@@ -1,3 +1,8 @@
+/* Required tags - these classes appear in the forms */
+
+/* Load Naaya Content custom styles */
+<span tal:replace="python:here.getLayoutTool().getNaayaContentStyles()" />
+
 /* folder index styles */
 #admin_this_folder{
 	margin: 0.5em 0;
@@ -25,6 +30,7 @@
 #admin_this_folder span {
 	padding:0em 0.4em;
 	margin: 0em 0.3em;
+	font-size: 90%;
 }
 #admin_this_folder img {
 	vertical-align: middle;
@@ -32,6 +38,7 @@
 }
 #admin_this_folder select {
 	vertical-align: middle;
+	font-size: 95%;
 }
 #admin_this_folder a:hover {
 	background: #ccc;
@@ -68,7 +75,6 @@ dd#admin_textarea{
 	text-decoration: none;
 }
 #toolbar a:hover {
-	/*background: #f0f5fb;*/
 	border-left:1px solid #6791c3;
 	border-top:1px solid #6791c3;
 	border-bottom:1px solid #34649b;
@@ -81,24 +87,24 @@ dd#admin_textarea{
 }
 
 #toolbar input, #toolbar button, #toolbar span {
-  white-space: nowrap;
-  font-size: 0.85em;
-  font-weight: bold;
-  background: #fff;
-  border-left:1px solid #bbb;
-  border-top:1px solid #bbb;
-  border-bottom:1px solid #666;
-  border-right:1px solid #666;
-  padding: 0.2em;
-  color: #333333;
+	white-space: nowrap;
+	font-size: 0.85em;
+	font-weight: bold;
+	background: #fff;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding: 0.2em;
+	color: #333333;
 }
 
 #toolbar input:hover, #toolbar button:hover, #toolbar span:hover {
-  border-left:1px solid #6791c3;
-  border-top:1px solid #6791c3;
-  border-bottom:1px solid #34649b;
-  border-right:1px solid #34649b;
-  color: #4e7cb0;
+	border-left:1px solid #6791c3;
+	border-top:1px solid #6791c3;
+	border-bottom:1px solid #34649b;
+	border-right:1px solid #34649b;
+	color: #4e7cb0;
 }
 
 table#folderfile_list{
@@ -177,12 +183,39 @@ td.title-column a:hover{
 	vertical-align: middle;
 }
 
+/* tip boxes */
+.right-floated-tip {
+	width: 20%;
+	float: right;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.tip {
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.left-floated-tip {
+	width: 20%;
+	float: left;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+
+/* Operations buttons */
 .floated-buttons {
 	float: right;
 	margin-right: 0.5em;
-}
-.buttons {
-	font-weight: bold;
 }
 .buttons a {
 	text-decoration: none;
@@ -196,134 +229,68 @@ td.title-column a:hover{
 	padding:0.2em 0.5em;
 	margin: 0em 0.3em;
 	font-size: 90%;
-	font-weight: bold;
 }
 .buttons a:visited {
 	color: #000;
 }
-
-/*______- sortables columns -_____ */
-/* -------ASC SORT--------- */
-.sort_asc_th {
-	padding: 0em;
-	background-color: #DEECF4;
-	border-top: 2px solid white;
-	border-right: 1px solid white;
+.submission_button {
+	margin-top: 20px;
+	padding: 1px 2px 0px 2px;
+	background-color: #8194A0;
+	border-top: 1px solid white;
 	border-left: 1px solid white;
-	border-bottom: 2px solid white;
-	vertical-align: middle;
-	color: #6d6d6d;
-	text-align: left;
-	text-indent: 1em;
+	border-right: 1px solid #637785;
+	border-bottom: 1px solid #637785;
+	font-size: 100%;
+	color: white;
 }
-.sort_asc_th img {
-	display: none;
-}
-.sort_asc_th a {
-	background-color: #DEECF4;
-	display: block;
-	width: 100%;
-	padding: 0.6em 0em;
-	vertical-align: middle;
+a.button-like, a.button-like:visited {
 	text-decoration: none;
-	font-weight: bold;
-	color: #1578B0;
-	background-image: url(misc_/Naaya/sort_asc.gif);
-	background-repeat: no-repeat;
-	background-position: right center;
-}
-/* ----------DESC SORT---------- */
-.sort_desc_th {
-	padding: 0em;
-	background-color: #DEECF4;
-	vertical-align: middle;
-	color: #6d6d6d;
-	text-align: left;
-	text-indent: 1em;
-	border-top: 2px solid white;
-	border-right: 1px solid white;
-	border-left: 1px solid white;
-	border-bottom: 2px solid white;
-	font-weight: normal;
-}
-.sort_desc_th img {
-	display: none;
-}
-.sort_desc_th a {
-	background-color: #DEECF4;
-	display: block;
-	width: 100%;
-	padding: 0.6em 0em;
-	vertical-align: middle;
-	text-decoration: none;
-	font-weight: bold;
-	color: #1578B0;
-	background-image: url(misc_/Naaya/sort_desc.gif);
-	background-repeat: no-repeat;
-	background-position: right center;
-}
-/* -----------SORTABLE------------- */
-.sort_th {
-	padding: 0em;
-	background-color: #DEECF4;
-	vertical-align: middle;
-	color: #6d6d6d;
-	text-align: left;
-	text-indent: 1em;
-	border-top: 2px solid white;
-	border-right: 1px solid white;
-	border-left: 1px solid white;
-	border-bottom: 2px solid white;
-}
-.sort_th a {
-	background-color: #DEECF4;
-	display: block;
-	width: 100%;
-	padding: 0.6em 0em;
-	vertical-align: middle;
-	text-decoration: none;
-	font-weight: bold;
-	color: #1578B0;
+	background-color: #fff;
+	color: #000;
+	line-height: 2em;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding:0.1em 0.4em;
+	margin: 0em 0.3em;
+	font-size: 95%;
 }
 
 /* Object language availability */
-
 .available_langs {
 	font-size: x-small;
 }
-
 .available_langs a{
 	border-right: 1px solid #0F75B3;
 	padding-right: 0.3em;
 	padding-left: 0.3em;
 }
-
 .available_langs a:first-child {
 	border-left:1px solid #0F75B3;
 }
 
 /* Tabbed menus  */
-#tabbedmenu {
+#tabbedmenu, .tabbedmenu {
 	float:left;
 	width:100%;
 	border-bottom: 1px solid #346d9f;
-	font-size: 0.8em;
+	font-size: 85%;
 	line-height: 1.5em;
-	margin-bottom: 1em;
-	background: #fff;
 }
-#tabbedmenu ul {
+#tabbedmenu ul, .tabbedmenu ul {
 	margin:0;
 	padding: 1em 1em 0;
 	list-style:none;
 }
-#tabbedmenu li {
+#tabbedmenu li, .tabbedmenu li {
 	float:left;
 	margin: 0;
 	padding:0;
 	white-space: nowrap;
 }
-#tabbedmenu a {
+#tabbedmenu a, .tabbedmenu a {
 	display:block;
 	text-decoration: none;
 	font-weight: normal;
@@ -333,38 +300,38 @@ td.title-column a:hover{
 	margin: 0.3em 0.1em 0 0.1em;
 	border: 1px solid #346d9f;
 	border-bottom: none;
-	text-transform: uppercase;
 }
-#tabbedmenu a:hover {
+#tabbedmenu a:hover, .tabbedmenu a:hover {
 	background: #A8C7EC;
 	color: #000;
 }
-#tabbedmenu #currenttab {
-	/*background: #F0F5FB;*/
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
+	background: #F0F5FB;
 }
-#tabbedmenu #currenttab a {
+#tabbedmenu #currenttab a, .tabbedmenu .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	background: #336399;
+	background: #346D9F;
 	margin: 0em 0.1em 0 0.1em;
 	padding: 0.5em 1em 0.4em 1em;
 	color: #fafafa;
 	border: 1px solid #fff;
 	border-bottom: none;
 }
-#tabbedmenu #currenttab span {
+#tabbedmenu #currenttab span, .tabbedmenu .currenttab span {
 	display:block;
 	text-decoration: none;
-
 }
+
 /* warning box for active versions of items */
 .version_box {
-	background-color: #f4fff4;
-	color: red;
-	padding: 1em;
+	width: 20%;
 	float: right;
-	border: 1px solid black;
-	width: 200px;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
 	text-align: center;
 }
 
@@ -388,7 +355,10 @@ td.title-column a:hover{
 
 /* Content translation boxes */
 .edit-holder {
-	margin: 0;
+	margin: 1.5em 0 0 0;
+}
+div.translate-top {
+	line-height: 2.29em;
 }
 .translate {
 	background: #fff;
@@ -727,17 +697,6 @@ padding-top: 0.5em;
 	border: 1px solid #666666;
 	font-size: 110%;
 	margin-bottom: 14px;
-}
-.submission_button {
-	margin-top: 20px;
-	padding: 1px 2px 0px 2px;
-	background-color: #8194A0; /* custom-color-submit */
-	border-top: 1px solid white;
-	border-left: 1px solid white;
-	border-right: 1px solid #637785; /* custom-color-a.font */
-	border-bottom: 1px solid #637785; /* custom-color-a.font */
-	font-size: 100%;
-	color: white;
 }
 /* +++++++++++++++++++++++ END  modified on febr 19 2006 +++++++++++++++++*/
 /* SORTABLE TABLES second, to be merged with the existing one */
@@ -1242,6 +1201,12 @@ table.datatable {
 }
 
 div.folder-feeds {margin: 1em 0;}
+p.form-errors {
+	color: #f00;
+	font-style: italic;
+	margin: 0.2em 0;
+}
+
 
 /* Map styles */
 #div.marker {
@@ -1335,15 +1300,7 @@ padding: 0 0 0 2em;
 	padding: 2px;
 	display: inline;
 }
-/* End map styles */
 
-form input[type="button"], form input[type="submit"], form input[type="reset"]{
-	border: 1px solid #ccc;
-	background: #336399;
-	padding: 1px 4px;
-	color: #fff;
-	text-transform: lowercase;
-}
 /* maintopics styles */
 ul.boxy {
 	list-style-type: none;
@@ -1367,7 +1324,7 @@ ul.boxy li {
 #maintopicslist .chk {
 	margin: 0px;
 }
-/* end maintopics styles  */
+
 td.portlet_arrange_left {
 	background-color: #fdd;
 }
@@ -1378,8 +1335,10 @@ td.portlet_arrange_center {
 	background-color: #dfd;
 }
 
-p.form-errors {
-	color: #f00;
-	font-style: italic;
-	margin: 0.2em 0;
+/* other styles */
+a.skiplink {
+	display: none;
+}
+.clearer, .cleaner {
+	clear:both;
 }

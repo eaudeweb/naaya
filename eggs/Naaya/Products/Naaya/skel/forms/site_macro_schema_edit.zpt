@@ -31,17 +31,17 @@
 <!-- Versioning -->
 <div metal:define-slot="version_box"
 	class="version_box" tal:condition="here/hasVersion">
-	<span i18n:translate="" tal:omit-tag="">
+	<p i18n:translate="">
 		<strong i18n:name="working-version" i18n:translate="">You are working on a version of this item.</strong>
 		In order to save the work done in the version and make it accessible to all
 		end users, click on the <strong i18n:name="commit-button" i18n:translate="">Commit</strong> button. To permanently
 		discard the work done in the version, click on the
 		<strong i18n:name="discard-button" i18n:translate="">Discard</strong> button.
-	</span>
-  <form style="display: inline;" action=".">
-    <input type="submit" value="Commit" i18n:attributes="value" name="commitVersion:method"/>
-    <input type="submit" value="Discard" i18n:attributes="value" name="discardVersion:method"/>
-  </form>
+	</p>
+	<form action=".">
+		<input type="submit" value="Commit" i18n:attributes="value" name="commitVersion:method" />
+		<input type="submit" value="Discard" i18n:attributes="value" name="discardVersion:method" />
+	</form>
 </div>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
@@ -63,8 +63,8 @@
 
 <!-- Switch content language box -->
 <div style="display:none" i18n:translate="" id="confirmSwMessage">
-  This action will move current translation to selected one.
-  The target translation will be lost. Are you sure?
+	This action will move current translation to selected one.
+	The target translation will be lost. Are you sure?
 </div>
 <script type="text/javascript">
 <!--
