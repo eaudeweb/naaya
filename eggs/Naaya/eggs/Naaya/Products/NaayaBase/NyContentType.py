@@ -365,6 +365,9 @@ class NyContentData(NyProperties):
         data = self.prop_details(prop_name, lang)
         data.update(kwargs)
 
+        if not getattr(self.aq_base, prop_name, ''):
+            return ''
+
         if data.get('as_href', False) and data['value'] in ['', 'http://']:
             data['visible'] = False
 
