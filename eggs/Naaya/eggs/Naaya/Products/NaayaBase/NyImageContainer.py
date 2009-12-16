@@ -26,12 +26,6 @@ class NyImageContainer(Acquisition.Implicit):
         self.relative = relative
         self.baseURL = baseURL
 
-    security.declarePrivate('_redirectBack')
-    def _redirectBack(self, REQUEST):
-        """Go back to the referring page"""
-        if REQUEST:
-            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
-
     def uploadImage(self, file, REQUEST=None):
         """Upload image to the collection and then return to the referring URL."""
         id, title = cookId(None, None, file)
@@ -39,8 +33,11 @@ class NyImageContainer(Acquisition.Implicit):
         while self.storage._getOb(id, None):
             i += 1
             id = '%s-%u' % (id, i)
-        manage_addImage(self.storage, id, file, title)
-        self._redirectBack(REQUEST)
+        id = manage_addImage(self.storage, id, file, title)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+        ob = self.storage._getOb(id)
+        return ob
 
     def deleteImages(self, ids, REQUEST=None):
         """Delete images from the collection
@@ -48,7 +45,8 @@ class NyImageContainer(Acquisition.Implicit):
             @param ids: image ids
         """
         self.storage.manage_delObjects(ids)
-        self._redirectBack(REQUEST)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def getImageURL(self, image):
         """Return the URL (absolute or relative) of the image
@@ -62,6 +60,5 @@ class NyImageContainer(Acquisition.Implicit):
     def getImages(self):
         """Return the list of images"""
         return self.storage.objectValues(['Image'])
-
 
 InitializeClass(NyImageContainer)
