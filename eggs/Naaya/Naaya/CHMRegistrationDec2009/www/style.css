@@ -1,8 +1,21 @@
-.field{
-	width:48em;
+.tiny_text{
+	font-size: x-small;
+	font-style: italic
+}
+
+.registration_fields{
+    width: 580px;
+    margin: 10px 0;
+}
+
+.field input{
+    width:550px;
+}
+.field textarea{
+    width:550px;
 }
 .vDateField {
-margin-left:0;
+    margin-left:0;
 }
 
 .mandatory{

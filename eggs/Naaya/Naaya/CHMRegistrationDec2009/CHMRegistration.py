@@ -38,16 +38,19 @@ import constants
 
 
 add_chm_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_chm_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
+def manage_add_chm_registration(self, id='', title='', conference_details='',\
+    conference_description='', conference_period='', conference_place='',
+    administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
     """ Adds a CHM registration instance"""
-    if registration_validation(REQUEST):
-        if id:
-            id = slugify(id)
-        else:
-            id = slugify(title)
+    if registration_validation(constants.REG_MANDATORY_FIELDS,
+                                            constants.REG_DATE_FIELDS,
+                                            constants.REG_TIME_FIELDS,
+                                            REQUEST):
+        id = naaya_utils.make_id(self, id=id, title=title, prefix='registration')
         if lang is None: 
             lang = self.gl_get_selected_language()
-        ob = CHMRegistration(id, title, conference_details, administrative_email, start_date, end_date, lang)
+        ob = CHMRegistration(id, title, conference_details, conference_description,\
+        conference_period, conference_place, administrative_email, start_date, end_date, lang)
         self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
@@ -61,13 +64,14 @@ def manage_add_chm_registration(self, id='', title='', conference_details='', ad
 class CHMRegistration(LocalPropertyManager, Folder):
     """ Main class of the meeting registration"""
 
-    meta_type = 'CHM Registration'
-    product_name = 'CHMRegistration'
+    meta_type = 'CHM Registration Dec2009'
+    product_name = 'CHMRegistrationDec2009'
 
     security = ClassSecurityInfo()
 
     title = LocalProperty('title')
     conference_details = LocalProperty('conference_details')
+    conference_description = LocalProperty('conference_description')
 
     manage_options = (
         Folder.manage_options[:1]
@@ -86,16 +90,25 @@ class CHMRegistration(LocalPropertyManager, Folder):
         manage_addTemplatesManager(self)
         self._loadRegistrationForms()
 
-    def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, lang):
+    def __init__(self, id, title, conference_details, conference_description,\
+                    conference_period, conference_place, administrative_email,\
+                    start_date, end_date, lang):
         """ constructor """
         self.id = id
-        self.save_properties(title, conference_details, administrative_email, start_date, end_date, lang)
+        self.save_properties(title, conference_details, conference_description,\
+                    conference_period, conference_place, administrative_email,\
+                    start_date, end_date, lang)
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'save_properties')
-    def save_properties(self, title, conference_details, administrative_email, start_date, end_date, lang):
+    def save_properties(self, title, conference_details, conference_description,\
+                    conference_period, conference_place, administrative_email,\
+                    start_date, end_date, lang):
         """ save properties """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('conference_details', lang, conference_details)
+        self._setLocalPropValue('conference_description', lang, conference_description)
+        self._setLocalPropValue('conference_period', lang, conference_period)
+        self._setLocalPropValue('conference_place', lang, conference_place)
         self.administrative_email = administrative_email
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
@@ -136,26 +149,27 @@ class CHMRegistration(LocalPropertyManager, Folder):
                                             REQUEST)
             if form_valid:
                 lang = self.gl_get_selected_language()
-                registration_no = naaya_utils.genRandomId(10)
+                registration_id = naaya_utils.make_id(self, prefix='p')
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                if not 'event_1' in cleaned_data: cleaned_data['event_1'] = '0'
-                if not 'event_2' in cleaned_data: cleaned_data['event_2'] = '0'
-                if not 'event_3' in cleaned_data: cleaned_data['event_3'] = '0'
-                ob = CHMParticipant(registration_no, **cleaned_data)
-                self._setObject(registration_no, ob)
-                participant = self._getOb(registration_no, None)
+                ob = CHMParticipant(registration_id, **cleaned_data)
+                self._setObject(registration_id, ob)
+                participant = self._getOb(registration_id, None)
                 if participant:
                     #save the authentication token on session
-                    REQUEST.SESSION.set('authentication_id', registration_no)
-                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.first_last_name))
+                    REQUEST.SESSION.set('authentication_id', registration_id)
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.organisation_name))
 
                     #send notifications
+                    conference_period = self.getPropertyValue('conference_period', lang)
+                    conference_place = self.getPropertyValue('conference_place', lang)
                     values = {'registration_edit_link': participant.absolute_url(),
                                 'registration_event': self.unicode2UTF8(self.title),
+                                'conference_period': conference_period,
+                                'conference_place': conference_place,
                                 'website_team': self.unicode2UTF8(self.site_title),
-                                'registration_number': registration_no,
-                                'name': self.unicode2UTF8(participant.first_last_name)}
+                                'registration_id': registration_id,
+                                'name': self.unicode2UTF8(participant.organisation_name)}
                     self.send_registration_notification(participant.email,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
@@ -206,7 +220,10 @@ class CHMRegistration(LocalPropertyManager, Folder):
         """ edit properties """
         submit =  REQUEST.form.get('edit-submit', '')
         if submit:
-            if registration_validation(REQUEST):
+            if registration_validation(constants.REG_MANDATORY_FIELDS,
+                                            constants.REG_DATE_FIELDS,
+                                            constants.REG_TIME_FIELDS,
+                                            REQUEST):
                 cleaned_data = REQUEST.form
                 del cleaned_data['edit-submit']
                 self.save_properties(**cleaned_data)
@@ -227,24 +244,30 @@ class CHMRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
-        data = [('Registration date', 'Registration number', 'Name', 'Position', 'Organisation',
-                    'Address', 'Postal code', 'eMail', 'eMail type', 'Phone number', 'Event #1', 'Event #2', 'Event #3', 
-                    'Topic #1', 'Topic #2', 'Topic #3', 'Topic #4', 'Explanation')]
+        data = [('Registration date', 'Registration number',
+                'Organisation Name', 'Organisation Address', 'Organisation Website',
+                'Media contact name', 'Media contact email',
+                'Media contact telephone', 'Media contact details',
+                'Program contact name', 'Program contact email', 'Program contact telephone',
+                'VIP contact name', 'VIP contact email', 'VIP contact telephone',
+                'Activities', 'Disclose permission')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1):
-            if part.private_email:
+            """if part.private_email:
                 email_type = 'Private'
             else:
-                email_type = 'Public'
+                email_type = 'Public'"""
+            disclose_permission = part.disclose_permission == '1' and 'Yes' or 'No'
             data_app((self.formatDate(part.registration_date), part.id,
-                    self.unicode2UTF8(part.first_last_name), self.unicode2UTF8(part.position), 
-                    self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.address),
-                    self.unicode2UTF8(part.zip_code), part.email, email_type, self.unicode2UTF8(part.phone_number),
-                    self.unicode2UTF8(part.event_1), self.unicode2UTF8(part.event_2),
-                    self.unicode2UTF8(part.event_3), self.unicode2UTF8(part.topic_1),
-                     self.unicode2UTF8(part.topic_2), self.unicode2UTF8(part.topic_3),
-                     self.unicode2UTF8(part.topic_4),
-                     self.unicode2UTF8(part.explanation.replace('\r\n', ' ').replace('\n', ' '))))
+                    self.unicode2UTF8(part.organisation_name), self.unicode2UTF8(part.organisation_address),
+                    self.unicode2UTF8(part.organisation_website), self.unicode2UTF8(part.media_contact_name),
+                    part.email, self.unicode2UTF8(part.media_contact_telephone), 
+                    self.unicode2UTF8(part.media_contact_details.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(part.program_contact_name), part.program_contact_email,
+                    self.unicode2UTF8(part.program_contact_telephone), self.unicode2UTF8(part.vip_contact_name),
+                    part.vip_contact_email, self.unicode2UTF8(part.vip_contact_telephone),
+                    self.unicode2UTF8(part.activities.replace('\r\n', ' ').replace('\n', ' ')),
+                    disclose_permission))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 

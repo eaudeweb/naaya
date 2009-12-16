@@ -26,7 +26,7 @@ def initialize(context):
                           )
 
 misc_ = {
-    'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_5.zip', globals()),
+    'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_7.zip', globals()),
     'tinymceconfig.js': ImageFile('www/tinymceconfig.js', globals()),
     'calendar.js': ImageFile('www/calendar.js', globals()),
     'core.js': ImageFile('www/core.js', globals()),

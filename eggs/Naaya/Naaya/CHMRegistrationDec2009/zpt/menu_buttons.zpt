@@ -5,9 +5,9 @@
 	</a>
 	<a i18n:translate="" tal:condition="python:here.canViewParticipants() or here.canManageParticipants()"
 		tal:attributes="href string:${here/absolute_url}/participants">
-		View participants
+		View partners
 	</a>
 	<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/registration_html">
-		Register participants
+		Register partners
 	</a>
 </div>
