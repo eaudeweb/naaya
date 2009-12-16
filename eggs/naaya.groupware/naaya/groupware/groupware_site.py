@@ -128,7 +128,7 @@ class GroupwareSite(NySite):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         source_obj = sources[0] #should not be more than one
-        if location == "__root":
+        if location == "/":
             location = ''
         if location:
             location_obj = self.unrestrictedTraverse(location, None)

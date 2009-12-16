@@ -23,7 +23,7 @@ function makeTree(div_id){
   var root = new Tree.AsyncTreeNode({
     text: '<dtml-var the_site_title>',
     draggable:false,
-    id:'__root'
+    id:'/'
   });
   tree.setRootNode(root);
   
