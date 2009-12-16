@@ -1243,7 +1243,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getNavigationSiteMap(self, REQUEST=None, **kwargs):
         """ Returns site map in order to be used with extjs library"""
         node = REQUEST.form.get('node', '')
-        if not node or node == '__root':
+        if not node or node == '/':
             node = ''
 
         items = self.getFolderPublishedContent(node)
@@ -1306,7 +1306,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         in order to be used with extjs library"""
 
         node = REQUEST.form.get('node', '')
-        if not node or node == '__root':
+        if not node or node == '/':
             node = ''
 
         items = self.getFolderContent(node)
@@ -1365,7 +1365,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getNavigationPhotos(self, REQUEST=None, **kwargs):
         """ Returns site map with photos only in order to be used with extjs library"""
         node = REQUEST.form.get('node', '')
-        if not node or node == '__root':
+        if not node or node == '/':
             node = ''
 
         items = self.getFolderPublishedContent(node)

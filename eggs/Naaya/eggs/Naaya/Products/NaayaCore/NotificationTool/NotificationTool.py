@@ -102,7 +102,7 @@ class NotificationTool(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_add_subscription')
     def admin_add_subscription(self, user_id, location, notif_type, lang, REQUEST):
         """ """
-        if location == '__root': location = ''
+        if location == '/': location = ''
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
         try:

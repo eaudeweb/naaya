@@ -273,7 +273,7 @@ class PortletsTool(Folder, utils):
             site_base_url = self.getSite().absolute_url(1)
             if site_base_url and location.startswith(site_base_url):
                 location = location[len(site_base_url)+1:]
-            if location == '__root':
+            if location == '/':
                 location = ''
             try:
                 self.assign_portlet(location, position, portlet_id, inherit)
