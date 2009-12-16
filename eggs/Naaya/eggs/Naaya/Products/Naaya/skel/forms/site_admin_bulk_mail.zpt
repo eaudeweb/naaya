@@ -15,35 +15,43 @@
     <script language="JavaScript">
         $(document).ready(function(){
             if ($("input[type=checkbox][name=user_mails:list]").length > 0) {
-                var sel_all = document.createElement('a');
-                var sel_none = document.createElement('a');
-                sel_all.addClass("button-like") = 'Select all';
-                sel_none.addClass("button-like") = 'Select none';
-                sel_all.innerHTML = 'Select all';
-                sel_none.innerHTML = 'Select none';
-                sel_all.id = 'select_all';
-                sel_none.id = 'select_none';
-                sel_all.href="#";
-                sel_none.href="#";
-                sel_none.style.display = 'none';
-                $(sel_all).click(function(){
-                        $("input[type=checkbox][name=user_mails:list]").attr('checked', 'checked');
-                        $("#select_all").css({'display': 'none'});
-                        $("#select_none").css({'display': 'inline'});
-                    })
-                $(sel_none).click(function(){
-                        $("input[type=checkbox][name=user_mails:list]").attr('checked', '');
-                        $("#select_none").css({'display': 'none'});
-                        $("#select_all").css({'display': 'inline'});
-                    })
+                var sel_all = $("<a" + ">" + "Select all<" + "/a>");
+                sel_all.attr({
+                    href: '#',
+                    id: 'select_all',
+                    class: 'button-like'
+                });
+                sel_all.click(function(){
+                    $("input[type=checkbox][name=user_mails:list]").attr('checked', 'checked');
+                    $("#select_all").toggle();
+                    $("#select_none").toggle();
+                });
+
+                var sel_none = $("<a" + ">Select none<" + "/a>");
+                sel_none.attr({
+                    href: '#',
+                    id: 'select_none',
+                    class: 'button-like'
+                });
+
+                sel_none.hide();
+
+                sel_none.click(function(){
+                    $("input[type=checkbox][name=user_mails:list]").attr('checked', '');
+                    $("#select_all").toggle();
+                    $("#select_none").toggle();
+                });
                 $('#user_listing').before(sel_all);
                 $('#user_listing').before(sel_none);
                 $('#compose_message').css({'display': 'inline'});
             }
             else {
                 $('#compose_message').css({'display': 'none'});
-            }
-        })
+            };
+        });
+        window.onload = function() {
+            $("select_none").hide();
+	}
     </script>
 
     <tal:block condition="not:compose">

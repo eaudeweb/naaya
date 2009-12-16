@@ -3619,7 +3619,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_html')
     def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return PageTemplateFile('skel/forms/admin_bulk_mail', globals()).__of__(self)()
+        return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
 
     def standard_template_macro(self):
         return self.getLayoutTool().get_standard_template().macros['page']
