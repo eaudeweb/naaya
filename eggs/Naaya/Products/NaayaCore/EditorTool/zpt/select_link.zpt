@@ -28,6 +28,7 @@
 			<ul>
 				<li>
 					<div id="pointer_tree" class="extjs_tree custom-tree" style="margin-bottom: .5em;"></div>
+					<div>To choose a link from this portal, click on the desired item from the sitemap above</div>
 					<div class="propfield"><label for="url">URL:</label></div>
 					<input class="extjs_target" type="text" id="url" name="url" style="width: 32em;" />
 				</li>
