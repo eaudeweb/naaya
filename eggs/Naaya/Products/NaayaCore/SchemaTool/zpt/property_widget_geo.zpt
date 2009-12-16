@@ -15,7 +15,7 @@
 
 <div style="background-color: #ecf5fa; border: 1px solid #b6cde1;
     margin-top: 0.5em; padding: 0.5em; width: 430px;">
-    <div style="float:right; padding:.5em;">
+    <div style="padding:0.5em;">
         <a id="map-toggle" href="javascript:">[Show map &#x25bc;]</a>
     </div>
     <label style="display:inline" tal:attributes="for lat_id" class="widget-title" i18n:translate="">Latitude</label>

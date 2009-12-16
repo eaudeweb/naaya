@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<tal:block define="global img_url python:here.get_preview_img(request)" />
+<tal:block define="global req_styles python:here.prepare_image_styles(request)" />
+<tal:block define="global alignment req_styles/alignment" />
+<html>
+	<head>
+		<title>Prepare image</title>
+		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
+	</head>
+	<body>
+		<tal:block condition="not: img_url">
+			<p>
+				Incorrect call to this page. <a href="javascript:window.close();">Close</a>
+			</p>
+		</tal:block>
+		<tal:block condition="img_url">
+		<div id="fe_preview" style="margin-top: 1em;">
+			Preview
+			<div style="width: 100%; height: 23em; overflow: scroll; border: 1px solid #C0C0C0;">
+				<img id="fe_img_preview" tal:attributes="title req_styles/title;src img_url; style string:float: left;;${req_styles/width_preview};;${req_styles/height_preview};;${req_styles/margin};;${req_styles/border_preview};;${req_styles/css_alignment}" /> 
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at consectetur augue. 
+				Vestibulum adipiscing consequat massa a vestibulum. Nam sem urna, lacinia sit amet imperdiet 
+				id, blandit fringilla mi. Donec eros mi, adipiscing id hendrerit non, congue a quam. 
+				In ornare consequat diam, eu tempus enim molestie at. Aliquam posuere massa ornare nisl blandit tempor. 
+				Suspendisse magna turpis, ultrices ac auctor vitae, pretium quis purus. 
+				Sed quis tortor ipsum, a egestas diam.
+			</div>
+		</div>
+		<div id="fe_preview" style="width: 50em;">
+			<fieldset>
+				<legend>Customize attributes</legend>
+				<ul>
+					<li>
+						<div class="propfield"><label for="fe_img_title">Image title:</label></div>
+						<input id="fe_img_title" style="width: 25em;" tal:attributes="value req_styles/title" />
+					</li>
+					<li>
+						<div class="propfield"><label for="fe_img_alignment">Alignment:</label></div>
+						<select id="fe_img_alignment" name="align">
+							<option tal:condition="python:alignment == 'baseline'" value="baseline" selected="selected">Baseline</option>
+							<option tal:condition="python:alignment != 'baseline'" value="baseline">Baseline</option>
+							<option tal:condition="python:alignment == 'left'" value="left" selected="selected">Left</option>
+							<option tal:condition="python:alignment != 'left'" value="left">Left</option>
+							<option tal:condition="python:alignment == 'right'" value="right" selected="selected">Right</option>
+							<option tal:condition="python:alignment != 'right'" value="right">Right</option>
+							<option tal:condition="python:alignment == 'top'" value="top" selected="selected">Top</option>
+							<option tal:condition="python:alignment != 'top'" value="top">Top</option>
+							<option tal:condition="python:alignment == 'middle'" value="middle" selected="selected">Middle</option>
+							<option tal:condition="python:alignment != 'middle'" value="middle">Middle</option>
+							<option tal:condition="python:alignment == 'bottom'" value="bottom" selected="selected">Bottom</option>
+							<option tal:condition="python:alignment != 'bottom'" value="bottom">Bottom</option>
+							<option tal:condition="python:alignment == 'text-top'" value="text-top" selected="selected">Text top</option>
+							<option tal:condition="python:alignment != 'text-top'" value="text-top">Text top</option>
+							<option tal:condition="python:alignment == 'text-bottom'" value="text-bottom" selected="selected">Text bottom</option>
+							<option tal:condition="python:alignment != 'text-bottom'" value="text-bottom">Text bottom</option>
+							<option tal:condition="python:alignment == 'sub'" value="sub" selected="selected">Subscript</option>
+							<option tal:condition="python:alignment != 'sub'" value="sub">Subscript</option>
+							<option tal:condition="python:alignment == 'sup'" value="sup" selected="selected">Superscript</option>
+							<option tal:condition="python:alignment != 'sup'" value="sup">Superscript</option>
+						</select>
+					</li>
+					<li>
+						<div class="propfield"><label for="fe_img_width">Dimensions:</label></div>
+						<input id="fe_img_width" type="text" tal:attributes="value req_styles/width" style="width: 5em;" />
+						x
+						<input id="fe_img_height" type="text" tal:attributes="value req_styles/height" style="width: 5em;" />
+						<input id="fe_img_proportional" type="checkbox" style="width: 1em; vertical-align: middle;" />
+						<label for="fe_img_proportional">Proportional</label>
+						
+					</li>
+					<li>
+						<div class="propfield"><label for="fe_img_vspace">Vertical space:</label></div>
+						<input id="fe_img_vspace" type="text" tal:attributes="value req_styles/v_margin" />
+					</li>
+					<li>
+						<div class="propfield"><label for="fe_img_hspace">Horizontal space:</label></div>
+						<input id="fe_img_hspace" type="text" tal:attributes="value req_styles/h_margin" />
+					</li>
+					<li>
+						<div class="propfield"><label for="fe_img_border">Border:</label></div>
+						<input id="fe_img_border" type="text" tal:attributes="value req_styles/border" />
+					</li>
+				</ul>
+			</fieldset>
+		</div>
+		<br class="cleaner" />
+		<div class="mceActionPanel">
+			<input id="insert" type="button" value="Insert" onclick="feInsertPicture();" />
+			<input id="cancel" type="button" value="Cancel" onclick="imageOb.cancel()" />
+		</div>
+		<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
+		<input type="hidden" id="fe_url_file" name="url_file" tal:attributes="value img_url" />
+		<script type="text/javascript">
+			var imageOb = null;
+			function feInsertPicture() {
+				imageOb.insert();
+			}
+
+			$(document).ready(function() {
+				imageOb = new ImagePreparer();
+				imageOb.init(
+					{
+						'title' : 'fe_img_title',
+						'url_file' : 'fe_url_file',
+						'preview' : 'fe_preview',
+						'img_preview' : 'fe_img_preview',
+						'img_width' : 'fe_img_width',
+						'img_height' : 'fe_img_height',
+						'img_border' : 'fe_img_border',
+						'img_proportional' : 'fe_img_proportional',
+						'img_alignment' : 'fe_img_alignment',
+						'img_hspace' : 'fe_img_hspace',
+						'img_vspace' : 'fe_img_vspace'
+					}
+				);
+				imageOb.update();
+				$('#fe_img_title').keyup(function() { imageOb.updateTitle(); });
+				$('#fe_img_width').keyup(function() { imageOb.updateWidth(); });
+				$('#fe_img_alignment').change(function() { imageOb.updateAlignment(); });
+				$('#fe_img_height').keyup(function() { imageOb.updateHeight(); });
+				$('#fe_img_vspace').keyup(function() { imageOb.updateVSpace(); });
+				$('#fe_img_hspace').keyup(function() { imageOb.updateHSpace(); });
+				$('#fe_img_border').keyup(function() { imageOb.updateBorder(); });
+			});
+		</script>
+		</tal:block>
+	</body>
+</html>
