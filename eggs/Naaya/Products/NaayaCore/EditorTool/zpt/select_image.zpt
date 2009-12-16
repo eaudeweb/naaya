@@ -10,6 +10,9 @@
 		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
 	</head>
 	<body>
+		<p i18n:translate="">
+			Insert an image by uploading it from your computer (<em>Computer</em>), taking it from a remote page (<em>URL</em>) or selecting it from the ones already available in the portal (<em>Browse</em>):
+		</p>
 		<div class="tabs">
 			<ul>
 				<li id="computer_tab"><span><a href="javascript:mcTabs.displayTab('computer_tab','computer_panel');" onmousedown="return false;">Computer</a></span></li>
@@ -29,11 +32,13 @@
 				<p>
 					Click <strong><code>Browse...</code></strong> to select one picture from your computer.
 				</p>
+				<div class="tip">
 				<strong>Tips:</strong>
 				<ul>
 					<li>To use multiple pictures create new photo gallery first, upload them there (all in one ZIP file) and go to <code><a href="javascript:mcTabs.displayTab('browse_tab','browse_panel');" onmousedown="return false;">Browse</a></code> tab.</li>
 					<li>Small pictures are loading faster. Modern cameras creates very big pictures. It is prefferable to bring them to a reasonable size before upload.</li>
 				</ul>
+				</div>
 			</div>
 
 			<div id="link_panel" class="panel">
@@ -49,16 +54,21 @@
 					Use this feature to insert picture into your document from another website.
 					<br />
 				</p>
+				<div class="tip">
 				<strong>Notes:</strong>
 				<ul>
-					<li>Small pictures are loading faster. Modern cameras takes very big pictures. Bring them to reasonable size before upload</li>
-					<li>Please consider copyright terms before using other people work</li>
+					<li>Small pictures load faster. Modern cameras takes very big pictures. Bring them to reasonable size before upload</li>
+					<li>Consider copyright terms before using other peoples work</li>
 					<li>In time websites change, this link may become invalid breaking your image as well</li>
 					<li>Linking to another websites generates additional overhead traffic for them. Owners may not agree with that</li>
 				</ul>
+				</div>
 			</div>
 			<div id="browse_panel" class="panel current">
 				<tal:block define="src python:request.get('src', test(here.isImageContainer(document), 'document', 'website')); images python:here.enumerateImages(src, request);">
+				<p i18n:translate="">
+					Pick an image from one of the available repositories below:
+				</p>
 				<div id="source" style="margin: 0;">
 					<ul>
 						<li tal:condition="python:here.isImageContainer(document)">
@@ -83,7 +93,7 @@
 						<a tal:condition="python: src != 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}"><img tal:attributes="src image/absolute_url" class="thumbnail" title="Click to select" /></a>
 						<a tal:condition="python: src == 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}/view?display=Original"><img tal:condition="python: src == 'album'" tal:attributes="src string:${image/absolute_url}/view?display=XSmall" class="thumbnail" title="Click to select" /></a>
 					</tal:block>
-					<tal:block tal:condition="not:images">No images available.</tal:block>
+					<p tal:condition="not:images" i18n:translate="">No images available in this repository</p>
 				</div>
 				</tal:block>
 			</div>
