@@ -41,7 +41,7 @@ class TemplatesManager(Folder):
     """ Email templates manager """
 
     meta_type = 'TemplatesManager'
-    icon = 'misc_/CHMRegistration/EmailTemplates.gif'
+    icon = 'misc_/CHMRegistrationDec2009/EmailTemplates.gif'
 
     security = ClassSecurityInfo()
 

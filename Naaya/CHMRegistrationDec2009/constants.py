@@ -19,8 +19,17 @@
 # Valentin Dumitru, Eau de Web
 
 #constants
-PART_MANDATORY_FIELDS = ['first_last_name', 'position', 'organisation', 'address', 'zip_code', 'email', 'phone_number']
-AUTH_MANDATORY_FIELDS = ['registration_no']
+PART_MANDATORY_FIELDS = ['organisation_name', 'organisation_address',\
+                'organisation_website', 'media_contact_name', 'email',\
+                'media_contact_telephone', 'program_contact_name', 'program_contact_email',\
+                'program_contact_telephone', 'vip_contact_name', 'vip_contact_email',\
+                'vip_contact_telephone', 'disclose_permission']
+REG_MANDATORY_FIELDS = ['title', 'conference_period','conference_place',\
+                'administrative_email', 'start_date', 'end_date']
+REG_DATE_FIELDS = ['start_date', 'end_date']
+REG_TIME_FIELDS = []
+
+AUTH_MANDATORY_FIELDS = ['registration_id']
 
 DATE_FIELDS = []
 TIME_FIELDS = []

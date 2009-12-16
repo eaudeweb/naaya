@@ -30,23 +30,36 @@ class CHMParticipant(BaseParticipant):
 
     meta_type = 'CHM Participant'
     product_name = 'CHMRegistration'
-    icon = 'misc_/CHMRegistration/CHMParticipant.png'
+    icon = 'misc_/CHMRegistrationDec2009/CHMParticipant.png'
 
     security = ClassSecurityInfo()
 
-    def __init__(self, registration_no, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
+    def __init__(self, registration_id,
+                organisation_name, organisation_address, organisation_website,\
+                media_contact_name, email, media_contact_telephone, media_contact_details,\
+                program_contact_name, program_contact_email, program_contact_telephone,\
+                vip_contact_name, vip_contact_email, vip_contact_telephone,\
+                activities, disclose_permission):
         """ constructor """
-        BaseParticipant.__dict__['__init__'](self, registration_no, first_last_name, position,\
-                organisation, address, zip_code, email, phone_number, event_1, event_2, event_3,\
-                topic_1, topic_2, topic_3, topic_4, explanation, private_email)
+        BaseParticipant.__dict__['__init__'](self, registration_id,\
+                organisation_name, organisation_address, organisation_website,\
+                media_contact_name, email, media_contact_telephone, media_contact_details,\
+                program_contact_name, program_contact_email, program_contact_telephone,\
+                vip_contact_name, vip_contact_email, vip_contact_telephone,\
+                activities, disclose_permission)
 
-    def edit(self, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
+    def edit(self, organisation_name, organisation_address, organisation_website,\
+                media_contact_name, email, media_contact_telephone, media_contact_details,\
+                program_contact_name, program_contact_email, program_contact_telephone,\
+                vip_contact_name, vip_contact_email, vip_contact_telephone,\
+                activities, disclose_permission):
         """ edit properties """
-        BaseParticipant.__dict__['edit'](self, first_last_name, position, organisation, address,\
-                zip_code, email, phone_number, event_1, event_2, event_3,\
-                topic_1, topic_2, topic_3, topic_4, explanation, private_email)
+        BaseParticipant.__dict__['edit'](self,\
+                organisation_name, organisation_address, organisation_website,\
+                media_contact_name, email, media_contact_telephone, media_contact_details,\
+                program_contact_name, program_contact_email, program_contact_telephone,\
+                vip_contact_name, vip_contact_email, vip_contact_telephone,\
+                activities, disclose_permission)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):

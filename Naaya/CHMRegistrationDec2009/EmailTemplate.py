@@ -21,7 +21,6 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 def addEmailTemplate(self, id='', title='', text='', REQUEST=None):
     """ """

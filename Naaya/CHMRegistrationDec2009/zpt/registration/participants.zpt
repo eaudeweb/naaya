@@ -20,10 +20,10 @@
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 					curr_lang_label python:here.get_language_name(curr_lang);">
 
-<p/><p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
+<p/><p tal:condition="not:participants" i18n:translate="">No partners have registered yet</p>
 
 <form action="deleteParticipants" method="post" tal:condition="participants">
-<h3 i18n:translate="">Participants list</h3>
+<h3 i18n:translate="">Partners list</h3>
 <table class="datatable">
 <thead>
 	<tr>
@@ -53,165 +53,163 @@
 			</th>
 		</tal:block>
 
-		<tal:block tal:condition="python:skey=='first_last_name'">
+		<tal:block tal:condition="python:skey=='organisation_name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=first_last_name&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Name</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_name&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Organisation</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=first_last_name">
-						<span i18n:translate="" tal:omit-tag="">Name</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_name">
+						<span i18n:translate="" tal:omit-tag="">Organisation</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 		</tal:block>
-		<tal:block tal:condition="python:skey!='first_last_name'">
+		<tal:block tal:condition="python:skey!='organisation_name'">
 			<th class="scope-col" scope="col">
 				<a i18n:translate=""
-				tal:attributes="href string:${here/absolute_url}/participants?skey=first_last_name">
-					Name
-				</a>
-			</th>
-		</tal:block>
-
-		<tal:block tal:condition="python:skey=='position'">
-			<tal:block tal:condition="python:rkey==''">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=position&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Position</span>
-					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=position">
-						<span i18n:translate="" tal:omit-tag="">Position</span>
-					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='position'">
-			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=position">
-					Position
-				</a>
-			</th>
-		</tal:block>
-
-
-		<tal:block tal:condition="python:skey=='organisation'">
-			<tal:block tal:condition="python:rkey==''">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Organisation</span>
-					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation">
-						<span i18n:translate="" tal:omit-tag="">Organisation</span>
-					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='organisation'">
-			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=organisation">
+				tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_name">
 					Organisation
 				</a>
 			</th>
 		</tal:block>
 
-		<tal:block tal:condition="python:skey=='email'">
+		<tal:block tal:condition="python:skey=='organisation_website'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=email&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">eMail</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_website&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Website</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=email">
-						<span i18n:translate="" tal:omit-tag="">eMail</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_website">
+						<span i18n:translate="" tal:omit-tag="">Website</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 		</tal:block>
-		<tal:block tal:condition="python:skey!='email'">
+		<tal:block tal:condition="python:skey!='organisation_website'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=email">
-					eMail
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=organisation_website">
+					Website
 				</a>
 			</th>
 		</tal:block>
 
-		<tal:block tal:condition="python:skey=='private_email'">
+		<tal:block tal:condition="python:skey=='media_contact_name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=private_email&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">eMail type</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=media_contact_name&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Media contact</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=private_email">
-						<span i18n:translate="" tal:omit-tag="">eMail type</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=media_contact_name">
+						<span i18n:translate="" tal:omit-tag="">Media contact</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 		</tal:block>
-		<tal:block tal:condition="python:skey!='private_email'">
+		<tal:block tal:condition="python:skey!='media_contact_name'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=private_email">
-					eMail type
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=media_contact_name">
+					Media contact
 				</a>
 			</th>
 		</tal:block>
 
-		<tal:block tal:condition="python:skey=='phone_number'">
+		<tal:block tal:condition="python:skey=='program_contact_name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=phone_number&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Phone number</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=program_contact_name&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Program contact</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=phone_number">
-						<span i18n:translate="" tal:omit-tag="">Phone number</span>
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=program_contact_name">
+						<span i18n:translate="" tal:omit-tag="">Program contact</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 		</tal:block>
-		<tal:block tal:condition="python:skey!='phone_number'">
+		<tal:block tal:condition="python:skey!='program_contact_name'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=phone_number">
-					Phone number
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=program_contact_name">
+					Program contact
 				</a>
 			</th>
 		</tal:block>
 
+		<tal:block tal:condition="python:skey=='vip_contact_name'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=vip_contact_name&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">VIP contact</span>
+					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=vip_contact_name">
+						<span i18n:translate="" tal:omit-tag="">VIP contact</span>
+					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='vip_contact_name'">
+			<th class="scope-col" scope="col">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=vip_contact_name">
+					VIP contact
+				</a>
+			</th>
+		</tal:block>
+
+		<tal:block tal:condition="python:skey=='disclose_permission'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=disclose_permission&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Disclose permission</span>
+					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=disclose_permission">
+						<span i18n:translate="" tal:omit-tag="">Disclose permission</span>
+					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='disclose_permission'">
+			<th class="scope-col" scope="col">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=disclose_permission">
+					Disclose permission
+				</a>
+			</th>
+		</tal:block>
 
 		<tal:block tal:condition="python:skey=='id'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
 					<a tal:attributes="href string:${here/absolute_url}/participants?skey=id&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Registration number</span>
+						<span i18n:translate="" tal:omit-tag="">Registration ID</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
 					<a tal:attributes="href string:${here/absolute_url}/participants?skey=id">
-						<span i18n:translate="" tal:omit-tag="">Registration number</span>
+						<span i18n:translate="" tal:omit-tag="">Registration ID</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
@@ -219,7 +217,7 @@
 		<tal:block tal:condition="python:skey!='id'">
 			<th class="scope-col" scope="col">
 				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=id">
-					Registration number
+					Registration ID
 				</a>
 			</th>
 		</tal:block>
@@ -232,13 +230,13 @@
 		</td>
 		<td tal:content="python:here.formatDate(participant.registration_date, '%d %b %Y')" />
 		<td>
-			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/first_last_name" />
+			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/organisation_name" />
 		</td>
-		<td tal:content="participant/position" />
-		<td tal:content="participant/organisation" />
-		<td tal:content="participant/email" />
-		<td tal:content="python:test(participant.private_email, 'Private', 'Public')" />
-		<td tal:content="participant/phone_number" />
+		<td tal:content="participant/organisation_website" />
+		<td tal:content="participant/media_contact_name" />
+		<td tal:content="participant/program_contact_name" />
+		<td tal:content="participant/vip_contact_name" />
+		<td tal:content="python:test(participant.disclose_permission == '1', 'Yes', 'No')" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />
 		</td>
@@ -248,10 +246,10 @@
 <br/>
 <p>
 	<a tal:attributes="href string:${here/absolute_url}/exportParticipants" i18n:translate="">
-		Export participants list
+		Export partners list
 	</a>
 </p>
-<input type="submit" name="submit" value="Delete selected participants" i18n:attributes="value"/>
+<input type="submit" name="submit" value="Delete selected partners" i18n:attributes="value"/>
 </form>
 
 </tal:block>
