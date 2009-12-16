@@ -7,10 +7,6 @@
 <metal:block metal:fill-slot="body">
 <h1><tal:block tal:replace="here/site_title" /> <span i18n:translate="" tal:omit-tag="">sitemap</span></h1>
 
-<p i18n:translate="">
-	This page presents the hierarchical structure of this portal.
-</p>
-
 <script type="text/javascript">
 <!--
 function fTreeClick(expand)
@@ -27,8 +23,8 @@ function fTreeClick(expand)
 						expand python:here.getSiteMapTrail(expand, tree);
 						expand_list python:here.splitToList(expand)">
 <form name="frmSiteMap" method="post" action="">
-<a tal:attributes="href string:javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
-<a tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
+<a class="button-like" tal:attributes="href string:javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
+<a class="button-like" tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
 <dl>
 	<dt tal:repeat="tree_node tree">
 		<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
