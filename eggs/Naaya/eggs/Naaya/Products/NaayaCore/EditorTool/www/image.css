@@ -41,9 +41,6 @@ input {width: 280px;}
 	width: 120px;
 	height: 90px;
 }
-.tabs {
-	
-}
 
 #source ul {
 	line-style-image: none;
@@ -58,10 +55,22 @@ input {width: 280px;}
 	width: 10%;
 	display: inline;
 	position: relative;
-	background-color: #d2dcdf;
+	background-color: #f5f5f5;
 	margin: 0 0.3em;
 	padding: 0.2em 0.5em;
+	color: #666;
+	line-height: 2em;
+	border-left:2px solid #EEEEEE;
+	border-top:2px solid #EEEEEE;
+	border-bottom:2px solid #2F6C91;
+	border-right:2px solid #2F6C91;
 }
 #source ul li a {
 	text-decoration: none;
+}
+.tip {
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
 }
