@@ -49,16 +49,18 @@ input {width: 280px;}
 	line-style-image: none;
 	line-style-position: outside;
 	line-style-type: none;
-	margin: 0;
+	margin: 0.3em 0 0 0;
 	padding: 0;
 }
 #source ul li {
 	border: 1px solid #8094a4;
 	float: feft;
+	width: 10%;
+	display: inline;
 	position: relative;
 	background-color: #d2dcdf;
-	margin: 0 1em;
-	padding: 0.2em 0.7em;
+	margin: 0 0.3em;
+	padding: 0.2em 0.5em;
 }
 #source ul li a {
 	text-decoration: none;
