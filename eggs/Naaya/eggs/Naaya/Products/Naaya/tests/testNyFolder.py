@@ -480,7 +480,7 @@ class TestNyFolderLocalRolesInfo(NaayaFunctionalTestCase):
         self.assertTrue(additional_info[1].has_key('date'))
         self.assertTrue(additional_info[1]['user_making_changes'] == 'admin')
 
-        self.portal.info.delLocalRolesInfo(self.username)
+        self.portal.info.delLocalRolesInfo([self.username])
         additional_info = self.portal.info.getLocalRolesInfo(self.username)
         self.assertTrue(additional_info is None)
 
@@ -506,11 +506,48 @@ class TestNyFolderLocalRolesInfo(NaayaFunctionalTestCase):
         self.assertTrue(additional_info[1].has_key('date'))
         self.assertTrue(additional_info[1]['user_making_changes'] == 'admin')
 
-        self.portal.info.manage_delLocalRoles(self.username)
+        self.portal.info.manage_delLocalRoles([self.username])
         additional_info = self.portal.info.getLocalRolesInfo(self.username)
         self.assertTrue(additional_info is None)
 
         self.browser_do_logout()
+
+    def _get_roles_from_additional_info(self, additional_info):
+        naaya_roles_list = []
+        if additional_info is None:
+            naaya_roles = set()
+        else:
+            for ai in additional_info:
+                naaya_roles_list.extend(ai['roles'])
+            naaya_roles = set(naaya_roles_list)
+        return naaya_roles
+
+    def test_match_local_roles_data(self):
+        self.browser_do_login('admin', '')
+
+        self.portal.info.manage_setLocalRoles(self.username, ['Manager'])
+        info = self.portal.info.get_local_roles_for_userid(self.username)
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        zope_roles = set(info)
+        naaya_roles = self._get_roles_from_additional_info(additional_info)
+        self.assertTrue(len(zope_roles.symmetric_difference(naaya_roles)) == 0)
+
+        self.portal.info.manage_addLocalRoles(self.username, ['Reader'])
+        info = self.portal.info.get_local_roles_for_userid(self.username)
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        zope_roles = set(info)
+        naaya_roles = self._get_roles_from_additional_info(additional_info)
+        self.assertTrue(len(zope_roles.symmetric_difference(naaya_roles)) == 0)
+
+        self.portal.info.manage_delLocalRoles([self.username])
+        info = self.portal.info.get_local_roles_for_userid(self.username)
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        zope_roles = set(info)
+        naaya_roles = self._get_roles_from_additional_info(additional_info)
+        self.assertTrue(len(zope_roles.symmetric_difference(naaya_roles)) == 0)
+
+        self.browser_do_logout()
+
 
 def test_suite():
     suite = TestSuite()

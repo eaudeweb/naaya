@@ -1535,8 +1535,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         event.notify(NySetLocalRoleEvent(self, name, roles))
         return NyFolderBase.manage_setLocalRoles(self, name, roles, *args)
 
-    def manage_delLocalRoles(self, name, *args):
-        event.notify(NyDelLocalRoleEvent(self, name))
-        return NyFolderBase.manage_delLocalRoles(self, name, *args)
+    def manage_delLocalRoles(self, names, *args):
+        event.notify(NyDelLocalRoleEvent(self, names))
+        return NyFolderBase.manage_delLocalRoles(self, names, *args)
 
 InitializeClass(NyFolder)

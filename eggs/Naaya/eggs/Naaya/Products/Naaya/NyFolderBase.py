@@ -378,17 +378,18 @@ class NyFolderBase(Folder, NyPermissions):
 
         self._p_changed = 1
 
-    def delLocalRolesInfo(self, name):
+    def delLocalRolesInfo(self, names):
         state, log = self._getStorage4LocalRolesInfo()
         current_date = datetime.utcnow()
         auth_user = self._getAuthenticatedUserUID()
-        del state[name]
-        log.append(PersistentDict({
-            'date': current_date,
-            'user_making_changes': auth_user,
-            'user': name,
-            'operation': 'del'
-            }))
+        for name in names:
+            del state[name]
+            log.append(PersistentDict({
+                'date': current_date,
+                'user_making_changes': auth_user,
+                'user': name,
+                'operation': 'del'
+                }))
 
         self._p_changed = 1
 
