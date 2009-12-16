@@ -42,7 +42,8 @@ class MigrateCatalog(UpdateScript):
     #priority = PRIORITY['LOW']
     description = ('Updates catalogs to Zope 2.10.'
                    'Replaces textindexng2 with textindexng3.'
-                   'WARNING: This update will clear the portal catalog and recatalog only NyContentTypes')
+                   'WARNING: This update will clear the portal catalog and recatalog only NyContentTypes.'
+                   'Catalogs contained in glossaries are recognized and properly recataloged with glossary content.')
     #dependencies = []
     #categories = []
 
@@ -75,6 +76,23 @@ class MigrateCatalog(UpdateScript):
             if isinstance(ob, NyFolder):
                 self.walk_folders(ob)
 
+    def find_glossary_content(self, glossary):
+        content = []
+        def walk_contents(folderish):
+            for ob in folderish.objectValues():
+                if ob.meta_type == 'Naaya Glossary Folder':
+                    content.append(ob)
+                    walk_contents(ob)
+                if ob.meta_type == 'Naaya Glossary Element':
+                    content.append(ob)
+        walk_contents(glossary)
+        return content
+
+    def recatalog_glossary_content(self, glossary):
+        content = self.find_glossary_content(glossary)
+        for ob in content:
+            glossary.cu_catalog_object(ob)
+
     security.declarePrivate('_update')
     def _update(self, portal):
         catalogs = portal.ZopeFind(portal, obj_metatypes=['ZCatalog', 'Naaya Catalog Tool'], search_sub=1)
@@ -82,6 +100,8 @@ class MigrateCatalog(UpdateScript):
             self.update_textindexng(catalog)
             catalog.manage_catalogClear()
             catalog.manage_convertIndexes()
+            if catalog.aq_parent.meta_type == 'Naaya Glossary':
+                self.recatalog_glossary_content(catalog.aq_parent)
             self.log.debug('Cleared and converted catalog %s' % catalog.absolute_url(1))
         self.recatalog_portal_content(portal)
         self.log.debug('Rebuilt portal catalog')
