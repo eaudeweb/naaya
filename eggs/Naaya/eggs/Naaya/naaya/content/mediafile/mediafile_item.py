@@ -131,16 +131,17 @@ def _create_NyMediaFile_object(parent, id, contributor):
     return ob
 
 def _check_video_file(the_file):
-    errors = []
+    if the_file is None:
+        return ['No file was uploaded']
     file_extension = the_file.filename.split('.')[-1]
     if ffmpeg_available:
         # TODO: check if our file is a valid video file!
-        pass
+        return []
     else:
         if not the_file or \
         (the_file.headers.get("content-type", "") not in FLV_HEADERS and file_extension != 'flv'):
-            errors += ['The file must be a valid flash video file (.flv)']
-    return errors
+            return ['The file must be a valid flash video file (.flv)']
+    return []
 
 def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
@@ -155,7 +156,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
-    _file = schema_raw_data.pop('file', '')
+    _file = schema_raw_data.pop('file', None)
     _subtitle = schema_raw_data.pop('subtitle', '')
     _skip_videofile_check = schema_raw_data.pop('_skip_videofile_check', False)
     _contact_word = schema_raw_data.get('contact_word', '')
