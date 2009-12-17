@@ -127,9 +127,13 @@ class ScriptChannel(PythonScript, utils):
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_properties_html')
 
-    def get_objects_for_rdf(self):
+    def get_objects_for_rdf(self, attr=None, reversed=False):
         #return the objects to be syndicated
-        return self._exec({'context': self, 'container': self}, {}, {})
+        #sorted by the attribute attr
+        objects = self._exec({'context': self, 'container': self}, {}, {})
+        if attr is not None:
+            return utils.utSortObjsListByAttr(self, objects, attr, False)
+        return objects
 
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
