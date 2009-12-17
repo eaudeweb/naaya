@@ -14,7 +14,7 @@
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            Het registratie nummer <strong>%(registration_id)s</strong> en uw naam
+            Het registratie nummer <strong>%(registration_id)s</strong> en de naam
 			<strong>%(name)s</strong> (hoofdlettergevoelig) zijn daarbij benodigd.
         <p/>
         <p>

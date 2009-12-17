@@ -4,7 +4,7 @@ Uw registratie voor de conferentie "%(registration_event)s" welke plaats vindt o
 
 %(registration_edit_link)s
 
-Het registratie nummer %(registration_id)s en uw naam %(name)s (hoofdlettergevoelig) zijn daarbij benodigd.
+Het registratie nummer %(registration_id)s en de naam %(name)s (hoofdlettergevoelig) zijn daarbij benodigd.
 
 ---
 Vriendelijke Groet,

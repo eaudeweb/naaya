@@ -23,7 +23,9 @@
 <div class="field">
 	<h4 i18n:translate="">Replyform</h4>
 	<p i18n:translate="">Fields with * are mandatory</p>
-</div>
+	<p i18n:translate="">A notification e-mail of this registration will be sent
+		to the media contact and the program contact.</p>
+	</div>
 
 <tal:block tal:condition="python:registration_opened and registration_not_closed">
 

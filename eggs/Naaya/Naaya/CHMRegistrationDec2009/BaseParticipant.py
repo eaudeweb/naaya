@@ -107,7 +107,9 @@ class BaseParticipant(SimpleItem):
             session.set('authentication_name', self.unicode2UTF8(REQUEST.get('authentication_name')))
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
-            if self.email == REQUEST.form.get('email', ''):
+            email_recipients = [getattr(self, field) for field in constants.PART_EMAIL_RECIPIENTS]
+            user_email = REQUEST.form.get('email', '')
+            if user_email in email_recipients:
                 conference_period = self.aq_parent.getPropertyValue('conference_period', lang)
                 conference_place = self.aq_parent.getPropertyValue('conference_place', lang)
                 values = {'registration_edit_link': self.absolute_url(),
@@ -117,7 +119,7 @@ class BaseParticipant(SimpleItem):
                             'website_team': self.site_title,
                             'registration_id': self.id,
                             'name': self.organisation_name}
-                self.send_registration_notification(self.email,
+                self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
                     self.getEmailTemplate('user_registration_text', lang) % values)
@@ -144,7 +146,9 @@ class BaseParticipant(SimpleItem):
                 session.set('authentication_name', self.unicode2UTF8(REQUEST.get('authentication_name')))
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
-            if self.email == REQUEST.form.get('email', ''):
+            email_recipients = [getattr(self, field) for field in constants.PART_EMAIL_RECIPIENTS]
+            user_email = REQUEST.form.get('email', '')
+            if user_email in email_recipients:
                 conference_period = self.aq_parent.getPropertyValue('conference_period', lang)
                 conference_place = self.aq_parent.getPropertyValue('conference_place', lang)
                 values = {'registration_edit_link': self.absolute_url(),
@@ -154,7 +158,7 @@ class BaseParticipant(SimpleItem):
                             'website_team': self.site_title,
                             'registration_id': self.id,
                             'name': self.organisation_name}
-                self.send_registration_notification(self.email,
+                self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
                     self.getEmailTemplate('user_registration_text', lang) % values)

@@ -24,6 +24,7 @@ PART_MANDATORY_FIELDS = ['organisation_name', 'organisation_address',\
                 'media_contact_telephone', 'program_contact_name', 'program_contact_email',\
                 'program_contact_telephone', 'vip_contact_name', 'vip_contact_email',\
                 'vip_contact_telephone', 'disclose_permission']
+PART_EMAIL_RECIPIENTS = ['email', 'program_contact_email']
 REG_MANDATORY_FIELDS = ['title', 'conference_period','conference_place',\
                 'administrative_email', 'start_date', 'end_date']
 REG_DATE_FIELDS = ['start_date', 'end_date']
@@ -34,7 +35,7 @@ AUTH_MANDATORY_FIELDS = ['registration_id']
 DATE_FIELDS = []
 TIME_FIELDS = []
 
-SMTP_HOST = 'mail.eaudeweb.ro'
+SMTP_HOST = 'localhost'
 SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@biodiversiteit.nl'
 
