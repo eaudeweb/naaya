@@ -102,7 +102,7 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The form contains errors' in html)
         self.failUnless('Value required for "Title"' in html)
-        self.failUnless('The file must be a valid flash video file (.flv)' in html)
+        self.failUnless('No file was uploaded' in html)
 
     def test_edit(self):
         self.browser_do_login('admin', '')
