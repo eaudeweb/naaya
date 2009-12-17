@@ -161,6 +161,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.organisation_name))
 
                     #send notifications
+                    email_recipients = [getattr(participant, field) for field in constants.PART_EMAIL_RECIPIENTS]
                     conference_period = self.getPropertyValue('conference_period', lang)
                     conference_place = self.getPropertyValue('conference_place', lang)
                     values = {'registration_edit_link': participant.absolute_url(),
@@ -170,7 +171,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_id': registration_id,
                                 'name': self.unicode2UTF8(participant.organisation_name)}
-                    self.send_registration_notification(participant.email,
+                    self.send_registration_notification(email_recipients,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
                         self.getEmailTemplate('user_registration_text', lang) % values)

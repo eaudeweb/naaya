@@ -5,7 +5,7 @@ To review and/or edit the submitted information please use the following link:
 
 %(registration_edit_link)s
 
-The registration number %(registration_id)s and your name %(name)s (case sensitive) are required for authentication.
+The registration number %(registration_id)s and the name %(name)s (case sensitive) are required for authentication.
 
 ---
 Best Regards,

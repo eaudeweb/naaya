@@ -13,7 +13,7 @@
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            The registration number <strong>%(registration_id)s</strong> and your name
+            The registration number <strong>%(registration_id)s</strong> and the name
 			<strong>%(name)s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
