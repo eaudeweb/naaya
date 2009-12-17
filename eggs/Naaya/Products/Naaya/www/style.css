@@ -308,18 +308,19 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 
 /* site title and subtitle */
 #toptitle {
-	margin: 0; padding: 0.5em;
+	margin: 0 1.5em;
+	padding: 0.5em;
 	font-family: "Trebuchet MS";
 	float: left;
 }
 .page_title {
-	color:#393939;
+	color: #ffffff;
 	font-size:1.6em;
 	font-weight:bold;
 	line-height:2em;
 }
 .page_subtitle {
-	color:#393939;
+	color: #ffffff;
 	font-size:1.2em;
 	font-weight:bold;
 	line-height:1.4em;
