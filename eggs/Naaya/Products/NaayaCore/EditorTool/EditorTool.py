@@ -121,7 +121,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
                 templates from `config.ini`. Default is 'tinymce'. 
                 Also you can use 'tinymce_noimage' to disable image insertion.
         """
-        doc_url = self.REQUEST['URLPATH1']
+        doc_url = "/".join(self.aq_parent.getPhysicalPath())
         if extra_options.has_key('config_template'):
             template = extra_options['config_template']
             cfg = loadConfig(template)
