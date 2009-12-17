@@ -135,6 +135,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
             'element_id': element,
             'script_url' : '%s/tinymce/jscripts/tiny_mce/tiny_mce.js' \
                 % self.absolute_url(),
+            'site_url': self.getSite().absolute_url(),
         })
         cfg.update(extra_options)
         return "<script type=\"text/javascript\">\
