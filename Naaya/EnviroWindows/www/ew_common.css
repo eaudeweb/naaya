@@ -663,16 +663,14 @@ div.translate-top {
 	border: 1px solid white;
 }
 .second_tab_set {
-/*	background-color: red; */
-	margin-right: 10px; 
-/*	border-right: 1px solid green; */
+	margin-right: 10px;
 	padding:0;
 }
 .second_tab_set .tabs_admin {
 	background-color: white; 
-	padding: 0; 
+	padding: 0;
 	margin: 0;
-	border-bottom: 1px solid #879AA7; /* custom-color-border*/
+	border-bottom: 1px solid #879AA7;
 }
 .second_tab_set .tabs_admin ul {
 	background-color: white; 
@@ -680,7 +678,7 @@ div.translate-top {
 	margin: 0;
 }
 .second_tabset_content {
-	background-color: #F6F6F7; /* custom-color-mainbackground*/
+	background-color: #F6F6F7;
 	padding: 0px 10px 10px 10px;
 	border-top-width: 0.01em;
 }
@@ -702,11 +700,11 @@ div.translate-top {
 .submission_button {
 	margin-top: 20px;
 	padding: 1px 2px 0px 2px;
-	background-color: #8194A0; /* custom-color-submit */
+	background-color: #8194A0;
 	border-top: 1px solid white;
 	border-left: 1px solid white;
-	border-right: 1px solid #637785; /* custom-color-a.font */
-	border-bottom: 1px solid #637785; /* custom-color-a.font */
+	border-right: 1px solid #637785;
+	border-bottom: 1px solid #637785;
 	font-size: 100%;
 	color: white;
 }
