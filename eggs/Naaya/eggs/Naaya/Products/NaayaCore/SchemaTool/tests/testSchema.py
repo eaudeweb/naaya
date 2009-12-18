@@ -209,7 +209,7 @@ class SchemaTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnless('TinyMCE' not in form())
 
         schema.addWidget('my_html_textarea', widget_type='TextArea', tinymce=True)
-        self.failUnless('tinyMCE.init' in form())
+        self.failUnless('tinymce(' in form())
 
     def test_prop_details(self):
         doc = self.portal.info.contact
