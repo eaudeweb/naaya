@@ -24,7 +24,6 @@ from BaseParticipant import BaseParticipant
 
 import constants
 
-
 class CHMParticipant(BaseParticipant):
     """ Participant class """
 
@@ -39,27 +38,27 @@ class CHMParticipant(BaseParticipant):
                 media_contact_name, email, media_contact_telephone, media_contact_details,\
                 program_contact_name, program_contact_email, program_contact_telephone,\
                 vip_contact_name, vip_contact_email, vip_contact_telephone,\
-                activities, disclose_permission):
+                activities, disclose_permission, comments=''):
         """ constructor """
         BaseParticipant.__dict__['__init__'](self, registration_id,\
                 organisation_name, organisation_address, organisation_website,\
                 media_contact_name, email, media_contact_telephone, media_contact_details,\
                 program_contact_name, program_contact_email, program_contact_telephone,\
                 vip_contact_name, vip_contact_email, vip_contact_telephone,\
-                activities, disclose_permission)
+                activities, disclose_permission, comments)
 
     def edit(self, organisation_name, organisation_address, organisation_website,\
                 media_contact_name, email, media_contact_telephone, media_contact_details,\
                 program_contact_name, program_contact_email, program_contact_telephone,\
                 vip_contact_name, vip_contact_email, vip_contact_telephone,\
-                activities, disclose_permission):
+                activities, disclose_permission, comments=''):
         """ edit properties """
         BaseParticipant.__dict__['edit'](self,\
                 organisation_name, organisation_address, organisation_website,\
                 media_contact_name, email, media_contact_telephone, media_contact_details,\
                 program_contact_name, program_contact_email, program_contact_telephone,\
                 vip_contact_name, vip_contact_email, vip_contact_telephone,\
-                activities, disclose_permission)
+                activities, disclose_permission, comments)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):
