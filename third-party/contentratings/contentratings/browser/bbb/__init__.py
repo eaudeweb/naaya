@@ -124,7 +124,7 @@ class UserRatingSetView(object):
 
     def post_rate(self, orig_url=None):
         if orig_url is not None:
-            q_str = 'portal_status_message=You have changed your rating'
+            q_str = 'portal_status_message=Your rating has been saved'
             q_spacer= '?' in orig_url and '&' or '?'
             res = self.request.RESPONSE
             return res.redirect(orig_url+q_spacer+q_str)

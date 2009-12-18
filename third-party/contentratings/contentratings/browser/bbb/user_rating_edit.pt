@@ -9,7 +9,7 @@
                       blank_star_icon string:/++resource++blank_star_icon.gif;"
           tal:condition="view/canRate"
           tal:attributes="action string:${context/absolute_url}/@@user_rating_set/rate">
-        <span i18n:translate="click_to_change_rating" class="label">Click to change your rating:</span>
+        <span i18n:translate="click_to_change_rating" class="label">Your rating:</span>
         <span class="discreet"
               tal:condition="python:rating is None"
               i18n:translate="not_rated">(not rated)</span>
@@ -18,7 +18,9 @@
                style="border: 0;"
                tal:repeat="star stars"
                tal:attributes="src python:(rating &lt; star) and blank_star_icon or star_icon;
-                               onclick string:rating.value=${star};;"/>
+                               title string:Click to change;
+                               onclick string:rating.value=${star};;"
+               i18n:attributes="title"/>
          <input type="hidden" name="rating" value="0"/>
 
           <div id="rating-labels">
