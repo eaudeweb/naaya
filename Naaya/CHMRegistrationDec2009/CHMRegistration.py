@@ -28,6 +28,7 @@ from OFS.Folder import Folder
 import time
 
 from Products.NaayaCore.managers import utils as naaya_utils
+from Products.NaayaCore.managers.csv_import_export import UnicodeReader
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from CHMParticipant import CHMParticipant
 from utilities.Slugify import slugify
@@ -241,6 +242,47 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     smtp_host = constants.SMTP_HOST,
                     smtp_port = constants.SMTP_PORT
                     )
+
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'importParticipants')
+    def importParticipants(self, REQUEST=None, RESPONSE=None):
+        """ """
+        errors = []
+        succcess = ''
+        data = REQUEST.form.get('data', None)
+        if data is None:
+            pass
+        try:
+            reader = UnicodeReader(data)
+            header = reader.next()
+            record_number = 0
+            for row in reader:
+                try:
+                    record_number += 1
+                    participant_data = {}
+                    for column, value in zip(header, row):
+                        participant_data[str(column)] = value
+                    registration_id = naaya_utils.make_id(self, prefix='p')
+                    ob = CHMParticipant(registration_id, **participant_data)
+                    self._setObject(registration_id, ob)
+                except UnicodeDecodeError, e:
+                    raise
+                except Exception, e:
+                    self.log_current_error()
+                    msg = 'Error while importing from CSV, row %d: %s' % (record_number, str(e))
+                    if REQUEST is None:
+                        raise ValueError(msg)
+                    else:
+                        errors.append(msg)
+        except UnicodeDecodeError, e:
+            if REQUEST is None:
+                raise
+            else:
+                errors = ['CSV file is not utf-8 encoded']
+        if not errors:
+            REQUEST.set('success', "%s records were imported successfully." % record_number)
+        else:
+            REQUEST.set('errors', errors)
+        return self.index_html(REQUEST)
 
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
