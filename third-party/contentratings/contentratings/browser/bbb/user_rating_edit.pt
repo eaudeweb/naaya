@@ -1,0 +1,41 @@
+    <form id="user-rating-edit"
+          i18n:domain="contentratings"
+          method="POST"
+          action="rating_action"
+          name="user_rating_form"
+          tal:define="rating view/userRating;
+                      stars python:range(1,view.scale+1);
+                      star_icon string:/++resource++star_icon.gif;
+                      blank_star_icon string:/++resource++blank_star_icon.gif;"
+          tal:condition="view/canRate"
+          tal:attributes="action string:${context/absolute_url}/@@user_rating_set/rate">
+        <span i18n:translate="click_to_change_rating" class="label">Click to change your rating:</span>
+        <span class="discreet"
+              tal:condition="python:rating is None"
+              i18n:translate="not_rated">(not rated)</span>
+        <input type="image"
+               name="ratingimage"
+               style="border: 0;"
+               tal:repeat="star stars"
+               tal:attributes="src python:(rating &lt; star) and blank_star_icon or star_icon;
+                               onclick string:rating.value=${star};;"/>
+         <input type="hidden" name="rating" value="0"/>
+
+          <div id="rating-labels">
+              &nbsp;
+              <span style="visibility: hidden; position:absolute"
+                    i18n:translate="rating_1">worthless</span>
+              <span style="visibility: hidden; position:absolute"
+                    i18n:translate="rating_2">bad</span>
+              <span style="visibility: hidden; position:absolute"
+                    i18n:translate="rating_3">average</span>
+              <span style="visibility: hidden; position:absolute"
+                    i18n:translate="rating_4">good</span>
+              <span style="visibility: hidden; position:absolute"
+                    i18n:translate="rating_5">great</span>
+          </div>
+          <input type="hidden"
+                 name="orig_url"
+                 value="current-url"
+                 tal:attributes="value request/ACTUAL_URL|request/getURL|nothing" />
+    </form>
