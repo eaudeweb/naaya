@@ -4,6 +4,28 @@
 
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			var pick_export = $('<a'+' href="#" class="button-like">Pick location<'+'/a>');
+			var pick_import = $('<a'+' href="#" class="button-like">Pick location<'+'/a>');
+			var tree = $('<div'+' id="location_tree" class="extjs_tree custom-tree"><'+'/div>');
+			function toggle_tree() {
+				$('#location_tree').remove();
+				$(this).after(tree);
+				if (!$('#location_tree').text()){
+					makeTree('location_tree');
+				}
+			}
+			pick_export.click(toggle_tree)
+			pick_import.click(toggle_tree)
+			$('#location_export').after(pick_export);
+			$('#location_import').after(pick_import);
+
+		});
+
+	</script>
+
 	<h1 i18n:translate="" tal:condition="python:not section">Contact - listing</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Contacts - vCard import/export</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Contacts - CSV import/export</h1>
@@ -29,12 +51,14 @@
 		<tal:block condition="python:section == 'csv'">
 
 		<h2>Export</h2>
-		<p>
-			<span>Export contacts as</span>
-			<a tal:attributes="href python:here.getSite().absolute_url() +
-				'/csv_export/export?meta_type=Naaya%20Contact&as_attachment=y'"
-				i18n:translate="">CSV file</a>.
-		</p>
+		<form action="export_contacts_to_csv" method="post">
+			<p i18n:translate="">Select or type the path to a location from whitch to export contacts.
+			If you want to export all portal contacts select the portal root or type <em>/</em></p>
+			<input class="extjs_target" type="text" name="location" id="location_export" size="50"
+				tal:attributes="value python:options.get('location', None)" />
+			<br />
+			<input type="submit" value="Export" i18n:attributes="value"/>
+		</form>
 
 		<h2>Import</h2>
 		<p i18n:translate="">This form allows you to upload multiple <em>Contact</em> items from
@@ -49,10 +73,9 @@
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
 
 		<form action="import_contacts_from_csv" method="post" enctype="multipart/form-data">
-			<div id="location_tree" class="extjs_tree custom-tree"></div>
 			<div style="clear: both"></div>
 			<label for="location" i18n:translate="">Location</label>
-			<input class="extjs_target" type="text" name="location" id="location" size="50" />
+			<input class="extjs_target" type="text" name="location" id="location_import" size="50" />
 			<div class="field">
 				<label for="file" i18n:translate="">File</label>
 				<input type="file" name="file" id="file" value="" />
