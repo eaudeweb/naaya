@@ -228,7 +228,10 @@ class CSVExportTool(Implicit, Item):
         csv_writer = csv.writer(output)
         csv_writer.writerow([widget.title for widget in widgets])
 
-        for ob in self.getSite().getCatalogedObjects(meta_type=[meta_type]):
+        search = self.getSite().getCatalogedObjects
+        objects = search(meta_type=[meta_type],
+                         path='/'.join(self.aq_parent.getPhysicalPath()))
+        for ob in objects:
             csv_writer.writerow([
                 unicode(getattr(ob, prop_name)).encode('utf-8')
                 for prop_name in prop_names
