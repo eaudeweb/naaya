@@ -1060,6 +1060,8 @@ text-decoration: underline;
         e = []
         if not location:
             e.append('You must specify a location.')
+        if location == '/':
+            location = ''
         if file:
             content = CSVReader(file=file, dialect=dialect, encoding=encoding)
             content = content.read()[0]
@@ -1137,6 +1139,19 @@ text-decoration: underline;
                    'First name,Last name,Department,Organisation,'\
                    'Postal address,Phone,Fax,Cell phone,Email,Webpage,'\
                    'Location url,Geographical type,Latitude,Longitude'
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_to_csv')
+    def export_contacts_to_csv(self, REQUEST=None, **kwargs):
+        """ """
+        if REQUEST is not None:
+            kwargs.update(REQUEST.form)
+
+        location = kwargs.get('location', '/')
+        if location != "/":
+            location = self.unrestrictedTraverse(location, self.getSite())
+        else:
+            location = self.getSite()
+        return location.csv_export.export(meta_type="Naaya Contact", as_attachment="y", REQUEST=REQUEST)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_contacts_html')
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
