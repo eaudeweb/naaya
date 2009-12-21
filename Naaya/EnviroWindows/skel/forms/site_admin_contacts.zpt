@@ -7,8 +7,8 @@
 	<script type="text/javascript">
 
 		$(document).ready(function(){
-			var pick_export = $('<a'+' href="#" class="button-like">Pick location<'+'/a>');
-			var pick_import = $('<a'+' href="#" class="button-like">Pick location<'+'/a>');
+			var pick_export = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
+			var pick_import = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
 			var tree = $('<div'+' id="location_tree" class="extjs_tree custom-tree"><'+'/div>');
 			function toggle_tree() {
 				$('#location_tree').remove();
