@@ -11,19 +11,4 @@
     <implements interface="naaya.core.interfaces.INyObjectContainer" />
   </class>
 
-  <subscriber
-    handler="Products.Naaya.subscribers.handle_add_local_role"
-    for="Products.Naaya.interfaces.INyAddLocalRoleEvent"
-    />
-
-  <subscriber
-    handler="Products.Naaya.subscribers.handle_set_local_role"
-    for="Products.Naaya.interfaces.INySetLocalRoleEvent"
-    />
-
-  <subscriber
-    handler="Products.Naaya.subscribers.handle_del_local_role"
-    for="Products.Naaya.interfaces.INyDelLocalRoleEvent"
-    />
-
 </configure>

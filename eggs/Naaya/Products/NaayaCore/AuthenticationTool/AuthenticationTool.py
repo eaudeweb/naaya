@@ -38,6 +38,7 @@ from AccessControl.Permissions import view_management_screens, view, manage_user
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
+from zope.event import notify
 
 #product imports
 from Products.NaayaCore.constants import *
@@ -48,6 +49,7 @@ from plugins_tool import plugins_tool
 from User import User
 from Role import Role
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
 
 
 def manage_addAuthenticationTool(self, REQUEST=None):
@@ -144,7 +146,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             if self.encrypt_passwords and not self._isPasswordEncrypted(password):
                 password = self._encryptPassword(password)
             user.__ = password
-        user.roles = roles
+        user.setRoles(self.getSite(), roles)
         user.domains = domains
         user.firstname = firstname
         user.lastname = lastname
@@ -179,7 +181,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def _doChangeUserRoles(self, name, roles, **kw):
         """ """
         user=self.data[name]
-        user.roles = roles
+        user.setRoles(self.getSite(), roles)
         self._p_changed = 1
 
     security.declarePrivate('_doDelUserRoles')
@@ -187,7 +189,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         for user in name:
             user_obj = self.data[user]
-            user_obj.roles = []
+            user_obj.delRoles(self.getSite())
         self._p_changed = 1
 
     security.declarePrivate('_doDelUsers')
@@ -317,7 +319,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         roles = self.utConvertToList(roles)
         if location == '':
             self._doChangeUserRoles(name, roles)
-            location_obj.setLocalRolesInfo(name, roles)
         else:
             location_obj.manage_setLocalRoles(name, roles)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
@@ -464,7 +465,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             if user is not None and not isinstance(user, SpecialUser):
                 user = deepcopy(user) #we make a copy so the new roles are not cached in the root acl_users
                 try:
-                    user.roles.extend([x for x in additional_roles if x not in user.roles])
+                    user.addRoles(self.getSite(), additional_roles)
                 # roles is not a list, roles remain unchanged
                 # this will happen when the LDAP user folder is
                 # replaced with a Zope UserFolder
@@ -878,6 +879,22 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         return self.checkPermissionPublishObjects()
 
+    def makeRolesString(self, roles, path='', date=None, user_granting_roles=None):
+        filtered_roles = self.getLocalRoles(roles)
+        if filtered_roles == []:
+            return None
+
+        if path == '':
+            path = 'entire site'
+
+        ret = '%s on %s' % (', '.join(filtered_roles), path)
+
+        if date is not None and user_granting_roles is not None:
+            ret += ' granted on %s by %s' % (date, user_granting_roles)
+
+        return ret
+
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'downloadUsersCsv')
     def downloadUsersCsv(self, REQUEST=None, RESPONSE=None):
         """ Return a csv file as a session response.
@@ -890,107 +907,99 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         output = StringIO()
         csv_writer = csv.writer(output)
-        # TODO: Username, Name, Organisation, Country, User's right, Justification, Date rights were granted, Person at EEA that granted rights
-        csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group', 'Roles', 'Account type'])
+        csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group(s)', 'Roles', 'Account type'])
 
-        items = self.getUsersRoles().items()
+        roles_by_location = {}
+        locations = self.getCatalogedObjects(has_local_role=1)
+        locations.append(self.getSite())
+        for l in locations:
+            roles_by_location[l.absolute_url(1)] = l.getAllLocalRolesInfo()
+        user_roles = self.getSite().getAllUserRolesInfo()
 
-        for uid, roles in items:
-            user = self.getUser(uid)
+        # roles_by_location[location][user] -> roles_by_user[user][location]
+        roles_by_user = {}
+        for l, v in roles_by_location.items():
+            for u, data in v.items():
+                if not roles_by_user.has_key(u):
+                    roles_by_user[u] = {}
+                roles_by_user[u][l] = data
+        for u, data in user_roles.items():
+            if not roles_by_user.has_key(u):
+                roles_by_user[u] = {}
+            roles_by_user[u][self.getSite().absolute_url(1)] = data
 
-            username = self.utToUtf8(uid)
+        # get users sources and objects
+        sources_by_user = {}
+        for userid in roles_by_user.keys():
+            user_ob = self.getUser(userid)
+            if user_ob is None:
+                for source in self.getSources():
+                    source_acl = source.getUserFolder()
+                    user_ob = source_acl.getUser(userid)
+                    if user_ob is not None:
+                        sources_by_user[userid] = source
+                        break
+            else:
+                sources_by_user[userid] = None
 
-            first_name = self.utToUtf8(self.getUserFirstName(user))
-            last_name = self.utToUtf8(self.getUserLastName(user))
-            name = first_name + ' ' + last_name
+        for userid in roles_by_user.keys():
+            if not sources_by_user.has_key(userid):
+                continue
+            source = sources_by_user[userid]
+            if source is None:
+                user = self.getUser(userid)
+            else:
+                user = source._get_user_by_uid(userid, source.getUserFolder())
+            user_info = roles_by_user[userid]
 
-            organisation = ''
+            username = self.utToUtf8(userid)
 
-            postal_address = ''
-
-            email = self.utToUtf8(self.getUserEmail(user))
-
-            group = ''
-
-            roles_info = []
-            for role in roles:
-                if role[0] == []:
-                    continue
-                user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
-                path = self.utToUtf8(role[1])
-                location = self.getFolderByPath(path)
-                additional_info = location.getLocalRolesInfo(uid)
-                if path == '':
-                    path = 'entire site'
-                role_info = '%s on %s' % (user_roles, path)
-                if additional_info is not None:
-                   role_info = ' | '.join([
-                                '%s on %s granted on %s by %s' % (
-                                    ', '.join(ai['roles']),
-                                    path,
-                                    ai['date'],
-                                    ai['user_making_changes'])
-                                for ai in additional_info])
-                roles_info.append(role_info)
-            role_str = ' | '.join(roles_info)
-
-            type = 'Local'
-
-            csv_writer.writerow([username, name, organisation, postal_address, email, group, role_str, type])
-
-        ldap_sources = self.getSources()
-
-        for source in ldap_sources:
-            acl = source.getUserFolder()
-
-            items = source.getUsersRoles(acl).items()
-
-            for uid, roles in items:
-                tstartuser = time.time()
-
-                user = source._get_user_by_uid(uid, acl)
-
-                username = self.utToUtf8(uid)
-
+            if source is None:
+                first_name = self.utToUtf8(self.getUserFirstName(user))
+                last_name = self.utToUtf8(self.getUserLastName(user))
+                name = first_name + ' ' + last_name
+            else:
                 name = self.utToUtf8(source._get_user_full_name(user))
 
+            if source is None:
+                organisation = ''
+            else:
                 organisation = self.utToUtf8(source._get_user_organisation(user))
 
+            if source is None:
+                postal_address = ''
+            else:
                 postal_address = self.utToUtf8(source._get_user_postal_address(user))
 
+            if source is None:
+                email = self.utToUtf8(self.getUserEmail(user))
+            else:
                 email = self.utToUtf8(source._get_user_email(user))
 
-                group = self.utToUtf8(source.getUserLocation(uid))
+            if source is None:
+                groups = ''
+            else:
+                groups = self.utToUtf8(source.getUserLocation(userid))
 
-                roles_info = []
-                for role in roles:
-                    if role[0] == []:
-                        continue
-                    user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
-                    path = self.utToUtf8(role[1])
-                    location = self.getFolderByPath(path)
-                    additional_info = location.getLocalRolesInfo(uid)
-                    if path == '':
-                        path = 'entire site'
-                    role_info = '%s on %s' % (user_roles, path)
-                    if additional_info is not None:
-                        role_info = ' | '.join([
-                                    '%s on %s granted on %s by %s' % (
-                                        ', '.join(ai['roles']),
-                                        path,
-                                        ai['date'],
-                                        ai['user_making_changes'])
-                                    for ai in additional_info])
-                    roles_info.append(role_info)
-                # TODO: add group roles
-                #additional_roles = self.get_ldap_group_roles(uid, source)
-                #for role in additional_roles:
-                #    roles_info.append('%s on entire site from group roles' % role)
-                role_str = ' | '.join(roles_info)
+            roles_info_str_list = []
+            for path, roles_infos in user_info.items():
+                for ri in roles_infos:
+                    roles_info_str = self.makeRolesString(
+                            ri['roles'],
+                            path,
+                            ri.get('date', None),
+                            ri.get('user_granting_roles', None))
+                    if roles_info_str is not None:
+                        roles_info_str_list.append(roles_info_str)
 
+            roles_str = ' | '.join(roles_info_str_list)
+
+            if source is None:
+                type = 'Local'
+            else:
                 type = 'LDAP (source_id=%s)' % source.id
 
-                csv_writer.writerow([username, name, organisation, postal_address, email, group, role_str, type])
+            csv_writer.writerow([username, name, organisation, postal_address, email, groups, roles_str, type])
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)
