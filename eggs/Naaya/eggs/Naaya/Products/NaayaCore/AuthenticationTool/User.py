@@ -11,6 +11,9 @@ import time
 
 from AccessControl.User import SimpleUser
 from Globals import Persistent
+from zope.event import notify
+
+from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
 
 class User(SimpleUser, Persistent):
     """ """
@@ -47,6 +50,19 @@ class User(SimpleUser, Persistent):
         """Return the list of roles assigned to a user."""
         if self.name == 'Anonymous User': return tuple(self.roles)
         else: return tuple(self.roles) + ('Authenticated',)
+
+    def addRoles(self, location, roles):
+        additional_roles = [r for r in roles if r not in self.roles]
+        notify(NyAddUserRoleEvent(location, self.name, additional_roles))
+        self.roles.extend(additional_roles)
+
+    def setRoles(self, location, roles):
+        notify(NySetUserRoleEvent(location, self.name, roles))
+        self.roles = roles
+
+    def delRoles(self, location):
+        notify(NyDelUserRoleEvent(location, [self.name]))
+        self.roles = []
 
     def getUserName(self):
         """Return the username of a user"""

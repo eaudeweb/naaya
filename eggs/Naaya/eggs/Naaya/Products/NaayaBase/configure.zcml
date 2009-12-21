@@ -4,4 +4,41 @@
   <class class=".NyContentType.NyContentType">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
   </class>
+
+  <adapter
+    for=".NyRoleManager.NyRoleManager"
+    provides="zope.annotation.interfaces.IAnnotations"
+    factory="zope.annotation.attribute.AttributeAnnotations"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_add_local_role"
+    for=".interfaces.INyAddLocalRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_set_local_role"
+    for=".interfaces.INySetLocalRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_del_local_role"
+    for=".interfaces.INyDelLocalRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_add_user_role"
+    for=".interfaces.INyAddUserRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_set_user_role"
+    for=".interfaces.INySetUserRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_del_user_role"
+    for=".interfaces.INyDelUserRoleEvent"
+    />
+
 </configure>
