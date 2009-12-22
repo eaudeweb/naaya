@@ -846,7 +846,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         return self.checkPermissionPublishObjects()
 
-    def makeRolesString(self, roles, path='', date=None, user_granting_roles=None):
+    def makeRolesString(self, roles, path='', date=None, user_granting_roles=None, from_group=None):
         filtered_roles = self.getLocalRoles(roles)
         if filtered_roles == []:
             return None
@@ -858,6 +858,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         if date is not None and user_granting_roles is not None:
             ret += ' granted on %s by %s' % (date, user_granting_roles)
+
+        if from_group is not None:
+            ret += ' from group %s' % from_group
 
         return ret
 
@@ -876,6 +879,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         csv_writer = csv.writer(output)
         csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group(s)', 'Roles', 'Account type'])
 
+        # get local_roles_by_location[location][user] = list of {roles, date, user_granting_roles}
         local_roles_by_location = {}
         meta_types = self.get_containers_metatypes()
         locations = self.getCatalogedObjects(meta_type=meta_types, has_local_role=1)
@@ -883,6 +887,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         for l in locations:
             local_roles_by_location[l.absolute_url(1)] = l.getAllLocalRolesInfo()
 
+        # get user_roles[user] = list of {roles, date, user_granting_roles}
         user_roles = self.getSite().getAllUserRolesInfo()
 
         # local_roles_by_location[location][user] -> roles_by_user[user][location]
@@ -899,7 +904,42 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 roles_by_user[u] = {}
             roles_by_user[u][self.getSite().absolute_url(1)] = data
 
-        # get users sources and objects
+
+        # get group_roles_by_location[location][group] = list of {roles, date, user_granting_roles}
+        group_roles_by_location = {}
+        locations = self.getCatalogedObjects(meta_type=meta_types)
+        locations.append(self.getSite())
+        for l in locations:
+            group_roles_by_location[l.absolute_url(1)] = l.getAllLDAPGroupRolesInfo()
+
+        # group_roles_by_location[location][group] -> group_roles_by_group[group][location]
+        group_roles_by_group = {}
+        for l, v in group_roles_by_location.items():
+            for g, data in v.items():
+                if not group_roles_by_group.has_key(g):
+                    group_roles_by_group[g] = {}
+                group_roles_by_group[g][l] = data
+
+        # get groups_by_userids[userid] = list of {source, groups}
+        groups_by_userids = {}
+        for group in group_roles_by_group.keys():
+            for source in self.getSources():
+                userids = source.group_member_ids(group)
+                for u in userids:
+                    if not groups_by_userids.has_key(u):
+                        groups_by_userids[u] = []
+                    for gu in groups_by_userids[u]:
+                        if gu['source'] == source:
+                            gu['groups'].append(group)
+                            break
+                    else:
+                        groups_by_userids[u].append({
+                            'source': source,
+                            'groups': [group]
+                            })
+
+
+        # get user_data[userid] = list of {user_object, source?, groups?}
         user_data = {}
         for userid in roles_by_user.keys():
             user_data[userid] = []
@@ -914,17 +954,40 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 source_acl = source.getUserFolder()
                 user_ob = source._get_user_by_uid(userid, source_acl)
                 if user_ob is not None:
+                    dict = {
+                        'user_object': user_ob,
+                        'source': source
+                        }
+                    for gu in groups_by_userids.get(userid, []):
+                        if gu['source'] == source:
+                            dict['groups'] = gu['groups']
+                    user_data[userid].append(dict)
+
+        for userid in groups_by_userids.keys():
+            if userid in roles_by_user.keys():
+                continue
+            user_data[userid] = []
+
+            for gu in groups_by_userids[userid]:
+                source = gu['source']
+                groups = gu['groups']
+
+                source_acl = source.getUserFolder()
+                user_ob = source._get_user_by_uid(userid, source_acl)
+                if user_ob is not None:
                     user_data[userid].append({
                         'user_object': user_ob,
                         'source': source,
+                        'groups': groups
                         })
 
-        for userid in roles_by_user.keys():
+        for userid in user_data.keys():
             # !!!OBS!!! if no data in user_data the user is not written to csv
             for data in user_data[userid]:
                 source = data.get('source', None)
                 user = data['user_object']
-                roles_for_user = roles_by_user[userid]
+                groups = data.get('groups', [])
+                roles_for_user = roles_by_user.get(userid, {})
 
                 username = self.utToUtf8(userid)
 
@@ -951,9 +1014,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     email = self.utToUtf8(source._get_user_email(user))
 
                 if source is None:
-                    groups = ''
+                    groups_str = ''
                 else:
-                    groups = self.utToUtf8(source.getUserLocation(userid))
+                    if groups == []:
+                        groups_str = self.utToUtf8(source.getUserLocation(userid))
+                    else:
+                        groups_str = self.utToUtf8(', '.join(groups))
 
                 roles_info_str_list = []
                 for path, roles_infos in roles_for_user.items():
@@ -965,6 +1031,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                 ri.get('user_granting_roles', None))
                         if roles_info_str is not None:
                             roles_info_str_list.append(roles_info_str)
+                # add roles from groups
+                for g in groups:
+                    for path, roles_infos in group_roles_by_group[g].items():
+                        for ri in roles_infos:
+                            roles_info_str = self.makeRolesString(
+                                    ri['roles'],
+                                    path,
+                                    ri.get('date', None),
+                                    ri.get('user_granting_roles', None),
+                                    g)
+                            if roles_info_str is not None:
+                                roles_info_str_list.append(roles_info_str)
 
                 roles_str = ' | '.join(roles_info_str_list)
 
@@ -973,7 +1051,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 else:
                     type = 'LDAP (source_id=%s)' % source.id
 
-                csv_writer.writerow([username, name, organisation, postal_address, email, groups, roles_str, type])
+                csv_writer.writerow([username, name, organisation, postal_address, email, groups_str, roles_str, type])
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)
