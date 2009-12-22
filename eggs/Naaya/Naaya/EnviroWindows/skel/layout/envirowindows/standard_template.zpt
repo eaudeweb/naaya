@@ -52,8 +52,8 @@
                     <div id="toolribbon">
                         <div id="topnav">
                             <div id="language">
+                                <span i18n:translate="">Select language</span>
                                 <span tal:replace="structure here/languages_box"/>
-                                <label for="old_lang">Select language</label>
                             </div>
                             <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
                                 <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&amp;disable_cookie_login__=1" i18n:translate="">Login</a></li>
