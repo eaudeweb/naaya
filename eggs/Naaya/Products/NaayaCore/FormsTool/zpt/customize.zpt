@@ -35,7 +35,7 @@
 
 <tal:block condition="current_form_id">
     <tal:block define="global default_form python:here.getDefaultForm(current_form_id)" />
-    <h2 tal:content="string:Customize current_form_id" />
+    <h2>Customize <code tal:content="current_form_id" /></h2>
 
     <textarea rows="20" readonly="readonly" tal:content="default_form"
       style="width: 95%; background-color: #ddd; border: 1px solid #737373;" />
