@@ -71,7 +71,7 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
 
     def browser_do_login(self, username, password):
         self.browser.go('http://localhost/portal/login_html')
-        form = self.browser.get_form(3)
+        form = self.browser.get_form(2)
         field = self.browser.get_form_field(form, '__ac_name')
         self.browser.clicked(form, field)
         form['__ac_name'] = username
