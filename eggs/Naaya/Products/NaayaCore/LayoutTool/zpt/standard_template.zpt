@@ -63,8 +63,8 @@
                     <metal:block define-slot="standard-page-header">
                         <div id="header">
                             <div id="language">
+                                <span i18n:translate="">select language:</span>
                                 <span tal:replace="structure here/languages_box"/>
-                                <label for="language">select language:</label>
                             </div>
                             <div id="topnav">
                                 <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
