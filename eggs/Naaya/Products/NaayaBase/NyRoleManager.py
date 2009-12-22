@@ -113,7 +113,8 @@ class NyRoleManager(RoleManager):
         state = self._getStorage4LocalRolesInfo()
 
         for userid in userids:
-            del state[userid]
+            if userid in state:
+                del state[userid]
 
     def getLocalRolesInfo(self, userid, default=None):
         state = self._getStorage4LocalRolesInfo()
