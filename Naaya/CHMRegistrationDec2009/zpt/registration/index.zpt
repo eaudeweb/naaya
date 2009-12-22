@@ -15,16 +15,6 @@
 
 	<span tal:replace="structure here/menu_buttons"/>
 
-	<form tal:condition="python:here.canManageParticipants()"
-		enctype="multipart/form-data" method="post" action="" name="csv_import">
-		<div class="field">
-			<label for="data">Import partners from CSV file:</label>
-			<input type="file" id="data" name="data" /><br />
-			<input type="submit" name="importParticipants:method" value="Upload data" />
-		</div>
-	</form>
-	<tal:block define="errors python:request.get('errors', None)" condition="errors" content="errors"/>
-	<tal:block define="success python:request.get('success', None)" condition="success" content="success"/>
 	<div class="field">
 		<span tal:replace="structure python:here.getPropertyValue('conference_description', curr_lang)" />
 	</div>

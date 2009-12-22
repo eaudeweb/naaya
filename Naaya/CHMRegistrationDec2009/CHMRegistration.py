@@ -282,7 +282,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
             REQUEST.set('success', "%s records were imported successfully." % record_number)
         else:
             REQUEST.set('errors', errors)
-        return self.index_html(REQUEST)
+        return self.participants(REQUEST)
 
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
@@ -293,7 +293,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                 'Media contact telephone', 'Media contact details',
                 'Program contact name', 'Program contact email', 'Program contact telephone',
                 'VIP contact name', 'VIP contact email', 'VIP contact telephone',
-                'Activities', 'Disclose permission')]
+                'Activities', 'Disclose permission', 'Comments')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1):
             """if part.private_email:
@@ -310,7 +310,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     self.unicode2UTF8(part.program_contact_telephone), self.unicode2UTF8(part.vip_contact_name),
                     part.vip_contact_email, self.unicode2UTF8(part.vip_contact_telephone),
                     self.unicode2UTF8(part.activities.replace('\r\n', ' ').replace('\n', ' ')),
-                    disclose_permission))
+                    disclose_permission, self.unicode2UTF8(part.admin_comment)))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -322,8 +322,25 @@ class CHMRegistration(LocalPropertyManager, Folder):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % filename)
         return content
 
+    _participants = PageTemplateFile('zpt/registration/participants', globals())
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'participants')
-    participants = PageTemplateFile('zpt/registration/participants', globals())
+    def participants(self, ids=[], REQUEST=None):
+        """ Loads the participants template.
+        Deletes selected participants or saves comments, depending on the pressed button. """
+        delete_participants = None
+        save_comments = None
+        if REQUEST is not None:
+            delete_participants = REQUEST.get('delete_selected', None)
+            save_comments = REQUEST.get('save_comments', None)
+        if delete_participants is not None:
+            self.deleteParticipants(ids)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        if save_comments is not None:
+            comments = [(key.split('_')[-1], value) for key, value in REQUEST.form.items() if key.startswith('admin_comment_') and value]
+            for comment in comments:
+                self._getOb(comment[0]).admin_comment = comment[1]
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return self._participants(REQUEST)
 
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'getParticipants')
     def getParticipants(self, skey, rkey):
@@ -336,11 +353,10 @@ class CHMRegistration(LocalPropertyManager, Folder):
         return [p for (key, p) in participants]
 
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'deleteParticipants')
-    def deleteParticipants(self, ids=[], REQUEST=None):
+    def deleteParticipants(self, ids):
         """ Deletes selected participants """
         ids = self.utConvertToList(ids)
         self.manage_delObjects(ids)
-        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declarePublic('canManageParticipants')
     def canManageParticipants(self):
