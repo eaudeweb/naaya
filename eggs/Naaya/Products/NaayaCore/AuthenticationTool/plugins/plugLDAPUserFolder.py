@@ -30,6 +30,7 @@ from AccessControl.Permissions import manage_users
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
+from zope.event import notify
 
 try:
     import ldap
@@ -41,6 +42,7 @@ except:
 #Product imports
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.Naaya.NySite import NySite
+from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
 
 from naaya.core.utils import relative_object_path
 
@@ -491,6 +493,8 @@ class LdapSatelliteProvider(Acquisition.Implicit):
                 roles_to_add.append(role)
         assigned_roles += roles_to_add
 
+        notify(NyAddGroupRoleEvent(current_folder, group, roles_to_add))
+
         current_folder._p_changed = True
 
     def remove_group_roles(self, group, roles):
@@ -507,6 +511,8 @@ class LdapSatelliteProvider(Acquisition.Implicit):
                 raise ValueError('Trying to remove non-existent role')
         if not assigned_roles:
             del local_roles[group]
+
+        notify(NyRemoveGroupRoleEvent(current_folder, group, roles))
 
         current_folder._p_changed = True
 

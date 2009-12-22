@@ -56,3 +56,17 @@ class INyDelUserRoleEvent(Interface):
     context = Attribute("Site or folder the roles are deleted for")
     names = Attribute("List of UIDs the roles are deleted for")
 
+class INyAddGroupRoleEvent(Interface):
+    """ LDAP group roles have been added """
+
+    context = Attribute("Site or folder the roles are added for")
+    group = Attribute("Group the roles are set for")
+    roles = Attribute("The list of roles")
+
+class INyRemoveGroupRoleEvent(Interface):
+    """ LDAP group roles have been removed """
+
+    context = Attribute("Site or folder the roles are removed for")
+    group = Attribute("Group the roles are removed for")
+    roles = Attribute("The list of roles")
+

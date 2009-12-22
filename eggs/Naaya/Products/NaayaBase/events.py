@@ -25,6 +25,7 @@ from zope.interface import implements
 #Products
 from interfaces import INyAddLocalRoleEvent, INySetLocalRoleEvent, INyDelLocalRoleEvent
 from interfaces import INyAddUserRoleEvent, INySetUserRoleEvent, INyDelUserRoleEvent
+from interfaces import INyAddGroupRoleEvent, INyRemoveGroupRoleEvent
 
 class NyAddLocalRoleEvent(object):
     """ Local role will be added """
@@ -74,4 +75,21 @@ class NyDelUserRoleEvent(object):
     def __init__(self, context, names):
         super(NyDelUserRoleEvent, self).__init__()
         self.context, self.names = context, names
+
+class NyAddGroupRoleEvent(object):
+    """ Group roles will be added """
+    implements(INyAddGroupRoleEvent)
+
+    def __init__(self, context, group, roles):
+        super(NyAddGroupRoleEvent, self).__init__()
+        self.context, self.group, self.roles = context, group, roles
+
+class NyRemoveGroupRoleEvent(object):
+    """ Group roles will be removed """
+    implements(INyRemoveGroupRoleEvent)
+
+    def __init__(self, context, group, roles):
+        super(NyRemoveGroupRoleEvent, self).__init__()
+        self.context, self.group, self.roles = context, group, roles
+
 

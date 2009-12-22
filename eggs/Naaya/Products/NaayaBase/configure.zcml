@@ -41,4 +41,14 @@
     for=".interfaces.INyDelUserRoleEvent"
     />
 
+  <subscriber
+    handler=".subscribers.handle_add_group_roles"
+    for=".interfaces.INyAddGroupRoleEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handle_remove_group_roles"
+    for=".interfaces.INyRemoveGroupRoleEvent"
+    />
+
 </configure>
