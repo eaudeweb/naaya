@@ -31,6 +31,14 @@
       />
 
   <page
+  	  name="user_rating_stars"
+      for="contentratings.interfaces.IUserRatable"
+      class=".UserRatingView"
+      template="user_rating_stars.pt"
+      permission="contentratings.ViewUserRating"
+      />
+
+  <page
   	  name="user_rating_set"
       for="contentratings.interfaces.IUserRatable"
       class=".UserRatingSetView"
