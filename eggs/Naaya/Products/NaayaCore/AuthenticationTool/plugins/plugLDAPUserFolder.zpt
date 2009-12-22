@@ -10,13 +10,18 @@ function setupWin(url, theWidth, theHeight)
 }
 
 function emptyLocation()
-{    if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
+{
+   if (document.forms['frmUsersRoles'].loc[0].checked == true)
+       document.forms['frmUsersRoles'].location.value = '';
+}
 
 function pickLocation()
-{    document.userRoles.loc[1].checked = true;}
+{
+   document.forms['frmUsersRoles'].loc[1].checked = true;
+}
 
 function createKey(key)
-{    document.userRoles.location.value = key;}
+{    document.forms['frmUsersRoles'].location.value = key;}
 
 var set_roles_target = '';
 function fPickRoles(url, target)
@@ -98,14 +103,17 @@ function toggleSelect()
 		    req_location python:request.get('req_location', '')">
 
 <string tal:replace="python:here.deleteCache(user_folder)" />
-<p>
-	The list below presents the LDAP users that have roles in this portal. You can revoke
-	role(s) assigned to a user by ticking in the appropriate check box and clicking on the
-	<em>Revoke selected roles</em> button.
-</p>
-<fieldset><legend>Users with roles in this portal</legend>
-<form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke">
-<table border="0" cellspacing="2" cellpadding="2" class="datatable">
+<fieldset><legend>LDAP users</legend>
+<tal:block define="users_roles python:here.getSortedUserRoles(skey, rkey)"
+           condition="users_roles">
+    <form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke">
+    <p>
+      The list below presents the LDAP users that have roles in
+      this portal. You can revoke role(s) assigned to a user by ticking in
+      the appropriate check box and clicking on the <em>Revoke selected
+      roles</em> button.
+    </p>
+    <table border="0" cellspacing="2" cellpadding="2" class="datatable">
 	<tr>
 	    <tal:block tal:condition="python:skey=='user'">
 		<th width="10%">
@@ -146,8 +154,7 @@ function toggleSelect()
 	    <th width="35%"><input type="checkbox" name="select_all" onclick="javascript:toggleSelect();" title="Select/Deselect All" /> Roles</th>
 	    <th width="*">Location</th>
 	</tr>
-	<tr tal:define="users_roles python:here.getSortedUserRoles(skey, rkey)"
-		tal:repeat="user python:users_roles"
+	<tr tal:repeat="user python:users_roles"
 		tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
 		<td style="vertical-align: top" tal:content="python:user[0]" />
 		<td style="vertical-align: top" tal:content="python:user[1]" />
@@ -174,14 +181,9 @@ function toggleSelect()
 </table>
 <p><input type="submit" value="Revoke selected roles" /></p>
 </form>
-</fieldset>
-<a name="ldap_user_roles"></a>
-<fieldset><legend>Assign roles to users</legend>
-<p>
-	Select a user from the above list by clicking on its ID or just type its userid in the field below,
-	assign new role(s) to it by marking the intended role(s) you want to grant and choosing
-	the specific location you want to grant them to.
-</p>
+<hr />
+
+</tal:block>
 <p>
 	Use this form to find users from the LDAP directory, view their details and assign them
 	roles in the current portal.
@@ -285,13 +287,51 @@ function toggleSelect()
 </fieldset>
 
 <fieldset>
-<legend i18n:translate="">Grant roles to LDAP groups</legend>
+<legend i18n:translate="">LDAP groups</legend>
 
-    <p i18n:translate="">
-        Type a LDAP group or select one from the list generated when pressing the <em>pick</em> button,
-        then select what role you wish to grant to that group. Roles are granted for the entire portal.
-    </p>
-    <form tal:attributes="action string:${here/absolute_url}/map_group_to_role" method="post">
+   <form method="post"
+          tal:attributes="action string:${here/absolute_url}/revoke_group_role"
+          tal:define="groups_roles_map here/get_groups_roles_map"
+          tal:condition="groups_roles_map">
+        <p i18n:translate="">
+            Roles currently granted for LDAP groups are listed in the table
+            below. To revoke roles, select them and click on the <em>Revoke
+            roles</em> button.
+        </p>
+        <table class="datatable ldap_groups">
+        <thead>
+            <th i18n:translate="">Group</th>
+            <th i18n:translate="">Role</th>
+        </thead>
+        <tbody>
+            <tr tal:repeat="group_id groups_roles_map">
+                <td tal:content="group_id"/>
+                <td><ul>
+                    <li tal:repeat="role_and_location python:groups_roles_map[group_id]">
+                        <label tal:define="role python:role_and_location[0];
+                                           location python:role_and_location[1];">
+                            <input type="checkbox" name="roles:list"
+                                   tal:attributes="value string:${group_id};;${role};;${location/path}"/>
+                            <tal:block content="role"/> at
+                            <a tal:content="location/ob/title_or_id"
+                               tal:attributes="href location/ob/absolute_url"></a>
+                        </label>
+                    </li>
+                </ul></td>
+            </tr>
+        </tbody>
+        </table>
+        <input type="submit" value="Revoke roles" i18n:attributes="value"/>
+    <hr />
+    </form>
+
+   <form name="frmUsersRoles" method="post"
+          tal:attributes="action string:${here/absolute_url}/map_group_to_role">
+        <p i18n:translate="">
+            Type a LDAP group or select one from the list generated
+            when pressing the <em>pick</em> button, then select what
+            role you wish to grant to that group.
+        </p>
         <div class="field">
         <label for="ldap_group" i18n:translate="">LDAP group</label>
         <input type="text" id="ldap_group" name="group"/>
@@ -310,31 +350,21 @@ function toggleSelect()
         </select>
         </div>
 
-        <input type="submit" value="Grant roles" i18n:attributes="value"/>
-    </form>
+        <div class="field">
+            <input type="radio" name="loc" value="allsite" checked="checked"
+                   onclick="emptyLocation();"
+                   i18n:translate=""/> Entire portal<br />
+            <input type=radio name="loc" value="other"
+                   i18n:translate="" /> Pick other...<br />
+            <input type=text name="location" size="40" onclick="pickLocation();" value="" />
+            <input type="button" value="Pick" i18n:translate=""
+                   tal:define="site here/getSite;
+                               acl_users site/getAuthenticationTool;
+                               acl_users_path acl_users/absolute_url"
+                   tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
+        </div>
 
-    <form method="post" tal:attributes="action string:${here/absolute_url}/revoke_group_role" tal:define="groups here/get_mapped_groups" tal:condition="groups">
-        <p i18n:translate="">Roles currently granted for LDAP groups are listed in the table below. To revoke roles, select them and click on the <em>Revoke roles</em> button.</p>
-        <table class="datatable ldap_groups">
-        <thead>
-            <th i18n:translate="">Group</th>
-            <th i18n:translate="">Role</th>
-        </thead>
-        <tbody>
-            <tr tal:repeat="group groups">
-                <td tal:content="group"/>
-                <td><ul>
-                    <li tal:repeat="role python:here.get_group_roles(group)">
-                        <label>
-                            <input type="checkbox" name="roles:list" tal:attributes="value string:${group};;${role}"/>
-                            <span tal:replace="role"/>
-                        </label>
-                    </li>
-                </ul></td>
-            </tr>
-        </tbody>
-        </table>
-        <input type="submit" value="Revoke roles" i18n:attributes="value"/>
+        <input type="submit" value="Grant roles" i18n:attributes="value"/>
     </form>
 </fieldset>
 

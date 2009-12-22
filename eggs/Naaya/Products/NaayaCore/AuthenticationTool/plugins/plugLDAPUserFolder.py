@@ -42,6 +42,8 @@ except:
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.Naaya.NySite import NySite
 
+from naaya.core.utils import relative_object_path
+
 plug_name = 'plugLDAPUserFolder'
 plug_doc = 'Plugin for LDAPUserFolder'
 plug_version = '1.0.0'
@@ -243,33 +245,48 @@ class plugLDAPUserFolder(PlugBase):
     def isList(self, l):
         return isinstance(l, list)
 
-    def get_group_roles(self, group):
-        return self.group_to_roles_mapping.get(group, [])
+    def get_groups_roles_map(self):
+        groups_roles_map = {}
+        def add_roles_from_ob(ob):
+            try:
+                ob_roles = ob.acl_satellite.getAllLocalRoles()
+            except AttributeError:
+                return # looks like we found a broken object
+            for group_id, group_roles in ob_roles.iteritems():
+                all_group_roles = groups_roles_map.setdefault(group_id, [])
+                for role in group_roles:
+                    location = {'ob': ob, 'path': relative_object_path(ob, site)}
+                    all_group_roles.append( (role, location) )
 
-    def get_mapped_groups(self):
-        return self.group_to_roles_mapping.keys()
+        site = self.getSite()
+        add_roles_from_ob(site)
+        for b in site.getCatalogTool()(path='/'):
+            add_roles_from_ob(b.getObject())
+
+        return groups_roles_map
 
     security.declareProtected(manage_users, 'map_group_to_role')
-    def map_group_to_role(self, group, roles, REQUEST=None):
+    def map_group_to_role(self, group, roles=[], loc='', location='', REQUEST=None):
         """ """
-        if not self.__dict__.has_key('group_to_roles_mapping'):
-            setattr(self, 'group_to_roles_mapping', PersistentDict())
-        gm = self.group_to_roles_mapping
-        gm.setdefault(group, []).extend([x for x in roles if x not in gm[group]])
-        gm._p_changed = 1
+
+        if loc == 'allsite':
+            location = ''
+
+        ob = self.getSite().unrestrictedTraverse(location)
+        ob.acl_satellite.add_group_roles(group, roles)
+
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     security.declareProtected(manage_users, 'revoke_group_role')
     def revoke_group_role(self, roles, REQUEST=None):
         """ """
-        gm = self.group_to_roles_mapping
-        for role in roles:
-            g, r = role.split(';')[:2]
-            gm[g] = [x for x in gm[g] if x != r]
-            if not gm[g]:
-                del gm[g]
-            gm._p_changed = 1
+
+        for roledata in roles:
+            group, role, location = roledata.split(';')
+            ob = self.getSite().unrestrictedTraverse(location)
+            ob.acl_satellite.remove_group_roles(group, [role])
+
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
