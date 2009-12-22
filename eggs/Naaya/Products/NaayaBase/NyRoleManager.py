@@ -78,14 +78,14 @@ class NyRoleManager(RoleManager):
 
         attr = '__Naaya_ac_local_roles__'
         annotations = IAnnotations(self)
-        if not annotations.has_key(attr):
+        if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
 
 
     def addLocalRolesInfo(self, userid, roles):
         state = self._getStorage4LocalRolesInfo()
-        if not state.has_key(userid):
+        if userid not in state:
             state[userid] = PersistentList()
 
         current_date = datetime.utcnow()
@@ -118,7 +118,7 @@ class NyRoleManager(RoleManager):
 
     def getLocalRolesInfo(self, userid, default=None):
         state = self._getStorage4LocalRolesInfo()
-        if not state.has_key(userid):
+        if userid not in state:
             return default
         return state[userid]
 
@@ -127,7 +127,7 @@ class NyRoleManager(RoleManager):
 
         # add RoleManager info
         for userid, roles in self.get_local_roles():
-            if not state.has_key(userid):
+            if userid not in state:
                 state[userid] = PersistentList()
 
             unsaved_roles = []
@@ -151,14 +151,14 @@ class NyRoleManager(RoleManager):
 
         attr = '__Naaya_ac_user_roles__'
         annotations = IAnnotations(self)
-        if not annotations.has_key(attr):
+        if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
 
 
     def addUserRolesInfo(self, userid, roles):
         state = self._getStorage4UserRolesInfo()
-        if not state.has_key(userid):
+        if userid not in state:
             state[userid] = PersistentList()
 
         current_date = datetime.utcnow()
@@ -187,12 +187,13 @@ class NyRoleManager(RoleManager):
         state = self._getStorage4UserRolesInfo()
 
         for userid in userids:
-            del state[userid]
+            if userid in state:
+                del state[userid]
 
     def getUserRolesInfo(self, userid, default=None):
         state = self._getStorage4UserRolesInfo()
 
-        if not state.has_key(userid):
+        if userid not in state:
             return default
         return state[userid]
 
@@ -204,7 +205,7 @@ class NyRoleManager(RoleManager):
         for user in auth_tool.getUsers():
             userid = user.name
             roles = user.roles
-            if not state.has_key(userid):
+            if userid not in state:
                 state[userid] = PersistentList()
 
             unsaved_roles = []
@@ -228,14 +229,14 @@ class NyRoleManager(RoleManager):
 
         attr = '__Naaya_ac_ldap_group_roles__'
         annotations = IAnnotations(self)
-        if not annotations.has_key(attr):
+        if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
 
 
     def addLDAPGroupRolesInfo(self, group, roles):
         state = self._getStorage4LDAPGroupRolesInfo()
-        if not state.has_key(group):
+        if group not in state:
             state[group] = PersistentList()
 
         current_date = datetime.utcnow()
@@ -250,19 +251,20 @@ class NyRoleManager(RoleManager):
     def removeLDAPGroupRolesInfo(self, group, roles):
         state = self._getStorage4LDAPGroupRolesInfo()
 
-        for dict in state[group]:
-            for r in roles:
-                if r in dict['roles']:
-                    dict['roles'].remove(r)
-            if dict['roles'] == []:
-                state[group].remove(dict)
-        if state[group] == []:
-            del state[group]
+        if group in state:
+            for dict in state[group]:
+                for r in roles:
+                    if r in dict['roles']:
+                        dict['roles'].remove(r)
+                if dict['roles'] == []:
+                    state[group].remove(dict)
+            if state[group] == []:
+                del state[group]
 
     def getLDAPGroupRolesInfo(self, group, default=None):
         state = self._getStorage4LDAPGroupRolesInfo()
 
-        if not state.has_key(group):
+        if group not in state:
             return default
         return state[group]
 
@@ -273,7 +275,7 @@ class NyRoleManager(RoleManager):
         mapped_roles = self.acl_satellite.getAllLocalRoles()
         for group in mapped_roles:
             roles = mapped_roles[group]
-            if not state.has_key(group):
+            if group not in state:
                 state[group] = PersistentList()
 
             unsaved_roles = []
