@@ -1,0 +1,20 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title"
+    i18n:translate="">
+    Members of LDAP group
+    "<tal:block i18n:name="group_id"
+                content="options/group_id" />"
+</h1>
+
+<metal:block fill-slot="section">
+
+<ul>
+    <li tal:repeat="member options/members">
+        <tal:block content="member/user_name" />
+        <em tal:content="string:(${member/user_id})"></em>
+    </li>
+</ul>
+
+</metal:block>
+</metal:block>

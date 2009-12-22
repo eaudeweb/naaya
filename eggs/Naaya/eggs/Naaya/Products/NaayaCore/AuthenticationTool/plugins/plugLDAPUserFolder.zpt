@@ -305,7 +305,10 @@ function toggleSelect()
         </thead>
         <tbody>
             <tr tal:repeat="group_id groups_roles_map">
-                <td tal:content="group_id"/>
+                <td>
+                    <a tal:attributes="href string:${here/absolute_url}/group_members?group_id=${group_id}"
+                       tal:content="group_id"></a>
+                </td>
                 <td><ul>
                     <li tal:repeat="role_and_location python:groups_roles_map[group_id]">
                         <label tal:define="role python:role_and_location[0];

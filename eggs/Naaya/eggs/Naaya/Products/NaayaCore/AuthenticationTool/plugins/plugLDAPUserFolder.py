@@ -292,7 +292,7 @@ class plugLDAPUserFolder(PlugBase):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def user_in_group(self, user, group):
+    def group_member_ids(self, group):
         if not hasattr(self, '_v_ldap_groups_cache'):
             cache = self._v_ldap_groups_cache = {}
         cache = self._v_ldap_groups_cache
@@ -305,9 +305,13 @@ class plugLDAPUserFolder(PlugBase):
         else:
             result = cache[group]
         if result['size'] > 0:
-            group_users = (x.split(',')[0] for x in result['results'][result['size']-1]['uniqueMember'])
-            return 'uid=%s' % user in group_users
-        return False
+            group_users = [x.split(',')[0].split('=')[1] for x in result['results'][result['size']-1]['uniqueMember']]
+            return group_users
+        else:
+            return []
+
+    def user_in_group(self, user, group):
+        return (str(user) in self.group_member_ids(group))
 
     def getUsersByRole(self, acl_folder, groups=None):
         """ Return all those users that are in a group """
@@ -419,6 +423,30 @@ class plugLDAPUserFolder(PlugBase):
 
     security.declarePublic('pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
+
+    _group_members = PageTemplateFile('ldapGroupMembers', globals())
+    security.declareProtected(manage_users, 'group_members')
+    def group_members(self, REQUEST):
+        """ Show members of a LDAP group """
+        group_id = REQUEST.form['group_id']
+        member_ids = self.group_member_ids(group_id)
+        ldap_user_folder = self.getUserFolder()
+
+        def user_data(user_id):
+            user_ob = ldap_user_folder.getUser(user_id)
+            name = user_ob.getProperty('cn').decode('latin-1')
+            return {
+                'user_id': user_id,
+                'user_name': name,
+                'user_location': self.getUserLocation(user_id),
+            }
+
+        options = {
+            'group_id': group_id,
+            'member_ids': member_ids,
+            'members': map(user_data, member_ids),
+        }
+        return self._group_members(REQUEST, **options)
 
 
 InitializeClass(plugLDAPUserFolder)
