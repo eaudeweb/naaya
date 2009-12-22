@@ -23,6 +23,7 @@
 #Python imports
 
 #Zope imports
+import Acquisition
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import manage_users
@@ -39,6 +40,7 @@ except:
 
 #Product imports
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
+from Products.Naaya.NySite import NySite
 
 plug_name = 'plugLDAPUserFolder'
 plug_doc = 'Plugin for LDAPUserFolder'
@@ -401,3 +403,94 @@ class plugLDAPUserFolder(PlugBase):
 
 
 InitializeClass(plugLDAPUserFolder)
+
+class LdapSatelliteProvider(Acquisition.Implicit):
+    """
+    This class behaves like LDAPUserFolder's LDAPSatellite class, and manages
+    local roles for LDAP groups. It is a singleton that has no state but uses
+    acquisition wrappers to figure out from which folder it was accessed.
+    """
+
+    def getAllLocalRoles(self):
+        current_folder = self.aq_parent
+        return getattr(current_folder, '__ny_ldap_group_roles__', {})
+
+    def user_in_group_factory(self, user):
+        """
+        Returns a function that checks whether `user` is part of the
+        specified group.
+
+          >>> user_in_group = self.user_in_group_factory(user)
+          >>> user_in_group('group1')
+          ... False
+          >>> user_in_group('group2')
+          ... True
+
+        This factory is especially useful in testing, where it gets replaced
+        with a simplified mock factory.
+        """
+        for auth_plugin in self.getSite().getAuthenticationTool().getSources():
+            if auth_plugin.getUserFolder() == user.aq_parent:
+                return lambda group: auth_plugin.user_in_group(user, group)
+        else:
+            return lambda group: False
+
+    def getAdditionalRoles(self, user):
+        roles = set()
+        user_in_group = self.user_in_group_factory(user)
+        mapped_roles = self.getAllLocalRoles()
+        for group in mapped_roles:
+            if user_in_group(group):
+                roles.update(mapped_roles[group])
+
+        current_folder = self.aq_parent
+        next_folder = current_folder.aq_inner.aq_parent
+        next_satellite = getattr(next_folder, 'acl_satellite', None)
+        if next_satellite is not None:
+            roles.update(next_satellite.getAdditionalRoles(user))
+
+        return list(roles)
+
+    def add_group_roles(self, group, roles):
+        assert not isinstance(roles, basestring), "Roles must be a list or tuple, not string"
+        if not roles:
+            return
+
+        current_folder = self.aq_parent
+
+        try:
+            local_roles = current_folder.__ny_ldap_group_roles__
+        except AttributeError:
+            local_roles = current_folder.__ny_ldap_group_roles__ = {}
+
+        if group not in local_roles:
+            assigned_roles = local_roles[group] = []
+        else:
+            assigned_roles = local_roles[group]
+
+        roles_to_add = []
+        for role in roles:
+            if role not in assigned_roles:
+                roles_to_add.append(role)
+        assigned_roles += roles_to_add
+
+        current_folder._p_changed = True
+
+    def remove_group_roles(self, group, roles):
+        assert not isinstance(roles, basestring), "Roles must be a list or tuple, not string"
+
+        current_folder = self.aq_parent
+        local_roles = current_folder.__ny_ldap_group_roles__
+        assigned_roles = local_roles[group]
+
+        for role in roles:
+            if role in assigned_roles:
+                assigned_roles.remove(role)
+            else:
+                raise ValueError('Trying to remove non-existent role')
+        if not assigned_roles:
+            del local_roles[group]
+
+        current_folder._p_changed = True
+
+NySite.acl_satellite = LdapSatelliteProvider()
