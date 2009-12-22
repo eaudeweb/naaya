@@ -32,6 +32,7 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
         self.username = 'testuser'
         self.password = 'testuser_password'
         self.email = 'test@testuser.com'
+        self.groupname= 'testgroup'
 
         self.portal.getAuthenticationTool().manage_addUser(name=self.username,
                 password=self.password, confirm=self.password,
@@ -272,6 +273,94 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
         self.assertTrue(not user_info[1].has_key('user_granting_roles'))
 
         self.browser_do_logout()
+
+
+    # ldap group roles functions tests
+    def test_group_roles_add_remove_raw(self):
+        self.browser_do_login('admin', '')
+
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        self.portal.addLDAPGroupRolesInfo(self.groupname, ['Manager'])
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(len(additional_info) == 1)
+        self.assertTrue(additional_info[0]['roles'] == ['Manager'])
+        self.assertTrue(additional_info[0].has_key('date'))
+        self.assertTrue(additional_info[0]['user_granting_roles'] == 'admin')
+
+        self.portal.removeLDAPGroupRolesInfo(self.groupname, ['Manager'])
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        self.browser_do_logout()
+
+    def test_group_roles_add_remove(self):
+        self.browser_do_login('admin', '')
+        satellite = self.portal.acl_satellite
+
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        satellite.add_group_roles(self.groupname, ['Manager'])
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(len(additional_info) == 1)
+        self.assertTrue(additional_info[0]['roles'] == ['Manager'])
+        self.assertTrue(additional_info[0].has_key('date'))
+        self.assertTrue(additional_info[0]['user_granting_roles'] == 'admin')
+
+        satellite.remove_group_roles(self.groupname, ['Manager'])
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        self.browser_do_logout()
+
+    def test_match_group_roles_data(self):
+        self.browser_do_login('admin', '')
+        satellite = self.portal.acl_satellite
+
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        satellite.add_group_roles(self.groupname, ['Manager'])
+        info = satellite.getAllLocalRoles()[self.groupname]
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        zope_roles = set(info)
+        naaya_roles = self._get_roles_from_additional_info(additional_info)
+        self.assertTrue(len(zope_roles.symmetric_difference(naaya_roles)) == 0)
+
+        satellite.remove_group_roles(self.groupname, ['Manager'])
+        info = satellite.getAllLocalRoles().get(self.groupname, [])
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        zope_roles = set(info)
+        naaya_roles = self._get_roles_from_additional_info(additional_info)
+        self.assertTrue(len(zope_roles.symmetric_difference(naaya_roles)) == 0)
+
+        self.browser_do_logout()
+
+    def test_all_group_roles_info(self):
+        self.browser_do_login('admin', '')
+        satellite = self.portal.acl_satellite
+
+        additional_info = self.portal.getLDAPGroupRolesInfo(self.groupname)
+        self.assertTrue(additional_info is None)
+
+        satellite.add_group_roles(self.groupname, ['Manager'])
+        satellite.add_group_roles(self.groupname, ['Reader'])
+
+        all_info = self.portal.getAllLDAPGroupRolesInfo()
+        self.assertTrue(all_info.has_key(self.groupname))
+        group_info = all_info[self.groupname]
+        self.assertTrue(len(group_info) == 2)
+        self.assertTrue(group_info[0]['roles'] == ['Manager'])
+        self.assertTrue(group_info[0].has_key('date'))
+        self.assertTrue(group_info[0]['user_granting_roles'] == 'admin')
+        self.assertTrue(group_info[1]['roles'] == ['Reader'])
+        self.assertTrue(group_info[1].has_key('date'))
+        self.assertTrue(group_info[1]['user_granting_roles'] == 'admin')
+
+        self.browser_do_logout()
+
 
 def test_suite():
     suite = TestSuite()

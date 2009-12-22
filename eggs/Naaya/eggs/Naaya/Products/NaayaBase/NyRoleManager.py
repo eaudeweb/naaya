@@ -85,6 +85,8 @@ class NyRoleManager(RoleManager):
 
     def addLocalRolesInfo(self, userid, roles):
         state = self._getStorage4LocalRolesInfo()
+        if not state.has_key(userid):
+            state[userid] = PersistentList()
 
         current_date = datetime.utcnow()
         auth_user = self._getAuthenticatedUserUID()
@@ -110,8 +112,6 @@ class NyRoleManager(RoleManager):
     def delLocalRolesInfo(self, userids):
         state = self._getStorage4LocalRolesInfo()
 
-        current_date = datetime.utcnow()
-        auth_user = self._getAuthenticatedUserUID()
         for userid in userids:
             del state[userid]
 
@@ -157,6 +157,8 @@ class NyRoleManager(RoleManager):
 
     def addUserRolesInfo(self, userid, roles):
         state = self._getStorage4UserRolesInfo()
+        if not state.has_key(userid):
+            state[userid] = PersistentList()
 
         current_date = datetime.utcnow()
         auth_user = self._getAuthenticatedUserUID()
@@ -183,8 +185,6 @@ class NyRoleManager(RoleManager):
     def delUserRolesInfo(self, userids):
         state = self._getStorage4UserRolesInfo()
 
-        current_date = datetime.utcnow()
-        auth_user = self._getAuthenticatedUserUID()
         for userid in userids:
             del state[userid]
 
@@ -218,6 +218,75 @@ class NyRoleManager(RoleManager):
             if unsaved_roles != []:
                 unsaved_roles = PersistentList(unsaved_roles)
                 state[userid].append(PersistentDict({'roles': unsaved_roles}))
+
+        return state
+
+    # ldap groups roles additionalInfo
+    def _getStorage4LDAPGroupRolesInfo(self):
+        self._removeOldAttributes()
+
+        attr = '__Naaya_ac_ldap_group_roles__'
+        annotations = IAnnotations(self)
+        if not annotations.has_key(attr):
+            annotations[attr] = PersistentDict()
+        return annotations[attr]
+
+
+    def addLDAPGroupRolesInfo(self, group, roles):
+        state = self._getStorage4LDAPGroupRolesInfo()
+        if not state.has_key(group):
+            state[group] = PersistentList()
+
+        current_date = datetime.utcnow()
+        auth_user = self._getAuthenticatedUserUID()
+        dict = {
+            'roles': PersistentList(roles),
+            'date': current_date,
+            'user_granting_roles': auth_user
+            }
+        state[group].append(PersistentDict(dict))
+
+    def removeLDAPGroupRolesInfo(self, group, roles):
+        state = self._getStorage4LDAPGroupRolesInfo()
+
+        for dict in state[group]:
+            for r in roles:
+                if r in dict['roles']:
+                    dict['roles'].remove(r)
+            if dict['roles'] == []:
+                state[group].remove(dict)
+        if state[group] == []:
+            del state[group]
+
+    def getLDAPGroupRolesInfo(self, group, default=None):
+        state = self._getStorage4LDAPGroupRolesInfo()
+
+        if not state.has_key(group):
+            return default
+        return state[group]
+
+    def getAllLDAPGroupRolesInfo(self):
+        state = self._getStorage4LDAPGroupRolesInfo()
+        auth_tool = self.getAuthenticationTool()
+
+        mapped_roles = self.acl_satellite.getAllLocalRoles()
+        for group in mapped_roles:
+            roles = mapped_roles[group]
+            if not state.has_key(group):
+                state[group] = PersistentList()
+
+            unsaved_roles = []
+            for r in roles:
+                has_role = False
+                for sg in state[group]:
+                    if r in sg['roles']:
+                        has_role = True
+                        break
+                if not has_role:
+                    unsaved_roles.append(r)
+            if unsaved_roles != []:
+                unsaved_roles = PersistentList(unsaved_roles)
+                state[group].append(PersistentDict({'roles': unsaved_roles}))
 
         return state
 

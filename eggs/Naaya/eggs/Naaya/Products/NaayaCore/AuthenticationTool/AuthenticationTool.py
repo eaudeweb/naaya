@@ -876,97 +876,104 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         csv_writer = csv.writer(output)
         csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group(s)', 'Roles', 'Account type'])
 
-        roles_by_location = {}
-        locations = self.getCatalogedObjects(has_local_role=1)
+        local_roles_by_location = {}
+        meta_types = self.get_containers_metatypes()
+        locations = self.getCatalogedObjects(meta_type=meta_types, has_local_role=1)
         locations.append(self.getSite())
         for l in locations:
-            roles_by_location[l.absolute_url(1)] = l.getAllLocalRolesInfo()
+            local_roles_by_location[l.absolute_url(1)] = l.getAllLocalRolesInfo()
+
         user_roles = self.getSite().getAllUserRolesInfo()
 
-        # roles_by_location[location][user] -> roles_by_user[user][location]
+        # local_roles_by_location[location][user] -> roles_by_user[user][location]
         roles_by_user = {}
-        for l, v in roles_by_location.items():
+        for l, v in local_roles_by_location.items():
             for u, data in v.items():
                 if not roles_by_user.has_key(u):
                     roles_by_user[u] = {}
                 roles_by_user[u][l] = data
+
+        # user_roles[user] -> roles_by_user[user][location]
         for u, data in user_roles.items():
             if not roles_by_user.has_key(u):
                 roles_by_user[u] = {}
             roles_by_user[u][self.getSite().absolute_url(1)] = data
 
         # get users sources and objects
-        sources_by_user = {}
+        user_data = {}
         for userid in roles_by_user.keys():
+            user_data[userid] = []
+
             user_ob = self.getUser(userid)
-            if user_ob is None:
-                for source in self.getSources():
-                    source_acl = source.getUserFolder()
-                    user_ob = source_acl.getUser(userid)
-                    if user_ob is not None:
-                        sources_by_user[userid] = source
-                        break
-            else:
-                sources_by_user[userid] = None
+            if user_ob is not None:
+                user_data[userid].append({
+                    'user_object': user_ob,
+                    })
+
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                user_ob = source._get_user_by_uid(userid, source_acl)
+                if user_ob is not None:
+                    user_data[userid].append({
+                        'user_object': user_ob,
+                        'source': source,
+                        })
 
         for userid in roles_by_user.keys():
-            if not sources_by_user.has_key(userid):
-                continue
-            source = sources_by_user[userid]
-            if source is None:
-                user = self.getUser(userid)
-            else:
-                user = source._get_user_by_uid(userid, source.getUserFolder())
-            user_info = roles_by_user[userid]
+            # !!!OBS!!! if no data in user_data the user is not written to csv
+            for data in user_data[userid]:
+                source = data.get('source', None)
+                user = data['user_object']
+                roles_for_user = roles_by_user[userid]
 
-            username = self.utToUtf8(userid)
+                username = self.utToUtf8(userid)
 
-            if source is None:
-                first_name = self.utToUtf8(self.getUserFirstName(user))
-                last_name = self.utToUtf8(self.getUserLastName(user))
-                name = first_name + ' ' + last_name
-            else:
-                name = self.utToUtf8(source._get_user_full_name(user))
+                if source is None:
+                    first_name = self.utToUtf8(self.getUserFirstName(user))
+                    last_name = self.utToUtf8(self.getUserLastName(user))
+                    name = first_name + ' ' + last_name
+                else:
+                    name = self.utToUtf8(source._get_user_full_name(user))
 
-            if source is None:
-                organisation = ''
-            else:
-                organisation = self.utToUtf8(source._get_user_organisation(user))
+                if source is None:
+                    organisation = ''
+                else:
+                    organisation = self.utToUtf8(source._get_user_organisation(user))
 
-            if source is None:
-                postal_address = ''
-            else:
-                postal_address = self.utToUtf8(source._get_user_postal_address(user))
+                if source is None:
+                    postal_address = ''
+                else:
+                    postal_address = self.utToUtf8(source._get_user_postal_address(user))
 
-            if source is None:
-                email = self.utToUtf8(self.getUserEmail(user))
-            else:
-                email = self.utToUtf8(source._get_user_email(user))
+                if source is None:
+                    email = self.utToUtf8(self.getUserEmail(user))
+                else:
+                    email = self.utToUtf8(source._get_user_email(user))
 
-            if source is None:
-                groups = ''
-            else:
-                groups = self.utToUtf8(source.getUserLocation(userid))
+                if source is None:
+                    groups = ''
+                else:
+                    groups = self.utToUtf8(source.getUserLocation(userid))
 
-            roles_info_str_list = []
-            for path, roles_infos in user_info.items():
-                for ri in roles_infos:
-                    roles_info_str = self.makeRolesString(
-                            ri['roles'],
-                            path,
-                            ri.get('date', None),
-                            ri.get('user_granting_roles', None))
-                    if roles_info_str is not None:
-                        roles_info_str_list.append(roles_info_str)
+                roles_info_str_list = []
+                for path, roles_infos in roles_for_user.items():
+                    for ri in roles_infos:
+                        roles_info_str = self.makeRolesString(
+                                ri['roles'],
+                                path,
+                                ri.get('date', None),
+                                ri.get('user_granting_roles', None))
+                        if roles_info_str is not None:
+                            roles_info_str_list.append(roles_info_str)
 
-            roles_str = ' | '.join(roles_info_str_list)
+                roles_str = ' | '.join(roles_info_str_list)
 
-            if source is None:
-                type = 'Local'
-            else:
-                type = 'LDAP (source_id=%s)' % source.id
+                if source is None:
+                    type = 'Local'
+                else:
+                    type = 'LDAP (source_id=%s)' % source.id
 
-            csv_writer.writerow([username, name, organisation, postal_address, email, groups, roles_str, type])
+                csv_writer.writerow([username, name, organisation, postal_address, email, groups, roles_str, type])
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)

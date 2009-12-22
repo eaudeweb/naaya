@@ -35,3 +35,9 @@ def handle_set_user_role(event):
 def handle_del_user_role(event):
     event.context.delUserRolesInfo(event.names)
 
+def handle_add_group_roles(event):
+    event.context.addLDAPGroupRolesInfo(event.group, event.roles)
+
+def handle_remove_group_roles(event):
+    event.context.removeLDAPGroupRolesInfo(event.group, event.roles)
+
