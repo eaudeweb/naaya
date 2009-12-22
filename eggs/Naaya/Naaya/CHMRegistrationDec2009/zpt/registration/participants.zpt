@@ -22,7 +22,19 @@
 
 <p/><p tal:condition="not:participants" i18n:translate="">No partners have registered yet</p>
 
-<form action="deleteParticipants" method="post" tal:condition="participants">
+<form tal:condition="python:here.canManageParticipants()"
+	enctype="multipart/form-data" method="post" action="importParticipants" name="csv_import">
+	<div class="field">
+		<label for="data">Import partners from CSV file:</label>
+		<input type="file" id="data" name="data" /><br />
+		<input type="submit" name="importParticipants" value="Upload data" />
+	</div>
+</form>
+
+<tal:block define="errors python:request.get('errors', None)" condition="errors" content="errors"/>
+<tal:block define="success python:request.get('success', None)" condition="success" content="success"/>
+
+<form action="" method="post" tal:condition="participants">
 <h3 i18n:translate="">Partners list</h3>
 <table class="datatable">
 <thead>
@@ -221,6 +233,12 @@
 				</a>
 			</th>
 		</tal:block>
+
+		<th class="scope-col" scope="col">
+			<span i18n:translate="">
+				Comments
+			</span>
+		</th>
 	</tr>
 </thead>
 <tbody>
@@ -240,6 +258,11 @@
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />
 		</td>
+		<td>
+			<input style="width: 250px;" type="text" size="300"
+				tal:attributes="name string:admin_comment_${participant/id}:utf8:ustring;
+				value participant/admin_comment|nothing" />
+		</td>
 	</tr>
 </tbody>
 </table>
@@ -249,7 +272,8 @@
 		Export partners list
 	</a>
 </p>
-<input type="submit" name="submit" value="Delete selected partners" i18n:attributes="value"/>
+<input type="submit" name="delete_selected" value="Delete selected partners" i18n:attributes="value"/>
+<input type="submit" name="save_comments" value="Save comments" i18n:attributes="value"/>
 </form>
 
 </tal:block>

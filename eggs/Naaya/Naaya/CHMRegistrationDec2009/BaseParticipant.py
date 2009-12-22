@@ -37,7 +37,7 @@ class BaseParticipant(SimpleItem):
                 media_contact_telephone, media_contact_details, program_contact_name,\
                 program_contact_email, program_contact_telephone, vip_contact_name,\
                 vip_contact_email, vip_contact_telephone, activities, disclose_permission,\
-                comments=''):
+                admin_comment=''):
         """ constructor """
         self.id = registration_id
         self.organisation_name = organisation_name
@@ -55,7 +55,7 @@ class BaseParticipant(SimpleItem):
         self.vip_contact_telephone = vip_contact_telephone
         self.disclose_permission = disclose_permission
         self.activities = activities
-        self.comments = comments
+        self.admin_comment = admin_comment
         self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
@@ -64,7 +64,7 @@ class BaseParticipant(SimpleItem):
             media_contact_telephone, media_contact_details, program_contact_name,\
             program_contact_email, program_contact_telephone, vip_contact_name,\
             vip_contact_email, vip_contact_telephone, activities, disclose_permission,\
-            comments):
+            admin_comment):
         """ edit properties """
         self.organisation_name = organisation_name
         self.organisation_address = organisation_address
@@ -81,7 +81,7 @@ class BaseParticipant(SimpleItem):
         self.vip_contact_telephone = vip_contact_telephone
         self.disclose_permission = disclose_permission
         self.activities = activities
-        self.comments = comments
+        self.admin_comment = admin_comment
 
     def getCountry(self, lang):
         """ get country name """
