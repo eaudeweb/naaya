@@ -44,6 +44,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 #local imports
 from Section import addSection
@@ -232,7 +233,8 @@ def addNyTalkBackConsultation(self,
         else:
             raise Exception, '%s' % ', '.join(r)
 
-class NyTalkBackConsultation(NyAttributes,
+class NyTalkBackConsultation(NyRoleManager,
+                             NyAttributes,
                              Implicit,
                              NyProperties,
                              NyContainer,
