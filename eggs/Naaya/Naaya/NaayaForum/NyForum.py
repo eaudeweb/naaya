@@ -35,6 +35,7 @@ from Products.NaayaCore.managers.utils import utils, make_id
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
 from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
@@ -55,7 +56,7 @@ def manage_addNyForum(self, id='', title='', description='', categories='', file
         return self.manage_main(self, REQUEST, update_menu=1)
     REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-class NyForum(NyForumBase, Folder, utils):
+class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     """ """
 
     meta_type = METATYPE_NYFORUM

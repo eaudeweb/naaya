@@ -33,6 +33,7 @@ from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 try:
     from zope.event import notify as zope_notify
@@ -75,7 +76,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
         elif referer in ['topic_add_html', 'addNyForumTopic']:
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
-class NyForumTopic(NyForumBase, Folder):
+class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     """ """
 
     meta_type = METATYPE_NYFORUMTOPIC
