@@ -881,7 +881,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         # get local_roles_by_location[location][user] = list of {roles, date, user_granting_roles}
         local_roles_by_location = {}
-        meta_types = self.get_containers_metatypes()
+        meta_types = ['Naaya Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder',
+                'Naaya Forum', 'Naaya Forum Topic', 'Naaya TalkBack Consultation',
+                'Naaya Survey Questionnaire']
         locations = self.getCatalogedObjects(meta_type=meta_types, has_local_role=1)
         locations.append(self.getSite())
         for l in locations:
