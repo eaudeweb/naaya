@@ -257,7 +257,11 @@ class plugLDAPUserFolder(PlugBase):
             for group_id, group_roles in ob_roles.iteritems():
                 all_group_roles = groups_roles_map.setdefault(group_id, [])
                 for role in group_roles:
-                    location = {'ob': ob, 'path': relative_object_path(ob, site)}
+                    location = {
+                        'ob': ob,
+                        'path': relative_object_path(ob, site),
+                        'is_site': ob == site,
+                    }
                     all_group_roles.append( (role, location) )
 
         site = self.getSite()
