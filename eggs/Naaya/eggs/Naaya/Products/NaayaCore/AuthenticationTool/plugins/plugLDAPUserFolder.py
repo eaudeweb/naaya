@@ -438,11 +438,13 @@ class plugLDAPUserFolder(PlugBase):
 
         def user_data(user_id):
             user_ob = ldap_user_folder.getUser(user_id)
-            name = user_ob.getProperty('cn').decode('latin-1')
+            if user_ob is None:
+                name = "[not found]"
+            else:
+                name = user_ob.getProperty('cn').decode('latin-1')
             return {
                 'user_id': user_id,
                 'user_name': name,
-                'user_location': self.getUserLocation(user_id),
             }
 
         options = {
