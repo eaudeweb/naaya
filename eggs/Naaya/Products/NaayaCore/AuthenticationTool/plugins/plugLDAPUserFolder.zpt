@@ -306,7 +306,8 @@ function toggleSelect()
         <tbody>
             <tr tal:repeat="group_id groups_roles_map">
                 <td>
-                    <a tal:attributes="href string:${here/absolute_url}/group_members?group_id=${group_id}"
+                    <a tal:attributes="href string:${here/absolute_url}/group_members?group_id=${group_id};
+                                       title string:Click to see members of ${group_id}"
                        tal:content="group_id"></a>
                 </td>
                 <td><ul>
@@ -315,16 +316,21 @@ function toggleSelect()
                                            location python:role_and_location[1];">
                             <input type="checkbox" name="roles:list"
                                    tal:attributes="value string:${group_id};;${role};;${location/path}"/>
-                            <tal:block content="role"/> at
-                            <a tal:content="location/ob/title_or_id"
-                               tal:attributes="href location/ob/absolute_url"></a>
+                            <em tal:content="role"></em> on
+                            <a tal:condition="not:location/is_site"
+                               tal:content="location/ob/title_or_id"
+                               tal:attributes="href location/ob/absolute_url"
+                               ></a>
+                            <em tal:condition="location/is_site"
+                                >entire portal</em>
                         </label>
                     </li>
                 </ul></td>
             </tr>
         </tbody>
         </table>
-        <input type="submit" value="Revoke roles" i18n:attributes="value"/>
+        <input type="submit" i18n:attributes="value"
+               value="Revoke selected roles" />
     <hr />
     </form>
 
