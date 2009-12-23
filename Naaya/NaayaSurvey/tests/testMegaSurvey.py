@@ -7,10 +7,11 @@ from DateTime import DateTime
 
 # Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 # Survey imports
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
-from Products.NaayaSurvey.SurveyQuestionnaire import SurveyQuestionnaireException
+from Products.NaayaSurvey.SurveyQuestionnaire import SurveyQuestionnaire, SurveyQuestionnaireException
 from Products.NaayaSurvey.SurveyReport import SurveyReport
 from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
@@ -69,6 +70,11 @@ class MegaSurveyTestCase(NaayaTestCase):
 
         self.survey.expirationdate = DateTime() - 1
         self.assertRaises(SurveyQuestionnaireException, self.survey.addSurveyAnswer, notify_respondent=False)
+
+    def test_NyRoleManager_wrappers(self):
+        self.assertTrue(SurveyQuestionnaire.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
+        self.assertTrue(SurveyQuestionnaire.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
+        self.assertTrue(SurveyQuestionnaire.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
 
 
 def test_suite():
