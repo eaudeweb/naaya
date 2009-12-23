@@ -46,6 +46,7 @@ from Products.NaayaBase.constants import \
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaWidgets.Widget import WidgetError
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
 from SurveyReport import manage_addSurveyReport
@@ -106,7 +107,7 @@ def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=N
         context.setSession('referer', context.absolute_url())
         REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
 
-class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
+class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyContainer):
     """ """
     meta_type = "Naaya Survey Questionnaire"
     meta_label = "Survey Instance"
