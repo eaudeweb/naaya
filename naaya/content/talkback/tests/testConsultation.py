@@ -28,8 +28,9 @@ import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
+from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation, NyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
+from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 
 class ConsultationBasicTestCase(NaayaFunctionalTestCase):
@@ -123,6 +124,11 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_consultation[0].string == 'Test consultation')
 
         self.browser_do_logout()
+
+    def test_NyRoleManager_wrappers(self):
+        self.assertTrue(NyTalkBackConsultation.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
+        self.assertTrue(NyTalkBackConsultation.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
+        self.assertTrue(NyTalkBackConsultation.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
 
 class CommentSubmissionTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
