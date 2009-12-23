@@ -1832,7 +1832,10 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if len(query.strip()):
             #search in each language
             for lang in langs:
-                rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
+                try:
+                    rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
+                except Exception, e:
+                    return (None, None, unicode(e))
             r = self.utEliminateDuplicatesByURL(r)
             res = [k for k in r if k.can_be_seen()]
             batch_obj = batch_utils(self.numberresultsperpage, len(res), start)
@@ -1845,7 +1848,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-        return (paging_informations, res[paging_informations[0]:paging_informations[1]])
+            return (paging_informations, res[paging_informations[0]:paging_informations[1]], None)
+        else:
+            return (None, None, None)
 
     security.declareProtected(view, 'process_profile')
     def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
