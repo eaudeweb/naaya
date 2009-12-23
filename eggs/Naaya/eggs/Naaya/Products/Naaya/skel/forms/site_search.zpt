@@ -24,10 +24,14 @@
 	rkey python:request.get('rkey', '');
 	querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;meta_types=%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), here.utNoneToEmpty(releasedate_range), '&meta_types='.join(meta_types));">
 <div class="searchQuery">
-<span tal:condition="query">
 <tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types, skey, rkey, start);
 	age here/getItemsAge; number_of_results here/getNumberOfResults;
 	list_paging python:results[0]; 
+	records python:results[1];
+	error python:results[2]">
+<span tal:condition="query">
+<tal:block condition="not:error">
+<tal:block define="
 	paging_start python:list_paging[0];
 	paging_upper python:list_paging[1]; 
 	paging_total python:list_paging[2]; 
@@ -36,11 +40,9 @@
 	paging_current_page python:list_paging[5]; 
 	paging_records_page python:list_paging[6];
 	paging_pages python:list_paging[7]; 
-	records python:results[1];
 	sortdata python:({'sortable': 1, 'key': 'meta_type', 'label': 'Type'}, {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'}, {'sortable': 0, 'key': '', 'label': 'Translations in'}, {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},)">
-
+<tal:block condition="python:paging_total!=0">
 <h2 style="padding-left: 0.5em; margin-bottom: 1em;"><strong i18n:translate="">Search Results:</strong></h2>
-<tal:block tal:condition="python:paging_total!=0">
 	<!--<div>
 		<span i18n:translate="" tal:omit-tag="">Age:</span>
 		<span tal:replace="python:here.internal_get_items_age(records, age)"/>
@@ -125,6 +127,7 @@
 	<span style="font-size: 1.2em;"><strong i18n:translate="">No results were found for this query.</strong></span>
 </tal:block>
 </tal:block>
+</tal:block>
 </span>
 
 <div class="searchQueryFilters">
@@ -132,6 +135,7 @@
 	<form method="get" name="frmSearch" action="search_html">
 		<strong i18n:translate="">Enter your search term(s):</strong><br />
 		<input type="text" name="query:utf8:ustring" id="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+		<p class="form-errors" tal:condition="error" tal:content="error" />
 		<div style="margin-top:15px;">
 			<strong><label i18n:translate="">Search items in:</label></strong><br />
 			<tal:block repeat="item here/gl_get_languages_mapping">
@@ -169,6 +173,7 @@
 	</form>
 	
 </div>
+</tal:block>
 
 </div>
 <div class="tooltip">
