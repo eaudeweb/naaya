@@ -45,8 +45,12 @@ class UpdateGeotaggedContent(UpdateScript):
                 continue
             update_zpt(obj, delta_list, self.log)
 
-        header = portal.portal_layout.getCurrentSkin().site_header
-        update_zpt(header, site_header_patches, self.log)
+        try:
+            header = portal.portal_layout.getCurrentSkin().site_header
+            update_zpt(header, site_header_patches, self.log)
+            self.log.debug('Updated site_header')
+        except AttributeError:
+            self.log.debug('Skipped site_header - NotFound')
         return True
 
 
