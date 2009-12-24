@@ -9,10 +9,14 @@
 				rkey python: request.get('rkey', 0);
 				users python:here.utSortObjsListByAttr(user_tool.getUsers(), skey, rkey)">
 
-<a style="float: right" tal:condition="user_tool/showBulkDownloadButton"
-		tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
-	<span i18n:translate="">Bulk download</span>
-</a>
+<div class="floated-buttons">
+	<span class="buttons">
+		<a style="float: right" tal:condition="user_tool/showBulkDownloadButton"
+				tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
+			<span i18n:translate="">Bulk download</span>
+		</a>
+	</span>
+</div>
 
 <div id="tabbedmenu">
 <ul>
