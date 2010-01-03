@@ -267,7 +267,12 @@ class plugLDAPUserFolder(PlugBase):
         site = self.getSite()
         add_roles_from_ob(site)
         for b in site.getCatalogTool()(path='/'):
-            add_roles_from_ob(b.getObject())
+            try:
+                ob = b.getObject()
+            except:
+                pass # broken brain?
+            else:
+                add_roles_from_ob(ob)
 
         return groups_roles_map
 
