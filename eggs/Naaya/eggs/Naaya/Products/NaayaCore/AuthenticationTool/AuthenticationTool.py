@@ -696,11 +696,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return user_obj.roles
 
     security.declarePrivate('get_all_user_roles')
-    def get_all_user_roles(self, uid):
+    def get_all_user_roles(self, user):
         """
         Given a userid, returns all the roles of that user, looking at this
         user folder and any external sources.
         """
+        uid = user.getUserName()
         # check local users
         roles = []
         local_user = self.getUser(uid)
@@ -715,7 +716,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if location == self.getSite().absolute_url(1):
                         roles.extend(role)
             # groups
-            roles.extend(self.get_ldap_group_roles(uid, source))
+            try:
+                roles.extend(source.get_group_roles_in_site(user))
+            except AttributeError:
+                pass # probably not an LDAP plugin
 
         if self.REQUEST is not None:
             auth_user = self.REQUEST['AUTHENTICATED_USER']

@@ -427,6 +427,13 @@ class plugLDAPUserFolder(PlugBase):
             value = value.decode(self.default_encoding)
         return value
 
+    def get_group_roles_in_site(self, user):
+        """
+        The user may have site-level roles because they are part of an
+        LDAP group. If so, return them.
+        """
+        return self.getSite().getAdditionalRoles(user)
+
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
 
