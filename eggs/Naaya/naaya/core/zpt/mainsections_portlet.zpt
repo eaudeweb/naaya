@@ -8,10 +8,15 @@
 <script type="text/javascript">
 // collapse other sections when expanding one;
 var collapse_others = false;
+// expand sections if no value in cookie;
+var default_expanded = true;
 function is_folder_expanded(folderId) {
 	var cookie_val = readCookie('ep_'+folderId);
 
-	return (cookie_val == null || cookie_val == 'expanded');
+	if (cookie_val == null) {
+		return default_expanded;
+	}
+	return cookie_val == 'expanded';
 }
 
 function expand_folder(folderId) {
