@@ -73,7 +73,7 @@ class GroupwareSite(NySite):
                                              '', 'yes')
 
     def get_user_access(self):
-        user = self.REQUEST['AUTHENTICATED_USER'].getUserName()
+        user = self.REQUEST['AUTHENTICATED_USER']
         user_roles = self.getAuthenticationTool().get_all_user_roles(user)
 
         if 'Manager' in user_roles or 'Administrator' in user_roles:
