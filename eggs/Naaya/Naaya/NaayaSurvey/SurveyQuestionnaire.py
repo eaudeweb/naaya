@@ -132,6 +132,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     notify_owner = True
     notify_respondents = 'LET_THEM_CHOOSE_YES'
+    allow_overtime = 0
 
     def __init__(self, id, survey_template, lang=None, **kwargs):
         """
