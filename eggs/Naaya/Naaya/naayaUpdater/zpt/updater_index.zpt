@@ -11,7 +11,7 @@
 <h3>Naaya updater</h3>
 
 
-<ul tal:define="updates here/get_updates">
+<ul tal:define="updates here/update_ids">
     <li tal:repeat="update updates">
         <a tal:attributes="href python:here.get_update_script_url(update)"
              tal:content="python:here.get_update_script_title(update)"/>
