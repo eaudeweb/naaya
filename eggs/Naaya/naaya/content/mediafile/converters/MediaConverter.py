@@ -174,7 +174,8 @@ _is_ffmepg_available = False
 try:
     _check_ffmpeg()
 except MediaConverterError, media_err:
-    logger.exception(media_err)
+    #logger.exception(media_err)
+    logger.warn("ffmpeg2 is not available")
 else:
     _is_ffmepg_available = True
 
@@ -182,7 +183,8 @@ _is_flvtool2_available = False
 try:
     _check_flvtool2()
 except MediaConverterError, media_err:
-    logger.exception(media_err)
+    #logger.exception(media_err)
+    logger.warn("flvtool2 is not available")
 else:
     _is_flvtool2_available = True
 
