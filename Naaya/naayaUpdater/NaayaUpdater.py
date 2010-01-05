@@ -41,6 +41,7 @@ except ImportError:
     from Products.NaayaContent.discover import get_pluggable_content
 
 from Products.naayaUpdater import update_scripts
+from Products.Naaya.interfaces import INySite
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
@@ -90,6 +91,9 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'get_updates') 
     def get_updates(self):
         return NaayaUpdater.update_scripts
+
+    def update_ids(self):
+        return sorted(NaayaUpdater.update_scripts.keys())
 
     security.declareProtected(view_management_screens, 'get_update_script_url')
     def get_update_script_url(self, key):
@@ -244,13 +248,14 @@ class NaayaUpdater(Folder):
         """
         if context is None:
             context = self.getPhysicalRoot()
-        if meta_types is None:
-            meta_types = self.getPortalMetaTypes()
         res = []
-        for portal in context.objectValues(meta_types):
-            res.append(portal)
-            if len(portal.objectValues(meta_types)) > 0:
-                res.extend(self.getPortals(portal, meta_types))
+        for ob in context.objectValues():
+            if not INySite.providedBy(ob):
+                continue
+            if meta_types is not None and ob.meta_type not in meta_types:
+                continue
+            res.append(ob)
+            res.extend(self.getPortals(ob, meta_types))
         return res
 
     security.declareProtected(view_management_screens, 'getPortalMetaTypes')
