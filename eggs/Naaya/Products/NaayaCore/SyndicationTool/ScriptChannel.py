@@ -169,7 +169,7 @@ class ScriptChannel(PythonScript, utils):
         ra('<items>')
         ra('<rdf:Seq>')
         for i in l_items:
-            ra('<rdf:li resource="%s"/>' % i.absolute_url())
+            ra('<rdf:li rdf:resource="%s"/>' % i.absolute_url())
         ra('</rdf:Seq>')
         ra('</items>')
         ra('</channel>')
