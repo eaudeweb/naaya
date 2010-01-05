@@ -13,7 +13,6 @@ Contents:
    site
    pluggable_content
    permissions
-   buildout
    stylesheets
 
 Indices and tables
