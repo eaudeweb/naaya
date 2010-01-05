@@ -41,6 +41,18 @@ There is also a top-level ``[buildout]`` section used by `buildout` itself.
 .. _`buildout configuration`: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/
 .. _README: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/README.txt
 
+
+
+Buildout installes Naaya code and configuration in these locations:
+    * ``src`` - location of Naaya packages
+    * ``products`` - a Products folder, additional products can be placed here
+    * ``parts`` - contains Products folders for each of the products defined
+      in the ``[zope-instance]`` section of ``naaya.cfg``. This folder is
+      volatile, and may be partly or entirely rebuilt when running bin/buildout.
+      Do not expect any changes to this folder to be remembered.
+    * ``extfile.ini`` - this file is copied in INSTANCE_HOME and configures
+      ExtFile to place files in var/files
+
 Manual installation
 -------------------
 

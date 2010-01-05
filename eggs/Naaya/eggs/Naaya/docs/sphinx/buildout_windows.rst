@@ -36,22 +36,14 @@ Prerequisites (software, settings)
 
 Configurations, build
 ---------------------
+By default the buildout comes with configuration files for Naaya (``naaya.cfg``) 
+and CHM (``chm.cfg``). These steps refer to ``naaya.cfg`` but the same can be applied to
+``chm.cfg``.
 
 1. Checkout the Naaya buildout (e.g. into the folder ``D:\Naaya``) from
    https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk
 
-2. If you make Naaya development, checkout Naaya from
-   https://svn.eionet.europa.eu/repositories/Naaya/trunk/eggs/Naaya
-   into a subfolder (e.g. ``D:\Naaya\Naaya210``)
-
-3. Changes to buildout.cfg:
-    * If you make Naaya development you should add the path to the chosen Naaya
-      checkout folder within the section ``[buildout]``, e.g.::
-
-          [buildout]
-          ...
-          develop = 
-              D:\\Naaya\\Naaya210
+2. Changes to ``naaya.cfg``:
 
     * If you wish to install separate products, you should create a Products folder
       and add the path to it within the section ``[zope-instance]``, e.g.::
@@ -62,12 +54,12 @@ Configurations, build
               ...
               D:\\Naaya\\Products
 
-4. Open a command prompt, change to the Naaya buildout checkout folder, and run::
+3. Open a command prompt, change to the Naaya buildout checkout folder, and run::
 
-       python bootstrap.py
-       bin\buildout -v
+       python bootstrap.py -c naaya.cfg
+       bin\buildout -c naaya.cfg -v
 
-5. After installation you can start the Zope instance with::
+4. After installation you can start the Zope instance with::
 
        trunk\bin\zope-instance.exe
 
