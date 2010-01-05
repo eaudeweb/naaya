@@ -1,4 +1,4 @@
-<metal:block use-macro="here/admin_html_template/macros/page">
+<metal:block use-macro="template/parent_template/macros/page">
 <metal:block fill-slot="custom_fields">
 
     <div class="field-inline">

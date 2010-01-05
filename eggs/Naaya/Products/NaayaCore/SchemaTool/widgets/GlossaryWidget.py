@@ -68,7 +68,7 @@ class GlossaryWidget(StringWidget):
 
     template = PageTemplateFile('../zpt/property_widget_glossary', globals())
 
-    admin_html_template = StringWidget.admin_html
     admin_html = PageTemplateFile('../zpt/admin_schema_property_glossary', globals())
+    admin_html.parent_template = StringWidget.admin_html
 
 InitializeClass(GlossaryWidget)
