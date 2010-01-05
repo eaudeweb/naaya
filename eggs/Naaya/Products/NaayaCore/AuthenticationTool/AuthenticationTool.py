@@ -926,28 +926,35 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     group_roles_by_group[g] = {}
                 group_roles_by_group[g][l] = data
 
-        # get groups_by_userids[userid] = list of {source, groups}
-        groups_by_userids = {}
+        # get groups_data[group] = {source, members}
+        groups_data = {}
         for group in group_roles_by_group.keys():
             for source in self.getSources():
                 userids = source.group_member_ids(group)
-                for u in userids:
-                    if not groups_by_userids.has_key(u):
-                        groups_by_userids[u] = []
-                    for gu in groups_by_userids[u]:
-                        if gu['source'] == source:
-                            gu['groups'].append(group)
-                            break
-                    else:
-                        groups_by_userids[u].append({
+                if userids != []:
+                    groups_data[group] = {
                             'source': source,
-                            'groups': [group]
-                            })
+                            'members': userids
+                            }
+                    break
 
+        # get groups_for_user[userid] = list of groups
+        groups_for_user = {}
+        for group, v in groups_data:
+            for userid in v['members']:
+                if userid not in groups_for_user:
+                    groups_for_user[userid] = []
+                groups_for_user[userid].append(group)
+
+        # all_users
+        all_users = []
+        all_users.extend(roles_by_user.keys())
+        all_users.extend(groups_for_user.keys())
+        all_users = list(set(all_users))
 
         # get user_data[userid] = {user_object, source?}
         user_data = {}
-        for userid in roles_by_user.keys():
+        for userid in all_users:
             user_ob = self.getUser(userid)
             if user_ob is not None:
                 user_data[userid] = {
@@ -965,32 +972,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         }
                 continue
 
-        for userid in groups_by_userids.keys():
-            if userid in user_data.keys():
-                continue
-
-            for gu in groups_by_userids[userid]:
-                source = gu['source']
-                groups = gu['groups']
-
-                source_acl = source.getUserFolder()
-                user_ob = source._get_user_by_uid(userid, source_acl)
-                if user_ob is not None:
-                    user_data[userid] = {
-                        'user_object': user_ob,
-                        'source': source,
-                        }
-                    break
-
         for userid in user_data.keys():
             data = user_data[userid]
             source = data.get('source', None)
             user = data['user_object']
 
-            groups = []
-            if userid in groups_by_userids:
-                for gs in groups_by_userids[userid]:
-                    groups.extend(gs['groups'])
+            groups = groups_for_user.get(userid, [])
 
             roles_for_user = roles_by_user.get(userid, {})
 
