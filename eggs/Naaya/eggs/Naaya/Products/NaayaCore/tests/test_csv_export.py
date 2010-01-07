@@ -23,6 +23,7 @@ from StringIO import StringIO
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.content.contact.contact_item import addNyContact
 
 
@@ -73,8 +74,56 @@ class NyCSVExportTest(NaayaTestCase):
         self.assertTrue('Subcontact 1' in export_data)
         self.assertTrue('Subcontact 2' in export_data)
         self.assertEqual(len(export_data.split('\n')), 4)
-        
+
+
+class GeopointExportTest(NaayaTestCase):
+    def afterSetUp(self):
+        addNyFolder(self.portal, 'toexport',
+                    contributor='contributor', submitted=1)
+        schema = self.portal.portal_schemas.NyContact
+        schema.addWidget('test_geo_loc', label="Geo Loc",
+                         widget_type='Geo', data_type='geo')
+        schema.addWidget('test_geo_type', label="Geo Type",
+                         widget_type='GeoType', data_type='str')
+        self.portal.portal_map.addSymbol('sym1', 'Test symbol one',
+                                         '', '', '', '')
+
+    def beforeTearDown(self):
+        nycontact_schema = self.portal['portal_schemas']['NyContact']
+        nycontact_schema.manage_delObjects('test_geo_loc-property')
+        nycontact_schema.manage_delObjects('test_geo_type-property')
+        self.portal.portal_map.deleteSymbol(['sym1'])
+        self.portal.manage_delObjects(['toexport'])
+
+    def test_export_geolocation(self):
+        toexport = self.portal['toexport']
+        addNyContact(toexport, id='contact1', title='Contact 1',
+                     contributor='contributor')
+        toexport['contact1'].test_geo_loc = Geo('13.45', '22.60', 'somewhere')
+
+        csv_output = toexport.csv_export.export(meta_type='Naaya Contact')
+        csv_lines = csv_output.strip().split('\n')
+        self.assertEqual(len(csv_lines), 2) # header line and one object
+        csv_data = dict(zip(*(line.split(',') for line in csv_lines)))
+        self.assertEqual(csv_data['Geo Loc - lat'], '13.45')
+        self.assertEqual(csv_data['Geo Loc - lon'], '22.60')
+        self.assertEqual(csv_data['Geo Loc - address'], 'somewhere')
+
+    def test_export_geotype(self):
+        toexport = self.portal['toexport']
+        addNyContact(toexport, id='contact1', title='Contact 1',
+                     contributor='contributor')
+        toexport['contact1'].test_geo_type = 'sym1'
+
+        csv_output = toexport.csv_export.export(meta_type='Naaya Contact')
+        csv_lines = csv_output.strip().split('\n')
+        self.assertEqual(len(csv_lines), 2) # header line and one object
+        csv_data = dict(zip(*(line.split(',') for line in csv_lines)))
+        self.assertEqual(csv_data['Geo Type'], 'Test symbol one')
+
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyCSVExportTest))
+    suite.addTest(makeSuite(GeopointExportTest))
     return suite
