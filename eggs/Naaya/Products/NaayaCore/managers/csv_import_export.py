@@ -40,7 +40,6 @@ from Products.NaayaCore.events import CSVImportEvent
 #Product imports
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
@@ -211,11 +210,15 @@ class CSVExportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
-    def export(self, meta_type, as_attachment=False, REQUEST=None):
-        """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
-            raise Unauthorized
+    def _dump_objects(self, meta_type):
+        """
+        Returns a tuple. First value is a list of column names; second
+        value is an iterable, which yields one list of string values for
+        each dumped object.
+
+        The column names and object values are conveniently arranged for
+        exporting as a table (e.g. CSV file)
+        """
 
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
@@ -224,18 +227,35 @@ class CSVExportTool(Implicit, Item):
         widgets = schema.listWidgets()
         prop_names = [widget.prop_name() for widget in widgets]
 
-        output = StringIO()
-        csv_writer = csv.writer(output)
-        csv_writer.writerow([widget.title for widget in widgets])
-
         search = self.getSite().getCatalogedObjects
         objects = search(meta_type=[meta_type],
                          path='/'.join(self.aq_parent.getPhysicalPath()))
-        for ob in objects:
-            csv_writer.writerow([
-                unicode(getattr(ob, prop_name)).encode('utf-8')
-                for prop_name in prop_names
-            ])
+
+        def generate_dump_items():
+            for ob in objects:
+                item = [unicode(getattr(ob, prop_name))
+                        for prop_name in prop_names]
+                yield item
+
+        dump_header = [widget.title for widget in widgets]
+        dump_items = generate_dump_items()
+
+        return dump_header, dump_items
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
+    def export(self, meta_type, as_attachment=False, REQUEST=None):
+        """ """
+        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+            raise Unauthorized
+
+        dump_header, dump_items = self._dump_objects(meta_type)
+
+        output = StringIO()
+        csv_writer = csv.writer(output)
+
+        csv_writer.writerow(dump_header)
+        for item in dump_items:
+            csv_writer.writerow([value.encode('utf-8') for value in item])
 
         if as_attachment and REQUEST is not None:
             filename = '%s Export.csv' % meta_type
