@@ -236,8 +236,11 @@ class Widget(Folder, LocalPropertyManager):
         return value
 
     def convert_to_user_string(self, value):
-        """ Convert a database value to a user-readable string """
-        return value
+        """
+        Convert a database value to a user-readable string
+        this method must return a `unicode` value
+        """
+        return unicode(value)
 
     hidden_template = PageTemplateFile('../zpt/property_widget_hidden', globals())
 

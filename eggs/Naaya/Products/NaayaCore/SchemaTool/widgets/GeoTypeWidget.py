@@ -49,6 +49,8 @@ class GeoTypeWidget(Widget):
 
     def convert_from_user_string(self, value):
         """ Convert a user-readable string to a value that can be saved """
+        if value == '':
+            return ''
         geo_map_tool = self.getSite().getGeoMapTool()
         for symbol in geo_map_tool.getSymbolsList():
             if value.strip().lower() == symbol.title.lower():
@@ -57,6 +59,8 @@ class GeoTypeWidget(Widget):
 
     def convert_to_user_string(self, value):
         """ Convert a database value to a user-readable string """
+        if value == '':
+            return u''
         geo_map_tool = self.getSite().getGeoMapTool()
         for symbol in geo_map_tool.getSymbolsList():
             if value == symbol.id:

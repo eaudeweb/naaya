@@ -25,6 +25,7 @@ import csv, codecs, cStringIO
 from StringIO import StringIO
 import urllib
 import simplejson as json
+import operator
 
 #Zope imports
 import transaction
@@ -219,13 +220,43 @@ class CSVExportTool(Implicit, Item):
         The column names and object values are conveniently arranged for
         exporting as a table (e.g. CSV file)
         """
-
         schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
         if schema is None:
             raise ValueError('Schema for meta-type "%s" not found' % meta_type)
 
-        widgets = schema.listWidgets()
-        prop_names = [widget.prop_name() for widget in widgets]
+        def getter_factory(prop_name, subname, convert, default=u''):
+            def getter(ob):
+                try:
+                    ob_property = getattr(ob, prop_name)
+
+                    if subname is None:
+                        value = ob_property
+                    else:
+                        value = getattr(ob_property, subname)
+
+                except AttributeError:
+                    return default
+
+                else:
+                    return convert(value)
+
+            return getter
+
+        prop_getters = []
+        dump_header = []
+        for widget in schema.listWidgets():
+            prop_name = widget.prop_name()
+            if widget.multiple_form_values:
+                for subname in widget.multiple_form_values:
+                    dump_header.append(widget.title + ' - ' + subname)
+                    convert = lambda value: unicode(value)
+                    getter = getter_factory(prop_name, subname, convert)
+                    prop_getters.append(getter)
+            else:
+                dump_header.append(widget.title)
+                convert = widget.convert_to_user_string
+                getter = getter_factory(prop_name, None, convert)
+                prop_getters.append(getter)
 
         search = self.getSite().getCatalogedObjects
         objects = search(meta_type=[meta_type],
@@ -233,11 +264,9 @@ class CSVExportTool(Implicit, Item):
 
         def generate_dump_items():
             for ob in objects:
-                item = [unicode(getattr(ob, prop_name))
-                        for prop_name in prop_names]
+                item = [unicode(get_value(ob)) for get_value in prop_getters]
                 yield item
 
-        dump_header = [widget.title for widget in widgets]
         dump_items = generate_dump_items()
 
         return dump_header, dump_items
@@ -258,7 +287,7 @@ class CSVExportTool(Implicit, Item):
             csv_writer.writerow([value.encode('utf-8') for value in item])
 
         if as_attachment and REQUEST is not None:
-            filename = '%s Export.csv' % meta_type
+            filename = '%s Export.csv' % meta_type
             set_response_attachment(REQUEST.RESPONSE, filename,
                 'text/csv; charset=utf-8', output.len)
         return output.getvalue()
