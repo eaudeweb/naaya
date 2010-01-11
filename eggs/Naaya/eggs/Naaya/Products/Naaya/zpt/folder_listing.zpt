@@ -93,8 +93,11 @@ function toggleSelect() {
 				<tal:block define="
 					del_permission python:folder_info['del_permission'];
 					copy_permission python:folder_info['copy_permission'];
+					edit_permission python:folder_info['edit_permission'];
+					versionable python:folder_info['versionable'];
+					editable python:folder_info['editable'];
 					folder python:folder_info['self'];
-					folder_view python:folder_info['object_view']">
+					">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
@@ -153,7 +156,21 @@ function toggleSelect() {
 						</tal:block>
 					</td>
 
-					<tal:block replace="structure folder_view/version_status_html"/>
+					<td class="checkin" tal:condition="edit_permission">
+						<tal:block condition="not:versionable">n/a</tal:block> 
+						<a tal:condition="python:versionable and editable" tal:attributes="href string:${here/absolute_url}/startVersion">
+							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
+						</a>
+						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+							<img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
+						</a>
+					</td>
+					<td class="edit" tal:condition="edit_permission">
+						<a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+						</a>
+						<tal:block condition="not:editable">n/a</tal:block> 
+					</td>
 
 				</tal:block>
 			</metal:block>
@@ -168,8 +185,11 @@ function toggleSelect() {
 				<tal:block define="
 					del_permission python:object_info['del_permission'];
 					copy_permission python:object_info['copy_permission'];
+					edit_permission python:object_info['edit_permission'];
+					versionable python:object_info['versionable'];
+					editable python:object_info['editable'];
 					object python:object_info['self'];
-					object_view python:object_info['object_view']">
+					">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
@@ -197,7 +217,21 @@ function toggleSelect() {
 						</tal:block>
 					</td>
 
-					<tal:block replace="structure object_view/version_status_html"/>
+					<td class="checkin" tal:condition="edit_permission">
+						<tal:block condition="not:versionable">n/a</tal:block> 
+						<a tal:condition="python:versionable and editable" tal:attributes="href string:${here/absolute_url}/startVersion">
+							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
+						</a>
+						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+							<img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
+						</a>
+					</td>
+					<td class="edit" tal:condition="edit_permission">
+						<a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+						</a>
+						<tal:block condition="not:editable">n/a</tal:block> 
+					</td>
 
 				</tal:block>
 			</metal:block>

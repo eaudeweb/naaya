@@ -32,36 +32,22 @@ from OFS.interfaces import IItem
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
 from naaya.content.base.interfaces import INyContentObject
-from interfaces import IObjectView
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
 from Products.Naaya.interfaces import INySite
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 
-class NyContentTypeViewAdapter(object):
-    adapts(INyContentObject)
-    implements(IObjectView)
-
-    def __init__(self, ob):
-        self.ob = ob
-
-    def version_status_html(self):
-        return self.ob.version_status()
-provideAdapter(NyContentTypeViewAdapter)
-
-class GenericViewAdapter(object):
+class GenericNyContentObjectAdapter(object):
     adapts(IItem)
-    implements(IObjectView)
+    implements(INyContentObject)
 
     def __init__(self, ob):
         self.ob = ob
 
-    def version_status_html(self):
-        editable = self.ob.checkPermissionEditObject()
-        pt = PageTemplateFile('zpt/generic_version_status', globals())
-        return pt.__of__(self.ob)(editable=editable)
-provideAdapter(GenericViewAdapter)
+    def version_status(self):
+        return False, self.ob.checkPermissionEditObject()
+provideAdapter(GenericNyContentObjectAdapter)
 
 class NyFolderBase(Folder, NyPermissions):
     """
@@ -88,13 +74,16 @@ class NyFolderBase(Folder, NyPermissions):
 
         ret = []
         for f in sorted_folders:
+            f_co = INyContentObject(f)
+            versionable, editable = f_co.version_status()
             info = {
                     'del_permission': f.checkPermissionDeleteObject(),
                     'copy_permission': f.checkPermissionCopyObject(),
                     'edit_permission': f.checkPermissionEditObject(),
                     'approved': f.approved,
+                    'versionable': versionable,
+                    'editable': editable,
                     'self': f,
-                    'object_view': IObjectView(f),
                     }
 
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
@@ -108,13 +97,16 @@ class NyFolderBase(Folder, NyPermissions):
 
         ret = []
         for o in sorted_objects:
+            o_co = INyContentObject(o)
+            versionable, editable = o_co.version_status()
             info = {
                     'del_permission': o.checkPermissionDeleteObject(),
                     'copy_permission': o.checkPermissionCopyObject(),
                     'edit_permission': o.checkPermissionEditObject(),
                     'approved': o.approved,
+                    'versionable': versionable,
+                    'editable': editable,
                     'self': o,
-                    'object_view': IObjectView(o),
                     }
 
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:

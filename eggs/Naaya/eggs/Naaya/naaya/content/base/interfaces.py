@@ -6,7 +6,7 @@ class INyContentObject(INyObject):
     """ An instance of a Naaya content type """
 
     def version_status():
-        """ returns html that discribes the versioning status """
+        """ returns tuple (versionable, editable) """
 
 
 class INyContentObjectAddEvent(Interface):
