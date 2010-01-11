@@ -234,7 +234,7 @@ class NyContentType(object):
             self.setSessionInfo(['The administrator will analyze your request and you will be notified about the result shortly.'])
         return REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
 
-    def _version_status(self):
+    def version_status(self):
         # return version status
         if self.checkPermissionEditObject():
             if self.isVersionable():
@@ -254,11 +254,6 @@ class NyContentType(object):
         else:
             return False, False
             #return 'no-permission, not-editable'
-
-    def version_status(self):
-        version, editable = self._version_status()
-        pt = PageTemplateFile('zpt/version_status', globals())
-        return pt.__of__(self)(version=version, editable=editable)
 
     # patch getVersionLocalProperty because some templates still use it
     def getVersionLocalProperty(self, id, lang):
