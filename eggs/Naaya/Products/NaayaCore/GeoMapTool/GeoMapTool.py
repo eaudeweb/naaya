@@ -29,6 +29,8 @@ from datetime import datetime
 import time
 from xml.dom import minidom
 import simplejson as json
+import csv
+from StringIO import StringIO
 
 #Zope imports
 from Globals import InitializeClass
@@ -1307,6 +1309,75 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['prev_end'] = options['start']
         options['records'] = results[options['start']:options['end']]
         return PageTemplateFile('zpt/list_locations',  globals()).__of__(self)(**options)
+
+    security.declareProtected(view, 'export_csv')
+    def export_csv(self, meta_type, REQUEST=None, RESPONSE=None, **kw):
+        """
+        Should be used to export the map viewable objects of a given meta_type
+        The exported properties are taken from schema (similar to the global csv_export)
+        """
+        schema = self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
+        if schema is None:
+            raise ValueError('Schema for meta-type "%s" not found' % meta_type)
+
+        if REQUEST is not None:
+            kw.update(REQUEST.form)
+
+        if 'meta_type' in kw:
+            del kw['meta_type']
+        if 'geo_query' in kw:
+            kw['query'] = kw['geo_query']
+            del kw['geo_query']
+        if 'geo_types' in kw:
+            kw['geo_types'] = kw['geo_types'].split(',')
+
+        results = self.search_geo_objects(meta_types=[meta_type], **kw)
+
+        output = StringIO()
+        csv_writer = csv.writer(output)
+
+        widgets_list = schema.listWidgets()
+
+        header = []
+        for widget in widgets_list:
+            prop_name = widget.prop_name()
+            if widget.multiple_form_values:
+                for subname in widget.multiple_form_values:
+                    header.append(widget.title + ' - ' + subname)
+            else:
+                header.append(widget.title)
+        csv_writer.writerow(header)
+
+        for r in results:
+            row = []
+            for widget in widgets_list:
+                prop_name = widget.prop_name()
+                if widget.multiple_form_values:
+                    for subname in widget.multiple_form_values:
+                        try:
+                            ob_prop = getattr(r, prop_name)
+                            value = getattr(ob_prop, subname)
+                        except AttributeError:
+                            value = ''
+                        row.append(self.utToUtf8(value))
+                else:
+                    try:
+                        value = getattr(r, prop_name)
+                    except AttributeError:
+                        value = ''
+                    row.append(self.utToUtf8(value))
+
+            csv_writer.writerow(row)
+
+        RESPONSE.setHeader('Content-Type', 'text/x-csv')
+        RESPONSE.setHeader('Content-Length', output.len)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="users.csv"')
+
+        ret = output.getvalue()
+
+        return ret
 
     security.declareProtected(view, 'export_geo_rss')
     def export_geo_rss(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
