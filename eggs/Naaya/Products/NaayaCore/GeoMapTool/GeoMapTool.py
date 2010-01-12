@@ -458,7 +458,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return results
 
     security.declareProtected(view, 'search_geo_objects')
-    def search_geo_objects(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
+    def search_geo_objects(self, meta_types=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
             path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
             landscape_type=[], administrative_level=[], languages=None, first_letter=None,
             sort_on='', sort_order=''):
@@ -488,21 +488,21 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lon_min, lon_max = lon_max, lon_min
 
         if float(lon_min) < float(lon_center) < float(lon_max):
-            filters = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
                 query=query, languages=languages, first_letter=first_letter)
 
         else:
-            filters = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
                 query=query, languages=languages, first_letter=first_letter)
 
-            filters2 = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters2 = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
                 query=query, languages=languages, first_letter=first_letter)
@@ -555,7 +555,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return cluster_obs, single_obs
 
     security.declareProtected(view, 'search_geo_clusters')
-    def search_geo_clusters(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None, zoom_level=None,
+    def search_geo_clusters(self, meta_types=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None, zoom_level=None,
             path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
             landscape_type=[], administrative_level=[], languages=None):
         """ Returns all the clusters that match the specified criteria. """
@@ -576,21 +576,21 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lon_min, lon_max = lon_max, lon_min
 
         if float(lon_min) < float(lon_center) < float(lon_max):
-            filters = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
                 query=query, languages=languages)
 
         else:
-            filters = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
                 query=query, languages=languages)
 
-            filters2 = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
+            filters2 = self.build_geo_filters(path=path, meta_types=meta_types,
+                geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
                 query=query, languages=languages)
