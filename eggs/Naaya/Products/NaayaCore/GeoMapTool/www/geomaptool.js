@@ -158,10 +158,14 @@ function update_locations_values(bounds, center, query){
 				else {form.symbols.value = symbols[i].value;}
 			}
 		}
-		var req_link = "?lat_min=" + bounds.lat_min + "&lat_max=" + 
-				bounds.lat_max + "&lon_min=" + bounds.lon_min + "&lon_max=" + 
-				bounds.lon_max + "&lon_center=" + center.lon_center + "&lat_center" + 
-				center.lat_center + "&geo_types=" + form.symbols.value + "&geo_query=" + query;
+		var req_link = "?lat_min=" + bounds.lat_min +
+				"&lat_max=" + bounds.lat_max +
+				"&lon_min=" + bounds.lon_min +
+				"&lon_max=" + bounds.lon_max +
+				"&lon_center=" + center.lon_center +
+				"&lat_center=" + center.lat_center +
+				"&geo_types=" + form.symbols.value +
+				"&geo_query=" + query;
 	
 		var list_locations_link = document.getElementById('view_as_list');
 		list_locations_link.href = "./list_locations" + req_link;
