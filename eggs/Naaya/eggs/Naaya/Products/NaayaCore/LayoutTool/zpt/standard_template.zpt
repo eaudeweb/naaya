@@ -62,10 +62,7 @@
                 <div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == 'Naaya Folder', '', 'background: none')">
                     <metal:block define-slot="standard-page-header">
                         <div id="header">
-                            <div id="language">
-                                <span i18n:translate="">select language:</span>
-                                <span tal:replace="structure here/languages_box"/>
-                            </div>
+                            <tal:block replace="structure here/languages_box"/>
                             <div id="topnav">
                                 <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
                                 <tal:block tal:repeat="item l_list">
