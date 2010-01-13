@@ -39,8 +39,11 @@
 			Displaying
 			<strong id="record_counter"></strong>
 			<span i18n:translate="">location(s).</span>
-			You can also <a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>, <a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>
-			or <a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a>.
+			You can also
+			<a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>,
+			<a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>,
+			<a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a>,
+			or <a href="." id="download_contacts_csv" i18n:translate="">download contacts in csv format</a>.
 		</p>
 		<div id="map" tal:attributes="style string:width: 100%;; height: ${here/map_height}px;;"></div>
 		<br clear="all" style="clear:both"/>

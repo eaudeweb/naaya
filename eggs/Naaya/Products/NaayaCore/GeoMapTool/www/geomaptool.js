@@ -181,6 +181,9 @@ function update_locations_values(bounds, center, query){
 			}
 		}
 		view_ge_link.href = "./downloadLocationsKml?" + req_symbols + "&geo_query=" + query;
+
+		var contacts_csv_link = document.getElementById('download_contacts_csv');
+		contacts_csv_link.href = "./export_csv" + req_link + "&meta_type=Naaya Contact";
 	}
 }
 
