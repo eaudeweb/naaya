@@ -135,7 +135,18 @@ function showMapLocationsHandler(){
 		document.body.style.cursor = "default";
 		noMapRefreshNeeded();
 	}
-	update_locations_values(bounds, center, query);
+	locations_update_notify(bounds, center, query);
+}
+
+var locations_update_observers = [update_locations_values];
+function locations_update_register(func) {
+	locations_update_observers.push(func);
+}
+function locations_update_notify(bounds, center, query) {
+	for (f_i in locations_update_observers) {
+		f = locations_update_observers[f_i];
+		f(bounds, center, query);
+	}
 }
 
 function update_locations_values(bounds, center, query){
