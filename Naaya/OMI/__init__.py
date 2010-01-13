@@ -27,6 +27,21 @@ import Factsheet
 import FactsheetComment
 from constants import *
 
+try:
+    from Products.Naaya import register_content
+    from Products.Naaya.NyFolderBase import NyFolderBase
+except ImportError:
+    pass
+else:
+    register_content(
+        module=FactsheetFolder,
+        klass=FactsheetFolder.FactsheetFolder,
+        module_methods={'manage_addFactsheetFolder_html': ADD_FACTSHEET_FOLDER},
+        klass_methods={},
+        add_method=('manage_addFactsheetFolder_html', ADD_FACTSHEET_FOLDER),
+    )
+    NyFolderBase.manage_addFactsheetFolder = FactsheetFolder.manage_addFactsheetFolder
+
 def initialize(context):
     context.registerClass(
                           FactsheetComment.FactsheetComment,
