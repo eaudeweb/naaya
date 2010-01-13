@@ -50,7 +50,7 @@ class CheckboxWidget(Widget):
         if isinstance(value, bool):
             return value
         elif isinstance(value, int):
-            return str(value)
+            return bool(value)
         else:
             return value
 
