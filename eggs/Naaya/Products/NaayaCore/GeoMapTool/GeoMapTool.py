@@ -1331,51 +1331,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if 'geo_types' in kw:
             kw['geo_types'] = kw['geo_types'].split(',')
 
-        results = self.search_geo_objects(meta_types=[meta_type], **kw)
+        objects = self.search_geo_objects(meta_types=[meta_type], **kw)
 
-        output = StringIO()
-        csv_writer = csv.writer(output)
-
-        widgets_list = schema.listWidgets()
-
-        header = []
-        for widget in widgets_list:
-            prop_name = widget.prop_name()
-            if widget.multiple_form_values:
-                for subname in widget.multiple_form_values:
-                    header.append(widget.title + ' - ' + subname)
-            else:
-                header.append(widget.title)
-        csv_writer.writerow(header)
-
-        for r in results:
-            row = []
-            for widget in widgets_list:
-                prop_name = widget.prop_name()
-                if widget.multiple_form_values:
-                    for subname in widget.multiple_form_values:
-                        try:
-                            ob_prop = getattr(r, prop_name)
-                            value = getattr(ob_prop, subname)
-                        except AttributeError:
-                            value = ''
-                        row.append(self.utToUtf8(value))
-                else:
-                    try:
-                        value = getattr(r, prop_name)
-                    except AttributeError:
-                        value = ''
-                    row.append(self.utToUtf8(value))
-
-            csv_writer.writerow(row)
+        csv_export = self.getSite().csv_export
+        ret = csv_export.generate_csv_output(meta_type, objects)
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
-        RESPONSE.setHeader('Content-Length', output.len)
+        RESPONSE.setHeader('Content-Length', len(ret))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename="map_contacts.csv"')
-
-        ret = output.getvalue()
 
         return ret
 

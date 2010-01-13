@@ -211,7 +211,7 @@ class CSVExportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    def _dump_objects(self, meta_type):
+    def _dump_objects(self, meta_type, objects):
         """
         Returns a tuple. First value is a list of column names; second
         value is an iterable, which yields one list of string values for
@@ -258,9 +258,6 @@ class CSVExportTool(Implicit, Item):
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
 
-        search = self.getSite().getCatalogedObjects
-        objects = search(meta_type=[meta_type],
-                         path='/'.join(self.aq_parent.getPhysicalPath()))
 
         def generate_dump_items():
             for ob in objects:
@@ -271,13 +268,8 @@ class CSVExportTool(Implicit, Item):
 
         return dump_header, dump_items
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
-    def export(self, meta_type, as_attachment=False, REQUEST=None):
-        """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
-            raise Unauthorized
-
-        dump_header, dump_items = self._dump_objects(meta_type)
+    def generate_csv_output(self, meta_type, objects):
+        dump_header, dump_items = self._dump_objects(meta_type, objects)
 
         output = StringIO()
         csv_writer = csv.writer(output)
@@ -286,11 +278,25 @@ class CSVExportTool(Implicit, Item):
         for item in dump_items:
             csv_writer.writerow([value.encode('utf-8') for value in item])
 
+        return output.getvalue()
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
+    def export(self, meta_type, as_attachment=False, REQUEST=None):
+        """ """
+        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+            raise Unauthorized
+
+        search = self.getSite().getCatalogedObjects
+        objects = search(meta_type=[meta_type],
+                         path='/'.join(self.aq_parent.getPhysicalPath()))
+
+        ret = self.generate_csv_output(meta_type, objects)
+
         if as_attachment and REQUEST is not None:
             filename = '%s Export.csv' % meta_type
             set_response_attachment(REQUEST.RESPONSE, filename,
-                'text/csv; charset=utf-8', output.len)
-        return output.getvalue()
+                'text/csv; charset=utf-8', len(ret))
+        return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_json')
     def export_json(self, meta_type=None, pretty=False,
