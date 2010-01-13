@@ -65,6 +65,6 @@ class GeoTypeWidget(Widget):
         for symbol in geo_map_tool.getSymbolsList():
             if value == symbol.id:
                 return symbol.title
-        raise ValueError('Could not convert value %s' % repr(value))
+        return u'ERROR: no symbol with id %s' % repr(value)
 
     template = PageTemplateFile('../zpt/property_widget_geo_type', globals())
