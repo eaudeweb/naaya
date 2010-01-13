@@ -1373,7 +1373,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         RESPONSE.setHeader('Content-Length', output.len)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="users.csv"')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="map_contacts.csv"')
 
         ret = output.getvalue()
 
