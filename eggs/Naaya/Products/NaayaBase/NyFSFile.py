@@ -37,6 +37,8 @@ class NyFSFile(File):
 
     implements(INyFSFile)
 
+    content_type = 'application/octet-stream' # catch-all content type
+
     def __init__(self, id, title, file, content_type='', precondition=''):
         try: id = id()
         except TypeError: pass
