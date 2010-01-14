@@ -3347,9 +3347,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
-            #remove pluggable item's data
-            try: self.getFormsTool().manage_delObjects(copy(pitem['forms']))
-            except: pass
             #remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
             self.searchable_content = [x for x in self.searchable_content if x != meta_type]
