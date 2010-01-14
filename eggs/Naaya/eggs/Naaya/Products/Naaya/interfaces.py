@@ -12,3 +12,7 @@ class IHeartbeat(Interface):
     """ Interface for Heartbeat """
     when = Attribute('when')
 
+class IObjectView(Interface):
+    """  """
+    def version_status():
+        """ returns tuple (versionable, editable) """

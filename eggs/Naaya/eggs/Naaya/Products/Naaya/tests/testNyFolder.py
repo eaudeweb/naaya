@@ -30,8 +30,8 @@ from zope import component
 # Products
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter
 from Products.Naaya.interfaces import IObjectView
+from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter, GenericViewAdapter
 from naaya.content.base.interfaces import INyContentObject
 
 class FolderListingInfo:
