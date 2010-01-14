@@ -12,4 +12,5 @@ def interact(self, REQUEST, RESPONSE):
     import code; code.interact(local={'self': self,
                                       'REQUEST': REQUEST,
                                       'RESPONSE': RESPONSE})
+    print 'closed interactive session, finishing response'
     RESPONSE.write('done.\n')
