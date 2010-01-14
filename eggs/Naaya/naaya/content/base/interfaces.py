@@ -4,10 +4,7 @@ from naaya.core.interfaces import INyObject
 
 class INyContentObject(INyObject):
     """ An instance of a Naaya content type """
-
-    def version_status():
-        """ returns tuple (versionable, editable) """
-
+    pass
 
 class INyContentObjectAddEvent(Interface):
     """ Naaya content object has been created """

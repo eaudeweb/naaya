@@ -158,15 +158,15 @@ function toggleSelect() {
 
 					<td class="checkin" tal:condition="edit_permission">
 						<tal:block condition="not:versionable">n/a</tal:block> 
-						<a tal:condition="python:versionable and editable" tal:attributes="href string:${here/absolute_url}/startVersion">
+						<a tal:condition="python:versionable and editable" tal:attributes="href string:${folder/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
-						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
 							<img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
 						</a>
 					</td>
 					<td class="edit" tal:condition="edit_permission">
-						<a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
@@ -219,15 +219,15 @@ function toggleSelect() {
 
 					<td class="checkin" tal:condition="edit_permission">
 						<tal:block condition="not:versionable">n/a</tal:block> 
-						<a tal:condition="python:versionable and editable" tal:attributes="href string:${here/absolute_url}/startVersion">
+						<a tal:condition="python:versionable and editable" tal:attributes="href string:${object/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
-						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${object/absolute_url}/edit_html">
 							<img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
 						</a>
 					</td>
 					<td class="edit" tal:condition="edit_permission">
-						<a tal:condition="editable" tal:attributes="href string:${here/absolute_url}/edit_html">
+						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 

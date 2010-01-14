@@ -33,21 +33,33 @@ from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION
 from Products.NaayaBase.NyPermissions import NyPermissions
 from naaya.content.base.interfaces import INyContentObject
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
-from Products.Naaya.interfaces import INySite
+from Products.Naaya.interfaces import INySite, IObjectView
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 
-class GenericNyContentObjectAdapter(object):
+class NyContentTypeViewAdapter(object):
+    adapts(INyContentObject)
+    implements(IObjectView)
+
+    def __init__(self, ob):
+        self.ob = ob
+
+    def version_status(self):
+        return self.ob.version_status()
+provideAdapter(NyContentTypeViewAdapter)
+
+class GenericViewAdapter(object):
     adapts(IItem)
-    implements(INyContentObject)
+    implements(IObjectView)
 
     def __init__(self, ob):
         self.ob = ob
 
     def version_status(self):
         return False, self.ob.checkPermissionEditObject()
-provideAdapter(GenericNyContentObjectAdapter)
+provideAdapter(GenericViewAdapter)
+
 
 class NyFolderBase(Folder, NyPermissions):
     """
@@ -74,8 +86,8 @@ class NyFolderBase(Folder, NyPermissions):
 
         ret = []
         for f in sorted_folders:
-            f_co = INyContentObject(f)
-            versionable, editable = f_co.version_status()
+            f_view = IObjectView(f)
+            versionable, editable = f_view.version_status()
             info = {
                     'del_permission': f.checkPermissionDeleteObject(),
                     'copy_permission': f.checkPermissionCopyObject(),
@@ -97,8 +109,8 @@ class NyFolderBase(Folder, NyPermissions):
 
         ret = []
         for o in sorted_objects:
-            o_co = INyContentObject(o)
-            versionable, editable = o_co.version_status()
+            o_view = IObjectView(o)
+            versionable, editable = o_view.version_status()
             info = {
                     'del_permission': o.checkPermissionDeleteObject(),
                     'copy_permission': o.checkPermissionCopyObject(),
