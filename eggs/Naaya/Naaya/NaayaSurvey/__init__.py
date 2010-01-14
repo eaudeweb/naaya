@@ -18,7 +18,7 @@
 # Alin Voinea, Eau de Web
 
 # Zope imports
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 
 # Naaya imports
 from Products.Naaya import register_content

@@ -65,10 +65,10 @@ class MegaSurveyTestCase(NaayaTestCase):
         answer = self.survey.getMyAnswer()
         self.assertEqual(answer, None)
 
-        self.survey.expirationdate = DateTime() + 1
+        self.survey.expirationdate = DateTime() + 5
         self.survey.addSurveyAnswer(notify_respondent=False)
 
-        self.survey.expirationdate = DateTime() - 1
+        self.survey.expirationdate = DateTime() - 5
         self.assertRaises(SurveyQuestionnaireException, self.survey.addSurveyAnswer, notify_respondent=False)
 
     def test_NyRoleManager_wrappers(self):
