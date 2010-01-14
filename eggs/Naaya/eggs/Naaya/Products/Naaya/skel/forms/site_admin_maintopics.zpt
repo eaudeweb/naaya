@@ -5,50 +5,60 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				maintopics here/getMainTopics">
+<script type="text/javascript" src="misc_/Naaya/jquery-ui-1.7.2.full.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('input[type=checkbox][name=ids]').click(function(){
+			if ($('input[type=checkbox][name=ids]:checked').length > 0) {
+				$('#delref_box').show();
+			}
+			else {
+				$('#delref_box').hide();
+			}
+		})
+		$('#delref_box').after('<'+'input type="hidden" value="" id="positions" name="positions"/>');
+		set_positions_value()
+		$('#maintopicslist').sortable({
+			axis: 'y',
+			cursor: 'move',
+			update: set_positions_value
+		})
+		function get_mt_order() {
+			var order = new Array();
+			$('#maintopicslist li').each(function(){
+				order.push($(this).attr('itemID'));
+			});
+			return order;
+		}
+		function get_encoded_mt_order() {
+			var order = get_mt_order();
+			return order.join('|');
+		}
+		function set_positions_value() {
+			$('#positions').attr('value', get_encoded_mt_order());
+		}
+	})
+	function setupWin(url, theWidth, theHeight)
+	{
+		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+		wwinn.focus();
+		return true;
+	}
+
+	function createKey(key)
+	{
+		document.forms['frmEditTopic'].folder_url.value = key;
+	}
+</script>
 <p i18n:translate="">
 	This section allows administrators to manage the main sections.
 	You can set the order by drag and drop the boxes and click <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
 </p>
 
-<script type="text/javascript">
-<!--
-function fSave(action)
-{
-	document.forms['frmDragDrop'].positions.value = junkdrawer.serializeList(document.getElementById('maintopicslist'));
-	document.forms['frmDragDrop'].action=action;
-}
-
-function setupWin(url, theWidth, theHeight)
-{
-    wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-    wwinn.focus();
-    return true;
-}
-
-function createKey(key)
-{
-    document.forms['frmEditTopic'].folder_url.value = key;
-}
-
-function showDelBox(){
-  var ids = document.getElementsByName('ids');
-  var delbox = document.getElementById('delref_box');
-  for(i=0;i<ids.length;i++){
-    if(ids[i].checked){
-        delbox.style.display = 'block';
-        return;
-    }
-  }
-  delbox.style.display = 'none';
-}
-//-->
-</script>
-
 <form name="frmDragDrop" method="post">
 <ul id="maintopicslist" class="boxy">
 	<li tal:repeat="item maintopics" tal:attributes="itemID item/id">
         <input type="checkbox" class="chk" name="ids" 
-               onclick="showDelBox()"
                tal:attributes="value python:item.absolute_url(1)" />
 		<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
 	</li>
@@ -60,14 +70,12 @@ function showDelBox(){
     i18n:translate="">Check this if you want to delete the folder(s) on remove</label>
 </div>
 
-<span tal:replace="structure python:here.DragDropHidden(maintopics)" />
-<input type="submit" value="Save positions" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_ordermaintopics')" />
-<input type="submit" value="Remove" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_deletemaintopics')" />
+<input type="submit" name="../admin_ordermaintopics:method" value="Save positions" i18n:attributes="value"/>
+<input type="submit" name="../admin_deletemaintopics:method" value="Remove" i18n:attributes="value"/>
 </form>
 <p i18n:translate=""><strong i18n:name="tip" i18n:translate="">Tip:</strong> when you delete a main section, the corresponding folder will be just
 	taken out from the main sections' list, not physically deleted.
 </p>
-<span tal:replace="structure python:here.DragDropCore('maintopicslist')" />
 
 <fieldset>
 <legend i18n:translate="">Add new main section</legend>
