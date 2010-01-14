@@ -289,7 +289,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
     def __init__(self, id, contributor):
         """ """
-        self.subobj_meta_type = NyFSContainer.is_ext and "ExtFile" or "File"
         self.id = id
         mediafile_item.__init__(self)
         NyValidation.__dict__['__init__'](self)
@@ -334,7 +333,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """
         Returns the B{SINGLE} media file if exists.
         """
-        l = self.objectValues(self.subobj_meta_type)
+        l = self.objectValues(['ExtFile', 'File'])
         if len(l)>0:
             return l[0]
         else:
@@ -375,8 +374,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         """
         Returns the list of media files, B{File} objects.
         """
-        meta_types = getattr(self, 'subobj_meta_type', None)
-        return self.objectValues(meta_types)
+        return self.objectValues(['ExtFile', 'File'])
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
