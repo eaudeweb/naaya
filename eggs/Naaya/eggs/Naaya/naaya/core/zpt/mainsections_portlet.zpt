@@ -76,7 +76,7 @@ function eraseCookie(name) {
 
 var mainFolderIds = [];
 $(function() {
-	for (var i in mainFolderIds) {
+	for (var i = 0; i < mainFolderIds.length; i++) {
 		var folderId = mainFolderIds[i];
 
 		if (is_folder_expanded(folderId)) {
