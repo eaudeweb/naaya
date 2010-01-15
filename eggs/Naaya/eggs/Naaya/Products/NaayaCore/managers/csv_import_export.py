@@ -243,6 +243,12 @@ class CSVExportTool(Implicit, Item):
 
             return getter
 
+        def simple_convert(value):
+            if value is None:
+                return u''
+            else:
+                return unicode(value)
+
         prop_getters = []
         dump_header = []
         for widget in schema.listWidgets():
@@ -250,8 +256,7 @@ class CSVExportTool(Implicit, Item):
             if widget.multiple_form_values:
                 for subname in widget.multiple_form_values:
                     dump_header.append(widget.title + ' - ' + subname)
-                    convert = lambda value: unicode(value)
-                    getter = getter_factory(prop_name, subname, convert)
+                    getter = getter_factory(prop_name, subname, simple_convert)
                     prop_getters.append(getter)
             else:
                 dump_header.append(widget.title)
