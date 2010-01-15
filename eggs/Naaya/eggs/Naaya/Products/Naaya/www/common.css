@@ -869,23 +869,17 @@ tr.not-duplicate {
 	color: red;
 }
 .tips_box {
-	color: #4e7cb0;
+	float: right;
+	width: 30%;
+	background-color: #EFF5FA;
 }
+
 .tips_box_title {
-	background-color: #fafafa;
+	background-color: #38679E;
 	font-weight: bold;
-	color: #000;
+	color: white;
 	line-height: 2em;
-	text-align: left;
-	padding: 0 1em;
-	border: 1px solid #ddd;
-}
-.tips_box ul {
-	margin: 0; padding: 0;
-	font-size: 1em;
-	padding-left: 1em;
-	list-style-type: none;
-	line-height: 1.4em;
+	text-align: center;
 }
 
 /* pagination items */
