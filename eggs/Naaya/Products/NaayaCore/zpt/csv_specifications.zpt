@@ -1,0 +1,6 @@
+<tal:block i18n:translate="">
+    The CSV file should be UTF-8 encoded, use comma (,) as separator
+    and a double quotation mark (") as a quotecharacter.
+    These conditions are respected by Microsoft Excel
+    on a system with regional settings set to "United Kingdom".
+</tal:block>

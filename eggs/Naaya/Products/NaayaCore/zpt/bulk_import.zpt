@@ -42,6 +42,11 @@
     <div class="field">
         <label for="data" i18n:translate="">Step 3: upload CSV file</label>
         <input type="file" id="data" name="data"/><br />
+    </div>
+
+    <div class="field" tal:content="here/csv_specifications"/>
+
+    <div class="field">
         <input type="submit" name="do_import:method" value="Upload data"/>
     </div>
 </form>
