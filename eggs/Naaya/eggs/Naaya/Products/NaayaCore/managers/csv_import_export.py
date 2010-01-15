@@ -199,6 +199,7 @@ class CSVImportTool(Implicit, Item):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
     index_html = PageTemplateFile('../zpt/bulk_import', globals())
+    csv_specifications = PageTemplateFile('../zpt/csv_specifications', globals())
 
 InitializeClass(CSVImportTool)
 
