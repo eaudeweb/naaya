@@ -16,12 +16,12 @@
 								condition="python:user!='Anonymous User'">
 
 <h1 i18n:translate="">Log out</h1>
-<div class="tips_box" style="float: right; width: 30%; background-color: #FFFFE1;">
-	<div class="tips_box_title" style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
-	<ul>
-		<li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
-		<li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
-	</ul>
+<div class="tips_box" tal:condition="python:user!='Anonymous User'">
+    <div class="tips_box_title" i18n:translate="">Tips</div>
+    <ul>
+        <li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
+        <li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
+    </ul>
 </div>
 
 <div class="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="user" /></em>.</div>
@@ -52,6 +52,15 @@
 
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
 <h1 i18n:translate="">Log in</h1>
+<div class="tips_box" tal:condition="python:user=='Anonymous User'">
+    <div class="tips_box_title" i18n:translate="">Tips</div>
+    <ul>
+        <li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+        <li i18n:translate="">Don't forget to logout or exit your browser when you're done</li>
+        <li i18n:translate="">Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+        <li i18n:translate="">Forgot your password? <a href="feedback_html">Contact the Webmaster</a> and explain the problem</li>
+    </ul>
+</div>
 
 <h2 i18n:translate="">Existing user</h2>
 <form tal:attributes="action action_url" method="post">
@@ -87,16 +96,6 @@
 <h2 i18n:translate="">New user</h2>
 
 <p i18n:translate="">First <a href="requestrole_html">create an account</a> on this server and then return to this page to log in. The newly created user will have no role on this portal, <a href="feedback_html">contact the Webmaster</a> if you need one.</p>
-
-<div class="tips_box">
-	<div class="tips_box_title" i18n:translate="">Tips</div>
-	<ul>
-		<li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
-		<li i18n:translate="">Don't forget to logout or exit your browser when you're done</li>
-		<li i18n:translate="">Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
-		<li i18n:translate="">Forgot your password? <a href="feedback_html">Contact the Webmaster</a> and explain the problem</li>
-	</ul>
-</div>
 
 </tal:block>
 </tal:block>
