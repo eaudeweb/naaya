@@ -153,6 +153,19 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         cfg['theme_advanced_buttons1'] = 'styleselect, ' + cfg['theme_advanced_buttons1']
         cfg['theme_advanced_styles'] = ';'.join(['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
 
+    def _convert_boolean_settings(self, cfg):
+        boolean_settings = ['button_tile_map',
+                'apply_source_formatting',
+                'remove_linebreaks',
+                'relative_urls',
+                'convert_urls',
+                'paste_use_dialog',
+                'theme_advanced_resizing',
+                ]
+        for s in boolean_settings:
+            if s in cfg:
+                cfg[s] = cfg[s].lower() != 'false'
+
     def render(self, element, lang=None, image_support=False, extra_options={}):
         """Return the HTML necessary to run the TinyMCE.
         Parameters:
@@ -190,6 +203,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         cfg.update(extra_options)
 
         self._add_styleselect_to_cfg(cfg)
+        self._convert_boolean_settings(cfg)
 
         return "<script type=\"text/javascript\">\
 $().ready(function() {$('#%s').tinymce(%s);})\
