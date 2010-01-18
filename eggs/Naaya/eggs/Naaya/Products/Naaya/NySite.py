@@ -256,15 +256,23 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.getPropertiesTool().manageMainTopics(['info'])
         self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
 
+    skel_handler_cache = {}
+
     security.declarePrivate('get_skel_handler')
-    def get_skel_handler(self, product_path):
+    def get_skel_handler(self, product_path, enable_cache=True):
+        if enable_cache and product_path in self.skel_handler_cache:
+            return self.skel_handler_cache[product_path]
+
         skel_path = join(product_path, 'skel')
         skel_content = self.futRead(join(skel_path, 'skel.xml'), 'r')
         skel_handler, error = skel_parser().parse(skel_content)
         if error:
             zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, error)
             raise ValueError('error parsing skel.xml')
+
         skel_handler.skel_path = skel_path
+
+        self.skel_handler_cache[product_path] = skel_handler
         return skel_handler
 
     security.declarePrivate('get_all_skel_handlers')
