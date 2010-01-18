@@ -103,7 +103,7 @@ class EditorTool(Folder):
 src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
     % {'parent_url': self.absolute_url()}
 
-    security.declarePublic('styleselect')
+    security.declarePublic('styleselect_text')
     def styleselect_text(self):
         """
         Returns the styles to use inside tinymce
@@ -143,7 +143,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         selectors = re.findall('\\.\w+(?=\s|[,{])', selectors_text)
         selectors = [sel[1:] for sel in selectors]
 
-        css_url = '/'.join(self.getPhysicalPath()) + '/styleselect'
+        css_url = '/'.join(self.getPhysicalPath()) + '/styleselect_text'
 
         old_css = cfg.get('content_css', '')
         cfg['content_css'] = css_url
