@@ -33,6 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from managers.combosync_tool import combosync_tool
 import Skin
+from Style import Style
 
 def manage_addLayoutTool(self, REQUEST=None):
     """ """
@@ -152,6 +153,24 @@ class LayoutTool(Folder, combosync_tool):
 
     def get_standard_template_base(self):
         return self._standard_template
+
+    def getCurrentStyleObjects(self):
+        """
+        Returns all the style objects in the current skin and current scheme
+        """
+        skin = self.getCurrentSkin()
+        scheme = self.getCurrentSkinScheme()
+
+        ret = []
+        for item in skin.objectValues():
+            if isinstance(item, Style):
+                ret.append(item)
+
+        for item in scheme.objectValues():
+            if isinstance(item, Style):
+                ret.append(item)
+
+        return ret
 
 
     #zmi pages

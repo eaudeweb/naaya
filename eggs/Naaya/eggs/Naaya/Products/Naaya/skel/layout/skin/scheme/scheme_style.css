@@ -11,3 +11,13 @@
 	color: #fff;
 	background: url("menunav-a-hover.gif") repeat-x top left;
 }
+/*BEGIN-TINYMCE-STYLESELECT*/
+.infobox {
+	background: #000080;
+	color: #FFFFFF;
+	float: right;
+}
+.mainparagraph {
+	font-weight: bold;
+}
+/*END-TINYMCE-STYLESELECT*/
