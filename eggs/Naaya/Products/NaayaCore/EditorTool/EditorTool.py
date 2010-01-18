@@ -22,6 +22,7 @@ This is a core tool of the Naaya CMF.
 Every portal B{must} have an object of this type inside.
 """
 #Python imports
+import re
 import copy
 from ConfigParser import ConfigParser
 from os.path import join, dirname
@@ -102,6 +103,55 @@ class EditorTool(Folder):
 src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
     % {'parent_url': self.absolute_url()}
 
+    security.declarePublic('styleselect')
+    def styleselect_text(self):
+        """
+        Returns the styles to use inside tinymce
+        Searches the current style objects for the specific format
+        /*BEGIN-TINYMCE-STYLESELECT*/
+        ...
+        selector { style }
+        ...
+        /*END-TINYMCE-STYLESELECT*/
+        """
+        style_objects = self.getLayoutTool().getCurrentStyleObjects()
+        for so in style_objects:
+            text = so()
+            match = re.search('/\\*BEGIN-TINYMCE-STYLESELECT\\*/(.*?)/\\*END-TINYMCE-STYLESELECT\\*/', text, re.S)
+            if match is not None:
+                return match.group(1)
+        return None
+
+    def _add_styleselect_to_cfg(self, cfg):
+        """
+        Adds a style select box to the front of the first row of buttons
+        if it can find the styles file it needs
+        if not it does nothing
+
+        the format for the styles is
+        /*BEGIN-TINYMCE-STYLESELECT*/
+        ...
+        selector { style }
+        ...
+        /*END-TINYMCE-STYLESELECT*/
+        """
+        text = self.styleselect_text()
+        if text is None:
+            return
+
+        selectors_text = re.sub('{(.|\n)*?}', '', text)
+        selectors = re.findall('\\.\w+(?=\s|[,{])', selectors_text)
+        selectors = [sel[1:] for sel in selectors]
+
+        css_url = '/'.join(self.getPhysicalPath()) + '/styleselect'
+
+        old_css = cfg.get('content_css', '')
+        cfg['content_css'] = css_url
+        if old_css != '':
+            cfg['content_css'] += ',' + old_css
+
+        cfg['theme_advanced_buttons1'] = 'styleselect, ' + cfg['theme_advanced_buttons1']
+        cfg['theme_advanced_styles'] = ';'.join(['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
 
     def render(self, element, lang=None, image_support=False, extra_options={}):
         """Return the HTML necessary to run the TinyMCE.
@@ -138,6 +188,9 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
             'site_url': self.getSite().absolute_url(),
         })
         cfg.update(extra_options)
+
+        self._add_styleselect_to_cfg(cfg)
+
         return "<script type=\"text/javascript\">\
 $().ready(function() {$('#%s').tinymce(%s);})\
 </script>" % (element, json.dumps(cfg, indent=2))
