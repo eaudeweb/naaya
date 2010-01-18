@@ -63,6 +63,8 @@ class skin_struct:
         self.title = title
         self.templates = []
         self.schemes = []
+        self.styles = []
+        self.images = []
 
 class template_struct:
     def __init__(self, id, title):

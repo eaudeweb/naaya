@@ -325,11 +325,26 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     if not layouttool_ob._getOb(skin.id, None):
                         layouttool_ob.manage_addSkin(id=skin.id, title=skin.title)
                     skin_ob = layouttool_ob._getOb(skin.id)
+                    if not skin_ob._getOb('images', None):
+                        skin_ob.manage_addFolder(id='images', title='Images common to all schemes contained in this skin.')
+                    images_folder = skin_ob._getOb('images')
                     for template in skin.templates:
                         content = self.futRead(join(skel_path, 'layout', skin.id, '%s.zpt' % template.id), 'r')
                         if not skin_ob._getOb(template.id, None):
                             skin_ob.manage_addTemplate(id=template.id, title=template.title, file='')
                         skin_ob._getOb(template.id).pt_edit(text=content, content_type='')
+                    for style in skin.styles:
+                        content = self.futRead(join(skel_path, 'layout', skin.id, '%s.css' % style.id), 'r')
+                        if skin_ob._getOb(style.id, None):
+                            skin_ob.manage_delObjects([style.id])
+                        skin_ob.manage_addStyle(id=style.id, title=style.title, file=content)
+                    for image in skin.images:
+                        content = self.futRead(join(skel_path, 'layout', skin.id, 'images', image.id), 'rb')
+                        if not images_folder._getOb(image.id, None):
+                            images_folder.manage_addImage(id=image.id, file='', title=image.title)
+                        image_ob = images_folder._getOb(image.id)
+                        image_ob.update_data(data=content)
+                        image_ob._p_changed=1
                     for scheme in skin.schemes:
                         if skin_ob._getOb(scheme.id, None):
                             skin_ob.manage_delObjects([scheme.id])
