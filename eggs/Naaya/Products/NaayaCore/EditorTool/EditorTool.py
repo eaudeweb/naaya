@@ -113,10 +113,24 @@ class EditorTool(Folder):
 src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
     % {'parent_url': self.absolute_url()}
 
-    security.declarePublic('styleselect_text')
-    def styleselect_text(self):
+    security.declarePublic('additional_styles')
+    def additional_styles(self):
         """
-        Returns the styles to use inside tinymce
+        Returns the additional naaya styles to be displayed in tinymce
+        """
+        ret = ''
+
+        # insert other styles here
+
+        styleselect = self._get_styleselect_styles()
+        if styleselect is not None:
+            ret += styleselect
+
+        return ret
+
+    def _get_styleselect_styles(self):
+        """
+        Returns the styles to use for styleselect listing inside tinymce
         Searches the current style objects for the specific format
         /*BEGIN-TINYMCE-STYLESELECT*/
         ...
@@ -145,21 +159,17 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         ...
         /*END-TINYMCE-STYLESELECT*/
         """
-        text = self.styleselect_text()
+        # get the styles
+        text = self._get_styleselect_styles()
         if text is None:
             return
 
+        # find class selectors
         selectors_text = re.sub('{(.|\n)*?}', '', text)
         selectors = re.findall('\\.\w+(?=\s|[,{])', selectors_text)
         selectors = [sel[1:] for sel in selectors]
 
-        css_url = '/'.join(self.getPhysicalPath()) + '/styleselect_text'
-
-        old_css = cfg.get('content_css', '')
-        cfg['content_css'] = css_url
-        if old_css != '':
-            cfg['content_css'] += ',' + old_css
-
+        # add the button and selectors to it
         cfg['theme_advanced_buttons1'] = 'styleselect, ' + cfg['theme_advanced_buttons1']
         cfg['theme_advanced_styles'] = ';'.join(['%s=%s' % (sel.capitalize(), sel) for sel in selectors])
 
@@ -200,6 +210,12 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         cfg.update(extra_options)
 
         self._add_styleselect_to_cfg(cfg)
+
+        css_url = '/'.join(self.getPhysicalPath()) + '/additional_styles'
+        old_css = cfg.get('content_css', '')
+        cfg['content_css'] = css_url
+        if old_css != '':
+            cfg['content_css'] += ',' + old_css
 
         return "<script type=\"text/javascript\">\
 $().ready(function() {$('#%s').tinymce(%s);})\
