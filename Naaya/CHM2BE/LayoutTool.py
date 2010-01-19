@@ -27,21 +27,30 @@ Patch for LayoutTool
 from utils import isCustom
 from Products.NaayaCore.LayoutTool.LayoutTool import LayoutTool
 
-def getContent(self, p_context={}, p_page=None):
-    context = self.REQUEST.PARENTS[0]
+
+def get_skin_files_path(self):
     ftool = self.getFormsTool()
     refferer = self.REQUEST.URL0.split('/')[-1]
     custom_forms = getattr(ftool, 'custom_forms', ())
-    
-    custom_skin = self._getOb(self.getCurrentSkinId())
-    custom_schema = self.getCurrentSkinSchemeId()
-    
+
     if isCustom(refferer, custom_forms):
         custom_skin = getattr(ftool, 'custom_skin', '')
         custom_skin_id, custom_schema = custom_skin.split('.')
         custom_skin = self._getOb(custom_skin_id)
+        return '%s/%s' % (custom_skin.absolute_url(), custom_schema)
+    return '%s/%s' % (self.get_current_skin().absolute_url(), self.getCurrentSkinSchemeId())
 
-    p_context['skin_files_path'] = '%s/%s' % (custom_skin.absolute_url(), custom_schema)
-    return custom_skin._getOb(p_page)(p_context)
+def get_current_skin(self):
+    ftool = self.getFormsTool()
+    refferer = self.REQUEST.URL0.split('/')[-1]
+    custom_forms = getattr(ftool, 'custom_forms', ())
 
-LayoutTool.getContent = getContent
+    if isCustom(refferer, custom_forms):
+        custom_skin = getattr(ftool, 'custom_skin', '')
+        custom_skin_id = custom_skin.split('.')[0]
+        return self._getOb(custom_skin_id)
+    return self._getOb(self.getCurrentSkinId())
+
+
+LayoutTool.get_skin_files_path = get_skin_files_path
+LayoutTool.get_current_skin = get_current_skin
