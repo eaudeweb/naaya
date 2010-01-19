@@ -370,6 +370,7 @@ $().ready(function() {$('#%s').tinymce(%s);})\
     tinymce_naaya \
         = StaticServeFromZip('Naaya', 'www/tinymce_naaya.zip', globals())
     select_image = PageTemplateFile('zpt/select_image', globals())
+    select_image_size = PageTemplateFile('zpt/select_image_size', globals())
     prepare_image = PageTemplateFile('zpt/prepare_image', globals())
     select_link = PageTemplateFile('zpt/select_link', globals())
 

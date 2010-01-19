@@ -90,8 +90,13 @@
 				</div>
 				<div id="browser">
 					<tal:block tal:condition="images" repeat="image images">
-						<a tal:condition="python: src != 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}"><img tal:attributes="src image/absolute_url" class="thumbnail" title="Click to select" /></a>
-						<a tal:condition="python: src == 'album'" tal:attributes="href string:${here/absolute_url}/prepare_image?src=url&url=${image/absolute_url}/view?display=Original"><img tal:condition="python: src == 'album'" tal:attributes="src string:${image/absolute_url}/view?display=XSmall" class="thumbnail" title="Click to select" /></a>
+						<a tal:condition="python: src != 'album'" tal:attributes="href string:${here/absolute_url}/select_image_size?src=url&image_url=${image/absolute_url}">
+							<img tal:attributes="src image/absolute_url" class="thumbnail" title="Click to select" />
+						</a>
+						<a tal:condition="python: src == 'album'"
+								tal:attributes="href string:${here/absolute_url}/select_image_size?src=url&title=${image/title} ${image/author} ${image/source}&image_url=${image/absolute_url}">
+							<img tal:condition="python: src == 'album'" tal:attributes="src string:${image/absolute_url}/view?display=XSmall" class="thumbnail" title="Click to select" />
+						</a>
 					</tal:block>
 					<p tal:condition="not:images" i18n:translate="">No images available in this repository</p>
                     <div class="cleaner"></div>
