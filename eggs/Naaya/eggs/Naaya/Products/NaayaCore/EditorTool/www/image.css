@@ -90,3 +90,47 @@ input {width: 280px;}
 	margin-top: 1em;
 	padding: 0.5em 1em;
 }
+
+
+/* for select image size */
+.g-boxes {
+  float: left;
+  width: 20em;
+}
+
+.g-box {
+  margin-top: 0.5em;
+  border-color: #DEDEDE;
+  border-style: none solid solid;
+  border-width: 1px;
+}
+
+.g-box a{
+  text-decoration: none;
+}
+
+.g-box .title {
+  border-bottom: 1px solid #DEDEDE;
+  border-top: 1px solid #DEDEDE;
+  background: #d5dde1;
+  font-size: 120%;
+  font-weight: bold;
+  padding: 0.5em;
+}
+
+.g-box .body {
+  margin: 0.5em 0;
+}
+
+* html .g-box .body dd {
+  margin-left: 0.1em;
+}
+
+.g-image-holder {
+	text-align: center;
+	vertical-align: middle;
+	display:block;
+	margin-left: auto;
+	margin-right: auto;
+}
+

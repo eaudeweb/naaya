@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<tal:block define="
+	image_url python:request.get('image_url');
+	display python:request.get('display', 'Medium');
+	photo_link string:${image_url}/view?display=${display};
+	title python:request.get('title', '');
+" >
+<html>
+	<head>
+		<title>Select image size</title>
+		<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/image_css" />
+	</head>
+	<body>
+		<div class="g-boxes">
+			<div class="g-box">
+				<div class="title">
+					<span i18n:translate="">View image</span>
+				</div>
+				<div class="body">
+					<dl class="photo_links">
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XSmall&title=${title}&image_url=${image_url}">Very small</a> (200px)
+						</dd>
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Small&title=${title}&image_url=${image_url}">Small</a> (320px)
+						</dd>
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Medium&title=${title}&image_url=${image_url}">Medium</a> (480px)
+						</dd>
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Large&title=${title}&image_url=${image_url}">Large</a> (768px)
+						</dd>
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=XLarge&title=${title}&image_url=${image_url}">Very large</a> (1024px)
+						</dd>
+						<dd>
+							<a tal:attributes="href string:${here/absolute_url}/select_image_size?display=Original&title=${title}&image_url=${image_url}">Original</a>
+						</dd>
+					</dl>
+				</div>
+			</div>
+
+			<input id="insert" type="button" value="Save size" tal:attributes="onclick string:location.href='${here/absolute_url}/prepare_image?src=url&title=${title}&url=${photo_link}'"/>
+		</div>
+
+		<div class="g-image-holder">
+			<img tal:attributes="src photo_link;"/>
+		</div>
+
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
+	</body>
+</html>
+</tal:block>
