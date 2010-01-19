@@ -26,6 +26,7 @@ INTERVALS = [
 
 en = locales.getLocale('en')
 formatter = en.numbers.getFormatter('decimal')
+formatter.setPattern('#,##0;-#,##0')
 
 def manage_addAnalyticsTool(self, REQUEST=None):
     """ """
@@ -79,16 +80,19 @@ class AnalyticsTool(SimpleItem, utils):
 
     _admin_account_zpt = NaayaPageTemplateFile('zpt/account', globals(), 'site_admin_account')
     _admin_verify = NaayaPageTemplateFile('zpt/verify', globals(), 'site_admin_verify')
-    _admin_stats = NaayaPageTemplateFile('zpt/stats', globals(), 'site_admin_stats')
+    _stats_info = NaayaPageTemplateFile('zpt/stats_info', globals(), 'site_admin_stats_info')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_stats')
-    def admin_stats(self, REQUEST):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'stats_info')
+    admin_stats = NaayaPageTemplateFile('zpt/stats', globals(), 'site_admin_stats')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'stats_info')
+    def stats_info(self):
         """ """
         view_name = 'stats'
         cached_data = self.get_cache(view_name=view_name)
         if cached_data is None:
             # no data in the cache, so cache it
-            data_to_cache = self._admin_stats(REQUEST)
+            data_to_cache = self._stats_info(self.REQUEST)
             self.set_cache(data_to_cache, view_name=view_name)
             return data_to_cache
         # get cached data
