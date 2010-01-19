@@ -48,7 +48,8 @@ class AddStatisticsTool(UpdateScript):
     security.declarePrivate('_update')
     def _update(self, portal):
         try:
-            portal.getAnalyticsTool()
+            tool = portal.getAnalyticsTool()
+            tool.clear_cache()
             self.log.debug('Portal statistics already exists in this portal')
         except:
             manage_addAnalyticsTool(portal)
