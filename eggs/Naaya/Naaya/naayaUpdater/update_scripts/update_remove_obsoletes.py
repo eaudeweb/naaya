@@ -19,6 +19,7 @@
 
 
 #Python imports
+import traceback
 
 #Zope imports
 from DateTime import DateTime
@@ -88,7 +89,7 @@ class UpdateRemoveObsoletes(UpdateScript):
             broken_objects = {}
             for path in REQUEST.form.get("broken", []):
                 path = path.split('/')
-                portal_path, bid = ''.join(path[:-1]), path[-1]
+                portal_path, bid = '/'.join(path[:-1]), path[-1]
                 broken_objects.setdefault(portal_path, []).append(bid)
 
             obsoletes = {}
