@@ -3,6 +3,7 @@
 	global document_url request/document|nothing;
 	global document python:here.getEnclosingDocument(request);
 	global req_album request/album|nothing;
+	global req_query request/query|nothing;
 " />
 <html>
 	<head>
@@ -65,7 +66,9 @@
 				</div>
 			</div>
 			<div id="browse_panel" class="panel current">
-				<tal:block define="src python:request.get('src', test(here.isImageContainer(document), 'document', 'website')); images python:here.enumerateImages(src, request);">
+				<tal:block define="
+					src python:request.get('src', test(here.isImageContainer(document), 'document', 'website'));
+					images python:here.enumerateImages(src, req_query, request);">
 				<p i18n:translate="">
 					Pick an image from one of the available repositories below:
 				</p>
@@ -87,6 +90,17 @@
 						</tal:block>
 					</ul>
 					<br clear="all" style="clear: both;" />
+					<br/>
+					<br/>
+					<div style="margin: 0;" tal:condition="python: src == 'album'">
+						<div>
+							<input id="query" name="query" type="text" tal:attributes="value req_query"/>
+						</div>
+						<br/>
+						<div>
+							<input id="insert" type="button" value="Search images" tal:attributes="onclick python:'filter_images(\'%s\', \'%s\', \'%s\')' % (here.absolute_url(), document_url, req_album)"/>
+						</div>
+					</div>
 				</div>
 				<div id="browser">
 					<tal:block tal:condition="images" repeat="image images">

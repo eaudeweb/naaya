@@ -254,7 +254,7 @@ $().ready(function() {$('#%s').tinymce(%s);})\
             print 'no image to upload'
 
 
-    def enumerateImages(self, source, REQUEST=None):
+    def enumerateImages(self, source, query=None, REQUEST=None):
         """ Retrieve the list of images depending on the source.
         Return a list of ``Image`` objects
         """
@@ -268,8 +268,16 @@ $().ready(function() {$('#%s').tinymce(%s);})\
             ret = site.imageContainer.getImages()
         if source == 'album':
             album_url = REQUEST.form['album']
-            album = self.restrictedTraverse(album_url)
-            ret = album.getObjects()
+            if query is None:
+                album = self.restrictedTraverse(album_url)
+                ret = album.getObjects()
+            else:
+                ctool = self.getCatalogTool()
+                filter_index = 'objectkeywords_' + self.gl_get_selected_language()
+                ret_brains = ctool.search({'path': album_url,
+                    'meta_type': 'Naaya Photo',
+                    filter_index: query})
+                ret = [x.getObject() for x in ret_brains]
         return ret
 
 
