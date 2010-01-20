@@ -201,3 +201,8 @@ function ImagePreparer() {
 		tinyMCEPopup.close();
 	}
 }
+
+function filter_images(absolute_url, document_url, album_url) {
+	var query = $("#query").val();
+	location.href=absolute_url+'/select_image?document='+document_url+'&src=album&query='+query+'&album='+album_url;
+}
