@@ -98,15 +98,16 @@ class UpdateScript(Item, Acquisition.Implicit):
     security.declarePrivate('_save_log')
     def _save_log(self, data, portal):
         logs_folder = getattr(self, LOGS_FOLDERNAME)
+        portal_path = '_'.join(portal.getPhysicalPath())
 
-        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, str(portal.getId()))
+        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, portal_path)
 
         begin_transaction()
         transaction = get_transaction()
         logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
         ob = logs_folder._getOb(log_filename)
         ob.manage_upload(data, 'text/plain')
-        transaction.note('Saved log file for update "%s" on portal "%s"' % (self.id, portal.title_or_id()))
+        transaction.note('Saved log file for update "%s" on portal "%s"' % (self.id, portal_path))
         transaction.commit()
 
     security.declareProtected(view_management_screens, 'update')
