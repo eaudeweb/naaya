@@ -48,6 +48,7 @@ class UpdateCSS(UpdateScript):
     id = 'update_list_custom_objects'
     title = 'List custom objects'
     authors = ['Alex Morega']
+    description = "Shows objects that have been customized (at the moment, just folders with custom indexes)"
     creation_date = DateTime('Nov 26, 2009')
 
     def _update(self, portal):
