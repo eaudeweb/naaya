@@ -91,9 +91,13 @@
           </div>
 
           <!-- Embed -->
+          <!-- The value of videoEmbed should remain on multiple lines otherwhise IE8 will not display it properly in editor tool -->
           <input id="videoEmbed" name="videoEmbed" type="text" style="width: 500px;" readonly="true" onclick="javascript:this.select();"
-            tal:attributes='value string:<!-- Embed video - copy & paste --><script type="text/javascript" src="$flowplayer_js"></script><script type="text/javascript" src="$flowconfig_js"></script><div id="miniplayer" style="width:280px;;height:210px"> </div><script type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url", "miniplayer", "$flvpath", "$subtitle")})</script>'/>
-
+            tal:attributes='value string:<!-- Embed video - copy & paste -->
+              <script type="text/javascript" src="$flowplayer_js"></script>
+              <script type="text/javascript" src="$flowconfig_js"></script>
+              <div id="miniplayer" style="width:280px;;height:210px"></div>
+              <script type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url", "miniplayer", "$flvpath", "$subtitle")})</script>'/>
           <!-- Download -->
           <div>
             <a tal:attributes="href flvpath">
