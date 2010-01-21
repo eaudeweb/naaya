@@ -106,6 +106,7 @@ class EditorTool(Folder):
     def includeLibs(self, lang=None):
         """ Returns HTML code that includes required JavaScript libraries.
         Parameters:
+
             `lang` 
                 **Not used**
         """
@@ -176,6 +177,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
     def render(self, element, lang=None, image_support=False, extra_options={}):
         """Return the HTML necessary to run the TinyMCE.
         Parameters:
+
             `element` 
                 `id` of HTML element that editor will is attached to.
             `lang` 
@@ -295,8 +297,10 @@ $().ready(function() {$('#%s').tinymce(%s);})\
         """
         Return the enclosing document where this editor tool 
         instance is located.
-        `REQUEST` 
-            Http request that **must** contain the 'document' parameter
+
+            `REQUEST` 
+                Http request that **must** contain the 'document' parameter
+
         Return enclosing document object
         """
         if REQUEST.form.has_key('document'):
@@ -345,6 +349,7 @@ $().ready(function() {$('#%s').tinymce(%s);})\
     def get_request_param(self, REQUEST, name, default=''):
         """ Safely retrieve an parameter from request
         Parameters:
+
             `REQUEST`
                 Http request
             `name`
@@ -352,6 +357,7 @@ $().ready(function() {$('#%s').tinymce(%s);})\
             `default`
                 Default value to return if parameter not found. If not specified
                 is empty string.
+
         Return the parameter or default if none found. 
         """
         if self.REQUEST.has_key(name):
@@ -363,8 +369,10 @@ $().ready(function() {$('#%s').tinymce(%s);})\
         """ Verifies document if is image container or inherits the 
         imageContainer of NySite.
         Parameters:
+
             `document` 
                 Document to be checked.
+
         Return ``true`` if document has its own instance of `imageContainer`
         """
         return self.getSite().imageContainer != document.imageContainer

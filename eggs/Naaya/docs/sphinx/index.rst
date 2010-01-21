@@ -8,6 +8,7 @@ Contents:
 
    installation
    authentication_tool
+   editor_tool
    notification_tool
    portlets
    site
