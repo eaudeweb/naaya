@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
   <include package="Products.NaayaCore.NotificationTool" />
+  <include package="Products.NaayaCore.PortletsTool" />
   <include package="Products.NaayaCore.GoogleDataTool" />
 </configure>
