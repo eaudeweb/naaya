@@ -49,7 +49,7 @@ class UpdateMainSections(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        self.update_portlet(portal, 'portlet_mainsections')
+        self.update_portlet(portal, 'portlet_maincategories')
         self.update_images(portal, ['ep_expand.gif', 'ep_collapse.gif'])
         return True
 
