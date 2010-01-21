@@ -11,4 +11,9 @@
     <implements interface="naaya.core.interfaces.INyObjectContainer" />
   </class>
 
+  <subscriber
+    handler=".subscribers.update_maintopics_after_move"
+    for="naaya.content.base.interfaces.INyContentObjectMovedEvent"
+    />
+
 </configure>
