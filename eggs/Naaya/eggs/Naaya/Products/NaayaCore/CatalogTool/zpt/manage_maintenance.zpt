@@ -49,4 +49,14 @@
 </ul>
 </tal:block>
 
+<tal:block define="ok_list options/report/ok|nothing" condition="ok_list">
+<h3>OK (<tal:block content="python:len(ok_list)" />)</h3>
+<ul>
+    <li tal:repeat="ob ok_list">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</tal:block>
+
 <tal:block content="structure here/manage_page_footer" />

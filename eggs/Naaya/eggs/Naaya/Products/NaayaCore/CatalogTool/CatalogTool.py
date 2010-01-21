@@ -53,7 +53,11 @@ def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
     ZMI method that creates an object of this type.
     """
-    if languages is None: languages = []
+    if languages is None:
+        try:
+            languages = self.getSite().get_available_languages()
+        except:
+            languages = []
     ob = CatalogTool(ID_CATALOGTOOL, TITLE_CATALOGTOOL)
     self._setObject(ID_CATALOGTOOL, ob)
     self._getOb(ID_CATALOGTOOL).loadDefaultData(languages)
@@ -241,18 +245,26 @@ class CatalogTool(ZCatalog, utils):
             cataloged_paths = set()
             broken_paths = set()
             for brain in self():
-                ob = brain.getObject()
+                try:
+                    ob = brain.getObject()
+                except:
+                    broken_paths.add(brain.getPath())
+                    continue
+
                 if ob.meta_type == 'Broken Because Product is Gone':
                     broken_paths.add(brain.getPath())
-                else:
-                    cataloged_paths.add(ob_path(ob))
+                    continue
+
+                cataloged_paths.add(ob_path(ob))
 
             missing_paths = found_paths - cataloged_paths
             extra_paths = cataloged_paths - found_paths
+            ok_paths = found_paths.intersection(cataloged_paths)
             return {
                 'missing': set(path_ob(ob) for ob in missing_paths),
                 'extra': set(path_ob(ob) for ob in extra_paths),
                 'broken': broken_paths,
+                'ok': set(path_ob(ob) for ob in ok_paths),
             }
 
         options = {}
