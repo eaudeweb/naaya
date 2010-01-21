@@ -3,5 +3,7 @@
   <utility provides=".meta.INaayaContent"
     factory=".meta.NaayaContent" />
 
+  <subscriber handler=".events.notify_content_object_moved" />
+
 </configure>
 

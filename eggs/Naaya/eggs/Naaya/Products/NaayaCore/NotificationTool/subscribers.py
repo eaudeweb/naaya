@@ -1,6 +1,5 @@
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
-
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 
 def handle_object_add(event):
@@ -37,3 +36,16 @@ def handle_csv_import(event):
     mail_body = mail_data['body_text']
 
     portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from, mail_subject)
+
+def update_subscriptions_after_move(event):
+    """ object was renamed; update subscription list if needed """
+    old_site_path = event.old_site_path
+    new_site_path = event.new_site_path
+    notification_tool = event.context.getSite().getNotificationTool()
+
+    for s in notification_tool.list_subscriptions():
+        if s.location == old_site_path:
+            notification_tool.remove_subscription(s.user_id, old_site_path,
+                                                  s.notif_type, s.lang)
+            notification_tool.add_subscription(s.user_id, new_site_path,
+                                               s.notif_type, s.lang)

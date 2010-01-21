@@ -114,6 +114,54 @@ class NotificationsTest(NaayaFunctionalTestCase):
         remove_subscription('reviewer', '', 'instant', 'en')
         transaction.commit()
 
+    def test_object_rename_hook(self):
+        # test is here only because we want to set a "current user" that
+        # has "rename" permissions
+        notif = self.portal.portal_notification
+        notif.add_subscription('contributor', 'notifol',
+                                    'instant', 'en')
+        notif.add_subscription('reviewer', 'notifol/notidoc',
+                                    'weekly', 'en')
+
+        def subscr():
+            for s in notif.list_subscriptions():
+                yield (s.location, s.notif_type, s.user_id)
+
+        self.assertEqual(set(subscr()),
+                         set([ ('notifol', 'instant', 'contributor'),
+                               ('notifol/notidoc', 'weekly', 'reviewer') ]))
+        transaction.commit()
+
+        # rename the folder using ZMI
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/manage_main')
+        form = self.browser.get_form('objectItems')
+        form['ids:list'] = ['notifol']
+        self.browser.clicked(form, self.browser.get_form_field(form,
+                                'manage_renameForm:method'))
+        self.browser.submit()
+        form = self.browser.get_form(1)
+        form['new_ids:list'] = 'newname'
+        self.browser.clicked(form, self.browser.get_form_field(form,
+                                'manage_renameObjects:method'))
+        self.browser.submit()
+        self.browser_do_logout()
+        # done renaming the folder using ZMI
+
+        self.assertEqual(set(subscr()),
+                         set([ ('newname', 'instant', 'contributor'),
+                               ('newname/notidoc', 'weekly', 'reviewer') ]))
+
+        notif.remove_subscription('contributor', 'newname',
+                                       'instant', 'en')
+        notif.remove_subscription('reviewer', 'newname/notidoc',
+                                       'weekly', 'en')
+
+        # do our own cleanup, since we renamed the folder
+        self.portal.manage_delObjects(['newname'])
+        addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
+        transaction.commit()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NotificationsTest))
