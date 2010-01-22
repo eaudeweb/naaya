@@ -75,4 +75,6 @@ class CheckboxWidget(Widget):
 
     template = PageTemplateFile('../zpt/property_widget_checkbox', globals())
 
+    hidden_template = PageTemplateFile('../zpt/property_widget_checkbox_hidden', globals())
+
 InitializeClass(CheckboxWidget)

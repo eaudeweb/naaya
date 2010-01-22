@@ -254,12 +254,14 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     def test_hidden_property(self):
         import transaction
         self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = False
+        self.portal.info.contact.discussion = 1
         transaction.commit()
         self.browser.go('http://localhost/portal/info/contact/edit_html')
         form = self.browser.get_form('frmEdit')
-        control = form.find_control('discussion:utf8:ustring')
+        control = form.find_control('discussion:boolean')
         self.failUnlessEqual(control.type, 'hidden')
         self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = True
+        self.portal.info.contact.discussion = 0
         transaction.commit()
 
 def test_suite():
