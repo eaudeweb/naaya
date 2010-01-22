@@ -83,7 +83,7 @@ def update_portlets_data(portal, log):
             folder_path = fixed_folder_path
         for portlet_id in portlet_ids:
             log.debug('right portlet "%s" at "%s"' % (portlet_id, folder_path))
-            portal_portlets.assign_portlet(folder_path, 'right', portlet_id, True)
+            portal_portlets.assign_portlet(folder_path, 'right', portlet_id, False)
 
     portal.__dict__['_portlets_manager__left_portlets_ids'] = []
     portal.__dict__['_portlets_manager__center_portlets_ids'] = []
