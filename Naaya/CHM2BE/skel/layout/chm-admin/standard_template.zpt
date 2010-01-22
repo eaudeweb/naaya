@@ -53,6 +53,32 @@
                 /*]]>*/
                 </style>
             <![endif]-->
+            <style type="text/css">
+            <!--
+                ul.boxy {
+                    list-style-type: none;
+                    padding: 0px;
+                    margin: 0px;
+                    width: 30em;
+                }
+                ul.boxy li {
+                    cursor:move;
+                    padding: 4px;
+                    border: 1px solid #ccc;
+                    background-color: #eee;
+                }
+                #maintopicslist {
+                    margin-bottom: 1em;
+                }
+                #maintopicslist li {
+                    margin-bottom: 0px;
+                    margin-top: 4px;
+                }
+                #maintopicslist .chk {
+                    margin: 0px;
+                }
+            //-->
+            </style>
         <metal:block define-slot="head">
         </metal:block>
     </metal:block>
@@ -69,7 +95,7 @@
                 </div>
 
                 <div id="language" tal:attributes="class here/gl_get_selected_language">
-                    <span tal:replace="structure here/portal_forms/admin_languages_box" />
+                    <span tal:replace="structure python:here.getFormsTool().getForm('admin_languages_box')" />
                 </div>
 
                 <div id="log">
