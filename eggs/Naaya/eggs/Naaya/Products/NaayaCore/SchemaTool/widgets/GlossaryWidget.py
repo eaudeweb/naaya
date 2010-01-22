@@ -40,7 +40,7 @@ class GlossaryWidget(StringWidget):
     _constructors = (addGlossaryWidget,)
 
     _properties = StringWidget._properties + (
-        {'id':'glossary_id', 'mode':'w', 'type': 'str'},
+        {'id':'glossary_id', 'mode':'w', 'type': 'string'},
     )
 
     glossary_id = None

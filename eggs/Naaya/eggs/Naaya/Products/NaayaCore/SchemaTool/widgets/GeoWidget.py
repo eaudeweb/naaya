@@ -42,6 +42,7 @@ class GeoWidget(Widget):
     _constructors = (addGeoWidget,)
 
     multiple_form_values = ('lat', 'lon', 'address')
+    default = None
 
     def parseFormData(self, data):
         if self.isEmptyDatamodel(data):

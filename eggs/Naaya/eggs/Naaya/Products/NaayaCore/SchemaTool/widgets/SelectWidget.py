@@ -40,10 +40,10 @@ class SelectWidget(Widget):
     _constructors = (addSelectWidget,)
 
     _properties = Widget._properties + (
-        {'id':'list_id', 'mode':'w', 'type': 'str'},
+        {'id':'list_id', 'mode':'w', 'type': 'string'},
     )
 
-    list_id = None
+    list_id = ''
 
     def get_selection_list(self):
         list_ob = self.getPortletsTool().getRefListById(self.list_id)

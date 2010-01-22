@@ -187,24 +187,23 @@ class Schema(Folder):
             else:
                 raw_value = None
 
-            if raw_value is None:
+            value = widget.convert_formvalue_to_pythonvalue(raw_value)
+
+            if value is None:
                 if not _all_values:
                     continue
 
-                if widget.default is not None:
-                    raw_value = widget.default
-                else:
-                    raw_value = ''
+                value = widget.default
 
             errors = []
             try:
-                widget.validateDatamodel(raw_value)
+                widget.validateDatamodel(value)
                 # we pass a doctored dict that looks like what our widget expects from the form
-                widget_value = widget.parseFormData(raw_value)
+                widget_value = widget.parseFormData(value)
                 form_data[field_name] = widget.convertValue(widget_value)
             except WidgetError, e:
                 errors.append(str(e))
-                form_data[field_name] = raw_value
+                form_data[field_name] = value
 
             if errors:
                 form_errors[field_name] = errors
