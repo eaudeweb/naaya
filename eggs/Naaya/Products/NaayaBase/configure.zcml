@@ -1,9 +1,14 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+	  xmlns:five="http://namespaces.zope.org/five">
   <include package=".adapter" />
 
   <class class=".NyContentType.NyContentType">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
   </class>
+
+  <include package="contentratings" />
+  <five:implements class=".NyContentType.NyContentType"
+    interface="contentratings.interfaces.IUserRatable" />
 
   <adapter
     for=".NyRoleManager.NyRoleManager"

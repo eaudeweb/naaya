@@ -1,0 +1,13 @@
+<tal:block define="global current_tab_url string:admin_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+	<metal:block fill-slot="tab_contents">
+
+		<p i18n:translate="">Select a content type to configure its properties.</p>
+
+		<ul tal:repeat="schema python:here.objectValues(['Naaya Schema'])">
+			<li>
+				<a tal:attributes="href string:${schema/absolute_url}/admin_html" tal:content="schema/title" i18n:translate="" />
+			</li>
+		</ul>
+	</metal:block>
+</metal:block>

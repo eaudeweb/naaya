@@ -1192,46 +1192,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_contenttypes')
     def admin_set_contenttypes(self, geotag=[], REQUEST=None):
-        """ Configure which content types are geotaggable """
-
-        for schema in self.getSite().portal_schemas.objectValues():
-            new_visible = (schema.id in geotag)
-
-            try:
-                geo_location = schema.getWidget('geo_location')
-            except:
-                pass
-            else:
-                geo_location.visible = new_visible
-
-            try:
-                geo_type = schema.getWidget('geo_type')
-            except:
-                pass
-            else:
-                geo_type.visible = new_visible
-
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_map_contenttypes_html')
-
+        """ """
+        schema_tool = self.getSite().getSchemaTool()
+        return schema_tool.admin_set_contenttypes(geotag=geotag, REQUEST=REQUEST)
 
     def list_geotaggable_types(self):
-        portal_schemas = self.getSite().portal_schemas
-        output = []
-        for schema in portal_schemas.listSchemas(installed=True).values():
-            try:
-                geo_location = schema.getWidget('geo_location');
-                geo_type = schema.getWidget('geo_type');
-            except KeyError:
-                # one or both widgets are missing; skip it
-                continue
-            output.append({'id': schema.id, 'title': schema.title_or_id(),
-                'enabled': geo_location.visible and geo_type.visible})
-        return output
-
-    def is_geotaggable(self, ob):
-        geotaggable_types = [x['id'] for x in self.list_geotaggable_types() if x['enabled']]
-        return ob.__class__.__name__ in geotaggable_types
+        schema_tool = self.getSite().getSchemaTool()
+        return schema_tool.list_geotaggable_types()
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
@@ -1508,7 +1475,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     admin_tabs = [
         {'url': 'admin_map_html', 'title': 'General settings'},
-        {'url': 'admin_map_contenttypes_html', 'title': 'Content types'},
         {'url': 'admin_maptypes_html', 'title': 'Location categories'},
         {'url': 'admin_maplocations_html', 'title': 'Manage locations'},
         {'url': 'admin_mapduplicatelocations_html', 'title': 'Duplicate locations'},

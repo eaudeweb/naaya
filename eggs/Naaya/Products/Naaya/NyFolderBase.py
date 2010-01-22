@@ -37,7 +37,6 @@ from Products.Naaya.interfaces import INySite, IObjectView
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-
 class NyContentTypeViewAdapter(object):
     adapts(INyContentObject)
     implements(IObjectView)
@@ -158,6 +157,23 @@ class NyFolderBase(Folder, NyPermissions):
 
         return ret
 
+    security.declareProtected(view, 'folder_listing_ratings')
+    def folder_listing_ratings(self):
+        """ This function is called on the folder listing and it checkes whether or not
+            there is at least an object that provides ratings
+        """
+        folders_info = self.listed_folders_info()
+        objects_info = self.listed_objects_info()
+
+        infos = []
+        infos.extend(folders_info)
+        infos.extend(objects_info)
+
+        for info in infos:
+            if info['self'].is_ratable():
+                return True
+        else:
+            return False
 
     security.declareProtected(view, 'item_has_title')
     def item_has_title(self, object, obj_title=''):

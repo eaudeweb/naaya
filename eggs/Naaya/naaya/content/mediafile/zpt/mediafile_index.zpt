@@ -12,12 +12,14 @@
         <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
     </metal:block>
 
-    <metal:block fill-slot="body">
+    <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
         <h1>
           <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
             title here/get_meta_label;
             alt here/get_meta_label" />
           <span tal:replace="here/title_or_id" />
+        <tal:block condition="is_ratable"
+                        replace="structure here/user_rating_view|nothing"/>
             <span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
               <span i18n:translate="">Item only translated in </span>
               <span tal:repeat="lang here/gl_get_languages_map">
@@ -127,6 +129,8 @@
           </div>
 
         </tal:block>
+
+        <tal:block content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />
     </metal:block>

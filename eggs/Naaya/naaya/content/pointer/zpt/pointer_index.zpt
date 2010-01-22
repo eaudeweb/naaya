@@ -12,8 +12,12 @@
         <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
     </metal:block>
 
-    <metal:block fill-slot="body">
-        <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <span tal:replace="here/title_or_id" /></h1>
+    <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
+        <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+            title here/get_meta_label; alt here/get_meta_label" />
+            <span tal:replace="here/title_or_id" /></h1>
+            <tal:block condition="is_ratable"
+                            replace="structure here/user_rating_view|nothing"/>
         <tal:block tal:condition="python:here.checkPermissionEditObject()">
         <div id="admin_this_folder">
             <tal:block tal:condition="python: not here.hasVersion()">
@@ -45,6 +49,8 @@
 
         <div tal:define="description python:here.prop_value_or_none('description')"
             tal:condition="description" tal:content="structure description" />
+
+        <tal:block content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />
     </metal:block>

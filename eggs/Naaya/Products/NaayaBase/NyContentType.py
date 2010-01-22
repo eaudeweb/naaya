@@ -36,6 +36,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
+from contentratings.interfaces import IUserRating
 
 NY_CONTENT_BASE_SCHEMA = {
     'title':        dict(sortorder=10, widget_type='String', label='Title', required=True, localized=True),
@@ -261,6 +262,13 @@ class NyContentType(object):
             return NyCheckControl.getVersionLocalProperty(self, id, lang)
         else:
             return self.getLocalProperty(id, lang)
+
+    set_content_rating = PageTemplateFile('zpt/set_content_rating', globals())
+
+    def is_ratable(self):
+        """returns the stars rating view if the content type is ratable"""
+        schema = self.getSite().portal_schemas.getSchemaForMetatype(self.meta_type)
+        return schema.is_ratable
 
 InitializeClass(NyContentType)
 

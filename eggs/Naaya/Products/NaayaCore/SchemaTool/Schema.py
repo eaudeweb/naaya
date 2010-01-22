@@ -61,6 +61,8 @@ class Schema(Folder):
     meta_types = ()
     all_meta_types = meta_types
 
+    is_ratable = False
+
     def __init__(self, id, title):
         super(Schema, self).__init__(id=id)
         self.title = title
