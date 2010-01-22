@@ -15,14 +15,4 @@
 #
 # Authors:
 #
-# Valentin Dumitru, Eau de Web
-
-TOPICS = {
-          1: 'Capacity building',
-          2: 'Data collection, analysis, monitoring',
-          3: 'Institutional, organisational and economic arrangements',
-          4: 'Legislation and regulatory measures',
-          5: 'Management plans and demonstration actions',
-          6: 'Networking, participation and partnership building',
-          7: 'Sustainable use and management of biodiversity and natural resources',
-}
+# Cornel Nitu, Eau de Web

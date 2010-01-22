@@ -15,7 +15,7 @@
 #
 # Authors:
 #
-# Valentin Dumitru, Eau de Web
+# Cornel Nitu, Eau de Web
 
 TOPICS = {
           1: 'Capacity building',
