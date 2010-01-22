@@ -1072,11 +1072,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
+        output = {}
         for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(meta_type):
-            try: keywords[l_prop.id] = REQUEST.get(l_prop.id, '')
-            except: keywords[l_prop.id] = ''
+            try: output[l_prop.id] = REQUEST.get(l_prop.id, keywords.get(l_prop.id, ''))
+            except: output[l_prop.id] = ''
 
-        return keywords
+        return output
 
     def getItemsAge(self): return self.search_age
     def setItemsAge(self, age): self.search_age = age
@@ -3342,14 +3343,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             pitem = self.get_pluggable_item(meta_type)
             if pitem == None:
                 raise ValueError('Missing pluggable content type "%s"' % meta_type)
-
-            #create Schema for this content type, if there is none
-            if ID_SCHEMATOOL in self.objectIds():
-                # if the site is just being created, there's no schema tool yet; move on, the
-                # schemas will be created later.
-                schema_tool = self._getOb(ID_SCHEMATOOL)
-                if pitem['module'] not in schema_tool.objectIds() and pitem['default_schema']:
-                    schema_tool.addSchema(pitem['module'], title=pitem['label'], defaults=pitem['default_schema'])
 
             #add content's permission to `Add content` permission group
             acl = self.getAuthenticationTool()
