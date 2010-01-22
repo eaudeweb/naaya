@@ -8,7 +8,8 @@
 	btn_copy python:listing_info['btn_copy'];
 	btn_cut python:listing_info['btn_cut'];
 	btn_paste python:listing_info['btn_paste'];
-	can_operate python:listing_info['can_operate'] ">
+	can_operate python:listing_info['can_operate'];
+	ratings here/folder_listing_ratings">
 
 
 <script language="javascript" type="text/javascript" tal:condition="btn_select">
@@ -127,7 +128,7 @@ function fRenameObjects()
 			</tal:comment>
 		</metal:block>
 	</div>
-	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" width="95%">
+	<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 		<tr tal:condition="can_operate">
 			<metal:block define-slot="table_head_default">
 				<th class="checkbox" style="width: 4%;" i18n:translate=""
@@ -145,6 +146,8 @@ function fRenameObjects()
 				<tal:comment condition="nothing">
 					Fill this slot to add custom columns (heading for columns goes here).
 				</tal:comment>
+				<th tal:condition="ratings"
+					class="edit" i18n:translate="" style="width: 10%;">Rating</th>
 			</metal:block>
 		</tr>
 		<tr tal:repeat="folder_info folders_list">
@@ -230,6 +233,10 @@ function fRenameObjects()
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
 					</td>
+					<td tal:condition="ratings" class="type">
+						<tal:block condition="object/user_rating_view|nothing"
+							replace="structure object/user_rating_stars"/>
+					</td>
 
 				</tal:block>
 			</metal:block>
@@ -290,6 +297,10 @@ function fRenameObjects()
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
+					</td>
+					<td tal:condition="ratings" class="type" style="width: 10%;">
+						<tal:block define="user_rating object/user_rating_stars|nothing"
+							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
 
 				</tal:block>
