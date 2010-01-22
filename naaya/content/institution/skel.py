@@ -18,14 +18,11 @@
 # Valentin Dumitru, Eau de Web
 
 TOPICS = {
-          1: 'Biodiversity',
-          2: 'Cleaner Production',
-          3: 'Climate Change',
-          4: 'Desertification',
-          5: 'Energy',
-          6: 'Integrated Coastal Zone Management',
-          7: 'Legislation, regulatory and planning measures',
-          8: 'Polluted Areas',
-          9: 'Waste Management',
-          10: 'Water Management', 
+          1: 'Capacity building',
+          2: 'Data collection, analysis, monitoring',
+          3: 'Institutional, organisational and economic arrangements',
+          4: 'Legislation and regulatory measures',
+          5: 'Management plans and demonstration actions',
+          6: 'Networking, participation and partnership building',
+          7: 'Sustainable use and management of biodiversity and natural resources',
 }
