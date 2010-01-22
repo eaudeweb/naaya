@@ -118,7 +118,7 @@ class Widget(Folder, LocalPropertyManager):
     _properties=(
         {'id':'sortorder', 'type': 'int', 'mode':'w', 'label': 'Sort order'},
         {'id':'required', 'type': 'boolean', 'mode':'w', 'label': 'Required widget'},
-        {'id':'default','mode':'w', 'label': 'Default value'},
+        {'id':'default','mode':'w', 'type': 'string', 'label': 'Default value'},
         {'id':'localized', 'mode':'w', 'type': 'boolean'},
         {'id':'data_type', 'mode':'w', 'type': 'string'},
         {'id':'visible', 'mode':'w', 'type': 'boolean'},
@@ -128,7 +128,7 @@ class Widget(Folder, LocalPropertyManager):
 
     sortorder = 100
     required = False
-    default = None
+    default = ''
     localized = False
     data_type = 'str'
     visible = True
@@ -140,6 +140,16 @@ class Widget(Folder, LocalPropertyManager):
         Folder.__init__(self, id=id)
         self.set_localproperty('title', 'string', lang)
         self._setLocalPropValue('title', lang, title)
+
+    def _setProperty(self, id, value, *args, **kwargs):
+        if id == 'default':
+            self.default = self.convertValue(value)
+        else:
+            super(Widget, self)._setProperty(id, value, *args, **kwargs)
+
+    def _setPropValue(self, id, value):
+        if getattr(self, id) != value:
+            super(Widget, self)._setPropValue(id, value)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
@@ -241,6 +251,9 @@ class Widget(Folder, LocalPropertyManager):
         this method must return a `unicode` value
         """
         return unicode(value)
+
+    def convert_formvalue_to_pythonvalue(self, value):
+        return value
 
     hidden_template = PageTemplateFile('../zpt/property_widget_hidden', globals())
 

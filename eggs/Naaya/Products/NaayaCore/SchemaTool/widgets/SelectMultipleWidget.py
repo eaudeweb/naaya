@@ -36,10 +36,10 @@ class SelectMultipleWidget(Widget):
     _constructors = (addSelectMultipleWidget,)
 
     _properties = Widget._properties + (
-        {'id':'list_id', 'mode':'w', 'type': 'str'},
+        {'id':'list_id', 'mode':'w', 'type': 'string'},
     )
 
-    list_id = None
+    list_id = ''
     data_type = 'list'
 
     def get_selection_list(self):

@@ -34,6 +34,8 @@ class CheckboxWidget(Widget):
     meta_label = "Checkbox"
     _constructors = (addCheckboxWidget,)
 
+    default = 0
+
     def render_meth(self):
         """ """
         raise NotImplementedError
@@ -72,6 +74,12 @@ class CheckboxWidget(Widget):
             return value_map[bool(value)]
         else:
             return value
+
+    def convert_formvalue_to_pythonvalue(self, value):
+        if value is None:
+            return 0
+        else:
+            return int(bool(value))
 
     template = PageTemplateFile('../zpt/property_widget_checkbox', globals())
 

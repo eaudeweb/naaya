@@ -45,6 +45,8 @@ class DateWidget(Widget):
     # Constructor
     _constructors = (addDateWidget,)
 
+    default = None
+
     def parseFormData(self, value):
         """Get datamodel from form"""
         if not value:
