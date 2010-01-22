@@ -8,7 +8,8 @@
 	btn_copy python:listing_info['btn_copy'];
 	btn_cut python:listing_info['btn_cut'];
 	btn_paste python:listing_info['btn_paste'];
-	can_operate python:listing_info['can_operate'] ">
+	can_operate python:listing_info['can_operate'];
+	ratings here/folder_listing_ratings">
 
 
 <script language="javascript" type="text/javascript" tal:condition="btn_select">
@@ -86,6 +87,8 @@ function toggleSelect() {
 				<tal:comment condition="nothing">
 					Fill this slot to add custom columns (heading for columns goes here).
 				</tal:comment>
+				<th tal:condition="ratings"
+					class="edit" i18n:translate="">Rating</th>
 			</metal:block>
 		</tr>
 		<tr tal:repeat="folder_info folders_list">
@@ -171,7 +174,6 @@ function toggleSelect() {
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
 					</td>
-
 				</tal:block>
 			</metal:block>
 			<metal:block define-slot="table_folders_extend">
@@ -231,6 +233,10 @@ function toggleSelect() {
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
+					</td>
+					<td tal:condition="ratings" class="type" style="width: 10%;">
+						<tal:block define="user_rating object/user_rating_stars|nothing"
+							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
 
 				</tal:block>

@@ -28,6 +28,9 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.SchemaTool.Schema import Schema
+from Products.NaayaCore.GeoMapTool.GeoMapTool import GeoMapTool
+from contentratings.interfaces import IUserRating
+from naaya.content.base.interfaces import INyContentObject
 
 _other_schema_products = {}
 def register_schema_product(name, label, meta_type, default_schema):
@@ -152,6 +155,102 @@ class SchemaTool(Folder):
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
-    admin_html = PageTemplateFile('zpt/admin', globals())
+    admin_html = PageTemplateFile('zpt/admin_contenttypes', globals())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'contenttypes_properties_html')
+    contenttypes_properties_html = PageTemplateFile('zpt/contenttypes_properties', globals())
+
+    admin_pt = PageTemplateFile('zpt/admin_template', globals())
+
+    admin_tabs = [
+        {'url': 'admin_html', 'title': 'Manage content types'},
+        {'url': 'contenttypes_properties_html', 'title': 'Content types properties'}
+    ]
+
+    def list_geotaggable_types(self):
+        return [item for item in self.list_content_types() if item.has_key('geo_taggable')]
+
+    def list_content_types(self):
+        portal_schemas = self.getSite().portal_schemas
+        output = []
+        for schema in portal_schemas.listSchemas(installed=True).values():
+            temp_output = {'id': schema.id, 'title': schema.title_or_id()}
+            try:
+                geo_location = schema.getWidget('geo_location');
+                geo_type = schema.getWidget('geo_type');
+                temp_output['geo_taggable'] = True
+                temp_output['geo_enabled'] = geo_location.visible and geo_type.visible
+            except KeyError:
+                # one or both widgets are missing; skip it
+                temp_output.append = {'geo_taggable': False}
+            if schema.is_ratable:
+                temp_output['ratable'] = True
+            else:
+                temp_output['ratable'] = False
+            output.append(temp_output)
+        return output
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_contenttypes')
+    def admin_set_contenttypes(self, geotag=[], ratable=[], REQUEST=None):
+        """ Configure which content types are geotaggable """
+
+        for schema in self.getSite().portal_schemas.objectValues():
+            new_visible = (schema.id in geotag)
+
+            try:
+                geo_location = schema.getWidget('geo_location')
+            except:
+                pass
+            else:
+                geo_location.visible = new_visible
+
+            try:
+                geo_type = schema.getWidget('geo_type')
+            except:
+                pass
+            else:
+                geo_type.visible = new_visible
+
+            if schema.id in ratable:
+                schema.is_ratable = True
+            else:
+                schema.is_ratable = False
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/contenttypes_properties_html')
+
+    def get_ratings(self):
+        """ """
+        objects = self.getSite().getCatalogedObjects()
+        ratings = []
+        for ob in filter(INyContentObject.providedBy, objects):
+            if ob.is_ratable() and IUserRating(ob).averageRating > 0:
+                rating = IUserRating(ob)
+                ratings.append((ob, rating.averageRating, rating.numberOfRatings))
+        return ratings
+
+    def sort_objects_by_ratings(self, skey=1, rkey=1, max_range=10):
+        """ """
+        import operator
+        objects = self.get_ratings()
+        objects = sorted(objects, key=operator.itemgetter(skey), reverse=rkey)
+        max_range = min(max_range, len(objects))
+        results = objects[0:max_range]
+        return results
+
+    _ratings_overview = PageTemplateFile('zpt/ratings_overview', globals())
+    def ratings_overview_html(self, REQUEST):
+        """ """
+        skey = 1
+        rkey = 1
+        if REQUEST.has_key('show_lowest_rated'):
+            rkey = 0
+        elif REQUEST.has_key('show_most_rated'):
+            skey=2
+        max_range = int(REQUEST.get('number_of_objects', 10))
+        if skey == 1 and rkey == 1:
+                REQUEST.set('show_highest_rated', True)
+        objects = self.sort_objects_by_ratings(skey, rkey, max_range)
+        return self._ratings_overview(REQUEST, objects=objects)
 
 InitializeClass(SchemaTool)
