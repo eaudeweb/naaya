@@ -1367,3 +1367,51 @@ div.marker-body h3 {
     color: #666666;
     font-size: 90%;
 }
+/* Data tables */
+.datatable caption {
+    font-weight: bold;
+}
+.datatable th {
+    text-align: center;
+    background-color: #e8e3dc;
+    font-weight: bold;
+    border-bottom: 2px solid white;
+}
+.datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+    text-align: right;
+    vertical-align:top;
+}
+.datatable th[scope="row"] {
+    text-align: right;
+    vertical-align:top;
+}
+.datatable td, .datatable th  {
+    margin:0;
+    padding: 0.3em;
+    vertical-align: top;
+}
+.datatable td {
+    border-bottom: 2px solid #f6f6f6;
+}
+.datatable tr.zebraeven {
+    background-color: #f6f6f6;
+}
+.datatable tr:hover, .datatable tr:hover th {
+    background-color: #f6f0e8;
+}
+table.datatable {
+    border: 1px solid #b6b6b6;
+    color: #666666;
+    margin: 1em 0em;
+}
+/* arrange portlets form */
+td.portlet_arrange_left { 
+    background-color: #fdd; 
+} 
+td.portlet_arrange_right { 
+    background-color: #ddf; 
+} 
+td.portlet_arrange_center { 
+    background-color: #dfd; 
+}
+

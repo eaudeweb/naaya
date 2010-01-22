@@ -25,7 +25,8 @@ from constants import CHM2BE_PRODUCT_PATH
 def wrap_loadDefaultData(method):
     def loadDefaultData(self):
         method(self)
-        self.loadSkeleton(join(CHM2BE_PRODUCT_PATH, 'skel'))
+        self.loadSkeleton(join(CHM2BE_PRODUCT_PATH))
     return loadDefaultData
 
+CHMSite.product_paths.append(CHM2BE_PRODUCT_PATH)
 CHMSite.loadDefaultData = wrap_loadDefaultData(CHMSite.loadDefaultData)
