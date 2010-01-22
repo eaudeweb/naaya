@@ -1206,3 +1206,12 @@ text-decoration: underline;
         clear: left;
         padding: 1em;
 }
+#ratings {
+	width: 250px;
+	color:#315076;
+	margin: 5px 0;
+	padding: 5px;
+	background-color: #FAFAFA;
+	border-top: 3px solid #CCCCCC;
+	border-bottom: 3px solid #CCCCCC;
+}
