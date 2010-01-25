@@ -21,6 +21,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
     EXCEPTION_NOVERSION_MSG
 
 #Python imports
+from copy import deepcopy
 from datetime import datetime
 import os, sys
 import simplejson as json
@@ -53,9 +54,7 @@ METATYPE_OBJECT = 'Naaya Institution'
 ADDITIONAL_STYLE = open(ImageFile('www/institution.css', globals()).path).read()
 
 
-DEFAULT_SCHEMA = {}
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
-DEFAULT_SCHEMA.update({
+DEFAULT_SCHEMA = {
     'webpage':      dict(sortorder=120, widget_type='String', label='Webpage'),
     'phone':        dict(sortorder=140, widget_type='String', label='Phone'),
     'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
@@ -63,13 +62,15 @@ DEFAULT_SCHEMA.update({
     'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='institution_topics'),
     'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='institution_topics'),
     'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
-    'coverage':     dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
-    'keywords':     dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
-    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
-    'releasedate':  dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
-    'discussion':   dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
-    'geo_location': dict(sortorder=24, widget_type='Geo', data_type='geo', label='Geographical location', visible=True)
-})
+}
+
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
+DEFAULT_SCHEMA['coverage'].update(visible=False)
+DEFAULT_SCHEMA['keywords'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
+DEFAULT_SCHEMA['discussion'].update(visible=False)
+DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['geo_location'].update(visible=True)
 
 def setupContentType(site):
     from skel import TOPICS
