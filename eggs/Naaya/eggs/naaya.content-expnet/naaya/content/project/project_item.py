@@ -18,6 +18,7 @@
 # Cornel Nitu, Eau de Web
 
 #Python imports
+from copy import deepcopy
 import os, sys
 import simplejson as json
 from decimal import Decimal
@@ -48,19 +49,20 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import make_id
 
 METATYPE_OBJECT = 'Naaya Project'
-DEFAULT_SCHEMA = {}
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
-DEFAULT_SCHEMA.update({
+
+DEFAULT_SCHEMA = {
     'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='project_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered',
-        list_id='project_topics'),
-    'coverage':     dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
-    'keywords':     dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
-    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
-    'releasedate':  dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
-    'discussion':   dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
-    'geo_location': dict(sortorder=24, widget_type='Geo', data_type='geo', label='Geographical location', visible=True)
-})
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='project_topics'),
+}
+
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
+DEFAULT_SCHEMA['coverage'].update(visible=False)
+DEFAULT_SCHEMA['keywords'].update(visible=False)
+DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
+DEFAULT_SCHEMA['discussion'].update(visible=False)
+DEFAULT_SCHEMA['geo_location'].update(visible=True)
+
 
 def setupContentType(site):
     from skel import TOPICS
@@ -377,5 +379,6 @@ config.update({
 
 def get_config():
     return config
+
 
 
