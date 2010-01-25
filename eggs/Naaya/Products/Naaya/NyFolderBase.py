@@ -170,10 +170,11 @@ class NyFolderBase(Folder, NyPermissions):
         infos.extend(objects_info)
 
         for info in infos:
-            if info['self'].is_ratable():
-                return True
-        else:
-            return False
+            try:
+                ratable = info['self'].is_ratable()
+                if ratable: return True
+            except: pass
+        return False
 
     security.declareProtected(view, 'item_has_title')
     def item_has_title(self, object, obj_title=''):
