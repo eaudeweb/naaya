@@ -29,6 +29,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.ImageFile import ImageFile
 from Acquisition import Implicit
 from OFS.Image import cookId
+from AccessControl.Permissions import change_permissions
 
 #Product imports
 from Products.NaayaContent.constants import *
@@ -43,6 +44,7 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
+from Products.NaayaBase.NyAccess import NyAccess
 from question_item import question_item
 from review_item import addConsultationReviewItem
 from RateList import manage_addRateList
@@ -173,6 +175,8 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     description = LocalProperty('description')
 
     security = ClassSecurityInfo()
+
+    ny_access = NyAccess([PERMISSION_REVIEW_CONSULTATION, PERMISSION_VIEW_CONSULTATION, PERMISSION_MANAGE_CONSULTATION])
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, contributor, releasedate, lang):
         """ """
@@ -725,6 +729,11 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'instructions_html')
     instructions_html = PageTemplateFile('zpt/instructions', globals())
+
+    security.declareProtected(change_permissions, 'edit_access_html')
+    def edit_access_html(self):
+        """ """
+        return NyConsultation.ny_access.index_html.__of__(self)()
 
 InitializeClass(NyConsultation)
 
