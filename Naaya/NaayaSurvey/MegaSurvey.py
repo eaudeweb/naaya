@@ -24,14 +24,16 @@ from DateTime import DateTime
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, ERROR, DEBUG
+from AccessControl.Permissions import change_permissions
 
 # Product imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import genRandomId, tmpfile, make_id
+from Products.NaayaBase.NyAccess import NyAccess
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
-from permissions import PERMISSION_ADD_MEGASURVEY
+from permissions import PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER, PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT, PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
@@ -87,6 +89,8 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     security = ClassSecurityInfo()
 
+    ny_access = NyAccess([PERMISSION_ADD_ANSWER, PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT, PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS])
+
     def __init__(self, id, **kwargs):
         """ """
         #BaseSurveyTemplate.__init__(self, id, **kwargs)
@@ -139,6 +143,11 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
     edit_reports_html = PageTemplateFile('zpt/megasurvey_edit_reports', globals())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_access_html')
+    def edit_access_html(self):
+        """ """
+        return MegaSurvey.ny_access.index_html.__of__(self)()
 
     #
     # change the security of the inherited methods

@@ -7,6 +7,7 @@
 			<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html" i18n:translate="">Edit Attachments</a>
 			<a tal:attributes="href string:${here/absolute_url}/edit_questions_html" i18n:translate="">Edit Questions</a>
 			<a tal:attributes="href string:${here/absolute_url}/edit_reports_html" i18n:translate="">Edit Reports</a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_access_html" i18n:translate="">Edit Permissions</a>
 		</div>
 	</tal:block>
 </tal:block>
