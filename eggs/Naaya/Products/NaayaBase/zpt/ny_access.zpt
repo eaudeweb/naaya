@@ -3,22 +3,31 @@
 	roles ny_access/getRoles;
 	permissions ny_access/permissions;
 	mapping ny_access/getPermissionMapping;
+	permissions_with_acquired_roles ny_access/getPermissionsWithAcquiredRoles;
 	">
 <span tal:replace="structure here/standard_html_header" />
 
 	<form method="post" action="ny_access/savePermissionMapping">
 		<table>
 			<tr style="background-color: #D9E3EF; font-weight: bold;">
+				<td>Also acquire from parent</td>
 				<td>Permission</td>
 				<td tal:attributes="colspan python:len(roles)">Roles</td>
 			</tr>
 			<tr>
+				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 				<td tal:repeat="role roles">
 					<span tal:replace="role"/>
 				</td>
 			</tr>
 			<tr tal:repeat="permission permissions">
+				<td>
+					<input type="checkbox" tal:attributes="
+						name string:aq${repeat/permission/index};
+						checked python:permission in permissions_with_acquired_roles;
+					"/>
+				</td>
 				<td tal:content="permission"></td>
 				<td tal:repeat="role roles">
 					<input type="checkbox" tal:attributes="

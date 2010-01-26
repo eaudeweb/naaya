@@ -42,6 +42,17 @@ class NyAccess(Implicit):
         roles_to_remove = ['Owner', 'Manager']
         return [role for role in self.aq_parent.validRoles() if role not in roles_to_remove]
 
+
+    security.declareProtected(change_permissions, 'getPermissionMapping')
+    def getPermissionsWithAcquiredRoles(self):
+        """ Return the permissions which acquire roles from their parents """
+        ret = []
+        for p_name in self.permissions:
+            permission = Permission(p_name, (), self.aq_parent)
+            if isinstance(permission.getRoles(), list):
+                ret.append(p_name)
+        return ret
+
     security.declareProtected(change_permissions, 'getPermissionMapping')
     def getPermissionMapping(self):
         """ Return the permission mapping for the parent """
@@ -74,20 +85,31 @@ class NyAccess(Implicit):
 
         roles = self.getRoles()
 
+        permissionsWithAcquiredRoles = []
+
         mapping = {}
         for p in self.permissions:
             mapping[p] = []
 
         for key in REQUEST.form.keys():
             m = re.match('r(\d+)p(\d+)', key)
-            groups = m.groups()
-            r_i, p_i = int(groups[0]), int(groups[1])
+            if m is not None:
+                groups = m.groups()
+                r_i, p_i = int(groups[0]), int(groups[1])
 
-            mapping[self.permissions[p_i]].append(roles[r_i])
+                mapping[self.permissions[p_i]].append(roles[r_i])
+            else:
+                m = re.match('aq(\d+)', key)
+                groups = m.groups()
+                p_i = int(groups[0])
 
-        # stop aquire from parent
+                permissionsWithAcquiredRoles.append(self.permissions[p_i])
+
         for p in mapping:
-            mapping[p] = tuple(mapping[p])
+            if p in permissionsWithAcquiredRoles:
+                mapping[p] = list(mapping[p])
+            else:
+                mapping[p] = tuple(mapping[p])
 
         self.setPermissionMapping(mapping)
 
