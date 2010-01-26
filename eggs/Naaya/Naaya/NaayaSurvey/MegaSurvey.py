@@ -144,7 +144,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
     edit_reports_html = PageTemplateFile('zpt/megasurvey_edit_reports', globals())
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_access_html')
+    security.declareProtected(change_permissions, 'edit_access_html')
     def edit_access_html(self):
         """ """
         return MegaSurvey.ny_access.index_html.__of__(self)()
