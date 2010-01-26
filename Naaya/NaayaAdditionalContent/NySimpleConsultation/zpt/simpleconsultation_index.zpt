@@ -31,6 +31,7 @@
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
 	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Simple Consultation</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/edit_access_html"><span i18n:translate="">Edit Permissions</span></a>
 </div>
 
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
