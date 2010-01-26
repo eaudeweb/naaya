@@ -66,7 +66,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.portal_map.admin_set_contenttypes([schema.id for schema in schemas])
 
     def beforeTearDown(self):
-        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['enabled']])
+        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['geo_enabled']])
 
         ids = [ob_dict['id'] for ob_dict in self.ob_dicts]
         self.portal.geo_clusters_test.manage_delObjects(ids)

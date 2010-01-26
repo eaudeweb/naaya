@@ -178,11 +178,13 @@ class SchemaTool(Folder):
             try:
                 geo_location = schema.getWidget('geo_location');
                 geo_type = schema.getWidget('geo_type');
-                temp_output['geo_taggable'] = True
-                temp_output['geo_enabled'] = geo_location.visible and geo_type.visible
             except KeyError:
                 # one or both widgets are missing; skip it
-                temp_output.append = {'geo_taggable': False}
+                temp_output['geo_taggable'] = False
+                temp_output['geo_enabled'] = False
+            else:
+                temp_output['geo_taggable'] = True
+                temp_output['geo_enabled'] = geo_location.visible and geo_type.visible
             if schema.is_ratable:
                 temp_output['ratable'] = True
             else:

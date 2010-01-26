@@ -83,7 +83,7 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
 
 
     def beforeTearDown(self):
-        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['enabled']])
+        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['geo_enabled']])
 
         ids = [ob_dict['id'] for ob_dict in self.ob_dicts]
         self.portal.listing_by_letter_test.manage_delObjects(ids)
