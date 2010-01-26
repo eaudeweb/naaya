@@ -68,7 +68,13 @@ good_chars= '__________________________AAAAAA' \
 
 TRANSMAP = string.maketrans(bad_chars, good_chars)
 
-def genObjectId(s, num_chars=50):
+default_remove_words = [
+    "a", "an", "as", "at", "before", "but", "by", "for", "from", "is",
+    "in", "into", "like", "of", "off", "on", "onto", "per", "since",
+    "than", "the", "this", "that", "to", "up", "via", "with",
+]
+
+def genObjectId(s, num_chars=50, removelist=None):
     '''
     Changes, e.g., "Petty theft" to "petty-theft".
     This function is the Python equivalent of the javascript function
@@ -83,10 +89,8 @@ def genObjectId(s, num_chars=50):
     # remove all these words from the string before urlifying
     s = toAscii(s)
 
-    removelist = ["a", "an", "as", "at", "before", "but", "by", "for",
-                  "from", "is", "in", "into", "like", "of", "off", "on",
-                  "onto", "per", "since", "than", "the", "this", "that",
-                  "to", "up", "via", "with"]
+    if removelist is None:
+        removelist = default_remove_words
 
     ignore_words = '|'.join([r for r in removelist])
     ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
@@ -115,14 +119,16 @@ def cleanupId(p_id=''):
     x = x.strip()
     return x.translate(TRANSMAP)
 
-def make_id(parent, temp_parent=None, id='', title='', prefix=''):
+def make_id(parent, temp_parent=None,
+            id='', title='',
+            prefix='', removelist=None):
     """
     Generates a valid unique id based on a suggested id, title or prefix 
     The generated id is checked for uniqueness in the parent folder
     and if passed, in a second, 'temporary' folder
     """
     gen_id = cleanupId(id)
-    if not gen_id: gen_id = genObjectId(title)
+    if not gen_id: gen_id = genObjectId(title, removelist=removelist)
     if not gen_id: gen_id = prefix + genRandomId(5)
     i = 1
     search_id = gen_id
