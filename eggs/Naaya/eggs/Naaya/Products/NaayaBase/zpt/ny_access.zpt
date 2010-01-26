@@ -1,0 +1,36 @@
+<tal:block define="
+	ny_access here/ny_access;
+	roles ny_access/getRoles;
+	permissions ny_access/permissions;
+	mapping ny_access/getPermissionMapping;
+	">
+<span tal:replace="structure here/standard_html_header" />
+
+	<form method="post" action="ny_access/savePermissionMapping">
+		<table>
+			<tr style="background-color: #D9E3EF; font-weight: bold;">
+				<td>Permission</td>
+				<td tal:attributes="colspan python:len(roles)">Roles</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td tal:repeat="role roles">
+					<span tal:replace="role"/>
+				</td>
+			</tr>
+			<tr tal:repeat="permission permissions">
+				<td tal:content="permission"></td>
+				<td tal:repeat="role roles">
+					<input type="checkbox" tal:attributes="
+						name string:r${repeat/role/index}p${repeat/permission/index};
+						checked python:role in mapping[permission];
+					"/>
+				</td>
+			</tr>
+		</table>
+		<input type="submit" value="Save changes"/>
+	</form>
+
+
+<span tal:replace="structure here/standard_html_footer" />
+</tal:block>
