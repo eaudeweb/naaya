@@ -26,7 +26,7 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens, view, change_permissions
 
 #Product imports
 from constants import *
@@ -36,6 +36,7 @@ from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForum
 from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.NyAccess import NyAccess
 
 STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
@@ -84,6 +85,8 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     _Add_Naaya_Forum_Message_Permission = ['Anonymous']
     _Add_Edit_Delete_Naaya_Forum_Topic_Permission = ['Administrator', 'Manager']
     _Naaya___Skip_Captcha_Permission = ['Administrator', 'Manager']
+
+    ny_access = NyAccess([PERMISSION_MODIFY_FORUMTOPIC, PERMISSION_ADD_FORUMMESSAGE, PERMISSION_MODIFY_FORUMMESSAGE])
 
     #constructors
     security.declareProtected(view_management_screens, 'manage_addNyForumTopic_html')
@@ -338,5 +341,10 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     
     security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
     forum_add_html = PageTemplateFile('zpt/forum_add', globals())
+
+    security.declareProtected(change_permissions, 'edit_access_html')
+    def edit_access_html(self):
+        """ """
+        return NyForum.ny_access.index_html.__of__(self)()
     
 InitializeClass(NyForum)
