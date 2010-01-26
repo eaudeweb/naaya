@@ -24,6 +24,9 @@
     <a tal:attributes="href string:${here/absolute_url}/admin_comments"
       tal:condition="python:perm_invite or perm_manage"
       rel="nofollow" i18n:translate="">Manage comments</a>
+    <a tal:attributes="href string:${here/absolute_url}/edit_access_html"
+      tal:condition="python:perm_invite or perm_manage"
+      rel="nofollow" i18n:translate="">Edit Permissions</a>
 </div>
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
