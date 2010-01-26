@@ -177,7 +177,7 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
 
     def beforeTearDown(self):
-        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['enabled']])
+        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['geo_enabled']])
 
         ids = [ob['data']['id'] for ob in self.objects]
         self.portal.geo_location_test.manage_delObjects(ids)

@@ -10,7 +10,7 @@
     <legend i18n:translate="">Geo-tagged content types</legend>
     <tal:block repeat="content_type here/list_geotaggable_types">
         <input type="checkbox" name="geotag:list"
-          tal:attributes="checked content_type/enabled;
+          tal:attributes="checked content_type/geo_enabled;
           value content_type/id; id content_type/id" />
         <label tal:content="content_type/title"
           tal:attributes="for content_type/id" />

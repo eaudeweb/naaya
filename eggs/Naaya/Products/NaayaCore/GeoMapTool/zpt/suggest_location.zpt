@@ -63,7 +63,7 @@
 
 	<select id="select_content_type" name="content_type">
 		<tal:block repeat="content_type geomap_tool/list_geotaggable_types">
-			<option tal:condition="content_type/enabled"
+			<option tal:condition="content_type/geo_enabled"
 				tal:attributes="value content_type/id"
 				tal:content="content_type/title"/>
 		</tal:block>
