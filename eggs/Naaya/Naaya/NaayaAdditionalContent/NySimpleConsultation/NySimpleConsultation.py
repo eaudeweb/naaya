@@ -29,6 +29,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from OFS.Image import cookId
+from AccessControl.Permissions import change_permissions
 
 #Product imports
 from Products.NaayaContent.constants import *
@@ -41,6 +42,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyAccess import NyAccess
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
 from simpleconsultation_comment import addSimpleConsultationComment
@@ -174,6 +176,8 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     description = LocalProperty('description')
 
     security = ClassSecurityInfo()
+
+    ny_access = NyAccess([PERMISSION_REVIEW_SIMPLECONSULTATION, PERMISSION_MANAGE_SIMPLECONSULTATION])
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, contributor, releasedate, lang):
         """ """
@@ -422,6 +426,12 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
+
+    security.declareProtected(change_permissions, 'edit_access_html')
+    def edit_access_html(self):
+        """ """
+        return NySimpleConsultation.ny_access.index_html.__of__(self)()
+
 
 InitializeClass(NySimpleConsultation)
 
