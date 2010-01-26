@@ -18,6 +18,7 @@
 # Andrei Laza, Eau de Web
 
 # Python imports
+import re
 
 # Zope imports
 from Acquisition import Implicit
@@ -25,6 +26,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import change_permissions
 import transaction
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Product imports
 
@@ -33,6 +35,12 @@ class NyAccess(Implicit):
 
     def __init__(self, permissions):
         self.permissions = permissions
+
+    security.declareProtected(change_permissions, 'getRoles')
+    def getRoles(self):
+        """ """
+        roles_to_remove = ['Owner', 'Manager']
+        return [role for role in self.aq_parent.validRoles() if role not in roles_to_remove]
 
     security.declareProtected(change_permissions, 'getPermissionMapping')
     def getPermissionMapping(self):
@@ -54,4 +62,36 @@ class NyAccess(Implicit):
             permission.setRoles(mapping[p_name])
 
         transaction.commit()
+
+    security.declareProtected(change_permissions, 'savePermissionMapping')
+    def savePermissionMapping(self, REQUEST=None):
+        """
+        This is called from index_html
+        calls setPermissionMapping after converting the arguments
+        """
+        if REQUEST is None:
+            return
+
+        roles = self.getRoles()
+
+        mapping = {}
+        for p in self.permissions:
+            mapping[p] = []
+
+        for key in REQUEST.form.keys():
+            m = re.match('r(\d+)p(\d+)', key)
+            groups = m.groups()
+            r_i, p_i = int(groups[0]), int(groups[1])
+
+            mapping[self.permissions[p_i]].append(roles[r_i])
+
+        # stop aquire from parent
+        for p in mapping:
+            mapping[p] = tuple(mapping[p])
+
+        self.setPermissionMapping(mapping)
+
+
+    security.declareProtected(change_permissions, 'index_html')
+    index_html = PageTemplateFile('zpt/ny_access', globals())
 
