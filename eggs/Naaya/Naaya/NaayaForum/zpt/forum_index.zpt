@@ -28,6 +28,10 @@
 		tal:attributes="href string:${here/absolute_url}/topic_add_html">
 		<span class="buttons" i18n:translate="">Add topic</span>
 	</a>
+	<a tal:condition="python:here.checkPermission('Change permissions')" style="margin-left: 5px;"
+		tal:attributes="href string:${here/absolute_url}/edit_access_html">
+		<span class="buttons" i18n:translate="">Edit Permissions</span>
+	</a>
 </div>
 
 <tal:block tal:condition="python:len(topics)>0">
