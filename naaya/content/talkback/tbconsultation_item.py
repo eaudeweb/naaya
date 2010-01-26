@@ -30,6 +30,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from App.ImageFile import ImageFile
 from OFS.Image import cookId
+from AccessControl.Permissions import change_permissions
 
 #Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -45,6 +46,7 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.NyAccess import NyAccess
 
 #local imports
 from Section import addSection
@@ -258,6 +260,8 @@ class NyTalkBackConsultation(NyRoleManager,
     description = LocalProperty('description')
 
     security = ClassSecurityInfo()
+
+    ny_access = NyAccess([PERMISSION_REVIEW_TALKBACKCONSULTATION, PERMISSION_MANAGE_TALKBACKCONSULTATION, PERMISSION_INVITE_TO_TALKBACKCONSULTATION])
 
     def __init__(self,
                  id,
@@ -588,6 +592,12 @@ class NyTalkBackConsultation(NyRoleManager,
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
                                        'tbconsultation_index')
+
+    security.declareProtected(change_permissions, 'edit_access_html')
+    def edit_access_html(self):
+        """ """
+        return NyTalkBackConsultation.ny_access.index_html.__of__(self)()
+
 
     # header and footer templates are proxied since invited reviewers
     # have "View" permission only in this folder; if the consultation
