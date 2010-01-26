@@ -71,6 +71,19 @@ class NyBase:
         self.contributor = contributor
         self._p_changed = 1
 
+    security.declareProtected(view_management_screens, 'setDiscussions')
+    def setDiscussions(self, discussion):
+        """
+        Set the discussion flag of the current object to open for discussions or not.
+        @param discussion: the discussion flag
+        @type discussion: integer
+        """
+        if discussion:
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
+        self._p_changed = 1
+
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1, approved_by=None):
         """
