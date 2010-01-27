@@ -35,11 +35,9 @@ _properties = (
 )
 
 FormsTool.custom_forms = (
-    'admin_.+_html',
+    'admin_.',
     '.+_add_html',
     'edit_html',
-    'admin_html',
-    'admin_layout',
 )
 
 FormsTool.custom_skin = 'chm-admin.default'
