@@ -281,10 +281,23 @@ class CatalogTool(ZCatalog, utils):
             self.catalog_object(ob, '/'.join(ob.getPhysicalPath()))
 
         self.manage_catalogClear()
+        self._fix_catalog()
         for ob in walk_folder(self.getSite()):
             add_to_catalog(ob)
 
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_maintenance')
+
+    def _fix_catalog(self):
+        _catalog = self._catalog
+        if hasattr(_catalog, '_length') and '__len__' in _catalog.__dict__:
+            # Old catalogs had a magic __len__ property to get their size; this
+            # has been removed in favor of the _length property. There's a
+            # migration function (Products.ZCatalog.Catalog.migrate__len__)
+            # that removes __len__ and adds _length, but for some reason, some
+            # migrated Naaya sites have both properties. In that case we
+            # remove __len__.
+            del _catalog.__dict__['__len__']
+            self._p_changed = True
 
 InitializeClass(CatalogTool)
 
