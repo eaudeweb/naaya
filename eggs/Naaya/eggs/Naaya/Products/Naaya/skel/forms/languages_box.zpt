@@ -1,10 +1,9 @@
 <tal:block tal:define="translate python:here.getPortalTranslations().gettext; lang_map here/gl_get_languages_map">
-<div id="language" tal:condition="python:len(lang_map) > 1" class="buttons">
-    <span i18n:translate="">Select language:</span>
+<div id="language" tal:condition="python:len(lang_map) > 1">
     <tal:block repeat="item lang_map">
         <a tal:attributes="title python:translate(item['title']);
                            href string:${here/absolute_url}/gl_changeLanguage?old_lang=${item/id};
-                           class python:test(item['selected'], 'selected', None)"
+                           class python:test(item['selected'], 'current', None)"
            tal:content="item/id">en</a>
     </tal:block>
 </div>

@@ -95,6 +95,7 @@
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="scheme" title="Scheme">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="powered.gif" title="Powered"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="addcomment.gif" title="Add comment"/>
