@@ -11,6 +11,15 @@
 	color: #fff;
 	background: url("menunav-a-hover.gif") repeat-x top left;
 }
+
+/* change language links */
+#language a {
+    background: url("bg-lang-btns.gif") no-repeat bottom left;
+}
+#language a:hover, #language a.current {
+    background: url("bg-lang-btns.gif") no-repeat top left;
+}
+
 /*BEGIN-TINYMCE-STYLESELECT*/
 .infobox {
 	background: #000080;
