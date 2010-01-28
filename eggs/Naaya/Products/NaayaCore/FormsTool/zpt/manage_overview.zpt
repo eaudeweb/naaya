@@ -1,0 +1,57 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<tal:block define="global current_form_id request/form_id|nothing" />
+
+<style>
+    h1 { font-size: 120%; }
+    li.form a { font-family: inherit; }
+    li.form span.customized_form_buttons a { text-decoration: underline; }
+    li.form em { color: red; }
+    li.form a.uncustomize { color: red; }
+</style>
+
+<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+<script>
+$(function() {
+    $('li.form span.customized_form_buttons').each(function() {
+        var form_id = $('> a', $(this).parent()).text();
+        var uncustomize_button = $('<' + 'a>').addClass('uncustomize');
+        uncustomize_button.attr('href', '#')
+        $(this).append('[').append(uncustomize_button).append(']');
+        uncustomize_button.text('revert').click(function(evt) {
+            evt.preventDefault();
+            $.post('./manage_delObjects', {'ids:list': form_id}, do_reload);
+        });
+        function do_reload() {
+            location.reload(true);
+        }
+    });
+});
+</script>
+
+<h1>All portal forms</h1>
+
+<ul>
+    <tal:block define="customized_form_ids here/objectIds"
+               repeat="form_id here/getFormIds">
+        <li class="form" tal:define="
+          customized python:form_id in customized_form_ids;
+          form_url python:test(customized,
+              '%s/%s/manage_workspace' % (here.absolute_url(), form_id),
+              'manage_customize?form_id=%s' % form_id);
+          ">
+            <a tal:attributes="href form_url"
+               tal:content="form_id"></a>
+            <span class="customized_form_buttons"
+                  tal:condition="customized">
+                <em>(customized)</em>
+                [<a tal:attributes="href string:${here/absolute_url
+                                        }/show_diff?form_id=${form_id}"
+                    >diff</a>]
+            </span>
+        </li>
+    </tal:block>
+</ul>
+
+<tal:block content="structure here/manage_page_footer"/>
