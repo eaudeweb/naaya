@@ -26,7 +26,7 @@ from Testing import ZopeTestCase
 from OFS.SimpleItem import SimpleItem
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, genObjectId
 
 class Parent(object):
 
@@ -92,7 +92,28 @@ class make_id_TestCase(NaayaFunctionalTestCase):
         id = make_id(self.parent, temp_parent=self.temp_parent, id='', title='', prefix='')
         self.assertEqual(len(id), 5)
 
+class SlugifyTestCase(ZopeTestCase.TestCase):
+    def assert_slug(self, initial_string, expected_slug):
+        slug = genObjectId(initial_string)
+        self.assertEqual(slug, expected_slug)
+
+    def test_simple(self):
+        self.assert_slug('asdf', 'asdf')
+        self.assert_slug('here we are', 'here-we-are')
+        self.assert_slug('something-else', 'something-else')
+
+    def test_multiple_dashes(self):
+        self.assert_slug('-----', '-')
+        self.assert_slug('t-----s-', 't-s-')
+
+    def test_latin_1(self):
+        self.assert_slug('ab\xe9c\xfc\xe7\xe8de', 'abecucede')
+
+    def test_utf8(self):
+        self.assert_slug('ab\xc3\xa9c\xc3\xbc\xc3\xa7\xc3\xa8de', 'abecucede')
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(make_id_TestCase))
+    suite.addTest(makeSuite(SlugifyTestCase))
     return suite
