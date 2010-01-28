@@ -74,9 +74,9 @@ class ref_manager:
         #get the collection
         return self.__collection
 
-    def get_list(self):
+    def get_list(self, sort_attr='title'):
         #get a list with all items
-        try: return self.utSortObjsListByAttr(self.__collection.values(), 'title', 0)
+        try: return self.utSortObjsListByAttr(self.__collection.values(), sort_attr, 0)
         except: return []
 
     def get_item(self, id):
