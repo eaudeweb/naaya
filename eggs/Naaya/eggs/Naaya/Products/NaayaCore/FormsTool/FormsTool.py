@@ -61,7 +61,7 @@ class FormsTool(Folder):
     icon = 'misc_/NaayaCore/FormsTool.gif'
 
     manage_options = (
-        {'label':'All forms', 'action':'manage_customize'},
+        {'label':'All forms', 'action':'manage_overview'},
         Folder.manage_options[0],
         Folder.manage_options[1],
         Folder.manage_options[4],
@@ -119,6 +119,9 @@ class FormsTool(Folder):
         # forms of type NaayaPageTemplateFile
         for form_id, tmpl in naaya_templates.iteritems():
             yield {'id': form_id, 'title': form_id, 'form_ob': tmpl}
+
+    def getFormIds(self):
+        return sorted(set(form['id'] for form in self.listDefaultForms()))
 
     def getDefaultForm(self, form_id):
         for form in self.listDefaultForms():
@@ -207,7 +210,8 @@ class FormsTool(Folder):
             return REQUEST.RESPONSE.redirect('%s/%s/manage_workspace' %
                 (self.absolute_url(), form['id']))
 
-    manage_customize = PageTemplateFile('zpt/customize', globals())
+    manage_overview = PageTemplateFile('zpt/manage_overview', globals())
+    manage_customize = PageTemplateFile('zpt/manage_customize', globals())
 
 InitializeClass(FormsTool)
 
