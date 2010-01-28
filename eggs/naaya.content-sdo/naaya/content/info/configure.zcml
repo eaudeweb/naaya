@@ -1,0 +1,10 @@
+<configure
+  xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="naaya.content">
+
+  <naaya:content factory=".info_item.get_config" />
+
+  <adapter factory="naaya.content.info.info_item.InfoCSVImportAdapter" />
+
+</configure>
