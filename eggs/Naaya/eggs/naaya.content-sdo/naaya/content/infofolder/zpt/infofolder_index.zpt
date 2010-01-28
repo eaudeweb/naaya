@@ -1,0 +1,43 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="body">
+        <tal:block tal:condition="python:here.checkPermissionEditObject()">
+            <div id="admin_this_folder">
+                <tal:block tal:condition="python: not here.hasVersion()">
+                    <a tal:attributes="href string:${here/absolute_url}/edit_html">
+                        <span i18n:translate="">Edit</span>
+                    </a>
+                </tal:block>
+            </div>
+        </tal:block>
+
+        <h1>
+            <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+                title here/get_meta_label;
+                alt here/get_meta_label" />
+                <span tal:replace="here/title" />
+                <span class="available_langs"
+                    tal:condition="python:here.check_item_title(here, here.title)">
+                    <span i18n:translate="">Item only translated in </span>
+                    <span tal:repeat="lang here/gl_get_languages_map">
+                        <a tal:content="python:' %s' % lang['title']"
+                        tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+                        tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                    </span>
+                </span>
+        </h1>
+
+        <tal:block replace="structure here/folder_menusubmissions"/>
+
+        <div class="boxes-right">
+            Boxes right
+        </div>
+
+        <div class="main-content" tal:define="
+                        geo_location here/geo_location;
+                        address geo_location/address|string:;">
+            <div class="description" tal:condition="here/description"
+                tal:content="structure here/description" />
+            <tal:block content="structure here/folder_categories"/>
+        </div>
+    </metal:block>
+</metal:block>
