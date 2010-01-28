@@ -13,32 +13,36 @@ fieldset legend {
 	padding: 0 10px;
 	color: #444;
 }
+/* change language links */
 #language {
-	float: right;
-	margin-right: 5px;
-	width: 22em;
-	display: inline;
-	z-index: 100;
-	position: relative;
-	top: 0;
-	left: 0;
+    float:right;
+    margin-right: 0.7em;
+    white-space: nowrap !important;
+    color: #333;
+    /*padding: 0.3em 0.2em 0 0;*/
+    position: relative;
+    padding-top: 0.1em;
 }
-#language label {
-	font-family: Arial, Helvetica, sans-serif;
-	float: left;
-	padding: 5px 0 0 0;
-	display: inline;
+#language span {
+    font-size:0.75em;
 }
-#language select {
-	float: right;
-	margin-top: 2px;
-	margin-right: 1.4em;
+body #language a {
+    display: block;
+    width: 31px;
+    height: 23px;
+    line-height: 23px;
+    font-size: 11px !important;
+    color: #000;
+    text-decoration: none;
+    text-transform: capitalize;
+    text-align: center;
+    font-weight: normal;
+    float: left;
+    border: none;
+    padding: 0;
 }
-* html #language select {
-	font-size: 110% !important;
-}
-#language form {
-	margin:0;
+#language form{
+    display:inline;
 }
 /* Remove the border around images */
 a img {

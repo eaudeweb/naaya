@@ -22,3 +22,10 @@ a#eealink {
 #header {
 	background: #5f7f7e url('ew-header.jpg') repeat-y top right;
 }
+/* change language links */
+#language a {
+    background: url("bg-lang-btns.gif") no-repeat bottom left;
+}
+#language a:hover, #language a.current {
+    background: url("bg-lang-btns.gif") no-repeat top left;
+}

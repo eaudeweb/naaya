@@ -25,6 +25,7 @@
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="EW-skin-00" title="Yellow leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -38,6 +39,7 @@
 			</scheme>
 			<scheme id="EW-skin-01" title="Light blue leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -51,6 +53,7 @@
 			</scheme>
 			<scheme id="EW-skin-02" title="Pink leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -64,6 +67,7 @@
 			</scheme>
 			<scheme id="EW-skin-03" title="Dark green leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -77,6 +81,7 @@
 			</scheme>
 			<scheme id="EW-skin-04" title="Light yellow leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -90,6 +95,7 @@
 			</scheme>
 			<scheme id="EW-skin-05" title="Orange leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -103,6 +109,7 @@
 			</scheme>
 			<scheme id="EW-skin-06" title="Purple leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -116,6 +123,7 @@
 			</scheme>
 			<scheme id="EW-skin-07" title="Large purple leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -129,6 +137,7 @@
 			</scheme>
 			<scheme id="EW-skin-08" title="Blue leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -142,6 +151,7 @@
 			</scheme>
 			<scheme id="EW-skin-09" title="More blue leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -155,6 +165,7 @@
 			</scheme>
 			<scheme id="EW-skin-10" title="Plain green leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -168,6 +179,7 @@
 			</scheme>
 			<scheme id="EW-skin-11" title="Many green leaves">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -181,6 +193,7 @@
 			</scheme>
 			<scheme id="EW-skin-12" title="Orange-red branch">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -194,6 +207,7 @@
 			</scheme>
 			<scheme id="EW-skin-13" title="Orange-red branches">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -207,6 +221,7 @@
 			</scheme>
 			<scheme id="EW-skin-14" title="Orange-red tree">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -220,6 +235,7 @@
 			</scheme>
 			<scheme id="EW-skin-15" title="Green flower">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -233,6 +249,7 @@
 			</scheme>
 			<scheme id="EW-skin-16" title="Yellow flower">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
@@ -246,6 +263,7 @@
 			</scheme>
 			<scheme id="EW-skin-17" title="Bathing waters">
 				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="bg-lang-btns.gif" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
