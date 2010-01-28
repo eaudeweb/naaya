@@ -76,7 +76,7 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
 
     idSuffix = ''
     while (id+idSuffix in container.objectIds() or
-           getattr(container, id+idSuffix, None) is not None):
+           container._getOb(id+idSuffix, None) is not None):
         idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
