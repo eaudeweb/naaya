@@ -34,12 +34,12 @@
 
 		<div class="field">
 			<label for="start_date"><span i18n:translate="">Start date</span> <noscript>(<em i18n:translate="">dd/mm/yyyy</em>)</noscript></label>
-			<input type="text" name="start_date" id="start_date" tal:attributes="value python:here.getSession('start_date', '')" class="vDateField" />
+			<input type="text" name="start_date" id="start_date" tal:attributes="value python:here.getSession('start_date', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" class="vDateField" />
 		</div>
 
 		<div class="field">
 			<label for="end_date"><span i18n:translate="">End date</span> <noscript>(<em i18n:translate="">dd/mm/yyyy</em>)</noscript></label>
-			<input type="text" name="end_date" id="end_date" tal:attributes="value python:here.getSession('end_date', '')" class="vDateField" />
+			<input type="text" name="end_date" id="end_date" tal:attributes="value python:here.getSession('end_date', here.utConvertDateTimeObjToString(DateTime() + 30))" class="vDateField" />
 		</div>
 
 		<div class="field-inline">
