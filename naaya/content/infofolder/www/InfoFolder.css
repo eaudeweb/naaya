@@ -1,0 +1,24 @@
+.boxes-right 
+{
+ float: right;
+ width: 20em;
+}
+
+.select{
+	width: 15%;
+	vertical-align: middle !important;
+	text-align: left !important;
+}
+.checkbox{
+	vertical-align: top;
+}
+.list_title{
+	vertical-align: top;
+}
+ul.infofolder li{
+	margin-left: -2em
+}
+.header{
+	vertical-align: middle !important;
+	text-align: left !important;
+}
