@@ -94,7 +94,7 @@ function createKey(key)
 <p>
 	<form method="get" action="manage_userRoles_html" name="frmSearchUsers">
 		<label for="query_users">
-			<span tal:omit-tag="">Search users</span>
+			<span tal:omit-tag="" i18n:translate="">Search users</span>
 		</label>
 		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
 		<input type="submit" value="Search" i18n:attributes="value" />
