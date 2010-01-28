@@ -43,7 +43,7 @@
 		</div>
 		<div>
 			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
-			<span tal:content="ob/description" />
+			<span tal:content="structure ob/description" />
 			<br/><br/>
 			<a tal:attributes="href ob/absolute_url" style="text-decoration: underline;">
 				View profile
