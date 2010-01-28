@@ -25,6 +25,7 @@ import string
 import calendar
 from random import choice
 import re
+import unicodedata
 from copy import deepcopy
 import md5
 import base64
@@ -152,9 +153,24 @@ def toAscii(s):
     'cafe-'
     """
 
-    if isinstance(s, unicode):
-        s = s.encode('iso-8859-15', 'ignore')
+    if isinstance(s, str):
+        try:
+            s = s.decode('utf-8')
+        except UnicodeDecodeError:
+            pass
 
+    if isinstance(s, unicode):
+        return unicode_to_ascii(s)
+    else:
+        return str_to_ascii(s)
+
+def unicode_to_ascii(s):
+    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I)
+    s = unicodedata.normalize('NFKD', s)
+    return s.encode('ascii', 'ignore')
+
+
+def str_to_ascii(s):
     latin_chars = u'\xc0\xc1\xc2\xc3\xc4\xc5\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd1\xd2\xd3\xd4\xd5\xd6\xd8\xd9\xda\xdb\xdc\xdd\xe0\xe1\xe2\xe3\xe4\xe5\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf1\xf2\xf3\xf4\xf5\xf6\xf8\xf9\xfa\xfb\xfc\xfd\xff'
     latin_chars = latin_chars.encode("ISO-8859-15")
 
