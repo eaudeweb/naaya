@@ -528,12 +528,9 @@ class utils:
 
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
-        l_len = len(p_list)
-        l_temp = map(None, map(self._ut_getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
-        l_temp.sort()
-        if p_desc:
-            l_temp.reverse()
-        return map(operator.getitem, l_temp, (-1,)*l_len)
+        return sorted(p_list,
+                      key=operator.attrgetter(p_attr),
+                      reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
         """Sort a list of objects by an item values"""
