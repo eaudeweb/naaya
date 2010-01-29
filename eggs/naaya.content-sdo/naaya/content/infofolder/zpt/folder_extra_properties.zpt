@@ -26,7 +26,7 @@
             <th class="select" i18n:translate="">Only one</th>
         </tr>
         <tal:block define="list_type string:EXTRA_PROPERTIES_LISTS"
-            repeat="list python:here.all_topic_lists(list_type)">
+            repeat="list python:here.get_topic_lists(list_type)">
             <tr tal:define="list_id list/list_id;
                             list_title list/list_title">
                 <td class="checkbox">
