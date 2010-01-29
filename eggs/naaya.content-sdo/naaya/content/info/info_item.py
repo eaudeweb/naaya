@@ -51,6 +51,9 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+from Products.Localizer.LocalPropertyManager import LocalProperty
+
+import naaya.content.infofolder.skel as skel
 
 from interfaces import INyInfo
 
@@ -130,7 +133,6 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a Info type of object.
     """
-    import pdb;pdb.set_trace()
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
     else:
@@ -146,6 +148,18 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyInfo_object(self, id, _title, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+    non_schema_properties = [key for key in schema_raw_data.keys() if key not in DEFAULT_SCHEMA.keys()]
+
+    for property in non_schema_properties:
+        if property in self.get_topic_list_ids('FOLDER_CATEGORIES'):
+            info_extra_dict = ob.info_categories
+        elif property in self.get_topic_list_ids('EXTRA_PROPERTIES_LISTS'):
+            info_extra_dict = ob.info_extra_properties_lists
+        else:
+            raise ValueError('Propery not in property lists')
+            #continue
+        info_extra_dict[property] = schema_raw_data[property]
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -178,7 +192,7 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
     auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
-        REQUEST.RESPONSE.redirect(self.absolute_url())
+        REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), ob.id))
     return ob.getId()
 
 class info_item(Implicit, NyContentData):
@@ -209,6 +223,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
+        self.info_categories = {}
+        self.info_extra_properties_lists = {}
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -240,14 +256,6 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
-
-    def obfuscated_email(self):
-        ret = self.email
-        if self.email:
-            if isinstance(self.email, unicode):
-                self.email = self.email.encode('UTF-8')
-            ret = self.email.replace('@', ' at ')
-        return ret
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
@@ -306,36 +314,14 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         """ """
         return self.getFormsTool().getContent({'here': self}, 'info_edit')
 
-    _minimap_template = PageTemplateFile('zpt/minimap', globals())
-    def minimap(self):
-        if self.geo_location not in (None, Geo()):
-            simplepoints = [{'lat': self.geo_location.lat, 'lon': self.geo_location.lon}]
-        elif self.aq_parent.geo_location not in (None, Geo()):
-            simplepoints = [{'lat': self.aq_parent.geo_location.lat, 'lon': self.aq_parent.geo_location.lon}]
-        else:
-            return ""
-        json_simplepoints = json.dumps(simplepoints, default=json_encode)
-        return self._minimap_template(points=json_simplepoints)
-
-    def has_coordinates(self):
-        """ check if the current object has map coordinates"""
-        if self.geo_location:
-            return self.geo_location.lat and self.geo_location.lon
-        return False
-
-class InfoCSVImportAdapter(object):
-    implements(ICSVImportExtraColumns)
-    adapts(INyInfo)
-    def __init__(self, ob):
-        self.ob = ob
-    def handle_columns(self, extra_properties):
-        self.ob.add_EmploymentRecord(None, None, extra_properties['Institution'], True)
-
-def json_encode(ob):
-    """ try to encode some known value types to JSON """
-    if isinstance(ob, Decimal):
-        return float(ob)
-    raise ValueError
+    def get_properties(self, property_group, property_id):
+        ptool = self.getPortletsTool()
+        property_title = getattr(ptool, property_id, None).title
+        if property_group == 'FOLDER_CATEGORIES':
+            info_extra_dict = self.info_categories
+        elif property_group =='EXTRA_PROPERTIES_LISTS':
+            info_extra_dict = self.info_extra_properties_lists
+        return [property_title, self.utConvertToList(info_extra_dict[property_id])]
 
 InitializeClass(NyInfo)
 

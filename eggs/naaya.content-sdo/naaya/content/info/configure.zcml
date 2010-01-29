@@ -5,6 +5,4 @@
 
   <naaya:content factory=".info_item.get_config" />
 
-  <adapter factory="naaya.content.info.info_item.InfoCSVImportAdapter" />
-
 </configure>

@@ -1,0 +1,10 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+	<metal:block fill-slot="body">
+		<ul>
+			<li tal:repeat="info here/getInfosByCategoryTitle">
+				<a tal:attributes="href string:${here/absolute_url}/${info}"
+					tal:content="info/title"/>
+			</li>
+		</ul>
+	</metal:block>
+</metal:block>
