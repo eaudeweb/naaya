@@ -122,12 +122,25 @@ class CSVImportTool(Implicit, Item):
                 for subname in widget.multiple_form_values:
                     prop_subname = prop_name + '.' + subname
                     prop_map[widget.title + ' - ' + subname] = {
-                        'column': prop_subname, 'widget': widget}
+                        'column': prop_subname,
+                        'convert': widget.convert_from_user_string,
+                    }
                 if isinstance(widget, GeoWidget):
                     for subname in widget.multiple_form_values:
                         self.geo_fields[subname] = prop_name + '.' + subname
             else:
-                prop_map[widget.title] = {'column': prop_name, 'widget': widget}
+                prop_map[widget.title] = {
+                    'column': prop_name,
+                    'convert': widget.convert_from_user_string,
+                }
+
+        # and now for dynamic properties
+        dynprop_tool = self.getSite().getDynamicPropertiesTool()
+        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
+            prop_map[dyn_prop.name] = {
+                'column': dyn_prop.id,
+                'convert': lambda x: x,
+            }
 
         try:
             reader = UnicodeReader(data)
@@ -157,8 +170,8 @@ class CSVImportTool(Implicit, Item):
                             extra_properties[column] = value
                             continue
                         key = prop_map[column]['column']
-                        widget = prop_map[column]['widget']
-                        properties[key] = widget.convert_from_user_string(value)
+                        convert = prop_map[column]['convert']
+                        properties[key] = convert(value)
                     properties = self.do_geocoding(properties)
                     ob_id = add_object(location_obj, _send_notifications=False, **properties)
                     ob = location_obj._getOb(ob_id)

@@ -143,6 +143,8 @@ class NyProperties(LocalPropertyManager):
         @param lang: language code
         @type lang: string
         """
+        if lang is None:
+            lang = self.gl_get_selected_language()
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
