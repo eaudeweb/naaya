@@ -114,7 +114,7 @@ training_training_type = {
                     ]
 }
 
-URL_CATEGORIES = [
+FOLDER_CATEGORIES = [
         enterprises_type_of_initiative, enterprises_nature_of_initiative,
         enterprises_topic_coverage, enterprises_services, enterprises_geographic_scope,
         networks_network_type, networks_scope, networks_audience, networks_status,

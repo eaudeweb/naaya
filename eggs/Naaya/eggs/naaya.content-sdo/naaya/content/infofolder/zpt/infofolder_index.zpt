@@ -32,12 +32,20 @@
             Boxes right
         </div>
 
-        <div class="main-content" tal:define="
-                        geo_location here/geo_location;
-                        address geo_location/address|string:;">
-            <div class="description" tal:condition="here/description"
-                tal:content="structure here/description" />
-            <tal:block content="structure here/folder_categories"/>
-        </div>
+		<fieldset>
+		<legend i18n:translate="">Folder categories</legend>
+		<dl tal:repeat="category_id here/folder_categories/keys">
+			<tal:block define="category python:here.getCategoryList(category_id);
+					category_title python:category[0];
+					category_values python:category[1]">
+			<dt tal:content="category_title"/>
+			<dd>
+				<ul>
+					<li tal:repeat="value category_values" tal:content="value"/>
+				</ul>
+			</dd>
+			</tal:block>
+		</dl>
+		</fieldset>
     </metal:block>
 </metal:block>
