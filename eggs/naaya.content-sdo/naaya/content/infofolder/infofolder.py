@@ -53,8 +53,8 @@ from Products.NaayaCore.managers.utils import make_id
 from naaya.content.info import info_item
 
 from constants import *
-from skel import URL_CATEGORIES, EXTRA_PROPERTIES_LISTS
-LISTS = URL_CATEGORIES + EXTRA_PROPERTIES_LISTS
+import skel
+LISTS = skel.URL_CATEGORIES + skel.EXTRA_PROPERTIES_LISTS
 
 METATYPE_OBJECT = 'Naaya InfoFolder'
 ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
@@ -71,6 +71,8 @@ def setupContentType(site):
     ptool = site.getPortletsTool()
     for topics_list in LISTS:
         list_id = topics_list['list_id']
+        if list_id == 'countries':
+            continue
         list_title = topics_list['list_title']
         itopics = getattr(ptool, list_id, None)
         if not itopics:
@@ -152,6 +154,8 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    #Process extra fields (categories, extra_properties)
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -291,29 +295,37 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'infofolder_edit')
 
-    def all_topic_lists(self, list_type):
+    def all_topic_lists(self, list_type='URL_CATEGORIES'):
         """Returns the list of id's of all the topic lists available
         within the list_type category (URL Category or Extra property)"""
-        if list_type == 'URL_CATEGORIES':
-            return [topic_list for topic_list in URL_CATEGORIES]
-        if list_type == 'EXTRA_PROPERTIES_LISTS':
-            list_of_lists = [topic_list for topic_list in EXTRA_PROPERTIES_LISTS]
-            ptool = self.getPortletsTool()
+        skel_lists = getattr(skel, list_type)
+        list_of_lists = []
+        ptool = self.getPortletsTool()
+        for skel_list in skel_lists:
+            list_id = skel_list['list_id']
+            list_title = skel_list['list_title']
+            ref_list = getattr(ptool, list_id, None)
+            if ref_list is not None:
+                ref_list_items = [list_item.title for list_item in ref_list.get_list()]
+                list_of_lists.append({'list_id': list_id, 'list_title': list_title,
+            'list_items': ref_list_items})
+        """if list_type == 'EXTRA_PROPERTIES_LISTS':
             countries = getattr(ptool, 'countries', None)
             countries_list = [country.title for country in countries.get_list()]
             list_of_lists.append({'list_id': 'countries', 'list_title': 'Country',
-                'list_items': countries_list})
-            return list_of_lists
+                'list_items': countries_list})"""
+        return list_of_lists
 
-    def getTopics(self, category):
+    def getCategoryList(self, category_id):
         ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'infofolder_topics', None)
-        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+        category_list = getattr(ptool, category_id, None)
+        list_items = [c_list.title for c_list in category_list.get_list('id')]
+        return [category_list.title, list_items]
 
     def is_single_select(self, list_id):
-        if list_id in self.folder_categories:
+        if list_id in self.folder_categories.keys():
             return self.folder_categories[list_id]
-        if list_id in self.folder_extra_properties:
+        if list_id in self.folder_extra_properties.keys():
             return self.folder_extra_properties[list_id]
         return False
 
@@ -325,7 +337,10 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         temp = {}
         if _folder_categories:
             for topic_list in _folder_categories:
-                temp[topic_list] = topic_list in _single_select_lists
+                if topic_list == 'countries':
+                    temp[topic_list] = True
+                else:
+                    temp[topic_list] = topic_list in _single_select_lists
         redirect = REQUEST.get('redirect_url', None)
         if redirect == 'folder_categories_html':
             self.folder_categories = temp

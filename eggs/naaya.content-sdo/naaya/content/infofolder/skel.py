@@ -123,6 +123,10 @@ URL_CATEGORIES = [
         training_training_type
         ]
 
+countries = {
+          'list_id': 'countries',
+          'list_title': 'Countries',
+}
 extra_properties_frequency = {
           'list_id': 'extra_properties_frequency',
           'list_title': 'Frequency',
@@ -139,7 +143,7 @@ extra_properties_duration = {
                 'Three years', 'Four years']
 }
 
-EXTRA_PROPERTIES_LISTS = [extra_properties_frequency, extra_properties_duration]
+EXTRA_PROPERTIES_LISTS = [countries, extra_properties_frequency, extra_properties_duration]
 
 EXTRA_PROPERTIES = [
                     ['subtitle', 'Subtitle', 'String'],
