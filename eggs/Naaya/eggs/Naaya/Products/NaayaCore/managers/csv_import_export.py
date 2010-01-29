@@ -251,6 +251,8 @@ class CSVExportTool(Implicit, Item):
 
         prop_getters = []
         dump_header = []
+
+        # create columns for schema widgets
         for widget in schema.listWidgets():
             prop_name = widget.prop_name()
             if widget.multiple_form_values:
@@ -263,6 +265,13 @@ class CSVExportTool(Implicit, Item):
                 convert = widget.convert_to_user_string
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
+
+        # create columns for dynamic properties
+        dynprop_tool = self.getSite().getDynamicPropertiesTool()
+        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
+            dump_header.append(dyn_prop.name)
+            getter = getter_factory(dyn_prop.id, None, simple_convert)
+            prop_getters.append(getter)
 
 
         def generate_dump_items():
