@@ -31,6 +31,14 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Globals import package_home
 
+try:
+    from naaya.content.bfile.tests.blob_patch import patch_testing_db
+except ImportError:
+    def patch_testing_db():
+        def cleanup():
+            pass
+        return cleanup
+
 
 test_zcml = """<configure
     xmlns="http://namespaces.zope.org/zope"
@@ -109,6 +117,8 @@ class NaayaLayerClass(object):
     def setUp(self):
         from Products.ExtFile import ExtFile
         ExtFile.REPOSITORY_PATH = ['var', 'testing']
+        self.cleanup_blob_patch = patch_testing_db()
+
         self.app = ZopeTestCase.app()
         self.install()
         self.mail_divert.divert()
@@ -119,6 +129,7 @@ class NaayaLayerClass(object):
         if os.path.isdir(repository):
             import shutil
             shutil.rmtree(repository, 1)
+        self.cleanup_blob_patch()
 
     def install(self):
         self.addRootUser()
