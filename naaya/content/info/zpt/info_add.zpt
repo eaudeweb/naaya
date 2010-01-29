@@ -35,6 +35,20 @@
 				</div>
 			</tal:block>
 		</tal:block>
-			<!--><tal:block repeat="c_item python:here.getCategoryList(category)" content="c_item"/>-->
+		<tal:block repeat="category here/folder_extra_properties/items">
+			<tal:block define="category_id python:category[0];
+								is_multiple not:python:category[1];
+								category_list python:here.getCategoryList(category_id);
+								category_title python:category_list[0];
+								category_items python:category_list[1]">
+				<div class="field">
+					<label tal:content="category_title"/>
+					<select tal:attributes="name category_id; multiple is_multiple">
+						<option tal:repeat="category_item category_items"
+							tal:attributes="value category_item" tal:content="category_item"/>
+					</select>
+				</div>
+			</tal:block>
+		</tal:block>
 	</tal:block>
 </tal:block>

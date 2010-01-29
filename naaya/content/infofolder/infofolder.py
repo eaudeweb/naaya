@@ -54,7 +54,7 @@ from naaya.content.info import info_item
 
 from constants import *
 import skel
-LISTS = skel.URL_CATEGORIES + skel.EXTRA_PROPERTIES_LISTS
+LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES_LISTS
 
 METATYPE_OBJECT = 'Naaya InfoFolder'
 ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
@@ -295,8 +295,9 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'infofolder_edit')
 
-    def all_topic_lists(self, list_type='URL_CATEGORIES'):
-        """Returns the list of id's of all the topic lists available
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
+    def get_topic_lists(self, list_type='FOLDER_CATEGORIES'):
+        """Returns the list of dictionaries of all the topic lists available
         within the list_type category (URL Category or Extra property)"""
         skel_lists = getattr(skel, list_type)
         list_of_lists = []
@@ -309,18 +310,25 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
                 ref_list_items = [list_item.title for list_item in ref_list.get_list()]
                 list_of_lists.append({'list_id': list_id, 'list_title': list_title,
             'list_items': ref_list_items})
-        """if list_type == 'EXTRA_PROPERTIES_LISTS':
-            countries = getattr(ptool, 'countries', None)
-            countries_list = [country.title for country in countries.get_list()]
-            list_of_lists.append({'list_id': 'countries', 'list_title': 'Country',
-                'list_items': countries_list})"""
         return list_of_lists
 
-    def getCategoryList(self, category_id):
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
+    def get_topic_list_ids(self, list_type='FOLDER_CATEGORIES'):
+        """Returns the list of id's of all the topic lists available
+        within the list_type category (URL Category or Extra property)"""
+        skel_lists = getattr(skel, list_type)
+        return [skel_list['list_id'] for skel_list in skel_lists]
+
+    def getCategoryList(self, ref_list_id):
         ptool = self.getPortletsTool()
-        category_list = getattr(ptool, category_id, None)
+        category_list = getattr(ptool, ref_list_id, None)
         list_items = [c_list.title for c_list in category_list.get_list('id')]
         return [category_list.title, list_items]
+
+    def get_ref_list_title(self, ref_list_id):
+        ptool = self.getPortletsTool()
+        ref_list = getattr(ptool, ref_list_id, None)
+        return ref_list.title
 
     def is_single_select(self, list_id):
         if list_id in self.folder_categories.keys():
@@ -328,6 +336,14 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         if list_id in self.folder_extra_properties.keys():
             return self.folder_extra_properties[list_id]
         return False
+
+    def getInfosByCategoryTitle(self, category='enterprises_topic_coverage',
+            category_title='Working Environment'):
+        ob_list = []
+        for ob in self.objectValues():
+            if category_title in self.utConvertToList(ob.info_categories[category]):
+                ob_list.append(ob.id)
+        return ob_list
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
     def manageCategories(self, REQUEST):
@@ -340,7 +356,7 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
                 if topic_list == 'countries':
                     temp[topic_list] = True
                 else:
-                    temp[topic_list] = topic_list in _single_select_lists
+                    temp[topic_list] = topic_list in self.utConvertToList(_single_select_lists)
         redirect = REQUEST.get('redirect_url', None)
         if redirect == 'folder_categories_html':
             self.folder_categories = temp
@@ -354,6 +370,7 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
     folder_categories_html = PageTemplateFile('zpt/folder_categories', globals())
     folder_extra_properties_html = PageTemplateFile('zpt/folder_extra_properties', globals())
+    infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
 
 InitializeClass(NyInfoFolder)
 

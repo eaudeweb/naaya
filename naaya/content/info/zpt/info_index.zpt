@@ -20,6 +20,78 @@
 			</tal:block>
 		</div>
 	</tal:block>
+	<h1 tal:content="here/title"/>
+	<dl>
+		<dt i18n:translate="">Website URL:</dt>
+		<dd tal:content="here/website"/>
+	</dl>
+	<fieldset>
+	<legend i18n:translate="">Specifications</legend>
+	<dl tal:repeat="info_category here/info_categories/items">
+		<tal:block define="category_id python:info_category[0];
+				category python:here.get_properties('FOLDER_CATEGORIES', category_id);
+				category_title python:category[0];
+				category_values python:category[1]">
+		<dt tal:content="category_title"/>
+		<dd>
+			<ul>
+				<li tal:repeat="value category_values" tal:content="value"/>
+			</ul>
+		</dd>
+		</tal:block>
+	</dl>
+	</fieldset>
+	<h2 i18n:translate="">Extras</h2>
+	<dl tal:repeat="info_category here/info_extra_properties_lists/items">
+		<tal:block define="category_id python:info_category[0];
+				category python:here.get_properties('EXTRA_PROPERTIES_LISTS', category_id);
+				category_title python:category[0];
+				category_values python:category[1]">
+		<dt tal:content="category_title"/>
+		<dd>
+			<ul>
+				<li tal:repeat="value category_values" tal:content="value"/>
+			</ul>
+		</dd>
+		</tal:block>
+	</dl>
+	<h2 i18n:translate="">Organisation</h2>
+	<dl>
+		<dt i18n:translate="">Name</dt>
+		<dd tal:content="here/organisation"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">City</dt>
+		<dd tal:content="here/city"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">Country</dt>
+		<dd tal:content="here/country"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">Email</dt>
+		<dd tal:content="here/email"/>
+	</dl>
+	<h2 i18n:translate="">Overview</h2>
+	<div tal:content="structure here/description"/>
+	<h2 i18n:translate="">Submitted by</h2>
+	<dl>
+		<dt i18n:translate="">First name</dt>
+		<dd tal:content="here/contributor_first_name"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">Last Name</dt>
+		<dd tal:content="here/contributor_first_name"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">Email</dt>
+		<dd tal:content="here/contributor_email"/>
+	</dl>
+	<dl>
+		<dt i18n:translate="">Telephone</dt>
+		<dd tal:content="here/contributor_telephone"/>
+	</dl>
+
 </metal:block>
 
 </metal:block>
