@@ -1,137 +1,25 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="here/standard_template_macro">
 
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
-	<br clear="all"/>
-	<div id="admin_this_folder">
-		<tal:block tal:condition="python: not here.hasVersion()">
-			<a tal:attributes="href string:${here/absolute_url}/edit_html">
-				<span i18n:translate="">Edit</span>
-			</a>
-		</tal:block>
-	</div>
-</tal:block>
+<metal:block metal:fill-slot="title">
+</metal:block>
 
-<h1>
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-		title here/get_meta_label;
-		alt here/get_meta_label" />
-		<span tal:replace="string:${here/personal_title} ${here/title}" />
-		<span class="available_langs"
-			tal:condition="python:here.check_item_title(here, here.title)">
-			<span i18n:translate="">Item only translated in </span>
-			<span tal:repeat="lang here/gl_get_languages_map">
-				<a tal:content="python:' %s' % lang['title']"
-				tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-				tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-			</span>
-		</span>
-</h1>
+<metal:block metal:fill-slot="head">
+<!--	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>-->
+</metal:block>
 
-<div class="boxes-right">
-	<div class="box" tal:condition="here/picture">
-		<div class="body">
-			<img tal:attributes="src string:${here/absolute_url}/render_picture"
-			alt="Expert picture" width="230" i18n:attributes="alt"/>
+<metal:block metal:fill-slot="body">
+	<tal:block tal:condition="python:here.checkPermissionEditObject()">
+		<br clear="all"/>
+		<div id="admin_this_folder">
+			<tal:block tal:condition="python: not here.hasVersion()">
+				<a tal:attributes="href string:${here/absolute_url}/edit_html">
+					<span i18n:translate="">Edit</span>
+				</a>
+			</tal:block>
 		</div>
-	</div>
+	</tal:block>
+</metal:block>
 
-	<div class="link-box">
-		<a i18n:translate="" tal:condition="here/cv"
-			tal:attributes="href string:${here/absolute_url}/serve_file">
-			Download CV
-		</a>
-		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">
-			Download vCard
-		</a>
-		<tal:block condition="python:here.has_coordinates() and here.picture"
-			tal:define="map python:request.get('map', '')">
-			<a i18n:translate="" tal:condition="not: map"
-			tal:attributes="href string:${here/absolute_url}?map=True">View map</a>
-			<a i18n:translate="" tal:condition="map"
-			tal:attributes="href string:${here/absolute_url}">Hide map</a>
-		</tal:block>
-	</div>
-
-	<!-- Details box -->
-	<div class="box"
-				tal:condition="python:(here.has_coordinates() and not here.picture) or request.get('map', '')">
-		<!-- Map widget -->
-		<div class="minimap">
-			<tal:block content="structure here/minimap" />
-		</div>
-	</div>
-</div>
-
-<div class="main-content" tal:define="
-				geo_location here/geo_location;
-				address geo_location/address|string:;
-				main_topics python:here.getExpertTopics(here.main_topics);
-				sub_topics python:here.getExpertTopics(here.sub_topics);
-				">
-	<div class="description" tal:condition="here/description"
-		tal:content="structure here/description"/>
-	<div tal:condition="here/obfuscated_email">
-		<span tal:replace="here/obfuscated_email" />
-	</div>
-	<div tal:condition="here/webpage">
-		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
-	</div>
-	<div tal:condition="here/phone" tal:content="here/phone"/>
-	<div tal:condition="here/mobile" tal:content="string:${here/mobile} (mobile)"/>
-	<div tal:condition="here/instant_messaging"
-		tal:content="string:${here/instant_messaging} (instant messaging)"/>
-	<div tal:condition="address">
-		<span tal:content="address"/>
-	</div>
-	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main areas of expertise</h4>
-		<ul>
-			<tal:block repeat="topic main_topics">
-				<li tal:content="topic/title"/>
-			</tal:block>
-		</ul>
-	</div>
-	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary areas of expertise</h4>
-		<ul>
-			<tal:block repeat="topic sub_topics">
-				<li tal:content="topic/title"/>
-			</tal:block>
-		</ul>
-	</div>
-	<div tal:condition="here/ref_lang">
-		<strong i18n:translate="">Working languages:</strong>
-		<span tal:replace="here/ref_lang"/>
-	</div>
-
-	<a name="Employment"></a>
-	<div tal:define="EmploymentHistory here/getEmploymentHistory"
-		tal:condition="EmploymentHistory">
-		<h4 i18n:translate="">Employment History</h4>
-		<span />
-		<ul>
-			<tal:block repeat="ob EmploymentHistory">
-				<li>
-					<span tal:condition="ob/start_date" tal:replace="ob/start_date" /><span tal:condition="not:ob/start_date" i18n:translate="" >Unknown</span>
-					-
-					<span tal:condition="ob/end_date" tal:replace="ob/end_date" /><span tal:condition="not:ob/end_date" i18n:translate="" >Present</span>,
-				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
-					<span>
-						<span tal:condition="not: inst" tal:replace="ob/institution" />
-						<a style="text-decoration: underline;" tal:condition="inst"
-						tal:attributes="href string:${inst/absolute_url}"
-						tal:content="ob/institution" />
-					</span>
-				</tal:block>
-				</li>
-			</tal:block>
-		</ul>
-	</div>
-	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/experts_list" i18n:translate="">
-			Experts list
-		</a>
-	</div>
-
-</div>
-<tal:block content="structure here/standard_html_footer" />
+</metal:block>
