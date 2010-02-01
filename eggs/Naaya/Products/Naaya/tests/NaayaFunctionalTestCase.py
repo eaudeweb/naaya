@@ -37,12 +37,66 @@ if getZopeVersion() < (2, 10, 9):
 else:
     newline = '\r\n'
 
-class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
+class TwillMixin(object):
+    wsgi_debug = False
+
+    def install_twill(self):
+        wsgi_app = self.wsgi_request
+        # TODO: we should run all requests through the validator. For now it's
+        # disabled because it mysteriously breaks some tests.
+        #if wsgiref:
+        #    wsgi_app = wsgiref.validate.validator(wsgi_app)
+        twill.add_wsgi_intercept('localhost', 80, lambda: wsgi_app)
+        self.browser = twill.browser.TwillBrowser()
+        self.divert_twill_output()
+
+    def remove_twill(self):
+        self.restore_twill_output()
+        twill.remove_wsgi_intercept('localhost', 80)
+
+    def wsgi_request(self, environ, start_response):
+        if self.wsgi_debug:
+            print 'wsgi_request start'
+            print environ
+            print '...'
+
+        outstream = StringIO()
+        response = Response(stdout=outstream, stderr=sys.stderr)
+        extra = {
+            'SESSION': self.app.REQUEST.SESSION,
+            'AUTHENTICATED_USER': self.app.REQUEST.AUTHENTICATED_USER,
+        }
+
+        publish_module('Zope2', environ=environ, response=response, extra=extra, stdin=environ['wsgi.input'])
+
+        output = outstream.getvalue()
+        headers, body = output.split(newline*2, 1)
+        headers = [header.split(': ', 1) for header in headers.split(newline)]
+        status = headers.pop(0)[1]
+
+        if self.wsgi_debug:
+            print 'wsgi_request done, status="%s"' % status
+            print '  ' + '\n'.join([': '.join(header) for header in headers])
+
+        headers = [ (header[0], ', '.join(header[1:])) for header in headers ]
+        if 'content-type' not in (header[0].lower() for header in headers):
+            headers.append( ('Content-Type', 'text/html; charset=utf-8') )
+        start_response(status, headers)
+        return [body]
+
+    def serve_http(self, host='', port=8081):
+        from wsgiref.simple_server import make_server
+        server = make_server(host, port, self.wsgi_request)
+        print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
+        server.serve_forever()
+
+    def browser_get_header(self, header_name):
+        return self.browser._browser._response._headers.get(header_name, None)
+
+class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
     """
     Functional test case for Naaya - use Twill (http://twill.idyll.org/) for client-side tests
     """
-
-    wsgi_debug = False
 
     def divert_twill_output(self):
         """ the Twill browser is messy and uses globals; this will divert its output """
@@ -54,20 +108,12 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
         twill.browser.OUT = self._twill_original_output
 
     def setUp(self):
-        wsgi_app = self.wsgi_request
-        # TODO: we should run all requests through the validator. For now it's
-        # disabled because it mysteriously breaks some tests.
-        #if wsgiref:
-        #    wsgi_app = wsgiref.validate.validator(wsgi_app)
-        twill.add_wsgi_intercept('localhost', 80, lambda: wsgi_app)
-        self.browser = twill.browser.TwillBrowser()
-        self.divert_twill_output()
+        self.install_twill()
         super(NaayaFunctionalTestCase, self).setUp()
 
     def tearDown(self):
         super(NaayaFunctionalTestCase, self).tearDown()
-        self.restore_twill_output()
-        twill.remove_wsgi_intercept('localhost', 80)
+        self.remove_twill()
 
     def browser_do_login(self, username, password):
         self.browser.go('http://localhost/portal/login_html')
@@ -114,42 +160,3 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
             if msg is None:
                 msg = "Access should be allowed, but is denied"
             self.failIf(access_denied, msg)
-
-    def browser_get_header(self, header_name):
-        return self.browser._browser._response._headers.get(header_name, None)
-
-    def wsgi_request(self, environ, start_response):
-        if self.wsgi_debug:
-            print 'wsgi_request start'
-            print environ
-            print '...'
-
-        outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
-        extra = {
-            'SESSION': self.app.REQUEST.SESSION,
-            'AUTHENTICATED_USER': self.app.REQUEST.AUTHENTICATED_USER,
-        }
-
-        publish_module('Zope2', environ=environ, response=response, extra=extra, stdin=environ['wsgi.input'])
-
-        output = outstream.getvalue()
-        headers, body = output.split(newline*2, 1)
-        headers = [header.split(': ', 1) for header in headers.split(newline)]
-        status = headers.pop(0)[1]
-
-        if self.wsgi_debug:
-            print 'wsgi_request done, status="%s"' % status
-            print '  ' + '\n'.join([': '.join(header) for header in headers])
-
-        headers = [ (header[0], ', '.join(header[1:])) for header in headers ]
-        if 'content-type' not in (header[0].lower() for header in headers):
-            headers.append( ('Content-Type', 'text/html; charset=utf-8') )
-        start_response(status, headers)
-        return [body]
-
-    def serve_http(self, host='', port=8081):
-        from wsgiref.simple_server import make_server
-        server = make_server(host, port, self.wsgi_request)
-        print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
-        server.serve_forever()
