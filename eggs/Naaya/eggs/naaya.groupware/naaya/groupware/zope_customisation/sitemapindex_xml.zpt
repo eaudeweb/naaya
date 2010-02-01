@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:tal="http://xml.zope.org/namespaces/tal">
+   <tal:block repeat="portal python:here.objectValues('Groupware site')">
+   <sitemap tal:condition="python:portal.get_user_access() != 'restricted'">
+      <loc tal:content="string:${portal/absolute_url}/sitemap_xml" />
+   </sitemap>
+   </tal:block>
+</sitemapindex>
