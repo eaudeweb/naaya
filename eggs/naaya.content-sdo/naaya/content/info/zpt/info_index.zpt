@@ -42,9 +42,9 @@
 	</dl>
 	</fieldset>
 	<h2 i18n:translate="">Extras</h2>
-	<dl tal:repeat="info_category here/info_extra_properties_lists/items">
+	<dl tal:repeat="info_category here/info_extra_properties/items">
 		<tal:block define="category_id python:info_category[0];
-				category python:here.get_properties('EXTRA_PROPERTIES_LISTS', category_id);
+				category python:here.get_properties('EXTRA_PROPERTIES', category_id);
 				category_title python:category[0];
 				category_values python:category[1]">
 		<dt tal:content="category_title"/>

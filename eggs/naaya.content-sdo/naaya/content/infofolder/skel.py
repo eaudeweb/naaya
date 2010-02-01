@@ -143,9 +143,9 @@ extra_properties_duration = {
                 'Three years', 'Four years']
 }
 
-EXTRA_PROPERTIES_LISTS = [countries, extra_properties_frequency, extra_properties_duration]
+EXTRA_PROPERTIES = [countries, extra_properties_frequency, extra_properties_duration]
 
-EXTRA_PROPERTIES = [
+EXTRA_FIELDS = [
                     ['subtitle', 'Subtitle', 'String'],
                     ['start_date', 'Start date', 'Date'],
                     ['end_date', 'End date', 'Date'],

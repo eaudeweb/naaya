@@ -32,6 +32,7 @@
             Boxes right
         </div>
 
+		<tal:block content="structure here/description"/>
 		<fieldset>
 		<legend i18n:translate="">Folder categories</legend>
 		<dl tal:repeat="category_id here/folder_categories/keys">
@@ -41,7 +42,13 @@
 			<dt tal:content="category_title"/>
 			<dd>
 				<ul>
-					<li tal:repeat="value category_values" tal:content="value"/>
+					<li tal:repeat="value category_values">
+						<tal:block define="has_items python:here.getInfosByCategoryTitle(category_id, value)">
+							<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category_id}&category_item=${value};"
+								tal:content="value" tal:condition="has_items"/>
+							<span tal:condition="not:has_items" tal:content="value"/>
+						</tal:block>
+					</li>
 				</ul>
 			</dd>
 			</tal:block>
