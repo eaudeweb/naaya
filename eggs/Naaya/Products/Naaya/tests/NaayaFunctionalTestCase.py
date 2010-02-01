@@ -40,6 +40,15 @@ else:
 class TwillMixin(object):
     wsgi_debug = False
 
+    def divert_twill_output(self):
+        """ the Twill browser is messy and uses globals; this will divert its output """
+        self._twill_original_output = twill.browser.OUT
+        self.browser_output = StringIO()
+        twill.browser.OUT = self.browser_output
+
+    def restore_twill_output(self):
+        twill.browser.OUT = self._twill_original_output
+
     def install_twill(self):
         wsgi_app = self.wsgi_request
         # TODO: we should run all requests through the validator. For now it's
@@ -97,15 +106,6 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
     """
     Functional test case for Naaya - use Twill (http://twill.idyll.org/) for client-side tests
     """
-
-    def divert_twill_output(self):
-        """ the Twill browser is messy and uses globals; this will divert its output """
-        self._twill_original_output = twill.browser.OUT
-        self.browser_output = StringIO()
-        twill.browser.OUT = self.browser_output
-
-    def restore_twill_output(self):
-        twill.browser.OUT = self._twill_original_output
 
     def setUp(self):
         self.install_twill()
