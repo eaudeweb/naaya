@@ -154,8 +154,8 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
     for property in non_schema_properties:
         if property in self.get_topic_list_ids('FOLDER_CATEGORIES'):
             info_extra_dict = ob.info_categories
-        elif property in self.get_topic_list_ids('EXTRA_PROPERTIES_LISTS'):
-            info_extra_dict = ob.info_extra_properties_lists
+        elif property in self.get_topic_list_ids('EXTRA_PROPERTIES'):
+            info_extra_dict = ob.info_extra_properties
         else:
             raise ValueError('Propery not in property lists')
             #continue
@@ -224,7 +224,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self.info_categories = {}
-        self.info_extra_properties_lists = {}
+        self.info_extra_properties = {}
+        self.info_extra_fields = {}
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -319,8 +320,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         property_title = getattr(ptool, property_id, None).title
         if property_group == 'FOLDER_CATEGORIES':
             info_extra_dict = self.info_categories
-        elif property_group =='EXTRA_PROPERTIES_LISTS':
-            info_extra_dict = self.info_extra_properties_lists
+        elif property_group =='EXTRA_PROPERTIES':
+            info_extra_dict = self.info_extra_properties
         return [property_title, self.utConvertToList(info_extra_dict[property_id])]
 
 InitializeClass(NyInfo)

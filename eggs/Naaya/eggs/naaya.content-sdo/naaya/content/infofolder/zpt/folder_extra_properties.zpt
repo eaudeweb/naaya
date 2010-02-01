@@ -25,7 +25,7 @@
             <th class="header" i18n:translate="">List content</th>
             <th class="select" i18n:translate="">Only one</th>
         </tr>
-        <tal:block define="list_type string:EXTRA_PROPERTIES_LISTS"
+        <tal:block define="list_type string:EXTRA_PROPERTIES"
             repeat="list python:here.get_topic_lists(list_type)">
             <tr tal:define="list_id list/list_id;
                             list_title list/list_title">
@@ -47,6 +47,19 @@
                         tal:attributes="value list_id;
                                         checked python:here.is_single_select(list_id)">
                 </td>
+            </tr>
+        </tal:block>
+        <tal:block repeat="property here/get_extra_fields">
+            <tr tal:define="property_id python:property[0];
+                            property_title python:property[1]">
+                <td class="checkbox">
+                    <input type="checkbox" name="folder_extra_fields"
+                        tal:attributes="value property_id;
+                                        checked python:property_id in here.folder_extra_fields">
+                </td>
+                <td class="list_title" tal:content="property_title"/>
+                <td/>
+                <td/>
             </tr>
         </tal:block>
     </table>
