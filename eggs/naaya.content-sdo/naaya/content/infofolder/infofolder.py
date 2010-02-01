@@ -54,7 +54,7 @@ from naaya.content.info import info_item
 
 from constants import *
 import skel
-LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES_LISTS
+LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES
 
 METATYPE_OBJECT = 'Naaya InfoFolder'
 ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
@@ -211,6 +211,7 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         self.contributor = contributor
         self.folder_categories = {}
         self.folder_extra_properties = {}
+        self.folder_extra_fields = {}
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -312,6 +313,9 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
             'list_items': ref_list_items})
         return list_of_lists
 
+    def get_extra_fields(self):
+        return skel.EXTRA_FIELDS
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
     def get_topic_list_ids(self, list_type='FOLDER_CATEGORIES'):
         """Returns the list of id's of all the topic lists available
@@ -337,11 +341,11 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
             return self.folder_extra_properties[list_id]
         return False
 
-    def getInfosByCategoryTitle(self, category='enterprises_topic_coverage',
-            category_title='Working Environment'):
+    def getInfosByCategoryTitle(self, category, category_item):
         ob_list = []
+        if category == 'Nothing' or category_item == 'Nothing': return None
         for ob in self.objectValues():
-            if category_title in self.utConvertToList(ob.info_categories[category]):
+            if category_item in self.utConvertToList(ob.info_categories[category]):
                 ob_list.append(ob.id)
         return ob_list
 
@@ -349,19 +353,21 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
     def manageCategories(self, REQUEST):
         """ """
         _folder_categories = REQUEST.get('folder_categories', None)
+        _folder_extra_fields = REQUEST.get('folder_extra_fields', [])
         _single_select_lists = REQUEST.get('single_select_lists', None)
-        temp = {}
+        temp_list = {}
         if _folder_categories:
             for topic_list in _folder_categories:
                 if topic_list == 'countries':
-                    temp[topic_list] = True
+                    temp_list[topic_list] = True
                 else:
-                    temp[topic_list] = topic_list in self.utConvertToList(_single_select_lists)
+                    temp_list[topic_list] = topic_list in self.utConvertToList(_single_select_lists)
         redirect = REQUEST.get('redirect_url', None)
         if redirect == 'folder_categories_html':
-            self.folder_categories = temp
+            self.folder_categories = temp_list
         elif redirect == 'folder_extra_properties_html':
-            self.folder_extra_properties = temp
+            self.folder_extra_properties = temp_list
+            self.folder_extra_fields = _folder_extra_fields
 
         if REQUEST:
             redirect += '?save=ok'
