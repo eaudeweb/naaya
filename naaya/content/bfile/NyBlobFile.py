@@ -45,12 +45,15 @@ class NyBlobFile(Persistent):
     def open_write(self):
         return self._blob.open('w')
 
-    def send_data(self, RESPONSE, as_attachment=True):
+    def send_data(self, RESPONSE, as_attachment=True, set_filename=True):
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Type', self.content_type)
         if as_attachment:
-            RESPONSE.setHeader('Content-Disposition',
-                "attachment;filename*=UTF-8''%s" % urllib.quote(self.filename))
+            header_value = "attachment"
+            if set_filename:
+                utf8_fname = urllib.quote(self.filename)
+                header_value += ";filename*=UTF-8''%s" % utf8_fname
+            RESPONSE.setHeader('Content-Disposition', header_value)
 
         if not hasattr(RESPONSE, '_streaming'):
             return self.open().read()
