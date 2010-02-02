@@ -61,3 +61,45 @@ class NaayaTemplateHelper(Implicit, object):
         return self._button_form(**kwargs)
 
 InitializeClass(NaayaTemplateHelper)
+
+
+class CaptureTraverse(Implicit):
+    """
+    Capture any request path and invoke a callback.
+
+    CaptureTraverse is useful when we need to capture arbitrary request
+    paths. If our object is published at `http://example.com/my/object`,
+    and we expect requests at `http://example.com/my/object/magic/a/b/c`,
+    then we can use CaptureTraverse like so::
+
+      >>> def handle_magic(context, path, REQUEST):
+      ...     return ('the page! path=%r, url=%r' %
+                      (path, context.absolute_url()))
+      >>> class MyObject(SimpleItem):
+      ...     # implementation of MyObject
+      ...     # ...
+      ...
+      ...     magic = CaptureTraverse(handle_magic)
+
+    GET requests for `http://example.com/my/object/magic/a/b/c` will
+    receive the following response::
+
+      the page! path=('a', 'b', 'c'), url='http://example.com/my/object'
+
+    """
+
+    security = ClassSecurityInfo()
+
+    def __init__(self, callback, path=tuple(), context=None):
+        self.callback = callback
+        self.path = path
+        self.context = context
+
+    def __bobo_traverse__(self, REQUEST, name):
+        new_path = self.path + (name,)
+        context = self.context or (self.aq_parent,)
+        return CaptureTraverse(self.callback, new_path, context).__of__(self)
+
+    def __call__(self, REQUEST):
+        assert self.path[-1] == 'index_html'
+        return self.callback(self.context[0], self.path[:-1], REQUEST)
