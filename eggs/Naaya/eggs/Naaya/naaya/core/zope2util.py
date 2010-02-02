@@ -18,10 +18,15 @@
 # Alex Morega, Eau de Web
 
 """
-naaya.z2util - utilities to make Zope 2 a friendlier place
+naaya.core.zope2util - utilities to make Zope 2 a friendlier place
 """
 
-from AccessControl import ClassSecurityInfo as Z2_ClassSecurityInfo
+from AccessControl import ClassSecurityInfo
+from Acquisition import Implicit
+from Globals import InitializeClass
+from AccessControl.Permissions import view
+from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+
 
 def redirect_to(tmpl):
     """
@@ -44,17 +49,15 @@ def redirect_to(tmpl):
         REQUEST.RESPONSE.redirect(url)
     return redirect
 
-class ClassSecurityInfo(Z2_ClassSecurityInfo):
-    def public(self, func):
-        self.declarePublic(func.func_name)
-        return func
+class NaayaTemplateHelper(Implicit, object):
+    security = ClassSecurityInfo()
 
-    def protected(self, permission):
-        def decorator(func):
-            self.declareProtected(permission, func.func_name)
-            return func
-        return decorator
+    def get_site(self):
+        return self.aq_parent
 
-    def private(self, func):
-        self.declarePrivate(func.func_name)
-        return func
+    _button_form = PageTemplateFile('zpt/button_form.zpt', globals())
+    security.declarePublic('button_form')
+    def button_form(self, **kwargs):
+        return self._button_form(**kwargs)
+
+InitializeClass(NaayaTemplateHelper)

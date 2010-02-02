@@ -108,9 +108,8 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
 
-from naaya.core.template_helper import NaayaTemplateHelper
-
-from naaya.z2util import redirect_to
+from naaya.core.zope2util import NaayaTemplateHelper
+from naaya.core.zope2util import redirect_to
 
 
 #constructor
