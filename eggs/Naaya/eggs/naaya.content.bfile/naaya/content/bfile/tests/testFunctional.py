@@ -229,7 +229,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser.go('http://localhost/portal/myfolder/bfile_add_html')
         form = self.browser.get_form('frmAdd')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        filename = u'un\u00efc\u00f8d\u04d4.txt'.encode('utf-8')
+        filename = u'un\u00efc\u00f6d\u04d4.txt'.encode('utf-8')
         form.find_control('uploaded_file').add_file(
             StringIO('simple contents'),
             filename=filename,
