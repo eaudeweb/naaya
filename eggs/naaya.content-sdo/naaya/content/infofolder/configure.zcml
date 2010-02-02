@@ -2,6 +2,6 @@
   xmlns:naaya="http://namespaces.zope.org/naaya"
   i18n_domain="naaya.content">
 
-  <naaya:content factory=".BaseInfoFolder.get_config" />
+  <naaya:content factory=".InfoFolder.get_config" />
 
 </configure>
