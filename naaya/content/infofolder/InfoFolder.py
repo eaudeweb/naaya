@@ -21,11 +21,8 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
     EXCEPTION_NOVERSION_MSG
 
 #Python imports
-from datetime import datetime
 from copy import deepcopy
 import os, sys
-import simplejson as json
-from decimal import Decimal
 
 #Zope imports
 from Globals import InitializeClass
@@ -35,7 +32,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zope.event import notify 
+from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 #Product imports
@@ -47,7 +44,6 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import make_id
 
 from naaya.content.info import info_item
@@ -56,11 +52,12 @@ from constants import *
 import skel
 LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES
 
-METATYPE_OBJECT = 'Naaya Base InfoFolder'
+METATYPE_OBJECT = 'Naaya InfoFolder'
 ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
 
 DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
-DEFAULT_SCHEMA['geo_location'].update(visible=True, sortorder=210)
+
+DEFAULT_SCHEMA['geo_location'].update(visible=False)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
@@ -86,17 +83,17 @@ def setupContentType(site):
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent',
-        'module': 'BaseInfoFolder',
+        'module': 'InfoFolder',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
-        'label': 'Base InfoFolder',
+        'label': 'InfoFolder',
         'permission': 'Naaya - Add Naaya InfoFolder objects',
-        'forms': ['base_infofolder_add', 'base_infofolder_edit', 'base_infofolder_index'],
-        'add_form': 'base_infofolder_add_html',
-        'description': 'This is Naaya Base InfoFolder type.',
+        'forms': ['infofolder_add', 'infofolder_edit', 'infofolder_index'],
+        'add_form': 'infofolder_add_html',
+        'description': 'This is Naaya InfoFolder type.',
         'properties': {}, #TODO: REMOVE
         'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyBaseInfoFolder',
+        'schema_name': 'NyInfoFolder',
         '_module': sys.modules[__name__],
         'additional_style': ADDITIONAL_STYLE,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInfoFolder.gif'),
@@ -107,23 +104,23 @@ config = {
             },
     }
 
-def base_infofolder_add_html(self, REQUEST=None, RESPONSE=None):
+def infofolder_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
-    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyBaseInfoFolder', 'form_helper': form_helper}, 'base_infofolder_add')
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyInfoFolder', 'form_helper': form_helper}, 'infofolder_add')
 
-def _create_NyBaseInfoFolder_object(parent, id, contributor):
-    ob = NyBaseInfoFolder(id, contributor)
+def _create_NyInfoFolder_object(parent, id, contributor):
+    ob = NyInfoFolder(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
     ob.after_setObject()
     return ob
 
-def addNyBaseInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
+def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
-    Create a base infofolder type of object.
+    Create an infofolder type of object.
     """
     #process parameters
     if REQUEST is not None:
@@ -135,7 +132,7 @@ def addNyBaseInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='infofolder')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyBaseInfoFolder_object(self, id, contributor)
+    ob = _create_NyInfoFolder_object(self, id, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang)
 
@@ -145,7 +142,7 @@ def addNyBaseInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            return REQUEST.RESPONSE.redirect('%s/base_infofolder_add_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect('%s/infofolder_add_html' % self.absolute_url())
             return
 
     if self.glCheckPermissionPublishObjects():
@@ -166,20 +163,20 @@ def addNyBaseInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'base_infofolder_manage_add' or l_referer.find('base_infofolder_manage_add') != -1:
+        if l_referer == 'infofolder_manage_add' or l_referer.find('infofolder_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'base_infofolder_add_html':
+        elif l_referer == 'infofolder_add_html':
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     return ob.getId()
 
-class base_infofolder(Implicit, NyContentData):
+class infofolder(Implicit, NyContentData):
     """ """
     pass
 
-class NyBaseInfoFolder(base_infofolder, NyAttributes, NyContainer, NyContentType):
+class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
     """ """
 
     security = ClassSecurityInfo()
@@ -205,7 +202,7 @@ class NyBaseInfoFolder(base_infofolder, NyAttributes, NyContainer, NyContentType
     def __init__(self, id, contributor):
         """ """
         self.id = id
-        base_infofolder.__init__(self)
+        infofolder.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
@@ -289,12 +286,12 @@ class NyBaseInfoFolder(base_infofolder, NyAttributes, NyContainer, NyContentType
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'base_infofolder_index')
+        return self.getFormsTool().getContent({'here': self}, 'infofolder_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'base_infofolder_edit')
+        return self.getFormsTool().getContent({'here': self}, 'infofolder_edit')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
     def get_topic_lists(self, list_type='FOLDER_CATEGORIES'):
@@ -378,23 +375,17 @@ class NyBaseInfoFolder(base_infofolder, NyAttributes, NyContainer, NyContentType
     folder_extra_properties_html = PageTemplateFile('zpt/folder_extra_properties', globals())
     infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
 
-InitializeClass(NyBaseInfoFolder)
-
-def json_encode(ob):
-    """ try to encode some known value types to JSON """
-    if isinstance(ob, Decimal):
-        return float(ob)
-    raise ValueError
+InitializeClass(NyInfoFolder)
 
 config.update({
-    'constructors': (base_infofolder_add_html, addNyBaseInfoFolder),
+    'constructors': (infofolder_add_html, addNyInfoFolder),
     'folder_constructors': [
-            ('base_infofolder_add_html', base_infofolder_add_html),
-            ('addNyBaseInfoFolder', addNyBaseInfoFolder),
+            ('infofolder_add_html', infofolder_add_html),
+            ('addNyInfoFolder', addNyInfoFolder),
         ],
-    'add_method': addNyBaseInfoFolder,
-    'validation': issubclass(NyBaseInfoFolder, NyValidation),
-    '_class': NyBaseInfoFolder,
+    'add_method': addNyInfoFolder,
+    'validation': issubclass(NyInfoFolder, NyValidation),
+    '_class': NyInfoFolder,
 })
 
 def get_config():
