@@ -94,6 +94,11 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(response.headers, ok_headers)
         self.assertEqual(ret, 'some test data')
 
+        ok_headers['Content-Disposition'] = "attachment"
+        ret = bf.send_data(response, set_filename=False)
+        self.assertEqual(response.headers, ok_headers)
+        self.assertEqual(ret, 'some test data')
+
 class NyBlobFileTransactionsTestCase(NaayaTestCase):
     def afterSetUp(self):
         self.portal.info.contact._theblob = NyBlobFile(filename='a.txt')

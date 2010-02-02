@@ -22,6 +22,7 @@
 import os
 import sys
 from datetime import datetime
+import urllib
 
 #Zope imports
 from Globals import InitializeClass
@@ -34,6 +35,7 @@ from zExceptions import NotFound
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core.zope2util import CaptureTraverse
 
 #Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -164,6 +166,28 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
+def bfile_download(context, path, REQUEST):
+    """
+    Perform a download of `context` (must be instance of NyBFile).
+
+    This function should be used as the callback for CaptureTraverse;
+    `path` will be the captured path for download. We only care about
+    the first component, which should be the version requeseted for
+    download.
+    """
+    try:
+        ver_number = int(path[0]) - 1
+        if ver_number < 0:
+            raise IndexError
+        ver = context._versions[ver_number]
+        if ver.removed:
+            raise IndexError
+    except (IndexError, ValueError), e:
+        raise NotFound
+
+    RESPONSE = REQUEST.RESPONSE
+    return ver.send_data(RESPONSE, set_filename=False)
+
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
@@ -282,7 +306,10 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             'content_type': version.content_type,
             'pretty_size': pretty_size(version.size),
             'removed': version.removed,
-            'url': self.absolute_url() + '/download?v=' + ver_id,
+            'url':  ('%s/download/%s/%s' %
+                     (self.absolute_url(),
+                      ver_id,
+                      urllib.quote(version.filename, safe=''))),
             'icon_url': ('%s/getContentTypePicture?id=%s' %
                          (self.getSite().absolute_url(),
                           version.content_type)),
@@ -319,17 +346,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         return self.getFormsTool().getContent(template_vars, 'bfile_edit')
 
     security.declareProtected(view, 'download')
-    def download(self, REQUEST, RESPONSE, v):
-        """ serve the specified version file """
-
-        try:
-            ver = self._versions[int(v)-1]
-            if ver.removed:
-                raise IndexError
-        except (IndexError, ValueError), e:
-            raise NotFound
-
-        return ver.send_data(RESPONSE)
+    download = CaptureTraverse(bfile_download)
 
 InitializeClass(NyBFile)
 

@@ -35,11 +35,11 @@ class BrowserFileTestingMixin(object):
         f.headers = {'content-type': content_type}
         return f
 
-    def assertDownload(self, filename, content_type, data):
+    def assertDownload(self, content_type, data, **kwargs):
         self.assertEqual(self.browser.get_code(), 200)
         self.assertEqual(self.browser_get_header('content-length'), str(len(data)))
         self.assertEqual(self.browser_get_header('content-disposition'),
-            'attachment;filename*=UTF-8\'\'' + filename)
+                         'attachment')
         self.assertEqual(self.browser_get_header('content-type'), content_type)
         self.assertEqual(self.browser.get_html(), data)
 
@@ -96,12 +96,13 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.failUnless('test_bfile_coverage' in html)
         self.failUnless('keyw1, keyw2' in html)
 
-        self.browser.go('http://localhost/portal/myfolder/test-file/download?v=1')
+        self.browser.go('http://localhost/portal/myfolder/test-file/'
+                        'download/1/testcreatebfile.txt')
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
-            'attachment;filename*=UTF-8\'\'testcreatebfile.txt')
+                             'attachment')
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
         self.failUnlessEqual(html, TEST_FILE_DATA)
 
@@ -141,11 +142,12 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
         self.portal.myfolder.mybfile.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/mybfile/download?v=1')
+        self.browser.go('http://localhost/portal/myfolder/mybfile/'
+                        'download/1/the_new_bfile.txt')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
-            'attachment;filename*=UTF-8\'\'the_new_bfile.txt')
+                             'attachment')
         self.assertEqual(headers['content-type'], 'text/plain; charset=latin-1')
         self.failUnlessEqual(html, TEST_FILE_DATA_2)
 
@@ -158,11 +160,12 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.browser.go('http://localhost/portal/myfolder/mybfile/download?v=2')
+        self.browser.go('http://localhost/portal/myfolder/mybfile/'
+                        'download/2/the_new_bfile.txt')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
-            'attachment;filename*=UTF-8\'\'the_new_bfile.txt')
+                             'attachment')
         self.assertEqual(headers['content-type'], 'text/html; charset=utf-8')
         self.failUnlessEqual(html, TEST_FILE_DATA_3)
 
@@ -182,10 +185,10 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         self.browser.go('http://localhost/portal/myfolder/mybfile')
         html = self.browser.get_html()
-        self.assertTrue('download?v=1' in html)
-        self.assertTrue('download?v=2' in html)
-        self.assertTrue('download?v=3' in html)
-        self.assertTrue('download?v=4' in html)
+        self.assertTrue('download/1/afile' in html)
+        self.assertTrue('download/2/afile' in html)
+        self.assertTrue('download/3/afile' in html)
+        self.assertTrue('download/4/afile' in html)
 
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html')
         form = self.browser.get_form('frmEdit')
@@ -202,10 +205,10 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         self.browser.go('http://localhost/portal/myfolder/mybfile')
         html = self.browser.get_html()
-        self.assertTrue('download?v=1' in html)
-        self.assertTrue('download?v=2' not in html)
-        self.assertTrue('download?v=3' in html)
-        self.assertTrue('download?v=4' not in html)
+        self.assertTrue('download/1/afile' in html)
+        self.assertTrue('download/2/afile' not in html)
+        self.assertTrue('download/3/afile' in html)
+        self.assertTrue('download/4/afile' not in html)
 
         self.browser_do_logout()
 
@@ -238,12 +241,16 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         self.portal.myfolder['unicod'].approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/unicod/download?v=1')
+        self.browser.go('http://localhost/portal/myfolder/unicod')
+        html = self.browser.get_html()
+        self.assertTrue('download/1/%s' % urllib.quote(filename) in html)
+
+        self.browser.go('http://localhost/portal/myfolder/unicod/'
+                        'download/1/%s' % urllib.quote(filename))
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         self.failUnlessEqual(self.browser_get_header('content-disposition'),
-                             "attachment;filename*=UTF-8''%s" %
-                                 urllib.quote(filename))
+                             "attachment")
         self.assertEqual(self.browser_get_header('content-type'),
                          'text/plain; charset=utf-8')
         self.failUnlessEqual(html, 'simple contents')
@@ -276,7 +283,7 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         html = self.browser.get_html()
         self.assertTrue('No file uploaded' in html)
         self.assertFalse(self.ob_url + '/download' in html)
-        self.browser.go(self.ob_url + '/download?v=1')
+        self.browser.go(self.ob_url + '/download/1/lala')
         self.assertEqual(self.browser.get_code(), 404)
         self.browser_do_logout()
 
@@ -293,11 +300,11 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         self.assertFalse('No files uploaded' in html)
-        self.assertTrue(self.ob_url + '/download?v=1' in html)
-        self.assertFalse(self.ob_url + '/download?v=2' in html)
+        self.assertTrue(self.ob_url + '/download/1/my.png' in html)
+        self.assertFalse(self.ob_url + '/download/2' in html)
         self.assertTrue('image/png' in html)
         self.assertTrue('4 bytes' in html)
-        self.browser.go(self.ob_url + '/download?v=1')
+        self.browser.go(self.ob_url + '/download/1/my.png')
         self.assertDownload(**file_data)
         self.browser_do_logout()
 
@@ -320,13 +327,13 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         self.assertFalse('No files uploaded' in html)
-        self.assertTrue(self.ob_url + '/download?v=1' in html)
-        self.assertTrue(self.ob_url + '/download?v=2' in html)
+        self.assertTrue(self.ob_url + '/download/1/my.png' in html)
+        self.assertTrue(self.ob_url + '/download/2/my.jpg' in html)
         self.assertTrue('4 MB' in html)
         self.assertTrue('15 KB' in html)
-        self.browser.go(self.ob_url + '/download?v=1')
+        self.browser.go(self.ob_url + '/download/1/my.png')
         self.assertDownload(**file_data_1)
-        self.browser.go(self.ob_url + '/download?v=2')
+        self.browser.go(self.ob_url + '/download/2/my.jpg')
         self.assertDownload(**file_data_2)
         self.browser_do_logout()
 
@@ -363,14 +370,15 @@ class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.browser_do_login('admin', '')
         self.browser.go(self.ob_url)
         self.assertEqual(self.browser.get_code(), 200)
-        self.assertTrue(self.ob_url + '/download?v=1' in self.browser.get_html())
-        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertTrue(self.ob_url + '/download/1/my.png' in
+                        self.browser.get_html())
+        self.browser.go(self.ob_url + '/download/1/my.png')
         self.assertDownload(**self.file_data)
         self.browser_do_logout()
 
         self.browser.go(self.ob_url)
         self.assertRedirectLoginPage()
-        self.browser.go(self.ob_url + '/download?v=1')
+        self.browser.go(self.ob_url + '/download/1/my.png')
         self.assertRedirectLoginPage()
 
 def test_suite():
