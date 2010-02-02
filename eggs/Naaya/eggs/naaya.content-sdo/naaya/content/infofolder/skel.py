@@ -17,67 +17,67 @@
 #
 # Valentin Dumitru, Eau de Web
 
-enterprises_type_of_initiative = {
-          'list_id': 'enterprises_type_of_initiative',
+sdo_type_of_initiative = {
+          'list_id': 'sdo_type_of_initiative',
           'list_title': 'Type of initiative',
           'list_items':  [
                     'Information Dissemination', 'Support Centre', 'Network - Club',
                     'Supply Chain Initiative', 'Funding Programmes', 'Other'
                     ]
 }
-enterprises_nature_of_initiative = {
-          'list_id': 'enterprises_nature_of_initiative',
+sdo_nature_of_initiative = {
+          'list_id': 'sdo_nature_of_initiative',
           'list_title': 'Nature of initiative',
           'list_items':  [
                     'Active - Hands-On', 'Passive - Hands-Off', 'Long Term - Years',
                     'Medium Term - Months', 'Short Term - One-Off Days'
                     ]
 }
-enterprises_topic_coverage = {
-          'list_id': 'enterprises_topic_coverage',
+sdo_topic_coverage = {
+          'list_id': 'sdo_topic_coverage',
           'list_title': 'Topic Coverage',
           'list_items':  [
                     'Eco-Efficiency', 'Eco-Design', 'Working Environment',
                     'Sustainable Manufacturing', 'Other'
                     ]
 }
-enterprises_services = {
-          'list_id': 'enterprises_services',
+sdo_services = {
+          'list_id': 'sdo_services',
           'list_title': 'Services',
           'list_items':  [
                     'Coordination - Facilitation', 'Info - advice on paper', 'Electronic information',
                     'Workshops - Seminars', 'Consultancy Services', 'Other'
                     ]
 }
-enterprises_geographic_scope = {
-          'list_id': 'enterprises_geographic_scope',
+sdo_geographic_scope = {
+          'list_id': 'sdo_geographic_scope',
           'list_title': 'Geographic Scope',
           'list_items':  ['International', 'National', 'Regional', 'Local']
 }
 
-networks_network_type = {
-          'list_id': 'networks_network_type',
+sdo_network_type = {
+          'list_id': 'sdo_network_type',
           'list_title': 'Network type',
           'list_items':  ['Formal', 'Informal']
 }
-networks_scope = {
-          'list_id': 'networks_scope',
+sdo_scope = {
+          'list_id': 'sdo_scope',
           'list_title': 'Scope',
           'list_items':  ['Holistic', 'Broad', 'Specialist']
 }
-networks_audience = {
-          'list_id': 'networks_audience',
+sdo_audience = {
+          'list_id': 'sdo_audience',
           'list_title': 'Audience',
           'list_items':  ['Business', 'Community', 'Policy', 'Research']
 }
-networks_status = {
-          'list_id': 'networks_status',
+sdo_status = {
+          'list_id': 'sdo_status',
           'list_title': 'Status',
           'list_items':  ['Pioneer', 'Progressive', 'Supportive']
 }
 
-events_type_of_event = {
-          'list_id': 'events_type_of_event',
+sdo_type_of_event = {
+          'list_id': 'sdo_type_of_event',
           'list_title': 'Type of event',
           'list_items':  [
                     'Conference', 'Seminar', 'Forum', 'Round table', 'Summit',
@@ -86,16 +86,16 @@ events_type_of_event = {
                     ]
 }
 
-tools_tool_type = {
-          'list_id': 'tools_tool_type',
+sdo_tool_type = {
+          'list_id': 'sdo_tool_type',
           'list_title': 'Tool type',
           'list_items':  [
                     'Dissemination of information', 'Ecodesign', 'Environmental management',
                     'Life Cycle Analysis', 'Policy instrument', 'Pollution prevention', 'Other'
                     ]
 }
-tools_tool_sort = {
-          'list_id': 'tools_tool_sort',
+sdo_tool_sort = {
+          'list_id': 'sdo_tool_sort',
           'list_title': 'Tool sort',
           'list_items':  [
                     'Case study', 'Software', 'Checklist', 'Guide - manual', 'Journal-Magazine',
@@ -105,8 +105,8 @@ tools_tool_sort = {
                     ]
 }
 
-training_training_type = {
-          'list_id': 'training_training_type',
+sdo_training_type = {
+          'list_id': 'sdo_training_type',
           'list_title': 'Training type',
           'list_items':  [
                     'Distance learning', 'Computer Based Training', 'Fellowship',
@@ -115,26 +115,26 @@ training_training_type = {
 }
 
 FOLDER_CATEGORIES = [
-        enterprises_type_of_initiative, enterprises_nature_of_initiative,
-        enterprises_topic_coverage, enterprises_services, enterprises_geographic_scope,
-        networks_network_type, networks_scope, networks_audience, networks_status,
-        events_type_of_event,
-        tools_tool_type, tools_tool_sort,
-        training_training_type
+        sdo_type_of_initiative, sdo_nature_of_initiative,
+        sdo_topic_coverage, sdo_services, sdo_geographic_scope,
+        sdo_network_type, sdo_scope, sdo_audience, sdo_status,
+        sdo_type_of_event,
+        sdo_tool_type, sdo_tool_sort,
+        sdo_training_type
         ]
 
 countries = {
           'list_id': 'countries',
-          'list_title': 'Countries',
+          'list_title': 'Country',
 }
-extra_properties_frequency = {
-          'list_id': 'extra_properties_frequency',
+sdo_ep_frequency = {
+          'list_id': 'sdo_ep_frequency',
           'list_title': 'Frequency',
           'list_items':  ['Contact provider', 'Once', 'Monthly', 'Biannual', 'Yearly',
                     'Several times a year', 'Continuous', 'Upon request']
 }
-extra_properties_duration = {
-          'list_id': 'extra_properties_duration',
+sdo_ep_duration = {
+          'list_id': 'sdo_ep_duration',
           'list_title': 'Duration',
           'list_items': [
                 'Own schedule', 'Contact provider', 'One day', 'Several days', 'One week',
@@ -143,7 +143,7 @@ extra_properties_duration = {
                 'Three years', 'Four years']
 }
 
-EXTRA_PROPERTIES = [countries, extra_properties_frequency, extra_properties_duration]
+EXTRA_PROPERTIES = [countries, sdo_ep_frequency, sdo_ep_duration]
 
 EXTRA_FIELDS = [
                     ['subtitle', 'Subtitle', 'String'],
