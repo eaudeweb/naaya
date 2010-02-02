@@ -17,8 +17,6 @@
 #
 # Alex Morega, Eau de Web
 
-import blob_patch
-
 import re
 from unittest import TestSuite, makeSuite
 from StringIO import StringIO
