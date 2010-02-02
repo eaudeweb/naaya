@@ -22,19 +22,20 @@
 patch ZopeTestCase to use blob storage
 """
 
-import tempfile, shutil, atexit
-from ZODB.DB import DB
+import tempfile
+import shutil
+
 from ZODB.blob import BlobStorage
 
-blob_dir = tempfile.mkdtemp()
-print "NAAYA BLOB: monkey-patching ZODB; using temp folder:", blob_dir
-orig__init__ = DB.__init__
-def new__init__(self, storage, *args, **kwargs):
-    storage = BlobStorage(blob_dir, storage)
-    orig__init__(self, storage, *args, **kwargs)
-DB.__init__ = new__init__
+def patch_testing_db():
+    import Zope2
+    db = Zope2.bobo_application._stuff[0]
+    orig_storage = db._storage
+    blob_dir = tempfile.mkdtemp()
+    db._storage = BlobStorage(blob_dir, orig_storage)
 
-def cleanup_blob_dir(*args, **kwargs):
-    print "NAAYA BLOB: cleaning up temp folder", blob_dir
-    shutil.rmtree(blob_dir)
-atexit.register(cleanup_blob_dir)
+    def cleanup():
+        db._storage = orig_storage
+        shutil.rmtree(blob_dir)
+
+    return cleanup
