@@ -34,7 +34,10 @@ import transaction
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.Naaya.NyFolder import addNyFolder
 try:
-    from naaya.content.bfile.bfile_item import addNyBFile as add_file
+    from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
+    def add_file(location_obj, id, title, file):
+        return add_bfile(location_obj, id=id, title=title,
+                           uploaded_file=file, _send_notifications=False)
 except ImportError:
     from naaya.content.file.file_item import addNyFile as add_ny_file
     def add_file(location_obj, id, title, file):
@@ -90,6 +93,7 @@ class ZipImportTool(Implicit, Item):
 
                 elif self.is_file(name):
                     f = StringIO(zip.read(name))
+                    setattr(f, 'filename', name)
                     container = self.get_folder(copy(nlist), root)
                     fname = name.split('/')[-1]
                     add_file(container, id=fname, title=fname, file=f)
