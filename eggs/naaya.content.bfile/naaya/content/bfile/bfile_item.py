@@ -87,7 +87,7 @@ def bfile_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyBFile', 'form_helper': form_helper}, 'bfile_add')
 
 def _create_NyBFile_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='bfile')
+    id = make_id(parent, id=id, prefix='file')
     ob = NyBFile(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -114,7 +114,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         base_filename = filename.rsplit('.', 1)[0] # strip extension
         if base_filename:
             schema_raw_data['title'] = title = base_filename.decode('utf-8')
-    id = make_id(self, id=id, title=title, prefix='bfile')
+    id = make_id(self, id=id, title=title, prefix='file')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyBFile_object(self, id, contributor)
