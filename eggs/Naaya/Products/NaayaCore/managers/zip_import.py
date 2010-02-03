@@ -82,9 +82,9 @@ class ZipImportTool(Implicit, Item):
 
                     elif self.is_file(name):
                         f_content = zip.read(name)
-                        f = self.make_file_object_from_string(f_content, name)
-                        container = self.get_folder(copy(nlist), root)
                         fname = name.split('/')[-1]
+                        f = self.make_file_object_from_string(f_content, fname)
+                        container = self.get_folder(copy(nlist), root)
                         add_file(container, id=fname, title='', file=f)
                 except Exception, e:
                     errors.append(str(e))
@@ -134,9 +134,9 @@ class ZipImportTool(Implicit, Item):
                                 _send_notifications=False)
         return location_obj[folder_id]
 
-    def make_file_object_from_string(self, string, name):
+    def make_file_object_from_string(self, string, fname):
         f = StringIO(string)
-        setattr(f, 'filename', name)
+        setattr(f, 'filename', fname)
         return f
 
     def sorted_nlist(self, nlist):
