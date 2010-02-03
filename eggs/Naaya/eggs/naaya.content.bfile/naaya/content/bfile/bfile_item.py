@@ -50,7 +50,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaCore.managers.utils import make_id
 
-from NyBlobFile import make_blobfile
+from NyBlobFile import make_blobfile, trim_filename
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -112,7 +112,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     title = schema_raw_data.get('title', '')
     if not title:
-        filename = getattr(_uploaded_file, 'filename', '')
+        filename = trim_filename(getattr(_uploaded_file, 'filename', ''))
         base_filename = filename.rsplit('.', 1)[0] # strip extension
         if base_filename:
             schema_raw_data['title'] = title = base_filename.decode('utf-8')

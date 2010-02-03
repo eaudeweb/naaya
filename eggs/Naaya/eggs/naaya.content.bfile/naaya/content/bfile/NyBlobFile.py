@@ -64,7 +64,7 @@ def make_blobfile(the_file, **kwargs):
         'content-type', 'application/octet-stream')
 
     meta = {
-        'filename': the_file.filename,
+        'filename': trim_filename(the_file.filename),
         'content_type': content_type,
     }
     meta.update(kwargs)
@@ -79,3 +79,10 @@ def make_blobfile(the_file, **kwargs):
     blobfile.size = len(data)
 
     return blobfile
+
+def trim_filename(filename):
+    """
+    Internet Explorer sends us the complete file path, not just the
+    file's name, so we need to strip that.
+    """
+    return filename.rsplit('\\', 1)[-1]
