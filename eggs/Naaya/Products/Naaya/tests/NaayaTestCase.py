@@ -18,6 +18,15 @@
 # Alin Voinea, Eau de Web
 # Alex Morega, Eau de Web
 
+
+try:
+    from naaya.content.bfile.tests.blob_patch import patch_testing_db
+except ImportError:
+    cleanup_blob_patch = lambda: None
+else:
+    cleanup_blob_patch = patch_testing_db()
+
+
 import os
 from zope.configuration.xmlconfig import xmlconfig
 from StringIO import StringIO
@@ -30,14 +39,6 @@ from AccessControl.User import nobody
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Globals import package_home
-
-try:
-    from naaya.content.bfile.tests.blob_patch import patch_testing_db
-except ImportError:
-    def patch_testing_db():
-        def cleanup():
-            pass
-        return cleanup
 
 
 test_zcml = """<configure
@@ -117,7 +118,6 @@ class NaayaLayerClass(object):
     def setUp(self):
         from Products.ExtFile import ExtFile
         ExtFile.REPOSITORY_PATH = ['var', 'testing']
-        self.cleanup_blob_patch = patch_testing_db()
 
         self.app = ZopeTestCase.app()
         self.install()
@@ -129,7 +129,7 @@ class NaayaLayerClass(object):
         if os.path.isdir(repository):
             import shutil
             shutil.rmtree(repository, 1)
-        self.cleanup_blob_patch()
+        cleanup_blob_patch()
 
     def install(self):
         self.addRootUser()
