@@ -13,7 +13,7 @@
             <a tal:attributes="href version/url" tal:content="version/filename"></a>
             <tal:block content="version/pretty_timestamp" />,
             <tal:block content="version/content_type" />,
-            <tal:block content="version/pretty_size" />,
+            <tal:block content="version/pretty_size" />
             <em tal:condition="version/is_current"
                 i18n:translate="">(current version)</em>
         </li>
