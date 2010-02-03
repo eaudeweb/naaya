@@ -77,6 +77,19 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(bf.filename, 'my.txt')
         self.assertEqual(bf.somerandomkw, 'thevalue')
 
+    def test_factory_ie6_filename(self):
+        data = 'some test data'
+        f = StringIO(data)
+        f.filename = r'C:\\Documents and Settings\\uzer\\Desktop\\data.txt'
+        f.headers = {'content-type': 'text/plain'}
+
+        bf = make_blobfile(f, somerandomkw='thevalue')
+
+        self.assertEqual(bf.open().read(), data)
+        self.assertEqual(bf.content_type, 'text/plain')
+        self.assertEqual(bf.filename, 'data.txt')
+        self.assertEqual(bf.somerandomkw, 'thevalue')
+
     def test_send_data(self):
         data = 'some test data'
         f = StringIO(data)
