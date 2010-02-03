@@ -1,6 +1,7 @@
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
+zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
 
 def handle_object_add(event):
     if not event.schema.get('_send_notifications', True):
@@ -30,6 +31,27 @@ def handle_csv_import(event):
     }
 
     mail_data = csv_email_template.render_email(**mail_args)
+    mail_from = portal.getEmailTool()._get_from_address()
+    mail_to = portal.getMaintainersEmails(folder)
+    mail_subject = mail_data['subject']
+    mail_body = mail_data['body_text']
+
+    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from, mail_subject)
+
+def handle_zip_import(event):
+    folder = event.context
+    portal = folder.getSite()
+    containing_folder = event.containing_folder
+    zip_contents = event.zip_contents
+
+    mail_args = {'ob': folder,
+                 'containing_folder': containing_folder,
+                 'zip_contents': zip_contents,
+                 'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
+                 'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
+    }
+
+    mail_data = zip_email_template.render_email(**mail_args)
     mail_from = portal.getEmailTool()._get_from_address()
     mail_to = portal.getMaintainersEmails(folder)
     mail_subject = mail_data['subject']

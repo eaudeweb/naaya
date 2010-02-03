@@ -11,6 +11,11 @@
     />
 
   <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_zip_import"
+    for="Products.NaayaCore.interfaces.IZipImportEvent"
+    />
+
+  <subscriber
     handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_edit"
     for="naaya.content.base.interfaces.INyContentObjectEditEvent"
     />
