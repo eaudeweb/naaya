@@ -1,25 +1,9 @@
-<metal:block metal:use-macro="here/standard_template_macro">
+<tal:block
+    metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
 
-<metal:block metal:fill-slot="title">
-</metal:block>
+    <h1 metal:fill-slot="title" i18n:translate="" tal:content="string:Edit ${here/meta_label}"/>
 
-<metal:block metal:fill-slot="head">
-<!--	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>-->
-</metal:block>
+    <tal:block metal:fill-slot="custom_properties">
+    </tal:block>
 
-<metal:block metal:fill-slot="body">
-	<tal:block tal:condition="python:here.checkPermissionEditObject()">
-		<br clear="all"/>
-		<div id="admin_this_folder">
-			<tal:block tal:condition="python: not here.hasVersion()">
-				<a tal:attributes="href string:${here/absolute_url}/edit_html">
-					<span i18n:translate="">Edit</span>
-				</a>
-			</tal:block>
-		</div>
-	</tal:block>
-</metal:block>
-
-</metal:block>
+</tal:block>

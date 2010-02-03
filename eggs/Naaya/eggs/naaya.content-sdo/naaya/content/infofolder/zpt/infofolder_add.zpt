@@ -4,5 +4,11 @@
         Fields marked with <span class="mandatory_field">*</span> are mandatory.
     </p>
     <tal:block metal:fill-slot="custom_properties">
+		<div class="field">
+			<label class="widget-title" i18n:translate="">Type of information *</label>
+			<select name="type_of_info">
+				<option value="enterprises" tal:content="string:Enterprises"/>
+			</select>
+		</div>
     </tal:block>
 </tal:block>
