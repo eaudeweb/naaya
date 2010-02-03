@@ -61,6 +61,14 @@ class NyBlobFile(Persistent):
             return self.open().read()
         return self.open_iterator()
 
+    def __repr__(self):
+        return '<%(cls)s %(fname)r (%(mime)s, %(size)d bytes)>' % {
+            'cls': self.__class__.__name__,
+            'fname': self.filename,
+            'mime': self.content_type,
+            'size': self.size,
+        }
+
 def make_blobfile(the_file, **kwargs):
     content_type = getattr(the_file, 'headers', {}).get(
         'content-type', 'application/octet-stream')
