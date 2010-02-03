@@ -44,3 +44,10 @@ class ICSVImportEvent(Interface):
     """
     context = Attribute("The containing folder")
     ids = Attribute("List containing the ids of the newly added objects")
+
+class IZipImportEvent(Interface):
+    """ Event triggered after a successful Zip upload
+    """
+    context = Attribute("Containing folder")
+    containing_folder = Attribute("Folder containing archive contents")
+    zip_contents = Attribute("Zip contents list (zip.namelist())")

@@ -1,5 +1,6 @@
 from zope.interface import implements
 from interfaces import ICSVImportEvent
+from interfaces import IZipImportEvent
 
 
 class CSVImportEvent(object):
@@ -10,3 +11,14 @@ class CSVImportEvent(object):
     def __init__(self, context, ids):
         self.context = context
         self.ids = ids
+
+class ZipImportEvent(object):
+    """Event triggered after a successful zip upload
+    """
+
+    implements(IZipImportEvent)
+
+    def __init__(self, context, containing_folder, zip_contents):
+        self.context = context
+        self.containing_folder = containing_folder
+        self.zip_contents = zip_contents

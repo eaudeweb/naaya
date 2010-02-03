@@ -21,11 +21,13 @@ from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaTestCase import load_test_file
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.EmailTool import EmailTool
 
 zip_one_file = load_test_file('./data/one_file_zip.zip', globals())
 folder_with_files = load_test_file('./data/folder_with_files_zip.zip', globals())
 complicated_zip = load_test_file('./data/complicated_zip.zip', globals())
 mac_zip = load_test_file('./data/mac_zip.zip', globals())
+spaces_zip = load_test_file('./data/Spaces in filename_zip.zip', globals())
 
 class NyZipImport(NaayaTestCase):
     """ TestCase for Naaya CSV import """
@@ -41,13 +43,14 @@ class NyZipImport(NaayaTestCase):
     def test_import_ok(self):
         errors = self.test_folder.zip_import.do_import(data=zip_one_file)
         self.assertEqual(errors, [])
-        self.assertEqual(self.test_folder.objectIds(), ['one_file.txt'])
+        container = self.test_folder['one_file_zip']
+        self.assertEqual(container.objectIds(), ['one_file.txt'])
 
     def test_import_folder_with_files(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
         self.assertEqual(errors, [])
-        self.assertTrue(self.test_folder._getOb('one_folder', False))
-        self.assertEqual(self.test_folder['one_folder'].objectIds(),
+        container = self.test_folder['folder_with_files_zip']
+        self.assertEqual(container['one_folder'].objectIds(),
                         ['one_file.txt', 'three_file.txt', 'two_file.txt'])
 
     def test_import_complicated(self):
@@ -100,6 +103,62 @@ class NyZipImport(NaayaTestCase):
         self.assertEqual(container.objectIds(),
                          ['Picture_1.png', 'Picture_2.png'])
 
+    def test_folder_exists(self):
+        errors = self.test_folder.zip_import.do_import(data=folder_with_files)
+        errors = self.test_folder.zip_import.do_import(data=folder_with_files)
+        self.assertEqual(errors, [])
+        
+        self.assertEqual(self.test_folder.objectIds(),
+                         ['folder_with_files_zip', 'folder_with_files_zip-1'])
+
+        container = self.test_folder['folder_with_files_zip']
+        self.assertEqual(container['one_folder'].objectIds(),
+                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+
+        container = self.test_folder['folder_with_files_zip-1']
+        self.assertEqual(container['one_folder'].objectIds(),
+                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+
+    def test_import_spaces_in_filename(self):
+        errors = self.test_folder.zip_import.do_import(data=spaces_zip)
+        self.assertEqual(errors, [])
+        self.assertEqual(self.test_folder.objectIds(),
+                        ['Spaces_in_filename_zip'])
+
+        container = self.test_folder['Spaces_in_filename_zip']
+        self.assertEqual(container['one_folder'].objectIds(),
+                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+
+    def test_import_mails(self):
+        diverted_mail = EmailTool.divert_mail()
+        self.test_folder.maintainer_email = 'someone@somehost'
+        self.test_folder.zip_import.do_import(data=folder_with_files)
+
+        # only the bulk csv import mail should have been sent
+        self.assertEqual(len(diverted_mail), 1)
+
+        expected_subject = u'Zip Import - zip_imported'
+        expected_body = (u'This is automatically generated message to'
+                         ' inform you that a Zip archive was uploaded in'
+                         ' zip_imported (http://nohost/portal/zip_imported).'
+                         ' A Folder named folder_with_files_zip'
+                         ' (http://nohost/portal/zip_imported/'
+                         'folder_with_files_zip)'
+                         ' was created for the archive contents:\n\n'
+                         ' - one_folder/\n'
+                         ' - one_folder/one_file.txt\n'
+                         ' - one_folder/three_file.txt\n'
+                         ' - one_folder/two_file.txt')
+
+        expected_recipients = ['someone@somehost', ''] #folder_maintainer, administrator_email
+        expected_sender = 'from.zope@example.com'
+
+        mail = diverted_mail[0]
+        self.assertTrue(expected_body in mail[0])
+        self.assertEqual(expected_recipients, mail[1])
+        self.assertEqual(expected_sender, mail[2])
+        self.assertEqual(expected_subject, mail[3])
+        EmailTool.divert_mail(False)
 
 def test_suite():
     suite = TestSuite()
