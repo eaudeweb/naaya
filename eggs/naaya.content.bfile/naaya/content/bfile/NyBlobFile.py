@@ -24,6 +24,8 @@ from ZODB.blob import Blob
 from Persistence import Persistent
 from ZPublisher.Iterators import filestream_iterator
 
+COPY_BLOCK_SIZE = 65536 # 64KB
+
 class NyBlobFile(Persistent):
     """
     Naaya container for files stored using ZODB Blob
@@ -73,10 +75,15 @@ def make_blobfile(the_file, **kwargs):
 
     # copy file data
     bf_stream = blobfile.open_write()
-    data = the_file.read()
-    bf_stream.write(data) # TODO: copy data in chunks
+    size = 0
+    while True:
+        data = the_file.read(COPY_BLOCK_SIZE)
+        if not data:
+            break
+        bf_stream.write(data)
+        size += len(data)
     bf_stream.close()
-    blobfile.size = len(data)
+    blobfile.size = size
 
     return blobfile
 
