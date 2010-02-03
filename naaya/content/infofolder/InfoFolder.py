@@ -29,24 +29,20 @@ from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 #Product imports
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA, get_schema_helper_for_metatype
 from Products.NaayaBase.NyItem import NyItem
-from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import make_id
+from Products.Naaya.NyFolder import NyFolder
 
-from naaya.content.info import info_item
+from naaya.content.info import info_item, NyEnterprise
 
 from constants import *
 import skel
@@ -106,7 +102,6 @@ config = {
 
 def infofolder_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyInfoFolder', 'form_helper': form_helper}, 'infofolder_add')
 
@@ -134,6 +129,11 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ob = _create_NyInfoFolder_object(self, id, contributor)
 
+    type_of_info = schema_raw_data.pop('type_of_info', None)
+    ob.type_of_info = type_of_info
+
+    ob.enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
+    ob.set_categories()
     form_errors = ob.process_submitted_form(schema_raw_data, _lang)
 
     if form_errors:
@@ -172,11 +172,7 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
-class infofolder(Implicit, NyContentData):
-    """ """
-    pass
-
-class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
+class NyInfoFolder(NyFolder):
     """ """
 
     security = ClassSecurityInfo()
@@ -187,22 +183,22 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
     icon_marked = 'misc_/NaayaContent/NyInfoFolder_marked.gif'
     security.declareProtected(view, 'add_html')
 
-    def manage_options(self):
+    """def manage_options(self):
         """ """
         l_options = ()
-        l_options += infofolder.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
-        return l_options
+        return l_options"""
 
-    security.declareProtected(PERMISSION_ADD_INFO, 'addNyPhoto')
+    security.declareProtected(PERMISSION_ADD_INFO, 'addNyInfo')
     addNyInfo = info_item.addNyInfo
+    security.declareProtected(PERMISSION_ADD_INFO, 'addNyEnterprise')
+    addNyEnterprise = NyEnterprise.addNyEnterprise
     security.declareProtected(PERMISSION_ADD_INFO, 'info_add_html')
-    info_add_html = info_item.info_add_html
+    info_add_html = NyEnterprise.add_html
 
     def __init__(self, id, contributor):
         """ """
         self.id = id
-        infofolder.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
@@ -323,7 +319,7 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
     def getCategoryList(self, ref_list_id):
         ptool = self.getPortletsTool()
         category_list = getattr(ptool, ref_list_id, None)
-        list_items = [c_list.title for c_list in category_list.get_list('id')]
+        list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
         return [category_list.title, list_items]
 
     def get_ref_list_title(self, ref_list_id):
@@ -342,7 +338,7 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
         ob_list = []
         if category == 'Nothing' or category_item == 'Nothing': return None
         for ob in self.objectValues():
-            if category_item in self.utConvertToList(ob.info_categories[category]):
+            if category_item in self.utConvertToList(getattr(ob,category)):
                 ob_list.append(ob.id)
         return ob_list
 
@@ -370,6 +366,36 @@ class NyInfoFolder(infofolder, NyAttributes, NyContainer, NyContentType):
             redirect += '?save=ok'
             REQUEST.RESPONSE.redirect(redirect)
 
+    security.declarePublic('get_meta_types')
+    def get_meta_types(self, folder=0):
+        """
+        overwrites the global get_meta_types function to only allow certain types of objects
+        in the InfoFolder
+        """
+        res = []
+        return res
+
+    security.declarePublic('getProductsMetaTypes')
+    def getProductsMetaTypes(self):
+        """
+        overwrites the global getProductsMetaTypes function
+        """
+        return []
+
+    def set_categories(self):
+        schema = getattr(self, '%s_schema' % self.type_of_info)
+        folder_categories = []
+        folder_extra_properties = []
+        for (k, v) in schema.items():
+            if k.startswith('sdo_'):
+                folder_categories.append(v)
+            if k.startswith('sdoextra_'):
+                folder_extra_properties.append(v)
+        self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
+        print self.folder_categories
+        self.folder_extra_properties = self.utSortObjsListByAttr(folder_extra_properties, 'sortorder', 0)
+
+    subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
     folder_categories_html = PageTemplateFile('zpt/folder_categories', globals())
     folder_extra_properties_html = PageTemplateFile('zpt/folder_extra_properties', globals())
