@@ -21,9 +21,6 @@
 from copy import deepcopy
 import os
 import sys
-import simplejson as json
-from decimal import Decimal
-from datetime import datetime
 
 #Zope imports
 from Globals import InitializeClass
@@ -33,13 +30,11 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
-from zope.interface import implements
-from zope.component import adapts
-from zope.event import notify 
+from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 #Product imports
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA, get_schema_helper_for_metatype
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyItem import NyItem
@@ -47,29 +42,25 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 import naaya.content.infofolder.skel as skel
 
-from interfaces import INyInfo
-
 #module constants
 METATYPE_OBJECT = 'Naaya Info'
 LABEL_OBJECT = 'Info'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Info objects'
 OBJECT_FORMS = ['info_add', 'info_edit', 'info_index']
-OBJECT_CONSTRUCTORS = ['info_add_html', 'addNyInfo']
-OBJECT_ADD_FORM = 'info_add_html'
+OBJECT_CONSTRUCTORS = ['add_html', 'addNyInfo']
+OBJECT_ADD_FORM = 'add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Info type.'
 PREFIX_OBJECT = 'Info'
 ADDITIONAL_STYLE = open(ImageFile('www/Info.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
-    'website':               dict(sortorder=15, widget_type='String',
+    'website':               dict(sortorder=11, widget_type='String',
                 label='Website url',required=True),
     'organisation':          dict(sortorder=20, widget_type='String',
                 label='Organisation',localized=True),
@@ -115,13 +106,12 @@ config = {
             },
     }
 
-def info_add_html(self, REQUEST=None, RESPONSE=None):
+def add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyInfo', 'form_helper': form_helper}, 'info_add')
 
-def _create_NyInfo_object(parent, id, title, contributor):
+def _create_object(parent, id, title, contributor):
     ob = NyInfo(id, title, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -142,24 +132,12 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
     _send_notifications = schema_raw_data.pop('_send_notifications', True)
     _title = schema_raw_data['title']
     #process parameters
-    id = make_id(self, id=id, title=_title, prefix='info')
+    id = make_id(self, id=id, title=_title, prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyInfo_object(self, id, _title, contributor)
+    ob = _create_object(self, id, _title, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-
-    non_schema_properties = [key for key in schema_raw_data.keys() if key not in DEFAULT_SCHEMA.keys()]
-
-    for property in non_schema_properties:
-        if property in self.get_topic_list_ids('FOLDER_CATEGORIES'):
-            info_extra_dict = ob.info_categories
-        elif property in self.get_topic_list_ids('EXTRA_PROPERTIES'):
-            info_extra_dict = ob.info_extra_properties
-        else:
-            raise ValueError('Propery not in property lists')
-            #continue
-        info_extra_dict[property] = schema_raw_data[property]
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -173,7 +151,7 @@ def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/info_add_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             return
 
     #process parameters
@@ -200,7 +178,6 @@ class info_item(Implicit, NyContentData):
 
 class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
-    implements(INyInfo)
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyInfo.gif'
@@ -223,9 +200,6 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.info_categories = {}
-        self.info_extra_properties = {}
-        self.info_extra_fields = {}
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -327,9 +301,9 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 InitializeClass(NyInfo)
 
 config.update({
-    'constructors': (info_add_html, addNyInfo),
+    'constructors': (add_html, addNyInfo),
     'folder_constructors': [
-            ('info_add_html', info_add_html),
+            ('add_html', add_html),
             ('addNyInfo', addNyInfo),
         ],
     'add_method': addNyInfo,

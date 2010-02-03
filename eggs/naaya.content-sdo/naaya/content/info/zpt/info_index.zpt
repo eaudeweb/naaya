@@ -27,8 +27,9 @@
 	</dl>
 	<fieldset>
 	<legend i18n:translate="">Specifications</legend>
-	<dl tal:repeat="info_category here/info_categories/items">
-		<tal:block define="category_id python:info_category[0];
+	<dl tal:repeat="info_category here/info_categories">
+		<tal:block content="info_category"/>
+		<!--<tal:block define="category_id info_category/list_id;
 				category python:here.get_properties('FOLDER_CATEGORIES', category_id);
 				category_title python:category[0];
 				category_values python:category[1]">
@@ -38,12 +39,12 @@
 				<li tal:repeat="value category_values" tal:content="value"/>
 			</ul>
 		</dd>
-		</tal:block>
+		</tal:block>-->
 	</dl>
 	</fieldset>
 	<h2 i18n:translate="">Extras</h2>
-	<dl tal:repeat="info_category here/info_extra_properties/items">
-		<tal:block define="category_id python:info_category[0];
+	<dl tal:repeat="info_category here/info_extra_properties">
+		<!--<tal:block define="category_id python:info_category[0];
 				category python:here.get_properties('EXTRA_PROPERTIES', category_id);
 				category_title python:category[0];
 				category_values python:category[1]">
@@ -53,7 +54,7 @@
 				<li tal:repeat="value category_values" tal:content="value"/>
 			</ul>
 		</dd>
-		</tal:block>
+		</tal:block>-->
 	</dl>
 	<h2 i18n:translate="">Organisation</h2>
 	<dl>
