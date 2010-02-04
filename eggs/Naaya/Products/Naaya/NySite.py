@@ -89,7 +89,7 @@ from Products.NaayaCore.managers.session_manager import session_manager
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.NaayaCore.managers.utils import vcard_file
 from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
-from Products.NaayaCore.managers.zip_import import ZipImportTool
+from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
@@ -3677,6 +3677,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     csv_import = CSVImportTool('csv_import')
     csv_export = CSVExportTool('csv_export')
     zip_import = ZipImportTool('zip_import')
+    zip_export = ZipExportTool('zip_export')
 
     #--------------------------------------------------------------------------------------------------
     security.declareProtected(view_management_screens, 'update_portal_forms')
