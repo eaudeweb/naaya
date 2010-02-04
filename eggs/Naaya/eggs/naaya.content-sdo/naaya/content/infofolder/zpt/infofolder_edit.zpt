@@ -3,8 +3,11 @@
     <tal:block metal:fill-slot="custom_properties">
 		<div class="field">
 			<label class="widget-title" i18n:translate="">Type of information *</label>
-			<select name="type_of_info">
-				<option value="enterprises" tal:content="string:Enterprises"/>
+			<select name="info_type">
+				<option tal:repeat="info here/get_info_types"
+					tal:attributes="value python:info[0];
+						selected python:here.info_type == info[0]"
+					tal:content="python:info[1]"/>
 			</select>
 		</div>
     </tal:block>

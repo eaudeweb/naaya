@@ -40,16 +40,18 @@ from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils, make_id
 
 import info_item
+from naaya.content.infofolder import skel
 
 #module constants
-METATYPE_OBJECT = 'Naaya Enterprise'
-LABEL_OBJECT = 'Enterprise'
+INFO_TYPE = skel.INFO_TYPES['enterprises']
+METATYPE_OBJECT = INFO_TYPE['meta_type']
+LABEL_OBJECT = INFO_TYPE['meta_label']
+PREFIX_OBJECT = INFO_TYPE['prefix']
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Enterprise objects'
 OBJECT_FORMS = ['enterprise_add', 'enterprise_edit', 'enterprise_index']
 OBJECT_CONSTRUCTORS = ['add_html', 'addNyEnterprise']
 OBJECT_ADD_FORM = 'add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Enterprise type.'
-PREFIX_OBJECT = 'enterprise'
 
 DEFAULT_SCHEMA = deepcopy(info_item.DEFAULT_SCHEMA)
 DEFAULT_SCHEMA['sdo_type_of_initiative'] = dict(sortorder=12, widget_type='Select',

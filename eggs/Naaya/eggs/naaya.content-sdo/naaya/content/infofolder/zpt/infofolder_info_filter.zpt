@@ -2,7 +2,7 @@
 	<metal:block fill-slot="body">
 		<ul tal:define="category python:request.get('category', 'Nothing');
 		                category_item python:request.get('category_item', 'Nothing')">
-			<li tal:repeat="info python:here.getInfosByCategoryTitle(category, category_item)">
+			<li tal:repeat="info python:here.getInfosByCategoryId(category, category_item)">
 				<a tal:attributes="href string:${here/absolute_url}/${info}"
 					tal:content="info/title"/>
 			</li>

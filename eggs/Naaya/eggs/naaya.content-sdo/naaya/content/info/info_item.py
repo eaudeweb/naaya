@@ -109,7 +109,9 @@ config = {
 def add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyInfo', 'form_helper': form_helper}, 'info_add')
+    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT,
+                                            'action': 'addNyInfo', 'form_helper': form_helper},
+                                            'info_add')
 
 def _create_object(parent, id, title, contributor):
     ob = NyInfo(id, title, contributor)
@@ -289,14 +291,25 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         """ """
         return self.getFormsTool().getContent({'here': self}, 'info_edit')
 
-    def get_properties(self, property_group, property_id):
+    def get_property_values(self, property_id):
+        """ returns the values of the ref_list items if there is a reflist with the given id
+        or the values of the propery"""
+        property_ids = self.utConvertToList(getattr(self, property_id))
+        try:
+            ref_list_items = self.get_ref_list_items(property_id)
+            property_values = [ref_list_item.title for ref_list_item in ref_list_items if ref_list_item.id in property_ids]
+        except:
+            property_values = property_ids
+        return property_values
+
+    def get_ref_list_items(self, ref_list_id):
+        ref_list_items = self.get_ref_list(ref_list_id)
+        return ref_list_items.get_list()
+
+    def get_ref_list(self, ref_list_id):
         ptool = self.getPortletsTool()
-        property_title = getattr(ptool, property_id, None).title
-        if property_group == 'FOLDER_CATEGORIES':
-            info_extra_dict = self.info_categories
-        elif property_group =='EXTRA_PROPERTIES':
-            info_extra_dict = self.info_extra_properties
-        return [property_title, self.utConvertToList(info_extra_dict[property_id])]
+        ref_list = getattr(ptool, ref_list_id, None)
+        return ref_list
 
 InitializeClass(NyInfo)
 
