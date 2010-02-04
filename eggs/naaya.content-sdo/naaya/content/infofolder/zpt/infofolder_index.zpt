@@ -1,39 +1,38 @@
 <metal:block metal:use-macro="here/standard_template_macro">
-    <metal:block fill-slot="body">
-        <tal:block tal:condition="python:here.checkPermissionEditObject()">
-            <div id="admin_this_folder">
-                <tal:block tal:condition="python: not here.hasVersion()">
-                    <a tal:attributes="href string:${here/absolute_url}/edit_html">
-                        <span i18n:translate="">Edit</span>
-                    </a>
-                </tal:block>
-            </div>
-        </tal:block>
+	<metal:block fill-slot="body">
+		<tal:block tal:condition="python:here.checkPermissionEditObject()">
+			<div id="admin_this_folder">
+				<tal:block tal:condition="python: not here.hasVersion()">
+					<a tal:attributes="href string:${here/absolute_url}/edit_html">
+						<span i18n:translate="">Edit</span>
+					</a>
+				</tal:block>
+			</div>
+		</tal:block>
 
-        <h1>
-            <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-                title here/get_meta_label;
-                alt here/get_meta_label" />
-                <span tal:replace="here/title" />
-                <span class="available_langs"
-                    tal:condition="python:here.check_item_title(here, here.title)">
-                    <span i18n:translate="">Item only translated in </span>
-                    <span tal:repeat="lang here/gl_get_languages_map">
-                        <a tal:content="python:' %s' % lang['title']"
-                        tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-                        tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-                    </span>
-                </span>
-        </h1>
+		<h1>
+			<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+				title here/get_meta_label;
+				alt here/get_meta_label" />
+				<span tal:replace="here/title" />
+				<span class="available_langs"
+					tal:condition="python:here.check_item_title(here, here.title)">
+					<span i18n:translate="">Item only translated in </span>
+					<span tal:repeat="lang here/gl_get_languages_map">
+						<a tal:content="python:' %s' % lang['title']"
+						tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+						tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+					</span>
+				</span>
+		</h1>
 
-        <tal:block replace="structure here/folder_menusubmissions"/>
+		<tal:block replace="structure here/folder_menusubmissions"/>
 
-        <div class="boxes-right">
-            Boxes right
-        </div>
+		<div class="boxes-right">
+			Boxes right
+		</div>
 
 		<tal:block content="structure here/description"/>
-		<tal:block content="here/type_of_info"/>
 		<fieldset>
 		<legend i18n:translate="">Folder categories</legend>
 		<dl tal:repeat="category_widget here/folder_categories">
@@ -46,7 +45,7 @@
 				<ul>
 					<li tal:repeat="item category_items">
 						<tal:block define="item_id item/id; item_title item/title;
-							has_items python:here.getInfosByCategoryTitle(category_id, item_id)">
+							has_items python:here.getInfosByCategoryId(category_id, item_id)">
 							<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category_id}&category_item=${item_id};"
 								tal:content="item_title" tal:condition="has_items"/>
 							<span tal:condition="not:has_items" tal:content="item_title"/>
@@ -57,5 +56,6 @@
 			</tal:block>
 		</dl>
 		</fieldset>
-    </metal:block>
+		<tal:block content="here/get_info_types"/>
+	</metal:block>
 </metal:block>

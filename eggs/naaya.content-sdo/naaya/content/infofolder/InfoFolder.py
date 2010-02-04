@@ -129,10 +129,9 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ob = _create_NyInfoFolder_object(self, id, contributor)
 
-    type_of_info = schema_raw_data.pop('type_of_info', None)
-    ob.type_of_info = type_of_info
+    ob.info_type = 'enterprises'
+    self.info_add_html = NyEnterprise.add_html
 
-    ob.enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
     ob.set_categories()
     form_errors = ob.process_submitted_form(schema_raw_data, _lang)
 
@@ -166,9 +165,10 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
         if l_referer == 'infofolder_manage_add' or l_referer.find('infofolder_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'infofolder_add_html':
-            self.setSession('referer', self.absolute_url())
-            return ob.object_submitted_message(REQUEST)
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            #self.setSession('referer', self.absolute_url())
+            #return ob.object_submitted_message(REQUEST)
+            #REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/%s/edit_html' % (self.absolute_url(), id))
 
     return ob.getId()
 
@@ -194,7 +194,7 @@ class NyInfoFolder(NyFolder):
     security.declareProtected(PERMISSION_ADD_INFO, 'addNyEnterprise')
     addNyEnterprise = NyEnterprise.addNyEnterprise
     security.declareProtected(PERMISSION_ADD_INFO, 'info_add_html')
-    info_add_html = NyEnterprise.add_html
+    enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
 
     def __init__(self, id, contributor):
         """ """
@@ -202,9 +202,6 @@ class NyInfoFolder(NyFolder):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.folder_categories = {}
-        self.folder_extra_properties = {}
-        self.folder_extra_fields = {}
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -252,9 +249,21 @@ class NyInfoFolder(NyFolder):
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _folder_categories = schema_raw_data.pop('folder_categories', None)
-        if _folder_categories:
-            self.folder_categories = _folder_categories
+
+        info_type = schema_raw_data.pop('info_type', None)
+        self.info_type = info_type
+        if info_type == 'enterprises':
+            self.info_add_html = NyEnterprise.add_html
+        #if info_type == 'networks':
+            #self.info_add_html = NyNetwork.add_html
+        #if info_type == 'events':
+            #self.info_add_html = NyEvent.add_html
+        #if info_type == 'tools':
+            #self.info_add_html = NyTool.add_html
+        #if info_type == 'trainings':
+            #self.info_add_html = NyTraining.add_html
+
+        self.set_categories()
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang)
 
@@ -289,52 +298,13 @@ class NyInfoFolder(NyFolder):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'infofolder_edit')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
-    def get_topic_lists(self, list_type='FOLDER_CATEGORIES'):
-        """Returns the list of dictionaries of all the topic lists available
-        within the list_type category (URL Category or Extra property)"""
-        skel_lists = getattr(skel, list_type)
-        list_of_lists = []
-        ptool = self.getPortletsTool()
-        for skel_list in skel_lists:
-            list_id = skel_list['list_id']
-            list_title = skel_list['list_title']
-            ref_list = getattr(ptool, list_id, None)
-            if ref_list is not None:
-                ref_list_items = [list_item.title for list_item in ref_list.get_list()]
-                list_of_lists.append({'list_id': list_id, 'list_title': list_title,
-            'list_items': ref_list_items})
-        return list_of_lists
-
-    def get_extra_fields(self):
-        return skel.EXTRA_FIELDS
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
-    def get_topic_list_ids(self, list_type='FOLDER_CATEGORIES'):
-        """Returns the list of id's of all the topic lists available
-        within the list_type category (URL Category or Extra property)"""
-        skel_lists = getattr(skel, list_type)
-        return [skel_list['list_id'] for skel_list in skel_lists]
-
     def getCategoryList(self, ref_list_id):
         ptool = self.getPortletsTool()
         category_list = getattr(ptool, ref_list_id, None)
         list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
         return [category_list.title, list_items]
 
-    def get_ref_list_title(self, ref_list_id):
-        ptool = self.getPortletsTool()
-        ref_list = getattr(ptool, ref_list_id, None)
-        return ref_list.title
-
-    def is_single_select(self, list_id):
-        if list_id in self.folder_categories.keys():
-            return self.folder_categories[list_id]
-        if list_id in self.folder_extra_properties.keys():
-            return self.folder_extra_properties[list_id]
-        return False
-
-    def getInfosByCategoryTitle(self, category, category_item):
+    def getInfosByCategoryId(self, category, category_item):
         ob_list = []
         if category == 'Nothing' or category_item == 'Nothing': return None
         for ob in self.objectValues():
@@ -342,38 +312,13 @@ class NyInfoFolder(NyFolder):
                 ob_list.append(ob.id)
         return ob_list
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageCategories')
-    def manageCategories(self, REQUEST):
-        """ """
-        _folder_categories = REQUEST.get('folder_categories', None)
-        _folder_extra_fields = REQUEST.get('folder_extra_fields', [])
-        _single_select_lists = REQUEST.get('single_select_lists', None)
-        temp_list = {}
-        if _folder_categories:
-            for topic_list in _folder_categories:
-                if topic_list == 'countries':
-                    temp_list[topic_list] = True
-                else:
-                    temp_list[topic_list] = topic_list in self.utConvertToList(_single_select_lists)
-        redirect = REQUEST.get('redirect_url', None)
-        if redirect == 'folder_categories_html':
-            self.folder_categories = temp_list
-        elif redirect == 'folder_extra_properties_html':
-            self.folder_extra_properties = temp_list
-            self.folder_extra_fields = _folder_extra_fields
-
-        if REQUEST:
-            redirect += '?save=ok'
-            REQUEST.RESPONSE.redirect(redirect)
-
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
         """
         overwrites the global get_meta_types function to only allow certain types of objects
         in the InfoFolder
         """
-        res = []
-        return res
+        return [skel.INFO_TYPES[self.info_type]['meta_label']]
 
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
@@ -383,7 +328,7 @@ class NyInfoFolder(NyFolder):
         return []
 
     def set_categories(self):
-        schema = getattr(self, '%s_schema' % self.type_of_info)
+        schema = getattr(self, '%s_schema' % self.info_type)
         folder_categories = []
         folder_extra_properties = []
         for (k, v) in schema.items():
@@ -392,13 +337,19 @@ class NyInfoFolder(NyFolder):
             if k.startswith('sdoextra_'):
                 folder_extra_properties.append(v)
         self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
-        print self.folder_categories
         self.folder_extra_properties = self.utSortObjsListByAttr(folder_extra_properties, 'sortorder', 0)
+
+    def process_submissions(self):
+        """ overwrite the global function to allow
+         only certain types of objects to be added into the folder"""
+        return [('info_add_html', self.get_meta_types()[0])]
+
+    def get_info_types(self):
+        """ """
+        return [(k, v['meta_label']) for (k, v) in skel.INFO_TYPES.items()]
 
     subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
-    folder_categories_html = PageTemplateFile('zpt/folder_categories', globals())
-    folder_extra_properties_html = PageTemplateFile('zpt/folder_extra_properties', globals())
     infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
 
 InitializeClass(NyInfoFolder)
