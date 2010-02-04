@@ -20,12 +20,6 @@
             tal:attributes="href string:${this_absolute_url}/edit_html">
             <span i18n:translate="">Edit folder</span></a>
         <a tal:condition="perm_publish_objects"
-            tal:attributes="href string:${this_absolute_url}/folder_categories_html">
-            <span i18n:translate="">Folder categories</span></a>
-        <a tal:condition="perm_publish_objects"
-            tal:attributes="href string:${this_absolute_url}/folder_extra_properties_html">
-            <span i18n:translate="">Folder extra properties</span></a>
-        <a tal:condition="perm_publish_objects"
             tal:attributes="href string:${this_absolute_url}/basketofapprovals_html">
             <span i18n:translate="">Approvals</span></a>
         <a tal:condition="perm_publish_objects"
