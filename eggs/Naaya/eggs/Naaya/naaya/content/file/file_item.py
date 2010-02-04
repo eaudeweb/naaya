@@ -621,6 +621,13 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
 
+    def zip_export_data(self):
+        zip_data = self.data
+        filename = self.utToUtf8(self.downloadfilename())
+        filename = self.utCleanupId(filename)
+        zip_filename = filename
+        return zip_data, zip_filename
+
 InitializeClass(NyFile_extfile)
 
 manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())

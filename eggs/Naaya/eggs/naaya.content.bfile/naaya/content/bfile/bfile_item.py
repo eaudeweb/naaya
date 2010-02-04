@@ -345,6 +345,12 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars, 'bfile_edit')
 
+    def zip_export_data(self):
+        data = ''
+        zip_data = self._versions[-1].open().read()
+        zip_filename = self._versions[-1].filename
+        return zip_data, zip_filename
+
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bfile_download)
 

@@ -407,6 +407,11 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+    def zip_export_data(self):
+        zip_data = self.body
+        zip_filename = '%s.html' % self.getId()
+        return zip_data, zip_filename
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/document_manage_edit', globals())
