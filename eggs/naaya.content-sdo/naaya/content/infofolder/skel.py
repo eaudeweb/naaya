@@ -152,3 +152,16 @@ EXTRA_FIELDS = [
                     ['location', 'Location', 'String'],
                     ['training_city', 'Training city', 'String'],
                    ]
+
+INFO_TYPES = {'enterprises':
+                {'meta_type': 'Naaya Enterprise', 'meta_label': 'Enterprise', 'prefix': 'enterprise'},
+              'networks':
+                {'meta_type': 'Naaya Network', 'meta_label': 'Network', 'prefix': 'network'},
+              'events':
+                {'meta_type': 'Naaya Event', 'meta_label': 'Event', 'prefix': 'event'},
+              'tools':
+                {'meta_type': 'Naaya Tool', 'meta_label': 'Tool', 'prefix': 'tool'},
+              'trainings':
+                {'meta_type': 'Naaya Training', 'meta_label': 'Training', 'prefix': 'training'}
+             }
+
