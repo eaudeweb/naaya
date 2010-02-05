@@ -35,6 +35,7 @@ from Products.NaayaCore.events import ZipImportEvent
 from zope.component import adapts
 from zope.interface import implements
 from zope.interface import Interface
+from DateTime import DateTime
 
 # Naaya imports
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
@@ -43,6 +44,8 @@ from Products.Naaya.NyFolder import NyFolder
 from naaya.content.bfile.interfaces import INyBFile
 from naaya.content.file.interfaces import INyFile
 from naaya.content.document.interfaces import INyDocument
+from naaya.content.contact.interfaces import INyContact
+from naaya.content.event.interfaces import INyEvent
 try:
     from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
     def add_file(location_obj, id, title, file):
@@ -304,7 +307,7 @@ class FileZipAdapter(object):
     implements(IZipExportObject)
     adapts(INyFile)
 
-    def __init__(self):
+    def __init__(self, context):
         self.context = context
 
     def __call__(self):
@@ -312,4 +315,47 @@ class FileZipAdapter(object):
         filename = self.context.utToUtf8(self.context.downloadfilename())
         filename = self.context.utCleanupId(filename)
         zip_filename = filename
+        return zip_data, zip_filename
+
+class ContactZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyContact)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        zip_data = self.context.export_vcard()
+        zip_filename = '%s.vcf' % self.context.getId()
+        return zip_data, zip_filename
+
+class EventZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyEvent)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        obj = self.context
+        portal = obj.getSite()
+        schema_tool = portal.getSchemaTool()
+
+        schema = schema_tool.getSchemaForMetatype(obj.meta_type)
+
+        obj_data = []
+
+        for widget in schema.listWidgets():
+            if widget.prop_name() in ['sortorder', 'topitem']:
+                continue
+            if not widget.visible:
+                continue
+            obj_widget_value = getattr(obj, widget.prop_name(), '')
+            widget_data = widget._convert_to_form_string(obj_widget_value)
+            if not widget_data:
+                continue
+            obj_data.append('%s: %s' % (widget.title, widget_data))
+
+        zip_data = '\n'.join(obj_data)
+        zip_filename = '%s.txt' % self.context.getId()
         return zip_data, zip_filename
