@@ -130,7 +130,6 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyInfoFolder_object(self, id, contributor)
 
     ob.info_type = 'enterprises'
-    self.info_add_html = NyEnterprise.add_html
 
     ob.set_categories()
     form_errors = ob.process_submitted_form(schema_raw_data, _lang)
@@ -181,7 +180,6 @@ class NyInfoFolder(NyFolder):
 
     icon = 'misc_/NaayaContent/NyInfoFolder.gif'
     icon_marked = 'misc_/NaayaContent/NyInfoFolder_marked.gif'
-    security.declareProtected(view, 'add_html')
 
     """def manage_options(self):
         """ """
@@ -189,12 +187,11 @@ class NyInfoFolder(NyFolder):
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options"""
 
-    security.declareProtected(PERMISSION_ADD_INFO, 'addNyInfo')
-    addNyInfo = info_item.addNyInfo
-    security.declareProtected(PERMISSION_ADD_INFO, 'addNyEnterprise')
-    addNyEnterprise = NyEnterprise.addNyEnterprise
-    security.declareProtected(PERMISSION_ADD_INFO, 'info_add_html')
     enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
+    #networks_schema = NyNetwork.DEFAULT_SCHEMA
+    #events_schema = NyEvent.DEFAULT_SCHEMA
+    #tools_schema = NyTool.DEFAULT_SCHEMA
+    #trainings_schema = NyTraining.DEFAULT_SCHEMA
 
     def __init__(self, id, contributor):
         """ """
@@ -252,16 +249,6 @@ class NyInfoFolder(NyFolder):
 
         info_type = schema_raw_data.pop('info_type', None)
         self.info_type = info_type
-        if info_type == 'enterprises':
-            self.info_add_html = NyEnterprise.add_html
-        #if info_type == 'networks':
-            #self.info_add_html = NyNetwork.add_html
-        #if info_type == 'events':
-            #self.info_add_html = NyEvent.add_html
-        #if info_type == 'tools':
-            #self.info_add_html = NyTool.add_html
-        #if info_type == 'trainings':
-            #self.info_add_html = NyTraining.add_html
 
         self.set_categories()
 
@@ -318,7 +305,7 @@ class NyInfoFolder(NyFolder):
         overwrites the global get_meta_types function to only allow certain types of objects
         in the InfoFolder
         """
-        return [skel.INFO_TYPES[self.info_type]['meta_label']]
+        return [skel.INFO_TYPES[self.info_type]['meta_type']]
 
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
@@ -341,8 +328,11 @@ class NyInfoFolder(NyFolder):
 
     def process_submissions(self):
         """ overwrite the global function to allow
-         only certain types of objects to be added into the folder"""
-        return [('info_add_html', self.get_meta_types()[0])]
+        only certain types of objects to be added into the folder"""
+        skel_info = skel.INFO_TYPES[self.info_type]
+        info_add_url = '%s_add_html' % skel_info['prefix']
+        info_meta_label = skel_info['meta_label']
+        return [(info_add_url, info_meta_label)]
 
     def get_info_types(self):
         """ """

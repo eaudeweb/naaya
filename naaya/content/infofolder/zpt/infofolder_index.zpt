@@ -56,6 +56,5 @@
 			</tal:block>
 		</dl>
 		</fieldset>
-		<tal:block content="here/get_info_types"/>
 	</metal:block>
 </metal:block>
