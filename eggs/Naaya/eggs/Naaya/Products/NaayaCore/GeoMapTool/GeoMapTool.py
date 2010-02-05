@@ -557,49 +557,47 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return cluster_obs, single_obs
 
     security.declareProtected(view, 'search_geo_clusters')
-    def search_geo_clusters(self, meta_types=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None, zoom_level=None,
-            path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
+    def search_geo_clusters(self, meta_types=None,
+            lat_min=None, lat_max=None, lon_min=None, lon_max=None,
+            path='', geo_types=None, query='', approved=True,
             landscape_type=[], administrative_level=[], languages=None):
         """ Returns all the clusters that match the specified criteria. """
-        if zoom_level is None: zoom_level = 0
         if lat_min is None or lat_min == '': lat_min = -90.
         if lat_max is None or lat_max == '': lat_max = 90.
         if lon_min is None or lon_min == '': lon_min = -180.
         if lon_max is None or lon_max == '': lon_max = 180.
-        if lat_center is None or lat_center == '': lat_center = 0.
-        if lon_center is None or lon_center == '': lon_center = 0.
-        zoom_level = int(zoom_level)
         lat_min, lat_max = float(lat_min), float(lat_max)
         lon_min, lon_max = float(lon_min), float(lon_max)
-        lat_center, lon_center = float(lat_center), float(lon_center)
 
-        # check for the 180/-180 longitude in the map
-        if float(lon_min) > float(lon_max):
-            lon_min, lon_max = lon_max, lon_min
-
-        if float(lon_min) < float(lon_center) < float(lon_max):
+        if float(lon_min) < float(lon_max):
             filters = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
                 query=query, languages=languages)
 
+            cluster_obs, single_obs = self._search_geo_clusters(filters)
+
         else:
-            filters = self.build_geo_filters(path=path, meta_types=meta_types,
+            filters1 = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
+                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=180.,
                 query=query, languages=languages)
+
+            cluster_obs_1, single_obs_1 = self._search_geo_clusters(filters1)
 
             filters2 = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
+                lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_max,
                 query=query, languages=languages)
 
-            filters.extend(filters2)
+            cluster_obs_2, single_obs_2 = self._search_geo_clusters(filters2)
 
-        cluster_obs, single_obs = self._search_geo_clusters(filters)
+            cluster_obs = cluster_obs_1 + cluster_obs_2
+            single_obs = single_obs_1 + single_obs_2
+
         return cluster_obs, single_obs
 
     security.declareProtected(view, 'downloadLocationsKml')
@@ -674,9 +672,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lat_center=0., lon_center=0.):
         """ """
         r = []
-        cluster_obs, single_obs = self.search_geo_clusters(path=path, geo_types=geo_types, query=geo_query,
-                              zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-                              lat_center=lat_center, lon_center=lon_center)
+        cluster_obs, single_obs = self.search_geo_clusters(
+            path=path, geo_types=geo_types, query=geo_query,
+            lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max)
 
         for res in cluster_obs:
             r.append('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res[0].lat),

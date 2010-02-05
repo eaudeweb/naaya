@@ -217,11 +217,24 @@ GGeoMapTool.prototype.getBounds = function () {
 	var sw = bounds.getSouthWest();
 	var ne = bounds.getNorthEast();
 
-	return {'lat_min': sw.lat(),
+	output = {
+		'lat_min': sw.lat(),
 		'lat_max': ne.lat(),
 		'lon_min': sw.lng(),
 		'lon_max': ne.lng()
 	}
+
+	var center_lat = map.getCenter().lat();
+	var horiz_bounds = new GLatLngBounds(new GLatLng(center_lat, -180),
+	                                     new GLatLng(center_lat, 180));
+    var zoom_level_for_full_360 = map.getBoundsZoomLevel(horiz_bounds);
+	if(map.getZoom() <= zoom_level_for_full_360) {
+		// looks like the map fits horizontally in the viewport
+		output['lon_min'] = -180;
+		output['lon_max'] = 180;
+	}
+
+	return output;
 }
 
 GGeoMapTool.prototype.getCenter = function () {
