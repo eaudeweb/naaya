@@ -41,7 +41,6 @@ from DateTime import DateTime
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.NyFolder import NyFolder
-from naaya.content.bfile.interfaces import INyBFile
 from naaya.content.file.interfaces import INyFile
 from naaya.content.document.interfaces import INyDocument
 from naaya.content.contact.interfaces import INyContact
@@ -278,18 +277,6 @@ class IZipExportObject(Interface):
     def __call__():
         """Return data (as `str`) and filename, as a tuple
         """
-
-class BFileZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyBFile)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        zip_data = self.context.current_version.open().read()
-        zip_filename = self.context.current_version.filename
-        return zip_data, zip_filename
 
 class DocumentZipAdapter(object):
     implements(IZipExportObject)
