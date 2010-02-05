@@ -85,7 +85,12 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
 
     def callback(context, path, REQUEST):
         filepath = os.path.join(_path, *path)
-        fd = open(filepath)
+        try:
+            fd = open(filepath)
+        except IOError:
+            REQUEST.RESPONSE.setStatus(404)
+            return "Not Found"
+
         try:
             data = fd.read()
             content_type = get_content_type(filepath)
@@ -98,6 +103,7 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
         except KeyError:
             data = "Not Found"
             REQUEST.RESPONSE.setStatus(404)
+
         fd.close()
         return data
 
