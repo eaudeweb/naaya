@@ -27,15 +27,22 @@ from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import transaction
 from zope.event import notify
 from Products.NaayaCore.events import ZipImportEvent
+from zope.component import adapts
+from zope.interface import implements
+from zope.interface import Interface
 
 # Naaya imports
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.NyFolder import NyFolder
+from naaya.content.bfile.interfaces import INyBFile
+from naaya.content.file.interfaces import INyFile
+from naaya.content.document.interfaces import INyDocument
 try:
     from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
     def add_file(location_obj, id, title, file):
@@ -175,7 +182,7 @@ class ZipExportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
+    security.declareProtected(view, 'do_export')
     def do_export(self, REQUEST=None):
         """ """
         if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
@@ -190,8 +197,9 @@ class ZipExportTool(Implicit, Item):
         file_like_object = StringIO()
         zip_file = ZipFile(file_like_object, 'w')
         try:
-            for object in objects_to_archive:
-                self.add_object_to_zip(object, zip_file)
+            for obj in objects_to_archive:
+                if self.user_has_view_permission(obj):
+                    self.add_object_to_zip(obj, zip_file)
             zip_file.close()
         except Exception, e:
             errors.append(str(e))
@@ -215,20 +223,20 @@ class ZipExportTool(Implicit, Item):
 
     def gather_objects(self, container):
         objects = []
-        for object in container.objectValues():
-            objects.append(object)
-            if isinstance(object, NyFolder):
-                objects.extend(self.gather_objects(object))
+        for obj in container.objectValues():
+            objects.append(obj)
+            if isinstance(obj, NyFolder):
+                objects.extend(self.gather_objects(obj))
         return objects
 
-    def add_object_to_zip(self, object, zip_file):
+    def add_object_to_zip(self, obj, zip_file):
         def file_has_no_extension(path):
             return not len(path.split('/')[-1].split('.')) > 1
-        zip_path = self.get_zip_path(object)
+        zip_path = self.get_zip_path(obj)
         if isinstance(zip_path, unicode):
             zip_path = zip_path.encode('utf-8')
-        object_zip_data, object_zip_filename = self.get_zip_content(object)
-        if isinstance(object, NyFolder):
+        object_zip_data, object_zip_filename = self.get_zip_content(obj)
+        if isinstance(obj, NyFolder):
             object_zip_data = 'Naaya Folder'
         else:
             if file_has_no_extension(zip_path):
@@ -239,22 +247,69 @@ class ZipExportTool(Implicit, Item):
                 object_zip_data = object_zip_data.encode('utf-8')
             zip_file.writestr(zip_path, object_zip_data)
 
-    def get_zip_path(self, object):
+    def get_zip_path(self, obj):
         my_container = self.getParentNode()
         my_container_path = my_container.getPhysicalPath()
-        object_path = object.getPhysicalPath()
+        object_path = obj.getPhysicalPath()
         relative_object_path = object_path[len(my_container_path):]
-        object_zip_path = ['']
+        object_zip_path = []
         for path in relative_object_path:
             object_zip_path.append(path)
-        if isinstance(object, NyFolder):
+        if isinstance(obj, NyFolder):
             object_zip_path.append('')
         return '/'.join(object_zip_path)
 
-    def get_zip_content(self, object):
-        zip_data = getattr(object, 'zip_export_data', '')
-        if callable(zip_data):
-            return zip_data()
-        return ('', '')
+    def get_zip_content(self, obj):
+        try:
+            export_adapter = IZipExportObject(obj)
+            return export_adapter()
+        except TypeError:
+            return ('', '')
+
+    def user_has_view_permission(self, obj):
+        return obj.checkPermissionView()
 
 InitializeClass(ZipExportTool)
+
+class IZipExportObject(Interface):
+    def __call__():
+        """Return data (as `str`) and filename, as a tuple
+        """
+
+class BFileZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyBFile)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        zip_data = self.context.current_version.open().read()
+        zip_filename = self.context.current_version.filename
+        return zip_data, zip_filename
+
+class DocumentZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyDocument)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        zip_data = self.context.body
+        zip_filename = '%s.html' % self.context.getId()
+        return zip_data, zip_filename
+
+class FileZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyFile)
+
+    def __init__(self):
+        self.context = context
+
+    def __call__(self):
+        zip_data = self.context.data
+        filename = self.context.utToUtf8(self.context.downloadfilename())
+        filename = self.context.utCleanupId(filename)
+        zip_filename = filename
+        return zip_data, zip_filename

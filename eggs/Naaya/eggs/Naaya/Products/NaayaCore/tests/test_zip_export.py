@@ -23,6 +23,7 @@ from Products.Naaya.tests.NaayaTestCase import load_test_file
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
 from zipfile import ZipFile
+from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
 
 folder_with_files = load_test_file('./data/folder_with_files_zip.zip', globals())
@@ -48,8 +49,8 @@ class NyZipExport(NaayaTestCase):
         self.assertTrue(isinstance(export_value, object))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['/one_file.txt'])
-        self.assertEqual(zip.read('/one_file.txt'), 'one_file contents\n')
+        self.assertEqual(zip.namelist(), ['one_file.txt'])
+        self.assertEqual(zip.read('one_file.txt'), 'one_file contents\n')
 
     def test_export_folder(self):
         self.test_folder.zip_import.do_import(data=folder_with_files)
@@ -59,11 +60,11 @@ class NyZipExport(NaayaTestCase):
         zip = ZipFile(export_value, 'r')
 
         expected_namelist = \
-            ['/folder_with_files_zip/',
-             '/folder_with_files_zip/one_folder/',
-             '/folder_with_files_zip/one_folder/one_file.txt',
-             '/folder_with_files_zip/one_folder/two_file.txt',
-             '/folder_with_files_zip/one_folder/three_file.txt']
+            ['folder_with_files_zip/',
+             'folder_with_files_zip/one_folder/',
+             'folder_with_files_zip/one_folder/one_file.txt',
+             'folder_with_files_zip/one_folder/two_file.txt',
+             'folder_with_files_zip/one_folder/three_file.txt']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
 
@@ -72,8 +73,8 @@ class NyZipExport(NaayaTestCase):
         self.test_folder['html_document'].body = '<p>Html document</p>'
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['/html_document.html'])
-        self.assertEqual(zip.read('/html_document.html'),
+        self.assertEqual(zip.namelist(), ['html_document.html'])
+        self.assertEqual(zip.read('html_document.html'),
                                   '<p>Html document</p>')
 
     def test_export_mixed_encodings(self):
@@ -86,23 +87,66 @@ class NyZipExport(NaayaTestCase):
 
         zip = ZipFile(export_value, 'r')
 
-        expected_namelist = ['/mac_zip/',
-                             '/mac_zip/Picture_1.png',
-                             '/mac_zip/Picture_2.png',
-                             '/html_document.html']
+        expected_namelist = ['mac_zip/',
+                             'mac_zip/Picture_1.png',
+                             'mac_zip/Picture_2.png',
+                             'html_document.html']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
-        self.assertEqual(zip.read('/html_document.html'),
+        self.assertEqual(zip.read('html_document.html'),
                                   '<p>Html document</p>')
 
         imported_folder = self.test_folder['mac_zip']
 
-        picture1_content = imported_folder['Picture_1.png'].zip_export_data()[0]
-        picture2_content = imported_folder['Picture_2.png'].zip_export_data()[0]
+        picture1_data = IZipExportObject(imported_folder['Picture_1.png'])()[0]
+        picture2_data = IZipExportObject(imported_folder['Picture_2.png'])()[0]
 
-        self.assertEqual(zip.read('/mac_zip/Picture_1.png'), picture1_content)
-        self.assertEqual(zip.read('/mac_zip/Picture_2.png'), picture2_content)
+        self.assertEqual(zip.read('mac_zip/Picture_1.png'), picture1_data)
+        self.assertEqual(zip.read('mac_zip/Picture_2.png'), picture2_data)
 
+    def test_export_anonymous(self):
+        addNyDocument(self.test_folder, id='public_access')
+        self.test_folder['public_access'].body = '<p>Some html</p>'
+        self.logout()
+        self.portalLogout()
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['public_access.html'])
+        self.assertEqual(zip.read('public_access.html'), '<p>Some html</p>')
+
+    def test_export_mixed_access(self):
+        addNyDocument(self.test_folder, id='public_document')
+        addNyDocument(self.test_folder, id='restricted_document')
+        self.test_folder['public_document'].body = '<p>Some html</p>'
+        self.test_folder['restricted_document'].body = '<p>Restricted html</p>'
+
+        #restrict access
+        restricted_doc = self.test_folder['restricted_document']
+        permission = getattr(restricted_doc, '_View_Permission', [])
+        new_permission = [x for x in permission if x != 'Anonymous']
+        if 'Contributor' not in new_permission:
+            new_permission.append('Contributor')
+        restricted_doc._View_Permission = tuple(new_permission)
+
+        self.logout()
+        self.portalLogout()
+
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['public_document.html'])
+        self.assertEqual(zip.read('public_document.html'), '<p>Some html</p>')
+
+        self.login('contributor')
+        self.portalLogin('contributor')
+
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['public_document.html',
+                                          'restricted_document.html'])
+        self.assertEqual(zip.read('public_document.html'),
+                                  '<p>Some html</p>')
+        self.assertEqual(zip.read('restricted_document.html'),
+                                  '<p>Restricted html</p>')
 
 def test_suite():
     suite = TestSuite()

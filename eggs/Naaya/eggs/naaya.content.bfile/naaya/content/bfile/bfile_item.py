@@ -36,6 +36,8 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.zope2util import CaptureTraverse
+from zope.interface import implements
+from interfaces import INyBFile
 
 #Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -191,6 +193,8 @@ def bfile_download(context, path, REQUEST):
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
+    implements(INyBFile)
+
     meta_type = config['meta_type']
     meta_label = config['label']
     icon = 'misc_/NaayaContent/NyBFile.gif'
@@ -344,12 +348,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars, 'bfile_edit')
-
-    def zip_export_data(self):
-        data = ''
-        zip_data = self._versions[-1].open().read()
-        zip_filename = self._versions[-1].filename
-        return zip_data, zip_filename
 
     security.declareProtected(view, 'download')
     download = CaptureTraverse(bfile_download)
