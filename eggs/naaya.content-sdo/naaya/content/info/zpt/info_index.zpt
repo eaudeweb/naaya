@@ -4,12 +4,10 @@
 </metal:block>
 
 <metal:block metal:fill-slot="head">
-<!--	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>-->
 </metal:block>
 
 <metal:block metal:fill-slot="body">
+	<div>
 	<tal:block tal:condition="python:here.checkPermissionEditObject()">
 		<br clear="all"/>
 		<div id="admin_this_folder">
@@ -20,61 +18,86 @@
 			</tal:block>
 		</div>
 	</tal:block>
-	<h1 tal:content="here/title"/>
-	<dl>
-		<dt i18n:translate="">Website URL:</dt>
-		<dd tal:content="here/website"/>
-	</dl>
-	<fieldset>
-	<legend i18n:translate="">Specifications</legend>
-	<dl tal:repeat="info_category here/folder_categories">
-		<tal:block define="category_id info_category/list_id">
-			<dt tal:content="info_category/label"/>
-			<dd tal:repeat="property_value python:here.get_property_values(category_id)"
-				tal:content="property_value"/>
-		</tal:block>
-	</dl>
-	</fieldset>
-	<h2 i18n:translate="">Extras</h2>
-	<dl tal:repeat="info_category here/folder_extra_properties">
-	</dl>
-	<h2 i18n:translate="">Organisation</h2>
-	<dl>
-		<dt i18n:translate="">Name</dt>
-		<dd tal:content="here/organisation"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">City</dt>
-		<dd tal:content="here/city"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">Country</dt>
-		<dd tal:content="here/country"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">Email</dt>
-		<dd tal:content="here/email"/>
-	</dl>
-	<h2 i18n:translate="">Overview</h2>
-	<div tal:content="structure here/description"/>
-	<h2 i18n:translate="">Submitted by</h2>
-	<dl>
-		<dt i18n:translate="">First name</dt>
-		<dd tal:content="here/contributor_first_name"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">Last Name</dt>
-		<dd tal:content="here/contributor_first_name"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">Email</dt>
-		<dd tal:content="here/contributor_email"/>
-	</dl>
-	<dl>
-		<dt i18n:translate="">Telephone</dt>
-		<dd tal:content="here/contributor_telephone"/>
-	</dl>
+	</div>
+	<div class="main-content">
+		<h1 tal:content="here/title"/>
+		<dl>
+			<dt i18n:translate="">Website URL:</dt>
+			<dd tal:content="here/website"/>
+		</dl>
 
+		<tal:block define="folder_categories here/folder_categories"
+			condition="folder_categories ">
+		<h2 i18n:translate="">Specifications</h2>
+		<dl tal:repeat="info_category folder_categories">
+			<tal:block define="category_id info_category/list_id">
+				<dt tal:content="info_category/label"/>
+				<dd tal:repeat="property_value python:here.get_property_values(category_id)"
+					tal:content="property_value"/>
+			</tal:block>
+		</dl>
+		</tal:block>
+
+		<tal:block define="folder_extra_properties here/folder_extra_properties"
+			condition="folder_extra_properties ">
+			<h2 i18n:translate="">Extras</h2>
+			<dl tal:repeat="info_category folder_extra_properties">
+				<tal:block define="category_id info_category/list_id">
+					<dt tal:content="info_category/label"/>
+					<dd tal:repeat="property_value python:here.get_property_values(category_id)"
+						tal:content="property_value"/>
+				</tal:block>
+			</dl>
+		</tal:block>
+
+		<h2 i18n:translate="">Organisation</h2>
+		<dl>
+			<dt i18n:translate="">Name</dt>
+			<dd tal:content="here/organisation"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">City</dt>
+			<dd tal:content="here/city"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">Country</dt>
+			<dd tal:content="here/country"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">Email</dt>
+			<dd tal:content="here/email"/>
+		</dl>
+		<h2 i18n:translate="">Overview</h2>
+		<div tal:content="structure here/description"/>
+		<h2 i18n:translate="">Submitted by</h2>
+		<dl>
+			<dt i18n:translate="">First name</dt>
+			<dd tal:content="here/contributor_first_name"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">Last Name</dt>
+			<dd tal:content="here/contributor_first_name"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">Email</dt>
+			<dd tal:content="here/contributor_email"/>
+		</dl>
+		<dl>
+			<dt i18n:translate="">Telephone</dt>
+			<dd tal:content="here/contributor_telephone"/>
+		</dl>
+	</div>
+	<div class="boxes-right"
+				tal:condition="python:here.has_coordinates()">
+		<!-- Map widget -->
+		<div class="minimap">
+			<tal:block content="structure here/minimap" />
+		</div>
+	</div>
+
+	<tal:block content="structure here/set_content_rating" />
+
+	<tal:block content="structure here/comments_box" />
 </metal:block>
 
 </metal:block>

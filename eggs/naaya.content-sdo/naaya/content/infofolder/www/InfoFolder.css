@@ -1,7 +1,13 @@
 .boxes-right 
 {
  float: right;
- width: 20em;
+ width: 25%;
+}
+
+.main-content 
+{
+ float: left;
+ width: 75%;
 }
 
 .select{

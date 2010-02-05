@@ -37,23 +37,24 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.constants import *
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import make_id
 
-import info_item
+from info_item import NyInfo, DEFAULT_SCHEMA
 from naaya.content.infofolder import skel
+from naaya.content.infofolder.constants import *
 
 #module constants
 INFO_TYPE = skel.INFO_TYPES['enterprises']
 METATYPE_OBJECT = INFO_TYPE['meta_type']
 LABEL_OBJECT = INFO_TYPE['meta_label']
 PREFIX_OBJECT = INFO_TYPE['prefix']
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Enterprise objects'
-OBJECT_FORMS = ['enterprise_add', 'enterprise_edit', 'enterprise_index']
-OBJECT_CONSTRUCTORS = ['add_html', 'addNyEnterprise']
-OBJECT_ADD_FORM = 'add_html'
+PERMISSION_ADD_OBJECT = PERMISSION_ADD_INFO
+OBJECT_FORMS = []
+OBJECT_CONSTRUCTORS = ['sdo_info_add', 'addNyEnterprise']
+OBJECT_ADD_FORM = 'enterprise_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Enterprise type.'
 
-DEFAULT_SCHEMA = deepcopy(info_item.DEFAULT_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(DEFAULT_SCHEMA)
 DEFAULT_SCHEMA['sdo_type_of_initiative'] = dict(sortorder=12, widget_type='Select',
                 label='Type of initiative', localized=True, list_id='sdo_type_of_initiative')
 DEFAULT_SCHEMA['sdo_nature_of_initiative'] = dict(sortorder=13, widget_type='SelectMultiple',
@@ -64,7 +65,6 @@ DEFAULT_SCHEMA['sdo_services'] = dict(sortorder=15, widget_type='SelectMultiple'
                 label='Services', localized=True, list_id='sdo_services')
 DEFAULT_SCHEMA['sdo_geographic_scope'] = dict(sortorder=16, widget_type='SelectMultiple',
                 label='Geographic scope', localized=True, list_id='sdo_geographic_scope')
-
 
 # this dictionary is updated at the end of the module
 config = {
@@ -87,11 +87,11 @@ config = {
             },
     }
 
-def add_html(self, REQUEST=None, RESPONSE=None):
+def enterprise_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT,
-             'action': 'addNyEnterprise', 'form_helper': form_helper}, 'info_add')
+             'action': 'addNyEnterprise', 'form_helper': form_helper}, 'sdo_info_add')
 
 def _create_object(parent, id, title, contributor):
     ob = NyEnterprise(id, title, contributor)
@@ -113,11 +113,25 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     _send_notifications = schema_raw_data.pop('_send_notifications', True)
     _title = schema_raw_data['title']
+    _contact_word = schema_raw_data.get('contact_word', '')
+
     #process parameters
     id = make_id(self, id=id, title=_title, prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_object(self, id, _title, contributor)
+
+
+    _city = schema_raw_data.get('city', None)
+    _country = schema_raw_data.get('country', None)
+    if _city or _country:
+        #remove the empty geo_location string (default when the geo_location widget is hidden)
+        if schema_raw_data.get('geo_location', None) == '':
+            schema_raw_data.pop('geo_location')
+        _address = _city + ', ' + _country
+        schema_raw_data['geo_location.lat'], schema_raw_data['geo_location.lon'] = ob.do_geocoding(_address)
+        schema_raw_data['geo_location.address'] = _address
+
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     #check Captcha/reCaptcha
@@ -132,7 +146,7 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/enterprise_add_html' % self.absolute_url())
             return
 
     #process parameters
@@ -154,7 +168,7 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
         REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), ob.id))
     return ob.getId()
 
-class NyEnterprise(info_item.NyInfo):
+class NyEnterprise(NyInfo):
     """ """
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
@@ -169,23 +183,12 @@ class NyEnterprise(info_item.NyInfo):
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
-    #site actions
-    security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'info_index')
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'info_edit')
-
 InitializeClass(NyEnterprise)
 
 config.update({
-    'constructors': (add_html, addNyEnterprise),
+    'constructors': (enterprise_add_html, addNyEnterprise),
     'folder_constructors': [
-            ('add_html', add_html),
+            ('enterprise_add_html', enterprise_add_html),
             ('addNyEnterprise', addNyEnterprise),
         ],
     'add_method': addNyEnterprise,
