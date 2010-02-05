@@ -39,6 +39,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from zope.interface import implements
+from interfaces import INyFile
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -282,6 +284,8 @@ class file_item(NyContentData, NyFSFile):
 
 class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation, NyContentType):
     """ """
+
+    implements(INyFile)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -620,13 +624,6 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
             return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-
-    def zip_export_data(self):
-        zip_data = self.data
-        filename = self.utToUtf8(self.downloadfilename())
-        filename = self.utCleanupId(filename)
-        zip_filename = filename
-        return zip_data, zip_filename
 
 InitializeClass(NyFile_extfile)
 

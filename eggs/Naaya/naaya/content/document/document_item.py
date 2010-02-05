@@ -36,6 +36,8 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from zope.interface import implements
+from interfaces import INyDocument
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -192,6 +194,8 @@ class document_item(Implicit, NyContentData):
 
 class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyValidation, NyContentType):
     """ """
+
+    implements(INyDocument)
 
     meta_type = config['meta_type']
     meta_label = config['label']
@@ -406,11 +410,6 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-    def zip_export_data(self):
-        zip_data = self.body
-        zip_filename = '%s.html' % self.getId()
-        return zip_data, zip_filename
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
