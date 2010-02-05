@@ -3,7 +3,6 @@
   <include package="Products.NaayaCore.NotificationTool" />
   <include package="Products.NaayaCore.PortletsTool" />
   <include package="Products.NaayaCore.GoogleDataTool" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.BFileZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.DocumentZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.FileZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.ContactZipAdapter" />
