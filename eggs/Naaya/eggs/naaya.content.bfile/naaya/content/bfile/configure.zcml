@@ -4,4 +4,6 @@
 
   <naaya:content factory=".bfile_item.get_config" />
 
+  <adapter factory=".adapters.BFileZipAdapter" />
+
 </configure>
