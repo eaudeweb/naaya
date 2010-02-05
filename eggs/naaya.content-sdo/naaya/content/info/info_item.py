@@ -21,6 +21,8 @@
 from copy import deepcopy
 import os
 import sys
+import simplejson as json
+from decimal import Decimal
 
 #Zope imports
 from Globals import InitializeClass
@@ -42,8 +44,10 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+from Products.NaayaCore.GeoMapTool.managers import geocoding
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 import naaya.content.infofolder.skel as skel
@@ -51,13 +55,7 @@ import naaya.content.infofolder.skel as skel
 #module constants
 METATYPE_OBJECT = 'Naaya Info'
 LABEL_OBJECT = 'Info'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Info objects'
-OBJECT_FORMS = ['info_add', 'info_edit', 'info_index']
-OBJECT_CONSTRUCTORS = ['add_html', 'addNyInfo']
-OBJECT_ADD_FORM = 'add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Info type.'
 PREFIX_OBJECT = 'Info'
-ADDITIONAL_STYLE = open(ImageFile('www/Info.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
     'website':               dict(sortorder=11, widget_type='String',
@@ -83,97 +81,9 @@ DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
+#DEFAULT_SCHEMA['geo_location'].update(visible=True)
 
-# this dictionary is updated at the end of the module
-config = {
-        'product': 'NaayaContent',
-        'module': 'info_item',
-        'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': METATYPE_OBJECT,
-        'label': LABEL_OBJECT,
-        'permission': PERMISSION_ADD_OBJECT,
-        'forms': OBJECT_FORMS,
-        'add_form': OBJECT_ADD_FORM,
-        'description': DESCRIPTION_OBJECT,
-        'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyInfo',
-        '_module': sys.modules[__name__],
-        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInfo.gif'),
-        'additional_style': ADDITIONAL_STYLE,
-        '_misc': {
-                'NyInfo.gif': ImageFile('www/NyInfo.gif', globals()),
-                'NyInfo_marked.gif': ImageFile('www/NyInfo_marked.gif', globals()),
-            },
-    }
-
-def add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT,
-                                            'action': 'addNyInfo', 'form_helper': form_helper},
-                                            'info_add')
-
-def _create_object(parent, id, title, contributor):
-    ob = NyInfo(id, title, contributor)
-    parent.gl_add_languages(ob)
-    parent._setObject(id, ob)
-    ob = parent._getOb(id)
-    ob.after_setObject()
-    return ob
-
-def addNyInfo(self, id='', REQUEST=None, contributor=None, **kwargs):
-    """
-    Create a Info type of object.
-    """
-    if REQUEST is not None:
-        schema_raw_data = dict(REQUEST.form)
-    else:
-        schema_raw_data = kwargs
-    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    _send_notifications = schema_raw_data.pop('_send_notifications', True)
-    _title = schema_raw_data['title']
-    #process parameters
-    id = make_id(self, id=id, title=_title, prefix=PREFIX_OBJECT)
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-
-    ob = _create_object(self, id, _title, contributor)
-
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
-    
-    if form_errors:
-        if REQUEST is None:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
-        else:
-            import transaction; transaction.abort() # because we already called _crete_NyZzz_object
-            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
-            return
-
-    #process parameters
-    if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
-    else:
-        approved, approved_by = 0, None
-    ob.approveThis(approved, approved_by)
-    ob.submitThis()
-
-    if ob.discussion: ob.open_for_comments()
-
-    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    #log post date
-    auth_tool = self.getAuthenticationTool()
-    auth_tool.changeLastPost(contributor)
-    #redirect if case
-    if REQUEST is not None:
-        REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), ob.id))
-    return ob.getId()
+sdo_info_add = NaayaPageTemplateFile('zpt/info_add', globals(), 'sdo_info_add')
 
 class info_item(Implicit, NyContentData):
     """ """
@@ -256,6 +166,17 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 
         schema_raw_data['title'] = obj.title
 
+        _city = schema_raw_data.get('city', None)
+        _country = schema_raw_data.get('country', None)
+        if _city or _country:
+            _address = _city + ', ' + _country
+            empty_geo_location = schema_raw_data.get('geo_location', None) == ''
+            old_geo_location = self.geo_location not in (None, Geo()) and self.geo_location.address != _address
+            if empty_geo_location or old_geo_location:
+                schema_raw_data.pop('geo_location')
+                schema_raw_data['geo_location.lat'], schema_raw_data['geo_location.lon'] = self.do_geocoding(_address)
+                schema_raw_data['geo_location.address'] = _address
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if form_errors:
@@ -282,14 +203,10 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 
     #site actions
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'info_index')
+    index_html = NaayaPageTemplateFile('zpt/info_index', globals(), 'sdo_info_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'info_edit')
+    edit_html = NaayaPageTemplateFile('zpt/info_edit', globals(), 'sdo_info_edit')
 
     def get_property_values(self, property_id):
         """ returns the values of the ref_list items if there is a reflist with the given id
@@ -311,18 +228,35 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         ref_list = getattr(ptool, ref_list_id, None)
         return ref_list
 
+    def do_geocoding(self, address):
+        if self.portal_map.map_engine == 'yahoo':
+            coordinates = geocoding.yahoo_geocode(address)
+        elif self.portal_map.map_engine == 'google':
+            coordinates = geocoding.location_geocode(address)
+        if coordinates != None:
+            return coordinates
+        return ('', '')
+
+    _minimap_template = PageTemplateFile('zpt/minimap', globals())
+    def minimap(self):
+        if self.geo_location not in (None, Geo()):
+            simplepoints = [{'lat': self.geo_location.lat, 'lon': self.geo_location.lon}]
+        else:
+            return ""
+        json_simplepoints = json.dumps(simplepoints, default=json_encode)
+        return self._minimap_template(points=json_simplepoints)
+
+    def has_coordinates(self):
+        """ check if the current object has map coordinates"""
+        if self.geo_location:
+            return self.geo_location.lat and self.geo_location.lon
+        return False
+
 InitializeClass(NyInfo)
 
-config.update({
-    'constructors': (add_html, addNyInfo),
-    'folder_constructors': [
-            ('add_html', add_html),
-            ('addNyInfo', addNyInfo),
-        ],
-    'add_method': addNyInfo,
-    'validation': issubclass(NyInfo, NyValidation),
-    '_class': NyInfo,
-})
+def json_encode(ob):
+    """ try to encode some known value types to JSON """
+    if isinstance(ob, Decimal):
+        return float(ob)
+    raise ValueError
 
-def get_config():
-    return config
