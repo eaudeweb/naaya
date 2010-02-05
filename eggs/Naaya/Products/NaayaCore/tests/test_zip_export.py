@@ -22,6 +22,8 @@ from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaTestCase import load_test_file
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
+from naaya.content.contact.contact_item import addNyContact
+from naaya.content.event.event_item import addNyEvent
 from zipfile import ZipFile
 from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
@@ -77,6 +79,45 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(zip.read('html_document.html'),
                                   '<p>Html document</p>')
 
+    def test_export_contact(self):
+        addNyContact(self.test_folder, id="important_contact",
+                     title='Important contact')
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['important_contact.vcf'])
+        exported_vcard_content = zip.read('important_contact.vcf')
+        self.assertTrue('BEGIN:VCARD' in exported_vcard_content)
+        self.assertTrue('Important contact' in exported_vcard_content)
+        self.assertTrue('END:VCARD' in exported_vcard_content)
+
+    def test_export_event(self):
+        addNyEvent(self.test_folder, id='interesting_event',
+                   title='Great event')
+
+        export_value = self.test_folder.zip_export.do_export()
+        self.assertFalse(isinstance(export_value, list),
+                         ('Errors are raised: ', export_value))
+
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['interesting_event.txt'])
+        exported_event_content = zip.read('interesting_event.txt')
+
+        obj = self.test_folder['interesting_event']
+        schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya Event')
+        obj_data = []
+        for widget in schema.listWidgets():
+            if widget.prop_name() in ['sortorder', 'topitem']:
+                continue
+            if not widget.visible:
+                continue
+            obj_widget_value = getattr(obj, widget.prop_name(), '')
+            widget_data = widget._convert_to_form_string(obj_widget_value)
+            if not widget_data:
+                continue
+            obj_data.append('%s: %s' % (widget.title, widget_data))
+
+        self.assertEqual('\n'.join(obj_data), exported_event_content)
+
     def test_export_mixed_encodings(self):
         self.test_folder.zip_import.do_import(data=mac_zip)
         addNyDocument(self.test_folder, id='html_document')
@@ -110,6 +151,8 @@ class NyZipExport(NaayaTestCase):
         self.logout()
         self.portalLogout()
         export_value = self.test_folder.zip_export.do_export()
+        self.assertFalse(isinstance(export_value, list),
+                         ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
         self.assertEqual(zip.namelist(), ['public_access.html'])
         self.assertEqual(zip.read('public_access.html'), '<p>Some html</p>')
@@ -132,6 +175,8 @@ class NyZipExport(NaayaTestCase):
         self.portalLogout()
 
         export_value = self.test_folder.zip_export.do_export()
+        self.assertFalse(isinstance(export_value, list),
+                         ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
         self.assertEqual(zip.namelist(), ['public_document.html'])
         self.assertEqual(zip.read('public_document.html'), '<p>Some html</p>')
@@ -140,6 +185,8 @@ class NyZipExport(NaayaTestCase):
         self.portalLogin('contributor')
 
         export_value = self.test_folder.zip_export.do_export()
+        self.assertFalse(isinstance(export_value, list),
+                         ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
         self.assertEqual(zip.namelist(), ['public_document.html',
                                           'restricted_document.html'])

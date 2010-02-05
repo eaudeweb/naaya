@@ -6,4 +6,6 @@
   <adapter factory="Products.NaayaCore.managers.zip_import_export.BFileZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.DocumentZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.FileZipAdapter" />
+  <adapter factory="Products.NaayaCore.managers.zip_import_export.ContactZipAdapter" />
+  <adapter factory="Products.NaayaCore.managers.zip_import_export.EventZipAdapter" />
 </configure>
