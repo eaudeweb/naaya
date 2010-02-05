@@ -1,3 +1,6 @@
+from zope.component import adapts
+from zope.interface import implements
+
 from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
 from interfaces import INyBFile
