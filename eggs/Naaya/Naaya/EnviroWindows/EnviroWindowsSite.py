@@ -1043,9 +1043,12 @@ text-decoration: underline;
         self.REQUEST.RESPONSE.redirect(news_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sendMailToContacts')
-    def sendMailToContacts(self, subject='', content='', REQUEST=None):
+    def sendMailToContacts(self, subject='', content='', location='',
+                           REQUEST=None):
         """ """
-        addresses = [contact.email for contact in self.getCatalogedObjectsCheckView(meta_type=['Naaya Contact'])]
+        search = self.getCatalogedObjectsCheckView
+        contacts = search(meta_type=['Naaya Contact'], path=location)
+        addresses = [contact.email for contact in contacts]
 
         for address in addresses:
             self.getEmailTool().sendEmail(content, address, self.mail_address_from, subject)
