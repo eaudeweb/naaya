@@ -7,6 +7,7 @@
 	<script type="text/javascript">
 
 		$(document).ready(function(){
+			// Pick trees for import/export
 			var pick_export = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
 			var pick_import = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
 			var tree = $('<div'+' id="location_tree" class="extjs_tree custom-tree"><'+'/div>');
@@ -22,6 +23,11 @@
 			$('#location_export').after(pick_export);
 			$('#location_import').after(pick_import);
 
+			// Pick tree for mail sending
+			var pick_mail = $('<span'+' class="buttons"><a'+' href="#">'+
+					'Pick location<'+'/a><'+'/span>');
+			pick_mail.click(toggle_tree);
+			$('#location_mail').after(pick_mail);
 		});
 
 	</script>
@@ -128,10 +134,16 @@
 
 			<p i18n:translate="">You can use the form below to send
 			an email to all email addresses from the Naaya Contact
-			objects throughout this portal.</p>
+			objects throughout this portal. Use the "location" field
+			to pick contacts from a particular folder.</p>
 		<form method="post" action="sendMailToContacts" tal:define="mail_from here/mail_address_from">
 			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">If you want to use this feature please add a valid email address in the "Default from address" field
 			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
+			</div>
+			<div class="field">
+			<label for="location_mail" i18n:translate="">Location</label>
+				<input class="extjs_target" type="text" name="location" id="location_mail" size="50"
+					tal:attributes="value python:options.get('location', None)" />
 			</div>
 			<div class="field">
 				<label for="subject" i18n:translate="">Mail subject</label>
