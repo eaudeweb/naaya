@@ -79,7 +79,6 @@ DEFAULT_SCHEMA['description'].update(sortorder=40)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
-DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 #DEFAULT_SCHEMA['geo_location'].update(visible=True)
 
@@ -166,16 +165,24 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 
         schema_raw_data['title'] = obj.title
 
+        #geo-location: 'geo_location' should always be removed from the schema_raw_data
+        #because the form should contain 'geo_location.lat' type of data
+        schema_raw_data.pop('geo_location')
         _city = schema_raw_data.get('city', None)
         _country = schema_raw_data.get('country', None)
+        _address = ''
         if _city or _country:
             _address = _city + ', ' + _country
-            empty_geo_location = schema_raw_data.get('geo_location', None) == ''
+        if _address:
             old_geo_location = self.geo_location not in (None, Geo()) and self.geo_location.address != _address
-            if empty_geo_location or old_geo_location:
-                schema_raw_data.pop('geo_location')
-                schema_raw_data['geo_location.lat'], schema_raw_data['geo_location.lon'] = self.do_geocoding(_address)
-                schema_raw_data['geo_location.address'] = _address
+            no_geo_location = self.geo_location in (None, Geo())
+            if old_geo_location or no_geo_location:
+                _lat, _lon = self.do_geocoding(_address)
+            else:
+                _lat, _lon = self.geo_location.lat, self.geo_location.lon
+            schema_raw_data['geo_location.lat'] = _lat
+            schema_raw_data['geo_location.lon'] = _lon
+            schema_raw_data['geo_location.address'] = _address
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
