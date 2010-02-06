@@ -86,6 +86,9 @@
 			<dt i18n:translate="">Telephone</dt>
 			<dd tal:content="here/contributor_telephone"/>
 		</dl>
+		<tal:block content="structure here/set_content_rating" />
+
+		<tal:block content="structure here/comments_box" />
 	</div>
 	<div class="boxes-right"
 				tal:condition="python:here.has_coordinates()">
@@ -95,9 +98,6 @@
 		</div>
 	</div>
 
-	<tal:block content="structure here/set_content_rating" />
-
-	<tal:block content="structure here/comments_box" />
 </metal:block>
 
 </metal:block>
