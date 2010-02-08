@@ -29,7 +29,14 @@
 		<tal:block replace="structure here/folder_menusubmissions"/>
 
 		<div class="boxes-right">
-			Boxes right
+			<fieldset>
+				<legend i18n:translate="">Latest uploads</legend>
+				<div tal:repeat="info here/latest_uploads">
+					<tal:block replace="python:info[2]"/><br/>
+					<a tal:attributes="href python:info[0]" tal:content="python:info[1]"/><br/>
+					---
+				</div>
+			</fieldset>
 		</div>
 
 		<tal:block content="structure here/description"/>
@@ -56,5 +63,6 @@
 			</tal:block>
 		</dl>
 		</fieldset>
+		<tal:block content="here/latest_uploads" />
 	</metal:block>
 </metal:block>

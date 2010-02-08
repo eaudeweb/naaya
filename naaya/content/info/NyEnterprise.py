@@ -19,13 +19,11 @@
 
 #Python imports
 from copy import deepcopy
-import os
-import sys
+import os, sys, time
 
 #Zope imports
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
-from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify
@@ -36,7 +34,6 @@ from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id
 
 from info_item import NyInfo, DEFAULT_SCHEMA
@@ -120,7 +117,7 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_object(self, id, _title, contributor)
-
+    ob.last_modification = time.localtime()
 
     _city = schema_raw_data.get('city', None)
     _country = schema_raw_data.get('country', None)
@@ -172,8 +169,6 @@ class NyEnterprise(NyInfo):
     """ """
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
-
-    security = ClassSecurityInfo()
 
     def __init__(self, id, title, contributor):
         """ """
