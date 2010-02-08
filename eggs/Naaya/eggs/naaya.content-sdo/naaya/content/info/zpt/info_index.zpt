@@ -6,7 +6,8 @@
 <metal:block metal:fill-slot="head">
 </metal:block>
 
-<metal:block metal:fill-slot="body">
+<metal:block metal:fill-slot="body"
+	tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 	<div>
 	<tal:block tal:condition="python:here.checkPermissionEditObject()">
 		<br clear="all"/>
