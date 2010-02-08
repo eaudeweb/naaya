@@ -22,7 +22,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
 
 #Python imports
 from copy import deepcopy
-import os, sys
+import os, sys, time
 
 #Zope imports
 from Globals import InitializeClass
@@ -48,7 +48,6 @@ from constants import *
 import skel
 LISTS = skel.FOLDER_CATEGORIES + skel.EXTRA_PROPERTIES
 
-METATYPE_OBJECT = 'Naaya InfoFolder'
 ADDITIONAL_STYLE = open(ImageFile('www/InfoFolder.css', globals()).path).read()
 
 DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
@@ -81,7 +80,7 @@ config = {
         'product': 'NaayaContent',
         'module': 'InfoFolder',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': METATYPE_OBJECT,
+        'meta_type': 'Naaya InfoFolder',
         'label': 'InfoFolder',
         'permission': 'Naaya - Add Naaya InfoFolder objects',
         'forms': ['infofolder_add', 'infofolder_edit', 'infofolder_index'],
@@ -178,8 +177,8 @@ class NyInfoFolder(NyFolder):
     meta_type = config['meta_type']
     meta_label = config['label']
 
-    icon = 'misc_/NaayaContent/NyInfoFolder.gif'
-    icon_marked = 'misc_/NaayaContent/NyInfoFolder_marked.gif'
+    icon = 'misc_/NyInfoFolder.gif'
+    icon_marked = 'misc_/NyInfoFolder_marked.gif'
 
     """def manage_options(self):
         """ """
@@ -337,6 +336,21 @@ class NyInfoFolder(NyFolder):
     def get_info_types(self):
         """ """
         return [(k, v['meta_label']) for (k, v) in skel.INFO_TYPES.items()]
+
+    #security.declarePrivate('process_submissions')
+    def latest_uploads(self, item_number=5):
+        objects_list = self.utSortObjsListByAttr(self.objectValues(), 'releasedate')
+        return [(ob.id, ob.title, self.formatDate(ob.last_modification)) for ob in objects_list[0:item_number]]
+
+    def formatDate(self, sdate, format='%d/%m/%Y'):
+        if sdate:
+            return time.strftime(format, sdate)
+        return None
+
+    def getPropertyValue(self, id, lang=None):
+        """ Returns a property value in the specified language. """
+        if lang is None: lang = self.gl_get_selected_language()
+        return self.getLocalProperty(id, lang)
 
     subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())

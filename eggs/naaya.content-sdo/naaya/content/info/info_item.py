@@ -19,8 +19,7 @@
 
 #Python imports
 from copy import deepcopy
-import os
-import sys
+import os, sys, time
 import simplejson as json
 from decimal import Decimal
 
@@ -36,14 +35,13 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 #Product imports
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA, get_schema_helper_for_metatype
-from naaya.content.base.constants import *
+from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA, get_schema_helper_for_metatype
+#from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
@@ -51,6 +49,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 import naaya.content.infofolder.skel as skel
+from naaya.content.infofolder.constants import *
 
 #module constants
 METATYPE_OBJECT = 'Naaya Info'
@@ -143,7 +142,7 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_INFO, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -164,6 +163,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         schema_raw_data['title'] = obj.title
+
+        self.last_modification = time.localtime()
 
         #geo-location: 'geo_location' should always be removed from the schema_raw_data
         #because the form should contain 'geo_location.lat' type of data
@@ -212,7 +213,7 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/info_index', globals(), 'sdo_info_index')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_INFO, 'edit_html')
     edit_html = NaayaPageTemplateFile('zpt/info_edit', globals(), 'sdo_info_edit')
 
     def get_property_values(self, property_id):
