@@ -18,3 +18,5 @@
 # Valentin Dumitru, Eau de Web
 
 PERMISSION_ADD_INFO = 'Naaya - Add Naaya Info'
+PERMISSION_ADD_INFOFOLDER = 'Naaya - Add Naaya InfoFolder'
+PERMISSION_EDIT_INFO = 'Naaya - Edit Naaya Info'
