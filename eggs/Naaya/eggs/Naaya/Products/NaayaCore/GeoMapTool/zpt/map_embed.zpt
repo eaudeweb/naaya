@@ -1,8 +1,6 @@
-<base href="http://10.0.0.23:8080/EW_Site/portal_map/" />
 <head>
-	<title>Portal Geo Map</title>
+	<title>Geo Map</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="home" title="Home" href="http://10.0.0.23:8080" />
 
 	<style TYPE="text/css">
 	body {
@@ -18,12 +16,10 @@
 		background: #fff;
 		margin-top: -12px;
 	}
-	h1 {
-		background: #f2f2f2;
+	h2 {
 		color: #444;
 		padding: 5px 0 0 5px;
-		border-bottom: 4px solid #ccc;
-		font-size: 1.5em;
+		font-size: 1.1em;
 		font-weight: normal;
 	}
 	#portalmap {
@@ -97,7 +93,7 @@
 	<span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
 	<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 		<div id="center_content" style="overflow-x: auto;">
-			<h1 tal:content="here/title_or_id" />
+			<h2 tal:content="here/title_or_id" />
 			<noscript>
 				<p i18n:translate="" style="color: #77b81f;">You must have Javascript turned on to access all the Geo Map features.</p>
 			</noscript>
