@@ -24,6 +24,8 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
 from naaya.content.contact.contact_item import addNyContact
 from naaya.content.event.event_item import addNyEvent
+from naaya.content.news.news_item import addNyNews
+from naaya.content.story.story_item import addNyStory
 from zipfile import ZipFile
 from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
@@ -79,6 +81,15 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(zip.read('html_document.html'),
                                   '<p>Html document</p>')
 
+    def test_export_story(self):
+        addNyStory(self.test_folder, id='a_nice_story')
+        self.test_folder['a_nice_story'].body = '<p>A nice story</p>'
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['a_nice_story.html'])
+        self.assertEqual(zip.read('a_nice_story.html'),
+                                  '<p>A nice story</p>')
+
     def test_export_contact(self):
         addNyContact(self.test_folder, id="important_contact",
                      title='Important contact')
@@ -99,24 +110,66 @@ class NyZipExport(NaayaTestCase):
                          ('Errors are raised: ', export_value))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['interesting_event.txt'])
-        exported_event_content = zip.read('interesting_event.txt')
+        self.assertEqual(zip.namelist(), ['interesting_event.html'])
+        exported_event_content = zip.read('interesting_event.html')
 
         obj = self.test_folder['interesting_event']
         schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya Event')
         obj_data = []
+        obj_data.append('<html><body>')
+        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
+
         for widget in schema.listWidgets():
-            if widget.prop_name() in ['sortorder', 'topitem']:
+            if widget.prop_name() in ['sortorder', 'topitem', 'title']:
                 continue
             if not widget.visible:
                 continue
             obj_widget_value = getattr(obj, widget.prop_name(), '')
             widget_data = widget._convert_to_form_string(obj_widget_value)
+
             if not widget_data:
                 continue
-            obj_data.append('%s: %s' % (widget.title, widget_data))
 
+            obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
+                                                                 widget_data))
+
+        obj_data.append('</body></html>')
         self.assertEqual('\n'.join(obj_data), exported_event_content)
+
+    def test_export_news(self):
+        addNyNews(self.test_folder, id='interesting_news',
+                   title='Great news')
+
+        export_value = self.test_folder.zip_export.do_export()
+        self.assertFalse(isinstance(export_value, list),
+                         ('Errors are raised: ', export_value))
+
+        zip = ZipFile(export_value, 'r')
+        self.assertEqual(zip.namelist(), ['interesting_news.html'])
+        exported_news_content = zip.read('interesting_news.html')
+
+        obj = self.test_folder['interesting_news']
+        schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya News')
+        obj_data = []
+        obj_data.append('<html><body>')
+        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
+
+        for widget in schema.listWidgets():
+            if widget.prop_name() in ['sortorder', 'topitem', 'title']:
+                continue
+            if not widget.visible:
+                continue
+            obj_widget_value = getattr(obj, widget.prop_name(), '')
+            widget_data = widget._convert_to_form_string(obj_widget_value)
+
+            if not widget_data:
+                continue
+
+            obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
+                                                                 widget_data))
+
+        obj_data.append('</body></html>')
+        self.assertEqual('\n'.join(obj_data), exported_news_content)
 
     def test_export_mixed_encodings(self):
         self.test_folder.zip_import.do_import(data=mac_zip)

@@ -45,6 +45,8 @@ from naaya.content.file.interfaces import INyFile
 from naaya.content.document.interfaces import INyDocument
 from naaya.content.contact.interfaces import INyContact
 from naaya.content.event.interfaces import INyEvent
+from naaya.content.news.interfaces import INyNews
+from naaya.content.story.interfaces import INyStory
 try:
     from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
     def add_file(location_obj, id, title, file):
@@ -290,6 +292,18 @@ class DocumentZipAdapter(object):
         zip_filename = '%s.html' % self.context.getId()
         return zip_data, zip_filename
 
+class StoryZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyStory)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        zip_data = self.context.body
+        zip_filename = '%s.html' % self.context.getId()
+        return zip_data, zip_filename
+
 class FileZipAdapter(object):
     implements(IZipExportObject)
     adapts(INyFile)
@@ -316,14 +330,9 @@ class ContactZipAdapter(object):
         zip_filename = '%s.vcf' % self.context.getId()
         return zip_data, zip_filename
 
-class EventZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyEvent)
+class NewsAndEventZipExport(object):
 
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
+    def export_data_for_zip(self):
         obj = self.context
         portal = obj.getSite()
         schema_tool = portal.getSchemaTool()
@@ -331,18 +340,45 @@ class EventZipAdapter(object):
         schema = schema_tool.getSchemaForMetatype(obj.meta_type)
 
         obj_data = []
+        obj_data.append('<html><body>')
+        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
 
         for widget in schema.listWidgets():
-            if widget.prop_name() in ['sortorder', 'topitem']:
+            if widget.prop_name() in ['sortorder', 'topitem', 'title']:
                 continue
             if not widget.visible:
                 continue
             obj_widget_value = getattr(obj, widget.prop_name(), '')
             widget_data = widget._convert_to_form_string(obj_widget_value)
+
             if not widget_data:
                 continue
-            obj_data.append('%s: %s' % (widget.title, widget_data))
 
+            obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
+                                                                 widget_data))
+
+        obj_data.append('</body></html>')
         zip_data = '\n'.join(obj_data)
-        zip_filename = '%s.txt' % self.context.getId()
+        zip_filename = '%s.html' % self.context.getId()
         return zip_data, zip_filename
+
+class EventZipAdapter(NewsAndEventZipExport):
+    implements(IZipExportObject)
+    adapts(INyEvent)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        return self.export_data_for_zip()
+
+class NewsZipAdapter(NewsAndEventZipExport):
+    implements(IZipExportObject)
+    adapts(INyNews)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        return self.export_data_for_zip()
+
