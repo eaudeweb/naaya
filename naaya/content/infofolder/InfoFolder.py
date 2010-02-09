@@ -248,6 +248,7 @@ class NyInfoFolder(NyFolder):
 
         info_type = schema_raw_data.pop('info_type', None)
         self.info_type = info_type
+        self.folder_meta_types = self.get_meta_types()
 
         self.set_categories()
 
@@ -355,6 +356,13 @@ class NyInfoFolder(NyFolder):
     subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
     infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
+
+    def import_items(self):
+        """ """
+        import xmlrpclib
+        import pdb;pdb.set_trace()
+        sdo = xmlrpclib.ServerProxy('http://sd-online.ewindows.eu.org')
+        objects = sdo.getURLs('Training')
 
 InitializeClass(NyInfoFolder)
 
