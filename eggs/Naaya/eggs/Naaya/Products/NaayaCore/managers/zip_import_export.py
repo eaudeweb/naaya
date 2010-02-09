@@ -50,12 +50,12 @@ from naaya.content.story.interfaces import INyStory
 try:
     from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
     def add_file(location_obj, id, file):
-        return add_bfile(location_obj, id=id, title=id,
+        return add_bfile(location_obj, id=id, title='',
                            uploaded_file=file, _send_notifications=False)
 except ImportError:
     from naaya.content.file.file_item import addNyFile as add_ny_file
     def add_file(location_obj, id, file):
-        return add_ny_file(location_obj, id=id, title='',
+        return add_ny_file(location_obj, id=id, title=id,
                            file=file.getvalue(), _send_notifications=False)
 
 
