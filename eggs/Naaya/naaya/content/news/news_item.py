@@ -36,6 +36,7 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from DateTime import DateTime
+from zope.interface import implements
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -47,6 +48,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from interfaces import INyNews
 
 #pluggable type metadata
 PROPERTIES_OBJECT = {
@@ -269,6 +271,8 @@ class news_item(Implicit, NyContentData):
 
 class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
+
+    implements(INyNews)
 
     meta_type = config['meta_type']
     meta_label = config['label']

@@ -38,6 +38,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from zope.interface import implements
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -49,6 +50,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from interfaces import INyStory
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -224,6 +226,8 @@ class story_item(Implicit, NyContentData):
 
 class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentType):
     """ """
+
+    implements(INyStory)
 
     meta_type = config['meta_type']
     meta_label = config['label']
