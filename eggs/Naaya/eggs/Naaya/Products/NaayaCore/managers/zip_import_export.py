@@ -49,13 +49,13 @@ from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
 try:
     from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
-    def add_file(location_obj, id, title, file):
-        return add_bfile(location_obj, id=id, title=title,
+    def add_file(location_obj, id, file):
+        return add_bfile(location_obj, id=id, title=id,
                            uploaded_file=file, _send_notifications=False)
 except ImportError:
     from naaya.content.file.file_item import addNyFile as add_ny_file
-    def add_file(location_obj, id, title, file):
-        return add_ny_file(location_obj, id=id, title=title,
+    def add_file(location_obj, id, file):
+        return add_ny_file(location_obj, id=id, title='',
                            file=file.getvalue(), _send_notifications=False)
 
 
@@ -96,7 +96,7 @@ class ZipImportTool(Implicit, Item):
                         fname = name.split('/')[-1]
                         f = self.make_file_object_from_string(f_content, fname)
                         container = self.get_folder(copy(nlist), root)
-                        add_file(container, id=fname, title='', file=f)
+                        add_file(container, id=fname, file=f)
                 except Exception, e:
                     errors.append(str(e))
 
@@ -200,10 +200,19 @@ class ZipExportTool(Implicit, Item):
 
         file_like_object = StringIO()
         zip_file = ZipFile(file_like_object, 'w')
+        archive_files = []
         try:
             for obj in objects_to_archive:
+                added_path = None
                 if self.user_has_view_permission(obj):
-                    self.add_object_to_zip(obj, zip_file)
+                    added_path = self.add_object_to_zip(obj, zip_file)
+                if added_path:
+                    archive_files.append((obj.title_or_id(),
+                                          getattr(obj, 'meta_label',
+                                                  obj.meta_type),
+                                          added_path))
+
+            self.add_index(zip_file, archive_files)
             zip_file.close()
         except Exception, e:
             errors.append(str(e))
@@ -250,12 +259,21 @@ class ZipExportTool(Implicit, Item):
             if isinstance(object_zip_data, unicode):
                 object_zip_data = object_zip_data.encode('utf-8')
             zip_file.writestr(zip_path, object_zip_data)
+            return zip_path
+
+    def add_index(self, zip_file, archive_files):
+        index_content = [('Title', 'Type', 'Path')]
+        index_content.extend(archive_files)
+        index_content = ['\t'.join(row).encode('utf-8') for \
+                         row in index_content]
+        index_content = '\n'.join(index_content)
+        zip_file.writestr('index.txt', index_content)
 
     def get_zip_path(self, obj):
         my_container = self.getParentNode()
         my_container_path = my_container.getPhysicalPath()
         object_path = obj.getPhysicalPath()
-        relative_object_path = object_path[len(my_container_path):]
+        relative_object_path = object_path[len(my_container_path[:-1]):]
         object_zip_path = []
         for path in relative_object_path:
             object_zip_path.append(path)
