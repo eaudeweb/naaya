@@ -63,6 +63,5 @@
 			</tal:block>
 		</dl>
 		</fieldset>
-		<tal:block content="here/latest_uploads" />
 	</metal:block>
 </metal:block>
