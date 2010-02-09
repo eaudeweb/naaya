@@ -53,8 +53,11 @@ class NyZipExport(NaayaTestCase):
         self.assertTrue(isinstance(export_value, object))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['one_file.txt'])
-        self.assertEqual(zip.read('one_file.txt'), 'one_file contents\n')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['one_file_zip/one_file.txt',
+                                 'index.txt']))
+        self.assertEqual(zip.read('one_file_zip/one_file.txt'),
+                         'one_file contents\n')
 
     def test_export_folder(self):
         self.test_folder.zip_import.do_import(data=folder_with_files)
@@ -64,11 +67,12 @@ class NyZipExport(NaayaTestCase):
         zip = ZipFile(export_value, 'r')
 
         expected_namelist = \
-            ['folder_with_files_zip/',
-             'folder_with_files_zip/one_folder/',
-             'folder_with_files_zip/one_folder/one_file.txt',
-             'folder_with_files_zip/one_folder/two_file.txt',
-             'folder_with_files_zip/one_folder/three_file.txt']
+        ['index.txt',
+         'zip_export_folder/folder_with_files_zip/',
+         'zip_export_folder/folder_with_files_zip/one_folder/',
+         'zip_export_folder/folder_with_files_zip/one_folder/one_file.txt',
+         'zip_export_folder/folder_with_files_zip/one_folder/two_file.txt',
+         'zip_export_folder/folder_with_files_zip/one_folder/three_file.txt']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
 
@@ -77,8 +81,10 @@ class NyZipExport(NaayaTestCase):
         self.test_folder['html_document'].body = '<p>Html document</p>'
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['html_document.html'])
-        self.assertEqual(zip.read('html_document.html'),
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/html_document.html']))
+        self.assertEqual(zip.read('zip_export_folder/html_document.html'),
                                   '<p>Html document</p>')
 
     def test_export_story(self):
@@ -86,8 +92,10 @@ class NyZipExport(NaayaTestCase):
         self.test_folder['a_nice_story'].body = '<p>A nice story</p>'
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['a_nice_story.html'])
-        self.assertEqual(zip.read('a_nice_story.html'),
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/a_nice_story.html']))
+        self.assertEqual(zip.read('zip_export_folder/a_nice_story.html'),
                                   '<p>A nice story</p>')
 
     def test_export_contact(self):
@@ -95,8 +103,11 @@ class NyZipExport(NaayaTestCase):
                      title='Important contact')
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['important_contact.vcf'])
-        exported_vcard_content = zip.read('important_contact.vcf')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/important_contact.vcf']))
+        exported_vcard_content = \
+            zip.read('zip_export_folder/important_contact.vcf')
         self.assertTrue('BEGIN:VCARD' in exported_vcard_content)
         self.assertTrue('Important contact' in exported_vcard_content)
         self.assertTrue('END:VCARD' in exported_vcard_content)
@@ -110,8 +121,11 @@ class NyZipExport(NaayaTestCase):
                          ('Errors are raised: ', export_value))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['interesting_event.html'])
-        exported_event_content = zip.read('interesting_event.html')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/interesting_event.html']))
+        exported_event_content = \
+            zip.read('zip_export_folder/interesting_event.html')
 
         obj = self.test_folder['interesting_event']
         schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya Event')
@@ -145,8 +159,11 @@ class NyZipExport(NaayaTestCase):
                          ('Errors are raised: ', export_value))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['interesting_news.html'])
-        exported_news_content = zip.read('interesting_news.html')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/interesting_news.html']))
+        exported_news_content = \
+            zip.read('zip_export_folder/interesting_news.html')
 
         obj = self.test_folder['interesting_news']
         schema = self.portal.getSchemaTool().getSchemaForMetatype('Naaya News')
@@ -181,13 +198,14 @@ class NyZipExport(NaayaTestCase):
 
         zip = ZipFile(export_value, 'r')
 
-        expected_namelist = ['mac_zip/',
-                             'mac_zip/Picture_1.png',
-                             'mac_zip/Picture_2.png',
-                             'html_document.html']
+        expected_namelist = ['index.txt',
+                             'zip_export_folder/mac_zip/',
+                             'zip_export_folder/mac_zip/Picture_1.png',
+                             'zip_export_folder/mac_zip/Picture_2.png',
+                             'zip_export_folder/html_document.html']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
-        self.assertEqual(zip.read('html_document.html'),
+        self.assertEqual(zip.read('zip_export_folder/html_document.html'),
                                   '<p>Html document</p>')
 
         imported_folder = self.test_folder['mac_zip']
@@ -195,8 +213,10 @@ class NyZipExport(NaayaTestCase):
         picture1_data = IZipExportObject(imported_folder['Picture_1.png'])()[0]
         picture2_data = IZipExportObject(imported_folder['Picture_2.png'])()[0]
 
-        self.assertEqual(zip.read('mac_zip/Picture_1.png'), picture1_data)
-        self.assertEqual(zip.read('mac_zip/Picture_2.png'), picture2_data)
+        self.assertEqual(zip.read('zip_export_folder/mac_zip/Picture_1.png'),
+                         picture1_data)
+        self.assertEqual(zip.read('zip_export_folder/mac_zip/Picture_2.png'),
+                         picture2_data)
 
     def test_export_anonymous(self):
         addNyDocument(self.test_folder, id='public_access')
@@ -207,8 +227,11 @@ class NyZipExport(NaayaTestCase):
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['public_access.html'])
-        self.assertEqual(zip.read('public_access.html'), '<p>Some html</p>')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/public_access.html']))
+        self.assertEqual(zip.read('zip_export_folder/public_access.html'),
+                         '<p>Some html</p>')
 
     def test_export_mixed_access(self):
         addNyDocument(self.test_folder, id='public_document')
@@ -231,8 +254,11 @@ class NyZipExport(NaayaTestCase):
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['public_document.html'])
-        self.assertEqual(zip.read('public_document.html'), '<p>Some html</p>')
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/public_document.html']))
+        self.assertEqual(zip.read('zip_export_folder/public_document.html'),
+                         '<p>Some html</p>')
 
         self.login('contributor')
         self.portalLogin('contributor')
@@ -241,11 +267,13 @@ class NyZipExport(NaayaTestCase):
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(zip.namelist(), ['public_document.html',
-                                          'restricted_document.html'])
-        self.assertEqual(zip.read('public_document.html'),
+        self.assertEqual(sorted(zip.namelist()),
+                         sorted(['index.txt',
+                                 'zip_export_folder/public_document.html',
+                                 'zip_export_folder/restricted_document.html']))
+        self.assertEqual(zip.read('zip_export_folder/public_document.html'),
                                   '<p>Some html</p>')
-        self.assertEqual(zip.read('restricted_document.html'),
+        self.assertEqual(zip.read('zip_export_folder/restricted_document.html'),
                                   '<p>Restricted html</p>')
 
 def test_suite():
