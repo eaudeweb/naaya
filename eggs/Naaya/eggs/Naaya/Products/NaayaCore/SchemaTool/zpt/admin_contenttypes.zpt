@@ -4,10 +4,13 @@
 
 		<p i18n:translate="">Select a content type to configure its properties.</p>
 
-		<ul tal:repeat="schema python:here.objectValues(['Naaya Schema'])">
+		<tal:block tal:define="schemas python:here.listSchemas(installed=True).values()">
+		<ul tal:condition="schemas" tal:repeat="schema schemas">
 			<li>
 				<a tal:attributes="href string:${schema/absolute_url}/admin_html" tal:content="schema/title" i18n:translate="" />
 			</li>
 		</ul>
+		</tal:block>
+
 	</metal:block>
 </metal:block>
