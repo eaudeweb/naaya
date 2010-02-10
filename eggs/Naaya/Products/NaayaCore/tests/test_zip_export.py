@@ -84,8 +84,8 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/html_document.html']))
-        self.assertEqual(zip.read('zip_export_folder/html_document.html'),
-                                  '<p>Html document</p>')
+        self.assertTrue('<p>Html document</p>' in \
+                        zip.read('zip_export_folder/html_document.html'))
 
     def test_export_story(self):
         addNyStory(self.test_folder, id='a_nice_story')
@@ -205,8 +205,8 @@ class NyZipExport(NaayaTestCase):
                              'zip_export_folder/html_document.html']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
-        self.assertEqual(zip.read('zip_export_folder/html_document.html'),
-                                  '<p>Html document</p>')
+        self.assertTrue('<p>Html document</p>' in \
+                         zip.read('zip_export_folder/html_document.html'))
 
         imported_folder = self.test_folder['mac_zip']
 
@@ -230,8 +230,8 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/public_access.html']))
-        self.assertEqual(zip.read('zip_export_folder/public_access.html'),
-                         '<p>Some html</p>')
+        self.assertTrue('<p>Some html</p>' in \
+                         zip.read('zip_export_folder/public_access.html'))
 
     def test_export_mixed_access(self):
         addNyDocument(self.test_folder, id='public_document')
@@ -257,8 +257,8 @@ class NyZipExport(NaayaTestCase):
         self.assertEqual(sorted(zip.namelist()),
                          sorted(['index.txt',
                                  'zip_export_folder/public_document.html']))
-        self.assertEqual(zip.read('zip_export_folder/public_document.html'),
-                         '<p>Some html</p>')
+        self.assertTrue('<p>Some html</p>' in \
+                        zip.read('zip_export_folder/public_document.html'))
 
         self.login('contributor')
         self.portalLogin('contributor')
@@ -271,10 +271,10 @@ class NyZipExport(NaayaTestCase):
                          sorted(['index.txt',
                                  'zip_export_folder/public_document.html',
                                  'zip_export_folder/restricted_document.html']))
-        self.assertEqual(zip.read('zip_export_folder/public_document.html'),
-                                  '<p>Some html</p>')
-        self.assertEqual(zip.read('zip_export_folder/restricted_document.html'),
-                                  '<p>Restricted html</p>')
+        self.assertTrue('<p>Some html</p>' in \
+                         zip.read('zip_export_folder/public_document.html'))
+        self.assertTrue('<p>Restricted html</p>' in \
+                         zip.read('zip_export_folder/restricted_document.html'))
 
 def test_suite():
     suite = TestSuite()

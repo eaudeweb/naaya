@@ -306,7 +306,15 @@ class DocumentZipAdapter(object):
         self.context = context
 
     def __call__(self):
-        zip_data = self.context.body
+        zip_data = ("<html><body>"
+                    "<h1>%(document_title)s</h1>"
+                    "<div>%(document_description)s</div>"
+                    "<div>%(document_body)s</div>"
+                    "</body></html>") % \
+                 {'document_title': self.context.title,
+                  'document_description': self.context.description,
+                  'document_body': self.context.body}
+
         zip_filename = '%s.html' % self.context.getId()
         return zip_data, zip_filename
 
