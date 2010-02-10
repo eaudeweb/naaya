@@ -5,6 +5,7 @@
         <form id="site_login" title="Portal login"/>
         <form id="site_admin_properties" title="Portal properties"/>
         <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
+        <form id="folder_index" title="Folder index customisation for Groupware"/>
     </forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
