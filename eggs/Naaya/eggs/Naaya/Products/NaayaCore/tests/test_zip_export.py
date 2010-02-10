@@ -41,9 +41,13 @@ class NyZipExport(NaayaTestCase):
         addNyFolder(self.portal, 'zip_export_folder',
                     contributor='contributor', submitted=1)
         self.test_folder = self.portal['zip_export_folder']
+        self.login()
+        self.portalLogin()
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['zip_export_folder'])
+        self.logout()
+        self.portalLogout()
 
     def test_export_ok(self):
         self.test_folder.zip_import.do_import(data=zip_one_file)
@@ -79,6 +83,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_html_document(self):
         addNyDocument(self.test_folder, id='html_document')
         self.test_folder['html_document'].body = '<p>Html document</p>'
+        self.test_folder['html_document'].approved = 1
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
         self.assertEqual(sorted(zip.namelist()),
@@ -90,6 +95,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_story(self):
         addNyStory(self.test_folder, id='a_nice_story')
         self.test_folder['a_nice_story'].body = '<p>A nice story</p>'
+        self.test_folder['a_nice_story'].approved = 1
         export_value = self.test_folder.zip_export.do_export()
         zip = ZipFile(export_value, 'r')
         self.assertEqual(sorted(zip.namelist()),
@@ -192,6 +198,7 @@ class NyZipExport(NaayaTestCase):
         self.test_folder.zip_import.do_import(data=mac_zip)
         addNyDocument(self.test_folder, id='html_document')
         self.test_folder['html_document'].body = u'<p>Html document</p>'
+        self.test_folder['html_document'].approved = 1
         export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
@@ -221,6 +228,7 @@ class NyZipExport(NaayaTestCase):
     def test_export_anonymous(self):
         addNyDocument(self.test_folder, id='public_access')
         self.test_folder['public_access'].body = '<p>Some html</p>'
+        self.test_folder['public_access'].approved = 1
         self.logout()
         self.portalLogout()
         export_value = self.test_folder.zip_export.do_export()
@@ -237,7 +245,9 @@ class NyZipExport(NaayaTestCase):
         addNyDocument(self.test_folder, id='public_document')
         addNyDocument(self.test_folder, id='restricted_document')
         self.test_folder['public_document'].body = '<p>Some html</p>'
+        self.test_folder['public_document'].approved = 1
         self.test_folder['restricted_document'].body = '<p>Restricted html</p>'
+        self.test_folder['restricted_document'].approved = 1
 
         #restrict access
         restricted_doc = self.test_folder['restricted_document']
