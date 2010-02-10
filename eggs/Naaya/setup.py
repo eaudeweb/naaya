@@ -17,9 +17,13 @@ setup(name='Naaya',
               # http://naaya.eaudeweb.ro/eggshop/glib-dlls.zip
           'feedparser >= 4.1',
           'BeautifulSoup >= 3.0.7a',
-          'twill >= 0.9',
           'simplejson >= 2.0.9',
           'vobject >= 0.8.1c',
           'gdata >= 2.0.5',
+          'mimeparse >= 0.1.2',
+
+          # only used for testing:
+          'twill >= 0.9',
+          'webob',
       ]
 )

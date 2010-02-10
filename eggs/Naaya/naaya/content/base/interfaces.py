@@ -34,3 +34,6 @@ class INyContentObjectMovedEvent(Interface):
     zope_event = Attribute("original ObjectMovedEvent instance")
     old_site_path = Attribute("object's path in site, before the move")
     new_site_path = Attribute("object's path in site, after the move")
+
+class INyRdfView(Interface):
+    """ Render an RDF document representing a given object """
