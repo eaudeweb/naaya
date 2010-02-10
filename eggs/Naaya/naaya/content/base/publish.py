@@ -23,6 +23,7 @@ from zope.component import adapts
 from zope.publisher.interfaces import IRequest
 from ZPublisher.BaseRequest import DefaultPublishTraverse
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Acquisition import Implicit
 
 from naaya.content.base.interfaces import INyContentObject
 from naaya.content.base.interfaces import INyRdfView
@@ -38,7 +39,9 @@ class NyContentPublishTraverse(DefaultPublishTraverse):
         if name == 'index_html':
             # we are asked for the object's index page
             if client_wants_rdf(request):
-                return INyRdfView(self.context)
+                view = INyRdfView(self.context)
+                # view needs to support acquisition (hello, Zope2 security!)
+                return view.__of__(self.context)
 
             # add other custom index views here
 
@@ -50,18 +53,17 @@ def client_wants_rdf(request):
     try:
         mime_type = mimeparse.best_match(known_types, accept)
     except:
-        # something went wrong; assume client doesn't want RDF
-        return False
-
-    if mime_type == 'application/rdf+xml':
-        return True
+        pass # something went wrong; assume content negotiation failed
+    else:
+        if mime_type == 'application/rdf+xml':
+            return True
 
     if request.get('format', None) == 'rdf':
         return True
 
     return False
 
-class DefaultRdfView(object):
+class DefaultRdfView(Implicit):
     def __init__(self, context):
         self.context = context
 
