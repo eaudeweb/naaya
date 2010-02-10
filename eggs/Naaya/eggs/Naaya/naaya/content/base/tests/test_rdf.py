@@ -39,13 +39,45 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
         self.assert_is_rdf(res)
         self.assertTrue('<rdf:Description '
                         'rdf:about="http://localhost/portal/'
-                        'myfolder/mydoc">' in
-                        res.body)
+                        'myfolder/mydoc">' in res.body)
         self.assertTrue('<dc:title>My document</dc:title>' in res.body)
         self.assertTrue('<dc:language>en</dc:language>' in res.body)
 
         res = get(fmt='rdf')
         self.assert_is_rdf(res)
+
+    def test_security(self):
+        url = 'http://localhost/portal/myfolder/mydoc?format=rdf'
+        rdf_fragment = ('<rdf:Description '
+                        'rdf:about="http://localhost/portal/myfolder/mydoc">')
+
+        # first, do a public GET
+        self.browser.go(url)
+        self.assertAccessDenied(False)
+        self.assertTrue(rdf_fragment in self.browser.get_html())
+
+        # change the permissions
+        self.portal.myfolder._View_Permission = ('Manager',)
+        transaction.commit()
+
+        # try another GET; it should fail
+        self.browser.go(url)
+        self.assertAccessDenied()
+        self.assertFalse(rdf_fragment in self.browser.get_html())
+
+        # try as contributor; it should fail
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go(url)
+        self.assertAccessDenied()
+        self.assertFalse(rdf_fragment in self.browser.get_html())
+        self.browser_do_logout()
+
+        # try as admin; it should work
+        self.browser_do_login('admin', '')
+        self.browser.go(url)
+        self.assertAccessDenied(False)
+        self.assertTrue(rdf_fragment in self.browser.get_html())
+        self.browser_do_logout()
 
 def test_suite():
     suite = TestSuite()
