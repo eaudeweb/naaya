@@ -189,7 +189,7 @@ class ZipExportTool(Implicit, Item):
     security.declareProtected(view, 'do_export')
     def do_export(self, REQUEST=None):
         """ """
-        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+        if REQUEST and not self.getParentNode().checkPermissionView():
             raise Unauthorized
 
         errors = []
@@ -204,7 +204,7 @@ class ZipExportTool(Implicit, Item):
         try:
             for obj in objects_to_archive:
                 added_path = None
-                if self.user_has_view_permission(obj):
+                if self.is_exportable(obj):
                     added_path = self.add_object_to_zip(obj, zip_file)
                 if added_path:
                     archive_files.append((obj.title_or_id(),
@@ -290,6 +290,9 @@ class ZipExportTool(Implicit, Item):
 
     def user_has_view_permission(self, obj):
         return obj.checkPermissionView()
+
+    def is_exportable(self, obj):
+        return obj.approved and self.user_has_view_permission(obj)
 
 InitializeClass(ZipExportTool)
 
