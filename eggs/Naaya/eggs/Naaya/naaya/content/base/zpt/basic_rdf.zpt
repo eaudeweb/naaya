@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rdf:RDF
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:dcterms="http://dublincore.org/documents/dcmi-terms/"
+    xmlns:xmpRights="http://ns.adobe.com/xap/1.0/rights/"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<rdf:Description tal:attributes="rdf:about here/absolute_url">
+    <dc:title tal:content="here/title" />
+    <dc:description tal:content="here/description" />
+    <dc:language tal:content="here/gl_get_selected_language"/>
+    <dcterms:identifier tal:attributes="rdf:resource here/absolute_url"/>
+    <dcterms:modified tal:content="python:here.bobobase_modification_time().HTML4()"/>
+    <dcterms:available tal:content="python:here.releasedate.HTML4()"/>
+</rdf:Description>
+
+</rdf:RDF>
