@@ -529,7 +529,7 @@ class utils:
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
         return sorted(p_list,
-                      key=operator.attrgetter(p_attr),
+                      key=lambda obj: getattr(obj, p_attr, None),
                       reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
