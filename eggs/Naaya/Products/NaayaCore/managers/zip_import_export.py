@@ -330,7 +330,7 @@ class FileZipAdapter(object):
         self.context = context
 
     def __call__(self):
-        zip_data = self.context.data
+        zip_data = self.context.get_data()
         filename = self.context.utToUtf8(self.context.downloadfilename())
         filename = self.context.utCleanupId(filename)
         zip_filename = filename
