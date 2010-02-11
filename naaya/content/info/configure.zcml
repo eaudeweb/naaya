@@ -4,5 +4,9 @@
   i18n_domain="naaya.content">
 
   <naaya:content factory=".NyEnterprise.get_config" />
+  <naaya:content factory=".NyNetwork.get_config" />
+  <naaya:content factory=".NyTool.get_config" />
+  <naaya:content factory=".NyTraining.get_config" />
+<!--  <naaya:content factory=".NyEvent.get_config" />-->
 
 </configure>
