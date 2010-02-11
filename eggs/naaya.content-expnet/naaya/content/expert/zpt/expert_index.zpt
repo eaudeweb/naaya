@@ -115,12 +115,12 @@
 					<span tal:condition="ob/start_date" tal:replace="ob/start_date" /><span tal:condition="not:ob/start_date" i18n:translate="" >Unknown</span>
 					-
 					<span tal:condition="ob/end_date" tal:replace="ob/end_date" /><span tal:condition="not:ob/end_date" i18n:translate="" >Present</span>,
-				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
+				<tal:block define="ob_name ob/organisation; inst python:here.find_OrganisationByName(ob_name)">
 					<span>
-						<span tal:condition="not: inst" tal:replace="ob/institution" />
+						<span tal:condition="not: inst" tal:replace="ob/organisation" />
 						<a style="text-decoration: underline;" tal:condition="inst"
 						tal:attributes="href string:${inst/absolute_url}"
-						tal:content="ob/institution" />
+						tal:content="ob/organisation" />
 					</span>
 				</tal:block>
 				</li>
