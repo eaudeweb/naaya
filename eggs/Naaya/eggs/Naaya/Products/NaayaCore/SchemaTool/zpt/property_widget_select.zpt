@@ -8,10 +8,17 @@
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+    <select tal:condition="python:selection_list is not None"
+            tal:attributes="name string:${prop_id}:utf8:ustring;
+                            id prop_id">
         <option value=""></option>
         <option tal:repeat="selection_item selection_list"
             tal:attributes="value selection_item/id; selected python: selection_item.id == value"
             tal:content="selection_item/title" i18n:translate="" />
     </select>
+    <input type="text"
+           tal:condition="python:selection_list is None"
+           tal:attributes="value value;
+                           name string:${prop_id}:utf8:ustring;
+                           id prop_id" />
 </div>
