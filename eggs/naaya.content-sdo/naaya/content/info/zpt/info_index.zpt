@@ -21,11 +21,15 @@
 	</tal:block>
 	</div>
 	<div class="main-content">
-		<h1 tal:content="here/title"/>
-		<dl>
+		<h1 tal:define="website here/website">
+			<a tal:condition="website" tal:attributes="href website"
+				tal:content="here/title"/>
+			<tal:block condition="not:website" content="here/title"/>
+		</h1>
+		<!--<dl>
 			<dt i18n:translate="">Website URL:</dt>
 			<dd tal:content="here/website"/>
-		</dl>
+		</dl>-->
 
 		<tal:block define="folder_categories here/folder_categories"
 			condition="folder_categories ">
@@ -34,7 +38,7 @@
 			<tal:block define="category_id info_category/list_id">
 				<dt tal:content="info_category/label"/>
 				<dd tal:repeat="property_value python:here.get_property_values(category_id)"
-					tal:content="property_value"/>
+					i18n:translate="" tal:content="property_value"/>
 			</tal:block>
 		</dl>
 		</tal:block>
@@ -46,7 +50,7 @@
 				<tal:block define="category_id info_category/list_id">
 					<dt tal:content="info_category/label"/>
 					<dd tal:repeat="property_value python:here.get_property_values(category_id)"
-						tal:content="property_value"/>
+					i18n:translate="" tal:content="property_value"/>
 				</tal:block>
 			</dl>
 		</tal:block>

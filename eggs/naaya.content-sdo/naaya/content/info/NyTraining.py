@@ -42,42 +42,39 @@ from naaya.content.infofolder import skel
 from naaya.content.infofolder.constants import *
 
 #module constants
-INFO_TYPE = skel.INFO_TYPES['enterprises']
+INFO_TYPE = skel.INFO_TYPES['trainings']
 METATYPE_OBJECT = INFO_TYPE['meta_type']
 LABEL_OBJECT = INFO_TYPE['meta_label']
 PREFIX_OBJECT = INFO_TYPE['prefix']
 PERMISSION_ADD_OBJECT = PERMISSION_ADD_INFO
 OBJECT_FORMS = []
-OBJECT_CONSTRUCTORS = ['sdo_info_add', 'addNyEnterprise']
-OBJECT_ADD_FORM = 'enterprise_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Enterprise type.'
+OBJECT_CONSTRUCTORS = ['sdo_info_add', 'addNyTraining']
+OBJECT_ADD_FORM = 'training_add_html'
+DESCRIPTION_OBJECT = 'This is Naaya Training type.'
 
 DEFAULT_SCHEMA = deepcopy(DEFAULT_SCHEMA)
 
 #Define folder categories
-DEFAULT_SCHEMA['sdo_type_of_initiative'] = dict(sortorder=12, widget_type='Select',
-                label='Type of initiative', list_id='sdo_type_of_initiative',
-                property_type='Sdo category')
-DEFAULT_SCHEMA['sdo_nature_of_initiative'] = dict(sortorder=13, widget_type='SelectMultiple',
-                label='Nature of initiative', list_id='sdo_nature_of_initiative',
-                property_type='Sdo category')
-DEFAULT_SCHEMA['sdo_topic_coverage'] = dict(sortorder=14, widget_type='SelectMultiple',
-                label='Topic coverage', list_id='sdo_topic_coverage',
-                property_type='Sdo category')
-DEFAULT_SCHEMA['sdo_services'] = dict(sortorder=15, widget_type='SelectMultiple',
-                label='Services', list_id='sdo_services',
-                property_type='Sdo category')
-DEFAULT_SCHEMA['sdo_geographic_scope'] = dict(sortorder=16, widget_type='SelectMultiple',
-                label='Geographic scope', list_id='sdo_geographic_scope',
-                property_type='Sdo category')
+DEFAULT_SCHEMA['sdo_training_type'] = dict(sortorder=12, widget_type='Select',
+                label='Training type', list_id='sdo_training_type', property_type='Sdo category')
 
 #Define folder extra properties
-# None
+
+DEFAULT_SCHEMA['sdo_training_city'] = dict(sortorder=11, widget_type='String',
+                label='Training city', property_type='Sdo extra property')
+DEFAULT_SCHEMA['sdo_training_country'] = dict(sortorder=12, widget_type='Select',
+                label='Country',list_id='countries', property_type='Sdo extra property')
+DEFAULT_SCHEMA['sdo_start_date'] = dict(sortorder=13, widget_type='Date',
+                label='Start date', property_type='Sdo extra property')
+DEFAULT_SCHEMA['sdo_frequency'] = dict(sortorder=14, widget_type='Select',
+                label='Frequency',list_id='sdo_frequency', property_type='Sdo extra property')
+DEFAULT_SCHEMA['sdo_duration'] = dict(sortorder=15, widget_type='Select',
+                label='Duration',list_id='sdo_duration', property_type='Sdo extra property')
 
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent', 
-        'module': 'NyEnterprise',
+        'module': 'NyTraining',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
         'label': LABEL_OBJECT,
@@ -86,7 +83,7 @@ config = {
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyEnterprise',
+        'schema_name': 'NyTraining',
         '_module': sys.modules[__name__],
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInfo.gif'),
         '_misc': {
@@ -95,21 +92,21 @@ config = {
             },
     }
 
-def enterprise_add_html(self, REQUEST=None, RESPONSE=None):
+def training_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT,
-             'action': 'addNyEnterprise', 'form_helper': form_helper}, 'sdo_info_add')
+             'action': 'addNyTraining', 'form_helper': form_helper}, 'sdo_info_add')
 
 def _create_object(parent, id, title, contributor):
-    ob = NyEnterprise(id, title, contributor)
+    ob = NyTraining(id, title, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
     ob.after_setObject()
     return ob
 
-def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
+def addNyTraining(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a Info type of object.
     """
@@ -167,7 +164,7 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            REQUEST.RESPONSE.redirect('%s/enterprise_add_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/training_add_html' % self.absolute_url())
             return
 
     #process parameters
@@ -194,7 +191,7 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
     transaction.commit()
     return ob.getId()
 
-class NyEnterprise(NyInfo):
+class NyTraining(NyInfo):
     """ """
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
@@ -207,17 +204,17 @@ class NyEnterprise(NyInfo):
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
-InitializeClass(NyEnterprise)
+InitializeClass(NyTraining)
 
 config.update({
-    'constructors': (enterprise_add_html, addNyEnterprise),
+    'constructors': (training_add_html, addNyTraining),
     'folder_constructors': [
-            ('enterprise_add_html', enterprise_add_html),
-            ('addNyEnterprise', addNyEnterprise),
+            ('training_add_html', training_add_html),
+            ('addNyTraining', addNyTraining),
         ],
-    'add_method': addNyEnterprise,
-    'validation': issubclass(NyEnterprise, NyValidation),
-    '_class': NyEnterprise,
+    'add_method': addNyTraining,
+    'validation': issubclass(NyTraining, NyValidation),
+    '_class': NyTraining,
 })
 
 def get_config():

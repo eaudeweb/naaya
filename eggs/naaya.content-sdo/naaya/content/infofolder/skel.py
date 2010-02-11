@@ -19,6 +19,7 @@
 
 sdo_type_of_initiative = {
           'list_id': 'sdo_type_of_initiative',
+          'list_id_sdo': 'Type_of_initiative',
           'list_title': 'Type of initiative',
           'list_items':  [
                     'Information Dissemination', 'Support Centre', 'Network - Club',
@@ -27,6 +28,7 @@ sdo_type_of_initiative = {
 }
 sdo_nature_of_initiative = {
           'list_id': 'sdo_nature_of_initiative',
+          'list_id_sdo': 'Nature_of_initiative',
           'list_title': 'Nature of initiative',
           'list_items':  [
                     'Active - Hands-On', 'Passive - Hands-Off', 'Long Term - Years',
@@ -35,6 +37,7 @@ sdo_nature_of_initiative = {
 }
 sdo_topic_coverage = {
           'list_id': 'sdo_topic_coverage',
+          'list_id_sdo': 'Topic_Coverage',
           'list_title': 'Topic Coverage',
           'list_items':  [
                     'Eco-Efficiency', 'Eco-Design', 'Working Environment',
@@ -43,6 +46,7 @@ sdo_topic_coverage = {
 }
 sdo_services = {
           'list_id': 'sdo_services',
+          'list_id_sdo': 'Services',
           'list_title': 'Services',
           'list_items':  [
                     'Coordination - Facilitation', 'Info - advice on paper', 'Electronic information',
@@ -51,33 +55,39 @@ sdo_services = {
 }
 sdo_geographic_scope = {
           'list_id': 'sdo_geographic_scope',
+          'list_id_sdo': 'Geographic_Scope',
           'list_title': 'Geographic Scope',
           'list_items':  ['International', 'National', 'Regional', 'Local']
 }
 
 sdo_network_type = {
           'list_id': 'sdo_network_type',
+          'list_id_sdo': 'Network_type',
           'list_title': 'Network type',
           'list_items':  ['Formal', 'Informal']
 }
 sdo_scope = {
           'list_id': 'sdo_scope',
+          'list_id_sdo': 'Scope',
           'list_title': 'Scope',
           'list_items':  ['Holistic', 'Broad', 'Specialist']
 }
 sdo_audience = {
           'list_id': 'sdo_audience',
+          'list_id_sdo': 'Audience',
           'list_title': 'Audience',
           'list_items':  ['Business', 'Community', 'Policy', 'Research']
 }
 sdo_status = {
           'list_id': 'sdo_status',
+          'list_id_sdo': 'Status',
           'list_title': 'Status',
           'list_items':  ['Pioneer', 'Progressive', 'Supportive']
 }
 
 sdo_type_of_event = {
           'list_id': 'sdo_type_of_event',
+          'list_id_sdo': 'Type_of_event',
           'list_title': 'Type of event',
           'list_items':  [
                     'Conference', 'Seminar', 'Forum', 'Round table', 'Summit',
@@ -88,6 +98,7 @@ sdo_type_of_event = {
 
 sdo_tool_type = {
           'list_id': 'sdo_tool_type',
+          'list_id_sdo': 'Tool_type',
           'list_title': 'Tool type',
           'list_items':  [
                     'Dissemination of information', 'Ecodesign', 'Environmental management',
@@ -96,6 +107,7 @@ sdo_tool_type = {
 }
 sdo_tool_sort = {
           'list_id': 'sdo_tool_sort',
+          'list_id_sdo': 'Tool_sort',
           'list_title': 'Tool sort',
           'list_items':  [
                     'Case study', 'Software', 'Checklist', 'Guide - manual', 'Journal-Magazine',
@@ -107,6 +119,7 @@ sdo_tool_sort = {
 
 sdo_training_type = {
           'list_id': 'sdo_training_type',
+          'list_id_sdo': 'Training_type',
           'list_title': 'Training type',
           'list_items':  [
                     'Distance learning', 'Computer Based Training', 'Fellowship',
@@ -127,14 +140,16 @@ countries = {
           'list_id': 'countries',
           'list_title': 'Country',
 }
-sdo_ep_frequency = {
-          'list_id': 'sdo_ep_frequency',
+sdo_frequency = {
+          'list_id': 'sdo_frequency',
+          'list_id_sdo': 'Frequency',
           'list_title': 'Frequency',
           'list_items':  ['Contact provider', 'Once', 'Monthly', 'Biannual', 'Yearly',
                     'Several times a year', 'Continuous', 'Upon request']
 }
-sdo_ep_duration = {
-          'list_id': 'sdo_ep_duration',
+sdo_duration = {
+          'list_id': 'sdo_duration',
+          'list_id_sdo': 'Duration',
           'list_title': 'Duration',
           'list_items': [
                 'Own schedule', 'Contact provider', 'One day', 'Several days', 'One week',
@@ -143,25 +158,25 @@ sdo_ep_duration = {
                 'Three years', 'Four years']
 }
 
-EXTRA_PROPERTIES = [countries, sdo_ep_frequency, sdo_ep_duration]
+EXTRA_PROPERTIES = [countries, sdo_frequency, sdo_duration]
 
 EXTRA_FIELDS = [
                     ['subtitle', 'Subtitle', 'String'],
-                    ['start_date', 'Start date', 'Date'],
+                    ['sdo_start_date', 'Start date', 'Date'],
                     ['end_date', 'End date', 'Date'],
                     ['location', 'Location', 'String'],
-                    ['training_city', 'Training city', 'String'],
+                    ['sdo_training_city', 'Training city', 'String'],
                    ]
 
 INFO_TYPES = {'enterprises':
-                {'meta_type': 'Naaya Enterprise', 'meta_label': 'Enterprise', 'prefix': 'enterprise'},
+                {'meta_type': 'Naaya Enterprise', 'meta_label': 'Enterprise', 'prefix': 'enterprise', 'folder_name': 'Enterprises'},
               'networks':
-                {'meta_type': 'Naaya Network', 'meta_label': 'Network', 'prefix': 'network'},
+                {'meta_type': 'Naaya Network', 'meta_label': 'Network', 'prefix': 'network', 'folder_name': 'Networks'},
               'events':
-                {'meta_type': 'Naaya Event', 'meta_label': 'Event', 'prefix': 'event'},
+                {'meta_type': 'Naaya Event', 'meta_label': 'Event', 'prefix': 'event', 'folder_name': 'Events'},
               'tools':
-                {'meta_type': 'Naaya Tool', 'meta_label': 'Tool', 'prefix': 'tool'},
+                {'meta_type': 'Naaya Tool', 'meta_label': 'Tool', 'prefix': 'tool', 'folder_name': 'Tools'},
               'trainings':
-                {'meta_type': 'Naaya Training', 'meta_label': 'Training', 'prefix': 'training'}
+                {'meta_type': 'Naaya Training', 'meta_label': 'Training', 'prefix': 'training', 'folder_name': 'Training'}
              }
 
