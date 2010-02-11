@@ -42,7 +42,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.managers.utils import make_id
 from Products.Naaya.NyFolder import NyFolder
 
-from naaya.content.info import info_item, NyEnterprise
+from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTraining
 
 from constants import *
 import skel
@@ -159,14 +159,14 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'infofolder_manage_add' or l_referer.find('infofolder_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'infofolder_add_html':
+        #l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+        #if l_referer == 'infofolder_manage_add' or l_referer.find('infofolder_manage_add') != -1:
+            #return self.manage_main(self, REQUEST, update_menu=1)
+        #elif l_referer == 'infofolder_add_html':
             #self.setSession('referer', self.absolute_url())
             #return ob.object_submitted_message(REQUEST)
             #REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/%s/edit_html' % (self.absolute_url(), id))
+        REQUEST.RESPONSE.redirect('%s/%s/edit_html' % (self.absolute_url(), id))
 
     return ob.getId()
 
@@ -187,10 +187,10 @@ class NyInfoFolder(NyFolder):
         return l_options"""
 
     enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
-    #networks_schema = NyNetwork.DEFAULT_SCHEMA
+    networks_schema = NyNetwork.DEFAULT_SCHEMA
+    tools_schema = NyTool.DEFAULT_SCHEMA
+    trainings_schema = NyTraining.DEFAULT_SCHEMA
     #events_schema = NyEvent.DEFAULT_SCHEMA
-    #tools_schema = NyTool.DEFAULT_SCHEMA
-    #trainings_schema = NyTraining.DEFAULT_SCHEMA
 
     def __init__(self, id, contributor):
         """ """
@@ -291,6 +291,11 @@ class NyInfoFolder(NyFolder):
         list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
         return [category_list.title, list_items]
 
+    def get_list_ids(self, list_id, list_titles):
+        ref_list = self.getCategoryList(list_id)
+        list_of_ids = [list_item['id'] for list_item in ref_list[1] if list_item['title'] in list_titles]
+        return list_of_ids
+
     def getInfosByCategoryId(self, category, category_item):
         ob_list = []
         if category == 'Nothing' or category_item == 'Nothing': return None
@@ -319,12 +324,14 @@ class NyInfoFolder(NyFolder):
         folder_categories = []
         folder_extra_properties = []
         for (k, v) in schema.items():
-            if k.startswith('sdo_'):
+            if schema[k].has_key('property_type') and\
+                schema[k]['property_type'] == 'Sdo category':
                 folder_categories.append(v)
-            if k.startswith('sdoextra_'):
+            if schema[k].has_key('property_type') and\
+                schema[k]['property_type'] == 'Sdo extra property':
                 folder_extra_properties.append(v)
         self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
-        self.folder_extra_properties = self.utSortObjsListByAttr(folder_extra_properties, 'sortorder', 0)
+        self.folder_extra_properties = self.utSortDictsListByKey(folder_extra_properties, 'sortorder', 0)
 
     def process_submissions(self):
         """ overwrite the global function to allow
@@ -357,12 +364,47 @@ class NyInfoFolder(NyFolder):
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
     infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'import_items')
     def import_items(self):
         """ """
         import xmlrpclib
-        import pdb;pdb.set_trace()
         sdo = xmlrpclib.ServerProxy('http://sd-online.ewindows.eu.org')
-        objects = sdo.getURLs('Training')
+        folder_name = skel.INFO_TYPES[self.info_type]['folder_name']
+        obs = sdo.urls_export(folder_name)
+        total_obs = len(obs)
+        current_ob = 0
+        for ob in obs:
+            current_ob += 1
+            #ob['title'] = ob['id'] temporary, to be able to identify items
+            ob['original_sdo_id'] = ob['id']
+            del ob['id']
+            for k in ob.keys():
+                ob[k] = self.replace_escaped(ob[k])
+            for k, v in ob.items():
+                sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
+                if k in sdo_ref_lists:
+                    new_k = 'sdo_' + k.lower()
+                    ob[new_k] = self.get_list_ids(new_k, ob[k])
+                    del ob[k]
+            if self.info_type == 'enterprises':
+                object_id = NyEnterprise.addNyEnterprise(self, contributor='admin', **ob)
+            if self.info_type == 'networks':
+                object_id = NyNetwork.addNyNetwork(self, contributor='admin', **ob)
+            if self.info_type == 'tools':
+                object_id = NyTool.addNyTool(self, contributor='admin', **ob)
+            if self.info_type == 'trainings':
+                object_id = NyTraining.addNyTraining(self, contributor='admin', **ob)
+            print '%s of %s objects, SDO Id: %s, ID: %s' % (current_ob, total_obs, ob['original_sdo_id'], object_id)
+
+    def replace_escaped(self, s):
+        if type(s) != type(''):
+            return s
+        s = s.replace('&amp;','&')
+        s = s.replace('&lt;','<')
+        s = s.replace('&quot;','"')
+        s = s.replace('&apos;','\'')
+        s = s.replace('&gt;','>')
+        return s
 
 InitializeClass(NyInfoFolder)
 
