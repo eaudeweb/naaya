@@ -30,7 +30,7 @@
 	<div class="box" tal:condition="here/picture">
 		<div class="body">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture"
-				alt="Institution picture" width="230" i18n:attributes="alt"/>
+				alt="Organisation picture" width="230" i18n:attributes="alt"/>
 		</div>
 	</div>
 
@@ -107,8 +107,8 @@
 		</tal:block>
 	</tal:block>
 	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/institutions_list" i18n:translate="">
-			Institutions list
+		&#171; <a tal:attributes=" href string:${here/absolute_url}/organisations_list" i18n:translate="">
+			Organisations list
 		</a>
 	</div>
 </div>
