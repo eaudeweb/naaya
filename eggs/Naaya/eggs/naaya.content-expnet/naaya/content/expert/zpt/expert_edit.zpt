@@ -4,13 +4,13 @@
 
 <tal:block metal:fill-slot="custom_properties">
 
-	<tal:block condition="here/has_institution_autocomplete">
+	<tal:block condition="here/has_organisation_autocomplete">
 		<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
 		<script type="text/javascript" src="misc_/Naaya/jquery.bgiframe.min.js"></script>
 		<script type="text/javascript" src="misc_/Naaya/jquery.autocomplete.min.js"></script>
 		<tal:block replace='structure string:<script type="text/javascript">' />
 		$(function() {
-			$('#id_institution').autocomplete('<span tal:replace="string:${here/absolute_url}/autosuggest_institutions" />', 
+			$('#id_organisation').autocomplete('<span tal:replace="string:${here/absolute_url}/autosuggest_organisations" />', 
 				{
 					autoFill : true,
 					delay : 250,
@@ -75,8 +75,8 @@
 		<br />
 	</div>
 	<div class="field-inline">
-		<label class="widget-title" for="id_institution" i18n:translate="">Institution</label>
-		<input id="id_institution" type="text" name="institution" autocomplete="off" />
+		<label class="widget-title" for="id_organisation" i18n:translate="">Organisation</label>
+		<input id="id_organisation" type="text" name="organisation" autocomplete="off" />
 	</div>
 	<a name="Employment"></a>
 	<ul tal:define="EmploymentHistory here/getEmploymentHistory"
@@ -86,12 +86,12 @@
 				<span tal:condition="ob/start_date" tal:replace="ob/start_date" /><span tal:condition="not:ob/start_date" i18n:translate="" >Unknown</span>
 				-
 				<span tal:condition="ob/end_date" tal:replace="ob/end_date" /><span tal:condition="not:ob/end_date" i18n:translate="" >Present</span>,
-				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
+				<tal:block define="ob_name ob/organisation; inst python:here.find_OrganisationByName(ob_name)">
 				<span>
-					<span tal:condition="not: inst" tal:replace="ob/institution" />
+					<span tal:condition="not: inst" tal:replace="ob/organisation" />
 					<a style="text-decoration: underline;" tal:condition="inst"
 					tal:attributes="href string:${inst/absolute_url}"
-					tal:content="ob/institution" />
+					tal:content="ob/organisation" />
 				</span>
 				</tal:block>
 				<a tal:attributes="href string:javascript:deleteEmploymentHistory('${ob/id}');" i18n:translate="">Delete</a>

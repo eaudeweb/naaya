@@ -1,11 +1,11 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="global req_topic python: request.get('topic', '')" /> 
 <tal:block define="global req_filter python: request.get('q', '')" />
-<h1>List of institutions</h1>
+<h1>List of organisations</h1>
 
 <div class="boxes-right">
 	<div class="link-box">
-		<strong i18n:translate="">Search institutions</strong>
+		<strong i18n:translate="">Search organisations</strong>
 		<form tal:attributes="action string:${here/absolute_url}" method="get" name="frmSearch">
 			<input type="text" size="30" name="q" tal:attributes="value req_filter" />
 			<input tal:condition="req_topic" type="hidden" name="topic" tal:attributes="value req_topic" />
@@ -40,7 +40,7 @@
 	<div class="main-content" tal:condition="results" tal:repeat="ob results">
 		<div tal:condition="ob/picture" class="picture">
 			<img tal:attributes="src string:${ob/absolute_url}/render_picture"
-			alt="Institution picture" width="80" i18n:attributes="alt"/>
+			alt="Organisation picture" width="80" i18n:attributes="alt"/>
 		</div>
 		<div>
 			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
@@ -54,7 +54,7 @@
 		<hr/>
 	</div>
 	<div class="main-content" tal:condition="not:results" i18n:translate="">
-		No institutions found for this query.
+		No organisations found for this query.
 	</div>
 </tal:block>
 <tal:block content="structure here/standard_html_footer" />

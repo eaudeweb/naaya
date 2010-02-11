@@ -343,8 +343,8 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         start = schema_raw_data.pop('start', None)
         end = schema_raw_data.pop('end', None)
         current = schema_raw_data.pop('current', None)
-        institution = schema_raw_data.pop('institution', None)
-        self.add_EmploymentRecord(start, end, institution, current)
+        organisation = schema_raw_data.pop('organisation', None)
+        self.add_EmploymentRecord(start, end, organisation, current)
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -434,22 +434,22 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         return self.employment_history
 
 
-    def add_EmploymentRecord(self, start, end, institution, current):
+    def add_EmploymentRecord(self, start, end, organisation, current):
         """
         Add new employment record.
-        Required parameters are institution and one of: end or current. If this rule is not fullfilled, no record is added.
+        Required parameters are organisation and one of: end or current. If this rule is not fullfilled, no record is added.
         @warning: This do not commits Zope transaction!
         @param start: Start year - str or int
         @param end: End year - str or int
-        @param institution: Institution name - str
+        @param organisation: Organisation name - str
         @param current: Is still employed there - anything True or False
 
         """
         if start: start = int(start)
         if end:
             end = int(end)
-        if institution and (current or end):
-            self.employment_history.append(EmploymentRecord(start, end, current, institution))
+        if organisation and (current or end):
+            self.employment_history.append(EmploymentRecord(start, end, current, organisation))
 
 
     def delete_EmploymentHistory(self, REQUEST=None):
@@ -464,15 +464,15 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
                 self._p_changed = True
             return 'success'
 
-    def find_InstitutionByName(self, name):
+    def find_OrganisationByName(self, name):
         ctool = self.getCatalogTool()
-        ret = ctool.search({'meta_type' : 'Naaya Institution', 'title_field' : name})
+        ret = ctool.search({'meta_type' : 'Naaya Organisation', 'title_field' : name})
         if ret:
             return ctool.getobject(ret[0].data_record_id_)
 
-    def has_institution_autocomplete(self):
-        #@WARNING: 'Naaya Institution' is hard-coded name of the NyInstitution meta_type
-        return 'Naaya Institution' in self.getSite().get_pluggable_installed_meta_types()
+    def has_organisation_autocomplete(self):
+        #@WARNING: 'Naaya Organisation' is hard-coded name of the NyOrganisation meta_type
+        return 'Naaya Organisation' in self.getSite().get_pluggable_installed_meta_types()
 
     security.declareProtected(view, 'export_vcard')
     def export_vcard(self, REQUEST=None):
@@ -526,7 +526,7 @@ class ExpertCSVImportAdapter(object):
     def __init__(self, ob):
         self.ob = ob
     def handle_columns(self, extra_properties):
-        self.ob.add_EmploymentRecord(None, None, extra_properties['Institution'], True)
+        self.ob.add_EmploymentRecord(None, None, extra_properties['Organisation'], True)
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
@@ -547,7 +547,7 @@ class ExpertsLister(Implicit, Item):
 
     def index_html(self, REQUEST):
         """
-        Render the list of institutions recorded for this site.
+        Render the list of organisations recorded for this site.
         """
         return self._index_template(REQUEST, experts=[1,2,3])
 
@@ -584,21 +584,21 @@ NySite.experts_list = ExpertsLister('experts_list')
 
 
 try:
-    import naaya.content.institution.institution_item
+    import naaya.content.organisation.organisation_item
 except:
-    HAS_META_TYPE_INSTITUTION = False
+    HAS_META_TYPE_ORGANISATION = False
 else:
-    HAS_META_TYPE_INSTITUTION = True
-if HAS_META_TYPE_INSTITUTION:
-    class AutosuggestInstitution(Implicit, Item):
+    HAS_META_TYPE_ORGANISATION = True
+if HAS_META_TYPE_ORGANISATION:
+    class AutosuggestOrganisation(Implicit, Item):
 
         def __init__(self, id):
             self.id = id
     
         def index_html(self, REQUEST=None):
             """
-            Index for autosuggest institutions.
-            @return: JSON formatted array with title of institutions
+            Index for autosuggest organisations.
+            @return: JSON formatted array with title of organisations
             """
             if REQUEST:
                 REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
@@ -610,7 +610,7 @@ if HAS_META_TYPE_INSTITUTION:
                 if q:
                     catalog = self.getCatalogTool()
                     q = '%s*' % q
-                    lst = catalog.search({'meta_type' : 'Naaya Institution', 'title' : q}) #@WARNING: Hard-coded meta_type
+                    lst = catalog.search({'meta_type' : 'Naaya Organisation', 'title' : q}) #@WARNING: Hard-coded meta_type
                     if len(lst) > limit:
                         lst = lst[0:limit]
                     return '|'.join([ '%s' % brain.getObject().title for brain in lst])
@@ -618,18 +618,18 @@ if HAS_META_TYPE_INSTITUTION:
             return None
 
 
-    NySite.autosuggest_institutions = AutosuggestInstitution('autosuggest_institutions')
+    NySite.autosuggest_organisations = AutosuggestOrganisation('autosuggest_organisations')
 
 
 class EmploymentRecord(object):
 
-    def __init__(self, start, end, current, institution):
+    def __init__(self, start, end, current, organisation):
         ut = utils()
         self.id = ut.utGenerateUID()
         self.start = start
         self.end = end
         self.current = current
-        self.institution = institution
+        self.organisation = organisation
 
     def start_date(self):
         return self.start

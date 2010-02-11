@@ -50,8 +50,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import make_id
 
-METATYPE_OBJECT = 'Naaya Institution'
-ADDITIONAL_STYLE = open(ImageFile('www/institution.css', globals()).path).read()
+METATYPE_OBJECT = 'Naaya Organisation'
+ADDITIONAL_STYLE = open(ImageFile('www/organisation.css', globals()).path).read()
 
 
 DEFAULT_SCHEMA = {
@@ -59,8 +59,8 @@ DEFAULT_SCHEMA = {
     'phone':        dict(sortorder=140, widget_type='String', label='Phone'),
     'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
     'email':        dict(sortorder=170, widget_type='String', label='Email address'),
-    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='institution_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='institution_topics'),
+    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='organisation_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='organisation_topics'),
     'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
 }
 
@@ -75,11 +75,11 @@ DEFAULT_SCHEMA['geo_location'].update(visible=True)
 def setupContentType(site):
     from skel import TOPICS
     ptool = site.getPortletsTool()
-    itopics = getattr(ptool, 'institution_topics', None)
+    itopics = getattr(ptool, 'organisation_topics', None)
     if not itopics:
-        ptool.manage_addRefList('institution_topics')
+        ptool.manage_addRefList('organisation_topics')
         for k, v in TOPICS.items():
-            ptool.institution_topics.manage_add_item(k, v)
+            ptool.organisation_topics.manage_add_item(k, v)
 
     #Create catalog index if it doesn't exist
     ctool = site.getCatalogTool()
@@ -92,45 +92,45 @@ def setupContentType(site):
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent',
-        'module': 'institution_item',
+        'module': 'organisation_item',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
-        'label': 'Institution',
-        'permission': 'Naaya - Add Naaya Institution objects',
-        'forms': ['institution_add', 'institution_edit', 'institution_index'],
-        'add_form': 'institution_add_html',
-        'description': 'This is Naaya Institution type.',
+        'label': 'Organisation',
+        'permission': 'Naaya - Add Naaya Organisation objects',
+        'forms': ['organisation_add', 'organisation_edit', 'organisation_index'],
+        'add_form': 'organisation_add_html',
+        'description': 'This is Naaya Organisation type.',
         'properties': {}, #TODO: REMOVE
         'default_schema': DEFAULT_SCHEMA,
-        'schema_name': 'NyInstitution',
+        'schema_name': 'NyOrganisation',
         '_module': sys.modules[__name__],
         'additional_style': ADDITIONAL_STYLE,
-        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInstitution.gif'),
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyOrganisation.gif'),
         'on_install' : setupContentType,
         '_misc': {
-                'NyInstitution.gif': ImageFile('www/NyInstitution.gif', globals()),
-                'NyInstitution_marked.gif': ImageFile('www/NyInstitution_marked.gif', globals()),
+                'NyOrganisation.gif': ImageFile('www/NyOrganisation.gif', globals()),
+                'NyOrganisation_marked.gif': ImageFile('www/NyOrganisation_marked.gif', globals()),
             },
     }
 
-def institution_add_html(self, REQUEST=None, RESPONSE=None):
+def organisation_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
-    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyInstitution', 'form_helper': form_helper}, 'institution_add')
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyOrganisation', 'form_helper': form_helper}, 'organisation_add')
 
-def _create_NyInstitution_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='institution')
-    ob = NyInstitution(id, contributor)
+def _create_NyOrganisation_object(parent, id, contributor):
+    id = make_id(parent, id=id, prefix='organisation')
+    ob = NyOrganisation(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
     ob.after_setObject()
     return ob
 
-def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
+def addNyOrganisation(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
-    Create an Institution type of object.
+    Create an Organisation type of object.
     """
     #process parameters
     if REQUEST is not None:
@@ -143,18 +143,18 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('resourceurl', '')
     schema_raw_data.setdefault('source', '')
     schema_raw_data.setdefault('topitem', '')
-    _institution_word = schema_raw_data.get('institution_word', '')
+    _organisation_word = schema_raw_data.get('organisation_word', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='institution')
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='organisation')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyInstitution_object(self, id, contributor)
+    ob = _create_NyOrganisation_object(self, id, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_institution_word, REQUEST)
+        captcha_validator = self.validateCaptcha(_organisation_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
 
@@ -164,7 +164,7 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            return REQUEST.RESPONSE.redirect('%s/institution_add_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect('%s/organisation_add_html' % self.absolute_url())
             return
 
     if self.glCheckPermissionPublishObjects():
@@ -176,7 +176,7 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     #Process uploaded file
     ob.picture = None
-    _uploaded_file = schema_raw_data.pop('institution_picture', None)
+    _uploaded_file = schema_raw_data.pop('organisation_picture', None)
     if _uploaded_file is not None and _uploaded_file.filename:
         ob.picture = make_blobfile(_uploaded_file,
                            removed=False,
@@ -191,41 +191,41 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
     #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'institution_manage_add' or l_referer.find('institution_manage_add') != -1:
+        if l_referer == 'organisation_manage_add' or l_referer.find('organisation_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'institution_add_html':
+        elif l_referer == 'organisation_add_html':
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     return ob.getId()
 
-def importNyInstitution(self, param, id, attrs, content, properties, discussion, objects):
+def importNyOrganisation(self, param, id, attrs, content, properties, discussion, objects):
     """
     @todo: Not implemented 
     """
     raise NotImplementedError
 
 
-class institution_item(Implicit, NyContentData):
+class organisation_item(Implicit, NyContentData):
     """ """
     pass
 
-class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
+class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
     meta_type = config['meta_type']
     meta_label = config['label']
 
-    icon = 'misc_/NaayaContent/NyInstitution.gif'
-    icon_marked = 'misc_/NaayaContent/NyInstitution_marked.gif'
+    icon = 'misc_/NaayaContent/NyOrganisation.gif'
+    icon_marked = 'misc_/NaayaContent/NyOrganisation_marked.gif'
 
     def manage_options(self):
         """ """
         l_options = ()
         #if not self.hasVersion():
         #    l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += institution_item.manage_options
+        l_options += organisation_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
@@ -234,7 +234,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
     def __init__(self, id, contributor):
         """ """
         self.id = id
-        institution_item.__init__(self)
+        organisation_item.__init__(self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
@@ -318,7 +318,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = institution_item()
+        self.version = organisation_item()
         self.version.copy_naaya_properties_from(self)
         self._p_changed = 1
         self.recatalogNyObject(self)
@@ -345,7 +345,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         #Process uploaded file
-        _uploaded_file = schema_raw_data.pop('institution_picture', None)
+        _uploaded_file = schema_raw_data.pop('organisation_picture', None)
         if _uploaded_file is not None and _uploaded_file.filename:
             self.picture = make_blobfile(_uploaded_file,
                                removed=False,
@@ -376,33 +376,33 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
 
     #zmi pages
     #security.declareProtected(view_management_screens, 'manage_edit_html')
-    #manage_edit_html = PageTemplateFile('zpt/institution_manage_edit', globals())
+    #manage_edit_html = PageTemplateFile('zpt/organisation_manage_edit', globals())
 
     #site pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'institution_index')
+        return self.getFormsTool().getContent({'here': self}, 'organisation_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'institution_edit')
+        return self.getFormsTool().getContent({'here': self}, 'organisation_edit')
     
     def render_picture(self, RESPONSE):
-        """ Render institution picture """
+        """ Render organisation picture """
         if hasattr(self, 'picture') and self.picture:
                 return self.picture.send_data(RESPONSE, as_attachment=False)
 
     def delete_picture(self, REQUEST=None):
-        """ Delete attached institution picture """
+        """ Delete attached organisation picture """
         self.picture = None
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
     def getTopics(self, category):
         ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'institution_topics', None)
+        topics = getattr(ptool, 'organisation_topics', None)
         return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
@@ -424,7 +424,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         for brain in contacts:
             contact = brain.getObject()
             for record in contact.employment_history:
-                if record.institution == self.title:
+                if record.organisation == self.title:
                     if record.current:
                         ret_current.append(contact)
                     else:
@@ -451,17 +451,17 @@ def json_encode(ob):
         return float(ob)
     raise ValueError
 
-InitializeClass(NyInstitution)
+InitializeClass(NyOrganisation)
 
 
 #
-class InstitutionLister(Implicit, Item):
+class OrganisationLister(Implicit, Item):
 
-    _index_template = NaayaPageTemplateFile('zpt/institutions_list', globals(), 'institution')
+    _index_template = NaayaPageTemplateFile('zpt/organisations_list', globals(), 'organisation')
 
     """
-    Plug into the catalog to retrieve the list of institutions
-    Render the list of institutions recorded for this site.
+    Plug into the catalog to retrieve the list of organisations
+    Render the list of organisations recorded for this site.
     """
     def __init__(self, id):
         self.id = id
@@ -487,7 +487,7 @@ class InstitutionLister(Implicit, Item):
         ptool = self.getPortletsTool()
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'institution_topics', None)
+        topics = getattr(ptool, 'organisation_topics', None)
         for id, value in topics.get_collection().items():
             ret.append((value, len(self.items_in_topic(ctool, id))))
         return ret
@@ -495,10 +495,10 @@ class InstitutionLister(Implicit, Item):
 
     def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
         """
-        Find the institutions that have associated a specific topic (either as primary or secondary topic).
-        @param topic: The name of the topic to find items in. If None, return all institutions
+        Find the organisations that have associated a specific topic (either as primary or secondary topic).
+        @param topic: The name of the topic to find items in. If None, return all organisations
         @param objects: Return full objects (True) or just the brains (False). Brains are useful to count: i.e. len(brains_arr)
-        @return: list of NyInstitution objects if objects=True or list of catalog brains if objects=False.
+        @return: list of NyOrganisation objects if objects=True or list of catalog brains if objects=False.
         """
         dict = {'meta_type' : METATYPE_OBJECT}
         if not catalog:
@@ -512,24 +512,24 @@ class InstitutionLister(Implicit, Item):
         return catalog.search(dict)
 
 from Products.Naaya.NySite import NySite
-NySite.institutions_list = InstitutionLister('institutions_list')
+NySite.organisations_list = OrganisationLister('organisations_list')
 
-#manage_addNyInstitution_html = PageTemplateFile('zpt/institution_manage_add', globals())
-#manage_addNyInstitution_html.kind = config['meta_type']
-#manage_addNyInstitution_html.action = 'addNyInstitution'
+#manage_addNyOrganisation_html = PageTemplateFile('zpt/organisation_manage_add', globals())
+#manage_addNyOrganisation_html.kind = config['meta_type']
+#manage_addNyOrganisation_html.action = 'addNyOrganisation'
 config.update({
-    #'constructors': (manage_addNyInstitution_html, addNyInstitution),
-    'constructors': (institution_add_html, addNyInstitution),
+    #'constructors': (manage_addNyOrganisation_html, addNyOrganisation),
+    'constructors': (organisation_add_html, addNyOrganisation),
     'folder_constructors': [
-            # NyFolder.manage_addNyInstitution_html = manage_addNyInstitution_html
-            #('manage_addNyInstitution_html', manage_addNyInstitution_html),
-            ('institution_add_html', institution_add_html),
-            ('addNyInstitution', addNyInstitution),
-            ('import_institution_item', importNyInstitution),
+            # NyFolder.manage_addNyOrganisation_html = manage_addNyOrganisation_html
+            #('manage_addNyOrganisation_html', manage_addNyOrganisation_html),
+            ('organisation_add_html', organisation_add_html),
+            ('addNyOrganisation', addNyOrganisation),
+            ('import_organisation_item', importNyOrganisation),
         ],
-    'add_method': addNyInstitution,
-    'validation': issubclass(NyInstitution, NyValidation),
-    '_class': NyInstitution,
+    'add_method': addNyOrganisation,
+    'validation': issubclass(NyOrganisation, NyValidation),
+    '_class': NyOrganisation,
 })
 
 def get_config():

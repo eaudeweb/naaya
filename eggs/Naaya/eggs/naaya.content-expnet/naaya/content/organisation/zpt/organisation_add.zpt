@@ -12,17 +12,17 @@
             <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
         </div>
         <div class="field">
-            <label for="institution_word"><span i18n:translate="">Word verification</span></label>
-            <input type="text" name="institution_word" size="50" id="institution_word"
+            <label for="organisation_word"><span i18n:translate="">Word verification</span></label>
+            <input type="text" name="organisation_word" size="50" id="organisation_word"
                 value="" />(required)<br />
             <em i18n:translate="">please type the word you see in the above picture.</em>
         </div>
     </tal:block>
 </tal:block>
 	<div class="field-inline">
-		<label class="widget-title" for="institution_picture">Picture</label>
+		<label class="widget-title" for="organisation_picture">Picture</label>
 		<br />
-		<input id="institution_picture" type="file" name="institution_picture" />
+		<input id="organisation_picture" type="file" name="organisation_picture" />
 	</div>
 </tal:block>
 </tal:block>

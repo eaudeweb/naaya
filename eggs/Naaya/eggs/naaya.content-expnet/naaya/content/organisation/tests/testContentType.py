@@ -19,7 +19,7 @@
 # Alin Voinea, Eau de Web
 
 from unittest import TestSuite, makeSuite
-from naaya.content.institution.institution_item import addNyInstitution
+from naaya.content.organisation.organisation_item import addNyOrganisation
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
@@ -27,41 +27,41 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """
     def afterSetUp(self):
         self.login()
-        self.install_content_type('Naaya Institution')
+        self.install_content_type('Naaya Organisation')
         
     def beforeTearDown(self):
-        self.remove_content_type('Naaya Institution')
+        self.remove_content_type('Naaya Organisation')
         self.logout()
 
     def test_main(self):
-        """ Add, Find, Edit and Delete Naaya Institutions """
-        #add NyInstitution
-        addNyInstitution(self._portal().info, id='myinstitution', title='My institution', lang='en')
-        addNyInstitution(self._portal().info, id='myfrenchinstitution', title='My french institution', lang='fr')
+        """ Add, Find, Edit and Delete Naaya Organisations """
+        #add NyOrganisation
+        addNyOrganisation(self._portal().info, id='myorganisation', title='My organisation', lang='en')
+        addNyOrganisation(self._portal().info, id='myfrenchorganisation', title='My french organisation', lang='fr')
         
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Institution'])
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Organisation'])
         
-        #get added NyInstitution
+        #get added NyOrganisation
         for x in meta:
-            if x.getLocalProperty('title', 'en') == 'My institution':
+            if x.getLocalProperty('title', 'en') == 'My organisation':
                 meta = x
-            if x.getLocalProperty('title', 'fr') == 'My french institution':
+            if x.getLocalProperty('title', 'fr') == 'My french organisation':
                 meta_fr = x
         
-        #change NyInstitution title
-        meta.saveProperties(title='My edited institution', lang='en')
-        meta_fr.saveProperties(title='My edited french institution', lang='fr')
+        #change NyOrganisation title
+        meta.saveProperties(title='My edited organisation', lang='en')
+        meta_fr.saveProperties(title='My edited french organisation', lang='fr')
         
-        self.assertEqual(meta.getLocalProperty('title', 'en'), 'My edited institution')
-        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'My edited french institution')
+        self.assertEqual(meta.getLocalProperty('title', 'en'), 'My edited organisation')
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'My edited french organisation')
         
         self.assertEqual(meta.sortorder, 100)
         
-        #delete NyInstitution
+        #delete NyOrganisation
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
         
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Institution'])
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Organisation'])
         self.assertEqual(meta, [])
 
 def test_suite():
