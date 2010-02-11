@@ -70,6 +70,7 @@ DEFAULT_SCHEMA = {
     'contributor_last_name': dict(sortorder=60, widget_type='String', label='Last name'),
     'contributor_email':     dict(sortorder=65, widget_type='String', label='Email'),
     'contributor_telephone': dict(sortorder=70, widget_type='String', label='Telephone'),
+    'original_sdo_id':                dict(sortorder=75, widget_type='String', label='SDO Id', visible=False),
 }
 
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
