@@ -105,6 +105,29 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_search(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder/projects_list')
+
+        #Find the expert added
+        form = self.browser.get_form('frmSearch')
+        form['q'] = 'My project'
+        self.browser.clicked(form, form.find_control('search'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.failUnless('My project</a></h4>' in html)
+
+        #Fail to find a nonexistend string
+        form = self.browser.get_form('frmSearch')
+        form['q'] = 'No results'
+        self.browser.clicked(form, form.find_control('search'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.failUnless('No projects found for this query.' in html)
+
+        self.browser_do_logout()
 
 def test_suite():
     suite = TestSuite()
