@@ -13,6 +13,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
+from directory import Directory
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -209,6 +210,8 @@ class GroupwareSite(NySite):
 
     request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(), 'naaya.groupware.relinquish_membership')
+
+    directory = Directory(id='directory')
 
     gw_common_css = ImageFile('www/gw_common.css', globals())
     gw_print_css = ImageFile('www/gw_print.css', globals())
