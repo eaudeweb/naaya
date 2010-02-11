@@ -51,8 +51,15 @@ class GWApplications(Folder):
             return user.get('mail', '')
 
     def send_new_application_mail(self, app):
+        def make_unicode(s):
+            if isinstance(s, unicode):
+                return s
+            try:
+                return s.decode('utf-8')
+            except:
+                return s.decode('latin-1')
         data = {
-            'username': app.application_data.get('username', '').decode('utf-8'),
+            'username': make_unicode(app.application_data.get('username', '')),
             'userid': app.userid,
             'appurl': app.absolute_url(),
             'basketurl': self.absolute_url() + '/basket_html',
