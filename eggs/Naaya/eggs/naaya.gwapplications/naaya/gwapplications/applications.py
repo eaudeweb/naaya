@@ -52,7 +52,7 @@ class GWApplications(Folder):
 
     def send_new_application_mail(self, app):
         data = {
-            'username': app.application_data.get('username', ''),
+            'username': app.application_data.get('username', '').decode('utf-8'),
             'userid': app.userid,
             'appurl': app.absolute_url(),
             'basketurl': self.absolute_url() + '/basket_html',
