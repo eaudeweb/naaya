@@ -3366,9 +3366,10 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             #remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
             self.searchable_content = [x for x in self.searchable_content if x != meta_type]
-            #remove content's permission from `Add content` permission group
-            acl = self.getAuthenticationTool()
-            acl.manage_group_permission('Add content', pitem['permission'], 'remove')
+            if pitem:
+                #remove content's permission from `Add content` permission group
+                acl = self.getAuthenticationTool()
+                acl.manage_group_permission('Add content', pitem['permission'], 'remove')
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
