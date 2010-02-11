@@ -29,6 +29,7 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
+from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
@@ -364,6 +365,52 @@ def json_encode(ob):
     raise ValueError
 
 InitializeClass(NyProject)
+
+class ProjectsLister(Implicit, Item):
+    """
+    Plug into the catalog to retrieve the list of projects
+    """
+    def __init__(self, id):
+        self.id = id
+
+    _index_template = NaayaPageTemplateFile('zpt/projects_list', globals(), 'projects')
+
+    def index_html(self, REQUEST):
+        """
+        Render the list of projects recorded for this site.
+        """
+        return self._index_template(REQUEST, experts=[1,2,3])
+
+
+    def topic_filters(self):
+        """ """
+        ret = []
+        ptool = self.getPortletsTool()
+        ctool = self.getCatalogTool()
+        ret.append((None, len(self.items_in_topic(ctool))))
+        topics = getattr(ptool, 'project_topics', None)
+        for id, value in topics.get_collection().items():
+            ret.append((value, len(self.items_in_topic(ctool, id))))
+        return ret
+
+    def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
+        """
+        @param objects: Return full objects, not brains
+        """
+        dict = {'meta_type' : 'Naaya Project'}
+        if not catalog:
+            catalog = self.getCatalogTool()
+        if topic:
+            dict['topics'] = topic
+        if filter_name:
+            dict['title'] = '*%s*' % filter_name
+        if objects:
+            return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
+        return catalog.search(dict)
+
+
+from Products.Naaya.NySite import NySite
+NySite.projects_list = ProjectsLister('projects_list')
 
 config.update({
     'constructors': (project_add_html, addNyProject),
