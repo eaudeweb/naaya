@@ -49,7 +49,7 @@
             <link id="directory" title="Directory" description="" url="/admin_users_html" relative="1" permission="Publish content" order="30"/>
             <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
             <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Publish content" order="50"/>
-            <link id="search" title="Search" description="" url="/search_html" relative="1" permission="" order="60"/>
+            <link id="search" title="IG Search" description="" url="/search_html" relative="1" permission="" order="60"/>
             <link id="help" title="Help" description="" url="/feedback_html" relative="1" permission="" order="70"/>
         </linkslist>
     </portlets>
