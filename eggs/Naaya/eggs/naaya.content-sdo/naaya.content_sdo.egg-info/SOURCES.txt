@@ -8,6 +8,9 @@ naaya.content_sdo.egg-info/requires.txt
 naaya.content_sdo.egg-info/top_level.txt
 naaya/content/__init__.py
 naaya/content/info/NyEnterprise.py
+naaya/content/info/NyNetwork.py
+naaya/content/info/NyTool.py
+naaya/content/info/NyTraining.py
 naaya/content/info/Readme.txt
 naaya/content/info/__init__.py
 naaya/content/info/configure.zcml
