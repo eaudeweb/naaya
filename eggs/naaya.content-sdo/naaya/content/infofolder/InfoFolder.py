@@ -318,7 +318,7 @@ class NyInfoFolder(NyFolder):
 
     def getInfosByCategoryId(self, category, category_item):
         ob_list = []
-        if category == 'Nothing' or category_item == 'Nothing': return None
+        if not (category and category_item): return []
         for ob in self.objectValues():
             if category_item in self.utConvertToList(getattr(ob,category)):
                 ob_list.append(ob.id)
