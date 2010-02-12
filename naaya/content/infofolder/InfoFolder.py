@@ -44,6 +44,7 @@ from Products.Naaya.NyFolder import NyFolder
 
 from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTraining
 from naaya.content.event import event_item
+from paginator import DiggPaginator, EmptyPage, InvalidPage
 
 from constants import *
 import skel
@@ -322,6 +323,28 @@ class NyInfoFolder(NyFolder):
             if category_item in self.utConvertToList(getattr(ob,category)):
                 ob_list.append(ob.id)
         return sorted(ob_list)
+
+    def itemsPaginator(self, REQUEST):
+        """ """
+        category = REQUEST.get('category', '')
+        category_item = REQUEST.get('category_item', '')
+
+        items_list = self.getInfosByCategoryId(category, category_item)
+        paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)   #Show 10 documents per page
+
+        # Make sure page request is an int. If not, deliver first page.
+        try:
+            page = int(REQUEST.get('page', '1'))
+        except ValueError:
+            page = 1
+
+        # If page request (9999) is out of range, deliver last page of results.
+        try:
+            items = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            items = paginator.page(paginator.num_pages)
+
+        return items
 
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
