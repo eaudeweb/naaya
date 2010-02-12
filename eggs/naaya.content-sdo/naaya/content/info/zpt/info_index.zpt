@@ -35,7 +35,7 @@
 			condition="folder_categories ">
 		<h2 i18n:translate="">Specifications</h2>
 		<dl tal:repeat="info_category folder_categories">
-			<tal:block define="category_id info_category/list_id">
+			<tal:block define="category_id info_category/property_id">
 				<dt tal:content="info_category/label"/>
 				<dd tal:repeat="property_value python:here.get_property_values(category_id)"
 					i18n:translate="" tal:content="property_value"/>
@@ -47,9 +47,10 @@
 			condition="folder_extra_properties ">
 			<h2 i18n:translate="">Extras</h2>
 			<dl tal:repeat="info_category folder_extra_properties">
-				<tal:block define="category_id info_category/list_id">
+				<tal:block define="category_id info_category/property_id">
 					<dt tal:content="info_category/label"/>
-					<dd tal:repeat="property_value python:here.get_property_values(category_id)"
+					<dd tal:condition="category_id"
+						tal:repeat="property_value python:here.get_property_values(category_id)"
 					i18n:translate="" tal:content="property_value"/>
 				</tal:block>
 			</dl>
