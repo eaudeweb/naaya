@@ -40,28 +40,46 @@
 		</div>
 
 		<tal:block content="structure here/description"/>
-		<fieldset>
-		<legend i18n:translate="">Folder categories</legend>
-		<dl tal:repeat="category_widget here/folder_categories">
-			<tal:block define="category_id category_widget/property_id;
-					category python:here.getCategoryList(category_id);
-					category_title python:category[0];
-					category_items python:category[1]">
-			<dt tal:content="category_title"/>
-			<dd>
-				<ul>
-					<li tal:repeat="item category_items">
-						<tal:block define="item_id item/id; item_title item/title;
-							has_items python:here.getInfosByCategoryId(category_id, item_id)">
-							<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category_id}&category_item=${item_id};"
-								tal:content="item_title" tal:condition="has_items"/>
-							<span tal:condition="not:has_items" tal:content="item_title"/>
+		<tal:block tal:define="widgets here/splitFolderCategories">
+			<div style="float:left;">
+				<div style="float:left;" tal:define="left_widgets python:widgets[0]">
+					<tal:block repeat="category_widget left_widgets">
+						<tal:block define="category_id category_widget/property_id;
+											category python:here.getCategoryList(category_id);">
+						<h4 tal:content="python:category[0]"/>
+						<ul>
+							<li tal:repeat="item python:category[1]">
+								<tal:block define="item_id item/id; item_title item/title;
+									has_items python:here.getInfosByCategoryId(category_id, item_id)">
+									<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category_id}&category_item=${item_id};"
+										tal:content="item_title" tal:condition="has_items"/>
+									<span tal:condition="not:has_items" tal:content="item_title"/>
+								</tal:block>
+							</li>
+						</ul>
 						</tal:block>
-					</li>
-				</ul>
-			</dd>
-			</tal:block>
-		</dl>
-		</fieldset>
+					</tal:block>
+				</div>
+
+				<div style="margin-left: 20em;" tal:define="right_widgets python:widgets[1]">
+					<tal:block repeat="category_widget right_widgets">
+						<tal:block define="category_id category_widget/property_id;
+											category python:here.getCategoryList(category_id);">
+						<h4 tal:content="python:category[0]"/>
+						<ul>
+							<li tal:repeat="item python:category[1]">
+								<tal:block define="item_id item/id; item_title item/title;
+									has_items python:here.getInfosByCategoryId(category_id, item_id)">
+									<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category_id}&category_item=${item_id};"
+										tal:content="item_title" tal:condition="has_items"/>
+									<span tal:condition="not:has_items" tal:content="item_title"/>
+								</tal:block>
+							</li>
+						</ul>
+						</tal:block>
+					</tal:block>
+				</div>
+				</div>
+		</tal:block>
 	</metal:block>
 </metal:block>
