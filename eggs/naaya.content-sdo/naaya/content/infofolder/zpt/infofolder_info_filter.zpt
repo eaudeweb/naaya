@@ -1,17 +1,73 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 	<metal:block fill-slot="body">
-		<tal:block define="global category_name python:here.getCategoryList(request.get('category', ''))" />
+		<tal:block define="
+						global category python:request.get('category', '');
+						global category_item python:request.get('category_item', '');
+						global page python:request.get('page', '');
+						global category_name python:here.getCategoryList(category);
+						global items python:here.itemsPaginator(request)" />
 
 		<h1 i18n:translate="" tal:condition="category_name">
 			<span i18n:name="category_name" i18n:translate="" tal:replace="here/title" /> listing - 
 			<span tal:replace="python:category_name[0]" />
 		</h1>
-		<ul tal:define="category python:request.get('category', 'Nothing');
-						category_item python:request.get('category_item', 'Nothing')">
-			<li tal:repeat="info python:here.getInfosByCategoryId(category, category_item)">
-				<a tal:attributes="href string:${here/absolute_url}/${info}"
-					tal:content="info/title"/>
+
+		<tal:block condition="items/object_list">
+
+		<ul>
+			<li tal:repeat="item items/object_list">
+				<a tal:attributes="href string:${here/absolute_url}/${item}"
+					tal:content="item/title"/>
 			</li>
 		</ul>
+
+		<tal:block tal:define="count items/paginator/count" condition="python:count > 15">
+		<div class="paginator">
+			<tal:block condition="items/leading_range">
+			<tal:block repeat="page items/leading_range">
+				<a class="numberedpage" 
+					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
+					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
+							tal:content="page" />
+				</a>
+			</tal:block>
+			...
+			</tal:block>
+
+			<tal:block repeat="page items/main_range">
+				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
+					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
+							tal:content="page" />
+				</a>
+			</tal:block>
+
+			<tal:block condition="items/trailing_range">
+			...
+			<tal:block repeat="page items/trailing_range">
+				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
+					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
+							tal:content="page" />
+				</a>
+			</tal:block>
+			</tal:block>
+
+			<span class="navigation">
+				<a class="prevpage" tal:condition="items/has_previous" 
+					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${items/previous_page_number}">&lt; previous</a>
+				<span class="prevpage" tal:condition="not:items/has_previous">previous</span>
+				|
+				<a class="nextpage" tal:condition="items/has_next" 
+					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${items/next_page_number}">next &gt;</a>
+				<span class="nextpage" tal:condition="not:items/has_next">next</span>
+			</span>
+
+			<span class="matchescount">
+				<span tal:replace="items/start_index"/>-<span tal:replace="items/end_index"/> of <span tal:replace="items/paginator/count"/> items
+			</span>
+		</div>
+		</tal:block>
+
+		</tal:block>
+
 	</metal:block>
 </metal:block>
