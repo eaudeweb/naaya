@@ -55,20 +55,20 @@ DESCRIPTION_OBJECT = 'This is Naaya Training type.'
 DEFAULT_SCHEMA = deepcopy(DEFAULT_SCHEMA)
 
 #Define folder categories
-DEFAULT_SCHEMA['sdo_training_type'] = dict(sortorder=12, widget_type='Select',
+DEFAULT_SCHEMA['sdo_training_type'] = dict(sortorder=11, widget_type='Select',
                 label='Training type', list_id='sdo_training_type', property_type='Sdo category')
 
 #Define folder extra properties
 
-DEFAULT_SCHEMA['sdo_training_city'] = dict(sortorder=11, widget_type='String',
+DEFAULT_SCHEMA['sdo_training_city'] = dict(sortorder=12, widget_type='String',
                 label='Training city', property_type='Sdo extra property')
-DEFAULT_SCHEMA['sdo_training_country'] = dict(sortorder=12, widget_type='Select',
+DEFAULT_SCHEMA['sdo_training_country'] = dict(sortorder=13, widget_type='Select',
                 label='Country',list_id='countries', property_type='Sdo extra property')
-DEFAULT_SCHEMA['sdo_start_date'] = dict(sortorder=13, widget_type='Date',
+DEFAULT_SCHEMA['sdo_start_date'] = dict(sortorder=14, widget_type='Date',
                 label='Start date', property_type='Sdo extra property')
-DEFAULT_SCHEMA['sdo_frequency'] = dict(sortorder=14, widget_type='Select',
+DEFAULT_SCHEMA['sdo_frequency'] = dict(sortorder=15, widget_type='Select',
                 label='Frequency',list_id='sdo_frequency', property_type='Sdo extra property')
-DEFAULT_SCHEMA['sdo_duration'] = dict(sortorder=15, widget_type='Select',
+DEFAULT_SCHEMA['sdo_duration'] = dict(sortorder=16, widget_type='Select',
                 label='Duration',list_id='sdo_duration', property_type='Sdo extra property')
 
 # this dictionary is updated at the end of the module
