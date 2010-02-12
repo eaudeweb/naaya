@@ -375,20 +375,7 @@ class NyInfoFolder(NyFolder):
         current_ob = 0
         for ob in obs:
             current_ob += 1
-            #ob['title'] = ob['id'] temporary, to be able to identify items
-            ob['original_sdo_id'] = ob['id']
-            del ob['id']
-            ob['contributor_telephone'] = ob['contributor_tel_country'] +\
-                ob['contributor_tel_area'] + ob['contributor_tel_local']
-            del ob['contributor_tel_country'], ob['contributor_tel_area'], ob['contributor_tel_local']
-            for k in ob.keys():
-                ob[k] = self.replace_escaped(ob[k])
-            for k, v in ob.items():
-                sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
-                if k in sdo_ref_lists:
-                    new_k = 'sdo_' + k.lower()
-                    ob[new_k] = self.get_list_ids(new_k, ob[k])
-                    del ob[k]
+            ob = self.translate_info(ob)
             if self.info_type == 'enterprises':
                 object_id = NyEnterprise.addNyEnterprise(self, contributor='admin', **ob)
             if self.info_type == 'networks':
@@ -398,8 +385,44 @@ class NyInfoFolder(NyFolder):
             if self.info_type == 'trainings':
                 object_id = NyTraining.addNyTraining(self, contributor='admin', **ob)
             print '%s of %s objects, SDO Id: %s, ID: %s' % (current_ob, total_obs, ob['original_sdo_id'], object_id)
+        print 'Import finished.'
 
-    def replace_escaped(self, s):
+    def translate_info(self, ob):
+        if self.info_type == 'events':
+            #Events specific data translation here
+            ob = self._rename_concatenate_keys(ob, 'event_url', ['website'])
+            ob = self._rename_concatenate_keys(ob, 'location', ['Location'])
+
+            ob = self._rename_concatenate_keys(ob, 'start_date', ['Start_date'])
+            ob = self._rename_concatenate_keys(ob, 'end_date', ['End_date'])
+            ob = self._rename_concatenate_keys(ob, 'contact_person',
+                ['contributor_first_name', 'contributor_last_name'])
+            ob = self._rename_concatenate_keys(ob, 'contact_email', ['contributor_email'])
+
+            ob = self._rename_concatenate_keys(ob, 'contact_phone',
+                ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
+            return ob
+        for k in ob.keys():
+            ob[k] = self._replace_escaped(ob[k])
+        ob = self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
+        ob = self._rename_concatenate_keys(ob, 'contributor_telephone',
+            ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
+        for k, v in ob.items():
+            sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
+            if k in sdo_ref_lists:
+                new_k = 'sdo_' + k.lower()
+                ob[new_k] = self.get_list_ids(new_k, ob[k])
+                del ob[k]
+        return ob
+
+    def _rename_concatenate_keys(self, ob, new_key, old_keys_list):
+        ob[new_key] = ''
+        for old_key in old_keys_list:
+            ob[new_key] = ob[new_key] + ob[old_key]
+            del ob[old_key]
+        return ob
+
+    def _replace_escaped(self, s):
         if not isinstance(s, (str, unicode)):
             return s
         s = s.replace('&amp;','&')
