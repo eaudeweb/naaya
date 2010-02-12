@@ -43,6 +43,7 @@ from Products.NaayaCore.managers.utils import make_id
 from Products.Naaya.NyFolder import NyFolder
 
 from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTraining
+from naaya.content.event import event_item
 
 from constants import *
 import skel
@@ -190,7 +191,7 @@ class NyInfoFolder(NyFolder):
     networks_schema = NyNetwork.DEFAULT_SCHEMA
     tools_schema = NyTool.DEFAULT_SCHEMA
     trainings_schema = NyTraining.DEFAULT_SCHEMA
-    #events_schema = NyEvent.DEFAULT_SCHEMA
+    events_schema = event_item.DEFAULT_SCHEMA
 
     def __init__(self, id, contributor):
         """ """
@@ -300,7 +301,18 @@ class NyInfoFolder(NyFolder):
 
     def get_list_ids(self, list_id, list_titles):
         ref_list = self.getCategoryList(list_id)
-        list_of_ids = [list_item['id'] for list_item in ref_list[1] if list_item['title'] in list_titles]
+        list_titles = [list_title.lower() for list_title in list_titles]
+
+        #Naaya event:
+        #only suports strings as values for single select lists
+        #so the first value that corresponds is returned
+        if self.info_type == 'events':
+            for list_item in ref_list[1]:
+                if list_item['title'].lower() in list_titles:
+                    return list_item['id']
+            return None
+
+        list_of_ids = [list_item['id'] for list_item in ref_list[1] if list_item['title'].lower() in list_titles]
         return list_of_ids
 
     def getInfosByCategoryId(self, category, category_item):
@@ -327,18 +339,24 @@ class NyInfoFolder(NyFolder):
         return []
 
     def set_categories(self):
-        schema = getattr(self, '%s_schema' % self.info_type)
-        folder_categories = []
-        folder_extra_properties = []
-        for (k, v) in schema.items():
-            if schema[k].has_key('property_type'):
-                v['property_id'] = k
-                if schema[k]['property_type'] == 'Sdo category':
-                    folder_categories.append(v)
-                elif schema[k]['property_type'] == 'Sdo extra property':
-                    folder_extra_properties.append(v)
-        self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
-        self.folder_extra_properties = self.utSortDictsListByKey(folder_extra_properties, 'sortorder', 0)
+        schema = deepcopy(getattr(self, '%s_schema' % self.info_type))
+        if self.info_type == 'events':
+            self.folder_extra_properties = []
+            schema['event_type']['property_id'] = 'event_type'
+            folder_categories=[schema['event_type']]
+            self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
+        else:
+            folder_categories = []
+            folder_extra_properties = []
+            for (k, v) in schema.items():
+                if schema[k].has_key('property_type'):
+                    v['property_id'] = k
+                    if schema[k]['property_type'] == 'Sdo category':
+                        folder_categories.append(v)
+                    elif schema[k]['property_type'] == 'Sdo extra property':
+                        folder_extra_properties.append(v)
+            self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
+            self.folder_extra_properties = self.utSortDictsListByKey(folder_extra_properties, 'sortorder', 0)
 
     def process_submissions(self):
         """ overwrite the global function to allow
@@ -354,6 +372,8 @@ class NyInfoFolder(NyFolder):
 
     #security.declarePrivate('process_submissions')
     def latest_uploads(self, item_number=5):
+        if self.info_type == 'events':
+            return None
         objects_list = self.utSortObjsListByAttr(self.objectValues(), 'releasedate')
         return [(ob.id, ob.title, self.formatDate(ob.last_modification)) for ob in objects_list[0:item_number]]
 
@@ -382,11 +402,13 @@ class NyInfoFolder(NyFolder):
         current_ob = 0
         for ob in obs:
             current_ob += 1
-            ob = self.translate_info(ob)
+            self.translate_info(ob)
             if self.info_type == 'enterprises':
                 object_id = NyEnterprise.addNyEnterprise(self, contributor='admin', **ob)
             if self.info_type == 'networks':
                 object_id = NyNetwork.addNyNetwork(self, contributor='admin', **ob)
+            if self.info_type == 'events':
+                object_id = event_item.addNyEvent(self, contributor='admin', **ob)
             if self.info_type == 'tools':
                 object_id = NyTool.addNyTool(self, contributor='admin', **ob)
             if self.info_type == 'trainings':
@@ -395,39 +417,61 @@ class NyInfoFolder(NyFolder):
         print 'Import finished.'
 
     def translate_info(self, ob):
+        for k,v in ob.items():
+            ob[k] = self._replace_escaped(v)
         if self.info_type == 'events':
+
             #Events specific data translation here
-            ob = self._rename_concatenate_keys(ob, 'event_url', ['website'])
-            ob = self._rename_concatenate_keys(ob, 'location', ['Location'])
 
-            ob = self._rename_concatenate_keys(ob, 'start_date', ['Start_date'])
-            ob = self._rename_concatenate_keys(ob, 'end_date', ['End_date'])
-            ob = self._rename_concatenate_keys(ob, 'contact_person',
-                ['contributor_first_name', 'contributor_last_name'])
-            ob = self._rename_concatenate_keys(ob, 'contact_email', ['contributor_email'])
+            #event details
+            #title as is
+            self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
+            self._rename_concatenate_keys(ob, 'event_type', ['Type_of_event'])
+            #map imported values to ids
+            ob['event_type'] = self.get_list_ids('event_types', ob['event_type'])
+            self._rename_concatenate_keys(ob, 'event_url', ['website'])
+            self._rename_concatenate_keys(ob, 'location', ['Location'])
+            #description as is
+            self._rename_concatenate_keys(ob, 'start_date', ['Start_date'])
+            ob['start_date'] = self._rearange_date(ob['start_date'])
+            self._rename_concatenate_keys(ob, 'end_date', ['End_date'])
+            ob['end_date'] = self._rearange_date(ob['end_date'])
 
-            ob = self._rename_concatenate_keys(ob, 'contact_phone',
+            #organisation details
+            self._rename_concatenate_keys(ob, 'organisation_name', ['organisation'])
+            self._rename_concatenate_keys(ob, 'organisation_email', ['email'])
+            self._rename_concatenate_keys(ob, 'organisation_address', ['city', 'country'],
+                spacer=', ')
+
+            #contributor details
+            self._rename_concatenate_keys(ob, 'contact_person',
+                ['contributor_first_name', 'contributor_last_name'], spacer=' ')
+            self._rename_concatenate_keys(ob, 'contact_email', ['contributor_email'])
+            self._rename_concatenate_keys(ob, 'contact_phone',
                 ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
-            return ob
-        for k in ob.keys():
-            ob[k] = self._replace_escaped(ob[k])
-        ob = self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
-        ob = self._rename_concatenate_keys(ob, 'contributor_telephone',
-            ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
-        for k, v in ob.items():
-            sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
-            if k in sdo_ref_lists:
-                new_k = 'sdo_' + k.lower()
-                ob[new_k] = self.get_list_ids(new_k, ob[k])
-                del ob[k]
-        return ob
 
-    def _rename_concatenate_keys(self, ob, new_key, old_keys_list):
-        ob[new_key] = ''
-        for old_key in old_keys_list:
-            ob[new_key] = ob[new_key] + ob[old_key]
-            del ob[old_key]
-        return ob
+            #approved as is
+            #approved_by as is
+
+        else:
+            self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
+            self._rename_concatenate_keys(ob, 'contributor_telephone',
+                ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
+            sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
+            for k, v in ob.items():
+                if k in sdo_ref_lists:
+                    new_k = 'sdo_' + k.lower()
+                    ob[new_k] = self.get_list_ids(new_k, ob[k])
+                    del ob[k]
+
+    def _rename_concatenate_keys(self, ob, new_key, old_keys_list, spacer=''):
+            ob[new_key] = ''
+            for old_key in old_keys_list:
+                if len(old_keys_list)>1:
+                    ob[new_key] = '%s%s%s' % (ob[new_key], spacer, ob[old_key])
+                else:
+                    ob[new_key] = ob[old_key]
+                del ob[old_key]
 
     def _replace_escaped(self, s):
         if not isinstance(s, (str, unicode)):
@@ -438,6 +482,11 @@ class NyInfoFolder(NyFolder):
         s = s.replace('&apos;','\'')
         s = s.replace('&gt;','>')
         return s
+
+    def _rearange_date(self, s):
+        parts = s.split('/')
+        parts.reverse()
+        return '/'.join(parts)
 
 InitializeClass(NyInfoFolder)
 
