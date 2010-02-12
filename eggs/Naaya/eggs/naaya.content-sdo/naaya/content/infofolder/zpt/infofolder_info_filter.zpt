@@ -1,7 +1,13 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 	<metal:block fill-slot="body">
+		<tal:block define="global category_name python:here.getCategoryList(request.get('category', ''))" />
+
+		<h1 i18n:translate="" tal:condition="category_name">
+			<span i18n:name="category_name" i18n:translate="" tal:replace="here/title" /> listing - 
+			<span tal:replace="python:category_name[0]" />
+		</h1>
 		<ul tal:define="category python:request.get('category', 'Nothing');
-		                category_item python:request.get('category_item', 'Nothing')">
+						category_item python:request.get('category_item', 'Nothing')">
 			<li tal:repeat="info python:here.getInfosByCategoryId(category, category_item)">
 				<a tal:attributes="href string:${here/absolute_url}/${info}"
 					tal:content="info/title"/>

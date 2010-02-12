@@ -288,8 +288,15 @@ class NyInfoFolder(NyFolder):
     def getCategoryList(self, ref_list_id):
         ptool = self.getPortletsTool()
         category_list = getattr(ptool, ref_list_id, None)
-        list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
-        return [category_list.title, list_items]
+        if category_list:
+            list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
+            return category_list.title, list_items
+
+    def splitFolderCategories(self):
+        """ Splits folder categories in two for better viewing """
+        left = self.folder_categories[::2]
+        right = self.folder_categories[1::2]
+        return left, right
 
     def get_list_ids(self, list_id, list_titles):
         ref_list = self.getCategoryList(list_id)
@@ -433,6 +440,13 @@ class NyInfoFolder(NyFolder):
         return s
 
 InitializeClass(NyInfoFolder)
+
+def get_naaya_containers_metatypes(self):
+    """ this method is used to display local roles, called from getUserRoles methods """
+    return ['Naaya Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire', 'Naaya InfoFolder']
+
+from Products.Naaya.NySite import NySite
+NySite.get_naaya_containers_metatypes = get_naaya_containers_metatypes
 
 config.update({
     'constructors': (infofolder_add_html, addNyInfoFolder),
