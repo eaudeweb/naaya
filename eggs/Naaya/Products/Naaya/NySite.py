@@ -816,10 +816,10 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         @return: a list of NyFolder objects
         """
         l_parent = p_folder
-        l_result = [l_parent]
-        while l_parent.getParentNode().meta_type != self.meta_type:
-            l_parent = l_parent.getParentNode()
+        l_result = []
+        while l_parent.meta_type != self.meta_type:
             l_result.append(l_parent)
+            l_parent = l_parent.getParentNode()
         l_result.reverse()
         return l_result
 
