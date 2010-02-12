@@ -324,12 +324,12 @@ class NyInfoFolder(NyFolder):
         folder_categories = []
         folder_extra_properties = []
         for (k, v) in schema.items():
-            if schema[k].has_key('property_type') and\
-                schema[k]['property_type'] == 'Sdo category':
-                folder_categories.append(v)
-            if schema[k].has_key('property_type') and\
-                schema[k]['property_type'] == 'Sdo extra property':
-                folder_extra_properties.append(v)
+            if schema[k].has_key('property_type'):
+                v['property_id'] = k
+                if schema[k]['property_type'] == 'Sdo category':
+                    folder_categories.append(v)
+                elif schema[k]['property_type'] == 'Sdo extra property':
+                    folder_extra_properties.append(v)
         self.folder_categories = self.utSortDictsListByKey(folder_categories, 'sortorder', 0)
         self.folder_extra_properties = self.utSortDictsListByKey(folder_extra_properties, 'sortorder', 0)
 
@@ -378,6 +378,9 @@ class NyInfoFolder(NyFolder):
             #ob['title'] = ob['id'] temporary, to be able to identify items
             ob['original_sdo_id'] = ob['id']
             del ob['id']
+            ob['contributor_telephone'] = ob['contributor_tel_country'] +\
+                ob['contributor_tel_area'] + ob['contributor_tel_local']
+            del ob['contributor_tel_country'], ob['contributor_tel_area'], ob['contributor_tel_local']
             for k in ob.keys():
                 ob[k] = self.replace_escaped(ob[k])
             for k, v in ob.items():
@@ -397,7 +400,7 @@ class NyInfoFolder(NyFolder):
             print '%s of %s objects, SDO Id: %s, ID: %s' % (current_ob, total_obs, ob['original_sdo_id'], object_id)
 
     def replace_escaped(self, s):
-        if type(s) != type(''):
+        if not isinstance(s, (str, unicode)):
             return s
         s = s.replace('&amp;','&')
         s = s.replace('&lt;','<')

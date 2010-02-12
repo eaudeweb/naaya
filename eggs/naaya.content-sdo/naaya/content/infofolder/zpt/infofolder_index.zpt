@@ -43,7 +43,7 @@
 		<fieldset>
 		<legend i18n:translate="">Folder categories</legend>
 		<dl tal:repeat="category_widget here/folder_categories">
-			<tal:block define="category_id category_widget/list_id;
+			<tal:block define="category_id category_widget/property_id;
 					category python:here.getCategoryList(category_id);
 					category_title python:category[0];
 					category_items python:category[1]">
