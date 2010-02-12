@@ -22,33 +22,29 @@
 		</ul>
 
 		<tal:block tal:define="count items/paginator/count" condition="python:count > 15">
-		<div class="paginator">
+		<div class="pagination">
 			<tal:block condition="items/leading_range">
-			<tal:block repeat="page items/leading_range">
+			<span tal:repeat="page items/leading_range">
 				<a class="numberedpage" 
-					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
-					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
-							tal:content="page" />
-				</a>
-			</tal:block>
+					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"
+					tal:content="page"/>
+			</span>
 			...
 			</tal:block>
 
-			<tal:block repeat="page items/main_range">
-				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
-					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
-							tal:content="page" />
-				</a>
-			</tal:block>
+			<span tal:repeat="page items/main_range">
+				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"
+				tal:content="page"/>
+			</span>
 
 			<tal:block condition="items/trailing_range">
 			...
-			<tal:block repeat="page items/trailing_range">
-				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}">
-					<span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"
-							tal:content="page" />
+			<span tal:repeat="page items/trailing_range">
+				<a class="numberedpage" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"
+				tal:content="page">
+					<!--><span tal:attributes="class python:test(page == request.get('page', '1'), 'selected', '');"-->
 				</a>
-			</tal:block>
+			</span>
 			</tal:block>
 
 			<span class="navigation">
