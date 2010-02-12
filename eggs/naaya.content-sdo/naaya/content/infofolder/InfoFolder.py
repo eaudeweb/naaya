@@ -321,7 +321,7 @@ class NyInfoFolder(NyFolder):
         for ob in self.objectValues():
             if category_item in self.utConvertToList(getattr(ob,category)):
                 ob_list.append(ob.id)
-        return ob_list
+        return sorted(ob_list)
 
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
@@ -485,6 +485,9 @@ class NyInfoFolder(NyFolder):
 
     def _rearange_date(self, s):
         parts = s.split('/')
+        #if the date cannot be slit by / in three parts it means it's format is wrong
+        if len(parts) != 3:
+            return ''
         parts.reverse()
         return '/'.join(parts)
 
