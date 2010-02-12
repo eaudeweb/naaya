@@ -21,11 +21,13 @@
 			</tr>
 			<tr>
 				<th>User ID</th>
-				<td tal:content="userinfo/userid"></td>
+				<td tal:condition="is_member" tal:content="userinfo/userid"></td>
+				<td tal:condition="not:is_member">N/A</td>
 			</tr>
 			<tr>
 				<th>Email</th>
-				<td tal:content="userinfo/email"></td>
+				<td tal:condition="is_member" tal:content="userinfo/email"></td>
+				<td tal:condition="not:is_member">N/A</td>
 			</tr>
 			<tr>
 				<th>Organisation</th>
@@ -33,7 +35,8 @@
 			</tr>
 			<tr>
 				<th>Postal Address</th>
-				<td tal:content="userinfo/postal_address"></td>
+				<td tal:condition="is_member" tal:content="userinfo/postal_address"></td>
+				<td tal:condition="not:is_member">N/A</td>
 			</tr>
 		</table>
 	</tal:block>
