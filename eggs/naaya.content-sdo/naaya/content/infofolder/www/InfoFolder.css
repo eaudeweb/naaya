@@ -1,26 +1,13 @@
-.boxes-right 
-{
- float: right;
- width: 24%;
- padding-right: 1%;
-}
-
-.main_content 
-{
- float: left;
- width: 75%;
-}
-
 .column-left
 {
 	float: left;
-	width:30em;
+	width:25em;
 	width:
 }
 
 .column-right
 {
-	margin-left:31em;
+	margin-left:26em;
 }
 
 .select{
@@ -76,21 +63,20 @@ ul.infofolder li{
 	float: left; 
 	margin-right: 1em; 
 	width: 48%; 
-	line-height: 1.3em;
 }
-
 .details {
 	float: left; 
 	width: 48%; 
-	line-height: 2em;
 }
-
-.details h2 {
-	line-height: 1.3em
-}
-
 .label{
 	font-weight: bold;
 	white-space:nowrap;
 }
-
+.highlabel{
+	font-weight: bold;
+	white-space:nowrap;
+	line-height: 2em;
+}
+.categories span{
+	line-height: 2em;
+}
