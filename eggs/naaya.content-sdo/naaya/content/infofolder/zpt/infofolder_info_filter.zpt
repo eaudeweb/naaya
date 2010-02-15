@@ -1,5 +1,13 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 	<metal:block fill-slot="body">
+
+		<style type="text/css">
+			.listing {
+				line-height:1.7em; 
+				list-style-type: none;
+				padding: 1em;
+			}
+		</style>
 		<tal:block define="
 						global category python:request.get('category', '');
 						global category_item python:request.get('category_item', '');
@@ -14,10 +22,12 @@
 
 		<tal:block condition="items/object_list">
 
-		<ul>
+		<ul class="listing">
 			<li tal:repeat="item items/object_list">
-				<a tal:attributes="href string:${here/absolute_url}/${item}"
+				<a tal:attributes="href item/absolute_url;
+									title python:here.splitTextByWords(here.utStripAllHtmlTags(item.description), 20)" 
 					tal:content="item/title"/>
+					<tal:block condition="item/organisation">(<span tal:replace="item/organisation" />)</tal:block>
 			</li>
 		</ul>
 

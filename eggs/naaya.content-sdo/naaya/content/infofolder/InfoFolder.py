@@ -321,8 +321,8 @@ class NyInfoFolder(NyFolder):
         if not (category and category_item): return []
         for ob in self.objectValues():
             if category_item in self.utConvertToList(getattr(ob,category)):
-                ob_list.append(ob.id)
-        return sorted(ob_list)
+                ob_list.append(ob)
+        return self.utSortObjsListByAttr(ob_list, 'id', p_desc=0)
 
     def itemsPaginator(self, REQUEST):
         """ """
