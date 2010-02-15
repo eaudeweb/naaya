@@ -3448,6 +3448,10 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             loc_obj = self
         else:
             loc_obj = self.unrestrictedTraverse(location)
+            site_id = self.getSite().getId()
+            if not location.startswith(site_id):
+                location = '%s/%s' % (site_id, location)
+
         contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'], path=location)
         files = [vcard_file(contact.id, contact.export_vcard()) for contact in contacts]
         if REQUEST:
