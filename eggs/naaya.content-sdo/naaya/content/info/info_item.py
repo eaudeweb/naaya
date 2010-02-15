@@ -59,13 +59,13 @@ PREFIX_OBJECT = 'Info'
 DEFAULT_SCHEMA = {
     'website':               dict(sortorder=11, widget_type='String',
                 label='Website url',required=True),
-    'organisation':          dict(sortorder=20, widget_type='String',
+    'organisation_name':          dict(sortorder=20, widget_type='String',
                 label='Organisation name',localized=True),
-    'city':                  dict(sortorder=25, widget_type='String',
+    'organisation_city':                  dict(sortorder=25, widget_type='String',
                 label='Organisation city',localized=True),
-    'country':               dict(sortorder=30, widget_type='Select',
+    'organisation_country':               dict(sortorder=30, widget_type='Select',
                 label='Organisation country',localized=True,list_id='countries'),
-    'email':                 dict(sortorder=35, widget_type='String',
+    'organisation_email':                 dict(sortorder=35, widget_type='String',
                 label='Organisation email'),
     'contributor_first_name':dict(sortorder=45, widget_type='String',
                 label='Contributor first name'),
@@ -176,8 +176,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         #geo-location: 'geo_location' should always be removed from the schema_raw_data
         #because the form should contain 'geo_location.lat' type of data
         schema_raw_data.pop('geo_location')
-        _city = schema_raw_data.get('city', None)
-        _country = schema_raw_data.get('country', None)
+        _city = schema_raw_data.get('organisation_city', None)
+        _country = schema_raw_data.get('organisation_country', None)
         _address = ''
         if _city or _country:
             _address = _city + ', ' + _country
@@ -225,8 +225,12 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 
     def get_property_values(self, property_id):
         """ returns the values of the ref_list items if there is a reflist with the given id
-        or the values of the propery"""
-        property_ids = self.utConvertToList(getattr(self, property_id))
+        or the values of the property"""
+        property_ids = getattr(self, property_id)
+        if property_ids:
+            property_ids = self.utConvertToList(property_ids)
+        else:
+            return []
         try:
             ref_list_items = self.get_ref_list_items(property_id)
             property_values = [ref_list_item.title for ref_list_item in ref_list_items if ref_list_item.id in property_ids]

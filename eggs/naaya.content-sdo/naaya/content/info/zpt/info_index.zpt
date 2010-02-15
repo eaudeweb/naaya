@@ -8,7 +8,7 @@
 
 <metal:block metal:fill-slot="body" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
-	<div class="main_content">
+	<div id="center_content" style="width: 69%; overflow-x: auto;">
 		<h1 tal:content="here/title"/>
 		<div>
 		<tal:block tal:condition="python:here.checkPermissionEditObject()">
@@ -34,12 +34,19 @@
 				<tal:block define="category_id info_category/property_id;
 									property_values python:here.get_property_values(category_id)">
 				<div tal:condition="property_values">
+					<tal:block condition="python:len(property_values)>1">
 					<span class="label" i18n:translate="" tal:content="info_category/label" />:
 					<ul>
 					<tal:block repeat="property_value property_values">
 						<li i18n:translate="" tal:content="property_value"/>
 					</tal:block>
 					</ul>
+					</tal:block>
+					<tal:block condition="python:len(property_values)==1">
+						<span class="highlabel" i18n:translate=""
+							tal:content="info_category/label" />:
+						<span i18n:translate="" tal:content="python:property_values[0]"/>
+					</tal:block>
 				</div>
 				</tal:block>
 			</tal:block>
@@ -50,9 +57,18 @@
 				<tal:block define="category_id info_category/property_id;
 									property_values python:here.get_property_values(category_id)">
 				<div tal:condition="property_values">
+					<tal:block condition="python:len(property_values)>1">
 					<span class="label" i18n:translate="" tal:content="info_category/label" />:
-					<tal:block repeat="property_value property_values" >
-						<span i18n:translate="" tal:content="property_value"/>, 
+						<ul>
+						<tal:block repeat="property_value property_values" >
+							<li i18n:translate="" tal:content="property_value"/>
+						</tal:block>
+						</ul>
+					</tal:block>
+					<tal:block condition="python:len(property_values)==1">
+						<span class="highlabel" i18n:translate=""
+							tal:content="info_category/label" />:
+						<span i18n:translate="" tal:content="python:property_values[0]"/>
 					</tal:block>
 				</div>
 				</tal:block>
@@ -63,31 +79,35 @@
 		<div class="details">
 		<h2 i18n:translate="">Contact</h2>
 			<div>
-				<span class="label" i18n:translate="">Organisation name</span>:
-				<span tal:content="here/organisation"/>
+				<span class="highlabel" i18n:translate="">Organisation name</span>:
+				<span tal:content="here/organisation_name"/>
 			</div>
 			<div>
-				<span class="label" i18n:translate="">City</span>:
-				<span tal:content="here/city"/>
+				<span class="highlabel" i18n:translate="">City</span>:
+				<span tal:content="here/organisation_city"/>
 			</div>
 			<div>
-				<span class="label" i18n:translate="">Email</span>:
-				<span tal:content="here/email"/>
+				<span class="highlabel" i18n:translate="">Country</span>:
+				<span tal:content="here/organisation_country"/>
+			</div>
+			<div>
+				<span class="highlabel" i18n:translate="">Email</span>:
+				<span tal:content="here/organisation_email"/>
 			</div>
 		</div>
 
 		<div class="details">
 		<h2 i18n:translate="">Submitted by</h2>
 		<div tal:condition="python:here.contributor_last_name or here.contributor_first_name">
-				<span class="label" i18n:translate="">Contributor name</span>:
+				<span class="highlabel" i18n:translate="">Contributor name</span>:
 				<span tal:content="here/contributor_last_name"/> <span tal:content="here/contributor_first_name"/>
 			</div>
 			<div tal:condition="here/contributor_email">
-				<span class="label" i18n:translate="">Email</span>:
+				<span class="highlabel" i18n:translate="">Email</span>:
 				<span tal:content="here/contributor_email"/>
 			</div>
 			<div tal:condition="here/contributor_telephone">
-				<span class="label" i18n:translate="">Telephone</span>:
+				<span class="highlabel" i18n:translate="">Telephone</span>:
 				<span tal:content="here/contributor_telephone"/>
 			</div>
 		</div>
@@ -97,11 +117,9 @@
 		<br style="clear:both">
 		<tal:block content="structure here/comments_box" />
 	</div>
-	<div class="boxes-right" tal:condition="python:here.has_coordinates()">
+	<div id="right_port" tal:condition="python:here.has_coordinates()">
 		<!-- Map widget -->
-		<div class="minimap">
-			<tal:block content="structure here/minimap" />
-		</div>
+		<tal:block content="structure here/minimap" />
 	</div>
 
 </metal:block>
