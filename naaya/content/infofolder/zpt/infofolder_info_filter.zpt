@@ -22,21 +22,22 @@
 		</ul>
 
 		<tal:block tal:define="count items/paginator/count" condition="python:count > 15">
-		<div class="pagination">
+		<div class="pagination" tal:define="current_page python:int(request.get('page', '1'))">
+
 			<tal:block condition="items/leading_range">
-			<tal:block define="this_page python:page == int(request.get('page', '1'))">
-				<a class="bold" tal:condition="this_page"
-				tal:content="page"/>
-				<a tal:condition="not:this_page"
-				tal:content="page" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"/>
+			<span tal:repeat="page items/leading_range">
+			<tal:block define="this_page python:page == current_page">
+				<a class="bold" tal:condition="this_page" tal:content="page"/>
+				<a tal:condition="not:this_page" tal:content="page"
+				tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"/>
 			</tal:block>
+			</span>
 			...
 			</tal:block>
 
 			<span tal:repeat="page items/main_range">
-			<tal:block define="this_page python:page == int(request.get('page', '1'))">
-				<a class="bold" tal:condition="this_page"
-				tal:content="page"/>
+			<tal:block define="this_page python:page == current_page">
+				<a class="bold" tal:condition="this_page" tal:content="page"/>
 				<a tal:condition="not:this_page"
 				tal:content="page" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"/>
 			</tal:block>
@@ -45,23 +46,21 @@
 			<tal:block condition="items/trailing_range">
 			...
 			<span tal:repeat="page items/trailing_range">
-			<tal:block define="this_page python:page == int(request.get('page', '1'))">
-				<a class="bold" tal:condition="this_page"
-				tal:content="page"/>
+			<tal:block define="this_page python:page == current_page">
+				<a class="bold" tal:condition="this_page" tal:content="page"/>
 				<a tal:condition="not:this_page"
 				tal:content="page" tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${page}"/>
 			</tal:block>
 			</span>
 			</tal:block>
 
-			<span class="navigation">
-				<a class="prevpage" tal:condition="items/has_previous" 
+			<span tal:define="has_previous items/has_previous;
+								has_next items/has_next;">
+				<a class="prevpage" tal:condition="has_previous" 
 					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${items/previous_page_number}">&lt; previous</a>
-				<span class="prevpage" tal:condition="not:items/has_previous">previous</span>
-				|
-				<a class="nextpage" tal:condition="items/has_next" 
+				<tal:block condition="python:(has_previous and has_next)">|</tal:block>
+				<a class="nextpage" tal:condition="has_next" 
 					tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${category}&amp;category_item=${category_item}&amp;page=${items/next_page_number}">next &gt;</a>
-				<span class="nextpage" tal:condition="not:items/has_next">next</span>
 			</span>
 
 			<span class="matchescount">
