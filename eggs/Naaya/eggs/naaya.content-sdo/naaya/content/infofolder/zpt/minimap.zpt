@@ -1,4 +1,4 @@
-<div tal:define="portal_map here/getGeoMapTool;" style="margin: 1em;">
+<div tal:define="portal_map here/getGeoMapTool;" style="margin: 1ex;">
 	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
 	<div id="minimap"></div>
 	<tal:block replace='structure string:<script type="text/javascript">' />

@@ -461,9 +461,7 @@ class NyInfoFolder(NyFolder):
             ob['end_date'] = self._rearange_date(ob['end_date'])
 
             #organisation details
-            self._rename_concatenate_keys(ob, 'organisation', ['organisation'])
-            self._rename_concatenate_keys(ob, 'organisation_email', ['email'])
-            self._rename_concatenate_keys(ob, 'organisation_address', ['city', 'country'],
+            self._rename_concatenate_keys(ob, 'organisation_address', ['organisation_city', 'organisation_country'],
                 spacer=', ')
 
             #contributor details
@@ -491,7 +489,10 @@ class NyInfoFolder(NyFolder):
             ob[new_key] = ''
             for old_key in old_keys_list:
                 if len(old_keys_list)>1:
-                    ob[new_key] = '%s%s%s' % (ob[new_key], spacer, ob[old_key])
+                    if ob[new_key]:
+                        ob[new_key] = '%s%s%s' % (ob[new_key], spacer, ob[old_key])
+                    else:
+                        ob[new_key] = ob[old_key]
                 else:
                     ob[new_key] = ob[old_key]
                 del ob[old_key]
