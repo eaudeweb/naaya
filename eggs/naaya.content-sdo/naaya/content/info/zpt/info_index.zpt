@@ -6,8 +6,30 @@
 <metal:block metal:fill-slot="head">
 </metal:block>
 
-<metal:block metal:fill-slot="body"
-	tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<metal:block metal:fill-slot="body" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+	<style type="text/css">
+		.url:visited {
+			color:#008000;
+			text-decoration:underline;
+		}
+		.url {
+			color:#0000CC;
+			text-decoration:underline !important;
+		}
+		.details {
+			float: left; 
+			margin-right: 1em; 
+			width: 48%; 
+			line-height:1.3em;
+		}
+
+		.details .label{
+			font-weight: bold;
+			white-space:nowrap;
+		}
+	</style>
+
 	<div>
 	<tal:block tal:condition="python:here.checkPermissionEditObject()">
 		<br clear="all"/>
@@ -21,83 +43,80 @@
 	</tal:block>
 	</div>
 	<div class="main-content">
-		<h1 tal:define="website here/website">
-			<a tal:condition="website" tal:attributes="href website"
-				tal:content="here/title"/>
-			<tal:block condition="not:website" content="here/title"/>
-		</h1>
-		<!--<dl>
-			<dt i18n:translate="">Website URL:</dt>
-			<dd tal:content="here/website"/>
-		</dl>-->
+		<h1 tal:content="here/title"/>
+		<a class="url" tal:attributes="href here/website" tal:content="here/website" tal:condition="here/website" />
 
-		<tal:block define="folder_categories here/folder_categories"
-			condition="folder_categories ">
-		<h2 i18n:translate="">Specifications</h2>
-		<dl tal:repeat="info_category folder_categories">
-			<tal:block define="category_id info_category/property_id">
-				<dt tal:content="info_category/label"/>
-				<dd tal:repeat="property_value python:here.get_property_values(category_id)"
-					i18n:translate="" tal:content="property_value"/>
-			</tal:block>
-		</dl>
-		</tal:block>
-
-		<tal:block define="folder_extra_properties here/folder_extra_properties"
-			condition="folder_extra_properties ">
-			<h2 i18n:translate="">Extras</h2>
-			<dl tal:repeat="info_category folder_extra_properties">
-				<tal:block define="category_id info_category/property_id">
-					<dt tal:content="info_category/label"/>
-					<dd tal:condition="category_id"
-						tal:repeat="property_value python:here.get_property_values(category_id)"
-					i18n:translate="" tal:content="property_value"/>
-				</tal:block>
-			</dl>
-		</tal:block>
-
-		<h2 i18n:translate="">Organisation</h2>
-		<dl>
-			<dt i18n:translate="">Name</dt>
-			<dd tal:content="here/organisation"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">City</dt>
-			<dd tal:content="here/city"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">Country</dt>
-			<dd tal:content="here/country"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">Email</dt>
-			<dd tal:content="here/email"/>
-		</dl>
-		<h2 i18n:translate="">Overview</h2>
 		<div tal:content="structure here/description"/>
+
+		<h2 i18n:translate="">Details</h2>
+
+		<div class="details">
+		<tal:block define="folder_categories here/folder_categories">
+			<tal:block repeat="info_category folder_categories">
+				<tal:block define="category_id info_category/property_id;
+									property_values python:here.get_property_values(category_id)">
+				<div tal:condition="property_values">
+					<span class="label" i18n:translate="" tal:content="info_category/label" />:
+					<tal:block repeat="property_value property_values">
+						<span i18n:translate="" tal:content="property_value"/>, 
+					</tal:block>
+				</div>
+				</tal:block>
+			</tal:block>
+		</tal:block>
+
+		<tal:block define="folder_extra_properties here/folder_extra_properties">
+			<tal:block repeat="info_category folder_extra_properties">
+				<tal:block define="category_id info_category/property_id;
+									property_values python:here.get_property_values(category_id)">
+				<div tal:condition="property_values">
+					<span class="label" i18n:translate="" tal:content="info_category/label" />:
+					<tal:block repeat="property_value property_values" >
+						<span i18n:translate="" tal:content="property_value"/>, 
+					</tal:block>
+				</div>
+				</tal:block>
+			</tal:block>
+		</tal:block>
+		</div>
+
+		<div class="details">
+			<div>
+				<span class="label" i18n:translate="">Organisation name</span>:
+				<span tal:content="here/organisation"/>
+			</div>
+			<div>
+				<span class="label" i18n:translate="">City</span>:
+				<span tal:content="here/city"/>
+			</div>
+			<div>
+				<span class="label" i18n:translate="">Email</span>:
+				<span tal:content="here/email"/>
+			</div>
+		</div>
+
+		<br style="clear:both">
 		<h2 i18n:translate="">Submitted by</h2>
-		<dl>
-			<dt i18n:translate="">First name</dt>
-			<dd tal:content="here/contributor_first_name"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">Last Name</dt>
-			<dd tal:content="here/contributor_first_name"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">Email</dt>
-			<dd tal:content="here/contributor_email"/>
-		</dl>
-		<dl>
-			<dt i18n:translate="">Telephone</dt>
-			<dd tal:content="here/contributor_telephone"/>
-		</dl>
+		<div class="details">
+			<div>
+				<span class="label" i18n:translate="">Contributor name</span>:
+				<span tal:content="here/contributor_last_name"/> <span tal:content="here/contributor_first_name"/>
+			</div>
+			<div>
+				<span class="label" i18n:translate="">Email</span>:
+				<span tal:content="here/contributor_email"/>
+			</div>
+			<div>
+				<span class="label" i18n:translate="">Telephone</span>:
+				<span tal:content="here/contributor_telephone"/>
+			</div>
+		</div>
+
 		<tal:block content="structure here/set_content_rating" />
 
 		<tal:block content="structure here/comments_box" />
 	</div>
-	<div class="boxes-right"
-				tal:condition="python:here.has_coordinates()">
+	<div class="boxes-right" tal:condition="python:here.has_coordinates()">
 		<!-- Map widget -->
 		<div class="minimap">
 			<tal:block content="structure here/minimap" />
