@@ -922,6 +922,8 @@ class utils:
             sz = sz + float(o.get_size())
             timetuple = time.localtime()[:6]
             filename = name + '/' + self.utToUtf8(o.id)
+            if isinstance(filename, unicode):
+                filename = filename.encode('utf-8')
             zfi = ZipInfo(filename)
             zfi.date_time = timetuple
             zfi.compress_type = ZIP_DEFLATED
@@ -1247,7 +1249,10 @@ class vcard_file:
         self.data = data
 
     def getZipData(self):
-        return self.data
+        if isinstance(self.data, unicode):
+            return self.data.deocde('utf-8')
+        else:
+            return self.data
 
     def get_size(self):
         return len(self.data)
