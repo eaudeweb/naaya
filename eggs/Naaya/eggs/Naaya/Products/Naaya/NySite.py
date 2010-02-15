@@ -3442,12 +3442,20 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
-    def export_contacts_vcard(self, REQUEST=None):
+    def export_contacts_vcard(self, location='', REQUEST=None):
         """ Exports all portal contacts in vCard format contained in a zip file """
-        contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'])
+        if not location or location == '/':
+            loc_obj = self
+        else:
+            loc_obj = self.unrestrictedTraverse(location)
+        contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'], path=location)
         files = [vcard_file(contact.id, contact.export_vcard()) for contact in contacts]
         if REQUEST:
-            return self.utGenerateZip('%s-contacts.zip' % self.id, files, self.REQUEST.RESPONSE)
+            if not contacts:
+                self.setSessionInfo(['No contacts found in the selected location.'])
+                return REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=vcard' % self.absolute_url())
+            return self.utGenerateZip('%s-contacts.zip' % loc_obj.title_or_id(),
+                                      files, self.REQUEST.RESPONSE)
         else: return files
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_vcard')
