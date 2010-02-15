@@ -1,13 +1,26 @@
 .boxes-right 
 {
  float: right;
- width: 25%;
+ width: 24%;
+ padding-right: 1%;
 }
 
-.main-content 
+.main_content 
 {
  float: left;
  width: 75%;
+}
+
+.column-left
+{
+	float: left;
+	width:30em;
+	width:
+}
+
+.column-right
+{
+	margin-left:31em;
 }
 
 .select{
@@ -51,3 +64,33 @@ ul.infofolder li{
 	font-weight: bold;
 	font-size: 1.2em;
 }
+.url:visited {
+	color:#008000;
+	text-decoration:underline;
+}
+.url {
+	color:#0000CC;
+	text-decoration:underline !important;
+}
+.categories {
+	float: left; 
+	margin-right: 1em; 
+	width: 48%; 
+	line-height: 1.3em;
+}
+
+.details {
+	float: left; 
+	width: 48%; 
+	line-height: 2em;
+}
+
+.details h2 {
+	line-height: 1.3em
+}
+
+.label{
+	font-weight: bold;
+	white-space:nowrap;
+}
+
