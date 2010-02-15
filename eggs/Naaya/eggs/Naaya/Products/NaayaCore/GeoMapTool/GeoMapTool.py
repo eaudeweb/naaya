@@ -325,7 +325,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             approved=True,
             landscape_type=[], administrative_level=[],
             lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            query='', languages=None, first_letter=None):
+            query='', country='', languages=None, first_letter=None):
         base_filter = {}
 
         base_filter['path'] = path
@@ -346,6 +346,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if administrative_level:
             base_filter['administrative_level'] = administrative_level
+
+        if country:
+            base_filter['coverage'] = country
 
         base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)), Decimal(str(lat_max))),
                                         'range':'min:max'}
@@ -560,7 +563,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def search_geo_clusters(self, meta_types=None,
             lat_min=None, lat_max=None, lon_min=None, lon_max=None,
             path='', geo_types=None, query='', approved=True,
-            landscape_type=[], administrative_level=[], languages=None):
+            landscape_type=[], administrative_level=[], country='', languages=None):
         """ Returns all the clusters that match the specified criteria. """
         if lat_min is None or lat_min == '': lat_min = -90.
         if lat_max is None or lat_max == '': lat_max = 90.
@@ -574,7 +577,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-                query=query, languages=languages)
+                query=query, country=country, languages=languages)
 
             cluster_obs, single_obs = self._search_geo_clusters(filters)
 
@@ -583,7 +586,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=180.,
-                query=query, languages=languages)
+                query=query, country=country, languages=languages)
 
             cluster_obs_1, single_obs_1 = self._search_geo_clusters(filters1)
 
@@ -591,7 +594,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_max,
-                query=query, languages=languages)
+                query=query, country=country, languages=languages)
 
             cluster_obs_2, single_obs_2 = self._search_geo_clusters(filters2)
 
@@ -669,12 +672,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'xrjs_getGeoClusters')
     def xrjs_getGeoClusters(self, REQUEST, path='', geo_types=None, geo_query=None,
             zoom_level=0, lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            lat_center=0., lon_center=0.):
+            lat_center=0., lon_center=0., landscape_type=[], administrative_level=[], country=''):
         """ """
         r = []
+
         cluster_obs, single_obs = self.search_geo_clusters(
             path=path, geo_types=geo_types, query=geo_query,
-            lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max)
+            lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
+            landscape_type=landscape_type, administrative_level=administrative_level, country=country)
 
         for res in cluster_obs:
             r.append('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res[0].lat),
