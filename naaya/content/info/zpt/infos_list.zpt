@@ -36,7 +36,7 @@
 </div>
 
 <tal:block define="results python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
-	<div class="main-content" tal:condition="results" tal:repeat="ob results">
+	<div class="main_content" tal:condition="results" tal:repeat="ob results">
 		<div tal:condition="ob/picture" class="picture">
 			<img tal:attributes="src string:${ob/absolute_url}/render_picture"
 			alt="Expert picture" width="80" i18n:attributes="alt"/>
@@ -52,7 +52,7 @@
 		<br clear="left"/>
 		<hr/>
 	</div>
-	<div class="main-content" tal:condition="not:results" i18n:translate="">
+	<div class="main_content" tal:condition="not:results" i18n:translate="">
 		No experts found for this query.
 	</div>
 </tal:block>
