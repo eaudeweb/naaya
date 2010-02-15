@@ -1,25 +1,26 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 	<metal:block fill-slot="body">
 
-		<h1>
-			<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-				title here/get_meta_label;
-				alt here/get_meta_label" />
-				<span tal:replace="here/title" />
-				<span class="available_langs"
-					tal:condition="python:here.check_item_title(here, here.title)">
-					<span i18n:translate="">Item only translated in </span>
-					<span tal:repeat="lang here/gl_get_languages_map">
-						<a tal:content="python:' %s' % lang['title']"
-						tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-						tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+		<div id="center_content" style="width: 78%; overflow-x: auto;">
+
+			<h1>
+				<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+					title here/get_meta_label;
+					alt here/get_meta_label" />
+					<span tal:replace="here/title" />
+					<span class="available_langs"
+						tal:condition="python:here.check_item_title(here, here.title)">
+						<span i18n:translate="">Item only translated in </span>
+						<span tal:repeat="lang here/gl_get_languages_map">
+							<a tal:content="python:' %s' % lang['title']"
+							tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+							tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+						</span>
 					</span>
-				</span>
-		</h1>
+			</h1>
 
-		<tal:block replace="structure here/folder_menusubmissions"/>
+			<tal:block replace="structure here/folder_menusubmissions"/>
 
-		<div class="main-content">
 			<tal:block content="structure here/description"/>
 			<tal:block tal:define="widgets here/splitFolderCategories">
 				<div style="float:left;">
@@ -65,15 +66,22 @@
 					</div>
 			</tal:block>
 		</div>
-		<div class="boxes-right" tal:condition="here/latest_uploads">
-			<fieldset>
-				<legend i18n:translate="">Latest uploads</legend>
-				<div tal:repeat="info here/latest_uploads">
-					<tal:block replace="python:info[2]"/><br/>
-					<a tal:attributes="href python:info[0]" tal:content="python:info[1]"/><br/>
-					---
+		<div id="right_port" tal:condition="here/latest_uploads">
+			<div class="right_portlet">
+				<div class="right_portlet_title" i18n:translate="">
+					<span>Latest uploads</span>
 				</div>
-			</fieldset>
+				<div class="right_portlet_content">
+					<ul>
+						<tal:block repeat="info here/latest_uploads">
+						<li>
+							<a tal:attributes="href python:info[0]" tal:content="python:info[1]"/>
+							<span class="postedon" i18n:translate="">[posted on: <span i18n:name="date" tal:replace="python:info[2]" />]</span>
+						</li>
+						</tal:block>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</metal:block>
 </metal:block>
