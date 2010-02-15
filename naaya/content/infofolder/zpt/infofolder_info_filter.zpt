@@ -27,7 +27,7 @@
 				<a tal:attributes="href item/absolute_url;
 									title python:here.splitTextByWords(here.utStripAllHtmlTags(item.description), 20)" 
 					tal:content="item/title"/>
-					<tal:block condition="item/organisation">(<span tal:replace="item/organisation" />)</tal:block>
+					<tal:block condition="item/organisation_name">(<span tal:replace="item/organisation_name" />)</tal:block>
 			</li>
 		</ul>
 

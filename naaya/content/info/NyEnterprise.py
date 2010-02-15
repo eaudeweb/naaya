@@ -130,8 +130,8 @@ def addNyEnterprise(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_object(self, id, _title, contributor)
     ob.last_modification = time.localtime()
 
-    _city = schema_raw_data.get('city', None)
-    _country = schema_raw_data.get('country', None)
+    _city = schema_raw_data.get('organisation_city', None)
+    _country = schema_raw_data.get('organisation_country', None)
     if _city or _country:
         #remove the empty geo_location string (default when the geo_location widget is hidden)
         if schema_raw_data.get('geo_location', None) == '':
