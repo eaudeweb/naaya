@@ -691,9 +691,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE], sort_on='id', sort_order='', path=path)
 
-    def get_all_elements(self):
+    def get_all_elements(self, sort_on='id'):
         """ return sorted objects by name """
-        return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], sort_on='id', sort_order='')
+        return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], sort_on=sort_on, sort_order='')
 
     def xliff_import(self, file, REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
