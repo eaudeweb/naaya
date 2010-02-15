@@ -8,58 +8,38 @@
 
 <metal:block metal:fill-slot="body" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
-	<style type="text/css">
-		.url:visited {
-			color:#008000;
-			text-decoration:underline;
-		}
-		.url {
-			color:#0000CC;
-			text-decoration:underline !important;
-		}
-		.details {
-			float: left; 
-			margin-right: 1em; 
-			width: 48%; 
-			line-height:1.3em;
-		}
-
-		.details .label{
-			font-weight: bold;
-			white-space:nowrap;
-		}
-	</style>
-
-	<div>
-	<tal:block tal:condition="python:here.checkPermissionEditObject()">
-		<br clear="all"/>
-		<div id="admin_this_folder">
-			<tal:block tal:condition="python: not here.hasVersion()">
-				<a tal:attributes="href string:${here/absolute_url}/edit_html">
-					<span i18n:translate="">Edit</span>
-				</a>
-			</tal:block>
-		</div>
-	</tal:block>
-	</div>
-	<div class="main-content">
+	<div class="main_content">
 		<h1 tal:content="here/title"/>
+		<div>
+		<tal:block tal:condition="python:here.checkPermissionEditObject()">
+			<div id="admin_this_folder">
+				<tal:block tal:condition="python: not here.hasVersion()">
+					<a tal:attributes="href string:${here/absolute_url}/edit_html">
+						<span i18n:translate="">Edit</span>
+					</a>
+				</tal:block>
+			</div>
+			<br clear="all"/>
+		</tal:block>
+		</div>
 		<a class="url" tal:attributes="href here/website" tal:content="here/website" tal:condition="here/website" />
-
+		<br/>
+		<br/>
 		<div tal:content="structure here/description"/>
 
+		<div class="categories">
 		<h2 i18n:translate="">Details</h2>
-
-		<div class="details">
 		<tal:block define="folder_categories here/folder_categories">
 			<tal:block repeat="info_category folder_categories">
 				<tal:block define="category_id info_category/property_id;
 									property_values python:here.get_property_values(category_id)">
 				<div tal:condition="property_values">
 					<span class="label" i18n:translate="" tal:content="info_category/label" />:
+					<ul>
 					<tal:block repeat="property_value property_values">
-						<span i18n:translate="" tal:content="property_value"/>, 
+						<li i18n:translate="" tal:content="property_value"/>
 					</tal:block>
+					</ul>
 				</div>
 				</tal:block>
 			</tal:block>
@@ -81,6 +61,7 @@
 		</div>
 
 		<div class="details">
+		<h2 i18n:translate="">Contact</h2>
 			<div>
 				<span class="label" i18n:translate="">Organisation name</span>:
 				<span tal:content="here/organisation"/>
@@ -95,25 +76,25 @@
 			</div>
 		</div>
 
-		<br style="clear:both">
-		<h2 i18n:translate="">Submitted by</h2>
 		<div class="details">
-			<div>
+		<h2 i18n:translate="">Submitted by</h2>
+		<div tal:condition="python:here.contributor_last_name or here.contributor_first_name">
 				<span class="label" i18n:translate="">Contributor name</span>:
 				<span tal:content="here/contributor_last_name"/> <span tal:content="here/contributor_first_name"/>
 			</div>
-			<div>
+			<div tal:condition="here/contributor_email">
 				<span class="label" i18n:translate="">Email</span>:
 				<span tal:content="here/contributor_email"/>
 			</div>
-			<div>
+			<div tal:condition="here/contributor_telephone">
 				<span class="label" i18n:translate="">Telephone</span>:
 				<span tal:content="here/contributor_telephone"/>
 			</div>
 		</div>
 
+		<br style="clear:both">
 		<tal:block content="structure here/set_content_rating" />
-
+		<br style="clear:both">
 		<tal:block content="structure here/comments_box" />
 	</div>
 	<div class="boxes-right" tal:condition="python:here.has_coordinates()">
