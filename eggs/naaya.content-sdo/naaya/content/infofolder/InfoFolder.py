@@ -276,10 +276,11 @@ class NyInfoFolder(NyFolder):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    #site pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        l_index = self._getOb('index', None)
+        if l_index is not None: return l_index()
         return self.getFormsTool().getContent({'here': self}, 'infofolder_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
@@ -320,7 +321,7 @@ class NyInfoFolder(NyFolder):
         ob_list = []
         if not (category and category_item): return []
         for ob in self.objectValues():
-            if category_item in self.utConvertToList(getattr(ob,category)):
+            if category_item in self.utConvertToList(getattr(ob,category, '')):
                 ob_list.append(ob)
         return self.utSortObjsListByAttr(ob_list, 'id', p_desc=0)
 
@@ -353,13 +354,6 @@ class NyInfoFolder(NyFolder):
         in the InfoFolder
         """
         return [skel.INFO_TYPES[self.info_type]['meta_type']]
-
-    security.declarePublic('getProductsMetaTypes')
-    def getProductsMetaTypes(self):
-        """
-        overwrites the global getProductsMetaTypes function
-        """
-        return []
 
     def set_categories(self):
         schema = deepcopy(getattr(self, '%s_schema' % self.info_type))
@@ -395,7 +389,7 @@ class NyInfoFolder(NyFolder):
 
     security.declarePublic('latest_uploads')
     def latest_uploads(self, howmany=5):
-        objects_list = self.getCatalogTool()(path=self.absolute_url(1), sort_on='releasedate', sort_order='reverse')
+        objects_list = self.getCatalogTool()(meta_type = self.get_meta_types(), path=self.absolute_url(1), sort_on='bobobase_modification_time', sort_order='reverse')
         return objects_list[:howmany]
 
     def getPropertyValue(self, id, lang=None):
@@ -408,7 +402,7 @@ class NyInfoFolder(NyFolder):
         """ folder search """
         results = []
         query = REQUEST.get('query', '')
-        meta_type = self.searchable_content
+        meta_type = self.get_meta_types()
         if query:
             results = []
             results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=self.absolute_url(1)))
