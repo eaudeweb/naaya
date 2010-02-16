@@ -35,8 +35,9 @@
 							<tal:block define="item_id item/id; item_title item/title;
 								has_items python:here.getInfosByCategoryId(property_id, item_id)">
 								<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
-									tal:content="item_title" tal:condition="has_items"/>
+									tal:condition="has_items" i18n:translate="" tal:content="item_title" />
 								<span tal:condition="not:has_items" tal:content="item_title"/>
+								(<span tal:replace="python:len(has_items)" />)
 							</tal:block>
 						</li>
 					</ul>
@@ -55,8 +56,9 @@
 							<tal:block define="item_id item/id; item_title item/title;
 								has_items python:here.getInfosByCategoryId(property_id, item_id)">
 								<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
-									tal:content="item_title" tal:condition="has_items"/>
+									tal:content="item_title" i18n:translate="" tal:condition="has_items"/>
 								<span tal:condition="not:has_items" tal:content="item_title"/>
+								(<span tal:replace="python:len(has_items)" />)
 							</tal:block>
 						</li>
 					</ul>
