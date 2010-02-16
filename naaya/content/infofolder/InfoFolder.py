@@ -288,7 +288,9 @@ class NyInfoFolder(NyFolder):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'infofolder_edit')
 
-    def getCategoryList(self, ref_list_id):
+    def getCategoryList(self, property_id):
+        items_schema = getattr(self, '%s_schema' % self.info_type)
+        ref_list_id = items_schema[property_id]['list_id']
         ptool = self.getPortletsTool()
         category_list = getattr(ptool, ref_list_id, None)
         if category_list:
@@ -485,16 +487,22 @@ class NyInfoFolder(NyFolder):
             self._rename_concatenate_keys(ob, 'contact_person',
                 ['contributor_first_name', 'contributor_last_name'], spacer=' ')
             self._rename_concatenate_keys(ob, 'contact_email', ['contributor_email'])
-            self._rename_concatenate_keys(ob, 'contact_phone',
-                ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
+            contributor_tel_local = ob['contributor_tel_local'].replace(' ', '')
+            if contributor_tel_local:
+                self._rename_concatenate_keys(ob, 'contact_phone',
+                    ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'],
+                    spacer='-')
 
             #approved as is
             #approved_by as is
 
         else:
             self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
-            self._rename_concatenate_keys(ob, 'contributor_telephone',
-                ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'])
+            contributor_tel_local = ob['contributor_tel_local'].replace(' ', '')
+            if contributor_tel_local:
+                self._rename_concatenate_keys(ob, 'contributor_telephone',
+                    ['contributor_tel_country', 'contributor_tel_area', 'contributor_tel_local'],
+                    spacer='-')
             sdo_ref_lists = [ref_list['list_id_sdo'] for ref_list in LISTS if ref_list['list_id'] != 'countries']
             for k, v in ob.items():
                 if k in sdo_ref_lists:
@@ -506,8 +514,9 @@ class NyInfoFolder(NyFolder):
             ob[new_key] = ''
             for old_key in old_keys_list:
                 if len(old_keys_list)>1:
-                    if ob[new_key]:
-                        ob[new_key] = '%s%s%s' % (ob[new_key], spacer, ob[old_key])
+                    if ob[new_key].replace(' ', ''):
+                        if ob[old_key].replace(' ', ''):
+                            ob[new_key] = '%s%s%s' % (ob[new_key], spacer, ob[old_key])
                     else:
                         ob[new_key] = ob[old_key]
                 else:

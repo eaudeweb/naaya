@@ -32,7 +32,7 @@
 		<br/>
 		<div tal:content="structure here/description"/>
 
-		<div class="categories">
+		<div class="categories" tal:condition="here/has_properties">
 		<h2 i18n:translate="">Details</h2>
 		<tal:block define="folder_categories here/folder_categories">
 			<tal:block repeat="info_category folder_categories">

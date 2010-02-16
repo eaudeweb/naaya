@@ -5,9 +5,8 @@
 <tal:block metal:fill-slot="portlet_content">
 	<div tal:define="widgets here/folder_categories">
 		<tal:block repeat="category_widget widgets">
-		<ul tal:define="category_id category_widget/list_id|category_widget/property_id;
-							property_id category_widget/property_id;
-							category python:here.getCategoryList(category_id);">
+		<ul tal:define="property_id category_widget/property_id;
+							category python:here.getCategoryList(property_id);">
 			<tal:block repeat="item python:category[1]">
 			<tal:block define="item_id item/id; item_title item/title;
 					has_items python:here.getInfosByCategoryId(property_id, item_id)">
