@@ -9,7 +9,7 @@
         </div>
     </div>
     <div id="workarea" tal:define="username python:request.AUTHENTICATED_USER.getUserName()" metal:fill-slot="div-workarea">
-        <tal:block tal:define="data here/application_data;
+        <tal:block tal:define="data here/get_application_data;
                                created_url here/created_url;
                                pending python:not here.approved and not here.rejected;
                                deleted python:here.approved and not created_url">

@@ -124,7 +124,7 @@ class GWApplication(SimpleItem):
             return
 
     def get_application_data(self):
-        for key, value in self.application_data:
+        for key, value in self.application_data.items():
             self.application_data[key] = make_unicode(value)
         return self.application_data
 
