@@ -9,6 +9,7 @@
 		initialize=".initialize"/>
 
 	<adapter factory="naaya.content.infofolder.portlets.InfoFolderPortlet" name="latest_uploads_portlet" />
+	<adapter factory="naaya.content.infofolder.portlets.InfoFolderSearchPortlet" name="infofolder_search_portlet" />
 </configure>
 
 

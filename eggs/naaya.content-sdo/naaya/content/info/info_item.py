@@ -119,6 +119,13 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
+    security.declarePrivate('objectkeywords')
+    def objectkeywords(self, lang):
+        return u' '.join([self._objectkeywords(lang), 
+                        self.getLocalProperty('organisation_name', lang), 
+                        self.getLocalProperty('organisation_city', lang),
+                        self.getLocalProperty('organisation_country', lang),])
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/info_manage_edit', globals())
