@@ -4,6 +4,11 @@
 </metal:block>
 
 <metal:block metal:fill-slot="head">
+<style type="text/css">
+	#container {
+		background:url("dot-bg.gif") repeat-y scroll 74% 50% transparent !important;
+	}
+</style>
 </metal:block>
 
 <metal:block metal:fill-slot="body" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
