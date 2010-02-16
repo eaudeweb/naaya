@@ -5,8 +5,8 @@
 </metal:block>
 
 <metal:block metal:fill-slot="body" tal:define="is_member python:here.get_user_access() in ['member', 'admin'];
-												userlist options/user_list|nothing;
-												search_string request/form/search_string|nothing;">
+						userlist options/user_list|nothing;
+						search_string request/form/search_string|nothing;">
 	<h1 i18n:translate="">Interest Group Directory search</h1>
 	<p i18n:translate="">
 	Use this form to search members in this Interest Group</p>
@@ -53,7 +53,7 @@
 		<input type="submit" value="Details"/>
 	</form>
 	</tal:block>
-	<tal:block tal:condition="not:options/user_list|nothing">
+	<tal:block tal:condition="python:search_string and not userlist">
 		<p>
 			<strong i18n:translate="">No users found matching your query.</strong>
 		</p>
