@@ -1,6 +1,8 @@
 <tal:block metal:use-macro="options/macro">
 
-<tal:block metal:fill-slot="portlet_title" i18n:translate="">Latest uploads</tal:block>
+<tal:block metal:fill-slot="portlet_title" i18n:translate="">
+	<span i18n:name="folder_title" i18n:translate="" tal:replace="here/title" /> latest uploads
+</tal:block>
 
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
