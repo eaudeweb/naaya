@@ -10,6 +10,14 @@ from datetime import datetime
 approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt', globals())
 rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt', globals())
 
+def make_unicode(s):
+    if isinstance(s, unicode):
+        return s
+    try:
+        return s.decode('utf-8')
+    except:
+        return s.decode('latin-1')
+
 class IGWApplication(Interface):
     """Interface for the GWApplication class
     """
@@ -114,6 +122,11 @@ class GWApplication(SimpleItem):
             return self.approved_on[-1]
         except IndexError:
             return
+
+    def get_application_data(self):
+        for key, value in self.application_data:
+            self.application_data[key] = make_unicode(value)
+        return self.application_data
 
     @property
     def pretty_date(self):
