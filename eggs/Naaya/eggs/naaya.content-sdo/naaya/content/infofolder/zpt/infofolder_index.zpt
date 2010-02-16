@@ -39,9 +39,8 @@
 		<div style="float:left;">
 			<div class="column-left" tal:define="left_widgets python:widgets[0]">
 				<tal:block repeat="category_widget left_widgets">
-					<tal:block define="category_id category_widget/list_id|category_widget/property_id;
-										property_id category_widget/property_id;
-										category python:here.getCategoryList(category_id);">
+					<tal:block define="property_id category_widget/property_id;
+										category python:here.getCategoryList(property_id);">
 					<h4 tal:content="python:category[0]"/>
 					<ul class="listing">
 						<li tal:repeat="item python:category[1]">
@@ -60,9 +59,8 @@
 
 			<div class="column-right" tal:define="right_widgets python:widgets[1]">
 				<tal:block repeat="category_widget right_widgets">
-					<tal:block define="category_id category_widget/list_id|category_widget/property_id;
-										property_id category_widget/property_id;
-										category python:here.getCategoryList(category_id);">
+					<tal:block define="property_id category_widget/property_id;
+										category python:here.getCategoryList(property_id);">
 					<h4 tal:content="python:category[0]"/>
 					<ul class="listing">
 						<li tal:repeat="item python:category[1]">
