@@ -1,13 +1,16 @@
 <metal:block metal:use-macro="here/standard_template_macro">
-	<metal:block fill-slot="body">
+<metal:block metal:fill-slot="head">
+	<style type="text/css">
+		.listing {
+			line-height:1.7em; 
+			list-style-type: none;
+			padding: 1em;
+		}
+	</style>
+</metal:block>
 
-		<style type="text/css">
-			.listing {
-				line-height:1.7em; 
-				list-style-type: none;
-				padding: 1em;
-			}
-		</style>
+<metal:block fill-slot="body">
+
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<tal:block define="
 					global category python:request.get('category', '');
