@@ -81,28 +81,28 @@
 		</tal:block>
 		</div>
 
-		<div class="details">
+		<div class="details" tal:condition="here/has_organisation_details">
 		<h2 i18n:translate="">Contact</h2>
-			<div>
+			<div tal:condition="here/organisation_name">
 				<span class="highlabel" i18n:translate="">Organisation name</span>:
 				<span tal:content="here/organisation_name"/>
 			</div>
-			<div>
+			<div tal:condition="here/organisation_city">
 				<span class="highlabel" i18n:translate="">City</span>:
 				<span tal:content="here/organisation_city"/>
 			</div>
-			<div>
+			<div tal:condition="here/organisation_country">
 				<span class="highlabel" i18n:translate="">Country</span>:
 				<span tal:content="here/organisation_country"/>
 			</div>
-			<div>
+			<div tal:condition="here/organisation_email">
 				<span class="highlabel" i18n:translate="">Email</span>:
 				<span tal:content="here/organisation_email"/>
 			</div>
 		</div>
 
-		<div class="details">
-		<h2 i18n:translate="">Submitted by</h2>
+		<div class="details" tal:condition="here/has_contributor">
+		<h2 i18n:translate="">Contributor details</h2>
 		<div tal:condition="python:here.contributor_last_name or here.contributor_first_name">
 				<span class="highlabel" i18n:translate="">Contributor name</span>:
 				<span tal:content="here/contributor_last_name"/> <span tal:content="here/contributor_first_name"/>

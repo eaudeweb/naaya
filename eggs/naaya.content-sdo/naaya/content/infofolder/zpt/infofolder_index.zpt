@@ -72,25 +72,5 @@
 	</tal:block>
 </div>
 
-<!--
-		<div id="right_port" tal:condition="here/latest_uploads">
-			<div class="right_portlet">
-				<div class="right_portlet_title" i18n:translate="">
-					<span>Latest uploads</span>
-				</div>
-				<div class="right_portlet_content">
-					<ul>
-						<tal:block repeat="info python:here.latest_uploads(request)">
-						<li>
-							<a tal:attributes="href info/id" tal:content="info/title"/>
-							<span class="postedon" i18n:translate="">[posted on: <span i18n:name="date" tal:replace="python:here.utShowDateTime(info.releasedate)" />]</span>
-						</li>
-						</tal:block>
-					</ul>
-				</div>
-			</div>
-		</div>
--->
-
 </metal:block>
 </metal:block>

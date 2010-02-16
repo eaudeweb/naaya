@@ -103,6 +103,7 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
     def manage_options(self):
         """ """
         l_options = ()
+        l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += info_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
@@ -117,6 +118,10 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
+
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_edit_html')
+    manage_edit_html = PageTemplateFile('zpt/info_manage_edit', globals())
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -147,7 +152,7 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(PERMISSION_EDIT_INFO, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
@@ -269,6 +274,20 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         """ check if the current object has map coordinates"""
         if self.geo_location:
             return self.geo_location.lat and self.geo_location.lon
+        return False
+
+    def has_organisation_details(self):
+        """ check if the current object has any contact details"""
+        if self.organisation_name or self.organisation_city or\
+            self.organisation_country or self.organisation_email:
+            return True
+        return False
+
+    def has_contributor(self):
+        """ check if the current object has any contributor details"""
+        if self.contributor_first_name or self.contributor_last_name or\
+            self.contributor_email or self.contributor_telephone:
+            return True
         return False
 
 InitializeClass(NyInfo)
