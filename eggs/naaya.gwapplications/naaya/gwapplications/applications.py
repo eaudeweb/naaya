@@ -5,10 +5,10 @@ from Products.Five.browser import BrowserView
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.EmailTool.EmailTool import EmailTool
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from application_item import make_unicode
 
 
 new_application_mail = EmailPageTemplateFile('emailpt/new_application.zpt', globals())
-
 
 class IGWApplications(Interface):
     """Interface for the GWApplications class
@@ -43,7 +43,9 @@ class GWApplications(Folder):
     def get_user_name(self, uid):
         user = self.get_user(uid)
         if user:
-            return user.get('cn', '')
+            user_name = user.get('cn', '')
+            return make_unicode(user_name)
+
 
     def get_user_email(self, uid):
         user = self.get_user(uid)
@@ -51,13 +53,6 @@ class GWApplications(Folder):
             return user.get('mail', '')
 
     def send_new_application_mail(self, app):
-        def make_unicode(s):
-            if isinstance(s, unicode):
-                return s
-            try:
-                return s.decode('utf-8')
-            except:
-                return s.decode('latin-1')
         data = {
             'username': make_unicode(app.application_data.get('username', '')),
             'userid': app.userid,
@@ -91,8 +86,8 @@ class GWApplicationsAddApplicationView(BrowserView):
         title = kwargs.get('site_title', '')
         id = '%s-%s' % (genObjectId(title), genRandomId())
         userid = self.request.AUTHENTICATED_USER.getUserName()
-        kwargs['username'] =  self.context.get_user_name(userid)
-        kwargs['useremail'] =  self.context.get_user_email(userid)
+        kwargs['username'] = self.context.get_user_name(userid)
+        kwargs['useremail'] = self.context.get_user_email(userid)
         obj = GWApplication(id, title, userid, **kwargs)
         self.context._setObject(id, obj)
         self.context.send_new_application_mail(self.context._getOb(id))
