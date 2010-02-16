@@ -1,11 +1,14 @@
-<configure
-  xmlns:naaya="http://namespaces.zope.org/naaya"
-  xmlns:five="http://namespaces.zope.org/five"
-  i18n_domain="naaya.content">
+<configure xmlns="http://namespaces.zope.org/zope"
+	xmlns:naaya="http://namespaces.zope.org/naaya"
+	xmlns:five="http://namespaces.zope.org/five"
+	i18n_domain="naaya.content">
 
-  <naaya:content factory=".InfoFolder.get_config" />
-  <five:registerPackage
-    package="."
-    initialize=".initialize"
-    />
+	<naaya:content factory=".InfoFolder.get_config" />
+	<five:registerPackage
+		package="."
+		initialize=".initialize"/>
+
+	<adapter factory="naaya.content.infofolder.portlets.InfoFolderPortlet" name="latest_uploads_portlet" />
 </configure>
+
+

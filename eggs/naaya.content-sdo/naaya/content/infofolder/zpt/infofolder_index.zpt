@@ -1,71 +1,78 @@
 <metal:block metal:use-macro="here/standard_template_macro">
-	<metal:block fill-slot="body">
+<metal:block fill-slot="body">
 
-		<div id="center_content" style="width: 78%; overflow-x: auto;">
+<div id="center_content" style="width: 78%; overflow-x: auto;">
 
-			<h1>
-				<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-					title here/get_meta_label;
-					alt here/get_meta_label" />
-					<span tal:replace="here/title" />
-					<span class="available_langs"
-						tal:condition="python:here.check_item_title(here, here.title)">
-						<span i18n:translate="">Item only translated in </span>
-						<span tal:repeat="lang here/gl_get_languages_map">
-							<a tal:content="python:' %s' % lang['title']"
-							tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-							tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-						</span>
-					</span>
-			</h1>
+	<h1>
+		<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+			title here/get_meta_label;
+			alt here/get_meta_label" />
+			<span tal:replace="here/title" />
+			<span class="available_langs"
+				tal:condition="python:here.check_item_title(here, here.title)">
+				<span i18n:translate="">Item only translated in </span>
+				<span tal:repeat="lang here/gl_get_languages_map">
+					<a tal:content="python:' %s' % lang['title']"
+					tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+				</span>
+			</span>
+	</h1>
 
-			<tal:block replace="structure here/folder_menusubmissions"/>
+	<tal:block replace="structure here/folder_menusubmissions"/>
 
-			<tal:block content="structure here/description"/>
-			<tal:block tal:define="widgets here/splitFolderCategories">
-				<div style="float:left;">
-					<div class="column-left" tal:define="left_widgets python:widgets[0]">
-						<tal:block repeat="category_widget left_widgets">
-							<tal:block define="category_id category_widget/list_id|category_widget/property_id;
-												property_id category_widget/property_id;
-												category python:here.getCategoryList(category_id);">
-							<h4 tal:content="python:category[0]"/>
-							<ul>
-								<li tal:repeat="item python:category[1]">
-									<tal:block define="item_id item/id; item_title item/title;
-										has_items python:here.getInfosByCategoryId(property_id, item_id)">
-										<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
-											tal:content="item_title" tal:condition="has_items"/>
-										<span tal:condition="not:has_items" tal:content="item_title"/>
-									</tal:block>
-								</li>
-							</ul>
+	<tal:block content="structure here/description"/>
+	<tal:block tal:define="widgets here/splitFolderCategories">
+		<div style="float:left;">
+			<div class="column-left" tal:define="left_widgets python:widgets[0]">
+				<tal:block repeat="category_widget left_widgets">
+					<tal:block define="category_id category_widget/list_id|category_widget/property_id;
+										property_id category_widget/property_id;
+										category python:here.getCategoryList(category_id);">
+					<h4 tal:content="python:category[0]"/>
+					<ul>
+						<li tal:repeat="item python:category[1]">
+							<tal:block define="item_id item/id; item_title item/title;
+								has_items python:here.getInfosByCategoryId(property_id, item_id)">
+								<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
+									tal:content="item_title" tal:condition="has_items"/>
+								<span tal:condition="not:has_items" tal:content="item_title"/>
 							</tal:block>
-						</tal:block>
-					</div>
+						</li>
+					</ul>
+					</tal:block>
+				</tal:block>
+			</div>
 
-					<div class="column-right" tal:define="right_widgets python:widgets[1]">
-						<tal:block repeat="category_widget right_widgets">
-							<tal:block define="category_id category_widget/list_id|category_widget/property_id;
-												property_id category_widget/property_id;
-												category python:here.getCategoryList(category_id);">
-							<h4 tal:content="python:category[0]"/>
-							<ul>
-								<li tal:repeat="item python:category[1]">
-									<tal:block define="item_id item/id; item_title item/title;
-										has_items python:here.getInfosByCategoryId(property_id, item_id)">
-										<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
-											tal:content="item_title" tal:condition="has_items"/>
-										<span tal:condition="not:has_items" tal:content="item_title"/>
-									</tal:block>
-								</li>
-							</ul>
+			<div class="column-right" tal:define="right_widgets python:widgets[1]">
+				<tal:block repeat="category_widget right_widgets">
+					<tal:block define="category_id category_widget/list_id|category_widget/property_id;
+										property_id category_widget/property_id;
+										category python:here.getCategoryList(category_id);">
+					<h4 tal:content="python:category[0]"/>
+					<ul>
+						<li tal:repeat="item python:category[1]">
+							<tal:block define="item_id item/id; item_title item/title;
+								has_items python:here.getInfosByCategoryId(property_id, item_id)">
+								<a tal:attributes="href string:${here/absolute_url}/infofolder_info_filter_html?category=${property_id}&category_item=${item_id};"
+									tal:content="item_title" tal:condition="has_items"/>
+								<span tal:condition="not:has_items" tal:content="item_title"/>
 							</tal:block>
-						</tal:block>
-					</div>
-					</div>
-			</tal:block>
+						</li>
+					</ul>
+					</tal:block>
+				</tal:block>
+			</div>
 		</div>
+	</tal:block>
+</div>
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
+		<tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
+
+<!--
 		<div id="right_port" tal:condition="here/latest_uploads">
 			<div class="right_portlet">
 				<div class="right_portlet_title" i18n:translate="">
@@ -73,15 +80,17 @@
 				</div>
 				<div class="right_portlet_content">
 					<ul>
-						<tal:block repeat="info here/latest_uploads">
+						<tal:block repeat="info python:here.latest_uploads(request)">
 						<li>
-							<a tal:attributes="href python:info[0]" tal:content="python:info[1]"/>
-							<span class="postedon" i18n:translate="">[posted on: <span i18n:name="date" tal:replace="python:info[2]" />]</span>
+							<a tal:attributes="href info/id" tal:content="info/title"/>
+							<span class="postedon" i18n:translate="">[posted on: <span i18n:name="date" tal:replace="python:here.utShowDateTime(info.releasedate)" />]</span>
 						</li>
 						</tal:block>
 					</ul>
 				</div>
 			</div>
 		</div>
-	</metal:block>
+-->
+
+</metal:block>
 </metal:block>
