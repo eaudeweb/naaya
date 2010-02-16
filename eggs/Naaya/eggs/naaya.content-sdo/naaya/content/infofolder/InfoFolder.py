@@ -393,17 +393,10 @@ class NyInfoFolder(NyFolder):
         """ """
         return [(k, v['meta_label']) for (k, v) in skel.INFO_TYPES.items()]
 
-    #security.declarePrivate('process_submissions')
-    def latest_uploads(self, item_number=5):
-        if self.info_type == 'events':
-            return None
-        objects_list = self.utSortObjsListByAttr(self.objectValues(), 'releasedate')
-        return [(ob.id, ob.title, self.formatDate(ob.last_modification)) for ob in objects_list[0:item_number]]
-
-    def formatDate(self, sdate, format='%d/%m/%Y'):
-        if sdate:
-            return time.strftime(format, sdate)
-        return None
+    security.declarePublic('latest_uploads')
+    def latest_uploads(self, howmany=10):
+        objects_list = self.getCatalogTool()(path=self.absolute_url(1), sort_on='releasedate', sort_order='reverse')
+        return objects_list[:howmany]
 
     def getPropertyValue(self, id, lang=None):
         """ Returns a property value in the specified language. """
