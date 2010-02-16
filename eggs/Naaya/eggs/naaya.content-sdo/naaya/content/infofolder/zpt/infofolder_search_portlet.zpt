@@ -1,0 +1,12 @@
+<tal:block metal:use-macro="options/macro">
+
+<tal:block metal:fill-slot="portlet_title" i18n:translate="">Search this folder</tal:block>
+
+<tal:block metal:fill-slot="portlet_content">
+	<form action="search" method="get" name="foldersearch">
+		<input type="text" name="query" tal:attributes="value request/query | nothing" />
+		<input type="submit" name="search" value="Search" i18n:attributes="value" />
+	</form>
+</tal:block>
+
+</tal:block>
