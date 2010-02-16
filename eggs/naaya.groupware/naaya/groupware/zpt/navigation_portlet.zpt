@@ -1,0 +1,15 @@
+<div class="left_portlet">
+<div class="left_portlet_title">Navigation</div>
+<div class="left_portlet_content">
+    <tal:block tal:define="site_url here/getSitePath">
+        <ul tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+            <tal:block tal:repeat="item link_list">
+                <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
+                    <a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);
+                                        title item/description"
+                        tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+            </tal:block>
+        </ul>
+    </tal:block>
+</div>
+</div>
