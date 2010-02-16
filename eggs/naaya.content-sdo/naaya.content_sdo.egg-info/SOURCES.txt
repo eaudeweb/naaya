@@ -20,16 +20,16 @@ naaya/content/info/tests/README.txt
 naaya/content/info/tests/__init__.py
 naaya/content/info/www/NyInfo.gif
 naaya/content/info/www/NyInfo_marked.gif
-naaya/content/info/www/info.css
 naaya/content/info/zpt/info_add.zpt
 naaya/content/info/zpt/info_edit.zpt
 naaya/content/info/zpt/info_index.zpt
-naaya/content/info/zpt/infos_list.zpt
 naaya/content/info/zpt/minimap.zpt
 naaya/content/infofolder/InfoFolder.py
 naaya/content/infofolder/__init__.py
 naaya/content/infofolder/configure.zcml
 naaya/content/infofolder/constants.py
+naaya/content/infofolder/paginator.py
+naaya/content/infofolder/portlets.py
 naaya/content/infofolder/skel.py
 naaya/content/infofolder/tests/README.txt
 naaya/content/infofolder/tests/__init__.py
@@ -41,5 +41,4 @@ naaya/content/infofolder/zpt/infofolder_add.zpt
 naaya/content/infofolder/zpt/infofolder_edit.zpt
 naaya/content/infofolder/zpt/infofolder_index.zpt
 naaya/content/infofolder/zpt/infofolder_info_filter.zpt
-naaya/content/infofolder/zpt/infofolders_list.zpt
 naaya/content/infofolder/zpt/minimap.zpt
