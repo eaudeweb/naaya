@@ -97,16 +97,7 @@
                         <div id="language">
                             <span tal:replace="structure here/languages_box"/>
                         </div>
-
-                        <ul id="dropdowns" tal:define="link_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-                            <tal:block tal:repeat="item link_list">
-                                <li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
-                                    <a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url);
-                                                       title item/description"
-                                       tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
-                            </tal:block>
-                        </ul>
-
+                        <tal:block replace="structure here/dropdowns.txt|nothing"/>
                     </div>
                     <div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
                         You are here: <a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home">Groupware home</a> &raquo;

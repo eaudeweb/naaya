@@ -1,0 +1,1 @@
+<configure xmlns="http://namespaces.zope.org/zope">    <adapter factory="naaya.groupware.portlets.NavigationPortlet"             name="portlet_navigation" /></configure>
