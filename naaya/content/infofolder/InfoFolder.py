@@ -391,7 +391,7 @@ class NyInfoFolder(NyFolder):
 
     security.declarePublic('latest_uploads')
     def latest_uploads(self, howmany=5):
-        objects_list = self.getCatalogTool()(meta_type = self.get_meta_types(), path=self.absolute_url(1), sort_on='bobobase_modification_time', sort_order='reverse')
+        objects_list = self.getCatalogTool()(meta_type = self.get_meta_types(), path=self.absolute_url(1), sort_on='bobobase_modification_time', sort_order='reverse', approved=1)
         return objects_list[:howmany]
 
     def getPropertyValue(self, id, lang=None):
@@ -407,7 +407,7 @@ class NyInfoFolder(NyFolder):
         meta_type = self.get_meta_types()
         if query:
             results = []
-            results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=self.absolute_url(1)))
+            results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=self.absolute_url(1), approved=1))
             results = self.utEliminateDuplicatesByURL(results)
             results = [item for item in results if item.can_be_seen()]
 

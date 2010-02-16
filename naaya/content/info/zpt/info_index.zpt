@@ -1,14 +1,21 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 
-<metal:block metal:fill-slot="head">
-<style type="text/css">
-	#container {
-		background:url("dot-bg.gif") repeat-y scroll 74% 50% transparent !important;
-	}
-</style>
+<metal:block fill-slot="head">
+	<tal:block define="description here/description; content python:here.html2text(description)">
+		<meta tal:condition="content" tal:attributes="content content" name="description" />
+	</tal:block>
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+
+	<style type="text/css">
+		#container {
+			background:url("dot-bg.gif") repeat-y scroll 74% 50% transparent !important;
+		}
+	</style>
 </metal:block>
 
 <metal:block metal:fill-slot="body" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
@@ -117,9 +124,9 @@
 			</div>
 		</div>
 
-		<br style="clear:both">
+		<br style="clear:both" />
 		<tal:block content="structure here/set_content_rating" />
-		<br style="clear:both">
+		<br style="clear:both" />
 		<tal:block content="structure here/comments_box" />
 	</div>
 	<div id="right_port" tal:condition="python:here.has_coordinates()">
