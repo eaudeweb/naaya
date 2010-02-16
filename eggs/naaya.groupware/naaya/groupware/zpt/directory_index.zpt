@@ -13,7 +13,7 @@
 	<form action="search_directory" method="get">
 		<label for="search_string" i18n:translate="">
 			Name contains</label>
-		<input type="text" name="search_string" id="search_string" tal:attributes="value search_string"/>
+		<input type="text" name="search_string:utf8:ustring" id="search_string" tal:attributes="value search_string"/>
 		<input type="submit" value="Search"/>
 	</form>
 
@@ -24,7 +24,10 @@
 		users matching your query.
 	</p>
 	<form action="user_details" method="get">
-		<table class="datatable" style="width: 100%">
+		<table class="datatable" style="min-width: 80%;">
+			<col style="width: 2em"/>
+			<col style="min-width: 20em"/>
+			<col style="min-width: 20em"/>
 			<thead>
 				<th></th>
 				<th i18n:translate="">First Name</th>
@@ -49,6 +52,11 @@
 		</table>
 		<input type="submit" value="Details"/>
 	</form>
+	</tal:block>
+	<tal:block tal:condition="not:options/user_list|nothing">
+		<p>
+			<strong i18n:translate="">No users found matching your query.</strong>
+		</p>
 	</tal:block>
 
 </metal:block>

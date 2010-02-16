@@ -11,33 +11,37 @@
 
 	<tal:block condition="userinfo">
 		<table class="datatable">
+			<col style="min-width: 10em;"/>
+			<col style="min-width: 20em;"/>
+			<tbody>
 			<tr>
-				<th>First Name</th>
+				<th scope="row">First Name</th>
 				<td tal:content="userinfo/firstname"></td>
 			</tr>
 			<tr>
-				<th>Last Name</th>
+				<th scope="row">Last Name</th>
 				<td tal:content="userinfo/lastname"></td>
 			</tr>
 			<tr>
-				<th>User ID</th>
+				<th scope="row">User ID</th>
 				<td tal:condition="is_member" tal:content="userinfo/userid"></td>
 				<td tal:condition="not:is_member">N/A</td>
 			</tr>
 			<tr>
-				<th>Email</th>
+				<th scope="row">Email</th>
 				<td tal:condition="is_member" tal:content="userinfo/email"></td>
 				<td tal:condition="not:is_member">N/A</td>
 			</tr>
 			<tr>
-				<th>Organisation</th>
+				<th scope="row">Organisation</th>
 				<td tal:content="userinfo/organisation"></td>
 			</tr>
 			<tr>
-				<th>Postal Address</th>
+				<th scope="row">Postal Address</th>
 				<td tal:condition="is_member" tal:content="userinfo/postal_address"></td>
 				<td tal:condition="not:is_member">N/A</td>
 			</tr>
+			</tbody>
 		</table>
 	</tal:block>
 
