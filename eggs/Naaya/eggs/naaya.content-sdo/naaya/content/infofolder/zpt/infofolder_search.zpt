@@ -2,34 +2,34 @@
 <metal:block fill-slot="body">
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
-
-	<tal:block define="items options/results;
+<tal:block define="items options/results;
 						page request/page | nothing;
 						query request/query | nothing;">
 
-	<h1 i18n:translate="">
-		<span i18n:name="enterprises" i18n:translate="" tal:replace="here/title" /> search results:
-	</h1>
+	<tal:block condition="items/object_list">
+		<h1 i18n:translate="">
+			<span i18n:name="enterprises" i18n:translate="" tal:replace="here/title" /> search results:
+		</h1>
 
-	<div>
-		<table class="datatable" style="width: 100%">
-			<thead>
-				<tr>
-					<th scope="col">Title</th>
-					<th scope="col" nowrap="nowrap">Last updated</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr tal:repeat="item items/object_list">
-					<td>
-						<img tal:attributes="src item/icon; alt item/meta_type" />
-						<a tal:attributes="href item/absolute_url" tal:content="item/title" /><br />
-						<span tal:content="python:here.splitTextByWords(here.utStripAllHtmlTags(item.description), 20)" />
-					<td tal:content="python:here.utShowDateTime(item.releasedate)" />
-				</tr>
-			</tbody>
-		</table>
-	</div>
+		<div>
+			<table class="datatable" style="width: 100%">
+				<thead>
+					<tr>
+						<th scope="col">Title</th>
+						<th scope="col" nowrap="nowrap">Last updated</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr tal:repeat="item items/object_list">
+						<td>
+							<img tal:attributes="src item/icon; alt item/meta_type" />
+							<a tal:attributes="href item/absolute_url" tal:content="item/title" /><br />
+							<span tal:content="python:here.splitTextByWords(here.utStripAllHtmlTags(item.description), 20)" />
+						<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
 		<tal:block tal:define="count items/paginator/count" condition="python:count > 15">
 		<div class="pagination" tal:define="current_page python:int(request.get('page', '1'))">
@@ -78,9 +78,15 @@
 			</span>
 		</div>
 		</tal:block>
+	</tal:block>
+	<tal:block condition="not:items/object_list">
+		<h1 i18n:translate="">
+			<span i18n:name="enterprises" i18n:translate="" tal:replace="here/title" /> search results:
+		</h1>
+		<div i18n:translate="">No items match your query. Please try again.</div>
 
 	</tal:block>
-
+</tal:block>
 </div>
 <div id="right_port">
 	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
