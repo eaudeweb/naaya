@@ -80,3 +80,6 @@ ul.infofolder li{
 .categories span{
 	line-height: 2em;
 }
+.form-errors{
+	color: #FF3300
+}

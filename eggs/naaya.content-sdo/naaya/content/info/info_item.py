@@ -297,6 +297,15 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
             return True
         return False
 
+    def has_properties(self):
+        """ check if the current object has any properties or extra properties"""
+        category_ids = [info_category['property_id'] for info_category in\
+            self.folder_categories+self.folder_extra_properties]
+        for category_id in category_ids:
+            if self.get_property_values(category_id):
+                return True
+        return False
+
 InitializeClass(NyInfo)
 
 def json_encode(ob):
