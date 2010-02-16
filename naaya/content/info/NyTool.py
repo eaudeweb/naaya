@@ -173,6 +173,7 @@ def addNyTool(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
 
+    self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
