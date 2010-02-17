@@ -13,7 +13,7 @@
 
 	<style type="text/css">
 		#container {
-			background:url("dot-bg.gif") repeat-y scroll 74% 50% transparent !important;
+			background: none !important;
 		}
 	</style>
 </metal:block>
