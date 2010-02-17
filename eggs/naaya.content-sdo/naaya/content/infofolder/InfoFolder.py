@@ -124,6 +124,7 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+    _folder_meta_types = schema_raw_data.pop('folder_meta_types', '')
 
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='infofolder')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -143,6 +144,17 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/infofolder_add_html' % self.absolute_url())
             return
+
+    site = self.getSite()
+    #extra settings
+    if _folder_meta_types == '':
+        #inherit allowd meta types from the parent
+        if self.meta_type == site.meta_type:
+            ob.folder_meta_types = self.adt_meta_types
+        else:
+            ob.folder_meta_types = self.folder_meta_types
+    else:
+        ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
 
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -182,12 +194,6 @@ class NyInfoFolder(NyFolder):
     icon = 'misc_/NyInfoFolder.gif'
     icon_marked = 'misc_/NyInfoFolder_marked.gif'
 
-    """def manage_options(self):
-        """ """
-        l_options = ()
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
-        return l_options"""
-
     enterprises_schema = NyEnterprise.DEFAULT_SCHEMA
     networks_schema = NyNetwork.DEFAULT_SCHEMA
     tools_schema = NyTool.DEFAULT_SCHEMA
@@ -197,8 +203,7 @@ class NyInfoFolder(NyFolder):
     def __init__(self, id, contributor):
         """ """
         self.id = id
-        NyCheckControl.__dict__['__init__'](self)
-        NyItem.__dict__['__init__'](self)
+        NyFolder.__dict__['__init__'](self, id, contributor)
         self.contributor = contributor
 
     #zmi actions

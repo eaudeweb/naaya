@@ -1,5 +1,17 @@
 <metal:block metal:use-macro="here/standard_template_macro">
+
+<metal:block metal:fill-slot="title">
+	<title tal:define="category request/category | nothing;
+						category_name python:here.getCategoryList(category)[0];"
+			tal:content="string:${here/title} listing - ${category_name} | ${here/site_title}" />
+</metal:block>
+
 <metal:block metal:fill-slot="head">
+	<tal:block define="description here/description; content python:here.html2text(description)">
+		<meta tal:condition="content" tal:attributes="content content" name="description" />
+	</tal:block>
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
 	<style type="text/css">
 		.listing {
 			line-height:1.7em; 
@@ -13,7 +25,7 @@
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<tal:block define="
-					global category python:request.get('category', '');
+					global category request/category | nothing;
 					global category_item python:request.get('category_item', '');
 					global page python:request.get('page', '');
 					global category_name python:here.getCategoryList(category);

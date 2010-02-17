@@ -196,9 +196,7 @@ class NyNetwork(NyInfo):
     def __init__(self, id, title, contributor):
         """ """
         self.id = id
-        NyValidation.__dict__['__init__'](self)
-        NyCheckControl.__dict__['__init__'](self)
-        NyItem.__dict__['__init__'](self)
+        NyInfo.__dict__['__init__'](self, id, title, contributor)
         self.contributor = contributor
 
 InitializeClass(NyNetwork)
