@@ -475,7 +475,7 @@ class NyInfoFolder(NyFolder):
             self._rename_concatenate_keys(ob, 'original_sdo_id', ['id'])
             self._rename_concatenate_keys(ob, 'event_type', ['Type_of_event'])
             #map imported values to ids
-            ob['event_type'] = self.get_list_ids('event_types', ob['event_type'])
+            ob['event_type'] = self.get_list_ids('event_type', ob['event_type'])
             self._rename_concatenate_keys(ob, 'event_url', ['website'])
             self._rename_concatenate_keys(ob, 'location', ['Location'])
             #description as is
