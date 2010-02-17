@@ -74,8 +74,8 @@
 
         <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getUsersWithRole(target_role)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
-            <fieldset>
-                <legend tal:condition="users" i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
+            <fieldset tal:condition="users">
+                <legend i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
                 <table class="datatable" id="user_listing" tal:condition="users">
                     <thead>
                         <tr>

@@ -533,6 +533,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         #dictionary that will hold external users
         external_users = {}
         for source in self.getSources():
+            acl_folder = source.getUserFolder()
             source_obj = self.getSourceObj(source.getId())
             users = source_obj.getSortedUserRoles(skey='user')
             for user in users:
@@ -543,6 +544,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         user_name = user[1]
                         user_email = source_obj.getUserEmail(user_id, source_obj.getUserFolder())
                         external_users[user_id] = {'name': user_name, 'email': user_email}
+            if not hasattr(source, 'get_groups_roles_map'):
+                continue
+            group_users = {}
+            for group, roles in source.get_groups_roles_map().items():
+                if role not in [x[0] for x in roles]:
+                    continue
+                userids = source.group_member_ids(group)
+                for userid in userids:
+                    group_users[userid] = {
+                        'name': source.getUserFullName(userid, acl_folder),
+                        'email': source.getUserEmail(userid, acl_folder),
+                    }
+            #update external users
+            external_users.update(group_users)
 
         #add external users data to local_result
         local_result.update(external_users)
