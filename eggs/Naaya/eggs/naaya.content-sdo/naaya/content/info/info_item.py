@@ -103,8 +103,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
     def manage_options(self):
         """ """
         l_options = ()
-        l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += info_item.manage_options
+        l_options += ({'label': 'Properties', 'action': 'edit_html'},)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
@@ -125,41 +125,6 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
                         self.getLocalProperty('organisation_name', lang), 
                         self.getLocalProperty('organisation_city', lang),
                         self.getLocalProperty('organisation_country', lang),])
-
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/info_manage_edit', globals())
-
-    #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-
-        if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
-        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
-        _approved = int(bool(schema_raw_data.pop('approved', False)))
-
-        schema_raw_data['title'] = self.title
-
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        if _approved != self.approved:
-            if _approved == 0: _approved_by = None
-            else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            self.approveThis(_approved, _approved_by)
-        self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(PERMISSION_EDIT_INFO, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
