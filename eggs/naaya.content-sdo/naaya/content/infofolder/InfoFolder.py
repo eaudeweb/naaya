@@ -200,39 +200,23 @@ class NyInfoFolder(NyFolder):
     trainings_schema = NyTraining.DEFAULT_SCHEMA
     events_schema = event_item.DEFAULT_SCHEMA
 
+    manage_options = (
+        NyFolder.manage_options[:2]
+        +
+        (
+            {'label': 'Properties', 'action': 'edit_html'},
+        )
+        +
+        NyFolder.manage_options[3:5]
+        +
+        NyFolder.manage_options[6:]
+        )
+
     def __init__(self, id, contributor):
         """ """
         self.id = id
         NyFolder.__dict__['__init__'](self, id, contributor)
         self.contributor = contributor
-
-    #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-
-        if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
-        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-
-        form_errors = self.process_submitted_form(schema_raw_data, _lang)
-        if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        if _approved != self.approved:
-            if _approved == 0: _approved_by = None
-            else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            self.approveThis(_approved, _approved_by)
-
-        self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
