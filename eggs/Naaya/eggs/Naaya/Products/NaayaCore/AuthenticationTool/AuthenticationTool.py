@@ -517,6 +517,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Don't use this in new code.
         return the user objects that have the specified role
         """
+        def handle_unicode(s):
+            if not isinstance(s, unicode):
+                try:
+                    return s.decode('utf-8')
+                except:
+                    return s.decode('latin-1')
+            else:
+                return s
         local_users = self.getUsersWithRoles()
         #dictionary that will hold local users
         local_result = {}
@@ -527,7 +535,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         user_obj = self.getUser(user_id)
                         user_name = "%s %s" % (self.getUserFirstName(user_obj), self.getUserLastName(user_obj))
                         user_email = self.getUserEmail(user_obj)
-                        local_result[user_id] = {'name': user_name, 'email': user_email}
+                        local_result[user_id] = {
+                            'name': handle_unicode(user_name),
+                            'email': user_email
+                        }
 
 
         #dictionary that will hold external users
@@ -543,7 +554,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         user_id = user[0]
                         user_name = user[1]
                         user_email = source_obj.getUserEmail(user_id, source_obj.getUserFolder())
-                        external_users[user_id] = {'name': user_name, 'email': user_email}
+                        external_users[user_id] = {
+                            'name': handle_unicode(user_name),
+                            'email': user_email
+                        }
             if not hasattr(source, 'get_groups_roles_map'):
                 continue
             group_users = {}
@@ -552,9 +566,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     continue
                 userids = source.group_member_ids(group)
                 for userid in userids:
+                    userinfo = source._get_user_by_uid(userid, acl_folder)
                     group_users[userid] = {
-                        'name': source.getUserFullName(userid, acl_folder),
-                        'email': source.getUserEmail(userid, acl_folder),
+                        'name': handle_unicode(
+                            source._get_user_full_name(userinfo)),
+                        'email': handle_unicode(
+                            source._get_user_email(userinfo)),
                     }
             #update external users
             external_users.update(group_users)
@@ -563,6 +580,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         local_result.update(external_users)
         #and return everything
         return local_result
+
+    def getSortedUsersWithRole(self, role, skey, rkey):
+        result = []
+        for userid, userdata in self.getUsersWithRole(role).items():
+            to_append = userdata
+            to_append['uid'] = userid
+            result.append(to_append)
+        return self.utSortDictsListByKey(result, skey, rkey)
 
     def getUserSource(self, user):
         """
