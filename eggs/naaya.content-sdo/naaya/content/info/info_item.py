@@ -181,8 +181,6 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        schema_raw_data['title'] = obj.title
-
         self.last_modification = time.localtime()
 
         #geo-location: 'geo_location' should always be removed from the schema_raw_data
