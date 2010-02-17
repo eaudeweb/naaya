@@ -8,7 +8,7 @@
         tal:define="target_role python:request.get('target_role', ''); 
                     acl_tool here/getAuthenticationTool;
                     skey python: request.get('skey', 'name');
-                    rkey python: request.get('rkey', 0);
+                    rkey python: int(request.get('rkey', 0));
                     compose python: request.get('compose', '');">
 
 
@@ -61,7 +61,7 @@
 
         <fieldset>
             <legend i18n:translate="">Step 1: Select a role from the dropdown list.</legend>
-            <form action="" method="post" id="role_selector">
+            <form action="" method="get" id="role_selector">
                 <div class="field-inline">
                     <label for="roleselect" i18n:translate="">Role</label>
                     <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
@@ -72,7 +72,7 @@
             </form>
         </fieldset>
 
-        <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getUsersWithRole(target_role)">
+        <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getSortedUsersWithRole(target_role, skey, rkey)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
             <fieldset tal:condition="users">
                 <legend i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
@@ -81,10 +81,20 @@
                         <tr>
                             <th align="left" i18n:translate="">Select</th>
                             <th align="left">
-                                <span i18n:translate="">Username</span>
+                                <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=uid&rkey=1">
+                                    <span i18n:translate="">Username</span>
+                                </a>
+                                <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=uid&rkey=0">
+                                    <span i18n:translate="">Username</span>
+                                </a>
                             </th>
                             <th align="left">
+                            <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=name&rkey=1">
                                 <span i18n:translate="">Name</span>
+                            </a>
+                            <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=name&rkey=0">
+                                <span i18n:translate="">Name</span>
+                            </a>
                             </th>
                             <th align="left">
                                 <span i18n:translate="">Email address</span>
@@ -92,14 +102,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr tal:repeat="user_id python:users.keys()">
+                        <tr tal:repeat="userdict users">
                             <td class="center">
-                                <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']" />
+                                <input type="checkbox" name="user_mails:list" tal:attributes="value python:userdict['email']" />
                             </td>
-                            <td><strong tal:content="user_id">username</strong>
+                            <td><strong tal:content="userdict/uid">username</strong>
                             </td>
-                            <td tal:content="python:users[user_id]['name']" />
-                            <td tal:content="python:users[user_id]['email']" />
+                            <td tal:content="python:userdict['name']" />
+                            <td tal:content="python:userdict['email']" />
                         </tr>
                     </tbody>
                 </table>
