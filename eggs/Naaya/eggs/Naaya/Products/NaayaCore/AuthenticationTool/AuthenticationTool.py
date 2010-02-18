@@ -512,11 +512,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return users
 
     security.declareProtected(manage_users, 'getUsersWithRole')
-    def getUsersWithRole(self, role):
+    def getUsersWithRole(self, roles=[]):
         """
         Don't use this in new code.
         return the user objects that have the specified role
         """
+        if not isinstance(roles, list):
+            roles = [roles]
         def handle_unicode(s):
             if not isinstance(s, unicode):
                 try:
@@ -528,9 +530,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         local_users = self.getUsersWithRoles()
         #dictionary that will hold local users
         local_result = {}
-        for user_id, roles in local_users.items():
-            for location in roles:
-                if role in location[0]:
+        for user_id, user_roles in local_users.items():
+            for location in user_roles:
+                if set(location[0]).intersection(set(roles)):
                     if user_id not in local_result.keys():
                         user_obj = self.getUser(user_id)
                         user_name = "%s %s" % (self.getUserFirstName(user_obj), self.getUserLastName(user_obj))
@@ -550,7 +552,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for user in users:
                 user_roles = user[3]
                 for user_role in user_roles:
-                    if role in user_role[0]:
+                    if set(user_role[0]).intersection(set(roles)):
                         user_id = user[0]
                         user_name = user[1]
                         user_email = source_obj.getUserEmail(user_id, source_obj.getUserFolder())
@@ -561,8 +563,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             if not hasattr(source, 'get_groups_roles_map'):
                 continue
             group_users = {}
-            for group, roles in source.get_groups_roles_map().items():
-                if role not in [x[0] for x in roles]:
+            for group, group_roles in source.get_groups_roles_map().items():
+                if not set(roles).intersection([x[0] for x in group_roles]):
                     continue
                 userids = source.group_member_ids(group)
                 for userid in userids:
@@ -581,9 +583,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         #and return everything
         return local_result
 
-    def getSortedUsersWithRole(self, role, skey, rkey):
+    def getSortedUsersWithRoles(self, roles, skey, rkey):
         result = []
-        for userid, userdata in self.getUsersWithRole(role).items():
+        for userid, userdata in self.getUsersWithRole(roles).items():
             to_append = userdata
             to_append['uid'] = userid
             result.append(to_append)
