@@ -128,7 +128,9 @@ class LayoutTool(Folder, combosync_tool):
         for v in ny_content.values():
             if v.has_key('additional_style') and v['additional_style']:
                 style = v['additional_style']
+                res.append('/* Begin %s styles*/' % v['meta_type'])
                 res.append(style)
+                res.append('/* End %s styles*/\n' % v['meta_type'])
         return '\n'.join(res)
 
     #zmi actions
