@@ -1,8 +1,10 @@
-<tal:block define="skin_files_path python:here.getLayoutTool().getSkinFilesPath()">
+<tal:block define="skin_files_path python:here.getLayoutTool().getSkinFilesPath();
+                   site_id python:here.getSite().getId();">
 
 <script type="text/javascript" tal:content="string:
 	var img_collapse = '${skin_files_path}/ep_collapse.gif';
 	var img_expand = '${skin_files_path}/ep_expand.gif';
+	var mainsections_cookie = '${site_id}-mainsections';
 "/>
 
 <script type="text/javascript">
@@ -11,12 +13,25 @@ var collapse_others = false;
 // expand sections if no value in cookie;
 var default_expanded = true;
 function is_folder_expanded(folderId) {
-	var cookie_val = readCookie('ep_'+folderId);
-
+	var cookie_val = readCookie(mainsections_cookie);
 	if (cookie_val == null) {
 		return default_expanded;
 	}
-	return cookie_val == 'expanded';
+	var cookie_ob = JSON.parse(cookie_val);
+	return cookie_ob[folderId] == 'expanded';
+}
+
+function change_cookie_value(folderId, new_value) {
+	var cookie_val = readCookie(mainsections_cookie);
+	if (cookie_val == null) {
+		var cookie_ob = {};
+	}
+	else {
+		var cookie_ob = JSON.parse(cookie_val);
+		}
+	cookie_ob[folderId] = new_value;
+	var new_cookie_val = JSON.stringify(cookie_ob)
+	createCookie(mainsections_cookie, new_cookie_val, 1);
 }
 
 function expand_folder(folderId) {
@@ -29,13 +44,13 @@ function expand_folder(folderId) {
 			}
 		})
 	}
-	createCookie('ep_'+folderId, 'expanded', 1);
+	change_cookie_value(folderId, 'expanded');
 }
 
 function collapse_folder(folderId) {
 	$('#img'+folderId).attr('src', img_expand);
 	$('#ul'+folderId).hide();
-	createCookie('ep_'+folderId, 'collapsed', 1);
+	change_cookie_value(folderId, 'collapsed');
 }
 
 function toggleFolder(folderId) {
