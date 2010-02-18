@@ -5,7 +5,7 @@
 
 
     <tal:block metal:fill-slot="section" 
-        tal:define="target_role python:request.get('target_role', ''); 
+        tal:define="target_roles python:request.get('target_roles', '');
                     acl_tool here/getAuthenticationTool;
                     skey python: request.get('skey', 'name');
                     rkey python: int(request.get('rkey', 0));
@@ -60,19 +60,20 @@
 
 
         <fieldset>
-            <legend i18n:translate="">Step 1: Select a role from the dropdown list.</legend>
+            <legend i18n:translate="">Step 1: Select roles</legend>
             <form action="" method="get" id="role_selector">
-                <div class="field-inline">
-                    <label for="roleselect" i18n:translate="">Role</label>
-                    <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
-                        <option tal:repeat="role roles" tal:content="role" tal:attributes="selected python:role == target_role">[role name]</option>
-                    </select>
+                    <tal:block repeat="role acl_tool/list_valid_roles">
+                        <div style="display:block;">
+                        <input type="checkbox" name="target_roles:list" tal:attributes="value role;
+                                                                                       id string:id_${role};
+                                                                                       checked python:role in target_roles"/>
+                        <label tal:attributes="for string:id_${role}" tal:content="role"/></div>
+                    </tal:block>
                     <input type="submit" i18n:attributes="value" value="Show users"/>
-                </div>
             </form>
         </fieldset>
 
-        <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getSortedUsersWithRole(target_role, skey, rkey)">
+        <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_roles" tal:define="users python:acl_tool.getSortedUsersWithRoles(target_roles, skey, rkey)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
             <fieldset tal:condition="users">
                 <legend i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
@@ -81,18 +82,18 @@
                         <tr>
                             <th align="left" i18n:translate="">Select</th>
                             <th align="left">
-                                <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=uid&rkey=1">
+                                <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=uid&rkey=1">
                                     <span i18n:translate="">Username</span>
                                 </a>
-                                <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=uid&rkey=0">
+                                <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=uid&rkey=0">
                                     <span i18n:translate="">Username</span>
                                 </a>
                             </th>
                             <th align="left">
-                            <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=name&rkey=1">
+                            <a tal:condition="python:rkey != 1" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=name&rkey=1">
                                 <span i18n:translate="">Name</span>
                             </a>
-                            <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_role=${target_role}&skey=name&rkey=0">
+                            <a tal:condition="python:rkey != 0" tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?target_roles=${target_roles}&skey=name&rkey=0">
                                 <span i18n:translate="">Name</span>
                             </a>
                             </th>
@@ -114,6 +115,9 @@
                     </tbody>
                 </table>
                 <input type="hidden" name="compose" value="true"/>
+                <input type="hidden" name="target_roles" tal:attributes="value target_roles"/>
+                <input type="hidden" name="skey" tal:attributes="value skey"/>
+                <input type="hidden" name="rkey" tal:attributes="value rkey"/>
                 <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
             </fieldset>
         </form>
@@ -121,11 +125,18 @@
     
     <tal:block condition="compose" 
                define="mails python:request.get('user_mails', []);
+                       skey python:request.get('skey', 'name');
+                       rkey python:request.get('rkey', '0');
                        mail_from here/mail_address_from">
-        <tal:block condition="not:mails">
+        <tal:block condition="not:mails" tal:define="
+                            target_roles python:request.get('target_roles', '');
+                            target_roles python:[x.strip() for x in target_roles[1:-1].split(',')];
+                            target_roles python:'&target_roles%3Alist='.join(target_roles);
+                            target_roles python:target_roles.replace('\'', '');
+                            target_roles python:'&target_roles%3Alist=' + target_roles;">
             <p>
                 <span i18n:translate="">You did not select any users.</span>
-                <a href="" i18n:translate="">Go back</a>
+                <a tal:attributes="href string:${here/absolute_url}/admin_bulk_mail_html?skey=${skey}&rkey=${rkey}${target_roles}" i18n:translate="">Go back</a>
             </p>
         </tal:block>
         <form action="send_mail_to_roles" method="post" tal:condition="mails">
