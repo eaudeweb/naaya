@@ -24,6 +24,7 @@ import smtplib
 import MimeWriter
 import cStringIO
 from urlparse import urlparse
+import logging
 
 #Zope imports
 from Globals import InitializeClass
@@ -37,6 +38,8 @@ from Products.NaayaCore.constants import *
 import EmailTemplate
 from EmailSender import build_email
 from naaya.core.permissions import naaya_admin
+
+mail_logger = logging.getLogger('naaya.core.email')
 
 def manage_addEmailTool(self, REQUEST=None):
     """ """
@@ -141,18 +144,35 @@ class EmailTool(Folder):
         #sends a generic email
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',') if e.strip()!='']
+        site_path = '/'.join(self.getSite().getPhysicalPath())
+
         try:
-            if self.mail_server_name and self.mail_server_port and p_to:
-                if diverted_mail is not None: # we're inside a unit test
-                    diverted_mail.append([p_content, p_to, p_from, p_subject])
-                    return 1
+            if diverted_mail is not None: # we're inside a unit test
+                diverted_mail.append([p_content, p_to, p_from, p_subject])
+                return 1
+            elif not (self.mail_server_name and self.mail_server_port):
+                mail_logger.info('Not sending email from %r because mail '
+                                  'server is not configured',
+                                  site_path)
+                return 0
+            elif not p_to:
+                mail_logger.info('Not sending email from %r - no recipients',
+                                  site_path)
+                return 0
+            else:
+                mail_logger.info('Sending email from site: %r '
+                                 'to: %r subject: %r',
+                                 site_path, p_to, p_subject)
                 l_message = self.__create_email(p_content, self.__build_addresses(p_to), p_from, p_subject)
                 server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
                 server.sendmail(p_from, p_to, l_message)
                 server.quit()
                 return 1
-            return 0
         except:
+            mail_logger.error('Did not send email from site: %r to: %r '
+                              'because an error occurred',
+                              site_path, p_to)
+            self.getSite().log_current_error()
             return 0
 
     #zmi actions
