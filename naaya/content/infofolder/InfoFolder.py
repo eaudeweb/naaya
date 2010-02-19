@@ -388,36 +388,6 @@ class NyInfoFolder(NyFolder):
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(id, lang)
 
-    security.declareProtected(view, 'search')
-    def search(self, REQUEST):
-        """ folder search """
-        results = []
-        query = REQUEST.get('query', '')
-        meta_type = self.get_meta_types()
-        if query:
-            results = []
-            results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=self.absolute_url(1), approved=1))
-            results = self.utEliminateDuplicatesByURL(results)
-            results = [item for item in results if item.can_be_seen()]
-
-        paginator = DiggPaginator(results, 10, body=5, padding=2, orphans=5)   #Show 10 documents per page
-
-        # Make sure page request is an int. If not, deliver first page.
-        try:
-            page = int(REQUEST.get('page', '1'))
-        except ValueError:
-            page = 1
-
-        # If page request (9999) is out of range, deliver last page of results.
-        try:
-            results = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            results = paginator.page(paginator.num_pages)
-
-        return self._search(REQUEST, results=results)
-
-
-    _search = PageTemplateFile('zpt/infofolder_search', globals())
     subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
     infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
@@ -530,7 +500,47 @@ class NyInfoFolder(NyFolder):
         parts.reverse()
         return '/'.join(parts)
 
+    def set_open_for_comments(self):
+        """ """
+        meta_type = skel.INFO_TYPES[self.info_type]['meta_type']
+        counter = 0
+        for ob in self.objectValues(meta_type):
+            counter += 1
+            ob.discussion = 1
+            ob._p_changed = 1
+
+        print "%s %s objects were updated" % (counter, meta_type)
+
 InitializeClass(NyInfoFolder)
+
+def search(self, REQUEST):
+    """ folder search """
+    results = []
+    query = REQUEST.get('query', '')
+    meta_type = self.get_meta_types()
+    if query:
+        results = []
+        results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=self.absolute_url(1), approved=1))
+        results = self.utEliminateDuplicatesByURL(results)
+        results = [item for item in results if item.can_be_seen()]
+
+    paginator = DiggPaginator(results, 10, body=5, padding=2, orphans=5)   #Show 10 documents per page
+
+    # Make sure page request is an int. If not, deliver first page.
+    try:
+        page = int(REQUEST.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    # If page request (9999) is out of range, deliver last page of results.
+    try:
+        results = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        results = paginator.page(paginator.num_pages)
+
+    return self._search(REQUEST, results=results)
+
+_search = PageTemplateFile('zpt/infofolder_search', globals())
 
 def get_naaya_containers_metatypes(self):
     """ this method is used to display local roles, called from getUserRoles methods """
@@ -538,6 +548,8 @@ def get_naaya_containers_metatypes(self):
 
 from Products.Naaya.NySite import NySite
 NySite.get_naaya_containers_metatypes = get_naaya_containers_metatypes
+NySite.search = search
+NySite._search = _search
 
 config.update({
     'constructors': (infofolder_add_html, addNyInfoFolder),
