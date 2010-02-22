@@ -46,6 +46,7 @@ def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
     self._setObject(id, ob)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+    return id
 
 class RefTreeNode(LocalPropertyManager, SimpleItem):
     """ """

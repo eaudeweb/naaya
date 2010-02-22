@@ -21,6 +21,8 @@
 
 #Python imports
 from md5 import new as new_md5
+import simplejson as json
+from copy import copy
 
 #Zope imports
 from Globals import InitializeClass
@@ -127,6 +129,65 @@ class PortletsTool(Folder, utils):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==4]
     def get_special_portlets(self):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==100]
+
+
+    #JsTree listing
+
+    def get_reftrees_as_json_data(self):
+        """ """
+        trees = [x.get_tree_data() for x in self.getRefTrees()]
+        data = {'data': self.getSite().title_or_id(),
+                'children': trees,
+                'attributes' : {'id': self.getSite().getId(),
+                                'rel': 'root',
+                                }
+                }
+        return json.dumps(data)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'handle_jstree_actions')
+    def handle_jstree_actions(self, data):
+        """ """
+        data = json.loads(data)
+        action = data['action']
+        type = data['type']
+        if action == 'add':
+            if type == 'tree':
+                return manage_addRefTree(self, title=data['name'])
+            if type == 'node':
+                parent_tree = data['parent_tree']['id']
+                parent_node = None
+                if data['parent']['type'] == 'node':
+                    parent_node = data['parent']['id'] or None
+                return self[parent_tree].manage_addRefTreeNode(
+                    title=data['name'],
+                    parent=parent_node,
+                    pickable=True)
+        elif action == 'rename':
+            if type == 'tree':
+                self[data['id']].title = data['new_name']
+            if type == 'node':
+                self[data['parent_tree']['id']][data['id']].title = data['new_name']
+        elif action == 'delete':
+            if type == 'tree':
+                self.manage_delObjects(data['id'])
+            elif type == 'node':
+                to_delete = copy(data['children'])
+                to_delete.append(data['id'])
+                self[data['parent_tree']['id']].manage_delObjects(to_delete)
+        elif action == 'move':
+            if type == 'node':
+                old_parent_tree = data['old_parent_tree']['id']
+                new_parent_tree = data['new_parent_tree']['id']
+                new_parent_node = None
+                node_name = self[old_parent_tree][data['id']].title
+                if data['new_parent']['type'] == 'node':
+                    new_parent_node = data['new_parent']['id'] or None
+                to_cut = copy(data['children'])
+                to_cut.append(data['id'])
+                cut_data = self[old_parent_tree].manage_cutObjects(to_cut)
+                self[new_parent_tree].manage_pasteObjects(cut_data)
+                self[new_parent_tree][data['id']].parent = new_parent_node
+                return data['id']
 
     def getPortletById(self, p_id):
         """

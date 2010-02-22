@@ -110,6 +110,7 @@ from Products.NaayaCore.managers import recaptcha_utils
 
 from naaya.core.zope2util import NaayaTemplateHelper
 from naaya.core.zope2util import redirect_to
+from naaya.core.StaticServe import StaticServeFromZip
 
 
 #constructor
@@ -3049,6 +3050,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_htmlportlets')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reftrees_html')
+    def admin_reftrees_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_reftrees')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):
         """ redirect to new notifications admin page """
@@ -3692,6 +3698,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     zip_import = ZipImportTool('zip_import')
     zip_export = ZipExportTool('zip_export')
 
+    jstree = StaticServeFromZip('source', 'www/jstree.zip', globals())
     #--------------------------------------------------------------------------------------------------
     security.declareProtected(view_management_screens, 'update_portal_forms')
     def update_portal_forms(self):
