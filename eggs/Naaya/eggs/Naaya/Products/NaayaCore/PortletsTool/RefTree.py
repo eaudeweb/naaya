@@ -43,6 +43,7 @@ def manage_addRefTree(self, id='', title='', description='', lang=None, REQUEST=
     self._setObject(id, ob)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+    return id
 
 class RefTree(LocalPropertyManager, Folder):
     """ """
@@ -133,6 +134,41 @@ class RefTree(LocalPropertyManager, Folder):
         ones given in B{expand} parameter.
         """
         return self.__get_tree_expand(self.get_tree_nodes(), None, 1, expand)
+
+    def get_tree_data(self):
+        tree = self.get_tree_thread()
+        data = []
+        struct = {}
+        for node in tree:
+            node_ob = node['ob']
+            if node['depth'] == 1:
+                struct.setdefault(node_ob.id, [])
+            if node['depth'] == 2:
+                struct.setdefault(node_ob.parent, []).append(node_ob.id)
+        for node, children in struct.items():
+            data_dict = {}
+            data_dict['data'] = self[node].title_or_id()
+            data_dict['attributes'] = {'rel': 'node',
+                                       'id': self[node].getId(),
+                                       }
+            if children:
+                data_dict['children'] = []
+                for child in children:
+                    child_ob = self._getOb(child)
+                    data_dict['children'].append({
+                        'data': child_ob.title_or_id(),
+                        'attributes': {
+                            'rel' : 'node',
+                            'id' : child_ob.getId(),
+                        }
+                    })
+            data.append(data_dict)
+        return {'data': self.title_or_id(),
+                'children': data,
+                'attributes': {'id': self.getId(),
+                               'rel': 'tree',
+                               }
+                    }
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
