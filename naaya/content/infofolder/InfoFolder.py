@@ -22,7 +22,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
 
 #Python imports
 from copy import deepcopy
-import os, sys, time
+import os, sys
 
 #Zope imports
 from Globals import InitializeClass
@@ -420,6 +420,9 @@ class NyInfoFolder(NyFolder):
     def translate_info(self, ob):
         for k,v in ob.items():
             ob[k] = self._replace_escaped(v)
+
+        ob['releasedate'] = ob['releasedate'].split(' ')[0]
+
         if self.info_type == 'events':
 
             #Events specific data translation here
@@ -546,13 +549,13 @@ def get_naaya_containers_metatypes(self):
     """ this method is used to display local roles, called from getUserRoles methods """
     return ['Naaya Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire', 'Naaya InfoFolder']
 
-submit_url = PageTemplateFile('zpt/submit_url', globals())
+submit_site = PageTemplateFile('zpt/submit_site', globals())
 
 from Products.Naaya.NySite import NySite
 NySite.get_naaya_containers_metatypes = get_naaya_containers_metatypes
 NySite.search = search
 NySite._search = _search
-NySite.submit_url = submit_url
+NySite.submit_site = submit_site
 
 config.update({
     'constructors': (infofolder_add_html, addNyInfoFolder),

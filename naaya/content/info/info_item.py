@@ -150,7 +150,8 @@ class NyInfo(info_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCo
 
         #geo-location: 'geo_location' should always be removed from the schema_raw_data
         #because the form should contain 'geo_location.lat' type of data
-        schema_raw_data.pop('geo_location')
+        if schema_raw_data.has_key('geo_location'):
+            schema_raw_data.pop('geo_location')
         _city = schema_raw_data.get('organisation_city', None)
         _country = schema_raw_data.get('organisation_country', None)
         _address = ''
