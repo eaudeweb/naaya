@@ -42,6 +42,7 @@ except ImportError:
 
 from Products.naayaUpdater import update_scripts
 from Products.Naaya.interfaces import INySite
+from discover import get_module_names, get_module_objects, filter_subclasses
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
@@ -53,6 +54,7 @@ class NaayaUpdater(Folder):
     meta_type = 'Naaya Updater'
     icon = 'misc_/naayaUpdater/updater.jpg'
     update_scripts = {}
+    scripts_packages = ['Products.naayaUpdater.update_scripts']
 
     def manage_options(self):
         """ """
@@ -83,7 +85,10 @@ class NaayaUpdater(Folder):
 
     def refresh_updates_dict(self):
         NaayaUpdater.update_scripts = {}
-        update_scripts.register_scripts(self)
+        for package in self.scripts_packages:
+            scripts = self.get_updates_from_module(package)
+            for s in scripts:
+                self.register_update_script(s.id, s)
 
     def register_update_script(self, key, update_script):
         NaayaUpdater.update_scripts[key] = update_script
@@ -92,22 +97,62 @@ class NaayaUpdater(Folder):
     def get_updates(self):
         return NaayaUpdater.update_scripts
 
-    def update_ids(self):
+    def update_ids(self): #
         return sorted(NaayaUpdater.update_scripts.keys())
 
     security.declareProtected(view_management_screens, 'get_update_script_url')
-    def get_update_script_url(self, key):
+    def get_update_script_url(self, key): #
         return self.absolute_url() + '/' + key
 
     security.declareProtected(view_management_screens, 'get_update_script_title')
-    def get_update_script_title(self, key):
+    def get_update_script_title(self, key): #
         return NaayaUpdater.update_scripts[key].title
+
+    security.declareProtected(view_management_screens, 'get_updates_from_folder')
+    def get_updates_from_module(self, module_path):
+        """ """
+        try:
+            module_names = get_module_names(module_path, 'update_.*')
+            update_cls = []
+            for name in module_names:
+                try:
+                    obj_list = get_module_objects(name)
+                    obj_list = filter_subclasses(obj_list, update_scripts.UpdateScript)
+                    update_cls.extend(obj_list)
+                except Exception, e:
+                    print 'Skipping module "%s" - %s' % (name, str(e))
+
+            return update_cls
+        except Exception, e:
+            print 'Skipping path "%s" - %s' % (module_path, str(e))
+            return []
+
+    def utConvertListToLines(self, values):
+        """Takes a list of values and returns a value for a textarea control"""
+        return '\r\n'.join(values)
+
+    def utConvertLinesToList(self, value):
+        """Takes a value from a textarea control and returns a list of values"""
+        if type(value) == type([]): return value
+        elif value == '': return []
+        else:
+            values = []
+            for v in value.split('\n'):
+                if v != '': values.append(v.replace('\r', ''))
+        return values
 
     ###
     #General stuff
     ######
     security.declareProtected(view_management_screens, 'index_html')
-    index_html = PageTemplateFile('zpt/updater_index', globals())
+    _index_html = PageTemplateFile('zpt/updater_index', globals())
+    def index_html(self, REQUEST):
+        """ """
+        module_paths = REQUEST.form.get('module_paths', '')
+        if module_paths != '':
+            self.scripts_packages = self.utConvertLinesToList(module_paths)
+            self.refresh_updates_dict()
+        return self._index_html(REQUEST)
 
     security.declareProtected(view_management_screens, 'available_content_updates')
     available_content_updates = PageTemplateFile('zpt/available_content_updates', globals())
