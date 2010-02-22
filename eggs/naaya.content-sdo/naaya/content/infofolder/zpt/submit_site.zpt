@@ -1,10 +1,10 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 <metal:block metal:fill-slot="title">
-	<title tal:content="string:Submit your URL | ${here/site_title}" />
+	<title tal:content="string:Submit your site | ${here/site_title}" />
 </metal:block>
 <metal:block fill-slot="body">
-<h1 i18n:translate="">Submit your URL</h1>
 <div id="center_content" style="width: 78%; overflow-x: auto;">
+	<h1 i18n:translate="">Submit your site</h1>
 	<span i18n:translate="">This service allows you to enter your website
 		in Sustainable Development Online (SDO)</span><span>:</span>
 	<ol>
