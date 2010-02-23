@@ -16,32 +16,47 @@
 
 <br clear="all" />
 
-<form method="post" tal:attributes="action python:test(record_data['action']=='add', 'adminAddSymbol', 'adminUpdateSymbol')" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data"
+	tal:attributes="action python:test(record_data['action']=='add', 'adminAddSymbol', 'adminUpdateSymbol')">
 <fieldset>
-	<legend i18n:translate="" tal:content="python:test(record_data['action']=='add', 'Add category', 'Edit category')"></legend>
+	<legend i18n:translate=""
+		tal:content="python:test(record_data['action']=='add', 'Add category', 'Edit category')">
+	</legend>
 	<dl>
 		<dt i18n:translate="">Title</dt>
-		<dd><input type="text" name="title" class="title" size="60" tal:attributes="value record_data/title" /></dd>
+		<dd>
+			<input type="text" name="title" class="title" size="60"
+				tal:attributes="value record_data/title" />
+		</dd>
 		<dt i18n:translate="">Description</dt>
-		<dd><textarea name="description" id="description" rows="5" cols="40" tal:content="record_data/description"></textarea></dd>
+		<dd>
+			<textarea name="description" id="description" rows="5" cols="40"
+				tal:content="record_data/description">
+			</textarea>
+		</dd>
 		<dt i18n:translate="">Parent category</dt>
 		<dd>
 			<select name="parent">
 				<option value="" i18n:translate=""></option>
 				<tal:block repeat="item here/getParentsList">
-				<option i18n:translate="" tal:attributes="value item/id; selected python:record_data['parent'] == item.id" tal:content="item/title" />
+					<option i18n:translate="" tal:content="item/title"
+						tal:attributes="value item/id; selected python:record_data['parent'] == item.id" />
 				</tal:block>
 			</select>
 		</dd>
 		<dt i18n:translate="">Icon</dt>
-		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed on the map so it is recommended to create it with these dimensions from the start and make it	transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
+		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed
+			on the map so it is recommended to create it with these dimensions from the start and make it
+			transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
 		<dd><input type="file" name="picture" value="" size="35" /></dd>
 		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
 		<dt i18n:translate="">Sort order</dt>
-		<dd><input id="sortorder" type="text" name="sortorder" size="2" tal:attributes="value python:test(record_data['action']=='add', '100', record_data['sortorder'])" /></dd>
+		<dd><input id="sortorder" type="text" name="sortorder" size="2"
+			tal:attributes="value python:test(record_data['action']=='add', '100', record_data['sortorder'])" /></dd>
 	</dl>
 <p><input type="hidden" name="id" tal:attributes="value record_data/id" /></p>
-<p><input type="submit" i18n:attributes="value" tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" /></p>
+<p><input type="submit" i18n:attributes="value"
+	tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" /></p>
 </fieldset>
 </form>
 <form method="post" action="adminDeleteSymbols">
@@ -67,9 +82,13 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='title'">
 			<th>
-				<a class="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title" i18n:translate="">Title</a>
+				<a class="title" i18n:translate=""
+					tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title">
+					Title
+				</a>
 			</th>
 		</tal:block>
+		<th i18n:translate="">Category id</th>
 		<tal:block tal:condition="python:skey=='parent'">
 			<tal:block tal:condition="python:rkey==''">
 				<th>
@@ -117,6 +136,7 @@
 		<td><input type="checkbox" name="id" tal:attributes="value record/id" /></td>
 		<td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" /></td>
 		<td><a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title" /></td>
+		<td tal:content="record/id" />
 		<td tal:content="python:here.getSymbolTitle(record.parent)" />
 		<td tal:content="record/sortorder" />
 	</tr>

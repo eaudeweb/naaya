@@ -85,13 +85,14 @@
 </head>
 <body>
 	<tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds());
-						   geo_query python:request.get('geo_query', '');
-						   center python:request.get('center', '');
-						   zoom python:request.get('zoom', '');
-						   path python:request.get('path', '');
+						   geo_query request/geo_query|nothing;
+						   center_locality request/center_locality|here/center_locality;
+						   center request/center|nothing;
+						   zoom request/zoom|nothing;
+						   path request/path|nothing;
 						   records python:here.search_geo_objects(path=path, geo_types=geo_types, query=geo_query);
-						   width python:request.get('width', here.map_width);
-						   height python:request.get('height', here.map_height)">
+						   width request/width|here/map_width;
+						   height request/height|here/map_height">
 	<span tal:condition="python: here.map_engine == 'google'">
 		<script type="text/javascript"
 			tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${here/get_googleApiKey}">
@@ -106,7 +107,7 @@
 	</span>
 	<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
-	<span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
+	<span tal:replace="structure python:here.jsMapControl(here.map_engine, center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
 	<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 		<div id="center_content" style="overflow-x: auto;">
 			<h2 tal:content="here/title_or_id" />
@@ -200,7 +201,7 @@
 					</ul>
 						<div>
 							<input type="hidden" id="center" name="center"
-								tal:attributes="value center" />
+-								tal:attributes="value center" />
 							<input type="hidden" id="zoom" name="zoom"
 								tal:attributes="value zoom" />
 							<input type="hidden" id="path" name="path"
