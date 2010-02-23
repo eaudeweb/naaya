@@ -17,6 +17,7 @@
 #
 # Alex Morega, Eau de Web
 
+import urllib
 import mimeparse
 
 from zope.component import adapts
@@ -63,11 +64,21 @@ def client_wants_rdf(request):
 
     return False
 
+def object_type_uri(obj):
+    if obj.meta_type.startswith('Naaya '):
+        type_name = obj.meta_type[6:]
+    else:
+        type_name = 'other'
+
+    return 'http://naaya.eaudeweb.ro/rdf/type/' + urllib.quote(type_name, '')
+
 class DefaultRdfView(Implicit):
     def __init__(self, context):
         self.context = context
 
     basic_rdf = PageTemplateFile('zpt/basic_rdf', globals())
+
     def __call__(self, REQUEST):
         REQUEST.RESPONSE.setHeader('Content-Type', "application/rdf+xml")
-        return self.basic_rdf.__of__(self.context)(REQUEST)
+        options = {'object_type_uri': object_type_uri(self.context)}
+        return self.basic_rdf.__of__(self.context)(REQUEST, **options)
