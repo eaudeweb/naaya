@@ -51,6 +51,7 @@ from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.NyItem import NyItem
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -908,6 +909,8 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         #ids_list = self.utConvertToList(REQUEST.get('id_topstory', []))
         try:
             for item in self.objectValues():
+                if not isinstance(item, NyItem):
+                    continue
                 if hasattr(item, 'topitem'): item.topitem = 0
                 if REQUEST.has_key('topstory_' + item.id):
                     item.topitem = 1
