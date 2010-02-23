@@ -2,7 +2,7 @@
 <metal:block use-macro="here/admin_pt/macros/page">
 	<metal:block fill-slot="tab_contents">
 
-<p i18n:translate="" class="cleaner">Choose which content types can be geo-tagged.</p>
+<p i18n:translate="" class="cleaner">Choose which content types can be geo-tagged and/or can be rated.</p>
 
 <form tal:attributes="action string:${here/absolute_url}/admin_set_contenttypes">
 <table>
