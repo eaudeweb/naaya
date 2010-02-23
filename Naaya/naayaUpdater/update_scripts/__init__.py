@@ -167,20 +167,3 @@ class UpdateScript(Item, Acquisition.Implicit):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_workspace')
 
 
-def register_scripts(updater):
-    update_filenames = []
-    for filename in os.listdir(os.path.dirname(__file__)):
-        if not (filename.startswith('update_') and filename.endswith('.py')):
-            continue
-        update_filenames.append(filename)
-
-    for filename in update_filenames:
-        # script imports might throw exception on different versions of Zope and python
-        try:
-            objects = __import__(filename[:-3], globals(), None, ['*'])
-            for key, obj in objects.__dict__.iteritems():
-                if (isinstance(obj, UpdateScript.__class__) and issubclass(obj, UpdateScript) and
-                        obj not in (UpdateScript, )):
-                    updater.register_update_script(obj.id, obj)
-        except ImportError, e:
-            print 'Skipping update "%s" - %s' % (filename, str(e))
