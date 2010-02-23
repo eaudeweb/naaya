@@ -201,7 +201,7 @@
 					</ul>
 						<div>
 							<input type="hidden" id="center" name="center"
--								tal:attributes="value center" />
+								tal:attributes="value center" />
 							<input type="hidden" id="zoom" name="zoom"
 								tal:attributes="value zoom" />
 							<input type="hidden" id="path" name="path"
