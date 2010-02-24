@@ -77,9 +77,9 @@ def setupContentType(site):
     ptool = site.getPortletsTool()
     itopics = getattr(ptool, 'organisation_topics', None)
     if not itopics:
-        ptool.manage_addRefList('organisation_topics')
+        ptool.manage_addRefTree('organisation_topics')
         for k, v in TOPICS.items():
-            ptool.organisation_topics.manage_add_item(k, v)
+            ptool.organisation_topics.manage_addRefTreeNode(k, v)
 
     #Create catalog index if it doesn't exist
     ctool = site.getCatalogTool()
