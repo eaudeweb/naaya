@@ -18,6 +18,9 @@ function is_folder_expanded(folderId) {
 		return default_expanded;
 	}
 	var cookie_ob = JSON.parse(unescape(cookie_val));
+	if (cookie_ob[folderId] == null) {
+		return default_expanded;
+	}
 	return cookie_ob[folderId] == 'expanded';
 }
 
