@@ -284,7 +284,7 @@ class NyInfoFolder(NyFolder):
         category_list = self.get_list_nodes(ref_list_id)
         if category_list:
             list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in self.utSortObjsListByAttr(category_list, 'id', 0)]
-            return category_list.title, list_items
+            return ptool[ref_list_id].title, list_items
 
     def splitFolderCategories(self):
         """ Splits folder categories in two for better viewing """
