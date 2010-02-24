@@ -17,7 +17,7 @@ function is_folder_expanded(folderId) {
 	if (cookie_val == null) {
 		return default_expanded;
 	}
-	var cookie_ob = JSON.parse(cookie_val);
+	var cookie_ob = JSON.parse(unescape(cookie_val));
 	return cookie_ob[folderId] == 'expanded';
 }
 
@@ -27,11 +27,11 @@ function change_cookie_value(folderId, new_value) {
 		var cookie_ob = {};
 	}
 	else {
-		var cookie_ob = JSON.parse(cookie_val);
+		var cookie_ob = JSON.parse(unescape(cookie_val));
 		}
 	cookie_ob[folderId] = new_value;
 	var new_cookie_val = JSON.stringify(cookie_ob)
-	createCookie(mainsections_cookie, new_cookie_val, 1);
+	createCookie(mainsections_cookie, escape(new_cookie_val), 1);
 }
 
 function expand_folder(folderId) {
