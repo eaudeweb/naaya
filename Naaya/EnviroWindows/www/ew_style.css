@@ -529,9 +529,14 @@ a#eealink {
 }
 
 /* start EIONET - Like dropdown menus */
-#dropdowns, #dropdowns ul {
+#dropdowns {
 	padding: 0;
 	margin: 0;
+	list-style: none;
+}
+#dropdowns ul {
+	padding: 0;
+	margin-top: 1em;
 	list-style: none;
 }
 
