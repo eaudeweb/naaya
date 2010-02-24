@@ -46,10 +46,15 @@ class SelectWidget(Widget):
     list_id = ''
 
     def get_selection_list(self):
-        list_ob = self.getPortletsTool().getRefListById(self.list_id)
-        if list_ob is None:
+        listing = self.get_list_nodes(self.list_id)
+        if listing == []:
             return None
-        return list_ob.get_list()
+        return listing
+
+    def list_is_tree(self):
+        ptool = self.getPortletsTool()
+        if ptool.getRefTreeById(self.list_id):
+            return True
 
     def isEmptyDatamodel(self, value):
         return not bool(value)

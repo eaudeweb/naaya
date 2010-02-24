@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+import simplejson as json
 
 #Zope imports
 from Globals import InitializeClass
@@ -31,12 +32,12 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode
+from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeForm = PageTemplateFile('zpt/reftree_manage_add', globals())
 def manage_addRefTree(self, id='', title='', description='', lang=None, REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_SUFIX_REFTREE % self.utGenRandomId(6)
+    id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if lang is None: lang = self.gl_get_selected_language()
     ob = RefTree(id, title, description, lang)
     self.gl_add_languages(ob)
@@ -163,6 +164,14 @@ class RefTree(LocalPropertyManager, Folder):
                         }
                     })
             data.append(data_dict)
+        return data
+
+    def get_tree_json_data(self):
+        """ """
+        return json.dumps(self.get_tree_data())
+
+    def get_tree_data_for_admin(self):
+        data = self.get_tree_data()
         return {'data': self.title_or_id(),
                 'children': data,
                 'attributes': {'id': self.getId(),

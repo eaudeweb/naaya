@@ -31,6 +31,7 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope import component
+from App.ImageFile import ImageFile
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -135,7 +136,7 @@ class PortletsTool(Folder, utils):
 
     def get_reftrees_as_json_data(self):
         """ """
-        trees = [x.get_tree_data() for x in self.getRefTrees()]
+        trees = [x.get_tree_data_for_admin() for x in self.getRefTrees()]
         data = {'data': self.getSite().title_or_id(),
                 'children': trees,
                 'attributes' : {'id': self.getSite().getId(),
@@ -527,6 +528,9 @@ class PortletsTool(Folder, utils):
 
     security.declareProtected(view_management_screens, 'manage_right_portlets_html')
     manage_right_portlets_html = PageTemplateFile('zpt/manage_right_portlets', globals())
+
+    jstree_admin_js = ImageFile('www/jstree_admin.js', globals())
+    jstree_item_js = ImageFile('www/jstree_item.js', globals())
 
 InitializeClass(PortletsTool)
 

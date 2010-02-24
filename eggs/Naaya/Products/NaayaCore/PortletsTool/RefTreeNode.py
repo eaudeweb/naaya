@@ -30,13 +30,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product related imports
 from Products.NaayaCore.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeNodeForm = PageTemplateFile('zpt/reftreenode_manage_add', globals())
 def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
     lang=None, REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_SUFIX_REFTREE % self.utGenRandomId(6)
+    id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if parent == '': parent = None
     if pickable: pickable = 1
     else: pickable = 0

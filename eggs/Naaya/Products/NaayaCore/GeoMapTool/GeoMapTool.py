@@ -1184,13 +1184,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     def get_administrative_xml(self):
         """ """
-        adminlist = self.getPortletsTool().getRefListById('administrative_level').get_list()
+        adminlist = self.get_list_nodes('administrative_level')
         return self.create_xml_for_tabs( adminlist );
 
 
     def get_landscape_xml(self):
         """ """
-        adminlist = self.getPortletsTool().getRefListById('landscape_type').get_list()
+        adminlist = self.get_list_nodes('landscape_type')
         return self.create_xml_for_tabs( adminlist );
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_contenttypes')

@@ -8,14 +8,39 @@
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <select tal:condition="python:selection_list is not None"
-            tal:attributes="name string:${prop_id}:utf8:ustring;
-                            id prop_id">
-        <option value=""></option>
-        <option tal:repeat="selection_item selection_list"
-            tal:attributes="value selection_item/id; selected python: selection_item.id == value"
-            tal:content="selection_item/title" i18n:translate="" />
-    </select>
+    <tal:block condition="python:selection_list is not None">
+        <select tal:condition="not:here/list_is_tree"
+                tal:attributes="name string:${prop_id}:utf8:ustring;
+                                id prop_id">
+            <option value=""></option>
+            <option tal:repeat="selection_item selection_list"
+                tal:attributes="value selection_item/id; selected python: selection_item.id == value"
+                tal:content="selection_item/title" i18n:translate="" />
+        </select>
+        <tal:block condition="here/list_is_tree">
+            <noscript>
+                <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+                    <option value=""></option>
+                    <option tal:repeat="selection_item selection_list"
+                        tal:attributes="value selection_item/id; selected python: selection_item.id == value"
+                        tal:content="selection_item/title" i18n:translate="" />
+                </select>
+            </noscript>
+            <script type="text/javascript" src="jstree/jquery.tree.min.js"></script>
+            <tal:block content="structure string:
+                <script>
+                    var tree_target = '${prop_id}_tree';
+                    var value_target = '${prop_id}';
+                    var data_url = 'portal_portlets/${here/list_id}/get_tree_json_data';
+                    var prop_current_value = '${value}';
+                    var prop_name = '${prop_id}:utf8:ustring';
+                    var prop_id = '${prop_id}';
+                </script>
+                "/>
+            <script type="text/javascript" src="portal_portlets/jstree_item_js"></script>
+            <div tal:attributes="id string:${prop_id}_tree"></div>
+        </tal:block>
+    </tal:block>
     <input type="text"
            tal:condition="python:selection_list is None"
            tal:attributes="value value;

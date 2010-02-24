@@ -62,7 +62,7 @@ class dynamic_property(utils):
             values = self.values
             if type(self.values) == type({}):
                 try:
-                    ref_list = context.getPortletsTool().getRefListById(self.values.keys()[0]).get_list()
+                    ref_list = context.get_list_nodes(self.values.keys()[0])
                     values = self.utConvertListToLines([x.title for x in ref_list])
                 except:
                     values = self.values.values()[0]
@@ -150,7 +150,7 @@ class dynamic_properties_tool:
             if type(l_dp.values) == type({}):
                 ref_list = l_dp.values.keys()[0]
                 try:
-                    values = self.utConvertListToLines([i.title for i in self.getPortletsTool().getRefListById(ref_list).get_list()])
+                    values = self.utConvertListToLines([i.title for i in self.get_list_nodes(ref_list)])
                 except:
                     values = l_dp.values.values()[0]
             return ['update', l_dp.id, l_dp.searchable, l_dp.name, l_dp.type, l_dp.required, l_dp.defaultvalue, values, l_dp.order, ref_list]
