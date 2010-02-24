@@ -70,12 +70,12 @@ def setupContentType(site):
         list_title = topics_list['list_title']
         itopics = getattr(ptool, list_id, None)
         if not itopics:
-            ptool.manage_addRefList(list_id, list_title)
+            ptool.manage_addRefTree(list_id, list_title)
             itopics = getattr(ptool, list_id, None)
             item_no = 0
             for list_item in topics_list['list_items']:
                 item_no += 1
-                itopics.manage_add_item(item_no, list_item)
+                itopics.manage_addRefTreeNode(item_no, list_item)
 
 # this dictionary is updated at the end of the module
 config = {

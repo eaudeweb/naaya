@@ -89,9 +89,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         except: order = 0
         if ref_list:
             values = {}
-            p_tool = self.getPortletsTool()
-            ref = p_tool.getRefListById(ref_list)
-            ref_items = ref.get_list()
+            ref_items = self.get_list_nodes(ref_list)
             values[ref_list] = self.utConvertListToLines([x.title for x in ref_items])
         self.addDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #create objects dynamic properties
@@ -113,9 +111,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         except: order = 0
         if ref_list:
             values = {}
-            p_tool = self.getPortletsTool()
-            ref = p_tool.getRefListById(ref_list)
-            ref_items = ref.get_list()
+            ref_items = self.get_list_nodes(ref_list)
             values[ref_list] = self.utConvertListToLines([x.title for x in ref_items])
         self.updateDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #update objects dynamic properties

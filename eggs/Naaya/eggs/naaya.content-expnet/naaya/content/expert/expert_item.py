@@ -94,9 +94,9 @@ def setupContentType(site):
     ptool = site.getPortletsTool()
     itopics = getattr(ptool, 'experts_topics', None)
     if not itopics:
-        ptool.manage_addRefList('experts_topics')
+        ptool.manage_addRefTree('experts_topics')
         for k, v in TOPICS.items():
-            ptool.experts_topics.manage_add_item(k, v)
+            ptool.experts_topics.manage_addRefTreeNode(k, v)
     #Create catalog index if it doesn't exist
     ctool = site.getCatalogTool()
 

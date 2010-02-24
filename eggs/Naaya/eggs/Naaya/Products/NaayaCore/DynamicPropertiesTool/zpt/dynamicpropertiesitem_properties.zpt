@@ -51,7 +51,7 @@
     <tr style="background-color: #EFEFEF">
         <td class="form-label" style="vertical-align: top">Values</td>
         <td>
-            <div id="sel_list" tal:define="reflists python:here.getPortletsTool().getRefLists()">
+            <div id="sel_list" tal:define="reflists python:here.getPortletsTool().getRefTrees()">
                 <p>Populate the selection with values from an existing <em>selection list</em>:</p>
                 <em tal:condition="not:reflists">No selection lists defined</em>
                 <select tal:condition="reflists" id="ref_list" name="ref_list" style="display: block" onchange="javascript:toggle_values(this)">

@@ -442,12 +442,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 for reflist in skel_handler.root.portlets.reflists:
                     reflist_ob = portletstool_ob._getOb(reflist.id, None)
                     if reflist_ob is None:
-                        portletstool_ob.manage_addRefList(reflist.id, reflist.title, reflist.description)
+                        portletstool_ob.manage_addRefTree(reflist.id, reflist.title, reflist.description)
                         reflist_ob = portletstool_ob._getOb(reflist.id)
                     else:
-                        reflist_ob.manage_delete_items(reflist_ob.get_collection().keys())
+                        reflist_ob.manage_delObjects(reflist_ob.objectIds())
                     for item in reflist.items:
-                        reflist_ob.add_item(item.id, item.title)
+                        reflist_ob.manage_addRefTreeNode(item.id, item.title)
                 for reftree in skel_handler.root.portlets.reftrees:
                     reftree_ob = portletstool_ob._getOb(reftree.id, None)
                     if reftree_ob is None:
@@ -853,21 +853,41 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         return [METATYPE_FOLDER, 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
     #layer over selection lists
+    def get_list_nodes(self, list_id):
+        """ Return a list with the items of the selection
+        list, first try RefLists then try RefTrees"""
+        ptool = self.getPortletsTool()
+        try:
+            return ptool.getRefListById(list_id).get_list()
+        except AttributeError:
+            try:
+                tree_thread = ptool.getRefTreeById(list_id).get_tree_thread()
+                return [x['ob'] for x in tree_thread]
+            except AttributeError:
+                return []
+
+    def get_node_title(self, list_id, node_id):
+        ptool = self.getPortletsTool()
+        try:
+            return ptool.getRefListById(list_id).get_item(node_id).title
+        except AttributeError:
+            try:
+                return ptool.getRefTreeById(list_id)[node_id].title
+            except AttributeError:
+                ''
+
     security.declarePublic('getEventTypesList')
     def getEventTypesList(self):
         """
         Return the selection list for event types.
         """
-        return self.getPortletsTool().getRefListById('event_types').get_list()
+        return self.get_list_nodes('event_types')
 
     def getEventTypeTitle(self, id):
         """
         Return the title of an item for the selection list for event types.
         """
-        try:
-            return self.getPortletsTool().getRefListById('event_types').get_item(id).title
-        except:
-            return ''
+        return get_node_title('event_types', id)
 
     #api
     security.declarePublic('process_releasedate')
@@ -3049,11 +3069,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def admin_htmlportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_htmlportlets')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reftrees_html')
-    def admin_reftrees_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_reftrees')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
     def admin_notifications_html(self, REQUEST):

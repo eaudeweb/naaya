@@ -62,7 +62,6 @@
 		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
 		<form id="site_admin_reflists" title="Portal administration - selection lists"/>
 		<form id="site_admin_reflist" title="Portal administration - list of items"/>
-		<form id="site_admin_reftrees" title="Portal administration - list of item trees"/>
 		<form id="site_admin_network" title="Portal administration - network portals"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
