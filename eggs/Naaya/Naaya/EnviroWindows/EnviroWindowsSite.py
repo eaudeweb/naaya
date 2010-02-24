@@ -200,59 +200,44 @@ class EnviroWindowsSite(NySite):
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """ Return the selection list for countries """
-        return self.getPortletsTool().getRefListById('countries').get_list()
+        return self.get_list_nodes('countries')
 
     security.declarePublic('getCountryName')
     def getCountryName(self, id):
         """ Return the title of an item for the selection list for countries """
-        try:
-            return self.getPortletsTool().getRefListById('countries').get_item(id).title
-        except:
-            return ''
+        return get_node_title('countries', id)
 
     security.declarePublic('getPrioritiesTypesList')
     def getPrioritiesTypesList(self):
         """ Return Projects selection list for priorities types """
-        return self.getPortletsTool().getRefListById('priorities_types').get_list()
+        return self.get_list_nodes('priorities_types')
 
     security.declarePublic('getPriorityTitle')
     def getPriorityTitle(self, id):
         """ Return the title of an item for the selection list for priorities types """
-        try:
-            return self.getPortletsTool().getRefListById('priorities_types').get_item(id).title
-        except:
-            return ''
+        return get_node_title('priorities_types', id)
 
     security.declarePublic('getFocusesTypesList')
     def getFocusesTypesList(self, priority_id):
         """ Return the selection list for focuses types for a given project """
         focus_list_id = "focuses_%s" % priority_id[:3]
-        try:
-            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
-        except:
-            return []
+        return self.get_list_nodes(focus_list_id.lower())
 
     security.declarePublic('getExpPrioritiesTypesList')
     def getExpPrioritiesTypesList(self):
         """ Return Experts selection list for priorities types"""
-        return self.getPortletsTool().getRefListById('priorities_types_exp').get_list()
+        return self.get_list_nodes('priorities_types_exp')
 
     security.declarePublic('getExpPriorityTitle')
     def getExpPriorityTitle(self, id):
         """ Return the title of an item for the selection list for priorities types """
-        try:
-            return self.getPortletsTool().getRefListById('priorities_types_exp').get_item(id).title
-        except:
-            return ''
+        return get_node_title('priorities_types_exp', id)
 
     security.declarePublic('getExpFocusesTypesList')
     def getExpFocusesTypesList(self, priority_id):
         """ Return the selection list for focuses types for a given project """
         focus_list_id = "focuses_%s_exp" % priority_id[:3]
-        try:
-            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
-        except:
-            return []
+        return self.get_list_nodes(focus_list_id.lower())
 
     def getSessionMainTopics(self, topic):
         """ """
@@ -269,19 +254,13 @@ class EnviroWindowsSite(NySite):
     def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
         focus_list_id = "focuses_%s" % priority_area_id[:3]
-        try:
-            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
-        except:
-            return ''
+        return get_node_title(focus_list_id.lower(), focus_id)
 
     security.declarePublic('getExpFocusTitle')
     def getExpFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
         focus_list_id = "focuses_%s_exp" % priority_area_id[:3]
-        try:
-            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
-        except:
-            return ''
+        return get_node_title(focus_list_id.lower(), focus_id)
 
 #####################################################
 # ENVIROWINDOWS functions loaded for compatibility  #

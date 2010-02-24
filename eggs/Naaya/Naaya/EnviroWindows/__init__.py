@@ -96,38 +96,30 @@ NyFolder.getCaseStudies = getCaseStudies
 from Products.Naaya.NySite import NySite
 
 #layer over selection lists
+
 def getScopeList(self):
     """ Return the selection list for scope. """
-    return self.getPortletsTool().getRefListById('scope_list').get_list()
+    return self.get_list_nodes('scope_list')
 
 def getScopeTitle(self, id):
     """ Return the title of an item for the selection list for scope """
-    try:
-        return self.getPortletsTool().getRefListById('scope_list').get_item(id).title
-    except:
-        return ''
+    return get_node_title('scope_list', id)
 
 def getTopicList(self):
     """ Return the selection list for topic. """
-    return self.getPortletsTool().getRefListById('topic_list').get_list()
+    return self.get_list_nodes('topic_list')
 
 def getTopicTitle(self, id):
     """ Return the title of an item for the selection list for topic """
-    try:
-        return self.getPortletsTool().getRefListById('topic_list').get_item(id).title
-    except:
-        return ''
+    return get_node_title('topic_list', id)
 
 def getLocationList(self):
     """ Return the selection list for locations. """
-    return self.getPortletsTool().getRefListById('location_list').get_list()
+    return self.get_list_nodes('location_list')
 
 def getLocationTitle(self, id):
     """ Return the title of an item for the selection list for location """
-    try:
-        return self.getPortletsTool().getRefListById('location_list').get_item(id).title
-    except:
-        return ''
+    return get_node_title('location_list', id)
 
 NySite.getScopeList = getScopeList
 NySite.getScopeTitle = getScopeTitle
