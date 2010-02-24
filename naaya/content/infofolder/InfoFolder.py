@@ -281,9 +281,9 @@ class NyInfoFolder(NyFolder):
         items_schema = getattr(self, '%s_schema' % self.info_type)
         ref_list_id = items_schema[property_id]['list_id']
         ptool = self.getPortletsTool()
-        category_list = getattr(ptool, ref_list_id, None)
+        category_list = self.get_list_nodes(ref_list_id)
         if category_list:
-            list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in category_list.get_list('id')]
+            list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in self.utSortObjsListByAttr(category_list, 'id', 0)]
             return category_list.title, list_items
 
     def splitFolderCategories(self):
