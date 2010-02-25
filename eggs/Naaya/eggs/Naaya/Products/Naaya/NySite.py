@@ -887,7 +887,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """
         Return the title of an item for the selection list for event types.
         """
-        return get_node_title('event_types', id)
+        return self.get_node_title('event_types', id)
 
     #api
     security.declarePublic('process_releasedate')
