@@ -1,5 +1,6 @@
 var rename_action = {"action" : "rename"};
 var move_action = {"action" : "move"};
+var creating_object = false;
 function get_node_parent_id(TREE_OBJ, NODE) {
     parent = TREE_OBJ.parent(NODE);
     parent_type = TREE_OBJ.get_type(parent);
@@ -36,7 +37,8 @@ $(function () {
                     'data' : {'data' : JSON.stringify(action)},
                     'success' : function(data){return data},
                     });
-                var created_id = created_response.responseText
+                var created_id = created_response.responseText;
+                creating_object = true;
                 TREE_OBJ.get_node(NODE).attr('id', created_id)
             },
             beforerename : function(NODE, LANG, TREE_OBJ){
@@ -48,9 +50,24 @@ $(function () {
             onrename : function(NODE, TREE_OBJ){
                 rename_action["new_name"] = TREE_OBJ.get_text(NODE);
                 rename_action["parent_tree"] = get_node_parent_tree_id(TREE_OBJ, NODE);
+                rename_action['object_creation'] = false;
                 var action = rename_action;
-                jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
+                if (creating_object == true) {
+                    action['object_creation'] = true;
+                    var renamed_response = jQuery.ajax({
+                        'async' : false,
+                        'url' : 'portal_portlets/handle_jstree_actions',
+                        'data' : {'data' : JSON.stringify(action)},
+                        'success' : function(data){return data},
+                        });
+                    var renamed_id = renamed_response.responseText;
+                    TREE_OBJ.get_node(NODE).attr('id', renamed_id);
+                }
+                else {
+                    jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
+                }
                 rename_action = {"action": "rename"};
+                creating_object = false;
             },
             beforedelete : function(NODE, TREE_OBJ){
                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
@@ -166,6 +183,10 @@ $(function () {
                         },
                         visible : function(NODE, TREE_OBJ) {
                             if (NODE.attr('rel') == 'root') return -1;
+                            var node_parent = TREE_OBJ.parent(NODE);
+                            if (TREE_OBJ.get_type(node_parent) == 'node') {
+                                return -1;
+                            }
                             if (NODE.length != 1) return 0;
                             return TREE_OBJ.check("creatable", NODE);
                         },

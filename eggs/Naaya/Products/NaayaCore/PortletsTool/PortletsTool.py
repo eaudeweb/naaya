@@ -164,10 +164,30 @@ class PortletsTool(Folder, utils):
                     parent=parent_node,
                     pickable=True)
         elif action == 'rename':
-            if type == 'tree':
-                self[data['id']].title = data['new_name']
-            if type == 'node':
-                self[data['parent_tree']['id']][data['id']].title = data['new_name']
+            if data['object_creation']:
+                if type == 'tree':
+                    obj = self[data['id']]
+                    obj_data = {
+                        'title': data['new_name'],
+                        'description': obj.description,
+                        }
+                    self.manage_delObjects([data['id']])
+                    return manage_addRefTree(self, **obj_data)
+                if type == 'node':
+                    obj_container = self[data['parent_tree']['id']]
+                    obj = obj_container[data['id']]
+                    obj_data = {
+                        'title': data['new_name'],
+                        'pickable': True,
+                        'parent': obj.parent,
+                    }
+                    obj_container.manage_delObjects(data['id'])
+                    return obj_container.manage_addRefTreeNode(**obj_data)
+            else:
+                if type == 'tree':
+                    self[data['id']].title = data['new_name']
+                if type == 'node':
+                    self[data['parent_tree']['id']][data['id']].title = data['new_name']
         elif action == 'delete':
             if type == 'tree':
                 self.manage_delObjects(data['id'])
