@@ -83,8 +83,11 @@ $(function () {
                     "parent_tree" : get_node_parent_tree_id(TREE_OBJ, NODE),
                     "children" : children,
                 }
-                jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
-                return true;
+                if (confirm('Are you sure you want to delete this node?')){
+                    jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
+                    return true;
+                }
+                else return false;
             },
             beforemove : function(NODE, REF_NODE, TYPE, TREE_OBJ){
                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
