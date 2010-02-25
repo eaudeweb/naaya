@@ -152,8 +152,8 @@ class RefTree(LocalPropertyManager, Folder):
             data_dict['attributes'] = {'rel': 'node',
                                        'id': self[node].getId(),
                                        }
+            data_dict['children'] = []
             if children:
-                data_dict['children'] = []
                 for child in children:
                     child_ob = self._getOb(child)
                     data_dict['children'].append({
@@ -178,6 +178,12 @@ class RefTree(LocalPropertyManager, Folder):
                                'rel': 'tree',
                                }
                     }
+
+    def get_list(self):
+        return self.get_tree_nodes()
+
+    def get_leafs(self):
+        return [x for x in self.get_tree_nodes() if x.parent == self.getId()]
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
