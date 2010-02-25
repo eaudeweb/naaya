@@ -859,22 +859,22 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         ptool = self.getPortletsTool()
         try:
             return ptool.getRefListById(list_id).get_list()
-        except AttributeError:
+        except:
             try:
                 tree_thread = ptool.getRefTreeById(list_id).get_tree_thread()
                 return [x['ob'] for x in tree_thread]
-            except AttributeError:
+            except:
                 return []
 
     def get_node_title(self, list_id, node_id):
         ptool = self.getPortletsTool()
         try:
             return ptool.getRefListById(list_id).get_item(node_id).title
-        except AttributeError:
+        except:
             try:
                 return ptool.getRefTreeById(list_id)[node_id].title
-            except AttributeError:
-                ''
+            except:
+                return ''
 
     security.declarePublic('getEventTypesList')
     def getEventTypesList(self):
