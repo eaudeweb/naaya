@@ -114,17 +114,17 @@ class UserRatingSetView(object):
         if self.canRate():
             self.adapted.rate(rating, user)
         else:
-            raise NotImplementedError, \
-                  "You may not re-rate an object anonymously!"
+            self.post_rate(orig_url, 'You may not re-rate an object anonymously!')
+            return
         # We set a cookie after an anonymous rating so that it's not
         # so easy to anonymously spam the ratings.
         if user is None:
             res.setCookie(self.getContentKey(), 'True', path='/')
         self.post_rate(orig_url)
 
-    def post_rate(self, orig_url=None):
+    def post_rate(self, orig_url=None, message='Your rating has been saved'):
         if orig_url is not None:
-            q_str = 'portal_status_message=Your rating has been saved'
+            q_str = 'portal_status_message=%s' % message
             q_spacer= '?' in orig_url and '&' or '?'
             res = self.request.RESPONSE
             return res.redirect(orig_url+q_spacer+q_str)
