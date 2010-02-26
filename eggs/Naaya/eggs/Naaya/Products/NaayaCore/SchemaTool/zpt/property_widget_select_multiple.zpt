@@ -110,7 +110,7 @@
                             ondblclk : false,
                         },
                     });
-                    $('#${prop_id}_tree').after('<div class=cleaner/>');
+                    $('#${prop_id}_tree').after('<div style=\'clear: both\'/>');
                 })
             </script>
             "/>
