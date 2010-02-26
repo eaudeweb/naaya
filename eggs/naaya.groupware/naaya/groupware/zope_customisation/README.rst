@@ -15,9 +15,15 @@ to live outside of any Groupware (Naaya) portal.
     template should have its Content-Type set to ``text/xml``.
 
 ``index.html``
-    Create a top-level `Page Template` named ``index.html``.
+    Create a top-level `Page Template` named ``index_html``.
 
 ``cookie_crumbler``
     After creating a top-level `CookieCrumbler` instance, replace its
     `DTML` templates with the scripts and templates provided in this
     folder.
+
+``applications``
+    Create a `GW Applications` object with id ``applications``. The
+    "mail from" field configures the address that emails will originate
+    from, and the "admin mail" field configures who will be notified of
+    application submissions.
