@@ -144,7 +144,12 @@ class EmailTool(Folder):
         #sends a generic email
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',') if e.strip()!='']
-        site_path = '/'.join(self.getSite().getPhysicalPath())
+        try:
+            site = self.getSite()
+            site_path = '/'.join(site.getPhysicalPath())
+        except:
+            site = None
+            site_path = '[no site]'
 
         try:
             if diverted_mail is not None: # we're inside a unit test
@@ -152,12 +157,12 @@ class EmailTool(Folder):
                 return 1
             elif not (self.mail_server_name and self.mail_server_port):
                 mail_logger.info('Not sending email from %r because mail '
-                                  'server is not configured',
-                                  site_path)
+                                 'server is not configured',
+                                 site_path)
                 return 0
             elif not p_to:
                 mail_logger.info('Not sending email from %r - no recipients',
-                                  site_path)
+                                 site_path)
                 return 0
             else:
                 mail_logger.info('Sending email from site: %r '
@@ -172,7 +177,8 @@ class EmailTool(Folder):
             mail_logger.error('Did not send email from site: %r to: %r '
                               'because an error occurred',
                               site_path, p_to)
-            self.getSite().log_current_error()
+            if site is not None:
+                self.getSite().log_current_error()
             return 0
 
     #zmi actions
