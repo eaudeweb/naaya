@@ -20,6 +20,18 @@ function get_node_parent_tree_id(TREE_OBJ, NODE) {
         "id": parent.attr('id')
         }
 }
+function get_children(TREE_OBJ, NODE) {
+    var all_children = [];
+    var node_children = TREE_OBJ.children(NODE);
+    node_children.each(function(){
+        all_children[all_children.length] = this;
+        $(get_children(TREE_OBJ, this)).each(function(){
+            all_children[all_children.length] = this;
+        });
+    });
+    return all_children;
+}
+
 $(function () {
     $("#jstree_container").tree({
         callback : {
@@ -39,7 +51,7 @@ $(function () {
                     });
                 var created_id = created_response.responseText;
                 creating_object = true;
-                TREE_OBJ.get_node(NODE).attr('id', created_id)
+                TREE_OBJ.get_node(NODE).attr('id', created_id);
             },
             beforerename : function(NODE, LANG, TREE_OBJ){
                 rename_action["type"] = TREE_OBJ.get_type(NODE);
@@ -62,9 +74,11 @@ $(function () {
                         });
                     var renamed_id = renamed_response.responseText;
                     TREE_OBJ.get_node(NODE).attr('id', renamed_id);
+                    TREE_OBJ.refresh();
                 }
                 else {
                     jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
+                    TREE_OBJ.refresh();
                 }
                 rename_action = {"action": "rename"};
                 creating_object = false;
@@ -72,7 +86,7 @@ $(function () {
             beforedelete : function(NODE, TREE_OBJ){
                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
                 var children = [];
-                $('#' + node_id + ' li').each(function(){
+                $(get_children(TREE_OBJ, NODE)).each(function(){
                     children[children.length] = $(this).attr('id');
                     });
                 var action = {
@@ -92,7 +106,7 @@ $(function () {
             beforemove : function(NODE, REF_NODE, TYPE, TREE_OBJ){
                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
                 var children = [];
-                $('#' + node_id + ' li').each(function(){
+                $(get_children(TREE_OBJ, NODE)).each(function(){
                     children[children.length] = $(this).attr('id');
                     });
                 move_action["type"] = TREE_OBJ.get_type(NODE);
@@ -114,7 +128,8 @@ $(function () {
                     });
                 var created_id = created_response.responseText
                 TREE_OBJ.get_node(NODE).attr('id', created_id)
-                var rename_action = {"action" : "rename"};
+                move_action = {"action" : "move"};
+                TREE_OBJ.refresh();
             },
         },
         rules : {

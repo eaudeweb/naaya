@@ -138,7 +138,7 @@ class PortletsTool(Folder, utils):
         """ """
         trees = [x.get_tree_data_for_admin() for x in self.getRefTrees()]
         data = {'data': self.getSite().title_or_id(),
-                'children': trees,
+                'children': self.utSortDictsListByKey(trees, 'data', 0),
                 'attributes' : {'id': self.getSite().getId(),
                                 'rel': 'root',
                                 }
@@ -550,7 +550,6 @@ class PortletsTool(Folder, utils):
     manage_right_portlets_html = PageTemplateFile('zpt/manage_right_portlets', globals())
 
     jstree_admin_js = ImageFile('www/jstree_admin.js', globals())
-    jstree_item_js = ImageFile('www/jstree_item.js', globals())
 
 InitializeClass(PortletsTool)
 
