@@ -12,6 +12,8 @@
 	lists (groups) of items that are used to fill selection boxes accross the portal.
 	Right-click on a list element to access available functionality.
 	You can also drag and drop items between lists and other items.
+	Please note that all actions are applied immediately. You will be asked
+	for confirmation before deleting lists or items.
 </p>
 
 <div id="jstree_container" class="tree tree-default"></div>
