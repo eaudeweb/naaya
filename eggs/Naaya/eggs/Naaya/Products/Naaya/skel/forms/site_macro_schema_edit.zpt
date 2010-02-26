@@ -15,6 +15,7 @@
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>
 	<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 </metal:block>
 <metal:block define-slot="custom_scripts" />

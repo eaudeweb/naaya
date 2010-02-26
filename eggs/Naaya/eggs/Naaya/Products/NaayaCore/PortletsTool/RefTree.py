@@ -163,8 +163,12 @@ class RefTree(LocalPropertyManager, Folder):
                             'id' : child_ob.getId(),
                         }
                     })
+            if data_dict['children']:
+                data_dict['children'] = \
+                         self.utSortDictsListByKey(data_dict['children'],
+                                                   'data', 0)
             data.append(data_dict)
-        return data
+        return self.utSortDictsListByKey(data, 'data', 0)
 
     def get_tree_json_data(self):
         """ """

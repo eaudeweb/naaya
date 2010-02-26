@@ -17,6 +17,105 @@
                             selected python: selection_item.id in value"
             tal:content="selection_item/title" i18n:translate="" />
     </select>
+
+    <tal:block condition="here/list_is_tree">
+        <tal:block content="structure string:
+            <script>
+                $$(function() {
+                    $('#'+'${prop_id}').hide();
+                    $('label[for=${prop_id}]').hide();
+
+                    var tree_data_json = undefined;
+                    $.ajax({
+                       type: 'GET',
+                       async: false,
+                       url: 'portal_portlets/${here/list_id}/get_tree_json_data',
+                       dataType: 'json',
+                       success : function(data) {
+                        tree_data_json = data;
+                        },
+                     });
+
+                    var form_selected = []
+                    $('#${prop_id} option:selected').each(function(){
+                        form_selected[form_selected.length] = this.value;
+                    });
+                    var selected_nodes = [];
+                    $(tree_data_json).each(function(){
+                        if ($.inArray(this['attributes']['id'], form_selected) != -1) {
+                            selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                        }
+                        $(this['children']).each(function(){
+                                if (this['attributes'] != null && $.inArray(this['attributes']['id'], form_selected) != -1) {
+                                    selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                                }
+                            })
+                        })
+
+                    tree_data_json = {'data':'${here/title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
+                    $('#${prop_id}_tree').tree({
+                        selected : selected_nodes,
+                        rules : {
+                            multiple : 'on',
+                        },
+                        data : {
+                            type : 'json',
+                            opts : {
+                                static : tree_data_json,
+                            },
+                        },
+                        ui : {
+                             selected_parent_close : false,
+                        },
+                        types : {
+                            'default' :{
+                                clickable : true,
+                                renameable : false,
+                                deletable : false,
+                                creatable : false,
+                                draggable : false,
+                            },
+                            'root' : {
+                                valid_children : ['node'],
+                                clickable : false,
+                                renameable : false,
+                                deletable : false,
+                                creatable : false,
+                                draggable : false,
+                                icon : {
+                                    image : '/misc_/NaayaCore/RefTree.gif'
+                                }
+                            },
+                            'node' : {
+                                valid_children : ['node'],
+                                renameable : true,
+                                max_depth : 2,
+                                icon : {
+                                    image : '/misc_/NaayaCore/RefTreeNode.gif'
+                                }
+                            }
+                        },
+                        callback : {
+                            onload : function(TREE_OBJ){
+                                TREE_OBJ.close_all();
+                            },
+                            onselect : function(NODE, TREE_OBJ){
+                                var node_id = TREE_OBJ.get_node(NODE).attr('id');
+                                $('#${prop_id} option[value='+node_id+']').attr('selected', 'selected');
+                            },
+                            ondeselect : function(NODE, TREE_OBJ){
+                                var node_id = TREE_OBJ.get_node(NODE).attr('id');
+                                $('#${prop_id} option[value='+node_id+']').attr('selected', '');
+                            },
+                            ondblclk : false,
+                        },
+                    });
+                    $('#${prop_id}_tree').after('<div class=cleaner/>');
+                })
+            </script>
+            "/>
+        <div tal:attributes="id string:${prop_id}_tree"></div>
+    </tal:block>
     <tal:block condition="python:selection_list is None">
     <p i18n:translate="">Missing selection list. Current values:</p>
     <ul>
