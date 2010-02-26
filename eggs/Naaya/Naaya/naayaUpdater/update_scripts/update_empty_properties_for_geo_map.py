@@ -51,6 +51,7 @@ class UpdateLandscapeType(UpdateScript):
                 ob.landscape_type ='Unspecified'
             if hasattr(ob, 'administrative_level') and ob.administrative_level == '':
                 ob.administrative_level ='Unspecified'
+            portal.recatalogNyObject(ob)
         return True
 
 
