@@ -70,7 +70,7 @@ class SchemaFormHelper(object):
             prop_type = widget.getDataType()
             val = self.context.getSession(prop_name, '')
             if val == '':
-                if widget.default is not None:
+                if widget.default not in (None, ''):
                     return prop_type(widget.default)
                 else:
                     return prop_type()
