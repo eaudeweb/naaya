@@ -57,9 +57,15 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         form['keywords:utf8:ustring'] = 'keyw1, keyw2'
         form['details:utf8:ustring'] = 'test_event_details'
 
-        event_types = form.find_control('event_type:utf8:ustring').get_items()[1:]
-        labels = set(map(lambda e: e.get_labels()[0].text, event_types))
-        ids = set(map(lambda e: e.name, event_types))
+        event_types = form.find_control('event_type:utf8:ustring').get_items()
+        labels = set()
+        ids = set()
+        for e in event_types:
+            try:
+                labels.add(e.get_labels()[0].text)
+            except IndexError:
+                continue
+            ids.add(e.name)
         self.failUnlessEqual(labels, set(['Conference', 'Other', 'Meeting', 'Event']))
         self.failUnlessEqual(ids, set(['conference', 'other', 'meeting', 'event']))
 
