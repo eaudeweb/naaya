@@ -30,4 +30,16 @@
     name="portlet_notifications"
     />
 
+  <adapter
+    factory="..NotificationTool.subscription_container_factory"
+    />
+
+  <class class="Products.Naaya.NySite.NySite">
+    <implements interface="..interfaces.ISubscriptionTarget" />
+  </class>
+
+  <class class="Products.NaayaBase.NyContentType.NyContentType">
+    <implements interface="..interfaces.ISubscriptionTarget" />
+  </class>
+
 </configure>
