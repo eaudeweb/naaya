@@ -38,6 +38,13 @@
 							onmouseout string:highlight(${rating_or_zero});
 							onclick string:rating.value=${star};"
 			i18n:attributes="title"/>
+		<tal:block condition="view/isAuthenticated">
+			<br/><br/>
+			<span i18n:translate="" class="label">
+				As an authenticated user you can <em>change</em> your vote at any time
+			</span>
+			<br/><br/>
+		</tal:block>
 		<input type="hidden" name="rating" value="0"/>
 
 		<input type="hidden"
