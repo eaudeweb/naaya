@@ -53,8 +53,9 @@ test_zcml = """<configure
   <include files="%(INSTANCE_HOME)s/etc/package-includes/*-configure.zcml" />
   <meta:redefinePermission from="zope2.Public" to="zope.Public" />
 
-  <five:loadProducts/>
-  <five:loadProductsOverrides/>
+  <five:loadProducts file="meta.zcml" />
+  <five:loadProducts />
+  <five:loadProductsOverrides />
 
 </configure>
 """ % {'INSTANCE_HOME': INSTANCE_HOME}

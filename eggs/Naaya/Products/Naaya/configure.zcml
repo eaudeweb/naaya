@@ -1,6 +1,5 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
-  <include package="naaya.core" />
 
   <adapter
     factory="Products.Naaya.NyFolderBase.ObjectListingPortlet"
@@ -16,4 +15,17 @@
     for="naaya.content.base.interfaces.INyContentObjectMovedEvent"
     />
 
+  <include package="naaya.core" />
+  <include package="naaya.content.base" />
+  <include package="naaya.content.contact" />
+  <include package="naaya.content.document" />
+  <include package="naaya.content.event" />
+  <include package="naaya.content.exfile" />
+  <include package="naaya.content.file" />
+  <include package="naaya.content.geopoint" />
+  <include package="naaya.content.mediafile" />
+  <include package="naaya.content.news" />
+  <include package="naaya.content.pointer" />
+  <include package="naaya.content.story" />
+  <include package="naaya.content.url" />
 </configure>
