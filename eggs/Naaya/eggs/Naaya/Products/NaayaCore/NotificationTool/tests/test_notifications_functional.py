@@ -22,11 +22,13 @@ from unittest import TestSuite, makeSuite
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.NotificationTool.NotificationTool \
-    import set_testing_mode as set_notif_testing_mode
+from Products.NaayaCore.NotificationTool.NotificationTool import (
+    set_testing_mode as set_notif_testing_mode,
+    walk_subscriptions)
 
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
+from naaya.core.utils import path_in_site
 
 class NotificationsTest(NaayaFunctionalTestCase):
     """ functional test for notifications """
@@ -60,37 +62,44 @@ class NotificationsTest(NaayaFunctionalTestCase):
         return notifications
 
     def test_notify_on_object_upload(self):
-        add_subscription = self.portal.portal_notification.add_subscription
-        add_subscription('contributor', '', 'instant', 'en')
-        add_subscription('admin', '', 'weekly', 'en')
+        add_account_subscription = \
+            self.portal.portal_notification.add_account_subscription
+        add_account_subscription('user1', '', 'instant', 'en')
+        add_account_subscription('user2', '', 'weekly', 'en')
         transaction.commit()
 
-        self.browser_do_login('contributor', 'contributor')
+        self.browser_do_login('admin', '')
 
         self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
         form = self.browser.get_form('frmEdit')
 
         form['description:utf8:ustring'] = 'i have been changed'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
         self.browser_do_logout()
 
-        self.assertEqual(self._fetch_test_notifications(), [('from.zope@example.com',
-            'contrib@example.com', u'Change notification - Notifying document',
-            u'This is an automatically generated message to inform you that the item '
-            u'"Notifying document" has been edited at '
-            'http://localhost/portal/notifol/notidoc by "contributor".')])
+        self.assertEqual(self._fetch_test_notifications(), [(
+            'from.zope@example.com',
+            'user1@example.com',
+            u'Change notification - Notifying document',
+            (u'This is an automatically generated message to inform you '
+             u'that the item "Notifying document" has been edited at '
+             u'http://localhost/portal/notifol/notidoc by "admin".'),
+            )])
 
-        remove_subscription = self.portal.portal_notification.remove_subscription
-        remove_subscription('contributor', '', 'instant', 'en')
-        remove_subscription('admin', '', 'weekly', 'en')
+        remove_account_subscription = \
+            self.portal.portal_notification.remove_account_subscription
+        remove_account_subscription('user1', '', 'instant', 'en')
+        remove_account_subscription('user2', '', 'weekly', 'en')
         transaction.commit()
 
     def test_notify_with_restricted_obj(self):
-        add_subscription = self.portal.portal_notification.add_subscription
-        add_subscription('contributor', '', 'instant', 'en')
-        add_subscription('reviewer', '', 'instant', 'en')
+        add_account_subscription = \
+            self.portal.portal_notification.add_account_subscription
+        add_account_subscription('contributor', '', 'instant', 'en')
+        add_account_subscription('reviewer', '', 'instant', 'en')
         self.portal.notifol._View_Permission = ('Reviewer','Manager')
         transaction.commit()
 
@@ -100,7 +109,8 @@ class NotificationsTest(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
 
         form['description:utf8:ustring'] = 'i have been changed'
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
         self.browser_do_logout()
@@ -109,27 +119,27 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0][1], 'reviewer@example.com')
 
-        remove_subscription = self.portal.portal_notification.remove_subscription
-        remove_subscription('contributor', '', 'instant', 'en')
-        remove_subscription('reviewer', '', 'instant', 'en')
+        remove_account_subscription = \
+            self.portal.portal_notification.remove_account_subscription
+        remove_account_subscription('contributor', '', 'instant', 'en')
+        remove_account_subscription('reviewer', '', 'instant', 'en')
         transaction.commit()
 
-    def test_object_rename_hook(self):
+    def test_object_rename(self):
         # test is here only because we want to set a "current user" that
         # has "rename" permissions
         notif = self.portal.portal_notification
-        notif.add_subscription('contributor', 'notifol',
-                                    'instant', 'en')
-        notif.add_subscription('reviewer', 'notifol/notidoc',
-                                    'weekly', 'en')
+        notif.add_account_subscription('user1', 'notifol', 'instant', 'en')
+        notif.add_account_subscription('user2',
+                                       'notifol/notidoc', 'weekly', 'en')
 
         def subscr():
-            for s in notif.list_subscriptions():
-                yield (s.location, s.notif_type, s.user_id)
+            return set((path_in_site(obj), sub.notif_type, sub.user_id) for
+                        obj, n, sub in walk_subscriptions(self.portal))
 
-        self.assertEqual(set(subscr()),
-                         set([ ('notifol', 'instant', 'contributor'),
-                               ('notifol/notidoc', 'weekly', 'reviewer') ]))
+        self.assertEqual(subscr(),
+                         set([ ('notifol', 'instant', 'user1'),
+                               ('notifol/notidoc', 'weekly', 'user2') ]))
         transaction.commit()
 
         # rename the folder using ZMI
@@ -148,14 +158,13 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
         # done renaming the folder using ZMI
 
-        self.assertEqual(set(subscr()),
-                         set([ ('newname', 'instant', 'contributor'),
-                               ('newname/notidoc', 'weekly', 'reviewer') ]))
+        self.assertEqual(subscr(),
+                         set([ ('newname', 'instant', 'user1'),
+                               ('newname/notidoc', 'weekly', 'user2') ]))
 
-        notif.remove_subscription('contributor', 'newname',
-                                       'instant', 'en')
-        notif.remove_subscription('reviewer', 'newname/notidoc',
-                                       'weekly', 'en')
+        notif.remove_account_subscription('user1', 'newname', 'instant', 'en')
+        notif.remove_account_subscription('user2',
+                                          'newname/notidoc', 'weekly', 'en')
 
         # do our own cleanup, since we renamed the folder
         self.portal.manage_delObjects(['newname'])

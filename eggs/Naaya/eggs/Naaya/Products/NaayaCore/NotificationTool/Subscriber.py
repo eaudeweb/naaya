@@ -28,9 +28,10 @@ from AccessControl import Unauthorized
 
 
 #Product imports
-from Products.NaayaCore.NotificationTool import NotificationTool
+from Products.NaayaCore.NotificationTool.NotificationTool import (
+    fetch_subscriptions, walk_subscriptions, AccountSubscription)
 
-from naaya.core import utils
+from naaya.core.utils import path_in_site
 
 class Subscriber(Implicit, Item):
     def __init__(self, id):
@@ -40,8 +41,11 @@ class Subscriber(Implicit, Item):
     def get_notification_tool(self):
         return self.getSite().getNotificationTool()
 
+    def get_context(self):
+        return self.aq_parent
+
     def get_location(self):
-        return utils.relative_object_path(self.aq_parent, self.getSite())
+        return path_in_site(self.get_context())
 
     def get_location_link(self, REQUEST):
         return self.get_notification_tool().get_location_link(REQUEST)
@@ -59,18 +63,24 @@ class Subscriber(Implicit, Item):
                 return l['id']
         return None
 
-    def list_subscriptions(self, REQUEST):
+    def list_user_subscriptions(self, REQUEST, get_all=False):
         user_id = self.get_user_id(REQUEST)
-        location = self.get_location()
 
-        notificationTool = self.get_notification_tool()
-        return notificationTool.list_subscriptions(user_id,
-            location=location, inherit_location=True)
+        if get_all:
+            obj = self.get_context().getSite()
+        else:
+            obj = self.get_context()
 
-    def list_user_subscriptions(self, REQUEST):
-        user_id = self.get_user_id(REQUEST)
-        notificationTool = self.get_notification_tool()
-        return notificationTool.list_subscriptions(user_id)
+        for obj, n, subscription in walk_subscriptions(obj):
+            if not isinstance(subscription, AccountSubscription):
+                continue
+            if subscription.user_id != user_id:
+                continue
+            yield {
+                'location': path_in_site(obj),
+                'notif_type': subscription.notif_type,
+                'lang': subscription.lang,
+            }
 
     def list_enabled_subscriptions(self):
         notificationTool = self.get_notification_tool()
@@ -79,7 +89,8 @@ class Subscriber(Implicit, Item):
 
     def get_enabled_subscriptions(self, REQUEST):
         enabled = set(self.list_enabled_subscriptions())
-        current = set((x.notif_type for x in self.list_subscriptions(REQUEST)))
+        current = set((x['notif_type'] for
+                       x in self.list_user_subscriptions(REQUEST)))
         return enabled.difference(current)
 
     def subscribe(self, REQUEST, notif_type, lang=None):
@@ -93,7 +104,8 @@ class Subscriber(Implicit, Item):
 
         notificationTool = self.get_notification_tool()
 
-        notificationTool.add_subscription(user_id, location, notif_type, lang)
+        notificationTool.add_account_subscription(user_id,
+                                                  location, notif_type, lang)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -101,7 +113,8 @@ class Subscriber(Implicit, Item):
         """ """
         user_id = self.get_user_id(REQUEST)
         notificationTool = self.get_notification_tool()
-        notificationTool.remove_subscription(user_id, location, notif_type, lang)
+        notificationTool.remove_account_subscription(
+            user_id, location, notif_type, lang)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 

@@ -138,6 +138,7 @@ class NaayaLayerClass(object):
         self.addPortalManager()
         self.addPortalContributor()
         self.addPortalReviewer()
+        self.addOtherContributors()
         self.logout()
         transaction.commit()
 
@@ -161,6 +162,16 @@ class NaayaLayerClass(object):
         atool = getattr(portal, 'acl_users')
         atool._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
             'Reviewer', 'Test', 'reviewer@example.com')
+
+    def addOtherContributors(self, portal_id='portal'):
+        portal = getattr(self.app, portal_id)
+        atool = getattr(portal, 'acl_users')
+        atool._doAddUser('user1', 'user1', ['Contributor'], '',
+            'User', 'One', 'user1@example.com')
+        atool._doAddUser('user2', 'user2', ['Contributor'], '',
+            'User', 'Two', 'user2@example.com')
+        atool._doAddUser('user3', 'user3', ['Contributor'], '',
+            'User', 'Three', 'user3@example.com')
 
     def login(self):
         '''Logs in.'''

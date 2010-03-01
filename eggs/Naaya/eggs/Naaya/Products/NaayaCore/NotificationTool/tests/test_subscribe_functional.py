@@ -38,9 +38,11 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         _notif.config['enable_daily'] = True
         _notif.config['enable_weekly'] = True
         _notif.config['enable_monthly'] = True
+        addNyFolder(self.portal, 'myfolder', contributor='admin')
         transaction.commit()
 
     def beforeTearDown(self):
+        self.portal.manage_delObjects(['myfolder'])
         _notif = self.portal.portal_notification
         _notif.config.clear()
         _notif.config.update(self._original_config)
@@ -50,7 +52,7 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         _notif = self.portal.portal_notification
         self.browser_do_login('contributor', 'contributor')
 
-        self.browser.go('http://localhost/portal/notifications_subscribe')
+        self.browser.go('http://localhost/portal/myfolder/notifications_subscribe')
 
         num_forms_before = len(self.browser.get_all_forms())
 
@@ -59,18 +61,20 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'submit'))
 
         self.browser.submit()
+        self.assertEqual(self.browser.result.http_code, 200)
 
         num_forms_after = len(self.browser.get_all_forms())
 
         self.assertEqual(num_forms_after, num_forms_before + 1)
 
         found_form = False
+        expected_controls = ['myfolder', 'instant', 'en', 'unsubscribe']
         for form in self.browser.get_all_forms():
             controls = form.controls
-            if [c.value for c in controls] == ['', 'instant', 'en', 'unsubscribe']:
+            if [c.value for c in controls] == expected_controls:
                 found_form = True
                 break
-        self.assert_(found_form)
+        self.assertTrue(found_form)
 
         self.browser_do_logout()
 

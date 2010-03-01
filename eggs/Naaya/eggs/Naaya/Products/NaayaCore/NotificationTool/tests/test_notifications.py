@@ -21,8 +21,11 @@ from unittest import TestSuite, makeSuite
 from datetime import datetime, timedelta
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.NaayaCore.NotificationTool.NotificationTool \
-    import set_testing_mode as set_notif_testing_mode
+from Products.NaayaCore.NotificationTool.NotificationTool import (
+    set_testing_mode as set_notif_testing_mode,
+    list_modified_objects)
+from Products.NaayaCore.NotificationTool.interfaces import \
+    ISubscriptionContainer
 
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
@@ -49,25 +52,24 @@ class NotificationsTest(NaayaTestCase):
         self.notif.config.update(self._original_config)
         set_notif_testing_mode(False)
 
-    def test_get_user_info(self):
-        test_contrib_data = {
-            'user_id': 'contributor',
-            'full_name': 'Contributor Test',
-            'email': 'contrib@example.com',
-        }
-        contrib_data = self.notif._get_user_info('contributor')
-        self.failUnlessEqual(contrib_data, test_contrib_data)
+    def test_get_email(self):
+        self.notif.add_account_subscription('contributor', '', 'instant', 'en')
+        subscription = list(ISubscriptionContainer(self.portal))[0]
+        self.assertEqual(subscription.get_email(self.portal),
+                         'contrib@example.com')
 
     def test_list_modified_objects(self):
         now = datetime.now() + timedelta(hours=1)
-        modified_objects = self.notif._list_modified_objects(now-timedelta(days=7), now)
+        modified_objects = list_modified_objects(
+                self.portal, now-timedelta(days=7), now)
         self.failUnless('contact' in (ob.id for ob in modified_objects))
 
-        modified_objects = self.notif._list_modified_objects(now, now+timedelta(days=7))
+        modified_objects = list_modified_objects(
+                self.portal, now, now+timedelta(days=7))
         self.failIf(len(list(modified_objects)) > 0)
 
     def test_mail_instant(self):
-        self.notif.add_subscription('contributor', '', 'instant', 'en')
+        self.notif.add_account_subscription('contributor', '', 'instant', 'en')
         self.notif.notify_instant(self.portal.info.contact, 'somebody')
 
         self.assertEqual(self._notifications, [
@@ -77,10 +79,12 @@ class NotificationsTest(NaayaTestCase):
             u'that the item "Contact us" has been created at '
             u'http://nohost/portal/info/contact by "somebody".')])
 
-        self.notif.remove_subscription('contributor', '', 'instant', 'en')
+        self.notif.remove_account_subscription('contributor',
+                                               '', 'instant', 'en')
 
     def test_mail_weekly(self):
-        self.notif.add_subscription('contributor', 'notifol', 'weekly', 'en')
+        self.notif.add_account_subscription('contributor',
+                                            'notifol', 'weekly', 'en')
 
         now = datetime.now()
         self.notif._send_newsletter('weekly',
@@ -93,7 +97,8 @@ class NotificationsTest(NaayaTestCase):
             u'notifol (at http://nohost/portal/notifol)\n'
             u'Notifying document (at http://nohost/portal/notifol/notidoc)')])
 
-        self.notif.remove_subscription('contributor', 'notifol', 'weekly', 'en')
+        self.notif.remove_account_subscription('contributor',
+                                               'notifol', 'weekly', 'en')
 
 def test_suite():
     suite = TestSuite()
