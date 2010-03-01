@@ -605,7 +605,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             #check sources
             for source in self.getSources():
                 source_acl = source.getUserFolder()
-                user_ob = source_acl.getUser(user)
+                # here we convert `user` to `str` because, for some strange
+                # reason, some user IDs are stored as `unicode` in the DB
+                user_ob = source_acl.getUser(str(user))
                 if user_ob:
                     return source.title
             return 'n/a'

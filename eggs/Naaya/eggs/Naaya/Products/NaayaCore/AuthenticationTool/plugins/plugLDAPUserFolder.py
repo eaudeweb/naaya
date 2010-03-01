@@ -495,7 +495,7 @@ class LdapSatelliteProvider(Acquisition.Implicit):
         with a simplified mock factory.
         """
         for auth_plugin in self.getSite().getAuthenticationTool().getSources():
-            if auth_plugin.getUserFolder() == user.aq_parent:
+            if auth_plugin.getUserFolder().getUser(user.getId()) is user:
                 return lambda group: auth_plugin.user_in_group(user, group)
         else:
             return lambda group: False
