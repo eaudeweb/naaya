@@ -8,8 +8,8 @@
 </tal:block>
 <tal:block condition="here/is_logged">
 <tal:block define="location python:here.get_location();
-					current_subscriptions python:list(here.list_subscriptions(request));
-                    my_subscriptions python:list(here.list_user_subscriptions(request));
+					current_subscriptions python:list(here.list_user_subscriptions(request));
+                    my_subscriptions python:list(here.list_user_subscriptions(request, get_all=True));
                     available_subscriptions python:here.get_enabled_subscriptions(request)">
 
 

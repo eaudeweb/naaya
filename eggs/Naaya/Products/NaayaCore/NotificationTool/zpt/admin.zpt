@@ -97,11 +97,13 @@
 </form>
 
 <h2 i18n:translate="">Current subscriptions</h2>
-<tal:block tal:define="current_subscriptions python:list(here.list_subscriptions())">
+<tal:block tal:define="current_subscriptions
+                           python:list(here.admin_get_subscriptions())">
 <br />
-<p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">No users have yet subscribed to any notifications.</p> 
+<p tal:condition="python:len(current_subscriptions) == 0"
+   i18n:translate="">No users have yet subscribed to any notifications.</p> 
 <br />
-<form action="admin_add_subscription" method="post"
+<form action="admin_add_account_subscription" method="post"
       tal:define="available_subscriptions python:list(here.available_notif_types())">
     <fieldset>
         <legend i18n:translate="">Add user subscripion</legend>
@@ -145,27 +147,29 @@
 		<th></th>
 	</thead>
 	<tbody>
-		<tr tal:repeat="subscription current_subscriptions">
+		<tr tal:repeat="sub_data current_subscriptions">
 			<td>
-				<span tal:content="subscription/user_id"/>
+				<span tal:content="sub_data/user"/>
 			</td>
-			<td tal:define="location subscription/location">
+			<td tal:define="location sub_data/location">
                 <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
                 <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
 			</td>
 			<td>
-				<span tal:content="subscription/notif_type"/>
+				<span tal:content="sub_data/notif_type"/>
 			</td>
-			<td tal:define="lang subscription/lang">
+			<td tal:define="lang sub_data/lang">
 				<span tal:content="python:here.gl_get_language_name(lang)"/>
 			</td>
 			<td>
-				<form method="post" tal:attributes="action string:${here/absolute_url}/admin_remove_subscription">
-					<input type="hidden" name="user_id" tal:attributes="value subscription/user_id"/>
-					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
-					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
-					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
-					<input type="submit" value="unsubscribe" i18n:attributes="value"/>
+				<form method="post"
+				      tal:attributes="action string:${here/absolute_url}/admin_remove_account_subscription">
+					<input type="hidden" name="location"
+					       tal:attributes="value sub_data/location"/>
+					<input type="hidden" name="sub_id:int"
+					       tal:attributes="value sub_data/sub_id"/>
+					<input type="submit" value="unsubscribe"
+					       i18n:attributes="value"/>
 				</form>
 			</td>
 		</tr>

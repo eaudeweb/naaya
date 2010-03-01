@@ -20,11 +20,6 @@
     for="naaya.content.base.interfaces.INyContentObjectEditEvent"
     />
 
-  <subscriber
-    handler="Products.NaayaCore.NotificationTool.subscribers.update_subscriptions_after_move"
-    for="naaya.content.base.interfaces.INyContentObjectMovedEvent"
-    />
-
   <adapter
     factory="..NotificationTool.NotificationsPortlet"
     name="portlet_notifications"

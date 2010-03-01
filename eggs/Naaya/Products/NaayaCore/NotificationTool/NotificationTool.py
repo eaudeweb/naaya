@@ -24,6 +24,7 @@ from operator import attrgetter
 
 from datetime import time, datetime, timedelta
 from itertools import ifilter
+import logging
 
 #Zope imports
 from DateTime import DateTime
@@ -34,7 +35,6 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
 from persistent import Persistent
-from BTrees.OIBTree import OISet as PersistentTreeSet
 from zope import interface
 from zope import component
 from zope import annotation
@@ -49,10 +49,13 @@ from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from naaya.content.base.interfaces import INyContentObject
 from naaya.core.utils import path_in_site
 from naaya.core.utils import relative_object_path
+from naaya.core.utils import force_to_unicode
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscription
 from interfaces import ISubscriptionTarget
+
+notif_logger = logging.getLogger('naaya.core.notif')
 
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
@@ -62,8 +65,17 @@ def manage_addNotificationTool(self, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+# TODO: remove `Subscription` after all sites have been updated
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
+def match_account_subscription(subs, user_id, notif_type, lang):
+    for n, subscription in subs.list_with_keys():
+        if not isinstance(subscription, AccountSubscription):
+            continue
+        if (subscription.user_id == user_id and
+            subscription.notif_type == notif_type and
+            subscription.lang == lang):
+            return n
 
 class NotificationTool(Folder):
     """ """
@@ -80,7 +92,6 @@ class NotificationTool(Folder):
         """ """
         self.id = id
         self.title = title
-        self.subscriptions = PersistentTreeSet()
         self.config = PersistentDict({
             'admin_on_error': True,
             'admin_on_edit': True,
@@ -107,27 +118,44 @@ class NotificationTool(Folder):
         else:
             return self.getSite().absolute_url()
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_add_subscription')
-    def admin_add_subscription(self, user_id, location, notif_type, lang, REQUEST):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_get_subscriptions')
+    def admin_get_subscriptions(self):
+        for obj, sub_id, subscription in walk_subscriptions(self.getSite()):
+            yield {
+                'user': subscription.to_string(obj),
+                'location': path_in_site(obj),
+                'sub_id': sub_id,
+                'lang': subscription.lang,
+                'notif_type': subscription.notif_type,
+            }
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_add_account_subscription')
+    def admin_add_account_subscription(self, REQUEST, user_id,
+                                       location, notif_type, lang):
         """ """
         if location == '/': location = ''
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
         try:
-            self.add_subscription(user_id, location, notif_type, lang)
+            self.add_account_subscription(user_id, location, notif_type, lang)
         except ValueError, msg:
             self.setSessionErrors(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remove_subscription')
-    def admin_remove_subscription(self, user_id, location, notif_type, lang, REQUEST):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_remove_account_subscription')
+    def admin_remove_account_subscription(self, REQUEST, location, sub_id):
         """ """
-        self.remove_subscription(user_id, location, notif_type, lang)
+        obj = self.getSite().restrictedTraverse(location)
+        subscription_container = ISubscriptionContainer(obj)
+        subscription_container.remove(sub_id)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
-    security.declarePrivate('add_subscription')
-    def add_subscription(self, user_id, location, notif_type, lang):
+    security.declarePrivate('add_account_subscription')
+    def add_account_subscription(self, user_id, location, notif_type, lang):
         """ Subscribe the user `user_id` """
         if notif_type not in ('instant', 'daily', 'weekly', 'monthly'):
             raise ValueError('Unknown notification type "%s"' % notif_type)
@@ -136,41 +164,26 @@ class NotificationTool(Folder):
         if notif_type not in self.available_notif_types(location):
             raise ValueError('Subscribing to notifications in "%s" not allowed' % location)
 
-        subscription = Subscription(user_id, location, notif_type, lang)
-        if self.subscriptions.has_key(subscription):
+        obj = self.getSite().restrictedTraverse(location)
+        subscription_container = ISubscriptionContainer(obj)
+        n = match_account_subscription(subscription_container,
+                                       user_id, notif_type, lang)
+        if n is not None:
             raise ValueError('Subscription already exists')
 
-        self.subscriptions.insert(subscription)
+        subscription = AccountSubscription(user_id, notif_type, lang)
+        subscription_container.add(subscription)
 
-    security.declarePrivate('remove_subscription')
-    def remove_subscription(self, user_id, location, notif_type, lang):
-        subscription = Subscription(user_id, location, notif_type, lang)
-        try:
-            self.subscriptions.remove(subscription)
-        except KeyError:
+    security.declarePrivate('remove_account_subscription')
+    def remove_account_subscription(self, user_id, location, notif_type, lang):
+        obj = self.getSite().restrictedTraverse(location)
+        subscription_container = ISubscriptionContainer(obj)
+        n = match_account_subscription(subscription_container,
+                                       user_id, notif_type, lang)
+        if n is None:
             raise ValueError('Subscription not found')
 
-    def list_subscriptions(self, user_id=None, notif_type=None,
-            location=None, inherit_location=False):
-        """ iterate over all existing subscriptions """
-        output = self.subscriptions.__iter__()
-
-        if user_id is not None:
-            f = lambda s: s.user_id == user_id
-            output = ifilter(f, output)
-
-        if notif_type is not None:
-            f = lambda s: s.notif_type == notif_type
-            output = ifilter(f, output)
-
-        if location is not None:
-            if inherit_location:
-                f = lambda s: is_subpath(location, s.location)
-            else:
-                f = lambda s: s.location == location
-            output = ifilter(f, output)
-
-        return output
+        subscription_container.remove(n)
 
     def available_notif_types(self, location=''):
         if self.config['enable_instant']:
@@ -190,14 +203,16 @@ class NotificationTool(Folder):
         """
         if not self.config['enable_instant']:
             return
-        ob_path = relative_object_path(ob, self._get_site())
-        messages_by_user = {}
-        for subscription in self.list_subscriptions(notif_type='instant'):
-            if not is_subpath(ob_path, subscription.location):
+        messages_by_email = {}
+        for subscription in fetch_subscriptions(ob, inherit=True):
+            if not subscription.check_permission(ob):
                 continue
-            if not self._has_view_permission(subscription.user_id, ob):
+            if subscription.notif_type != 'instant':
                 continue
-            messages_by_user[subscription.user_id] = {
+            email = subscription.get_email(ob)
+            if email is None:
+                continue
+            messages_by_email[email] = {
                 'ob': ob,
                 'ob_edited': ob_edited,
                 'person': user_id,
@@ -205,16 +220,7 @@ class NotificationTool(Folder):
             }
 
         template = self._get_template('instant')
-        self._send_notifications(messages_by_user, template)
-
-    def _list_modified_objects(self, when_start, when_end):
-        DT_when_start = DateTime_from_datetime(when_start)
-        DT_when_end = DateTime_from_datetime(when_end)
-        catalog = self.getSite().getCatalogTool()
-        brains = catalog(bobobase_modification_time={
-            'query': (DT_when_start, DT_when_end), 'range': 'min:max'})
-        for brain in brains:
-            yield brain.getObject()
+        self._send_notifications(messages_by_email, template)
 
     def _get_template(self, name):
         template = self._getOb('%s_emailpt' % name, None)
@@ -222,105 +228,53 @@ class NotificationTool(Folder):
             raise ValueError('template for "%s" not found' % name)
         return template.render_email
 
-    def _get_email_tool(self):
-        return self.getSite().getEmailTool()
-
-    def _get_site(self):
-        return self.getSite()
-
-    def _has_view_permission(self, user_id, ob):
-        acl_users = self.getSite().getAuthenticationTool()
-        user = acl_users.get_user_with_userid(user_id)
-
-        if user is None:
-            return False
-        elif user.has_permission(view, ob):
-            return True
-        else:
-            return False
-
-    def _send_notifications(self, messages_by_user, template):
+    def _send_notifications(self, messages_by_email, template):
         """
-        Send the notifications described in the `messages_by_user` data
+        Send the notifications described in the `messages_by_email` data
         structure, using the specified EmailTemplate.
 
-        `messages_by_user` should be a dictionary, keyed by user_id. The
-        values should be dictionaries suitable to be passwd as kwargs
-        to the template.
+        `messages_by_email` should be a dictionary, keyed by email
+        address. The values should be dictionaries suitable to be passed
+        as kwargs (options) to the template.
         """
-        portal = self._get_site()
-        email_tool = self._get_email_tool()
+        portal = self.getSite()
+        email_tool = portal.getEmailTool()
         addr_from = email_tool._get_from_address()
-        for user_id, kwargs in messages_by_user.iteritems():
-            addr_to = self._get_user_info(user_id)['email']
-            translate = self._get_site().getPortalTranslations()
+        for addr_to, kwargs in messages_by_email.iteritems():
+            translate = self.getSite().getPortalTranslations()
             kwargs.update({'portal': portal, '_translate': translate})
             mail_data = template(**kwargs)
             send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])
-
-    def _get_user_info(self, user_id):
-        # First look for the user in Nayaa's acl_users
-        auth_tool = self.getAuthenticationTool()
-        user_obj = auth_tool.getUser(user_id)
-        if user_obj is not None:
-            return {
-                'user_id': user_id,
-                'full_name': '%s %s' % (
-                        auth_tool.getUserFirstName(user_obj),
-                        auth_tool.getUserLastName(user_obj)),
-                'email': auth_tool.getUserEmail(user_obj),
-            }
-
-        # The user is not in Naaya's acl_users, so let's look deeper
-        parent_acl_users = self.restrictedTraverse('/').acl_users
-        if parent_acl_users.meta_type == 'LDAPUserFolder':
-            # TODO: what if parent_acl_users is not an LDAPUserFolder?
-            # Note: EIONET LDAP data is encoded with latin-1
-            ldap_user_data = parent_acl_users.getUserById(user_id)
-            if ldap_user_data:
-                return {
-                    'user_id': ldap_user_data.uid,
-                    'full_name': ldap_user_data.cn,
-                        # taken from DAPUserFolder's cache,
-                        # already utf-8
-                    'email': ldap_user_data.mail,
-                }
-
-        # Didn't find the user anywhere; return a placeholder
-        return {
-            'user_id': user_id,
-            'full_name': '[missing user]',
-            'email': None,
-        }
 
     def _send_newsletter(self, notif_type, when_start, when_end):
         """
         Send notifications for the period between `when_start` and `when_end`
         using the `notif_type` template
         """
-        objects_by_user = {}
-        langs_by_user = {}
-        for ob in self._list_modified_objects(when_start, when_end):
-            ob_path = relative_object_path(ob, self._get_site())
-            for subscription in self.list_subscriptions(notif_type=notif_type):
-                if not is_subpath(ob_path, subscription.location):
+        objects_by_email = {}
+        langs_by_email = {}
+        for ob in list_modified_objects(self.getSite(), when_start, when_end):
+            for subscription in fetch_subscriptions(ob, inherit=True):
+                if subscription.notif_type != notif_type:
                     continue
-                if not self._has_view_permission(subscription.user_id, ob):
+                if not subscription.check_permission(ob):
                     continue
-                msgs_for_user = objects_by_user.setdefault(subscription.user_id, [])
-                msgs_for_user.append({'ob': ob})
-                langs_by_user[subscription.user_id] = subscription.lang
+                email = subscription.get_email(ob)
+                if email is None:
+                    continue
+                objects_by_email.setdefault(email, []).append({'ob': ob})
+                langs_by_email[email] = subscription.lang
 
-        messages_by_user = {}
-        for user_id in objects_by_user:
-            messages_by_user[user_id] = {
-                'objs': objects_by_user[user_id],
-                '_lang': langs_by_user[user_id],
+        messages_by_email = {}
+        for email in objects_by_email:
+            messages_by_email[email] = {
+                'objs': objects_by_email[email],
+                '_lang': langs_by_email[email],
             }
 
         template = self._get_template(notif_type)
-        self._send_notifications(messages_by_user, template)
+        self._send_notifications(messages_by_email, template)
 
     def _cron_heartbeat(self, when):
 
@@ -401,6 +355,15 @@ class NotificationTool(Folder):
 
 InitializeClass(NotificationTool)
 
+def list_modified_objects(site, when_start, when_end):
+    DT_when_start = DateTime_from_datetime(when_start)
+    DT_when_end = DateTime_from_datetime(when_end)
+    catalog = site.getCatalogTool()
+    brains = catalog(bobobase_modification_time={
+        'query': (DT_when_start, DT_when_end), 'range': 'min:max'})
+    for brain in brains:
+        yield brain.getObject()
+
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
     mail = build_email(addr_from, addr_to, subject, body)
     #TODO: send using the EmailSender
@@ -425,19 +388,6 @@ def set_testing_mode(testing, save_to=[]):
         send_notification = _send_notification
 
 set_testing_mode(False)
-
-def norm_folder_path(p):
-    if p == '':
-        return '/'
-    else:
-        return '/' + p + '/'
-
-def is_subpath(path1, path2):
-    """ check whether `path1` is inside the folder `path2` """
-    path1 = norm_folder_path(path1)
-    path2 = norm_folder_path(path2)
-
-    return path1.startswith(path2)
 
 def DateTime_from_datetime(dt):
     DT = DateTime(dt.isoformat())

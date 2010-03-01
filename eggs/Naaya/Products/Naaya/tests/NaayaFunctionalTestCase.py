@@ -160,3 +160,6 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
             if msg is None:
                 msg = "Access should be allowed, but is denied"
             self.failIf(access_denied, msg)
+
+    def print_last_error(self):
+        print self.portal.error_log._getLog()[0]['tb_text']

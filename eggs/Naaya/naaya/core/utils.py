@@ -34,3 +34,14 @@ def call_method(obj, attr, default):
         return obj[attr]()
     else:
         return default
+
+def force_to_unicode(s):
+    if isinstance(s, unicode):
+        return s
+    elif isinstance(s, str):
+        try:
+            return s.decode('utf-8')
+        except UnicodeDecodeError:
+            return s.decode('latin-1')
+    else:
+        raise ValueError('expected `str` or `unicode`')
