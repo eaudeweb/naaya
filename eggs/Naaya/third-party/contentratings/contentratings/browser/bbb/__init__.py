@@ -166,6 +166,10 @@ class UserRatingSetView(object):
         return not (user is None and
              self.request.cookies.get(self.getContentKey(), None) is not None)
 
+    def isAuthenticated(self):
+        """ """
+        return self._getUser() is not None
+
     def userRating(self, userid=None):
         return self.adapted.userRating(userid or self._getUser())
 
