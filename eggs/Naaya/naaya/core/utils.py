@@ -11,6 +11,13 @@ def relative_object_path(obj, ancestor):
         raise ValueError('My path is not in the site. Panicking.')
     return obj_path[len(ancestor_path)+1:]
 
+def path_in_site(obj):
+    """
+    Compute the relative path of `obj` in reference to its
+    containing site
+    """
+    return relative_object_path(obj, obj.getSite())
+
 def get_noaq_attr(obj, attr, default):
     """
     Return the wanted attribute without

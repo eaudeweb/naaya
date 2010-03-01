@@ -33,9 +33,11 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
+from persistent import Persistent
 from BTrees.OIBTree import OISet as PersistentTreeSet
 from zope import interface
 from zope import component
+from zope import annotation
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -44,8 +46,13 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from Products.Naaya.interfaces import INySite, IHeartbeat
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
-
+from naaya.content.base.interfaces import INyContentObject
+from naaya.core.utils import path_in_site
 from naaya.core.utils import relative_object_path
+
+from interfaces import ISubscriptionContainer
+from interfaces import ISubscription
+from interfaces import ISubscriptionTarget
 
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
@@ -56,6 +63,7 @@ def manage_addNotificationTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
+
 
 class NotificationTool(Folder):
     """ """
@@ -448,6 +456,123 @@ def set_day_of_month(the_date, day):
 
 def minus_one_month(the_date):
     return set_day_of_month(the_date.replace(day=1) - timedelta(days=1), the_date.day)
+
+
+class SubscriptionContainer(Persistent):
+    interface.implements(ISubscriptionContainer)
+    component.adapts(ISubscriptionTarget)
+
+    def __init__(self):
+        self.subscriptions = PersistentDict()
+        self._next_id = 1
+
+    def add(self, subscription):
+        self.subscriptions[self._next_id] = subscription
+        self._next_id += 1
+
+    def remove(self, n):
+        del self.subscriptions[n]
+
+    def list_with_keys(self):
+        for n, subscription in self.subscriptions.iteritems():
+            yield n, subscription
+
+    def __iter__(self):
+        for subscription in self.subscriptions.itervalues():
+            yield subscription
+
+subscription_container_factory = annotation.factory(SubscriptionContainer)
+
+class AccountSubscription(object):
+    interface.implements(ISubscription)
+
+    def __init__(self, user_id, notif_type, lang):
+        self.user_id = user_id
+        self.lang = lang
+        self.notif_type = notif_type
+
+    def check_permission(self, obj):
+        acl_users = obj.getSite().getAuthenticationTool()
+        user = acl_users.get_user_with_userid(self.user_id)
+
+        if user is None:
+            return False
+        elif user.has_permission(view, obj):
+            return True
+        else:
+            return False
+
+    def _name_and_email(self, obj):
+        # First look for the user in Nayaa's acl_users
+        site = obj.getSite()
+        auth_tool = site.getAuthenticationTool()
+        user_obj = auth_tool.getUser(self.user_id)
+        if user_obj is not None:
+            full_name = u'%s %s' % (
+                    auth_tool.getUserFirstName(user_obj),
+                    auth_tool.getUserLastName(user_obj))
+            email = auth_tool.getUserEmail(user_obj)
+            return (full_name, email)
+
+        # The user is not in Naaya's acl_users, so let's look deeper
+        parent_acl_users = site.restrictedTraverse('/').acl_users
+        if parent_acl_users.meta_type == 'LDAPUserFolder':
+            # TODO: what if parent_acl_users is not an LDAPUserFolder?
+            # Note: EIONET LDAP data is encoded with latin-1
+            ldap_user_data = parent_acl_users.getUserById(self.user_id)
+            if ldap_user_data:
+                full_name = ldap_user_data.cn
+                email = ldap_user_data.mail
+                return (force_to_unicode(full_name), email)
+
+        # Didn't find the user anywhere; return a placeholder
+        notif_logger.warn('Could not find email for user %r (context: %r)',
+                          self.user_id, obj)
+        return (u'[not found]', None)
+
+    def get_email(self, obj):
+        return self._name_and_email(obj)[1]
+
+    def to_string(self, obj):
+        name, email = self._name_and_email(obj)
+        return u'%s (%s)' % (name, self.user_id)
+
+def fetch_subscriptions(obj, inherit):
+    """
+    Get subscriptions on `obj`. If `inherit` is True then recurse
+    into parents, up to site level.
+    """
+    try:
+        sc = ISubscriptionContainer(obj)
+    except TypeError:
+        # we probably went below site level; bail out.
+        return
+
+    for subscription in sc:
+        yield subscription
+
+    if inherit:
+        for subscription in fetch_subscriptions(obj.aq_parent, inherit=True):
+            yield subscription
+
+def walk_subscriptions(obj):
+    """
+    Get subscriptions on `obj` and all of its children. Returns a
+    generator that yields tuples in the form `(obj, n, subscription)`.
+    """
+    try:
+        sc = ISubscriptionContainer(obj)
+    except TypeError:
+        # we reached an object that does not support subscription
+        return
+
+    for n, subscription in sc.list_with_keys():
+        yield (obj, n, subscription)
+
+    for child_obj in obj.objectValues():
+        for item in walk_subscriptions(child_obj):
+            yield item
+
 
 @component.adapter(INySite, IHeartbeat)
 def notifSubscriber(site, hb):
