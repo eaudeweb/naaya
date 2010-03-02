@@ -137,6 +137,7 @@
                 </div>
             </metal:block>
             <tal:block replace="structure here/portal_statistics/ga_verify" />
+            <metal:block define-slot="javascript_files"></metal:block>
         </body>
     </metal:block>
     </html>
