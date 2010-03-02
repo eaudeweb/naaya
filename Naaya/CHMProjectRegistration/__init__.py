@@ -1,28 +1,28 @@
 from App.ImageFile import ImageFile
 
 from Products.Naaya import register_content
-import CHMRegistration
+import CHMProjectRegistration
 from utilities.StaticServe import StaticServeFromZip
 
-ADD_PERMISSION = 'Add CHM Registration'
+ADD_PERMISSION = 'Add CHM Project Registration'
 
 # Register as a folder content type
 register_content(
-    module=CHMRegistration,
-    klass=CHMRegistration.CHMRegistration,
-    module_methods={'manage_add_chm_registration': ADD_PERMISSION, 'add_chm_registration': ADD_PERMISSION},
+    module=CHMProjectRegistration,
+    klass=CHMProjectRegistration.CHMProjectRegistration,
+    module_methods={'manage_add_chm_project_registration': ADD_PERMISSION, 'add_chm_project_registration': ADD_PERMISSION},
     klass_methods={},
-    add_method=('add_chm_registration', ADD_PERMISSION),
+    add_method=('add_chm_project_registration', ADD_PERMISSION),
 )
 
 def initialize(context):
     context.registerClass(
-                          CHMRegistration.CHMRegistration,
+                          CHMProjectRegistration.CHMProjectRegistration,
                           permission = ADD_PERMISSION,
                           constructors=(
-                                    CHMRegistration.add_chm_registration,
-                                    CHMRegistration.manage_add_chm_registration),
-                          icon='www/CHMRegistration.gif',
+                                    CHMProjectRegistration.add_chm_project_registration,
+                                    CHMProjectRegistration.manage_add_chm_project_registration),
+                          icon='www/CHMProjectRegistration.gif',
                           )
 
 misc_ = {
@@ -33,7 +33,7 @@ misc_ = {
     'datetime.js': ImageFile('www/datetime.js', globals()),
     'style.css': ImageFile('www/style.css', globals()),
     'print.css': ImageFile('www/print.css', globals()),
-    'CHMParticipant.png': ImageFile('www/CHMParticipant.png', globals()),
+    'CHMProject.png': ImageFile('www/CHMProject.png', globals()),
     'print.gif': ImageFile('www/print.gif', globals()),
     'EmailTemplates.gif': ImageFile('www/EmailTemplates.gif', globals()),
     }
