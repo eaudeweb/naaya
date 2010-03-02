@@ -2,17 +2,16 @@ import re
 import time
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
-def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
+def form_validation (mandatory_fields, date_fields, time_fields, email_fields, REQUEST):
     has_errors = False
     #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
     for k,v in REQUEST.form.items():
-        if k in mandatory_fields:
-            if 'email' in k and v:
-                if not email_expr.match(v):
-                    REQUEST.set('%s_notvalid' % k, True)
-                    has_errors = True
-            if not v:
-                REQUEST.set('%s_error' % k, True)
+        if k in mandatory_fields and not v:
+            REQUEST.set('%s_error' % k, True)
+            has_errors = True
+        if 'email' in k and v:
+            if not email_expr.match(v):
+                REQUEST.set('%s_notvalid' % k, True)
                 has_errors = True
         if k in date_fields and v:
             try:
@@ -27,9 +26,6 @@ def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
                 REQUEST.set('%s_notvalid' % k, True)
                 has_errors = True
 
-        if k == 'disclose_permission' and v == '0':
-            REQUEST.set('disclose_permission_error', True)
-            has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
     return not has_errors
@@ -60,7 +56,7 @@ def registration_validation(mandatory_fields, date_fields, time_fields, REQUEST)
     if administrative_email and not has_errors:
         for email_address in administrative_email:
             if email_address and not email_expr.match(email_address):
-                REQUEST.set('%s_notvalid' % k, True)
+                REQUEST.set('administrative_email_notvalid', True)
                 has_errors = True
 
     start_date = REQUEST.form.get('start_date', '')

@@ -6,7 +6,7 @@
 					color python:here.utHexColors(curr_lang);">
 
 	<h1 tal:content="here/getRegistrationTitle" />
-	<h2 tal:content="here/getConferenceDetails" />
+	<h2 tal:content="here/getRegistrationDetails" />
 	<h3>
 		<span i18n:translate="">Registration opened for the period: </span>
 		<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
@@ -16,7 +16,7 @@
 	<span tal:replace="structure here/menu_buttons"/>
 
 	<div class="field">
-		<span tal:replace="structure python:here.getPropertyValue('conference_description', curr_lang)" />
+		<span tal:replace="structure python:here.getPropertyValue('registration_description', curr_lang)" />
 	</div>
 
 </tal:block>

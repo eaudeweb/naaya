@@ -22,65 +22,106 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
-import time
+from datetime import datetime
 
 from utilities.validators import form_validation, str2date
 import constants
 
-class BaseParticipant(SimpleItem):
-    """ Base class for participants """
+class CHMProject(SimpleItem):
+    """ Project class """
+
+    meta_type = 'CHM Project'
+    product_name = 'CHMProjectRegistration'
+    icon = 'misc_/CHMProjectRegistration/CHMProject.png'
 
     security = ClassSecurityInfo()
 
-    def __init__(self, registration_id, organisation_name, organisation_address,\
-                organisation_website, media_contact_name, email,\
-                media_contact_telephone, media_contact_details, program_contact_name,\
-                program_contact_email, program_contact_telephone, vip_contact_name,\
-                vip_contact_email, vip_contact_telephone, activities, disclose_permission,\
+    def __init__(self, id,\
+                title, requesting_organisations, other_partners, other_requests,\
+                contact_name, contact_address, contact_telephone, contact_fax, contact_email,\
+                start_date, end_date, important_dates,\
+                goal, subgoals, activities, results, locations, target_group,\
+                expectation, risks, reporting,\
+                requested_budget, total_budget, partner_contribution, added_value,\
+                financial_contact_name, financial_contact_address, financial_contact_telephone,
+                financial_contact_fax, financial_contact_email,
                 admin_comment=''):
         """ constructor """
-        self.id = registration_id
-        self.organisation_name = organisation_name
-        self.organisation_address = organisation_address
-        self.organisation_website = organisation_website
-        self.media_contact_name = media_contact_name
-        self.email = email
-        self.media_contact_telephone = media_contact_telephone
-        self.media_contact_details = media_contact_details
-        self.program_contact_name = program_contact_name
-        self.program_contact_email = program_contact_email
-        self.program_contact_telephone = program_contact_telephone
-        self.vip_contact_name = vip_contact_name
-        self.vip_contact_email = vip_contact_email
-        self.vip_contact_telephone = vip_contact_telephone
-        self.disclose_permission = disclose_permission
+        self.id = id
+        self.title = title
+        self.requesting_organisations = requesting_organisations
+        self.other_partners = other_partners
+        self.other_requests = other_requests
+        self.contact_name = contact_name
+        self.contact_address = contact_address
+        self.contact_telephone = contact_telephone
+        self.contact_fax = contact_fax
+        self.contact_email = contact_email
+        self.start_date = start_date
+        self.end_date = end_date
+        self.important_dates = important_dates
+        self.goal = goal
+        self.subgoals = subgoals
         self.activities = activities
+        self.results = results
+        self.locations = locations
+        self.target_group = target_group
+        self.expectation = expectation
+        self.risks = risks
+        self.reporting = reporting
+        self.requested_budget = requested_budget
+        self.total_budget = total_budget
+        self.partner_contribution = partner_contribution
+        self.added_value = added_value
+        self.financial_financial_contact_name = financial_contact_name
+        self.financial_contact_address = financial_contact_address
+        self.financial_contact_telephone = financial_contact_telephone
+        self.financial_contact_fax = financial_contact_fax
+        self.financial_contact_email = financial_contact_email
         self.admin_comment = admin_comment
-        self.registration_date = time.localtime()
+        self.registration_date = datetime.now()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
-    def edit(self, organisation_name, organisation_address,\
-            organisation_website, media_contact_name, email,\
-            media_contact_telephone, media_contact_details, program_contact_name,\
-            program_contact_email, program_contact_telephone, vip_contact_name,\
-            vip_contact_email, vip_contact_telephone, activities, disclose_permission,\
-            admin_comment):
+    def edit(self, title, requesting_organisations, other_partners, other_requests,\
+            contact_name, contact_address, contact_telephone, contact_fax, contact_email,\
+            start_date, end_date, important_dates,\
+            goal, subgoals, activities, results, locations, target_group,\
+            expectation, risks, reporting,\
+            requested_budget, total_budget, partner_contribution, added_value,\
+            financial_contact_name, financial_contact_address, financial_contact_telephone,
+            financial_contact_fax, financial_contact_email,
+            admin_comment=''):
         """ edit properties """
-        self.organisation_name = organisation_name
-        self.organisation_address = organisation_address
-        self.organisation_website = organisation_website
-        self.media_contact_name = media_contact_name
-        self.email = email
-        self.media_contact_telephone = media_contact_telephone
-        self.media_contact_details = media_contact_details
-        self.program_contact_name = program_contact_name
-        self.program_contact_email = program_contact_email
-        self.program_contact_telephone = program_contact_telephone
-        self.vip_contact_name = vip_contact_name
-        self.vip_contact_email = vip_contact_email
-        self.vip_contact_telephone = vip_contact_telephone
-        self.disclose_permission = disclose_permission
+        self.title = title
+        self.requesting_organisations = requesting_organisations
+        self.other_partners = other_partners
+        self.other_requests = other_requests
+        self.contact_name = contact_name
+        self.contact_address = contact_address
+        self.contact_telephone = contact_telephone
+        self.contact_fax = contact_fax
+        self.contact_email = contact_email
+        self.start_date = start_date
+        self.end_date = end_date
+        self.important_dates = important_dates
+        self.goal = goal
+        self.subgoals = subgoals
         self.activities = activities
+        self.results = results
+        self.locations = locations
+        self.target_group = target_group
+        self.expectation = expectation
+        self.risks = risks
+        self.reporting = reporting
+        self.requested_budget = requested_budget
+        self.total_budget = total_budget
+        self.partner_contribution = partner_contribution
+        self.added_value = added_value
+        self.financial_contact_name = financial_contact_name
+        self.financial_contact_address = financial_contact_address
+        self.financial_contact_telephone = financial_contact_telephone
+        self.financial_contact_fax = financial_contact_fax
+        self.financial_contact_email = financial_contact_email
         self.admin_comment = admin_comment
 
     def getCountry(self, lang):
@@ -94,14 +135,14 @@ class BaseParticipant(SimpleItem):
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
-            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.organisation_name))) or \
-            self.canManageParticipants() or self.canViewParticipants()
+            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.contact_name))) or \
+            self.canManageProjects() or self.canViewProjects()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
-    _index_html = PageTemplateFile('zpt/participant/index', globals())
+    _index_html = PageTemplateFile('zpt/project/index', globals())
     #@todo: security
     def index_html(self, REQUEST=None):
-        """ edit base participant properties """
+        """ edit project properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
         lang = self.gl_get_selected_language()
@@ -114,29 +155,25 @@ class BaseParticipant(SimpleItem):
             email_recipients = [getattr(self, field) for field in constants.PART_EMAIL_RECIPIENTS]
             user_email = REQUEST.form.get('email', '')
             if user_email in email_recipients:
-                conference_period = self.aq_parent.getPropertyValue('conference_period', lang)
-                conference_place = self.aq_parent.getPropertyValue('conference_place', lang)
                 values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.aq_parent.title,
-                            'conference_period': conference_period,
-                            'conference_place': conference_place,
-                            'website_team': self.site_title,
+                            'registration_event': self.unicode2UTF8(self.aq_parent.title),
+                            'website_team': self.unicode2UTF8(self.site_title),
                             'registration_id': self.id,
-                            'name': self.organisation_name}
-                self.send_registration_notification(user_email,
+                            'name': self.unicode2UTF8(self.contact_name)}
+                """self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
-                    self.getEmailTemplate('user_registration_text', lang) % values)
+                    self.getEmailTemplate('user_registration_text', lang) % values)"""
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
         return self._index_html(REQUEST)
 
-    _edit_html = PageTemplateFile('zpt/participant/edit', globals())
+    _edit_html = PageTemplateFile('zpt/project/edit', globals())
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, mandatory_fields, REQUEST=None):
-        """ edit base participant properties """
+        """ edit project properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
         lang = self.gl_get_selected_language()
@@ -145,6 +182,7 @@ class BaseParticipant(SimpleItem):
             if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
+                                email_fields=constants.EMAIL_FIELDS,
                                 REQUEST=REQUEST):
                 session.set('authentication_id', REQUEST.get('registration_id'))
                 session.set('authentication_name', self.unicode2UTF8(REQUEST.get('authentication_name')))
@@ -153,19 +191,15 @@ class BaseParticipant(SimpleItem):
             email_recipients = [getattr(self, field) for field in constants.PART_EMAIL_RECIPIENTS]
             user_email = REQUEST.form.get('email', '')
             if user_email in email_recipients:
-                conference_period = self.aq_parent.getPropertyValue('conference_period', lang)
-                conference_place = self.aq_parent.getPropertyValue('conference_place', lang)
                 values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.aq_parent.title,
-                            'conference_period': conference_period,
-                            'conference_place': conference_place,
-                            'website_team': self.site_title,
+                            'registration_event': self.unicode2UTF8(self.aq_parent.title),
+                            'website_team': self.unicode2UTF8(self.site_title),
                             'registration_id': self.id,
-                            'name': self.organisation_name}
-                self.send_registration_notification(user_email,
+                            'name': self.unicode2UTF8(self.contact_name)}
+                """self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
-                    self.getEmailTemplate('user_registration_text', lang) % values)
+                    self.getEmailTemplate('user_registration_text', lang) % values)"""
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
@@ -173,6 +207,7 @@ class BaseParticipant(SimpleItem):
             if form_validation(mandatory_fields=mandatory_fields, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
+                                email_fields=constants.EMAIL_FIELDS,
                                 REQUEST=REQUEST):
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
@@ -183,12 +218,12 @@ class BaseParticipant(SimpleItem):
                             'registration_event': self.aq_parent.title,
                             'website_team': self.site_title,
                             'registration_id': self.id}
-                self.send_registration_notification(self.administrative_email,
+                """self.send_registration_notification(self.administrative_email,
                     'Event registration',
                     self.getEmailTemplate('admin_registration_html', 'en') % values,
-                    self.getEmailTemplate('admin_registration_text', 'en') % values)
+                    self.getEmailTemplate('admin_registration_text', 'en') % values)"""
 
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)
 
-InitializeClass(BaseParticipant)
+InitializeClass(CHMProject)

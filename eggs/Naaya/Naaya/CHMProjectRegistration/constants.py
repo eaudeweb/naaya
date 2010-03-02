@@ -19,21 +19,22 @@
 # Valentin Dumitru, Eau de Web
 
 #constants
-PART_MANDATORY_FIELDS = ['organisation_name', 'organisation_address',\
-                'organisation_website', 'media_contact_name', 'email',\
-                'media_contact_telephone', 'program_contact_name', 'program_contact_email',\
-                'program_contact_telephone', 'vip_contact_name', 'vip_contact_email',\
+PART_MANDATORY_FIELDS = ['title', 'requesting_organisations',
+                'contact_name', 'contact_address', 'contact_telephone', 'contact_fax' ,'contact_email',
+                'start_date', 'end_date',
+                'goal', 'subgoals', 'activities', 'results', 'target_group', 'reporting',
+                'requested_budget', 'total_budget', 'partner_contribution', 'added_value',
                 'vip_contact_telephone', 'disclose_permission']
-PART_EMAIL_RECIPIENTS = ['email', 'program_contact_email']
-REG_MANDATORY_FIELDS = ['title', 'conference_period','conference_place',\
-                'administrative_email', 'start_date', 'end_date']
+PART_EMAIL_RECIPIENTS = ['contact_email']
+REG_MANDATORY_FIELDS = ['title', 'administrative_email', 'start_date', 'end_date']
 REG_DATE_FIELDS = ['start_date', 'end_date']
 REG_TIME_FIELDS = []
 
 AUTH_MANDATORY_FIELDS = ['registration_id']
 
-DATE_FIELDS = []
+DATE_FIELDS = ['start_date', 'end_date']
 TIME_FIELDS = []
+EMAIL_FIELDS = ['contact_email', 'financial_contact_email']
 
 SMTP_HOST = 'localhost'
 SMTP_PORT = '25'
