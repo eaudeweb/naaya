@@ -30,7 +30,7 @@ import time
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.NaayaCore.managers.csv_import_export import UnicodeReader
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from CHMParticipant import CHMParticipant
+#from CHMProject import CHMProject
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
 from utilities.validators import form_validation, registration_validation, str2date
@@ -38,8 +38,8 @@ from utilities import tmpfile, checkPermission
 import constants
 
 
-add_chm_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_chm_registration(self, id='', title='', conference_details='',\
+add_chm_project_registration = PageTemplateFile('zpt/registration/add', globals())
+def manage_add_chm_project_registration(self, id='', title='', conference_details='',\
     conference_description='', conference_period='', conference_place='',
     administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
     """ Adds a CHM registration instance"""
@@ -50,7 +50,7 @@ def manage_add_chm_registration(self, id='', title='', conference_details='',\
         id = naaya_utils.make_id(self, id=id, title=title, prefix='registration')
         if lang is None: 
             lang = self.gl_get_selected_language()
-        ob = CHMRegistration(id, title, conference_details, conference_description,\
+        ob = CHMProjectRegistration(id, title, conference_details, conference_description,\
         conference_period, conference_place, administrative_email, start_date, end_date, lang)
         self.gl_add_languages(ob)
         self._setObject(id, ob)
@@ -59,14 +59,14 @@ def manage_add_chm_registration(self, id='', title='', conference_details='',\
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
-        return add_chm_registration.__of__(self)(REQUEST)
+        return add_chm_project_registration.__of__(self)(REQUEST)
 
 
-class CHMRegistration(LocalPropertyManager, Folder):
+class CHMProjectRegistration(LocalPropertyManager, Folder):
     """ Main class of the meeting registration"""
 
-    meta_type = 'CHM Registration Dec2009'
-    product_name = 'CHMRegistrationDec2009'
+    meta_type = 'CHM Project Registration'
+    product_name = 'CHMProjectRegistration'
 
     security = ClassSecurityInfo()
 
@@ -119,16 +119,16 @@ class CHMRegistration(LocalPropertyManager, Folder):
         """ load registration forms """
         registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
         manage_addPageTemplate(self, 'registration_form', title='', text=registration_form)
-        view_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'view_participant.zpt')).read()
-        edit_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'edit_participant.zpt')).read()
+        view_project = file(join(constants.PRODUCT_PATH, 'zpt', 'project', 'view_project.zpt')).read()
+        edit_project = file(join(constants.PRODUCT_PATH, 'zpt', 'project', 'edit_project.zpt')).read()
         menu_buttons = file(join(constants.PRODUCT_PATH, 'zpt', 'menu_buttons.zpt')).read()
         manage_addPageTemplate(self, 'menu_buttons', title='', text=menu_buttons)
-        manage_addPageTemplate(self, 'view_participant', title='', text=view_participant)
-        manage_addPageTemplate(self, 'edit_participant', title='', text=edit_participant)
+        manage_addPageTemplate(self, 'view_project', title='', text=view_project)
+        manage_addPageTemplate(self, 'edit_project', title='', text=edit_project)
 
     def _deleteRegistrationForms(self):
         try:
-            self.manage_delObjects(['registration_form', 'menu_buttons', 'view_participant', 'edit_participant'])
+            self.manage_delObjects(['registration_form', 'menu_buttons', 'view_project', 'edit_project'])
         except:
             pass
 
@@ -153,25 +153,25 @@ class CHMRegistration(LocalPropertyManager, Folder):
                 registration_id = naaya_utils.make_id(self, prefix='p')
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                ob = CHMParticipant(registration_id, **cleaned_data)
+                #ob = CHMProject(registration_id, **cleaned_data)
                 self._setObject(registration_id, ob)
-                participant = self._getOb(registration_id, None)
-                if participant:
+                project = self._getOb(registration_id, None)
+                if project:
                     #save the authentication token on session
                     REQUEST.SESSION.set('authentication_id', registration_id)
-                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.organisation_name))
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(project.organisation_name))
 
                     #send notifications
-                    email_recipients = [getattr(participant, field) for field in constants.PART_EMAIL_RECIPIENTS]
+                    email_recipients = [getattr(project, field) for field in constants.PART_EMAIL_RECIPIENTS]
                     conference_period = self.getPropertyValue('conference_period', lang)
                     conference_place = self.getPropertyValue('conference_place', lang)
-                    values = {'registration_edit_link': participant.absolute_url(),
+                    values = {'registration_edit_link': project.absolute_url(),
                                 'registration_event': self.unicode2UTF8(self.title),
                                 'conference_period': conference_period,
                                 'conference_place': conference_place,
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_id': registration_id,
-                                'name': self.unicode2UTF8(participant.organisation_name)}
+                                'name': self.unicode2UTF8(project.organisation_name)}
                     self.send_registration_notification(email_recipients,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
@@ -182,7 +182,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                         self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                     #redirect to profile page
-                    return REQUEST.RESPONSE.redirect(participant.absolute_url())
+                    return REQUEST.RESPONSE.redirect(project.absolute_url())
         return self.registration_form(REQUEST)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
@@ -243,8 +243,8 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     smtp_port = constants.SMTP_PORT
                     )
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'importParticipants')
-    def importParticipants(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'importProjects')
+    def importProjects(self, REQUEST=None, RESPONSE=None):
         """ """
         errors = []
         succcess = ''
@@ -258,11 +258,11 @@ class CHMRegistration(LocalPropertyManager, Folder):
             for row in reader:
                 try:
                     record_number += 1
-                    participant_data = {}
+                    project_data = {}
                     for column, value in zip(header, row):
-                        participant_data[str(column)] = value
+                        project_data[str(column)] = value
                     registration_id = naaya_utils.make_id(self, prefix='p')
-                    ob = CHMParticipant(registration_id, **participant_data)
+                    #ob = CHMProject(registration_id, **project_data)
                     self._setObject(registration_id, ob)
                 except UnicodeDecodeError, e:
                     raise
@@ -282,11 +282,11 @@ class CHMRegistration(LocalPropertyManager, Folder):
             REQUEST.set('success', "%s records were imported successfully." % record_number)
         else:
             REQUEST.set('errors', errors)
-        return self.participants(REQUEST)
+        return self.projects(REQUEST)
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportParticipants')
-    def exportParticipants(self, REQUEST=None, RESPONSE=None):
-        """ exports the participants list in CSV format """
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportProjects')
+    def exportProjects(self, REQUEST=None, RESPONSE=None):
+        """ exports the projects list in CSV format """
         data = [('Registration date', 'Registration number',
                 'Organisation Name', 'Organisation Address', 'Organisation Website',
                 'Media contact name', 'Media contact email',
@@ -295,7 +295,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                 'VIP contact name', 'VIP contact email', 'VIP contact telephone',
                 'Activities', 'Disclose permission', 'Comments')]
         data_app = data.append
-        for part in self.getParticipants(skey='registration_date', rkey=1):
+        for part in self.getProjects(skey='registration_date', rkey=1):
             """if part.private_email:
                 email_type = 'Private'
             else:
@@ -312,7 +312,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     self.unicode2UTF8(part.activities.replace('\r\n', ' ').replace('\n', ' ')),
                     disclose_permission, self.unicode2UTF8(part.admin_comment)))
 
-        return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
+        return self.create_csv(data, filename='projects.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declarePrivate('create_csv')
     def create_csv(self, data, filename, RESPONSE):
@@ -322,50 +322,50 @@ class CHMRegistration(LocalPropertyManager, Folder):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % filename)
         return content
 
-    _participants = PageTemplateFile('zpt/registration/participants', globals())
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'participants')
-    def participants(self, ids=[], REQUEST=None):
-        """ Loads the participants template.
-        Deletes selected participants or saves comments, depending on the pressed button. """
-        delete_participants = None
+    _projects = PageTemplateFile('zpt/registration/projects', globals())
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'projects')
+    def projects(self, ids=[], REQUEST=None):
+        """ Loads the projects template.
+        Deletes selected projects or saves comments, depending on the pressed button. """
+        delete_projects = None
         save_comments = None
         if REQUEST is not None:
-            delete_participants = REQUEST.get('delete_selected', None)
+            delete_projects = REQUEST.get('delete_selected', None)
             save_comments = REQUEST.get('save_comments', None)
-        if delete_participants is not None:
-            self.deleteParticipants(ids)
+        if delete_projects is not None:
+            self.deleteProjects(ids)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if save_comments is not None:
             comments = [(key.split('_')[-1], value) for key, value in REQUEST.form.items() if key.startswith('admin_comment_') and value]
             for comment in comments:
                 self._getOb(comment[0]).admin_comment = comment[1]
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        return self._participants(REQUEST)
+        return self._projects(REQUEST)
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'getParticipants')
-    def getParticipants(self, skey, rkey):
-        """ Returns the list of participants """
-        meta_type = 'CHM Participant'
-        participants = [ ( self.unicode2UTF8(getattr(p, skey)), p ) for p in self.objectValues(meta_type) ]
-        participants.sort()
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'getProjects')
+    def getProjects(self, skey, rkey):
+        """ Returns the list of projects """
+        meta_type = 'CHM Project'
+        projects = [ ( self.unicode2UTF8(getattr(p, skey)), p ) for p in self.objectValues(meta_type) ]
+        projects.sort()
         if rkey:
-            participants.reverse()
-        return [p for (key, p) in participants]
+            projects.reverse()
+        return [p for (key, p) in projects]
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'deleteParticipants')
-    def deleteParticipants(self, ids):
-        """ Deletes selected participants """
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'deleteProjects')
+    def deleteProjects(self, ids):
+        """ Deletes selected projects """
         ids = self.utConvertToList(ids)
         self.manage_delObjects(ids)
 
-    security.declarePublic('canManageParticipants')
-    def canManageParticipants(self):
-        """ Check the permissions to edit/delete meeting settgins and participants """
+    security.declarePublic('canManageProjects')
+    def canManageProjects(self):
+        """ Check the permissions to edit/delete meeting settgins and projects """
         return checkPermission(constants.MANAGE_PERMISSION, self)
 
-    security.declarePublic('canViewParticipants')
-    def canViewParticipants(self):
-        """ Check the permissions to edit/delete participants """
+    security.declarePublic('canViewProjects')
+    def canViewProjects(self):
+        """ Check the permissions to edit/delete projects """
         return checkPermission(constants.VIEW_EDIT_PERMISSION, self)
 
     security.declarePublic('getRegistrationTitle')
@@ -412,4 +412,4 @@ class CHMRegistration(LocalPropertyManager, Folder):
         """ """
         return None
 
-InitializeClass(CHMRegistration)
+InitializeClass(CHMProjectRegistration)
