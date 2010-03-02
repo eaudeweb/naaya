@@ -1,6 +1,6 @@
 Dear Madam, Sir,
 
-Your registration for the conference "%(registration_event)s" that will take place on %(conference_period)s in %(conference_place)s was received in good order.
+Your registration was received in good order.
 To review and/or edit the submitted information please use the following link:
 
 %(registration_edit_link)s
@@ -9,6 +9,6 @@ The registration number %(registration_id)s and the name %(name)s (case sensitiv
 
 ---
 Best Regards,
-The conference organisers
+The registration organisers
 
 For questions or remarks please contact: Snethlage@ecnc.org

@@ -30,7 +30,7 @@ import time
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.NaayaCore.managers.csv_import_export import UnicodeReader
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-#from CHMProject import CHMProject
+from CHMProject import CHMProject
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
 from utilities.validators import form_validation, registration_validation, str2date
@@ -39,9 +39,9 @@ import constants
 
 
 add_chm_project_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_chm_project_registration(self, id='', title='', conference_details='',\
-    conference_description='', conference_period='', conference_place='',
-    administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
+def manage_add_chm_project_registration(self, id='', title='', registration_details='',\
+    registration_description='', administrative_email ='', start_date='', end_date='',\
+    lang='', REQUEST=None):
     """ Adds a CHM registration instance"""
     if registration_validation(constants.REG_MANDATORY_FIELDS,
                                             constants.REG_DATE_FIELDS,
@@ -50,8 +50,8 @@ def manage_add_chm_project_registration(self, id='', title='', conference_detail
         id = naaya_utils.make_id(self, id=id, title=title, prefix='registration')
         if lang is None: 
             lang = self.gl_get_selected_language()
-        ob = CHMProjectRegistration(id, title, conference_details, conference_description,\
-        conference_period, conference_place, administrative_email, start_date, end_date, lang)
+        ob = CHMProjectRegistration(id, title, registration_details, registration_description,\
+        administrative_email, start_date, end_date, lang)
         self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
@@ -71,8 +71,8 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
     security = ClassSecurityInfo()
 
     title = LocalProperty('title')
-    conference_details = LocalProperty('conference_details')
-    conference_description = LocalProperty('conference_description')
+    registration_details = LocalProperty('registration_details')
+    registration_description = LocalProperty('registration_description')
 
     manage_options = (
         Folder.manage_options[:1]
@@ -91,25 +91,20 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         manage_addTemplatesManager(self)
         self._loadRegistrationForms()
 
-    def __init__(self, id, title, conference_details, conference_description,\
-                    conference_period, conference_place, administrative_email,\
-                    start_date, end_date, lang):
+    def __init__(self, id, title, registration_details, registration_description,\
+                    administrative_email, start_date, end_date, lang):
         """ constructor """
         self.id = id
-        self.save_properties(title, conference_details, conference_description,\
-                    conference_period, conference_place, administrative_email,\
-                    start_date, end_date, lang)
+        self.save_properties(title, registration_details, registration_description,\
+                    administrative_email, start_date, end_date, lang)
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'save_properties')
-    def save_properties(self, title, conference_details, conference_description,\
-                    conference_period, conference_place, administrative_email,\
-                    start_date, end_date, lang):
+    def save_properties(self, title, registration_details, registration_description,\
+                    administrative_email, start_date, end_date, lang):
         """ save properties """
         self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('conference_details', lang, conference_details)
-        self._setLocalPropValue('conference_description', lang, conference_description)
-        self._setLocalPropValue('conference_period', lang, conference_period)
-        self._setLocalPropValue('conference_place', lang, conference_place)
+        self._setLocalPropValue('registration_details', lang, registration_details)
+        self._setLocalPropValue('registration_description', lang, registration_description)
         self.administrative_email = administrative_email
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
@@ -147,39 +142,36 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             form_valid = form_validation(constants.PART_MANDATORY_FIELDS,
                                             constants.DATE_FIELDS,
                                             constants.TIME_FIELDS,
+                                            constants.EMAIL_FIELDS,
                                             REQUEST)
             if form_valid:
                 lang = self.gl_get_selected_language()
                 registration_id = naaya_utils.make_id(self, prefix='p')
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                #ob = CHMProject(registration_id, **cleaned_data)
+                ob = CHMProject(registration_id, **cleaned_data)
                 self._setObject(registration_id, ob)
                 project = self._getOb(registration_id, None)
                 if project:
                     #save the authentication token on session
                     REQUEST.SESSION.set('authentication_id', registration_id)
-                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(project.organisation_name))
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(project.contact_name))
 
                     #send notifications
                     email_recipients = [getattr(project, field) for field in constants.PART_EMAIL_RECIPIENTS]
-                    conference_period = self.getPropertyValue('conference_period', lang)
-                    conference_place = self.getPropertyValue('conference_place', lang)
                     values = {'registration_edit_link': project.absolute_url(),
                                 'registration_event': self.unicode2UTF8(self.title),
-                                'conference_period': conference_period,
-                                'conference_place': conference_place,
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_id': registration_id,
-                                'name': self.unicode2UTF8(project.organisation_name)}
-                    self.send_registration_notification(email_recipients,
+                                'name': self.unicode2UTF8(project.contact_name)}
+                    """self.send_registration_notification(email_recipients,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
                         self.getEmailTemplate('user_registration_text', lang) % values)
                     self.send_registration_notification(self.administrative_email,
                         'Event registration',
                         self.getEmailTemplate('admin_registration_html', 'en') % values,
-                        self.getEmailTemplate('admin_registration_text', 'en') % values)
+                        self.getEmailTemplate('admin_registration_text', 'en') % values)"""
 
                     #redirect to profile page
                     return REQUEST.RESPONSE.redirect(project.absolute_url())
@@ -262,7 +254,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                     for column, value in zip(header, row):
                         project_data[str(column)] = value
                     registration_id = naaya_utils.make_id(self, prefix='p')
-                    #ob = CHMProject(registration_id, **project_data)
+                    ob = CHMProject(registration_id, **project_data)
                     self._setObject(registration_id, ob)
                 except UnicodeDecodeError, e:
                     raise
@@ -302,8 +294,8 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                 email_type = 'Public'"""
             disclose_permission = part.disclose_permission == '1' and 'Yes' or 'No'
             data_app((self.formatDate(part.registration_date), part.id,
-                    self.unicode2UTF8(part.organisation_name), self.unicode2UTF8(part.organisation_address),
-                    self.unicode2UTF8(part.organisation_website), self.unicode2UTF8(part.media_contact_name),
+                    self.unicode2UTF8(part.contact_name), self.unicode2UTF8(part.contact_address),
+                    self.unicode2UTF8(part.contact_website), self.unicode2UTF8(part.media_contact_name),
                     part.email, self.unicode2UTF8(part.media_contact_telephone), 
                     self.unicode2UTF8(part.media_contact_details.replace('\r\n', ' ').replace('\n', ' ')),
                     self.unicode2UTF8(part.program_contact_name), part.program_contact_email,
@@ -373,10 +365,10 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         """ """
         return self.title
 
-    security.declarePublic('getConferenceDetails')
-    def getConferenceDetails(self):
+    security.declarePublic('getRegistrationDetails')
+    def getRegistrationDetails(self):
         """ """
-        return self.conference_details
+        return self.registration_details
 
     #internal
     def formatDate(self, sdate, format='%d/%m/%Y'):

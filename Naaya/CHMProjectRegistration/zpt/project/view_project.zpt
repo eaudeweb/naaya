@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" media="print" href="/misc_/CHMRegistration/print.css" />
 
 <h1 tal:content="here/getRegistrationTitle" />
-<h2 tal:content="here/getConferenceDetails" />
+<h2 tal:content="here/getRegistrationDetails" />
 
 <tal:block define="global entitled python:here.isEntitled(request);
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();

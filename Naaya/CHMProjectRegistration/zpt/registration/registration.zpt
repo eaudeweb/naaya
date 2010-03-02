@@ -1,257 +1,375 @@
-<tal:block replace="structure here/standard_html_header"/>
-<link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMRegistrationDec2009/style.css"/>
-<!--<script type="text/javascript" src="/misc_/CHMRegistrationDec2009/core.js"></script>
-<script type="text/javascript" src="/misc_/CHMRegistrationDec2009/calendar.js"></script>
-<script type="text/javascript" src="/misc_/CHMRegistrationDec2009/datetime.js"></script>
-<script type="text/javascript" src="/misc_/CHMRegistrationDec2009/tinymce/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="/misc_/CHMRegistrationDec2009/tinymceconfig.js"></script>-->
+<metal:block metal:use-macro="here/standard_template_macro">
 
-<tal:block define="global registration_opened here/registrationOpened;
-					global registration_not_closed here/registrationNotClosed;
-					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
-					global curr_lang_label python:here.get_language_name(curr_lang);"/>
+	<metal:block metal:fill-slot="title">
+		<title tal:content="string:Add project | ${here/site_title}" />
+	</metal:block>
 
-<h1 tal:content="here/getRegistrationTitle" />
-<h2 tal:content="here/getConferenceDetails" />
+	<metal:block fill-slot="head">
+		<link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMProjectRegistration/style.css"/>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/core.js"></script>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/calendar.js"></script>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/datetime.js"></script>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/tinymce/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/tinymceconfig.js"></script>
+	</metal:block>
 
-<!--<h3>
-	<span i18n:translate="">Registration opened for the period: </span>
-	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
-	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
-</h3>-->
+	<metal:block metal:fill-slot="body"
+				tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+							curr_lang_label python:here.get_language_name(curr_lang);">
 
-<tal:block tal:condition="python:registration_opened and registration_not_closed">
+		<h1 tal:content="here/getRegistrationTitle" />
+		<h2 tal:content="here/getRegistrationDetails" />
 
-	<div class="field">
-		<h4 i18n:translate="">Replyform</h4>
-		<p i18n:translate="">Fields with * are mandatory</p>
-		<p i18n:translate="">A notification e-mail of this registration will be sent
-			to the media contact and the program contact.</p>
-	</div>
-
-
-	<form action="" method="post">
-		<div>
-		<fieldset class="registration_fields">
-			<legend i18n:translate="">Organisation</legend>
-			<div class="field">
-				<label class="mandatory" for="organisation_name">
-					<span i18n:translate="">Name</span> *
-				</label>
-				<div tal:condition="python:request.has_key('organisation_name_error')" class="message-error"
-					i18n:translate="">
-					The name is mandatory!
-				</div>
-				<input type="text" name="organisation_name:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('organisation_name')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="organisation_address">
-					<span i18n:translate="">Address</span> *
-				</label>
-				<div tal:condition="python:request.has_key('organisation_address_error')" class="message-error"
-					i18n:translate="">
-					The address is mandatory!
-				</div>
-				<textarea name="organisation_address:utf8:ustring" cols="66" rows="5"
-					tal:content="python:request.get('organisation_address')">
-				</textarea>
-			</div>
-			<div class="field">
-				<label class="mandatory" for="organisation_website">
-					<span i18n:translate="">Website</span> *
-				</label>
-				<span i18n:translate="">(the URL of your organisation to which a link
-					will be made from the website of the Dutch IYB coalition)<br/><br/></span>
-				<div tal:condition="python:request.has_key('organisation_website_error')" class="message-error"
-					i18n:translate="">
-					The website address is mandatory!
-				</div>
-				<input type="text" name="organisation_website:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('organisation_website')" />
-			</div>
-		</fieldset>
-		</div>
-		<div>
-		<fieldset class="registration_fields">
-			<legend i18n:translate="">Media contact</legend>
-			<span i18n:translate="">
-				(Contact person in your organisation responsible for media and marketing)
-			</span>
-			<div class="field">
-				<label class="mandatory" for="media_contact_name">
-					<span i18n:translate="">Name</span> *
-				</label>
-				<div tal:condition="python:request.has_key('media_contact_name_error')" class="message-error"
-					i18n:translate="">
-					The name is mandatory!
-				</div>
-				<input type="text" name="media_contact_name:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('media_contact_name')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="email">
-					<span i18n:translate="">Email</span> *
-				</label>
-				<div tal:condition="python:request.has_key('email_error')" class="message-error"
-					i18n:translate="">
-					The email is mandatory!
-				</div>
-				<div tal:condition="python:request.has_key('email_notvalid')" class="message-error"
-					i18n:translate="">
-					Please enter a valid email address!
-				</div>
-				<input type="text" name="email:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('email')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="email">
-					<span i18n:translate="">Telephone</span> *
-				</label>
-				<div tal:condition="python:request.has_key('media_contact_telephone_error')" class="message-error"
-					i18n:translate="">
-					The telephone is mandatory!
-				</div>
-				<input type="text" name="media_contact_telephone:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('media_contact_telephone')" /><br/>
-			</div>
-			<div class="field">
-				<label for="media_contact_details" i18n:translate="">Contact details</label>
-				<textarea name="media_contact_details:utf8:ustring" cols="66" rows="5"
-					tal:content="python:request.get('media_contact_details')">
-				</textarea>
-			</div>
-		</fieldset>
-		</div>
-		<div>
-		<fieldset class="registration_fields">
-			<legend i18n:translate="">Program contact</legend>
-			<span i18n:translate="">
-				(Contact person in your organisation responsible for the 2010 IYB activities)
-			</span>
-			<div class="field">
-				<label class="mandatory" for="program_contact_name">
-					<span i18n:translate="">Name</span> *
-				</label>
-				<div tal:condition="python:request.has_key('program_contact_name_error')" class="message-error"
-					i18n:translate="">
-					The name is mandatory!
-				</div>
-				<input type="text" name="program_contact_name:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('program_contact_name')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="program_contact_email">
-					<span i18n:translate="">Email</span> *
-				</label>
-				<div tal:condition="python:request.has_key('program_contact_email_error')" class="message-error"
-					i18n:translate="">
-					The email is mandatory!
-				</div>
-				<div tal:condition="python:request.has_key('program_contact_email_notvalid')" class="message-error"
-					i18n:translate="">
-					Please enter a valid email address!
-				</div>
-				<input type="text" name="program_contact_email:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('program_contact_email')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="email">
-					<span i18n:translate="">Telephone</span> *
-				</label>
-				<div tal:condition="python:request.has_key('program_contact_telephone_error')" class="message-error"
-					i18n:translate="">
-					The telephone is mandatory!
-				</div>
-				<input type="text" name="program_contact_telephone:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('program_contact_telephone')" /><br/>
-			</div>
-		</fieldset>
-		</div>
-		<div>
-		<fieldset class="registration_fields">
-			<legend i18n:translate="">VIP contact</legend>
-			<span i18n:translate="">
-				(Contact person in your organisation when it comes to invititations for VIP events)
-			</span>
-			<div class="field">
-				<label class="mandatory" for="vip_contact_name">
-					<span i18n:translate="">Name</span> *
-				</label>
-				<div tal:condition="python:request.has_key('vip_contact_name_error')" class="message-error"
-					i18n:translate="">
-					The name is mandatory!
-				</div>
-				<input type="text" name="vip_contact_name:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('vip_contact_name')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="vip_contact_email">
-					<span i18n:translate="">Email</span> *
-				</label>
-				<div tal:condition="python:request.has_key('vip_contact_email_error')" class="message-error"
-					i18n:translate="">
-					The email is mandatory!
-				</div>
-				<div tal:condition="python:request.has_key('vip_contact_email_notvalid')" class="message-error"
-					i18n:translate="">
-					Please enter a valid email address!
-				</div>
-				<input type="text" name="vip_contact_email:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('vip_contact_email')" />
-			</div>
-			<div class="field">
-				<label class="mandatory" for="email">
-					<span i18n:translate="">Telephone</span> *
-				</label>
-				<div tal:condition="python:request.has_key('vip_contact_telephone_error')" class="message-error"
-					i18n:translate="">
-					The telephone is mandatory!
-				</div>
-				<input type="text" name="vip_contact_telephone:utf8:ustring" size="87"
-					tal:attributes="value python:request.get('vip_contact_telephone')" /><br/>
-			</div>
-		</fieldset>
+		<div class="field">
+			<h4 i18n:translate="">Replyform</h4>
+			<p i18n:translate="">Fields with * are mandatory</p>
+			<p i18n:translate="">A notification e-mail of this registration will be sent
+				to the provided email addresses.</p>
 		</div>
 
-		<div>
-		<fieldset class="registration_fields">
-			<legend i18n:translate="">Activities</legend>
-			<div i18n:translate="" class="field">
-				We will undertake the following concrete activities in 2010
-				to serve the goals of the Dutch Coalition Biodiversity 2010:<br/><br/>
-			<textarea name="activities:utf8:ustring" cols="66" rows="5"
-				tal:content="python:request.get('activities', '')">
-			</textarea>
-			</div>
-		</fieldset>
-		</div>
+		<form action="" method="post">
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">General</legend>
+				<div class="field">
+					<label class="mandatory" for="title">
+						<span i18n:translate="">Project title</span> *
+					</label>
+					<div tal:condition="python:request.has_key('title_error')" class="message-error"
+						i18n:translate="">
+						The project title is mandatory!
+					</div>
+					<input type="text" name="title:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('title')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="requesting_organisations">
+						<span i18n:translate="">Requesting organisation(s)</span> *
+					</label>
+					<span i18n:translate="">(Coalition partners who are submitting the request)<br/></span>
+					<div tal:condition="python:request.has_key('requesting_organisations_error')" class="message-error"
+						i18n:translate="">
+						You must fill in at least a requesting organisation!
+					</div>
+					<input type="text" name="requesting_organisations:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('requesting_organisations')" />
+				</div>
+				<div class="field">
+					<label for="other_partners" i18n:translate="">Other partners</label>
+					<span i18n:translate="">(Possible non-coalition partners involved in the project)<br/></span>
+					<input type="text" name="other_partners:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('other_partners')" />
+				</div>
+				<div class="field">
+					<label for="other_requests" i18n:translate="">Participation in other requests</label>
+					<span i18n:translate="">(Other submitted project proposals in which the requesting
+					organisation participates)<br/></span>
+					<input type="text" name="other_requests:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('other_requests')" />
+				</div>
+			</fieldset>
 
-		<div>
-		<fieldset class="registration_fields"
-			tal:define="permission python:request.get('disclose_permission', '')">
-			<legend><span i18n:translate="">Disclose permission</span> *</legend>
-			<div i18n:translate="" class="field">Do you give the secretariat of the Dutch Coalition Biodiversity 2010
-				permission to disclose the contact data of your organisation to other partners of the
-				Dutch Coalition Biodiversity 2010, to media or to others involved in the promotion of
-				the International Year of Biodiversity?<br/><br/>
-			<div tal:condition="python:permission=='0'" class="message-error"
-				i18n:translate="">
-				Please express your option!
-			</div>
-			<select name="disclose_permission" style="width: 6em">
-				<option value="0" tal:attributes="selected python:test(permission == '0', 'selected', None)">Choose</option>
-				<option value="1" tal:attributes="selected python:test(permission == '1', 'selected', None)">Yes</option>
-				<option value="2" tal:attributes="selected python:test(permission == '2', 'selected', None)">No</option>
-			</select>
-			</div>
-		</fieldset>
-		</div>
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">Contact person</legend>
+				<div class="field">
+					<label class="mandatory" for="contact_name">
+						<span i18n:translate="">Name, organisation</span> *
+					</label>
+					<div tal:condition="python:request.has_key('contact_name_error')" class="message-error"
+						i18n:translate="">
+						The name is mandatory!
+					</div>
+					<input type="text" name="contact_name:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('contact_name')" />
+				</div>
+				<div i18n:translate="" class="field">
+					<label class="mandatory" for="contact_address">
+						<span i18n:translate="">Address</span> *
+					</label>
+					<div tal:condition="python:request.has_key('contact_address_error')" class="message-error"
+						i18n:translate="">
+						The address is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="contact_address:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('contact_address', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="contact_telephone">
+						<span i18n:translate="">Telephone number</span> *
+					</label>
+					<div tal:condition="python:request.has_key('contact_telephone_error')" class="message-error"
+						i18n:translate="">
+						The telephone number is mandatory!
+					</div>
+					<input type="text" name="contact_telephone:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('contact_telephone')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="contact_fax">
+						<span i18n:translate="">Fax</span> *
+					</label>
+					<div tal:condition="python:request.has_key('contact_fax_error')" class="message-error"
+						i18n:translate="">
+						The fax number is mandatory!
+					</div>
+					<input type="text" name="contact_fax:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('contact_fax')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="contact_email">
+						<span i18n:translate="">Email</span> *
+					</label>
+					<div tal:condition="python:request.has_key('contact_email_error')" class="message-error"
+						i18n:translate="">
+						The email is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('contact_email_notvalid')"
+					class="message-error" i18:translate="">
+					Please enter a valid email address.</div>
+					<input type="text" name="contact_email:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('contact_email')" />
+				</div>
+			</fieldset>
 
-		<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">Project period</legend>
+				<div class="field">
+					<label class="mandatory" for="start_date">
+						<span i18n:translate="">Start date</span> *
+					</label>
+					<div tal:condition="python:request.has_key('start_date_error')" class="message-error"
+						i18n:translate="">
+						The start date is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('start_date_notvalid')"
+					class="message-error" i18:translate="">
+					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
+					<input type="text" name="start_date:utf8:ustring" class="vDateField"
+						size="10" maxlength="10" size="10"
+						tal:attributes="value python:request.get('start_date', '')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="end_date">
+						<span i18n:translate="">End date</span> *
+					</label>
+					<div tal:condition="python:request.has_key('end_date_error')" class="message-error"
+						i18n:translate="">
+						The start date is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('end_date_notvalid')"
+					class="message-error" i18:translate="">
+					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
+					<input type="text" name="end_date:utf8:ustring" class="vDateField"
+						size="10" maxlength="10" size="10"
+						tal:attributes="value python:request.get('end_date', '')" />
+				</div>
+				<div i18n:translate="" class="field">
+					<label for="important_dates">
+						<span i18n:translate="">Important dates in the project and possible phasing</span>
+					</label>
+					<textarea class="mceNoEditor" name="important_dates:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('important_dates', '')">
+					</textarea>
+				</div>
+			</fieldset>
 
-	</form>
-</tal:block>
-<strong tal:condition="not: registration_opened" i18n:translate="">Registration did not start yet</strong>
-<strong tal:condition="not: registration_not_closed" i18n:translate="">Registration is closed</strong>
-<tal:block replace="structure here/standard_html_footer"/>
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">Project details</legend>
+				<div class="field">
+					<label class="mandatory" for="goal">
+						<span i18n:translate="">Project goal</span> *
+					</label>
+					(<span i18n:translate="">How will the project contribute to awareness raising
+						and support for biodiversity conservation?</span>)<br/>
+					<div tal:condition="python:request.has_key('goal_error')" class="message-error"
+						i18n:translate="">
+						The project goal is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="goal:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('goal', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="subgoals">
+						<span i18n:translate="">Project subgoals</span> *
+					</label>
+					(<span i18n:translate="">To which subgoals will the project contribute?
+						See funding criteria</span>)<br/>
+					<div tal:condition="python:request.has_key('subgoals_error')" class="message-error"
+						i18n:translate="">
+						The project subgoals are mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="subgoals:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('subgoals', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="activities">
+						<span i18n:translate="">Planned activities, including planning</span> *
+					</label>
+					(<span i18n:translate="">Specify which activities will carried out and finished
+						when: project planning</span>)<br/>
+					<div tal:condition="python:request.has_key('activities_error')" class="message-error"
+						i18n:translate="">
+						The project planned activities are mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="activities:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('activities', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="results">
+						<span i18n:translate="">Intended results / output</span> *
+					</label>
+					(<span i18n:translate="">What is achieved at the end of the project period?</span>
+					<span i18n:translate="">Which hard results / outputs will be achieved?</span>)<br/>
+					<div tal:condition="python:request.has_key('results_error')" class="message-error"
+						i18n:translate="">
+						The project intended results are mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="results:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('results', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label for="locations" i18n:translate="">Location(s)</label>
+					(<span i18n:translate="">Where will the activities/events
+						within the project take place?</span>)<br/>
+					<textarea class="mceNoEditor" name="locations:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('locations', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="target_group">
+						<span i18n:translate="">Target group reach</span> *
+					</label>
+					(<span i18n:translate="">Which target group(s) will be reached?</span>
+						<span i18n:translate="">Which means are used for this?</span><br/>
+						<span i18n:translate="">Number of people that will be reached?</span>
+						<span i18n:translate="">Geographical spreading of the target group(s)?</span>)<br/>
+					<div tal:condition="python:request.has_key('target_group_error')" class="message-error"
+						i18n:translate="">
+						The project intended target_group are mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="target_group:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('target_group', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label for="expectation" i18n:translate="">Which are the communication goals?
+						Which is the interest of the project, which effects are to be expected
+						(character, reach)? </label>
+					(<span i18n:translate="">Intended results in terms of knowledge, attitude and behaviour</span>)<br/>
+					<textarea class="mceNoEditor" name="expectation:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('expectation', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label for="risks" i18n:translate="">Are there risks to be forseen? If yes, which?</label>
+					<textarea class="mceNoEditor" name="risks:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('risks', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="reporting">
+						<span i18n:translate="">How will the results be reported to the communication coalition?</span> *
+					</label>
+					<div tal:condition="python:request.has_key('reporting_error')" class="message-error"
+						i18n:translate="">
+						The type of results' communication is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="reporting:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('reporting', '')">
+					</textarea>
+				</div>
+			</fieldset>
+
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">Financial details</legend>
+				<div class="field">
+					<label class="mandatory" for="requested_budget">
+						<span i18n:translate="">Requested amount in euro</span> *
+					</label>
+					<div tal:condition="python:request.has_key('requested_budget_error')" class="message-error"
+						i18n:translate="">
+						The project requested amount is mandatory!
+					</div>
+					<input type="text" name="requested_budget:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('requested_budget')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="total_budget">
+						<span i18n:translate="">Total budget in euro</span> *
+					</label>
+					<div tal:condition="python:request.has_key('total_budget_error')" class="message-error"
+						i18n:translate="">
+						The total budget is mandatory!
+					</div>
+					<input type="text" name="total_budget:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('total_budget')" />
+				</div>
+				<div class="field">
+					<label class="mandatory" for="partner_contribution">
+						<span i18n:translate="">Financial contribution of the partners</span> *
+					</label>
+					(<span i18n:translate="">Specify the origin of the 60% own financial contribution</span>)<br/>
+					<div tal:condition="python:request.has_key('partner_contribution_error')" class="message-error"
+						i18n:translate="">
+						The financial contribution of the partners is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="partner_contribution:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('partner_contribution', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="added_value">
+						<span i18n:translate="">What is the added value of the requested contribution for the project?</span> *
+					</label>
+					<div tal:condition="python:request.has_key('added_value_error')" class="message-error"
+						i18n:translate="">
+						The added value is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="added_value:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('added_value', '')">
+					</textarea>
+				</div>
+			</fieldset>
+
+			<fieldset class="registration_fields">
+				<legend i18n:translate="">Financial contact person</legend>
+				<div class="field">
+					<label for="financial_contact_name" i18n:translate="">Name, organisation</label>
+					<input type="text" name="financial_contact_name:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('financial_contact_name')" />
+				</div>
+				<div i18n:translate="" class="field">
+					<label for="financial_contact_address" i18n:translate="">Address</label>
+					<textarea class="mceNoEditor" name="financial_contact_address:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('financial_contact_address', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label for="financial_contact_telephone" i18n:translate="">Telephone number</label>
+					<input type="text" name="financial_contact_telephone:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('financial_contact_telephone')" />
+				</div>
+				<div class="field">
+					<label for="financial_contact_fax" i18n:translate="">Fax</label>
+					<input type="text" name="financial_contact_fax:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('financial_contact_fax')" />
+				</div>
+				<div class="field">
+					<label for="financial_contact_email" i18n:translate="">Email</label>
+					<div tal:condition="python:request.has_key('financial_contact_email_notvalid')"
+					class="message-error" i18:translate="">
+					Please enter a valid email address.</div>
+					<input type="text" name="financial_contact_email:utf8:ustring" size="87"
+						tal:attributes="value python:request.get('financial_contact_email')" />
+				</div>
+			</fieldset>
+
+			<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
+
+		</form>
+	</metal:block>
+</metal:block>

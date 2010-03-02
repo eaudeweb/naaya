@@ -5,8 +5,7 @@
             Dear Madam, Sir,
         <p/>
         <p>
-            Your registration for the conference "%(registration_event)s" that will take place
-			on %(conference_period)s in %(conference_place)s was received in good order.
+            Your registration was received in good order.
 			To review and/or edit the submitted information please use the following link:
         <p/>
         <p>
@@ -21,7 +20,7 @@
         </p>
         <p>
             Best Regards,<br/>
-            The conference organisers
+            The registration organisers
         </p>
 		<p>
 			For questions or remarks please contact: <a href="mailto:Snethlage@ecnc.org">Snethlage@ecnc.org</a>
