@@ -142,3 +142,6 @@
 .calendar-cancel a {
     padding:2px; color:#999;
 }
+td.label{
+	font-weight: bold;
+}

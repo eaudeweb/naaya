@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/misc_/CHMProjectRegistration/datetime.js"></script>
 		<script type="text/javascript" src="/misc_/CHMProjectRegistration/tinymce/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 		<script type="text/javascript" src="/misc_/CHMProjectRegistration/tinymceconfig.js"></script>
+		<script type="text/javascript" src="/misc_/CHMProjectRegistration/process.js"></script>
 	</metal:block>
 
 	<metal:block metal:fill-slot="body"
@@ -105,13 +106,7 @@
 						tal:attributes="value python:request.get('contact_telephone')" />
 				</div>
 				<div class="field">
-					<label class="mandatory" for="contact_fax">
-						<span i18n:translate="">Fax</span> *
-					</label>
-					<div tal:condition="python:request.has_key('contact_fax_error')" class="message-error"
-						i18n:translate="">
-						The fax number is mandatory!
-					</div>
+					<label for="contact_fax" i18n:translate="">Fax</label>
 					<input type="text" name="contact_fax:utf8:ustring" size="87"
 						tal:attributes="value python:request.get('contact_fax')" />
 				</div>
@@ -232,9 +227,15 @@
 					</textarea>
 				</div>
 				<div class="field">
-					<label for="locations" i18n:translate="">Location(s)</label>
+					<label class="mandatory" for="locations">
+						<span i18n:translate="">Location(s)</span> *
+					</label>
 					(<span i18n:translate="">Where will the activities/events
 						within the project take place?</span>)<br/>
+					<div tal:condition="python:request.has_key('locations_error')" class="message-error"
+						i18n:translate="">
+						The project locations are mandatory!
+					</div>
 					<textarea class="mceNoEditor" name="locations:utf8:ustring" cols="66" rows="5"
 						tal:content="python:request.get('locations', '')">
 					</textarea>
@@ -256,16 +257,40 @@
 					</textarea>
 				</div>
 				<div class="field">
-					<label for="expectation" i18n:translate="">Which are the communication goals?
-						Which is the interest of the project, which effects are to be expected
-						(character, reach)? </label>
-					(<span i18n:translate="">Intended results in terms of knowledge, attitude and behaviour</span>)<br/>
-					<textarea class="mceNoEditor" name="expectation:utf8:ustring" cols="66" rows="5"
-						tal:content="python:request.get('expectation', '')">
+					<label class="mandatory" for="communication_goals">
+						<span i18n:translate="">Which are the communication goals?</span> *
+					</label>
+					(<span i18n:translate="">Intended results in terms of knowledge,
+						attitude and behaviour</span>)<br/>
+					<div tal:condition="python:request.has_key('communication_goals_error')" class="message-error"
+						i18n:translate="">
+						The communication goals are mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="communication_goals:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('communication_goals', '')">
 					</textarea>
 				</div>
 				<div class="field">
-					<label for="risks" i18n:translate="">Are there risks to be forseen? If yes, which?</label>
+					<label class="mandatory" for="interest">
+						<span i18n:translate="">Which is the interest of the project?</span> *
+					</label>
+					(<span i18n:translate="">which effects are to be expected (character, reach, originality)?</span>)<br/>
+					<div tal:condition="python:request.has_key('interest_error')" class="message-error"
+						i18n:translate="">
+						The interest of the project is mandatory!
+					</div>
+					<textarea class="mceNoEditor" name="interest:utf8:ustring" cols="66" rows="5"
+						tal:content="python:request.get('interest', '')">
+					</textarea>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="risks">
+						<span i18n:translate="">Are there risks to be foreseen? If yes, which?</span> *
+					</label>
+					<div tal:condition="python:request.has_key('risks_error')" class="message-error"
+						i18n:translate="">
+						Comments on the risks are mandatory!
+					</div>
 					<textarea class="mceNoEditor" name="risks:utf8:ustring" cols="66" rows="5"
 						tal:content="python:request.get('risks', '')">
 					</textarea>
@@ -286,41 +311,399 @@
 
 			<fieldset class="registration_fields">
 				<legend i18n:translate="">Financial details</legend>
+
 				<div class="field">
-					<label class="mandatory" for="requested_budget">
-						<span i18n:translate="">Requested amount in euro</span> *
-					</label>
-					<div tal:condition="python:request.has_key('requested_budget_error')" class="message-error"
-						i18n:translate="">
-						The project requested amount is mandatory!
-					</div>
-					<input type="text" name="requested_budget:utf8:ustring" size="87"
-						tal:attributes="value python:request.get('requested_budget')" />
+					<label i18n:translate="">Amount requested for labour costs (tariff 1)</label>
+					<table>
+						<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('requested_t1_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t1_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 1 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('requested_t1_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t1_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" i18n:translate="" class="label">
+								Total costs
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id='requested_t1_hours' style="width: 174px"
+									name="requested_t1_hours:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('requested_t1_hours')"
+									onchange="process_requested_labour_1()"/>
+							</td>
+							<td>
+								<input type="text" id='requested_t1_euro' style="width: 174px"
+									name="requested_t1_euro:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('requested_t1_euro')"
+									onchange="process_requested_labour_1()"/>
+							</td>
+							<td>
+								<input type="text" id='total_requested_t1' style="width: 174px" READONLY/>
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div class="field">
-					<label class="mandatory" for="total_budget">
-						<span i18n:translate="">Total budget in euro</span> *
-					</label>
-					<div tal:condition="python:request.has_key('total_budget_error')" class="message-error"
-						i18n:translate="">
-						The total budget is mandatory!
-					</div>
-					<input type="text" name="total_budget:utf8:ustring" size="87"
-						tal:attributes="value python:request.get('total_budget')" />
+					<label i18n:translate="">Amount requested for labour costs (tariff 2)</label>
+					<table>
+						<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('requested_t2_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if tariff 2 has value!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t2_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 2 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('requested_t2_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if hours has value!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t2_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" i18n:translate="" class="label">
+								Total costs
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id='requested_t2_hours' style="width: 174px"
+									name="requested_t2_hours:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('requested_t2_hours')"
+									onchange="process_requested_labour_2()"/>
+							</td>
+							<td>
+								<input type="text" id='requested_t2_euro' style="width: 174px"
+									name="requested_t2_euro:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('requested_t2_euro')"
+									onchange="process_requested_labour_2()"/>
+							</td>
+							<td>
+								<input type="text" id='total_requested_t2' style="width: 174px" READONLY/>
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div class="field">
-					<label class="mandatory" for="partner_contribution">
-						<span i18n:translate="">Financial contribution of the partners</span> *
-					</label>
-					(<span i18n:translate="">Specify the origin of the 60% own financial contribution</span>)<br/>
-					<div tal:condition="python:request.has_key('partner_contribution_error')" class="message-error"
-						i18n:translate="">
-						The financial contribution of the partners is mandatory!
-					</div>
-					<textarea class="mceNoEditor" name="partner_contribution:utf8:ustring" cols="66" rows="5"
-						tal:content="python:request.get('partner_contribution', '')">
-					</textarea>
+					<label i18n:translate="">Amount requested for labour costs (tariff 3)</label>
+				<table>
+					<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('requested_t3_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if tariff 3 has value!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t3_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 3 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('requested_t3_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if hours has value!
+								</span>
+								<span tal:condition="python:request.has_key('requested_t3_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+						<td width="175" i18n:translate="" class="label">
+							Total costs
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" id='requested_t3_hours' style="width: 174px"
+								name="requested_t3_hours:utf8:ustring" size="10"
+								tal:attributes="value python:request.get('requested_t3_hours')"
+								onchange="process_requested_labour_3()"/>
+						</td>
+						<td>
+							<input type="text" id='requested_t3_euro' style="width: 174px"
+								name="requested_t3_euro:utf8:ustring" size="10"
+								tal:attributes="value python:request.get('requested_t3_euro')"
+								onchange="process_requested_labour_3()"/>
+						</td>
+						<td>
+							<input type="text" id='total_requested_t3' style="width: 174px" READONLY/>
+						</td>
+					</tr>
+				</table>
 				</div>
+				<div class="field">
+					<label for="total_requested_labor" i18n:translate="">Total amount requested for labour costs</label>
+						<input type="text" id='total_requested_labor' style="width: 174px" READONLY/>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="requested_material_costs">
+						<span i18n:translate="">Amount requested for materials (in &euro;)</span> *
+					</label>
+					<div tal:condition="python:request.has_key('requested_material_costs_error')" class="message-error"
+						i18n:translate="">
+						The amount requested for materials is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('requested_material_costs_notvalid')"
+					class="message-error" i18:translate="">
+					The amount must be a number!</div>
+					<input type="text" id="requested_material_costs" style="width: 174px"
+						name="requested_material_costs:utf8:ustring" size="10"
+						tal:attributes="value python:request.get('requested_material_costs')"
+						onchange="process_requested_materials()"/>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="requested_other_costs">
+						<span i18n:translate="">Amount requested for other costs</span> *
+					</label>
+					<div tal:condition="python:request.has_key('requested_other_costs_error')" class="message-error"
+						i18n:translate="">
+						The amount requested for other costs is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('requested_other_costs_notvalid')"
+					class="message-error" i18:translate="">
+					The amount must be a number!</div>
+					<input type="text" id='requested_other_costs' style="width: 174px"
+						name="requested_other_costs:utf8:ustring" size="10"
+						tal:attributes="value python:request.get('requested_other_costs')"
+						onchange="process_requested_materials()"/>
+				</div>
+				<div class="field">
+					<label for="total_requested_material_other" i18n:translate="">
+						Total amount requested for materials and other costs
+					</label>
+					<input type="text" id="total_requested_material_other" style="width: 174px" READONLY/>
+				</div>
+				<div class="field">
+					<label for="total_requested" i18n:translate="">
+						Total requested contribution
+					</label>
+					<input type="text" id="total_requested" style="width: 174px" READONLY/>
+				</div>
+
+				<div class="field">
+					<label i18n:translate="">Own contribution for labour costs (tariff 1)</label>
+					<table>
+						<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('own_t1_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory!
+								</span>
+								<span tal:condition="python:request.has_key('own_t1_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 1 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('own_t1_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory!
+								</span>
+								<span tal:condition="python:request.has_key('own_t1_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" i18n:translate="" class="label">
+								Total costs
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id='own_t1_hours' style="width: 174px"
+									name="own_t1_hours:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('own_t1_hours')"
+									onchange="process_own_labour_1()"/>
+							</td>
+							<td>
+								<input type="text" id='own_t1_euro' style="width: 174px"
+									name="own_t1_euro:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('own_t1_euro')"
+									onchange="process_own_labour_1()"/>
+							</td>
+							<td>
+								<input type="text" id='total_own_t1' style="width: 174px" READONLY/>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="field">
+					<label i18n:translate="">Own contribution for labour costs (tariff 2)</label>
+					<table>
+						<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('own_t2_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if tariff 2 has value!
+								</span>
+								<span tal:condition="python:request.has_key('own_t2_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 2 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('own_t2_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if hours has value!
+								</span>
+								<span tal:condition="python:request.has_key('own_t2_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" i18n:translate="" class="label">
+								Total costs
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id='own_t2_hours' style="width: 174px"
+									name="own_t2_hours:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('own_t2_hours')"
+									onchange="process_own_labour_2()"/>
+							</td>
+							<td>
+								<input type="text" id='own_t2_euro' style="width: 174px"
+									name="own_t2_euro:utf8:ustring" size="10"
+									tal:attributes="value python:request.get('own_t2_euro')"
+									onchange="process_own_labour_2()"/>
+							</td>
+							<td>
+								<input type="text" id='total_own_t2' style="width: 174px" READONLY/>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="field">
+					<label i18n:translate="">Own contribution for labour costs (tariff 3)</label>
+				<table>
+					<tr>
+							<td width="175" class="label">
+								<span i18n:translate="">Hours</span> *
+								<span tal:condition="python:request.has_key('own_t3_hours_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if tariff 3 has value!
+								</span>
+								<span tal:condition="python:request.has_key('own_t3_hours_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+							<td width="175" class="label">
+								<span i18n:translate="">Tariff 3 (&euro;/hour)</span> *
+								<span tal:condition="python:request.has_key('own_t3_euro_error')"
+									class="message-error" i18n:translate="">
+									Mandatory if hours has value!
+								</span>
+								<span tal:condition="python:request.has_key('own_t3_euro_notvalid')"
+								class="message-error" i18n:translate="">
+									Please enter a numeric value!
+								</span>
+							</td>
+						<td width="175" i18n:translate="" class="label">
+							Total costs
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" id='own_t3_hours' style="width: 174px"
+								name="own_t3_hours:utf8:ustring" size="10"
+								tal:attributes="value python:request.get('own_t3_hours')"
+								onchange="process_own_labour_3()"/>
+						</td>
+						<td>
+							<input type="text" id='own_t3_euro' style="width: 174px"
+								name="own_t3_euro:utf8:ustring" size="10"
+								tal:attributes="value python:request.get('own_t3_euro')"
+								onchange="process_own_labour_3()"/>
+						</td>
+						<td>
+							<input type="text" id='total_own_t3' style="width: 174px" READONLY/>
+						</td>
+					</tr>
+				</table>
+				</div>
+				<div class="field">
+					<label for="total_own_labor" i18n:translate="">Total own contribution for labour costs</label>
+						<input type="text" id='total_own_labor' style="width: 174px" READONLY/>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="own_material_costs">
+						<span i18n:translate="">Own contribution for materials (in &euro;)</span> *
+					</label>
+					<div tal:condition="python:request.has_key('own_material_costs_error')" class="message-error"
+						i18n:translate="">
+						The amount own for materials is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('own_material_costs_notvalid')"
+					class="message-error" i18:translate="">
+					The amount must be a number!</div>
+					<input type="text" id="own_material_costs" style="width: 174px"
+						name="own_material_costs:utf8:ustring" size="10"
+						tal:attributes="value python:request.get('own_material_costs')"
+						onchange="process_own_materials()"/>
+				</div>
+				<div class="field">
+					<label class="mandatory" for="own_other_costs">
+						<span i18n:translate="">Own contribution for other costs</span> *
+					</label>
+					<div tal:condition="python:request.has_key('own_other_costs_error')" class="message-error"
+						i18n:translate="">
+						The amount own for other costs is mandatory!
+					</div>
+					<div tal:condition="python:request.has_key('own_other_costs_notvalid')"
+					class="message-error" i18:translate="">
+					The amount must be a number!</div>
+					<input type="text" id='own_other_costs' style="width: 174px"
+						name="own_other_costs:utf8:ustring" size="10"
+						tal:attributes="value python:request.get('own_other_costs')"
+						onchange="process_own_materials()"/>
+				</div>
+				<div class="field">
+					<label for="total_own_material_other" i18n:translate="">
+						Totaal own contribution for materials and other costs
+					</label>
+					<input type="text" id="total_own_material_other" style="width: 174px" READONLY/>
+				</div>
+				<div class="field">
+					<label for="total_own" i18n:translate="">
+						Total own contribution
+					</label>
+					<input type="text" id="total_own" style="width: 174px" READONLY/>
+				</div>
+
 				<div class="field">
 					<label class="mandatory" for="added_value">
 						<span i18n:translate="">What is the added value of the requested contribution for the project?</span> *

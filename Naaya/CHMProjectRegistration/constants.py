@@ -19,12 +19,15 @@
 # Valentin Dumitru, Eau de Web
 
 #constants
-PART_MANDATORY_FIELDS = ['title', 'requesting_organisations',
-                'contact_name', 'contact_address', 'contact_telephone', 'contact_fax' ,'contact_email',
+PART_MANDATORY_FIELDS = [
+                'title', 'requesting_organisations',
+                'contact_name', 'contact_address', 'contact_telephone', 'contact_email',
                 'start_date', 'end_date',
-                'goal', 'subgoals', 'activities', 'results', 'target_group', 'reporting',
-                'requested_budget', 'total_budget', 'partner_contribution', 'added_value',
-                'vip_contact_telephone', 'disclose_permission']
+                'goal', 'subgoals', 'activities', 'results', 'locations', 'target_group',
+                'communication_goals', 'interest', 'risks', 'reporting',
+                'requested_t1_hours', 'requested_t1_euro', 'requested_material_costs', 'requested_other_costs',
+                'own_t1_hours', 'own_t1_euro', 'own_material_costs', 'own_other_costs', 'added_value',
+                ]
 PART_EMAIL_RECIPIENTS = ['contact_email']
 REG_MANDATORY_FIELDS = ['title', 'administrative_email', 'start_date', 'end_date']
 REG_DATE_FIELDS = ['start_date', 'end_date']

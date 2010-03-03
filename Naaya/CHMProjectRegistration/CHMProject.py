@@ -36,13 +36,16 @@ class CHMProject(SimpleItem):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id,\
-                title, requesting_organisations, other_partners, other_requests,\
-                contact_name, contact_address, contact_telephone, contact_fax, contact_email,\
-                start_date, end_date, important_dates,\
-                goal, subgoals, activities, results, locations, target_group,\
-                expectation, risks, reporting,\
-                requested_budget, total_budget, partner_contribution, added_value,\
+    def __init__(self, id,
+                title, requesting_organisations, other_partners, other_requests,
+                contact_name, contact_address, contact_telephone, contact_fax, contact_email,
+                start_date, end_date, important_dates,
+                goal, subgoals, activities, results, locations, target_group,
+                communication_goals, interest, risks, reporting, comments,
+                requested_t1_hours, requested_t1_euro, requested_t2_hours, requested_t2_euro,
+                requested_t3_hours, requested_t3_euro, requested_material_costs,
+                requested_other_costs, own_t1_hours, own_t1_euro, own_t2_hours, own_t2_euro,
+                own_t3_hours, own_t3_euro, own_material_costs, own_other_costs, added_value,
                 financial_contact_name, financial_contact_address, financial_contact_telephone,
                 financial_contact_fax, financial_contact_email,
                 admin_comment=''):
@@ -66,12 +69,27 @@ class CHMProject(SimpleItem):
         self.results = results
         self.locations = locations
         self.target_group = target_group
-        self.expectation = expectation
+        self.communication_goals = communication_goals
+        self.interest = interest
         self.risks = risks
         self.reporting = reporting
-        self.requested_budget = requested_budget
-        self.total_budget = total_budget
-        self.partner_contribution = partner_contribution
+        self.comments = comments
+        self.requested_t1_hours = requested_t1_hours
+        self.requested_t1_euro = requested_t1_euro
+        self.requested_t2_hours = requested_t2_hours
+        self.requested_t2_euro = requested_t2_euro
+        self.requested_t3_hours = requested_t3_hours
+        self.requested_t3_euro = requested_t3_euro
+        self.requested_material_costs = requested_material_costs
+        self.requested_other_costs = requested_other_costs
+        self.own_t1_hours = own_t1_hours
+        self.own_t1_euro = own_t1_euro
+        self.own_t2_hours = own_t2_hours
+        self.own_t2_euro = own_t2_euro
+        self.own_t3_hours = own_t3_hours
+        self.own_t3_euro = own_t3_euro
+        self.own_material_costs = own_material_costs
+        self.own_other_costs = own_other_costs
         self.added_value = added_value
         self.financial_financial_contact_name = financial_contact_name
         self.financial_contact_address = financial_contact_address
@@ -82,12 +100,15 @@ class CHMProject(SimpleItem):
         self.registration_date = datetime.now()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
-    def edit(self, title, requesting_organisations, other_partners, other_requests,\
-            contact_name, contact_address, contact_telephone, contact_fax, contact_email,\
-            start_date, end_date, important_dates,\
-            goal, subgoals, activities, results, locations, target_group,\
-            expectation, risks, reporting,\
-            requested_budget, total_budget, partner_contribution, added_value,\
+    def edit(self, title, requesting_organisations, other_partners, other_requests,
+            contact_name, contact_address, contact_telephone, contact_fax, contact_email,
+            start_date, end_date, important_dates,
+            goal, subgoals, activities, results, locations, target_group,
+            communication_goals, interest, risks, reporting, comments,
+            requested_t1_hours, requested_t1_euro, requested_t2_hours, requested_t2_euro,
+            requested_t3_hours, requested_t3_euro, requested_material_costs,
+            requested_other_costs, own_t1_hours, own_t1_euro, own_t2_hours, own_t2_euro,
+            own_t3_hours, own_t3_euro, own_material_costs, own_other_costs, added_value,
             financial_contact_name, financial_contact_address, financial_contact_telephone,
             financial_contact_fax, financial_contact_email,
             admin_comment=''):
@@ -110,12 +131,27 @@ class CHMProject(SimpleItem):
         self.results = results
         self.locations = locations
         self.target_group = target_group
-        self.expectation = expectation
+        self.communication_goals = communication_goals
+        self.interest = interest
         self.risks = risks
         self.reporting = reporting
-        self.requested_budget = requested_budget
-        self.total_budget = total_budget
-        self.partner_contribution = partner_contribution
+        self.comments = comments
+        self.requested_t1_hours = requested_t1_hours
+        self.requested_t1_euro = requested_t1_euro
+        self.requested_t2_hours = requested_t2_hours
+        self.requested_t2_euro = requested_t2_euro
+        self.requested_t3_hours = requested_t3_hours
+        self.requested_t3_euro = requested_t3_euro
+        self.requested_material_costs = requested_material_costs
+        self.requested_other_costs = requested_other_costs
+        self.own_t1_hours = own_t1_hours
+        self.own_t1_euro = own_t1_euro
+        self.own_t2_hours = own_t2_hours
+        self.own_t2_euro = own_t2_euro
+        self.own_t3_hours = own_t3_hours
+        self.own_t3_euro = own_t3_euro
+        self.own_material_costs = own_material_costs
+        self.own_other_costs = own_other_costs
         self.added_value = added_value
         self.financial_contact_name = financial_contact_name
         self.financial_contact_address = financial_contact_address
