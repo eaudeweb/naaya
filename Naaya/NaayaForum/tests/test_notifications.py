@@ -29,6 +29,12 @@ from Products.NaayaForum.NyForum import manage_addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
 
+from zope.configuration import xmlconfig
+import Products.NaayaForum
+xmlconfig.file('configure.zcml',
+               package=Products.NaayaForum,
+               context=xmlconfig._getContext())
+
 class NotificationsTestCase(NaayaTestCase):
     """ TestCase for NaayaContent object """
 
