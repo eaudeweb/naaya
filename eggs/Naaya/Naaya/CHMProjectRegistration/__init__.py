@@ -31,6 +31,7 @@ misc_ = {
     'calendar.js': ImageFile('www/calendar.js', globals()),
     'core.js': ImageFile('www/core.js', globals()),
     'datetime.js': ImageFile('www/datetime.js', globals()),
+    'process.js': ImageFile('www/process.js', globals()),
     'style.css': ImageFile('www/style.css', globals()),
     'print.css': ImageFile('www/print.css', globals()),
     'CHMProject.png': ImageFile('www/CHMProject.png', globals()),
