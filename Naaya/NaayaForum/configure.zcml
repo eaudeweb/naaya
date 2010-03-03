@@ -13,14 +13,20 @@
   <class class=".NyForum.NyForum">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
     <implements interface="naaya.core.interfaces.INyObjectContainer" />
+    <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
+    <implements interface="Products.NaayaCore.NotificationTool.interfaces.ISubscriptionTarget" />
   </class>
 
   <class class=".NyForumTopic.NyForumTopic">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
     <implements interface="naaya.core.interfaces.INyObjectContainer" />
+    <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
+    <implements interface="Products.NaayaCore.NotificationTool.interfaces.ISubscriptionTarget" />
   </class>
 
   <class class=".NyForumMessage.NyForumMessage">
     <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+    <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
+    <implements interface="Products.NaayaCore.NotificationTool.interfaces.ISubscriptionTarget" />
   </class>
 </configure>

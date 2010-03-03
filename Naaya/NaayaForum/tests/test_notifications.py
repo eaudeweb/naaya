@@ -43,16 +43,20 @@ class NotificationsTestCase(NaayaTestCase):
         notif_tool = self.portal.getNotificationTool()
         notif_tool.config['enable_instant'] = True
         notif_tool.config['enable_weekly'] = True
-        notif_tool.add_subscription('contributor', 'tforum', 'instant', 'en')
-        notif_tool.add_subscription('contributor', 'tforum', 'weekly', 'en')
+        notif_tool.add_account_subscription('contributor',
+                                            'tforum', 'instant', 'en')
+        notif_tool.add_account_subscription('contributor',
+                                            'tforum', 'weekly', 'en')
         transaction.commit()
 
     def beforeTearDown(self):
         notif_tool = self.portal.getNotificationTool()
         notif_tool.config['enable_instant'] = False
         notif_tool.config['enable_weekly'] = False
-        notif_tool.remove_subscription('contributor', 'tforum', 'instant', 'en')
-        notif_tool.remove_subscription('contributor', 'tforum', 'weekly', 'en')
+        notif_tool.remove_account_subscription('contributor',
+                                               'tforum', 'instant', 'en')
+        notif_tool.remove_account_subscription('contributor',
+                                               'tforum', 'weekly', 'en')
         self.portal.manage_delObjects(['tforum'])
         transaction.commit()
 
