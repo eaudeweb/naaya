@@ -11,9 +11,9 @@
 	<form method="post" action="ny_access/savePermissionMapping">
 		<table class="datatable">
 			<tr>
-				<td>Also acquire from parent</td>
-				<td>Permission</td>
-				<td tal:attributes="colspan python:len(roles)">Roles</td>
+				<th i18n:translate="">Also acquire from parent</th>
+				<th i18n:translate="">Permission</th>
+				<th tal:attributes="colspan python:len(roles)">Roles</th>
 			</tr>
 			<tr>
 				<td> </td>
@@ -38,7 +38,7 @@
 				</td>
 			</tr>
 		</table>
-		<input type="submit" value="Save changes" />
+		<input type="submit" value="Save changes" i18n:attributes="value" />
 	</form>
 
 
