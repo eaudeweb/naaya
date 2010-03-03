@@ -323,7 +323,8 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         #Check that the filled values are saved
         form = self.browser.get_form('frmAdd')
         self.assertEqual(form['title:utf8:ustring'], 'Message title 2')
-        self.assertEqual(form['description:utf8:ustring'], 'Message description 2')
+        self.assertEqual(form['description:utf8:ustring'].strip(),
+                         'Message description 2')
         self.assertEqual(form['notify'], ['on'])
 
         self.browser_do_logout()
