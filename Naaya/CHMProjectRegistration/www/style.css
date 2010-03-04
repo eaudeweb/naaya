@@ -142,6 +142,25 @@
 .calendar-cancel a {
     padding:2px; color:#999;
 }
-td.label{
+.label{
 	font-weight: bold;
+}
+.new_row{
+	padding-top: 10px;
+}
+.new_section{
+	padding: 30px 0 0 0;
+}
+.numeric{
+	width: 174px !important;
+}
+.contribution{
+	margin-bottom: 20px;
+	padding-bottom: 3px;
+}
+div.field table tr td{
+	width: 175px;
+}
+table.project_view tr td{
+	width: 50%;
 }
