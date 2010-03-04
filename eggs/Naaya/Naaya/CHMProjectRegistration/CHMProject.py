@@ -91,7 +91,7 @@ class CHMProject(SimpleItem):
         self.own_material_costs = own_material_costs
         self.own_other_costs = own_other_costs
         self.added_value = added_value
-        self.financial_financial_contact_name = financial_contact_name
+        self.financial_contact_name = financial_contact_name
         self.financial_contact_address = financial_contact_address
         self.financial_contact_telephone = financial_contact_telephone
         self.financial_contact_fax = financial_contact_fax
@@ -218,6 +218,8 @@ class CHMProject(SimpleItem):
             if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
+                                number_fields=constants.NUMBER_FIELDS,
+                                pair_fields=constants.PAIR_FIELDS,
                                 email_fields=constants.EMAIL_FIELDS,
                                 REQUEST=REQUEST):
                 session.set('authentication_id', REQUEST.get('registration_id'))
@@ -243,6 +245,8 @@ class CHMProject(SimpleItem):
             if form_validation(mandatory_fields=mandatory_fields, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
+                                number_fields=constants.NUMBER_FIELDS,
+                                pair_fields=constants.PAIR_FIELDS,
                                 email_fields=constants.EMAIL_FIELDS,
                                 REQUEST=REQUEST):
                 cleaned_data = REQUEST.form

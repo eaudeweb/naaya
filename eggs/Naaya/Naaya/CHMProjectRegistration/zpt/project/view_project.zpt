@@ -1,5 +1,3 @@
-<link rel="stylesheet" type="text/css" media="print" href="/misc_/CHMRegistration/print.css" />
-
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getRegistrationDetails" />
 
@@ -69,70 +67,346 @@
 		</a>
 	</div>
 
-	<table class="datatable">
+<table class="datatable project_view" style="width: 600px;">
 	<tr>
-		<th i18n:translate="">Registration number</th>
-		<td><strong tal:content="here/id" /></td>
+		<td class="label" i18n:translate="">Project title</td>
+		<td tal:content="here/title" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Organisation</th>
-		<td tal:content="here/organisation_name" />
+		<td class="label" i18n:translate="">Requesting organisation(s)</td>
+		<td tal:content="here/requesting_organisations" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Address</th>
-		<td tal:content="here/organisation_address" />
+		<td class="label" i18n:translate="">Other partners</td>
+		<td tal:content="here/other_partners" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Website</th>
-		<td tal:content="here/organisation_website" />
+		<td class="label" i18n:translate="">Participation in other requests</td>
+		<td tal:content="here/other_requests" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Media contact</th>
-		<td tal:content="structure here/media_contact_name" />
+		<td class="label" i18n:translate="">Contact person</td>
+		<td tal:content="here/contact_name" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Email</th>
-		<td tal:content="here/email" />
+		<td class="label" i18n:translate="">Address</td>
+		<td tal:content="structure here/contact_address" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Telephone</th>
-		<td tal:content="here/media_contact_telephone" />
+		<td class="label" i18n:translate="">Telephone number</td>
+		<td tal:content="here/contact_telephone" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Details</th>
-		<td tal:content="structure here/media_contact_details" />
+		<td class="label" i18n:translate="">Fax</td>
+		<td tal:content="here/contact_fax" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Program contact</th>
-		<td tal:content="structure here/program_contact_name" />
+		<td class="label" i18n:translate="">Email</td>
+		<td tal:content="here/contact_email" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Email</th>
-		<td tal:content="here/program_contact_email" />
+		<td class="label" i18n:translate="">Project start date</td>
+		<td tal:content="here/start_date" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Telephone</th>
-		<td tal:content="here/program_contact_telephone" />
+		<td class="label" i18n:translate="">Project end date</td>
+		<td tal:content="here/end_date" />
 	</tr>
 	<tr>
-		<th i18n:translate="">VIP contact</th>
-		<td tal:content="structure here/vip_contact_name" />
+		<td class="label" i18n:translate="">Important dates in the project and possible phasing</td>
+		<td tal:content="here/important_dates" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Email</th>
-		<td tal:content="here/vip_contact_email" />
+		<td class="label" i18n:translate="">Project goal</td>
+		<td tal:content="here/goal" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Telephone</th>
-		<td tal:content="here/vip_contact_telephone" />
+		<td class="label" i18n:translate="">Project subgoals</td>
+		<td tal:content="here/subgoals" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Activities</th>
-		<td tal:content="structure here/activities" />
+		<td class="label" i18n:translate="">Planned activities, including planning</td>
+		<td tal:content="here/activities" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Disclose permission</th>
-		<td tal:content="python:test(here.disclose_permission == '1', 'Yes', 'No')" />
+		<td class="label" i18n:translate="">Intended results / output</td>
+		<td tal:content="here/results" />
 	</tr>
-	</table>
+	<tr>
+		<td class="label" i18n:translate="">Location(s)</td>
+		<td tal:content="here/locations" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Target group reach</td>
+		<td tal:content="here/target_group" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Communication goals</td>
+		<td tal:content="here/communication_goals" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Project interest</td>
+		<td tal:content="here/interest" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Project risks</td>
+		<td tal:content="here/risks" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Way of reporting to the communication coalition</td>
+		<td tal:content="here/reporting" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Comments</td>
+		<td tal:content="here/comments" />
+	</tr>
+</table>
+
+<table class="datatable" style="width: 600px;">
+	<tr>
+		<th i18n:translate="">Requested contribution</th>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Amount requested for labour costs (tariff 1)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 1 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='requested_t1_hours' class="numeric"
+				tal:attributes="value here/requested_t1_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='requested_t1_euro' class="numeric"
+				tal:attributes="value here/requested_t1_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_requested_t1" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Amount requested for labour costs (tariff 2)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 2 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='requested_t2_hours' class="numeric"
+				tal:attributes="value here/requested_t2_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='requested_t2_euro' class="numeric"
+				tal:attributes="value here/requested_t2_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_requested_t2" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Amount requested for labour costs (tariff 3)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 3 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='requested_t3_hours' class="numeric"
+				tal:attributes="value here/requested_t3_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='requested_t3_euro' class="numeric"
+				tal:attributes="value here/requested_t3_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_requested_t3" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="label new_row" i18n:translate="">
+			Total amount requested for labour costs
+		</td>
+		<td class="label new_row">
+			<input type="text" id='total_requested_labor' class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td class="label new_section" i18n:translate="">Amount requested for materials (in &euro;)</td>
+		<td class="label new_section" i18n:translate="">Amount requested for other costs</td>
+		<td class="label new_section" i18n:translate="">Total amount requested for materials and other costs</td>
+	</tr>
+	<tr>
+		<td class="label">
+			<input type="text" id="requested_material_costs" class="numeric"
+				tal:attributes="value here/requested_material_costs" READONLY/>
+		</td>
+		<td class="label">
+			<input type="text" id="requested_material_costs" class="numeric"
+				tal:attributes="value here/requested_other_costs" READONLY/>
+		</td>
+		<td class="label">
+			<input type="text" id="total_requested_material_other" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="label new_row" i18n:translate="">Total requested contribution</td>
+		<td class="label new_row">
+			<input type="text" id="total_requested" class="numeric" READONLY/>
+		</td>
+	</tr>
+</table>
+
+<table class="datatable" style="width: 600px;">
+	<tr>
+		<th i18n:translate="">Own contribution</th>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Own contribution for labour costs (tariff 1)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 1 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='own_t1_hours' class="numeric"
+				tal:attributes="value here/own_t1_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='own_t1_euro' class="numeric"
+				tal:attributes="value here/own_t1_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_own_t1" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Own contribution for labour costs (tariff 2)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 2 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='own_t2_hours' class="numeric"
+				tal:attributes="value here/own_t2_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='own_t2_euro' class="numeric"
+				tal:attributes="value here/own_t2_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_own_t2" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3" class="label new_row" i18n:translate="">
+			Own contribution for labour costs (tariff 3)
+		</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Hours</td>
+		<td class="label" i18n:translate="">Tariff 3 (&euro;/hour)</td>
+		<td class="label" i18n:translate="">Total costs</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="text" id='own_t3_hours' class="numeric"
+				tal:attributes="value here/own_t3_hours" READONLY/>
+		</td>
+		<td>
+			<input type="text" id='own_t3_euro' class="numeric"
+				tal:attributes="value here/own_t3_euro" READONLY/>
+		</td>
+		<td>
+			<input type="text" id="total_own_t3" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="label new_row" i18n:translate="">
+			Total own contribution for labour costs
+		</td>
+		<td class="label new_row">
+			<input type="text" id='total_own_labor' class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td class="label new_section" i18n:translate="">Own contribution for materials (in &euro;)</td>
+		<td class="label new_section" i18n:translate="">Own contribution for other costs</td>
+		<td class="label new_section" i18n:translate="">Total own contribution for materials and other costs</td>
+	</tr>
+	<tr>
+		<td class="label">
+			<input type="text" id="own_material_costs" class="numeric"
+				tal:attributes="value here/own_material_costs" READONLY/>
+		</td>
+		<td class="label">
+			<input type="text" id="own_material_costs" class="numeric"
+				tal:attributes="value here/own_other_costs" READONLY/>
+		</td>
+		<td class="label">
+			<input type="text" id="total_own_material_other" class="numeric" READONLY/>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="label new_row" i18n:translate="">Total own contribution</td>
+		<td class="label new_row">
+			<input type="text" id="total_own" class="numeric" READONLY/>
+		</td>
+	</tr>
+</table>
+
+<table class="datatable project_view" style="width: 600px;">
+	<tr>
+		<td class="label" i18n:translate="">Added value of the requested contribution for the project?</td>
+		<td tal:content="here/added_value" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Financial contact person</td>
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Name, organisation</td>
+		<td tal:content="here/financial_contact_name" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Address</td>
+		<td tal:content="here/financial_contact_address" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Telephone number</td>
+		<td tal:content="here/financial_contact_telephone" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Address</td>
+		<td tal:content="structure here/contact_address" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Fax</td>
+		<td tal:content="here/financial_contact_fax" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Email</td>
+		<td tal:content="here/financial_contact_email" />
+	</tr>
+</table>
 </tal:block>

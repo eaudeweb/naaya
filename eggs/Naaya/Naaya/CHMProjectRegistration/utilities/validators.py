@@ -2,11 +2,12 @@ import re
 import time
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
-def form_validation (mandatory_fields, date_fields, time_fields, email_fields, REQUEST):
+def form_validation (mandatory_fields, date_fields, time_fields,
+                    number_fields, pair_fields, email_fields, REQUEST):
     has_errors = False
     #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
     for k,v in REQUEST.form.items():
-        if k in mandatory_fields and not v:
+        if k in mandatory_fields and (k in number_fields and v=='0' or not v):
             REQUEST.set('%s_error' % k, True)
             has_errors = True
         if 'email' in k and v:
@@ -25,6 +26,17 @@ def form_validation (mandatory_fields, date_fields, time_fields, email_fields, R
             except:
                 REQUEST.set('%s_notvalid' % k, True)
                 has_errors = True
+        if k in number_fields and v:
+            try:
+                temp = float(v)
+            except:
+                REQUEST.set('%s_notvalid' % k, True)
+                has_errors = True
+        for pair in pair_fields:
+            if k in pair and (not v or v=='0'):
+                if REQUEST.form.get(pair[1-pair.index(k)])!='0':
+                    REQUEST.set('%s_error' % k, True)
+                    has_errors = True
 
     if has_errors:
         REQUEST.set('request_error', True)

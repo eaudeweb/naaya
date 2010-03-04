@@ -142,6 +142,8 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             form_valid = form_validation(constants.PART_MANDATORY_FIELDS,
                                             constants.DATE_FIELDS,
                                             constants.TIME_FIELDS,
+                                            constants.NUMBER_FIELDS,
+                                            constants.PAIR_FIELDS,
                                             constants.EMAIL_FIELDS,
                                             REQUEST)
             if form_valid:

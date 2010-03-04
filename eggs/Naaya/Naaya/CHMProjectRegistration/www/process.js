@@ -82,5 +82,5 @@ $(document).ready(function() {
    process_own_labour_2();
    process_own_labour_3();
    process_requested_materials();
-   process_own_materials()
+   process_own_materials();
    });

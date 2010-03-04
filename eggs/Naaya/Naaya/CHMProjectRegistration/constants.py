@@ -37,6 +37,14 @@ AUTH_MANDATORY_FIELDS = ['registration_id']
 
 DATE_FIELDS = ['start_date', 'end_date']
 TIME_FIELDS = []
+NUMBER_FIELDS = ['requested_t1_hours', 'requested_t1_euro', 'requested_t2_hours', 'requested_t2_euro',
+                'requested_t3_hours', 'requested_t3_euro', 'requested_material_costs',
+                'requested_other_costs', 'own_t1_hours', 'own_t1_euro', 'own_t2_hours', 'own_t2_euro',
+                'own_t3_hours', 'own_t3_euro', 'own_material_costs', 'own_other_costs']
+PAIR_FIELDS = [
+              ['requested_t2_hours', 'requested_t2_euro'], ['requested_t3_hours', 'requested_t3_euro'],
+              ['own_t2_hours', 'own_t2_euro'], ['own_t3_hours', 'own_t3_euro'],
+              ]
 EMAIL_FIELDS = ['contact_email', 'financial_contact_email']
 
 SMTP_HOST = 'localhost'
