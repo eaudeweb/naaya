@@ -1,6 +1,6 @@
 Geachte Mevrouw, Mijnheer,
 
-Uw registratie voor de conferentie "%(registration_event)s" is in goede orde ontvangen. Om de ingestuurde informatie te kunnen inzien of aanpassen kunt u gebruik maken van de volgende link:
+Uw registratie is in goede orde ontvangen. Om de ingestuurde informatie te kunnen inzien of aanpassen kunt u gebruik maken van de volgende link:
 
 %(registration_edit_link)s
 
@@ -8,6 +8,6 @@ Het registratie nummer %(registration_id)s en de naam %(name)s (hoofdlettergevoe
 
 ---
 Vriendelijke Groet,
-De conferentieorganisatoren
+De registratieorganisatoren
 
 Voor vragen of opmerkingen kunt u contact opnemen met: Snethlage@ecnc.org

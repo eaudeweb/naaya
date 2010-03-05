@@ -5,7 +5,7 @@
             Geachte Mevrouw, Mijnheer,
         <p/>
         <p>
-            Uw registratie voor de conferentie "%(registration_event)s" is in goede orde ontvangen.
+            Uw registratie is in goede orde ontvangen.
 			Om de ingestuurde informatie te kunnen inzien of aanpassen
 			kunt u gebruik maken van de volgende link:
         <p/>
@@ -21,7 +21,7 @@
         </p>
         <p>
             Vriendelijke Groet,<br/>
-            De conferentieorganisatoren
+            De registratieorganisatoren
         </p>
 		<p>
 			Voor vragen of opmerkingen kunt u contact opnemen met: <a href="mailto:Snethlage@ecnc.org">Snethlage@ecnc.org</a>
