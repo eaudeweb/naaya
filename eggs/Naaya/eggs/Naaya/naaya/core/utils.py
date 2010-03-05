@@ -45,3 +45,10 @@ def force_to_unicode(s):
             return s.decode('latin-1')
     else:
         raise ValueError('expected `str` or `unicode`')
+
+def ofs_path(obj):
+    """
+    Return a string representation of an object's path, e.g.
+    ``/mysite/about/info``
+    """
+    return '/'.join(obj.getPhysicalPath())

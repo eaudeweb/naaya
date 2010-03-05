@@ -50,6 +50,7 @@ from naaya.content.base.interfaces import INyContentObject
 from naaya.core.utils import path_in_site
 from naaya.core.utils import relative_object_path
 from naaya.core.utils import force_to_unicode
+from naaya.core.utils import ofs_path
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscription
@@ -201,6 +202,7 @@ class NotificationTool(Folder):
         send instant notifications because object `ob` was changed by
         the user `user_id`
         """
+        notif_logger.info('Instant notifications on %r', ofs_path(ob))
         if not self.config['enable_instant']:
             return
         messages_by_email = {}
@@ -212,6 +214,7 @@ class NotificationTool(Folder):
             email = subscription.get_email(ob)
             if email is None:
                 continue
+            notif_logger.info('.. sending notification to %r', email)
             messages_by_email[email] = {
                 'ob': ob,
                 'ob_edited': ob_edited,
@@ -252,9 +255,14 @@ class NotificationTool(Folder):
         Send notifications for the period between `when_start` and `when_end`
         using the `notif_type` template
         """
+        notif_logger.info('Notifications newsletter on site %r, type %r, '
+                          'from %r to %r',
+                          ofs_path(self.getSite()), notif_type,
+                          when_start, when_end)
         objects_by_email = {}
         langs_by_email = {}
         for ob in list_modified_objects(self.getSite(), when_start, when_end):
+            notif_logger.info('.. modified object: %r', ofs_path(ob))
             for subscription in fetch_subscriptions(ob, inherit=True):
                 if subscription.notif_type != notif_type:
                     continue
@@ -263,6 +271,7 @@ class NotificationTool(Folder):
                 email = subscription.get_email(ob)
                 if email is None:
                     continue
+                notif_logger.info('.. .. sending notification to %r', email)
                 objects_by_email.setdefault(email, []).append({'ob': ob})
                 langs_by_email[email] = subscription.lang
 
@@ -362,7 +371,10 @@ def list_modified_objects(site, when_start, when_end):
     brains = catalog(bobobase_modification_time={
         'query': (DT_when_start, DT_when_end), 'range': 'min:max'})
     for brain in brains:
-        yield brain.getObject()
+        try:
+            yield brain.getObject()
+        except:
+            notif_logger.error('Found broken brain: %r', brain.getPath())
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
     mail = build_email(addr_from, addr_to, subject, body)
