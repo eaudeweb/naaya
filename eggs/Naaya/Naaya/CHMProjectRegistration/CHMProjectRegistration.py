@@ -26,6 +26,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from OFS.Folder import Folder
 import time
+from datetime import datetime, date, timedelta
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.NaayaCore.managers.csv_import_export import UnicodeReader
@@ -205,7 +206,6 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
     def registrationNotClosed(self):
         """ check if the registration is opend to the public """
         now = time.localtime()
-        from datetime import date, timedelta
         end_date = date(*self.end_date[0:3]) + timedelta(days=1)
         end_date = end_date.timetuple()[0:3] + self.end_date[3:]
         if now < end_date:
@@ -282,30 +282,65 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportProjects')
     def exportProjects(self, REQUEST=None, RESPONSE=None):
         """ exports the projects list in CSV format """
-        data = [('Registration date', 'Registration number',
-                'Organisation Name', 'Organisation Address', 'Organisation Website',
-                'Media contact name', 'Media contact email',
-                'Media contact telephone', 'Media contact details',
-                'Program contact name', 'Program contact email', 'Program contact telephone',
-                'VIP contact name', 'VIP contact email', 'VIP contact telephone',
-                'Activities', 'Disclose permission', 'Comments')]
+        data = [('Registration date', 'Registration ID',
+                'Project title', 'Requesting organisation(s)', 'Other partners',
+                'Participation in other requests',
+                'Contact person', 'Address', 'Telephone number', 'Fax', 'Email',
+                'Project start date', 'Project end date',
+                'Important dates in the project and possible phasing',
+                'Project goal', 'Project subgoals', 'Planned activities, including planning',
+                'Intended results / output', 'Location(s)', 'Target group reach',
+                'Communication goals', 'Project interest', 'Project risks',
+                'Way of reporting to the communication coalition', 'Comments',
+                'Requested Tariff 1 hours', 'Requested Tariff 1 (EUR/hour)',
+                'Requested Tariff 2 hours', 'Requested Tariff 2 (EUR/hour)',
+                'Requested Tariff 3 hours', 'Requested Tariff 3 (EUR/hour)',
+                'Amount requested for materials (in EUR)',
+                'Amount requested for other costs (in EUR)',
+                'Own Tariff 1 hours', 'Own Tariff 1 (EUR/hour)',
+                'Own Tariff 2 hours', 'Own Tariff 2 (EUR/hour)',
+                'Own Tariff 3 hours', 'Own Tariff 3 (EUR/hour)',
+                'Own contribution for materials (in EUR)',
+                'Own contribution for other costs (in EUR)',
+                'Added value of the requested contribution for the project',
+                'Financial contact', 'Address', 'Telephone number', 'Fax', 'Email', 'Admin comment')]
         data_app = data.append
-        for part in self.getProjects(skey='registration_date', rkey=1):
-            """if part.private_email:
+        for ob in self.getProjects(skey='registration_date', rkey=1):
+            """if ob.private_email:
                 email_type = 'Private'
             else:
                 email_type = 'Public'"""
-            disclose_permission = part.disclose_permission == '1' and 'Yes' or 'No'
-            data_app((self.formatDate(part.registration_date), part.id,
-                    self.unicode2UTF8(part.contact_name), self.unicode2UTF8(part.contact_address),
-                    self.unicode2UTF8(part.contact_website), self.unicode2UTF8(part.media_contact_name),
-                    part.email, self.unicode2UTF8(part.media_contact_telephone), 
-                    self.unicode2UTF8(part.media_contact_details.replace('\r\n', ' ').replace('\n', ' ')),
-                    self.unicode2UTF8(part.program_contact_name), part.program_contact_email,
-                    self.unicode2UTF8(part.program_contact_telephone), self.unicode2UTF8(part.vip_contact_name),
-                    part.vip_contact_email, self.unicode2UTF8(part.vip_contact_telephone),
-                    self.unicode2UTF8(part.activities.replace('\r\n', ' ').replace('\n', ' ')),
-                    disclose_permission, self.unicode2UTF8(part.admin_comment)))
+            data_app((self.formatDate(ob.registration_date), ob.id,
+
+                    self.unicode2UTF8(ob.title), self.unicode2UTF8(ob.requesting_organisations),
+                    self.unicode2UTF8(ob.other_partners), self.unicode2UTF8(ob.other_requests),
+                    self.unicode2UTF8(ob.contact_name),
+                    self.unicode2UTF8(ob.contact_address.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.contact_telephone), self.unicode2UTF8(ob.contact_fax),
+                    ob.contact_email, ob.start_date, ob.end_date,
+                    self.unicode2UTF8(ob.important_dates.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.goal.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.subgoals.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.activities.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.results.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.locations.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.target_group.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.communication_goals.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.interest.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.risks.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.reporting.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.comments.replace('\r\n', ' ').replace('\n', ' ')),
+                    ob.requested_t1_hours, ob.requested_t1_euro, ob.requested_t2_hours,
+                    ob.requested_t2_euro, ob.requested_t3_hours, ob.requested_t3_euro,
+                    ob.requested_material_costs, ob.requested_other_costs, ob.own_t1_hours,
+                    ob.own_t1_euro, ob.own_t2_hours, ob.own_t2_euro, ob.own_t3_hours, ob.own_t3_euro,
+                    ob.own_material_costs, ob.own_other_costs,
+                    self.unicode2UTF8(ob.added_value.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.financial_contact_name),
+                    self.unicode2UTF8(ob.financial_contact_address.replace('\r\n', ' ').replace('\n', ' ')),
+                    self.unicode2UTF8(ob.financial_contact_telephone),
+                    self.unicode2UTF8(ob.financial_contact_fax),
+                    ob.financial_contact_email, self.unicode2UTF8(ob.admin_comment)))
 
         return self.create_csv(data, filename='projects.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -375,8 +410,10 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
 
     #internal
     def formatDate(self, sdate, format='%d/%m/%Y'):
-        if sdate:
+        if isinstance(sdate, time.struct_time):
             return time.strftime(format, sdate)
+        if isinstance(sdate, datetime):
+            return datetime.strftime(sdate, format)
         return None
 
     def unicode2UTF8(self, s):
