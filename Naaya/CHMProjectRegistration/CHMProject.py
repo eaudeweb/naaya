@@ -208,19 +208,14 @@ class CHMProject(SimpleItem):
     _edit_html = PageTemplateFile('zpt/project/edit', globals())
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
-    def edit_html(self, mandatory_fields, REQUEST=None):
+    def edit_html(self, REQUEST=None):
         """ edit project properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
         lang = self.gl_get_selected_language()
         if REQUEST.form.has_key('authenticate'):
             #The registration number and last name are saved on the session as submitted by the user
-            if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS, 
-                                date_fields=constants.DATE_FIELDS,
-                                time_fields=constants.TIME_FIELDS,
-                                number_fields=constants.NUMBER_FIELDS,
-                                pair_fields=constants.PAIR_FIELDS,
-                                email_fields=constants.EMAIL_FIELDS,
+            if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS,
                                 REQUEST=REQUEST):
                 session.set('authentication_id', REQUEST.get('registration_id'))
                 session.set('authentication_name', self.unicode2UTF8(REQUEST.get('authentication_name')))
@@ -242,7 +237,7 @@ class CHMProject(SimpleItem):
             else:
                 REQUEST.set('wrong_email', True)
         if submit:
-            if form_validation(mandatory_fields=mandatory_fields, 
+            if form_validation(mandatory_fields=constants.PART_MANDATORY_FIELDS, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
                                 number_fields=constants.NUMBER_FIELDS,
@@ -251,6 +246,8 @@ class CHMProject(SimpleItem):
                                 REQUEST=REQUEST):
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
+                del cleaned_data['total_requested']
+                del cleaned_data['total_own']
                 self.edit(**cleaned_data)
 
                 #send notifications

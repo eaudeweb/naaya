@@ -2,11 +2,12 @@ import re
 import time
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
-def form_validation (mandatory_fields, date_fields, time_fields,
-                    number_fields, pair_fields, email_fields, REQUEST):
+def form_validation (mandatory_fields=[], date_fields=[], time_fields=[],
+                    number_fields=[], pair_fields=[[]], email_fields=[], REQUEST=None):
     has_errors = False
+    req = REQUEST.form
     #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
-    for k,v in REQUEST.form.items():
+    for k,v in req.items():
         if k in mandatory_fields and (k in number_fields and v=='0' or not v):
             REQUEST.set('%s_error' % k, True)
             has_errors = True
@@ -34,10 +35,21 @@ def form_validation (mandatory_fields, date_fields, time_fields,
                 has_errors = True
         for pair in pair_fields:
             if k in pair and (not v or v=='0'):
-                if REQUEST.form.get(pair[1-pair.index(k)])!='0':
+                if req.get(pair[1-pair.index(k)])!='0':
                     REQUEST.set('%s_error' % k, True)
                     has_errors = True
-
+        total_requested = req.get('total_requested')
+        total_own = req.get('total_own')
+    try:
+        total_requested = float(total_requested)
+        total_own = float(total_own)
+        percentage = total_own/(total_own + total_requested)
+        if percentage < 0.6:
+            percentage = '%s%%' % percentage * 100
+            REQUEST.set('percentage_error', percentage)
+            has_errors = True
+    except:
+        pass
     if has_errors:
         REQUEST.set('request_error', True)
     return not has_errors
