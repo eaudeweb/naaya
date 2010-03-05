@@ -48,7 +48,8 @@ class catalog_tool:
                 ob = self.portal_catalog.getobject(brain.data_record_id_)
             except:
                 self.log_current_error()
-            output.append(ob)
+            else:
+                output.append(ob)
         return output
 
     def __getObjectsAndScore(self, p_brains):
