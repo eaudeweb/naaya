@@ -24,9 +24,7 @@ PART_MANDATORY_FIELDS = [
                 'contact_name', 'contact_address', 'contact_telephone', 'contact_email',
                 'start_date', 'end_date',
                 'goal', 'subgoals', 'activities', 'results', 'locations', 'target_group',
-                'communication_goals', 'interest', 'risks', 'reporting',
-                'requested_t1_hours', 'requested_t1_euro', 'requested_material_costs', 'requested_other_costs',
-                'own_t1_hours', 'own_t1_euro', 'own_material_costs', 'own_other_costs', 'added_value',
+                'communication_goals', 'interest', 'risks', 'reporting', 'added_value',
                 ]
 PART_EMAIL_RECIPIENTS = ['contact_email']
 REG_MANDATORY_FIELDS = ['title', 'administrative_email', 'start_date', 'end_date']
@@ -42,8 +40,12 @@ NUMBER_FIELDS = ['requested_t1_hours', 'requested_t1_euro', 'requested_t2_hours'
                 'requested_other_costs', 'own_t1_hours', 'own_t1_euro', 'own_t2_hours', 'own_t2_euro',
                 'own_t3_hours', 'own_t3_euro', 'own_material_costs', 'own_other_costs']
 PAIR_FIELDS = [
-              ['requested_t2_hours', 'requested_t2_euro'], ['requested_t3_hours', 'requested_t3_euro'],
-              ['own_t2_hours', 'own_t2_euro'], ['own_t3_hours', 'own_t3_euro'],
+              ['requested_t1_hours', 'requested_t1_euro'],
+              ['requested_t2_hours', 'requested_t2_euro'],
+              ['requested_t3_hours', 'requested_t3_euro'],
+              ['own_t1_hours', 'own_t1_euro'],
+              ['own_t2_hours', 'own_t2_euro'],
+              ['own_t3_hours', 'own_t3_euro'],
               ]
 EMAIL_FIELDS = ['contact_email', 'financial_contact_email']
 

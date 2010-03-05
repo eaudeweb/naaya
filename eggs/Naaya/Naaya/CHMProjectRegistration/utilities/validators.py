@@ -38,8 +38,24 @@ def form_validation (mandatory_fields=[], date_fields=[], time_fields=[],
                 if req.get(pair[1-pair.index(k)])!='0':
                     REQUEST.set('%s_error' % k, True)
                     has_errors = True
-        total_requested = req.get('total_requested')
-        total_own = req.get('total_own')
+    total_requested = req.get('total_requested')
+    total_own = req.get('total_own')
+    try:
+        total_requested = float(total_requested)
+        if not (total_requested > 0):
+            REQUEST.set('total_requested_error', True)
+            has_errors = True
+    except:
+        REQUEST.set('total_requested_notvalid', True)
+        has_errors = True
+    try:
+        total_own = float(total_own)
+        if not (total_own > 0):
+            REQUEST.set('total_own_error', True)
+            has_errors = True
+    except:
+        REQUEST.set('total_own_notvalid', True)
+        has_errors = True
     try:
         total_requested = float(total_requested)
         total_own = float(total_own)
