@@ -161,7 +161,7 @@
 		<td tal:content="here/comments" />
 	</tr>
 	<tr>
-		<td class="label" i18n:translate="">Added value of the requested contribution for the project?</td>
+		<td class="label" i18n:translate="">Added value of the requested contribution for the project</td>
 		<td tal:content="here/added_value" />
 	</tr>
 </table>
@@ -249,7 +249,7 @@
 	</tr>
 	<tr>
 		<td class="label new_section" i18n:translate="">Amount requested for materials (in &euro;)</td>
-		<td class="label new_section" i18n:translate="">Amount requested for other costs</td>
+		<td class="label new_section" i18n:translate="">Amount requested for other costs (in &euro;)</td>
 		<td class="label new_section" i18n:translate="">Total amount requested for materials and other costs</td>
 	</tr>
 	<tr>
@@ -356,7 +356,7 @@
 	</tr>
 	<tr>
 		<td class="label new_section" i18n:translate="">Own contribution for materials (in &euro;)</td>
-		<td class="label new_section" i18n:translate="">Own contribution for other costs</td>
+		<td class="label new_section" i18n:translate="">Own contribution for other costs (in &euro;)</td>
 		<td class="label new_section" i18n:translate="">Total own contribution for materials and other costs</td>
 	</tr>
 	<tr>
@@ -395,10 +395,6 @@
 	<tr>
 		<td class="label" i18n:translate="">Telephone number</td>
 		<td tal:content="here/financial_contact_telephone" />
-	</tr>
-	<tr>
-		<td class="label" i18n:translate="">Address</td>
-		<td tal:content="structure here/contact_address" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Fax</td>
