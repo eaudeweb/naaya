@@ -139,18 +139,19 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
         if submit:
-            form_valid = form_validation(constants.PART_MANDATORY_FIELDS,
-                                            constants.DATE_FIELDS,
-                                            constants.TIME_FIELDS,
-                                            constants.NUMBER_FIELDS,
-                                            constants.PAIR_FIELDS,
-                                            constants.EMAIL_FIELDS,
-                                            REQUEST)
-            if form_valid:
+            if form_validation(mandatory_fields=constants.PART_MANDATORY_FIELDS, 
+                                date_fields=constants.DATE_FIELDS,
+                                time_fields=constants.TIME_FIELDS,
+                                number_fields=constants.NUMBER_FIELDS,
+                                pair_fields=constants.PAIR_FIELDS,
+                                email_fields=constants.EMAIL_FIELDS,
+                                REQUEST=REQUEST):
                 lang = self.gl_get_selected_language()
                 registration_id = naaya_utils.make_id(self, prefix='p')
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
+                del cleaned_data['total_requested']
+                del cleaned_data['total_own']
                 ob = CHMProject(registration_id, **cleaned_data)
                 self._setObject(registration_id, ob)
                 project = self._getOb(registration_id, None)

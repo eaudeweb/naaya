@@ -144,7 +144,7 @@
 					<div tal:condition="python:request.has_key('start_date_notvalid')"
 					class="message-error" i18:translate="">
 					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
-					<input type="text" name="start_date:utf8:ustring" class="vDateField"
+					<input type="text" name="start_date" class="vDateField"
 						size="10" maxlength="10" size="10"
 						tal:attributes="value python:request.get('start_date', '')" />
 				</div>
@@ -159,7 +159,7 @@
 					<div tal:condition="python:request.has_key('end_date_notvalid')"
 					class="message-error" i18:translate="">
 					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
-					<input type="text" name="end_date:utf8:ustring" class="vDateField"
+					<input type="text" name="end_date" class="vDateField"
 						size="10" maxlength="10" size="10"
 						tal:attributes="value python:request.get('end_date', '')" />
 				</div>
@@ -365,18 +365,18 @@
 						<tr>
 							<td>
 								<input type="text" id='requested_t1_hours' class="numeric"
-									name="requested_t1_hours:utf8:ustring" size="10"
+									name="requested_t1_hours" size="10"
 									tal:attributes="value python:request.get('requested_t1_hours')"
-									onchange="process_requested_labour_1()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
 								<input type="text" id='requested_t1_euro' class="numeric"
-									name="requested_t1_euro:utf8:ustring" size="10"
+									name="requested_t1_euro" size="10"
 									tal:attributes="value python:request.get('requested_t1_euro')"
-									onchange="process_requested_labour_1()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
-								<input type="text" id='total_requested_t1' class="numeric" READONLY/>
+								<input type="text" id='total_requested_t1' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -414,18 +414,18 @@
 						<tr>
 							<td>
 								<input type="text" id='requested_t2_hours' class="numeric"
-									name="requested_t2_hours:utf8:ustring" size="10"
+									name="requested_t2_hours" size="10"
 									tal:attributes="value python:request.get('requested_t2_hours')"
-									onchange="process_requested_labour_2()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
 								<input type="text" id='requested_t2_euro' class="numeric"
-									name="requested_t2_euro:utf8:ustring" size="10"
+									name="requested_t2_euro" size="10"
 									tal:attributes="value python:request.get('requested_t2_euro')"
-									onchange="process_requested_labour_2()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
-								<input type="text" id='total_requested_t2' class="numeric" READONLY/>
+								<input type="text" id='total_requested_t2' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -463,18 +463,18 @@
 						<tr>
 							<td>
 								<input type="text" id='requested_t3_hours' class="numeric"
-									name="requested_t3_hours:utf8:ustring" size="10"
+									name="requested_t3_hours" size="10"
 									tal:attributes="value python:request.get('requested_t3_hours')"
-									onchange="process_requested_labour_3()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
 								<input type="text" id='requested_t3_euro' class="numeric"
-									name="requested_t3_euro:utf8:ustring" size="10"
+									name="requested_t3_euro" size="10"
 									tal:attributes="value python:request.get('requested_t3_euro')"
-									onchange="process_requested_labour_3()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
-								<input type="text" id='total_requested_t3' class="numeric" READONLY/>
+								<input type="text" id='total_requested_t3' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -482,7 +482,7 @@
 								Total amount requested for labour costs
 							</td>
 							<td class="label new_row">
-								<input type="text" id='total_requested_labor' class="numeric" READONLY/>
+								<input type="text" id='total_requested_labor' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -515,19 +515,19 @@
 						<tr>
 							<td class="label">
 								<input type="text" id="requested_material_costs" class="numeric"
-									name="requested_material_costs:utf8:ustring" size="10"
+									name="requested_material_costs" size="10"
 									tal:attributes="value python:request.get('requested_material_costs')"
-									onchange="process_requested_materials()"/>
+									onchange="process_table()"/>
 							</td>
 							<td class="label">
 								<input type="text" id='requested_other_costs' class="numeric"
-									name="requested_other_costs:utf8:ustring" size="10"
+									name="requested_other_costs" size="10"
 									tal:attributes="value python:request.get('requested_other_costs')"
-									onchange="process_requested_materials()"/>
+									onchange="process_table()"/>
 							</td>
 							<td class="label">
 								<input type="text" id="total_requested_material_other"
-									class="numeric" READONLY/>
+									class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -535,7 +535,8 @@
 								<span i18n:translate="">Total requested contribution</span>
 							</td>
 							<td class="label new_row">
-								<input type="text" id="total_requested" class="numeric" READONLY/>
+								<input type="text" id="total_requested" name="total_requested"
+									class="numeric" readonly=""/>
 							</td>
 						</tr>
 					</table>
@@ -578,18 +579,18 @@
 						<tr>
 							<td>
 								<input type="text" id='own_t1_hours' class="numeric"
-									name="own_t1_hours:utf8:ustring" size="10"
+									name="own_t1_hours" size="10"
 									tal:attributes="value python:request.get('own_t1_hours')"
-									onchange="process_own_labour_1()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
 								<input type="text" id='own_t1_euro' class="numeric"
-									name="own_t1_euro:utf8:ustring" size="10"
+									name="own_t1_euro" size="10"
 									tal:attributes="value python:request.get('own_t1_euro')"
-									onchange="process_own_labour_1()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
-								<input type="text" id='total_own_t1' class="numeric" READONLY/>
+								<input type="text" id='total_own_t1' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -627,18 +628,18 @@
 						<tr>
 							<td>
 								<input type="text" id='own_t2_hours' class="numeric"
-									name="own_t2_hours:utf8:ustring" size="10"
+									name="own_t2_hours" size="10"
 									tal:attributes="value python:request.get('own_t2_hours')"
-									onchange="process_own_labour_2()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
 								<input type="text" id='own_t2_euro' class="numeric"
-									name="own_t2_euro:utf8:ustring" size="10"
+									name="own_t2_euro" size="10"
 									tal:attributes="value python:request.get('own_t2_euro')"
-									onchange="process_own_labour_2()"/>
+									onchange="process_table()"/>
 							</td>
 							<td>
-								<input type="text" id='total_own_t2' class="numeric" READONLY/>
+								<input type="text" id='total_own_t2' class="numeric" readonly=""/>
 							</td>
 						</tr>
 						<tr>
@@ -676,18 +677,18 @@
 					<tr>
 						<td>
 							<input type="text" id='own_t3_hours' class="numeric"
-								name="own_t3_hours:utf8:ustring" size="10"
+								name="own_t3_hours" size="10"
 								tal:attributes="value python:request.get('own_t3_hours')"
-								onchange="process_own_labour_3()"/>
+								onchange="process_table()"/>
 						</td>
 						<td>
 							<input type="text" id='own_t3_euro' class="numeric"
-								name="own_t3_euro:utf8:ustring" size="10"
+								name="own_t3_euro" size="10"
 								tal:attributes="value python:request.get('own_t3_euro')"
-								onchange="process_own_labour_3()"/>
+								onchange="process_table()"/>
 						</td>
 						<td>
-							<input type="text" id='total_own_t3' class="numeric" READONLY/>
+							<input type="text" id='total_own_t3' class="numeric" readonly=""/>
 						</td>
 					</tr>
 					<tr>
@@ -695,7 +696,7 @@
 							Total own contribution for labour costs
 						</td>
 						<td class="label new_row">
-							<input type="text" id='total_own_labor' class="numeric" READONLY/>
+							<input type="text" id='total_own_labor' class="numeric" readonly=""/>
 						</td>
 					</tr>
 					<tr>
@@ -728,26 +729,31 @@
 					<tr>
 						<td class="label">
 							<input type="text" id="own_material_costs" class="numeric"
-								name="own_material_costs:utf8:ustring" size="10"
+								name="own_material_costs" size="10"
 								tal:attributes="value python:request.get('own_material_costs')"
-								onchange="process_own_materials()"/>
+								onchange="process_table()"/>
 						</td>
 						<td class="label">
 							<input type="text" id='own_other_costs' class="numeric"
-								name="own_other_costs:utf8:ustring" size="10"
+								name="own_other_costs" size="10"
 								tal:attributes="value python:request.get('own_other_costs')"
-								onchange="process_own_materials()"/>
+								onchange="process_table()"/>
 						</td>
 						<td class="label">
-							<input type="text" id="total_own_material_other" class="numeric" READONLY/>
+							<input type="text" id="total_own_material_other" class="numeric" readonly=""/>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2" class="label new_row">
 							<span i18n:translate="">Total own contribution</span>
+							<div tal:condition="python:request.has_key('percentage_error')"
+							class="message-error" i18:translate="">
+								Please make sure that the own contribution is at least 60%
+								of the total project budget.
+							</div>
 						</td>
 						<td class="label new_row">
-							<input type="text" id="total_own" class="numeric" READONLY/>
+							<input type="text" id="total_own" name="total_own" class="numeric" readonly=""/>
 						</td>
 					</tr>
 				</table>
