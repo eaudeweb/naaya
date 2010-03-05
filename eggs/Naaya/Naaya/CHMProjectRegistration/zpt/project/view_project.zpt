@@ -160,6 +160,10 @@
 		<td class="label" i18n:translate="">Comments</td>
 		<td tal:content="here/comments" />
 	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Added value of the requested contribution for the project?</td>
+		<td tal:content="here/added_value" />
+	</tr>
 </table>
 
 <table class="datatable" style="width: 600px;">
@@ -377,10 +381,6 @@
 </table>
 
 <table class="datatable project_view">
-	<tr>
-		<td class="label" i18n:translate="">Added value of the requested contribution for the project?</td>
-		<td tal:content="here/added_value" />
-	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Financial contact person</td>
 	</tr>
