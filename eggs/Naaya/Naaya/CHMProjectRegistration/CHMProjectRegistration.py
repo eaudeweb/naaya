@@ -168,14 +168,14 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_id': registration_id,
                                 'name': self.unicode2UTF8(project.contact_name)}
-                    """self.send_registration_notification(email_recipients,
+                    self.send_registration_notification(email_recipients,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
                         self.getEmailTemplate('user_registration_text', lang) % values)
                     self.send_registration_notification(self.administrative_email,
                         'Event registration',
                         self.getEmailTemplate('admin_registration_html', 'en') % values,
-                        self.getEmailTemplate('admin_registration_text', 'en') % values)"""
+                        self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                     #redirect to profile page
                     return REQUEST.RESPONSE.redirect(project.absolute_url())
@@ -238,7 +238,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                     smtp_port = constants.SMTP_PORT
                     )
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'importProjects')
+    security.declareProtected(constants.EDIT_PERMISSION, 'importProjects')
     def importProjects(self, REQUEST=None, RESPONSE=None):
         """ """
         errors = []
@@ -279,7 +279,46 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             REQUEST.set('errors', errors)
         return self.projects(REQUEST)
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportProjects')
+    security.declareProtected('Manage users', 'import_users')
+    import_users = PageTemplateFile('zpt/registration/import_users', globals())
+    security.declareProtected('Manage users', 'importUsers')
+    def importUsers(self, REQUEST=None, RESPONSE=None):
+        """ """
+        errors = []
+        succcess = ''
+        data = REQUEST.form.get('data', None)
+        if data is None:
+            pass
+        try:
+            reader = UnicodeReader(data)
+            record_number = 0
+            for row in reader:
+                try:
+                    record_number += 1
+                    self.getAuthenticationTool().manage_addUser(name=row[0], password=row[1],
+                        confirm=row[1], roles=[row[2]], firstname=row[3], lastname=row[4],
+                        email=row[5])
+                except UnicodeDecodeError, e:
+                    raise
+                except Exception, e:
+                    self.log_current_error()
+                    msg = 'Error while importing from CSV, row %d: %s' % (record_number, str(e))
+                    if REQUEST is None:
+                        raise ValueError(msg)
+                    else:
+                        errors.append(msg)
+        except UnicodeDecodeError, e:
+            if REQUEST is None:
+                raise
+            else:
+                errors = ['CSV file is not utf-8 encoded']
+        if not errors:
+            REQUEST.set('success', "%s users were imported successfully." % record_number)
+        else:
+            REQUEST.set('errors', errors)
+        return self.import_users(REQUEST)
+
+    security.declareProtected(constants.EDIT_PERMISSION, 'exportProjects')
     def exportProjects(self, REQUEST=None, RESPONSE=None):
         """ exports the projects list in CSV format """
         data = [('Registration date', 'Registration ID',
@@ -353,7 +392,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         return content
 
     _projects = PageTemplateFile('zpt/registration/projects', globals())
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'projects')
+    security.declareProtected(constants.EDIT_PERMISSION, 'projects')
     def projects(self, ids=[], REQUEST=None):
         """ Loads the projects template.
         Deletes selected projects or saves comments, depending on the pressed button. """
@@ -372,7 +411,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         return self._projects(REQUEST)
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'getProjects')
+    security.declareProtected(constants.EDIT_PERMISSION, 'getProjects')
     def getProjects(self, skey, rkey):
         """ Returns the list of projects """
         meta_type = 'CHM Project'
@@ -382,7 +421,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             projects.reverse()
         return [p for (key, p) in projects]
 
-    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'deleteProjects')
+    security.declareProtected(constants.EDIT_PERMISSION, 'deleteProjects')
     def deleteProjects(self, ids):
         """ Deletes selected projects """
         ids = self.utConvertToList(ids)
@@ -393,10 +432,15 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         """ Check the permissions to edit/delete meeting settgins and projects """
         return checkPermission(constants.MANAGE_PERMISSION, self)
 
+    security.declarePublic('canManageUsers')
+    def canManageUsers(self):
+        """ Check the permissions to add portal users """
+        return checkPermission('Manage users', self)
+
     security.declarePublic('canViewProjects')
     def canViewProjects(self):
         """ Check the permissions to edit/delete projects """
-        return checkPermission(constants.VIEW_EDIT_PERMISSION, self)
+        return checkPermission(constants.EDIT_PERMISSION, self)
 
     security.declarePublic('getRegistrationTitle')
     def getRegistrationTitle(self):

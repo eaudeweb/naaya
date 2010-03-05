@@ -52,9 +52,9 @@ SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@biodiversiteit.nl'
 
 
-VIEW_PERMISSION = 'View'
-VIEW_EDIT_PERMISSION = 'View CHM Registrations'
-MANAGE_PERMISSION = 'Manage CHM Registration'
+VIEW_PERMISSION = 'View CHM Project Registrations'
+EDIT_PERMISSION = 'Add CHM Project Registrations'
+MANAGE_PERMISSION = 'Manage CHM Project Registration'
 
 from os.path import dirname
 PRODUCT_PATH = dirname(__file__)

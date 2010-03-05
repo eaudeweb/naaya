@@ -196,10 +196,10 @@ class CHMProject(SimpleItem):
                             'website_team': self.unicode2UTF8(self.site_title),
                             'registration_id': self.id,
                             'name': self.unicode2UTF8(self.contact_name)}
-                """self.send_registration_notification(user_email,
+                self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
-                    self.getEmailTemplate('user_registration_text', lang) % values)"""
+                    self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
@@ -229,10 +229,10 @@ class CHMProject(SimpleItem):
                             'website_team': self.unicode2UTF8(self.site_title),
                             'registration_id': self.id,
                             'name': self.unicode2UTF8(self.contact_name)}
-                """self.send_registration_notification(user_email,
+                self.send_registration_notification(user_email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
-                    self.getEmailTemplate('user_registration_text', lang) % values)"""
+                    self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
@@ -255,10 +255,10 @@ class CHMProject(SimpleItem):
                             'registration_event': self.aq_parent.title,
                             'website_team': self.site_title,
                             'registration_id': self.id}
-                """self.send_registration_notification(self.administrative_email,
+                self.send_registration_notification(self.administrative_email,
                     'Event registration',
                     self.getEmailTemplate('admin_registration_html', 'en') % values,
-                    self.getEmailTemplate('admin_registration_text', 'en') % values)"""
+                    self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)
