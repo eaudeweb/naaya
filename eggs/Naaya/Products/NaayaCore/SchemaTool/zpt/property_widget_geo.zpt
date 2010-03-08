@@ -8,7 +8,7 @@
     portal_map here/getGeoMapTool;
     ">
     <label tal:attributes="for prop_id" class="widget-title">
-        <span tal:content="here/title" />
+        <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
@@ -16,7 +16,7 @@
 <div style="background-color: #ecf5fa; border: 1px solid #b6cde1;
     margin-top: 0.5em; padding: 0.5em; width: 430px;">
     <div style="padding:0.5em;">
-        <a id="map-toggle" href="javascript:">[Show map &#x25bc;]</a>
+        <a id="map-toggle" href="javascript:">[<tal:block i18n:translate="">Show map</tal:block> &#x25bc;]</a>
     </div>
     <label style="display:inline" tal:attributes="for lat_id" class="widget-title" i18n:translate="">Latitude</label>
     <input type="text" size="20" maxlength="20" tal:attributes="value opt_value/lat|nothing;
