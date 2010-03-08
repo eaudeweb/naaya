@@ -286,7 +286,7 @@
 					<label class="mandatory" for="target_group">
 						<span i18n:translate="">Target group reach</span> *
 					</label>
-					(<span i18n:translate="">Which target group(s) will be reached?</span>
+					(<span i18n:translate="">Which target group(s) will be reached?</span><br/>
 						<span i18n:translate="">Which means are used for this?</span><br/>
 						<span i18n:translate="">Number of people that will be reached?</span>
 						<span i18n:translate="">Geographical spreading of the target group(s)?</span>)<br/>
