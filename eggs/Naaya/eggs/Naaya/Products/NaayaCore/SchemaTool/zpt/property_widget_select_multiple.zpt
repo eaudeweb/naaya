@@ -4,7 +4,7 @@
     prop_id here/prop_name;
     selection_list here/get_selection_list">
     <label tal:attributes="for prop_id" class="widget-title">
-        <span tal:content="here/title" />
+        <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <br />
