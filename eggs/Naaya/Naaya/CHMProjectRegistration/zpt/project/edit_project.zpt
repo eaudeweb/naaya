@@ -744,14 +744,14 @@
 								Must be a number.
 							</div>
 						</td>
-						<td class="new_section" i18n:translate="">
+						<td class="new_section">
 							<span class="label" i18n:translate="">Own contribution for other costs</span>
 							<div tal:condition="python:request.has_key('own_other_costs_notvalid')"
 							class="message-error" i18:translate="">
 								Must be a number.
 							</div>
 						</td>
-						<td class="label new_section" i18n:translate="">
+						<td class="label new_section">
 							<span i18n:translate="">Total own contribution for materials and other costs</span>
 						</td>
 					</tr>
