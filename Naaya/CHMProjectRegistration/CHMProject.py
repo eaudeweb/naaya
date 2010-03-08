@@ -173,7 +173,6 @@ class CHMProject(SimpleItem):
             (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.contact_name))) or \
             self.canManageProjects() or self.canViewProjects()
 
-    security.declareProtected(constants.VIEW_PROJECTS, 'index_html')
     _index_html = PageTemplateFile('zpt/project/index', globals())
     #@todo: security
     def index_html(self, REQUEST=None):
