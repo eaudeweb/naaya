@@ -448,6 +448,11 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         """ Check the permissions to add projects """
         return checkPermission(constants.ADD_PROJECTS, self)
 
+    security.declarePublic('canEditProjects')
+    def canEditProjects(self):
+        """ Check the permissions to add projects """
+        return checkPermission(constants.EDIT_PROJECTS, self)
+
     security.declarePublic('getRegistrationTitle')
     def getRegistrationTitle(self):
         """ """
