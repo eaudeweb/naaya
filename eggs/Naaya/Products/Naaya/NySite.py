@@ -3797,4 +3797,10 @@ class Heartbeat(object):
     interface.implements(IHeartbeat)
     def __init__(self):
         self.when = datetime.now()
-
+@component.adapter(INySite, IHeartbeat)
+def cleanupUnsubmittedObjectsHeartbeat(site, hb):
+    """
+    Used by heartbeat to clean up unsubmitted objects older than 1 day.
+    """
+    site.cleanupUnsubmittedObjects(site.get_site_uid())
+component.provideHandler(cleanupUnsubmittedObjectsHeartbeat)
