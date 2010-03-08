@@ -59,7 +59,8 @@
 
 <tal:block condition="entitled">
 	<div id="admin_this_folder">
-		<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">
+		<a tal:condition="here/canEditProjects"
+			tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">
 			Edit registration
 		</a>
 		<a tal:attributes="href string:javascript:print()" i18n:translate="">

@@ -11,7 +11,7 @@
 		tal:attributes="href string:${here/absolute_url}/projects">
 		View projects
 	</a>
-	<a i18n:translate="" tal:condition="python:here.canAddProjects()"
+	<a i18n:translate="" tal:condition="here/canAddProjects"
 		tal:attributes="href string:${here/absolute_url}/registration_html">
 		Register projects
 	</a>
