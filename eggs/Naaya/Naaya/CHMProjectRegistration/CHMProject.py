@@ -99,7 +99,7 @@ class CHMProject(SimpleItem):
         self.admin_comment = admin_comment
         self.registration_date = datetime.now()
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'edit')
+    security.declareProtected(constants.EDIT_PROJECTS, 'edit')
     def edit(self, title, requesting_organisations, other_partners, other_requests,
             contact_name, contact_address, contact_telephone, contact_fax, contact_email,
             start_date, end_date, important_dates,
@@ -167,14 +167,13 @@ class CHMProject(SimpleItem):
             return results[0].get_translation_by_language(lang)
         return ''
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'isEntitled')
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
             (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.contact_name))) or \
             self.canManageProjects() or self.canViewProjects()
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
+    security.declareProtected(constants.VIEW_PROJECTS, 'index_html')
     _index_html = PageTemplateFile('zpt/project/index', globals())
     #@todo: security
     def index_html(self, REQUEST=None):
@@ -207,7 +206,7 @@ class CHMProject(SimpleItem):
 
     _edit_html = PageTemplateFile('zpt/project/edit', globals())
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
+    security.declareProtected(constants.EDIT_PROJECTS, 'edit_html')
     def edit_html(self, REQUEST=None):
         """ edit project properties """
         session = REQUEST.SESSION

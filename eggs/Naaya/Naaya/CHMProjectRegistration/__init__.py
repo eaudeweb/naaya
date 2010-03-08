@@ -4,7 +4,7 @@ from Products.Naaya import register_content
 import CHMProjectRegistration
 from utilities.StaticServe import StaticServeFromZip
 
-ADD_PERMISSION = 'Add CHM Project Registration'
+ADD_PERMISSION = 'CHM Project Registration - Manage Registration'
 
 # Register as a folder content type
 register_content(

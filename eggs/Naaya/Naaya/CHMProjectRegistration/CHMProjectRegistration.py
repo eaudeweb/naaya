@@ -85,7 +85,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         Folder.manage_options[2:]
     )
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'loadDefaultContent')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'loadDefaultContent')
     def loadDefaultContent(self):
         """ load default content such as: email templates """
         from TemplatesManager import manage_addTemplatesManager
@@ -99,7 +99,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         self.save_properties(title, registration_details, registration_description,\
                     administrative_email, start_date, end_date, lang)
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'save_properties')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'save_properties')
     def save_properties(self, title, registration_details, registration_description,\
                     administrative_email, start_date, end_date, lang):
         """ save properties """
@@ -128,7 +128,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         except:
             pass
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'reloadRegistrationForms')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'reloadRegistrationForms')
     def reloadRegistrationForms(self, REQUEST=None):
         """ reload registration forms """
         self._deleteRegistrationForms()
@@ -136,6 +136,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         if REQUEST:
             return self.manage_main(self, REQUEST, update_menu=1)
 
+    security.declareProtected(constants.ADD_PROJECTS, 'registration_html')
     def registration_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
@@ -181,10 +182,10 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                     return REQUEST.RESPONSE.redirect(project.absolute_url())
         return self.registration_form(REQUEST)
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
+    security.declareProtected(constants.VIEW_REGISTRATION, 'index_html')
     index_html = PageTemplateFile('zpt/registration/index', globals())
 
-    security.declareProtected(constants.MANAGE_PERMISSION, '_edit_html')
+    security.declareProtected(constants.MANAGE_REGISTRATION, '_edit_html')
     _edit_html = PageTemplateFile('zpt/registration/edit', globals())
 
     security.declarePrivate('getEmailTemplate')
@@ -212,7 +213,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             return True
         return False
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'edit_html')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'edit_html')
     def edit_html(self, REQUEST):
         """ edit properties """
         submit =  REQUEST.form.get('edit-submit', '')
@@ -238,7 +239,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                     smtp_port = constants.SMTP_PORT
                     )
 
-    security.declareProtected(constants.EDIT_PERMISSION, 'importProjects')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'importProjects')
     def importProjects(self, REQUEST=None, RESPONSE=None):
         """ """
         errors = []
@@ -318,7 +319,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             REQUEST.set('errors', errors)
         return self.import_users(REQUEST)
 
-    security.declareProtected(constants.EDIT_PERMISSION, 'exportProjects')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'exportProjects')
     def exportProjects(self, REQUEST=None, RESPONSE=None):
         """ exports the projects list in CSV format """
         data = [('Registration date', 'Registration ID',
@@ -392,7 +393,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         return content
 
     _projects = PageTemplateFile('zpt/registration/projects', globals())
-    security.declareProtected(constants.EDIT_PERMISSION, 'projects')
+    security.declareProtected(constants.VIEW_PROJECTS, 'projects')
     def projects(self, ids=[], REQUEST=None):
         """ Loads the projects template.
         Deletes selected projects or saves comments, depending on the pressed button. """
@@ -411,7 +412,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         return self._projects(REQUEST)
 
-    security.declareProtected(constants.EDIT_PERMISSION, 'getProjects')
+    security.declareProtected(constants.VIEW_PROJECTS, 'getProjects')
     def getProjects(self, skey, rkey):
         """ Returns the list of projects """
         meta_type = 'CHM Project'
@@ -421,7 +422,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
             projects.reverse()
         return [p for (key, p) in projects]
 
-    security.declareProtected(constants.EDIT_PERMISSION, 'deleteProjects')
+    security.declareProtected(constants.MANAGE_REGISTRATION, 'deleteProjects')
     def deleteProjects(self, ids):
         """ Deletes selected projects """
         ids = self.utConvertToList(ids)
@@ -430,7 +431,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
     security.declarePublic('canManageProjects')
     def canManageProjects(self):
         """ Check the permissions to edit/delete meeting settgins and projects """
-        return checkPermission(constants.MANAGE_PERMISSION, self)
+        return checkPermission(constants.MANAGE_REGISTRATION, self)
 
     security.declarePublic('canManageUsers')
     def canManageUsers(self):
@@ -440,7 +441,12 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
     security.declarePublic('canViewProjects')
     def canViewProjects(self):
         """ Check the permissions to edit/delete projects """
-        return checkPermission(constants.EDIT_PERMISSION, self)
+        return checkPermission(constants.VIEW_PROJECTS, self)
+
+    security.declarePublic('canAddProjects')
+    def canAddProjects(self):
+        """ Check the permissions to add projects """
+        return checkPermission(constants.ADD_PROJECTS, self)
 
     security.declarePublic('getRegistrationTitle')
     def getRegistrationTitle(self):
@@ -470,7 +476,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(id, lang)
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'getCountryList')
+    security.declareProtected(constants.VIEW_REGISTRATION, 'getCountryList')
     def getCountryList(self):
         """ """
         catalog = self.glossary_coverage.getGlossaryCatalog()
