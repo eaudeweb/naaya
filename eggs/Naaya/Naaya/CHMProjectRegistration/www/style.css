@@ -164,6 +164,6 @@ div.field table tr td{
 table.project_view tr td{
 	width: 50%;
 }
-table.project_view{
+.project_view{
 	width: 600px;
 }

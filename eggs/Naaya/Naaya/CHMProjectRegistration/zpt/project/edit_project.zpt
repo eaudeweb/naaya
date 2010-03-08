@@ -58,7 +58,7 @@
 </tal:block>
 
 <tal:block condition="entitled">
-
+	<div class="project_view">
 		<div class="field">
 			<p i18n:translate="">Fields with * are mandatory</p>
 			<p i18n:translate="">A notification e-mail of this registration will be sent
@@ -846,5 +846,6 @@
 			<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
 
 		</form>
+	</div>
 </tal:block>
 

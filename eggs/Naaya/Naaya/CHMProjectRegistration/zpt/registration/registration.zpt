@@ -20,6 +20,7 @@
 							curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 							curr_lang_label python:here.get_language_name(curr_lang);">
 
+	<div class="project_view">
 		<h1 tal:content="here/getRegistrationTitle" />
 		<h2 tal:content="here/getRegistrationDetails" />
 
@@ -854,5 +855,6 @@
 			<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 		</h3>
 		</tal:block>
+	</div>
 	</metal:block>
 </metal:block>
