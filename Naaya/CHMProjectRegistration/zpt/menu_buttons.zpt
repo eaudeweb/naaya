@@ -3,7 +3,7 @@
 		tal:attributes="href string:${here/absolute_url}/edit_html">
 		Edit properties
 	</a>
-<!-->	<a i18n:translate="" tal:condition="here/canManageUsers"
+<!--	<a i18n:translate="" tal:condition="here/canManageUsers"
 		tal:attributes="href string:${here/absolute_url}/import_users">
 		Import portal users
 	</a>-->
