@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+	xmlns:naaya="http://namespaces.zope.org/naaya"
+	xmlns:five="http://namespaces.zope.org/five"
+	i18n_domain="naaya.content">
+	<adapter factory="naaya.Products.NaayaCore.AnonymousNotification.portlets.AnonymousNotificationsPortlet" name="notifications_portlet" />
+</configure>
