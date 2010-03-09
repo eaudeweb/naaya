@@ -331,8 +331,9 @@ class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.assertTrue(self.ob_url + '/download/2/my.jpg' in html)
         self.assertTrue('4 MB' in html)
         self.assertTrue('15 KB' in html)
-        self.browser.go(self.ob_url + '/download/1/my.png')
-        self.assertDownload(**file_data_1)
+        # don't download 1st file, it takes too much time
+        #self.browser.go(self.ob_url + '/download/1/my.png')
+        #self.assertDownload(**file_data_1)
         self.browser.go(self.ob_url + '/download/2/my.jpg')
         self.assertDownload(**file_data_2)
         self.browser_do_logout()
@@ -352,7 +353,7 @@ class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.file_data = {
             'filename': 'my.png',
             'content_type': 'image/png',
-            'data': 'asdf'*1024*1024,
+            'data': 'asdf'*1024*64,
         }
         self.portal.fol.secur._save_file(self.make_file(**self.file_data))
         transaction.commit()
