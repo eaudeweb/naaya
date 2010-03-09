@@ -568,16 +568,16 @@ class NyTalkBackConsultation(NyRoleManager,
     security.declareProtected(view, 'custom_editor')
     def custom_editor(self, editor_tool, lang, dom_id):
         extra_options = {
-            'content_css': [self.absolute_url() +
-                            '/misc_/NaayaContent/tb-editor.css'],
-            'theme_advanced_buttons1': [
+            'content_css': self.absolute_url() +
+                            '/misc_/NaayaContent/tb-editor.css',
+            'theme_advanced_buttons1':
                 'bold,italic,underline,strikethrough,sub,sup,forecolor,'
                     'backcolor,removeformat,separator,'
                 'bullist,numlist,separator,'
                 'justifyleft,justifycenter,justifyright,justifyfull,separator,'
                 'link,unlink,hr,image,separator,'
-                'pastetext,pasteword,cleanup,code,help'],
-            'theme_advanced_buttons2': [''],
+                'pastetext,pasteword,cleanup,code,help',
+            'theme_advanced_buttons2': '',
         }
         return editor_tool.render(dom_id, lang, image_support=True,
                                   extra_options=extra_options)
