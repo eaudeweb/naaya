@@ -175,6 +175,7 @@ class CHMProject(SimpleItem):
 
     _index_html = PageTemplateFile('zpt/project/index', globals())
     #@todo: security
+    security.declareProtected(constants.VIEW_REGISTRATION, 'index_html')
     def index_html(self, REQUEST=None):
         """ edit project properties """
         session = REQUEST.SESSION
@@ -205,7 +206,7 @@ class CHMProject(SimpleItem):
 
     _edit_html = PageTemplateFile('zpt/project/edit', globals())
 
-    security.declareProtected(constants.EDIT_PROJECTS, 'edit_html')
+    security.declareProtected(constants.VIEW_REGISTRATION, 'edit_html')
     def edit_html(self, REQUEST=None):
         """ edit project properties """
         session = REQUEST.SESSION
