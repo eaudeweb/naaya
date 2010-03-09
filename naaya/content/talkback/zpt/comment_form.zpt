@@ -1,6 +1,6 @@
 <tal:block define="cannot_comment here/check_cannot_comment">
 
-<a id="comment-form" />
+<a id="comment-form"></a>
 <div class="talkback-add_comment_form" tal:condition="not:cannot_comment">
     <tal:block define="
         editor here/getEditorTool;
