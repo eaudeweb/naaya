@@ -127,13 +127,60 @@ sdo_training_type = {
                     ]
 }
 
+sdo_sectors = {
+    'list_id': 'sdo_sectors',
+    'list_id_sdo': 'sdo_sectors',
+    'list_title': 'Sector',
+    'list_items':[
+        'European Union Agency',
+        'Government (local, national)',
+        'Government Related Agency',
+        'Inter Government Organisation',
+        'Employers Association - Federation',
+        'Private Business',
+        'Public Utility',
+        'University',
+        'Trade Union - Workers Association',
+        'Non Government Organisation',
+        'Other',
+    ]
+}
+sdo_countries = {
+    'list_id': 'sdo_countries',
+    'list_id_sdo': 'sdo_countries',
+    'list_title': 'Country',
+    'list_items':[
+        'Albania',
+        'Algeria',
+        'Bosnia&Herzegovina',
+        'Croatia',
+        'Cyprus',
+        'Egypt',
+        'France',
+        'Greece',
+        'Israel',
+        'Italy',
+        'Jordan',
+        'Lebanon',
+        'Lybia',
+        'Malta',
+        'Morocco',
+        'PalestinianAuthority',
+        'Serbia&Montenegro',
+        'Slovenia',
+        'Spain',
+        'Syria',
+        'Tunisia',
+        'Turkey'
+    ]
+}
 FOLDER_CATEGORIES = [
         sdo_type_of_initiative, sdo_nature_of_initiative,
         sdo_topic_coverage, sdo_services, sdo_geographic_scope,
         sdo_network_type, sdo_scope, sdo_audience, sdo_status,
         sdo_type_of_event,
         sdo_tool_type, sdo_tool_sort,
-        sdo_training_type
+        sdo_training_type, sdo_sectors, sdo_countries
         ]
 
 countries = {
@@ -158,6 +205,8 @@ sdo_duration = {
                 'Three years', 'Four years']
 }
 
+
+
 EXTRA_PROPERTIES = [countries, sdo_frequency, sdo_duration]
 
 EXTRA_FIELDS = [
@@ -179,4 +228,3 @@ INFO_TYPES = {'enterprises':
               'trainings':
                 {'meta_type': 'Naaya Training', 'meta_label': 'Training', 'prefix': 'training', 'folder_name': 'Training'}
              }
-
