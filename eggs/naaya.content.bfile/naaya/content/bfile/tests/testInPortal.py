@@ -126,6 +126,16 @@ class NyBFileTestCase(NaayaTestCase):
         myfile = myfolder['myfilefortitle']
         self.assertEqual(myfile.title, 'my_file_for_title')
 
+    def test_add_utf8_filename(self):
+        name = u'A\xa7A\xb6A\xa9A\xae_\x86\x90a\x83\x91a\x86\x93a\x99\xaa1.txt'
+        myfile = StringIO('hello data!')
+        myfile.filename = name.encode('utf-8')
+
+        myfolder = self.portal.myfolder
+        file_id = addNyBFile(myfolder, uploaded_file=myfile,
+                             submitted=1, contributor='contributor')
+        self.assertEqual(file_id, 'aaaaaaaa1')
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyBFileTestCase))
