@@ -47,17 +47,95 @@ from naaya.content.contact.interfaces import INyContact
 from naaya.content.event.interfaces import INyEvent
 from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
-try:
-    from naaya.content.bfile.bfile_item import addNyBFile as add_bfile
-    def add_file(location_obj, id, file):
-        return add_bfile(location_obj, id=id, title='',
-                           uploaded_file=file, _send_notifications=False)
-except ImportError:
-    from naaya.content.file.file_item import addNyFile as add_ny_file
-    def add_file(location_obj, id, file):
-        return add_ny_file(location_obj, id=id, title=id,
-                           file=file.getvalue(), _send_notifications=False)
+from naaya.core.utils import force_to_unicode, relative_object_path
 
+try:
+    from naaya.content.bfile.bfile_item import addNyBFile
+    def add_file(location_obj, name, data):
+        f = StringIO(data)
+        f.filename = name
+        return addNyBFile(location_obj, uploaded_file=f,
+                          _send_notifications=False)
+
+except ImportError:
+    from naaya.content.file.file_item import addNyFile
+    def add_file(location_obj, name, data):
+        return addNyFile(location_obj, id=name, title=name,
+                         file=data, _send_notifications=False)
+
+def read_zipfile_contents(data):
+    """
+    Read the contents of a zip file, and return a tuple
+    of ``(folder_tree, files_iterator)``.
+
+    ``folder_tree`` is a recursive data structure describing
+    folders that need to be created.
+
+    ``files_iterator`` is an iterator that yields tuples
+    of ``(file_path, file_data)``.
+    """
+    try:
+        zf = ZipFile(data)
+    except Exception, e:
+        raise ValueError('Error reading Zip file')
+
+    file_paths = set()
+    folder_tree = []
+    def add_to_folder_tree(folder_path):
+        node = folder_tree
+        for path_element in folder_path.split('/'):
+            for name, contents in node:
+                if name == path_element:
+                    node = contents
+                    break
+            else:
+                new_node = []
+                node.append( (path_element, new_node) )
+                node = new_node
+
+    for p in zf.namelist():
+        if p.startswith('_'):
+            continue
+        elif p.endswith('/'):
+            add_to_folder_tree(p[:-1])
+        else:
+            if p.rsplit('/')[-1] == '.DS_Store':
+                continue
+            file_paths.add(p)
+            if '/' in p:
+                # maybe our parent folder is not listed explicitly
+                add_to_folder_tree(p.rsplit('/')[0])
+
+    def iterate_zipfile_files():
+        for file_path in file_paths:
+            file_data = zf.read(file_path)
+            yield file_path, file_data
+
+    return folder_tree, iterate_zipfile_files()
+
+
+def create_folders(container, folder_tree, report_path):
+    """
+    `container` - reference to a NyFolder object
+
+    `folder_tree` - list of two-tuples; in each tuple, first element is name
+    of (current) folder; second element is another list of two-tuples.
+    """
+
+    folder_map = {}
+    for kid_name, kid_tree in folder_tree:
+        kid_id = addNyFolder(container, id=kid_name, title='',
+                             _send_notifications=False)
+        kid_folder = container[kid_id]
+        folder_map[kid_name] = kid_folder
+        report_path(kid_id + '/')
+
+        kid_report_path = lambda p: report_path('%s/%s' % (kid_id, p))
+        kid_folder_map = create_folders(kid_folder, kid_tree, kid_report_path)
+        for sub_kid_name, folder in kid_folder_map.iteritems():
+            folder_map['%s/%s' % (kid_name, sub_kid_name)] = folder
+
+    return folder_map
 
 class ZipImportTool(Implicit, Item):
     title = "Zip import"
@@ -75,102 +153,59 @@ class ZipImportTool(Implicit, Item):
 
         errors = []
 
+        container_id = addNyFolder(self.getParentNode(),
+                                id=data.filename.split('.')[0],
+                                title='',
+                                _send_notifications=False)
+        container = self.getParentNode()[container_id]
+
         try:
-            zip = ZipFile(data)
-        except Exception, e:
-            errors.append(str(e))
+            folder_tree, zip_files = read_zipfile_contents(data)
+        except ValueError, e:
+            errors.append(e)
+        else:
+            created_file_paths = set()
+            folder_map = create_folders(container, folder_tree,
+                                        created_file_paths.add)
+            folder_map[''] = container
+            for file_path, file_data in zip_files:
+                if '/' in file_path:
+                    file_container_path, file_name = file_path.rsplit('/', 1)
+                else:
+                    file_container_path, file_name = '', file_path
 
-        if not errors:
-            sorted_namelist = self.sorted_nlist(zip.namelist())
-            root = self.make_folder_named_after_zip(data)
-
-            for name in sorted_namelist:
-                nlist = name.split('/')[:-1]
-
+                assert file_container_path in folder_map
                 try:
-                    if self.is_folder(name):
-                        self.make_folder_structure(copy(nlist), root)
-
-                    elif self.is_file(name):
-                        f_content = zip.read(name)
-                        fname = name.split('/')[-1]
-                        f = self.make_file_object_from_string(f_content, fname)
-                        container = self.get_folder(copy(nlist), root)
-                        add_file(container, id=fname, file=f)
+                    file_container = folder_map[file_container_path]
+                    file_ob_id = add_file(file_container, file_name, file_data)
+                    file_ob = file_container[file_ob_id]
                 except Exception, e:
-                    errors.append(str(e))
+                    errors.append(u"Error while creating file %r: %s" %
+                                  (file_path, force_to_unicode(str(e))))
+                else:
+                    p = relative_object_path(file_ob, container)
+                    created_file_paths.add(p)
 
-        my_container = self.getParentNode()
-
-        if REQUEST is not None:
-            if errors:
+        if errors:
+            if REQUEST is not None:
                 transaction.abort()
                 self.setSessionErrors(errors)
                 return self.index_html(REQUEST)
+
             else:
-                self.setSessionInfo(['Zip archive successfully imported'])
-                notify(ZipImportEvent(my_container, root, sorted_namelist))
-                return REQUEST.RESPONSE.redirect(my_container.absolute_url())
+                return errors
+
         else:
-            if not errors:
-                notify(ZipImportEvent(my_container, root, sorted_namelist))
-            return errors
+            notify(ZipImportEvent(self.getParentNode(), container,
+                                  sorted(created_file_paths)))
 
+            if REQUEST is not None:
+                self.setSessionInfo(['imported %s' % pth for pth in
+                                     sorted(created_file_paths)])
+                return REQUEST.RESPONSE.redirect(container.absolute_url())
 
-    def is_file(self, name):
-        return not name.endswith('/')
-
-    def is_folder(self, name):
-        return name.endswith('/')
-
-    def get_folder(self, nlist, root):
-        if len(nlist) == 0:
-            return root
-        folder = root[nlist.pop(0)]
-        return self.get_folder(nlist, folder)
-
-    def make_folder_structure(self, nlist, root):
-        if len(nlist) == 0:
-            return
-        new = nlist.pop(0)
-        if not root._getOb(new, None):
-            addNyFolder(root, id=new, title='', _send_notifications=False)
-        root = root[new]
-        self.make_folder_structure(nlist, root)
-
-    def make_folder_named_after_zip(self, data):
-        location_obj = self.getParentNode()
-        filename = data.filename.split('.')[0]
-        folder_id = addNyFolder(location_obj, id=filename, title='',
-                                _send_notifications=False)
-        return location_obj[folder_id]
-
-    def make_file_object_from_string(self, string, fname):
-        f = StringIO(string)
-        setattr(f, 'filename', fname)
-        return f
-
-    def sorted_nlist(self, nlist):
-        files, folders = [], []
-        for x in nlist:
-            if x.startswith('_'):
-                continue
-            if self.is_file(x):
-                files.append(x)
             else:
-                folders.append(x)
-        return folders + files
-
-    def has_many_objects_in_root(self, sorted_namelist):
-        result = []
-        for x in sorted_namelist:
-            if x.endswith('/'):
-                result.append(x[:-1])
-            else:
-                result.append(x)
-
-        if len([x for x in result if '/' not in x]) > 1:
-            return True
+                return []
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
     index_html = PageTemplateFile('../zpt/zip_import', globals())

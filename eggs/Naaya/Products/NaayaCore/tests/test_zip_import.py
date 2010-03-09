@@ -40,56 +40,59 @@ class NyZipImport(NaayaTestCase):
     def beforeTearDown(self):
         self.portal.manage_delObjects(['zip_imported'])
 
+    def assert_same_contents(self, a, b, *args):
+        self.assertEqual(set(a), set(b), *args)
+
     def test_import_ok(self):
         errors = self.test_folder.zip_import.do_import(data=zip_one_file)
         self.assertEqual(errors, [])
         container = self.test_folder['one_file_zip']
-        self.assertEqual(container.objectIds(), ['one_file.txt'])
+        self.assert_same_contents(container.objectIds(), ['one_file.txt'])
 
     def test_import_folder_with_files(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
         self.assertEqual(errors, [])
         container = self.test_folder['folder_with_files_zip']
-        self.assertEqual(container['one_folder'].objectIds(),
-                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+        self.assert_same_contents(container['one_folder'].objectIds(),
+            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
 
     def test_import_complicated(self):
         def get_folder_ids(container):
             return [x.getId() for x in container.objectValues('Naaya Folder')]
 
         def get_file_ids(container):
-            return [x.getId() for x in \
+            return [x.getId() for x in
                     container.objectValues(['Naaya File', 'Naaya Blob File'])]
 
         def assert_three_files(container):
-            return self.assertEqual(get_file_ids(container),
-                             ['one_file.txt', 'three_file.txt', 'two_file.txt'])
-    
+            return self.assert_same_contents(get_file_ids(container),
+                       ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+
         errors = self.test_folder.zip_import.do_import(data=complicated_zip)
         self.assertEqual(errors, [])
 
         container = self.test_folder['complicated_zip']
-        self.assertEqual(get_folder_ids(container),
-                         ['empty_folder', 'one_folder', 'two_folder'])
-        self.assertEqual(get_file_ids(container),
-                         ['one_file.txt', 'two_file.txt'])
+        self.assert_same_contents(get_folder_ids(container),
+            ['empty_folder', 'one_folder', 'two_folder'])
+        self.assert_same_contents(get_file_ids(container),
+            ['one_file.txt', 'two_file.txt'])
 
         zip_folder = self.test_folder['complicated_zip']
         container = zip_folder['empty_folder']
-        self.assertEqual(container.objectIds(), [])
+        self.assert_same_contents(container.objectIds(), [])
 
 
         container = zip_folder['one_folder']
-        self.assertEqual(get_folder_ids(container),
-                         ['one_empty_subfolder', 'one_subfolder1',
-                          'one_subfolder3', 'one_subfolder4', 'one_subfolder5'])
+        self.assert_same_contents(get_folder_ids(container),
+            ['one_empty_subfolder', 'one_subfolder1',
+             'one_subfolder3', 'one_subfolder4', 'one_subfolder5'])
 
         assert_three_files(container)
 
         assert_three_files(zip_folder['two_folder'])
-        
+
         container = zip_folder['one_folder']['one_empty_subfolder']
-        self.assertEqual(container.objectIds(), [])
+        self.assert_same_contents(container.objectIds(), [])
 
         assert_three_files(zip_folder['one_folder']['one_subfolder1'])
         assert_three_files(zip_folder['one_folder']['one_subfolder3'])
@@ -100,34 +103,34 @@ class NyZipImport(NaayaTestCase):
         errors = self.test_folder.zip_import.do_import(data=mac_zip)
         self.assertEqual(errors, [])
         container = self.test_folder['mac_zip']
-        self.assertEqual(container.objectIds(),
-                         ['Picture_1.png', 'Picture_2.png'])
+        self.assert_same_contents(container.objectIds(),
+            ['Picture_1.png', 'Picture_2.png'])
 
     def test_folder_exists(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
         self.assertEqual(errors, [])
-        
-        self.assertEqual(self.test_folder.objectIds(),
-                         ['folder_with_files_zip', 'folder_with_files_zip-1'])
+
+        self.assert_same_contents(self.test_folder.objectIds(),
+            ['folder_with_files_zip', 'folder_with_files_zip-1'])
 
         container = self.test_folder['folder_with_files_zip']
-        self.assertEqual(container['one_folder'].objectIds(),
-                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+        self.assert_same_contents(container['one_folder'].objectIds(),
+            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
 
         container = self.test_folder['folder_with_files_zip-1']
-        self.assertEqual(container['one_folder'].objectIds(),
-                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+        self.assert_same_contents(container['one_folder'].objectIds(),
+            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
 
     def test_import_spaces_in_filename(self):
         errors = self.test_folder.zip_import.do_import(data=spaces_zip)
         self.assertEqual(errors, [])
-        self.assertEqual(self.test_folder.objectIds(),
-                        ['Spaces_in_filename_zip'])
+        self.assert_same_contents(self.test_folder.objectIds(),
+            ['Spaces_in_filename_zip'])
 
         container = self.test_folder['Spaces_in_filename_zip']
-        self.assertEqual(container['one_folder'].objectIds(),
-                        ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+        self.assert_same_contents(container['one_folder'].objectIds(),
+            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
 
     def test_import_mails(self):
         diverted_mail = EmailTool.divert_mail()
