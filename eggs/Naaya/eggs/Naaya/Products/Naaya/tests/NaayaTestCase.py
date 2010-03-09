@@ -49,13 +49,14 @@ test_zcml = """<configure
   <!-- this comes from Five/skel/site.zcml -->
 
   <include package="Products.Five"/>
-  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-meta.zcml" />
-  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-configure.zcml" />
   <meta:redefinePermission from="zope2.Public" to="zope.Public" />
 
   <five:loadProducts file="meta.zcml" />
   <five:loadProducts />
   <five:loadProductsOverrides />
+
+  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-meta.zcml" />
+  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-configure.zcml" />
 
 </configure>
 """ % {'INSTANCE_HOME': INSTANCE_HOME}
