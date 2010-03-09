@@ -51,7 +51,6 @@ from OFS.ObjectManager import checkValidId
 #Product imports
 from stripping_tool import stripping_tool
 from Products.NaayaCore.managers.paginator import ObjectPaginator
-
 #constants
 bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
           '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
@@ -74,6 +73,8 @@ default_remove_words = [
     "in", "into", "like", "of", "off", "on", "onto", "per", "since",
     "than", "the", "this", "that", "to", "up", "via", "with",
 ]
+
+VALID_EMAIL_PATTERN = re.compile("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$")
 
 def genObjectId(s, num_chars=50, removelist=None):
     '''
@@ -163,7 +164,13 @@ def toAscii(s):
         return unicode_to_ascii(s)
     else:
         return str_to_ascii(s)
-
+def is_valid_email(email):
+    """
+    Validate e-mail address against regular expression
+    """
+    if VALID_EMAIL_PATTERN.match(str(email)):
+        return True
+    return False
 def unicode_to_ascii(s):
     ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I)
     s = unicodedata.normalize('NFKD', s)
