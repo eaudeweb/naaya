@@ -152,12 +152,7 @@ class ZipImportTool(Implicit, Item):
             raise Unauthorized
 
         errors = []
-
-        container_id = addNyFolder(self.getParentNode(),
-                                id=data.filename.split('.')[0],
-                                title='',
-                                _send_notifications=False)
-        container = self.getParentNode()[container_id]
+        container = self.getParentNode()
 
         try:
             folder_tree, zip_files = read_zipfile_contents(data)
@@ -196,8 +191,7 @@ class ZipImportTool(Implicit, Item):
                 return errors
 
         else:
-            notify(ZipImportEvent(self.getParentNode(), container,
-                                  sorted(created_file_paths)))
+            notify(ZipImportEvent(container, sorted(created_file_paths)))
 
             if REQUEST is not None:
                 self.setSessionInfo(['imported %s' % pth for pth in

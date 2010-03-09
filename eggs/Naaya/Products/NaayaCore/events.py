@@ -18,7 +18,6 @@ class ZipImportEvent(object):
 
     implements(IZipImportEvent)
 
-    def __init__(self, context, containing_folder, zip_contents):
+    def __init__(self, context, zip_contents):
         self.context = context
-        self.containing_folder = containing_folder
         self.zip_contents = zip_contents
