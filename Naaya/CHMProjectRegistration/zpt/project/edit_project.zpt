@@ -19,7 +19,7 @@
 	</tal:block>
 
 	<form action="" name="frmLogin" method="post">
-		<table class="datatable project_view">
+		<table class="datatable" style="width: 600px">
 			<tr>
 				<td class="label" i18n:translate="">Registration number</td>
 				<td><input type="text" name="registration_id" value="" /></td>

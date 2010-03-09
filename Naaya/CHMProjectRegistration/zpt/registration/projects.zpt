@@ -46,7 +46,7 @@
 
 			<form action="" method="post" tal:condition="projects">
 			<h3 i18n:translate="">Project list</h3>
-			<table class="datatable project_view">
+			<table class="datatable">
 			<thead>
 				<tr>
 					<th />
