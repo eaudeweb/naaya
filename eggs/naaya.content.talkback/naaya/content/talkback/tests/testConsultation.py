@@ -242,7 +242,8 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
 
         self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
         form = self.browser.get_form('frmEdit')
-        self.assertEqual(form['message:utf8:ustring'], 'original comment')
+        self.assertEqual(form['message:utf8:ustring'].strip(),
+                         'original comment')
         form['message:utf8:ustring'] = 'modified comment'
         self.browser.clicked(form, form.find_control('message:utf8:ustring'))
         self.browser.submit()
