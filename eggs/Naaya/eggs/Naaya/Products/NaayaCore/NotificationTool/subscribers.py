@@ -41,11 +41,9 @@ def handle_csv_import(event):
 def handle_zip_import(event):
     folder = event.context
     portal = folder.getSite()
-    containing_folder = event.containing_folder
     zip_contents = event.zip_contents
 
     mail_args = {'ob': folder,
-                 'containing_folder': containing_folder,
                  'zip_contents': zip_contents,
                  'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
                  'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),

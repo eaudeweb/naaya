@@ -51,16 +51,15 @@ class NyZipExport(NaayaTestCase):
 
     def test_export_ok(self):
         self.test_folder.zip_import.do_import(data=zip_one_file)
-        export_value = self.test_folder['one_file_zip'].zip_export.do_export()
+        export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
         self.assertTrue(isinstance(export_value, object))
 
         zip = ZipFile(export_value, 'r')
-        self.assertEqual(sorted(zip.namelist()),
-                         sorted(['one_file_zip/one_file.txt',
-                                 'index.txt']))
-        self.assertEqual(zip.read('one_file_zip/one_file.txt'),
+        self.assertEqual(set(zip.namelist()),
+                         set(['zip_export_folder/one_file.txt', 'index.txt']))
+        self.assertEqual(zip.read('zip_export_folder/one_file.txt'),
                          'one_file contents\n')
 
     def test_export_folder(self):
@@ -70,15 +69,15 @@ class NyZipExport(NaayaTestCase):
                          ('Errors are raised: ', export_value))
         zip = ZipFile(export_value, 'r')
 
-        expected_namelist = \
-        ['index.txt',
-         'zip_export_folder/folder_with_files_zip/',
-         'zip_export_folder/folder_with_files_zip/one_folder/',
-         'zip_export_folder/folder_with_files_zip/one_folder/one_file.txt',
-         'zip_export_folder/folder_with_files_zip/one_folder/two_file.txt',
-         'zip_export_folder/folder_with_files_zip/one_folder/three_file.txt']
+        expected_namelist = [
+            'index.txt',
+            'zip_export_folder/one_folder/',
+            'zip_export_folder/one_folder/one_file.txt',
+            'zip_export_folder/one_folder/two_file.txt',
+            'zip_export_folder/one_folder/three_file.txt',
+        ]
 
-        self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
+        self.assertEqual(set(zip.namelist()), set(expected_namelist))
 
     def test_export_html_document(self):
         addNyDocument(self.test_folder, id='html_document')
@@ -206,23 +205,20 @@ class NyZipExport(NaayaTestCase):
         zip = ZipFile(export_value, 'r')
 
         expected_namelist = ['index.txt',
-                             'zip_export_folder/mac_zip/',
-                             'zip_export_folder/mac_zip/Picture_1.png',
-                             'zip_export_folder/mac_zip/Picture_2.png',
+                             'zip_export_folder/Picture_1.png',
+                             'zip_export_folder/Picture_2.png',
                              'zip_export_folder/html_document.html']
 
         self.assertEqual(sorted(zip.namelist()), sorted(expected_namelist))
         self.assertTrue('<p>Html document</p>' in \
                          zip.read('zip_export_folder/html_document.html'))
 
-        imported_folder = self.test_folder['mac_zip']
+        picture1_data = IZipExportObject(self.test_folder['Picture_1.png'])()[0]
+        picture2_data = IZipExportObject(self.test_folder['Picture_2.png'])()[0]
 
-        picture1_data = IZipExportObject(imported_folder['Picture_1.png'])()[0]
-        picture2_data = IZipExportObject(imported_folder['Picture_2.png'])()[0]
-
-        self.assertEqual(zip.read('zip_export_folder/mac_zip/Picture_1.png'),
+        self.assertEqual(zip.read('zip_export_folder/Picture_1.png'),
                          picture1_data)
-        self.assertEqual(zip.read('zip_export_folder/mac_zip/Picture_2.png'),
+        self.assertEqual(zip.read('zip_export_folder/Picture_2.png'),
                          picture2_data)
 
     def test_export_anonymous(self):
