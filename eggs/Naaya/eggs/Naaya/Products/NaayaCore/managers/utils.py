@@ -76,6 +76,14 @@ default_remove_words = [
 
 VALID_EMAIL_PATTERN = re.compile("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$")
 
+def is_valid_email(email):
+    """
+    Validate e-mail address against regular expression
+    """
+    if VALID_EMAIL_PATTERN.match(str(email)):
+        return True
+    return False
+
 def genObjectId(s, num_chars=50, removelist=None):
     '''
     Changes, e.g., "Petty theft" to "petty-theft".
@@ -164,15 +172,8 @@ def toAscii(s):
         return unicode_to_ascii(s)
     else:
         return str_to_ascii(s)
-def is_valid_email(email):
-    """
-    Validate e-mail address against regular expression
-    """
-    if VALID_EMAIL_PATTERN.match(str(email)):
-        return True
-    return False
+
 def unicode_to_ascii(s):
-    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I)
     s = unicodedata.normalize('NFKD', s)
     return s.encode('ascii', 'ignore')
 
