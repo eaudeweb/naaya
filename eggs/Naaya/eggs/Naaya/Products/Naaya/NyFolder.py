@@ -82,12 +82,15 @@ def _create_NyFolder_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
-def addNyFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
+def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_NyFolder_object, **kwargs):
 #def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
 #    publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
 #    releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Folder type of object.
+    Parameters:
+        `callback`
+            A function that returns an new instance of the NyFolder object-type
     """
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
@@ -106,7 +109,7 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyFolder_object(self, id, contributor)
+    ob = callback(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
     if form_errors:
         if REQUEST is None:
