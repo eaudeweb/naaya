@@ -47,13 +47,13 @@ class NyZipImport(NaayaTestCase):
         errors = self.test_folder.zip_import.do_import(data=zip_one_file)
         self.assertEqual(errors, [])
         self.assert_same_contents(self.test_folder.objectIds(),
-            ['one_file.txt'])
+            ['one_file'])
 
     def test_import_folder_with_files(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
         self.assertEqual(errors, [])
         self.assert_same_contents(self.test_folder['one_folder'].objectIds(),
-            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+            ['one_file', 'three_file', 'two_file'])
 
     def test_import_complicated(self):
         def get_folder_ids(container):
@@ -65,7 +65,7 @@ class NyZipImport(NaayaTestCase):
 
         def assert_three_files(container):
             return self.assert_same_contents(get_file_ids(container),
-                       ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+                       ['one_file', 'three_file', 'two_file'])
 
         errors = self.test_folder.zip_import.do_import(data=complicated_zip)
         self.assertEqual(errors, [])
@@ -73,7 +73,7 @@ class NyZipImport(NaayaTestCase):
         self.assert_same_contents(get_folder_ids(self.test_folder),
             ['empty_folder', 'one_folder', 'two_folder'])
         self.assert_same_contents(get_file_ids(self.test_folder),
-            ['one_file.txt', 'two_file.txt'])
+            ['one_file', 'two_file'])
 
         container = self.test_folder['empty_folder']
         self.assert_same_contents(container.objectIds(), [])
@@ -100,7 +100,7 @@ class NyZipImport(NaayaTestCase):
         errors = self.test_folder.zip_import.do_import(data=mac_zip)
         self.assertEqual(errors, [])
         self.assert_same_contents(self.test_folder.objectIds(),
-            ['Picture_1.png', 'Picture_2.png'])
+            ['Picture_1', 'Picture_2'])
 
     def test_folder_exists(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)
@@ -111,17 +111,17 @@ class NyZipImport(NaayaTestCase):
             ['one_folder', 'one_folder-1'])
 
         self.assert_same_contents(self.test_folder['one_folder'].objectIds(),
-            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+            ['one_file', 'three_file', 'two_file'])
 
         self.assert_same_contents(self.test_folder['one_folder-1'].objectIds(),
-            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+            ['one_file', 'three_file', 'two_file'])
 
     def test_import_spaces_in_filename(self):
         errors = self.test_folder.zip_import.do_import(data=spaces_zip)
         self.assertEqual(errors, [])
         self.assert_same_contents(self.test_folder.objectIds(), ['one_folder'])
         self.assert_same_contents(self.test_folder['one_folder'].objectIds(),
-            ['one_file.txt', 'three_file.txt', 'two_file.txt'])
+            ['one_file', 'three_file', 'two_file'])
 
     def test_import_mails(self):
         diverted_mail = EmailTool.divert_mail()
@@ -136,9 +136,9 @@ class NyZipImport(NaayaTestCase):
                          'you that a Zip archive was uploaded in zip_imported '
                          '(http://nohost/portal/zip_imported):\n\n'
                          ' - one_folder/\n'
-                         ' - one_folder/one_file.txt\n'
-                         ' - one_folder/three_file.txt\n'
-                         ' - one_folder/two_file.txt')
+                         ' - one_folder/one_file\n'
+                         ' - one_folder/three_file\n'
+                         ' - one_folder/two_file')
 
         expected_recipients = ['someone@somehost', ''] #folder_maintainer, administrator_email
         expected_sender = 'from.zope@example.com'
@@ -151,8 +151,16 @@ class NyZipImport(NaayaTestCase):
         EmailTool.divert_mail(False)
 
 def test_suite():
+    try:
+        import naaya.content.bfile
+    except ImportError:
+        skip = True
+    else:
+        skip = False
+
     suite = TestSuite()
-    suite.addTest(makeSuite(NyZipImport))
+    if not skip:
+        suite.addTest(makeSuite(NyZipImport))
     return suite
 
 

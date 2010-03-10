@@ -213,8 +213,8 @@ class NyZipExport(NaayaTestCase):
         self.assertTrue('<p>Html document</p>' in \
                          zip.read('zip_export_folder/html_document.html'))
 
-        picture1_data = IZipExportObject(self.test_folder['Picture_1.png'])()[0]
-        picture2_data = IZipExportObject(self.test_folder['Picture_2.png'])()[0]
+        picture1_data = IZipExportObject(self.test_folder['Picture_1'])()[0]
+        picture2_data = IZipExportObject(self.test_folder['Picture_2'])()[0]
 
         self.assertEqual(zip.read('zip_export_folder/Picture_1.png'),
                          picture1_data)
@@ -283,8 +283,16 @@ class NyZipExport(NaayaTestCase):
                          zip.read('zip_export_folder/restricted_document.html'))
 
 def test_suite():
+    try:
+        import naaya.content.bfile
+    except ImportError:
+        skip = True
+    else:
+        skip = False
+
     suite = TestSuite()
-    suite.addTest(makeSuite(NyZipExport))
+    if not skip:
+        suite.addTest(makeSuite(NyZipExport))
     return suite
 
 

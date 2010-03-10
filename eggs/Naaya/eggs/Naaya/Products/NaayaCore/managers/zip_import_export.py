@@ -54,7 +54,9 @@ try:
     def add_file(location_obj, name, data):
         f = StringIO(data)
         f.filename = name
-        return addNyBFile(location_obj, uploaded_file=f,
+        if '.' in name:
+            name = name.rsplit('.', 1)[0]
+        return addNyBFile(location_obj, id=name, uploaded_file=f,
                           _send_notifications=False)
 
 except ImportError:
