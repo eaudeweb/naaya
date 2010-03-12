@@ -170,11 +170,11 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
                                 'registration_id': registration_id,
                                 'name': self.unicode2UTF8(project.contact_name)}
                     self.send_registration_notification(email_recipients,
-                        'Event registration',
+                        'Project registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
                         self.getEmailTemplate('user_registration_text', lang) % values)
                     self.send_registration_notification(self.administrative_email,
-                        'Event registration',
+                        'Project registration',
                         self.getEmailTemplate('admin_registration_html', 'en') % values,
                         self.getEmailTemplate('admin_registration_text', 'en') % values)
 
@@ -440,7 +440,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
 
     security.declarePublic('canViewProjects')
     def canViewProjects(self):
-        """ Check the permissions to edit/delete projects """
+        """ Check the permissions to view projects """
         return checkPermission(constants.VIEW_PROJECTS, self)
 
     security.declarePublic('canAddProjects')
@@ -450,7 +450,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
 
     security.declarePublic('canEditProjects')
     def canEditProjects(self):
-        """ Check the permissions to add projects """
+        """ Check the permissions to edit projects """
         return checkPermission(constants.EDIT_PROJECTS, self)
 
     security.declarePublic('getRegistrationTitle')

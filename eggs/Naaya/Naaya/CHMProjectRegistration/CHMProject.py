@@ -24,6 +24,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
 from datetime import datetime
 
+from utilities import checkPermission
 from utilities.validators import form_validation, str2date
 import constants
 
@@ -167,11 +168,24 @@ class CHMProject(SimpleItem):
             return results[0].get_translation_by_language(lang)
         return ''
 
-    def isEntitled(self, REQUEST):
-        """ check if current user has the right to modify this object """
+    def has_credentials(self, REQUEST):
+        """ check if current user has the right credentials """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
-            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.contact_name))) or \
-            self.canManageProjects() or self.canViewProjects()
+            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.contact_name)))
+
+    security.declarePublic('canViewProject')
+    def canViewProject(self, REQUEST):
+        """ Check the permissions to view this project """
+        return self.canViewProjects() or\
+            self.canManageProjects() or\
+            self.has_credentials(REQUEST)
+
+    security.declarePublic('canEditProject')
+    def canEditProject(self, REQUEST):
+        """ Check the permissions to edit this project """
+        return self.canEditProjects() or\
+            self.canManageProjects() or\
+            self.has_credentials(REQUEST)
 
     _index_html = PageTemplateFile('zpt/project/index', globals())
     #@todo: security
@@ -196,7 +210,7 @@ class CHMProject(SimpleItem):
                             'registration_id': self.id,
                             'name': self.unicode2UTF8(self.contact_name)}
                 self.send_registration_notification(user_email,
-                    'Event registration',
+                    'Project registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
                     self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
@@ -229,7 +243,7 @@ class CHMProject(SimpleItem):
                             'registration_id': self.id,
                             'name': self.unicode2UTF8(self.contact_name)}
                 self.send_registration_notification(user_email,
-                    'Event registration',
+                    'Project registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
                     self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
@@ -255,7 +269,7 @@ class CHMProject(SimpleItem):
                             'website_team': self.site_title,
                             'registration_id': self.id}
                 self.send_registration_notification(self.administrative_email,
-                    'Event registration',
+                    'Project registration',
                     self.getEmailTemplate('admin_registration_html', 'en') % values,
                     self.getEmailTemplate('admin_registration_text', 'en') % values)
 
