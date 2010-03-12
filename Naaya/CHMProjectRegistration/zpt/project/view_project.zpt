@@ -1,7 +1,7 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getRegistrationDetails" />
 
-<tal:block define="global entitled python:here.isEntitled(request);
+<tal:block define="global entitled python:here.canViewProject(request);
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 					global curr_lang_label python:here.get_language_name(curr_lang);" />
 
@@ -59,7 +59,7 @@
 
 <tal:block condition="entitled">
 	<div id="admin_this_folder">
-		<a tal:condition="python:here.canEditProjects() or entitled"
+		<a tal:condition="python:here.canEditProject(request)"
 			tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">
 			Edit registration
 		</a>

@@ -1,7 +1,7 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getRegistrationDetails" />
 
-<tal:block define="global entitled python:here.isEntitled(request);
+<tal:block define="global entitled python:here.canEditProject(request);
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 					global curr_lang_label python:here.get_language_name(curr_lang);" />
 
