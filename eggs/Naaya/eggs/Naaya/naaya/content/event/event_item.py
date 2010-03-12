@@ -24,6 +24,9 @@
 from copy import deepcopy
 import os
 import sys
+import datetime
+
+import vobject
 
 #Zope imports
 from Globals import InitializeClass
@@ -47,6 +50,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from naaya.core.zope2util import DT2dt
 from interfaces import INyEvent
 
 #module constants
@@ -436,6 +440,44 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'event_edit')
+
+    def get_ics(self, REQUEST, RESPONSE):
+        """ Export this event as 'ics' """
+
+        cal = vobject.iCalendar()
+        cal.add('prodid').value = '-//European Environment Agency//Naaya//EN'
+        cal.add('vevent')
+
+        cal.vevent.add('uid').value = self.absolute_url() + '/get_ics'
+        cal.vevent.add('url').value = self.absolute_url()
+        cal.vevent.add('summary').value = self.title_or_id()
+        cal.vevent.add('transp').value = 'OPAQUE'
+
+        modif_time = DT2dt(self.bobobase_modification_time())
+        cal.vevent.add('dtstamp').value = modif_time
+
+        cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
+        cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
+                                         datetime.timedelta(days=1))
+
+        loc = []
+        if self.location:
+            loc.append(self.location)
+        if self.location_address:
+            loc.append(self.location_address)
+        if self.location_url:
+            loc.append(self.location_url)
+
+        if loc:
+            cal.vevent.add('location').value = ', '.join(loc)
+
+        ics_data = cal.serialize()
+
+        #RESPONSE.setHeader('Content-Type', 'text/plain')
+        RESPONSE.setHeader('Content-Type', 'text/calendar')
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment;filename=%s.ics' % self.getId())
+        RESPONSE.write(ics_data)
 
 InitializeClass(NyEvent)
 
