@@ -136,13 +136,14 @@ class PortletsTool(Folder, utils):
 
     def get_reftrees_as_json_data(self):
         """ """
-        trees = [x.get_tree_data_for_admin() for x in self.getRefTrees()]
+        trees = [x.get_tree_data_dict() for x in self.getRefTrees()]
         data = {'data': self.getSite().title_or_id(),
-                'children': self.utSortDictsListByKey(trees, 'data', 0),
-                'attributes' : {'id': self.getSite().getId(),
-                                'rel': 'root',
-                                }
+                'children': trees,
+                'attributes' : {
+                    'id': self.getSite().getId(),
+                    'rel': 'root',
                 }
+        }
         return json.dumps(data)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'handle_jstree_actions')
@@ -200,7 +201,6 @@ class PortletsTool(Folder, utils):
                 old_parent_tree = data['old_parent_tree']['id']
                 new_parent_tree = data['new_parent_tree']['id']
                 new_parent_node = None
-                node_name = self[old_parent_tree][data['id']].title
                 if data['new_parent']['type'] == 'node':
                     new_parent_node = data['new_parent']['id'] or None
                 to_cut = copy(data['children'])
@@ -208,8 +208,18 @@ class PortletsTool(Folder, utils):
                 cut_data = self[old_parent_tree].manage_cutObjects(to_cut)
                 self[new_parent_tree].manage_pasteObjects(cut_data)
                 self[new_parent_tree][data['id']].parent = new_parent_node
-                return data['id']
 
+                if data['new_parent']['type'] == 'tree':
+                    parent = None
+                else: 
+                    parent = data['new_parent']['id']
+                if data['new_prev'] == data['new_parent']['id']:# First item
+                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data['new_next'])
+                elif 'new_next' in data: # Any item
+                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data['new_next'])
+                else:# Last item
+                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent)
+                return data['id']
     def getPortletById(self, p_id):
         """
         Get the portlet with the given id. Returns the portlet from

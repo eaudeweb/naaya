@@ -1,25 +1,25 @@
 var rename_action = {"action" : "rename"};
 var move_action = {"action" : "move"};
 var creating_object = false;
+
 function get_node_parent_id(TREE_OBJ, NODE) {
-    parent = TREE_OBJ.parent(NODE);
-    parent_type = TREE_OBJ.get_type(parent);
     return {
-        "type" : parent_type,
-        "id": parent.attr('id')
-        }
+        "type" : TREE_OBJ.get_type(TREE_OBJ.parent(NODE)),
+        "id": TREE_OBJ.parent(NODE).attr('id')
+    }
 }
+
 function get_node_parent_tree_id(TREE_OBJ, NODE) {
-    parent = TREE_OBJ.parent(NODE);
-    parent_type = TREE_OBJ.get_type(parent);
+    parent_type = TREE_OBJ.get_type(TREE_OBJ.parent(NODE));
     if (parent_type == 'node') {
-        return get_node_parent_id(TREE_OBJ, parent);
+        return get_node_parent_id(TREE_OBJ, TREE_OBJ.parent(NODE));
     }
     return {
         "type" : parent_type,
-        "id": parent.attr('id')
-        }
+        "id": TREE_OBJ.parent(NODE).attr('id')
+    }
 }
+
 function get_children(TREE_OBJ, NODE) {
     var all_children = [];
     var node_children = TREE_OBJ.children(NODE);
@@ -95,7 +95,7 @@ $(function () {
                     "id" : node_id,
                     "parent" : get_node_parent_id(TREE_OBJ, NODE),
                     "parent_tree" : get_node_parent_tree_id(TREE_OBJ, NODE),
-                    "children" : children,
+                    "children" : children
                 }
                 if (confirm('Are you sure you want to delete this node?')){
                     jQuery.post('portal_portlets/handle_jstree_actions', {"data": JSON.stringify(action)});
@@ -119,6 +119,8 @@ $(function () {
             onmove : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB){
                 move_action["new_parent"] = get_node_parent_id(TREE_OBJ, NODE);
                 move_action["new_parent_tree"] = get_node_parent_tree_id(TREE_OBJ, NODE);
+                move_action["new_prev"] = TREE_OBJ.prev(NODE).attr('id');
+                move_action["new_next"] = TREE_OBJ.next(NODE).attr('id');                
                 var action = move_action;
                 var created_response = jQuery.ajax({
                     'async' : false,
@@ -130,7 +132,7 @@ $(function () {
                 TREE_OBJ.get_node(NODE).attr('id', created_id)
                 move_action = {"action" : "move"};
                 TREE_OBJ.refresh();
-            },
+            }
         },
         rules : {
             valid_children : ["root"],

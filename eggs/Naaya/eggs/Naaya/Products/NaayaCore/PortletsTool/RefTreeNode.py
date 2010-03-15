@@ -72,7 +72,8 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
         self._setLocalPropValue('title', lang, title)
         self.parent = parent
         self.pickable = pickable
-
+        self.weight = 0
+    
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', parent='', pickable='',
