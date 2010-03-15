@@ -11,7 +11,7 @@
 
 <div class="floated-buttons">
 	<span class="buttons">
-		<a style="float: right" tal:condition="user_tool/showBulkDownloadButton"
+		<a style="float: right" tal:condition="python:user_tool.showBulkDownloadButton() and len(users) > 0"
 				tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
 			<span i18n:translate="">Bulk download</span>
 		</a>
