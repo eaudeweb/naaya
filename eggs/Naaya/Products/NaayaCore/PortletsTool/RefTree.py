@@ -81,11 +81,122 @@ class RefTree(LocalPropertyManager, Folder):
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
+    
+    def _setObject(self, object_id, object, set_owner = 0):
+        """
+        Reorder B{object}'s level by weight
+        Each time a new node is appended to the tree the level it wants to seat
+        on will be reorded by weight (easy objects float, heavy objects sink)
+        """
+        node_siblings = self.get_node_children(object.parent)
+        weight = 0
+        for node in node_siblings: # Reordering
+            node.weight = weight
+            weight += 1
+        object.weight = weight # Put this node at the last position
+        super(RefTree, self)._setObject(object_id, object, set_owner)
+
+    def move(self, object, parent=None, after=None, before=None):
+        """ Moves object"""
+        if after and before:
+            raise ValueError('Provide just one argument after or before not both')
+
+        node_siblings = self.get_node_children(parent) # get new parent's children
+        if not after and not before: # Move to parent
+            if object.parent != parent: #parent changed move node
+                if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+                    raise ValueError('Illegal move operation')
+                # Check if operation is legal
+                object.parent = parent
+                weight = 0
+                for node in node_siblings: # Reordering
+                    weight += 1
+                object.weight = weight # Last item
+        elif after and not before:
+            # After
+            for node in node_siblings:
+                if node.id == after:
+                    if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+                        raise ValueError('Illegal move operation')
+                    #import pdb; pdb.set_trace()
+                    object.parent = parent
+                    weight = 0
+                    for rnode in node_siblings: # Reordering
+                        rnode.weight = weight
+                        if rnode.id == after:
+                            object.weight = rnode.weight + 1
+                            weight += 1
+                        weight += 1
+                    break
+        else:
+            # Before
+            for node in node_siblings:
+                if node.id == before:
+                    if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+                        raise ValueError('Illegal move operation')
+                    object.parent = parent
+                    weight = 0
+                    for rnode in node_siblings: # Reordering
+                        if rnode.id != object.id:
+                            if rnode.id == before:
+                                if rnode.weight == 0:
+                                    object.weight = 0
+                                else:
+                                    object.weight = rnode.weight - 1
+                                weight += 1
+                            rnode.weight = weight
+                            weight += 1
+                    break
+
+    def get_node_children(self, parent = None):
+        """ return child nodes for parent ordered by weight """
+        return self.utSortObjsListByAttr([x for x in self.get_tree_nodes() if parent == x.parent ], 'weight', 0)
+        
+    def __get_tree_rec(self, node):
+        """ Traverse the tree """
+        if node.id not in self.visited:
+            if node.parent == None or node.parent in self.visited:
+                self.visited.append(node.id)
+                ret_dict = {}
+                ret_dict[node] = []
+                if hasattr(node, 'children'):
+                    ret_dict[node] = map(self.__get_tree_rec, node.children)
+                return ret_dict
+        
+    def get_tree(self):
+        """ Get tree as a list of dictionaries ordered by weight """
+        nodes = self.get_tree_nodes()
+        data = []
+        for node in nodes:
+            node.children = self.get_node_children(node.id)
+        self.visited = []
+        for node in nodes:
+            res = self.__get_tree_rec(node)
+            if res:
+                data.append(res)
+        del(self.visited)
+        return data
+
+    def is_child(self, object, parent):
+        """ Check if a node is child of parent """
+        self.found = False
+        self.__is_child_rec(object, parent)
+        return self.found
+
+    def __is_child_rec(self, object, parent):
+        """ Recursive check """
+        if object.parent == parent:
+            self.found = True
+            return True
+        parent_children = self.get_node_children(parent)
+        for child in parent_children:
+            if not self.found:
+                self.is_child(object, child.id)
 
     #api
     def get_tree_object(self): return self
     def get_tree_path(self, p=0): return self.absolute_url(p)
-    def get_tree_nodes(self): return self.objectValues(METATYPE_REFTREENODE)
+    def get_tree_nodes(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_REFTREENODE), 'weight', 0)
 
     def __get_tree_thread(self, nodes, parent, depth):
         """
@@ -182,7 +293,37 @@ class RefTree(LocalPropertyManager, Folder):
                                'rel': 'tree',
                                }
                     }
-
+    def __get_tree_dict(self, tree):
+        """ Build a dict for json repr """
+        data = []
+        for rnode in tree:
+            node = rnode.items()[0][0]
+            children = rnode.items()[0][1]
+            node_dict = {
+                'attributes': {
+                    'id': node.getId(),
+                    'rel': 'node',
+                },
+                'data': node.title_or_id(),
+                'children': [],
+                'weight': getattr(node, 'weight', 0)
+            }
+            if children:
+                node_dict['children'] = self.utSortDictsListByKey(self.__get_tree_dict(children), 'weight', 0)
+            data.append(node_dict)
+        return self.utSortDictsListByKey(data, 'weight', 0)
+        
+    def get_tree_data_dict(self):
+        tree = self.get_tree()
+        data = [self.__get_tree_dict(tree)]
+        return {
+            'data': self.title_or_id(),
+            'children': data,
+            'attributes': {
+                'id': self.getId(),
+                'rel': 'tree',
+            }
+        }        
     def get_list(self):
         return self.get_tree_nodes()
 
