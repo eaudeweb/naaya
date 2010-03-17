@@ -25,6 +25,7 @@
 import string
 from copy       import copy
 from os.path    import join
+import simplejson as json
 
 #Zope imports
 import Products
@@ -699,7 +700,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return element titles as a list """
         elements = self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE, NAAYAGLOSSARY_FOLDER_METATYPE])
         elements_list = ','.join([x.title or x.id for x in elements]).split(',')
-        return elements_list
+        json_element_list = json.dumps(elements_list)
+        return json_element_list
 
     def xliff_import(self, file, REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
