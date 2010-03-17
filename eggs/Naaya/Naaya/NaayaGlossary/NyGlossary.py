@@ -695,6 +695,12 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], sort_on=sort_on, sort_order='')
 
+    def get_all_element_titles(self):
+        """ return element titles as a list """
+        elements = self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE, NAAYAGLOSSARY_FOLDER_METATYPE])
+        elements_list = ','.join([x.title or x.id for x in elements]).split(',')
+        return elements_list
+
     def xliff_import(self, file, REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
             designed by a group of software providers.
