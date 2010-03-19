@@ -335,7 +335,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             base_filter['meta_type'] = meta_types
 
-        if geo_types is not None:
+        if geo_types:
             base_filter['geo_type'] = geo_types
 
         if approved:
@@ -466,7 +466,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def search_geo_objects(self, meta_types=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
             path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
             landscape_type=[], administrative_level=[], languages=None, first_letter=None,
-            sort_on='', sort_order=''):
+            sort_on='', sort_order='', country=''):
         """ Returns all the objects that match the specified criteria.
 
                 lat_min -- string/float: minimum latitude for results
@@ -497,20 +497,20 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-                query=query, languages=languages, first_letter=first_letter)
+                query=query, languages=languages, first_letter=first_letter, country=country)
 
         else:
             filters = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
-                query=query, languages=languages, first_letter=first_letter)
+                query=query, languages=languages, first_letter=first_letter, country=country)
 
             filters2 = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
                 landscape_type=landscape_type, administrative_level=administrative_level,
                 lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
-                query=query, languages=languages, first_letter=first_letter)
+                query=query, languages=languages, first_letter=first_letter, country=country)
 
             filters.extend(filters2)
 
@@ -608,13 +608,42 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """Returns the selected locations as a KML file"""
         path = path or '/'
 
+        if geo_types == '':
+            geo_types = []
+        if isinstance(geo_types, str):
+            geo_types = geo_types.split(',')
+        if REQUEST is not None:
+            lat_min, lat_max, lon_min, lon_max = \
+                   REQUEST.get('lat_min', ''),\
+                   REQUEST.get('lat_max', ''),\
+                   REQUEST.get('lon_min', ''),\
+                   REQUEST.get('lon_max', '')
+            lat_center, lon_center = \
+                    REQUEST.get('lat_center', ''),\
+                    REQUEST.get('lon_center', '')
+            administrative_level = REQUEST.get('administrative_level', [])
+            if administrative_level == '':
+                administrative_level = []
+            if isinstance(administrative_level, str):
+                administrative_level = administrative_level.split(',')
+            landscape_type = REQUEST.get('landscape_type', [])
+            if landscape_type == '':
+                landscape_type = []
+            if isinstance(landscape_type, str):
+                landscape_type = landscape_type.split(',')
+            country = REQUEST.get('country', '')
+
         output = []
         out_app = output.append
 
         kml = kml_generator()
         out_app(kml.header())
         out_app(kml.style())
-        for loc in self.search_geo_objects(path=path, geo_types=geo_types, query=geo_query):
+
+        for loc in self.search_geo_objects(path=path, lat_min=lat_min, lat_max=lat_max,
+            lon_min=lon_min, lon_max=lon_max, geo_types=geo_types, query=geo_query,
+            administrative_level=administrative_level, landscape_type=landscape_type,
+            lat_center=lat_center, lon_center=lon_center, country=country):
             if loc.geo_location is not None:
                 try:
                     loc_url = loc.url
@@ -1235,10 +1264,23 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         lat_center, lon_center = \
                 kw.get('lat_center', ''),\
                 kw.get('lon_center', '')
-        geo_types = kw.get('geo_types', '')
+        geo_types = kw.get('geo_types', [])
+        if geo_types == '':
+            geo_types = []
         if isinstance(geo_types, str):
             geo_types = geo_types.split(',')
+        administrative_level = kw.get('administrative_level', [])
+        if administrative_level == '':
+            administrative_level = []
+        if isinstance(administrative_level, str):
+            administrative_level = administrative_level.split(',')
+        landscape_type = kw.get('landscape_type', [])
+        if landscape_type == '':
+            landscape_type = []
+        if isinstance(landscape_type, str):
+            landscape_type = landscape_type.split(',')
         geo_query = kw.get('geo_query', '')
+        country = kw.get('country', '')
 
         sort_on, sort_order = '', ''
         if kw.get('sortable', ''):
@@ -1250,8 +1292,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         results = self.search_geo_objects(
             lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,
             lon_max=lon_max, geo_types=geo_types, query=geo_query,
+            administrative_level=administrative_level, landscape_type=landscape_type,
             first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
-            lat_center=lat_center, lon_center=lon_center,
+            lat_center=lat_center, lon_center=lon_center, country=country,
         )
 
         options = {}
@@ -1261,9 +1304,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['lon_max'] = lon_max
         options['lat_center'] = lat_center
         options['lon_center'] = lon_center
-        options['symbols'] = ','.join(geo_types)
         options['geo_types'] = geo_types
+        options['administrative_level'] = administrative_level
+        options['landscape_type'] = landscape_type
         options['geo_query'] = geo_query
+        options['country'] = country
         options['step'] = int(kw.get('step', '50'))
         step = options['step']
         options['start'] = int(kw.get('start', '0'))
@@ -1331,10 +1376,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
               <author><name>European Environment Agency</name></author>
               <updated>%s</updated>
               """ % (self.title, self.absolute_url(), self.absolute_url(), timestamp) ]
-        items = self.search_geo_objects(lat_min, lat_max, lon_min, lon_max,
-                                        path, geo_types, geo_query, approved, lat_center, lon_center,
-                                        landscape_type, administrative_level, languages,
-                                        sort_on, sort_order)
+        items = self.search_geo_objects(lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
+                    path=path, geo_types=geo_types, query=geo_query, approved=approved,
+                    lat_center=lat_center, lon_center=lon_center, landscape_type=landscape_type,
+                    administrative_level=administrative_level, languages=languages,
+                    sort_on=sort_on, sort_order=sort_order)
+
         for item in items:
             doc = minidom.Document()
             entry = doc.createElement("entry")
