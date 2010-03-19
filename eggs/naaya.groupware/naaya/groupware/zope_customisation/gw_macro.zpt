@@ -21,12 +21,15 @@
             font-weight:bold;
             margin-bottom:0.3em;
         }
+        div#menunav {
+            width: 100%;
+            float: left;
+            border-top: 1px 0 solid black;
+            background-color: #00446A;
+        }
     </style>
   </head>
     <body tal:define="gw_root_url string:${here/get_gw_root}/index_html" metal:define-slot="body">
-        <div style="border: 2px dashed rgb(255, 255, 255); padding: 1pt; background: rgb(170, 0, 0) none repeat scroll 0% 0%;font-weight: bold; text-align: center; font-size: 1.5em; color: white;">
-            This is a DEMO site. Please do not upload any importand data!
-        </div>
         <div id="container" metal:define-slot="div-container">
             <div id="toolribbon" metal:define-slot="div-toolribbon">
                 <div id="lefttools">
@@ -40,8 +43,11 @@
             </div>
             <div id="pagehead" metal:define-slot="div-pagehead">
                 <a href="/" title="Frontpage"></a>
-                <div id="networktitle">Naaya Groupware</div>
-                <div id="sitetitle">Demo site</div>
+                <div id="networktitle">Eionet Forum</div>
+                <!--<div id="sitetitle">subtitle</div>-->
+            </div>
+            <div id="menunav">
+                <tal:block replace="structure here/dropdowns.txt|nothing"/>
             </div>
             <div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
                 <div class="breadcrumbhead" i18n:translate="">You are here: </div>
@@ -55,6 +61,13 @@
                     <li><a href="../applications">Apply for IG</a></li>
                     <li tal:condition="python:'Manager' in user.getRoles()">
                         <a href="../applications/basket_html">Manage applications</a></li>
+                </ul>
+                <h2>Places</h2>
+                <ul>
+                    <li><a href="http://ew.eea.europa.eu/" title="EnviroWindows">EWindows</a></li>
+                    <li><a href="http://www.eea.europa.eu/" title="">EEA home</a></li>
+                    <li><a href="http://www.europa.eu" title="EU website">Europa</a></li>
+                    <li><a href="http://eionet.europa.eu/" title="">Eionet</a></li>
                 </ul>
             </div>
             <div id="workarea" metal:define-slot="div-workarea">
