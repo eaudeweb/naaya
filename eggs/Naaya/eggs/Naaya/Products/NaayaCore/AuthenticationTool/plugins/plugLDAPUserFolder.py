@@ -495,7 +495,12 @@ class LdapSatelliteProvider(Acquisition.Implicit):
         with a simplified mock factory.
         """
         for auth_plugin in self.getSite().getAuthenticationTool().getSources():
-            if auth_plugin.getUserFolder().getUser(user.getId()) is user:
+            user_of_plugin = auth_plugin.getUserFolder().getUser(user.getId())
+            # ideally we'd check ``if user_of_plugin is user``
+            # but LDAPUserFolder returns a different instance of the
+            # user object, so that doesn't work. Instead we just make sure
+            # a user with the same ID exists in the plugin.
+            if user_of_plugin is not None:
                 return lambda group: auth_plugin.user_in_group(user, group)
         else:
             return lambda group: False
