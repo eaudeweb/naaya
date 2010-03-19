@@ -29,7 +29,7 @@ import time
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from SemideParticipant import SemideParticipant
+from BaseParticipant import BaseParticipant
 from SemidePress import SemidePress
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
@@ -42,6 +42,18 @@ add_registration = PageTemplateFile('zpt/registration/add', globals())
 def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', introduction='', lang='', REQUEST=None):
     """ Adds a Semide registration instance"""
     if registration_validation(REQUEST):
+
+        ptool = self.getPortletsTool()
+        list_id = 'conference_participant_types'
+        itopics = getattr(ptool, list_id, None)
+        if not itopics:
+            ptool.manage_addRefTree(list_id, 'Participant types')
+            itopics = getattr(ptool, list_id, None)
+            item_no = 0
+            for list_item in constants.PARTICIPANT_TYPES:
+                itopics.manage_addRefTreeNode(item_no, list_item)
+                item_no += 1
+
         if id:
             id = slugify(id)
         else:
@@ -144,7 +156,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                ob = SemideParticipant(registration_no, **cleaned_data)
+                ob = BaseParticipant(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
                 participant = self._getOb(registration_no, None)
                 if participant:
@@ -400,6 +412,24 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
     def hasVersion(self):
         """ """
+        return None
+
+    def getRefTree(self, ref_tree_id):
+        """ """
+        return self.getPortletsTool().getRefTreeById(ref_tree_id)
+
+    def getRefTreeNodes(self, ref_tree_id='conference_participant_types'):
+        """ """
+        ref_tree = self.getRefTree(ref_tree_id)
+        nodes = ref_tree.get_tree_nodes()
+        return [(node.id, node.title) for node in nodes]
+
+    def getRefTreeTitle(self, node_id, ref_tree_id='conference_participant_types'):
+        """ """
+        ref_tree = self.getRefTree(ref_tree_id)
+        for node in ref_tree.get_tree_nodes():
+            if node.id == node_id:
+                return node.title
         return None
 
 InitializeClass(SemideRegistration)

@@ -22,28 +22,98 @@
 
 <tal:block tal:condition="python:registration_opened and registration_not_closed">
 	<p i18n:translate="">Please fill the form below and click <strong>Submit and print</strong>.
-		Fields in <span style="color: #f40000">red</span> are mandatory.
+		Fields marked with * are mandatory.
 		You can update your registration form later with your family name and
 		the registration number that will be given to you when you submit the form.</p>
 	<p i18n:translate="">Date format: dd/mm/yyyy. Time format: hh:mm</p>
 
 	<form action="" method="post">
-		<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">
-			The name is mandatory!
+		<div tal:condition="python:request.has_key('request_error')"
+			class="message-error" i18n:translate="">
+			At least one field was not filled in correctly.
+			Please check the mandatory fields and try again!
 		</div>
 		<div class="field">
-			<label class="mandatory" for="last_name" i18n:translate="">Name</label>
-			<input type="text" name="last_name:utf8:ustring" size="50" tal:attributes="value python:request.get('last_name')" />
+			<label class="mandatory" for="delegation_of">
+				<span i18n:translate="">Official delegation of</span> *</label>
+			<div tal:condition="python:request.has_key('delegation_of_error')"
+				class="message-error" i18n:translate="">
+				The delegation name is mandatory!
+			</div>
+			<input type="text" name="delegation_of:utf8:ustring" size="50"
+				tal:attributes="value request/delegation_of|nothing" />
+		</div>
+		<div class="field">
+			<label class="mandatory" for="participant_type">
+				<span i18n:translate="">Participant type</span> *</label>
+			<div tal:condition="python:request.has_key('participant_type_error')"
+				class="message-error" i18n:translate="">
+				The participant type is mandatory!
+			</div>
+			<select name="participant_type" tal:define="nodes here/getRefTreeNodes">
+				<option value=""></option>
+				<tal:block repeat="node nodes">
+					<option tal:attributes="value python:node[0]; 
+											selected python:node[0] == request.get('participant_type')" 
+							tal:content="python:node[1]" />
+				</tal:block>
+			</select>
+		</div>
+		<div class="field">
+			<label class="mandatory" for="last_name">
+				<span i18n:translate="">Name</span> *</label>
+			<div tal:condition="python:request.has_key('last_name_error')"
+				class="message-error" i18n:translate="">
+				The name is mandatory!
+			</div>
+			<input type="text" name="last_name:utf8:ustring" size="50"
+				tal:attributes="value request/last_name|nothing" />
 		</div>
 		<div class="field">
 			<label for="first_name" i18n:translate="">First name</label>
-			<input type="text" name="first_name:utf8:ustring" size="50" tal:attributes="value python:request.get('first_name')" />
+			<input type="text" name="first_name:utf8:ustring" size="50"
+				tal:attributes="value request/first_name|nothing" />
 		</div>
-		<div tal:condition="python:request.has_key('country_error')" class="message-error" i18n:translate="">
-			The country name is mandatory!
+		<div class="field" tal:define="gender request/gender|nothing">
+			<label i18n:translate="">Gender</label>
+			<input type="radio" name="gender" value="1"
+				tal:attributes="checked python:test(gender=='1', True, None)" /> <span i18n:translate="">Male</span>
+			<br/>
+			<input type="radio" name="gender" value="2"
+				tal:attributes="checked python:test(gender=='2', True, None)" /> <span i18n:translate="">Female</span>
 		</div>
 		<div class="field">
-			<label class="mandatory" for="country" i18n:translate="">Country</label>
+			<label for="position" i18n:translate="">Position</label>
+			<input type="text" name="position:utf8:ustring" size="50"
+				tal:attributes="value request/position|nothing" />
+		</div>
+		<div class="field">
+			<label class="mandatory" for="work_address">
+				<span i18n:translate="">Work address</span> *</label>
+			<div tal:condition="python:request.has_key('work_address_error')"
+				class="message-error" i18n:translate="">
+				The work address is mandatory!
+			</div>
+			<textarea rows="5" cols="31" name="work_address:utf8:ustring" 
+			tal:content="request/work_address|nothing" />
+		</div>
+		<div class="field">
+			<label for="city" i18n:translate="">City</label>
+			<input type="text" name="city:utf8:ustring" size="50"
+				tal:attributes="value request/city|nothing" />
+		</div>
+		<div class="field">
+			<label for="postal_code" i18n:translate="">Postal code</label>
+			<input type="text" name="postal_code:utf8:ustring" size="50"
+				tal:attributes="value request/postal_code|nothing" />
+		</div>
+		<div class="field">
+			<label class="mandatory" for="country">
+				<span i18n:translate="">Country</span> *</label>
+			<div tal:condition="python:request.has_key('country_error')"
+				class="message-error" i18n:translate="">
+				The country is mandatory!
+			</div>
 			<select name="country">
 				<option value=""></option>
 				<tal:block repeat="country here/getCountryList">
@@ -56,123 +126,134 @@
 			</select>
 		</div>
 		<div class="field">
-			<label for="organisation" i18n:translate="">Organisation</label>
-			<input type="text" name="organisation:utf8:ustring" size="50" tal:attributes="value python:request.get('organisation')" />
+			<label for="phone_number" i18n:translate="">Phone number</label>
+			<input type="text" name="phone_number:utf8:ustring" size="50"
+				tal:attributes="value request/phone_number|nothing" />
 		</div>
 		<div class="field">
-			<label for="official_title" i18n:translate="">Official title</label>
-			<input type="text" name="official_title:utf8:ustring" size="50" tal:attributes="value python:request.get('official_title')" />
-		</div>
-
-		<div tal:condition="python:request.has_key('passport_no_error')" class="message-error" i18n:translate="">
-			Passport number is mandatory!
+			<label for="mobile_number" i18n:translate="">Mobile number</label>
+			<input type="text" name="mobile_number:utf8:ustring" size="50"
+				tal:attributes="value request/mobile_number|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="passport_no" i18n:translate="">Passport number *</label>
-			<input type="text" name="passport_no:utf8:ustring" tal:attributes="value python:request.get('passport_no')" />
-		</div>
-
-		<div tal:condition="python:request.has_key('passport_expire_error')" class="message-error" i18n:translate="">
-			Expiry date of the passport is mandatory!
-		</div>
-		<div tal:condition="python:request.has_key('passport_expire_notvalid')" class="message-error" i18n:translate="">
-			Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
-		</div>
-		<div class="field">
-			<label class="mandatory" for="passport_expire" i18n:translate="">Expiry date of the passport *</label>
-			<input type="text" name="passport_expire:utf8:ustring" class="vDateField" size="10" maxlength="10"
-			tal:attributes="value python:request.get('passport_expire')" />
-		</div>
-
-		<div tal:condition="python:request.has_key('phone_number_error')" class="message-error" i18n:translate="">
-			Phone number is mandatory!
+			<label class="mandatory" for="email">
+				<span i18n:translate="">Email</span> *</label>
+			<div tal:condition="python:request.has_key('email_error')"
+				class="message-error" i18n:translate="">
+				The Email is mandatory!
+			</div>
+			<div tal:condition="python:request.has_key('email_notvalid')"
+				class="message-error" i18n:translate="">
+				Please enter a valid email address!
+			</div>
+			<input type="text" name="email:utf8:ustring" size="50"
+				tal:attributes="value request/email|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="phone_number" i18n:translate="">Phone number</label>
-			<input type="text" name="phone_number:utf8:ustring" size="50" tal:attributes="value python:request.get('phone_number')" />
-		</div>
-
-		<div tal:condition="python:request.has_key('email_error')" class="message-error" i18n:translate="">
-			Email is mandatory!
-		</div>
-		<div tal:condition="python:request.has_key('email_notvalid')" class="message-error" i18n:translate="">
-			Please enter a valid email address!
-		</div>
-		<div class="field">
-			<label class="mandatory" for="email" i18n:translate="">Email</label>
-			<input type="text" name="email:utf8:ustring" size="50" tal:attributes="value python:request.get('email')" />
+			<label class="mandatory" for="fax_number">
+				<span i18n:translate="">Fax number</span> *</label>
+			<div tal:condition="python:request.has_key('fax_number_error')"
+				class="message-error" i18n:translate="">
+				The fax number is mandatory!
+			</div>
+			<input type="text" name="fax_number:utf8:ustring" size="50"
+				tal:attributes="value request/fax_number|nothing" />
 		</div>
 		<div class="field">
-			<label for="fax_number" i18n:translate="">Fax number</label>
-			<input type="text" name="fax_number:utf8:ustring" tal:attributes="value python:request.get('fax_number')" />
-		</div>
-		<div tal:condition="python:request.has_key('arrival_date_notvalid')" class="message-error" i18n:translate="">
-			Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+			<label for="passport_no" i18n:translate="">Passport number</label>
+			<input type="text" name="passport_no:utf8:ustring" size="50"
+				tal:attributes="value request/passport_no|nothing" />
 		</div>
 		<div class="field">
-			<label for="arrival_date" i18n:translate="">Date of arrival</label>
-			<input type="text" name="arrival_date:utf8:ustring" class="vDateField" size="10" maxlength="10"
-				tal:attributes="value python:request.get('arrival_date')" />
+			<label for="languages" i18n:translate="">Language(s) spoken</label>
+			<input type="text" name="languages:utf8:ustring" size="50"
+				tal:attributes="value request/languages|nothing" />
 		</div>
 		<div class="field">
-			<label for="arrival_from" i18n:translate="">Arrival from</label>
-			<input type="text" name="arrival_from:utf8:ustring" tal:attributes="value python:request.get('arrival_from')" />
+			<label for="work_address" i18n:translate="">Hotel</label>
+			<textarea rows="5" cols="31" name="hotel:utf8:ustring" 
+			tal:content="request/hotel|nothing" />
 		</div>
 		<div class="field">
-			<label for="arrival_flight" i18n:translate="">Flight number</label>
-			<input type="text" name="arrival_flight:utf8:ustring" tal:attributes="value python:request.get('arrival_flight')" />
+			<label class="mandatory" for="arrival_date">
+				<span i18n:translate="">Arrival date</span> *</label>
+			<div tal:condition="python:request.has_key('arrival_date_error')"
+				class="message-error" i18n:translate="">
+				The arrival date is mandatory!
+			</div>
+			<div tal:condition="python:request.has_key('arrival_date_notvalid')"
+				class="message-error" i18n:translate="">
+				Please enter the date in the correct format dd/mm/yyyy
+					(you can also use the calendar function).
+			</div>
+			<input type="text" name="arrival_date:utf8:ustring"
+				class="vDateField" size="10" maxlength="10"
+				tal:attributes="value request/arrival_date|nothing" />
 		</div>
-		<div tal:condition="python:request.has_key('arrival_time_notvalid')" class="message-error" i18n:translate="">
-			Please enter the time in the correct format hh:mm.
+		<div class="field">
+			<label for="arrival" i18n:translate="">Means of transport, arrival</label>
+			<input type="text" name="arrival:utf8:ustring" size="50"
+				tal:attributes="value request/arrival|nothing" />
 		</div>
 		<div class="field">
 			<label for="arrival_time" i18n:translate="">Time of arrival (hh:mm)</label>
-			<input type="text" name="arrival_time:utf8:ustring" tal:attributes="value python:request.get('arrival_time')" />
-		</div>
-		<div tal:condition="python:request.has_key('departure_date_notvalid')" class="message-error" i18n:translate="">
-			Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
-		</div>
-		<div class="field">
-			<label for="departure_date" i18n:translate="">Date of departure</label>
-			<input type="text" name="departure_date:utf8:ustring" class="vDateField" size="10" maxlength="10"
-				tal:attributes="value python:request.get('departure_date')" />
+			<div tal:condition="python:request.has_key('arrival_time_notvalid')"
+				class="message-error" i18n:translate="">
+				Please enter the time in the correct format hh:mm.
+			</div>
+			<input type="text" name="arrival_time:utf8:ustring"
+				tal:attributes="value request/arrival_time|nothing" />
 		</div>
 		<div class="field">
-			<label for="departure_flight" i18n:translate="">Flight number</label>
-			<input type="text" name="departure_flight:utf8:ustring" tal:attributes="value python:request.get('departure_flight')" />
+			<label class="mandatory" for="departure_date">
+				<span i18n:translate="">Departure date</span> *</label>
+			<div tal:condition="python:request.has_key('departure_date_error')"
+				class="message-error" i18n:translate="">
+				The departure date is mandatory!
+			</div>
+			<div tal:condition="python:request.has_key('departure_date_notvalid')"
+				class="message-error" i18n:translate="">
+				Please enter the date in the correct format dd/mm/yyyy
+					(you can also use the calendar function).
+			</div>
+			<input type="text" name="departure_date:utf8:ustring"
+				class="vDateField" size="10" maxlength="10"
+				tal:attributes="value request/departure_date|nothing" />
 		</div>
-		<div tal:condition="python:request.has_key('departure_time_notvalid')" class="message-error" i18n:translate="">
-			Please enter the time in the correct format hh:mm.
+		<div class="field">
+			<label for="departure" i18n:translate="">Means of transport, departure</label>
+			<input type="text" name="departure:utf8:ustring" size="50"
+				tal:attributes="value request/departure|here/departure" />
 		</div>
 		<div class="field">
 			<label for="departure_time" i18n:translate="">Time of departure (hh:mm)</label>
-			<input type="text" name="departure_time:utf8:ustring" tal:attributes="value python:request.get('departure_time')" />
+			<div tal:condition="python:request.has_key('departure_time_notvalid')"
+				class="message-error" i18n:translate="">
+				Please enter the time in the correct format hh:mm.
+			</div>
+			<input type="text" name="departure_time:utf8:ustring"
+				tal:attributes="value request/departure_time|nothing" />
 		</div>
-
-		<h3 i18n:translate="">HOTEL RESERVATION</h3>
-
 		<div class="field">
-			<input type="radio" name="hotel_reservation:utf8:ustring" value="1" />
-			<span i18n:translate="">I am part of one of the following delegations:
-			(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
-			Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
-			Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
-			My accommodation is covered by the French Government.</span><br/>
-			<input type="radio" name="hotel_reservation:utf8:ustring" value="2" checked="checked"/>
-			<span i18n:translate="">I pay my own accommodation. So please book your hotel room,
-			click here to get hotels contacts and special rates</span><br/>
+			<label for="special_requests" i18n:translate="">Special requests</label>
+			<input type="text" name="special_requests:utf8:ustring" size="50"
+				tal:attributes="value request/special_requests|nothing" />
 		</div>
-
-		<p i18n:translate="">* For UE representatives, passport details can be replaced by ID card details</p>
+		<div class="field">
+			<label for="medical_requirements" i18n:translate="">Medical requirements</label>
+			<input type="text" name="medical_requirements:utf8:ustring" size="50"
+				tal:attributes="value request/medical_requirements|nothing" />
+		</div>
+		<div class="field">
+			<label for="special_diet" i18n:translate="">Special diet</label>
+			<input type="text" name="special_diet:utf8:ustring" size="50"
+				tal:attributes="value request/special_diet|nothing" />
+		</div>
 
 		<div class="field">
 			<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
 		</div>
 	</form>
-	<p>
-		<span i18n:translate="">IMPORTANT: If you do not receive a confirmation within 72 hours, please contact: Andrea MATUSAKOVA</span>
-		<a href="mailto:matusakova@pseau.org">matusakova@pseau.org</a>
-	</p>
 </tal:block>
 <strong tal:condition="not: registration_opened" i18n:translate="">Registration did not start yet</strong>
 <strong tal:condition="not: registration_not_closed" i18n:translate="">Registration is closed</strong>
