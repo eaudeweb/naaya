@@ -32,61 +32,76 @@ class BaseParticipant(SimpleItem):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, registration_no, first_name, last_name, email, country, passport_no, \
-                passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
-                arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist):
+    def __init__(self, registration_no, delegation_of, participant_type,
+                first_name, last_name, position, work_address, city, postal_code,
+                country, phone_number, mobile_number, email, fax_number, passport_no,
+                languages, hotel, arrival_date, departure_date, arrival, arrival_time,
+                departure, departure_time, special_requests,
+                medical_requirements, special_diet, gender=''):
         """ constructor """
         self.id = registration_no
+        self.delegation_of = delegation_of
+        self.participant_type = participant_type
         self.first_name = first_name
         self.last_name = last_name
-        self.email = email
+        self.gender = gender
+        self.position = position
+        self.work_address = work_address
+        self.city = city
+        self.postal_code = postal_code
         self.country = country
-        self.passport_no = passport_no
-        self.passport_expire = passport_expire
         self.phone_number = phone_number
+        self.mobile_number = mobile_number
+        self.email = email
         self.fax_number = fax_number
-        if arrival_date:
-            self.arrival_date = str2date(arrival_date)
-        else:
-            self.arrival_date = ''
-        self.arrival_from = arrival_from
-        self.arrival_flight = arrival_flight
+        self.passport_no = passport_no
+        self.languages = languages
+        self.hotel = hotel
+        self.arrival_date = str2date(arrival_date)
+        self.departure_date = str2date(departure_date)
+        self.arrival = arrival
         self.arrival_time = arrival_time
-        if departure_date:
-            self.departure_date = str2date(departure_date)
-        else:
-            self.departure_date = ''
-        self.departure_flight = departure_flight
+        self.departure = departure
         self.departure_time = departure_time
-        self.is_journalist = is_journalist
+        self.special_requests = special_requests
+        self.medical_requirements = medical_requirements
+        self.special_diet = special_diet
         self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
-    def edit(self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, \
-                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, \
-                    departure_flight, departure_time):
+    def edit(self, delegation_of, participant_type, first_name, last_name,
+            position, work_address, city, postal_code, country,
+            phone_number, mobile_number, email, fax_number, passport_no,
+            languages, hotel, arrival_date, departure_date, arrival,
+            arrival_time, departure, departure_time, special_requests,
+            medical_requirements, special_diet, gender=''):
         """ edit properties """
+        self.delegation_of = delegation_of
+        self.participant_type = participant_type
         self.first_name = first_name
         self.last_name = last_name
-        self.email = email
+        self.gender = gender
+        self.position = position
+        self.work_address = work_address
+        self.city = city
+        self.postal_code = postal_code
         self.country = country
-        self.passport_no = passport_no
-        self.passport_expire = passport_expire
         self.phone_number = phone_number
+        self.mobile_number = mobile_number
+        self.email = email
         self.fax_number = fax_number
-        if arrival_date:
-            self.arrival_date = str2date(arrival_date)
-        else:
-            self.arrival_date = ''
-        self.arrival_from = arrival_from
-        self.arrival_flight = arrival_flight
+        self.passport_no = passport_no
+        self.languages = languages
+        self.hotel = hotel
+        self.arrival_date = str2date(arrival_date)
+        self.departure_date = str2date(departure_date)
+        self.arrival = arrival
         self.arrival_time = arrival_time
-        if departure_date:
-            self.departure_date = str2date(departure_date)
-        else:
-            self.departure_date = ''
-        self.departure_flight = departure_flight
+        self.departure = departure
         self.departure_time = departure_time
+        self.special_requests = special_requests
+        self.medical_requirements = medical_requirements
+        self.special_diet = special_diet
 
     def getCountry(self, lang):
         """ get country name """
@@ -133,7 +148,7 @@ class BaseParticipant(SimpleItem):
     _edit_html = PageTemplateFile('zpt/participant/edit', globals())
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
-    def edit_html(self, mandatory_fields, REQUEST=None):
+    def edit_html(self, REQUEST=None):
         """ edit base participant properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
@@ -157,7 +172,7 @@ class BaseParticipant(SimpleItem):
             else:
                 REQUEST.set('wrong_email', True)
         if submit:
-            if form_validation(mandatory_fields=mandatory_fields, 
+            if form_validation(mandatory_fields=constants.PART_MANDATORY_FIELDS, 
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
                                 REQUEST=REQUEST):
