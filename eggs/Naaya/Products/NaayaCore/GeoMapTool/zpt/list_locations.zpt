@@ -9,9 +9,14 @@
 		lon_max options/lon_max;
 		lat_center options/lat_center;
 		lon_center options/lon_center;
-		symbols options/symbols;
 		geo_types options/geo_types;
+		geo_types_str python:','.join(geo_types);
+		administrative_level options/administrative_level|string:;
+		administrative_level_str python:','.join(administrative_level);
+		landscape_type options/landscape_type|string:;
+		landscape_type_str python:','.join(landscape_type);
 		geo_query options/geo_query;
+		country options/country;
 		sort_on options/sort_on;
 		sort_order options/sort_order;
 		step options/step;
@@ -21,10 +26,10 @@
 		results options/results;
 		first_letter options/first_letter;
 		next_start end;
-		next_end python:end+step;
+		next_end python:test(end+step<results, end+step, results);
 		prev_start python:start-step;
 		prev_end start;
-		url_params string:?lat_min=${lat_min}&amp;lat_max=${lat_max}&amp;lon_min=${lon_min}&amp;lon_max=${lon_max}&amp;lat_center=${lat_center}&amp;lon_center=${lon_center}&amp;geo_types=${symbols}&amp;geo_query=${geo_query}&amp;sortable=${sortable};
+		url_params string:?lat_min=${lat_min}&amp;lat_max=${lat_max}&amp;lon_min=${lon_min}&amp;lon_max=${lon_max}&amp;lat_center=${lat_center}&amp;lon_center=${lon_center}&amp;geo_types=${geo_types_str}&amp;administrative_level=${administrative_level_str}&amp;landscape_type=${landscape_type_str}&amp;geo_query=${geo_query}&amp;country=${country}&amp;sortable=${sortable};
 		records options/records">
 
 <div class="floated-buttons">
@@ -42,6 +47,8 @@
 			<a href="http://earth.google.com/downloads.html">Google Earth viewer</a>
 			(version 4.0 or higher)
 			<input type="hidden" name="geo_types:list" tal:attributes="value geo_type" tal:repeat="geo_type geo_types"/>
+			<input type="hidden" name="administrative_level:list" tal:attributes="value adm_level" tal:repeat="adm_level administrative_level"/>
+			<input type="hidden" name="landscape_type:list" tal:attributes="value land_type" tal:repeat="land_type landscape_type"/>
 			<input type="hidden" name="geo_query" tal:attributes="value geo_query"/>
 			<input type="submit" value="View in Google Earth" i18n:attributes="value" class="map-button" />
 		</p>
@@ -51,14 +58,13 @@
 	<strong tal:content="python:results"/> <span i18n:translate="">locations found.</span>
 	<a tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;start=${prev_start}&amp;end=${prev_end}&amp;step=${step}&amp;sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${first_letter}"
 		tal:condition="python:prev_start >= 0">
-		<< <span i18n:translate="">Prev</span> <span tal:replace="step"/>
-	</a>	
+		<< <span i18n:translate="">Prev</span> <span tal:replace="step"/></a>
 	<tal:block condition="python:results > step">
 		<span i18n:translate="">Displaying</span> <strong><span tal:replace="start"/> - <span tal:replace="end"/></strong>
 	</tal:block>
 	<a tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;start=${next_start}&amp;end=${next_end}&amp;step=${step}&amp;sort_on=${sort_on}&amp;sort_order=${sort_order}&amp;first_letter=${first_letter}"
 		tal:condition="python:results > next_start">
-		<span i18n:translate="">Next</span> <span tal:replace="step"/> >>
+		<span i18n:translate="">Next</span> <span tal:replace="python:test(step<next_end-next_start, step, next_end-next_start)"/> >>
 	</a>
 	<tal:block tal:condition="here/can_filter_by_first_letter">
 		<br />
