@@ -148,6 +148,9 @@ class SchemaTool(Folder):
                     continue
             if name in self.objectIds():
                 output[meta_type] = self._getOb(name)
+        folder_schema = self._getOb('NyFolder', None)
+        if folder_schema is not None:
+            output['Naaya Folder'] = folder_schema
         return output
 
     def index_html(self, REQUEST):
