@@ -31,7 +31,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers.utils import utils
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 
 from geo import Geo
 
@@ -96,6 +96,8 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
     return id
 
 class Widget(Folder, LocalPropertyManager):
+    # Widget is a LocalPropertyManager because some old instances still
+    # have their "title" property set as a LocalProperty/LocalAttribute
     """ Abstract class for widget
     """
     meta_type = 'Naaya Schema Widget'
@@ -133,13 +135,9 @@ class Widget(Folder, LocalPropertyManager):
     data_type = 'str'
     visible = True
 
-    # Local properties
-    title = LocalProperty('title')
-
     def __init__(self, id, title='', lang=None):
         Folder.__init__(self, id=id)
-        self.set_localproperty('title', 'string', lang)
-        self._setLocalPropValue('title', lang, title)
+        self.title = title
 
     def _setProperty(self, id, value, *args, **kwargs):
         if id == 'default':
@@ -164,7 +162,7 @@ class Widget(Folder, LocalPropertyManager):
             raise ValueError('Can not make property "%s" non-mandatory'
                 % self.prop_name())
 
-        self._setLocalPropValue('title', _lang, kwargs.get('title'))
+        self.title = kwargs.get('title')
         self.required = _required
         self.sortorder = int(kwargs.get('sortorder'))
         self.visible = bool(kwargs.get('visible'))
