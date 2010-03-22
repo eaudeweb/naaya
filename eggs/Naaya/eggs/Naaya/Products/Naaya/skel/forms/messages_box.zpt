@@ -1,8 +1,8 @@
 <div class="message-error">
-<fieldset tal:condition="here/isSessionErrors"><legend i18:translate="">Errors</legend>
+<fieldset tal:condition="here/isSessionErrors"><legend i18n:translate="">Errors</legend>
 	<div class="fieldset_div">
 		<ul>
-			<li tal:repeat="error_value here/getSessionErrors" i18:translate="" tal:content="error_value" />
+			<li tal:repeat="error_value here/getSessionErrors" i18n:translate="" tal:content="error_value" />
 		</ul>
 	</div>
 </fieldset>
@@ -11,10 +11,10 @@
 <span tal:content="python:here.delSessionErrors()" tal:omit-tag="" />
 
 <div class="message information">
-	<fieldset tal:condition="here/isSessionInfo"><legend i18:translate="">Information</legend>
+	<fieldset tal:condition="here/isSessionInfo"><legend i18n:translate="">Information</legend>
 		<div class="fieldset_div">
 			<ul>
-				<li tal:repeat="info_value here/getSessionInfo" i18:translate="" tal:content="info_value" />
+				<li tal:repeat="info_value here/getSessionInfo" i18n:translate="" tal:content="info_value" />
 			</ul>
 		</div>
 	</fieldset>
