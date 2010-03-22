@@ -249,7 +249,7 @@
 							user_lastupdated python:user_info[7];">
 	
 		<div class="system-msg" tal:condition="python:request.has_key('save')">
-			Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+			<tal:block i18n:translate="">Saved changes</tal:block>. (<span tal:replace="here/ZopeTime"/>)<br />
 		</div>
 	
 		<form name="frmEditUser" method="post" tal:attributes="action string:${here/absolute_url}/admin_saveuser_credentials">
