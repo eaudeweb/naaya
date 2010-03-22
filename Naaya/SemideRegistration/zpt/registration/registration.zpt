@@ -1,8 +1,17 @@
 <tal:block replace="structure here/standard_html_header"/>
 <link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/autocomplete.css"/>
 <script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/autocomplete.js"></script>
+<tal:block replace="structure string:<script>"/>
+	var autocomplete_data = <tal:block replace="structure here/getDelegations" />;
+	$(document).ready(function() {
+		$('#delegation_of').autocomplete(autocomplete_data, {multiple: true});
+	});
+<tal:block replace="structure string:</script>"/>
 <tal:block define="global registration_opened here/registrationOpened;
 					global registration_not_closed here/registrationNotClosed;
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();

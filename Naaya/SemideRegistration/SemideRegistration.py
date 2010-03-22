@@ -26,6 +26,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from OFS.Folder import Folder
 import time
+import simplejson as json
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -438,5 +439,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
             if node.id == node_id:
                 return node.title
         return None
+
+    security.declareProtected(constants.VIEW_PERMISSION, 'getDelegations')
+    def getDelegations(self, meta_type='Semide Participant'):
+        """ """
+        return json.dumps([ob.delegation_of for ob in self.objectValues(meta_type)])
 
 InitializeClass(SemideRegistration)
