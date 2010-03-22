@@ -109,11 +109,11 @@
 		</div>
 		<div class="field" tal:define="gender request/gender|here/gender">
 			<label i18n:translate="">Gender</label>
-			<input type="radio" name="gender" value="1"
-				tal:attributes="checked python:test(gender=='1', True, None)" /> <span i18n:translate="">Male</span>
+			<input type="radio" name="gender" value="Male"
+				tal:attributes="checked python:test(gender=='Male', True, None)" /> <span i18n:translate="">Male</span>
 			<br/>
-			<input type="radio" name="gender" value="2"
-				tal:attributes="checked python:test(gender=='2', True, None)" /> <span i18n:translate="">Female</span>
+			<input type="radio" name="gender" value="Female"
+				tal:attributes="checked python:test(gender=='Female', True, None)" /> <span i18n:translate="">Female</span>
 		</div>
 		<div class="field">
 			<label for="position" i18n:translate="">Position</label>

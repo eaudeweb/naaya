@@ -3,7 +3,6 @@
 <script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
-
 <tal:block define="global registration_opened here/registrationOpened;
 					global registration_not_closed here/registrationNotClosed;
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
@@ -40,7 +39,7 @@
 				class="message-error" i18n:translate="">
 				The delegation name is mandatory!
 			</div>
-			<input type="text" name="delegation_of:utf8:ustring" size="50"
+			<input type="text" id="delegation_of" name="delegation_of:utf8:ustring" size="50"
 				tal:attributes="value request/delegation_of|nothing" />
 		</div>
 		<div class="field">
@@ -76,11 +75,11 @@
 		</div>
 		<div class="field" tal:define="gender request/gender|nothing">
 			<label i18n:translate="">Gender</label>
-			<input type="radio" name="gender" value="1"
-				tal:attributes="checked python:test(gender=='1', True, None)" /> <span i18n:translate="">Male</span>
+			<input type="radio" name="gender" value="Male"
+				tal:attributes="checked python:test(gender=='Male', True, None)" /> <span i18n:translate="">Male</span>
 			<br/>
-			<input type="radio" name="gender" value="2"
-				tal:attributes="checked python:test(gender=='2', True, None)" /> <span i18n:translate="">Female</span>
+			<input type="radio" name="gender" value="Female"
+				tal:attributes="checked python:test(gender=='Female', True, None)" /> <span i18n:translate="">Female</span>
 		</div>
 		<div class="field">
 			<label for="position" i18n:translate="">Position</label>
@@ -223,7 +222,7 @@
 		<div class="field">
 			<label for="departure" i18n:translate="">Means of transport, departure</label>
 			<input type="text" name="departure:utf8:ustring" size="50"
-				tal:attributes="value request/departure|here/departure" />
+				tal:attributes="value request/departure|nothing" />
 		</div>
 		<div class="field">
 			<label for="departure_time" i18n:translate="">Time of departure (hh:mm)</label>

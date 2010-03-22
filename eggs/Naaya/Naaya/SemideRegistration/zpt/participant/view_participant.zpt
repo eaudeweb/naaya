@@ -82,8 +82,8 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">Gender</th>
-		<td tal:condition="python:here.gender == '1'" i18n:translate="" >Male</td>
-		<td tal:condition="python:here.gender == '2'" i18n:translate="" >Female</td>
+		<td tal:condition="python:here.gender == 'Male'" i18n:translate="" >Male</td>
+		<td tal:condition="python:here.gender == 'Female'" i18n:translate="" >Female</td>
 	</tr>
 	<tr>
 		<th i18n:translate="">Position</th>

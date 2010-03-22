@@ -30,6 +30,10 @@ import constants
 class BaseParticipant(SimpleItem):
     """ Base class for participants """
 
+    meta_type = 'Semide Participant'
+    product_name = 'SemideRegistration'
+    icon = 'misc_/SemideRegistration/SemideParticipant.png'
+
     security = ClassSecurityInfo()
 
     def __init__(self, registration_no, delegation_of, participant_type,
@@ -103,9 +107,9 @@ class BaseParticipant(SimpleItem):
         self.medical_requirements = medical_requirements
         self.special_diet = special_diet
 
-    def getCountry(self, lang):
+    def getCountry(self, lang, prop_name='country'):
         """ get country name """
-        language, query, results = self.glossary_coverage.searchGlossary(query=self.country, size=1)
+        language, query, results = self.glossary_coverage.searchGlossary(query=getattr(self, prop_name), size=1)
         if results:
             return results[0].get_translation_by_language(lang)
         return ''

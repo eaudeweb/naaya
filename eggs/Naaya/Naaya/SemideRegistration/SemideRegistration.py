@@ -280,10 +280,13 @@ class SemideRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
-        data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Organisation',
-                    'Official title', 'Passport number', 'Expiry date of the passport', 'Email address',
-                    'Phone number', 'Fax number', 'Date of arrival', 'Arriving from', 'Flight number',
-                    'Time of arrival', 'Date of departure', 'Flight number', 'Departure time', 'Hotel reservation')]
+        data = [('Registration date', 'Registration number', 'Official delegation of',
+                    'Participant type', 'First name', 'Name', 'Gender', 'Position',
+                    'Work address', 'City', 'Postal code', 'Country', 'Phone number',
+                    'Mobile number', 'Email', 'Fax number', 'Passport number', 'Language(s) spoken',
+                    'Date of arrival', 'Means of transport, arrival', 'Time of arrival',
+                    'Date of departure', 'Means of transport, departure ', 'Time of departure',
+                    'Special requests', 'Medical requirements', 'Special diet')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
             if part.arrival_date:
@@ -294,15 +297,19 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 departure_date = self.formatDate(part.departure_date)
             else:
                 departure_date = 'n/a'
-            if part.hotel_reservation == '1':
-                hotel_reservation = 'I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro, Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey. My accommodation is covered by the French Government.'
-            else:
-                hotel_reservation = 'I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.'
-            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
-                        self.unicode2UTF8(part.country), self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.official_title), 
-                        self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, self.unicode2UTF8(part.phone_number), 
-                        self.unicode2UTF8(part.fax_number), arrival_date, self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight),
-                        part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight), part.departure_time, hotel_reservation))
+            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.delegation_of),
+            self.getRefTreeTitle(part.participant_type), self.unicode2UTF8(part.first_name),
+            self.unicode2UTF8(part.last_name), self.unicode2UTF8(part.gender),
+            self.unicode2UTF8(part.position),
+            self.unicode2UTF8(part.work_address).replace('\r\n', ' ').replace('\n', ' '),
+            self.unicode2UTF8(part.city), self.unicode2UTF8(part.postal_code), self.unicode2UTF8(part.country),
+            self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.mobile_number),
+            part.email, self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.passport_no),
+            self.unicode2UTF8(part.languages), 
+            arrival_date, self.unicode2UTF8(part.arrival), part.arrival_time,
+            departure_date, self.unicode2UTF8(part.departure), part.departure_time,
+            self.unicode2UTF8(part.special_requests), self.unicode2UTF8(part.medical_requirements),
+            self.unicode2UTF8(part.special_diet)))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
