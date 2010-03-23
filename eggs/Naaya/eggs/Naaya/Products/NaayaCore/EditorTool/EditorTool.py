@@ -193,6 +193,8 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
                 templates from `config.ini`. Default is 'tinymce'. 
                 Also you can use 'tinymce_noimage' to disable image insertion.
         """
+        if not lang:
+            lang = self.gl_get_selected_language()
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
         if extra_options.has_key('config_template'):
             template = extra_options['config_template']
@@ -200,6 +202,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         else:
             cfg = copy.copy(configuration)
         cfg.update({
+            'language': lang,
             'select_image_url' : '%s/select_image?document=%s' \
                     % (self.absolute_url(), doc_url),
             'edit_image_url' : '%s/prepare_image?mode=edit&document=%s' % (self.absolute_url(), doc_url),
