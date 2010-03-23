@@ -29,7 +29,7 @@ TIME_FIELDS = ['arrival_time', 'departure_time']
 
 PARTICIPANT_TYPES = ['Head of delegation', 'Member of delegation', 'Observer', 'Press', 'Security']
 
-SMTP_HOST = 'mail.eaudeweb.ro'
+SMTP_HOST = 'localhost'
 SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@ufm-water.net'
 
