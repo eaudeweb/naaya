@@ -321,7 +321,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return catalog_tool._catalog.indexes.has_key('full_title')
 
     security.declarePrivate('build_geo_filters')
-    def build_geo_filters(self, path='', meta_types=None, geo_types=None,
+    def build_geo_filters(self, path='', meta_types=None, geo_types=[],
             approved=True,
             landscape_type=[], administrative_level=[],
             lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
@@ -335,8 +335,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             base_filter['meta_type'] = meta_types
 
-        if geo_types:
-            base_filter['geo_type'] = geo_types
+        base_filter['geo_type'] = geo_types
 
         if approved:
             base_filter['approved'] = 1
@@ -562,7 +561,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'search_geo_clusters')
     def search_geo_clusters(self, meta_types=None,
             lat_min=None, lat_max=None, lon_min=None, lon_max=None,
-            path='', geo_types=None, query='', approved=True,
+            path='', geo_types=[], query='', approved=True,
             landscape_type=[], administrative_level=[], country='', languages=None):
         """ Returns all the clusters that match the specified criteria. """
         if lat_min is None or lat_min == '': lat_min = -90.
@@ -699,7 +698,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '$$'.join(r)
 
     security.declareProtected(view, 'xrjs_getGeoClusters')
-    def xrjs_getGeoClusters(self, REQUEST, path='', geo_types=None, geo_query=None,
+    def xrjs_getGeoClusters(self, REQUEST, path='', geo_types=[], geo_query=None,
             zoom_level=0, lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
             lat_center=0., lon_center=0., landscape_type=[], administrative_level=[], country=''):
         """ """
@@ -1077,7 +1076,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSymbolsListOrdered')
-    def getSymbolsListOrdered(self, skey='', rkey=''):
+    def getSymbolsListOrdered(self, skey='sortorder', rkey=''):
         """ return an ordered lsit of symbols """
         r = self.getSymbolsList()
         if skey in ['title', 'parent', 'sortorder']:
