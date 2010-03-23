@@ -188,6 +188,11 @@
                         </td>
                     </tal:block>
                 </tr>
+                <tr tal:condition="not: python:test(list_expired, True, upcoming_events)">
+                        <td colspan="3">
+                            <strong i18n:translate="">There are no upcoming events</strong>
+                        </td>
+                </tr>
             </table>
         </form>
     <tal:block define="global show_right_port_in_main_pt python:True" />
@@ -201,4 +206,3 @@
 
 </metal:block>
 </tal:block>
-
