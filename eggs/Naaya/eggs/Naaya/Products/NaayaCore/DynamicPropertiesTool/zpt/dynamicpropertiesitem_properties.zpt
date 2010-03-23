@@ -112,13 +112,14 @@ function show_selection() {
     var type = document.getElementById('type');
     var rl = document.getElementById('sel_list');
     if (type.value != 'selection') rl.style.display = 'none';
-    else rl.style.display = 'block'
-    }
+    else{
+		rl.style.display = 'block'
+		toggle_values(document.getElementById('ref_list'))
+	}
+}
 
 function toggle_values(elem) {
-    var values = document.getElementById('values')
-    if (elem.value != ''){ values.disabled = true }
-    else { values.disabled = false }
+    document.getElementById('values').disabled = elem.value?true:false
 }
 </script>
 
