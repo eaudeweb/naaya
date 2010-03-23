@@ -2,7 +2,7 @@
     value options/value|nothing;
     errors options/errors;
     prop_id here/prop_name;
-    geo_type_list python:here.getSite().getGeoMapTool().getSymbolsList()">
+    geo_type_list python:here.getSite().getGeoMapTool().getSymbolsListOrdered()">
     <label tal:attributes="for prop_id" class="widget-title">
         <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
         <span tal:condition="here/required" class="mandatory_field">*</span>
