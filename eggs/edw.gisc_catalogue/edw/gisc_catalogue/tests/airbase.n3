@@ -1,0 +1,61 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcmi: <http://purl.org/dc/dcmitype/> .
+@prefix gisc: <http://gisc.ew.eea.europa.eu/rdf/> .
+@prefix : <http://test.edw.ro/gisc_catalogue/eea/> .
+
+gisc:Product rdfs:subClassOf dcmi:Collection .
+gisc:Dataset rdfs:subClassOf dcmi:Dataset .
+gisc:DownloadLink rdfs:subClassOf rdf:Resource .
+
+gisc:availableFrom a rdf:Property .
+gisc:url a rdf:Property .
+gisc:startDate a rdf:Property .
+gisc:endDate a rdf:Property .
+gisc:indicator a rdf:Property .
+gisc:countryCode a rdf:Property .
+gisc:numberOfRecords a rdf:Property .
+gisc:fileSize a rdf:Property .
+
+:EEA a foaf:Organization ;
+     #owl:sameAs <http://rod.eionet.europa.eu/clients/3> ;
+     foaf:name "European Environment Agency" ;
+     foaf:homepage <http://www.eea.europa.eu/> .
+
+:AirBaseData a gisc:Product ;
+             dcterms:title "Eionet air quality database" ;
+             dcterms:description "AirBase is the public air quality database system of the EEA. It contains air quality monitoring data and information submitted by the participating countries throughout Europe." ;
+             foaf:homepage <http://air-climate.eionet.europa.eu/databases/airbase/> ;
+             dcterms:publisher :EEA ;
+             dcterms:modified "2010-03-04"^^xsd:date .
+
+:AirBaseStations a gisc:Dataset ;
+                 dcmi:isPartOf :AirBaseData ;
+                 dcterms:title "AirBase stations" ;
+                 dcterms:modified "2010-03-04"^^xsd:date ;
+                 gisc:availableFrom [ a gisc:DownloadLink ;
+                                      dcterms:format "text/html" ;
+                                      gisc:url <http://www.eea.europa.eu/data-and-maps/data/airbase-the-european-air-quality-database-2/airbase-stations> ] ;
+                 gisc:numberOfRecords 7379 .
+
+:AirBase_cz a gisc:Dataset ;
+            dcmi:isPartOf :AirBaseData ;
+            dcterms:title "AirBase data for Czech Republic" ;
+            dcterms:modified "2010-03-04"^^xsd:date ;
+            gisc:availableFrom [ a gisc:DownloadLink ;
+                                 dcterms:format "text/html" ;
+                                 gisc:url <http://www.eea.europa.eu/data-and-maps/data/airbase-the-european-air-quality-database-2/czech-republic> ] ;
+            dcterms:temporal [ a dcterms:PeriodOfTime ;
+                               gisc:startDate "1969-01-01"^^xsd:date ;
+                               gisc:endDate "2008-12-31"^^xsd:date ] ;
+            dcterms:spatial [ a dcterms:Jurisdiction ;
+                              gisc:countryCode "cz" ] ;
+            gisc:indicator "co2" ;
+            gisc:indicator "ch4" ;
+            gisc:fileSize 89714784 .
+

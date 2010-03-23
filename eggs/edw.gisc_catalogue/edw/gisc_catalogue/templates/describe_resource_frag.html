@@ -1,0 +1,10 @@
+<dl class="resource-properties">
+{%- for prop_name, prop_value_list in props %}
+    <dt>{{ prop_name }}</dt>
+    <dd><ul>
+    {%- for prop_value in prop_value_list %}
+        <li>{{ prop_value }}</li>
+    {% endfor -%}
+    </ul></dd>
+{% endfor -%}
+</dl>
