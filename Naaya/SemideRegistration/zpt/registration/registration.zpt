@@ -9,7 +9,7 @@
 <tal:block replace="structure string:<script>"/>
 	var autocomplete_data = <tal:block replace="structure here/getDelegations" />;
 	$(document).ready(function() {
-		$('#delegation_of').autocomplete(autocomplete_data, {multiple: true});
+		$('#delegation_of').autocomplete(autocomplete_data);
 	});
 <tal:block replace="structure string:</script>"/>
 <tal:block define="global registration_opened here/registrationOpened;
