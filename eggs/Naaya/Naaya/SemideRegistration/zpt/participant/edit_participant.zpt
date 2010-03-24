@@ -319,12 +319,12 @@
 		</div>
 		<div class="field">
 			<strong i18n:translate="">Participation in the 12/04 event</strong>
-			<input type="checkbox" name="extra_event_1" value="True"
+			<input style="margin-left: 1em;" type="checkbox" name="extra_event_1" value="True"
 				tal:attributes="checked request/extra_event_1|here/extra_event_1" />
 		</div>
 		<div class="field">
 			<strong i18n:translate="">Participation in the 14/04 activity</strong>
-			<input type="checkbox" name="extra_event_2" value="True"
+			<input style="margin-left: 1em;" type="checkbox" name="extra_event_2" value="True"
 				tal:attributes="checked request/extra_event_2|here/extra_event_2" />
 		</div>
 
