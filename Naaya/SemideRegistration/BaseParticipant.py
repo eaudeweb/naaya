@@ -39,9 +39,10 @@ class BaseParticipant(SimpleItem):
     def __init__(self, registration_no, delegation_of, participant_type,
                 first_name, last_name, position, work_address, city, postal_code,
                 country, phone_number, mobile_number, email, fax_number, passport_no,
-                languages, hotel, arrival_date, departure_date, arrival, arrival_time,
-                departure, departure_time, special_requests,
-                medical_requirements, special_diet, gender=''):
+                languages, hotel, arrival_date, departure_date, arrival, arrival_flight_number,
+                arrival_time, departure, departure_flight_number, departure_time,
+                special_requests, medical_requirements, special_diet, gender='',
+                extra_event_1=None, extra_event_2=None):
         """ constructor """
         self.id = registration_no
         self.delegation_of = delegation_of
@@ -64,21 +65,26 @@ class BaseParticipant(SimpleItem):
         self.arrival_date = str2date(arrival_date)
         self.departure_date = str2date(departure_date)
         self.arrival = arrival
+        self.arrival_flight_number = arrival_flight_number
         self.arrival_time = arrival_time
         self.departure = departure
+        self.departure_flight_number = departure_flight_number
         self.departure_time = departure_time
         self.special_requests = special_requests
         self.medical_requirements = medical_requirements
         self.special_diet = special_diet
+        self.extra_event_1 = extra_event_1
+        self.extra_event_2 = extra_event_2
         self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, delegation_of, participant_type, first_name, last_name,
             position, work_address, city, postal_code, country,
             phone_number, mobile_number, email, fax_number, passport_no,
-            languages, hotel, arrival_date, departure_date, arrival,
-            arrival_time, departure, departure_time, special_requests,
-            medical_requirements, special_diet, gender=''):
+            languages, hotel, arrival_date, departure_date, arrival, arrival_flight_number,
+            arrival_time, departure, departure_flight_number, departure_time,
+            special_requests, medical_requirements, special_diet, gender='',
+            extra_event_1=None, extra_event_2=None):
         """ edit properties """
         self.delegation_of = delegation_of
         self.participant_type = participant_type
@@ -100,12 +106,16 @@ class BaseParticipant(SimpleItem):
         self.arrival_date = str2date(arrival_date)
         self.departure_date = str2date(departure_date)
         self.arrival = arrival
+        self.arrival_flight_number = arrival_flight_number
         self.arrival_time = arrival_time
         self.departure = departure
+        self.departure_flight_number = departure_flight_number
         self.departure_time = departure_time
         self.special_requests = special_requests
         self.medical_requirements = medical_requirements
         self.special_diet = special_diet
+        self.extra_event_1 = extra_event_1
+        self.extra_event_2 = extra_event_2
 
     def getCountry(self, lang, prop_name='country'):
         """ get country name """
