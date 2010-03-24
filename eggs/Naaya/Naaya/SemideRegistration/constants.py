@@ -20,9 +20,9 @@
 
 #constants
 PART_MANDATORY_FIELDS = ['delegation_of', 'participant_type', 'last_name',
-                        'work_address', 'country', 'email', 'fax_number',
-                        'hotel', 'arrival_date', 'arrival_flight_number',
-                        'departure_date', 'departure_flight_number']
+                        'work_address', 'country', 'email', 'fax_number', 'hotel',
+                        'arrival_date', 'arrival_flight_number', 'arrival_flight_company',
+                        'departure_date', 'departure_flight_number', 'departure_flight_company']
 AUTH_MANDATORY_FIELDS = ['registration_no']
 
 DATE_FIELDS = ['arrival_date', 'departure_date']
