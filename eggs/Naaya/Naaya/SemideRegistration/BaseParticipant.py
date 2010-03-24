@@ -140,6 +140,7 @@ class BaseParticipant(SimpleItem):
         """ edit base participant properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
+        lang = self.gl_get_selected_language()
         if REQUEST.form.has_key('authenticate'):
             #The registration number and last name are saved on the session as submitted by the user
             session.set('authentication_id', REQUEST.get('registration_no'))
@@ -148,14 +149,15 @@ class BaseParticipant(SimpleItem):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
             if self.email == REQUEST.form.get('email', ''):
                 values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.title,
-                            'website_team': self.site_title,
+                            'conference_title': self.unicode2UTF8(self.aq_parent.title),
+                            'conference_details': self.unicode2UTF8(self.conference_details),
+                            'website_team': self.unicode2UTF8(self.site_title),
                             'registration_number': self.id,
-                            'last_name': self.last_name}
+                            'last_name': self.unicode2UTF8(self.last_name)}
                 self.send_registration_notification(self.email,
                     'Event registration',
-                    constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                    constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                    self.getEmailTemplate('user_registration_html', lang) % values,
+                    self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
@@ -180,6 +182,12 @@ class BaseParticipant(SimpleItem):
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
             if self.email == REQUEST.form.get('email', ''):
+                values = {'registration_edit_link': self.absolute_url(),
+                            'conference_title': self.unicode2UTF8(self.aq_parent.title),
+                            'conference_details': self.unicode2UTF8(self.conference_details),
+                            'website_team': self.unicode2UTF8(self.site_title),
+                            'registration_number': self.id,
+                            'last_name': self.unicode2UTF8(self.last_name)}
                 self.send_registration_notification(self.email,
                     'Event registration',
                     self.getEmailTemplate('user_registration_html', lang) % values,
@@ -198,8 +206,9 @@ class BaseParticipant(SimpleItem):
 
                 #send notifications
                 values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.title,
-                            'website_team': self.site_title,
+                            'conference_title': self.unicode2UTF8(self.title),
+                            'conference_details': self.unicode2UTF8(self.conference_details),
+                            'website_team': self.unicode2UTF8(self.site_title),
                             'registration_number': self.id}
                 self.send_registration_notification(self.administrative_email,
                     'Event registration',

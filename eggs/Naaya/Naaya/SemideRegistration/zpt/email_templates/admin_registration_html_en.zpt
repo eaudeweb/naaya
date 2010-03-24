@@ -5,7 +5,7 @@
             Hello,
         <p/>
         <p>
-            A new registration was received for the "%(registration_event)s". You can review the submitted information by following the link:
+            A new registration was received for the "%(conference_title)s". You can review the submitted information by following the link:
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>

@@ -167,7 +167,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
                     #send notifications
                     values = {'registration_edit_link': participant.absolute_url(),
-                                'registration_event': self.unicode2UTF8(self.title),
+                                'conference_title': self.unicode2UTF8(self.title),
+                                'conference_details': self.unicode2UTF8(self.conference_details),
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_number': registration_no,
                                 'last_name': self.unicode2UTF8(participant.last_name)}
@@ -207,7 +208,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
                     #send notifications
                     values = {'registration_edit_link': press.absolute_url(),
-                                'registration_event': self.unicode2UTF8(self.title),
+                                'conference_title': self.unicode2UTF8(self.title),
+                                'conference_details': self.unicode2UTF8(self.conference_details),
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_number': registration_no,
                                 'last_name': self.unicode2UTF8(press.last_name)}
