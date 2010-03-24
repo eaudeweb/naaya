@@ -1,6 +1,6 @@
 Hello, 
 
-A new registration was received for the "%(registration_event)s". You can review the submitted information by following the link:
+A new registration was received for the "%(conference_title)s". You can review the submitted information by following the link:
 
 %(registration_edit_link)s
 
