@@ -409,7 +409,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ """
         catalog = self.glossary_coverage.getGlossaryCatalog()
         brains = catalog(meta_type='Naaya Glossary Element', sort_on='id', sort_order='ascending')
-        return self.__getObjects(catalog, brains)
+        #if there are several glossaries, countries can get duplicated, so remove duplicates:
+        all_countries_list = self.__getObjects(catalog, brains)
+        country_list = {}
+        for country in all_countries_list:
+            country_list[country.id] = country
+        return self.utSortObjsListByAttr(country_list.values(), 'id', False)
 
     def __getObjects(self, catalog, p_brains):
         """ """

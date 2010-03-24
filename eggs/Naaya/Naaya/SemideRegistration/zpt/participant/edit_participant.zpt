@@ -203,7 +203,12 @@
 				tal:attributes="value request/languages|here/languages" />
 		</div>
 		<div class="field">
-			<label for="work_address" i18n:translate="">Hotel</label>
+			<label for="hotel" i18n:translate="">
+			<span i18n:translate="">Hotel</span> *</label>
+			<div tal:condition="python:request.has_key('hotel_error')"
+				class="message-error" i18n:translate="">
+				The hotel is mandatory!
+			</div>
 			<textarea rows="5" cols="31" name="hotel:utf8:ustring" 
 			tal:content="request/hotel|here/hotel" />
 		</div>
@@ -227,6 +232,16 @@
 			<label for="arrival" i18n:translate="">Means of transport, arrival</label>
 			<input type="text" name="arrival:utf8:ustring" size="50"
 				tal:attributes="value request/arrival|here/arrival" />
+		</div>
+		<div class="field">
+			<label class="mandatory" for="arrival_flight_number" i18n:translate="">
+			<span i18n:translate="">Flight number</span> *</label>
+			<div tal:condition="python:request.has_key('arrival_flight_number_error')"
+				class="message-error" i18n:translate="">
+				The arrival flight number is mandatory!
+			</div>
+			<input type="text" name="arrival_flight_number:utf8:ustring" size="50"
+				tal:attributes="value request/arrival_flight_number|here/arrival_flight_number" />
 		</div>
 		<div class="field">
 			<label for="arrival_time" i18n:translate="">Time of arrival (hh:mm)</label>
@@ -259,6 +274,16 @@
 				tal:attributes="value request/departure|here/departure" />
 		</div>
 		<div class="field">
+			<label class="mandatory" for="departure_flight_number" i18n:translate="">
+			<span i18n:translate="">Flight number</span> *</label>
+			<div tal:condition="python:request.has_key('departure_flight_number_error')"
+				class="message-error" i18n:translate="">
+				The departure flight number is mandatory!
+			</div>
+			<input type="text" name="departure_flight_number:utf8:ustring" size="50"
+				tal:attributes="value request/departure_flight_number|here/departure_flight_number" />
+		</div>
+		<div class="field">
 			<label for="departure_time" i18n:translate="">Time of departure (hh:mm)</label>
 			<div tal:condition="python:request.has_key('departure_time_notvalid')"
 				class="message-error" i18n:translate="">
@@ -281,6 +306,16 @@
 			<label for="special_diet" i18n:translate="">Special diet</label>
 			<input type="text" name="special_diet:utf8:ustring" size="50"
 				tal:attributes="value request/special_diet|here/special_diet" />
+		</div>
+		<div class="field">
+			<label for="extra_event_1" i18n:translate="">Participation in the 12/04 event</label>
+			<input type="checkbox" name="extra_event_1" value="True"
+				tal:attributes="checked request/extra_event_1|here/extra_event_1" />
+		</div>
+		<div class="field">
+			<label for="extra_event_2" i18n:translate="">Participation in the 14/04 activity</label>
+			<input type="checkbox" name="extra_event_2" value="True"
+				tal:attributes="checked request/extra_event_2|here/extra_event_2" />
 		</div>
 
 		<div class="field">

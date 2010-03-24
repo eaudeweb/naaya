@@ -138,6 +138,10 @@
 		<td tal:content="here/arrival" />
 	</tr>
 	<tr>
+		<th i18n:translate="">Flight number</th>
+		<td tal:content="here/arrival_flight_number" />
+	</tr>
+	<tr>
 		<th i18n:translate="">Time of arrival</th>
 		<td tal:content="here/arrival_time" />
 	</tr>
@@ -148,6 +152,10 @@
 	<tr>
 		<th i18n:translate="">Means of transport, departure</th>
 		<td tal:content="here/departure" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Flight number</th>
+		<td tal:content="here/departure_flight_number" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Time of departure</th>
@@ -164,6 +172,16 @@
 	<tr>
 		<th i18n:translate="">Special diet</th>
 		<td tal:content="here/special_diet" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Participation in the 12/04 event</th>
+		<td tal:condition="here/extra_event_1" i18n:translate="">Yes</td>
+		<td tal:condition="not:here/extra_event_1" i18n:translate="">No</td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Participation in the 14/04 activity</th>
+		<td tal:condition="here/extra_event_2" i18n:translate="">Yes</td>
+		<td tal:condition="not:here/extra_event_2" i18n:translate="">No</td>
 	</tr>
 	</table>
 </tal:block>
