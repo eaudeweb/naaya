@@ -335,7 +335,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             base_filter['meta_type'] = meta_types
 
-        base_filter['geo_type'] = geo_types
+        # if geo_types is None the filters should not include this key
+        if geo_types is not None:
+            base_filter['geo_type'] = geo_types
 
         if approved:
             base_filter['approved'] = 1
@@ -490,7 +492,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if float(lon_min) > float(lon_max):
             lon_min, lon_max = lon_max, lon_min
-
         if float(lon_min) < float(lon_center) < float(lon_max):
             filters = self.build_geo_filters(path=path, meta_types=meta_types,
                 geo_types=geo_types, approved=approved,
