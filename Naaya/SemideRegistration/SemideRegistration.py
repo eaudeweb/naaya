@@ -285,9 +285,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
                     'Participant type', 'First name', 'Name', 'Gender', 'Position',
                     'Work address', 'City', 'Postal code', 'Country', 'Phone number',
                     'Mobile number', 'Email', 'Fax number', 'Passport number', 'Language(s) spoken',
-                    'Date of arrival', 'Means of transport, arrival', 'Time of arrival',
-                    'Date of departure', 'Means of transport, departure ', 'Time of departure',
-                    'Special requests', 'Medical requirements', 'Special diet')]
+                    'Date of arrival', 'Time of arrival',
+                    'Arrival flight number', 'Arrival flight company',
+                    'Date of departure', 'Time of departure',
+                    'Departure flight number', 'Departure flight company',
+                    'Special requests', 'Medical requirements', 'Special diet',
+                    'Participation in the 12/04 event', 'Participation in the 14/04 activity')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
             if part.arrival_date:
@@ -298,6 +301,14 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 departure_date = self.formatDate(part.departure_date)
             else:
                 departure_date = 'n/a'
+            if part.extra_event_1:
+                extra_event_1 = 'Yes'
+            else:
+                extra_event_1 = 'No'
+            if part.extra_event_2:
+                extra_event_2 = 'Yes'
+            else:
+                extra_event_2 = 'No'
             data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.delegation_of),
             self.getRefTreeTitle(part.participant_type), self.unicode2UTF8(part.first_name),
             self.unicode2UTF8(part.last_name), self.unicode2UTF8(part.gender),
@@ -307,10 +318,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
             self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.mobile_number),
             part.email, self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.passport_no),
             self.unicode2UTF8(part.languages), 
-            arrival_date, self.unicode2UTF8(part.arrival), part.arrival_time,
-            departure_date, self.unicode2UTF8(part.departure), part.departure_time,
+            arrival_date, part.arrival_time,
+            self.unicode2UTF8(part.arrival_flight_number), self.unicode2UTF8(part.arrival_flight_company),
+            departure_date, part.departure_time,
+            self.unicode2UTF8(part.departure_flight_number), self.unicode2UTF8(part.departure_flight_company),
             self.unicode2UTF8(part.special_requests), self.unicode2UTF8(part.medical_requirements),
-            self.unicode2UTF8(part.special_diet)))
+            self.unicode2UTF8(part.special_diet), extra_event_1, extra_event_2))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 

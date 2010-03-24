@@ -134,32 +134,32 @@
 		<td tal:content="python:here.formatDate(here.arrival_date, '%d %b %Y')" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Means of transport, arrival</th>
-		<td tal:content="here/arrival" />
+		<th i18n:translate="">Time of arrival</th>
+		<td tal:content="here/arrival_time" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Flight number</th>
 		<td tal:content="here/arrival_flight_number" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Time of arrival</th>
-		<td tal:content="here/arrival_time" />
+		<th i18n:translate="">Flight company</th>
+		<td tal:content="here/arrival_flight_company" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Departure date</th>
 		<td tal:content="python:here.formatDate(here.departure_date, '%d %b %Y')" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Means of transport, departure</th>
-		<td tal:content="here/departure" />
+		<th i18n:translate="">Time of departure</th>
+		<td tal:content="here/departure_time" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Flight number</th>
 		<td tal:content="here/departure_flight_number" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Time of departure</th>
-		<td tal:content="here/departure_time" />
+		<th i18n:translate="">Flight company</th>
+		<td tal:content="here/departure_flight_company" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Special requests</th>
