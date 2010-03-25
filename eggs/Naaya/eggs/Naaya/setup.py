@@ -21,6 +21,7 @@ setup(name='Naaya',
           'vobject >= 0.8.1c',
           'gdata >= 2.0.5',
           'mimeparse >= 0.1.2',
+          'python-dateutil',
 
           # only used for testing:
           'twill >= 0.9',
