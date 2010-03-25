@@ -30,6 +30,7 @@ function fTreeClick(expand)
 <form><input type=button value="Close window" onclick="window.close()" style="font-size: 85%" /></form>
 
 <tal:block tal:define="expand python:request.get('expand', '');
+						form_name python:request.get('form_name', '');
 						tree python:here.getSiteMap(here.splitToList(expand), None, 0);
 						expand python:here.getSiteMapTrail(expand, tree);
 						expand_list python:here.splitToList(expand)">
@@ -59,7 +60,7 @@ function fTreeClick(expand)
 			</td>
 			<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
 			<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" 
-				tal:attributes="href node_path; onclick string:window.opener.createKey('${node_path}');; window.close();;" 
+				tal:attributes="href node_path; onclick string:window.opener.createKey('${node_path}', '${form_name}');; window.close();;" 
 				tal:content="python:tree_node[0].title_or_id()">folder</a></td>
 		</tr>
 		</table>
