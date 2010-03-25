@@ -25,6 +25,7 @@ import datetime
 
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
+from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
@@ -51,18 +52,38 @@ def redirect_to(tmpl):
         REQUEST.RESPONSE.redirect(url)
     return redirect
 
-class NaayaTemplateHelper(Implicit, object):
-    security = ClassSecurityInfo()
+class RestrictedToolkit(SimpleItem):
+    """
+    RestrictedToolkit exposes some useful methods to RestrictedPython
+    code (e.g. Scripts in ZODB, PageTemplates). You can get a hold of
+    the RestrictedPython instance (it's a singleton) easily:
 
-    def get_site(self):
-        return self.aq_parent
+      >>> rstk = self.rstk
+
+    It's pulled form the NySite object via acquisition.
+    """
+    security = ClassSecurityInfo()
+    # by default, all methods are "public"
 
     _button_form = PageTemplateFile('zpt/button_form.zpt', globals())
-    security.declarePublic('button_form')
     def button_form(self, **kwargs):
+        """
+        A simple one-button form, useful when a button that does POST
+        is more appropriate than a link that does GET.
+
+        It takes a few keyword arguments.
+        `label`: what text should appear on the button;
+        `button_title`: tooltip text for the button;
+        `action`: what should the form do (e.g. ``"POST"``);
+        `formdata`: dictionary of name/value pairs to be embedded as
+        hidden inputs in the form.
+
+        None of the fields are translated by default; it's your
+        responsability to do that before calling ``button_form``.
+        """
         return self._button_form(**kwargs)
 
-InitializeClass(NaayaTemplateHelper)
+InitializeClass(RestrictedToolkit)
 
 
 class CaptureTraverse(Implicit):

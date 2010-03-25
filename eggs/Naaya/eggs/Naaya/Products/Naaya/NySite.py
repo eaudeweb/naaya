@@ -108,7 +108,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
 
-from naaya.core.zope2util import NaayaTemplateHelper
+from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip
 
@@ -3780,14 +3780,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def translate_url(self, *args):
         return translate_url(*args)
 
-    def get_helper(self):
-        return NaayaTemplateHelper(ny_site=self)
-
-    @property
-    def helper(self):
-        return NaayaTemplateHelper(ny_site=self)
-
-    helper = NaayaTemplateHelper()
+    rstk = RestrictedToolkit()
 
 InitializeClass(NySite)
 
