@@ -53,32 +53,50 @@
 		</div>
 		<div class="field">
 			<label class="mandatory" for="participant_type">
-				<span i18n:translate="">Participant type</span> *</label>
+				<span i18n:translate="">Participation type</span> *</label>
 			<div tal:condition="python:request.has_key('participant_type_error')"
 				class="message-error" i18n:translate="">
 				The participant type is mandatory!
 			</div>
-			<select name="participant_type" tal:define="nodes here/getRefTreeNodes">
+			<select name="participant_type">
 				<option value=""></option>
-				<tal:block repeat="node nodes">
-					<option tal:attributes="value python:node[0]; 
-											selected python:node[0] == request.get('participant_type')" 
-							tal:content="python:node[1]" />
-				</tal:block>
+					<option value="0" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '0'" >
+						Head of delegation</option>
+					<option value="1" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '1'" >
+						Member of delegation (1)</option>
+					<option value="2" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '2'" >
+						Member of delegation (2)</option>
+					<option value="3" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '3'" >
+						Observer</option>
+					<option value="4" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '4'" >
+						Press</option>
+					<option value="5" i18n:translate=""
+					tal:attributes="selected python:request.get('participant_type') == '5'" >
+						Security</option>
 			</select>
 		</div>
 		<div class="field">
 			<label class="mandatory" for="last_name">
-				<span i18n:translate="">Name</span> *</label>
+				<span i18n:translate="">Surname</span> *</label>
 			<div tal:condition="python:request.has_key('last_name_error')"
 				class="message-error" i18n:translate="">
-				The name is mandatory!
+				The surname is mandatory!
 			</div>
 			<input type="text" name="last_name:utf8:ustring" size="50"
 				tal:attributes="value request/last_name|nothing" />
 		</div>
 		<div class="field">
-			<label for="first_name" i18n:translate="">First name</label>
+			<label class="mandatory" for="first_name">
+				<span i18n:translate="">First name</span> *</label>
+			<div tal:condition="python:request.has_key('first_name_error')"
+				class="message-error" i18n:translate="">
+				The first name is mandatory!
+			</div>
 			<input type="text" name="first_name:utf8:ustring" size="50"
 				tal:attributes="value request/first_name|nothing" />
 		</div>
@@ -91,17 +109,17 @@
 				tal:attributes="checked python:test(gender=='Female', True, None)" /> <span i18n:translate="">Female</span>
 		</div>
 		<div class="field">
-			<label for="position" i18n:translate="">Position</label>
+			<label class="mandatory" for="position">
+				<span i18n:translate="">Position</span> *</label>
+			<div tal:condition="python:request.has_key('position_error')"
+				class="message-error" i18n:translate="">
+				The position is mandatory!
+			</div>
 			<input type="text" name="position:utf8:ustring" size="50"
 				tal:attributes="value request/position|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="work_address">
-				<span i18n:translate="">Work address</span> *</label>
-			<div tal:condition="python:request.has_key('work_address_error')"
-				class="message-error" i18n:translate="">
-				The work address is mandatory!
-			</div>
+			<label for="city" i18n:translate="">Work address</label>
 			<textarea rows="5" cols="31" name="work_address:utf8:ustring" 
 			tal:content="request/work_address|nothing" />
 		</div>
@@ -144,6 +162,11 @@
 				tal:attributes="value request/mobile_number|nothing" />
 		</div>
 		<div class="field">
+			<label for="fax_number" i18n:translate="">Fax number</label>
+			<input type="text" name="fax_number:utf8:ustring" size="50"
+				tal:attributes="value request/fax_number|nothing" />
+		</div>
+		<div class="field">
 			<label class="mandatory" for="email">
 				<span i18n:translate="">Email</span> *</label>
 			<div tal:condition="python:request.has_key('email_error')"
@@ -158,17 +181,12 @@
 				tal:attributes="value request/email|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="fax_number">
-				<span i18n:translate="">Fax number</span> *</label>
-			<div tal:condition="python:request.has_key('fax_number_error')"
+			<label class="mandatory" for="passport_no">
+				<span i18n:translate="">Passport number</span> *</label>
+			<div tal:condition="python:request.has_key('passport_no_error')"
 				class="message-error" i18n:translate="">
-				The fax number is mandatory!
+				The passport number is mandatory!
 			</div>
-			<input type="text" name="fax_number:utf8:ustring" size="50"
-				tal:attributes="value request/fax_number|nothing" />
-		</div>
-		<div class="field">
-			<label for="passport_no" i18n:translate="">Passport number</label>
 			<input type="text" name="passport_no:utf8:ustring" size="50"
 				tal:attributes="value request/passport_no|nothing" />
 		</div>
@@ -179,7 +197,7 @@
 		</div>
 		<div class="field">
 			<label for="hotel" i18n:translate="">
-			<span i18n:translate="">Hotel</span> *</label>
+				<span i18n:translate="">Hotel</span> *</label>
 			<div tal:condition="python:request.has_key('hotel_error')"
 				class="message-error" i18n:translate="">
 				The hotel is mandatory!
@@ -223,12 +241,7 @@
 				tal:attributes="value request/arrival_flight_number|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="arrival_flight_company" i18n:translate="">
-			<span i18n:translate="">Flight company</span> *</label>
-			<div tal:condition="python:request.has_key('arrival_flight_company_error')"
-				class="message-error" i18n:translate="">
-				The arrival flight company is mandatory!
-			</div>
+			<label for="arrival_flight_company" i18n:translate="">Flight company</label>
 			<input type="text" name="arrival_flight_company:utf8:ustring" size="50"
 				tal:attributes="value request/arrival_flight_company|nothing" />
 		</div>
@@ -268,12 +281,7 @@
 				tal:attributes="value request/departure_flight_number|nothing" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="departure_flight_company" i18n:translate="">
-			<span i18n:translate="">Flight company</span> *</label>
-			<div tal:condition="python:request.has_key('departure_flight_company_error')"
-				class="message-error" i18n:translate="">
-				The departure flight company is mandatory!
-			</div>
+			<label for="departure_flight_company" i18n:translate="">Flight company</label>
 			<input type="text" name="departure_flight_company:utf8:ustring" size="50"
 				tal:attributes="value request/departure_flight_company|nothing" />
 		</div>
@@ -293,14 +301,21 @@
 				tal:attributes="value request/special_diet|nothing" />
 		</div>
 		<div class="field">
-			<strong i18n:translate="">Participation in the 12/04 event</strong>
+			<strong i18n:translate="">Participation in the
+				Informal Open Technical Workshop 12/04 event</strong>
 			<input style="margin-left: 1em;" type="checkbox" name="extra_event_1" value="True"
 				tal:attributes="checked request/extra_event_1|nothing" />
 		</div>
 		<div class="field">
-			<strong i18n:translate="">Participation in the 14/04 activity</strong>
+			<strong i18n:translate="">Participation in the technical visit 14/04</strong>
 			<input style="margin-left: 1em;" type="checkbox" name="extra_event_2" value="True"
 				tal:attributes="checked request/extra_event_2|nothing" />
+		</div>
+		<div class="field">
+			<strong i18n:translate="">Participation in the gala dinner
+				(Mininter + one member of the delegation)</strong>
+			<input style="margin-left: 1em;" type="checkbox" name="extra_event_3" value="True"
+				tal:attributes="checked request/extra_event_3|nothing" />
 		</div>
 
 		<div class="field">

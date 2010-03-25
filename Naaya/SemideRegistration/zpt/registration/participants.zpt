@@ -213,7 +213,7 @@
 		</td>
 		<td tal:content="python:here.formatDate(participant.registration_date, '%d %b %Y')" />
 		<td tal:content="participant/delegation_of" />
-		<td tal:content="python:participant.getRefTreeTitle(participant.participant_type)" />
+		<td tal:content="python:here.getParticipantLabel(participant.participant_type)" />
 		<td tal:content="participant/first_name" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}"

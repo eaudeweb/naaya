@@ -44,17 +44,6 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
     """ Adds a Semide registration instance"""
     if registration_validation(REQUEST):
 
-        ptool = self.getPortletsTool()
-        list_id = 'conference_participant_types'
-        itopics = getattr(ptool, list_id, None)
-        if not itopics:
-            ptool.manage_addRefTree(list_id, 'Participant types')
-            itopics = getattr(ptool, list_id, None)
-            item_no = 0
-            for list_item in constants.PARTICIPANT_TYPES:
-                itopics.manage_addRefTreeNode(item_no, list_item)
-                item_no += 1
-
         if id:
             id = slugify(id)
         else:
@@ -292,7 +281,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
                     'Date of departure', 'Time of departure',
                     'Departure flight number', 'Departure flight company',
                     'Special requests', 'Medical requirements', 'Special diet',
-                    'Participation in the 12/04 event', 'Participation in the 14/04 activity')]
+                    'Participation in the Informal Open Technical Workshop 12/04 event',
+                    'Participation in the technical visit 14/04', 'Participation in the gala dinner')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
             if part.arrival_date:
@@ -311,8 +301,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 extra_event_2 = 'Yes'
             else:
                 extra_event_2 = 'No'
+            if part.extra_event_3:
+                extra_event_3 = 'Yes'
+            else:
+                extra_event_3 = 'No'
             data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.delegation_of),
-            self.getRefTreeTitle(part.participant_type), self.unicode2UTF8(part.first_name),
+            self.getParticipantLabel(part.participant_type), self.unicode2UTF8(part.first_name),
             self.unicode2UTF8(part.last_name), self.unicode2UTF8(part.gender),
             self.unicode2UTF8(part.position),
             self.unicode2UTF8(part.work_address).replace('\r\n', ' ').replace('\n', ' '),
@@ -325,7 +319,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             departure_date, part.departure_time,
             self.unicode2UTF8(part.departure_flight_number), self.unicode2UTF8(part.departure_flight_company),
             self.unicode2UTF8(part.special_requests), self.unicode2UTF8(part.medical_requirements),
-            self.unicode2UTF8(part.special_diet), extra_event_1, extra_event_2))
+            self.unicode2UTF8(part.special_diet), extra_event_1, extra_event_2, extra_event_3))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -442,23 +436,9 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ """
         return None
 
-    def getRefTree(self, ref_tree_id):
+    def getParticipantLabel(self, list_index):
         """ """
-        return self.getPortletsTool().getRefTreeById(ref_tree_id)
-
-    def getRefTreeNodes(self, ref_tree_id='conference_participant_types'):
-        """ """
-        ref_tree = self.getRefTree(ref_tree_id)
-        nodes = ref_tree.get_tree_nodes()
-        return [(node.id, node.title) for node in nodes]
-
-    def getRefTreeTitle(self, node_id, ref_tree_id='conference_participant_types'):
-        """ """
-        ref_tree = self.getRefTree(ref_tree_id)
-        for node in ref_tree.get_tree_nodes():
-            if node.id == node_id:
-                return node.title
-        return None
+        return constants.PARTICIPANT_TYPES[int(list_index)]
 
     security.declareProtected(constants.VIEW_PERMISSION, 'getDelegations')
     def getDelegations(self, meta_type='Semide Participant'):
