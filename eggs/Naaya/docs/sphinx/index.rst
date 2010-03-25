@@ -15,6 +15,7 @@ Contents:
    pluggable_content
    permissions
    stylesheets
+   restricted_toolkit
 
 Indices and tables
 ==================

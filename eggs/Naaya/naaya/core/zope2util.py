@@ -83,6 +83,28 @@ class RestrictedToolkit(SimpleItem):
         """
         return self._button_form(**kwargs)
 
+    def parse_string_to_datetime(self, date_string):
+        """
+        Parse a date/time string to a Python ``datetime.datetime``
+        object.
+        """
+        from dateutil.parser import parse
+        return parse(date_string)
+
+    def convert_datetime_to_DateTime(self, dt):
+        """
+        Convert a Python ``datetime.datetime`` object to a
+        Zope2 ``DateTime``.
+        """
+        return dt2DT(dt)
+
+    def convert_DateTime_to_datetime(self, DT):
+        """
+        Convert a Zope2 ``DateTime object`` to a Python
+        ``datetime.datetime``.
+        """
+        return DT2dt(DT)
+
 InitializeClass(RestrictedToolkit)
 
 
