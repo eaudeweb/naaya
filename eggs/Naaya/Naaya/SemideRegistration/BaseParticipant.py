@@ -43,7 +43,7 @@ class BaseParticipant(SimpleItem):
                 arrival_flight_number, arrival_flight_company, arrival_time,
                 departure_flight_number, departure_flight_company, departure_time,
                 special_requests, medical_requirements, special_diet, gender='',
-                extra_event_1=None, extra_event_2=None):
+                extra_event_1=None, extra_event_2=None, extra_event_3=None):
         """ constructor """
         self.id = registration_no
         self.delegation_of = delegation_of
@@ -76,6 +76,7 @@ class BaseParticipant(SimpleItem):
         self.special_diet = special_diet
         self.extra_event_1 = extra_event_1
         self.extra_event_2 = extra_event_2
+        self.extra_event_3 = extra_event_3
         self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
@@ -86,7 +87,7 @@ class BaseParticipant(SimpleItem):
             arrival_flight_number, arrival_flight_company, arrival_time,
             departure_flight_number, departure_flight_company, departure_time,
             special_requests, medical_requirements, special_diet, gender='',
-            extra_event_1=None, extra_event_2=None):
+            extra_event_1=None, extra_event_2=None, extra_event_3=None):
         """ edit properties """
         self.delegation_of = delegation_of
         self.participant_type = participant_type
@@ -118,6 +119,7 @@ class BaseParticipant(SimpleItem):
         self.special_diet = special_diet
         self.extra_event_1 = extra_event_1
         self.extra_event_2 = extra_event_2
+        self.extra_event_3 = extra_event_3
 
     def getCountry(self, lang, prop_name='country'):
         """ get country name """
@@ -206,7 +208,7 @@ class BaseParticipant(SimpleItem):
 
                 #send notifications
                 values = {'registration_edit_link': self.absolute_url(),
-                            'conference_title': self.unicode2UTF8(self.title),
+                            'conference_title': self.unicode2UTF8(self.aq_parent.title),
                             'conference_details': self.unicode2UTF8(self.conference_details),
                             'website_team': self.unicode2UTF8(self.site_title),
                             'registration_number': self.id}

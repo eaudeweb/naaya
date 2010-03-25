@@ -70,10 +70,21 @@
 		<td tal:content="here/delegation_of" />
 	</tr>
 	<tr>
-		<th i18n:translate="" tal:content="python:here.getRefTreeTitle(here.participant_type)" />
+		<th i18n:translate="" tal:condition="python:here.participant_type == '0'" >
+			Head of delegation</th>
+		<th i18n:translate="" tal:condition="python:here.participant_type == '1'" >
+			Member of delegation (1)</th>
+		<th i18n:translate="" tal:condition="python:here.participant_type == '2'" >
+			Member of delegation (2)</th>
+		<th i18n:translate="" tal:condition="python:here.participant_type == '3'" >
+			Observer</th>
+		<th i18n:translate="" tal:condition="python:here.participant_type == '4'" >
+			Press</th>
+		<th i18n:translate="" tal:condition="python:here.participant_type == '5'" >
+			Security</th>
 	</tr>
 	<tr>
-		<th i18n:translate="">Name</th>
+		<th i18n:translate="">Surname</th>
 		<td tal:content="here/last_name" />
 	</tr>
 	<tr>
@@ -174,14 +185,21 @@
 		<td tal:content="here/special_diet" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Participation in the 12/04 event</th>
+		<th i18n:translate="">Participation in the<br/>
+			Informal Open Technical Workshop 12/04 event</th>
 		<td tal:condition="here/extra_event_1" i18n:translate="">Yes</td>
 		<td tal:condition="not:here/extra_event_1" i18n:translate="">No</td>
 	</tr>
 	<tr>
-		<th i18n:translate="">Participation in the 14/04 activity</th>
+		<th i18n:translate="">Participation in the technical visit 14/04</th>
 		<td tal:condition="here/extra_event_2" i18n:translate="">Yes</td>
 		<td tal:condition="not:here/extra_event_2" i18n:translate="">No</td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Participation in the gala dinner<br/>
+			(Mininter + one member of the delegation)</th>
+		<td tal:condition="here/extra_event_3" i18n:translate="">Yes</td>
+		<td tal:condition="not:here/extra_event_3" i18n:translate="">No</td>
 	</tr>
 	</table>
 </tal:block>

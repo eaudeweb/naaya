@@ -19,18 +19,23 @@
 # Valentin Dumitru, Eau de Web
 
 #constants
-PART_MANDATORY_FIELDS = ['delegation_of', 'participant_type', 'last_name',
-                        'work_address', 'country', 'email', 'fax_number', 'hotel',
-                        'arrival_date', 'arrival_flight_number', 'arrival_flight_company',
-                        'departure_date', 'departure_flight_number', 'departure_flight_company']
+PART_MANDATORY_FIELDS = ['delegation_of', 'participant_type', 'last_name', 'first_name',
+                        'position', 'country', 'email', 'passport_no', 'hotel',
+                        'arrival_date', 'arrival_flight_number',
+                        'departure_date', 'departure_flight_number']
 AUTH_MANDATORY_FIELDS = ['registration_no']
 
 DATE_FIELDS = ['arrival_date', 'departure_date']
 TIME_FIELDS = ['arrival_time', 'departure_time']
 
-PARTICIPANT_TYPES = ['Head of delegation', 'Member of delegation', 'Observer', 'Press', 'Security']
+PARTICIPANT_TYPES = ['Head of delegation',
+                    'Member of delegation (1)',
+                    'Member of delegation (2)',
+                    'Observer',
+                    'Press',
+                    'Security']
 
-SMTP_HOST = 'localhost'
+SMTP_HOST = 'mail.eaudeweb.ro'
 SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@ufm-water.net'
 
