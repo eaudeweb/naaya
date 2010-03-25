@@ -1,27 +1,30 @@
+<script type="text/javascript"
+        tal:content="string:var sitemap_url='${here/getAuthenticationToolPath
+                                               }/sitemap';" />
 <script type="text/javascript">
 <!--
 
-function setupWin(url, theWidth, theHeight)
-{
-   pickLocation();
-   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-   wwinn.focus();
-   return true;
+function onclick_pick_location(form_name) {
+    pickLocation(form_name);
+    wwinn = window.open(sitemap_url + '?form_name='+form_name, 'wwinn',
+        'width=400,height=500,scrollbars,top=50,left=600');
+    wwinn.focus();
+    return true;
 }
 
-function emptyLocation()
+function emptyLocation(form_name)
 {
-   if (document.forms['frmUsersRoles'].loc[0].checked == true)
-       document.forms['frmUsersRoles'].location.value = '';
+   if (document.forms[form_name].loc[0].checked == true)
+       document.forms[form_name].location.value = '';
 }
 
-function pickLocation()
+function pickLocation(form_name)
 {
-   document.forms['frmUsersRoles'].loc[1].checked = true;
+   document.forms[form_name].loc[1].checked = true;
 }
 
-function createKey(key)
-{    document.forms['frmUsersRoles'].location.value = key;}
+function createKey(key, form_name)
+{    document.forms[form_name].location.value = key;}
 
 var set_roles_target = '';
 function fPickRoles(url, target)
@@ -233,7 +236,8 @@ function toggleSelect()
 	Users found with <strong tal:content="role" /> role
 </p>
 
-<form name="userRoles" method="post" tal:attributes="action string:${here/absolute_url}/addUserRoles">
+<form name="user-roles" method="post"
+      tal:attributes="action string:${here/absolute_url}/addUserRoles">
 <table class="datatable" width="95%">
 	<tr>
 		<th></th>
@@ -265,10 +269,10 @@ function toggleSelect()
 	<tr>
 		<td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
 		<td>
-			<input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation();" /> Entire portal<br />
+			<input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation('user-roles');" /> Entire portal<br />
 			<input type=radio name="loc" value="other" tal:attributes="checked req_location" /> Pick other...<br />
 			<input type=text name="location" size="50" onclick="pickLocation();" value="" tal:attributes="value req_location" />
-			<input type="button" value="Pick" tal:attributes="onclick string:javascript:setupWin('${here/getAuthenticationToolPath}/sitemap', 400, 500);" />
+			<input type="button" value="Pick" tal:attributes="onclick string:javascript:onclick_pick_location('user-roles');" />
 		</td>
 	</tr>
 	<tr>
@@ -334,7 +338,7 @@ function toggleSelect()
     <hr />
     </form>
 
-   <form name="frmUsersRoles" method="post"
+   <form name="group-roles" method="post"
           tal:attributes="action string:${here/absolute_url}/map_group_to_role">
         <p i18n:translate="">
             Type a LDAP group or select one from the list generated
@@ -361,16 +365,15 @@ function toggleSelect()
 
         <div class="field">
             <input type="radio" name="loc" value="allsite" checked="checked"
-                   onclick="emptyLocation();"
+                   onclick="emptyLocation('group-roles');"
                    i18n:translate=""/> Entire portal<br />
             <input type=radio name="loc" value="other"
                    i18n:translate="" /> Pick other...<br />
             <input type=text name="location" size="40" onclick="pickLocation();" value="" />
             <input type="button" value="Pick" i18n:translate=""
                    tal:define="site here/getSite;
-                               acl_users site/getAuthenticationTool;
-                               acl_users_path acl_users/absolute_url"
-                   tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
+                               acl_users site/getAuthenticationTool"
+                   tal:attributes="onclick string:onclick_pick_location('group-roles');;" />
         </div>
 
         <input type="submit" value="Grant roles" i18n:attributes="value"/>

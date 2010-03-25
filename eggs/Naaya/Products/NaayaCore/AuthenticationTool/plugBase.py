@@ -100,6 +100,12 @@ class PlugBase(SimpleItem):
         else: name = self.utConvertToList(name)
         if loc == 'allsite': location = site
         else: location = self.utGetObject(location)
+        if location is None:
+            if REQUEST is not None:
+                self.setSessionErrors(['Invalid location path'])
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            else:
+                raise ValueError('Invalid location')
         if roles == '': roles = []
         else: roles = self.utConvertToList(roles)
         #assing roles
