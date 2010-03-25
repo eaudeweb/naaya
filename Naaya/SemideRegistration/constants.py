@@ -35,7 +35,7 @@ PARTICIPANT_TYPES = ['Head of delegation',
                     'Press',
                     'Security']
 
-SMTP_HOST = 'mail.eaudeweb.ro'
+SMTP_HOST = 'localhost'
 SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@ufm-water.net'
 
