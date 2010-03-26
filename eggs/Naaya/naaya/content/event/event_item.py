@@ -446,6 +446,7 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
         cal = vobject.iCalendar()
         cal.add('prodid').value = '-//European Environment Agency//Naaya//EN'
+        cal.add('method').value = 'PUBLISH'
         cal.add('vevent')
 
         cal.vevent.add('uid').value = self.absolute_url() + '/get_ics'
