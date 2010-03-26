@@ -60,7 +60,8 @@ function fTreeClick(expand)
 			</td>
 			<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
 			<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" 
-				tal:attributes="href node_path; onclick string:window.opener.createKey('${node_path}', '${form_name}');; window.close();;" 
+				href="#"
+				tal:attributes="onclick string:window.opener.createKey('${node_path}', '${form_name}');; window.close();;" 
 				tal:content="python:tree_node[0].title_or_id()">folder</a></td>
 		</tr>
 		</table>
@@ -68,6 +69,7 @@ function fTreeClick(expand)
 </tr>
 </table>
 <input type="hidden" name="expand" tal:attributes="value expand" />
+<input type="hidden" name="form_name" tal:attributes="value form_name" />
 </form>
 </tal:block>
 
