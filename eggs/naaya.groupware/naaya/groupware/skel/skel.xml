@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
     <forms>
-        <form id="languages_box" title="Box for changing the language on pages"/>
         <form id="site_login" title="Portal login"/>
         <form id="site_admin_properties" title="Portal properties"/>
         <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
