@@ -64,7 +64,6 @@ class GroupwareSite(NySite):
         #load groupware skel
         self.loadSkeleton(Globals.package_home(globals()))
 
-        addNyFolder(self, id="library", title="Library", submitted=1)
         if rdf_calendar_available:
             events_rdf = self.getSyndicationTool()['latestevents_rdf']
             manage_addRDFCalendar(self, id="portal_rdfcalendar", title="Events calendar")
@@ -72,6 +71,7 @@ class GroupwareSite(NySite):
             summary_add.manage_addRDFSummary('latest_events', 'events',
                                              events_rdf.absolute_url(),
                                              '', 'yes')
+        self.getPortletsTool().assign_portlet('library', 'right', 'portlet_latestuploads_rdf', True)
 
     def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER']
