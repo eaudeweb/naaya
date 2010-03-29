@@ -76,7 +76,7 @@
 }
 .buttons a {
 	text-decoration: none;
-	background: #ffffff; 
+	background: #ffffff;
 	color: #666;
 	line-height: 2em;
 	border-left:2px solid #EEEEEE;
@@ -136,7 +136,7 @@ a.button-like, a.button-like:visited {
 	border-top:1px solid #bbb;
 	border-bottom:1px solid #666;
 	border-right:1px solid #666;
-	padding:2px 2px; 
+	padding:2px 2px;
 	font-size: 90%;
 }
 #admin_this_folder span {
@@ -473,8 +473,8 @@ div.translate-top {
 
 /*  Comment box form */
 .comment_box {
-	background-color:#FAFAFA; 
-	border: 1px dashed #cccccc; 
+	background-color:#FAFAFA;
+	border: 1px dashed #cccccc;
 	margin:1em;
 	padding:1em;
 	}
@@ -542,24 +542,24 @@ div.translate-top {
 	background-position: left center;
 }
 .commentbox_content {
-	color:#666666; 
+	color:#666666;
 	font-size: 80%;
 }
 .commentbox_add {
 	margin: 1em;
 }
 .hr_addcomment {
-	border-top: 1px solid #eaeaea; 
+	border-top: 1px solid #eaeaea;
 	border-bottom:1px solid white;
 }
 .hr_inside_comment {
-	border-top: 1px solid #eaeaea; 
-	border-bottom:1px solid white; 
+	border-top: 1px solid #eaeaea;
+	border-bottom:1px solid white;
 	margin-top:0.5em;
 }
 
 .hr_invisible {
-	clear: both; 
+	clear: both;
 	border: 1px solid white;
 }
 
@@ -611,14 +611,14 @@ tr.not-duplicate {
 }
 .roles_per_folder li {
 	margin: 3px 0 3px 0px;
-	background-color: #eaeaea; 
+	background-color: #eaeaea;
 	padding: 4px;
 }
 .folder_of_roles {
-	display: inline; 
+	display: inline;
 }
 .list_of_roles {
-	display: inline; 
+	display: inline;
 }
 
 /* Pop up windows used as pickers */
@@ -633,7 +633,7 @@ tr.not-duplicate {
 .pick_pop_up h1 {
 	margin-top: 0.8em;
 	position: relative;
-	color:#8da559; /*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/	
+	color:#8da559;/*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/	
 	color: #666666;	
 	font-family: arial, sans-serif;
 	font-size: 1.9em;
@@ -664,7 +664,7 @@ tr.not-duplicate {
 /* Thesaurus style */
 .h2term {
 	font-family: Arial, Verdana;
-	margin-bottom: 20px;  
+	margin-bottom: 20px; 
 }
 .bar {
 	background-color: #EFF6FA;
@@ -726,132 +726,132 @@ div.xmlExportButtons a.xml {
 }
 
 /* calendars & clocks */ 
- .calendarbox, .clockbox { 
-	margin:5px auto; 
-	font-size:11px; 
-	width:16em; 
-	text-align:center; 
-	background:white; 
-	position:relative; 
+.calendarbox, .clockbox {
+	margin:5px auto;
+	font-size:11px;
+	width:16em;
+	text-align:center;
+	background:white;
+	position:relative;
 	border: 1px solid #ccc;
- } 
- .clockbox { 
-	width:9em; 
- } 
- .calendar { 
-	margin:0; padding: 0; 
- } 
- .calendar table { 
-	margin:0; padding:0; 
-	border-collapse:collapse; 
-	background:white; 
-	width:99%; 
- } 
- .calendar caption, .calendarbox h2 { 
-	 margin: 0; 
-	 font-size:11px; 
-	 text-align:center; 
-	 border-top:none; 
- } 
- .calendar th { 
-	 font-size:10px; 
-	 color:#666; 
-	 padding:2px 3px; 
-	 text-align:center; 
-	 background:#e1e1e1 url(misc_/Naaya/nav-bg.gif) 0 50% repeat-x; 
-	 border-bottom:1px solid #ddd; 
- } 
- .calendar td { 
-	 font-size:11px; 
-	 text-align: center; 
-	 padding: 0; 
-	 border-top:1px solid #eee; 
-	 border-bottom:none; 
- } 
- .calendar td.selected a { 
-	 background: #C9DBED; 
- } 
- .calendar td.nonday { 
-	 background:#efefef; 
- }
- .calendar td.today a { 
-	 background:#ffc; 
- } 
- .calendar td a, .timelist a { 
-	 display: block; 
-	 font-weight:bold; 
-	 padding:4px; 
-	 text-decoration: none; 
-	 color:#444; 
- } 
- .calendar td a:hover, .timelist a:hover { 
-	 background: #5b80b2; 
-	 color:white; 
- } 
- .calendar td a:active, .timelist a:active { 
-	 background: #036; 
-	 color:white; 
- } 
- .calendarnav { 
-	 font-size:10px; 
-	 text-align: center; 
-	 color:#ccc; margin:0; 
-	 padding:1px 3px; 
- } 
- .calendarnav a:link, #calendarnav a:visited, #calendarnav a:hover { 
-	color: #999; 
+}
+.clockbox {
+	width:9em;
+}
+.calendar {
+	margin:0;padding: 0;
+}
+.calendar table {
+	margin:0;padding:0;
+	border-collapse:collapse;
+	background:white;
+	width:99%;
+}
+.calendar caption,.calendarbox h2 {
+	margin: 0;
+	font-size:11px;
+	text-align:center;
+	border-top:none;
+}
+.calendar th {
+	font-size:10px;
+	color:#666;
+	padding:2px 3px;
+	text-align:center;
+	background:#e1e1e1 url(misc_/Naaya/nav-bg.gif) 0 50% repeat-x;
+	border-bottom:1px solid #ddd;
+}
+.calendar td {
+	font-size:11px;
+	text-align: center;
+	padding: 0;
+	border-top:1px solid #eee;
+	border-bottom:none;
+}
+.calendar td.selected a {
+	background: #C9DBED;
+}
+.calendar td.nonday {
+	background:#efefef;
+}
+.calendar td.today a {
+	 background:#ffc;
+}
+.calendar td a, .timelist a {
+	 display: block;
+	 font-weight:bold;
+	 padding:4px;
+	 text-decoration: none;
+	 color:#444;
+)
+.calendar td a:hover, .timelist a:hover {
+	 background: #5b80b2;
+	 color:white;
+)
+.calendar td a:active, .timelist a:active {
+	 background: #036;
+	 color:white;
+)
+.calendarnav {
+	 font-size:10px;
+	 text-align: center;
+	 color:#ccc;margin:0;
+	 padding:1px 3px;
+)
+.calendarnav a:link, #calendarnav a:visited, #calendarnav a:hover {
+	color: #999;
 	text-decoration: none;
 	font-weight: bold;
 	padding: 3px;
- } 
- .calendar-shortcuts { 
-	background:white; 
-	font-size:10px; 
-	line-height:11px; 
-	border-top:1px solid #eee; 
-	padding:3px 0 4px; 
-	color:#ccc; 
- } 
- .calendarbox .calendarnav-previous, .calendarbox .calendarnav-next { 
-	 display:block; 
-	 position:absolute; 
-	 font-weight:bold; 
-	 font-size:12px; 
-	 background:#C9DBED url(misc_/Naaya/default-bg.gif) bottom left repeat-x; 
-	 padding:1px 4px 2px 4px; 
-	 color:white; 
+)
+.calendar-shortcuts {
+	background:white;
+	font-size:10px;
+	line-height:11px;
+	border-top:1px solid #eee;
+	padding:3px 0 4px;
+	color:#ccc;
+)
+.calendarbox.calendarnav-previous,.calendarbox.calendarnav-next {
+	 display:block;
+	 position:absolute;
+	 font-weight:bold;
+	 font-size:12px;
+	 background:#C9DBED url(misc_/Naaya/default-bg.gif) bottom left repeat-x;
+	 padding:1px 4px 2px 4px;
+	 color:white;
 	 text-decoration: none;
- } 
- .calendarnav-previous:hover, .calendarnav-next:hover { 
-	 background:#036; 
- } 
- .calendarnav-previous { 
-	 top:0; left:0; 
- } 
- .calendarnav-next { 
-	 top:0; right:0; 
- } 
- .calendar-cancel { 
-	 margin:0 !important; 
+)
+.calendarnav-previous:hover,.calendarnav-next:hover {
+	 background:#036;
+)
+.calendarnav-previous {
+	 top:0;left:0;
+)
+.calendarnav-next {
+	 top:0;right:0;
+)
+.calendar-cancel {
+	 margin:0 !important;
 	 padding: 4px 0;
-	 color: #000 !important; 
-	 font-size:10px; 
-	 background:#e1e1e1; 
-	 border-top:1px solid #ddd; 
- } 
- .calendar-cancel a { 
-	 padding:2px; color:#999; 
- } 
- ul.timelist, .timelist li { 
-	list-style-type:none; 
-	margin:0; padding:0; 
- } 
- .timelist a { 
-	 padding:2px; 
- } 
- .vDateField { 
-	 margin-left:4px; 
- }
+	 color: #000 !important;
+	 font-size:10px;
+	 background:#e1e1e1;
+	 border-top:1px solid #ddd;
+)
+.calendar-cancel a {
+	 padding:2px;color:#999;
+)
+ul.timelist, .timelist li {
+	list-style-type:none;
+	margin:0;padding:0;
+)
+.timelist a {
+	padding:2px;
+)
+.vDateField {
+	margin-left:4px;
+}
 
 /* Map styles */
 #div.marker {
@@ -1033,7 +1033,7 @@ padding: 0.3em 0.2em;
 }
 .forum_message_bottom {
 	padding:5px;
-	border-top: 1px dashed #E4E4E4;;
+	border-top: 1px dashed #E4E4E4;
 	color: #666666;
 	font-size: 90%;
 }
@@ -1048,7 +1048,7 @@ padding: 0.3em 0.2em;
 	font-weight: bold;
 	border-bottom: 2px solid white;
 }
-.datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+.datatable th.scope-row {/* IE6 doesn't understand [scope="row"] */
 	text-align: right;
 	vertical-align:top;
 }
