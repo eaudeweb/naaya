@@ -49,6 +49,7 @@ input[type="button"], input[type="submit"], input[type="reset"] {
 	padding-top:0.6em;
 	position:relative;
 	white-space:nowrap !important;
+	float:right;
 }
 #language span {
 	font-size:0.75em;
@@ -65,7 +66,9 @@ input[type="button"], input[type="submit"], input[type="reset"] {
 	text-decoration:none;
 	text-transform:capitalize;
 	width:20px;
+	background: url("bg-lang-btns.gif") no-repeat bottom left;
 }
+
 #language form {
 	display:inline;
 }
