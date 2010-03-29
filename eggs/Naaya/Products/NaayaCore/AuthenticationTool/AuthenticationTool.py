@@ -244,8 +244,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             raise Exception, 'An username must be specified'
         if not password or not confirm:
             raise Exception, 'Password and confirmation must be specified'
-        if self.getUser(name) or (self._emergency_user and name == self._emergency_user.getUserName()):
-            raise Exception, 'A user with the specified name already exists'
+        name = str(name)
+        if (self.get_user_with_userid(name) is not None or
+            (self._emergency_user and
+             name == self._emergency_user.getUserName())):
+            raise Exception, 'Username %r already in use' % name
         if (password or confirm) and (password != confirm):
             raise Exception, 'Password and confirmation do not match'
         if strict:
