@@ -26,7 +26,7 @@
                         <input type="submit" name="submit" value=" Login "/>
                     </div>
                 </form>
-                <div>
+                <div class="right-floated-tip">
                     <div>Tips</div>
                     <ul>
                         <li><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
