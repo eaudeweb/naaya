@@ -139,8 +139,8 @@ a.button-like, a.button-like:visited {
 	padding:2px 2px;
 	font-size: 90%;
 }
-#admin_this_folder span {
-	padding:0em 0.4em;
+#admin_this_folder a span {
+	padding:0em 0.3em;
 	margin: 0em 0.3em;
 }
 #admin_this_folder img {
