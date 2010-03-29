@@ -94,9 +94,7 @@
                         <div class="page_subtitle" tal:content="here/site_subtitle" />
                     </div>
                     <div id="menunav">
-                        <div id="language">
-                            <span tal:replace="structure here/languages_box"/>
-                        </div>
+                        <span tal:replace="structure here/languages_box"/>
                         <tal:block replace="structure here/dropdowns.txt|nothing"/>
                     </div>
                     <div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
