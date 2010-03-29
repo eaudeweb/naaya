@@ -686,7 +686,7 @@ tr.not-duplicate {
 .tab_term {
 	font-size: 90%;
 	color: #333333;
-	mergin-bottom: 10px;
+	margin-bottom: 10px;
 }
 .tab_term td {
 	vertical-align: middle!important;
@@ -783,27 +783,27 @@ div.xmlExportButtons a.xml {
 	 padding:4px;
 	 text-decoration: none;
 	 color:#444;
-)
+}
 .calendar td a:hover, .timelist a:hover {
 	 background: #5b80b2;
 	 color:white;
-)
+}
 .calendar td a:active, .timelist a:active {
 	 background: #036;
 	 color:white;
-)
+}
 .calendarnav {
 	 font-size:10px;
 	 text-align: center;
 	 color:#ccc;margin:0;
 	 padding:1px 3px;
-)
+}
 .calendarnav a:link, #calendarnav a:visited, #calendarnav a:hover {
 	color: #999;
 	text-decoration: none;
 	font-weight: bold;
 	padding: 3px;
-)
+}
 .calendar-shortcuts {
 	background:white;
 	font-size:10px;
@@ -811,7 +811,7 @@ div.xmlExportButtons a.xml {
 	border-top:1px solid #eee;
 	padding:3px 0 4px;
 	color:#ccc;
-)
+}
 .calendarbox.calendarnav-previous,.calendarbox.calendarnav-next {
 	 display:block;
 	 position:absolute;
@@ -821,16 +821,16 @@ div.xmlExportButtons a.xml {
 	 padding:1px 4px 2px 4px;
 	 color:white;
 	 text-decoration: none;
-)
+}
 .calendarnav-previous:hover,.calendarnav-next:hover {
 	 background:#036;
-)
+}
 .calendarnav-previous {
 	 top:0;left:0;
-)
+}
 .calendarnav-next {
 	 top:0;right:0;
-)
+}
 .calendar-cancel {
 	 margin:0 !important;
 	 padding: 4px 0;
@@ -838,17 +838,17 @@ div.xmlExportButtons a.xml {
 	 font-size:10px;
 	 background:#e1e1e1;
 	 border-top:1px solid #ddd;
-)
+}
 .calendar-cancel a {
 	 padding:2px;color:#999;
-)
+}
 ul.timelist, .timelist li {
 	list-style-type:none;
 	margin:0;padding:0;
-)
+}
 .timelist a {
 	padding:2px;
-)
+}
 .vDateField {
 	margin-left:4px;
 }
@@ -872,11 +872,11 @@ div.marker-body h3 {
 	text-transform: uppercase;
 }
 .map-button {
-color: #fff;
-font-size: 90%;
-border: 1px solid white;
-background-color: #336699;
-padding: 0.3em 0.2em;
+	color: #fff;
+	font-size: 90%;
+	border: 1px solid white;
+	background-color: #336699;
+	padding: 0.3em 0.2em;
 }
 #record_counter_message {
 	font-size: x-small;
@@ -1121,18 +1121,18 @@ table .center {
 }
 .searchQuery li {
 	float: left;
-	margin: 0.3em;
-	width: 15em;
+	margin: 0.2em;
+	width: 10em;
 }
 .searchQuery ul {
 	float: left;
-	padding: 1em;
 }
 .tooltip {
 	float: right;
-	border: 1px dashed black;
+	border-top: 1px solid #A8BFBC;
+	border-bottom: 1px solid #A8BFBC;
 	font-size: 0.88em;
-	width: 35%;
+	width: 25%;
 	background-color: #F3F3F3;
 	padding: 0.5em;
 }
@@ -1258,4 +1258,17 @@ a.skiplink {
 }
 .clearer, .cleaner {
 	clear:both;
+}
+
+/* site search page */
+.searchQuery {
+	float: left;
+	width: 70%;
+}
+.searchQueryFilters {
+	padding: 0.3em;
+	background-color: #F1F7F6;
+	border-top: 1px solid #A8BFBC;
+	border-bottom: 1px solid #A8BFBC;
+	margin: 0.5em 0;
 }
