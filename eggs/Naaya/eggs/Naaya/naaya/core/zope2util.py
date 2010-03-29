@@ -30,6 +30,7 @@ from Globals import InitializeClass
 from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
+import simplejson as json
 
 def redirect_to(tmpl):
     """
@@ -104,6 +105,18 @@ class RestrictedToolkit(SimpleItem):
         ``datetime.datetime``.
         """
         return DT2dt(DT)
+
+    def json_dumps(self, obj):
+        """
+        Convert a Python object to JSON
+        """
+        return json.dumps(obj)
+
+    def json_loads(self, json):
+        """
+        Convert JSON data to a Python object
+        """
+        return json.loads(obj)
 
 InitializeClass(RestrictedToolkit)
 
