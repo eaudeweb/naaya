@@ -9,7 +9,7 @@
 						search_string request/form/search_string|nothing;">
 	<h1 i18n:translate="">Interest Group Directory search</h1>
 	<p i18n:translate="">
-	Use this form to search members in this Interest Group</p>
+	Search members of this Interest Group</p>
 	<form action="search_directory" method="get">
 		<label for="search_string" i18n:translate="">
 			Name contains</label>
