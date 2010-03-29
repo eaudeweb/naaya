@@ -213,8 +213,4 @@ class GroupwareSite(NySite):
 
     directory = Directory(id='directory')
 
-    gw_common_css = ImageFile('www/gw_common.css', globals())
-    gw_print_css = ImageFile('www/gw_print.css', globals())
-    gw_style_css = ImageFile('www/gw_style.css', globals())
-
 InitializeClass(GroupwareSite)
