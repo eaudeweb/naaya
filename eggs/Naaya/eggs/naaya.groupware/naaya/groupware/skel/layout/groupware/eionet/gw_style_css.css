@@ -46,7 +46,6 @@ input[type="button"], input[type="submit"], input[type="reset"] {
 	color:#333333;
 	float:right;
 	margin-right:0.7em;
-	padding-top:0.6em;
 	position:relative;
 	white-space:nowrap !important;
 	float:right;
@@ -65,7 +64,7 @@ input[type="button"], input[type="submit"], input[type="reset"] {
 	text-align:center;
 	text-decoration:none;
 	text-transform:capitalize;
-	width:20px;
+	width:30px;
 	background: url("bg-lang-btns.gif") no-repeat bottom left;
 }
 
