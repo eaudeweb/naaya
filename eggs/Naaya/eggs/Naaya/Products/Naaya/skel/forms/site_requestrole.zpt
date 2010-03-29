@@ -32,11 +32,11 @@
 	</tr>
 	<tr>
 		<td i18n:translate="">First name</td>
-		<td><input type="text" name="firstname" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
+		<td><input type="text" name="firstname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Last name</td>
-		<td><input type="text" name="lastname" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
+		<td><input type="text" name="lastname:utf8:ustring" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Email address</td>
@@ -52,7 +52,7 @@
 	</tr>
 	<tr>
 		<td i18n:translate="">Organisation</td>
-		<td><input type="text" name="organisation" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
+		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
 </tal:block>
 
