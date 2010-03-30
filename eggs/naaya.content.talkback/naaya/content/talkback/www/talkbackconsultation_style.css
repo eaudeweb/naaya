@@ -258,6 +258,9 @@ div.tb-modal-overlay {
     opacity: 0.5;
 }
 
+dl.tb-invitations dd {
+    margin-bottom: 0;
+}
 dl.tb-invitations.revoked dt {
     text-decoration: line-through;
 }
