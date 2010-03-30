@@ -28,7 +28,6 @@ from AccessControl.Permissions import view
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.Traversable import path2url
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZPublisher import BadRequest, InternalError, NotFound
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, ERROR, DEBUG
@@ -45,6 +44,7 @@ from Products.NaayaBase.constants import \
      PERMISSION_SKIP_CAPTCHA
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers import recaptcha_utils
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaWidgets.Widget import WidgetError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
@@ -470,19 +470,24 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # Site pages
     #
     security.declareProtected(PERMISSION_ADD_QUESTIONNAIRE, 'questionnaire_add_html')
-    questionnaire_add_html = PageTemplateFile('zpt/questionnaire_add', globals())
+    questionnaire_add_html = NaayaPageTemplateFile('zpt/questionnaire_add',
+                             globals(), 'NaayaSurvey.questionnaire_add')
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/questionnaire_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/questionnaire_index',
+                     globals(), 'NaayaSurvey.questionnaire_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    edit_html = PageTemplateFile('zpt/questionnaire_edit', globals())
+    edit_html = NaayaPageTemplateFile('zpt/questionnaire_edit',
+                    globals(), 'NaayaSurvey.questionnaire_edit')
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'view_reports_html')
-    view_reports_html = PageTemplateFile('zpt/questionnaire_view_reports', globals())
+    view_reports_html = NaayaPageTemplateFile('zpt/questionnaire_view_reports',
+                        globals(), 'NaayaSurvey.questionnaire_view_reports')
 
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'view_answers_html')
-    view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
+    view_answers_html = NaayaPageTemplateFile('zpt/questionnaire_view_answers',
+                        globals(), 'NaayaSurvey.questionnaire_view_answers')
 
     security.declarePublic('view_my_answer_html')
     def view_my_answer_html(self, REQUEST):
@@ -496,7 +501,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # macros & other html snippets
     #
     security.declareProtected(view, 'base_index_html')
-    base_index_html = PageTemplateFile('zpt/base_questionnaire_index', globals())
+    base_index_html = NaayaPageTemplateFile('zpt/base_questionnaire_index',
+                          globals(), 'NaayaSurvey.base_questionnaire_index')
 
     security.declareProtected(view, 'showCaptcha')
     def showCaptcha(self):
