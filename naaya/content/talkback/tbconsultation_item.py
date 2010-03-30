@@ -476,7 +476,7 @@ class NyTalkBackConsultation(NyRoleManager,
         if self.start_date.lessThanEqualTo(today):
             return (1, int(str(after_end_date - today).split('.')[0]))
         else:
-            return (0, int(str(start_date - today).split('.')[0]))
+            return (0, int(str(self.start_date - today).split('.')[0]))
 
     security.declareProtected(view_management_screens, 'manage_options')
     def manage_options(self):
