@@ -152,10 +152,28 @@ body.fullscreen {
 #breadcrumbtrail a {
 	color: #888;
 	text-decoration: none;
+	font-weight:bold;
 }
 #breadcrumbtrail a:hover {
 	color: black;
 	text-decoration: underline;
+	font-weight:bold;
+}
+.breadcrumbitem {
+	background-image:url(arrow-normal.png);
+	background-position:100% 2px;
+	background-repeat:no-repeat;
+	margin-right:3px;
+	padding-right:11px;
+}
+.breadcrumbitemlast {
+}
+.breadcrumbhead {
+	margin-right:3px;
+}
+.breadcrumbtail {
+	font-size:0.1px;
+	width:1px;
 }
 
 /* center part and content */
