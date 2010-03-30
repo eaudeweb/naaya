@@ -5,13 +5,13 @@
         <div id="sitetitle" tal:content="here/title_or_id"></div>
     </div>
 	<div class="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)" metal:fill-slot="div-breadcrumbtrail">
-		<div class="breadcrumbhead" i18n:translate="">You are here: </div>
-		<a class="breadcrumbitem" href="http://www.eionet.europa.eu">Eionet</a>
-		<a class="breadcrumbitem" tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="here/get_gw_root/title" />
+		<span class="breadcrumbhead" i18n:translate="">You are here: </span>
+		<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
+		<span class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="here/get_gw_site_root/title_or_id" /></span>
 		<tal:block tal:repeat="crumb crumbs">
-			<div tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')">
+			<span tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')">
 				<a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
-			</div>
+			</span>
 		</tal:block>
 	</div>
     <div id="workarea" metal:fill-slot="div-workarea">

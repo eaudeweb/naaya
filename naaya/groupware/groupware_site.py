@@ -89,6 +89,9 @@ class GroupwareSite(NySite):
     def get_gw_root(self):
         return self.aq_parent.absolute_url()
 
+    def get_gw_site_root(self):
+        return self.aq_parent
+
     @property
     def portal_is_restricted(self):
         view_perm = getattr(self, '_View_Permission', [])
