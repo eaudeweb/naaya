@@ -28,10 +28,10 @@ from zLOG import LOG, INFO
 
 # Products import
 from Products.ExtFile.ExtFile import manage_addExtFile
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from permissions import PERMISSION_VIEW_ANSWERS
 
@@ -143,7 +143,8 @@ class SurveyAnswer(Folder):
     # (including anonymous ones) can see all answers. Also setting the view
     # permission for each SurveyAnswer wouldn't be practical.
 
-    _index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
+    _index_html = NaayaPageTemplateFile('zpt/surveyanswer_index',
+                    globals(), 'NaayaSurvey.surveyanswer_index')
     def index_html(self,REQUEST=None):
         """ Return the answer index if the current user
         is the respondent or has permission to view answers """

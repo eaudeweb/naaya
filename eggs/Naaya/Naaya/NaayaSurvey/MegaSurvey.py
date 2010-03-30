@@ -22,7 +22,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from DateTime import DateTime
 from Globals import InitializeClass
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, ERROR, DEBUG
 from AccessControl.Permissions import change_permissions
 
@@ -30,6 +29,7 @@ from AccessControl.Permissions import change_permissions
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import genRandomId, tmpfile, make_id
 from Products.NaayaBase.NyAccess import NyAccess
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
@@ -127,22 +127,28 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     # Site pages
     #
     security.declareProtected(PERMISSION_ADD_MEGASURVEY, 'megasurvey_add_html')
-    megasurvey_add_html = PageTemplateFile('zpt/megasurvey_add', globals())
+    megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add',
+                          globals(), 'NaayaSurvey.megasurvey_add')
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/megasurvey_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/megasurvey_index',
+                     globals(), 'NaayaSurvey.megasurvey_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    edit_html = PageTemplateFile('zpt/megasurvey_edit', globals())
+    edit_html = NaayaPageTemplateFile('zpt/megasurvey_edit',
+                    globals(), 'NaayaSurvey.megasurvey_edit')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_attachments_html')
-    edit_attachments_html = PageTemplateFile('zpt/megasurvey_edit_attachments', globals())
+    edit_attachments_html = NaayaPageTemplateFile('zpt/megasurvey_edit_attachments',
+                        globals(), 'NaayaSurvey.megasurvey_edit_attachments')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_questions_html')
-    edit_questions_html = PageTemplateFile('zpt/megasurvey_edit_questions', globals())
+    edit_questions_html = NaayaPageTemplateFile('zpt/megasurvey_edit_questions',
+                        globals(), 'NaayaSurvey.megasurvey_edit_questions')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
-    edit_reports_html = PageTemplateFile('zpt/megasurvey_edit_reports', globals())
+    edit_reports_html = NaayaPageTemplateFile('zpt/megasurvey_edit_reports',
+                        globals(), 'NaayaSurvey.megasurvey_edit_reports')
 
     security.declareProtected(change_permissions, 'edit_access_html')
     def edit_access_html(self):
