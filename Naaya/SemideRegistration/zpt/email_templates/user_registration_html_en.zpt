@@ -13,6 +13,9 @@
         <p>
             The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(last_name)s</strong> (case sensitive) are required for authentication.
         <p/>
+		<p>
+			Please note that your registration will be confirmed by email after 2/4/2010 as for security reasons the number of seats is limited.
+		</p>
         <p>
             ---
         </p>

@@ -1,0 +1,13 @@
+Estimada/o Señor/a,
+
+Su inscripción para «"%(conference_title)s"», que tendrá lugar el %(conference_details)s, fue recibida en buen estado. Para revisar y / o editar la información presentada por favor utilice el siguiente enlace:
+
+%(registration_edit_link)s
+
+El número de registro %(registration_number)s y su apellido %(last_name)s (mayúsculas o minúsculas tal como aparece) son necesarios para la autentificación.
+
+Tenga en cuenta que su inscripción será confirmada por correo electrónico después del 2/4/2010 por razones de seguridad (El número de asientos es limitado)
+
+---
+Saludos cordiales,
+El comité organizador del la conferencia ministerial
