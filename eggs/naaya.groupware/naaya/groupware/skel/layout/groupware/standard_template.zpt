@@ -97,11 +97,11 @@
                         <tal:block replace="structure here/dropdowns.txt|nothing"/>
                     </div>
 					<div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
-						<div class="breadcrumbhead" i18n:translate="">You are here: </div>
-						<a class="breadcrumbitem" href="http://www.eionet.europa.eu">Eionet</a></div>
-						<div class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="here/get_gw_root/title" />
+						<span class="breadcrumbhead" i18n:translate="">You are here: </span>
+						<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
+						<span class="breadcrumbitem"><a tal:attributes="href string:${here/get_gw_root}/index_html" title="Groupware home" tal:content="here/get_gw_site_root/title_or_id" /></span>
 						<tal:block repeat="crumb crumbs">
-							<a class="breadcrumbitem" tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+							<span class="breadcrumbitem"><a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" /></span>
 						</tal:block>
 					</div>
                     <div id="left_port">

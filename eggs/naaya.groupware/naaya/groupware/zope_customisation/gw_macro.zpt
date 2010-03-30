@@ -50,8 +50,8 @@
                 <tal:block replace="structure here/dropdowns.txt|nothing"/>
             </div>
 			<div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
-				<div class="breadcrumbhead" i18n:translate="">You are here: </div>
-				<a class="breadcrumbitem" href="http://www.eionet.europa.eu">Eionet</a>
+				<span class="breadcrumbhead" i18n:translate="">You are here: </span>
+				<span class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></span>
 				<span class="breadcrumbitemlast">Forum</span>
 			</div>
             <div id="leftcolumn" class="localnav" tal:define="user python:request.AUTHENTICATED_USER" tal:condition="python:user.getUserName() != 'Anonymous User'" metal:define-slot="div-leftcolumn">
