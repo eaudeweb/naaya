@@ -160,7 +160,7 @@ misc_ = {
     'cookies.js': ImageFile('zpt/dragdrop/cookies.js.dtml', globals()),
 
     # documentation
-    'admin_schema':ImageFile('www/documentation/admin_schema.gif', globals()),
+    'admin_schema':ImageFile('www/documentation/admin_schema.png', globals()),
     'workflow':ImageFile('www/documentation/workflow.gif', globals()),
     'brief_layout':ImageFile('www/documentation/brief_layout.gif', globals()),
     'select_language_box':ImageFile('www/documentation/select_language_box.gif', globals()),

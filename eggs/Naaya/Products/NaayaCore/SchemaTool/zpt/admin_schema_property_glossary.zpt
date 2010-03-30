@@ -12,7 +12,7 @@
     </div>
 
     <div class="field-inline">
-        <label for="all_content_types">Change for all content types</label>
+        <label for="all_content_types" i18n:translate="">Change for all content types</label>
         <input type="checkbox" name="all_content_types:boolean" id="all_content_types" />
     </div>
 
