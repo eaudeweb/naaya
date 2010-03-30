@@ -52,12 +52,10 @@ class Style(ZopePageTemplate):
         ZopePageTemplate.__dict__['__init__'](self, id, text, 'text/html')
         self.title = title
 
-    def __call__(self, context={}, *args):
+    def index_html(self, REQUEST):
         """ """
-        if not context.has_key('args'):
-            context['args'] = args
-        self.REQUEST.RESPONSE.setHeader('content-type', 'text/css')
-        return self.pt_render(extra_context=context)
+        REQUEST.RESPONSE.setHeader('content-type', 'text/css')
+        return self(REQUEST)
 
     def om_icons(self):
         """ """
