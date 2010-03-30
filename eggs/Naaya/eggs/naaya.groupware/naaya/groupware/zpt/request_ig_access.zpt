@@ -5,10 +5,9 @@
         <div id="sitetitle" tal:content="here/site_subtitle">Demo site</div>
     </div>
     <div class="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)" metal:fill-slot="div-breadcrumbtrail">
-        <div class="breadcrumbhead" i18n:translate="">You are here: </div>
-        <div class="breadcrumbitem">
-            <a tal:attributes="href gw_root_url" title="Groupware home">Groupware home</a>
-        </div>
+		<div class="breadcrumbhead" i18n:translate="">You are here: </div>
+		<a class="breadcrumbitem" href="http://www.eionet.europa.eu">Eionet</a>
+		<a class="breadcrumbitem" tal:attributes="href gw_root_url" title="Groupware home" tal:content="here/get_gw_root/title" />
         <tal:block tal:repeat="crumb crumbs">
             <div tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')">
                 <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
