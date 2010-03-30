@@ -13,6 +13,9 @@
         <p>
             Votre numéro d’enregistrement <strong>%(registration_number)s</strong> et votre nom de famille <strong>%(last_name)s</strong> (en respectant la casse) seront nécessaire pour votre authentification.
         <p/>
+		<p>
+			Veuillez noter que votre inscription sera confirmée par e-mail après le 2/4/2010 pour des raisons de sécurité, le nombre de places est limité.
+		</p>
         <p>
             ---
         </p>
