@@ -36,6 +36,10 @@
     <metal:block use-macro="template/macros/invitation">
     <metal:block fill-slot="other_info">
     <dd i18n:translate="">
+        E-mail address:
+        <code tal:content="invite/email" i18n:name="email" />
+    </dd>
+    <dd i18n:translate="">
         Private URL:
         <small tal:content="string:${here/absolute_url}/welcome?key=${invite/key}"
                i18n:name="private_url"></small>

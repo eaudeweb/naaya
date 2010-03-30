@@ -234,7 +234,8 @@ class InvitationsContainer(SimpleItem):
     def get_current_invitation(self, REQUEST):
         return self.get_invitation(REQUEST.SESSION.get('nytb-current-key', None))
 
-    security.declarePrivate('get_invitation')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'get_invitation')
     def get_invitation(self, key):
         return self._invites.get(key, None)
 
@@ -259,7 +260,8 @@ class InvitationUsersTool(BasicUserFolder):
     def authenticate(self, name, password, request):
         invitation = self.invitations.get_current_invitation(request)
         if invitation is not None and invitation.enabled:
-            return SimpleUser('invited_reviewer', '', ('InvitedReviewer',), [])
+            return SimpleUser('invite:' + invitation.key, '',
+                              ('InvitedReviewer',), [])
         else:
             return None
 
