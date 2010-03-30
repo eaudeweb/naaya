@@ -17,8 +17,11 @@
 # Ghica Alexandru, Finsiel Romania
 
 #Zope imports
-from ImageFile import ImageFile
-
+try:
+    from App.ImageFile import ImageFile
+except:
+    from ImageFile import ImageFile
+    
 #Product imports
 import NyThesaurus
 from constants import *
