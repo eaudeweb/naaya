@@ -23,17 +23,18 @@
             font-weight:bold;
             margin-bottom:0.3em;
         }
-        div#menunav {
+        div#menuribbon {
             width: 100%;
             float: left;
             border-top: 1px 0 solid black;
             background-color: #00446A;
         }
         p.helpdesktext {
-            background:#a5ced1;
             font-size:90%;
             padding:0.3em;
             text-align:center;
+            border: 1px solid #e4e4e4;
+            background-color: #F9F9ED; /*#a5ced1*/
         }
     </style>
   </head>
@@ -62,7 +63,7 @@
                 <div id="networktitle">Eionet Forum</div>
                 <div id="sitetitle">Discussion, sharing, dialogue</div>
             </div>
-            <div id="menunav">
+            <div id="menuribbon">
                 <tal:block replace="structure here/dropdowns.txt|nothing"/>
             </div>
 			<div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
