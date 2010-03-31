@@ -29,7 +29,10 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
-from naaya.Products.NaayaCore.AnonymousNotification.AnonymousNotification import AnonymousNotification
+try:
+    from naaya.Products.NaayaCore.AnonymousNotification.AnonymousNotification import AnonymousNotification
+except:
+    pass
 
 class UpdateAddAnonymousNotification(UpdateScript):
     """ Update add AnonymousNotification  """
