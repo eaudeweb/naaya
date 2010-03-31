@@ -89,8 +89,8 @@
                         <div id="logo" tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
                             <img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
                         </div>
-                        <div class="page_title" tal:content="here/site_title" />
-                        <div class="page_subtitle" tal:content="here/site_subtitle" />
+                        <div class="page_title" tal:content="here/root_site_title" />
+                        <div class="page_subtitle" tal:content="here/site_title" />
                     </div>
                     <div id="menunav">
                         <span tal:replace="structure here/languages_box"/>
