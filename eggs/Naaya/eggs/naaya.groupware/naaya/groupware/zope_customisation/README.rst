@@ -27,3 +27,7 @@ to live outside of any Groupware (Naaya) portal.
     "mail from" field configures the address that emails will originate
     from, and the "admin mail" field configures who will be notified of
     application submissions.
+
+Zope site customisations
+========================
+     * define a Zope root string property with the id 'root_site_title'
