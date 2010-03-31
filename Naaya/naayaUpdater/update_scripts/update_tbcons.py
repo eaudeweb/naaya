@@ -32,7 +32,10 @@ from OFS.Folder import Folder
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.NaayaContent.NyTalkBackConsultation.invitations import InvitationsContainer
+try:
+    from Products.NaayaContent.NyTalkBackConsultation.invitations import InvitationsContainer
+except:
+    pass
 
 class UpdateTalkBackCons(UpdateScript):
     """ TalkBack Consultation update """
