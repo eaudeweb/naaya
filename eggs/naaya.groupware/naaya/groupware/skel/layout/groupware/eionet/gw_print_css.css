@@ -1,24 +1,74 @@
 #center_content { width: 100% !important; overflow-x: visible !important;}
 
-.skiplink {
-	display: none;
+html, body {
+	margin:0px;
+	padding:0px;
+	font-family: "New baskerville", times, serif;
+	font-size: 10pt; 
+	font-style: normal; 
+	line-height: normal; 
+	background-color: #FFFFFF;
+}
+a:link, a:visited {
+	color: black;
+	text-decoration: none;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: Avenir, Helvetica, sans-serif;
+	font-style: normal; 
+	font-weight: bold; 
+	text-decoration: none
+}
+h1 {
+	font-size: 14pt; 
+	line-height: 120%; 
+}
+h2 {
+	font-size: 12pt; 
+	line-height: normal; 
+}
+h3 {
+	font-size: 11pt; 
+	line-height: normal;
+}
+h4, h5, h6 {
+	font-size: 10pt; 
+	line-height: normal; 
+	padding-left: 0.5em;
+}
+img {
+	border: 0;
+}
+ul.menu { /* Simple menu of items */
+	list-style: none;
+	list-style-image: none;
+	padding:0;
+	margin:0;
+}
+td, th {
+	font-family: Avenir, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	font-style: normal; 
+	line-height: normal; 
+	text-decoration: none;
+	empty-cells: show;
+	widows: 3; orphans: 3; /* not understood by IE6 */
+}
+th {
+	font-weight: bold; 
+	text-align: left;
 }
 
-#language {
+#language, #logo, #logobis, .skiplink, #toolribbon, #breadcrumbtrail, #left_port, #footer, #topnav {
 	display: none;
 }
 
 #header {
-	border: 1px solid #cccccc;
 	position: relative;
 	padding: 10px;
 }
 
 #header img {
-	margin-left: 1%;
-}
-
-#toolribbon, #breadcrumbtrail {
 	display: none;
 }
 
@@ -26,15 +76,7 @@
 	margin: 1% 0%;
 }
 
-#left_port {
-	display: none;
-}
-
 #right_port {
-	display: none;
-}
-
-#footer {
 	display: none;
 }
 
@@ -47,22 +89,22 @@
 	margin: 1% 0% 1% 0%;
 }
 
-#topnav {
+#admin_this_folder, #toolbar, .folder-feeds, #tabbedmenu, #menunav, .b_download {
 	display: none;
 }
 
-#menunav {
-	display: none;
+.page_title {
+	color: #009590;
+	font-family: Avenir, Helvetica, sans-serif;
+	font-size: 14pt;
+	font-weight: bold;
 }
-
-#tabbedmenu {
-	display: none;
+.page_subtitle {
+	color: #005E9D;
+	font-family: Avenir, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
 }
-
-.page_title {}
-.page_subtitle {}
-
-.b_download { display: none; }
 
 /* Data tables */
 .sortable, .datatable {
@@ -139,16 +181,15 @@ table .sum {
 /*	border-top:    2px solid #f6f6f6;*/
 	border-bottom: 2px solid #f6f6f6;
 }
-/*
+
 .datatable tr.zebraeven {
 	background-color: #f6f6f6;
 }
-*/
-/*
+
 .datatable tr:hover, .datatable tr:hover th {
 	background-color: #e4f1bc;
 }
-*/
+
 table.datatable {
 	border: 1px solid #b6b6b6;
 	color: #666666;
