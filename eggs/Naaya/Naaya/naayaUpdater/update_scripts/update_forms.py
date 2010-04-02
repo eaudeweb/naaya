@@ -69,7 +69,7 @@ class UpdateForms(UpdateScript):
                 forms_list_tmp = []
                 for form_line in forms_list: #Search in ZMI and FS for template patterns
                     for form_id in self.find_templates(re.compile(form_line), portal):
-                        forms_list_tmp.append(form_id)
+                        if form_id not in forms_list_tmp: forms_list_tmp.append(form_id)
                 forms_list = forms_list_tmp
                 del(forms_list_tmp)
             deltas = []
