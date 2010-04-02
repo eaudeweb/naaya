@@ -16,15 +16,18 @@
 # Authors:
 #
 # Alex Morega, Eau de Web
+# Alexandru Plugaru, Eau de Web
 
 
 #Python imports
+import re
 from os.path import join
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
+from Products.NaayaCore.LayoutTool.Template import Template
 from Products.naayaUpdater.update_scripts import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
@@ -36,7 +39,7 @@ class UpdateForms(UpdateScript):
     """ Update forms in portal_forms """
     id = 'update_forms'
     title = 'Update forms'
-    authors = ['Alex Morega']
+    authors = ['Alex Morega', 'Alexandru Plugaru']
 
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))
@@ -62,7 +65,13 @@ class UpdateForms(UpdateScript):
             portal_path = '/'.join(portal.getPhysicalPath()[1:])
             if all_forms:
                 forms_list = portal.portal_forms.objectIds()
-
+            else:
+                forms_list_tmp = []
+                for form_line in forms_list: #Search in ZMI and FS for template patterns
+                    for form_id in self.find_templates(re.compile(form_line), portal):
+                        forms_list_tmp.append(form_id)
+                forms_list = forms_list_tmp
+                del(forms_list_tmp)
             deltas = []
             for form_id in forms_list:
                 form_path = '%s/portal_forms/%s' % (portal_path, form_id)
@@ -82,7 +91,7 @@ class UpdateForms(UpdateScript):
                         delta['result'] = 'identical'
                     else:
                         delta['result'] = 'different'
-
+    
                         delta['diff'] = html_diff(form_fs, form_zmi)
                     deltas.append(delta)
 
@@ -115,7 +124,7 @@ class UpdateForms(UpdateScript):
             form_ob = self.get_zmi_template(form_path)
             form_ob.aq_parent.manage_delObjects([form_id])
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_update')
-
+        
     def get_zmi_template(self, path):
         """
             return a ZMI template object given the path
@@ -150,5 +159,17 @@ class UpdateForms(UpdateScript):
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return [f.id for f in skel_handler.root.forms.forms]
-
+    
+    def find_templates(self, pattern, portal):
+        """ Find templates based on a rexp pattern from FS and ZMI """
+        fs_matches = []
+        fs_forms = self.list_fs_templates(portal) + self.list_fs_templates(NySite_module)
+        for fs_tpl in fs_forms:
+            if pattern.match(fs_tpl):
+                fs_matches.append(fs_tpl)
+        portal_forms = getattr(portal, 'portal_forms', None)
+        forms_list = portal_forms.objectValues([Template.meta_type ,])
+        for zmi_tpl in forms_list:
+            if zmi_tpl.id in fs_matches:
+                yield zmi_tpl.id
     manage_update = PageTemplateFile('zpt/update_forms', globals())
