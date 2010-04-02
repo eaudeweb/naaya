@@ -14,7 +14,7 @@
     report python:here.get_report(forms, all_forms, portals, p_action, request)">
 
 <form method="post" name="frmQuickModForms">
-    <label for="exclude">Form IDs (one per row)</label><br />
+    <label for="exclude">Form IDs (one per row, REXP enabled)</label><br />
     <textarea name="forms" id="forms" cols="50" rows="5" tal:content="forms"></textarea>
     <br />
     <label><input type="checkbox" name="all_forms:boolean" tal:attributes="checked all_forms" />
