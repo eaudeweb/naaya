@@ -159,14 +159,19 @@ class UpdateForms(UpdateScript):
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return [f.id for f in skel_handler.root.forms.forms]
-    
+            
+    def list_pluggable_templates(self, portal):
+        """ get filesystem templates from pluggable content """
+        return [ tpl for meta_type in portal.get_pluggable_metatypes() for tpl in portal.get_pluggable_item(meta_type).get('forms', None) ]
+        
     def find_templates(self, pattern, portal):
         """ Find templates based on a rexp pattern from FS and ZMI """
         fs_matches = []
-        fs_forms = self.list_fs_templates(portal) + self.list_fs_templates(NySite_module)
+        fs_forms = self.list_fs_templates(portal) + self.list_fs_templates(NySite_module) + self.list_pluggable_templates(portal)
         for fs_tpl in fs_forms:
             if pattern.match(fs_tpl):
                 fs_matches.append(fs_tpl)
+
         portal_forms = getattr(portal, 'portal_forms', None)
         forms_list = portal_forms.objectValues([Template.meta_type ,])
         for zmi_tpl in forms_list:
