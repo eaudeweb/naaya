@@ -5,7 +5,7 @@
             Madame, Monsieur,
         <p/>
         <p>
-            Votre enregistrement à la conférence internationale «"%(conference_title)s"», qui se déroulera à %(conference_details)s, a bien été reçue. Vous pouvez revoir ou éditer votre formulaire à partir du lien suivant:
+            Votre enregistrement à la conférence internationale "%(conference_title)s", qui se déroulera à %(conference_details)s, a bien été reçue. Vous pouvez revoir ou éditer votre formulaire à partir du lien suivant:
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
