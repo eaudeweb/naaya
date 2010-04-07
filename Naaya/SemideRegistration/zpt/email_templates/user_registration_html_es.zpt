@@ -5,7 +5,7 @@
             Estimada/o Señor/a,
         <p/>
         <p>
-            Su inscripción para «"%(conference_title)s"», que tendrá lugar el %(conference_details)s, fue recibida en buen estado. Para revisar y / o editar la información presentada por favor utilice el siguiente enlace:
+            Su inscripción para "%(conference_title)s", que tendrá lugar el %(conference_details)s, fue recibida en buen estado. Para revisar y / o editar la información presentada por favor utilice el siguiente enlace:
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>

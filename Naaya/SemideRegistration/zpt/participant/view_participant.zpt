@@ -141,6 +141,10 @@
 		<td tal:content="here/languages" />
 	</tr>
 	<tr>
+		<th i18n:translate="">Hotel</th>
+		<td tal:content="here/hotel" />
+	</tr>
+	<tr>
 		<th i18n:translate="">Arrival date</th>
 		<td tal:content="python:here.formatDate(here.arrival_date, '%d %b %Y')" />
 	</tr>
