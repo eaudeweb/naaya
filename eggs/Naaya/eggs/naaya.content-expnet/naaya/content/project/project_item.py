@@ -53,7 +53,7 @@ METATYPE_OBJECT = 'Naaya Project'
 
 DEFAULT_SCHEMA = {
     'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='project_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='project_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='project_topics'),
 }
 
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
@@ -339,7 +339,7 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def getTopics(self, category):
         ptool = self.getPortletsTool()
         topics = getattr(ptool, 'project_topics', None)
-        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
@@ -381,7 +381,6 @@ class ProjectsLister(Implicit, Item):
         """
         return self._index_template(REQUEST, experts=[1,2,3])
 
-
     def topic_filters(self):
         """ """
         ret = []
@@ -389,8 +388,8 @@ class ProjectsLister(Implicit, Item):
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
         topics = getattr(ptool, 'project_topics', None)
-        for id, value in topics.get_collection().items():
-            ret.append((value, len(self.items_in_topic(ctool, id))))
+        for topic in topics.get_tree_nodes():
+            ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
 
     def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
