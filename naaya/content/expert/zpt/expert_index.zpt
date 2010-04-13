@@ -92,7 +92,7 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary areas of expertise</h4>
+		<h4 i18n:translate="">Areas of expertise</h4>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>

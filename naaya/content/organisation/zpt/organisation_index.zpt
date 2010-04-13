@@ -81,7 +81,7 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary topics covered</h4>
+		<h4 i18n:translate="">Topics covered</h4>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>

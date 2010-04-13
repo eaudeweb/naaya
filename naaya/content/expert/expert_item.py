@@ -76,7 +76,7 @@ DEFAULT_SCHEMA = {
     'webpage':  dict(sortorder=190, widget_type='String', label='Webpage'),
     'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
     'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main areas of expertise', list_id='experts_topics'),
-    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Secondary areas of expertise', list_id='experts_topics'),
+    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Areas of expertise', list_id='experts_topics'),
     'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
@@ -384,7 +384,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
     def getExpertTopics(self, category):
         ptool = self.getPortletsTool()
         topics = getattr(ptool, 'experts_topics', None)
-        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
@@ -559,8 +559,8 @@ class ExpertsLister(Implicit, Item):
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
         topics = getattr(ptool, 'experts_topics', None)
-        for id, value in topics.get_collection().items():
-            ret.append((value, len(self.items_in_topic(ctool, id))))
+        for topic in topics.get_tree_nodes():
+            ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
 
     def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):

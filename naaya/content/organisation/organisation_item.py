@@ -60,7 +60,7 @@ DEFAULT_SCHEMA = {
     'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
     'email':        dict(sortorder=170, widget_type='String', label='Email address'),
     'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='organisation_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='organisation_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='organisation_topics'),
     'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
 }
 
@@ -403,7 +403,7 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
     def getTopics(self, category):
         ptool = self.getPortletsTool()
         topics = getattr(ptool, 'organisation_topics', None)
-        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
@@ -471,10 +471,8 @@ class OrganisationLister(Implicit, Item):
         """ Index page """
         return self._index_template(REQUEST)
 
-
     def topic_filters(self):
-        """ 
-        Return the list of topics and their count of items inside to be displayed from template.
+        """Return the list of topics and their count of items inside to be displayed from template.
         Example:
         <ul>
             <li>All (12)</li>
@@ -488,10 +486,9 @@ class OrganisationLister(Implicit, Item):
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
         topics = getattr(ptool, 'organisation_topics', None)
-        for id, value in topics.get_collection().items():
-            ret.append((value, len(self.items_in_topic(ctool, id))))
+        for topic in topics.get_tree_nodes():
+            ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
-
 
     def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
         """
