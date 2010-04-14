@@ -281,9 +281,8 @@ class RefTree(LocalPropertyManager, Folder):
             data.append(data_dict)
         return self.utSortDictsListByKey(data, 'data', 0)
 
-    def get_tree_json_data(self, REQUEST):
+    def get_tree_json_data(self):
         """ """
-        REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return json.dumps(self.get_tree_data())
 
     def get_tree_data_for_admin(self):

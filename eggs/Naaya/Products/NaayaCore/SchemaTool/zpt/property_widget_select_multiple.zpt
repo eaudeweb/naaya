@@ -28,7 +28,7 @@
                     $.ajax({
                        type: 'GET',
                        async: false,
-                       url: 'portal_portlets/${here/list_id}/get_tree_json_data',
+                       url: '/portal_portlets/${here/list_id}/get_tree_json_data',
                        dataType: 'json',
                        success : function(data) {
                         tree_data_json = data;
