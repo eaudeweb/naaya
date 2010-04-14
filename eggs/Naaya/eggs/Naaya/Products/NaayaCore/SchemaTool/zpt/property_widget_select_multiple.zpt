@@ -25,7 +25,6 @@
                     $('#'+'${prop_id}').hide();
                     $('label[for=${prop_id}]').hide();
 
-                    var tree_data_json = undefined;
                     $.ajax({
                        type: 'GET',
                        async: false,
@@ -33,39 +32,39 @@
                        dataType: 'json',
                        success : function(data) {
                         tree_data_json = data;
-                        },
+                        }
                      });
 
-                    var form_selected = []
+                    var form_selected = [];
                     $('#${prop_id} option:selected').each(function(){
                         form_selected[form_selected.length] = this.value;
                     });
                     var selected_nodes = [];
                     $(tree_data_json).each(function(){
-                        if ($.inArray(this['attributes']['id'], form_selected) != -1) {
-                            selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                        if ($.inArray(this.attributes.id, form_selected) != -1) {
+                            selected_nodes[selected_nodes.length] = this.attributes.id;
                         }
-                        $(this['children']).each(function(){
-                                if (this['attributes'] != null && $.inArray(this['attributes']['id'], form_selected) != -1) {
-                                    selected_nodes[selected_nodes.length] = this['attributes']['id'];
+                        $(this.children).each(function(){
+                                if (this.attributes !== null && $.inArray(this.attributes.id, form_selected) != -1) {
+                                    selected_nodes[selected_nodes.length] = this.attributes.id;
                                 }
-                            })
-                        })
+                            });
+                        });
 
                     tree_data_json = {'data':'${here/title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
                     $('#${prop_id}_tree').tree({
                         selected : selected_nodes,
                         rules : {
-                            multiple : 'on',
+                            multiple : 'on'
                         },
                         data : {
                             type : 'json',
                             opts : {
-                                static : tree_data_json,
-                            },
+                                'static' : tree_data_json
+                            }
                         },
                         ui : {
-                             selected_parent_close : false,
+                             selected_parent_close : false
                         },
                         types : {
                             'default' :{
@@ -73,7 +72,7 @@
                                 renameable : false,
                                 deletable : false,
                                 creatable : false,
-                                draggable : false,
+                                draggable : false
                             },
                             'root' : {
                                 valid_children : ['node'],
@@ -107,11 +106,11 @@
                                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
                                 $('#${prop_id} option[value='+node_id+']').attr('selected', '');
                             },
-                            ondblclk : false,
-                        },
+                            ondblclk : false
+                        }
                     });
                     $('#${prop_id}_tree').after('<div style=\'clear: both\'/>');
-                })
+                });
             </script>
             "/>
         <div tal:attributes="id string:${prop_id}_tree"></div>
