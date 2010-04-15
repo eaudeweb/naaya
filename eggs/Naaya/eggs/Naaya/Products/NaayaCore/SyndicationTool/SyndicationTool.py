@@ -21,6 +21,7 @@
 #Python imports
 import urlparse
 import urllib
+from datetime import timedelta
 
 #Zope imports
 from Globals import InitializeClass, DTMLFile
@@ -28,12 +29,16 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope import component
 
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from managers.namespaces_tool import namespaces_tool
 from managers.channeltypes_manager import channeltypes_manager
+from Products.Naaya.interfaces import INySite, IHeartbeat
+from naaya.core.utils import cooldown, ofs_path
+
 import LocalChannel
 import RemoteChannel
 import ScriptChannel
@@ -299,3 +304,13 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     manage_channeltypes_html = PageTemplateFile('zpt/syndication_manage_channeltypes', globals())
 
 InitializeClass(SyndicationTool)
+
+
+@component.adapter(INySite, IHeartbeat)
+def feedUpdateSubscriber(site, hb):
+    if cooldown('remote channels %r' % ofs_path(site), timedelta(hours=1)):
+        return
+
+    site.updateRemoteChannels(site.get_site_uid())
+
+component.provideHandler(feedUpdateSubscriber)

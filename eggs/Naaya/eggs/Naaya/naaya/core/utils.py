@@ -1,3 +1,5 @@
+from datetime import datetime
+
 def relative_object_path(obj, ancestor):
     """
     Compute the relative path from `ancestor` to `obj` (`obj` must be
@@ -52,3 +54,24 @@ def ofs_path(obj):
     ``/mysite/about/info``
     """
     return '/'.join(obj.getPhysicalPath())
+
+_cooldown_map = {}
+def cooldown(name, interval):
+    """
+    Return ``True`` if called sooner than ``interval`` with the same
+    ``name`` argument. Intended usage::
+
+        @component.adapter(INySite, IHeartbeat)
+        def hourly_foobar(site, hb):
+            if cooldown('foobar %r' % ofs_path(site), timedelta(hours=1)):
+                return
+            # ... code that will run (almost) every hour
+
+        component.provideHandler(hourly_foobar)
+    """
+    now = datetime.now()
+    if name in _cooldown_map and _cooldown_map[name] + interval > now:
+        return True
+    else:
+        _cooldown_map[name] = now
+        return False
