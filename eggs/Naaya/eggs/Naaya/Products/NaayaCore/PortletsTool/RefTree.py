@@ -283,7 +283,11 @@ class RefTree(LocalPropertyManager, Folder):
 
     def get_tree_json_data(self):
         """ """
-        return json.dumps(self.get_tree_data())
+        try:
+            list = self.get_tree_data_dict().get('children', [[]])[0]
+        except KeyError:
+            list = []
+        return json.dumps(list)
 
     def get_tree_data_for_admin(self):
         data = self.get_tree_data()
