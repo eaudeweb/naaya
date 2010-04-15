@@ -214,9 +214,9 @@ class PortletsTool(Folder, utils):
                 else: 
                     parent = data['new_parent']['id']
                 if data['new_prev'] == data['new_parent']['id']:# First item
-                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data['new_next'])
+                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data.get('new_next', None))
                 elif 'new_next' in data: # Any item
-                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data['new_next'])
+                    self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data.get('new_next', None))
                 else:# Last item
                     self[new_parent_tree].move(self[new_parent_tree][data['id']], parent)
                 return data['id']
