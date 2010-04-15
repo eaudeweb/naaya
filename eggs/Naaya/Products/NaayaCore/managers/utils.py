@@ -385,7 +385,9 @@ class batch_utils:
         return (l_start, l_stop, l_total, l_prev, l_next, l_current_page, l_records_page, l_pages)
 
 class utils:
-    """Utils class"""
+    """
+    Utility functions. All Naaya objects currently inherit from this class.
+    """
 
     def __init__(self):
         """Constructor"""
@@ -421,13 +423,16 @@ class utils:
             res.append(word)
         return ' '.join(res)
 
-    def html2text(self, html):
+    def html2text(self, html, trim_length=512):
+        """
+        Strip all tags from ``html``. If ``trim_length`` is not None,
+        limit the output length to ``trim_length`` characters.
+        """
         soup = BeautifulSoup(html)
-        if soup.p is not None:
-            text = ''.join(soup.p(text=True))
-            if len(text) > 512:
-                return text[:512]
-            return text
+        text = ''.join(soup.findAll(text=True))
+        if trim_length is not None:
+            text = text[:trim_length]
+        return text
 
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
