@@ -19,5 +19,12 @@ This should output::
 
     datetime.datetime(2010, 3, 24, 14, 42, tzinfo=tzoffset(None, 3600))
 
+The :class:`utils <Products.NaayaCore.managers.utils.utils>` class contains a
+few more general-purpose utility functions. They are accessible in ``rstk`` via
+acquisition, and will be migrated there eventually.
+
 .. autoclass:: naaya.core.zope2util.RestrictedToolkit
    :members:
+
+.. autoclass:: Products.NaayaCore.managers.utils.utils
+   :members: html2text
