@@ -389,7 +389,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         for brain in catalog({'path': path2url(self.getPhysicalPath()),
                               'meta_type': SurveyAnswer.meta_type,
                               'respondent': respondent}):
-            return brain.getObject()
+            obj = brain.getObject()
+            # if the "respondent" index is missing for some reason, we get
+            # all answers, so we must do the filtering ourselves.
+            if obj.respondent != respondent:
+                continue
+            return obj
         return None
 
     security.declarePublic('getMyAnswerDatamodel')
