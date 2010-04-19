@@ -31,12 +31,12 @@
 <span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 	<div id="center_content" style="width: 78%; overflow-x: auto;">
-		<h1 tal:content="here/title_or_id" />
+		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<noscript>
 			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
 		</noscript>
 		<p id="js_links" style="display: none; height: 2em">
-			Displaying
+			<span i18n:translate="">Displaying </span>
 			<strong id="record_counter"></strong>
 			<span i18n:translate="">location(s).</span>
 			You can also <a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>, <a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>
@@ -48,22 +48,22 @@
 	</div>
 	<div id="portalmap">
 		<div class="portalmap_portlet">
-			<div class="portalmap_portlet_title" i18n:translate="">
-				<p>Find address</p>
+			<div class="portalmap_portlet_title">
+				<p i18n:translate="">Find address</p>
 			</div>
 			<div>
 				<input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
 				<input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
 			</div>
-			<div class="portalmap_portlet_title" i18n:translate="">
-				<p>Filter locations</p>
+			<div class="portalmap_portlet_title">
+				<p i18n:translate="">Filter locations</p>
 			</div>
 			<div class="map_filters">
 				<div>
 					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" onkeypress="return handleKeyPress(this, event);" style="width: 60%" />
 					<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Go" onclick="startMapRefresh()" i18n:attributes="value"/>
 					<noscript>
-						<p><small>eg: "water supply"</small></p>
+						<p><small i18n:translate="">eg: "water supply"</small></p>
 					</noscript>
 				</div>
 				<small><a href="javascript:toggleSelect();" title="Check all" i18n:translate="" i18n:attributes="title" id="checkall" style="display:none">Uncheck All</a></small>
