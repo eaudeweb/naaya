@@ -110,9 +110,7 @@ class EditorTool(Folder):
             `lang` 
                 **Not used**
         """
-        return '<script language="JavaScript" \
-src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
-    % {'parent_url': self.absolute_url()}
+        return '<script type="text/javascript" language="javascript" src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>' % {'parent_url': self.absolute_url()}
 
     security.declarePublic('additional_styles')
     def additional_styles(self):
@@ -211,6 +209,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
             'script_url' : '%s/tinymce/jscripts/tiny_mce/tiny_mce.js' \
                 % self.absolute_url(),
             'site_url': self.getSite().absolute_url(),
+            'language' : self.gl_get_selected_language(),
         })
         cfg.update(extra_options)
 
@@ -222,6 +221,7 @@ src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>'\
         if old_css != '':
             cfg['content_css'] += ',' + old_css
 
+        self.REQUEST.RESPONSE.setHeader('content-type', 'text/html; charset="utf-8"')
         return "<script type=\"text/javascript\">\
 $().ready(function() {$('#%s').tinymce(%s);})\
 </script>" % (element, json.dumps(cfg, indent=2))
