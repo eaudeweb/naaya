@@ -35,7 +35,7 @@ from AccessControl import ClassSecurityInfo
 class symbol_item:
     """ """
 
-    sortorder = '100'
+    sortorder = 100
 
     def __init__(self, id, title, description, parent, picture, sortorder):
         """Constructor"""
@@ -44,7 +44,10 @@ class symbol_item:
         self.description = description
         self.parent = parent
         self.picture = picture
-        self.sortorder = sortorder
+        try:
+            self.sortorder = int(sortorder)
+        except:
+            self.sortorder = 100
 
     def setPicture(self, picture):
         """ """
@@ -86,7 +89,10 @@ class symbols_tool:
             obj.description = description
             obj.parent = parent
             obj.setPicture(picture)
-            obj.sortorder = sortorder
+            try:
+                obj.sortorder = int(sortorder)
+            except:
+                obj.sortorder = 100
             obj._p_changed = 1
 
     def __deleteSymbol(self, id):
@@ -135,7 +141,7 @@ class symbols_tool:
                 'description': ob.description, 'parent': ob.parent, 'picture': ob.picture, 'sortorder': ob.sortorder}
         else:
             return {'action': 'add', 'id': '', 'title': '',
-                'description': '', 'parent': '', 'picture': None, 'sortorder': ''}
+                'description': '', 'parent': '', 'picture': None, 'sortorder': 100}
 
     def getSymbolTitle(self, id):
         """Get title"""
@@ -180,6 +186,17 @@ class symbols_tool:
                 newobj = symbol_item('symbol%s' % obj.id, obj.title, obj.parent, obj.description, None, obj.sortorder)
                 newobj.setPicture(obj.picture)
                 self.__symbol_collection['symbol%s' % obj.id] = newobj
+        self._p_changed = 1
+
+    def updateSymbolsSortorders(self):
+        """ """
+        #to be removed
+        for id in self.getSymbolsIds():
+            obj = self.__symbol_collection[id]
+            try:
+                obj.sortorder = int(obj.sortorder)
+            except:
+                obj.sortorder = 100
         self._p_changed = 1
 
     def updateSymbolsParent(self):
