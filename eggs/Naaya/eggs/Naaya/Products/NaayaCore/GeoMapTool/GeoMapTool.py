@@ -1077,7 +1077,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(view, 'getSymbolsListOrdered')
-    def getSymbolsListOrdered(self, skey='sortorder', rkey=''):
+    def getSymbolsListOrdered(self, skey='sortorder', rkey=1):
         """ return an ordered lsit of symbols """
         r = self.getSymbolsList()
         if skey in ['title', 'parent', 'sortorder']:
