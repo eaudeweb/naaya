@@ -1515,6 +1515,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         l_tree = []
         if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
         else: l_folders = call_method(root, 'getPublishedFolders', [])
+        l_folders = self.utSortObjsListByAttr(l_folders, 'title', sort_order)
         l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', sort_order)
         for l_folder in l_folders:
             if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
