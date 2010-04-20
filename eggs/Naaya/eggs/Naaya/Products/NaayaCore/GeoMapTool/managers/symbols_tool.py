@@ -107,7 +107,7 @@ class symbols_tool:
 
     def getParentsListOrdered(self):
         """ Get a list with all parent objects ordered by sortorder """
-        return self.utSortObjsListByAttr(self.getParentsList(), 'sortorder', 1)
+        return self.utSortObjsListByAttr(self.getParentsList(), 'sortorder', 0)
 
     def getSymbolChildren(self, parent):
         """Get a list with all the children of a parent object"""
@@ -116,7 +116,7 @@ class symbols_tool:
 
     def getSymbolChildrenOrdered(self, parent):
         """Get a list with all the children of a parent object ordered by sortorder """
-        return self.utSortObjsListByAttr(self.getSymbolChildren(parent), 'sortorder', 1)
+        return self.utSortObjsListByAttr(self.getSymbolChildren(parent), 'sortorder', 0)
 
     def getSymbolsList(self):
         """Get a list with all objects"""
