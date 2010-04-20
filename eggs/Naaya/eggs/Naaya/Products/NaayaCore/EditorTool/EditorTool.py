@@ -221,7 +221,6 @@ class EditorTool(Folder):
         if old_css != '':
             cfg['content_css'] += ',' + old_css
 
-        self.REQUEST.RESPONSE.setHeader('content-type', 'text/html; charset="utf-8"')
         return "<script type=\"text/javascript\">\
 $().ready(function() {$('#%s').tinymce(%s);})\
 </script>" % (element, json.dumps(cfg, indent=2))
