@@ -193,6 +193,11 @@ class EditorTool(Folder):
         """
         if not lang:
             lang = self.gl_get_selected_language()
+        # romancri 20100420:
+        # When using dialects, clobber the dialect. Otherwise, TinyMCE fails 
+        # because it doesn't have these translation files.
+        if lang:
+            lang = lang.split('-')[0]
         doc_url = "/".join(self.aq_parent.getPhysicalPath())
         if extra_options.has_key('config_template'):
             template = extra_options['config_template']
