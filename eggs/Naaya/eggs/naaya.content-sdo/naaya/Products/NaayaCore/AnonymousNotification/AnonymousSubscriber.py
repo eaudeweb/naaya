@@ -81,7 +81,8 @@ class AnonymousSubscriber(Subscriber):
                 str(self.absolute_url()) + '/confirm'
             )
         except ValueError, e:
-            errors['email_exists'] = True
+            if is_valid_email(email):
+                errors['email_exists'] = True
         
         if not len(errors):
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/thank_you')
