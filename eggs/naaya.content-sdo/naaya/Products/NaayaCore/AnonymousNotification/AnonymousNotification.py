@@ -122,6 +122,15 @@ class AnonymousNotification(SimpleItem):
         email_to = subscription.email
         email_tool.sendEmail(email_data['body_text'], email_to, email_from, email_data['subject'])
     
+    security.declarePrivate('add_account_subscription')
+    def import_email_subscription(self, email, organisation, sector, country, notif_type, lang):
+        """Import e-mail subscription into the subscriptions container."""
+        portal_notification = self.getSite().getNotificationTool()
+        subscription_container = ISubscriptionContainer(self.getSite())
+        
+        subscription = AnonymousSubscription(email, organisation, sector, country, notif_type, lang)
+        subscription_container.add(subscription)
+    
     security.declarePrivate('remove_account_subscription')
     def remove_account_subscription(self, email, location='', notif_type='', lang=''):
         if not is_valid_email(email):

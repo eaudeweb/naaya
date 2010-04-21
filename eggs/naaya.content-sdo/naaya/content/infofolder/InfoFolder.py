@@ -514,6 +514,55 @@ class NyInfoFolder(NyFolder):
 
         print "%s %s objects were updated" % (counter, meta_type)
 
+    def update_properties(self, attr, oldvalue, newvalue):
+        """ """
+        counter = 0
+        for ob in self.objectValues():
+            try:
+                if getattr(ob, attr) == oldvalue:
+                    setattr(ob, attr, newvalue)
+                    counter += 1
+                    print ob.id
+            except:
+                continue
+        print 'Number of objects updated: %s' % counter
+
+    def update_website(self):
+        """ """
+        counter = 0
+        for ob in self.objectValues():
+            if ob.website == ' ':
+                ob.website = None
+                counter += 1
+                print ob.id
+        print 'Number of objects updated: %s' % counter
+
+    security.declareProtected('Naaya - Add Naaya Event objects', 'import_subscribers')
+    def import_subscribers(self, notif_type='monthly'):
+        ''' '''
+        from Products.NaayaCore.NotificationTool.interfaces import ISubscriptionContainer
+        import xmlrpclib
+        sdo = xmlrpclib.ServerProxy('http://sd-online.ewindows.eu.org')
+        obs = sdo.a_subscribers_export()
+        total_obs = len(obs)
+        current_ob = 0
+        for ob in obs:
+            current_ob += 1
+            notificationTool = self.getSite().portal_anonymous_notification
+            notificationTool.import_email_subscription(
+                ob['email'],
+                ob['organisation'],
+                ob['sector'],
+                ob['country'],
+                notif_type,
+                'en'
+            )
+            print '%s of %s objects, SDO Id: %s' % (current_ob, total_obs, ob['id'])
+        print 'Import finished.'
+        subscription_container = ISubscriptionContainer(self.getSite())
+        for ob in subscription_container:
+            print ob
+
 InitializeClass(NyInfoFolder)
 
 def search(self, REQUEST):
