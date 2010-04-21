@@ -1296,7 +1296,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             first_letter=first_letter, sort_on=sort_on, sort_order=sort_order,
             lat_center=lat_center, lon_center=lon_center, country=country,
         )
-
         options = {}
         options['lat_min'] = lat_min
         options['lat_max'] = lat_max
@@ -1323,7 +1322,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['prev_start'] = options['start'] - step
         options['prev_end'] = options['start']
         options['records'] = results[options['start']:options['end']]
+        options['ratable_records'] = self._ratable_results(results[options['start']:options['end']])
         return PageTemplateFile('zpt/list_locations',  globals()).__of__(self)(**options)
+
+    def _ratable_results(self, results):
+        for ob in results:
+            try:
+                ratable = ob.is_ratable()
+                if ratable: return True
+            except: pass
+        return False
 
     security.declareProtected(view, 'export_csv')
     def export_csv(self, meta_type, REQUEST=None, RESPONSE=None, **kw):

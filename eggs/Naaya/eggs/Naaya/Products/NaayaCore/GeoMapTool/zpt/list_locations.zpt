@@ -30,7 +30,8 @@
 		prev_start python:start-step;
 		prev_end start;
 		url_params string:?lat_min=${lat_min}&amp;lat_max=${lat_max}&amp;lon_min=${lon_min}&amp;lon_max=${lon_max}&amp;lat_center=${lat_center}&amp;lon_center=${lon_center}&amp;geo_types=${geo_types_str}&amp;administrative_level=${administrative_level_str}&amp;landscape_type=${landscape_type_str}&amp;geo_query=${geo_query}&amp;country=${country}&amp;sortable=${sortable};
-		records options/records">
+		records options/records;
+		ratable_records options/ratable_records">
 
 <div class="floated-buttons">
 	<span class="buttons">
@@ -162,6 +163,7 @@
 					<a tal:omit-tag="not: sortable" id="geo_longitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_longitude#geo_longitude" i18n:translate="">Longitude</a>
 				</th>
 			</tal:block>
+			<th tal:condition="ratable_records" scope="col" class="scope-col" i18n:translate="">Rating</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -178,6 +180,10 @@
 			<td tal:content="record/geo_location/address" />
 			<td tal:content="record/geo_location/lat" />
 			<td tal:content="record/geo_location/lon" />
+			<td tal:condition="ratable_records" class="type" style="width: 15%;">
+				<tal:block define="user_rating record/user_rating_stars_numbers|nothing"
+					condition="record/is_ratable" replace="structure user_rating"/>
+			</td>
 		</tr>
 	</tbody>
 </table>

@@ -234,8 +234,8 @@ function toggleSelect() {
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block> 
 					</td>
-					<td tal:condition="ratings" class="type" style="width: 10%;">
-						<tal:block define="user_rating object/user_rating_stars|nothing"
+					<td tal:condition="ratings" class="type" style="width: 15%;">
+						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"
 							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
 
