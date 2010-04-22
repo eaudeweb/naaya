@@ -51,6 +51,7 @@ from naaya.core.utils import path_in_site
 from naaya.core.utils import relative_object_path
 from naaya.core.utils import force_to_unicode
 from naaya.core.utils import ofs_path
+from paginator import DiggPaginator, EmptyPage, InvalidPage
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscription
@@ -362,6 +363,25 @@ class NotificationTool(Folder):
     weekly_emailpt = EmailPageTemplateFile('emailpt/weekly.zpt', globals())
     monthly_emailpt = EmailPageTemplateFile('emailpt/monthly.zpt', globals())
 
+    def itemsPaginator(self, REQUEST):
+        """ """
+        items_list = list(self.admin_get_subscriptions())
+        paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)   #Show 10 documents per page
+
+        # Make sure page request is an int. If not, deliver first page.
+        try:
+            page = int(REQUEST.get('page', '1'))
+        except ValueError:
+            page = 1
+
+        # If page request (9999) is out of range, deliver last page of results.
+        try:
+            items = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            items = paginator.page(paginator.num_pages)
+
+        return items
+
 InitializeClass(NotificationTool)
 
 def list_modified_objects(site, when_start, when_end):
@@ -497,7 +517,10 @@ class AccountSubscription(object):
 
     def to_string(self, obj):
         name, email = self._name_and_email(obj)
-        return u'%s (%s)' % (name, self.user_id)
+        if name:
+            return u'%s (%s)' % (name, email)
+        else:
+            return u'%s' % email
 
 def fetch_subscriptions(obj, inherit):
     """
