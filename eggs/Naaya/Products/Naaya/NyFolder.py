@@ -38,6 +38,7 @@ from interfaces import INyFolder
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils, batch_utils, make_id
+from naaya.core.utils import force_to_unicode
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -303,7 +304,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             for x in self.getFolders():
                 ra(x.export_this(folderish))
         ra('</ob>')
-        return ''.join(r)
+        return ''.join(force_to_unicode(ln) for ln in r)
 
     security.declarePublic('export_this_withoutcontent')
     def export_this_withoutcontent(self):
