@@ -98,9 +98,9 @@
 
 <h2 i18n:translate="">Current subscriptions</h2>
 <tal:block tal:define="current_subscriptions
-                           python:list(here.admin_get_subscriptions())">
+                           python:here.itemsPaginator(request)">
 <br />
-<p tal:condition="python:len(current_subscriptions) == 0"
+<p tal:condition="not:current_subscriptions/object_list"
    i18n:translate="">No users have yet subscribed to any notifications.</p> 
 <br />
 <form action="admin_add_account_subscription" method="post"
@@ -138,7 +138,7 @@
         <input type="submit" value="Subscribe user" i18n:attributes="value"/>
     </fieldset>
 </form>
-<table class="datatable" tal:condition="python:len(current_subscriptions) > 0">
+<table class="datatable" tal:condition="current_subscriptions/object_list">
 	<thead>
 		<th>User</th>
 		<th>Location</th>
@@ -147,7 +147,7 @@
 		<th></th>
 	</thead>
 	<tbody>
-		<tr tal:repeat="sub_data current_subscriptions">
+		<tr tal:repeat="sub_data current_subscriptions/object_list">
 			<td>
 				<span tal:content="sub_data/user"/>
 			</td>
@@ -175,6 +175,51 @@
 		</tr>
 	</tbody>
 </table>
+<div class="pagination" tal:define="current_page python:int(request.get('page', '1'))">
+
+	<tal:block condition="current_subscriptions/leading_range">
+	<span tal:repeat="page current_subscriptions/leading_range">
+	<tal:block define="this_page python:page == current_page">
+		<a class="bold" tal:condition="this_page" tal:content="page"/>
+		<a tal:condition="not:this_page" tal:content="page"
+		tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
+	</tal:block>
+	</span>
+	...
+	</tal:block>
+
+	<span tal:repeat="page current_subscriptions/main_range">
+	<tal:block define="this_page python:page == current_page">
+		<a class="bold" tal:condition="this_page" tal:content="page"/>
+		<a tal:condition="not:this_page"
+		tal:content="page" tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
+	</tal:block>
+	</span>
+
+	<tal:block condition="current_subscriptions/trailing_range">
+	...
+	<span tal:repeat="page current_subscriptions/trailing_range">
+	<tal:block define="this_page python:page == current_page">
+		<a class="bold" tal:condition="this_page" tal:content="page"/>
+		<a tal:condition="not:this_page"
+		tal:content="page" tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
+	</tal:block>
+	</span>
+	</tal:block>
+
+	<span tal:define="has_previous current_subscriptions/has_previous;
+						has_next current_subscriptions/has_next;">
+		<a class="prevpage" tal:condition="has_previous" 
+			tal:attributes="href string:${here/absolute_url}/admin_html?page=${current_subscriptions/previous_page_number}">&lt; previous</a>
+		<tal:block condition="python:(has_previous and has_next)">|</tal:block>
+		<a class="nextpage" tal:condition="has_next" 
+			tal:attributes="href string:${here/absolute_url}/admin_html?page=${current_subscriptions/next_page_number}">next &gt;</a>
+	</span>
+
+	<span class="matchescount">
+		<span tal:replace="current_subscriptions/start_index"/>-<span tal:replace="current_subscriptions/end_index"/> of <span tal:replace="current_subscriptions/paginator/count"/> current_subscriptions
+	</span>
+</div>
 </tal:block>
 <!-- Ajax tree scripts -->
 <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
