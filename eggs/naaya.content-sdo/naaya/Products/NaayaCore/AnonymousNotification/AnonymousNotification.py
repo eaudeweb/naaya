@@ -77,7 +77,10 @@ class AnonymousSubscription(object):
         return self.email
 
     def to_string(self, obj):
-        return u'%s (%s)' % (self.organisation, self.email)
+        if self.organisation:
+            return u'%s (%s)' % (self.organisation, self.email)
+        else:
+            return u'%s' % self.email
 
 class AnonymousNotification(SimpleItem):
     meta_type = "Anonymous Notification"
