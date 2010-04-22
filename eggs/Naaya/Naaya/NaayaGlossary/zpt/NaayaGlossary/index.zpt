@@ -1,10 +1,9 @@
 <span tal:replace="structure here/standard_html_header"/>
 <script language="JavaScript">
 	function fTreeClick(expand) {
-	    document.frmGlossMap.action = '';
-
+		document.frmGlossMap.action = '';
 		document.frmGlossMap.expand.value = expand;
-	    document.frmGlossMap.submit();
+		document.frmGlossMap.submit();
 	}
 </script>
 
@@ -59,8 +58,8 @@
 					skin_path python:here.getLayoutTool().getSkinFilesPath();
 					ctrl python:request.get('ctrl', '');
 					selected_item python:here.getGlossaryChild(request.get('item', ''));
-                    insert_after  python:here.getGlossaryChild(request.get('insert', ''));
-                    is_manager here/checkPermissionManageGlossary">
+					insert_after  python:here.getGlossaryChild(request.get('insert', ''));
+					is_manager here/checkPermissionManageGlossary">
 	<p>
 		<a class="button" href="javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
 		<a class="button" href="javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
@@ -75,9 +74,9 @@
 		<table>
 			<tr tal:repeat="tree_node tree">
 				<td tal:define="lang python:here.get_language_by_code(here.getSelectedLang());
-                                item python:tree_node[0];
-                                translation python:item.get_translation_by_language(lang);
-                                translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
+								item python:tree_node[0];
+								translation python:item.get_translation_by_language(lang);
+								translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
 					<table>
 						<tr tal:condition="python:item.approved or is_manager">
 							<td>
@@ -111,10 +110,10 @@
 									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
 								<tal:block condition="is_manager">
-                                    <a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">edit</a>
+									<a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">edit</a>
 									<tal:block condition="python:item.meta_type=='Naaya Glossary Folder'">
-                                        <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">add</a>
-                                    </tal:block>
+										<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">add</a>
+									</tal:block>
 								</tal:block>
 							</td>
 						</tr>
@@ -122,10 +121,10 @@
 				</td>
 			</tr>
 		</table>
-        <tal:block condition="is_manager">
-            <br />
-            <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))">Add Glossary Folder</a>
-        </tal:block>
+		<tal:block condition="is_manager">
+			<br />
+			<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))">Add Glossary Folder</a>
+		</tal:block>
 		<input type="hidden" name="expand" tal:attributes="value expand" />
 		<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
 		<input type="hidden" name="lang" tal:attributes="value selected_lang" />

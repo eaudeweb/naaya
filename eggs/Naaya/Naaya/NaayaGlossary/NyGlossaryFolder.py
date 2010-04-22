@@ -109,8 +109,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         obj_lst = []
         for obj in self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
             id_lst.append(obj.id)
-        id_lst.sort()
-        for term in self.utSortObjsListByAttr(id_lst, 'title', 0):
+        for term in self.utSortObjsListByAttr(id_lst, 'id', 0):
             ob = self._getOb(term)
             obj_lst.append(ob)
         return obj_lst
@@ -253,7 +252,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
 
     def getGlossElems(self):
         """ """
-        return self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE])
+        return self.utSortObjsListByAttr(self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]), 'id', 0)
 
     def hasGlossElems(self):
         """ """
