@@ -110,7 +110,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         for obj in self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
             id_lst.append(obj.id)
         id_lst.sort()
-        for term in id_lst:
+        for term in self.utSortObjsListByAttr(id_lst, 'title', 0):
             ob = self._getOb(term)
             obj_lst.append(ob)
         return obj_lst
