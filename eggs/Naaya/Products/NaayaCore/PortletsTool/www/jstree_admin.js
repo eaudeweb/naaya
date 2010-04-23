@@ -35,6 +35,9 @@ function get_children(TREE_OBJ, NODE) {
 $(function () {
     $("#jstree_container").tree({
         callback : {
+            onload : function(TREE_OBJ){
+                TREE_OBJ.open_all();
+            },
             oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ){
                 var action = {
                     "action" : "add",

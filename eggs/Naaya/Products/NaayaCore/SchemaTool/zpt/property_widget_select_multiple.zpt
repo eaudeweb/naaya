@@ -96,7 +96,7 @@
                         },
                         callback : {
                             onload : function(TREE_OBJ){
-                                TREE_OBJ.close_all();
+                                TREE_OBJ.open_all();
                             },
                             onselect : function(NODE, TREE_OBJ){
                                 var node_id = TREE_OBJ.get_node(NODE).attr('id');
