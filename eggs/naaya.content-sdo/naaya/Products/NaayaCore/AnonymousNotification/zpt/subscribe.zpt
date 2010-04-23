@@ -32,21 +32,16 @@
         </select>
         </tal:block>
     </tal:block>    
-	
-	<div class="field text">
-		<tal:block tal:condition="python: errors.get('email', False)">
-			<p class="error" i18n:translate="">Your e-mail address is not valid.</p>
+	<div class="form-errors">
+		<tal:block tal:condition="python: errors.get('message', False)">
+		<p class="error" i18n:translate="" tal:content="python: errors['message']"></p>
 		</tal:block>
-		<tal:block tal:condition="python: errors.get('email_exists', False)">
-			<p class="error" i18n:translate="">Your e-mail address is already subscribed to notifications.</p>
-		</tal:block>
+	</div>
+	<div class="field text">		
 		<label i18n:translate="">Email</label>
 		<input type="text" name="email" tal:attributes="value request/email | nothing" />
 	</div>
 	<div class="field text">
-		<tal:block tal:condition="python: errors.get('organisation', False)">
-			<p class="error" i18n:translate="">Please provide an Organization.</p>
-		</tal:block>
 		<label i18n:translate="">Organization</label>
 		<input type="text" name="organisation" tal:attributes="value request/organisation | nothing" />
 	</div>

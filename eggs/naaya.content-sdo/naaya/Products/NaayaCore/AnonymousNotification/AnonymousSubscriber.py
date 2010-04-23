@@ -62,28 +62,25 @@ class AnonymousSubscriber(Subscriber):
         country = REQUEST.get('country', '')
         errors = {} 
         REQUEST.SESSION['errors'] = {}
-         # Send errors back to form
-        if not is_valid_email(email):
-            errors['email'] = True
-        if not organisation:
-            errors['organisation'] = True
         if not lang:
             lang = self.get_implicit_lang()
         try:
-            notificationTool = self.getSite().portal_anonymous_notification
-            notificationTool.add_email_subscription(
-                email,
-                organisation,
-                sector,
-                country,
-                notif_type,
-                lang,
-                str(self.absolute_url()) + '/confirm'
-            )
-        except ValueError, e:
-            if is_valid_email(email):
-                errors['email_exists'] = True
-        
+            if 'Anonymous User' != REQUEST.AUTHENTICATED_USER.getUserName():
+                errors['message'] = 'Only non-registered users can submit this form'
+            else:
+                notificationTool = self.getSite().portal_anonymous_notification
+                notificationTool.add_email_subscription(
+                    email,
+                    organisation,
+                    sector,
+                    country,
+                    notif_type,
+                    lang,
+                    str(self.absolute_url()) + '/confirm'
+                )
+        except Exception, e:
+            errors['message'] = e
+            
         if not len(errors):
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/thank_you')
         else:
