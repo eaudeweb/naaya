@@ -415,4 +415,4 @@ config.update({
 })
 
 def get_config():
-    return config
+    return config

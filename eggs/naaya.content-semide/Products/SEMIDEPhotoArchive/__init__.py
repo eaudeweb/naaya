@@ -42,4 +42,4 @@ misc_ = {
     'NyPhotoFolder.gif':ImageFile('www/NyPhotoFolder.gif', globals()),
     'NyPhoto.gif':ImageFile('www/NyPhoto.gif', globals()),
     'NyPhoto_marked.gif':ImageFile('www/NyPhoto_marked.gif', globals()),
-}
+}

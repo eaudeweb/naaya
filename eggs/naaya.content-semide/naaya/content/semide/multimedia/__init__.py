@@ -14,4 +14,4 @@
 #
 # Authors:
 #
-# Dragos Chirila, Finsiel Romania
+# Dragos Chirila, Finsiel Romania

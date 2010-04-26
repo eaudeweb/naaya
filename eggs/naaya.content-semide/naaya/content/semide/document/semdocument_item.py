@@ -97,8 +97,8 @@ DEFAULT_SCHEMA = {
     'creator':          dict(sortorder=150, widget_type="String", label="Creator", localized = True),
     'creator_email':    dict(sortorder=160, widget_type="String", label="Creator e-mail"),
     'rights':           dict(sortorder=170, widget_type="Select", label="Rights", list_id='rights_types'),
-    'subject':          dict(sortorder=180, widget_type="SelectMultiple", label="Subject", visible=False, localized=True),
-    'relation':         dict(sortorder=190, widget_type='String', label='Relation', visible=False, localized=True),
+    'subject':          dict(sortorder=180, widget_type="SelectMultiple", label="Subject", localized=True),
+    'relation':         dict(sortorder=190, widget_type='String', label='Relation', localized=True),
     'file_link':        dict(sortorder=200, widget_type="String", label="File link"),
 }
 
@@ -147,11 +147,7 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-        schema_raw_data['relation'] = schema_raw_data['relation'][1]
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()

@@ -170,4 +170,3 @@ class ZZipFile(ZipFile):
         """ """
         self.hasbeenread = 0
         self.filename=filename
-
