@@ -126,4 +126,4 @@ class MDH(utils):
         temp.close()
         unlink('%s.lck' % temp_path)
 
-InitializeClass(MDH)
+InitializeClass(MDH)

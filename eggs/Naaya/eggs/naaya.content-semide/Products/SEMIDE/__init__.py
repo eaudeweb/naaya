@@ -66,4 +66,4 @@ misc_ = {
     'FlashTool.gif':ImageFile('www/FlashTool.gif', globals()),
     'FlashTemplate.gif':ImageFile('www/FlashTemplate.gif', globals()),
     'FlashCategory.gif':ImageFile('www/FlashCategory.gif', globals()),
-}
+}

@@ -79,7 +79,6 @@ from managers.semide_zip                            import SemideZip
 from managers                                       import utils
 from managers.decorators                            import cachable, content_type_xml
 
-from SemideVersions                                 import SemideVersions
 from pdf.export_pdf                                 import export_pdf
 from Tools.FlashTool                                import manage_addFlashTool
 
@@ -96,7 +95,7 @@ def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip, Cacheable):
+class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     """ """
 
     meta_type = METATYPE_SEMIDESITE
@@ -110,7 +109,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip, Cac
 
     security = ClassSecurityInfo()
     
-    product_paths = NySite.product_paths + [Globals.package_home(globals())]
+    product_paths = NySite.product_paths + [SEMIDE_PRODUCT_PATH]
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
