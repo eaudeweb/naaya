@@ -1,0 +1,74 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p>
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
+</div>
+
+<p class="form-help">
+	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
+</p>
+
+<form name="frmEdit" method="post" action="manageProperties" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr><td class="form-label" colspan="2">Base properties</td></tr>
+	<tr>
+		<td class="form-label">Title</td>
+		<td><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value here/title"></td>
+	</tr>
+	<tr>
+		<td class="form-label" valign="top">Description</td>
+		<td><textarea name="description:utf8:ustring" rows="5" cols="50" tal:content="here/description"/></td>
+	</tr>
+	<tr>
+		<td class="form-label">Country</td>
+		<td><input type="text" name="coverage:utf8:ustring" size="50" tal:attributes="value here/coverage" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Keywords</td>
+		<td><input type="text" name="keywords:utf8:ustring" size="50" tal:attributes="value here/keywords" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Sort order</td>
+		<td><input type="text" name="sortorder" size="2" tal:attributes="value here/sortorder"></td>
+	</tr>
+	<tr>
+		<td class="form-label">Approved</td>
+		<td><input type="checkbox" name="approved" tal:attributes="checked here/approved" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
+		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)"/></td>
+	</tr>
+	<tr>
+		<td class="form-label">Open for comments</td>
+		<td><input type="checkbox" name="discussion" tal:attributes="checked here/is_open_for_comments" /></td>
+	</tr>
+	<tr><td></td></tr>
+	<tr><td class="form-label" colspan="2">Custom properties</td></tr>
+
+	<!-- Custom properties -->
+	<tr>
+		<td class="form-label" valign="top">River basin</td>
+		<td><input type="text" name="fieldsite_loc:utf8:ustring" id="fieldsite_loc" size="50" tal:attributes="value here/fieldsite_loc" /></td>
+	</tr>
+	<tr>
+		<td class="form-label" valign="top">River basin</td>
+		<td><input type="text" name="fieldsite_rb:utf8:ustring" id="fieldsite_rb" size="50" tal:attributes="value here/fieldsite_rb" /></td>
+	</tr>
+
+	<tr><td></td></tr>
+	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
+	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+		<td class="form-label"><span tal:replace="record/name"/></td>
+		<td tal:content="structure python:record.render(here.getPropertyValue(record.id))">dynamic html control</td>
+	</tr>
+	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

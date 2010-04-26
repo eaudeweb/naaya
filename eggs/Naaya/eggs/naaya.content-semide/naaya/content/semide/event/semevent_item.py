@@ -1,0 +1,646 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is EMWIS/SEMIDE.
+# Code created by Finsiel Romania are
+# Copyright (C) EMWIS/SEMIDE. All Rights Reserved.
+#
+# Authors:
+#
+# Cornel Nitu, Finsiel Romania
+# Dragos Chirila, Finsiel Romania
+
+#Python
+import os
+import sys
+from copy import deepcopy
+
+#Zope
+from Acquisition import Implicit
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from App.ImageFile import ImageFile
+from OFS.Image import cookId
+import zope.event
+
+#Naaya
+from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+
+from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyFSContainer import NyFSContainer
+from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyCheckControl import NyCheckControl
+from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyValidation import NyValidation
+
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
+
+#module constants
+METATYPE_OBJECT = 'Naaya Semide Event'
+LABEL_OBJECT = 'Event'
+PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Semide Event objects'
+OBJECT_FORMS = ['semevent_add', 'semevent_edit', 'semevent_index']
+OBJECT_CONSTRUCTORS = ['manage_addNySemEvent_html', 'semevent_add_html', 'addNySemEvent', 'importNySemEvent']
+OBJECT_ADD_FORM = 'semevent_add_html'
+DESCRIPTION_OBJECT = 'This is Naaya Semide Event type.'
+PREFIX_OBJECT = 'sev'
+PROPERTIES_OBJECT = {
+    'id':               (0, '', ''),
+    'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
+    'description':      (0, '', ''),
+    'coverage':         (1, MUST_BE_NONEMPTY, 'The Geographical coverage field must have a value.'),
+    'keywords':         (0, '', ''),
+    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
+    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
+    'discussion':       (0, '', ''),
+    'creator':          (0, '', ''),
+    'creator_email':    (0, '', ''),
+    'topitem':          (0, '', ''),
+    'event_type':       (0, '', ''),
+    'source':           (0, '', ''),
+    'source_link':      (0, '', ''),
+    'file_link':        (0, '', ''),
+    'file_link_copy':   (0, '', ''),
+    'subject':          (0, '', ''),
+    'relation':         (0, '', ''),
+    'organizer':        (0, '', ''),
+    'duration':         (0, '', ''),
+    'geozone':          (0, '', ''),
+    'address':          (0, '', ''),
+    'start_date':       (0, '', ''),
+    'end_date':         (0, '', ''),
+    'event_status':     (0, '', ''),
+    'contact_person':   (0, '', ''),
+    'contact_email':    (0, '', ''),
+    'contact_phone':    (0, '', ''),
+    'working_langs':    (0, '', ''),
+    'lang':             (0, '', ''),
+    'file':             (0, '', ''),
+}
+
+DEFAULT_SCHEMA = {
+    'start_date':       dict(sortorder=100, widget_type="Date", label="Start date", required = True),
+    'end_date':         dict(sortorder=110, widget_type="Date", label="End Date"),
+    'duration':         dict(sortorder=120, widget_type="String", localized = True, label="Duration"),
+    'organizer':        dict(sortorder=130, widget_type="String", localized = True, label="Organizer"),
+    'address':          dict(sortorder=140, widget_type="String", localized = True, label="Address"),
+    'geozone':          dict(sortorder=150, widget_type="Select", label="Geozone", list_id='event_geozone'),
+    'event_type':       dict(sortorder=160, widget_type="Select", label="Type", list_id='event_types'),
+    'subject':          dict(sortorder=170, widget_type="SelectMultiple", label="", visible=False),
+    'source':           dict(sortorder=180, widget_type="String", localized = True, label="Source"),
+    'source_link':      dict(sortorder=190, widget_type="String", label="Source link"),
+    'creator':          dict(sortorder=200, widget_type="String", label="Creator"),
+    'creator_email':    dict(sortorder=210, widget_type="String", label="Creator e-mail"),
+    'contact_person':   dict(sortorder=220, widget_type="String", localized = True, label="Contact name"),
+    'contact_email':    dict(sortorder=230, widget_type="String", label="Contact e-mail"),
+    'contact_phone':    dict(sortorder=240, widget_type="String", label="Contact phone"),
+    'topitem':          dict(sortorder=250, widget_type="Checkbox", label="Is hot"),
+    'relation':         dict(sortorder=250, widget_type="String", visible=False),
+    'working_langs':    dict(sortorder=260, widget_type="SelectMultiple", label="", visible=False),
+    'event_status':     dict(sortorder=270, widget_type="Select", label="Status", list_id='event_status'),
+    'file_link':        dict(sortorder=280, widget_type="String", localized = True, label="File link", default='http://'),
+    'file':             dict(sortorder=290, widget_type="String", label="", visible=False)
+}
+
+DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA['sortorder'].update(visible=False)
+
+config = {
+    'product': 'NaayaContent', 
+    'module': 'NySemEvent',
+    'package_path': os.path.abspath(os.path.dirname(__file__)),
+    'meta_type': METATYPE_OBJECT,
+    'label': LABEL_OBJECT,
+    'permission': PERMISSION_ADD_OBJECT,
+    'forms': OBJECT_FORMS,
+    'add_form': OBJECT_ADD_FORM,
+    'description': DESCRIPTION_OBJECT,
+    'default_schema': DEFAULT_SCHEMA,
+    'properties': PROPERTIES_OBJECT,
+    'schema_name': 'NySemEvent',
+    '_module': sys.modules[__name__],
+    'icon': os.path.join(os.path.dirname(__file__), 'www', 'NySemEvent.gif'),
+    '_misc': {
+            'NySemEvent.gif': ImageFile('www/NySemEvent.gif', globals()),
+            'NySemEvent_marked.gif': ImageFile('www/NySemEvent_marked.gif', globals()),
+        },
+}
+
+manage_addNySemEvent_html = PageTemplateFile('zpt/semevent_manage_add', globals())
+manage_addNySemEvent_html.kind = METATYPE_OBJECT
+manage_addNySemEvent_html.action = 'addNySemEvent'
+
+def semevent_add_html(self, REQUEST=None, RESPONSE=None):
+    """ """
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemEvent', 'form_helper': form_helper}, 'semevent_add')
+
+def _create_NySemEvent_object(parent, id, contributor):
+    id = make_id(parent, id=id, prefix=PREFIX_OBJECT)
+    ob = NySemEvent(id, contributor)
+    parent.gl_add_languages(ob)
+    parent._setObject(id, ob)
+    ob = parent._getOb(id)
+    ob.after_setObject()
+    return ob
+
+def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
+    """ """
+    if REQUEST is not None:
+        schema_raw_data = dict(REQUEST.form)
+    else:
+        schema_raw_data = kwargs
+    
+    #XXX this hack should be remove once the Schema is *fully* functionaly
+    if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
+        schema_raw_data['relation'] = schema_raw_data['relation'][1]
+    
+    #XXX this hack should be remove once the Schema is *fully* functionaly
+    if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
+        schema_raw_data['file'] = schema_raw_data['file'][1]
+        
+    #process parameters
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
+    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    
+    ob = _create_NySemEvent_object(self, id, contributor)    
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+    ob.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+    ob.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
+    
+    #check Captcha/reCaptcha
+    if not self.checkPermissionSkipCaptcha():
+        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+        if captcha_validator:
+            form_errors['captcha'] = captcha_validator
+    
+    if form_errors:
+        if REQUEST is None:
+            raise ValueError(form_errors.popitem()[1]) # pick a random error
+        else:
+            import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            return REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+    
+    if 'file' in schema_raw_data:
+        ob.handleUpload(schema_raw_data['file'])
+
+    if self.glCheckPermissionPublishObjects():
+        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+    else:
+        approved, approved_by = 0, None
+    ob.approveThis(approved, approved_by)
+    ob.submitThis()    
+    ob.updatePropertiesFromGlossary(_lang)
+
+    if ob.discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    zope.event.notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
+
+    #log post date
+    auth_tool = self.getAuthenticationTool()
+    auth_tool.changeLastPost(contributor)
+    #redirect if case
+    if REQUEST is not None:
+        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+        if l_referer == 'semevent_manage_add' or l_referer.find('semevent_manage_add') != -1:
+            return self.manage_main(self, REQUEST, update_menu=1)
+        elif l_referer == 'semevent_add_html':
+            self.setSession('referer', self.absolute_url())
+            return ob.object_submitted_message(REQUEST)
+            REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+    return ob.getId()
+    
+def importNySemEvent(self, param, id, attrs, content, properties, discussion, objects):
+    #this method is called during the import process
+    try: param = abs(int(param))
+    except: param = 0
+    if param == 3:
+        #just try to delete the object
+        try: self.manage_delObjects([id])
+        except: pass
+    else:
+        ob = self._getOb(id, None)
+        if param in [0, 1] or (param==2 and ob is None):
+            if param == 1:
+                #delete the object if exists
+                try: self.manage_delObjects([id])
+                except: pass
+            #Creating object and setting all object properties (taken from Schema)
+            ob = _create_NySemEvent_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
+            for prop in ob._get_schema().listPropNames():
+                setattr(ob, prop, '')
+            for k, v  in attrs.items():
+                setattr(ob, k, v.encode('utf-8'))
+            # Upload file
+            if objects:
+                obj = objects[0]
+                data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
+                ctype = obj.attrs['content_type'].encode('utf-8')
+                name = obj.attrs['name'].encode('utf-8')
+                try:
+                    size = int(obj.attrs['size'])
+                except TypeError, ValueError:
+                    size = 0
+                ob.update_data(data, ctype, size, name)
+            # Update properties
+            for property, langs in properties.items():
+                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
+            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+            if attrs['releasedate'].encode('utf-8') != '':
+                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.import_comments(discussion)
+            self.recatalogNyObject(ob)
+
+class semevent_item(Implicit, NyContentData, NyFSContainer):
+    """ """
+    meta_type = METATYPE_OBJECT
+class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
+    """ """
+    meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
+    icon = 'misc_/NaayaContent/NySemEvent.gif'
+    icon_marked = 'misc_/NaayaContent/NySemEvent_marked.gif'
+
+    def manage_options(self):
+        """ """
+        l_options = ()
+        if not self.hasVersion():
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += semevent_item.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
+        return l_options
+
+    security = ClassSecurityInfo()
+
+    def __init__(self, id, contributor):
+        """ """
+        self.id = id
+        semevent_item.__init__(self)
+        NyCheckControl.__dict__['__init__'](self)
+        NyItem.__dict__['__init__'](self)
+        self.contributor = contributor
+
+    security.declareProtected(view, 'resource_type')
+    def resource_type(self):
+        return self.event_type
+
+    security.declareProtected(view, 'resource_status')
+    def resource_status(self):
+        return self.event_status
+
+    security.declareProtected(view, 'resource_date')
+    def resource_date(self):
+        return self.start_date
+
+    security.declareProtected(view, 'resource_end_date')
+    def resource_end_date(self):
+        return self.end_date or self.start_date
+
+    security.declareProtected(view, 'resource_subject')
+    def resource_subject(self):
+        return ' '.join(self.subject)
+
+    security.declarePrivate('objectkeywords')
+    def objectkeywords(self, lang):
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang)])
+
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'creator="%s" creator_email="%s" topitem="%s" event_type="%s" source_link="%s" contact_email="%s" contact_phone="%s" subject="%s" relation="%s" geozone="%s" start_date="%s" end_date="%s" event_status="%s" working_langs="%s"' % \
+            (self.utXmlEncode(self.creator),
+                self.utXmlEncode(self.creator_email),
+                self.utXmlEncode(self.topitem),
+                self.utXmlEncode(self.event_type),
+                self.utXmlEncode(self.source_link),
+                self.utXmlEncode(self.contact_email),
+                self.utXmlEncode(self.contact_phone),
+                self.utXmlEncode(self.subject),
+                self.utXmlEncode(self.relation),
+                self.utXmlEncode(self.geozone),
+                self.utXmlEncode(self.utNoneToEmpty(self.start_date)),
+                self.utXmlEncode(self.utNoneToEmpty(self.end_date)),
+                self.utXmlEncode(self.event_status),
+                self.utXmlEncode(self.working_langs))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        ra = r.append
+        for l in self.gl_get_languages():
+            ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
+            ra('<file_link lang="%s"><![CDATA[%s]]></file_link>' % (l, self.utToUtf8(self.getLocalProperty('file_link', l))))
+            ra('<file_link_copy lang="%s"><![CDATA[%s]]></file_link_copy>' % (l, self.utToUtf8(self.getLocalProperty('file_link_copy', l))))
+            ra('<organizer lang="%s"><![CDATA[%s]]></organizer>' % (l, self.utToUtf8(self.getLocalProperty('organizer', l))))
+            ra('<duration lang="%s"><![CDATA[%s]]></duration>' % (l, self.utToUtf8(self.getLocalProperty('duration', l))))
+            ra('<address lang="%s"><![CDATA[%s]]></address>' % (l, self.utToUtf8(self.getLocalProperty('address', l))))
+            ra('<contact_person lang="%s"><![CDATA[%s]]></contact_person>' % (l, self.utToUtf8(self.getLocalProperty('contact_person', l))))
+        if self.getSize():
+            ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utXmlEncode(self.utToUtf8(self.getContentType())),
+                self.utToUtf8(self.getSize()),
+                self.utToUtf8(self.downloadfilename()))
+        )
+        return ''.join(r)
+
+    security.declarePrivate('syndicateThis')
+    def syndicateThis(self, lang=None):
+        l_site = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
+        r = []
+        ra = r.append
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Event</dc:type>')
+        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
+        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.getLocalProperty('creator', lang)))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra('<dc:relation>%s</dc:relation>' % self.utXmlEncode(self.relation))
+        for k in self.subject:
+            if k:
+                theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
+                theme_name = theme_ob.theme_name
+                if theme_name:
+                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
+
+        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
+        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
+        ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('organizer', lang)))
+        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.event_type))
+
+        for k in self.getLocalProperty('keywords', lang).split(','):
+            ra('<ut:keywords>%s</ut:keywords>' % self.utXmlEncode(k))
+        ra('<ut:creator_mail>%s</ut:creator_mail>' % self.utXmlEncode(self.creator_email))
+        ra('<ut:contact_name>%s</ut:contact_name>' % self.utXmlEncode(self.getLocalProperty('contact_person', lang)))
+        ra('<ut:contact_mail>%s</ut:contact_mail>' % self.utXmlEncode(self.contact_email))
+        ra('<ut:contact_phone>%s</ut:contact_phone>' % self.utXmlEncode(self.contact_phone))
+        ra('<ut:event_type>%s</ut:event_type>' % self.utXmlEncode(self.event_type))
+        ra('<ut:file_link>%s</ut:file_link>' % self.utXmlEncode(self.getLocalProperty('file_link', lang)))
+        ra('<ut:file_link_copy>%s</ut:file_link_copy>' % self.utXmlEncode(self.getLocalProperty('file_link_copy', lang)))
+        ra('<ut:source_link>%s</ut:source_link>' % self.utXmlEncode(self.source_link))
+        ra('<ut:organizer>%s</ut:organizer>' % self.utXmlEncode(self.getLocalProperty('organizer', lang)))
+        ra('<ut:geozone>%s</ut:geozone>' % self.utXmlEncode(self.geozone))
+        ra('<ut:address>%s</ut:address>' % self.utXmlEncode(self.getLocalProperty('address', lang)))
+        ra('<ut:duration>%s</ut:duration>' % self.utXmlEncode(self.getLocalProperty('duration', lang)))
+        ra('<ut:start_date>%s</ut:start_date>' % self.utShowFullDateTimeHTML(self.start_date))
+        ra('<ut:end_date>%s</ut:end_date>' % self.utShowFullDateTimeHTML(self.end_date))
+        ra('<ut:event_status>%s</ut:event_status>' % self.utXmlEncode(self.event_status))
+        ra(self.syndicateThisFooter())
+        return ''.join(r)
+
+    #zmi actions
+    security.declareProtected(view_management_screens, 'manageProperties')
+    def manageProperties(self, REQUEST=None, **kwargs):
+        """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+            
+         #XXX this hack should be remove once the Schema is *fully* functionaly
+        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
+            schema_raw_data['relation'] = schema_raw_data['relation'][1]
+        
+        #XXX this hack should be remove once the Schema is *fully* functionaly
+        if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
+            schema_raw_data['file'] = schema_raw_data['file'][1]
+        
+        _lang = self.gl_get_selected_language()
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        
+        self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+        self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
+        
+        if form_errors:
+            raise ValueError(form_errors.popitem()[1]) # pick a random error
+            
+        self.updatePropertiesFromGlossary(_lang)
+        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
+        
+        approved = schema_raw_data.get('approved', None)
+        if  approved != self.approved:
+            if approved == 0:
+                approved_by = None
+            else:
+                approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
+        
+        self._p_changed = 1
+        
+        if schema_raw_data.get('discussion', None):
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
+            
+        self.recatalogNyObject(self)
+        
+        if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+    #site actions
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
+    def commitVersion(self, REQUEST=None):
+        """ """
+        if (not self.checkPermissionEditObject()) or (self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName()):
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if not self.hasVersion():
+            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
+        
+        self.copy_naaya_properties_from(self.version)
+        self.checkout = 0
+        self.checkout_user = None
+        self.version = None
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
+    def startVersion(self, REQUEST=None):
+        """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if self.hasVersion():
+            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
+        self.checkout = 1
+        self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.version = semevent_item()
+        self.version.copy_naaya_properties_from(self)
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    def saveProperties(self, REQUEST=None, **kwargs):
+        """ """
+        if not self.checkPermissionEditObject(): #Check if user can edit the content
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+
+        if self.hasVersion():
+            self = self.version
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+        
+         #XXX this hack should be remove once the Schema is *fully* functionaly
+        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
+            schema_raw_data['relation'] = schema_raw_data['relation'][1]
+        
+        #XXX this hack should be remove once the Schema is *fully* functionaly
+        if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
+            schema_raw_data['file'] = schema_raw_data['file'][1]
+            
+        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+        
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        
+        self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+        self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
+        
+        if form_errors:
+            if REQUEST is None:
+                raise ValueError(form_errors.popitem()[1]) # pick a random error
+            else:
+                import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+       
+        if 'file' in schema_raw_data: # Upload file
+            self.handleUpload(schema_raw_data['file'])
+
+        if schema_raw_data.get('discussion', None):
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        
+        # Create log
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+        
+        zope.event.notify(NyContentObjectEditEvent(self, contributor))
+        
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_edit_html')
+    manage_edit_html = PageTemplateFile('zpt/semevent_manage_edit', globals())
+
+    #site pages
+    security.declareProtected(view, 'index_html')
+    def index_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'semevent_index')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    def edit_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT}, 'semevent_edit')
+
+    security.declarePublic('downloadfilename')
+    def downloadfilename(self, version=False):
+        """ """
+        context = self
+        if version and self.hasVersion():
+            context = self.version
+        attached_file = context.get_data(as_string=False)
+        filename = getattr(attached_file, 'filename', [])
+        if not filename:
+            return self.title_or_id()
+        return filename[-1]
+
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST, RESPONSE):
+        """ """
+        version = REQUEST.get('version', False)
+        RESPONSE.setHeader('Content-Type', self.getContentType())
+        RESPONSE.setHeader('Content-Length', self.getSize())
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        if version and self.hasVersion():
+            return semevent_item.index_html(self.version, REQUEST, RESPONSE)
+        return semevent_item.index_html(self, REQUEST, RESPONSE)
+
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
+
+    security.declarePublic('getEditDownloadUrl')
+    def getEditDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download?version=1'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
+    
+    def handleUpload(self, file):
+        """
+        Upload a file from disk.
+        """
+        filename = getattr(file, 'filename', '')
+        if not filename:
+            return
+        self.manage_delObjects(self.objectIds())
+        file_id = cookId('', '', file)[0]   #cleanup id
+        self.manage_addFile(id=file_id, file=file)
+
+InitializeClass(NySemEvent)
+
+config.update({
+    'constructors': (manage_addNySemEvent_html, addNySemEvent),
+    'folder_constructors': [
+            ('manage_addNySemEvent_html', manage_addNySemEvent_html),
+            ('semevent_add_html', semevent_add_html),
+            ('addNySemEvent', addNySemEvent),
+            ('import_NySemEvent', importNySemEvent),            
+        ],
+    'add_method': addNySemEvent,
+    'validation': issubclass(NySemEvent, NyValidation),
+    '_class': NySemEvent,
+})
+
+def get_config():
+    return config

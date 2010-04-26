@@ -1,0 +1,1 @@
+from naaya.content.semide.multimedia.semmultimedia_item import NySemMultimedia

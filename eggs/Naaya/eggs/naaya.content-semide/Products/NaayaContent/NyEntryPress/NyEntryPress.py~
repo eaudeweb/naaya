@@ -1,0 +1,1 @@
+from naaya.content.semide.entry.NyEntry import NyEntry
