@@ -47,8 +47,8 @@ function toggleSelect()
 		  frm.elements[i].checked = !isSelected;
 	  isSelected = !isSelected;
   var btn = document.getElementById('checkall');
-  if (btn.innerHTML == 'Check All') {btn.innerHTML = 'Uncheck All'}
-  else {btn.innerHTML = 'Check All'}
+  if (btn.innerHTML == naaya_map_i18n["Check All"]) {btn.innerHTML = naaya_map_i18n["Uncheck All"]}
+  else {btn.innerHTML = naaya_map_i18n["Check All"]}
   }
   startMapRefresh();
 }
