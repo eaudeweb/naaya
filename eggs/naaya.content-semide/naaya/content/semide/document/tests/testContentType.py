@@ -16,8 +16,10 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+# Alexandru Plugaru, Eau de Web
+
 from unittest import TestSuite, makeSuite
-from naaya.content.semide.document.semdocument_item import addNySemDocument
+from naaya.content.semide.document.semdocument_item import addNySemDocument, METATYPE_OBJECT
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
@@ -33,7 +35,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         """ Add, Find, Edit and Delete Naaya Semide Documents """
         addNySemDocument(self._portal().info, id='doc1', title='doc1', lang='en', submitted=1, source="Eau de Web")
         addNySemDocument(self._portal().info, id='doc1_fr', title='doc1_fr', lang='fr', submitted=1, source="Eau de Web")
-        docs = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide Document'])
+        docs = self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_OBJECT, ])
         
         #Get added NyDocument
         for x in docs:
@@ -56,7 +58,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
         
-        brains = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide Document'])
+        brains = self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_OBJECT, ])
         self.assertEqual(len(brains), 0)
 
 def test_suite():

@@ -98,4 +98,4 @@ def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
     except UnicodeDecodeError, e:
         # error log
         pass
-    return s
+    return s

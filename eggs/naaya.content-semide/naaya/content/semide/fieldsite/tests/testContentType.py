@@ -16,8 +16,10 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+# Alexandru Plugaru, Eau de Web
+
 from unittest import TestSuite, makeSuite
-from naaya.content.semide.event.semevent_item import addNySemEvent
+from naaya.content.semide.fieldsite.semfieldsite_item import addNySemFieldSite, METATYPE_OBJECT
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
@@ -32,34 +34,34 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Semide Events """
         #add NyEvent
-        addNySemEvent(self._portal().info, id='event1', title='event1', lang='en', coverage="all", start_date="12/12/2000")
-        addNySemEvent(self._portal().info, id='event1_fr', title='event1_fr', lang='fr', coverage="all", start_date="12/12/2000")
+        addNySemFieldSite(self._portal().info, id='fieldsite1', title='fieldsite1', lang='en', coverage="all")
+        addNySemFieldSite(self._portal().info, id='fieldsite1_fr', title='fieldsite1_fr', lang='fr', coverage="all")
         
-        docs = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide Event'])
+        docs = self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_OBJECT, ])
         self.assertEqual(len(docs), 2)
         
-        #get added NyEvent
+        #get added NyFieldSite
         for x in docs:
-            if x.getLocalProperty('title', 'en') == 'event1':
+            if x.getLocalProperty('title', 'en') == 'fieldsite1':
                 meta = x
-            if x.getLocalProperty('title', 'fr') == 'event1_fr':
+            if x.getLocalProperty('title', 'fr') == 'fieldsite1_fr':
                 meta_fr = x
             
-        self.assertEqual(meta.getLocalProperty('title', 'en'), 'event1')
-        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'event1_fr')
+        self.assertEqual(meta.getLocalProperty('title', 'en'), 'fieldsite1')
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'fieldsite1_fr')
         
-        #change NyEvent title
-        meta.saveProperties(title='event1_edited', lang='en', coverage="all", start_date="12/12/2000")
-        meta_fr.saveProperties(title='event1_fr_edited', lang='fr', coverage="all", start_date="12/12/2000")
+        #change NyFieldSite title
+        meta.saveProperties(title='fieldsite1_edited', lang='en', coverage="all")
+        meta_fr.saveProperties(title='fieldsite1_fr_edited', lang='fr', coverage="all")
         
-        self.assertEqual(meta.getLocalProperty('title', 'en'), 'event1_edited')
-        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'event1_fr_edited')
+        self.assertEqual(meta.getLocalProperty('title', 'en'), 'fieldsite1_edited')
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'fieldsite1_fr_edited')
         
-        #delete NyEvent
+        #delete NyFieldSite
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
         
-        brains = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide Event'])
+        brains = self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_OBJECT, ])
         self.assertEqual(len(brains), 0)
 
 def test_suite():

@@ -18,8 +18,12 @@
 # Dragos Chirila, Finsiel Romania
 # Alexandru Plugaru, Eau de Web
 
-#creator =       LocalProperty('creator')
-#source =        LocalProperty('source')
+
+
+
+#DEPRECATED
+
+
 
 #Python
 import os

@@ -16,6 +16,8 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+# Alexandru Plugaru, Eau de Web
+
 from unittest import TestSuite, makeSuite
 from naaya.content.semide.funding.semfunding_item import addNySemFunding
 from Products.Naaya.tests import NaayaTestCase

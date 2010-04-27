@@ -34,9 +34,9 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, 
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
@@ -100,7 +100,7 @@ DEFAULT_SCHEMA = {
     'address':          dict(sortorder=140, widget_type="String", localized = True, label="Address"),
     'geozone':          dict(sortorder=150, widget_type="Select", label="Geozone", list_id='event_geozone'),
     'event_type':       dict(sortorder=160, widget_type="Select", label="Type", list_id='event_types'),
-    'subject':          dict(sortorder=170, widget_type="SelectMultiple", label="", visible=False),
+    'subject':          dict(sortorder=170, widget_type="SelectMultiple", label="Subject"),
     'source':           dict(sortorder=180, widget_type="String", localized = True, label="Source"),
     'source_link':      dict(sortorder=190, widget_type="String", label="Source link"),
     'creator':          dict(sortorder=200, widget_type="String", label="Creator"),
@@ -109,13 +109,11 @@ DEFAULT_SCHEMA = {
     'contact_email':    dict(sortorder=230, widget_type="String", label="Contact e-mail"),
     'contact_phone':    dict(sortorder=240, widget_type="String", label="Contact phone"),
     'topitem':          dict(sortorder=250, widget_type="Checkbox", label="Is hot"),
-    'relation':         dict(sortorder=250, widget_type="String", visible=False),
-    'working_langs':    dict(sortorder=260, widget_type="SelectMultiple", label="", visible=False),
+    'relation':         dict(sortorder=250, widget_type="String", label="Relation"),
+    'working_langs':    dict(sortorder=260, widget_type="SelectMultiple", label="Working langs"),
     'event_status':     dict(sortorder=270, widget_type="Select", label="Status", list_id='event_status'),
     'file_link':        dict(sortorder=280, widget_type="String", localized = True, label="File link", default='http://'),
-    'file':             dict(sortorder=290, widget_type="String", label="", visible=False)
 }
-
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
@@ -166,14 +164,6 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-        schema_raw_data['relation'] = schema_raw_data['relation'][1]
-    
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
-        schema_raw_data['file'] = schema_raw_data['file'][1]
-        
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -184,9 +174,6 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NySemEvent_object(self, id, contributor)    
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    ob.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
-    ob.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-    
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
@@ -200,6 +187,9 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+    
+    ob.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+    ob.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
     
     if 'file' in schema_raw_data:
         ob.handleUpload(schema_raw_data['file'])
@@ -311,11 +301,11 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
 
     security.declareProtected(view, 'resource_date')
     def resource_date(self):
-        return self.start_date
+        return getattr(self, 'start_date', None)
 
     security.declareProtected(view, 'resource_end_date')
     def resource_end_date(self):
-        return self.end_date or self.start_date
+        return getattr(self, 'end_date', None) or self.resource_date()
 
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
@@ -422,14 +412,6 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         else:
             schema_raw_data = kwargs
             
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
-        #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
-            schema_raw_data['file'] = schema_raw_data['file'][1]
-        
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -510,14 +492,6 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         else:
             schema_raw_data = kwargs
         
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
-        #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
-            schema_raw_data['file'] = schema_raw_data['file'][1]
-            
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         

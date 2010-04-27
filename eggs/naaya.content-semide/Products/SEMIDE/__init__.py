@@ -27,7 +27,6 @@ from constants import *
 from Products.NaayaCore.constants import *
 import SEMIDESite
 from Tools import FlashTool
-from Tools.ControlsTool import NyControlSettings
 
 def initialize(context):
     """ """
@@ -51,19 +50,11 @@ def initialize(context):
                 ),
         icon = 'www/FlashTool.gif'
         )
-    context.registerClass(
-        NyControlSettings.NyControlSettings,
-        permission = PERMISSION_ADD_NAAYACORE_TOOL,
-        constructors = (
-                NyControlSettings.manage_addNyControlSettings,
-                ),
-        icon = 'Tools/ControlsTool/www/ControlsTool.gif'
-    )
-
+    
 misc_ = {
     'print.gif':ImageFile('www/print.gif', globals()),
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'FlashTool.gif':ImageFile('www/FlashTool.gif', globals()),
     'FlashTemplate.gif':ImageFile('www/FlashTemplate.gif', globals()),
     'FlashCategory.gif':ImageFile('www/FlashCategory.gif', globals()),
-}
+}

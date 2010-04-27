@@ -1,1 +1,1 @@
-NyEntryPress
+NyEntryPress - DEPRECATED

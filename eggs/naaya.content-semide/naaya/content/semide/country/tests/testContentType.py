@@ -35,7 +35,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         addNyCountry(self._portal().info, id='country1', title="Country1", lang="en")
         addNyCountry(self._portal().info, id='country2', title="Country2", lang="fr")
         
-        for x in self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_NYCOUNTRY]):
+        for x in self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_NYCOUNTRY, ]):
             if x.getLocalProperty('title', 'en') == 'Country1':
                 country = x
             if x.getLocalProperty('title', 'fr') == 'Country2':
@@ -53,7 +53,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         #delete NyCountry
         self._portal().info.manage_delObjects([country.id, country_fr.id])
         
-        self.assertEqual(len(self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_NYCOUNTRY])), 0)
+        self.assertEqual(len(self._portal().getCatalogedObjectsCheckView(meta_type=[METATYPE_NYCOUNTRY, ])), 0)
         
 def test_suite():
     suite = TestSuite()

@@ -31,8 +31,11 @@ from App.ImageFile import ImageFile
 import zope.event
 
 #Naaya
-import naaya.content.base.constants
-import Products.NaayaBase.constants
+from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, 
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
+
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -55,12 +58,12 @@ DESCRIPTION_OBJECT = 'This is Naaya Semide Field Site type.'
 PREFIX_OBJECT = 'field'
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
-    'title':               (1, naaya.content.base.constants.MUST_BE_NONEMPTY, 'The Title field must have a value.'),
+    'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
     'description':         (0, '', ''),
     'coverage':            (0, '', ''),
     'keywords':            (0, '', ''),
-    'sortorder':           (0, naaya.content.base.constants.MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':         (0, naaya.content.base.constants.MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
+    'sortorder':           (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
+    'releasedate':         (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':          (0, '', ''),
     'fieldsite_rb':        (0, '', ''),
     'fieldsite_loc':       (0, '', ''),
@@ -261,7 +264,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
-            raise Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED, Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -297,13 +300,13 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         self.recatalogNyObject(self)        
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')        
     #site actions
-    security.declareProtected(Products.NaayaBase.constants.PERMISSION_EDIT_OBJECTS, 'commitVersion')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
         """ """
         if (not self.checkPermissionEditObject()) or (self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName()):
-            raise Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED, Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
-            raise Products.NaayaBase.constants.EXCEPTION_NOVERSION, Products.NaayaBase.constants.EXCEPTION_NOVERSION_MSG
+            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
         
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
@@ -314,13 +317,13 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    security.declareProtected(Products.NaayaBase.constants.PERMISSION_EDIT_OBJECTS, 'startVersion')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
-            raise Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED, Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.hasVersion():
-            raise Products.NaayaBase.constants.EXCEPTION_STARTEDVERSION, Products.NaayaBase.constants.EXCEPTION_STARTEDVERSION_MSG
+            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = semfieldsite_item()
@@ -329,16 +332,16 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(Products.NaayaBase.constants.PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject(): #Check if user can edit the content
-            raise Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED, Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED_MSG
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
         if self.hasVersion():
             self = self.version
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED, Products.NaayaBase.constants.EXCEPTION_NOTAUTHORIZED_MSG
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -371,7 +374,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
         
         if REQUEST:
-            self.setSessionInfo([Products.NaayaBase.constants.MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     #zmi pages
@@ -389,7 +392,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         """ """
         REQUEST.RESPONSE.redirect('%s/index_html#%s' % (self.getParentNode().absolute_url(), self.id))
 
-    security.declareProtected(Products.NaayaBase.constants.PERMISSION_EDIT_OBJECTS, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semfieldsite_edit')

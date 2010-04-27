@@ -1,1 +1,1 @@
-SemidePhotoArchive
+SemidePhotoArchive - DEPRECATED
