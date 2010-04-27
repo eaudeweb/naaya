@@ -107,9 +107,3 @@
     >>> test.deleteObjects(id=[item_id])
     >>> test.objectIds()
     []
-
-#Import File
-
-    >>> r = test.manage_import(file=expfile)
-    >>> test['test'].objectIds() == [defitem[0]]
-    True
