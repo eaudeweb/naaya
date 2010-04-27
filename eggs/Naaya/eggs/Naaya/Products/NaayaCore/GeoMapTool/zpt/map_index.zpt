@@ -26,6 +26,7 @@
 	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${here/get_mapsapikey}"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
 </span>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
 <span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />

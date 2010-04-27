@@ -91,13 +91,13 @@ function getMarkerData(marker) {
 	var longitude = marker.YGeoPoint.Lon;
 	var query = document.getElementById('geo_query').value;
 	var query = document.getElementById('geo_query').value;
-	if (query === "Type keywords") {
+	if (query === naaya_map_i18n["Type keywords"]) {
 		query = "";
 	}
 	var enc_form = encodeForm("frmFilterMap");
 	//don't send explanatory text
-	enc_form = enc_form.replace("Type%20location%20address", "");
-	enc_form = enc_form.replace("Type%20keywords", "");
+	enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type location address"]), "");
+	enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type keywords"]), "");
 	doHttpRequest( server_base_url + "/xrjs_getTooltip?" + 
 			enc_form + '&lat='+ latitude + '&lon=' + longitude + 
 			'&geo_query=' + query, function(response) {marker.openSmartWindow(response.responseText);});

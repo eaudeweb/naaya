@@ -74,6 +74,13 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = 'xmlrpc_simple_map_loader.js'
 TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = 'xmlrpc_addpick_map_loader.js'
 TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = 'xmlrpc_editpick_map_loader.js'
 
+map_i18n_js_messages = [
+    "Check All",
+    "Uncheck All",
+    "Type location address",
+    "Type keywords",
+]
+
 class GeoMapToolUploadError(Exception):
     """GeoMapTool Upload Error"""
     pass
@@ -1569,5 +1576,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     # macros
     security.declareProtected(view, 'locations_table_html')
     locations_table_html = PageTemplateFile('zpt/locations_table', globals())
+
+    security.declareProtected(view, 'map_i18n_js')
+    def map_i18n_js(self, REQUEST):
+        """ translations for javascript map messages """
+        translate = self.getSite().getPortalTranslations()
+        translations = dict( (msg, translate(msg)) for msg in
+                             map_i18n_js_messages )
+
+        REQUEST.RESPONSE.setHeader('Content-Type', 'application/javascript')
+        return 'var naaya_map_i18n = %s;\n' % json.dumps(translations)
 
 InitializeClass(GeoMapTool)
