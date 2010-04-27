@@ -118,14 +118,14 @@ function showMapLocationsHandler(){
 	var zoom_level = mapTool.getZoomLevel();
 	var str_zoom_level = 'zoom_level=' + zoom_level;
 	var query = document.getElementById('geo_query').value;
-	if (query === "Type keywords") {
+	if (query === naaya_map_i18n["Type keywords"]) {
 		query = "";
 	}
 	if (encodeForm("frmFilterMap").match("geo_types") != null) {
 		var enc_form = encodeForm("frmFilterMap");
 		//don't send explanatory text
-		enc_form = enc_form.replace("Type%20location%20address", "");
-		enc_form = enc_form.replace("Type%20keywords", "");
+		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type location address"]), "");
+		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type keywords"]), "");
 		doHttpRequestNoErrorChecking( server_base_url + "/xrjs_getGeoClusters?" + str_bounds +
 				'&' + str_center + '&' + str_zoom_level +
 				'&'+ enc_form + '&geo_query=' + query, mapRefreshHandler);
@@ -280,18 +280,18 @@ function showPageElements() {
 	// set explanatory text in search fields
 	var address = document.getElementById('address');
 	var geo_query = document.getElementById('geo_query');
-	address.value = "Type location address";
+	address.value = naaya_map_i18n["Type location address"];
 	address.style.color = "#ccc";
 	address.onfocus = function() {
-		if (this.value === "Type location address") {
+		if (this.value === naaya_map_i18n["Type location address"]) {
 			this.value = "";
 		}
 		this.style.color = "#000";
 	}
-	geo_query.value = "Type keywords";
+	geo_query.value = naaya_map_i18n["Type keywords"];
 	geo_query.style.color = "#ccc";
 	geo_query.onfocus = function() {
-		if (this.value === "Type keywords") {
+		if (this.value === naaya_map_i18n["Type keywords"]) {
 			this.value = "";
 		}
 		this.style.color = "#000";
