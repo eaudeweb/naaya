@@ -1,3 +1,6 @@
+<p tal:condition="here/list_is_tree" i18n:translate="">
+	Click on the items from list below to select/deselect them.
+</div>
 <div class="field-inline" tal:define="
     value options/value|nothing;
     errors options/errors;
