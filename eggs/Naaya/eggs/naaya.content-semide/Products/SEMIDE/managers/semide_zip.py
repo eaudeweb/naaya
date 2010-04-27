@@ -28,8 +28,8 @@ from os.path    import join
 from Products.SEMIDE.constants              import *
 from Products.NaayaBase.constants           import MESSAGE_SAVEDCHANGES
 from Products.NaayaContent                  import *
-from Products.SEMIDEPhotoArchive.constants  import METATYPE_NYPHOTO
-from Products.SEMIDEPhotoArchive.NyPhoto    import addNyPhoto
+from Products.NaayaPhotoArchive.constants  import METATYPE_NYPHOTO
+from Products.NaayaPhotoArchive.NyPhoto    import addNyPhoto
 
 class SemideZip:
     """."""

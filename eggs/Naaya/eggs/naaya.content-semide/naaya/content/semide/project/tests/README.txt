@@ -6,9 +6,9 @@ Usage:
 Windows
 =======
 - cd path\to\zope\instance
-- bin\zopectl test -vp NaayaContent.NySemProject
+- bin\zopectl test -vp naaya.content.semide.project
 
 UNIX
 ====
 - cd path/to/zope/instance
-- bin/zopectl test -vp NaayaContent.NySemProject
+- bin/zopectl test -vp naaya.content.semide.project

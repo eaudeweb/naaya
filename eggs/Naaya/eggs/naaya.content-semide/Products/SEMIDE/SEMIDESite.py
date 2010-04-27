@@ -60,14 +60,14 @@ from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
 from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
-from Products.SEMIDEPhotoArchive.NyPhotoFolder      import manage_addNyPhotoFolder
+from Products.NaayaPhotoArchive.NyPhotoFolder       import manage_addNyPhotoFolder
 from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
 from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCentre
 from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
 from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
 from Products.NaayaForum.NyForum                    import manage_addNyForum
 from Products.NaayaForum.constants                  import METATYPE_NYFORUM, METATYPE_NYFORUMTOPIC, METATYPE_NYFORUMMESSAGE
-from Products.SEMIDEPhotoArchive.constants          import METATYPE_NYPHOTOFOLDER
+from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOFOLDER
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
@@ -501,9 +501,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
         if len(entries) > 0: return entries[0]
         else: return None
-
-    security.declarePublic('getControlsTool')
-    def getControlsTool(self): return self._getOb('portal_control', None)
     
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):

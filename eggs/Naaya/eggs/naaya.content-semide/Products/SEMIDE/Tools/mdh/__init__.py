@@ -15,4 +15,4 @@
 # Authors:
 #
 # Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Dragos Chirila, Finsiel Romania

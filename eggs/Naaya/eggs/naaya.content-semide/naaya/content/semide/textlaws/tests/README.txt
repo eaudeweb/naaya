@@ -6,9 +6,9 @@ Usage:
 Windows
 =======
 - cd path\to\zope\instance
-- bin\zopectl test -vp NaayaContent.NySemTextLaws
+- bin\zopectl test -vp naaya.content.semide.textlaws
 
 UNIX
 ====
 - cd path/to/zope/instance
-- bin/zopectl test -vp NaayaContent.NySemTextLaws
+- bin/zopectl test -vp naaya.content.semide.textlaws

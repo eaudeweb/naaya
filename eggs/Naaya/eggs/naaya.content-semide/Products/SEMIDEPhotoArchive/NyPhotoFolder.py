@@ -381,4 +381,4 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     security.declareProtected(PERMISSION_ADD_PHOTO, 'photo_add_html')
     photo_add_html = PageTemplateFile('zpt/photo_add', globals())
 
-InitializeClass(NyPhotoFolder)
+InitializeClass(NyPhotoFolder)

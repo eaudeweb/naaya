@@ -1,3 +1,1 @@
-NySemPublication
-
-Deprecated
+NySemPublication - Deprecated

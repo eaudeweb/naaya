@@ -278,4 +278,4 @@ while 1:
             if DEBUG: print finish_msg
             log_file.close()
 
-    time.sleep( MAILDROP_INTERVAL )
+    time.sleep( MAILDROP_INTERVAL )

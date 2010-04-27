@@ -53,4 +53,4 @@ class sempublication_item(Implicit, NyProperties):
         self._setLocalPropValue('keywords',     lang, keywords)
         self.sortorder =        sortorder
         self.releasedate =      releasedate
-        self.publication_url =  publication_url
+        self.publication_url =  publication_url

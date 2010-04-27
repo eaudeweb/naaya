@@ -32,9 +32,9 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME, MUST_BE_POSITIV_FLOAT
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, PERMISSION_DELETE_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS,
+PERMISSION_DELETE_OBJECTS, EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG,
+EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
@@ -48,11 +48,18 @@ from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CO
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
-from naaya.content.semide.organisation.semorganisation_item import addNySemOrganisation, semorganisation_add_html, manage_addNySemOrganisation_html, importNySemOrganisation, METATYPE_OBJECT as METATYPE_NYSEMORGANISATION
-from naaya.content.semide.funding.semfunding_item import addNySemFunding, semfunding_add_html, manage_addNySemFunding_html, importNySemFunding, METATYPE_OBJECT as METATYPE_NYSEMFUNDING
-from naaya.content.semide.fieldsite.semfieldsite_item import addNySemFieldSite, semfieldsite_add_html, manage_addNySemFieldSite_html, importNySemFieldSite, METATYPE_OBJECT as METATYPE_NYSEMFIELDSITE
-from naaya.content.semide.document.semdocument_item import addNySemDocument, semdocument_add_html, manage_addNySemDocument_html, importNySemDocument, METATYPE_OBJECT as METATYPE_NYSEMDOCUMENT
-
+from naaya.content.semide.organisation.semorganisation_item import (
+    addNySemOrganisation, semorganisation_add_html, manage_addNySemOrganisation_html,
+    importNySemOrganisation, METATYPE_OBJECT as METATYPE_NYSEMORGANISATION)
+from naaya.content.semide.funding.semfunding_item import (
+    addNySemFunding, semfunding_add_html, manage_addNySemFunding_html,
+    importNySemFunding, METATYPE_OBJECT as METATYPE_NYSEMFUNDING)
+from naaya.content.semide.fieldsite.semfieldsite_item import (
+    addNySemFieldSite, semfieldsite_add_html, manage_addNySemFieldSite_html,
+    importNySemFieldSite, METATYPE_OBJECT as METATYPE_NYSEMFIELDSITE)
+from naaya.content.semide.document.semdocument_item import (
+    addNySemDocument, semdocument_add_html, manage_addNySemDocument_html,
+    importNySemDocument, METATYPE_OBJECT as METATYPE_NYSEMDOCUMENT)
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Project'
@@ -89,7 +96,7 @@ PROPERTIES_OBJECT = {
 
 DEFAULT_SCHEMA = {
     'pr_number':    dict(sortorder=100, widget_type='String', label="Project Number"),
-    'subject':      dict(sortorder=110, widget_type='SelectMultiple', label="", visible=False),
+    'subject':      dict(sortorder=110, widget_type='SelectMultiple', label="Subject"),
     'acronym':      dict(sortorder=120, widget_type='String', label="Acronym", localized=True),
     'budget':       dict(sortorder=130, widget_type='String', label="Budget (EUR)", default="0"),
     'programme':    dict(sortorder=140, widget_type='String', label="Programme", localized=True),

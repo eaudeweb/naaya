@@ -84,4 +84,4 @@ class XSLTemplate(ZopePageTemplate, utils, file_utils):
         if REQUEST:
             REQUEST.RESPONSE.redirect('edit_html')
 
-InitializeClass(XSLTemplate)
+InitializeClass(XSLTemplate)

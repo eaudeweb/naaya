@@ -34,9 +34,9 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.Localizer.LocalPropertyManager import LocalProperty
@@ -94,14 +94,14 @@ DEFAULT_SCHEMA = {
     'source':           dict(sortorder=110, widget_type="String", label="Source", localized=True),
     'source_link':      dict(sortorder=120, widget_type="String", label="Source link", default="http://"),
     'news_type':        dict(sortorder=130, widget_type="Select", label="News type", list_id="news_types"),
-    'subject':          dict(sortorder=150, widget_type="SelectMultiple", label="Subject", visible=False, localized=True),
+    'subject':          dict(sortorder=150, widget_type="SelectMultiple", label="Subject", localized=True),
     'creator':          dict(sortorder=160, widget_type="String", label="Creator", localized = True),
     'creator_email':    dict(sortorder=170, widget_type="String", label="Creator e-mail"),
     'contact_person':   dict(sortorder=180, widget_type="String", label="Contact name", localized=True),
     'contact_email':    dict(sortorder=190, widget_type="String", label="Contact e-mail", localized=True),
     'contact_phone':    dict(sortorder=200, widget_type="String", label="Contact phone", localized=True),
-    'working_langs':    dict(sortorder=210, widget_type="SelectMultiple", label="", visible=False),
-    'relation':         dict(sortorder=220, widget_type="String", visible=False),
+    'working_langs':    dict(sortorder=210, widget_type="SelectMultiple", label="Working langs"),
+    'relation':         dict(sortorder=220, widget_type="String", label="Relation"),
     'rights':           dict(sortorder=230, widget_type="Select", label="Rights", list_id='rights_types', localized=True),
     'file_link':        dict(sortorder=240, widget_type="String", label="Full description link", localized=True, default="http://"),
 
@@ -156,10 +156,6 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
     else:
         schema_raw_data = kwargs
     
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-        schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -389,14 +385,6 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         else:
             schema_raw_data = kwargs
             
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
-        #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'file' in schema_raw_data and isinstance(schema_raw_data['file'], list):
-            schema_raw_data['file'] = schema_raw_data['file'][1]
-        
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -476,10 +464,6 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         else:
             schema_raw_data = kwargs
         
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-            
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         

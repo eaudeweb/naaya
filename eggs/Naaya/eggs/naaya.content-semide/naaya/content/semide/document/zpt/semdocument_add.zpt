@@ -3,7 +3,6 @@
 <p metal:fill-slot="description" i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
 </p>
-
 <!-- Schema properties -->
 <tal:block metal:fill-slot="schema_properties" repeat="form_item form_helper/form_items">
     <tal:block condition="python: form_item['name'] not in ['relation', 'subject', 'file_link']" replace="structure form_item/html" />

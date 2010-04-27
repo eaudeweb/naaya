@@ -21,7 +21,7 @@
 </tr>
 
 <tr tal:define="file_link		python:here.convertToFullURL(here.file_link);
-				file_link_local	python:here.convertToFullURL(here.file_link_local)
+				file_link_local	python:here.getDownloadUrl()
 				">
 	<th i18n:translate="">File link</th>
 	<td>

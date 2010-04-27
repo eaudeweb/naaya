@@ -14,4 +14,4 @@
 #
 # Authors:
 #
-# Alexandru Ghica, Finsiel Romania
+# Alexandru Ghica, Finsiel Romania

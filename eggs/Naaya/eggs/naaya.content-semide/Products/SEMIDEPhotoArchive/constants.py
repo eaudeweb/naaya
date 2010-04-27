@@ -46,4 +46,4 @@ DEFAULT_DISPLAYS = {
     'Medium': (480,480),
     'Large': (768,768),
     'XLarge': (1024,1024)
-}
+}

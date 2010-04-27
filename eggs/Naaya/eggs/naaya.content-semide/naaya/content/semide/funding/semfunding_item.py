@@ -32,9 +32,9 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
@@ -415,4 +415,4 @@ config.update({
 })
 
 def get_config():
-    return config
+    return config

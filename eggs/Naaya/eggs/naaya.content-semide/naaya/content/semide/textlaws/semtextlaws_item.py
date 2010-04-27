@@ -34,9 +34,9 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, \
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
@@ -89,11 +89,10 @@ DEFAULT_SCHEMA = {
     'source_link':          dict(sortorder=140, widget_type="String", label="Source link", default="http://"),
     'geozone':              dict(sortorder=150, widget_type="Select", label="Geozone", list_id='event_geozone'),
     'statute':              dict(sortorder=160, widget_type="Select", label="Status", list_id='status_types'),
-    'original_language':    dict(sortorder=170, widget_type="Select", label="Original language", glossary_id='glossary_languages', visible=False),
-    'relation':             dict(sortorder=180, widget_type="String", label="Relation", visible=False),
-    'subject':              dict(sortorder=190, widget_type="SelectMultiple", label="Subject", visible=False),
+    'original_language':    dict(sortorder=170, widget_type="Select", label="Original language", glossary_id='glossary_languages'),
+    'relation':             dict(sortorder=180, widget_type="String", label="Relation"),
+    'subject':              dict(sortorder=190, widget_type="SelectMultiple", label="Subject"),
     'file_link':            dict(sortorder=200, widget_type="String", label="File link", default='http://'),
-    'file_link_local':      dict(sortorder=210, widget_type="String", label="File link local", visible=False)
 }
 
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
@@ -145,15 +144,7 @@ def addNySemTextLaws(self, id='', contributor=None, REQUEST=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-        schema_raw_data['relation'] = schema_raw_data['relation'][1]
-    
-    #XXX this hack should be remove once the Schema is *fully* functionaly
-    if 'file_link_local' in schema_raw_data and isinstance(schema_raw_data['file_link_local'], list):
-        schema_raw_data['file'] = schema_raw_data['file_link_local'][1]
-        
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -362,14 +353,6 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
         else:
             schema_raw_data = kwargs
             
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
-        #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'file_link_local' in schema_raw_data and isinstance(schema_raw_data['file_link_local'], list):
-            schema_raw_data['file'] = schema_raw_data['file_link_local'][1]
-        
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -450,15 +433,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
-         #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'relation' in schema_raw_data and isinstance(schema_raw_data['relation'], list):
-            schema_raw_data['relation'] = schema_raw_data['relation'][1]
-        
-        #XXX this hack should be remove once the Schema is *fully* functionaly
-        if 'file_link_local' in schema_raw_data and isinstance(schema_raw_data['file_link_local'], list):
-            schema_raw_data['file'] = schema_raw_data['file_link_local'][1]
-            
+             
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         
@@ -584,4 +559,4 @@ config.update({
 })
 
 def get_config():
-    return config
+    return config
