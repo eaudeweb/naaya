@@ -3,9 +3,6 @@
     errors options/errors;
     prop_id here/prop_name;
     selection_list here/get_selection_list">
-	<p tal:condition="here/list_is_tree" i18n:translate="">
-		Click on the items from list below to select/deselect them.
-	</p>
     <label tal:attributes="for prop_id" class="widget-title">
         <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
         <span tal:condition="here/required" class="mandatory_field">*</span>
@@ -22,6 +19,9 @@
     </select>
 
     <tal:block condition="here/list_is_tree">
+	<p i18n:translate="">
+		Click on the items from list below to select/deselect them.
+	</p>
         <tal:block content="structure string:
             <script>
                 $$(function() {
