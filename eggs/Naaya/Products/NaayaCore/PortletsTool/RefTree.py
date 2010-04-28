@@ -76,7 +76,7 @@ class RefTree(LocalPropertyManager, Folder):
     manage_addRefTreeNodeForm = manage_addRefTreeNodeForm
     manage_addRefTreeNode = manage_addRefTreeNode
 
-    def __init__(self, id, lang):
+    def __init__(self, id, title, description, lang):
         """ """
         self.id = id
         self.title = title
