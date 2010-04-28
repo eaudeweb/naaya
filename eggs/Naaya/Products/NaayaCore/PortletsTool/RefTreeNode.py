@@ -48,6 +48,19 @@ def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
         return self.manage_main(self, REQUEST, update_menu=1)
     return id
 
+# localizer_patcher is a descriptor (getter/setter) that retrieves values
+# from LocalProperty data. It's a patchy way of disabling localization,
+# and eventually we need to run a proper update script.
+def localizer_getter(self):
+    # getter for title
+    if 'title' in self.__dict__:
+        return self.__dict__['title']
+    else:
+        return self.getLocalProperty('title', 'en')
+def localizer_setter(self, value):
+    self.__dict__['title'] = value
+localizer_patcher = property(localizer_getter, localizer_setter)
+
 class RefTreeNode(LocalPropertyManager, SimpleItem):
     """ """
 
@@ -64,12 +77,12 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
 
     security = ClassSecurityInfo()
 
-    title = LocalProperty('title')
+    title = localizer_patcher
 
     def __init__(self, id, title, parent, pickable, lang):
         """ """
         self.id = id
-        self._setLocalPropValue('title', lang, title)
+        self.title = title
         self.parent = parent
         self.pickable = pickable
         self.weight = 0
@@ -83,7 +96,7 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
         if pickable: pickable = 1
         else: pickable = 0
         if lang is None: lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
+        self.title = title
         self.parent = parent
         self.pickable = pickable
         self._p_changed = 1

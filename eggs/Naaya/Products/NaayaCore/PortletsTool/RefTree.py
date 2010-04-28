@@ -31,7 +31,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product related imports
 from Products.NaayaCore.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode
+from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, localizer_patcher
 from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeForm = PageTemplateFile('zpt/reftree_manage_add', globals())
@@ -45,6 +45,7 @@ def manage_addRefTree(self, id='', title='', description='', lang=None, REQUEST=
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
     return id
+
 
 class RefTree(LocalPropertyManager, Folder):
     """ """
@@ -69,18 +70,17 @@ class RefTree(LocalPropertyManager, Folder):
     )
     all_meta_types = meta_types
 
+    title = localizer_patcher
+
     #constructors
     manage_addRefTreeNodeForm = manage_addRefTreeNodeForm
     manage_addRefTreeNode = manage_addRefTreeNode
 
-    title = LocalProperty('title')
-    description = LocalProperty('description')
-
-    def __init__(self, id, title, description, lang):
+    def __init__(self, id, lang):
         """ """
         self.id = id
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('description', lang, description)
+        self.title = title
+        self.description = description
     
     def _setObject(self, object_id, object, set_owner = 0):
         """
@@ -282,12 +282,19 @@ class RefTree(LocalPropertyManager, Folder):
         return self.utSortDictsListByKey(data, 'data', 0)
 
     def get_tree_json_data(self):
-        """ """
-        try:
-            list = self.get_tree_data_dict().get('children', [[]])[0]
-        except KeyError:
-            list = []
-        return json.dumps(list)
+        """ returns tree data (titles are translated) """
+        data = self.get_tree_data_dict()['children'][0]
+
+        translate = self.getSite().getPortalTranslations()
+        def do_translations(item):
+            item['data'] = translate(item['data'])
+            for subitem in item['children']:
+                do_translations(subitem)
+
+        for item in data:
+            do_translations(item)
+
+        return json.dumps(data)
 
     def get_tree_data_for_admin(self):
         data = self.get_tree_data()
@@ -339,8 +346,8 @@ class RefTree(LocalPropertyManager, Folder):
     def manageProperties(self, title='', description='', lang=None, REQUEST=None):
         """ """
         if lang is None: lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('description', lang, description)
+        self.title = title
+        self.description = description
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_edit_html')

@@ -135,7 +135,7 @@ class PortletsTool(Folder, utils):
     #JsTree listing
 
     def get_reftrees_as_json_data(self):
-        """ """
+        """ returns all reftrees (NOT translated) """
         trees = [x.get_tree_data_dict() for x in self.getRefTrees()]
         data = {'data': self.getSite().title_or_id(),
                 'children': trees,
