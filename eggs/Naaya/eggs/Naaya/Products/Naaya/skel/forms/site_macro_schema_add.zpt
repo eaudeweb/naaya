@@ -8,7 +8,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 metal:define-slot="title" tal:content="string:Submit ${form_helper/get_meta_label}" />
+<h1 metal:define-slot="title" tal:content="string:Submit ${form_helper/get_meta_label}" i18n:translate="" />
 
 <p metal:define-slot="description"><!--description--></p>
 
@@ -43,7 +43,8 @@ function fSet(ctrl, value)
     <select name="lang" id="lang">
         <option tal:repeat="item here/gl_get_languages_mapping"
             tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
-            tal:content="python:item['name']" />
+            tal:content="python:item['name']"
+			i18n:translate="" />
     </select>
 </div>
 
