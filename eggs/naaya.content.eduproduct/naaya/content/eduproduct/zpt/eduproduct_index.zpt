@@ -55,6 +55,39 @@
         <div tal:define="description python:here.prop_value_or_none('description')"
             tal:condition="description" tal:content="structure description" />
 
+        <tal:block condition="here/product_type">
+            <h4 i18n:translate="">Product type</h4>
+            <ul>
+                <li tal:repeat="pt_id here/product_type"
+                    tal:content="python:here.getSite()['portal_portlets']['product_type'][pt_id].title"
+                    i18n:translate="" />
+            </ul>
+        </tal:block>
+
+        <tal:block condition="here/target_group">
+            <h4 i18n:translate="">Target group</h4>
+            <ul>
+                <li tal:repeat="pt_id here/target_group"
+                    tal:content="python:here.getSite()['portal_portlets']['product_target_group'][pt_id].title"
+                    i18n:translate="" />
+            </ul>
+        </tal:block>
+
+        <tal:block condition="here/theme">
+            <h4 i18n:translate="">Theme</h4>
+            <ul>
+                <li tal:repeat="pt_id here/theme"
+                    tal:content="python:here.getSite()['portal_portlets']['product_theme'][pt_id].title"
+                    i18n:translate="" />
+            </ul>
+        </tal:block>
+
+        <h4 i18n:translate="">Contact information</h4>
+        <tal:block define="contact_info python:here.prop_value_or_none('contact_info')"
+            tal:condition="contact_info">
+            <div tal:content="structure contact_info" />
+        </tal:block>
+
         <tal:block content="structure here/set_content_rating" />
 
         <tal:block content="structure here/comments_box" />

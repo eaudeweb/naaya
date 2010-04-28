@@ -24,9 +24,21 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 
 from interfaces import INyEduProduct
+import skel
 
-DEFAULT_SCHEMA = {}
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = {
+    'product_type': dict(sortorder=100, widget_type='SelectMultiple',
+                label='Product type', list_id='product_type'),
+    'target_group': dict(sortorder=110, widget_type='SelectMultiple',
+                label='Target group', list_id='product_target_group'),
+    'theme': dict(sortorder=120, widget_type='SelectMultiple',
+                label='Theme', list_id='product_theme'),
+    'contact_info': dict(sortorder=130, widget_type='TextArea',
+                label='Contact information', localized=True, tinymce=True),
+}
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
+DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
+DEFAULT_SCHEMA['geo_type'].update(visible=True)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -232,6 +244,21 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckCont
 
 InitializeClass(NyEduProduct)
 
+def on_install_eduproduct(site):
+    portal_portlets = site.getPortletsTool()
+
+    for tree_data in skel.ref_trees:
+        tree_id = tree_data['id']
+        if tree_id in portal_portlets.objectIds():
+            continue
+
+        tree_title = tree_data['title']
+        portal_portlets.manage_addRefTree(tree_id, tree_title)
+        tree_ob = portal_portlets[tree_id]
+
+        for tree_item in tree_data['items']:
+            tree_ob.manage_addRefTreeNode(tree_item['id'], tree_item['title'])
+
 manage_addNyEduProduct_html = PageTemplateFile('zpt/eduproduct_manage_add', globals())
 manage_addNyEduProduct_html.kind = config['meta_type']
 manage_addNyEduProduct_html.action = 'addNyEduProduct'
@@ -245,6 +272,7 @@ config.update({
     'add_method': addNyEduProduct,
     'validation': issubclass(NyEduProduct, NyValidation),
     '_class': NyEduProduct,
+    'on_install' : on_install_eduproduct,
 })
 
 def get_config():
