@@ -18,7 +18,7 @@
             tal:content="selection_item/title" i18n:translate="" />
     </select>
 
-    <tal:block condition="here/list_is_tree">
+	<tal:block condition="here/list_is_tree">
     <p i18n:translate="">
         Click on the items from list below to select/deselect them.
     </p>

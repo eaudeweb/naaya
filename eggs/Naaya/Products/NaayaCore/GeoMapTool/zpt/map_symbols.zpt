@@ -48,6 +48,11 @@
 		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed
 			on the map so it is recommended to create it with these dimensions from the start and make it
 			transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
+		<dd><div i18n:translate="">Example pins (download the image on your computer and upload it below):</div>
+			<tal:block repeat="i python:range(1,20)">
+				<img tal:attributes="src string:_misc/NaayaCore/pin${i}.png; alt string:_misc/NaayaCore/pin${i}.png" />
+			</tal:block>
+		</dd>
 		<dd><input type="file" name="picture" value="" size="35" /></dd>
 		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
 		<dt i18n:translate="">Sort order</dt>
