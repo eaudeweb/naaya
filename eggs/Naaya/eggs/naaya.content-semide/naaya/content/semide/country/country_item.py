@@ -54,8 +54,7 @@ from naaya.content.semide.project.semproject_item import METATYPE_OBJECT as META
 from Products.NaayaCore.PortletsTool.HTMLPortlet import addHTMLPortlet
 from Products.NaayaCore.SyndicationTool.RemoteChannel import manage_addRemoteChannel
 
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 #module constants
 
 METATYPE_OBJECT =       'Naaya Country Folder'
