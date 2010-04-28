@@ -19,23 +19,28 @@
     </select>
 
     <tal:block condition="here/list_is_tree">
-	<p i18n:translate="">
-		Click on the items from list below to select/deselect them.
-	</p>
-        <tal:block content="structure string:
+    <p i18n:translate="">
+        Click on the items from list below to select/deselect them.
+    </p>
+        <tal:block define="site_url python:here.getSite().absolute_url()"
+                   content="structure string:
             <script>
                 $$(function() {
+                    var tree_data_json;
                     $('#'+'${prop_id}').hide();
                     $('label[for=${prop_id}]').hide();
 
                     $.ajax({
                        type: 'GET',
                        async: false,
-                       url: '/portal_portlets/${here/list_id}/get_tree_json_data',
+                       url: '${site_url}/portal_portlets/${here/list_id}/get_tree_json_data',
                        dataType: 'json',
                        success : function(data) {
                         tree_data_json = data;
-                        }
+                       },
+                       error: function(request, status) {
+                           //console.log('AJAX error', status);
+                       }
                      });
 
                     var form_selected = [];
