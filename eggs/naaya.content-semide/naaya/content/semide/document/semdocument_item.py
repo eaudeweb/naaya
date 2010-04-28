@@ -53,8 +53,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
 
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 # Module constants
 METATYPE_OBJECT = 'Naaya Semide Document'

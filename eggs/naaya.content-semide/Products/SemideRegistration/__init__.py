@@ -2,7 +2,7 @@ from App.ImageFile import ImageFile
 
 from Products.Naaya import register_content
 import SemideRegistration
-from utilities.StaticServe import StaticServeFromZip
+from naaya.core.StaticServe import StaticServeFromZip
 
 ADD_PERMISSION = 'Add Semide Registration'
 
