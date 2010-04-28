@@ -50,7 +50,7 @@
 			transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
 		<dd><div i18n:translate="">Example pins (download the image on your computer and upload it below):</div>
 			<tal:block repeat="i python:range(1,20)">
-				<img tal:attributes="src string:_misc/NaayaCore/pin${i}.png; alt string:_misc/NaayaCore/pin${i}.png" />
+				<img tal:attributes="src string:misc_/NaayaCore/pin${i}.png; alt string:pin${i}.png" />
 			</tal:block>
 		</dd>
 		<dd><input type="file" name="picture" value="" size="35" /></dd>
