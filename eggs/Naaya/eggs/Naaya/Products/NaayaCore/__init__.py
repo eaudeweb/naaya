@@ -256,5 +256,20 @@ if geo_installed:
     'pin18.png':ImageFile('GeoMapTool/images/pin18.png', globals()),
     'pin19.png':ImageFile('GeoMapTool/images/pin19.png', globals()),
     'pin20.png':ImageFile('GeoMapTool/images/pin20.png', globals()),
+
+    'pin_22_1.png':ImageFile('GeoMapTool/images/pin_22_1.png', globals()),
+    'pin_22_2.png':ImageFile('GeoMapTool/images/pin_22_2.png', globals()),
+    'pin_22_3.png':ImageFile('GeoMapTool/images/pin_22_3.png', globals()),
+    'pin_22_4.png':ImageFile('GeoMapTool/images/pin_22_4.png', globals()),
+    'pin_22_5.png':ImageFile('GeoMapTool/images/pin_22_5.png', globals()),
+    'pin_22_6.png':ImageFile('GeoMapTool/images/pin_22_6.png', globals()),
+    'pin_22_7.png':ImageFile('GeoMapTool/images/pin_22_7.png', globals()),
+    'pin_22_8.png':ImageFile('GeoMapTool/images/pin_22_8.png', globals()),
+    'pin_22_9.png':ImageFile('GeoMapTool/images/pin_22_9.png', globals()),
+    'pin_22_10.png':ImageFile('GeoMapTool/images/pin_22_10.png', globals()),
+    'pin_22_11.png':ImageFile('GeoMapTool/images/pin_22_11.png', globals()),
+    'pin_22_12.png':ImageFile('GeoMapTool/images/pin_22_12.png', globals()),
+    'pin_22_13.png':ImageFile('GeoMapTool/images/pin_22_13.png', globals()),
+    'pin_22_14.png':ImageFile('GeoMapTool/images/pin_22_14.png', globals()),
     }
     misc_.update(gmisc_)
