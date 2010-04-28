@@ -1086,9 +1086,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'getSymbolsListOrdered')
     def getSymbolsListOrdered(self, skey='sortorder', rkey=0):
         """ return an ordered lsit of symbols """
-        r = self.getSymbolsList()
-        if skey in ['title', 'parent', 'sortorder']:
-            r = self.utSortObjsListByAttr(r, skey, rkey)
+        r = []
+        for p in self.getParentsListOrdered():
+            r.append(p)
+            r.extend(self.getSymbolChildrenOrdered(p.id))
         return r
 
 
