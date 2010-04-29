@@ -338,6 +338,7 @@ class NyContentData(NyProperties):
         """ Fetch the schema for this object type """
         return self.getSite()._getOb(ID_SCHEMATOOL).getSchemaForMetatype(self.meta_type)
 
+    security.declareProtected(view, 'prop_details')
     def prop_details(self, prop_name, lang=None):
         """
         return property label, value and other info; useful for index_html views
@@ -361,6 +362,7 @@ class NyContentData(NyProperties):
             'show': bool(visible and value)}
 
     _content_prop_tr = PageTemplateFile('zpt/content_prop_tr', globals())
+    security.declareProtected(view, 'prop_display_tr')
     def prop_display_tr(self, prop_name, lang=None, **kwargs):
         """
         Display a property of this object (only if it's not hidden) with the
@@ -386,6 +388,7 @@ class NyContentData(NyProperties):
         else:
             return ''
 
+    security.declareProtected(view, 'prop_value_or_none')
     def prop_value_or_none(self, prop_name, lang=None):
         details = self.prop_details(prop_name, lang)
         if details['visible']:
@@ -472,7 +475,7 @@ class NyContentData(NyProperties):
             return ''
         return self.geo_location.address
 
-    security.declarePrivate(view, 'title_utf8')
+    security.declareProtected(view, 'title_utf8')
     def title_utf8(self):
         if not isinstance(self.title, basestring):
             return self.title
