@@ -203,12 +203,12 @@ class Widget(Folder, LocalPropertyManager):
     def convertValue(self, value):
         convert = DATA_TYPES[self.data_type]
         try:
-            if value == '':
+            if value in ('', None):
                 # special cases for empty values
                 if convert in (int, float):
-                    value = 0
+                    return convert(0)
                 elif convert is DateTime:
-                    value = None
+                    return None
             return convert(value)
         except ValueError:
             raise WidgetError('Conversion error: expected %s value '

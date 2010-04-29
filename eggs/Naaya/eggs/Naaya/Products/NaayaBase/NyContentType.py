@@ -29,6 +29,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 from zope.annotation.interfaces import IAttributeAnnotatable
+from DateTime import DateTime
 
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
@@ -69,11 +70,14 @@ class SchemaFormHelper(object):
             widget = self.schema.getWidget(prop_name)
             prop_type = widget.getDataType()
             val = self.context.getSession(prop_name, '')
-            if val == '':
+            if val in ('', None):
                 if widget.default not in (None, ''):
                     return prop_type(widget.default)
                 else:
-                    return prop_type()
+                    if prop_type is DateTime:
+                        return ''
+                    else:
+                        return prop_type()
             else:
                 return prop_type(val)
 
