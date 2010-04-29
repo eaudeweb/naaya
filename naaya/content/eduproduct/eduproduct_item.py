@@ -159,7 +159,6 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckCont
         """ """
         self.id = id
         NyValidation.__dict__['__init__'](self)
-        NyNonCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
