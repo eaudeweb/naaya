@@ -34,9 +34,10 @@
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 
-        <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-        <tal:block content="structure python: here.prop_display_tr('contributor')" />
+        <tal:block condition="nothing" content="structure python: here.prop_display_tr('releasedate')" />
+        <tal:block condition="nothing" content="structure python: here.prop_display_tr('contributor')" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
+
 
         <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
             picture python:portal_map.getSymbolPicture(here.geo_type)"
@@ -47,6 +48,14 @@
             <span tal:replace="title" />
         </td>
         </tr>
+
+        <tal:block content="structure python: here.prop_display_tr('available_from')" />
+        <tal:block content="structure python: here.prop_display_tr('available_until')" />
+        <tal:block content="structure python: here.prop_display_tr('supplier')" />
+        <tal:block content="structure python: here.prop_display_tr('supplier_url')" />
+        <tal:block content="structure python: here.prop_display_tr('contact_person')" />
+        <tal:block content="structure python: here.prop_display_tr('contact_email')" />
+        <tal:block content="structure python: here.prop_display_tr('contact_phone')" />
 
         <tal:block content="structure python: here.prop_display_tr('keywords')" />
 
@@ -82,10 +91,12 @@
             </ul>
         </tal:block>
 
-        <h4 i18n:translate="">Contact information</h4>
-        <tal:block define="contact_info python:here.prop_value_or_none('contact_info')"
-            tal:condition="contact_info">
-            <div tal:content="structure contact_info" />
+        <tal:block condition="here/details">
+            <h4 i18n:translate="">Details</h4>
+            <tal:block define="details python:here.prop_value_or_none('details')"
+                tal:condition="details">
+                <div tal:content="structure details" />
+            </tal:block>
         </tal:block>
 
         <tal:block content="structure here/set_content_rating" />
