@@ -80,6 +80,7 @@ map_i18n_js_messages = [
     "Uncheck All",
     "Type location address",
     "Type keywords",
+    "close",
 ]
 
 class GeoMapToolUploadError(Exception):
@@ -136,14 +137,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             %s
             <small>%s</small>
             <div class="marker-more">
-                <a href="%s" i18n:translate="">see more</a>
+                <a href="%s">%s</a>
             </div>
         </div>
         """
 
     _small_marker_template = """
         <div class="marker-more">
-            <a href="%s" i18n:translate="">%s</a>%s
+            <a href="%s">%s</a>%s
         </div>
         """
 
@@ -163,10 +164,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         access_str = ''
         if not has_access:
             access_str = '<div>RESTRICTED ACCESS</div>'
+        translate = self.getSite().getPortalTranslations()
         return self._marker_template % (object.title_or_id(),
                                         access_str,
                                         object.description,
-                                        object.absolute_url())
+                                        object.absolute_url(),
+                                        translate("see more"))
 
     _cluster_marker_template = """
         <div class="marker-body">

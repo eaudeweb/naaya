@@ -318,7 +318,7 @@ function custom_balloon(point_position, content) {
     css.top = map_jq.offset().top + point_position.top;
 
     var balloon = $('<div>').css(css);
-    var close_button = $('<a>[close]</a>').css({color: '#999', float: 'right'});
+    var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
     close_button.click(function(){ clear_custom_balloon(); });
     balloon.append(close_button, $('<div>').html(content));
     map_jq.parent().append(balloon);
