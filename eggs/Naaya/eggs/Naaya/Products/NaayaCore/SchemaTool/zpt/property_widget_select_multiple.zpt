@@ -22,7 +22,8 @@
     <p i18n:translate="">
         Click on the items from list below to select/deselect them.
     </p>
-        <tal:block define="site_url python:here.getSite().absolute_url()"
+        <tal:block define="site_url python:here.getSite().absolute_url();
+                           reflist_title python:here.getPortalTranslations()(here.title)"
                    content="structure string:
             <script>
                 $$(function() {
@@ -59,7 +60,7 @@
                             });
                         });
 
-                    tree_data_json = {'data':'${here/title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
+                    tree_data_json = {'data':'${reflist_title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
                     $('#${prop_id}_tree').tree({
                         selected : selected_nodes,
                         rules : {
