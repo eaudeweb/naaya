@@ -39,6 +39,7 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from zLOG import LOG, DEBUG, INFO, ERROR
 from App.ImageFile import ImageFile
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 #Product imports
 from constants import *
@@ -1513,6 +1514,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         map_div = get_template('map_div.html', skip_script=True)
         map_div = map_div % (self.detailed_map_width, self.detailed_map_width, 
                              self.detailed_map_height, self.absolute_url())
+        # there's an i18n:translate in `map_div`, so we render as template
+        map_div = ZopePageTemplate('map_div', text=map_div).__of__(self)()
         return '\n'.join((map_div, template))
 
     def render_edit_map(self, geo_location):
