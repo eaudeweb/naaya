@@ -176,6 +176,14 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckCont
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
+    @property
+    def start_date(self):
+        return getattr(self, 'available_from', None)
+
+    @property
+    def end_date(self):
+        return getattr(self, 'available_until', None)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
