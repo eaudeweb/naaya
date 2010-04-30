@@ -237,18 +237,6 @@ GGeoMapTool.prototype.getBounds = function () {
 	return output;
 }
 
-GGeoMapTool.prototype.getCenter = function () {
-	var center = map.getCenter();
-	return {
-		'lat_center': center.lat(),
-		'lon_center': center.lng()
-	};
-}
-
-GGeoMapTool.prototype.getZoomLevel = function () {
-	return map.getZoom();
-}
-
 GGeoMapTool.prototype.onMapMove = function (listener) {
 	 GEvent.addListener(map, "moveend", listener);
 }

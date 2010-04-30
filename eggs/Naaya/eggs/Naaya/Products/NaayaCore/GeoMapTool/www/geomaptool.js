@@ -113,10 +113,6 @@ function showMapLocationsHandler(){
 	var bounds = mapTool.getBounds();
 	var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
 		'&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
-	var center = mapTool.getCenter();
-	var str_center = 'lat_center=' + center.lat_center + '&lon_center=' + center.lon_center;
-	var zoom_level = mapTool.getZoomLevel();
-	var str_zoom_level = 'zoom_level=' + zoom_level;
 	var query = document.getElementById('geo_query').value;
 	if (query === naaya_map_i18n["Type keywords"]) {
 		query = "";
@@ -127,7 +123,6 @@ function showMapLocationsHandler(){
 		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type location address"]), "");
 		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type keywords"]), "");
 		doHttpRequestNoErrorChecking( server_base_url + "/xrjs_getGeoClusters?" + str_bounds +
-				'&' + str_center + '&' + str_zoom_level +
 				'&'+ enc_form + '&geo_query=' + query, mapRefreshHandler);
 	}
 	else {
@@ -135,21 +130,21 @@ function showMapLocationsHandler(){
 		document.body.style.cursor = "default";
 		noMapRefreshNeeded();
 	}
-	locations_update_notify(bounds, center, query);
+	locations_update_notify(bounds, query);
 }
 
 var locations_update_observers = [update_locations_values];
 function locations_update_register(func) {
 	locations_update_observers.push(func);
 }
-function locations_update_notify(bounds, center, query) {
+function locations_update_notify(bounds, query) {
 	for (f_i in locations_update_observers) {
 		f = locations_update_observers[f_i];
-		f(bounds, center, query);
+		f(bounds, query);
 	}
 }
 
-function update_locations_values(bounds, center, query){
+function update_locations_values(bounds, query){
 	/* update the locations form fields with the new viewport coordinates */
 	var form = document.getElementById('list_locations_form');
 	form.lat_min.value = bounds.lat_min;
@@ -173,8 +168,6 @@ function update_locations_values(bounds, center, query){
 				"&lat_max=" + bounds.lat_max +
 				"&lon_min=" + bounds.lon_min +
 				"&lon_max=" + bounds.lon_max +
-				"&lon_center=" + center.lon_center +
-				"&lat_center=" + center.lat_center +
 				"&geo_types=" + form.symbols.value +
 				"&geo_query=" + query;
 	

@@ -250,18 +250,6 @@ YGeoMapTool.prototype.getBounds = function () {
 	}
 }
 
-YGeoMapTool.prototype.getCenter = function () {
-	var center = map.getCenterLatLon();
-	return {
-		'lat_center': center.Lat,
-		'lon_center': center.Lon
-	};
-}
-
-YGeoMapTool.prototype.getZoomLevel = function () {
-	return 18 - map.getZoomLevel();
-}
-
 YGeoMapTool.prototype.onMapMove = function (listener) {
 	 YEvent.Capture(map, EventsList.endPan, listener);
 }
