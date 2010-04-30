@@ -39,7 +39,7 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from zLOG import LOG, DEBUG, INFO, ERROR
 from App.ImageFile import ImageFile
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate, manage_addPageTemplate
 
 #Product imports
 from constants import *
@@ -1074,17 +1074,32 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return schema_tool.list_geotaggable_types()
 
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
+    def index_html(self, REQUEST=None):
         """ """
+        return self._index_template()({'here': self})
+
+    security.declareProtected(view_management_screens,
+                              'manage_customize_index')
+    def manage_customize_index(self, REQUEST):
+        """ create a custom map_index """
+        if 'map_index' in self.objectIds():
+            raise ValueError('map_index already customized')
+        else:
+            manage_addPageTemplate(self, id='map_index', title='',
+                                   text=self._index_template()._text)
+            REQUEST.RESPONSE.redirect('%s/manage_workspace' %
+                                      self.map_index.absolute_url())
+
+    def _index_template(self):
         if hasattr(self, 'map_index'):
-            return self._getOb('map_index')({'here': self})
+            return self._getOb('map_index')
         for skel_handler in reversed(self.get_all_skel_handlers()):
             skel_path = skel_handler.skel_path
             map_index_path = os.path.join(skel_path, 'others', 'map_index.zpt')
             if os.path.isfile(map_index_path):
-                return PageTemplateFile(map_index_path).__of__(self)()
-            break # we're only interested in the skel for the current portal type
-        return self.view_map_html({'here': self})
+                return PageTemplateFile(map_index_path).__of__(self)
+        else:
+            return self.view_map_html
 
     security.declareProtected(view, 'view_map_html')
     view_map_html = PageTemplateFile('zpt/map_index', globals())
