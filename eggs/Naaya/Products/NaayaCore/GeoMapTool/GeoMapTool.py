@@ -573,7 +573,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'search_geo_clusters')
     def search_geo_clusters(self, REQUEST=None, **kwargs):
         """ Returns all the clusters that match the specified criteria. """
-        defaults = {
+        criteria = {
             'lat_min': None,
             'lat_max': None,
             'lon_min': None,
@@ -588,13 +588,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'languages': None,
             'meta_types': None,
         }
-        for name in defaults.iterkeys():
-            if name in kwargs:
-                pass
-            elif REQUEST is not None and name in REQUEST.form:
-                kwargs[name] = REQUEST.form[name]
-            else:
-                kwargs[name] = defaults[name]
+        criteria.update(kwargs)
+        if REQUEST is not None:
+            criteria.update(REQUEST.form)
 
         coord_defaults = {
             'lat_min': -90.0,
@@ -603,20 +599,24 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'lon_max': 180.0,
         }
         for name, default_value in coord_defaults.iteritems():
-            if kwargs[name] in (None, ''):
-                kwargs[name] = default_value
+            if criteria[name] in (None, ''):
+                criteria[name] = default_value
             else:
-                kwargs[name] = float(kwargs[name])
+                criteria[name] = float(criteria[name])
 
-        if kwargs['lon_min'] < kwargs['lon_max']:
-            filters = self.build_geo_filters(**kwargs)
+        if 'geo_query' in criteria:
+            criteria['query'] = criteria['geo_query']
+            del criteria['geo_query']
+
+        if criteria['lon_min'] < criteria['lon_max']:
+            filters = self.build_geo_filters(**criteria)
             cluster_obs, single_obs = self._search_geo_clusters(filters)
 
         else:
-            filters1 = self.build_geo_filters(**dict(kwargs, lon_max=180.0))
+            filters1 = self.build_geo_filters(**dict(criteria, lon_max=180.0))
             cluster_obs_1, single_obs_1 = self._search_geo_clusters(filters1)
 
-            filters2 = self.build_geo_filters(**dict(kwargs, lon_min=-180.0))
+            filters2 = self.build_geo_filters(**dict(criteria, lon_min=-180.0))
             cluster_obs_2, single_obs_2 = self._search_geo_clusters(filters2)
 
             cluster_obs = cluster_obs_1 + cluster_obs_2
@@ -720,16 +720,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '$$'.join(r)
 
     security.declareProtected(view, 'xrjs_getGeoClusters')
-    def xrjs_getGeoClusters(self, REQUEST, path='', geo_types=[], geo_query=None,
-            zoom_level=0, lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            lat_center=0., lon_center=0., landscape_type=[], administrative_level=[], country=''):
+    def xrjs_getGeoClusters(self, REQUEST):
         """ """
         r = []
 
-        cluster_obs, single_obs = self.search_geo_clusters(
-            path=path, geo_types=geo_types, query=geo_query,
-            lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-            landscape_type=landscape_type, administrative_level=administrative_level, country=country)
+        cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
 
         for res in cluster_obs:
             r.append('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res[0].lat),
