@@ -7,8 +7,6 @@
 		lat_max options/lat_max;
 		lon_min options/lon_min;
 		lon_max options/lon_max;
-		lat_center options/lat_center;
-		lon_center options/lon_center;
 		geo_types options/geo_types;
 		geo_types_str python:','.join(geo_types);
 		administrative_level options/administrative_level|string:;
@@ -29,7 +27,7 @@
 		next_end python:test(end+step<results, end+step, results);
 		prev_start python:start-step;
 		prev_end start;
-		url_params string:?lat_min=${lat_min}&amp;lat_max=${lat_max}&amp;lon_min=${lon_min}&amp;lon_max=${lon_max}&amp;lat_center=${lat_center}&amp;lon_center=${lon_center}&amp;geo_types=${geo_types_str}&amp;administrative_level=${administrative_level_str}&amp;landscape_type=${landscape_type_str}&amp;geo_query=${geo_query}&amp;country=${country}&amp;sortable=${sortable};
+		url_params string:?lat_min=${lat_min}&amp;lat_max=${lat_max}&amp;lon_min=${lon_min}&amp;lon_max=${lon_max}&amp;geo_types=${geo_types_str}&amp;administrative_level=${administrative_level_str}&amp;landscape_type=${landscape_type_str}&amp;geo_query=${geo_query}&amp;country=${country}&amp;sortable=${sortable};
 		records options/records;
 		ratable_records options/ratable_records">
 
