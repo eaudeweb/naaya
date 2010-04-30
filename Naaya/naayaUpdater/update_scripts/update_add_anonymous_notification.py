@@ -36,6 +36,7 @@ except:
 
 class UpdateAddAnonymousNotification(UpdateScript):
     """ Update add AnonymousNotification  """
+    
     id = 'update_add_anonymousNotification'
     title = 'Update add AnonymousNotification portal tool'
     #meta_type = 'Naaya Update Script'
@@ -53,6 +54,3 @@ class UpdateAddAnonymousNotification(UpdateScript):
         portal._setObject('portal_anonymous_notification', AnonymousNotification('portal_anonymous_notification'))
         self.log.debug('AnonymousNotification succesfully added')
         return True
-
-
-
