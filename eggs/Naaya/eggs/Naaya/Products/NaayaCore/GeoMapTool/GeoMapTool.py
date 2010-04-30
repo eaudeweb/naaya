@@ -571,42 +571,52 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return cluster_obs, single_obs
 
     security.declareProtected(view, 'search_geo_clusters')
-    def search_geo_clusters(self, meta_types=None,
-            lat_min=None, lat_max=None, lon_min=None, lon_max=None,
-            path='', geo_types=[], query='', approved=True,
-            landscape_type=[], administrative_level=[], country='', languages=None):
+    def search_geo_clusters(self, REQUEST=None, **kwargs):
         """ Returns all the clusters that match the specified criteria. """
-        if lat_min is None or lat_min == '': lat_min = -90.
-        if lat_max is None or lat_max == '': lat_max = 90.
-        if lon_min is None or lon_min == '': lon_min = -180.
-        if lon_max is None or lon_max == '': lon_max = 180.
-        lat_min, lat_max = float(lat_min), float(lat_max)
-        lon_min, lon_max = float(lon_min), float(lon_max)
+        defaults = {
+            'lat_min': None,
+            'lat_max': None,
+            'lon_min': None,
+            'lon_max': None,
+            'path': '',
+            'geo_types': [],
+            'query': '',
+            'approved': True,
+            'landscape_type': [],
+            'administrative_level': [],
+            'country': '',
+            'languages': None,
+            'meta_types': None,
+        }
+        for name in defaults.iterkeys():
+            if name in kwargs:
+                pass
+            elif REQUEST is not None and name in REQUEST.form:
+                kwargs[name] = REQUEST.form[name]
+            else:
+                kwargs[name] = defaults[name]
 
-        if float(lon_min) < float(lon_max):
-            filters = self.build_geo_filters(path=path, meta_types=meta_types,
-                geo_types=geo_types, approved=approved,
-                landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-                query=query, country=country, languages=languages)
+        coord_defaults = {
+            'lat_min': -90.0,
+            'lat_max': 90.0,
+            'lon_min': -180.0,
+            'lon_max': 180.0,
+        }
+        for name, default_value in coord_defaults.iteritems():
+            if kwargs[name] in (None, ''):
+                kwargs[name] = default_value
+            else:
+                kwargs[name] = float(kwargs[name])
 
+        if kwargs['lon_min'] < kwargs['lon_max']:
+            filters = self.build_geo_filters(**kwargs)
             cluster_obs, single_obs = self._search_geo_clusters(filters)
 
         else:
-            filters1 = self.build_geo_filters(path=path, meta_types=meta_types,
-                geo_types=geo_types, approved=approved,
-                landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=180.,
-                query=query, country=country, languages=languages)
-
+            filters1 = self.build_geo_filters(**dict(kwargs, lon_max=180.0))
             cluster_obs_1, single_obs_1 = self._search_geo_clusters(filters1)
 
-            filters2 = self.build_geo_filters(path=path, meta_types=meta_types,
-                geo_types=geo_types, approved=approved,
-                landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_max,
-                query=query, country=country, languages=languages)
-
+            filters2 = self.build_geo_filters(**dict(kwargs, lon_min=-180.0))
             cluster_obs_2, single_obs_2 = self._search_geo_clusters(filters2)
 
             cluster_obs = cluster_obs_1 + cluster_obs_2
