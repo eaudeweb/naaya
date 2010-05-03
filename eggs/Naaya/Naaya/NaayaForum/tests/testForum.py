@@ -25,13 +25,13 @@ import transaction
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
-from Products.NaayaForum.NyForum import NyForum, manage_addNyForum
+from Products.NaayaForum.NyForum import NyForum, addNyForum
 from Products.NaayaForum.NyForumTopic import NyForumTopic, addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
 
 class ForumBasicTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
-        manage_addNyForum(
+        addNyForum(
                         self.portal,
                         id='forum_id',
                         title='myforum',
