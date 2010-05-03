@@ -25,7 +25,7 @@ import transaction
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaCore.NotificationTool.NotificationTool import \
     set_testing_mode as notif_testing_mode
-from Products.NaayaForum.NyForum import manage_addNyForum
+from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
 
@@ -42,7 +42,7 @@ class NotificationsTestCase(NaayaTestCase):
         self._notifications = []
         notif_testing_mode(True, self._notifications)
 
-        manage_addNyForum(self.portal, id='tforum', title='My Forum')
+        addNyForum(self.portal, id='tforum', title='My Forum')
         tforum = self.portal['tforum']
         addNyForumTopic(tforum, id='ttopic', title='My Topic')
         addNyForumMessage(tforum['ttopic'], id='tmessage', title='My Message')

@@ -34,7 +34,7 @@
 <!-- Submit buttons-->
 <div class="field">
 	<input type="hidden" name="redirect_url" value="index_html" />
-	<input type="submit" value="Save changes" i18n:attributes="value" name="manage_addNyForum:method"/>
+	<input type="submit" value="Save changes" i18n:attributes="value" name="addNyForum:method"/>
 </div>
 </form>
 

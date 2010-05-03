@@ -34,7 +34,7 @@ from Products.Naaya import register_content
 register_content(
     module=NyForum,
     klass=NyForum.NyForum,
-    module_methods={'manage_addNyForum': PERMISSION_ADD_FORUM},
+    module_methods={'addNyForum': PERMISSION_ADD_FORUM},
     klass_methods={'forum_add_html': PERMISSION_ADD_FORUM},
     add_method=('forum_add_html', PERMISSION_ADD_FORUM),
 )
@@ -48,7 +48,7 @@ def initialize(context):
         permission = PERMISSION_ADD_FORUM,
         constructors = (
                 NyForum.manage_addNyForum_html,
-                NyForum.manage_addNyForum,
+                NyForum.addNyForum,
                 ),
         icon = 'www/NyForum.gif'
         )

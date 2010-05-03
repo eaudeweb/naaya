@@ -42,7 +42,7 @@ STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
-def manage_addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
+def addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
     """ """
     id = make_id(self, id=id, title=title, prefix=PREFIX_NYFORUM)
     categories = self.utConvertLinesToList(categories)

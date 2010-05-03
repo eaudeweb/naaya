@@ -26,7 +26,7 @@ import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-from Products.NaayaForum.NyForum import manage_addNyForum
+from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
 
@@ -34,7 +34,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        manage_addNyForum(
+        addNyForum(
                         self.portal,
                         id='forum_id',
                         title='myforum',
