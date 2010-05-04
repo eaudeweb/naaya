@@ -81,7 +81,7 @@ class RefTree(LocalPropertyManager, Folder):
         self.id = id
         self.title = title
         self.description = description
-    
+
     def _setObject(self, object_id, object, set_owner = 0):
         """
         Reorder B{object}'s level by weight
@@ -151,30 +151,30 @@ class RefTree(LocalPropertyManager, Folder):
     def get_node_children(self, parent = None):
         """ return child nodes for parent ordered by weight """
         return self.utSortObjsListByAttr([x for x in self.get_tree_nodes() if parent == x.parent ], 'weight', 0)
-        
-    def __get_tree_rec(self, node):
-        """ Traverse the tree """
-        if node.id not in self.visited:
-            if node.parent == None or node.parent in self.visited:
-                self.visited.append(node.id)
-                ret_dict = {}
-                ret_dict[node] = []
-                if hasattr(node, 'children'):
-                    ret_dict[node] = map(self.__get_tree_rec, node.children)
-                return ret_dict
-        
+
     def get_tree(self):
         """ Get tree as a list of dictionaries ordered by weight """
         nodes = self.get_tree_nodes()
         data = []
         for node in nodes:
             node.children = self.get_node_children(node.id)
-        self.visited = []
+
+        visited = []
+        def recurse_get_tree(node):
+            if node.id not in visited:
+                if node.parent == None or node.parent in visited:
+                    visited.append(node.id)
+                    ret_dict = {}
+                    ret_dict[node] = []
+                    if hasattr(node, 'children'):
+                        ret_dict[node] = map(recurse_get_tree, node.children)
+                    return ret_dict
+
         for node in nodes:
-            res = self.__get_tree_rec(node)
+            res = recurse_get_tree(node)
             if res:
                 data.append(res)
-        del(self.visited)
+
         return data
 
     def is_child(self, object, parent):
@@ -323,7 +323,7 @@ class RefTree(LocalPropertyManager, Folder):
                 node_dict['children'] = self.utSortDictsListByKey(self.__get_tree_dict(children), 'weight', 0)
             data.append(node_dict)
         return self.utSortDictsListByKey(data, 'weight', 0)
-        
+
     def get_tree_data_dict(self):
         tree = self.get_tree()
         data = [self.__get_tree_dict(tree)]
@@ -334,7 +334,7 @@ class RefTree(LocalPropertyManager, Folder):
                 'id': self.getId(),
                 'rel': 'tree',
             }
-        }        
+        }
     def get_list(self):
         return self.get_tree_nodes()
 
