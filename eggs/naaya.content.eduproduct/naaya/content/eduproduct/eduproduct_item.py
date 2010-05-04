@@ -30,7 +30,7 @@ DEFAULT_SCHEMA = {
     'product_type': dict(sortorder=100, widget_type='SelectMultiple',
                 label='Product type', list_id='product_type'),
     'target_group': dict(sortorder=110, widget_type='SelectMultiple',
-                label='Target group', list_id='product_target_group'),
+                label='Target group', list_id='target-group'),
     'theme': dict(sortorder=120, widget_type='SelectMultiple',
                 label='Theme', list_id='product_theme'),
     'details': dict(sortorder=130, widget_type='TextArea',
