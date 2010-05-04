@@ -571,9 +571,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'languages': None,
             'meta_types': None,
         }
-        criteria.update(kwargs)
         if REQUEST is not None:
             criteria.update(REQUEST.form)
+        criteria.update(kwargs)
 
         coord_defaults = {
             'lat_min': -90.0,
@@ -595,7 +595,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if isinstance(criteria['geo_types'], str):
                 criteria['geo_types'] = criteria['geo_types'].split(',')
         else:
-            criteria['geo_types'] = None
+            criteria['geo_types'] = []
 
         for ignored_key in ['center', 'zoom', 'address']:
             if ignored_key in criteria:

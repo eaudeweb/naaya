@@ -38,7 +38,7 @@
 			next_end python:end + step;
 			prev_start python:start - step;
 			prev_end python:end - step;
-			records python:here.search_geo_objects(sort_on=sort_on, sort_order=sort_order, first_letter=first_letter);
+			records python:here.search_geo_objects(sort_on=sort_on, sort_order=sort_order, geo_types=None, first_letter=first_letter);
 			records_len python:len(records);
 			records python:records[start:end];
 			edit_mode python:True;
