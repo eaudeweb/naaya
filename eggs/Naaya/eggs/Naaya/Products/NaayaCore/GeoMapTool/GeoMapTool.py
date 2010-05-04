@@ -368,12 +368,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         base_filter['geo_longitude'] = {'query': (Decimal(str(lon_min)), Decimal(str(lon_max))),
                                         'range':'min:max'}
 
-        custom_filter = self._getOb('custom_filter', None)
-        if custom_filter is not None:
-            custom_filter(base_filter, kwargs)
-
         filters = []
         filters.append(base_filter)
+
+        custom_filter = self._getOb('custom_filter', None)
+        if custom_filter is not None:
+            custom_filter(filters, kwargs)
 
         if query:
             query_filters = []
