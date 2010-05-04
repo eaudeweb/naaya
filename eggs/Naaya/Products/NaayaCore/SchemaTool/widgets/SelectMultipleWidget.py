@@ -56,4 +56,6 @@ class SelectMultipleWidget(Widget):
     def isEmptyDatamodel(self, value):
         return not bool(value)
 
+    hidden_template = PageTemplateFile('../zpt/property_widget_hidden_multiple', globals())
+
     template = PageTemplateFile('../zpt/property_widget_select_multiple', globals())
