@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
@@ -48,12 +48,12 @@
 		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
 		<select id="items_perpage" name="items_perpage" class="itemsPerPage">
 			<tal:block repeat="item items_perpage_values">
-				<option tal:attributes="value item; 
-						selected python:test(items_perpage == item, 1, None)" 
-						tal:content="string:${item} results / page" 
+				<option tal:attributes="value item;
+						selected python:test(items_perpage == item, 1, None)"
+						tal:content="string:${item} results / page"
 						i18n:translate="" />
 			</tal:block>
-			<option value="100000" 
+			<option value="100000"
 				tal:attributes="selected python:test(items_perpage == 100000, 1, None)"
 				i18n:translate="">all results</option>
 		</select>

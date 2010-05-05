@@ -50,7 +50,7 @@ TITLE_LINKCHECKER =     'Link checker'
 ID_HELPDESKAGENT =      'HelpDesk'
 TITLE_HELPDESKAGENT =   'Helpdesk'
 
-ID_PHOTOARCHIVE =       'Photos'
+ID_PHOTOARCHIVE =       'photos'
 TITLE_PHOTOARCHIVE =    'Photos'
 
 ID_FLASHTOOL =          'FlashTool'
@@ -137,11 +137,11 @@ MARKER_LEFT_THIRD_FONT_AR_START =                '/*s41*/'
 MARKER_LEFT_THIRD_FONT_AR_END =                  '/*e41*/'
 
 MARKER_BREAD_COLOR_START =                       '/*s9*/'
-MARKER_BREAD_COLOR_END =                         '/*e9*/'  
+MARKER_BREAD_COLOR_END =                         '/*e9*/'
 MARKER_BREAD_SIZE_AR_START =                     '/*s42*/'
 MARKER_BREAD_SIZE_AR_END =                       '/*e42*/'
-MARKER_BREAD_SIZE_START =                        '/*s10*/' 
-MARKER_BREAD_SIZE_END =                          '/*e10*/'   
+MARKER_BREAD_SIZE_START =                        '/*s10*/'
+MARKER_BREAD_SIZE_END =                          '/*e10*/'
 
 MARKER_LEFT_TITLE_BG_START =                     '/*s11*/'
 MARKER_LEFT_TITLE_BG_END =                       '/*e11*/'
@@ -229,12 +229,12 @@ RDF_SEARCH_MAPPING = {
 }
 
 RDF_SEARCH_QUERY_MAPPING = {
-    'sq': 'query', 
-    'mt': 'meta_types', 
-    'tp': 'textlaws_props', 
-    'dp': 'document_props', 
-    'mp': 'multimedia_propes', 
-    'sd': 'start_date', 
-    'ed': 'end_date', 
+    'sq': 'query',
+    'mt': 'meta_types',
+    'tp': 'textlaws_props',
+    'dp': 'document_props',
+    'mp': 'multimedia_propes',
+    'sd': 'start_date',
+    'ed': 'end_date',
     'sl': 'languages',
 }
