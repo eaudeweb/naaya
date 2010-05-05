@@ -52,6 +52,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.GeoMapTool import clusters
 from Products.NaayaCore.GeoMapTool import clusters_catalog
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
@@ -1394,6 +1395,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         {'url': 'admin_map_no_coordinates_html', 'title': 'Objects with no coordinates'}
     ]
     admin_pt = PageTemplateFile('zpt/map_admin_template', globals())
+
+    admin_map_embed_help = NaayaPageTemplateFile('zpt/map_embed_help',
+                    globals(), 'site_admin_map_embed_help')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_html')
     admin_map_html = PageTemplateFile('zpt/map_edit', globals())

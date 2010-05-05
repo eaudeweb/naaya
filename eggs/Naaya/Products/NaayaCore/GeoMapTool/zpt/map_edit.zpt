@@ -86,33 +86,7 @@
 </fieldset>
 <fieldset class="form-fieldset">
     <legend i18n:translate="">Embed map</legend>
-        <p i18n:translate="">
-            Embed this map in your site using a code like this:
-        </p>
-        <pre tal:define="site_url here/absolute_url">
-&lt;iframe src="<tal:block content="string:${site_url}/embed_map_html?
-		center_locality=Europe&zoom=14&geo_types=symbol001&geo_types=symbol002"/>&quot;
-    width="600" height="500" frameborder="0" scrolling="no"&gt;
-        &lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
-&lt;/iframe&gt;
-</pre>
-        <p i18n:translate="">
-            Following parameters can be used:
-		</p>
-			<dl>
-				<dt>center_locality=&lt;place name&gt;</dt>
-					<dd i18n:translate="">Allows precentering the map to a certain location.</dd>
-				<dt>zoom=&lt;zoom level&gt;</dt>
-					<dd i18n:translate="">Please observe the scale from 19 to 1 for Google Maps
-						and 1 to 15 for Yahoo Maps.</dd>
-				<dt>geo_types=&lt;category ID&gt;</dt>
-					<dd i18n:translate="">Allows the prefiltering the location categories that
-						appear on the map.<br/> You can find the category IDs under
-						<a tal:attributes="href string:${map_url}/admin_maptypes_html">
-							<em i18n:translate="Location categories">Location categories</em>
-						</a>
-					</dd>
-			</dl>
+    <tal:block content="structure here/admin_map_embed_help" />
 </fieldset>
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 </form>
