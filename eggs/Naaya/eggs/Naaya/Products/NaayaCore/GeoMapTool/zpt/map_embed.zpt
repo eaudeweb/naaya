@@ -89,7 +89,7 @@
 						   center_locality request/center_locality|here/center_locality;
 						   center request/center|nothing;
 						   zoom request/zoom|nothing;
-						   path request/path|nothing;
+						   path python:'/'.join(here.getSite().getPhysicalPath()) + '/' + request.get('path', '');
 						   records python:here.search_geo_objects(path=path, geo_types=geo_types, query=geo_query);
 						   width request/width|here/map_width;
 						   height request/height|here/map_height">
@@ -105,6 +105,7 @@
 		</script>
 		<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
 	</span>
+	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
 	<span tal:replace="structure python:here.jsMapControl(here.map_engine, center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
