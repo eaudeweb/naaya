@@ -17,8 +17,8 @@ ref_trees = [
 #               dict(id='3', title='Elderly'),
 #               dict(id='4', title='Children, Primary Education'),
 #               dict(id='5', title='Children, Secondary Education')]},
-#    {'id': 'product_theme',
 
+    {'id': 'product_theme',
      'title': "Product Theme",
      'items': [dict(id='1', title='Green and garden'),
                dict(id='2', title='Health'),
