@@ -18,6 +18,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+import os
 from whrandom import choice
 from DateTime import DateTime
 import xmlrpclib
@@ -49,6 +50,7 @@ from naaya.content.semide.textlaws import  semtextlaws_item; METATYPE_NYSEMTEXTL
 from naaya.content.semide.news import semnews_item; METATYPE_NYSEMNEWS = semnews_item.config['meta_type']
 from naaya.content.semide.thematicdir import semthematicdir_item; METATYPE_NYSEMTHEMATICDIR = semthematicdir_item.config['meta_type']
 from naaya.content.semide.multimedia import semmultimedia_item; METATYPE_NYSEMMULTIMEDIA = semmultimedia_item.config['meta_type']
+from naaya.content.semide.project import semproject_item; METATYPE_NYSEMPROJECT = semproject_item.config['meta_type']
 
 
 from Products.NaayaCore.ProfilesTool.ProfileMeta    import ProfileMeta
@@ -60,14 +62,17 @@ from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
 from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
-from Products.NaayaPhotoArchive.NyPhotoFolder       import manage_addNyPhotoFolder
+
+from Products.NaayaPhotoArchive.NyPhotoGallery      import manage_addNyPhotoGallery
+from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLERY
+
 from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
 from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCentre
 from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
 from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
-from Products.NaayaForum.NyForum                    import manage_addNyForum
+from Products.NaayaForum.NyForum                    import addNyForum
 from Products.NaayaForum.constants                  import METATYPE_NYFORUM, METATYPE_NYFORUMTOPIC, METATYPE_NYFORUMMESSAGE
-from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOFOLDER
+
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
@@ -76,7 +81,7 @@ from Products.NaayaCore.managers.paginator          import ObjectPaginator
 
 from managers.config_parser                         import config_parser
 from managers.semide_zip                            import SemideZip
-from managers                                       import utils
+from managers                                       import utils as semide_utils
 from managers.decorators                            import cachable, content_type_xml
 
 from pdf.export_pdf                                 import export_pdf
@@ -100,7 +105,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     meta_type = METATYPE_SEMIDESITE
     icon = 'misc_/SEMIDE/Site.gif'
-    
+
     manage_options = (
         NySite.manage_options
         +
@@ -108,7 +113,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     )
 
     security = ClassSecurityInfo()
-    
+
     product_paths = NySite.product_paths + [SEMIDE_PRODUCT_PATH]
 
     def __init__(self, id, portal_uid, title, lang):
@@ -176,12 +181,15 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def loadDefaultData(self):
         """ """
         NySite.__dict__['createPortalTools'](self)
-        NySite.__dict__['loadDefaultData'](self, exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
+        NySite.__dict__['loadDefaultData'](self)
 
         #load site skeleton - configuration
-        self.getSyndicationTool().manage_delObjects('news_rdf')
-        self.getSyndicationTool().manage_delObjects('lateststories_rdf')
-        self.loadSkeleton(join(SEMIDE_PRODUCT_PATH, 'skel'), exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
+        if self.getSyndicationTool()._getOb('news_rdf', None):
+            self.getSyndicationTool().manage_delObjects('news_rdf')
+
+        if self.getSyndicationTool()._getOb('lateststories_rdf', None):
+            self.getSyndicationTool().manage_delObjects('lateststories_rdf')
+        self.loadSkeleton(SEMIDE_PRODUCT_PATH)
         self.getLayoutTool().manage_delObjects('skin')
 
         #overwrite default subobjects for folders
@@ -189,7 +197,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         self.getPortletsTool().manage_delObjects('topnav_links')
 
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
-        manage_addNyPhotoFolder(self.documents, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE, self.getAuthenticationToolPath(1))
+        manage_addNyPhotoGallery(self, ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE, contributor=self.getAuthenticationToolPath(1))
 
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
         rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
@@ -214,64 +222,47 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         #set the flash tool
         manage_addFlashTool(self)
-#        flash_tool = self.getFlashTool()
-#
-#        flash_tool.notif_date = self.utGetTodayDate() + 30
-#        flash_tool.lastflashdate = self.utStringDate(flash_tool.notif_date)
-#        flash_tool.news_start_date = self.utGetTodayDate()
-#        flash_tool.news_end_date = flash_tool.news_start_date + 30
-#
-#        flash_tool.event_start_date = self.utGetTodayDate()
-#        flash_tool.event_end_date = flash_tool.event_start_date + 30
-#
-#        flash_tool.doc_start_date = self.utGetTodayDate()
-#        flash_tool.doc_end_date = flash_tool.doc_start_date + 30
-#
-#        flash_tool.uploadmetatypes = [METATYPE_NYFILE, METATYPE_NYSEMTEXTLAWS]
-#
-#        flash_tool.path = self.getSitePath(1)
-#        flash_tool.df_template = 'monthly'
 
         #load default SKOS data on thesaurus
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-relations.xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-relations.xml'), 'r')
         thesaurus_ob.getConceptsFolder().skos_import(p_skos)
 
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-relations.xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-relations.xml'), 'r')
         thesaurus_ob.getConceptRelationsFolder().skos_import(p_skos)
 
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[en].xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[en].xml'), 'r')
         thesaurus_ob.getThemesFolder().skos_import(p_skos, 'en')
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[fr].xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[fr].xml'), 'r')
         thesaurus_ob.getThemesFolder().skos_import(p_skos, 'fr')
         try:
-            p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[ar].xml'), 'r')
+            p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-labels[ar].xml'), 'r')
             thesaurus_ob.getThemesFolder().skos_import(p_skos, 'ar')
         except:
             pass
 
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[ar].xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[ar].xml'), 'r')
         thesaurus_ob.getTermsFolder().skos_import(p_skos, 'ar')
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[en].xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[en].xml'), 'r')
         thesaurus_ob.getTermsFolder().skos_import(p_skos, 'en')
-        p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[fr].xml'), 'r')
+        p_skos = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-labels[fr].xml'), 'r')
         thesaurus_ob.getTermsFolder().skos_import(p_skos, 'fr')
 
         #create and fill glossaries
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
-        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[en].xml')))
-        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[fr].xml')))
-        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[ar].xml')))
+        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[en].xml')))
+        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[fr].xml')))
+        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage[ar].xml')))
 
         manage_addGlossaryCentre(self, ID_GLOSSARY_LANGUAGES, TITLE_GLOSSARY_LANGUAGES)
-        self._getOb(ID_GLOSSARY_LANGUAGES).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_languages[en].xml')))
+        self._getOb(ID_GLOSSARY_LANGUAGES).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_languages[en].xml')))
 
         manage_addGlossaryCentre(self, ID_GLOSSARY_RIVER_BASIN, TITLE_GLOSSARY_RIVER_BASIN)
-        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[en].xml')))
-        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[fr].xml')))
-        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
+        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[en].xml')))
+        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[fr].xml')))
+        self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
         #portal_map custom index
-        custom_map_index = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
+        custom_map_index = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
         portal_map = self.getGeoMapTool()
         manage_addPageTemplate(portal_map, id='map_index', title='', text='')
         map_index = portal_map._getOb(id='map_index')
@@ -292,53 +283,53 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         cal_ob = self._getOb(ID_CALENDAR)
 
         style_ob = cal_ob._getOb(ID_CALENDAR_CSS)
-        p_text = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'calendar_style.css'), 'r')
+        p_text = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'calendar_style.css'), 'r')
         style_ob.pt_edit(p_text, 'text/html')
 
         img_ob = cal_ob._getOb(ID_RIGHT_ARROW)
-        img_content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'right_arrow.gif'), 'rb')
+        img_content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'right_arrow.gif'), 'rb')
         img_ob.manage_upload(img_content)
 
         img_ob = cal_ob._getOb(ID_LEFT_ARROW)
-        img_content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'left_arrow.gif'), 'rb')
+        img_content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'left_arrow.gif'), 'rb')
         img_ob.manage_upload(img_content)
 
         #add the images for sorted columns
         images_fld = self.getImagesFolder()
 
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortup.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortup.gif'), 'rb')
         images_fld.manage_addImage(id='sortup.gif', title='SortUp', file='')
         images_fld._getOb('sortup.gif').update_data(data=content)
 
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortdown.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortdown.gif'), 'rb')
         images_fld.manage_addImage(id='sortdown.gif', title='SortDown', file='')
         images_fld._getOb('sortdown.gif').update_data(data=content)
 
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortnot.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'sortnot.gif'), 'rb')
         images_fld.manage_addImage(id='sortnot.gif', title='SortNot', file='')
         images_fld._getOb('sortnot.gif').update_data(data=content)
 
         #add flags for available languages
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_ar.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_ar.gif'), 'rb')
         images_fld.manage_addImage(id='flag_ar.gif', title='ar', file='')
         images_fld._getOb('flag_ar.gif').update_data(data=content)
 
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_en.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_en.gif'), 'rb')
         images_fld.manage_addImage(id='flag_en.gif', title='en', file='')
         images_fld._getOb('flag_en.gif').update_data(data=content)
 
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_fr.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'flag_fr.gif'), 'rb')
         images_fld.manage_addImage(id='flag_fr.gif', title='fr', file='')
         images_fld._getOb('flag_fr.gif').update_data(data=content)
 
         #add image for pdf
-        content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'pdf.gif'), 'rb')
+        content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'pdf.gif'), 'rb')
         images_fld.manage_addImage(id='pdf.gif', title='PDF', file='')
         images_fld._getOb('pdf.gif').update_data(data=content)
 
         #custom configuration
         config = config_parser()
-        config_handler, error = config_parser().parse(file_utils().futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
+        config_handler, error = config_parser().parse(file_utils().futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
         if config_handler is not None:
             if config_handler.root.thumbs is not None:
                 images_fld = self.getImagesFolder()
@@ -346,7 +337,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                 images_fld = self.getThumbsFolder()
                 for thumb in config_handler.root.thumbs.thumbs:
                     id = 'thumb%s' % self.utGenRandomId(4)
-                    content = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', thumb.id), 'rb')
+                    content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', thumb.id), 'rb')
                     images_fld.manage_addImage(id=id, title='', file='')
                     images_fld._getOb(id).update_data(data=content)
 
@@ -356,12 +347,13 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         profilestool_ob.manageAddProfileMeta(ID_FLASHTOOL)
 
         #create and configure a forum
-        manage_addNyForum(self, id='forum', title='Forum', description='', categories=['General'])
+        addNyForum(self, id='forum', title='Forum', description='', categories=['General'])
 
         try:
             #set default main topics
             self.getPropertiesTool().manageMainTopics(['about', 'countries',
-                                                       'introduction', 'partners', 'initiatives', 'thematicdirs', 'publications', 'documents', 'nfp_private', 'topics'])
+                'introduction', 'partners', 'initiatives', 'thematicdirs',
+                'publications', 'documents', 'nfp_private', 'topics'])
         except:
             pass
 
@@ -454,7 +446,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     #objects getters
     def getHelpDeskAgent(self):             return self._getOb(ID_HELPDESKAGENT, None)
-    def getPhotoArchive(self):              return self.documents._getOb(ID_PHOTOARCHIVE, None)
+    def getPhotoArchive(self):              return self._getOb(ID_PHOTOARCHIVE, None)
     def getLinkChecker(self):               return self._getOb(ID_LINKCHECKER, None)
     def getSkinFilesPath(self):             return self.getLayoutTool().getSkinFilesPath()
     def getThumbsFolder(self):              return self.getImagesFolder()._getOb('thumbs')
@@ -479,7 +471,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def getCoverageGlossaryTrans(self, p_id, lang_name):
         try:
             gloss_elem = self.getCoverageGlossary().cu_search_catalog_by_id(p_id)
-            return gloss_elem[0].get_translation_by_language(lang_name)
+            return gloss_elem[0].getObject().get_translation_by_language(lang_name)
         except:
             return ''
 
@@ -501,11 +493,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
         if len(entries) > 0: return entries[0]
         else: return None
-    
+
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
         #this method is used to display Naaya & Semide container types
-        return [METATYPE_FOLDER, METATYPE_NYCOUNTRY, 'Folder', METATYPE_NYPHOTOFOLDER, METATYPE_NYSEMTHEMATICDIR]
+        return [METATYPE_FOLDER, METATYPE_NYCOUNTRY, 'Folder', METATYPE_NYPHOTOGALLERY, METATYPE_NYSEMTHEMATICDIR]
 
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
@@ -534,7 +526,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             catalogtool_ob.del_index_for_lang('programme', language)
         for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             for language in languages:
-                try: 
+                try:
                     gloss.del_language_from_list(language)
                     gloss._p_changed = 1
                 except:
@@ -706,12 +698,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             results.extend(p_objects)
         else:
             if rkey: rkey=1
-            l_objects = utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
+            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
             results.extend(l_objects)
         return results
 
     security.declareProtected(view, 'getNewsListing')
-    def getNewsListing(self, query='', languages=[], nt='', nd='', nc='', skey='', 
+    def getNewsListing(self, query='', languages=[], nt='', nd='', nc='', skey='',
                        rkey='', p_context=None, ps_start='', **kwargs):
         """
         Returns a list of news
@@ -783,7 +775,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             results.extend(p_objects)
         else:
             if rkey: rkey=1
-            l_objects = utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
+            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
             results.extend(l_objects)
         return results
 
@@ -799,11 +791,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         results = []
         dict = {}
 
-        meta_types =        utils.utConvertToListExact(meta_types)
-        languages =         utils.utConvertToListExact(languages)
-        textlaws_props =    utils.utConvertToListExact(textlaws_props)
-        document_props =    utils.utConvertToListExact(document_props)
-        multimedia_props =  utils.utConvertToListExact(multimedia_props)
+        meta_types =        semide_utils.utConvertToListExact(meta_types)
+        languages =         semide_utils.utConvertToListExact(languages)
+        textlaws_props =    semide_utils.utConvertToListExact(textlaws_props)
+        document_props =    semide_utils.utConvertToListExact(document_props)
+        multimedia_props =  semide_utils.utConvertToListExact(multimedia_props)
         if th:  query_th = ', resource_subject=th'
         else:   query_th = ''
         if languages:   langs = languages
@@ -887,12 +879,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             results.extend(p_objects)
         else:
             if rkey: rkey=1
-            l_objects = utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
+            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
             results.extend(l_objects)
         return results
 
     def _getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
-                         rkey=0, sd='', ed='', p_context=None, 
+                         rkey=0, sd='', ed='', p_context=None,
                          ps_start='', **kwargs):
         """
         Returns a list of events
@@ -904,11 +896,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         #get result
         if not l_archive:
             return []
-        
+
         if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
             #no criteria then returns the 10 more recent
             return l_archive.getObjects()
-        
+
         r = []
         query = self.utStrEscapeForSearch(query)
         l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1, path=\'/\'.join(l_archive.getPhysicalPath())'
@@ -940,7 +932,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     security.declareProtected(view, 'getEventsListing')
     def getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
-                         rkey=0, sd='', ed='', p_context=None, 
+                         rkey=0, sd='', ed='', p_context=None,
                          ps_start='', **kwargs):
         """
         Returns a list of events
@@ -948,7 +940,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         res_per_page = kwargs.get('items', 10) or 10
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-        
+
         gz_list = self.utConvertToList(gz)
         results = []
         if not gz_list:
@@ -956,7 +948,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         for gz in gz_list:
             results.extend(self._getEventsListing(query, languages, et, gz, es,
                             skey, rkey, sd, ed, p_context, ps_start, **kwargs))
-        
+
         dict = {}
         for x in results:
             dict[x.id] = x
@@ -1040,11 +1032,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             results.extend(p_objects)
         else:
             if rkey: rkey=1
-            l_objects = utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
+            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
             results.extend(l_objects)
         return results
 
-    def _getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, 
+    def _getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0,
                            archive=[], ps_start='', gz='', th='', pr='', **kwargs):
         """
         Returns a list of projects
@@ -1061,7 +1053,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                 else:
                     return archive
             return archive
-        
+
         if languages:
             langs = languages
         else:
@@ -1106,9 +1098,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             r.extend(query_r)
             r.extend(so_r)
         return r
-    
+
     security.declareProtected(view, 'getProjectsListing')
-    def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, 
+    def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0,
                            archive=[], ps_start='', gz='', th='', pr='', **kwargs):
         """
         Returns a list of projects
@@ -1119,12 +1111,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         dict = {}
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-        
+
         gz_list = self.utConvertToList(gz)
         if not gz_list:
             gz_list = ['']
         for gz in gz_list:
-            results.extend(self._getProjectsListing(query, so, languages, skey, rkey, 
+            results.extend(self._getProjectsListing(query, so, languages, skey, rkey,
                            archive, ps_start, gz, th, pr, **kwargs))
         for x in results:
             dict[x.id] = x
@@ -1177,7 +1169,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     #left navigation related
     def getNavFolders(self, l_folder):
         #sort alphabeticaly if sortorder is the same.
-        l_buff = self.utSortObjsListByAttr([x for x in l_folder.objectValues([METATYPE_FOLDER, METATYPE_NYCOUNTRY, METATYPE_NYPHOTOFOLDER, METATYPE_NYSEMTHEMATICDIR]) if (x.submitted==1 and x.approved==1)], "title", 0)
+        l_buff = self.utSortObjsListByAttr([x for x in l_folder.objectValues([METATYPE_FOLDER, METATYPE_NYCOUNTRY, METATYPE_NYPHOTOGALLERY, METATYPE_NYSEMTHEMATICDIR]) if (x.submitted==1 and x.approved==1)], "title", 0)
         return self.utSortObjsListByAttr(l_buff, "sortorder", 0)
 
     def _testIsRoot(self, p_location):
@@ -1240,7 +1232,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     security.declareProtected(view, 'processCreateAccountForm')
     def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
-        """ Creates an account on the local acl_users and sends an email to the maintainer 
+        """ Creates an account on the local acl_users and sends an email to the maintainer
             with the account infomation
         """
         #create an account without any role
@@ -1288,7 +1280,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             url_redirect = '%s/%s' % (self.absolute_url(), welcome_page)
         REQUEST.RESPONSE.redirect(url_redirect)
 
-    def sendCreateAccountEmail(self, p_name, p_to, p_username, 
+    def sendCreateAccountEmail(self, p_name, p_to, p_username,
                                REQUEST=None, **kwargs):
         #sends a confirmation email to the newlly created account's owner
         if REQUEST:
@@ -1403,22 +1395,22 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         return None
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_appearance')
-    def admin_appearance(self, bckg_left='', bckg_left_ar='', bck_topmenu='', 
+    def admin_appearance(self, bckg_left='', bckg_left_ar='', bck_topmenu='',
                          topmenucolor='', bck_search='', bck_search_ar='', europe='', europe_ar='',
                          rightportletoutline='', entire_site_font='', entire_site_font_ar='', headings_font='', headings_font_ar='',
                          main_navigation_font='', main_navigation_font_ar='', left_second_font='', left_second_font_ar='', left_third_font='',
                          left_third_font_ar='', left_title_font='', left_title_font_ar='', left_title_color='', left_title_bg='',
                          left_title_border='', left_active_bg='', left_active_color='', left_active_size='', right_bg='', right_font='',
-                         right_font_ar='', right_color='', right_size='', right_title_font='', right_title_font_ar='', 
+                         right_font_ar='', right_color='', right_size='', right_title_font='', right_title_font_ar='',
                          right_title_color='', right_title_size='',
                          bread_color='', bread_size='', bread_size_ar='', breadbar_bg='', search_bg='', quick_bg='',
                          quick_right_border='', search_left_border='', breadbar_middle_bg='', breadbar_middle_width='',
-                         breadbar_upper_border='', breadbar_lower_border='', 
-                         search_bgimg=' ', search_bgimg_ar=' ', quick_bgimg=' ', quick_bgimg_ar=' ', 
+                         breadbar_upper_border='', breadbar_lower_border='',
+                         search_bgimg=' ', search_bgimg_ar=' ', quick_bgimg=' ', quick_bgimg_ar=' ',
                          bg_search='', bg_search_ar='', bg_quickaccess='', bg_quickaccess_ar='',
                          breadbar_bgimg=' ', breadbar_bgimg_ar=' ',
                          REQUEST=None):
-        """ """
+        """ WTF??? """
         scheme = self.getLayoutTool().getCurrentSkinScheme()
         style = scheme._getOb('style')
         style_src = style.document_src()
@@ -1718,8 +1710,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                                    MARKER_BREADBAR_BGIMG_AR_END,
                                    breadbar_bgimg_ar)
         if r is not None: style_src = r
-
-        style.pt_edit(text=style_src, content_type='')
+        style.pt_edit(text=style_src.encode('utf-8'), content_type='')
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_appearance_html' % self.absolute_url())
@@ -1842,9 +1833,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         #has specific expanded nodes
         l_maintopics = self.getMainTopics()
         l_tree = []
-        if root is self: 
+        if root is self:
             l_folders = [x for x in root.objectValues(self.get_semide_containers_metatypes()) if x.approved == 1 and x.submitted==1 and x in l_maintopics]
-        else: 
+        else:
             l_folders = root.getPublishedFolders()
             l_folders.extend(root.objectValues(METATYPE_NYCOUNTRY))
         l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', 0)
@@ -2040,11 +2031,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flash_settings')
-    def admin_flash_settings(self, title='', path='', archive_path='', news_sd='', news_ed='', event_sd='', event_ed='', doc_sd='', 
+    def admin_flash_settings(self, title='', path='', archive_path='', news_sd='', news_ed='', event_sd='', event_ed='', doc_sd='',
                              doc_ed='', notif_date='', notif_admin='', uploadmetatypes=[], lang=[], REQUEST=None):
         """ edit eflash """
         flash_tool = self.getFlashTool()
-        flash_tool.manageSettings(title, path, archive_path, news_sd, news_ed, event_sd, event_ed, doc_sd, doc_ed, 
+        flash_tool.manageSettings(title, path, archive_path, news_sd, news_ed, event_sd, event_ed, doc_sd, doc_ed,
                                   notif_date, notif_admin, uploadmetatypes, lang)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -2134,7 +2125,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         #update the reflists
         portletstool_ob = self.getPortletsTool()
-        skel_handler, error = skel_parser().parse(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'skel.xml'), 'r'))
+        skel_handler, error = skel_parser().parse(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'skel.xml'), 'r'))
         if skel_handler is not None:
             for reflist in skel_handler.root.portlets.reflists:
                 reflist_ob = portletstool_ob._getOb(reflist.id, None)
@@ -2198,7 +2189,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Load profile metadata and updates existing profiles.
         """
-        self._loadProfileMeta(join(SEMIDE_PRODUCT_PATH, 'skel', 'others'))
+        self._loadProfileMeta(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others'))
 
     security.declareProtected(view, 'profilesheet')
     def profilesheet(self, name=None, welcome_page='', REQUEST=None):
@@ -2269,11 +2260,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     #highlight searched words
     def getHighlightWordsInText(self, p_text, p_words="", p_highlight_start="<span class='hlighted'>",
                                 p_highlight_end="</span>", p_phrases = 3, p_nosplit = False):
-        return utils.html_utils().highlightWordsInText(p_text, p_words, p_highlight_start, p_highlight_end, p_phrases, p_nosplit)
+        return semide_utils.html_utils().highlightWordsInText(p_text, p_words, p_highlight_start, p_highlight_end, p_phrases, p_nosplit)
 
     def getHighlightWordsInHtml(self, p_text, p_words="", p_highlight_start="<span class='hlighted'>",
                                 p_highlight_end="</span>", p_phrases = 3, p_nosplit = False):
-        return utils.html_utils().highlightWordsInHtml(p_text, p_words, p_highlight_start, p_highlight_end, p_phrases, p_nosplit)
+        return semide_utils.html_utils().highlightWordsInHtml(p_text, p_words, p_highlight_start, p_highlight_end, p_phrases, p_nosplit)
 
     #site pages
     security.declareProtected(view, 'insertrelativelink_html')
@@ -2430,7 +2421,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     security.declarePublic('stripAllHtmlTags')
     def stripAllHtmlTags(self, p_text):
         """ """
-        return utils.html_utils().stripAllHtmlTags(p_text)
+        return semide_utils.html_utils().stripAllHtmlTags(p_text)
 
     #Link checker relatd
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_link_checker_html')
@@ -2494,13 +2485,13 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         search_method = search_mapping.get(search_by, None)
         search_method = search_method and getattr(site, search_method, None)
         if not search_method:
-            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG, 
+            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG,
                      'Unknown search_by: %s => search_method: %s' % (
                          search_by, search_method))
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
 
-        # XXX Ugly hack 
+        # XXX Ugly hack
         for key, value in search_query_mapping.items():
             req_value = form.get(key, None)
             if not req_value:
@@ -2537,12 +2528,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         search_method = search_mapping.get(search_by, None)
         search_method = search_method and getattr(site, search_method, None)
         if not search_method:
-            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG, 
+            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG,
                      'Unknown search_by: %s => search_method: %s' % (
                          search_by, search_method))
             return self.getSyndicationTool().syndicateAtom(self, [])
 
-        # XXX Ugly hack 
+        # XXX Ugly hack
         for key, value in search_query_mapping.items():
             req_value = form.get(key, None)
             if not req_value:

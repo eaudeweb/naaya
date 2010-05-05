@@ -44,9 +44,9 @@ from naaya.content.semide.textlaws.semtextlaws_item import config; METATYPE_NYSE
 from naaya.content.semide.news.semnews_item import config; METATYPE_NYSEMNEWS = config['meta_type']
 from naaya.content.semide.event.semevent_item import config; METATYPE_NYSEMEVENT = config['meta_type']
 
-from Products.SEMIDE.constants import TITLE_FLASHTOOL, ID_FLASHTOOL, \
-FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION, VACANCIES,\
-CALLFORPROPOSALS, TENDERS, PAPERS, TRAINING
+from Products.SEMIDE.constants import (SEMIDE_PRODUCT_PATH, TITLE_FLASHTOOL,
+ID_FLASHTOOL, FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION,
+VACANCIES, CALLFORPROPOSALS, TENDERS, PAPERS, TRAINING)
 
 from FlashTemplate import manage_addFlashTemplateForm, manage_addFlashTemplate
 from converters.xslt import Converter
@@ -127,7 +127,7 @@ class FlashTool(Folder, ProfileMeta, utils):
 
     ########## ZMI #################
     security.declareProtected(view_management_screens, 'manageSettings')
-    def manageSettings(self, title='', path='', archive_path='', news_sd='', news_ed='', event_sd='', event_ed='', doc_sd='', 
+    def manageSettings(self, title='', path='', archive_path='', news_sd='', news_ed='', event_sd='', event_ed='', doc_sd='',
         doc_ed='', notif_date='', notif_admin='', uploadmetatypes=[], langs=[], REQUEST=None):
         """ manage properties """
         self.title = title
@@ -287,20 +287,20 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declarePrivate('collect_objects')
     def collect_objects(self, path=''):
         """ search the catalog to find objects for a given date interval """
-        news = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], 
-                                            approved=1, 
-                                            resource_date=self.news_start_date, 
+        news = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS],
+                                            approved=1,
+                                            resource_date=self.news_start_date,
                                             resource_date_range='min',
                                             path=path)
-        events = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], 
-                                            approved=1, 
-                                            resource_date=self.event_start_date, 
+        events = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT],
+                                            approved=1,
+                                            resource_date=self.event_start_date,
                                             resource_date_range='min',
                                             path=path)
 
-        documents = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMDOCUMENT], 
-                                            approved=1, 
-                                            resource_date=self.doc_start_date, 
+        documents = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMDOCUMENT],
+                                            approved=1,
+                                            resource_date=self.doc_start_date,
                                             resource_date_range='min',
                                             path=path)
 
@@ -417,7 +417,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                 xml_append('<section id="nominations">')
                 for obj in nomination:
                     if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' % 
+                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
                         (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
                         self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
                         lang, self.is_arabic(lang)))
@@ -433,7 +433,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                 xml_append('<section id="publications">')
                 for obj in publication:
                     if obj.istranslated(lang):
-                        xml_append('<document title="%s" source="%s" source_link="%s" file_link="%s" publisher="%s" url="%s" lang="%s" isrtl="%s">' % 
+                        xml_append('<document title="%s" source="%s" source_link="%s" file_link="%s" publisher="%s" url="%s" lang="%s" isrtl="%s">' %
                         (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
                         self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.publisher), self.utXmlEncode(obj.absolute_url(0)), \
                         lang, self.is_arabic(lang)))
@@ -449,7 +449,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                 xml_append('<section id="proposal">')
                 for obj in tender:
                     if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' % 
+                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
                         (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
                         self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
                         lang, self.is_arabic(lang)))
@@ -465,7 +465,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                 xml_append('<section id="papers">')
                 for obj in papers:
                     if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' % 
+                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
                         (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
                         self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
                         lang, self.is_arabic(lang)))
@@ -521,7 +521,7 @@ class FlashTool(Folder, ProfileMeta, utils):
 
     security.declareProtected(Products.NaayaBase.constants.PERMISSION_PUBLISH_OBJECTS, 'runTrigger')
     def runTrigger(self, REQUEST=None):
-        """ 
+        """
         Trigger the monthly notification
         """
         uid = self.get_site_uid()
@@ -687,7 +687,7 @@ class FlashTool(Folder, ProfileMeta, utils):
 
     security.declarePrivate('instant_xml')
     def instant_xml(self, notifications, p_type='html'):
-        """ 
+        """
             create the XML structure.
             notifications is a list: [items]
         """
@@ -702,7 +702,7 @@ class FlashTool(Folder, ProfileMeta, utils):
             for item in notifications:
                 if item.istranslated(lang):
                     flag = 1
-                    xml_append('<object title="%s" url="%s" releasedate="%s">' % 
+                    xml_append('<object title="%s" url="%s" releasedate="%s">' %
                         (self.utXmlEncode(item.getLocalProperty('title', lang)), \
                         self.utXmlEncode(item.absolute_url(0)), self.utXmlEncode(item.releasedate)))
                     if self.instant_is_folder(item):
