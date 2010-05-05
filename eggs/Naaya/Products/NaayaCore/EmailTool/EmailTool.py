@@ -143,7 +143,10 @@ class EmailTool(Folder):
     def sendEmail(self, p_content, p_to, p_from, p_subject):
         #sends a generic email
         if not isinstance(p_to, list):
-            p_to = [e.strip() for e in p_to.split(',') if e.strip()!='']
+            p_to = [e.strip() for e in p_to.split(',')]
+
+        p_to = filter(None, p_to) # filter out blank recipients
+
         try:
             site = self.getSite()
             site_path = '/'.join(site.getPhysicalPath())
