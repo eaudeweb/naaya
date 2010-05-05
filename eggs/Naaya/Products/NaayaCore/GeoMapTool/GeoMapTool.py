@@ -1113,7 +1113,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     view_map_html = PageTemplateFile('zpt/map_index', globals())
 
     security.declareProtected(view, 'embed_map_html')
-    embed_map_html = PageTemplateFile('zpt/map_embed', globals())
+    _embed_map_html = PageTemplateFile('zpt/map_embed', globals())
+    def embed_map_html(self, REQUEST):
+        """ embeddable map, for iframe """
+        if 'map_embed' in self.objectIds():
+            return self.map_embed(REQUEST)
+        else:
+            return self._embed_map_html(REQUEST)
 
     security.declareProtected(view, 'list_locations')
     def list_locations(self, REQUEST=None, **kw):
