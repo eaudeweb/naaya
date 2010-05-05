@@ -48,9 +48,9 @@ class UpdateLandscapeType(UpdateScript):
     def _update(self, portal):
         for ob in portal.getCatalogedObjects():
             if hasattr(ob, 'landscape_type') and ob.landscape_type == '':
-                ob.landscape_type ='Unspecified'
+                ob._setLocalPropValue('landscape_type', 'en', 'Unspecified')
             if hasattr(ob, 'administrative_level') and ob.administrative_level == '':
-                ob.administrative_level ='Unspecified'
+                ob._setLocalPropValue('administrative_level', 'en', 'Unspecified')
             portal.recatalogNyObject(ob)
         return True
 
