@@ -24,6 +24,7 @@ form_names=['title', 'short_name', 'summary', 'web_link', 'contact_name', 'conta
     'contact_email', 'analytical_technique_text', 'structure_text', 'developer_owner', 'history',
     'target', 'calibration', 'validation', 'uncertainty', 'key_reference', 'accessibility',
     'restrictions', 'links', 'participative_processes', 'other_comments']
+form_text_areas=['summary', 'structure_text']
 form_lists=['themes_covered', 'key_drivers', 'key_indicators', 'model_coverage', 'model_resolution',
     'model_time_horizon', 'model_time_steps', 'dominant_analytical_techniques']
 comment_names=['author', 'body']
