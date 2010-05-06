@@ -30,6 +30,20 @@ from Products.ZCatalog.CatalogAwareness import CatalogAware
 
 import re
 
+import scrubber
+if 'any' not in dir(__builtins__):
+    from Products.NaayaCore.backport import any
+    scrubber.any = any
+sanitize = scrubber.Scrubber().scrub
+
+def trim(message):
+    """ Remove leading and trailing empty paragraphs """
+    message = re.sub(r'^\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*', '', message)
+    message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
+    return message
+
+def cleanup_message(message):
+    return sanitize(trim(message)).strip()
 
 from constants import *
 from utilities import *
@@ -193,7 +207,10 @@ class Factsheet(CatalogAware, Folder):
                 data.setdefault(key, [])
         for key in data.keys():
             if key in form_names:
-                setattr(self, key, data.get(key, u''))
+                if key in form_text_areas:
+                    setattr(self, key, cleanup_message(data.get(key, u'')))
+                else:
+                    setattr(self, key, data.get(key, u''))
             if key in form_lists:
                 setattr(self, key, filter(None, data.get(key, [])))
             if key == 'structure_file' and data[key]: #@todo: poate fi scrisa mai elegant cu isinstance or something
