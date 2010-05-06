@@ -41,6 +41,10 @@
 	margin: 15px 5px 15px 5px;
 	border-collapse:collapse;
 	padding: 10px;
+	text-align: left;
+}
+.omi td{
+	vertical-align: top;
 }
 .omi table.Section1{
 	width: 99%;

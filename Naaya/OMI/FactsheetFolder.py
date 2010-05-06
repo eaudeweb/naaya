@@ -165,7 +165,7 @@ class FactsheetFolder(Folder):
             if filters:
                 results = catalogue(filters)
                 results = list(set(results))    # get brains
-                results = get_objects(catalogue, results)   # get the actual objects
+                results = list(get_objects(catalogue, results))   # get the actual objects
         return self._search_html(REQUEST, themes_covered = potential_themes, dominant_analytical_techniques = analytical_techniques, results=results)
 
     def add_message(self, message):
@@ -310,6 +310,11 @@ class FactsheetFolder(Folder):
     def canManageFactsheetFolder(self):
         """ Check the permissions to edit/delete factsheets """
         return checkPermission(MANAGE_FACTSHEET_FOLDER, self)
+
+    security.declarePublic('get_models')
+    def get_models(self):
+        """ return the factsheet objects from the folder """
+        return self.objectValues('OMI Factsheet')
 
 InitializeClass(FactsheetFolder)
 

@@ -133,11 +133,11 @@ def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
     return s
 
 def get_objects(catalogue, brains):
-    try:
-        return map(catalogue.getobject, map(getattr, brains, ('data_record_id_',)*len(brains)))
-    except:
-        #because sometimes products are not well indexed
-        return []
+    for brain in brains:
+        try:
+            yield brain.getObject()
+        except:
+            pass # TODO: log this somewhere
 
 def checkPermission(permission, object):
     """  Generic function to check a given permission on the current object. """
