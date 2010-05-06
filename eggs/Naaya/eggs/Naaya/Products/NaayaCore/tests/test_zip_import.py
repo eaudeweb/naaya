@@ -140,7 +140,8 @@ class NyZipImport(NaayaTestCase):
                          ' - one_folder/three_file\n'
                          ' - one_folder/two_file')
 
-        expected_recipients = ['someone@somehost', ''] #folder_maintainer, administrator_email
+        expected_recipients = ['someone@somehost', # folder_maintainer
+                               'site.admin@example.com'] # administrator_email
         expected_sender = 'from.zope@example.com'
 
         mail = diverted_mail[0]
