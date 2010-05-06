@@ -678,8 +678,8 @@
 				</div>
 				<div>
 					<textarea id="structure_text" name="structure_text:utf8:ustring" rows="13" cols="38"
-						onKeyDown="limitText(this.form.summary,500);"
-						onKeyUp="limitText(this.form.summary,500);"
+						onKeyDown="limitText(this.form.structure_text,500);"
+						onKeyUp="limitText(this.form.structure_text,500);"
 						tal:content="python:request.get('structure_text', form_data.structure_text)"/>
 				</div>
 			</tal:block>
