@@ -176,7 +176,8 @@ class NyCSVImportTest(NaayaTestCase):
                           ' (http://nohost/portal/imported):\n'
                           ' - My URL 1\n - Eau de Web\n\n'
                           'Uploaded by Anonymous User on')
-        expected_recipients = ['someone@somehost', ''] #folder_maintainer, administrator_email
+        expected_recipients = ['someone@somehost', # folder_maintainer
+                               'site.admin@example.com'] # administrator_email
         expected_sender = 'from.zope@example.com'
 
         mail = diverted_mail[0]

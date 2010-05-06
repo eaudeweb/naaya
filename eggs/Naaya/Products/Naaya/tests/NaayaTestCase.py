@@ -190,6 +190,7 @@ class NaayaLayerClass(object):
         manage_addNySite(self.app, 'portal', 'Naaya Test Site')
         self.portal = getattr(self.app, 'portal')
         self.portal.mail_address_from = 'from.zope@example.com'
+        self.portal.administrator_email = 'site.admin@example.com'
 
 NaayaDefaultLayer = NaayaLayerClass(__name__, 'NaayaDefaultLayer')
 
