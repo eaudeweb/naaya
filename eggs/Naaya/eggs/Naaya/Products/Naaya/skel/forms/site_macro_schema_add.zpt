@@ -1,8 +1,10 @@
-<tal:block metal:define-macro="page">
+<tal:block metal:define-macro="page" tal:define="
+        curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 
 <tal:block tal:replace="structure here/standard_html_header"/>
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/jstree/jquery.tree.min.js"></script>

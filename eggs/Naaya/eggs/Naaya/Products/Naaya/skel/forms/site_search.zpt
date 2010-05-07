@@ -1,4 +1,5 @@
-<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block metal:use-macro="here/standard_template_macro" tal:define="
+        curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 
 <metal:block metal:fill-slot="title">
 	<title><tal:block i18n:translate="">Search</tal:block> | <span tal:replace="here/site_title" /></title>
@@ -6,6 +7,7 @@
 
 <metal:block metal:fill-slot="head">
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/i18n_js?lang=${curr_lang}"></script>
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 </metal:block>

@@ -30,6 +30,7 @@ from copy import copy
 from cStringIO import StringIO
 from zipfile import ZipFile
 from datetime import datetime, timedelta
+import simplejson as json
 
 #Zope imports
 import zLOG
@@ -3683,6 +3684,18 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'core_js')
     core_js = DTMLFile('zpt/calendar/core_js', globals())
+
+    security.declarePublic(view, 'i18n_js')
+    def i18n_js(self, lang='en', REQUEST=None):
+        """ translations for messages used by JavaScript """
+        portal_translations = self.getPortalTranslations()
+        translate = lambda msg: portal_translations(msg, lang=lang)
+        translations = dict( (msg, translate(msg)) for msg in JS_MESSAGES )
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-Type',
+                                       'application/javascript')
+        return 'var naaya_i18n_catalog = %s;' % json.dumps(translations)
 
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())

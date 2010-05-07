@@ -57,3 +57,16 @@ MESSAGE_USERADDED = 'User successfully added. Now you can assign a role to this 
 MESSAGE_USERMODIFIED = 'User\'s credentials saved'
 
 NYEXP_SCHEMA_LOCATION = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd'
+
+JS_MESSAGES = [
+# datetime_js
+    'Today',
+    'Yesterday',
+    'Tomorrow',
+    'Calendar',
+    'Cancel',
+# calendar_js
+    ('January February March April May June July '
+     'August September October November December'),
+    'S M T W T F S',
+]
