@@ -135,12 +135,14 @@ class AnonymousNotification(SimpleItem):
         subscription_container.add(subscription)
     
     security.declarePrivate('remove_account_subscription')
-    def remove_account_subscription(self, email, location='', notif_type='', lang=''):
+    def remove_account_subscription(self, email, location='', notif_type='', lang='', key=''):
         if not is_valid_email(email):
             raise ValueError('You email address does not appear to be valid.')
         subscription_container = ISubscriptionContainer(self.getSite())
         for id, subscription in subscription_container.list_with_keys():
             if subscription.email == email:
+                if subscription.key != key:
+                    raise ValueError('The provided key is invalid.')
                 subscription_container.remove(id)
                 return
         raise ValueError('Subscription not found')
