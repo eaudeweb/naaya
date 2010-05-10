@@ -1,0 +1,17 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
+</div>
+
+<h2 tal:content="string:Email template ${here/getId}" />
+
+<form method="post">
+<label for="form-text">Template text</label><br/>
+<textarea name="text" id="form-text" rows="20" cols="100"
+          tal:content="options/text"></textarea><br/>
+<input type="submit" value="Save changes" />
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

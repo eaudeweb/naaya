@@ -42,7 +42,8 @@ from zope import annotation
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import (
+    manage_addEmailPageTemplate, EmailPageTemplateFile)
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from Products.Naaya.interfaces import INySite, IHeartbeat
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
@@ -58,6 +59,13 @@ from interfaces import ISubscription
 from interfaces import ISubscriptionTarget
 
 notif_logger = logging.getLogger('naaya.core.notif')
+
+email_templates = {
+    'instant': EmailPageTemplateFile('emailpt/instant.zpt', globals()),
+    'daily': EmailPageTemplateFile('emailpt/daily.zpt', globals()),
+    'weekly': EmailPageTemplateFile('emailpt/weekly.zpt', globals()),
+    'monthly': EmailPageTemplateFile('emailpt/monthly.zpt', globals()),
+}
 
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
@@ -227,10 +235,15 @@ class NotificationTool(Folder):
         self._send_notifications(messages_by_email, template)
 
     def _get_template(self, name):
-        template = self._getOb('%s_emailpt' % name, None)
-        if template is None:
-            raise ValueError('template for "%s" not found' % name)
-        return template.render_email
+        template = self._getOb('emailpt_%s' % name, None)
+        if template is not None:
+            return template.render_email
+
+        template = email_templates.get(name, None)
+        if template is not None:
+            return template.render_email
+
+        raise ValueError('template for %r not found' % name)
 
     def _send_notifications(self, messages_by_email, template):
         """
@@ -358,10 +371,18 @@ class NotificationTool(Folder):
         self.config['notif_content_types'] = form.get('notif_content_types', [])
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
-    instant_emailpt = EmailPageTemplateFile('emailpt/instant.zpt', globals())
-    daily_emailpt = EmailPageTemplateFile('emailpt/daily.zpt', globals())
-    weekly_emailpt = EmailPageTemplateFile('emailpt/weekly.zpt', globals())
-    monthly_emailpt = EmailPageTemplateFile('emailpt/monthly.zpt', globals())
+    security.declareProtected(view_management_screens,
+                              'manage_customizeTemplate')
+    def manage_customizeTemplate(self, name, REQUEST=None):
+        """ customize the email template called `name` """
+        ob_id = 'emailpt_%s' % name
+        manage_addEmailPageTemplate(self, ob_id, email_templates[name]._text)
+        ob = self._getOb(ob_id)
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
+        else:
+            return ob_id
 
     def itemsPaginator(self, REQUEST):
         """ """

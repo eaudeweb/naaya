@@ -171,6 +171,64 @@ class NotificationsTest(NaayaFunctionalTestCase):
         addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
         transaction.commit()
 
+    def test_custom_mail_template(self):
+        notif = self.portal.portal_notification
+        notif.manage_customizeTemplate(name='instant')
+        self.assertTrue('emailpt_instant' in notif.objectIds())
+        add_account_subscription = \
+            self.portal.portal_notification.add_account_subscription
+        add_account_subscription('user1', '', 'instant', 'en')
+        transaction.commit()
+
+
+        def change_title(value):
+            self.browser_do_login('admin', '')
+
+            self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
+            form = self.browser.get_form('frmEdit')
+
+            form['description:utf8:ustring'] = value
+            self.browser.clicked(form,
+                self.browser.get_form_field(form, 'title:utf8:ustring'))
+            self.browser.submit()
+
+            self.browser_do_logout()
+
+
+        change_title('some new title')
+        self.assertEqual(self._fetch_test_notifications(), [(
+            'from.zope@example.com',
+            'user1@example.com',
+            u'Change notification - Notifying document',
+            (u'This is an automatically generated message to inform you '
+             u'that the item "Notifying document" has been edited at '
+             u'http://localhost/portal/notifol/notidoc by "admin".'),
+            )])
+
+        notif.emailpt_instant._text = (
+            '<subject>i can haz changez on <tal:block '
+                'content="options/ob/title_or_id" /></subject>\n'
+            '\n'
+            '<body_text>thing changed, yo! '
+                '"<tal:block content="options/ob/title_or_id" />", '
+                '<tal:block content="options/ob/absolute_url" />, '
+                '"<tal:block content="options/person" />".</body_text>\n')
+        transaction.commit()
+
+        change_title('some other new title')
+        self.assertEqual(self._fetch_test_notifications(), [(
+            'from.zope@example.com',
+            'user1@example.com',
+            u'i can haz changez on Notifying document',
+            (u'thing changed, yo! "Notifying document", '
+             u'http://localhost/portal/notifol/notidoc, "admin".'),
+            )])
+
+        notif.manage_delObjects('emailpt_instant')
+        self.portal.portal_notification.remove_account_subscription(
+            'user1', '', 'instant', 'en')
+        transaction.commit()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NotificationsTest))
