@@ -52,6 +52,7 @@ from naaya.core.utils import path_in_site
 from naaya.core.utils import relative_object_path
 from naaya.core.utils import force_to_unicode
 from naaya.core.utils import ofs_path
+from naaya.core.zope2util import folder_manage_main_plus
 from paginator import DiggPaginator, EmptyPage, InvalidPage
 
 from interfaces import ISubscriptionContainer
@@ -402,6 +403,13 @@ class NotificationTool(Folder):
             items = paginator.page(paginator.num_pages)
 
         return items
+
+    security.declareProtected(view_management_screens, 'manage_main')
+    manage_main = folder_manage_main_plus
+
+    security.declareProtected(view_management_screens, 'ny_after_listing')
+    ny_after_listing = PageTemplateFile('zpt/customize_emailpt', globals())
+    ny_after_listing.email_templates = email_templates
 
 InitializeClass(NotificationTool)
 
