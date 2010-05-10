@@ -72,13 +72,13 @@ class UpdateJquery(UpdateScript):
             </script>
         </metal:block>""", """
         <metal:block define-slot="standard-head-content">
-            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
+            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-ui.js"></script>
             <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/utils.js"></script>
         </metal:block>
 """)
             if new_content != old_content:
                 standard_template.pt_edit(text=new_content, content_type="text/html")
             else:
-                self.log.debug(('An error has occured while updating %s') % standard_template.getId())
+                self.log.debug(('The %s haven\'t been changed') % standard_template.getId())
         return True
