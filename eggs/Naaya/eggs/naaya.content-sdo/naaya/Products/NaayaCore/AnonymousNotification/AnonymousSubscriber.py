@@ -88,11 +88,11 @@ class AnonymousSubscriber(Subscriber):
             return REQUEST.RESPONSE.redirect(self.absolute_url())
             
     security.declarePublic('delete_subscription')
-    def delete_subscription(self, REQUEST, email, location='', notif_type='', lang=''):
+    def delete_subscription(self, REQUEST, email, location='', notif_type='', lang='', key=''):
         """ User doesn't want to receive notifications any more """
         notificationTool = self.getSite().portal_anonymous_notification
         try:
-            notificationTool.remove_account_subscription(email, location, notif_type, lang)
+            notificationTool.remove_account_subscription(email, location, notif_type, lang, key)
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/delete_success')
         except ValueError:
             return REQUEST.RESPONSE.setStatus(404); return self.delete_error.pt_render()
