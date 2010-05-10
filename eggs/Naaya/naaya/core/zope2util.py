@@ -27,6 +27,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
+from Globals import DTMLFile
 from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
@@ -213,3 +214,9 @@ def DT2dt(date):
     args.append(0)
     args.append(UnnamedTimeZone(int(date.tzoffset()/60)))
     return datetime.datetime(*args)
+
+folder_manage_main_plus = DTMLFile('zpt/folder_main_plus', globals())
+"""
+The OFS.ObjectManager `manage_main` template, modified to render two
+extra pieces of content: ``ny_before_listing`` and ``ny_after_listing``.
+"""
