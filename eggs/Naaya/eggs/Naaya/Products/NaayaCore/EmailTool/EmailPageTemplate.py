@@ -20,10 +20,12 @@
 import re
 import os.path
 
-from zope import interface
 from Globals import package_home
-from OFS.interfaces import ITraversable
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
 from OFS.SimpleItem import SimpleItem
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.pagetemplate.pagetemplate import PageTemplate as Z3_PageTemplate
 from zope.tales.tales import Context
 
@@ -36,14 +38,14 @@ def manage_addEmailPageTemplate(self, id, text):
 
 class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
     meta_type = 'Naaya Email Page Template'
+    security = ClassSecurityInfo()
 
     manage_options = (
-        {'label':'Edit', 'action':'pt_editForm',
-         'help': ('PageTemplates', 'PageTemplate_Edit.stx')},
-        {'label':'Test', 'action':'ZScriptHTML_tryForm'},
-        ) + SimpleItem.manage_options
+        {'label':'Edit', 'action':'manage_edit'},
+    ) + SimpleItem.manage_options
 
     def __init__(self, id, text):
+        self.id = id
         self._text = text
 
     def render_email(self, **kwargs):
@@ -65,6 +67,20 @@ class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
 
     def pt_getEngineContext(self, namespace):
         return CustomI18nContext(self.pt_getEngine(), namespace)
+
+    _manage_edit_html = PageTemplateFile('zpt/emailpt_edit', globals())
+    security.declareProtected(view_management_screens, 'manage_edit')
+    def manage_edit(self, text=None, REQUEST=None):
+        """ change the contents """
+
+        if text is not None:
+            self._text = text
+
+        if REQUEST is not None:
+            return self._manage_edit_html(REQUEST, text=self._text)
+            #REQUEST.RESPONSE.redirect(self.absolute_url() + 'manage_edit')
+
+InitializeClass(EmailPageTemplate)
 
 def EmailPageTemplateFile(filename, _prefix):
     if _prefix:
