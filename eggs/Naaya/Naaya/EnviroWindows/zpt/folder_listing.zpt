@@ -1,4 +1,5 @@
 <metal:block define-macro="content">
+
 <tal:block define="listing_info folder_listing_info|here/folder_listing_info;
 	folders_list python:listing_info['folders'];
 	objects_list python:listing_info['objects'];
@@ -17,13 +18,13 @@ function toggleSelect() {
 	var select_button = $("#btn_select")[0];
 	var select_checkbox = $("#folderfile_list th.checkbox input")[0];
 
-	var check = select_button.value == 'Select all';
+	var check = select_button.innerHTML == 'Select all';
 
 	if (check) {
-		select_button.value = 'Deselect all';
+		select_button.innerHTML = 'Deselect all';
 		select_checkbox.checked = check;
 	} else {
-		select_button.value = 'Select all';
+		select_button.innerHTML = 'Select all';
 		select_checkbox.checked = check;
 	}
 
@@ -32,11 +33,72 @@ function toggleSelect() {
 		checkboxes[i].checked = check;
 	}
 }
+
+function fCheckSelection()
+{   var frm = document.objectItems;
+    var i;
+    check = false;
+    for(i=0; i<frm.elements.length; i++)
+        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+        {   check = true; break;}
+    return check;}
 //-->
 </script>
 
-<metal:block define-slot="menu_extension">
-</metal:block>
+<script type="text/javascript" tal:condition="btn_copy">
+<!--
+function fCopyObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="copyObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to copy.');}
+//-->
+</script>
+
+
+<script type="text/javascript" tal:condition="btn_cut">
+<!--
+function fCutObjects()
+{   if (fCheckSelection())
+    {
+        document.objectItems.action="cutObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to cut.');}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_paste">
+<!--
+function fPasteObjects()
+{   document.objectItems.action="pasteObjects";
+    document.objectItems.submit();}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fDeleteObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="deleteObjects";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to delete.');}
+//-->
+</script>
+
+<script type="text/javascript" tal:condition="btn_delete">
+<!--
+function fRenameObjects()
+{   if (fCheckSelection())
+    {   document.objectItems.action="renameobject_html";
+        document.objectItems.submit();}
+    else
+        alert('Please select one or more items to rename.');}
+//-->
+</script>
+
 
 <form id="folder_listing" name="objectItems" method="post" action=".">
 	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
