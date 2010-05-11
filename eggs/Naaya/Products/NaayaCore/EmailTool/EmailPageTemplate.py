@@ -75,6 +75,7 @@ class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
 
         if text is not None:
             self._text = text
+            self._cook() # force re-compilation of template
 
         if REQUEST is not None:
             return self._manage_edit_html(REQUEST, text=self._text)
