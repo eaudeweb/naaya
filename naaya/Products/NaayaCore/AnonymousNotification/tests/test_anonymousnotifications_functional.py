@@ -43,10 +43,11 @@ class AnonymousNotificationTest(NaayaFunctionalTestCase):
         _notif.config['enable_daily'] = True
         _notif.config['enable_weekly'] = True
         _notif.config['enable_monthly'] = True
-        self.portal.manage_install_pluggableitem(meta_type="Naaya InfoFolder") # Install Naaya infoFolder
+        self.portal.manage_install_pluggableitem("Naaya InfoFolder")
         transaction.commit()
 
     def beforeTearDown(self):
+        self.portal.manage_install_pluggableitem("Naaya InfoFolder")
         _notif = self.portal.portal_notification
         _notif.config.clear()
         _notif.config.update(self._original_config)
@@ -56,7 +57,6 @@ class AnonymousNotificationTest(NaayaFunctionalTestCase):
         """ Subscribe unauthenticated user to NotificationTool via submit form"""
         self.browser.go('http://localhost/portal/sdo_notifications_subscribe')
         num_forms_before = len(self.browser.get_all_forms())
-        
         form = self.browser.get_form('subscribe')
         form['notif_type'] = ['instant']
         form['email'] = 'contributor@eaudeweb.ro'
@@ -100,9 +100,9 @@ class AnonymousNotificationTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/sdo_notifications_subscribe/confirm?key=%s' % subscriber.key)
         self.assertEqual(self.browser.result.http_code, 404) # User cannot confirm 2 time with the same code
         
-        self.browser.go('http://localhost/portal/sdo_notifications_subscribe/delete_subscription?email=%s' % subscriber.email)
+        self.browser.go('http://localhost/portal/sdo_notifications_subscribe/delete_subscription?email=%s&key=%s' % (subscriber.email, subscriber.key))
         self.assertEqual(self.browser.result.http_code, 200)
-        self.browser.go('http://localhost/portal/sdo_notifications_subscribe/delete_subscription?email=%s' % subscriber.email)
+        self.browser.go('http://localhost/portal/sdo_notifications_subscribe/delete_subscription?email=%s&key=%s' % (subscriber.email, subscriber.key))
         self.assertEqual(self.browser.result.http_code, 404) # Cannot delete unexistent subscribtion
 def test_suite():
     suite = TestSuite()
