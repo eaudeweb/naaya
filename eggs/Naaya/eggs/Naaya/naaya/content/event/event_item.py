@@ -50,6 +50,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
 from interfaces import INyEvent
 
@@ -485,6 +486,10 @@ InitializeClass(NyEvent)
 manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
 manage_addNyEvent_html.kind = config['meta_type']
 manage_addNyEvent_html.action = 'addNyEvent'
+
+#Custom folder index for events
+NaayaPageTemplateFile('zpt/event_folder_index', globals(), 'event_folder_index')
+
 config.update({
     'constructors': (manage_addNyEvent_html, addNyEvent),
     'folder_constructors': [

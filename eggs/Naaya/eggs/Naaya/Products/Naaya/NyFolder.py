@@ -992,6 +992,14 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('sortorder_html')
 
+    security.declareProtected(view_management_screens, 'set_default_sortorder')
+    def set_default_sortorder(self, sortorder = DEFAULT_SORTORDER, REQUEST=None):
+        """ Set sortorder attribute to default of all folder items """
+        for item in self.objectValues():
+            if hasattr(item, 'sortorder'):
+                item.sortorder = sortorder
+        if REQUEST: REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_workspace')
+
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'validateObject')
     def validateObject(self, id='', status='', comment='', REQUEST=None):
         """ """

@@ -1,0 +1,108 @@
+<metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
+<metal:block fill-slot="page-middle">
+    <div class="custom-syndication" style="float: right; margin:5px;">
+    <!--
+    Latest events <a tal:attributes="href string: ${site_url}/portal_syndication/latestevents_rdf;
+    title string: 'Latest events';"><img alt="Syndication (XML)" tal:attributes="src string: ${site_url}/misc_/NaayaCore/xml.png"></a>
+    |-->
+    Upcoming events <a tal:attributes="href string: ${site_url}/portal_syndication/upcomingevents_rdf;
+    title string: 'Latest events';"><img alt="Syndication (XML)" tal:attributes="src string: ${site_url}/misc_/NaayaCore/xml.png"></a>
+    </div>
+    <br />
+    <h1>
+        <img tal:attributes="
+            src python:test(here.approved, here.icon, here.icon_marked);
+            title here/get_meta_label;
+            alt here/get_meta_label" />
+        <tal:block tal:replace="here/title_or_id" />
+        <tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+            [Limited access]
+        </tal:block>
+        <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+            [Restricted access]
+        </tal:block>
+        <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+            <span i18n:translate="">Item only translated in </span>
+            <span tal:repeat="lang here/gl_get_languages_map">
+                <a tal:content="python:' %s' % lang['title']"
+                    tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+                    tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+            </span>
+        </span>
+    </h1>
+
+    <p tal:condition="python:here.description!=''"
+        tal:content="structure here/description" />
+    <tal:block define="folder_listing_info python: here.folder_listing_info('start_date')">
+    <metal:block use-macro="here/folder_listing/macros/content">
+        <metal:block fill-slot="menu_extension">
+            <span tal:replace="structure here/menusubmissions" />
+        </metal:block>
+        <metal:block fill-slot="table_objects_default">
+				<tal:block define="
+					del_permission python:object_info['del_permission'];
+					copy_permission python:object_info['copy_permission'];
+					edit_permission python:object_info['edit_permission'];
+					versionable python:object_info['versionable'];
+					editable python:object_info['editable'];
+					object python:object_info['self'];
+					">
+					<td class="checkbox" tal:condition="btn_select"
+						style="width: 4%; vertical-align: top;">
+						<input tal:condition="python:del_permission or copy_permission"
+							type="checkbox" name="id" tal:attributes="value object/id" />
+					</td>
+					<td class="type" style="width: 4%;">
+						<img tal:attributes="
+							src python:test(object.approved, object.icon, object.icon_marked);
+							alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
+							title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+					</td>
+					<td class="title-column">
+                        <span class="object-date" tal:condition="python: getattr(object,'end_date', None) and object.start_date != object.end_date"
+                              tal:content="python: '[' + str(object.start_date.strftime('%d/%m/%Y')) + ' - ' + str(object.end_date.strftime('%d/%m/%Y')) + ']'">
+                        </span>
+                        <span class="object-date" tal:condition="python: not (getattr(object,'end_date', None) and object.start_date != object.end_date)"
+                              tal:content="python: '[' + str(object.start_date.strftime('%d/%m/%Y')) + ']'">
+                        </span>
+						<a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
+							<span i18n:translate="">Item only translated in </span>
+							<span tal:repeat="lang here/gl_get_languages_map">
+								<a tal:content="python:' %s' % lang['title']"
+									tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])"
+									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+							</span>
+						</span>
+						<tal:block tal:condition="python:here.item_has_comments(object) and object.count_comments()>0">
+							[<span tal:replace="object/count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+					</td>
+
+					<td class="checkin" tal:condition="edit_permission">
+						<tal:block condition="not:versionable">n/a</tal:block>
+						<a tal:condition="python:versionable and editable" tal:attributes="href string:${object/absolute_url}/startVersion">
+							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
+						</a>
+						<a tal:condition="python:versionable and not editable" tal:attributes="href string:${object/absolute_url}/edit_html">
+							<img src="misc_/Naaya/checkin" alt="Version control" i18n:attributes="alt" />
+						</a>
+					</td>
+					<td class="edit" tal:condition="edit_permission">
+						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+						</a>
+						<tal:block condition="not:editable">n/a</tal:block>
+					</td>
+					<td tal:condition="ratings" class="type" style="width: 10%;">
+						<tal:block define="user_rating object/user_rating_stars|nothing"
+							condition="object/is_ratable" replace="structure user_rating"/>
+					</td>
+
+				</tal:block>
+			</metal:block>
+    </metal:block>
+    </tal:block>
+</metal:block>
+</metal:block>

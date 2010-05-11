@@ -1,6 +1,6 @@
 <metal:block define-macro="content">
 
-<tal:block define="listing_info here/folder_listing_info;
+<tal:block define="listing_info folder_listing_info|here/folder_listing_info;
 	folders_list python:listing_info['folders'];
 	objects_list python:listing_info['objects'];
 	btn_select python:listing_info['btn_select'];
@@ -160,7 +160,7 @@ function toggleSelect() {
 					</td>
 
 					<td class="checkin" tal:condition="edit_permission">
-						<tal:block condition="not:versionable">n/a</tal:block> 
+						<tal:block condition="not:versionable">n/a</tal:block>
 						<a tal:condition="python:versionable and editable" tal:attributes="href string:${folder/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
@@ -172,7 +172,7 @@ function toggleSelect() {
 						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
-						<tal:block condition="not:editable">n/a</tal:block> 
+						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
 				</tal:block>
 			</metal:block>
@@ -220,7 +220,7 @@ function toggleSelect() {
 					</td>
 
 					<td class="checkin" tal:condition="edit_permission">
-						<tal:block condition="not:versionable">n/a</tal:block> 
+						<tal:block condition="not:versionable">n/a</tal:block>
 						<a tal:condition="python:versionable and editable" tal:attributes="href string:${object/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
@@ -232,7 +232,7 @@ function toggleSelect() {
 						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
-						<tal:block condition="not:editable">n/a</tal:block> 
+						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
 					<td tal:condition="ratings" class="type" style="width: 15%;">
 						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"

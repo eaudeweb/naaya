@@ -1,4 +1,4 @@
-<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
 	<title tal:content="string:${here/title} | ${here/site_title}" />
@@ -15,6 +15,7 @@
 
 <metal:block metal:fill-slot="body">
 <div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
+	<metal:block metal:define-slot="page-middle">
 	<h1>
 		<img tal:attributes="
 			src python:test(here.approved, here.icon, here.icon_marked);
@@ -45,7 +46,7 @@
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>
 	</metal:block>
-
+	</metal:block>
 	<div class="folder-feeds">
 		<a tal:attributes="href string:${here/absolute_url}/index_rdf">
 			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
