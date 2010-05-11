@@ -1,6 +1,5 @@
 <metal:block define-macro="content">
-
-<tal:block define="listing_info here/folder_listing_info;
+<tal:block define="listing_info folder_listing_info|here/folder_listing_info;
 	folders_list python:listing_info['folders'];
 	objects_list python:listing_info['objects'];
 	btn_select python:listing_info['btn_select'];
@@ -18,13 +17,13 @@ function toggleSelect() {
 	var select_button = $("#btn_select")[0];
 	var select_checkbox = $("#folderfile_list th.checkbox input")[0];
 
-	var check = select_button.innerHTML == 'Select all';
+	var check = select_button.value == 'Select all';
 
 	if (check) {
-		select_button.innerHTML = 'Deselect all';
+		select_button.value = 'Deselect all';
 		select_checkbox.checked = check;
 	} else {
-		select_button.innerHTML = 'Select all';
+		select_button.value = 'Select all';
 		select_checkbox.checked = check;
 	}
 
@@ -33,72 +32,11 @@ function toggleSelect() {
 		checkboxes[i].checked = check;
 	}
 }
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
 //-->
 </script>
 
-<script type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<script type="text/javascript" tal:condition="btn_delete">
-<!--
-function fRenameObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="renameobject_html";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to rename.');}
-//-->
-</script>
-
+<metal:block define-slot="menu_extension">
+</metal:block>
 
 <form id="folder_listing" name="objectItems" method="post" action=".">
 	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
@@ -219,7 +157,7 @@ function fRenameObjects()
 					</td>
 
 					<td class="checkin" tal:condition="edit_permission">
-						<tal:block condition="not:versionable">n/a</tal:block> 
+						<tal:block condition="not:versionable">n/a</tal:block>
 						<a tal:condition="python:versionable and editable" tal:attributes="href string:${folder/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
@@ -231,7 +169,7 @@ function fRenameObjects()
 						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
-						<tal:block condition="not:editable">n/a</tal:block> 
+						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
 					<td tal:condition="ratings" class="type">
 						<tal:block condition="object/user_rating_view|nothing"
@@ -284,7 +222,7 @@ function fRenameObjects()
 					</td>
 
 					<td class="checkin" tal:condition="edit_permission">
-						<tal:block condition="not:versionable">n/a</tal:block> 
+						<tal:block condition="not:versionable">n/a</tal:block>
 						<a tal:condition="python:versionable and editable" tal:attributes="href string:${object/absolute_url}/startVersion">
 							<img src="misc_/Naaya/checkout" alt="Checkout - start new versionable" i18n:attributes="alt" />
 						</a>
@@ -296,7 +234,7 @@ function fRenameObjects()
 						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 						</a>
-						<tal:block condition="not:editable">n/a</tal:block> 
+						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
 					<td tal:condition="ratings" class="type" style="width: 10%;">
 						<tal:block define="user_rating object/user_rating_stars|nothing"
