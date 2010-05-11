@@ -230,6 +230,7 @@ class NotificationTool(Folder):
                 'ob_edited': ob_edited,
                 'person': user_id,
                 '_lang': subscription.lang,
+                'subscription': subscription,
             }
 
         template = self._get_template('instant')
@@ -276,6 +277,7 @@ class NotificationTool(Folder):
                           when_start, when_end)
         objects_by_email = {}
         langs_by_email = {}
+        subscriptions_by_email = {}
         for ob in list_modified_objects(self.getSite(), when_start, when_end):
             notif_logger.info('.. modified object: %r', ofs_path(ob))
             for subscription in fetch_subscriptions(ob, inherit=True):
@@ -289,12 +291,14 @@ class NotificationTool(Folder):
                 notif_logger.info('.. .. sending notification to %r', email)
                 objects_by_email.setdefault(email, []).append({'ob': ob})
                 langs_by_email[email] = subscription.lang
+                subscriptions_by_email[email] = subscription
 
         messages_by_email = {}
         for email in objects_by_email:
             messages_by_email[email] = {
                 'objs': objects_by_email[email],
                 '_lang': langs_by_email[email],
+                'subscription': subscriptions_by_email[email],
             }
 
         template = self._get_template(notif_type)
