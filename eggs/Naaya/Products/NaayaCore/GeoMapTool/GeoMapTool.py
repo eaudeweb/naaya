@@ -464,6 +464,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             key_func = lambda x: x.geo_location.lat
         elif sort_on == 'geo_longitude':
             key_func = lambda x: x.geo_location.lon
+        elif sort_on == 'coverage':
+            key_func = lambda x: x.coverage
 
         reverse = (sort_order == 'reverse')
 
