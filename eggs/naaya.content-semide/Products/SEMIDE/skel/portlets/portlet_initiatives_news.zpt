@@ -1,12 +1,9 @@
-<tal:block tal:define=" mainfolder here">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-
 	<tal:block metal:fill-slot="portlet_title">
-		<span i18n:translate="" tal:omit-tag="" tal:content="python: '%s - News' % mainfolder.title_or_id()" />
+		<span i18n:translate="" tal:omit-tag="" tal:content="string:${here/title_or_id} - News" />
 	</tal:block>
-
 	<tal:block metal:fill-slot="portlet_content">
-		<ul tal:define="items python: here.getSite().getInitiativesNews(mainfolder)" tal:condition="items">
+		<ul tal:define="items python: here.getSite().getInitiativesList(here, 'news')" tal:condition="items">
 			<tal:block tal:repeat="item items">
 				<li>
 					<img tal:attributes="src item/icon; alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type); title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" style="vertical-align: -5px;" />
@@ -15,6 +12,4 @@
 			</tal:block>
 		</ul>
 	</tal:block>
-
-</tal:block>
 </tal:block>

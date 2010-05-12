@@ -33,6 +33,7 @@ from pdf_templates              import pdf_templates
 from Products.Naaya.constants   import *
 
 # Content types constants
+from naaya.content.document.document_item import config; METATYPE_NYDOCUMENT = config['meta_type']
 from naaya.content.semide.country.country_item import METATYPE_OBJECT as METATYPE_NYCOUNTRY
 from naaya.content.semide.document.semdocument_item import METATYPE_OBJECT as METATYPE_NYSEMDOCUMENT
 from naaya.content.semide.news.semnews_item import METATYPE_OBJECT as METATYPE_NYSEMNEWS
