@@ -2,7 +2,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit Text of Laws</h1>
 <!-- Schema properties -->
 <tal:block metal:fill-slot="schema_properties" define="schema_helper python:here.get_schema_helper(lang=curr_lang)"
-        repeat="form_item schema_helper/form_items">	
+        repeat="form_item schema_helper/form_items">
     <tal:block condition="python: form_item['name'] not in ['relation', 'subject', 'original_language']" replace="structure form_item/html" />
 	<div tal:condition="python: form_item['name'] == 'relation'" class="field">
 		<label for="relation"><span i18n:translate="" tal:omit-tag="">Relation</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'relation')" class="mandatory_field"> *</span></label>
@@ -98,5 +98,4 @@
 		<input type="file" name="file" id="file" value="" size="50" onclick="document.getElementById('file-source-file').checked='checked'"/>
 	</div>
 </fieldset>
-</tal:block>
 </tal:block>

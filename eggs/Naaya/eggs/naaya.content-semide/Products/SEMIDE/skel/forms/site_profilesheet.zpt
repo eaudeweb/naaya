@@ -1,5 +1,5 @@
 <tal:block tal:define="tab_ob python:here">
-<tal:block metal:use-macro="python:here.getFormsTool().site_userprofile_macro.macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_userprofile_macro').macros['page']">
 
 <h1 metal:fill-slot="title" i18n:translate="">SEMIDE profile</h1>
 
@@ -12,7 +12,7 @@
 				profile python:here.getProfilesTool().getProfile(username);
 				sheet python:profile.getSheetById(here.getInstanceSheetId())" id="frmEdit" name="frmEdit">
 <p>
-Currently, your welcome page is 
+Currently, your welcome page is
 <span tal:condition="python:sheet.welcome_page==''">not set</span>
 <tal:block define="page_ob python:here.utGetObject(sheet.welcome_page)" condition="python:sheet.welcome_page!=''">
 	<span tal:condition="python:page_ob is None">broken</span>

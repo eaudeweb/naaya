@@ -358,10 +358,13 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             pass
 
         #Latest news portlet for about folder on the right side
-        self.set_right_portlets_locations(self._getOb('about').absolute_url(1), ['portlet_latestnews_rdf'])
+        self.getPortletsTool().assign_portlet(self._getOb('about').absolute_url(1), 'right' 'portlet_latestnews_rdf', True)
 
         #set portal index's right portlets
-        self.getPortletsTool().set_right_portlets_locations('', ['portlet_calendar', 'portlet_latestnews_rdf', 'portlet_upcomingevents_rdf', 'portlet_eflash'])
+        self.getPortletsTool().assign_portlet('', 'right', 'portlet_calendar')
+        self.getPortletsTool().assign_portlet('', 'right', 'portlet_latestnews_rdf')
+        self.getPortletsTool().assign_portlet('', 'right', 'portlet_upcomingevents_rdf')
+        self.getPortletsTool().assign_portlet('', 'right', 'portlet_eflash')
 
         #do not show portlet title
         try: self.getPortletsTool()._getOb('portlet_maincategories').manage_addProperty('hide_title', 1, 'int')
@@ -554,7 +557,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Return the selection list for event status.
         """
-        return self.getPortletsTool().getRefListById('event_status').get_list()
+        return self.getPortletsTool().getRefTreeById('event_status').get_list()
 
     security.declarePublic('getEventStatusTitle')
     def getEventStatusTitle(self, id):
@@ -562,7 +565,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         Return the title of an item for the selection list for event status.
         """
         try:
-            return self.getPortletsTool().getRefListById('event_status').get_item(id).title
+            return self.getPortletsTool().getRefTreeById('event_status').get_item(id).title
         except:
             return ''
 
@@ -571,35 +574,35 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Return the selection list for text laws types.
         """
-        return self.getPortletsTool().getRefListById('text_laws').get_list()
+        return self.getPortletsTool().getRefTreeById('text_laws').get_list()
 
     security.declarePublic('getLawsStatusList')
     def getLawsStatusList(self):
         """
         Return the selection list for statuses types.
         """
-        return self.getPortletsTool().getRefListById('status_types').get_list()
+        return self.getPortletsTool().getRefTreeById('status_types').get_list()
 
     security.declarePublic('getDocumentTypesList')
     def getDocumentTypesList(self):
         """
         Return the selection list for document types.
         """
-        return self.getPortletsTool().getRefListById('document_types').get_list()
+        return self.getPortletsTool().getRefTreeById('document_types').get_list()
 
     security.declarePublic('getMultimediaTypesList')
     def getMultimediaTypesList(self):
         """
         Return the selection list for document types.
         """
-        return self.getPortletsTool().getRefListById('multimedia_types').get_list()
+        return self.getPortletsTool().getRefTreeById('multimedia_types').get_list()
 
     security.declarePublic('getNewsTypesList')
     def getNewsTypesList(self):
         """
         Return the selection list for news types.
         """
-        return self.getPortletsTool().getRefListById('news_types').get_list()
+        return self.getPortletsTool().getRefTreeById('news_types').get_list()
 
     security.declarePublic('getNewsTypeTitle')
     def getNewsTypeTitle(self, id):
@@ -607,7 +610,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         Return the title of an item for the selection list for news type.
         """
         try:
-            return self.getPortletsTool().getRefListById('news_types').get_item(id).title
+            return self.getPortletsTool().getRefTreeById('news_types').get_item(id).title
         except:
             return ''
 
@@ -616,14 +619,14 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Return the selection list for object subject.
         """
-        return self.getPortletsTool().getRefListById('event_geozone').get_list()
+        return self.getPortletsTool().getRefTreeById('event_geozone').get_list()
 
     security.declarePublic('getOrganismTypesList')
     def getOrganismTypesList(self):
         """
         Return the selection list for organism types.
         """
-        return self.getPortletsTool().getRefListById('organism_types').get_list()
+        return self.getPortletsTool().getRefTreeById('organism_types').get_list()
 
     security.declarePublic('getEventStatusTitle')
     def getOrganismTypeTitle(self, id):
@@ -631,7 +634,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         Return the title of an item for the selection list for organism type.
         """
         try:
-            return self.getPortletsTool().getRefListById('organism_types').get_item(id).title
+            return self.getPortletsTool().getRefTreeById('organism_types').get_item(id).title
         except:
             return ''
 
@@ -640,7 +643,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Return the selection list for funding types.
         """
-        return self.getPortletsTool().getRefListById('funding_types').get_list()
+        return self.getPortletsTool().getRefTreeById('funding_types').get_list()
 
     security.declarePublic('getFundingTypeTitle')
     def getFundingTypeTitle(self, id):
@@ -648,7 +651,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         Return the title of an item for the selection list for funding type.
         """
         try:
-            return self.getPortletsTool().getRefListById('funding_types').get_item(id).title
+            return self.getPortletsTool().getRefTreeById('funding_types').get_item(id).title
         except:
             return ''
 
@@ -657,7 +660,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         Return the selection list for rights types.
         """
-        return self.getPortletsTool().getRefListById('rights_types').get_list()
+        return self.getPortletsTool().getRefTreeById('rights_types').get_list()
 
     #api
     def list_glossaries(self):
@@ -1216,7 +1219,22 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                                 else: buf.append((y, 0))
                             l.append(((x, 0), buf))
                         else:
-                            if p_location == x or (l_mainfolder.id in ['countries', 'partners', 'publications'] and x.meta_type == "Naaya Folder") or (l_mainfolder.id in ['documents'] and x.meta_type == "Naaya URL" and x.id == 'thesaurus'): #coded for countries
+                            if (
+                                p_location == x
+                                or
+                                (
+                                    l_mainfolder.id in ['countries', 'partners', 'publications']
+                                    and
+                                    x.meta_type == "Naaya Folder"
+                                )
+                                or
+                                (
+                                    l_mainfolder.id in ['documents']
+                                    and
+                                    x.meta_type == "Naaya URL"
+                                    and x.id == 'thesaurus'
+                                )
+                            ): #coded for countries
                                 buf = []
                                 for y in childs:
                                     buf.append((y, 0))
@@ -2156,32 +2174,20 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         if p is not None: l.append(p)
         return l
 
-    def getInitiativesNews(self, folder=None):
-        """returns a list with news related with a folder inside the Initiatives folder"""
-        try:
-            search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
-            expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, howmany=5, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMNEWS, 'en')
-            return eval(expr)
-        except:
-            return None
+    def getInitiativesList(self, context, type='news', lang=None):
+        """ Get a list of news, events or projects related to the current folder by keywords or title """
+        if type == 'news':
+            meta_type = METATYPE_NYSEMNEWS
+        elif type == 'events':
+            meta_type = METATYPE_NYSEMEVENT
+        elif type == 'projects':
+            meta_type = METATYPE_NYSEMPROJECT
 
-    def getInitiativesEvents(self, folder=None):
-        """returns a list with events related with a folder inside the Initiatives folder"""
-        try:
-            search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
-            expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, howmany=5, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMEVENT, 'en')
-            return eval(expr)
-        except:
-            return None
+        if not lang: lang = self.gl_get_selected_language()
 
-    def getInitiativesProjects(self, folder=None):
-        """returns a list with projects related with a folder inside the Initiatives folder"""
-        try:
-            search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
-            expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMPROJECT, 'en')
-            return eval(expr)
-        except:
-            return None
+        search_keywords = u' or '.join((context.getLocalProperty('keywords', lang) + ' ' + context.getLocalProperty('title', lang)).split())
+        objectkeywords = 'objectkeywords_' + lang
+        return self.getCatalogedObjects(meta_type=meta_type, approved=1, howmany=5, **{objectkeywords: search_keywords})
 
     #ProfileMeta implementation
     security.declarePrivate('loadProfileMeta')
@@ -2225,11 +2231,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def get_zcatalog_harvesters(self, server):
         """ returns a list of ZCatalog harvesters """
         return server.objectValues('ZCatalog Harvester')
-
-    def test(self):
-        """ """
-        self.oai_trigger(uid='portal_2c2d1d908e4630eb6806238c7e3e7e75')
-        self.agregator_trigger(uid='portal_2c2d1d908e4630eb6806238c7e3e7e75')
 
     security.declarePublic('oai_trigger')
     def oai_trigger(self, uid):
@@ -2275,6 +2276,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         return self.getFormsTool().getContent({'here': self}, 'site_insertrelativelink')
 
     #download ZIP
+    security.declarePrivate('getDownloadContext')
     def getDownloadContext(self, p_url):
         """ """
         return self.unrestrictedTraverse(p_url)
