@@ -32,7 +32,7 @@
                        dataType: 'json',
                        success : function(data) {
                         tree_data_json = data;
-                        },
+                       }
                      });
 
                     var selected_nodes = [];
@@ -54,11 +54,11 @@
                         data : {
                             type : 'json',
                             opts : {
-                                static : tree_data_json,
-                            },
+                                static : tree_data_json
+                            }
                         },
                         ui : {
-                             selected_parent_close : false,
+                             selected_parent_close : false
                         },
                         types : {
                             'default' :{
@@ -66,7 +66,7 @@
                                 renameable : false,
                                 deletable : false,
                                 creatable : false,
-                                draggable : false,
+                                draggable : false
                             },
                             'root' : {
                                 valid_children : ['node'],
@@ -100,7 +100,7 @@
                                 TREE_OBJ.deselect_branch(NODE);
                                 $('#' + '${prop_id}').attr('value', '');
                             }
-                        },
+                        }
                     });
                     $('#'+'${prop_id}'+'_tree').after('<div style=\'clear: both\'/>');
                 })
