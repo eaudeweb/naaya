@@ -7,9 +7,10 @@
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <input type="text" class="vDateField" size="10" maxlength="10" tal:attributes="
-        value value;
-        name prop_id;
-        id prop_id" />
+    <input type="text" class="vDateField"
+           size="10" maxlength="10" placeholder="dd/mm/yyyy"
+           tal:attributes="value value;
+                           name prop_id;
+                           id prop_id" />
     <noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
 </div>
