@@ -116,17 +116,17 @@
 				</tal:block>
 			</div>
 		</div>
-		<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
-		<script language="JavaScript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
+		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/mctabs.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/form_utils.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/validate.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/utils/editable_selects.js"></script>
 		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
 		<script type="text/javascript">
-				$('#comp_file').change(function() {
-					$('#comp_upload_form').submit();
-				});
+			$('#comp_file').change(function() {
+				$('#comp_upload_form').submit();
+			});
 		</script>
 	</body>
 </html>

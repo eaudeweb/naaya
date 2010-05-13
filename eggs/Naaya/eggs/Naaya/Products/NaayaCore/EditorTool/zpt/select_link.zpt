@@ -8,7 +8,7 @@
 				margin:0 0 .5em 0;
 			}
 			#link_prepare input { width: 20em; }
-			#link_prepare ul { 
+			#link_prepare ul {
 				list-style: none;
 				margin: 0;
 				padding: 0;
@@ -27,10 +27,10 @@
 		<div id="link_prepare">
 			<ul>
 				<li>
-					<div id="pointer_tree" class="extjs_tree custom-tree" style="margin-bottom: .5em;"></div>
+					<div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
 					<div>To choose a link from this portal, click on the desired item from the sitemap above</div>
 					<div class="propfield"><label for="url">URL:</label></div>
-					<input class="extjs_target" type="text" id="url" name="url" style="width: 32em;" />
+					<input class="sitemap_tree_target" type="text" id="url" name="url" style="width: 32em;" />
 				</li>
 				<li>
 					<div class="propfield"><label for="target">Target</label></div>

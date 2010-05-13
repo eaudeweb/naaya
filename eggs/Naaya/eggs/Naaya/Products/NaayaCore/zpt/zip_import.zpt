@@ -13,12 +13,6 @@
 	represented as File and Folder objects in the newly created folder.
 </p>
 
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
-
 <form name="csv_import" action="" method="post" enctype="multipart/form-data">
 	<div class="field">
 		<label for="data" i18n:translate="">Zip file</label>
