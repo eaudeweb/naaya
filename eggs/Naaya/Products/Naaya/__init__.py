@@ -33,7 +33,6 @@ from naaya.content.base import discover
 import NySite
 import NyFolder
 import NyFolderBase
-from managers import initialize as managers_initialize
 
 #make drag & drop available globally
 def DragDropCore(self, name):
@@ -73,7 +72,7 @@ def DragDropCore(self, name):
             var id = list.getAttribute("id")
             if (id == null) return
             group.register('dragend', function() {
-                ToolMan.cookies().set("list-" + id, 
+                ToolMan.cookies().set("list-" + id,
                         junkdrawer.serializeList(list), 365)
             })
         }''' % name)
@@ -88,8 +87,6 @@ def DragDropHidden(self, p_items):
 
 def initialize(context):
     """ """
-    managers_initialize(context)
-    
     #register classes
     context.registerClass(
         NySite.NySite,
@@ -175,28 +172,42 @@ misc_ = {
     'nav-bg.gif':ImageFile('www/nav-bg.gif', globals()),
     'default-bg.gif':ImageFile('www/default-bg.gif', globals()),
 
+    # Utilities JS
+    'utils.js':ImageFile('www/js/utils.js', globals()),
+
     # jQuery
-    'jquery-1.3.2.min.js':ImageFile('www/jquery-1.3.2.min.js', globals()),
-    'jquery.cookie.js':ImageFile('www/jquery.cookie.js', globals()),
-    'jquery-ui-1.7.2.full.min.js':ImageFile('www/jquery-ui-1.7.2.full.min.js', globals()),
-		# jQuery plugins
-    'jquery.bgiframe.min.js':ImageFile('www/jquery.bgiframe.min.js', globals()),
-		'jquery.autocomplete.min.js':ImageFile('www/jquery.autocomplete.min.js', globals()),
-		'jquery.autocomplete.css':ImageFile('www/jquery.autocomplete.css', globals()),
+    # Use jquery.js if version is of no importance
+    'jquery.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+    'jquery.min.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+    'jquery-1.4.2.min.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+
+    'jquery-1.3.2.min.js':ImageFile('www/js/jquery-1.3.2.min.js', globals()), # DEPRECATED
+
+    # jQuery plugins
+    'jquery-ui.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+    'jquery.cookie.js':ImageFile('www/js/jquery.cookie.js', globals()),
+    'jquery.bgiframe.min.js':ImageFile('www/js/jquery.bgiframe.min.js', globals()),
+    'jquery.autocomplete.min.js':ImageFile('www/js/jquery.autocomplete.min.js', globals()),
+    'jquery.tree.init.js':ImageFile('www/js/jquery.tree.init.js', globals()),
+
+    #CSS files
+    'jquery-ui.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
+    'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
+    'jquery.autocomplete.css':ImageFile('www/js/css/jquery.autocomplete.css', globals()),
 }
 
 def register_content(module, klass, module_methods, klass_methods, add_method):
     """ To be called from content type you want to register within Naaya Folder.
-    
+
     module_methods = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
     klass_methods  = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
     add_method = ('METHOD_ADD_HTML', 'PERMISSION')
-    
+
     See NaayaForum for an example.
     """
     security = ClassSecurityInfo()
     NyFolderBase.NyFolderBase.security = security
-    
+
     # Register module methods
     for meth, permission in module_methods.items():
         meth_obj = getattr(module, meth, None)
@@ -205,7 +216,7 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
         setattr(NyFolderBase.NyFolderBase, meth, meth_obj)
         if permission:
             NyFolderBase.NyFolderBase.security.declareProtected(permission, meth)
-    
+
     # Register class methods
     for meth, permission in klass_methods.items():
         meth_obj = getattr(klass, meth, None)
@@ -214,7 +225,7 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
         setattr(NyFolderBase.NyFolderBase, meth, meth_obj)
         if permission:
             NyFolderBase.NyFolderBase.security.declareProtected(permission, meth)
-    
+
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
     add_meth, add_perm = add_method
     NyFolderBase.NyFolderBase._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)

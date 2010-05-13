@@ -24,6 +24,10 @@
 
 #Python imports
 import urllib
+try:
+    import json
+except ImportError:
+    import simplejson as json
 from os.path import join, isfile
 from urllib import quote
 from copy import copy
@@ -104,6 +108,7 @@ from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method
+from naaya.core.utils import path_in_site
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 #reCaptcha
@@ -1284,132 +1289,73 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
 
-    #site map stuff
+    # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
-    def getNavigationSiteMap(self, REQUEST=None, **kwargs):
-        """ Returns site map in order to be used with extjs library"""
+    def getNavigationSiteMap(self, REQUEST=None, all=False, **kwargs):
+        """
+        Return JSON tree of the sitemap
+        Used with javascript tree libraries
+        """
         node = REQUEST.form.get('node', '')
         if not node or node == '/':
             node = ''
 
-        items = self.getFolderPublishedContent(node)
-        folders = items[0]
-        documents = items[1]
-        res = []
-        for folder in folders:
-            iconCls = 'custom-%s' % folder.meta_type.replace(' ', '-')
-            title = ''
-            folder_localized = getattr(folder.aq_base, 'getLocalProperty', None)
-            if folder_localized:
-                title = folder_localized('title')
-            title = title or folder.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            title = self.utToUtf8(title)
-            title = self.utJsEncode(title)
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": false,
-                "href": "%(href)s",
-                "iconCls": "%(iconCls)s"
-                }""" % {
-                    "id": folder.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "iconCls": iconCls,
-                })
-        for document in documents:
-            icon = getattr(document, 'icon', '')
-            icon = icon and '/'.join((self.absolute_url(), icon))
-            title = ''
-            document_localized = getattr(document.aq_base, "getLocalProperty", None)
-            if document_localized:
-                title = document_localized('title')
-            title = title or document.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            title = self.utToUtf8(title)
-            title = self.utJsEncode(title)
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": true,
-                "href": "%(href)s",
-                "icon": "%(icon)s"
-                }""" % {
-                    "id": document.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "icon": icon,
-                })
-        res = ', '.join(res)
-        return '[%s]' % res
+        def recurse(items, level=0, stop_level=2):
+            """ Create a dict with node properties and children """
+            res = []
+            for item in items:
+                children_items = []
+                if level != stop_level:
+                    node = path_in_site(item)
+                    if all: items = self.getFolderContent(node)
+                    else: items = self.getFolderPublishedContent(node)
+                    children_items = recurse(
+                        items[0]+items[1],
+                        level+1,
+                        stop_level
+                    )
+                res.append(dict(
+                    data = dict(
+                        title=self.utStrEscapeHTMLTags(self.utToUtf8(item.title_or_id())),
+                        icon=item.approved and item.icon or item.icon_marked
+                    ),
+                    attributes=dict(
+                        title=item.absolute_url(1)
+                    ),
+                    children = children_items
+                ))
+            return res
+
+        if all: items = self.getFolderContent(node)
+        else: items = self.getFolderPublishedContent(node)
+        ret = recurse(items[0]+items[1])
+
+        #Adding the portal if we are in root
+        if not node or node == '/':
+            ret = {
+                'attributes': {
+                    'title': '/'
+                },
+                'data': {
+                    'icon': self.icon,
+                    'title': self.title
+                },
+                'children': ret
+            }
+        return json.dumps(ret)
 
     security.declareProtected(view, 'getCompleteNavigationSiteMap')
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
         """ Returns site map including unapproved items,
-        in order to be used with extjs library"""
-
-        node = REQUEST.form.get('node', '')
-        if not node or node == '/':
-            node = ''
-
-        items = self.getFolderContent(node)
-        folders = items[0]
-        documents = items[1]
-        res = []
-        for folder in folders:
-            iconCls = 'custom-%s' % folder.meta_type.replace(' ', '-')
-            if not folder.approved: iconCls += '-marked'
-            title = ''
-            folder_localized = getattr(folder.aq_base, 'getLocalProperty', None)
-            if folder_localized:
-                title = folder_localized('title')
-            title = title or folder.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": false,
-                "href": "%(href)s",
-                "iconCls": "%(iconCls)s"
-                }""" % {
-                    "id": folder.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "iconCls": iconCls,
-                })
-        for document in documents:
-            if document.approved: icon = getattr(document, 'icon', '')
-            else: icon = getattr(document, 'icon_marked', '')
-            icon = icon and '/'.join((self.absolute_url(), icon))
-            title = ''
-            document_localized = getattr(document.aq_base, "getLocalProperty", None)
-            if document_localized:
-                title = document_localized('title')
-            title = title or document.title_or_id()
-            title = self.utStrEscapeHTMLTags(title)
-            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
-            res.append("""{
-                "id": "%(id)s",
-                "text": "%(title)s",
-                "leaf": true,
-                "href": "%(href)s",
-                "icon": "%(icon)s"
-                }""" % {
-                    "id": document.absolute_url(1),
-                    "title": title,
-                    "href": '',
-                    "icon": icon,
-                })
-        res = ', '.join(res)
-        return '[%s]' % res.encode('utf-8')
+        in order to be used to display a tree"""
+        self.getNavigationSiteMap(REQUEST=REQUEST, all=True, **kwargs)
 
     security.declareProtected(view, 'getNavigationPhotos')
     def getNavigationPhotos(self, REQUEST=None, **kwargs):
-        """ Returns site map with photos only in order to be used with extjs library"""
+        """
+        XXX: Not used in Naaya.. should be removed
+        Returns site map with photos only in order to be used with extjs library
+        """
         node = REQUEST.form.get('node', '')
         if not node or node == '/':
             node = ''
@@ -3727,7 +3673,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     zip_import = ZipImportTool('zip_import')
     zip_export = ZipExportTool('zip_export')
 
-    jstree = StaticServeFromZip('source', 'www/jstree.zip', globals())
+    jstree = StaticServeFromZip('source', 'www/js/jstree.zip', globals())
+    jquery_tree_init = ImageFile('www/js/jquery.tree.init.js', globals())
+
     #--------------------------------------------------------------------------------------------------
     security.declareProtected(view_management_screens, 'update_portal_forms')
     def update_portal_forms(self):

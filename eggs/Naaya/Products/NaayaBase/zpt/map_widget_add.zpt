@@ -2,12 +2,6 @@
 <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/get_mapsapikey}"></script>
 <script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
-<!-- Extjs tree libs -->
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 
 <div class="field" tal:define="geo_type python:request.get('geo_type', '')">
 	<label for="geo_type">
@@ -51,7 +45,5 @@
 	</label>
 	<input type="text" name="url:utf8:ustring" id="url" size="50" tal:attributes="value python:here.getSession('url', request.get('url', 'http://'))" />
 </div>
-
-<!-- Extjs end -->
 
 </tal:block>

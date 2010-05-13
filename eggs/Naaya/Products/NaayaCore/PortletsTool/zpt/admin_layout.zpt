@@ -12,7 +12,6 @@
 <!-- we define a macro for the body, so the `manage` template can re-use it -->
 
 <metal:block define-macro="body">
-<script type="text/javascript" src="misc_/Naaya/jquery-ui-1.7.2.full.min.js"></script>
 <script type="text/javascript">
 $(function(){
     $('table.datatable tbody').each(function() {
@@ -142,10 +141,10 @@ $(function(){
 
     <div class="field-inline">
     <label for="location" i18n:translate="">Location</label>
-    <input name="location" class="extjs_target" id="location" type="text" />
+    <input name="location" class="sitemap_tree_target" id="location" type="text" />
     <small><em>(choose a location from the tree below)</em></small>
 
-    <div id="pointer_tree" class="extjs_tree custom-tree"></div>
+    <div id="sitemap_tree" class="sitemap_tree"></div>
     <div style="clear: both"></div>
     <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
     </div>

@@ -101,7 +101,7 @@
                            python:here.itemsPaginator(request)">
 <br />
 <p tal:condition="not:current_subscriptions/object_list"
-   i18n:translate="">No users have yet subscribed to any notifications.</p> 
+   i18n:translate="">No users have yet subscribed to any notifications.</p>
 <br />
 <form action="admin_add_account_subscription" method="post"
       tal:define="available_subscriptions python:list(here.available_notif_types())">
@@ -113,8 +113,9 @@
         </div>
         <div class="field">
             <label for="location" i18n:translate="">Location</label>
-            <div id="extjs_tree" class="extjs_tree custom-tree"></div>
-            <input type="text" id="location" name="location" class="extjs_target" style="width:40%"/>
+            <div id="sitemap_tree" class="sitemap_tree"></div>
+            <div style="clear: both"></div>
+            <input type="text" id="location" name="location" class="sitemap_tree_target" style="width:40%;"/>
         </div>
         <div class="field-inline">
             <label for="notif_type">Subscribe to</label>
@@ -209,10 +210,10 @@
 
 	<span tal:define="has_previous current_subscriptions/has_previous;
 						has_next current_subscriptions/has_next;">
-		<a class="prevpage" tal:condition="has_previous" 
+		<a class="prevpage" tal:condition="has_previous"
 			tal:attributes="href string:${here/absolute_url}/admin_html?page=${current_subscriptions/previous_page_number}">&lt; previous</a>
 		<tal:block condition="python:(has_previous and has_next)">|</tal:block>
-		<a class="nextpage" tal:condition="has_next" 
+		<a class="nextpage" tal:condition="has_next"
 			tal:attributes="href string:${here/absolute_url}/admin_html?page=${current_subscriptions/next_page_number}">next &gt;</a>
 	</span>
 

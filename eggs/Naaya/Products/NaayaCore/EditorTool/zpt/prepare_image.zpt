@@ -17,12 +17,12 @@
 		<div id="fe_preview" style="margin-top: 1em;">
 			Preview
 			<div style="width: 100%; height: 23em; overflow: scroll; border: 1px solid #C0C0C0;">
-				<img id="fe_img_preview" tal:attributes="title req_styles/title;src img_url; style string:float: left;;${req_styles/width_preview};;${req_styles/height_preview};;${req_styles/margin};;${req_styles/border_preview};;${req_styles/css_alignment}" /> 
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at consectetur augue. 
-				Vestibulum adipiscing consequat massa a vestibulum. Nam sem urna, lacinia sit amet imperdiet 
-				id, blandit fringilla mi. Donec eros mi, adipiscing id hendrerit non, congue a quam. 
-				In ornare consequat diam, eu tempus enim molestie at. Aliquam posuere massa ornare nisl blandit tempor. 
-				Suspendisse magna turpis, ultrices ac auctor vitae, pretium quis purus. 
+				<img id="fe_img_preview" tal:attributes="title req_styles/title;src img_url; style string:float: left;;${req_styles/width_preview};;${req_styles/height_preview};;${req_styles/margin};;${req_styles/border_preview};;${req_styles/css_alignment}" />
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at consectetur augue.
+				Vestibulum adipiscing consequat massa a vestibulum. Nam sem urna, lacinia sit amet imperdiet
+				id, blandit fringilla mi. Donec eros mi, adipiscing id hendrerit non, congue a quam.
+				In ornare consequat diam, eu tempus enim molestie at. Aliquam posuere massa ornare nisl blandit tempor.
+				Suspendisse magna turpis, ultrices ac auctor vitae, pretium quis purus.
 				Sed quis tortor ipsum, a egestas diam.
 			</div>
 		</div>
@@ -66,7 +66,7 @@
 						<input id="fe_img_height" type="text" tal:attributes="value req_styles/height" style="width: 5em;" />
 						<input id="fe_img_proportional" type="checkbox" style="width: 1em; vertical-align: middle;" />
 						<label for="fe_img_proportional">Proportional</label>
-						
+
 					</li>
 					<li>
 						<div class="propfield"><label for="fe_img_vspace">Vertical space:</label></div>
@@ -88,7 +88,7 @@
 			<input id="insert" type="button" value="Insert" onclick="feInsertPicture();" />
 			<input id="cancel" type="button" value="Cancel" onclick="imageOb.cancel()" />
 		</div>
-		<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 		<script type="text/javascript" src="tinymce/jscripts/tiny_mce/tiny_mce_popup.js"></script>
 		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/image_js"></script>
 		<input type="hidden" id="fe_url_file" name="url_file" tal:attributes="value img_url" />

@@ -5,7 +5,6 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				maintopics here/getMainTopics">
-<script type="text/javascript" src="misc_/Naaya/jquery-ui-1.7.2.full.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('input[type=checkbox][name=ids]').click(function(){
@@ -58,7 +57,7 @@
 <form name="frmDragDrop" method="post">
 <ul id="maintopicslist" class="boxy">
 	<li tal:repeat="item maintopics" tal:attributes="itemID item/id">
-        <input type="checkbox" class="chk" name="ids" 
+        <input type="checkbox" class="chk" name="ids"
                tal:attributes="value python:item.absolute_url(1)" />
 		<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
 	</li>
@@ -66,7 +65,7 @@
 
 <div id="delref_box" style="display:none">
   <input type="checkbox" id="delref" name="delref" class="chk"/>
-  <label for="delref" class="chk" 
+  <label for="delref" class="chk"
     i18n:translate="">Check this if you want to delete the folder(s) on remove</label>
 </div>
 
@@ -82,7 +81,7 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_addmaintopics">
 
 <p i18n:translate="">
-	Upon adding a main section, a top-folder will be created in this portal and it will be included 
+	Upon adding a main section, a top-folder will be created in this portal and it will be included
 	in the list of main sections. For further changes and translation of this folder,
 	go to its index and edit it.
 </p>
@@ -117,8 +116,8 @@ Pick a folder from this portal and press the <em i18n:name="submit-button" i18n:
 <div class="field">
 	<label for="folder_url" i18n:translate="">URL</label>
 	<input type="text" name="folder_url" id="folder_url" size="50" />
-	<input type="button" value="Pick" i18n:translate="" 
-			tal:define="sitemap_path here/getSitePath" 
+	<input type="button" value="Pick" i18n:translate=""
+			tal:define="sitemap_path here/getSitePath"
 			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html?display_root=0&showitems=0', 300, 500);;" />
 </div>
 <div class="field">

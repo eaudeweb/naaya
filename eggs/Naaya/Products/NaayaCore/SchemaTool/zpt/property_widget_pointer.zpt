@@ -7,9 +7,10 @@
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <div id="pointer_tree" class="extjs_tree custom-tree"></div>
+    <div tal:attributes="id string:sitemap_tree_${prop_id}" class="sitemap_tree"></div>
     <div style="clear: both"></div>
-    <input class="extjs_target" type="text" tal:attributes="
+    <input type="text" tal:attributes="
+        class string:sitemap_tree_${prop_id}_target;
         value value;
         size here/width;
         maxlength python:test(here.size_max, here.size_max, None);
