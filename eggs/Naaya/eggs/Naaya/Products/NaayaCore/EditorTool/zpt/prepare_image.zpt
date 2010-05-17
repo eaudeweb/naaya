@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<tal:block define="global site_url python: here.getSite().absolute_url();" />
 <tal:block define="global img_url python:here.get_preview_img(request)" />
 <tal:block define="global req_styles python:here.prepare_image_styles(request)" />
 <tal:block define="global alignment req_styles/alignment" />
