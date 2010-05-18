@@ -454,7 +454,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declarePublic('checkPermissionViewAnswers')
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
-        return self.checkPermission(PERMISSION_VIEW_ANSWERS) and self.checkPermissionPublishObjects()
+        return self.checkPermission(PERMISSION_VIEW_ANSWERS) or self.checkPermissionPublishObjects()
 
     security.declarePublic('checkPermissionViewReports')
     def checkPermissionViewReports(self):
