@@ -184,7 +184,7 @@ misc_ = {
     'jquery-1.3.2.min.js':ImageFile('www/js/jquery-1.3.2.min.js', globals()), # DEPRECATED
 
     # jQuery plugins
-    'jquery-ui.js':ImageFile('www/js/jquery-1.4.2.min.js', globals()),
+    'jquery-ui.js':ImageFile('www/js/jquery-ui-1.8.1.custom.min.js', globals()),
     'jquery.cookie.js':ImageFile('www/js/jquery.cookie.js', globals()),
     'jquery.bgiframe.min.js':ImageFile('www/js/jquery.bgiframe.min.js', globals()),
     'jquery.autocomplete.min.js':ImageFile('www/js/jquery.autocomplete.min.js', globals()),
