@@ -155,7 +155,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	width: 98%;
 	padding: 0.3em;
 	color: #084173;
-	font-family: Arial, Helvetica, sans-serif; 
+	font-family: Arial, Helvetica, sans-serif;
 	font-size: 80%;
 	line-height: 1.3;
 	vertical-align: bottom;
@@ -163,7 +163,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	border-bottom: 1px solid #dce8f6;
 	display: inline-block; /* fix for IE peek-a-boo bug */
 }
-.left_portlet ul li:hover { 
+.left_portlet ul li:hover {
 	background: #fff;
 }
 .left_portlet ul li a {
@@ -543,6 +543,23 @@ h3 {
 .mceStatusbarPathText { visibility: hidden; }
 
 #addrole-form {
-	clear: left; 
+	clear: left;
 	padding: 1em;
+}
+
+/**
+ * Google translate Widget
+*/
+#google_translate_element{
+	display: none;
+	border:1px solid #CCCCCC;
+	padding:1px 4px 0 5px;
+	position:absolute;
+	right:5px;
+	top:30px;
+	background: #FFF;
+}
+
+a.goog-logo-link{
+	background-image: none !important;
 }
