@@ -35,6 +35,7 @@
 		<form id="site_search" title="Portal search"/>
 		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_feedback" title="Portal feedback"/>
+		<form id="site_googletranslate" title="Portal Google Translate widget"/>
 		<form id="site_requestrole" title="Portal request role"/>
 		<form id="site_macro_add" title="Macro for add forms"/>
 		<form id="site_macro_edit" title="Macro for edit forms"/>
