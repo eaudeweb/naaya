@@ -119,29 +119,46 @@
 					<a tal:omit-tag="not: sortable" id="geo_address" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_address#geo_address" i18n:translate="">Address</a>
 				</th>
 			</tal:block>
-			<th scope="col" class="scope-col">
-				<span i18n:translate="">Latitude/Longitude</span>
-			</th>
-			<tal:block tal:condition="python:sort_on=='coverage'">
+			<tal:block tal:condition="python:sort_on=='geo_latitude'">
 				<tal:block tal:condition="python:sort_order==''">
 					<th scope="col" class="scope-col">
-						<a id="coverage" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=coverage&amp;sort_order=reverse">
-							<span i18n:translate="">Country</span>
+						<a id="geo_latitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_latitude&amp;sort_order=reverse#geo_latitude">
+							<span i18n:translate="">Latitude</span>
 						</a>
 					</th>
 				</tal:block>
 				<tal:block tal:condition="python:sort_order=='reverse'">
 					<th scope="col" class="scope-col">
-						<a id="coverage" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=coverage">
-							<span i18n:translate="">Country</span>
+						<a id="geo_latitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_latitude#geo_latitude">
+							<span i18n:translate="">Latitude</span>
 						</a>
 					</th>
 				</tal:block>
 			</tal:block>
-			<tal:block tal:condition="python:sort_on!='coverage'">
+			<tal:block tal:condition="python:sort_on!='geo_latitude'">
 				<th scope="col" class="scope-col">
-					<a tal:omit-tag="not: sortable" id="coverage"
-					tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=coverage" i18n:translate="">Country</a>
+					<a tal:omit-tag="not: sortable" id="geo_latitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_latitude#geo_latitude" i18n:translate="">Latitude</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:sort_on=='geo_longitude'">
+				<tal:block tal:condition="python:sort_order==''">
+					<th scope="col" class="scope-col">
+						<a id="geo_longitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_longitude&amp;sort_order=reverse#geo_longitude">
+							<span i18n:translate="">Longitude</span>
+						</a>
+					</th>
+				</tal:block>
+				<tal:block tal:condition="python:sort_order=='reverse'">
+					<th scope="col" class="scope-col">
+						<a id="geo_longitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_longitude#geo_longitude">
+							<span i18n:translate="">Longitude</span>
+						</a>
+					</th>
+				</tal:block>
+			</tal:block>
+			<tal:block tal:condition="python:sort_on!='geo_longitude'">
+				<th scope="col" class="scope-col">
+					<a tal:omit-tag="not: sortable" id="geo_longitude" tal:attributes="href string:${request/ACTUAL_URL}${url_params}&amp;first_letter=${first_letter}&amp;sort_on=geo_longitude#geo_longitude" i18n:translate="">Longitude</a>
 				</th>
 			</tal:block>
 			<th tal:condition="ratable_records" scope="col" class="scope-col" i18n:translate="">Rating</th>
@@ -159,13 +176,8 @@
 			</td>
 			<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title_or_id" /></td>
 			<td tal:content="record/geo_location/address" />
-			<td tal:define="lat record/geo_location/lat;
-							lon record/geo_location/lon;
-							latitude python:'%2.6f' % lat;
-							longitude python:'%2.6f' % lon;"
-				tal:content="string:${latitude}/${longitude}" />
-			<td tal:condition="record/coverage" tal:content="record/coverage" />
-			<td tal:condition="not:record/coverage" tal:content="string:---" />
+			<td tal:content="record/geo_location/lat" />
+			<td tal:content="record/geo_location/lon" />
 			<td tal:condition="ratable_records" class="type" style="width: 15%;">
 				<tal:block define="user_rating record/user_rating_stars_numbers|nothing"
 					condition="record/is_ratable" replace="structure user_rating"/>

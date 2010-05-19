@@ -1116,6 +1116,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             return self._embed_map_html(REQUEST)
 
+    _list_locations = NaayaPageTemplateFile('zpt/list_locations', globals(),
+                                            'map_list_locations')
     security.declareProtected(view, 'list_locations')
     def list_locations(self, REQUEST=None, **kw):
         """" """
@@ -1183,7 +1185,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         options['prev_end'] = options['start']
         options['records'] = results[options['start']:options['end']]
         options['ratable_records'] = self._ratable_results(results[options['start']:options['end']])
-        return PageTemplateFile('zpt/list_locations',  globals()).__of__(self)(**options)
+        return self._list_locations(**options)
 
     def _ratable_results(self, results):
         for ob in results:
