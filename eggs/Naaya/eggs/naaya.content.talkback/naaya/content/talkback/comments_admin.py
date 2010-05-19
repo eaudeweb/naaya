@@ -21,6 +21,8 @@
 import os
 import sys
 from itertools import groupby
+from cStringIO import StringIO
+import csv
 
 #Zope imports
 from Globals import InitializeClass
@@ -92,5 +94,37 @@ class CommentsAdmin(SimpleItem):
             'comment_macros': self._comment_template.macros,
         }
         return self._admin_template(REQUEST, **options)
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'export_csv')
+    def export_csv(self, REQUEST, RESPONSE):
+        """ export all comments as CSV """
+
+        data_file = StringIO()
+        csv_writer = csv.writer(data_file)
+
+        fields = [
+            ('Contributor', lambda c: c.contributor),
+            ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
+            ('Message', lambda c: c.message),
+            ('Paragraph', lambda c: c.get_paragraph().absolute_url()),
+        ]
+
+        csv_writer.writerow([field[0] for field in fields])
+
+        comments = [c for c in self._iter_comments() if c.approved]
+        comments.sort(key=dict(fields)['Date'])
+
+        for comment in comments:
+            row = [field[1](comment).encode('utf-8') for field in fields]
+            csv_writer.writerow(row)
+
+        raw_data = data_file.getvalue()
+
+        RESPONSE.setHeader('Content-Type', 'text/csv;charset=utf-8')
+        RESPONSE.setHeader('Content-Length', len(raw_data))
+        RESPONSE.setHeader('Content-Disposition',
+                           "attachment; filename=comments.csv")
+        return raw_data
 
 InitializeClass(CommentsAdmin)
