@@ -14,6 +14,12 @@
     Total comments:
     <tal:block content="options/total_count"
                i18n:name="comment_count" />
+
+    <span tal:condition="python:
+                    here.checkPermissionManageTalkBackConsultation()">
+        (<a tal:attributes="href string:${here/absolute_url}/export_csv"
+          i18n:translate="">Download as CSV</a>)
+    </span>
 </p>
 
 <p i18n:translate="" tal:condition="options/invited_count">
