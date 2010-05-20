@@ -54,6 +54,7 @@ import Products
 from zope.interface import implements
 from App.ImageFile import ImageFile
 from zope import component, interface
+import transaction
 
 #Product imports
 from interfaces import INySite, IHeartbeat
@@ -114,6 +115,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
 
+from naaya.core.utils import ofs_path
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip
@@ -3453,7 +3455,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 addNyContact(container, **contact_data)
 
         if objects_created:
-            import transaction
             transaction.get().note('Imported %d Naaya Contact objects' % objects_created)
             infos.append('Imported %d contact objects' % objects_created)
 
@@ -3707,8 +3708,15 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST is not None:
             raise Unauthorized
 
+        transaction.commit() # commit earlier stuff; fresh transaction
+        transaction.get().note('cron heartbeat at %s' % ofs_path(self))
         hb = Heartbeat()
-        component.handle(self, hb)
+        try:
+            component.handle(self, hb)
+        except:
+            self.log_current_error()
+            raise
+        transaction.commit()
 
     def heartbeat(self):
         """ if cooldown has passed does a heartbeat """

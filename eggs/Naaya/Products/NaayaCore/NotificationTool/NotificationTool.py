@@ -38,6 +38,7 @@ from persistent import Persistent
 from zope import interface
 from zope import component
 from zope import annotation
+import transaction
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -305,6 +306,8 @@ class NotificationTool(Folder):
         self._send_notifications(messages_by_email, template)
 
     def _cron_heartbeat(self, when):
+        transaction.commit() # commit earlier stuff; fresh transaction
+        transaction.get().note('notifications cron at %s' % ofs_path(self))
 
         ### daily newsletter ###
         if self.config['enable_daily']:
@@ -350,6 +353,8 @@ class NotificationTool(Folder):
             if prev_monthly < latest_monthly < when:
                 self._send_newsletter('monthly', prev_monthly, when)
                 self.timestamps['monthly'] = when
+
+        transaction.commit() # make sure our timestamp updates are saved
 
     def index_html(self, REQUEST):
         """ redirect to admin page """
