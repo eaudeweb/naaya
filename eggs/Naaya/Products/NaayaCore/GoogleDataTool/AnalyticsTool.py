@@ -104,7 +104,7 @@ class AnalyticsTool(SimpleItem, utils):
         if REQUEST.has_key('save'):
             self.ga_verify = REQUEST.get('ga_verify', '')
             self.gw_verify = REQUEST.get('gw_verify', '')
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         return self._admin_verify(REQUEST)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account')
@@ -127,7 +127,7 @@ class AnalyticsTool(SimpleItem, utils):
                     self.start_date = ''
                 if self.account or self.start_date or self.date_interval:
                     self.clear_cache()  #clear cached data
-                    self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                    self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             elif REQUEST.has_key('revoke'):
                 self.delAuthToken()
                 self.clear_cache()  #clear cached data

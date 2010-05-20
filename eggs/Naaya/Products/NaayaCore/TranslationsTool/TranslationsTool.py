@@ -117,7 +117,7 @@ class TranslationsTool(MessageCatalog):
     def message_decode(self, message):
         """ Decodes a message from an ASCII string.
             To be used in the user interface, to avoid problems with the
-            encodings, HTML entities, etc.. 
+            encodings, HTML entities, etc..
         """
         return message_decode(message)
 
@@ -378,14 +378,14 @@ class TranslationsTool(MessageCatalog):
     security.declareProtected('Manage messages', 'spreadsheet_export')
     def spreadsheet_export(self, target_lang, dialect, encoding='utf-8', REQUEST=None, RESPONSE=None):
         """ Exports the content of the message catalog to a spreadsheet format """
-        
+
         site = self.getSite()
         default_lang = site.gl_get_default_language()
         if dialect == 'excel':
             ct, ext = 'text/comma-separated-values', 'csv'
         else:
             ct, ext = 'text/tab-separated-values', 'txt'
-            
+
         translations = {}
         for msgkey, transunit in self._messages.items():
             if isinstance(msgkey, unicode):
@@ -416,7 +416,7 @@ class TranslationsTool(MessageCatalog):
 
         #generate a temporary file on the filesystem that will be used to return the actual output
         tmp_name = spreadsheet_file(output, dialect)
-        
+
         #return spreadsheet file
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', '%s;charset=%s' % (ct, encoding))
@@ -426,9 +426,9 @@ class TranslationsTool(MessageCatalog):
     security.declareProtected('Manage messages', 'spreadsheet_import')
     def spreadsheet_import(self, file, target_lang, dialect, encoding='utf-8', REQUEST=None):
         """Imports translations from a spreadsheet format into the message catalog."""
-        
+
         if not file:
-            self.setSessionErrors(['You must select a file to import.'])
+            self.setSessionErrorsTrans('You must select a file to import.')
             return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
         else:
             #read translations from spreadsheet file
@@ -439,19 +439,19 @@ class TranslationsTool(MessageCatalog):
             try:
                 #itterate translations
                 for translation in translations:
-                    
+
                     #import only translated messages
                     if translation['target'] != '':
                         try:
                             self._messages[translation['source']][target_lang] = translation['target']
-                            
+
                         #if the message doesn't exist in the catalog, skip it
                         except KeyError:
                             pass
-                        
-                self.setSessionInfo(['Translations successfully imported.'])
+
+                self.setSessionInfoTrans('Translations successfully imported.')
             except KeyError:
-                self.setSessionErrors(['File format does not match selected format.'])
+                self.setSessionErrorsTrans('File format does not match selected format.')
         return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
 
 

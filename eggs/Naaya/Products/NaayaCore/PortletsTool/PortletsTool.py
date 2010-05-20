@@ -211,7 +211,7 @@ class PortletsTool(Folder, utils):
 
                 if data['new_parent']['type'] == 'tree':
                     parent = None
-                else: 
+                else:
                     parent = data['new_parent']['id']
                 if data['new_prev'] == data['new_parent']['id']:# First item
                     self[new_parent_tree].move(self[new_parent_tree][data['id']], parent, before=data.get('new_next', None))
@@ -371,17 +371,13 @@ class PortletsTool(Folder, utils):
                 self.assign_portlet(location, position, portlet_id, inherit)
             except ValueError, e:
                 if 'already assigned' in str(e):
-                    self.setSessionErrors([
-                        'Portlet "%s" already assigned to "%s" at "%s"'
-                        % (portlet.title_or_id(), position, location or "[site root]")
-                        ])
+                    self.setSessionErrorsTrans('Portlet "${title}" already assigned to "${position}" at "${location}"',
+                        title=portlet.title_or_id(), position=position, location=(location or "[site root]"))
                 else:
                     raise
             else:
-                self.setSessionInfo([
-                    'Successfully assigned portlet "%s" at "%s"'
-                    % (portlet.title_or_id(), location or "[site root]")
-                    ])
+                self.setSessionInfoTrans('Successfully assigned portlet "${title}" at "${location}"',
+                    title=portlet.title_or_id(), location=(location or "[site root]"))
 
         elif action == 'Unassign':
             portlet_id = form['portlet_id']
@@ -389,10 +385,8 @@ class PortletsTool(Folder, utils):
             location = form['location']
             position = form['position']
             self.unassign_portlet(location, position, portlet_id)
-            self.setSessionInfo([
-                'Successfully removed portlet "%s" from "%s"'
-                % (portlet.title_or_id(), location or "[site root]")
-                ])
+            self.setSessionInfoTrans('Successfully removed portlet "${title}" from "${location}"',
+                title=portlet.title_or_id(), location=(location or "[site root]"))
 
         elif action == 'ToggleInherit':
             portlet_id = form['portlet_id']
@@ -403,10 +397,10 @@ class PortletsTool(Folder, utils):
                 if i['id'] == portlet_id:
                     inherit = i['inherit'] = not i['inherit']
                     self._p_changed = True
-                    self.setSessionInfo([
-                        'Successfully changed portlet inheritance "%s" at "%s" to %r'
-                        % (portlet.title_or_id(), location or "[site root]", inherit)
-                        ])
+                    self.setSessionInfoTrans('Successfully changed portlet inheritance "${title}" at "${location}" to ${inherit}',
+                        title=portlet.title_or_id(), location=(location or "[site root]"),
+                        inherit=inherit
+                    )
                     break
 
         else:

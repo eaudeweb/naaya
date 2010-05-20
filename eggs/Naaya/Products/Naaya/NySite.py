@@ -1495,7 +1495,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         err = []
         if not self.checkPermissionPublishDirect():
             if contact_word=='' or contact_word!=self.getSession('captcha', None):
-                err.append('The word you typed does not match with the one shown in the image. Please try again.')
+                err.append(('The word you typed does not match with the one shown in the image. Please try again.', ))
         if username.strip() == '':
             err.append('The full name is required')
         if email.strip() == '':
@@ -1504,7 +1504,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             err.append('The comments are required')
         if err:
             if REQUEST:
-                self.setSessionErrors(err)
+                self.setSessionErrorsTrans(err)
                 self.setFeedbackSession(username, email, comments)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
@@ -1523,7 +1523,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         err = self.getAuthenticationTool().manage_changeUser(auth_user, password, confirm, user.roles, user.domains, firstname, lastname, email)
         if err is not None:
             if REQUEST:
-                self.setSessionErrors(err)
+                self.setSessionErrorsTrans(err)
                 self.setUserSession(auth_user, user.roles, user.domains, firstname, lastname, email, password)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if REQUEST: return REQUEST.RESPONSE.redirect('changecredentials_html')
@@ -1602,7 +1602,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if err:
                 if not REQUEST:
                     return err
-                self.setSessionErrors(err)
+                self.setSessionErrorsTrans(err)
                 self.setRequestRoleSession(username, firstname, lastname, email,
                                            password, organisation, comments,
                                            location)
@@ -1851,7 +1851,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
         confirm='', REQUEST=None):
         """ """
-        msg = err = ''
+        err = ''
+        success = False
         auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
         user = self.getAuthenticationTool().getUser(auth_user)
         if password == '': password = confirm = old_pass
@@ -1863,12 +1864,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         else:
             err = WRONG_PASSWORD
         if REQUEST:
-            if err != '':self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/profile_html' % self.absolute_url())
 
     #paging stuff
@@ -1925,7 +1926,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self._setLocalPropValue('creator', lang, creator)
         self._setLocalPropValue('rights', lang, rights)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_metadata_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declarePublic('hasLeftLogo')
@@ -2059,7 +2060,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.default_logo = default_lang
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_glossary_ids')
@@ -2081,7 +2082,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     continue
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_glossaries_html' % self.absolute_url())
 
 
@@ -2120,7 +2121,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.display_subobject_count= kwargs.get('display_subobject_count', '')
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
@@ -2128,7 +2129,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_email_html' % self.absolute_url())
 
     #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_maintopics_children')
@@ -2162,7 +2163,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         else:
             self.getLayoutTool().manageLayout(theMasterList, theSlaveList)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
@@ -2170,7 +2171,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getAuthenticationTool().manage_delUsers(names)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
@@ -2179,7 +2180,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """
         Create a user with the specified information
         """
-        msg = err = ''
+        err = ''
+        success = False
         try:
             userinfo = self.getAuthenticationTool().manage_addUser(name,
                             password, confirm, [], [], firstname, lastname,
@@ -2187,16 +2189,16 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         except Exception, error:
             err = error
         else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            success = True
         if not REQUEST:
             return userinfo
 
         if err != '':
-            self.setSessionErrors([err])
+            self.setSessionErrorsTrans(err)
             self.setUserSession(name, [], [], firstname, lastname, email, '')
             REQUEST.RESPONSE.redirect('%s/admin_adduser_html' % self.absolute_url())
-        if msg != '':
-            self.setSessionInfo([msg])
+        if success:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
 
 
@@ -2206,20 +2208,21 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """
         Update the specified user's information
         """
-        msg = err = ''
+        err = ''
+        success = True
         try:
             self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
                 lastname, email)
         except Exception, error:
             err = error
         else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            success = True
         if REQUEST:
             if err != '':
-                self.setSessionErrors([err])
+                self.setSessionErrorsTrans(err)
                 self.setUserSession(name, [], [], firstname, lastname, email, '')
-            if msg != '':
-                self.setSessionInfo([msg])
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' % (self.absolute_url(), name))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
@@ -2227,19 +2230,20 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """
         Create a role, with the specified permissions
         """
-        msg = err = ''
+        err = ''
+        success = False
         try:
             self.getAuthenticationTool().addRole(role, permissions)
         except Exception, error:
             err = error
         else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            success = True
         if REQUEST:
             if err != '':
-                self.setSessionErrors([err])
+                self.setSessionErrorsTrans(err)
                 return REQUEST.RESPONSE.redirect('%s/admin_addrole_html' % self.absolute_url())
-            if msg != '':
-                self.setSessionInfo([msg])
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeroles')
@@ -2247,7 +2251,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
@@ -2256,7 +2260,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         Assign the given list of roles to the given list of users at the
         specified location
         """
-        msg = err = ''
+        err = ''
+        success = False
         names = self.utConvertToList(names)
         if len(names)<=0:
             err = 'An username must be specified'
@@ -2267,7 +2272,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
             if not err and send_mail:
                 auth_tool = self.getAuthenticationTool()
                 for name in names:
@@ -2278,8 +2283,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     except:
                         err = 'Could not send confirmation mail.'
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
 
     security.declareProtected(view, 'admin_welcome_page')
@@ -2297,7 +2302,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         message_encoded = ob.message_encode(message)
         ob.message_edit(message, language, translation, '')
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
                 (self.absolute_url(), quote(message_encoded), start, skey, rkey, query))
 
@@ -2311,11 +2316,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         if REQUEST:
             if not file:
-                self.setSessionErrors(['You must select a file to import.'])
+                self.setSessionErrorsTrans('You must select a file to import.')
                 return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
             else:
                 self.getPortalTranslations().manage_import(lang, file)
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
@@ -2328,11 +2333,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         if REQUEST:
             if not file:
-                self.setSessionErrors(['You must select a file to import.'])
+                self.setSessionErrorsTrans('You must select a file to import.')
                 return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
             else:
                 self.getPortalTranslations().xliff_import(file)
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
 
@@ -2341,7 +2346,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addreflist')
@@ -2349,7 +2354,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_addRefList(id, title, description)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editreflist')
@@ -2359,7 +2364,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manageProperties(title, description)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteitems')
@@ -2369,7 +2374,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_delete_items(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_additem')
@@ -2379,7 +2384,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_add_item(item, title)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edititem')
@@ -2389,7 +2394,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_update_item(item, title)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinkslist')
@@ -2397,7 +2402,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlinkslist')
@@ -2405,7 +2410,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_addLinksList(id, title, portlet)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlinkslist')
@@ -2415,7 +2420,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manageProperties(title)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinks')
@@ -2425,7 +2430,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_delete_links(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlink')
@@ -2435,7 +2440,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_add_link_item('', title, description, url, relative, permission, order)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlink')
@@ -2445,13 +2450,14 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_update_link_item(item, title, description, url, relative, permission, order)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addnetworkportal')
     def admin_addnetworkportal(self, title='', url='', REQUEST=None):
         """ """
-        msg, err, res = '', '', None
+        err, res = '', '', None
+        success = False
         xconn = XMLRPCConnector(self.http_proxy)
         if url.endswith('/'): url = url[:-1]
         res = xconn(url, 'external_search_capabilities')
@@ -2459,16 +2465,17 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             err = 'Cannot connect to the given URL.'
         else:
             self.add_networkportal_item(url, title, url, res)
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            success = True
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatenetworkportal')
     def admin_updatenetworkportal(self, id='', REQUEST=None):
         """ """
-        msg, err, res = '', '', None
+        err, res = '', '', None
+        success = False
         networkportal = self.get_networkportal_item(id)
         if networkportal:
             xconn = XMLRPCConnector(self.http_proxy)
@@ -2477,12 +2484,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 err = 'Cannot connect to the given URL.'
             else:
                 self.edit_networkportal_item(id, networkportal.title, networkportal.url, res)
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         else:
             err = 'Invalid network portal.'
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletenetworkportal')
@@ -2490,7 +2497,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.delete_networkportal_item(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_discardversion')
@@ -2500,7 +2507,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.discardVersion()
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_versioncontrol_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
@@ -2512,7 +2519,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.maintopics.append(folder_ob.absolute_url(1))
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics')
@@ -2522,7 +2529,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.maintopics.append(folder_url)
             self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_ordermaintopics')
@@ -2539,7 +2546,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 except:
                     pass
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletemaintopics')
@@ -2562,7 +2569,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannel')
@@ -2577,7 +2584,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet,
                     filter_by_language, automatic_translation_portlet)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannel')
@@ -2585,7 +2592,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems, filter_by_language)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannelfacade')
@@ -2595,7 +2602,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.getSyndicationTool().get_channel(id).manageProperties(title, url,
             providername, location, obtype, numbershownitems)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updateremotechannel')
@@ -2604,9 +2611,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         res = self.getSyndicationTool().get_channel(id).updateChannel(self.get_site_uid())
         if REQUEST:
             if res == '':
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             else:
-                self.setSessionErrors([res])
+                self.setSessionErrorsTrans(res)
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechannel')
@@ -2614,7 +2621,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannels_aggregator')
@@ -2623,7 +2630,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.getSyndicationTool().manage_addChannelAggregator('', title, channels, portlet, description)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannels_aggregator')
@@ -2631,7 +2638,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().get_channel(id).manageProperties(title, channels, description)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechannel')
@@ -2639,7 +2646,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlocalchannel')
@@ -2647,7 +2654,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().manage_addLocalChannel('', title, description, language, type, objmetatype, numberofitems, portlet)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editlocalchannel')
@@ -2655,7 +2662,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().get_channel(id).manageProperties(title, description, language, type, objmetatype, numberofitems, portlet)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelocalchannel')
@@ -2663,7 +2670,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_localchannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets')
@@ -2671,7 +2678,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.set_left_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_leftportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_frontportlets')
@@ -2679,7 +2686,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.set_center_portlets_ids(self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_frontportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_rightportlets')
@@ -2687,7 +2694,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.set_right_portlets_locations(folder, self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleterightportlets')
@@ -2697,7 +2704,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             location, id = pair.split('||')
             self.delete_right_portlets_locations(location, id)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_rightportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechportlet')
@@ -2705,7 +2712,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechportlet')
@@ -2718,7 +2725,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             elif ob.meta_type == METATYPE_REMOTECHANNELFACADE:
                 self.create_portlet_for_remotechannelfacade(ob)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelocalchportlet')
@@ -2726,7 +2733,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlocalchportlet')
@@ -2735,7 +2742,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         ob = self.getSyndicationTool().get_channel(id)
         if ob is not None: self.create_portlet_for_localchannel(ob)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_localchportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletefolderportlet')
@@ -2743,7 +2750,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addfolderportlet')
@@ -2755,7 +2762,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 if not self.exists_portlet_for_object(ob):
                     self.create_portlet_for_folder(ob)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_folderportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinksportlet')
@@ -2763,7 +2770,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlinksportlet')
@@ -2772,7 +2779,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         ob = self.getPortletsTool().getLinksListById(id)
         if ob is not None: self.create_portlet_for_linkslist(ob)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_linksportlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addhtmlportlet')
@@ -2781,7 +2788,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         id = PREFIX_PORTLET + self.utGenRandomId(6)
         self.getPortletsTool().addHTMLPortlet(id=id, title='New portlet')
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edithtmlportlet')
@@ -2791,7 +2798,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if ob is not None:
             ob.manage_properties(title, body, lang)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletehtmlportlet')
@@ -2799,7 +2806,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html' % self.absolute_url())
 
     #administration pages
@@ -3391,7 +3398,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         for message in messages:
             ob.message_del(message)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmesg_html')
@@ -3409,7 +3416,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.getEmailTool().sendEmail(mail_body, mail, self.mail_address_from, mail_subject)
 
         if REQUEST:
-            self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
+            self.setSessionInfoTrans('Mail sent. (${date})', date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
@@ -3427,7 +3434,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         files = [vcard_file(contact.id, contact.export_vcard()) for contact in contacts]
         if REQUEST:
             if not contacts:
-                self.setSessionInfo(['No contacts found in the selected location.'])
+                self.setSessionInfoTrans('No contacts found in the selected location.')
                 return REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=vcard' % self.absolute_url())
             return self.utGenerateZip('%s-contacts.zip' % loc_obj.title_or_id(),
                                       files, self.REQUEST.RESPONSE)
@@ -3438,8 +3445,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ Import contacts in vCard format from a zip file """
         from naaya.content.contact.contact_item import addNyContact, parse_vcard_data
         container = self.restrictedTraverse(location)
-        errors = []
-        infos = []
+        error = []
+        success = False
         objects_created = 0
         vcard_zip = ZipFile(vcard_zipfile)
         for filename in vcard_zip.namelist():
@@ -3447,7 +3454,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             try:
                 contact_data = parse_vcard_data(data)
             except:
-                errors.append('Error parsing "%s"' % filename)
+                errors.append(('Error parsing "${filename}"', {'filename': filename}, ))
             else:
                 objects_created += 1
                 contact_data['title'] = '%s %s' % (
@@ -3456,11 +3463,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
         if objects_created:
             transaction.get().note('Imported %d Naaya Contact objects' % objects_created)
-            infos.append('Imported %d contact objects' % objects_created)
+            success = True
 
         if REQUEST is not None:
-            self.setSessionErrors(errors)
-            self.setSessionInfo(infos)
+            if len(errors): self.setSessionErrorsTrans(errors)
+            if success: self.setSessionInfoTrans('Imported ${objects} contact objects', objects=objects_created)
             return REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
     security.declareProtected(view, 'recaptcha_is_present')

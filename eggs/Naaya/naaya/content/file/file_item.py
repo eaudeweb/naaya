@@ -498,7 +498,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         auth_tool.changeLastPost(contributor)
         notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
@@ -539,7 +539,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         self.recatalogNyObject(self)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(view_management_screens, 'manage_advanced_html')

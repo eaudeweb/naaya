@@ -79,7 +79,7 @@ def read_zipfile_contents(data):
     try:
         zf = ZipFile(data)
     except Exception, e:
-        raise ValueError('Error reading Zip file')
+        raise ValueError(('Error reading Zip file', ))
 
     file_paths = set()
     folder_tree = []
@@ -177,8 +177,8 @@ class ZipImportTool(Implicit, Item):
                     file_ob_id = add_file(file_container, file_name, file_data)
                     file_ob = file_container[file_ob_id]
                 except Exception, e:
-                    errors.append(u"Error while creating file %r: %s" %
-                                  (file_path, force_to_unicode(str(e))))
+                    errors.append((u"Error while creating file ${file_path}: ${error}",
+                    {'file_path': file_path, 'error': force_to_unicode(str(e))}))
                 else:
                     p = relative_object_path(file_ob, container)
                     created_file_paths.add(p)
@@ -186,7 +186,7 @@ class ZipImportTool(Implicit, Item):
         if errors:
             if REQUEST is not None:
                 transaction.abort()
-                self.setSessionErrors(errors)
+                self.setSessionErrorsTrans(errors)
                 return self.index_html(REQUEST)
 
             else:
@@ -196,7 +196,7 @@ class ZipImportTool(Implicit, Item):
             notify(ZipImportEvent(container, sorted(created_file_paths)))
 
             if REQUEST is not None:
-                self.setSessionInfo(['imported %s' % pth for pth in
+                self.setSessionInfoTrans([('imported ${path}', {'path': pth}, ) for pth in
                                      sorted(created_file_paths)])
                 return REQUEST.RESPONSE.redirect(container.absolute_url())
 
@@ -246,12 +246,12 @@ class ZipExportTool(Implicit, Item):
             self.add_index(zip_file, archive_files)
             zip_file.close()
         except Exception, e:
-            errors.append(str(e))
+            errors.append(e)
 
         if REQUEST is not None:
             if errors:
                 transaction.abort()
-                self.setSessionErrors(errors)
+                self.setSessionErrorsTrans(errors)
             else:
                 response = REQUEST.RESPONSE
                 response.setHeader('content-type', 'application/zip')
@@ -441,4 +441,3 @@ class NewsZipAdapter(NewsAndEventZipExport):
 
     def __call__(self):
         return self.export_data_for_zip()
-

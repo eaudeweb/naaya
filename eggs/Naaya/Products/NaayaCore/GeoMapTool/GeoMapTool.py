@@ -867,7 +867,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 self.recatalogNyObject(ob)
                 return (ob, None)
             except Exception, err:
-                return (None, 'Failed to add %s geo-point! Error: %s' % (title, str(err)))
+                return (None, ('Failed to add %s geo-point! Error: %s',  title, str(err), ))
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
@@ -928,11 +928,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             errs.append(str(ex)) # TODO Python 2.5: ex.message
 
         if errs:
-            self.setSessionErrors(errs)
+            self.setSessionErrorsTrans(errs)
         else:
-            self.setSessionInfo(["%u GeoPoint(s) uploaded. (%s)" % (len(records), self.utGetTodayDate())])
+            self.setSessionInfoTrans("${records} GeoPoint(s) uploaded. (${date})", records=len(records), date=self.utGetTodayDate())
             if num_nolocation:
-                self.setSessionErrors(["Could not geolocate %u address(es)." % (num_nolocation,)])
+                self.setSessionErrorsTrans("Could not geolocate ${location} address(es).", location=num_nolocation)
         return REQUEST.RESPONSE.redirect('%s/admin_mapupload_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
@@ -1030,7 +1030,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             if loc_obj:
                 loc_obj.getParentNode().manage_delObjects([loc_obj.getId()])
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
@@ -1038,7 +1038,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """ """
         self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture, sortorder)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
@@ -1046,7 +1046,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """ """
         self.updateSymbol(id, title, description, parent, picture, sortorder)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminDeleteSymbols')
@@ -1054,7 +1054,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """ """
         self.deleteSymbol(self.utConvertToList(id))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(view, 'getSymbolsListOrdered')
@@ -1148,7 +1148,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         sort_on, sort_order = '', ''
         if kw.get('sortable', ''):
-            sort_on = kw.get('sort_on', '') 
+            sort_on = kw.get('sort_on', '')
             sort_order = kw.get('sort_order', '')
 
         first_letter = kw.get('first_letter', '')
@@ -1318,11 +1318,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """
         Returns all the script and html required to display a map
         corresponding to the map engine selected in the administration
-        area. The constrains of the map are affected by self.detailed_* 
+        area. The constrains of the map are affected by self.detailed_*
         attributes.
-        
+
         geo_location -- a Geo() object
-        
+
         Example usage:
         <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
         """
@@ -1336,7 +1336,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                      'HYB': {'google': 'G_HYBRID_MAP', 'yahoo': 'YAHOO_MAP_HYB'},
                      'SAT': {'google': 'G_SATELLITE_MAP', 'yahoo': 'YAHOO_MAP_SAT'},
                      }
-        
+
         if geo_location.missing_lat_lon:
             lat, lon = "''", "''"
         else:
@@ -1353,7 +1353,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         template = template % (appid, lat, lon, address, self.detailed_zoom,
                                all_map_types, default_map_type, dom_element)
         map_div = get_template('map_div.html', skip_script=True)
-        map_div = map_div % (self.detailed_map_width, self.detailed_map_width, 
+        map_div = map_div % (self.detailed_map_width, self.detailed_map_width,
                              self.detailed_map_height, self.absolute_url())
         # there's an i18n:translate in `map_div`, so we render as template
         map_div = ZopePageTemplate('map_div', text=map_div).__of__(self)()

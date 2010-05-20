@@ -216,11 +216,11 @@ class NyFolderBase(Folder, NyPermissions):
         kwargs.update(REQUEST.form)
         ids = self.utConvertToList(kwargs.get('id', []))
         if not ids:
-            self.setSessionErrors(['Please select one or more items to copy.'])
+            self.setSessionErrorsTrans('Please select one or more items to copy.')
         else:
             try: self.manage_copyObjects(ids, REQUEST)
-            except: self.setSessionErrors(['Error while copy data.'])
-            else: self.setSessionInfo(['Item(s) copied.'])
+            except: self.setSessionErrorsTrans('Error while copy data.')
+            else: self.setSessionInfoTrans('Item(s) copied.')
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
@@ -233,11 +233,11 @@ class NyFolderBase(Folder, NyPermissions):
         kwargs.update(REQUEST.form)
         ids = self.utConvertToList(kwargs.get('id', []))
         if not ids:
-            self.setSessionErrors(['Please select one or more items to cut.'])
+            self.setSessionErrorsTrans('Please select one or more items to cut.')
         else:
             try: self.manage_cutObjects(ids, REQUEST)
-            except: self.setSessionErrors(['Error while cut data.'])
-            else: self.setSessionInfo(['Item(s) cut.'])
+            except: self.setSessionErrorsTrans('Error while cut data.')
+            else: self.setSessionInfoTrans('Item(s) cut.')
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(view, 'pasteObjects')
@@ -248,11 +248,11 @@ class NyFolderBase(Folder, NyPermissions):
             return self.manage_pasteObjects(cp)
 
         if not self.checkPermissionPasteObjects():
-            self.setSessionErrors(['You are not allowed to paste objects in this context.'])
+            self.setSessionErrorsTrans('You are not allowed to paste objects in this context.')
         else:
             try: self.manage_pasteObjects(None, REQUEST)
-            except: self.setSessionErrors(['Error while paste data.'])
-            else: self.setSessionInfo(['Item(s) pasted.'])
+            except: self.setSessionErrorsTrans('Error while paste data.')
+            else: self.setSessionInfoTrans('Item(s) pasted.')
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
@@ -265,15 +265,15 @@ class NyFolderBase(Folder, NyPermissions):
         kwargs.update(REQUEST.form)
         id_list = self.utConvertToList(kwargs.get('id', []))
         if not id_list:
-            self.setSessionErrors(['Please select one or more items to delete.'])
+            self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try:
                 self.manage_delObjects(id_list)
             except Exception, err:
-                self.setSessionErrors(['Error while delete data.'])
+                self.setSessionErrorsTrans('Error while delete data.')
                 zLOG.LOG("NyFolder.deleteObjects", zLOG.DEBUG, err)
             else:
-                self.setSessionInfo(['Item(s) deleted.'])
+                self.setSessionInfoTrans('Item(s) deleted.')
         return REQUEST.RESPONSE.redirect('index_html')
 
 
@@ -363,4 +363,3 @@ class ObjectListingPortlet(object):
         return self.template.__of__(context)()
 
     template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.core.folder.listing_portlet')
-

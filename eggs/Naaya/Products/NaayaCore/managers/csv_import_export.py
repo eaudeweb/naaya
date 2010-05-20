@@ -186,7 +186,8 @@ class CSVImportTool(Implicit, Item):
                     raise
                 except Exception, e:
                     self.log_current_error()
-                    msg = 'Error while importing from CSV, row %d: %s' % (record_number, str(e))
+                    msg = ('Error while importing from CSV, row ${record_number}: ${error}',
+                           {'record_number': record_number, 'error': str(e)})
                     if REQUEST is None:
                         raise ValueError(msg)
                     else:
@@ -196,7 +197,7 @@ class CSVImportTool(Implicit, Item):
             if REQUEST is None:
                 raise
             else:
-                errors = ['CSV file is not utf-8 encoded']
+                errors.append('CSV file is not utf-8 encoded')
 
         if not errors:
             notify(CSVImportEvent(location_obj, obj_ids))
@@ -204,10 +205,10 @@ class CSVImportTool(Implicit, Item):
         if REQUEST is not None:
             if errors:
                 transaction.abort()
-                self.setSessionErrors(errors)
+                self.setSessionErrorsTrans(errors)
             else:
-                self.setSessionInfo(['%s object(s) of type "%s" successfully imported.'
-                    % (record_number, schema.title_or_id())])
+                self.setSessionInfoTrans('${records} object(s) of type "${title}" successfully imported.',
+                records=record_number, title=schema.title_or_id())
             return self.index_html(REQUEST, meta_type=meta_type)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')

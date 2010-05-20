@@ -200,7 +200,7 @@ class NyContentType(object):
 
     security.declarePrivate('_prepare_error_response')
     def _prepare_error_response(self, REQUEST, form_errors, REQUEST_form):
-        self.setSessionErrors(['The form contains errors. Please correct them and try again.'])
+        self.setSessionErrorsTrans('The form contains errors. Please correct them and try again.')
         for key, value in form_errors.iteritems():
             if value:
                 self.setSession('%s-errors' % key, '; '.join(value))
@@ -232,11 +232,11 @@ class NyContentType(object):
 
     def object_submitted_message(self, REQUEST):
         if self.approved:
-            self.setSessionInfo(['Item added'])
+            self.setSessionInfoTrans('Item added')
         elif self.checkPermissionPublishObjects():
-            self.setSessionInfo(['Item added (unapproved)'])
+            self.setSessionInfoTrans('Item added (unapproved)')
         else:
-            self.setSessionInfo(['The administrator will analyze your request and you will be notified about the result shortly.'])
+            self.setSessionInfoTrans('The administrator will analyze your request and you will be notified about the result shortly.')
         return REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
 
     def version_status(self):

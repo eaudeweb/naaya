@@ -426,15 +426,15 @@ class NotificationsUiApiTest(BaseNotificationsTest):
             args[0](*args[1:])
             self.fail('Should have raised exception "%s"' % str(exc))
         except exc, e:
-            self.assertTrue(msg in str(e), 'Exception raised but message is wrong: '
+            self.assertTrue(str(msg) in str(e), 'Exception raised but message is wrong: '
                 '%s not in %s' % (repr(msg), repr(str(e))))
 
     def test_add_account_subscription(self):
         notif_tool = self.portal.getNotificationTool()
 
-        self.assertRaisesWithMessage(ValueError, 'Notifications of type "instant" not allowed',
+        self.assertRaisesWithMessage(ValueError, ('Notifications of type "${type}" not allowed', {'type': 'instant'}, ),
             self.add_account_subscription, 'user1', '', 'instant', 'en')
-        self.assertRaisesWithMessage(ValueError, 'Notifications of type "weekly" not allowed',
+        self.assertRaisesWithMessage(ValueError, ('Notifications of type "${type}" not allowed', {'type': 'weekly'}, ),
             self.add_account_subscription, 'user2', 'fol1', 'weekly', 'en')
 
         notif_tool.config['enable_instant'] = True

@@ -168,7 +168,7 @@ class Widget(Folder, LocalPropertyManager):
         self.visible = bool(kwargs.get('visible'))
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     def must_be_mandatory(self):

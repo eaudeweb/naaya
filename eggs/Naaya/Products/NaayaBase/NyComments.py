@@ -261,7 +261,7 @@ class NyComments:
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_del')
@@ -276,7 +276,7 @@ class NyComments:
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(user)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #site pages

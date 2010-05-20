@@ -102,7 +102,7 @@ class PlugBase(SimpleItem):
         else: location = self.utGetObject(location)
         if location is None:
             if REQUEST is not None:
-                self.setSessionErrors(['Invalid location path'])
+                self.setSessionErrorsTrans('Invalid location path')
                 return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
             else:
                 raise ValueError('Invalid location')

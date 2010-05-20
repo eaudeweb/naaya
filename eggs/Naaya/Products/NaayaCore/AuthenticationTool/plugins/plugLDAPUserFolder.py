@@ -286,7 +286,7 @@ class plugLDAPUserFolder(PlugBase):
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:
-            self.setSessionErrors(['Invalid location path'])
+            self.setSessionErrorsTrans('Invalid location path')
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
         ob.acl_satellite.add_group_roles(group, roles)
 
