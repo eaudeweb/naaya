@@ -117,10 +117,10 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'addNyForumMessage')
     addNyForumMessage = addNyForumMessage
-    
+
     sort_reverse = False
     status = 0
-    
+
     def __init__(self, id, title, category, description, notify, author, postdate, status, sort_reverse=False):
         """ """
         self.id = id
@@ -144,14 +144,14 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     def get_messages(self): return self.objectValues(METATYPE_NYFORUMMESSAGE)
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
-    
+
     def is_topic_opened(self): return self.status==0
     def is_topic_closed(self): return self.status==1
 
     security.declareProtected(view, 'getPublishedFolders')
     def getPublishedFolders(self):
         return self.objectValues(METATYPE_NYFORUMMESSAGE)
-    
+
     security.declarePrivate('get_message_parent')
     def get_message_parent(self, msg):
         """
@@ -269,15 +269,15 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
                 contributor = None
             zope_notify(NyForumTopicEditEvent(self, contributor))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteAttachments')
     def deleteAttachments(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Attachment(s) deleted.'])
+        except: self.setSessionErrorsTrans('Error while delete data.')
+        else: self.setSessionInfoTrans('Attachment(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addAttachment')
@@ -289,7 +289,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
                 return self.edit_html.__of__(self)(REQUEST)
         self.handleAttachmentUpload(self, attachment)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'setRestrictions')
@@ -297,7 +297,8 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         """
         Restrict access to current folder for given roles.
         """
-        msg = err = ''
+        err = ''
+        success = False
         if access == 'all':
             #remove restrictions
             try:
@@ -305,7 +306,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         else:
             #restrict for given roles
             try:
@@ -315,15 +316,15 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans([err])
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', category='', status='', description='', notify='', postdate='', 
+    def manageProperties(self, title='', category='', status='', description='', notify='', postdate='',
         REQUEST=None):
         """ """
         try: status = abs(int(status))
@@ -348,9 +349,9 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         # Update hits
         forum = self.aq_inner.aq_parent
         forum.updateTopicHits(self.absolute_url(1))
-        
+
         return self._index_html(*args, **kwargs)
-        
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/topic_manage_edit', globals())
