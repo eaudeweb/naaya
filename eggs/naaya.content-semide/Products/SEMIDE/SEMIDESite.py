@@ -116,6 +116,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     product_paths = NySite.product_paths + [SEMIDE_PRODUCT_PATH]
 
+
     def __init__(self, id, portal_uid, title, lang):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
@@ -720,7 +721,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         if query == '' and nt == '' and nd == '' and gz == []:
             #no criteria then returns the 10 more recent
-            try:    p_objects = self.unrestrictedTraverse(p_context).getObjects()
+            try:    p_objects = self.unrestrictedTraverse(p_context).getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1)
             except: p_objects = []
             results = self.get_archive_listing(self.sorted_news_listing(p_objects, skey, rkey))
         else:
@@ -902,7 +903,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
             #no criteria then returns the 10 more recent
-            return l_archive.getObjects()
+            return l_archive.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1)
 
         r = []
         query = self.utStrEscapeForSearch(query)
@@ -1267,7 +1268,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         # Errors occured
         if err:
             if not REQUEST: return err
-            self.setSessionErrors(err)
+            self.setSessionErrorsTrans(err)
             self.setCreateAccountSession(username, firstname, lastname, email, password)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -1730,7 +1731,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         if r is not None: style_src = r
         style.pt_edit(text=style_src.encode('utf-8'), content_type='')
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_appearance_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_thumbs')
@@ -1752,7 +1753,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                         img_ob = images_fld._getOb(img_id)
                         img_ob.update_data(data=content)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_thumbnail_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'del_thumb')
@@ -1761,7 +1762,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         images_fld = self.getThumbsFolder()
         images_fld.manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_thumbnail_html' % self.absolute_url())
 
     ############################################
@@ -2061,7 +2062,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         flash_tool.manageSettings(title, path, archive_path, news_sd, news_ed, event_sd, event_ed, doc_sd, doc_ed,
                                   notif_date, notif_admin, uploadmetatypes, lang)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('admin_flash_settings_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flash_generate')
@@ -2071,7 +2072,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         flag = flashtool_ob.generate_flash()
         if flag:
             if REQUEST:
-                self.setSessionInfo([MESSAGE_GENERATED])
+                self.setSessionInfoTrans(MESSAGE_GENERATED)
                 REQUEST.RESPONSE.redirect('%s/admin_flashhtml_html' % self.absolute_url())
         else:
             if REQUEST:
@@ -2084,7 +2085,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         doc_ob = flashtool_ob.getFlashDocument('html')
         doc_ob.saveProperties(title='Flash to be sent on %s (html version)' % self.utShowDateTime(flashtool_ob.notif_date), body=body, lang=lang)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_flashhtml_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flashtext_save')
@@ -2094,7 +2095,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         doc_ob = flashtool_ob.getFlashDocument('text')
         doc_ob.saveProperties(title='Flash to be sent on %s (text version)' % self.utShowDateTime(flashtool_ob.notif_date), body=body, lang=lang)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_flashtext_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flashemail')
@@ -2102,7 +2103,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """ """
         self.getFlashTool().emailUsers(subject, body)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_EMAILSENT])
+            self.setSessionInfoTrans(MESSAGE_EMAILSENT)
             REQUEST.RESPONSE.redirect('%s/admin_flashusers_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flashexportusers')
@@ -2210,7 +2211,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         if name is None: name = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._profilesheet(name, {'welcome_page': welcome_page})
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/profilesheet_html' % self.absolute_url())
 
     security.declareProtected(view, 'profilesheet_html')
@@ -2474,7 +2475,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         self.maintopics.append(folder_ob.absolute_url(1))
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(view, 'search_rdf')

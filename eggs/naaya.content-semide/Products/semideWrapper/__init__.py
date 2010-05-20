@@ -96,7 +96,7 @@ def processDuplicateContent(self, delids=[], REQUEST=None):
         try: self._delObject(id)
         except: pass
     if REQUEST:
-        self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         REQUEST.RESPONSE.redirect('%s/basketofapprovals_duplicates_html' % self.absolute_url())
 NyFolder.processDuplicateContent = processDuplicateContent
 
@@ -138,7 +138,7 @@ def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
         try: self._delObject(id)
         except: pass
     if REQUEST:
-        self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         REQUEST.RESPONSE.redirect('%s/basketofapprovals_published_html' % self.absolute_url())
 NyFolder.processPublishedContent = processPublishedContent
 

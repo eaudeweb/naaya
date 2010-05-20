@@ -374,7 +374,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
         
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     #zmi pages
