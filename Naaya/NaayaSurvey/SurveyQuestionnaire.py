@@ -180,7 +180,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             # Redirect
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     #
@@ -226,7 +226,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 raise SurveyQuestionnaireException("The survey has expired")
         except SurveyQuestionnaireException, ex:
             if REQUEST:
-                self.setSessionErrors([ex])
+                self.setSessionErrorsTrans(str(ex))
                 return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             else:
                 raise
@@ -251,7 +251,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 errors.add(captcha_errors)
 
         if errors:
-            self.setSessionErrors(errors)
+            self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -430,12 +430,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     def expired(self):
         """
         expired():
-        -> true if the expiration date has been exceeded, 
-        -> false if the expiration date is still to be reached or 
+        -> true if the expiration date has been exceeded,
+        -> false if the expiration date is still to be reached or
         if the survey allows posting after the expiration date.
         """
-        
-        
+
+
         if self.allow_overtime:
             return False
         now = DateTime()

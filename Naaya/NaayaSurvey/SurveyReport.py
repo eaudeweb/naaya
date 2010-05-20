@@ -153,7 +153,7 @@ class SurveyReport(Folder, LocalPropertyManager):
         if not meta_type:
             err.append('Please select a statistic type')
         if err:
-            self.setSessionErrors(err)
+            self.setSessionErrorsTrans(err)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         statistic_cls = STATISTICS[meta_type]
@@ -170,19 +170,19 @@ class SurveyReport(Folder, LocalPropertyManager):
             err = sys.exc_info()
             LOG('NaayaSurvey.statistics.manage_addStatistic', DEBUG,
                 'Error creating statistic %s for question %s' % (statistic_cls, question.absolute_url()), error=err)
-            self.setSessionErrors(['''"%s" can't be used for question "%s"''' % \
-                                    (statistic_cls.meta_label, question.title)])
+            self.setSessionErrorsTrans('"${meta_label}" can\'t be used for question "${title}"',
+                meta_label=statistic_cls.meta_label, title=question.title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'deleteStatistics')
     def deleteStatistics(self, ids=[], REQUEST=None):
         """ Delete statistics by ids"""
         if not ids:
-            self.setSessionErrors(['Please select one or more items to delete.'])
+            self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try: self.manage_delObjects(ids)
-            except: self.setSessionErrors(['Error while delete data.'])
-            else: self.setSessionInfo(['Item(s) deleted.'])
+            except: self.setSessionErrorsTrans('Error while delete data.')
+            else: self.setSessionInfoTrans('Item(s) deleted.')
         REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setSortOrder')
@@ -196,7 +196,7 @@ class SurveyReport(Folder, LocalPropertyManager):
                 continue
             ob.sortorder = neworder
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     def getAvailableStatistics(self):
