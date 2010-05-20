@@ -511,7 +511,7 @@ class EnviroWindowsSite(NySite):
             del kwargs['username']
             del kwargs['confirm']
             self.setRequestRoleSession(**kwargs)
-            self.setSessionErrors(['Required field: Comments'])
+            self.setSessionErrorsTrans('Required field: Comments')
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         return super(EnviroWindowsSite, self).processRequestRoleForm(REQUEST=REQUEST, **kwargs)
 
@@ -550,7 +550,7 @@ class EnviroWindowsSite(NySite):
         else:
             _err = ''
         if _err:
-            self.setSessionErrors(_err)
+            self.setSessionErrorsTrans(_err)
             return RESPONSE.redirect('requestinfo_html?role=%s' % role)
         else:
             return RESPONSE.redirect('requestlocations_html?role=%s' % role)
@@ -672,7 +672,7 @@ class EnviroWindowsSite(NySite):
             return errors
 
         if errors:
-            self.setSessionErrors(errors)
+            self.setSessionErrorsTrans(errors)
         RESPONSE.redirect(path)
 
     security.declareProtected(PERMISSION_BULK_DOWNLOAD, 'zipDownloadDocuments')
@@ -1033,7 +1033,7 @@ text-decoration: underline;
             self.getEmailTool().sendEmail(content, address, self.mail_address_from, subject)
 
         if REQUEST:
-            self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
+            self.setSessionInfoTrans('Mail sent. (${date})', date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_from_csv')
@@ -1048,12 +1048,12 @@ text-decoration: underline;
             content = CSVReader(file=file, dialect=dialect, encoding=encoding)
             content = content.read()[0]
             if content == None:
-                self.setSessionErrors(["File encoding doesn't match selected encoding."])
+                self.setSessionErrorsTrans("File encoding doesn't match selected encoding.")
                 return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
         if not file:
             e.append('You must specify a file.')
         if e and REQUEST is not None:
-            self.setSessionErrors(e)
+            self.setSessionErrorsTrans(e)
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
 
         contact_meta = 'Naaya Contact'
@@ -1108,7 +1108,7 @@ text-decoration: underline;
                                       webpage=webpage)
 
         if REQUEST is not None:
-            self.setSessionInfo(['Contacts successfully imported.'])
+            self.setSessionInfoTrans('Contacts successfully imported.')
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
     security.declareProtected(view, 'contacts_csv_template')
@@ -1183,4 +1183,3 @@ class ObjectListingPortlet(object):
         return self.template.__of__(context)()
 
     template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.envirowindows.folder.listing_portlet')
-
