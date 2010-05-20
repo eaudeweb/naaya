@@ -64,7 +64,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
                 _contact_word = REQUEST.form.get('contact_word', '')
                 captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
                 if captcha_validator:
-                    self.setSessionErrors(captcha_validator)
+                    self.setSessionErrorsTrans(captcha_validator)
                     for k, v in REQUEST.form.items():
                         if k in ['title', 'description', 'notify']:
                             self.setSession(k, v)
@@ -161,7 +161,7 @@ class NyForumMessage(NyForumBase, Folder):
                 contributor = None
             zope_notify(NyForumMessageEditEvent(self, contributor))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteAttachments')
@@ -170,8 +170,8 @@ class NyForumMessage(NyForumBase, Folder):
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
         try: self.manage_delObjects(self.utConvertToList(ids))
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Attachment(s) deleted.'])
+        except: self.setSessionErrorsTrans('Error while delete data.')
+        else: self.setSessionInfoTrans('Attachment(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'addAttachment')
@@ -185,7 +185,7 @@ class NyForumMessage(NyForumBase, Folder):
                 return self.edit_html.__of__(self)(REQUEST)
         self.handleAttachmentUpload(self, attachment)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'replyMessage')
@@ -204,7 +204,7 @@ class NyForumMessage(NyForumBase, Folder):
         if captcha_redirect:
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/reply_html')
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s#%s' % (self.get_topic_path(), id))
 
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteMessage')
@@ -227,7 +227,7 @@ class NyForumMessage(NyForumBase, Folder):
         #remove message itself
         topic.manage_delObjects([self.id])
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(topic.absolute_url())
 
     #zmi actions

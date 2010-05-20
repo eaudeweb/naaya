@@ -271,7 +271,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         self.file_max_size = abs(int(file_max_size))
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('edit_html?save=ok')
 
     #site actions
@@ -279,10 +279,10 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     def deleteTopics(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Topic(s) deleted.'])
+        except: self.setSessionErrorsTrans('Error while delete data.')
+        else: self.setSessionInfoTrans('Topic(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-    
+
     #
     # Statistics
     #
@@ -292,10 +292,10 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         """
         scontainer = getattr(self, STATISTICS_CONTAINER, None)
         if not scontainer:
-            return manage_addNyGadflyContainer(self, STATISTICS_CONTAINER, 
+            return manage_addNyGadflyContainer(self, STATISTICS_CONTAINER,
                                                **STATISTICS_COLUMNS)
         return scontainer
-    
+
     security.declareProtected(view, 'getTopicHits')
     def getTopicHits(self, topic):
         """ Returns statistics for given topic
@@ -305,7 +305,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         if not res:
             return 0
         return res[0]['HITS']
-    
+
     security.declareProtected(view, 'updateTopicHits')
     def updateTopicHits(self, topic):
         """ Update hits for topic
@@ -317,7 +317,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         hits = res[0]['HITS']
         hits += 1
         return scontainer.set(key='hits', value=hits, topic=topic)
-    
+
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
         """ """
@@ -335,10 +335,10 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/forum_index', globals())
-    
+
     security.declareProtected(PERMISSION_ADD_FORUM, 'edit_html')
     edit_html = PageTemplateFile('zpt/forum_edit', globals())
-    
+
     security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
     forum_add_html = PageTemplateFile('zpt/forum_add', globals())
 
@@ -346,5 +346,5 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     def edit_access_html(self):
         """ """
         return NyForum.ny_access.index_html.__of__(self)()
-    
+
 InitializeClass(NyForum)
