@@ -111,7 +111,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-        'product': 'NaayaContent', 
+        'product': 'NaayaContent',
         'module': 'NySemProject',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
@@ -121,7 +121,7 @@ config = {
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
-        'properties': PROPERTIES_OBJECT,        
+        'properties': PROPERTIES_OBJECT,
         'schema_name': 'NySemProject',
         '_module': sys.modules[__name__],
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NySemProject.gif'),
@@ -137,7 +137,7 @@ manage_addNySemProject_html.action = 'addNySemProject'
 
 def semproject_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype    
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemProject', 'form_helper': form_helper}, 'semproject_add')
 
@@ -156,25 +156,25 @@ def addNySemProject(self, id='', contributor=None, REQUEST=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
-    ob = _create_NySemProject_object(self, id, contributor)    
+
+    ob = _create_NySemProject_object(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
     ob.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
     ob.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-    
+
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-    
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -182,7 +182,7 @@ def addNySemProject(self, id='', contributor=None, REQUEST=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semproject_add_html' % self.absolute_url())
-    
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
@@ -208,7 +208,7 @@ def addNySemProject(self, id='', contributor=None, REQUEST=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semproject_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNySemProject(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -230,7 +230,7 @@ def importNySemProject(self, param, id, attrs, content, properties, discussion, 
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-                
+
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
@@ -255,11 +255,11 @@ def importNySemProject(self, param, id, attrs, content, properties, discussion, 
             elif ob_meta == METATYPE_NYSEMDOCUMENT:
                 importNySemDocument(ob, object.param, object.id, object.attrs, object.content,
                     object.properties, object.discussion, object.objects)
-                
+
 class semproject_item(Implicit, NyContentData):
     """ """
     meta_type = METATYPE_OBJECT
-    
+
 class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, NyCheckControl, NyContentType, NyValidation):
     """ """
 
@@ -339,7 +339,7 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
             return self.getLocalProperty('programme', lang)
         else:
             return super(NySemProject, self).__getattr__(name)
-            
+
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
         return ' '.join(self.subject)
@@ -475,25 +475,25 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-        
+
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -501,14 +501,14 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
-        self._p_changed = 1        
+
+        self._p_changed = 1
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-            
-        self.recatalogNyObject(self)        
+
+        self.recatalogNyObject(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
@@ -518,16 +518,16 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
@@ -542,7 +542,7 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -558,14 +558,14 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -573,23 +573,23 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -616,8 +616,8 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
         try: self.manage_delObjects(id_list)
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Item(s) deleted.'])
+        except: self.setSessionErrorsTrans('Error while delete data.')
+        else: self.setSessionInfoTrans('Item(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
 InitializeClass(NySemProject)

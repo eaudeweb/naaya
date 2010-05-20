@@ -34,10 +34,11 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, 
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
+from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
@@ -118,7 +119,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-    'product': 'NaayaContent', 
+    'product': 'NaayaContent',
     'module': 'NySemEvent',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': METATYPE_OBJECT,
@@ -163,15 +164,32 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
-    ob = _create_NySemEvent_object(self, id, contributor)    
+
+    #Creating archive folder
+    start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+    start_date_year = str(start_date.year())
+    start_date_month = start_date.mm()
+
+    year_folder = self._getOb(start_date_year, None)
+    if year_folder is None:
+        year_folder = self._getOb(addNyFolder(self, start_date_year,
+            contributor=contributor, title="Events for %s" % start_date_year))
+
+    month_folder = year_folder._getOb(start_date_month, None)
+    if month_folder is None:
+        month_folder = year_folder._getOb(addNyFolder(year_folder, start_date_month,
+                        contributor=contributor,
+                        title="Events for %s/%s" %
+                        (start_date_year, start_date_month)))
+
+    ob = _create_NySemEvent_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     #check Captcha/reCaptcha
@@ -179,7 +197,7 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-    
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -187,10 +205,10 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
-    
+
     ob.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
     ob.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-    
+
     if 'file' in schema_raw_data:
         ob.handleUpload(schema_raw_data['file'])
 
@@ -199,7 +217,7 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -219,7 +237,7 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNySemEvent(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -406,25 +424,25 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-        
+
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -432,16 +450,16 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-            
+
         self.recatalogNyObject(self)
-        
+
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
@@ -451,14 +469,14 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
@@ -491,15 +509,15 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-        
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -507,7 +525,7 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
 
@@ -517,16 +535,16 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -589,7 +607,7 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     def handleUpload(self, file):
         """
         Upload a file from disk.
@@ -609,7 +627,7 @@ config.update({
             ('manage_addNySemEvent_html', manage_addNySemEvent_html),
             ('semevent_add_html', semevent_add_html),
             ('addNySemEvent', addNySemEvent),
-            ('import_NySemEvent', importNySemEvent),            
+            ('import_NySemEvent', importNySemEvent),
         ],
     'add_method': addNySemEvent,
     'validation': issubclass(NySemEvent, NyValidation),

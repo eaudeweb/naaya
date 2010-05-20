@@ -41,6 +41,7 @@ EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
+from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -110,7 +111,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-        'product': 'NaayaContent', 
+        'product': 'NaayaContent',
         'module': 'NySemNews',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
@@ -121,7 +122,7 @@ config = {
         'description': DESCRIPTION_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
         'properties': PROPERTIES_OBJECT,
-        'schema_name': 'NySemNews',        
+        'schema_name': 'NySemNews',
         '_module': sys.modules[__name__],
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NySemNews.gif'),
         '_misc': {
@@ -155,24 +156,41 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
-    ob = _create_NySemNews_object(self, id, contributor)
+
+    #Creating archive folder
+    news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
+    news_date_year = str(news_date.year())
+    news_date_month = news_date.mm()
+
+    year_folder = self._getOb(news_date_year, None)
+    if year_folder is None:
+        year_folder = self._getOb(addNyFolder(self, news_date_year,
+            contributor=contributor, title="News for %s" % news_date_year))
+
+    month_folder = year_folder._getOb(news_date_month, None)
+    if month_folder is None:
+        month_folder = year_folder._getOb(addNyFolder(year_folder, news_date_month,
+                        contributor=contributor,
+                        title="News for %s/%s" %
+                        (news_date_year, news_date_month)))
+
+    ob = _create_NySemNews_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    ob.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-    
+    ob.news_date = news_date
+
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-    
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -180,7 +198,8 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semnews_add_html' % self.absolute_url())
-    
+
+
     if 'file' in schema_raw_data:
         ob.handleUpload(schema_raw_data['file'])
 
@@ -189,7 +208,7 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -209,7 +228,7 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semnews_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNySemNews(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -231,7 +250,7 @@ def importNySemNews(self, param, id, attrs, content, properties, discussion, obj
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-                
+
             if objects:
                 obj = objects[0]
                 data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
@@ -250,12 +269,12 @@ def importNySemNews(self, param, id, attrs, content, properties, discussion, obj
                 ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
-            
+
 class semnews_item(Implicit, NyContentData, NyFSContainer):
     """ """
     meta_type = METATYPE_OBJECT
     file_link_local =   LocalProperty('file_link_local')
-    
+
 class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
     """ """
     meta_type = METATYPE_OBJECT
@@ -379,12 +398,12 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -393,10 +412,10 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -404,16 +423,16 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-            
+
         self.recatalogNyObject(self)
-        
+
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
@@ -423,16 +442,16 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
@@ -447,7 +466,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-            
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -463,15 +482,15 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-        
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         self.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
 
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -479,7 +498,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
 
@@ -489,18 +508,18 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-        
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/semnews_manage_edit', globals())
@@ -521,7 +540,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT}, 'semnews_edit')
-    
+
     security.declarePublic('downloadfilename')
     def downloadfilename(self, version=False):
         """ """
@@ -533,7 +552,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
@@ -557,7 +576,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """
@@ -568,7 +587,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     def handleUpload(self, file):
         """
         Upload a file from disk.
@@ -579,7 +598,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         self.manage_delObjects(self.objectIds())
         file_id = cookId('', '', file)[0]   #cleanup id
         self.manage_addFile(id=file_id, file=file)
-        
+
 InitializeClass(NySemNews)
 
 config.update({

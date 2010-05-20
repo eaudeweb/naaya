@@ -95,7 +95,7 @@ PROPERTIES_OBJECT = {
 
 DEFAULT_SCHEMA = {
     'nfp_label':            dict(sortorder=100, widget_type='String', label='NFP short label', localized=True),
-    'nfp_url':              dict(sortorder=110, widget_type='String', label='NFP URL', default='http://', localized=True),    
+    'nfp_url':              dict(sortorder=110, widget_type='String', label='NFP URL', default='http://', localized=True),
     'link_ins':             dict(sortorder=120, widget_type='String', label='Institutions URL', default='http://', localized=True),
     'link_doc':             dict(sortorder=130, widget_type='String', label='Documentation URL', default='http://', localized=True),
     'link_train':           dict(sortorder=140, widget_type='String', label='Training URL', default='http://', localized=True),
@@ -151,29 +151,29 @@ def addNyCountry(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create an object of Country type.
     """
-    
+
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
+
     ob = _create_NyCountry_object(self, id, contributor)
-        
+
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    
+
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-    
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -181,7 +181,7 @@ def addNyCountry(self, id='', REQUEST=None, contributor=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/country_add_html' % self.absolute_url())
-        
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
@@ -192,23 +192,23 @@ def addNyCountry(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.updatePropertiesFromGlossary(_lang)
 
     if 'discussion' in schema_raw_data and schema_raw_data['discussion']: ob.open_for_comments()
-    
+
     #set smallflag from URL or from file upload
     if 'flag_file' in schema_raw_data and schema_raw_data['flag_file']:
         ob.setSmallFlag(schema_raw_data['flag_file'])
     elif 'flag_url' in schema_raw_data and schema_raw_data['flag_url']:
         ob.setSmallFlag(schema_raw_data['flag_url'])
-    
+
     ob.loadDefaultData(_lang, schema_raw_data.get('legislation_feed_url', ''), schema_raw_data.get('project_feed_url',''))
-    
-    
+
+
     self.recatalogNyObject(ob)
     zope.event.notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
-    
+
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    
+
     #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -219,7 +219,7 @@ def addNyCountry(self, id='', REQUEST=None, contributor=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/country_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNyCountry(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -230,14 +230,14 @@ def importNyCountry(self, param, id, attrs, content, properties, discussion, obj
             #delete the object if exists
             try: self.manage_delObjects([id])
             except: pass
-        
+
         #Creating object and setting all object properties (taken from Schema)
         ob = _create_NyCountry_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
         for prop in ob._get_schema().listPropNames():
             setattr(ob, prop, '')
         for k, v  in attrs.items():
             setattr(ob, k, v.encode('utf-8'))
-                
+
         for property, langs in properties.items():
             for lang in langs:
                 ob._setLocalPropValue(property, lang, langs[lang])
@@ -360,7 +360,7 @@ class NyCountry(NyFolder):
     def get_country_object(self):           return self
     def get_country_object_title(self, lang='en'):     return self.utToUtf8(self.getLocalProperty('title', lang))
     def get_country_object_path(self, p=0): return self.absolute_url(p)
- 
+
     def get_portlet_indicators_id(self):    return '%sindicators' % PREFIX_PORTLET
     def get_portlet_indicators(self):       return self._getOb('%sindicators' % PREFIX_PORTLET, None)
     def get_portlet_reports_id(self):       return '%sreports' % PREFIX_PORTLET
@@ -406,10 +406,10 @@ class NyCountry(NyFolder):
             while l_parent.getParentNode() != self:
                 l_parent = l_parent.getParentNode()
             return p_topic == l_parent
-    
+
     def hasSmallFlag(self):
         return hasattr(self, 'smallflag') and self.smallflag is not None
-    
+
     def getSmallFlag(self, REQUEST=None):
         """ Return 404 if no flag is found or return the flag"""
         if self.hasSmallFlag():
@@ -418,7 +418,7 @@ class NyCountry(NyFolder):
             return self.smallflag
         else:
             return REQUEST.RESPONSE.setStatus(404);
-            
+
     def setSmallFlag(self, source = None, content_type = None):
         """
         source can be:
@@ -428,10 +428,9 @@ class NyCountry(NyFolder):
         """
         self.smallflag = None
         self.smallflag_type = None
-        
+
         if isinstance(source, str) and not content_type: #this is an URL so get image from web
             l_data, l_ctype = self.grabFromUrl(source)
-            import pdb; pdb.set_trace()
             if 'image' in l_ctype and l_data is not None:
                 self.smallflag = l_data
                 self.smallflag_type = l_ctype
@@ -466,47 +465,47 @@ class NyCountry(NyFolder):
         p = self.get_portlet_indicators()
         if p is not None: l.append(p)
         p = self.get_portlet_reports()
-        if p is not None: l.append(p)        
+        if p is not None: l.append(p)
         return l + self._portlets_from_list(['portlet_country_news', 'portlet_country_events', 'portlet_country_projects'])
-    
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject(): #Check if user can edit the content
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             return REQUEST.RESPONSE.redirect('%s/manage_edit_html?lang=%s' % (self.absolute_url(), _lang))
-        
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-        
+
         approved = schema_raw_data.get('approved', 0)
         if approved != self.approved:
             if approved == 0: approved_by = None
             else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-            
+
         if schema_raw_data.get('del_smallflag', ''): self.delSmallFlag()
         elif 'flag_file' in schema_raw_data and schema_raw_data['flag_file']:
             self.setSmallFlag(schema_raw_data['flag_file'])
         elif 'flag_url' in schema_raw_data and schema_raw_data['flag_url']:
             self.setSmallFlag(schema_raw_data['flag_url'])
-        
+
         self.publicinterface = schema_raw_data.get('publicinterface', 0)
         self._p_changed = 1
         self.recatalogNyObject(self)
@@ -519,9 +518,9 @@ class NyCountry(NyFolder):
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
@@ -530,16 +529,16 @@ class NyCountry(NyFolder):
         """ Edit """
         if not self.checkPermissionEditObject(): #Check if user can edit the content
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-        
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -547,10 +546,10 @@ class NyCountry(NyFolder):
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-        
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
@@ -558,23 +557,23 @@ class NyCountry(NyFolder):
         #update remote channels feeds
         self.get_rc_legislation().set_new_feed_url(schema_raw_data.get('legislation_feed_url', ''))
         self.get_rc_project().set_new_feed_url(schema_raw_data.get('project_feed_url', ''))
-        
+
         if schema_raw_data.get('del_smallflag', ''): self.delSmallFlag()
         elif 'flag_file' in schema_raw_data and schema_raw_data['flag_file']:
             self.setSmallFlag(schema_raw_data['flag_file'])
         elif 'flag_url' in schema_raw_data and schema_raw_data['flag_url']:
             self.setSmallFlag(schema_raw_data['flag_url'])
-        
-        self._p_changed = 1        
+
+        self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_legislation_feed')
@@ -585,8 +584,8 @@ class NyCountry(NyFolder):
         channel = self.get_rc_legislation()
         channel.harvest_feed()
         if REQUEST:
-            if channel.get_feed_bozo_exception() is not None: self.setSessionErrors([channel.get_feed_bozo_exception()])
-            else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            if channel.get_feed_bozo_exception() is not None: self.setSessionErrorsTrans([channel.get_feed_bozo_exception()])
+            else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/legislation_water/' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_project_feed')
@@ -597,11 +596,11 @@ class NyCountry(NyFolder):
         channel = self.get_rc_project()
         channel.harvest_feed()
         if REQUEST:
-            if channel.get_feed_bozo_exception() is not None: self.setSessionErrors([channel.get_feed_bozo_exception()])
-            else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            if channel.get_feed_bozo_exception() is not None: self.setSessionErrorsTrans([channel.get_feed_bozo_exception()])
+            else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/project_water/index_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'editPortlet')    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'editPortlet')
     def editPortlet(self, id='', title='', body='', lang=None, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
@@ -610,13 +609,13 @@ class NyCountry(NyFolder):
         if ob is not None:
             ob.manage_properties(title, body, lang)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/editportlet_html?id=%s' % (self.absolute_url(), id))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/country_manage_edit', globals())    
-    
+    manage_edit_html = PageTemplateFile('zpt/country_manage_edit', globals())
+
     #public pages
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
@@ -625,7 +624,7 @@ class NyCountry(NyFolder):
             l_index = self._getOb('index', None)
             if l_index is not None: return l_index()
         return self.getFormsTool().getContent({'here': self}, 'country_index')
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """

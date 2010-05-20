@@ -396,7 +396,7 @@ class NySemOrganisation(semorganisation_item, NyAttributes, NyItem, NyCheckContr
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
         
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

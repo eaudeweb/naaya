@@ -761,7 +761,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         self._profilesheet(name, {'flash': flash, 'language': language,
             'notify': notify})
         if REQUEST:
-            self.setSessionInfo([Products.NaayaBase.constants.MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(Products.NaayaBase.constants.MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/profilesheet_html' % self.absolute_url())
 
     security.declareProtected(view, 'profilesheet_html')
@@ -801,7 +801,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                 self.setSession('body', '')
                 REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
             if err != '':
-                self.setSessionErrors([err])
+                self.setSessionErrorsTrans([err])
                 REQUEST.RESPONSE.redirect('%s/subscribe_html' % self.absolute_url())
 
     #site pages
