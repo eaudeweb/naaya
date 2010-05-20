@@ -139,7 +139,7 @@ class Widget(Folder, LocalPropertyManager):
                        if key not in local_properties])
         self.manage_changeProperties(**kwargs)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     def _escape(self, value=''):
