@@ -51,7 +51,7 @@ PREFIX_FOLDER = 'fol'
 ID_IMAGESFOLDER = 'images'
 WRONG_PASSWORD = 'Current password is not correct. Changes NOT saved.'
 
-MESSAGE_ROLEADDED = 'Role(s) successfully granted to user %s'
+MESSAGE_ROLEADDED = 'Role(s) successfully granted to user ${user}'
 MESSAGE_ROLEREVOKED = 'Role(s) successfully revoked to selected user(s)'
 MESSAGE_USERADDED = 'User successfully added. Now you can assign a role to this account.'
 MESSAGE_USERMODIFIED = 'User\'s credentials saved'

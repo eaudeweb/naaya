@@ -57,6 +57,6 @@ EXCEPTION_STARTEDVERSION_MSG = 'The object is locked out'
 EXCEPTION_PARSINGFILE = 'Error parsing file %s: %s'
 
 # Others
-MESSAGE_SAVEDCHANGES = 'Saved changes. (%s)'
+MESSAGE_SAVEDCHANGES = 'Saved changes. (${date})'
 MESSAGE_NOTFROMEMAIL = 'The Sender email was not provided. Changes NOT saved (%s)'
 ERROR_NOTHING_SELECTED = 'Nothing was selected.'

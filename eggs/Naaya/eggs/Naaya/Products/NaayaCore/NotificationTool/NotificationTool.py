@@ -153,7 +153,7 @@ class NotificationTool(Folder):
         try:
             self.add_account_subscription(user_id, location, notif_type, lang)
         except ValueError, msg:
-            self.setSessionErrors(msg)
+            self.setSessionErrorsTrans(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
 
@@ -170,18 +170,18 @@ class NotificationTool(Folder):
     def add_account_subscription(self, user_id, location, notif_type, lang):
         """ Subscribe the user `user_id` """
         if notif_type not in ('instant', 'daily', 'weekly', 'monthly'):
-            raise ValueError('Unknown notification type "%s"' % notif_type)
+            raise ValueError(('Unknown notification type "${type}"', {'type': notif_type}, ))
         if self.config['enable_%s' % notif_type] is False:
-            raise ValueError('Notifications of type "%s" not allowed' % notif_type)
+            raise ValueError(('Notifications of type "${type}" not allowed', {'type': notif_type}, ))
         if notif_type not in self.available_notif_types(location):
-            raise ValueError('Subscribing to notifications in "%s" not allowed' % location)
+            raise ValueError(('Subscribing to notifications in "${location}" not allowed', {'location': location}, ))
 
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         n = match_account_subscription(subscription_container,
                                        user_id, notif_type, lang)
         if n is not None:
-            raise ValueError('Subscription already exists')
+            raise ValueError(('Subscription already exists', ))
 
         subscription = AccountSubscription(user_id, notif_type, lang)
         subscription_container.add(subscription)

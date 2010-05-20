@@ -603,7 +603,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             l_to = self.administrator_email
         if err:
             if REQUEST:
-                self.setSessionErrors(err)
+                self.setSessionErrorsTrans(err)
                 self.setFeedbackSession(username, email, comments, who)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
@@ -630,7 +630,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         site._p_changed = 1
         #save data
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/administration_feedback_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_revokeroles')
@@ -638,7 +638,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         """ """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_ROLEREVOKED])
+            self.setSessionInfoTrans(MESSAGE_ROLEREVOKED)
             REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
@@ -650,14 +650,11 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             self.getAuthenticationTool().manage_addUser(name, password, confirm, [], [],
                                                             firstname, lastname, email)
         except Exception, error:
-            _err = [error]
-        if _err:
-            self.setSessionErrors(_err)
+            self.setSessionErrorsTrans(error)
             return RESPONSE.redirect("%s/administration_users_html?mode=add" % self.absolute_url())
-        else:
-            self.delUserSession()
-            self.setSessionInfo([MESSAGE_USERADDED])
-            return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
+        self.delUserSession()
+        self.setSessionInfoTrans(MESSAGE_USERADDED)
+        return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_getuser')
     def admin_getuser(self, username):
@@ -684,14 +681,12 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         try:
             self.getAuthenticationTool().manage_changeUser(name, password, confirm, roles, domains, firstname, lastname, email, lastupdated)
         except Exception, error:
-            _err = [error]
-        if _err:
-            self.setSessionErrors(_err)
+            self.setSessionErrorsTrans(error)
             return RESPONSE.redirect("%s/administration_users_html?mode=edit&name=%s" % (self.absolute_url(), name))
-        else:
-            self.delUserSession()
-            self.setSessionInfo([MESSAGE_USERMODIFIED])
-            return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
+
+        self.delUserSession()
+        self.setSessionInfoTrans(MESSAGE_USERMODIFIED)
+        return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_portlets')
     def admin_folder_portlets(self, portlets=[], folder='', mode='', REQUEST=None):
@@ -707,7 +702,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                 folder = self.absolute_url(1)
             self.set_right_portlets_locations(folder, self.utConvertToList(portlets))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/administration_portlets_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_addroles')
@@ -717,6 +712,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                 #this is the current folder actually
                 location = self.absolute_url(1)
         msg = err = ''
+        success = False
         #test that the location is under the current folder
         if location.startswith(self.absolute_url(1)):
             try:
@@ -724,12 +720,12 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             except Exception, error:
                 err = str(error)
             else:
-                msg = MESSAGE_ROLEADDED % name
+                success = True
         else:
             err = 'Invalid location specified.'
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_ROLEADDED, user=name)
             if not err:
                 try: #backwards compatibility
                     auth_tool = self.getAuthenticationTool()
@@ -849,7 +845,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             self.folder_meta_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             redirect = REQUEST.get('redirect_url', 'manage_folder_subobjects_html')
             redirect += '?save=ok'
             REQUEST.RESPONSE.redirect(redirect)
@@ -887,7 +883,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             auth_tool.changeLastPost(contributor)
             event.notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
@@ -904,7 +900,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         if del_logo != '': self.delLogo()
         else: self.setLogo(source, file, url)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('editlogo_html')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopStoryObjects')
@@ -920,8 +916,8 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                     item.topitem = 1
                 item._p_changed = 1
                 self.recatalogNyObject(item)
-        except: self.setSessionErrors(['Error while updating data.'])
-        else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        except: self.setSessionErrorsTrans('Error while updating data.')
+        else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
@@ -948,7 +944,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             try: self._delObject(id)
             except: pass
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
@@ -973,7 +969,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             try: self._delObject(id)
             except: pass
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setSortOrder')
@@ -989,7 +985,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             except:
                 pass
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('sortorder_html')
 
     security.declareProtected(view_management_screens, 'set_default_sortorder')
@@ -1003,7 +999,8 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'validateObject')
     def validateObject(self, id='', status='', comment='', REQUEST=None):
         """ """
-        msg = err = ''
+        err = ''
+        success = False
         try:
             status = int(status)
             if status == -1 and len(comment)<=0:
@@ -1014,10 +1011,10 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         except Exception, error:
             err = error
         else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            success = True
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/basketofvalidation_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')
@@ -1025,7 +1022,8 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         """
         Restrict access to current folder for given roles.
         """
-        msg = err = ''
+        err = ''
+        success = False
         if access == 'all':
             #remove restrictions
             try:
@@ -1033,7 +1031,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         else:
             #restrict for given roles
             try:
@@ -1043,10 +1041,10 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             except Exception, error:
                 err = error
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                success = True
         if REQUEST:
-            if err != '': self.setSessionErrors([err])
-            if msg != '': self.setSessionInfo([msg])
+            if err != '': self.setSessionErrorsTrans(err)
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'renameObjectsIds')
@@ -1063,10 +1061,10 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                         new_body = self.getObjectById(new_ids[i]).body.replace(old_ids[i], new_ids[i])
                         self.getObjectById(new_ids[i]).body = new_body
                         self.getObjectById(new_ids[i])._p_changed = 1
-                    r.append(MESSAGE_SAVEDCHANGES % self.utGetTodayDate())
-                except: r.append("The %s object could not be renamed." % old_ids[i])
+                    r.append((MESSAGE_SAVEDCHANGES, {'date': self.utGetTodayDate()}))
+                except: r.append(("The ${id} object could not be renamed.", {'id': old_ids[i]}))
             else: r.append("Files can not be renamed.")
-        self.setSessionInfo(r)
+        self.setSessionInfoTrans(r)
         return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(view_management_screens, 'set_subobject')

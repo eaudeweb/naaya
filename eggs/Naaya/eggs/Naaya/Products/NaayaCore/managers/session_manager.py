@@ -89,6 +89,57 @@ class session_manager:
     def getSessionInfo(self, default=None):
         return self.__getSession(_SESSION_INFO, default)
 
+    def _translateSessionMessages(self, messages, lang=None, **kwargs):
+        """
+        Translates Session messages using interpolation like so:
+
+        >>> self._translateSessionMessages(u"Hello world")
+        [u'Hello world']
+
+        >>> self._translateSessionMessages("Message ${a1} ${a2}", a1="aaaa", a2="bbbb")
+        [u'Message aaaa bbbb']
+
+        >>> self._translateSessionMessages([('First message ${arg1}', {'arg1': 'axxx'}), 'Second message', ])
+        [u'First message axxx', 'Second message']
+
+        >>> self._translateSessionMessages(['First message','Second message'])
+        ['First message', 'Second message']
+        """
+
+        if lang is None:
+            lang = self.gl_get_selected_language()
+
+        def translate(msgid, mapping = {}):
+            return self.getPortalTranslations().translate(domain = None,
+                    msgid = msgid, mapping=mapping, target_language = lang)
+
+        if isinstance(messages, (str, unicode)):
+            return [translate(messages, kwargs), ]
+        elif isinstance(messages, (list, tuple)): # This is the 3rd example
+            translated_messages = []
+            for message in messages:
+                if isinstance(message, (str, unicode)):
+                    trans_message = translate(message)
+                elif isinstance(message, (list, tuple)):
+                    message_str = message[0] #the message
+                    try:
+                        interpolation_params = message[1]
+                    except IndexError:
+                        interpolation_params = {}
+                    trans_message = translate(message_str, interpolation_params)
+                else:
+                    raise ValueError("Invalid arguments")
+
+                if not trans_message: # There is no translation return unmodified
+                    trans_message = message
+                translated_messages.append(trans_message)
+            return translated_messages
+        else:
+            raise ValueError("Invalid arguments")
+
+    def setSessionInfoTrans(self, messages, lang=None, **kwargs):
+        self.__setSession(_SESSION_INFO, self._translateSessionMessages(messages, lang, **kwargs))
+
     def setSessionInfo(self, value):
         self.__setSession(_SESSION_INFO, value)
 
@@ -101,6 +152,9 @@ class session_manager:
 
     def getSessionErrors(self, default=None):
         return self.__getSession(_SESSION_ERRORS, default)
+
+    def setSessionErrorsTrans(self, messages, lang=None, **kwargs):
+        self.__setSession(_SESSION_ERRORS, self._translateSessionMessages(messages, lang=lang, **kwargs))
 
     def setSessionErrors(self, value):
         self.__setSession(_SESSION_ERRORS, value)

@@ -645,7 +645,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         auth_tool.changeLastPost(contributor)
         notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     security.declarePrivate('switch_content_to_language')
@@ -698,7 +698,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         context.handleUpload(source, file, url, lang)
         self.recatalogNyObject(self)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     def checkExFileLang(self, lang):
