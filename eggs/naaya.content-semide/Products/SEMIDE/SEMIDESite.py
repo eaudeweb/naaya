@@ -1978,6 +1978,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_search_advanced')
 
+    security.declareProtected(view, 'search_google_html')
+    def search_google_html(self, REQUEST=None, RESPONSE=None):
+        """ Google search widget """
+        return self.getFormsTool().getContent({'here': self}, 'site_search_google')
+
     security.declareProtected(view, 'getSearchableMetaTypes')
     def getSearchableMetaTypes(self):
         """ Returns all installed meta types that should be searched
