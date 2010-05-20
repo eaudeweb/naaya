@@ -72,7 +72,7 @@ class ThemeRelations(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -180,9 +180,9 @@ class ThemeRelations(SimpleItem, session_manager):
             if err:
                 self.setSessionConceptId(concept_id)
                 self.setSessionThemeId(theme_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('theme_relations_html')
 
     security.declareProtected(view_management_screens, 'manage_update_threlation')
@@ -198,10 +198,10 @@ class ThemeRelations(SimpleItem, session_manager):
             if err:
                 self.setSessionConceptId(concept_id)
                 self.setSessionThemeId(theme_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('theme_relations_html?concept_id=%s&amp;theme_id=%s' % (old_concept_id, old_theme_id))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('theme_relations_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_threlations')
@@ -221,7 +221,8 @@ class ThemeRelations(SimpleItem, session_manager):
                 del_count += 1
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.', '%s related records were deleted.' % del_count])
+            self.setSessionInfoTrans(['Selected records deleted.',
+                ('${del_count} related records were deleted.', {'del_count': del_count}, )])
             REQUEST.RESPONSE.redirect('theme_relations_html')
 
     security.declareProtected(view_management_screens, 'getThRelationItemData')

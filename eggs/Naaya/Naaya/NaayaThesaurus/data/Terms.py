@@ -72,7 +72,7 @@ class Terms(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -170,9 +170,9 @@ class Terms(SimpleItem, session_manager):
                 self.setSessionLangcode(langcode)
                 self.setSessionConceptName(concept_name)
                 self.setSessionSourceId(source_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('terms_html')
 
     security.declareProtected(view_management_screens, 'manage_update_term')
@@ -191,10 +191,10 @@ class Terms(SimpleItem, session_manager):
                 self.setSessionLangcode(langcode)
                 self.setSessionConceptName(concept_name)
                 self.setSessionSourceId(source_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('terms_html?concept_id=%s&amp;langcode=%s' % (old_concept_id, old_langcode))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('terms_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_terms')
@@ -205,7 +205,7 @@ class Terms(SimpleItem, session_manager):
         self.__delete_term(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('terms_html')
 
     security.declareProtected(view_management_screens, 'getTermItemData')
@@ -243,7 +243,7 @@ class Terms(SimpleItem, session_manager):
 
         if chandler is None:
             if REQUEST:
-                self.setSessionErrors(['Parsing error. The file could not be parsed.'])
+                self.setSessionErrorsTrans('Parsing error. The file could not be parsed.')
                 return REQUEST.RESPONSE.redirect('import_html')
 
         #get the target language
@@ -369,34 +369,35 @@ class Terms(SimpleItem, session_manager):
                 err_def_src.append('None')
 
         if REQUEST:
-            self.setSessionInfo(['File imported successfully.',
-                                 'Translations added: %s' % count_terms,
-                                 'Alternative terms added: %s' % count_altterms,
-                                 'Definitions added: %s' % count_def,
-                                 'ScopeNotes added: %s' % count_scope,
-                                 'Terms Sources added: %s' % count_src,
-                                 'Definitions Sources added: %s' % count_def_src])
+            self.setSessionInfoTrans(['File imported successfully.',
+                ('Translations added: ${count_terms}', {'count_terms':  count_terms}, ),
+                ('Alternative terms added: ${count_altterms}', {'count_altterms':  count_altterms}, ),
+                ('Definitions added: ${count_def}', {'count_def':  count_def}, ),
+                ('ScopeNotes added: ${count_scope}', {'count_scope':  count_scope}, ),
+                ('Terms Sources added: ${count_src}', {'count_src':  count_src}, ),
+                ('Definitions Sources added: ${count_def_src}', {'count_def_src':  count_def_src}, ),
+            ])
             msg_err = []
             if err_terms:
-                msg_err.extend(['Translations not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_terms, ', ')])
+                msg_err.append(('Translations not imported because the specified concept_id does not exist: ${err_terms}',
+                    {'err_terms': th_utils().utJoinToString(err_terms, ', ')}, ))
             if err_altterms:
-                msg_err.extend(['Alternative terms not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_altterms, ', ')])
+                msg_err.append(('Alternative terms not imported because the specified concept_id does not exist: ${err_altterms}',
+                    {'err_altterms': th_utils().utJoinToString(err_altterms, ', ')}, ))
             if err_defs:
-                msg_err.extend(['Definitions not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_defs, ', ')])
+                msg_err.append(('Definitions not imported because the specified concept_id does not exist: ${err_defs}',
+                    {'err_defs': th_utils().utJoinToString(err_defs, ', ')}, ))
             if err_scope:
-                msg_err.extend(['ScopeNotes not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_scope, ', ')])
+                msg_err.append(('ScopeNotes not imported because the specified concept_id does not exist: ${err_scope}',
+                    {'err_scope': th_utils().utJoinToString(err_scope, ', ')}, ))
             if err_src:
-                msg_err.extend(['Term sources not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_src, ', ')])
+                msg_err.append(('Term sources not imported because the specified concept_id does not exist: ${err_src}',
+                    {'err_src': th_utils().utJoinToString(err_src, ', ')}, ))
             if err_def_src:
-                msg_err.extend(['Definition sources not imported because the specified concept_id does not exist:',
-                                '%s' % th_utils().utJoinToString(err_def_src, ', ')])
+                msg_err.append(('Definition sources not imported because the specified concept_id does not exist: ${err_def_src}',
+                    {'err_def_src': th_utils().utJoinToString(err_def_src, ', ')}, ))
             if msg_err:
-                self.setSessionErrors(msg_err)
+                self.setSessionErrorsTrans(msg_err)
             return REQUEST.RESPONSE.redirect('import_html')
 
 

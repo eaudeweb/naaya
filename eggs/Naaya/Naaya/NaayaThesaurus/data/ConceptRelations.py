@@ -72,7 +72,7 @@ class ConceptRelations(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -138,7 +138,7 @@ class ConceptRelations(SimpleItem, session_manager):
                                 orig_concept_id, orig_relation_id, orig_relation_type):
         #get an item data
         item = self.get_relation_by_id((orig_concept_id, orig_relation_id, orig_relation_type))
-        if item is not None: 
+        if item is not None:
             return ['update', concept_id, relation_id, relation_type,
                     orig_concept_id, orig_relation_id, orig_relation_type]
         else:
@@ -160,9 +160,9 @@ class ConceptRelations(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionRelationId(relation_id)
                 self.setSessionRelationType(relation_type)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('concept_relations_html')
 
     security.declareProtected(view_management_screens, 'manage_update_relation')
@@ -181,11 +181,11 @@ class ConceptRelations(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionRelationId(relation_id)
                 self.setSessionRelationType(relation_type)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('concept_relations_html?concept_id=%s&amp;relation_id=%s&amp;relation_type=%s'
                                            % (old_concept_id, old_relation_id, old_relation_type))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('concept_relations_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_relations')
@@ -196,7 +196,7 @@ class ConceptRelations(SimpleItem, session_manager):
         self.__delete_relation(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('concept_relations_html')
 
     security.declareProtected(view_management_screens, 'getRelationItemData')
@@ -234,7 +234,7 @@ class ConceptRelations(SimpleItem, session_manager):
 
         if chandler is None:
             if REQUEST:
-                self.setSessionErrors(['Parsing error. The file could not be parsed.'])
+                self.setSessionErrorsTrans('Parsing error. The file could not be parsed.')
                 return REQUEST.RESPONSE.redirect('import_html')
 
         #info
@@ -253,20 +253,18 @@ class ConceptRelations(SimpleItem, session_manager):
                     count_rel += 1
                 else:
                     if not relation_id:
-                        err_list.append('(%s, None) - relation_id not specified' % concept_id)
+                        err_list.append(('(${content_id}, None) - relation_id not specified', {'concept_id': concept_id }, ))
                     else:
-                        err_list.append('(%s, %s) - at least one of the concept_id or relation_id does not exist' % (concept_id, relation_id))
+                        err_list.append(('(${concept_id}, ${relation_id}) - at least one of the concept_id or relation_id does not exist',
+                        {'concept_id': concept_id, 'relation_id': relation_id }))
             else:
                 err_list.append('None - concept_id not specified')
 
         if REQUEST:
-            self.setSessionInfo(['File imported successfully.',
-                                 'Translations added: %s' % count_rel])
+            self.setSessionInfoTrans(['File imported successfully.',
+                ('Translations added: ${count_rel}', {'count_rel': count_rel}, )])
             if err_list:
-                l_list = []
-                l_list.append('Relations not imported (by its (concept_id, relation_id)):')
-                l_list.extend(err_list)
-                self.setSessionErrors(l_list)
+                self.setSessionErrorsTrans(['Relations not imported (by its (concept_id, relation_id)):', err_list, ])
             return REQUEST.RESPONSE.redirect('import_html')
 
 

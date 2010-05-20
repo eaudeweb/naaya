@@ -60,16 +60,16 @@ NAAYATHESAURUS_CATALOG_ID =     'thesaurus_catalog'
 THESAURUS_INDEXES = {'meta_type'        :'FieldIndex',
                      'langcode'         :'FieldIndex',
                      'theme_id'         :'FieldIndex',
-                     'theme_name'       :'TextIndexNG2',
+                     'theme_name'       :'TextIndexNG3',
                      'concept_id'       :'FieldIndex',
                      'relation_id'      :'FieldIndex',
                      'relation_type'    :'FieldIndex',
-                     'concept_name'     :'TextIndexNG2',
+                     'concept_name'     :'TextIndexNG3',
                      'source_id'        :'FieldIndex',
-                     'source_name'      :'TextIndexNG2',
-                     'alt_name'         :'TextIndexNG2',
-                     'scope_note'       :'TextIndexNG2',
-                     'definition'       :'TextIndexNG2'}
+                     'source_name'      :'TextIndexNG3',
+                     'alt_name'         :'TextIndexNG3',
+                     'scope_note'       :'TextIndexNG3',
+                     'definition'       :'TextIndexNG3'}
 
 #relation types
 RELATION_TYPES = {'1':'Broader', '2':'Narrower', '3':'Related'}

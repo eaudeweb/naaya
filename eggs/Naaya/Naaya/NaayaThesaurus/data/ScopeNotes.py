@@ -70,7 +70,7 @@ class ScopeNotes(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -156,9 +156,9 @@ class ScopeNotes(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionScopeNote(scope_note)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('scope_notes_html')
 
     security.declareProtected(view_management_screens, 'manage_update_scope')
@@ -176,10 +176,10 @@ class ScopeNotes(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionScopeNote(scope_note)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('scope_notes_html?concept_id=%s&amp;langcode=%s' % (old_concept_id, old_langcode))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('scope_notes_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_scopes')
@@ -190,7 +190,7 @@ class ScopeNotes(SimpleItem, session_manager):
         self.__delete_scope(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('scope_notes_html')
 
     security.declareProtected(view_management_screens, 'getScopeItemData')

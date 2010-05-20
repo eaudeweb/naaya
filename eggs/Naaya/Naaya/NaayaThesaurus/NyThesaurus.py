@@ -206,7 +206,7 @@ class NyThesaurus(Folder):
         self.approved =     approved
         self._p_changed =   1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
     #alphabetic listing

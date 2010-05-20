@@ -71,7 +71,7 @@ class AltTerms(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -157,9 +157,9 @@ class AltTerms(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionAltName(alt_name)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('altterms_html')
 
     security.declareProtected(view_management_screens, 'manage_update_altterm')
@@ -176,10 +176,10 @@ class AltTerms(SimpleItem, session_manager):
                 self.setSessionConceptId(concept_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionAltName(alt_name)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('altterms_html?concept_id=%s&amp;langcode=%s' % (old_concept_id, old_langcode))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('altterms_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_altterms')
@@ -190,7 +190,7 @@ class AltTerms(SimpleItem, session_manager):
         self.__delete_altterm(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('altterms_html')
 
     security.declareProtected(view_management_screens, 'getAltTermItemData')

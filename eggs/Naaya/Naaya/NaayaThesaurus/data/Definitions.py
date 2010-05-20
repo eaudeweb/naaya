@@ -70,7 +70,7 @@ class Definitions(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -168,9 +168,9 @@ class Definitions(SimpleItem, session_manager):
                 self.setSessionLangcode(langcode)
                 self.setSessionDefinition(definition)
                 self.setSessionSourceId(source_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('definitions_html')
 
     security.declareProtected(view_management_screens, 'manage_update_definition')
@@ -189,10 +189,10 @@ class Definitions(SimpleItem, session_manager):
                 self.setSessionLangcode(langcode)
                 self.setSessionDefinition(definition)
                 self.setSessionSourceId(source_id)
-                self.setSessionErrors(['%s is not a valid concept ID.' % concept_id])
+                self.setSessionErrorsTrans('${concept_id} is not a valid concept ID.', concept_id=concept_id)
                 REQUEST.RESPONSE.redirect('definitions_html?concept_id=%s&amp;langcode=%s' % (old_concept_id, old_langcode))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('definitions_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_definitions')
@@ -203,7 +203,7 @@ class Definitions(SimpleItem, session_manager):
         self.__delete_definition(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('definitions_html')
 
     security.declareProtected(view_management_screens, 'getDefinitionItemData')
