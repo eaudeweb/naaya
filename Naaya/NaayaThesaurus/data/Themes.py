@@ -72,7 +72,7 @@ class Themes(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -158,9 +158,9 @@ class Themes(SimpleItem, session_manager):
                 self.setSessionThemeId(theme_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionThemeName(theme_name)
-                self.setSessionErrors(['%s is not a valid theme ID.' % theme_id])
+                self.setSessionErrorsTrans('${theme_id} is not a valid theme ID.', theme_id=theme_id)
             else:
-                self.setSessionInfo(['Record added.'])
+                self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('themes_html')
 
     security.declareProtected(view_management_screens, 'manage_update_theme')
@@ -177,10 +177,10 @@ class Themes(SimpleItem, session_manager):
                 self.setSessionThemeId(theme_id)
                 self.setSessionLangcode(langcode)
                 self.setSessionThemeName(theme_name)
-                self.setSessionErrors(['%s is not a valid theme ID.' % theme_id])
+                self.setSessionErrorsTrans('${theme_id} is not a valid theme ID.', theme_id=theme_id)
                 REQUEST.RESPONSE.redirect('themes_html?theme_id=%s&amp;langcode=%s' % (old_theme_id, old_langcode))
             else:
-                self.setSessionInfo(['Record updated.'])
+                self.setSessionInfoTrans('Record updated.')
                 REQUEST.RESPONSE.redirect('themes_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_themes')
@@ -191,7 +191,7 @@ class Themes(SimpleItem, session_manager):
         self.__delete_theme(ids)
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('themes_html')
 
     security.declareProtected(view_management_screens, 'getThemeItemData')
@@ -226,7 +226,7 @@ class Themes(SimpleItem, session_manager):
 
         if chandler is None:
             if REQUEST:
-                self.setSessionErrors(['Parsing error. The file could not be parsed.'])
+                self.setSessionErrorsTrans('Parsing error. The file could not be parsed.')
                 return REQUEST.RESPONSE.redirect('import_html')
 
         #get the target language
@@ -256,11 +256,11 @@ class Themes(SimpleItem, session_manager):
                 err_themes.append('None')
 
         if REQUEST:
-            self.setSessionInfo(['File imported successfully.',
-                                 'Translations added: %s' % count_themes])
+            self.setSessionInfoTrans(['File imported successfully.',
+                ('Translations added: ${count_themes}', {'count_themes': count_themes}, )])
             if err_themes:
-                self.setSessionErrors(['Translations not imported (by its theme_id):',
-                                       '%s' % th_utils().utJoinToString(err_themes, ', ')])
+                self.setSessionErrorsTrans(['Translations not imported (by its theme_id):',
+                    ('Errors: ${err_themes}', {'err_themes': th_utils().utJoinToString(err_themes, ', ')}, )])
             return REQUEST.RESPONSE.redirect('import_html?msg=done')
 
 

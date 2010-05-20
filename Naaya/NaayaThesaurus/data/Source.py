@@ -69,7 +69,7 @@ class Source(SimpleItem):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -134,7 +134,7 @@ class Source(SimpleItem):
         if not source_id: source_id = th_utils().utGenRandomId()
         self.__add_source(source_id, source_name)
         if REQUEST:
-            self.setSessionInfo(['Record added.'])
+            self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('sources_html')
 
     security.declareProtected(view_management_screens, 'manage_update_source')
@@ -142,7 +142,7 @@ class Source(SimpleItem):
         """ update source """
         self.__update_source(source_id, old_source_id, source_name)
         if REQUEST:
-            self.setSessionInfo(['Record updated.'])
+            self.setSessionInfoTrans('Record updated.')
             REQUEST.RESPONSE.redirect('sources_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_sources')
@@ -152,7 +152,7 @@ class Source(SimpleItem):
         else:           ids = self.getIdsList(ids)
         self.__delete_source(ids)
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.'])
+            self.setSessionInfoTrans('Selected records deleted.')
             REQUEST.RESPONSE.redirect('sources_html')
 
     security.declareProtected(view_management_screens, 'getSourceItemData')

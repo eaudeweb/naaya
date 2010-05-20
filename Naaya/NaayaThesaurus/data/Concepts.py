@@ -73,7 +73,7 @@ class Concepts(SimpleItem, session_manager):
         self.title = title
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('properties_html')
 
 
@@ -139,7 +139,7 @@ class Concepts(SimpleItem, session_manager):
         if not concept_id: concept_id = th_utils().utGenRandomId()
         self.__add_concept(concept_id)
         if REQUEST:
-            self.setSessionInfo(['Record added.'])
+            self.setSessionInfoTrans('Record added.')
             REQUEST.RESPONSE.redirect('concepts_html')
 
     security.declareProtected(view_management_screens, 'manage_update_concept')
@@ -147,7 +147,7 @@ class Concepts(SimpleItem, session_manager):
         """ update concept """
         self.__update_concept(concept_id, old_concept_id)
         if REQUEST:
-            self.setSessionInfo(['Record updated.'])
+            self.setSessionInfoTrans('Record updated.')
             REQUEST.RESPONSE.redirect('concepts_html')
 
     security.declareProtected(view_management_screens, 'manage_delete_concepts')
@@ -226,7 +226,8 @@ class Concepts(SimpleItem, session_manager):
                 del_count += 1
 
         if REQUEST:
-            self.setSessionInfo(['Selected records deleted.', '%s related records were deleted.' % del_count])
+            self.setSessionInfoTrans('Selected records deleted.',
+                ('${del_count} related records were deleted.', {'del_count': del_count}, ))
             REQUEST.RESPONSE.redirect('concepts_html')
 
     security.declareProtected(view_management_screens, 'getConceptItemData')
@@ -245,7 +246,7 @@ class Concepts(SimpleItem, session_manager):
 
         if chandler is None:
             if REQUEST:
-                self.setSessionErrors(['Parsing error. The file could not be parsed.'])
+                self.setSessionErrorsTrans('Parsing error. The file could not be parsed.')
                 return REQUEST.RESPONSE.redirect('import_html')
 
         #get data
@@ -273,9 +274,9 @@ class Concepts(SimpleItem, session_manager):
                 theme_relations_folder.manage_add_threlation(concept_id, theme_id)
 
         if REQUEST:
-            self.setSessionInfo(['File imported successfully.',
-                                 'Concepts added: %s' % count_concepts,
-                                 'ThemeRelations added: %s' % count_themes_rel])
+            self.setSessionInfoTrans(['File imported successfully.',
+                ('Concepts added: ${count_concepts}', {'count_concepts': count_concepts}, ),
+                ('ThemeRelations added: ${count_themes_rel}', {'count_themes_rel': count_themes_rel}, )])
             return REQUEST.RESPONSE.redirect('import_html')
 
 
