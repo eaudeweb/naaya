@@ -240,10 +240,10 @@ class SurveyTool(Folder):
         """Add a new survey template"""
         stemplate_id = None
         if not title:
-            self.setSessionErrors(['Survey title is required',])
+            self.setSessionErrorsTrans('Survey title is required')
         else:
             stemplate_id = manage_addSurveyTemplate(self, title=title)
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         # Return
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -255,7 +255,7 @@ class SurveyTool(Folder):
         if not ids:
             if not REQUEST:
                 raise ValueError, 'Please select one or more items to delete.'
-            self.setSessionErrors(['Please select one or more items to delete.'])
+            self.setSessionErrorsTrans('Please select one or more items to delete.')
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
         # Check for dependencies
@@ -269,15 +269,15 @@ class SurveyTool(Folder):
                 try:
                     self.manage_delObjects([stemplate_id,])
                 except Exception, err:
-                    all_errors.append('Error while deleting %s: %s' % (stemplate_id, err))
+                    all_errors.append(('Error while deleting ${stemplate_id}: ${err}', {'stemplate_id': stemplate_id, 'err': err}, ))
             else:
-                all_errors.append("""You can't delete "%s" because of the following dependencies: """ % stemplate_id)
+                all_errors.append(('You can\'t delete "${stemplate_id}" because of the following dependencies: ', {'stemplate_id': stemplate_id}, ))
                 all_errors.extend(dependencies)
 
         if all_errors:
-            self.setSessionErrors(all_errors)
+            self.setSessionErrorsTrans(all_errors)
         else:
-            self.setSessionInfo(['Item(s) deleted.'])
+            self.setSessionInfoTrans('Item(s) deleted.')
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 

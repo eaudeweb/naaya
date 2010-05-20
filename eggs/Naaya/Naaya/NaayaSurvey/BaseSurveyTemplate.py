@@ -205,7 +205,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         if err:
             if REQUEST is None:
                 raise ValueError('.'.join(err))
-            self.setSessionErrors(err)
+            self.setSessionErrorsTrans(err)
             self.setSession('title', title)
             self.setSession('meta_type', meta_type)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -220,7 +220,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     def deleteItems(self, ids=[], REQUEST=None):
         """ Delete items (e.g. widgets, reports) by ids"""
         if not ids:
-            self.setSessionErrors(['Please select one or more items to delete.'])
+            self.setSessionErrorsTrans('Please select one or more items to delete.')
         else:
             try:
                 if isinstance(self._getOb(ids[0]), AVAILABLE_WIDGETS):
@@ -234,9 +234,9 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                 err = sys.exc_info()
                 zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
                          'Could not delete items', error=err)
-                self.setSessionErrors(['Error while deleting data.'])
+                self.setSessionErrorsTrans('Error while deleting data.')
             else:
-                self.setSessionInfo(['Item(s) deleted.'])
+                self.setSessionInfoTrans('Item(s) deleted.')
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -251,7 +251,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                 continue
             widget.saveProperties(sortorder=value)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         return True
 
@@ -294,7 +294,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         if err:
             if REQUEST is None:
                 raise ValueError('.'.join(err))
-            self.setSessionErrors(err)
+            self.setSessionErrorsTrans(err)
             self.setSession('title', title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -309,7 +309,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         if not title:
             if REQUEST is None:
                 raise ValueError('Field title is required')
-            self.setSessionErrors(('Field title is required',))
+            self.setSessionErrorsTrans('Field title is required')
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         report_id = manage_addSurveyReport(self, title=title)
