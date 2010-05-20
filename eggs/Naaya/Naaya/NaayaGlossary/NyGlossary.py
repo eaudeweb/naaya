@@ -337,9 +337,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if not code in [subj['code'] for subj in self.subjects_list]:
             self.set_subjects_list(code, name)
             self._p_changed = 1
-            self.setSessionInfo(['Theme added.'])
+            self.setSessionInfoTrans('Theme added.')
         else:
-            self.setSessionErrors(["Code already exists."])
+            self.setSessionErrorsTrans("Code already exists.")
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_themes_html')
 
@@ -351,7 +351,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         for subj in self.utConvertToList(ids):
             self.del_subject_from_list(subj)
         self._p_changed = 1
-        self.setSessionInfo(['Themes deleted.'])
+        self.setSessionInfoTrans('Themes deleted.')
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_themes_html')
 
@@ -366,15 +366,15 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self._p_changed = 1
             for lang in lang_codes:
                 self.manageDefinitionTranslations(code, lang, translations[lang_codes.index(lang)])
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
         elif code != old_code and not code in [subj['code'] for subj in self.subjects_list]:
             self.update_subject_in_list(old_code, code, name)
             self._p_changed = 1
             for lang in lang_codes:
                 self.manageDefinitionTranslations(code, lang, translations[lang_codes.index(lang)])
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
         else:
-            self.setSessionErrors(["Code already exists."])
+            self.setSessionErrorsTrans("Code already exists.")
             if REQUEST:
                 return REQUEST.RESPONSE.redirect('index_themes_html?code=%s' % old_code)
         if REQUEST:
@@ -569,7 +569,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ """
         if string.strip(lang)=='' or string.strip(english_name)=='':
             if REQUEST:
-                self.setSessionErrors(["Please specify language name and code."])
+                self.setSessionErrorsTrans("Please specify language name and code.")
                 return REQUEST.RESPONSE.redirect('index_properties_html')
         else:
             if self.check_language_exists(english_name):
@@ -587,10 +587,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 self._p_changed = 1
             else:
                 if REQUEST:
-                    self.setSessionErrors(["Language already exists."])
+                    self.setSessionErrorsTrans("Language already exists.")
                     return REQUEST.RESPONSE.redirect('index_properties_html')
         if REQUEST:
-            self.setSessionInfo(['Saved changes.'])
+            self.setSessionInfoTrans('Saved changes.')
             return REQUEST.RESPONSE.redirect('index_properties_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'deleteLanguages')
