@@ -58,7 +58,6 @@ class ThesaurusCatalog(ZCatalog):
 
         #create indexes
         for index in self._getDefaultIndexes():
-            import pdb; pdb.set_trace()
             if not (index in available_indexes):
                 if self._getIndexById(index) == 'TextIndexNG3':
                     p_extras = record()
