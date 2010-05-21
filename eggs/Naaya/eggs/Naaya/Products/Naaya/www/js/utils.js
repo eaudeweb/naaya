@@ -17,3 +17,16 @@ function externalLinks() {
     }
 }
 window.onload = externalLinks;
+
+function gettext(msgid) {
+    // Translates javascript strings
+    if(typeof(naaya_i18n_catalog) == 'undefined') {
+        return msgid;
+    }
+    var value = naaya_i18n_catalog[msgid];
+    if (typeof(value) == 'undefined') {
+       return msgid;
+    } else {
+       return (typeof(value) == 'string') ? value : value[0];
+    }
+}
