@@ -75,4 +75,9 @@ JS_MESSAGES = [
     'Type location address',
     'Type keywords',
     'close',
+# folder_listing.zpt error messages
+    'Please select one or more items to copy.',
+    'Please select one or more items to cut.',
+    'Please select one or more items to delete.',
+    'Please select one or more items to rename.',
 ]

@@ -1,6 +1,7 @@
 <metal:block define-macro="content">
 
-<tal:block define="listing_info folder_listing_info|here/folder_listing_info;
+<tal:block define="site_url python:here.getSite().absolute_url();
+	listing_info folder_listing_info|here/folder_listing_info;
 	folders_list python:listing_info['folders'];
 	objects_list python:listing_info['objects'];
 	btn_select python:listing_info['btn_select'];
@@ -11,29 +12,45 @@
 	can_operate python:listing_info['can_operate'];
 	ratings here/folder_listing_ratings">
 
+<script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	// Multiple items operations
+	$('.select-all').click(function(e){
+		//Select toggle for all items
+		var input_button = $(this).attr('id') == 'btn_select';
+		var checked = input_button ? $(this).hasClass('clicked') : !$(this).attr('checked');
+		if (input_button){//not an input[type=checkbox]
+			$(this).toggleClass('clicked');
+		}
+		$('#folderfile_list td.checkbox input[type=checkbox]').attr('checked', !checked);
+	});
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
-//<!--
-function toggleSelect() {
-	var select_button = $("#btn_select")[0];
-	var select_checkbox = $("#folderfile_list th.checkbox input")[0];
+	$('.action-button').click(function(e){
+		//Copy, cut, paste... buttons
+		e.preventDefault()
 
-	var check = select_button.value == 'Select all';
+		// The form.action and the alert messages, set message to false to allow no selection
+		var multiple_action_messages = {
+			'copyObjects': gettext('Please select one or more items to copy.'),
+			'cutObjects': gettext('Please select one or more items to cut.'),
+			'pasteObjects': false,
+			'deleteObjects': gettext('Please select one or more items to delete.'),
+			'renameobject_html': gettext('Please select one or more items to rename.')
+		};
 
-	if (check) {
-		select_button.value = 'Deselect all';
-		select_checkbox.checked = check;
-	} else {
-		select_button.value = 'Select all';
-		select_checkbox.checked = check;
-	}
+		var action = $(this).attr('name').split(':')[0];
 
-	var checkboxes = $("#folderfile_list td.checkbox input");
-	for (var i in checkboxes) {
-		checkboxes[i].checked = check;
-	}
-}
-//-->
+		if (!$("#folderfile_list td.checkbox input[type=checkbox]:checked").length > 0 && multiple_action_messages[action] !== false){
+			alert(multiple_action_messages[action]);
+			return false;
+		}
+
+		var form = $('#folder_listing');
+		form.attr('action', action);
+		form.submit();
+	});
+})
 </script>
 
 <metal:block define-slot="menu_extension">
@@ -43,23 +60,23 @@ function toggleSelect() {
 	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
 		<metal:block define-slot="toolbar_default">
 			<input id="btn_select" type="button" value="Select all"
-				onclick="javascript:toggleSelect();"
+				class="select-all"
 				i18n:attributes="value"
 				tal:condition="btn_select" />
-			<input type="submit" value="Copy" name="copyObjects:method"
+			<input type="submit" value="Copy" class="action-button" name="copyObjects:method"
 				i18n:attributes="value"
 				tal:condition="btn_copy" />
-			<input type="submit" value="Cut" name="cutObjects:method"
+			<input type="submit" value="Cut" class="action-button" name="cutObjects:method"
 				i18n:attributes="value"
 				tal:condition="btn_cut" />
-			<input type="submit" value="Paste" name="pasteObjects:method"
+			<input type="submit" value="Paste" class="action-button" name="pasteObjects:method"
 				i18n:attributes="value"
 				tal:condition="btn_paste" />
-			<input type="submit" value="Delete" name="deleteObjects:method"
+			<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
 				onclick="javascript:return window.confirm('Are you sure?')"
 				i18n:attributes="value"
 				tal:condition="btn_delete" />
-			<input type="submit" value="Rename" name="renameobject_html:method"
+			<input type="submit" value="Rename" class="action-button" name="renameobject_html:method"
 				i18n:attributes="value"
 				tal:condition="python: here.rename_id and btn_delete" />
 		</metal:block>
@@ -74,7 +91,7 @@ function toggleSelect() {
 			<metal:block define-slot="table_head_default">
 				<th class="checkbox" style="width: 4%;"
 					tal:condition="btn_select">
-					<input type="checkbox" onclick="javascript:toggleSelect()" />
+					<input type="checkbox" class="select-all" />
 				</th>
 				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 				<th class="title-column" i18n:translate="">Title</th>
