@@ -23,6 +23,7 @@ except ImportError: from Products.NaayaCore.backport import namedtuple
 from unittest import TestSuite, makeSuite
 from datetime import date, time, datetime, timedelta
 from operator import attrgetter
+import transaction
 
 from Products.NaayaCore.NotificationTool.NotificationTool \
     import set_testing_mode as set_notif_testing_mode
@@ -77,6 +78,7 @@ class BaseNotificationsTest(NaayaTestCase):
                 return group_tmpl
 
         replace(NotificationTool, '_get_template', testing_get_template)
+        transaction.commit()
 
 
     def beforeTearDown(self):
@@ -87,6 +89,7 @@ class BaseNotificationsTest(NaayaTestCase):
         self.portal.manage_delObjects(['fol1', 'fol2'])
         notif_tool.config.update(self._notif_config)
         set_notif_testing_mode(False)
+        transaction.commit()
 
     def _fetch_test_notifications(self):
         notifications = list(self._notifications)
@@ -117,6 +120,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
             'enable_weekly': True,
             'enable_monthly': True,
         })
+        transaction.commit()
 
     def test_add_account_subscription(self):
         notif_tool = self.portal.getNotificationTool()
@@ -244,6 +248,7 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
             'enable_weekly': True,
             'enable_monthly': True,
         })
+        transaction.commit()
 
     def test_restricted_instant(self):
         notif_tool = self.portal.getNotificationTool()
@@ -308,6 +313,7 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
             self._newsletters.append( (notif_type, when_start, when_end) )
 
         replace(NotificationTool, '_send_newsletter', testing_send_newsletter)
+        transaction.commit()
 
     def fetch_test_newsletters(self):
         newsletters = set(self._newsletters)
