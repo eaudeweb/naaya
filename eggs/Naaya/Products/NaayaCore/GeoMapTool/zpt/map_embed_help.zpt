@@ -1,6 +1,6 @@
-<p i18n:translate="">
-    Embed this map in your site using a code like this:
-</p>
+<p i18n:translate="">Embed this map in another website using the
+following HTML snippet:</p>
+
 <pre tal:define="site_url here/absolute_url">
 &lt;iframe
 src="<tal:block content="string:${site_url}/embed_map_html?geo_types=symbol001&geo_types=symbol002"/>&quot;
@@ -8,9 +8,7 @@ width="600" height="500" frameborder="0" scrolling="no"&gt;
 &lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
 &lt;/iframe&gt;
 </pre>
-<p i18n:translate="">
-    Following parameters can be used:
-</p>
+<p i18n:translate="">The following parameters can be used:</p>
 <dl>
     <dt>center_locality=&lt;place name&gt;</dt>
     <dd i18n:translate="">Allows precentering the map to a
