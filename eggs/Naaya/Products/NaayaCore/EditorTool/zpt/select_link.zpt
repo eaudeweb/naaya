@@ -22,18 +22,19 @@
 				float: left;
 			}
 		</style>
+		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/misc_/Naaya/jquery.js"></script>
 	</head>
 	<body>
 		<div id="link_prepare">
 			<ul>
 				<li>
 					<div id="sitemap_tree" class="sitemap_tree" style="margin-bottom: .5em;"></div>
-					<div>To choose a link from this portal, click on the desired item from the sitemap above</div>
-					<div class="propfield"><label for="url">URL:</label></div>
+					<div style="float: left; clear: both;">To choose a link from this portal, click on the desired item from the sitemap above</div>
+					<div class="propfield" style="clear:both;"><label for="url">URL:</label></div>
 					<input class="sitemap_tree_target" type="text" id="url" name="url" style="width: 32em;" />
 				</li>
 				<li>
-					<div class="propfield"><label for="target">Target</label></div>
+					<div class="propfield" style="clear: both;"><label for="target">Target</label></div>
 					<select id="target" name="target">
 						<option value="">Open link in same window</option>
 						<option value="_new">Open link in new window</option>
