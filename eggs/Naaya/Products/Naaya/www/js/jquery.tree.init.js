@@ -29,7 +29,7 @@ $(document).ready(function(){
             },
             onselect: function(NODE, TREE_OBJ){
                 // If the tree_container has xxx_tree id the target input should have xxx_tree_target class
-                target = $('.' + TREE_OBJ.container.attr('id') + '_target')
+                var target = $('.' + TREE_OBJ.container.attr('id') + '_target')
                 if (target.length){
                     val = $(NODE).attr('title')
                     if (val == '/')
