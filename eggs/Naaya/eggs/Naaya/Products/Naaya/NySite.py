@@ -3649,6 +3649,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST is not None:
             REQUEST.RESPONSE.setHeader('Content-Type',
                                        'application/javascript')
+            REQUEST.RESPONSE.setHeader('Cache-Control', 'public,max-age=60')
         return 'var naaya_i18n_catalog = %s;' % json.dumps(translations)
 
     security.declareProtected(view, 'datetime_js')
