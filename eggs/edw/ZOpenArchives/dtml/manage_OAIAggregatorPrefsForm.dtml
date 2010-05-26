@@ -1,0 +1,62 @@
+
+
+<dtml-var manage_page_header>
+
+<dtml-var manage_tabs>
+
+<br>
+<p>This is an OAI Aggregrator.</p>
+
+<form action="manage_OAIRepositoryPrefs">
+
+<table>
+<tr><td>Object title:</td> <td> <input name="title" size=40 value="&dtml-title;"></td></tr>
+
+
+<tr><td>Results limit:</td> <td><select name="results_limit:int">
+
+<dtml-in "[ 1, 5, 10, 100, 500 ]">
+<dtml-let r_num="_['sequence-item']">
+<option value="&dtml-r_num;" <dtml-if "r_num==results_limit">SELECTED</dtml-if> ><dtml-var r_num></option>
+</dtml-let>
+</dtml-in>
+</select></td></tr>
+
+
+<tr><td>Token expiration:<br>(minutes)</td> <td><select name="token_expiration:int">
+
+<dtml-in "[ 0, 1, 5, 10]">
+
+<dtml-let e_num="_['sequence-item']">
+<option value="&dtml-e_num;" <dtml-if "e_num==token_expiration">SELECTED</dtml-if> ><dtml-var e_num></option>
+</dtml-let>
+</dtml-in>
+</select></td></tr>
+</table>
+
+<hr size=2 width="75%"></td>
+
+<p>These are default values used when creating Open Archive Harvesters. They can be changed before the harvester is created.</p>
+
+<table>
+<tr><td>Default update:</td> <td> <select name="update_period:int">
+
+<dtml-in "[['daily', 1000], ['weekly', 7000], ['monthly', 30000]]">
+
+<dtml-let d_name="_['sequence-item'][0]"
+d_num="_['sequence-item'][1]">
+&dtml-d_num;
+<option value="&dtml-d_num;" <dtml-if "d_num==def_update">SELECTED</dtml-if> ><dtml-var d_name></option>
+
+</dtml-let>
+</dtml-in>
+</select></td></tr>
+
+
+
+<tr><td colspan=2 align="right"><input type="submit" value="submit"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>

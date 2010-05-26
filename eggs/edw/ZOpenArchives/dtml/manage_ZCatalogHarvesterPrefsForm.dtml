@@ -1,0 +1,51 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+This is an ZCatalog Site Harvester object. It gets the site records and updates them periodically. This will force a reindex of all of the objects in the harvester, no matter how long it has been since the file has had an update in the associated ZCatalog.
+</p>
+
+<form action="manage_ZCatalogHarvesterPrefs">
+<table>
+
+<tr><td>Title:</td> <td><input size=30 name="title" value="&dtml-title;"></td></tr>
+
+<tr><td>Autopublish:</td>
+	<td><select name="autopublish:int">
+		<dtml-in "[['Yes', 1], ['No', 0]]">
+			<dtml-let d_name="_['sequence-item'][0]"
+			d_num="_['sequence-item'][1]">
+			<option value="&dtml-d_num;" <dtml-if "d_num==autopublish">SELECTED</dtml-if> ><dtml-var d_name></option>
+			</dtml-let>
+		</dtml-in>
+	</select>
+	</td>
+</tr>
+
+<tr><td valign="top">Autopublish Roles:</td>
+	<td><textarea name="autopublishRoles:lines" rows=3 cols=30 ><dtml-in autopublishRoles><dtml-var sequence-item><dtml-if expr="not _['sequence-end']"><dtml-var "'\n'"></dtml-if></dtml-in></textarea>
+</td>
+</tr>
+
+<tr><td>Update records:</td> 
+	<td><select name="update_period:int">
+		<dtml-in "[['Daily', 1440], ['Weekly', 10080], ['Monthly', 43800]]">	
+			<dtml-let d_name="_['sequence-item'][0]"
+						d_num="_['sequence-item'][1]">
+				<option value="&dtml-d_num;" <dtml-if "d_num==update_period">SELECTED</dtml-if> ><dtml-var d_name></option>
+			</dtml-let>
+		</dtml-in>
+		</select>
+	</td>
+</tr>
+
+<tr><td>Metatypes: (e.g.: "Naaya News")</td>
+	<td>
+	<textarea name="pref_meta_types:lines" rows=3 cols=30><dtml-in pref_meta_types><dtml-var sequence-item><dtml-if expr="not _['sequence-end']"><dtml-var "'\r\n'"></dtml-if></dtml-in></textarea></td>
+</tr>
+<tr><td colspan=2 align="right"><input type="submit" value="Submit"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>
