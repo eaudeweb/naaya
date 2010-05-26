@@ -45,4 +45,3 @@ class MyXMLLib:
         if len(new_path):
             found_nodes = self.findDOMElements(dom_list=found_nodes,tag_path=new_path)
         return found_nodes
-

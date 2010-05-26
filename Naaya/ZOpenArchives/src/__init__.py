@@ -34,27 +34,20 @@ def initialize(context):
     import zOAIToken
     import zOAINamespace
 
-    import zOAIExistToken
-    import zOAIExistAggregator
-    import zOAIExistRepository
-    import zOAIExistHarvester
-    import zOAIExistNamespace
-    
-    
     context.registerClass(
         zOAIAggregator.zOAIAggregator,
         constructors = ( zOAIAggregator.manage_addOAIAggregatorForm,
                          zOAIAggregator.manage_addOAIAggregator, ),
         icon='www/icon_object.gif'
     )
-    
+
     context.registerClass(
         ZopeOAIServer.ZopeOAIServer,
         constructors = ( ZopeOAIServer.manage_addZopeOAIServerForm,
                          ZopeOAIServer.manage_addZopeOAIServer, ),
         icon='www/icon_object.gif'
     )
-    
+
     context.registerClass(
         zOAIHarvester.zOAIHarvester,
         constructors = ( zOAIHarvester.manage_addOAIHarvesterForm,
@@ -62,7 +55,7 @@ def initialize(context):
         icon='www/icon_site.gif',
         visibility=None
     )
-    
+
     context.registerClass(
         ZCatalogHarvester.ZCatalogHarvester,
         constructors = ( ZCatalogHarvester.manage_addZCatalogHarvesterForm,
@@ -77,57 +70,17 @@ def initialize(context):
                          zOAINamespace.manage_addOAINamespace, ),
         icon='www/icon_site.gif'
     )
-    
+
     context.registerClass(
         zOAIRecord.zOAIRecord,
         constructors = ( zOAIRecord.manage_addOAIRecord, ),
         icon='www/icon_record.gif',
         visibility=None
     )
-    
+
     context.registerClass(
         zOAIToken.zOAIToken,
         constructors = ( zOAIToken.manage_addOAIToken, ),
         icon='www/icon_record.gif',
         visibility=None
     )
-
-    ## zOAIImplementation for eXist
-    context.registerClass(
-        zOAIExistAggregator.zOAIExistAggregator,
-        constructors = ( zOAIExistAggregator.manage_addOAIExistAggregatorForm,
-                         zOAIExistAggregator.manage_addOAIExistAggregator, ),
-        icon='www/icon_object.gif'
-    )
-
-    context.registerClass(
-        zOAIExistRepository.zOAIExistRepository,
-        constructors = ( zOAIExistRepository.manage_addOAIExistRepositoryForm,
-                         zOAIExistRepository.manage_addOAIExistRepository, ),
-        icon='www/icon_object.gif'
-    )
-
-    context.registerClass(
-        zOAIExistHarvester.zOAIExistHarvester,
-        constructors = ( zOAIExistHarvester.manage_addOAIExistHarvesterForm,
-                         zOAIExistHarvester.manage_addOAIExistHarvester, ),
-        icon='www/icon_site.gif',
-        visibility=None
-    )
-
-    context.registerClass(
-        zOAIExistNamespace.zOAIExistNamespace,
-        constructors = ( zOAIExistNamespace.manage_addOAIExistNamespaceForm,
-                         zOAIExistNamespace.manage_addOAIExistNamespace, ),
-        icon='www/icon_site.gif'
-    )
-
-    context.registerClass(
-        zOAIExistToken.zOAIExistToken,
-        constructors = ( zOAIExistToken.manage_addOAIExistToken, ),
-        icon='www/icon_record.gif',
-        visibility=None
-    )
-    
-    
-    

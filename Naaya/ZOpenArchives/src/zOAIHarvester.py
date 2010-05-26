@@ -23,6 +23,7 @@
 __doc__ = """Zope OAI Site Harvester"""
 
 import string
+from urllib import quote
 
 from Globals import HTMLFile, Persistent
 from Products.ZCatalog.ZCatalog import ZCatalog
@@ -31,64 +32,57 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder
 import App
-import zOAIRecord # for manage_addOAIRecord
+
+from zOAIRecord import manage_addOAIRecord
+from zOAISupport import processId
 from pyOAIMH.OAIHarvester import OAIHarvester
-from pyOAIMH.OAIHarvester import HTTPLibError, ServerError
-
-import zOAISupport  # for processId
-
+from pyOAIMH.OAIHarvester import ServerError
 
 manage_addOAIHarvesterForm = HTMLFile('dtml/manage_addOAIHarvesterForm', globals())
 
-def manage_addOAIHarvester(self, host="", url="", title="", days=7, REQUEST=None, RESPONSE=None):
-    """ method for adding a new OAI object """
-    if url == "":
-        if RESPONSE is not None:
-            RESPONSE.redirect(self.absolute_url()+'/manage_main?error_message=' + 'You%20have%20to%20choose%20a%20url')
-            return None
-    try:
-         id = zOAISupport.processId(host)
-         OAIS = zOAIHarvester(id, host, url, title, days)
-    except:
-        import traceback
-        traceback.print_exc()
+def manage_addOAIHarvester(self, id='', REQUEST=None, **kwargs):
+    """ Add a Harverster Object """
+    if REQUEST is not None:
+        form_data = dict(REQUEST.form)
+    else:
+        form_data = dict(kwargs)
+
+    if form_data.get('host', '') == '' or form_data.get('url', '') == '':
+        error = "host and url fields are required"
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST.get('HTTP_REFERER', self.absolute_url() + '/manage_main?') + '&error_message=%s' % quote(error))
+        else:
+            raise ValueError(error)
+
+    if id == '':
+        id = processId(form_data['host'])
+
+    OAIS = zOAIHarvester(id, form_data['host'], form_data['url'], form_data.get('title', ''), form_data.get('days', 7))
     self._setObject(id, OAIS)
+
     OAIS = getattr(self, id)
     OAIS.initialize()
 
     if REQUEST is not None:
         return REQUEST.RESPONSE.redirect(self.absolute_url()+'/manage_main?update_menu=1')
 
-
-class zOAIHarvester(OAIHarvester,App.Management.Navigation, BTreeFolder2, Persistent, Implicit):
+class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persistent, Implicit):
     """ """
 
     meta_type = 'Open Archive Harvester'
     default_document = 'index_html'
 
     manage_options= (
-        {'label': 'Preferences',     
-         'action': 'manage_preferences' 
-         },
-        
-        {'label': 'Update',     
-         'action': 'manage_update'
-         },
-        
-        {'label': 'Contents',     
-         'action': 'manage_main'
-         },
-        )
+        {'label': 'Preferences', 'action': 'manage_preferences'},
+        {'label': 'Update', 'action': 'manage_update'},
+        {'label': 'Contents', 'action': 'manage_main' },
+    )
 
     def __init__(self, id, host, url, title, days):
         """ """
-        try:
-            OAIHarvester.__init__(self, host, url)
-        except:
-            # this is needed for some reason when python
-            # version is < 2.2
-            OAIHarvester.__init__.im_func(self, host, url)
-        BTreeFolder2.__init__(self,id)
+        super(zOAIHarvester, self).__init__(host, url)
+        BTreeFolder2.__init__(self, id)
+
         self.id = id
         self.title = title
         # update frequency in days
@@ -135,7 +129,7 @@ class zOAIHarvester(OAIHarvester,App.Management.Navigation, BTreeFolder2, Persis
             OAIR.handle_DOM(dom)
             OAIR.reindex_object()
         else:
-            zOAIRecord.manage_addOAIRecord(self, id=identifier,
+            manage_addOAIRecord(self, id=identifier,
                                            metadata_format=self.current_request['metadataPrefix'],
                                            dom=dom)
 
@@ -143,9 +137,9 @@ class zOAIHarvester(OAIHarvester,App.Management.Navigation, BTreeFolder2, Persis
     ####  ZMI Interfaces
     ######################
 
-    manage_mainold = HTMLFile("dtml/manage_OAIHarvesterMainForm",globals())
+    manage_mainold = HTMLFile("dtml/manage_OAIHarvesterMainForm", globals())
 
-    manage_preferences = HTMLFile("dtml/manage_OAIHarvesterPrefsForm",globals())
+    manage_preferences = HTMLFile("dtml/manage_OAIHarvesterPrefsForm", globals())
 
     def manage_OAIHarvesterPrefs(self, title, minutes, site_host, site_url, metadata_format, REQUEST=None, RESPONSE=None):
         """ save preferences """
@@ -163,5 +157,5 @@ class zOAIHarvester(OAIHarvester,App.Management.Navigation, BTreeFolder2, Persis
         try:
             self.do_updateSite()
             RESPONSE.redirect(self.absolute_url() + '/manage_update?manage_tabs_message=Site%20records%20updated')
-        except (HTTPLibError, ServerError):
+        except ServerError:
             RESPONSE.redirect(self.absolute_url() + '/manage_update?manage_tabs_message=Problem%20connecting%20to%20site')
