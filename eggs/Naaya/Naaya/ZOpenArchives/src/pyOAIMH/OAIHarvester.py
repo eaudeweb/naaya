@@ -22,35 +22,74 @@
 #################################################################################
 
 __doc__ = """ Class which implements the OAI harvester protocol """
-
-
-
-import httplib
+import sys
+import urllib2
+from urllib import urlencode
 import StringIO
+import DateTime
+import datetime
+import string
+import lxml.objectify # Create objects form xml elements
+
 from xml.sax import make_parser, saxutils
-from xml.sax.handler import ContentHandler 
+from xml.sax.handler import ContentHandler
 import xml.dom.minidom
-
-from CreateURL import CreateURL
-
-from MyXMLLib import MyXMLLib
-import DateTime, sys
-# import timeoutsocket
-# from socket import error
-
-class HTTPLibError(Exception): pass
 
 class ServerError(Exception): pass
 
-
-class OAIHarvester(MyXMLLib):
-
+class OAIHarvester:
     default_encoding = 'UTF-8'
-
     # gives tag path within XML structure to
     #   use to retrieve information. differences between
     #   OAI protocol versions
-    #
+    def getDOMElementText(self, dom_node=None, encode=None):
+        """
+
+        DEPRECATED
+
+
+        input is a DOM node
+
+        returns text of node; encoded text if
+          encode parameter is given
+        """
+        text = ""
+        for node in dom_node.childNodes:
+            if node.nodeType == node.TEXT_NODE:
+                text = text + string.strip(node.data)
+        if encode != None:
+            text = text.encode(encode)
+        return text.strip()
+
+    def findDOMElements(self, dom_list=[], tag_path=[]):
+        """
+
+        DEPRECATED
+
+        finds DOM elements in DOM trees by path
+        path is a list of strings - eg, [ 'Adressbook','Adress','Person','Name']
+        which corresponds to tag names in XML
+        returns list of nodes which have this path, or [] for none
+        """
+        found_nodes = []
+        if len(dom_list)==0 or len(tag_path)==0:
+            return found_nodes
+
+        # get next tag to search for
+        tag_name = tag_path[0]
+        new_path = tag_path[1:]
+        for dom in dom_list:
+##            for node in dom.getElementsByTagName(tag_name):
+##                found_nodes.append(node)
+            for node in dom.childNodes:
+                if hasattr(node, 'tagName') and node.tagName == tag_name:
+                    found_nodes.append(node)
+
+        if len(new_path):
+            found_nodes = self.findDOMElements(dom_list=found_nodes,tag_path=new_path)
+        return found_nodes
+
+
     dompaths = {
         '1.1': {
           'protocolVersion':['Identify','protocolVersion'],
@@ -58,10 +97,9 @@ class OAIHarvester(MyXMLLib):
           'baseURL':['Identify','baseURL'],
           'adminEmail':['Identify','adminEmail'],
           'description':['Identify','description'],
-          
           'metadataFormat':['ListMetadataFormats','metadataFormat']
         },
-        
+
         '2.0':{
           'protocolVersion':['OAI-PMH','Identify','protocolVersion'],
           'repositoryName':['OAI-PMH','Identify','repositoryName'],
@@ -72,60 +110,59 @@ class OAIHarvester(MyXMLLib):
           'deletedRecord':['OAI-PMH','Identify','deletedRecord'],
           'compression':['OAI-PMH','Identify','compression'],
           'granularity':['OAI-PMH','Identify','granularity'],
-          
           'metadataFormat':['OAI-PMH','ListMetadataFormats','metadataFormat']
         }
-        }
+    }
 
-    
     def __init__(self, site_host, site_url):
         """ """
-
         # host and url for OAI server
-        #
         self.site_host = site_host
         self.site_url = site_url
-        self.site_status = { 'lastUpdate':None,
-                             'status': 'unknown',
-                             'lastRequest':None
-                             }
+        self.site_status = {
+            'lastUpdate':None,
+            'status': 'unknown',
+            'lastRequest':None
+        }
 
         # site_identify
         #   first group is must includes
         #   second is may include multiples
-        self.site_identify = { 'repositoryName':'',
-                               'baseURL':'',
-                               'protocolVersion':'1.1',
-                               'earliestDatestamp':'',
-                               'deletedRecord':'',
-                               'granularity':'',
-                               'adminEmail':[],
-                               
-                               'compression':None,
-                               'description':[]
-                               }
+        self.site_identify = {
+            'repositoryName':'',
+            'baseURL':'',
+            'protocolVersion':'1.1',
+            'earliestDatestamp':'',
+            'deletedRecord':'',
+            'granularity':'',
+            'adminEmail':[],
+
+            'compression':None,
+            'description':[]
+        }
 
         # list of site's available metadata
-        self.site_metadata = { 'oai_dc':
-                               {'schema':'',
-                                'metadataNamespace':'',
-                                'metadataPrefix':'oai_dc'}
-                               }
+        self.site_metadata = {
+            'oai_dc': {
+                'schema':'',
+                'metadataNamespace':'',
+                'metadataPrefix':'oai_dc'
+            }
+        }
 
 
     def initialize(self):
-        """
-        issue_Identify - get OAI site information from URL
-        """
-        self.issue_Identify()
+        """ """
+        #self.issue_Identify()
+        self.issue_ListSets()
 
     def updateObject(self):
-        """
-        updates older objects
-        """
-        self.site_status={'lastUpdate':'',
-                          'status': '',
-                          'lastRequest':''}
+        """ updates older objects """
+        self.site_status = {
+            'lastUpdate':'',
+            'status': '',
+            'lastRequest':''
+        }
 
     def handle_Error(self, errors):
         """
@@ -210,8 +247,6 @@ class OAIHarvester(MyXMLLib):
         else:
             return None
 
-    #### baseURL
-
     def set_baseURL(self, url=''):
         """ """
         self.site_identify['baseURL'] = url
@@ -222,8 +257,6 @@ class OAIHarvester(MyXMLLib):
             return self.site_identify['baseURL']
         else:
             return None
-
-    #### earlistDatestamp
 
     def set_earliestDatestamp(self, datestamp=''):
         """ """
@@ -236,8 +269,6 @@ class OAIHarvester(MyXMLLib):
         else:
             return None
 
-    #### deletedRecord
-
     def set_deletedRecord(self, record=''):
         """ """
         self.site_identify['deletedRecord'] = record
@@ -248,8 +279,6 @@ class OAIHarvester(MyXMLLib):
             return self.site_identify['deletedRecord']
         else:
             return None
-
-    #### granularity
 
     def set_granularity(self, granularity=''):
         """ """
@@ -262,8 +291,6 @@ class OAIHarvester(MyXMLLib):
         else:
             return None
 
-    #### description
-
     def set_description(self, description_list=[]):
         """ """
         self.site_identify['description'] = description_list
@@ -274,8 +301,6 @@ class OAIHarvester(MyXMLLib):
             return self.site_identify['description']
         else:
             return None
-
-    #### compression
 
     def set_compression(self, compression=''):
         """ """
@@ -288,8 +313,6 @@ class OAIHarvester(MyXMLLib):
         else:
             return None
 
-    #### adminEmail
-
     def set_adminEmail(self, admin_list=[]):
         """ """
         self.site_identify['adminEmail']=admin_list
@@ -301,15 +324,9 @@ class OAIHarvester(MyXMLLib):
         else:
             return []
 
-    #### site host
-
     def get_siteHost(self):
         """ """
         return self.site_host
-
-
-    ###########################
-    ###### principal methods
 
     def do_updateSite(self):
         """
@@ -322,6 +339,8 @@ class OAIHarvester(MyXMLLib):
         self.set_siteStatus('lastRequest', DateTime.DateTime().aCommon())
         self.issue_Identify()
         self.issue_ListMetadataFormats()
+        self.issue_ListSets()
+
         #### add by jecez for manage oai_dc prefix in portal #################
         namespaces = getattr(self.aq_parent,'Namespaces')
         lNameSpaceMetaDataPrefix = []
@@ -405,7 +424,7 @@ class OAIHarvester(MyXMLLib):
             node_list = self.findDOMElements(dom_list=[dom], tag_path=path)
             for node in node_list:
                 desc_list.append(self.getDOMElementText(node))
-                
+
             self.set_description(desc_list)
 
         ## these are for 2.0
@@ -466,9 +485,10 @@ class OAIHarvester(MyXMLLib):
           store results
 
         """
-        self.current_request = { 'verb':'ListMetadataFormats',
-                                 'identifier':oai_identifier
-                                 }
+        self.current_request = {
+            'verb':'ListMetadataFormats',
+            'identifier': oai_identifier
+        }
         url_obj = CreateURL( self.current_request )
         url = url_obj.getURL()
 
@@ -480,7 +500,7 @@ class OAIHarvester(MyXMLLib):
                 #if self.handle_Error(dom.getElementsByTagName("error")) != 0:
                 #    print "ERROR !! ", data
                 # find <records> in DOM
-                path = self.get_dompath('metadataFormat') 
+                path = self.get_dompath('metadataFormat')
                 metadom_list = self.findDOMElements(dom_list=[dom], tag_path=path)
                 self.handle_ListMetadataFormats(dom_list=metadom_list)
         except:
@@ -511,6 +531,35 @@ class OAIHarvester(MyXMLLib):
             # TODO: check for existance of at least 'oai_dc'
             #  it's a minimum requirement in OAI spec
             self.site_metadata[dict['metadataPrefix']]=dict
+
+    def issue_ListSets(self):
+        """  method to issue the ?verb=ListSets"""
+        query_set = (
+            ('verb', 'ListSets', ),
+        )
+        response_code, data = self._get_url(query_set)
+        if response_code == 200:
+            tree = lxml.etree.fromstring(data)
+            for element in tree:
+                if 'error' in element.tag:
+                    print "ERROR: List Sets\n\n", lxml.etree.tostring(data)
+                    break
+                elif 'ListSets' in element.tag:
+                    self.handle_ListSets(element)
+                    break
+
+    def handle_ListSets(self, ListSets):
+        """
+        calls handle_addOAIRecord on all records found:
+          this is a hook for a subclass to implement
+        """
+        sets = []
+        for e in ListSets:
+            sets.append({
+                'spec': e[0].text,
+                'name': e[1].text
+            })
+        if len(sets): self.list_sets = sets
 
     def issue_ListRecords(self, oai_metadataPrefix, oai_from=None,
                           oai_until=None, oai_set=None, oai_setSpec=None ):
@@ -591,6 +640,7 @@ class OAIHarvester(MyXMLLib):
         depends on the database you have
         """
 
+
     def http_connect(self, get_url):
         """
         connect to site given GET url
@@ -614,3 +664,13 @@ class OAIHarvester(MyXMLLib):
             data = r1.read()
         h.close()
         return ( returncode, returnmsg, headers, data )
+
+    def _get_url(self, data = None):
+        """ Return GET request to site_url, site_host
+        Data as a list of tuples of key, values or a string"""
+        if isinstance(data, (list, tuple)):
+            data = urlencode(data)
+        elif not isinstance(data, str):
+            raise ValueError("Bad data")
+        con = urllib2.urlopen("http://%s%s" % (self.site_host, self.site_url), data = data)
+        return (con.code, con.read(), )

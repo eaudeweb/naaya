@@ -42,7 +42,7 @@
 
 2004-10-19	jecez
 	* zOAIAggregator.py 1.10:
-		replace TextIndex by ZCTextIndex in Catalog Indexes (OAI_title , 
+		replace TextIndex by ZCTextIndex in Catalog Indexes (OAI_title ,
 		OAI_fulltext , dc_description , dc_creator)
 
 2004-10-15	jecez
@@ -89,7 +89,7 @@
 
 2004-10-12	jecez
 	* zOAIRepository.py 1.27:
-		use html_quote method for quoting description in 
+		use html_quote method for quoting description in
 		manage_serach_XML
 
 	* zOAIRepository.py 1.28:
@@ -202,35 +202,35 @@
 		= FEATURES
 		> Namespaces
 		- added new Namespace object class and ZMI forms
-		
+
 		> MetadataAware
 		- adds namespace information to user metadata
 		- use site domain for record id
 		- created method to setup metadata dictionary, used by other classes too
-		
+
 		> ZCatalogHarvester
 		- changed when adding oai_state to portal catalog
 		- properly creates multiple records for documents with multiple metadata
 		- use site domain for record id
 		- cleaned up manual_publish area
 		- now harvester doesn't delete oai_status index in portal catalog
-		
+
 		> Repository
 		- added code to access new Namespace classes-
 		- added access/set method for the repositories domain name
 		- moved misc zoai information to Preferences tab, changed manage methods
 		- moved zoai site admin and name to preferences
 		  in preparation for rebuilding data if anything in Info tab changes
-		
+
 		> site domain
 		- moved site domain for record id to ZMI, not hard-coded
 		- added to ZMI gui
-		
-		
+
+
 		= BUGS
 		- fixed searching problem with portal catalog, removed hack
 		- changed method parameters in dtml to access metadata
-		
+
 		= MISCELLANEOUS
 		- manual publishing looks for shared documents all of the time
 		- filter objects from ZMI drop down that users shouldn't add
@@ -261,12 +261,12 @@
 		- hyperlink of OAI site admins in ZMI Update screen
 		- results from OAI Identify command now properly populate
 		  server info in ZMI Update screen
-		
+
 		Changes:
 		- arrangement of information on ZMI Update screen
 		- code cleanup
 		- server info/path moved to ZMI Preferences
-		
+
 		Bugs:
 		- fixed problems with ZCatalog getting data from records
 		- fixed some Unicode errors
@@ -481,4 +481,3 @@
 	* zOAIRecord.py 1.1.1.1:
 	* zOAIRepository.py 1.1.1.1:
 		First import of ZOpenArchives
-

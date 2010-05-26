@@ -56,7 +56,7 @@ def manage_addZCatalogHarvester(self, id="", title="Zope OAI Server", update_per
     except:
         import traceback
         traceback.print_exc()
-        
+
     self._setObject(id, ZCATO)
     ZCATO = getattr(self, id)
     ZCATO.initialize()
@@ -77,16 +77,16 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
 
 
     manage_options= (
-        {'label': 'Contents',     
+        {'label': 'Contents',
          'action': 'manage_main'
          },
 
-        {'label': 'Preferences',     
-         'action': 'manage_preferences' 
+        {'label': 'Preferences',
+         'action': 'manage_preferences'
          },
-        
-        {'label': 'Update',     
-         'action': 'manage_update' 
+
+        {'label': 'Update',
+         'action': 'manage_update'
          },
         )
 
@@ -124,7 +124,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         get args from request form
         """
         self.the_request = REQUEST.URL0
-        return self.process_Request(args=REQUEST.form)    
+        return self.process_Request(args=REQUEST.form)
 
     def get_myContainer(self):
         """ get my parent container """
@@ -351,7 +351,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
                     n_header = xmldoc.createElement("header")
                     n_record.childNodes.append(n_header)
 
-                    # add child <identifier> 
+                    # add child <identifier>
                     h_id = xmldoc.createElement('identifier')
                     n_header.appendChild(h_id)
 
@@ -377,7 +377,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
 
                     c2 = from_meta_node.cloneNode(1)
                     to_meta_node.appendChild(c2)
-                    
+
                     record_xml =  xmldoc.toxml(self.default_encoding)
 
                 if OAIO != None:
