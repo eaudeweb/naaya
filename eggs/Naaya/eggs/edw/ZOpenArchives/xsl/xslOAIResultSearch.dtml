@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" >
+  <xsl:output method="html" encoding="iso-8859-1" />
+      <xsl:template match="records">
+      <fieldset>
+        number of results :&#160;<xsl:value-of select="@number" /><br />
+
+                <xsl:for-each select="record">
+                  <fieldset><legend>title:
+                  <xsl:value-of select="title" /></legend>
+                   Author:<xsl:value-of select="author" /><br />
+                   Description:<xsl:value-of select="description" /><br />
+                   Identifier:<xsl:value-of select="identifier" />
+               </fieldset>
+             </xsl:for-each>
+           </fieldset>
+      </xsl:template>
+    </xsl:stylesheet>

@@ -1,0 +1,37 @@
+<dtml-var standard_html_header>
+
+<dtml-unless OAI_Title>
+<dtml-call "REQUEST.set('OAI_Title','')">
+</dtml-unless>
+<dtml-unless OAI_Fulltext>
+<dtml-call "REQUEST.set('OAI_Fulltext','')">
+</dtml-unless>
+<h1>Search form for harvested OAI records</h1>
+<p>Use this form to search within the titles of <acronym title="Open Archives Initiative">OAI</acronym> records harvested by this portal  .</p>
+<fieldset>
+ <span><a href="portal_AdvSearchForm">Advanced Search</a></span>
+
+<form action="portal_OAISearchForm" name="frmSearch" method="get">
+
+<table>
+<tr><td>Find a resource by title:</td> <td><input size=30 name="text" value="<dtml-if text>&dtml-text;</dtml-if>"></td></tr>
+
+<tr><td colspan=2 align="right"><input type="submit" name="button" value="Search"></td></tr>
+
+</table>
+</form>
+</fieldset>
+
+<br />
+<dtml-if "REQUEST.has_key('text')">
+<h2>Search Results</h2>
+
+<dtml-in "searchHTML(REQUEST['text'])">
+	<dtml-var "_['sequence-index']+1">. <a href="<dtml-var "_['sequence-item'].dc_identifier()">"><dtml-var "_['sequence-item'].OAI_Title()"></a><br />
+<dtml-else>
+No records found.
+</dtml-in>
+
+</dtml-if>
+
+<dtml-var standard_html_footer>

@@ -1,0 +1,56 @@
+<dtml-var manage_page_header>
+
+<strong>Add a ZCatalog Harvester</strong><br><br>
+
+<form action="manage_addZCatalogHarvester" method="POST">
+
+<table >
+
+<tr><td width="50">Id:</td>
+	<td><input type="text" name="id" id="id" /></td>
+</tr>
+
+<tr><td>Title:</td> <td><input name="title" size=30 value="ZCatalog Harvester"></td></tr>
+
+
+<tr><td>Autopublish:</td>
+	<td><select name="autopublish:int">
+	<dtml-in "[['Yes', 1], ['No', 0]]">
+		<dtml-let d_name="_['sequence-item'][0]"
+		d_num="_['sequence-item'][1]">
+		<option value="&dtml-d_num;" <dtml-if "d_num==def_autopublish">SELECTED</dtml-if> ><dtml-var d_name></option>
+		</dtml-let>
+	</dtml-in>
+	</select></td>
+</tr>
+
+
+<tr><td valign="top">Autopublish Roles:</td>
+	<td>
+		<textarea name="autopublishRoles:lines" rows=3 cols=30 >
+<dtml-in def_autopublishRoles><dtml-var sequence-item><dtml-if expr="not _['sequence-end']"><dtml-var "'\n'"></dtml-if>
+</dtml-in>
+</textarea>
+	</td>
+</tr>
+
+<tr><td>Update period:</td>
+<td><select name="update_period:int">
+	<dtml-in "[['daily', 1000], ['weekly', 7000], ['monthly', 30000]]">
+		<dtml-let d_name="_['sequence-item'][0]"
+				  d_num="_['sequence-item'][1]">
+			<option value="&dtml-d_num;" <dtml-if "d_num==def_update">SELECTED</dtml-if> ><dtml-var d_name></option>
+		</dtml-let>
+	</dtml-in>
+</select></td></tr>
+
+<tr><td>Metatypes: (e.g.: "Naaya News")</td>
+	<td><textarea name="pref_meta_types:lines"></textarea></td>
+</tr>
+
+<tr><td colspan=2 align="right"><input type="submit" value="Submit"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>
