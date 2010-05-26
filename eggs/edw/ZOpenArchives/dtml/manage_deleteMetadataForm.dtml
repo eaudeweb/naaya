@@ -1,0 +1,25 @@
+<dtml-var standard_html_header>
+
+<dtml-unless m_name>
+don't have name
+<dtml-call "REQUEST.set('m_name', '')">
+<dtml-call "RESPONSE.redirect('manage_viewMetadataForm?error=missing%20metadata%20name')">
+</dtml-unless>
+
+
+<table width="80%" cellpadding="5" cellspacing="0" border="0" bgcolor="#EEEEEE">
+
+<tr><td>Are you sure that you want to delete the metadata for <strong><dtml-var m_name></strong>?</td></tr>
+
+<tr><td>
+<form action="manage_deleteMetadata" method="GET">
+
+<input type="hidden" name="m_name" value="&dtml-m_name;">
+<input type="submit" value="delete">
+</form>
+
+</td></tr>
+</table>
+
+
+<dtml-var standard_html_footer>
