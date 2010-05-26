@@ -1,0 +1,40 @@
+<dtml-var manage_page_header>
+
+<strong>Add a Zope OAI Server</strong><br><br>
+
+<form action="manage_addZopeOAIServer">
+
+<table >
+<tr><td width=50>Id:</td> <td><input name="id" value="zoai"></td></tr>
+<tr><td>Title:</td> <td><input name="title" size=30 value="Zope OAI Server"></td></tr>
+
+
+<tr><td>Auto Publish:</td>
+<td><select name="autopublish:int">
+<option value=1>Yes</option>
+<option value=0>No</option>
+</select>
+</td></tr>
+
+<tr><td valign="top">Autopublish Roles:</td>
+<td><textarea name="autopublishRoles:lines" rows="3" cols="30" >Anonymous</textarea>
+</td></tr>
+
+<tr>
+<td>Default update:</td>
+	<td><select name="update_time:int">
+		<dtml-in "[['daily', 1000], ['weekly', 7000], ['monthly', 30000]]">
+			<dtml-let d_name="_['sequence-item'][0]"
+					d_num="_['sequence-item'][1]">
+			<option value="&dtml-d_num;" <dtml-if "d_num==7000">SELECTED</dtml-if> ><dtml-var d_name></option>
+			</dtml-let>
+		</dtml-in>
+	</select></td>
+</tr>
+
+<tr><td colspan=2 align="right"><input type="submit" value="Submit"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>

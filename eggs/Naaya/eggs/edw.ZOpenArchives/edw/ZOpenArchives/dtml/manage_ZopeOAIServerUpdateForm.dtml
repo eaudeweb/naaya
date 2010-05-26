@@ -1,0 +1,18 @@
+<dtml-var manage_page_header>
+
+<dtml-var manage_tabs>
+
+<p class="form-help">This will manually update the ZCatalog Harvester items contained within this zOAI Server according to their regular update period. This process does not force an update.</p>
+
+<form action="manage_ZopeOAIServerUpdate">
+
+<table border=1>
+<tr><td width=120>Object id:</td> <td> <dtml-var id></td></tr>
+<tr><td>Object title:</td> <td><dtml-var title></td></tr>
+
+<tr><td colspan=2 align="right"><input type="submit" value="update"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>
