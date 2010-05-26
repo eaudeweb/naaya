@@ -1,91 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
+		<form id="channel_details" title="Show all items from remote channel" />
+		<form id="comment_add" title="Add comment for content" />
+		<form id="comments_box" title="Box for content comments"/>
 		<form id="folder_add" title="NyFolder add"/>
-		<form id="folder_subobjects" title="NyFolder subobjects"/>
+		<form id="folder_administration_basket" title="Folder administration - centralized basket form"/>
+		<form id="folder_administration_feedback" title="Folder administration - customize feedback form"/>
+		<form id="folder_administration_logo" title="Folder administration - change logo"/>
+		<form id="folder_administration_portlets" title="Folder administration - right side portlets"/>
+		<form id="folder_administration_source" title="Folder administration - acl_users source"/>
+		<form id="folder_administration_users" title="Folder administration - users' management"/>
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="folder_basketofvalidation" title="NyFolder basket of invalid items"/>
 		<form id="folder_edit" title="NyFolder edit"/>
 		<form id="folder_editlogo" title="NyFolder edit logo"/>
 		<form id="folder_index" title="NyFolder default view"/>
-		<form id="folder_sortorder" title="NyFolder sort order"/>
+		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_renameid" title="NyFolder rename subitems ids"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
-		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
-		<form id="folder_administration_basket" title="Folder administration - centralized basket form"/>
-		<form id="folder_administration_logo" title="Folder administration - change logo"/>
-		<form id="folder_administration_users" title="Folder administration - users' management"/>
-		<form id="folder_administration_portlets" title="Folder administration - right side portlets"/>
-		<form id="folder_administration_feedback" title="Folder administration - customize feedback form"/>
-		<form id="folder_administration_source" title="Folder administration - acl_users source"/>
-		<form id="messages_box" title="Box for info or error messages"/>
-		<form id="languages_box" title="Box for changing the language on pages"/>
+		<form id="folder_sortorder" title="NyFolder sort order"/>
+		<form id="folder_subobjects" title="NyFolder subobjects"/>
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
-		<form id="comment_add" title="Add comment for content" />
-		<form id="channel_details" title="Show all items from remote channel" />
-		<form id="comments_box" title="Box for content comments"/>
-		<form id="site_index" title="Portal home page"/>
-		<form id="site_menusubmissions" title="Site menu for submissions"/>
-		<form id="standard_error_message" title="Portal standard error page"/>
-		<form id="site_messages" title="Portal messages page"/>
-		<form id="site_login" title="Portal login"/>
-		<form id="site_logout" title="Portal logout"/>
-		<form id="site_unauthorized" title="Portal logout"/>
+		<form id="languages_box" title="Box for changing the language on pages"/>
+		<form id="messages_box" title="Box for info or error messages"/>
+		<form id="site_admin_addrole" title="Portal administration - add role"/>
+		<form id="site_admin_adduser" title="Portal administration - add user"/>
+		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
+		<form id="site_admin_centre" title="Portal administration - centre"/>
+		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
+		<form id="site_admin_documentation" title="Portal administration - documentation"/>
+		<form id="site_admin_editor" title="Portal administration - editor settings"/>
+		<form id="site_admin_edituser" title="Portal administration - edit user"/>
+		<form id="site_admin_email" title="Portal administration - email settings"/>
+		<form id="site_admin_folderportlets" title="Portal administration - portlets for folders section"/>
+		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
+		<form id="site_admin_glossaries" title="Portal administration - glossaries"/>
+		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
+		<form id="site_admin_importexport" title="Portal administration - import export messages"/>
+		<form id="site_admin_layout" title="Portal administration - layout"/>
+		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
+		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
+		<form id="site_admin_linkslists" title="Portal administration - lists of links"/>
+		<form id="site_admin_linksportlets" title="Portal administration - list of links portlets section"/>
+		<form id="site_admin_localchannels" title="Portal administration - local channels"/>
+		<form id="site_admin_localchportlets" title="Portal administration - local channels section"/>
+		<form id="site_admin_logos" title="Portal administration - logos"/>
+		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
+		<form id="site_admin_messages" title="Portal administration - messages' summary"/>
+		<form id="site_admin_metadata" title="Portal administration - medata"/>
+		<form id="site_admin_network" title="Portal administration - network portals"/>
+		<form id="site_admin_properties" title="Portal administration - properties"/>
+		<form id="site_admin_reflist" title="Portal administration - list of items"/>
+		<form id="site_admin_reflists" title="Portal administration - selection lists"/>
+		<form id="site_admin_remotechannels" title="Portal administration - remote channels"/>
+		<form id="site_admin_remotechannels_aggregators" title="Portal administration - remote channels aggregators"/>
+		<form id="site_admin_remotechportlets" title="Portal administration - remote channels portlets section"/>
+		<form id="site_admin_rightportlets" title="Portal administration - right portlets section"/>
+		<form id="site_admin_roles" title="Portal administration - users and roles"/>
+		<form id="site_admin_sources" title="Portal administration - other users sources"/>
+		<form id="site_admin_specialportlets" title="Portal administration - system portlets section"/>
+		<form id="site_admin_template" title="Portal administration - macro"/>
+		<form id="site_admin_translations" title="Portal administration - translate messages"/>
+		<form id="site_admin_users" title="Portal administration - users"/>
+		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
+		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>
+		<form id="site_admin_versioncontrol" title="Portal administration - version control"/>
 		<form id="site_external_search" title="Portal external search"/>
-		<form id="site_search" title="Portal search"/>
-		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="site_googletranslate" title="Portal Google Translate widget"/>
-		<form id="site_requestrole" title="Portal request role"/>
+		<form id="site_index" title="Portal home page"/>
+		<form id="site_login" title="Portal login"/>
+		<form id="site_logout" title="Portal logout"/>
 		<form id="site_macro_add" title="Macro for add forms"/>
 		<form id="site_macro_edit" title="Macro for edit forms"/>
 		<form id="site_macro_schema_add" title="Macro for add forms using schemas"/>
 		<form id="site_macro_schema_edit" title="Macro for edit forms using schemas"/>
-		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_admin_centre" title="Portal administration - centre"/>
-		<form id="site_admin_metadata" title="Portal administration - medata"/>
-		<form id="site_admin_logos" title="Portal administration - logos"/>
-		<form id="site_admin_glossaries" title="Portal administration - glossaries"/>
-		<form id="site_admin_properties" title="Portal administration - properties"/>
-		<form id="site_admin_email" title="Portal administration - email settings"/>
-		<form id="site_admin_layout" title="Portal administration - layout"/>
-		<form id="site_admin_documentation" title="Portal administration - documentation"/>
-		<form id="site_admin_users" title="Portal administration - users"/>
-		<form id="site_admin_adduser" title="Portal administration - add user"/>
-		<form id="site_admin_edituser" title="Portal administration - edit user"/>
-		<form id="site_admin_addrole" title="Portal administration - add role"/>
-		<form id="site_admin_roles" title="Portal administration - users and roles"/>
-		<form id="site_admin_sources" title="Portal administration - other users sources"/>
-		<form id="site_admin_translations" title="Portal administration - translate messages"/>
-		<form id="site_admin_messages" title="Portal administration - messages' summary"/>
-		<form id="site_admin_importexport" title="Portal administration - import export messages"/>
-		<form id="site_admin_linkslists" title="Portal administration - lists of links"/>
-		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
-		<form id="site_admin_reflists" title="Portal administration - selection lists"/>
-		<form id="site_admin_reflist" title="Portal administration - list of items"/>
-		<form id="site_admin_network" title="Portal administration - network portals"/>
-		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
-		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
-		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>
-		<form id="site_admin_versioncontrol" title="Portal administration - version control"/>
-		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
-		<form id="site_admin_localchannels" title="Portal administration - local channels"/>
-		<form id="site_admin_remotechannels" title="Portal administration - remote channels"/>
-		<form id="site_admin_remotechannels_aggregators" title="Portal administration - remote channels aggregators"/>
-		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
-		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
-		<form id="site_admin_rightportlets" title="Portal administration - right portlets section"/>
-		<form id="site_admin_specialportlets" title="Portal administration - system portlets section"/>
-		<form id="site_admin_remotechportlets" title="Portal administration - remote channels portlets section"/>
-		<form id="site_admin_localchportlets" title="Portal administration - local channels section"/>
-		<form id="site_admin_folderportlets" title="Portal administration - portlets for folders section"/>
-		<form id="site_admin_linksportlets" title="Portal administration - list of links portlets section"/>
-		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
-		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
-		<form id="site_admin_editor" title="Portal administration - editor settings"/>
-		<form id="sitemap_add" title="Sitemap for picklists"/>
-		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
+		<form id="site_menusubmissions" title="Site menu for submissions"/>
+		<form id="site_messages" title="Portal messages page"/>
+		<form id="site_requestrole" title="Portal request role"/>
+		<form id="site_scripts" title="Portal site global scripts"/>
+		<form id="site_search" title="Portal search"/>
+		<form id="site_sitemap" title="Portal site map"/>
+		<form id="site_styles" title="Portal site global styles"/>
+		<form id="site_unauthorized" title="Portal logout"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
+		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
+		<form id="sitemap_add" title="Sitemap for picklists"/>
+		<form id="standard_error_message" title="Portal standard error page"/>
 	</forms>
 	<layout default_skin_id="skin" default_scheme_id="scheme">
 		<skin id="skin" title="Skin">

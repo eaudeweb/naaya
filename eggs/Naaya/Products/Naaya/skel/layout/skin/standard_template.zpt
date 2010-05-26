@@ -3,34 +3,26 @@
     /><metal:block define-slot="doctype"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"></metal:block>
     <html xmlns="http://www.w3.org/1999/xhtml"
         tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
-        tal:define="site_url here/getSitePath;
-                    skin_files_path python:here.getLayoutTool().get_skin_files_path()">
-    <head tal:define="layout_path python:here.getSite().getLayoutTool().absolute_url()">
+        tal:define="site_url here/getSitePath">
+    <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
         <tal:block replace="structure here/portal_statistics/gw_verify" />
+
         <metal:block define-slot="title">
             <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
         </metal:block>
 
-        <!--The stylesheets 'style', 'common' and 'print' are common to all schemes and are opened as imagefiles.
-        The stylesheet 'scheme_style' carries all the differences between schemes.-->
         <metal:block define-slot="standard-head-links">
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/style_css" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/common_css" />
-            <link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${layout_path}/print_css" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/scheme_style" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
+            <tal:block replace="structure python: here.getFormsTool().getForm('site_styles')()">Default Styles</tal:block>
         </metal:block>
 
         <metal:block define-slot="standard-head-content">
-            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
-            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-ui.js"></script>
-            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/utils.js"></script>
+            <tal:block replace="structure python: here.getFormsTool().getForm('site_scripts')()">Default JavaScripts</tal:block>
         </metal:block>
+
         <metal:block define-slot="head"></metal:block>
     </head>
     <metal:block define-slot="standard-body">

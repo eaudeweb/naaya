@@ -55,19 +55,6 @@ function findPosY(obj) {
     return curtop;
 }
 
-function gettext(msgid) {
-  if(! naaya_i18n_catalog) {
-      return msgid;
-  }
-  var value = naaya_i18n_catalog[msgid];
-  if (typeof(value) == 'undefined') {
-    return msgid;
-  } else {
-    return (typeof(value) == 'string') ? value : value[0];
-  }
-}
-
-
 //-----------------------------------------------------------------------------
 // Date object extensions
 // ----------------------------------------------------------------------------
