@@ -21,10 +21,10 @@
 #Python imports
 import time
 import smtplib
-import MimeWriter
 import cStringIO
 from urlparse import urlparse
 import logging
+import email.MIMEText, email.Utils, email.Charset, email.Header
 
 #Zope imports
 from Globals import InitializeClass
@@ -38,6 +38,7 @@ from Products.NaayaCore.constants import *
 import EmailTemplate
 from EmailSender import build_email
 from naaya.core.permissions import naaya_admin
+from naaya.core.utils import force_to_unicode
 
 mail_logger = logging.getLogger('naaya.core.email')
 
@@ -185,35 +186,38 @@ def divert_mail(enabled=True):
     else:
         diverted_mail = None
 
-def build_addresses(p_emails):
-    #given a list of emails returns a valid string for an email address
-    if type(p_emails) == type(''):
-        return p_emails
-    elif type(p_emails) == type([]):
-        return ', '.join(p_emails)
+def safe_header(value):
+    """ prevent header injection attacks (the email library doesn't) """
+    if '\n' in value:
+        return email.Header.Header(value.encode('utf-8'), 'utf-8')
+    else:
+        return value
 
-def create_message(p_content, p_to, p_from, p_subject):
-    p_to = build_addresses(p_to)
-    if isinstance(p_content, unicode): p_content = p_content.encode('utf-8')
-    if isinstance(p_subject, unicode): p_subject = p_subject.encode('utf-8')
-    #creates a mime-message that will render as text
-    l_out = cStringIO.StringIO()
-    l_writer = MimeWriter.MimeWriter(l_out)
-    # set up some basic headers
-    l_writer.addheader("From", p_from)
-    l_writer.addheader("To", p_to)
-    l_writer.addheader("Date", time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))
-    l_writer.addheader("Subject", p_subject)
-    l_writer.addheader("MIME-Version", "1.0")
-    # start the multipart section of the message
-    l_writer.startmultipartbody("alternative")
-    l_writer.flushheaders()
-    # the plain text section
-    l_subpart = l_writer.nextpart()
-    l_pout = l_subpart.startbody("text/plain", [("charset", 'utf-8')])
-    l_pout.write(p_content)
-    #close your writer and return the message body
-    l_writer.lastpart()
-    l_msg = l_out.getvalue()
-    l_out.close()
-    return l_msg
+def hack_to_use_quopri(message):
+    """
+    force message payload to be encoded using quoted-printable
+    http://mail.python.org/pipermail/baypiggies/2008-September/003984.html
+    """
+
+    charset = email.Charset.Charset('utf-8')
+    charset.header_encoding = email.Charset.QP
+    charset.body_encoding = email.Charset.QP
+
+    del message['Content-Transfer-Encoding']
+    message.set_charset(charset)
+
+def create_message(text, addr_to, addr_from, subject):
+    if isinstance(addr_to, basestring):
+        addr_to = (addr_to,)
+    addr_to = ', '.join(addr_to)
+    subject = force_to_unicode(subject)
+    text = force_to_unicode(text)
+
+    message = email.MIMEText.MIMEText(text.encode('utf-8'), 'plain')
+    hack_to_use_quopri(message)
+    message['To'] = safe_header(addr_to)
+    message['From'] = safe_header(addr_from)
+    message['Subject'] = safe_header(subject)
+    message['Date'] = email.Utils.formatdate()
+
+    return message.as_string()
