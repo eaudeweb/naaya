@@ -91,7 +91,7 @@
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Address</td>
-		<td tal:content="structure here/contact_address" />
+		<td tal:content="structure python:here.format_view(here.contact_address)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Telephone number</td>
@@ -115,55 +115,55 @@
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Important dates in the project and possible phasing</td>
-		<td tal:content="here/important_dates" />
+		<td tal:content="structure python:here.format_view(here.important_dates)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Project goal</td>
-		<td tal:content="here/goal" />
+		<td tal:content="structure python:here.format_view(here.goal)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Project subgoals</td>
-		<td tal:content="here/subgoals" />
+		<td tal:content="structure python:here.format_view(here.subgoals)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Planned activities, including planning</td>
-		<td tal:content="here/activities" />
+		<td tal:content="structure python:here.format_view(here.activities)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Intended results / output</td>
-		<td tal:content="here/results" />
+		<td tal:content="structure python:here.format_view(here.results)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Location(s)</td>
-		<td tal:content="here/locations" />
+		<td tal:content="structure python:here.format_view(here.locations)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Target group reach</td>
-		<td tal:content="here/target_group" />
+		<td tal:content="structure python:here.format_view(here.target_group)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Communication goals</td>
-		<td tal:content="here/communication_goals" />
+		<td tal:content="structure python:here.format_view(here.communication_goals)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Project interest</td>
-		<td tal:content="here/interest" />
+		<td tal:content="structure python:here.format_view(here.interest)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Project risks</td>
-		<td tal:content="here/risks" />
+		<td tal:content="structure python:here.format_view(here.risks)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Way of reporting to the communication coalition</td>
-		<td tal:content="here/reporting" />
+		<td tal:content="structure python:here.format_view(here.reporting)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Comments</td>
-		<td tal:content="here/comments" />
+		<td tal:content="structure python:here.format_view(here.comments)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Added value of the requested contribution for the project</td>
-		<td tal:content="here/added_value" />
+		<td tal:content="structure python:here.format_view(here.added_value)" />
 	</tr>
 </table>
 
@@ -383,7 +383,7 @@
 
 <table class="datatable" style="width: 600px">
 	<tr>
-		<td class="label" i18n:translate="">Financial contact person</td>
+		<td class="label" i18n:translate="" style="width:30%">Financial contact person</td>
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Name, organisation</td>
@@ -391,7 +391,7 @@
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Address</td>
-		<td tal:content="here/financial_contact_address" />
+		<td tal:content="structure python:here.format_view(here.financial_contact_address)" />
 	</tr>
 	<tr>
 		<td class="label" i18n:translate="">Telephone number</td>
