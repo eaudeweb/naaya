@@ -85,39 +85,6 @@ class EmailTool(Folder):
         #load default stuff
         pass
 
-    #core
-    def __create_email(self, p_content, p_to, p_from, p_subject):
-        if isinstance(p_content, unicode): p_content = p_content.encode('utf-8')
-        if isinstance(p_subject, unicode): p_subject = p_subject.encode('utf-8')
-        #creates a mime-message that will render as text
-        l_out = cStringIO.StringIO()
-        l_writer = MimeWriter.MimeWriter(l_out)
-        # set up some basic headers
-        l_writer.addheader("From", p_from)
-        l_writer.addheader("To", p_to)
-        l_writer.addheader("Date", time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))
-        l_writer.addheader("Subject", p_subject)
-        l_writer.addheader("MIME-Version", "1.0")
-        # start the multipart section of the message
-        l_writer.startmultipartbody("alternative")
-        l_writer.flushheaders()
-        # the plain text section
-        l_subpart = l_writer.nextpart()
-        l_pout = l_subpart.startbody("text/plain", [("charset", 'utf-8')])
-        l_pout.write(p_content)
-        #close your writer and return the message body
-        l_writer.lastpart()
-        l_msg = l_out.getvalue()
-        l_out.close()
-        return l_msg
-
-    def __build_addresses(self, p_emails):
-        #given a list of emails returns a valid string for an email address
-        if type(p_emails) == type(''):
-            return p_emails
-        elif type(p_emails) == type([]):
-            return ', '.join(p_emails)
-
     def _guess_from_address(self):
         if self.portal_url != '':
             return 'notifications@%s' % urlparse(self.getSite().get_portal_domain())[1]
@@ -171,8 +138,9 @@ class EmailTool(Folder):
                 mail_logger.info('Sending email from site: %r '
                                  'to: %r subject: %r',
                                  site_path, p_to, p_subject)
-                l_message = self.__create_email(p_content, self.__build_addresses(p_to), p_from, p_subject)
-                server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
+                l_message = create_message(p_content, p_to, p_from, p_subject)
+                server = smtplib.SMTP(self.mail_server_name,
+                                      self.mail_server_port)
                 server.sendmail(p_from, p_to, l_message)
                 server.quit()
                 return 1
@@ -216,3 +184,36 @@ def divert_mail(enabled=True):
         return diverted_mail
     else:
         diverted_mail = None
+
+def build_addresses(p_emails):
+    #given a list of emails returns a valid string for an email address
+    if type(p_emails) == type(''):
+        return p_emails
+    elif type(p_emails) == type([]):
+        return ', '.join(p_emails)
+
+def create_message(p_content, p_to, p_from, p_subject):
+    p_to = build_addresses(p_to)
+    if isinstance(p_content, unicode): p_content = p_content.encode('utf-8')
+    if isinstance(p_subject, unicode): p_subject = p_subject.encode('utf-8')
+    #creates a mime-message that will render as text
+    l_out = cStringIO.StringIO()
+    l_writer = MimeWriter.MimeWriter(l_out)
+    # set up some basic headers
+    l_writer.addheader("From", p_from)
+    l_writer.addheader("To", p_to)
+    l_writer.addheader("Date", time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))
+    l_writer.addheader("Subject", p_subject)
+    l_writer.addheader("MIME-Version", "1.0")
+    # start the multipart section of the message
+    l_writer.startmultipartbody("alternative")
+    l_writer.flushheaders()
+    # the plain text section
+    l_subpart = l_writer.nextpart()
+    l_pout = l_subpart.startbody("text/plain", [("charset", 'utf-8')])
+    l_pout.write(p_content)
+    #close your writer and return the message body
+    l_writer.lastpart()
+    l_msg = l_out.getvalue()
+    l_out.close()
+    return l_msg
