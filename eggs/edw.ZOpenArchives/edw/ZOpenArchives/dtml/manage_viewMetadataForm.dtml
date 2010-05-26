@@ -1,0 +1,49 @@
+<dtml-var standard_html_header>
+
+
+
+<dtml-var headerBox>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" >
+
+<tr><td> <img src="&dtml-portal_url;/MISC/images/icono/boxPuce.gif" align="top"> <span class="titreBox"> Sharing </span></td></tr>
+<tr><td><br><span class="texte"><dtml-gettext catalog="gettext">To share your object via the OAI interface, choose partager. The use for this is to share your document via the Portail</dtml-gettext>.
+<br>
+<dtml-gettext catalog="gettext">Le partage est immédiat, par contre l'indéxation sur les serveurs OAI est plus longue</dtml-gettext>.</span>
+</td></tr>
+
+<tr><td>
+<form action="manage_viewMetadata">
+<br>
+<input class="texte" type="checkbox" name="state" value="shared" <dtml-if "oai_state()=='shared'" >checked</dtml-if>> <span class="texte">partager</span>
+<input class="texte" type="submit" value="submit">
+</form>
+
+</td></tr>
+</table>
+<dtml-var footerBox>
+<br>
+<dtml-var headerBox>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" >
+<tr><td colspan=3 ><img src="&dtml-portal_url;/MISC/images/icono/boxPuce.gif" align="top"> <span class="titreBox"> Metadata</span></td></tr>
+<tr><td colspan=3><br><span class="texte">These are the namespaces you can add metadata under. Click on edit or delete to modify the data. Your XML must be use UTF-8 encoding.</span></td></tr>
+<tr><td colspan=3>&nbsp;</td></tr>
+<dtml-in get_MetadataList>
+<dtml-let m_prefix="_['sequence-item']">
+<tr><td width="25%"><span class="titreBox"><dtml-var sequence-item></span></td><td valign="top">
+&nbsp;&nbsp;<a href="manage_addMetadataForm?m_name=&dtml-m_prefix;"><span class="texte"><i>[add/edit]</i></span></a>
+&nbsp;&nbsp;<dtml-if  "has_metadata(m_prefix)"><a href="manage_deleteMetadataForm?m_name=&dtml-m_prefix;"><span class="texte"><i>[delete]</i></span></a><dtml-else><span class="texte"><i>[delete]</i></span></dtml-if></td>
+<td><span class="texte"><dtml-var "get_namespaceInfoByPrefix(m_prefix)['description']"></span></td>
+</tr></dtml-let>
+<tr><td colspan=3>&nbsp;</td></tr>
+</dtml-in>
+</table>
+<dtml-var footerBox>
+
+<br />
+<dtml-var headerBox>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" >
+<tr><td><img src="&dtml-portal_url;/MISC/images/icono/boxPuce.gif" align="top"> <span class="titreBox"> Metadata xml</span></td></tr>
+<tr><td><span class="texte"><dtml-var oai_metadata html_quote></span></td></tr>
+</table>
+<dtml-var footerBox>
+<dtml-var standard_html_footer>
