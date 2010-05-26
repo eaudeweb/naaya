@@ -276,4 +276,7 @@ class CHMProject(SimpleItem):
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)
 
+    def format_view(self, message=''):
+        return message.replace('&','&amp;').replace('<', '&lt').replace('>','&gt').replace('\r\n','<br/>')
+
 InitializeClass(CHMProject)
