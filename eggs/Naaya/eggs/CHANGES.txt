@@ -1,0 +1,15 @@
+### Change v1.3 17-Feb-2006
+    - add eXsit DB repository features include
+      + eXist OAIRepository
+      + eXist OAIAggregator
+
+
+### Change v1.2 12-Oct-2004
+    - use BTreeFolder2 in place of BTreeFolder 
+
+### Change v1.1 12-Oct-2004
+    - Add plone compatibilty (now we can add a Zope OAI Server in a plone site and Add a ZCatalog Harvester on portal_catalog)
+    - Add default oai_dc namespace in OAI Aggregator Namespaces folder
+    
+
+## 1.0 Initial release
