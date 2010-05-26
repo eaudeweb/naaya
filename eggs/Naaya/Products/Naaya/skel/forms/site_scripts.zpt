@@ -1,6 +1,8 @@
-<tal:block define="site_url here/getSitePath">
+<tal:block define="
+    site_url here/getSitePath;
+    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-ui.js"></script>
     <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/utils.js"></script>
-    <script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js"></script><!-- Translated messages in json format -->
+    <script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js?lang=${curr_lang}"></script><!-- Translated messages in json format -->
 </tal:block>

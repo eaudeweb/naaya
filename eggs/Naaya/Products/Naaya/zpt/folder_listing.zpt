@@ -12,7 +12,6 @@
 	can_operate python:listing_info['can_operate'];
 	ratings here/folder_listing_ratings">
 
-<script type="text/javascript" tal:attributes="src string:${site_url}/i18n_js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	// Multiple items operations
