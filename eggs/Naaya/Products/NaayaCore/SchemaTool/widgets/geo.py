@@ -18,6 +18,7 @@
 # Alex Morega, Eau de Web
 
 from decimal import Decimal as D
+import simplejson as json
 
 class Geo(tuple):
     """ Immutable type representing individual geographical points """
@@ -76,3 +77,19 @@ class Geo(tuple):
     def is_in_rectangle(self, lat_min, lat_max, lon_min, lon_max):
         return D(str(lat_max)) > self.lat > D(str(lat_min)) and\
                 D(str(lon_max)) > self.lon > D(str(lon_min))
+
+def json_encode_helper(value):
+    if isinstance(value, D):
+        return str(value)
+    else:
+        raise ValueError('Can not encode value %r' % value)
+
+def geo_as_json(value):
+    if value is None:
+        return json.dumps(None)
+    assert isinstance(value, Geo)
+    if value.missing_lat_lon:
+        return json.dumps(None)
+    else:
+        return json.dumps({'lat': value.lat, 'lon': value.lon},
+                          default=json_encode_helper)

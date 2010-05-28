@@ -1,44 +1,5 @@
-var map_needs_refresh = false;
-var map_refresh_in_progress = false;
-/**
- * Initialize and display the map in engine independent way.
- * @return Nothing
- */
-function showMap() {
-	checkConfig( "showMap" );
-	if( map_engine == "yahoo" ) {
-		mapTool = new YGeoMapTool;
-	}
-	if( map_engine == "google" ) {
-		mapTool = new GGeoMapTool;
-	}
-	mapTool.showMap(center_address, initial_zoom, enableScrollZoom, map_types, initial_map_type);
-	mapTool.onMapMove(startMapRefresh);
-	cluster_re = /^cluster_\d+$/
-	for( symbol in symbolImageURLPairArray ) {
-		if (cluster_re.test(symbol)) {
-			symbolIcons[ "mk_" + symbol ] = mapTool.createIconSymbol( symbolImageURLPairArray[ symbol ], 32, 32);
-		} else {
-			symbolIcons[ "mk_" + symbol ] = mapTool.createIconSymbol( symbolImageURLPairArray[ symbol ], 16, 16);
-		}
-	}
-}
-
-/**
- * Verifies if the mapping system configuration is correct
- * @param callerMethodName Callee name, to identify in debugging the script
- * @return
- */
-function checkConfig( callerMethodName ) {
-	if( map_engine != "yahoo" && map_engine != "google" ) {
-		throw callerMethodName + ".checkConfig: map_engine does not point to neither 'google' not 'yahoo'";
-	}
-}
-
-
 var isSelected = true;
-function toggleSelect()
-{
+function toggleSelect() {
   var frm = document.frmFilterMap;
   if(frm != null) {
 	  var i;
@@ -53,49 +14,9 @@ function toggleSelect()
   startMapRefresh();
 }
 
-/**
- * Handle the XmlHttpRequest event, parse the result and add the markers on map.
- * Map engine independent.
- * @param req XmlHttpRequest object
- * @return Nothing
- */
-function httpDocumentHandler(req) {
-	checkConfig( "httpDocumentHandler" );
-	try {
-		var data = req.responseText;
-		var arrMarkers = data.split('$$');
-		var num_records = 0;
-		for (var i = 0; i < arrMarkers.length; i++) {
-			var b = arrMarkers[i];
-			if (b != '') {
-				var m = b.split('##');
-				lat = parseFloat(m[0]);
-				lng = parseFloat(m[1]);
-				id = m[2].toString();
-				label = m[3].toString();
-				mapMarker = m[4].toString();
-				tooltip = m[5].toString();
-				var marker = mapTool.createMarker(lat, lng, tooltip, label, symbolIcons[mapMarker]);
-				if( mapTool.markerHash[ mapMarker ] == null ) mapTool.markerHash[ mapMarker ] = new Array();
-				mapTool.markerHash[ mapMarker ].push( marker );
-				mapTool.addMarkerOnMap(marker);
-				if (label === 'cluster') {
-					var m = /(\d+) location\(s\) inside/.exec(tooltip);
-					if (m === null) {
-						num_records++;
-					} else {
-						num_records += parseInt(m[1]);
-					}
-				} else {
-					num_records++;
-				}
-			}
-		}
-	} catch(e) {
-		alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)
-	};
-	setRecordCounter(num_records);
-	document.body.style.cursor = "default";
+function encode_form_value(value) {
+    // uri-encode with "+" for space
+    return encodeURIComponent(value).replace(/%20/g, '+');
 }
 
 /**
@@ -104,44 +25,79 @@ function httpDocumentHandler(req) {
  * @return Nothing
  */
 
-function showMapLocationsHandler(){
-	checkConfig( "showMapLocations" );
-	mapTool.clearMap();
-	clear_custom_balloon();
-	mapTool.markerHash = {};
-	setAjaxWait();
-	var bounds = mapTool.getBounds();
-	var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
-		'&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
-	var query = document.getElementById('geo_query').value;
-	if (query === naaya_map_i18n["Type keywords"]) {
-		query = "";
-	}
-	if (encodeForm("frmFilterMap").match("geo_types") != null) {
-		var enc_form = encodeForm("frmFilterMap");
-		//don't send explanatory text
-		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type location address"]), "");
-		enc_form = enc_form.replace(encodeURIComponent(naaya_map_i18n["Type keywords"]), "");
-		doHttpRequestNoErrorChecking( server_base_url + "/xrjs_getGeoClusters?" + str_bounds +
-				'&'+ enc_form + '&geo_query=' + query, mapRefreshHandler);
-	}
-	else {
-		setRecordCounter(0);
-		document.body.style.cursor = "default";
-		noMapRefreshNeeded();
-	}
-	locations_update_notify(bounds, query);
+function load_map_points(bounds, callback) {
+    clear_custom_balloon();
+    setAjaxWait();
+    var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
+        '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
+    var query = document.getElementById('geo_query').value;
+    if (query === naaya_map_i18n["Type keywords"]) {
+        query = "";
+    }
+    var enc_form = $("form#frmFilterMap").serialize();
+    //don't send explanatory text
+    enc_form = enc_form.replace(encode_form_value(
+                naaya_map_i18n["Type location address"]), "");
+    enc_form = enc_form.replace(encode_form_value(
+                naaya_map_i18n["Type keywords"]), "");
+    var url = portal_map_url + "/xrjs_getGeoClusters?" +
+              str_bounds + '&' + enc_form + '&geo_query=' + query;
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        success: function(data) {
+            document.body.style.cursor = "default";
+            callback(parse_response_data(data));
+        },
+        error: function(req) {
+            document.body.style.cursor = "default";
+            setRecordCounter(0);
+            if(console) console.error('error getting map data', req);
+        }
+    });
+
+    function parse_response_data(response) {
+        if(response.error) {
+            alert("Error loading points: " + response.error);
+        }
+        var num_records = 0;
+        $.each(response.points, function(i, point) {
+            if (point.label === 'cluster') {
+                var m = /(\d+) location\(s\) inside/.exec(point.tooltip);
+                if (m === null) {
+                    num_records++;
+                } else {
+                    num_records += parseInt(m[1]);
+                }
+            } else {
+                num_records++;
+            }
+        });
+        setRecordCounter(num_records);
+        update_locations_values(bounds, query);
+        return response.points;
+    }
 }
 
-var locations_update_observers = [update_locations_values];
-function locations_update_register(func) {
-	locations_update_observers.push(func);
-}
-function locations_update_notify(bounds, query) {
-	for (f_i in locations_update_observers) {
-		f = locations_update_observers[f_i];
-		f(bounds, query);
-	}
+function load_marker_balloon(latitude, longitude, callback) {
+    var query = document.getElementById('geo_query').value;
+    if (query === naaya_map_i18n["Type keywords"]) {
+        query = "";
+    }
+    var enc_form = $("form#frmFilterMap").serialize();
+    //don't send explanatory text
+    enc_form = enc_form.replace(encode_form_value(
+                    naaya_map_i18n["Type location address"]), "");
+    enc_form = enc_form.replace(encode_form_value(
+                    naaya_map_i18n["Type keywords"]), "");
+
+    var url = portal_map_url + "/xrjs_getTooltip?" +
+            enc_form + '&lat='+ latitude + '&lon=' + longitude +
+            '&geo_query=' + query;
+
+    $.get(url, function(data) {
+        callback(data);
+    });
 }
 
 function update_locations_values(bounds, query){
@@ -171,20 +127,18 @@ function update_locations_values(bounds, query){
 				"&geo_types=" + form.symbols.value +
 				"&geo_query=" + query;
 	
-		var list_locations_link = document.getElementById('view_as_list');
-		list_locations_link.href = "./list_locations" + req_link;
-		var geo_rss_link = document.getElementById('download_georss');
-		geo_rss_link.href = "./export_geo_rss" + req_link;
-		var view_ge_link = document.getElementById('view_in_google_earth');
+		$('#view_as_list').attr('href', "./list_locations" + req_link);
+		$('#download_georss').attr('href', "./export_geo_rss" + req_link);
 		var form_symbols = form.symbols.value.split(',');
-		var req_symbols = ""
+		var req_symbols = "";
 		for (var i=0;i<form_symbols.length; i++) {
 			req_symbols += ("geo_types=" + form_symbols[i]);
 			if (i < form_symbols.length) {
 				req_symbols += "&";
 			}
 		}
-		view_ge_link.href = "./downloadLocationsKml?" + req_symbols + "&geo_query=" + query;
+		$('#view_in_google_earth').attr('href', "./downloadLocationsKml?" +
+		       req_symbols + "&geo_query=" + query);
 	}
 }
 
@@ -201,10 +155,11 @@ function setRecordCounter( value ) {
 	document.getElementById('record_counter').innerHTML = value.toString();
 }
 
-function findAddress() {
+function findAddress(evt) {
+	if(evt) evt.preventDefault();
 	mapCenterLoc = document.getElementById('address').value;
 	if (mapCenterLoc != '') {
-		mapTool.drawZoomAndCenter(mapCenterLoc);
+		map_engine.go_to_address(mapCenterLoc);
 	}
 }
 
@@ -216,36 +171,8 @@ function handleKeyPress(elem, key) {
 }
 
 function startMapRefresh() {
-	if (map_refresh_in_progress) {
-		map_needs_refresh = true;
-		return;
-	}
-
-	map_refresh_in_progress = true;
 	setAjaxWait();
-
-	map_needs_refresh = false;
-	showMapLocationsHandler();
-}
-
-function mapRefreshHandler(req) {
-	map_refresh_in_progress = false;
-	if (map_needs_refresh) {
-		startMapRefresh();
-		return
-	}
-
-	if (req.status == 200) {
-		httpDocumentHandler(req);
-	} else {
-		setRecordCounter(0);
-		document.body.style.cursor = "default";
-		alert('Naaya GeoMapTool: there was a problem retrieving the map data:\n' + xmlhttp.statusText);
-	}
-}
-
-function noMapRefreshNeeded() {
-	map_refresh_in_progress = false;
+	map_engine.refresh_points();
 }
 
 function toggleChildren(elem) {

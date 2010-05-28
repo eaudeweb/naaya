@@ -92,3 +92,10 @@ def yahoo_geocode(address):
     addr = addresses[0] #take the first one, it should be the good one
     return (addr['Latitude'].encode('utf-8'), addr['Longitude'].encode('utf-8'))
 
+def geocode(portal_map, address):
+    if portal_map.current_engine == 'yahoo':
+        return yahoo_geocode(address)
+    elif portal_map.current_engine == 'google':
+        return location_geocode(address)
+    else:
+        return None

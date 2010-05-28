@@ -84,10 +84,7 @@ class CSVImportTool(Implicit, Item):
         lon = properties.get(self.geo_fields['lon'], '')
         address = properties.get(self.geo_fields['address'], '')
         if lat.strip() == '' and lon.strip() == '' and address:
-            if self.portal_map.map_engine == 'yahoo':
-                coordinates = geocoding.yahoo_geocode(address)
-            elif self.portal_map.map_engine == 'google':
-                coordinates = geocoding.location_geocode(address)
+            coordinates = geocoding.geocode(self.portal_map, address)
             if coordinates != None:
                 lat, lon = coordinates
                 properties[self.geo_fields['lat']] = lat

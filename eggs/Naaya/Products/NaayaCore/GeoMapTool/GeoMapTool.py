@@ -31,6 +31,7 @@ from xml.dom import minidom
 import simplejson as json
 import csv
 from StringIO import StringIO
+import operator
 
 #Zope imports
 from Globals import InitializeClass
@@ -39,17 +40,18 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from zLOG import LOG, DEBUG, INFO, ERROR
 from App.ImageFile import ImageFile
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate, manage_addPageTemplate
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from persistent.dict import PersistentDict
 
 #Product imports
-from constants import *
 from Products.NaayaBase.constants import *
 import Products.NaayaBase.NyContentType
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils, findDuplicates
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
+from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -59,22 +61,11 @@ from managers.kml_gen import kml_generator
 from managers.kml_parser import parse_kml
 from managers.csv_reader import CSVReader
 from managers.geocoding import location_geocode
-from managers.yahoo import Yahoo
 
-def get_template(name, skip_script=False):
-    f = open(os.path.join(os.path.dirname(__file__), 'templates', name))
-    try:
-        content = f.read()
-    finally:
-        f.close()
-    if skip_script:
-        return content
-    return ''.join(("""<script type="text/javascript">\n<!--\n""", content, """\n// -->\n</script>\n"""))
+all_engines = {}
 
-TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = 'xmlrpc_locations_map_loader.js'
-TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = 'xmlrpc_simple_map_loader.js'
-TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = 'xmlrpc_addpick_map_loader.js'
-TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = 'xmlrpc_editpick_map_loader.js'
+def register_map_engine(cls):
+    all_engines[cls.name] = cls
 
 class GeoMapToolUploadError(Exception):
     """GeoMapTool Upload Error"""
@@ -91,29 +82,21 @@ def manage_addGeoMapTool(self, languages=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+def err_info():
+    import sys, traceback
+    return traceback.format_exception_only(*sys.exc_info()[:2])[-1].strip()
+
 class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     """
     Class that implements the tool.
     """
 
-    mapsapikey = ['m.6kzBLV34FOaYaMCfIKBRHIIYE8zCf6c6yxcc5rZCWkCilWFPzAhcyQEcRTgYKy5g--']
-    googleApiKey = ['ABQIAAAAkblOrSS9iVzkKUfXj3gOFRR26BjrSmLtamIPMRgDuTUxZh8BLxQ2qfb6PUeks1ZMeSmUGC0ZTrNFVg']
-    map_engine = 'yahoo'
     #center map in Europe
-    center_locality = MAP_CENTER_LOCALITY
-    center_zoom = MAP_CENTER_ZOOM
-    detailed_zoom = MAP_DETAILED_ZOOM
-    map_width = MAP_WIDTH
-    map_height = MAP_HEIGHT
-    detailed_map_width = MAP_DETAILED_WIDTH
-    detailed_map_height = MAP_DETAILED_HEIGHT
-    map_types = YAHOO_MAP_TYPES
-    default_type = 'YAHOO_MAP_REG'
-    enableKeyControls = True
     _cluster_pngs = [ImageFile('images/cluster_less_10.png', globals()),
                         ImageFile('images/cluster_10_100.png', globals()),
                         ImageFile('images/cluster_100_1k.png', globals()),
                         ImageFile('images/cluster_1k_more.png', globals())]
+
     def _pick_cluster(self, len_group):
         if len_group > 1000:
             return 3
@@ -176,19 +159,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security = ClassSecurityInfo()
 
-    manage_options = (
-        Folder.manage_options
-    )
-
-    _properties = (
-        Folder._properties
-        +
-        (
-            {'id':'center_locality', 'type': 'string', 'mode': 'w'},
-            {'id':'center_zoom', 'type': 'int', 'mode': 'w'},
-            {'id':'detailed_zoom', 'type': 'int', 'mode': 'w'},
-        )
-    )
+    manage_options = Folder.manage_options[:2] + (
+        {'label': 'Admin', 'action': 'admin_map_html'},
+    ) + Folder.manage_options[2:]
 
     def __init__(self, id, title):
         """
@@ -196,129 +169,27 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """
         self.id = id
         self.title = title
-        self.mapsapikey = ['m.6kzBLV34FOaYaMCfIKBRHIIYE8zCf6c6yxcc5rZCWkCilWFPzAhcyQEcRTgYKy5g--']
-        self.googleApiKey = ['ABQIAAAAkblOrSS9iVzkKUfXj3gOFRR26BjrSmLtamIPMRgDuTUxZh8BLxQ2qfb6PUeks1ZMeSmUGC0ZTrNFVg']
-        self.map_engine = 'yahoo'
-        #center map in Europe
-        self.center_locality = MAP_CENTER_LOCALITY
-        self.center_zoom = MAP_CENTER_ZOOM
-        self.detailed_zoom = MAP_DETAILED_ZOOM
-        self.map_width = MAP_WIDTH
-        self.map_height = MAP_HEIGHT
-        self.detailed_map_width = MAP_DETAILED_WIDTH
-        self.detailed_map_height = MAP_DETAILED_HEIGHT
-        self.map_types = YAHOO_MAP_TYPES
-        self.default_type = 'YAHOO_MAP_REG'
         symbols_tool.__dict__['__init__'](self)
-        self.enableKeyControls = True
+        self.initial_address = u'Europe'
+        self.map_height_px = 500
+        self.objmap_height_px = 400
+        self.objmap_width_px = 400
+        self.set_map_engine('google')
 
-    def __setstate__(self,state):
-        """Updates"""
-        if not hasattr(self, 'map_types'):
-            self.map_types = YAHOO_MAP_TYPES
-        if not hasattr(self, 'map_engine'):
-            self.map_engine = 'yahoo'
-        if not hasattr(self, 'googleApiKey'):
-            self.googleApiKey = ''
-        if not hasattr(self, 'default_type'):
-            self.default_type = 'YAHOO_MAP_REG'
-        if not hasattr(self, 'enableKeyControls'):
-            self.enableKeyControls = True
-        Folder.inheritedAttribute("__setstate__") (self, state)
+    def _create_map_engine_if_needed(self):
+        name = self.current_engine
+        obj_id = 'engine_%s' % name
+        if obj_id not in self.objectIds():
+            self._setObject(obj_id, all_engines[name](id=obj_id))
 
-    #admin actions
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
-    def manageProperties(self, mapsapikey=[], googleApiKey=[], map_engine='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', enableKeyControls='', REQUEST=None):
-        """ """
-        try: center_zoom = abs(int(center_zoom))
-        except: center_zoom = MAP_CENTER_ZOOM
-        try: detailed_zoom = abs(int(detailed_zoom))
-        except: detailed_zoom = MAP_DETAILED_ZOOM
-        try: map_width = abs(int(map_width))
-        except: map_width = MAP_WIDTH
-        try: map_height = abs(int(map_height))
-        except: map_height = MAP_HEIGHT
-        try: detailed_map_width = abs(int(detailed_map_width))
-        except: detailed_map_width = MAP_DETAILED_WIDTH
-        try: detailed_map_height = abs(int(detailed_map_height))
-        except: detailed_map_height = MAP_DETAILED_HEIGHT
-        self.mapsapikey = mapsapikey
-        self.googleApiKey = googleApiKey
-        self.map_engine = map_engine
-        self.center_locality = center_locality
-        self.center_zoom = center_zoom
-        self.detailed_zoom = detailed_zoom
-        self.map_width = map_width
-        self.map_height = map_height
-        self.detailed_map_width = detailed_map_width
-        self.detailed_map_height = detailed_map_height
-        self.map_types = self.utConvertToList(map_types)
-        if enableKeyControls: self.enableKeyControls = True
-        else: self.enableKeyControls = False
-        if not default_type:
-            default_type = 'YAHOO_MAP_REG'
-        self.default_type = default_type
-        self._p_changed = 1
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect('%s/admin_map_html' % self.absolute_url())
+    security.declarePrivate('set_map_engine')
+    def set_map_engine(self, name):
+        self.current_engine = name
+        self._create_map_engine_if_needed()
 
-    def get_mapsapikey(self):
-        """Return the Yahoo API key for the current domain"""
-        yahoo_key = self.mapsapikey
-        current_domain = getattr(self.REQUEST, 'other')['SERVER_URL']
-        if isinstance(yahoo_key, list):                 #backwards compatibility
-            keys = []
-            #split the domain/key pairs
-            for domain_key in yahoo_key:
-                key_mapping = tuple(domain_key.split('::'))
-                #only add keys that specify a domain
-                if len(key_mapping) == 2:
-                    keys.append(key_mapping)
-            if keys:
-                for domain, key in keys:
-                    if domain == current_domain:
-                        return key
-            #no domain/key pairs were found, return the first value in the list
-            if len(yahoo_key):
-                return yahoo_key[0]
-            return ''
-        return yahoo_key
-
-    def display_mapsapikeys(self):
-        key = self.mapsapikey
-        if isinstance(key, list):
-            return '\n'.join(key)
-        else:
-            return self.mapsapikey
-
-    def get_googleApiKey(self):
-        """Return the Google API key for the current domain"""
-        google_key = self.googleApiKey
-        current_domain = getattr(self.REQUEST, 'other')['SERVER_URL']
-        if isinstance(google_key, list):                #backwards compatibility
-            keys = []
-            #split the domain/key pairs
-            for domain_key in google_key:
-                key_mapping = tuple(domain_key.split('::'))
-                #only add keys that specify a domain
-                if len(key_mapping) == 2:
-                    keys.append(key_mapping)
-            if keys:
-                for domain, key in keys:
-                    if domain == current_domain:
-                        return key
-            #no domain/key pairs were found, return the first value in the list
-            if len(google_key):
-                return google_key[0]
-            return ''
-        return google_key
-
-    def display_googleApiKeys(self):
-        key = self.googleApiKey
-        if isinstance(key, list):
-            return '\n'.join(key)
-        else:
-            return key
+    security.declarePrivate('get_map_engine')
+    def get_map_engine(self):
+        return self['engine_%s' % self.current_engine]
 
     def can_filter_by_first_letter(self):
         catalog_tool = self.getCatalogTool()
@@ -654,62 +525,72 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
         return '\n'.join(output)
 
-    security.declareProtected(view, 'xrjs_getZoomLevel')
-    def xrjs_getZoomLevel(self, REQUEST=None, **kwargs):
-        """ """
-        if REQUEST:
-            kwargs.update(REQUEST.form)
-        address = kwargs.get('address', '')
-        if not address:
-            return 6
-        return Yahoo(self.get_mapsapikey()).get_zoom_level(address)
-
     security.declareProtected(view, 'xrjs_getGeoPoints')
     def xrjs_getGeoPoints(self, REQUEST):
         """ """
-        r = []
-        ra = r.append
-        portal_ob = self.getSite()
-        for res in self.search_geo_objects(REQUEST=REQUEST):
-            if res.geo_location is None:
-                continue
-            ra('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res.geo_location.lat),
-                                      self.utToUtf8(res.geo_location.lon),
-                                      self.utToUtf8(res.id),
-                                      self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
-                                      'mk_%s' % self.utToUtf8(res.geo_type),
-                                      self.utToUtf8(self.get_marker(res)),
-                                      ))
+        try:
+            points = []
+            for res in self.search_geo_objects(REQUEST=REQUEST):
+                if res.geo_location is None:
+                    continue
+                points.append({
+                    'lat': res.geo_location.lat,
+                    'lon': res.geo_location.lon,
+                    'id': res.getId(),
+                    'label': res.title_or_id(),
+                    'icon_name': 'mk_%s' % res.geo_type,
+                    'tooltip': self.get_marker(res),
+                })
 
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return '$$'.join(r)
+            json_response = json.dumps({'points': points},
+                                       default=json_encode_helper)
+
+        except:
+            self.log_current_error()
+            json_response = json.dumps({'error': err_info(), 'points': {}})
+
+        REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
+        return json_response
 
     security.declareProtected(view, 'xrjs_getGeoClusters')
     def xrjs_getGeoClusters(self, REQUEST):
         """ """
-        r = []
+        try:
+            points = []
+            cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
 
-        cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
+            for center, n_points in cluster_obs:
+                points.append({
+                    'lat': center.lat,
+                    'lon': center.lon,
+                    'id': '',
+                    'label': 'cluster',
+                    'icon_name': ('mk_cluster_%s' %
+                                  self._pick_cluster(n_points)),
+                    'tooltip': (self._cluster_marker_template % n_points),
+                })
 
-        for res in cluster_obs:
-            r.append('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res[0].lat),
-                                              self.utToUtf8(res[0].lon),
-                                              '', # id
-                                              'cluster', # title or id
-                                              'mk_cluster_%s' % self._pick_cluster(res[1]), # geo_type
-                                               self.utToUtf8(self._cluster_marker_template % res[1]), # tooltip
-                                              ))
-        for res in single_obs:
-            r.append('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res.geo_location.lat),
-                                              self.utToUtf8(res.geo_location.lon),
-                                              self.utToUtf8(res.id),
-                                              self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
-                                              'mk_%s' % self.utToUtf8(res.geo_type),
-                                              self.utToUtf8(self.get_marker(res)),
-                                              ))
+            for res in single_obs:
+                if res.geo_location is None:
+                    continue
+                points.append({
+                    'lat': res.geo_location.lat,
+                    'lon': res.geo_location.lon,
+                    'id': res.getId(),
+                    'label': res.title_or_id(),
+                    'icon_name': 'mk_%s' % res.geo_type,
+                    'tooltip': self.get_marker(res),
+                })
 
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return '$$'.join(r)
+            json_response = json.dumps({'points': points},
+                                       default=json_encode_helper)
+
+        except:
+            self.log_current_error()
+            json_response = json.dumps({'error': err_info(), 'points': {}})
+
+        REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
+        return json_response
 
 
     security.declareProtected(view, 'xrjs_getTooltip')
@@ -724,118 +605,25 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             ret += self.get_small_marker(ob)
         return ret
 
-    security.declareProtected(view, 'xrjs_simple_feed')
-    def xrjs_simple_feed(self, key='', show='', REQUEST=None):
-        """ """
-        #if key == self.getSession(MSP_SESSION_KEY, None):
-        res = ''
-        ob = self.unrestrictedTraverse('%s' % show, None)
-        if ob and not isinstance(ob, GeoMapTool):
-            if ob.geo_location is not None:
-                res = '%s|%s|%s' % (ob.geo_location.lat, ob.geo_location.lon, self.utJavaScriptEncode(ob.title_or_id()))
-        #self.delSession(MSP_SESSION_KEY)
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return res
-
-    security.declareProtected(view, 'xrjs_markers')
-    def xrjs_markers(self):
-        #load markers on the map
-        output = []
-        out_a = output.append
-        for symbol in self.getSymbolsList():
-            out_a("mk_%s = new YImage();" % symbol.id)
-            icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
-            if icon_url is not None:
-                out_a('mk_%s.src = "%s";' % (symbol.id, icon_url))
-                out_a('mk_%s.size = new YSize(17, 17);' % symbol.id)
-                out_a('mk_%s.offsetSmartWindow = new YCoordPoint(6, 11);' % symbol.id)
-
-        return '\n'.join(output)
-
-
-    def jsMarkerIcons(self):
-        #load markers on the map
-        output = []
-        for symbol in self.getSymbolsList():
-            icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
-            output.append('"%s":"%s"' % (symbol.id, icon_url))
-
+    def get_geotype_icons(self):
         for i in range(len(self._cluster_pngs)):
-            icon_url = '%s/getSymbolPicture?id=symbol_cluster_%s' % (self.absolute_url(), i)
-            output.append('"cluster_%s": "%s"' % (i, icon_url))
-        return ",".join(output)
+            yield {
+                'id': "cluster_%d" % i,
+                'url': ('%s/getSymbolPicture?id=symbol_cluster_%d' %
+                        (self.absolute_url(), i)),
+                'w': 32,
+                'h': 32,
+            }
 
-    def jsMapControl(self, map_engine="yahoo", center="", zoom="", width="", height="", enableKeyControls=False, map_types=[], default_type=""):
-        """
-        Load map control from ZPT template into web page
-        """
-        center_locality = center or self.center_locality
-        center_zoom = zoom or self.center_zoom
-
-        map_type = [];
-        if "YAHOO_MAP_SAT" in map_types: map_type.append( "satellite" );
-        if "YAHOO_MAP_REG" in map_types: map_type.append( "map" );
-        if "YAHOO_MAP_HYB" in map_types: map_type.append( "hybrid" );
-
-        initial_map_type = "map";
-        if "YAHOO_MAP_SAT" == default_type: initial_map_type = "satellite";
-        if "YAHOO_MAP_HYB" == default_type: initial_map_type = "hybrid";
-
-        return get_template("map_loader.js") % (map_engine,
-                                                self.jsMarkerIcons(), #Marker icons types
-                                                center, #Center location
-                                                center_zoom, #Default zoom
-                                                ("%s" % (enableKeyControls,)).lower(), #Enable mouse wheel zoom
-                                                "[%s];" % ",".join(["\"%s\"" % (k) for k in map_type]), #map types
-                                                initial_map_type,
-                                                self.absolute_url(),) #Absolute url for control
-
-
-    #xmlrpc interface
-    def xrjs_loader(self, show, geo_query, center='', zoom='', path='', width='', height='', enableKeyControls=True):
-        #initialize markers loader - locations
-        xr_key = self.utGenRandomId(32)
-        show = self.utJsEncode(show)
-        self.setSession(MSP_SESSION_KEY, xr_key)
-        #try to get the coordinates from request
-        center_locality = center or self.center_locality
-        if center_locality.startswith("YGeoPoint"):
-            center_locality = 'new ' + center_locality # YGeoPoint object
-        else:
-            center_locality = '"' + center_locality + '"' # Javascript string
-        center_zoom = zoom or self.center_zoom
-        path = path or '/'
-        strKeyControls = ""
-        if not self.enableKeyControls or not enableKeyControls:
-            strKeyControls = "map.disableKeyControls();"
-        return get_template(TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER) % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), strKeyControls, self.xrjs_markers(), self.absolute_url())
-
-    def xrjs_simple_loader(self, show):
-        #initialize marker loader - location
-        xr_key = self.utGenRandomId(32)
-        show = self.utJsEncode(show)
-        self.setSession(MSP_SESSION_KEY, xr_key)
-        ob = self.unrestrictedTraverse('%s' % show)
-        center_locality, center_zoom = self.center_locality, self.center_zoom
-        if ob:
-            center_latitude, center_longitude = 0.0, 0.0
-            if ob.geo_location is not None:
-                center_latitude, center_longitude, center_zoom = ob.geo_location.lat, ob.geo_location.lon, self.detailed_zoom
-        return get_template(TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER) % (center_latitude, center_longitude, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
-
-    def xrjs_editpick_loader(self, show):
-        #initialize edit pick map
-        show = self.utJsEncode(show)
-        ob = self.unrestrictedTraverse('%s' % show)
-        if not ob or ob.geo_location is None:
-            return None
-        latitude, longitude, zoom = ob.geo_location.lat, ob.geo_location.lon, self.detailed_zoom
-        return get_template(TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER) % (latitude, longitude, zoom, self.center_locality, self.center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
-
-    def xrjs_addpick_loader(self):
-        #initialize add pick map
-        center_locality, center_zoom = self.center_locality, self.center_zoom + 2
-        return get_template(TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER) % (center_locality, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
+        for symbol in self.getSymbolsList():
+            size = symbol.image_size
+            yield {
+                'id': symbol.id,
+                'url': ('%s/getSymbolPicture?id=%s' %
+                        (self.absolute_url(), symbol.id)),
+                'w': size.w,
+                'h': size.h,
+            }
 
     def get_location_marker(self, location):
         symbol = self.getSymbol(location.geo_type)
@@ -845,103 +633,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 return icon_url
             return ''
         return ''
-
-    security.declarePrivate('add_location')
-    def add_location(self, title, description, address, URL, approved, container, geo_type, latitude, longitude):
-        """ add a location in the database """
-        meta_type = 'Naaya GeoPoint'
-
-        if latitude.strip() == '' and longitude.strip() == '':
-            coordinates = location_geocode(address)
-            if coordinates is None:
-                LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'add_location: could not find coordinates for %s' % (address, ))
-                latitude, longitude = None, None
-            else:
-                latitude, longitude = coordinates
-
-        if meta_type in container.get_pluggable_installed_meta_types():
-            try:
-                ob_id = container.addNyGeoPoint(title=title, description=description, longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
-                ob = container._getOb(ob_id)
-                ob.approveThis(approved)
-                self.recatalogNyObject(ob)
-                return (ob, None)
-            except Exception, err:
-                return (None, ('Failed to add %s geo-point! Error: %s',  title, str(err), ))
-
-    #site actions
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
-    def uploadLocations(self, file=None, dialect='comma', encoding='utf-8', approved=False, parent_folder='', geo_type='', REQUEST=None):
-        """ """
-        errs = []
-        metadata = ['name', 'description', 'address', 'URL', 'latitude', 'longitude']
-
-
-        try:
-            if file:
-                if file.filename.find('\\') != -1:
-                    filename = file.filename.split('\\')[-1]
-                else:
-                    filename = file.filename
-            else:
-                raise GeoMapToolUploadError("No file uploaded.")
-
-            if dialect != 'kml':
-                #step 1. read the CSV file
-                csv = CSVReader(file, dialect, encoding)
-                records, error = csv.read()
-
-                #validate metadata
-                for meta in metadata:
-                    if meta not in records[0].keys():
-                        raise GeoMapToolUploadError('Invalid headers in file.')
-            else:
-                records = parse_kml(file)
-
-            #step 2. add locations
-            if not parent_folder:
-                raise GeoMapToolUploadError('The Upload in folder field must be an existing folder.')
-            parent_ob = self.utGetObject(parent_folder)
-            if not parent_ob:
-                raise GeoMapToolUploadError('The Upload in folder field must be an existing folder.')
-
-            num_nolocation = 0
-            for rec in records:
-                if not rec:
-                    continue
-                ob, err = self.add_location(self.utToUnicode(rec['name']),
-                                            self.utToUnicode(rec['description']),
-                                            rec.get('address', ''),
-                                            rec.get('URL', ''),
-                                            approved,
-                                            parent_ob,
-                                            geo_type,
-                                            rec.get('latitude', ''),
-                                            rec.get('longitude', ''))
-
-                if err is not None:
-                    errs.append(err)
-                    continue
-                if ob.geo_location is not None:
-                    num_nolocation += 1
-        except GeoMapToolUploadError, ex:
-            errs.append(str(ex)) # TODO Python 2.5: ex.message
-
-        if errs:
-            self.setSessionErrorsTrans(errs)
-        else:
-            self.setSessionInfoTrans("${records} GeoPoint(s) uploaded. (${date})", records=len(records), date=self.utGetTodayDate())
-            if num_nolocation:
-                self.setSessionErrorsTrans("Could not geolocate ${location} address(es).", location=num_nolocation)
-        return REQUEST.RESPONSE.redirect('%s/admin_mapupload_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
-    def getLocations(self, skey='', rkey=''):
-        """ return the list of locations """
-        locations = self.search_geo_objects(approved=False)
-        if skey in ['title', 'address', 'latitude', 'longitude']:
-            locations = self.utSortObjsListByAttr(locations, skey, rkey)
-        return locations
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicateLocations')
     def getDuplicateLocations(self, criteria, sort_on="", sort_order=""):
@@ -1311,56 +1002,24 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     res.append(meta_type)
         return res
 
-    #alias for yahoo api key getter
-    #used for render_object_map
-    get_yahooApiKey = get_mapsapikey
-    def render_object_map(self, geo_location, default=None):
+    _object_index_map = PageTemplateFile('zpt/object_index_map', globals())
+    def render_object_map(self, geo_location):
         """
         Returns all the script and html required to display a map
         corresponding to the map engine selected in the administration
-        area. The constrains of the map are affected by self.detailed_*
-        attributes.
+        area.
 
-        geo_location -- a Geo() object
+        `geo_location` -- a ``Geo`` object
 
-        Example usage:
-        <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+        Example usage::
+            <tal:block content="structure
+                python:here.portal_map.render_object_map(here.geo_location)"/>
         """
+
         if not geo_location:
-            if default:
-                geo_location = default
-            else:
-                return ''
+            return ''
 
-        map_types = {'REG': {'google': 'G_NORMAL_MAP', 'yahoo': 'YAHOO_MAP_REG'},
-                     'HYB': {'google': 'G_HYBRID_MAP', 'yahoo': 'YAHOO_MAP_HYB'},
-                     'SAT': {'google': 'G_SATELLITE_MAP', 'yahoo': 'YAHOO_MAP_SAT'},
-                     }
-
-        if geo_location.missing_lat_lon:
-            lat, lon = "''", "''"
-        else:
-            lat, lon = geo_location.lat, geo_location.lon
-        address = json.dumps(geo_location.address)
-        if address == '""':
-            address = json.dumps(self.center_locality.strip())
-        all_map_types = [map_types[x[-3:]][self.map_engine] for x in self.map_types]
-        default_map_type = map_types[self.default_type[-3:]][self.map_engine]
-        dom_element = "map"
-        template_id = "%s_map.html" % self.map_engine
-        template = get_template(template_id, skip_script=True)
-        appid = getattr(self, "get_%sApiKey" % self.map_engine)()
-        template = template % (appid, lat, lon, address, self.detailed_zoom,
-                               all_map_types, default_map_type, dom_element)
-        map_div = get_template('map_div.html', skip_script=True)
-        map_div = map_div % (self.detailed_map_width, self.detailed_map_width,
-                             self.detailed_map_height, self.absolute_url())
-        # there's an i18n:translate in `map_div`, so we render as template
-        map_div = ZopePageTemplate('map_div', text=map_div).__of__(self)()
-        return '\n'.join((map_div, template))
-
-    def render_edit_map(self, geo_location):
-        return self.render_object_map(geo_location, default=Geo(0,0))
+        return self._object_index_map(coord_json=geo_as_json(geo_location))
 
     security.declareProtected(view, 'suggest_location_redirect')
     def suggest_location_redirect(self, REQUEST, content_type, folder, url=None):
@@ -1395,8 +1054,46 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     admin_map_embed_help = NaayaPageTemplateFile('zpt/map_embed_help',
                     globals(), 'site_admin_map_embed_help')
 
+    _admin_map_html = PageTemplateFile('zpt/map_edit', globals())
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_html')
-    admin_map_html = PageTemplateFile('zpt/map_edit', globals())
+    def admin_map_html(self, REQUEST):
+        """ configure the map """
+        self._create_map_engine_if_needed()
+        options = {
+            'all_engines': sorted([
+                {'name': name, 'label': engine.title}
+                for name, engine in all_engines.iteritems()],
+                    key=operator.itemgetter('name')),
+            'engine_config_html': self.get_map_engine().config_html(),
+        }
+        return self._admin_map_html(REQUEST, **options)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
+    def manageProperties(self, REQUEST):
+        """ """
+        for key in ('initial_address', 'map_height_px',
+                    'objmap_height_px', 'objmap_width_px'):
+            setattr(self, key, REQUEST.form[key])
+
+        new_engine = REQUEST.form['engine']
+        if new_engine != self.current_engine:
+            self.set_map_engine(new_engine)
+        else:
+            self.get_map_engine().save_config(REQUEST.form)
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('%s/admin_map_html' %
+                                      self.absolute_url())
+
+    security.declareProtected(view, 'setup_map_engine_html')
+    def setup_map_engine_html(self, request, **kwargs):
+        """ render the HTML needed to set up the current map engine """
+        global_config = {
+            'initial_address': self.initial_address,
+            'icons': list(self.get_geotype_icons()),
+        }
+        global_config.update(kwargs)
+        return self.get_map_engine().html_setup(request, global_config)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_contenttypes_html')
     admin_map_contenttypes_html = PageTemplateFile('zpt/map_contenttypes', globals())
