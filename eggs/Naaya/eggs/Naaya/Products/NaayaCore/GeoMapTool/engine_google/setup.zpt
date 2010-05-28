@@ -1,0 +1,7 @@
+<script tal:attributes="src
+    string:http://maps.google.com/maps?file=api&v=2&key=${options/apikey}">
+</script>
+<script tal:content="structure
+    string:var naaya_google_map_api_config = ${options/js_config};"></script>
+<script tal:attributes="src
+    string:${here/absolute_url}/naaya_google_js"></script>

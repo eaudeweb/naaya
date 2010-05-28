@@ -17,14 +17,12 @@
 #
 # Alex Morega, Eau de Web
 
-import simplejson as json
-
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, WidgetError, manage_addWidget
-from geo import Geo
+from geo import Geo, geo_as_json
 
 def addGeoWidget(container, id="", title="Geo Widget", REQUEST=None, **kwargs):
     """ Contructor for Geo widget"""
@@ -66,16 +64,8 @@ class GeoWidget(Widget):
         except ValueError, e:
             raise WidgetError(str(e))
 
-    def portal_map_config_js(self):
-        portal_map = self.getSite().getGeoMapTool()
-        js_template = (
-            "var prop_name = '%(prop_name)s';\n"
-            "var server_base_url = '%(server_base_url)s';\n"
-        )
-        return js_template % {
-            'prop_name': self.prop_name(),
-            'server_base_url': portal_map.absolute_url(),
-        }
+    def coord_as_json(self, value):
+        return geo_as_json(value)
 
     def isEmptyDatamodel(self, value):
         return value in (None, '', {}, Geo())

@@ -25,42 +25,64 @@
 
 
 #Python imports
+try:
+    from PIL import Image
+except ImportError:
+    have_pil = False
+else:
+    have_pil = True
+from StringIO import StringIO
 
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 #Product imports
+from Products.NaayaCore.backport import namedtuple
+
+ImageSize = namedtuple('ImageSize', 'w h')
 
 class symbol_item:
     """ """
 
     sortorder = 100
 
+    @property
+    def image_size(self):
+        # temporary, until we're sure all symbol_item objects have the property
+        return self._calculate_image_size()
+
     def __init__(self, id, title, description, parent, picture, sortorder):
-        """Constructor"""
         self.id = id
         self.title = title
         self.description = description
         self.parent = parent
-        self.picture = picture
+        self.setPicture(picture)
         try:
             self.sortorder = int(sortorder)
         except:
             self.sortorder = 100
 
     def setPicture(self, picture):
-        """ """
-        if picture != '':
+        self.picture = None
+
+        if picture not in ('', None):
             if hasattr(picture, 'filename'):
                 if picture.filename != '':
                     content = picture.read()
                     if content != '':
                         self.picture = content
-                        self._p_changed = 1
             else:
                 self.picture = picture
-                self._p_changed = 1
+
+        self.__dict__['image_size'] = self._calculate_image_size()
+
+    def _calculate_image_size(self):
+        if not have_pil or self.picture is None:
+            return ImageSize(16, 16) # guess a plausible value
+
+        image = Image.open(StringIO(self.picture))
+        return ImageSize(*image.size)
 
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")

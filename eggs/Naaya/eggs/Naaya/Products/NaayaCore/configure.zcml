@@ -1,8 +1,10 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
-  <include package="Products.NaayaCore.NotificationTool" />
-  <include package="Products.NaayaCore.PortletsTool" />
-  <include package="Products.NaayaCore.GoogleDataTool" />
+  <include package=".GeoMapTool" />
+  <include package=".NotificationTool" />
+  <include package=".PortletsTool" />
+  <include package=".GoogleDataTool" />
+
   <adapter factory="Products.NaayaCore.managers.zip_import_export.DocumentZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.FileZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.ContactZipAdapter" />

@@ -229,12 +229,7 @@ if geo_installed:
     'GeoMapTool.gif':ImageFile('GeoMapTool/www/GeoMapTool.gif', globals()),
     'progress.gif':ImageFile('GeoMapTool/www/progress.gif', globals()),
     'shadow.png':ImageFile('GeoMapTool/www/shadow.png', globals()),
-    'yahoomaps.js':ImageFile('GeoMapTool/www/yahoomaps.js', globals()),
     'geomaptool.js':ImageFile('GeoMapTool/www/geomaptool.js', globals()),
-    'remote.js':ImageFile('GeoMapTool/www/remote.js', globals()),
-    'template.csv':ImageFile('GeoMapTool/www/template.csv', globals()),
-    'googlemaps.js':ImageFile('GeoMapTool/www/googlemaps.js', globals()),
-    'xmlhttp.js':ImageFile('GeoMapTool/www/xmlhttp.js', globals()),
 
     'pin1.png':ImageFile('GeoMapTool/images/pin1.png', globals()),
     'pin2.png':ImageFile('GeoMapTool/images/pin2.png', globals()),

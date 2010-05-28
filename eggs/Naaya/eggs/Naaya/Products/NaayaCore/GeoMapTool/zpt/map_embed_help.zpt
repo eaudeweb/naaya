@@ -3,29 +3,25 @@ following HTML snippet:</p>
 
 <pre tal:define="site_url here/absolute_url">
 &lt;iframe
-src="<tal:block content="string:${site_url}/embed_map_html?geo_types=symbol001&geo_types=symbol002"/>&quot;
+src="<tal:block content="string:${site_url}/embed_map_html"/>&quot;
 width="600" height="500" frameborder="0" scrolling="no"&gt;
 &lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
 &lt;/iframe&gt;
 </pre>
-<p i18n:translate="">The following parameters can be used:</p>
+<p i18n:translate="">The following URL parameters can be used:</p>
 <dl>
-    <dt>center_locality=&lt;place name&gt;</dt>
-    <dd i18n:translate="">Allows precentering the map to a
-    certain location.</dd>
-
-    <dt>zoom=&lt;zoom level&gt;</dt>
-    <dd i18n:translate="">Please observe the scale from 19
-    to 1 for Google Maps and 1 to 15 for Yahoo Maps.</dd>
+    <dt>address=&lt;place name&gt;</dt>
+    <dd i18n:translate="">Center the map to a certain location.</dd>
 
     <dt>geo_types=&lt;category ID&gt;</dt>
-    <dd i18n:translate="">Allows the prefiltering the location categories
-    that appear on the map.<br/> You can find the category IDs under
-    <a tal:attributes="href string:${here/getGeoMapToolPath}/admin_maptypes_html">
-        <em i18n:translate="Location categories">Location categories</em>
-    </a></dd>
+    <dd i18n:translate="">Comma-separated list of location types that
+    appear on the map. You can find the category IDs at
+    <a tal:define="portal_map_url here/getGeoMapToolPath"
+       tal:attributes="href string:${portal_map_url}/admin_maptypes_html"
+       i18n:name="link"><em i18n:translate="">Location categories</em></a>
+    </dd>
 
     <dt>path=&lt;folder_path&gt;</dt>
-    <dd i18n:translate="">Path of a folder in the portal; only
-    objects inside the folder will be shown on the map.</dd>
+    <dd i18n:translate="">Only objects inside this folder, and its
+    subfolders, will be shown on the map.</dd>
 </dl>
