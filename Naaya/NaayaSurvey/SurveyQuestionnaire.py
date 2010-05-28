@@ -248,7 +248,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
             captcha_errors = self.getSite().validateCaptcha('', REQUEST)
             if captcha_errors:
-                errors.add(captcha_errors)
+                errors.append(captcha_errors)
 
         if errors:
             self.setSessionErrorsTrans(errors)
