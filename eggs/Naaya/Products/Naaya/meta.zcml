@@ -1,3 +1,15 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+           xmlns:meta="http://namespaces.zope.org/meta">
   <include package="naaya.content.base" file="meta.zcml" />
+
+  <meta:directives namespace="http://namespaces.zope.org/naaya">
+
+    <meta:directive
+      name="call"
+      schema=".meta.INaayaCallDirective"
+      handler=".meta.call_directive"
+      />
+
+  </meta:directives>
+
 </configure>
