@@ -2,7 +2,7 @@ from unittest import TestSuite, makeSuite
 
 from Testing import ZopeTestCase
 
-from edw.ZOpenArchives.ZopeOAIServer import manage_addZopeOAIServer, ZopeOAIServer
+from edw.ZOpenArchives.zOAIAggregator import manage_addOAIAggregator, zOAIAggregator
 
 ZopeTestCase.installProduct('Five')
 ZopeTestCase.installProduct('ZCatalog')
@@ -11,8 +11,8 @@ ZopeTestCase.installProduct('TextIndexNG3')
 class TestZopeOAIServer(ZopeTestCase.ZopeTestCase):
     def test_basic(self):
         """ """
-        manage_addZopeOAIServer(self.app, 'zoai')
-        self.assertTrue(hasattr(self.app, 'zoai'))
+        manage_addOAIAggregator(self.app, 'oai')
+        self.assertTrue(hasattr(self.app, 'oai'))
 
 def test_suite():
     suite = TestSuite()

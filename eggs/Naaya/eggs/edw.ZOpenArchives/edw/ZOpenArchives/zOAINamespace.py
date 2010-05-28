@@ -31,7 +31,7 @@ from OFS.SimpleItem import SimpleItem
 import App
 from pyOAIMH.OAINamespace import OAINamespace
 
-import zOAISupport  # for processId
+from utils import processId
 
 
 manage_addOAINamespaceForm = HTMLFile('dtml/manage_addOAINamespaceForm', globals())
@@ -39,7 +39,7 @@ manage_addOAINamespaceForm = HTMLFile('dtml/manage_addOAINamespaceForm', globals
 def manage_addOAINamespace(self, ns_prefix=None, ns_description=None, ns_shortname=None, ns_schema=None, ns_namespace=None, REQUEST=None):
     """ method for adding a new OAI namespace """
     try:
-        id = zOAISupport.processId(ns_prefix)
+        id = processId(ns_prefix)
         OAI_NS = zOAINamespace( id, ns_prefix, ns_description, ns_shortname, ns_schema, ns_namespace)
     except:
         import traceback
@@ -53,7 +53,7 @@ def manage_addOAINamespace(self, ns_prefix=None, ns_description=None, ns_shortna
     OAI_NS = getattr(self, id)
     OAI_NS.initialize()
     OAI_NS.index_object()
-    
+
     if REQUEST is not None:
         return REQUEST.RESPONSE.redirect(self.absolute_url()+'/manage_main?update_menu=1')
 
@@ -66,8 +66,8 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
     default_catalog = 'OAI_Catalog'
 
     manage_options = (
-        {'label': 'Information',     
-         'action': 'index_html' 
+        {'label': 'Information',
+         'action': 'index_html'
          },
         )
 
@@ -94,7 +94,7 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
         """ """
         return self.get_nsShortname()
 
-    
+
     def index_object(self):
         """
         """
@@ -121,9 +121,9 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
 
     # manage methods
     #
-    
+
     manage_namespaceUpdate = HTMLFile("dtml/manage_OAINamespaceUpdateForm",globals())
-    
+
     def manage_OAINamespaceUpdate(self, ns_prefix=None, ns_description=None, ns_shortname=None, ns_namespace=None, ns_schema=None, REQUEST=None, RESPONSE=None):
         """ """
 
@@ -144,11 +144,11 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
           ideally, would go and collect the validating schema
           and store within namespace object.
         """
-        
+
         errors = 0
         ns_dict = self.namespaces
         msg = 'manage_tabs_message=No%20message'
-        
+
         # setup string for return in case of errors
         #   so the user doesn't lose what they have entered
         #
@@ -158,34 +158,34 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
                               ('ns_description', ns_description)]:
             vars = vars + '&' + name + '=' + value
 
-            
+
 
         # check to make sure have proper values for inputs
-        
+
         # NAMESPACE
         if ns_namespace == "" and not errors:
             msg = 'manage_tabs_message=Namespace%20is%20invalid'
             errors = 1
-            
+
         if ns_dict.has_key(ns_namespace) and not errors:
             errors = 1
             msg = 'manage_tabs_message=Namespace%20already%20exists'
-            
+
         # SHORTNAME
         if ns_shortname == "" and not errors:
             msg = 'manage_tabs_message=Shortname%20is%20invalid'
             errors = 1
-            
+
         # DESCRIPTION
         if ns_description == "" and not errors:
             msg = 'manage_tabs_message=Description%20is%20invalid'
-            errors = 1  
-            
+            errors = 1
+
         # PREFIX
         if ns_prefix == "" and not errors:
             msg = 'manage_tabs_message=Prefix%20is%20invalid'
             errors = 1
-                        
+
         # SCHEMA
 ##        if ns_schema == "" and not errors:
 ##            errors = 1
@@ -200,7 +200,7 @@ class zOAINamespace(OAINamespace,App.Management.Navigation, SimpleItem, Implicit
                                       'shortname':ns_shortname,
                                       'description':ns_description
                                       }
-            
+
             self.namespaces = ns_dict
             msg = 'manage_tabs_message=Server%20has%20been%20updated'
             vars = ''

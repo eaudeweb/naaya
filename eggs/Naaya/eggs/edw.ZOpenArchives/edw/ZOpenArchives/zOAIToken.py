@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 # from Products.PTKBase.PortalContent import PortalContent
 from OFS.SimpleItem import SimpleItem
 
-import zOAISupport  # for processId
+from utils import processId
 
 
 def manage_addOAIToken(self, parent_id=None, request_args={}, token_args={}):
@@ -47,7 +47,7 @@ def manage_addOAIToken(self, parent_id=None, request_args={}, token_args={}):
     #id = str(ran_num) + '_' + str(time)
     id = str(time)
     try:
-         id = zOAISupport.processId(id)
+         id = processId(id)
          OAIT = zOAIToken(id, parent_id=parent_id, request_args=request_args, token_args=token_args)
     except:
         import traceback
@@ -66,7 +66,7 @@ class zOAIToken(SimpleItem, Implicit):
     index_html = HTMLFile("dtml/manage_OAITokenForm",globals())
 
     manage_options= (
-        {'label': 'Contents',     
+        {'label': 'Contents',
          'action': 'index_html'
          },
         )
@@ -125,4 +125,3 @@ class zOAIToken(SimpleItem, Implicit):
         #
         self.unindex_object()
         SimpleItem.inheritedAttribute("manage_beforeDelete")(self,item,container)
-

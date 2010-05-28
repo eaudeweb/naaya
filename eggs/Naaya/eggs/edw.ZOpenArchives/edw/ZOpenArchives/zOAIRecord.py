@@ -36,7 +36,7 @@ from OFS.SimpleItem import SimpleItem
 from types import StringType, UnicodeType
 from pyOAIMH.OAIRecord import OAIRecord
 
-import zOAISupport  # for processId
+from utils import processId
 
 
 # there is no interface to add these. addition
@@ -48,7 +48,7 @@ def manage_addOAIRecord(self, id=None, metadata_format=None, xml=None, dom=None)
     #   because we could have many records for
     #   one single object
     try:
-        id = zOAISupport.processId(id)
+        id = processId(id)
         OAIR = zOAIRecord(id, metadata_format=metadata_format, xml=xml, dom=dom)
     except:
         import traceback
@@ -69,13 +69,13 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
     default_catalog = 'OAI_Catalog'
 
     manage_options= (
-        {'label': 'Information',     
-         'action': 'index_html' 
+        {'label': 'Information',
+         'action': 'index_html'
          },
         )
 
     index_html = HTMLFile("dtml/manage_OAIRecordForm",globals())
-  
+
     def __init__(self, id, metadata_format=None, xml=None, dom=None, timestr=""):
         """
         TODO: change so it accepts string or dom xml
@@ -191,7 +191,7 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
             for creator_dom in self.findDOMElements( dom_list=[dom], tag_path=path ):
                 creator_str = creator_str + self.getDOMElementText(dom_node=creator_dom, encode=self.default_encoding)
             creator_str += ' '
-                
+
         return creator_str.strip()
        ## list = self.do_MetadataListInterface('oai_dc', 'dc', ['creator'])
        ## return string.join(map(self._encode,list))
@@ -219,7 +219,7 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
                 type_str = type_str + self.getDOMElementText(dom_node=type_dom, encode=self.default_encoding)
             type_str += ' '
         return type_str.strip()
-    
+
     def dc_subject(self):
         """ """
         list = self.do_MetadataListInterface('oai_dc', 'dc', ['subject'])
@@ -272,11 +272,11 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
                     if string.find(identif,'http')!=-1:
                         return identif
                 return lIdentifier[0]
-        
+
         return identifier_str.strip()
 ##        id = self.do_MetadataListInterface('oai_dc', 'dc', ['identifier'] )
 ##        return string.join(id)
-    
+
     def dc_source(self):
         """ """
         return []
