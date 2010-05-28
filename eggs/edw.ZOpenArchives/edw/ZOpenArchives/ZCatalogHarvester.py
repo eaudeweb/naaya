@@ -26,20 +26,21 @@ __doc__ = """ Produit ZCatalog Harvester """
 import urllib
 import string
 import DateTime
+import sys
+import xml.dom.minidom
+
 import App
-from Globals import HTMLFile, Persistent
-from Products.ZCatalog.ZCatalog import ZCatalog
-from Acquisition import Implicit
+
 from AccessControl import ClassSecurityInfo
+from Acquisition import Implicit
+from Globals import HTMLFile, Persistent
 from OFS.Folder import Folder
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-import zOAIRecord   # for manage_addOAIRecord
-from zOAIRecord import create_ObjectMetadata
-import xml.dom.minidom
 from Products.ZCatalog.ZCatalog import ZCatalog
-import zOAISupport  # for processId
-import sys
-from utils import utConvertLinesToList, utConvertListToLines
+
+from zOAIRecord import manage_addOAIRecord, create_ObjectMetadata
+
+from utils import utConvertLinesToList, utConvertListToLines, processId
 
 manage_addZCatalogHarvesterForm = HTMLFile('dtml/manage_addZCatalogHarvesterForm', globals())
 
@@ -205,7 +206,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
             # see if the harvester already has the object
             #   decide whether to update or add new one
             path = urllib.unquote( '/' + obj.absolute_url(1) + '-oai_dc'  )
-            pid = zOAISupport.processId(path)
+            pid = processId(path)
             OAIO = self._getOb( pid, None)
 
             # check to see if we need to update the object, either
@@ -278,7 +279,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
             if OAIO != None:
                 OAIO.update_Record(xml=record_xml)
             else:
-                zOAIRecord.manage_addOAIRecord(self, metadata_format='oai_dc', id=pid, xml=record_xml)
+                manage_addOAIRecord(self, metadata_format='oai_dc', id=pid, xml=record_xml)
         self.force_update = 0
 
     def process_Manualpublish(self):
@@ -309,7 +310,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
                 # take each one, check if exists see if the harvester already has the object
                 #   decide whether to update or add new one
                 path = urllib.unquote( '/' + obj.absolute_url(1) + '-' + metadata )
-                pid = zOAISupport.processId(path)
+                pid = processId(path)
                 OAIO = self._getOb( pid, None)
                 # check to see if we need to update the object
                 #   - been updated since last time
@@ -383,7 +384,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
                 if OAIO != None:
                     OAIO.update_Record(xml=record_xml)
                 else:
-                    zOAIRecord.manage_addOAIRecord(self, metadata_format=metadata, id=pid, xml=record_xml)
+                    manage_addOAIRecord(self, metadata_format=metadata, id=pid, xml=record_xml)
         self.force_update = 0
 
     def process_deletedObjects(self):

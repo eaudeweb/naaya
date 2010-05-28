@@ -25,17 +25,20 @@ __doc__ = """ Class which implements the OAI harvester protocol """
 
 import sys
 import urllib2
-from urllib import urlencode
-import StringIO
-import datetime
 import string
 import lxml.etree # Create objects form xml elements
+from urllib import urlencode
+from datetime import datetime
 
 from xml.sax import make_parser, saxutils
 from xml.sax.handler import ContentHandler
 import xml.dom.minidom
 
+from CreateURL import CreateURL
+from edw.ZOpenArchives.utils import utSortDictsListByKey
+
 class ServerError(Exception): pass
+class HTTPLibError(Exception): pass
 
 class OAIHarvester:
     default_encoding = 'UTF-8'
@@ -150,10 +153,12 @@ class OAIHarvester:
             }
         }
 
+        self.list_sets_selected = [] # List of keys that are selected
+        self.list_sets_all = '1' # By default all sets are selected
 
     def initialize(self):
         """ """
-        #self.issue_Identify()
+        self.issue_Identify()
         self.issue_ListSets()
 
     def updateObject(self):
@@ -341,41 +346,32 @@ class OAIHarvester:
         self.issue_ListMetadataFormats()
         self.issue_ListSets()
 
-        #### add by jecez for manage oai_dc prefix in portal #################
         namespaces = getattr(self.aq_parent,'Namespaces')
         lNameSpaceMetaDataPrefix = []
+
         for nm in namespaces.objectValues():
             lNameSpaceMetaDataPrefix.append(nm.get_nsPrefix())
+
         for metadata_prefix in  self.site_metadata.keys():
             if metadata_prefix in lNameSpaceMetaDataPrefix:
-        ########## end ########################################################
-                self.issue_ListRecords( oai_metadataPrefix = metadata_prefix )
+                pass
+                #self.issue_ListRecords( oai_metadataPrefix = metadata_prefix )
+
         self.set_siteStatus('lastUpdate', datetime.now().strftime('%Y-%m-%d %H:%M'))
 
     def issue_Identify(self):
-        """
-        method to issue the 'oai/?verb=Identify' request
-        """
-        self.current_request = { 'verb':'Identify' }
-        url_obj = CreateURL(self.current_request )
-        url = url_obj.getURL()
-        try:
-            returncode, returnmsg, headers, data = self.http_connect('?' + url)
-            if returncode == 200:
-                self.set_siteStatus('status', 'Available')
-                dom = xml.dom.minidom.parseString(data)
-                #if self.handle_Error(dom.getElementsByTagName("error")) != 0:
-                    #print "ERROR !! ", data
-                self.handle_Identify(dom=dom)
-        except:
-            import traceback
-            traceback.print_exc()
-            self.set_siteStatus('status', 'Unavailable')
-            raise HTTPLibError
-        self.current_request = None
+        """ method to issue the 'oai/?verb=Identify' request """
+        query_set = (
+            ('verb', 'Identify', ),
+        )
+        response, data = self._get_url(query_set)
+        if response.code == 200:
+            self.set_siteStatus('status', 'Available')
+            dom = xml.dom.minidom.parseString(data)
+            self.handle_Identify(dom=dom)
 
-        if returncode != 200:
-            self.set_siteStatus('status', "%s (%s)" % (returnmsg,returncode) )
+        if response.code != 200:
+            self.set_siteStatus('status', "%s (%s)" % (response.message, response.code) )
             raise ServerError
 
     def handle_Identify(self, dom=None):
@@ -485,31 +481,22 @@ class OAIHarvester:
           store results
 
         """
-        self.current_request = {
-            'verb':'ListMetadataFormats',
-            'identifier': oai_identifier
-        }
-        url_obj = CreateURL( self.current_request )
-        url = url_obj.getURL()
+        query_set = (
+            ('verb', 'ListMetadataFormats', ),
+            ('identifier', oai_identifier, ),
+        )
+        response, data = self._get_url(query_set)
+        self.set_siteStatus('status', 'Available')
+        dom = xml.dom.minidom.parseString(data)
+        #if self.handle_Error(dom.getElementsByTagName("error")) != 0:
+        #    print "ERROR !! ", data
+        # find <records> in DOM
+        path = self.get_dompath('metadataFormat')
+        metadom_list = self.findDOMElements(dom_list=[dom], tag_path=path)
+        self.handle_ListMetadataFormats(dom_list=metadom_list)
 
-        try:
-            returncode, returnmsg, headers, data = self.http_connect('?'+url)
-            if returncode == 200:
-                self.set_siteStatus('status', 'Available')
-                dom = xml.dom.minidom.parseString(data)
-                #if self.handle_Error(dom.getElementsByTagName("error")) != 0:
-                #    print "ERROR !! ", data
-                # find <records> in DOM
-                path = self.get_dompath('metadataFormat')
-                metadom_list = self.findDOMElements(dom_list=[dom], tag_path=path)
-                self.handle_ListMetadataFormats(dom_list=metadom_list)
-        except:
-            self.set_siteStatus('status', 'Unavailable')
-            raise HTTPLibError
-        self.current_request = None
-
-        if returncode != 200:
-            self.set_siteStatus('status', "%s (%s)" % (returnmsg,returncode) )
+        if response.code != 200:
+            self.set_siteStatus('status', "%s (%s)" % (response.msg, response.code) )
             raise ServerError
 
     def handle_ListMetadataFormats(self, dom_list=[]):
@@ -537,8 +524,8 @@ class OAIHarvester:
         query_set = (
             ('verb', 'ListSets', ),
         )
-        response_code, data = self._get_url(query_set)
-        if response_code == 200:
+        response, data = self._get_url(query_set)
+        if response.code == 200:
             tree = lxml.etree.fromstring(data)
             for element in tree:
                 if 'error' in element.tag:
@@ -559,7 +546,7 @@ class OAIHarvester:
                 'spec': e[0].text,
                 'name': e[1].text
             })
-        if len(sets): self.list_sets = sets
+        self.list_sets = utSortDictsListByKey(sets, 'name', 0) #Order alphabeticaly
 
     def issue_ListRecords(self, oai_metadataPrefix, oai_from=None,
                           oai_until=None, oai_set=None, oai_setSpec=None ):
@@ -673,4 +660,4 @@ class OAIHarvester:
         elif not isinstance(data, str):
             raise ValueError("Bad data")
         con = urllib2.urlopen("http://%s%s" % (self.site_host, self.site_url), data = data)
-        return (con.code, con.read(), )
+        return (con, con.read(), )

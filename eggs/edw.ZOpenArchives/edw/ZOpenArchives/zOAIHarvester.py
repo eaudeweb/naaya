@@ -25,20 +25,22 @@ __doc__ = """Zope OAI Site Harvester"""
 import string
 from urllib import quote
 
-from Globals import HTMLFile, Persistent
-from Products.ZCatalog.ZCatalog import ZCatalog
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from Acquisition import Implicit
-from AccessControl import ClassSecurityInfo
-from OFS.Folder import Folder
 import App
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
+from Acquisition import Implicit
+from Globals import HTMLFile, Persistent
+
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from zOAIRecord import manage_addOAIRecord
-from zOAISupport import processId
 from pyOAIMH.OAIHarvester import OAIHarvester
 from pyOAIMH.OAIHarvester import ServerError
 
-manage_addOAIHarvesterForm = HTMLFile('dtml/manage_addOAIHarvesterForm', globals())
+from utils import processId
+
+manage_addOAIHarvesterForm = PageTemplateFile('zpt/manage_addOAIHarvesterForm', globals())
 
 def manage_addOAIHarvester(self, id='', REQUEST=None, **kwargs):
     """ Add a Harverster Object """
@@ -57,7 +59,7 @@ def manage_addOAIHarvester(self, id='', REQUEST=None, **kwargs):
     if id == '':
         id = processId(form_data['host'])
 
-    OAIS = zOAIHarvester(id, form_data['host'], form_data['url'], form_data.get('title', ''), form_data.get('days', 7))
+    OAIS = zOAIHarvester(id, form_data['host'], form_data['url'], form_data.get('title', id), form_data.get('update_period', 7))
     self._setObject(id, OAIS)
 
     OAIS = getattr(self, id)
@@ -68,8 +70,8 @@ def manage_addOAIHarvester(self, id='', REQUEST=None, **kwargs):
 
 class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persistent, Implicit):
     """ """
-
     meta_type = 'Open Archive Harvester'
+
     default_document = 'index_html'
 
     manage_options= (
@@ -78,26 +80,23 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
         {'label': 'Contents', 'action': 'manage_main' },
     )
 
-    def __init__(self, id, host, url, title, days):
+    #all_meta_types =
+
+    security = ClassSecurityInfo()
+
+    def __init__(self, id, host, url, title, update_period):
         """ """
         super(zOAIHarvester, self).__init__(host, url)
         BTreeFolder2.__init__(self, id)
 
         self.id = id
         self.title = title
-        # update frequency in days
-        self.update_period = days
+        self.update_period = update_period
 
-    def get_myContainer(self):
-        """ get my parent container """
-        return self.aq_parent
-
+    security.declarePrivate('handle_addOAIRecord')
     def handle_addOAIRecord(self, dom=None):
-        """
-        create or update <record> given its DOM node
-        """
+        """ Create or update <record> given its DOM node """
         # get record header
-        #the_xml = dom.toxml('UTF-8')
         header = None
         for h in dom.childNodes:
             if hasattr(h, 'tagName') and h.tagName == 'header':
@@ -121,7 +120,7 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
         metadata_format = self.current_request['metadataPrefix'].encode(self.default_encoding)
         identifier = string.strip(identifier)
         identifier = identifier.encode(self.default_encoding) + '-' + metadata_format
-        identifier = zOAISupport.processId(identifier)
+        identifier = processId(identifier)
         # check if record object already exists with this ID
         #   if so, do an update
         OAIR = self._getOb( identifier, None)
@@ -137,21 +136,24 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
     ####  ZMI Interfaces
     ######################
 
-    manage_mainold = HTMLFile("dtml/manage_OAIHarvesterMainForm", globals())
+    security.declareProtected(view_management_screens, 'manage_preferences')
+    manage_preferences = PageTemplateFile("zpt/manage_OAIHarvesterPrefsForm", globals())
 
-    manage_preferences = HTMLFile("dtml/manage_OAIHarvesterPrefsForm", globals())
-
-    def manage_OAIHarvesterPrefs(self, title, minutes, site_host, site_url, metadata_format, REQUEST=None, RESPONSE=None):
+    security.declareProtected(view_management_screens, 'manage_OAIHarvesterPrefs')
+    def manage_OAIHarvesterPrefs(self, title, update_period, site_host, site_url, list_sets_selected, list_sets_all='0', REQUEST=None):
         """ save preferences """
         self.title = title
-        self.update_period = minutes
+        self.update_period = update_period
         self.set_siteURL(site_url)
         self.set_siteHost(site_host)
-        RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
+        self.list_sets_all = list_sets_all
+        self.list_sets_selected = list_sets_selected
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
 
+    security.declareProtected(view_management_screens, 'manage_update')
+    manage_update = HTMLFile("dtml/manage_OAIHarvesterUpdateForm", globals())
 
-    manage_update = HTMLFile("dtml/manage_OAIHarvesterUpdateForm",globals())
-
+    security.declareProtected(view_management_screens, 'manage_OAIHarvesterUpdate')
     def manage_OAIHarvesterUpdate(self, REQUEST=None, RESPONSE=None):
         """ update site records, identification """
         try:

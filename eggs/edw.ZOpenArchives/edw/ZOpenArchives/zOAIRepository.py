@@ -22,63 +22,46 @@
 
 __doc__ = """ Zope OAI Repository """
 
-import DateTime
-from DocumentTemplate.DT_Util import html_quote
-import Globals
-from Globals import HTMLFile, Persistent
-from Products.ZCatalog.ZCatalog import ZCatalog
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
+from Acquisition import Implicit
+from DocumentTemplate.DT_Util import html_quote
+from Globals import HTMLFile, Persistent
 from OFS.Folder import Folder
-# from Products.PTKBase.PortalExtFile import manage_addPortalExtFile
-from types import StringType, UnicodeType
-import string
+from Products.ZCatalog.ZCatalog import ZCatalog
+from pyOAIMH.OAINamespace import oai_dc_defaults
 from pyOAIMH.OAIRepository import OAIRepository
-import zOAIToken
-import zOAINamespace
+from types import StringType, UnicodeType
+from utils import latin1_to_ascii, utConvertLinesToList
 import App
 import DateTime
-from pyOAIMH.OAINamespace import oai_dc_defaults
-import zOAINamespace
+import DateTime
+import Globals
+import string
 import urllib
-from utils import latin1_to_ascii, utConvertLinesToList
+import zOAINamespace
+import zOAINamespace
+import zOAIToken
 
-##import StringIO
 
-##from rdflib.TripleStore import TripleStore
-##from rdflib.Literal import Literal
-##from rdflib.Namespace import Namespace
-
-class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent, Implicit):
+class zOAIRepository(OAIRepository, App.Management.Navigation, Folder, Persistent, Implicit):
     """ """
-    
+
     # meta_type = 'OVERRIDE'
-    
+
     default_document = 'index_html'
     default_catalog = 'OAI_Catalog'
     default_tokenStorage = 'Tokens'
     default_namespaceStorage = 'Namespaces'
     # default_rdflib = 'RDFLib'
     default_encoding = 'UTF-8'
-    
-    manage_options= (   
-        {'label': 'Contents',     
-         'action': 'manage_main'
-         },
-        {'label': 'Preferences',     
-         'action': 'manage_preferences' 
-         },
-        
-        {'label': 'Server Info',     
-         'action': 'manage_repositoryInfo' 
-         },
-        {'label': 'Update',     
-         'action': 'manage_repositoryUpdate' 
-         },
-        {'label': 'Search',     
-         'action': 'search' 
-         },
-        )
+
+    manage_options= (
+        {'label': 'Contents','action': 'manage_main' },
+        {'label': 'Preferences', 'action': 'manage_preferences'},
+        {'label': 'Server Info', 'action': 'manage_repositoryInfo' },
+        {'label': 'Update', 'action': 'manage_repositoryUpdate' },
+        {'label': 'Search', 'action': 'search' },
+    )
 
     def __init__(self, id, title, update_time):
         """ """
@@ -105,25 +88,10 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
             OAIRepository.initialize.im_func(self)
         self.baseURL(self.absolute_url())
 
-        # add xron DTML method
-        #
-        #self.manage_addProduct['Xron'].manage_addXronDTMLMethod('RepositoryTimer', 'Xron event timer',
-        #                                                   file='<dtml-call update_theRepository>', periodDays=(1.0), executeAt=DateTime.DateTime()+(1.0) )
-
-        
-        # add rdf library.
-        # the_xml = """<?xml version="1.0"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"></rdf:RDF>"""
-
-##        file_obj = StringIO.StringIO("")
-##        manage_addPortalExtFile(self, fn='RDFLib', title='RDFLib database',
-##                                content_type='text/xml', file=file_obj)
-
     def index_html(self, REQUEST=None, RESPONSE=None):
         """
         process incoming OAI requests get args from request form
         """
-##        self.the_request = "internal call"
-##        if REQUEST.has_key('URL0'):
         self.the_request = REQUEST.URL0
         return self.process_Request(args=REQUEST.form)
 
@@ -139,10 +107,10 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         """ """
         return self._getOb(self.default_namespaceStorage)
 
-    def update_theRepository(self, force_update=0):
+    def update_repository(self, force_update=0):
         """
         update the tokens
-        """        
+        """
         cat = self.get_myCatalog()
         tStor = self.get_myTokenStorage()
         time_now = DateTime.DateTime().HTML4()
@@ -202,10 +170,10 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
 ##        ns_sn = Namespace("http://www.snee.com/ns/misc#")
 ##        ns_dc = Namespace("http://purl.org/dc/elements/1.1/")
 ##        ns_sd = Namespace("http://www.snee.com/docs/")
-        
+
 ##        # Create storage object for triples.
 ##        store = TripleStore()
-        
+
 ##        # Add triples to store.
 ##        store.add((ns_sd["d1001"], ns_dc["title"], Literal("Sample Acrobat document")))
 ##        store.add((ns_sd["d1002"], ns_dc["format"], Literal("PDF")))
@@ -222,7 +190,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
     ####
     #### OVERLOADED METHODS OF OAI_REPOSITORY
     ####
-    
+
     def get_Request(self):
         """
         returns the request for the return
@@ -268,7 +236,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         elif granularity == 'YYYY-MM-DDThh:mm:ssZ':
             d_str = str( date.HTML4() )
         else:
-            raise "Unknown granularity: '%s'", granularity 
+            raise "Unknown granularity: '%s'", granularity
         return d_str
 
     def get_GetRecord(self, args={}):
@@ -319,7 +287,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
 
             # get search record and info
             record = results[rec_sent+record_count]
-            record_count += 1     
+            record_count += 1
 
             header = getattr(record, 'header', "")
             metadata = getattr(record, 'metadata', "")
@@ -369,7 +337,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
                 raise NoMetadataFormats, "OAI Error: noMetadataFormats"
         else:
             # ask catalog for its values for OAI_MetadataFormats
-            results = self.get_myCatalog().uniqueValuesFor('OAI_MetadataFormat')    
+            results = self.get_myCatalog().uniqueValuesFor('OAI_MetadataFormat')
             for ns_prefix in results:
                 the_list.append( self.get_namespaceInfoByPrefix(ns_prefix) )
         return the_list
@@ -483,7 +451,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         cat.addIndex('OAI_Date', 'FieldIndex')
         #cat.addIndex('OAI_Date', 'DateIndex')
         pass
-       
+
     def add_MetadataColumns(self, cat):
         """
         OVERRIDE - have own set of metadata
@@ -503,7 +471,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
     portal_AdvSearchForm = HTMLFile("dtml/portal_AdvSearchForm",globals())
     xslOAIResultSearch = HTMLFile("xsl/xslOAIResultSearch",globals())
     portal_OAISearchResult = HTMLFile("dtml/portal_OAISearchResult",globals())
-    
+
     def manage_searchXML(self, title="", text="", REQUEST=None, RESPONSE=None):
         """
         return
@@ -604,7 +572,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         xml_response += "</searchresults>"
         return xml_response
 
-    advSearchXML = manage_advSearchXML  
+    advSearchXML = manage_advSearchXML
 
     # manage preferences is overridden
     # in the other classes
@@ -620,12 +588,12 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         self.adminEmail(adminEmailList)
         self.repositoryName(repositoryName)
         # TODO, only if necessary
-        self.update_theRepository()
+        self.update_repository()
         RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
 
     manage_repositoryInfo = HTMLFile("dtml/manage_OAIRepositoryInfoForm",globals())
     def manage_OAIRepositoryInfo(self,  repositoryDomain,
-                                 deletedRecord, granularity, 
+                                 deletedRecord, granularity,
                                  REQUEST=None, RESPONSE=None):
         """
         save server information
@@ -634,7 +602,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         # baseURL, protocolVersion can't be changed
         self.repositoryDomain(repositoryDomain)
         # self.earliestDatestamp( earliestDatestamp)
-        self.deletedRecord(deletedRecord) 
+        self.deletedRecord(deletedRecord)
         self.granularity(granularity)
 
         # update datestamp in case granularity has changed
@@ -652,7 +620,7 @@ class zOAIRepository(OAIRepository,App.Management.Navigation, Folder, Persistent
         force_update = 0
         if REQUEST.has_key('force_update'):
             force_update = 1
-        self.update_theRepository(force_update=force_update)
+        self.update_repository(force_update=force_update)
         RESPONSE.redirect(self.absolute_url() + '/manage_repositoryUpdate?manage_tabs_message=Server%20has%20been%20updated')
 
     def commit_Changes(self):
@@ -678,11 +646,11 @@ from Products.ZCTextIndex.ILexicon import ILexicon
 from Products.ZCTextIndex.PipelineFactory import element_factory
 
 class AccentNormalizer:
-    
+
     def process(self, lst):
         return [latin1_to_ascii(w) for w in lst]
-    
-if 'Accent Normalizer' not in element_factory.getFactoryGroups():    
+
+if 'Accent Normalizer' not in element_factory.getFactoryGroups():
     element_factory.registerFactory('Accent Normalizer',
                                     'Accent Normalizer',
                                     AccentNormalizer)
@@ -692,7 +660,7 @@ class LocaleAwareSplitter:
     import re
     rx = re.compile(r"\w+", re.UNICODE )
     rxGlob = re.compile(r"\w+[\w*?]*",re.UNICODE ) # See globToWordIds() above
-    
+
     def process(self, lst):
         result = []
         for s in lst:
@@ -706,7 +674,7 @@ class LocaleAwareSplitter:
         for s in lst:
             result += self.rxGlob.findall(s)
         return result
-    
+
 if 'Locale Aware Word Splitter' not in element_factory.getFactoryGroups():
     element_factory.registerFactory('Locale Aware Word Splitter',
                                     'Locale Aware Word Splitter',

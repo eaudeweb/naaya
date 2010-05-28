@@ -1,4 +1,30 @@
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
+
+import string
+import operator
+
+bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
+          '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
+          '\xC6\xE9\xE8\xEA\xEB\xE6\xCD\xCC\xCE\xCF\xED\xEC' \
+          '\xEE\xEF\xD1\xF1\xD6\xD3\xD2\xD4\xD5\xD8\xF6\xF3' \
+          '\xF2\xF4\xF5\xF8\x8A\x9A\xDF\xDC\xDA\xD9\xDB\xFC' \
+          '\xFA\xF9\xFB\xDD\x9F\xFD\xFF\x8E\x9E'
+
+good_chars= '__________________________AAAAAA' \
+          'aaaaaaCcEEEE' \
+          'EeeeeeIIIIii' \
+          'iiNnOOOOOOoo' \
+          'ooooSssUUUUu' \
+          'uuuYYyyZz'
+
+TRANSMAP = string.maketrans(bad_chars, good_chars)
+
+def processId(p_id):
+    """ Retourne un identifiant valide """
+    if isinstance(p_id, unicode): x = p_id.encode('utf-8')
+    else: x = str(p_id)
+    x = x.strip()
+    return x.translate(TRANSMAP)
 
 def latin1_to_ascii (unicrap):
     """This takes a UNICODE string and replaces Latin-1 characters with
@@ -61,3 +87,12 @@ def utConvertLinesToList(value):
         for v in value.split('\r\n'):
             if v != '': values.append(v)
     return values
+
+def utSortDictsListByKey(p_list, p_key, p_desc=1):
+        """Sort a list of objects by an item values"""
+        l_len = len(p_list)
+        l_temp = map(None, map(lambda x, y: x[y], p_list, (p_key,)*l_len), xrange(l_len), p_list)
+        l_temp.sort()
+        if p_desc:
+            l_temp.reverse()
+        return map(operator.getitem, l_temp, (-1,)*l_len)

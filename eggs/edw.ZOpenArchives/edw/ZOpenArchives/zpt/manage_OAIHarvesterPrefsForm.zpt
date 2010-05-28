@@ -1,0 +1,46 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+<p class="form-help">This is an OAI Site Harvester object. It gets the site records and updates them periodically.</p>
+<form action="manage_OAIHarvesterPrefs">
+<table>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input type="text" name="title" size="40" tal:attributes="value here/title" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Site Host:</td>
+        <td><input type="text" name="site_host" size="40" tal:attributes="value here/site_host" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Site URL:</td>
+        <td><input type="text" name="site_url" size="40" tal:attributes="value here/site_url" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="update_period">
+                <option tal:attributes="selected python: test(here.update_period == '1', 'selected', '')" value="1">daily</option>
+                <option tal:attributes="selected python: test(here.update_period == '7', 'selected', '')" value="7">weekly</option>
+                <option tal:attributes="selected python: test(here.update_period == '30', 'selected','')" value="30">monthly</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label" valign="top">Available sets:</td>
+        <td>
+            <input type="checkbox" id="list_sets_all" name="list_sets_all" value="1"
+                tal:attributes="checked python: test(here.list_sets_all == '1', 'checked', '')" />
+            <label for="list_sets_all">All <em>(uncheck to update only selected sets)</em></label>
+            <br />
+            <select multiple="multiple" name="list_sets_selected">
+                <option tal:repeat="set_item here/list_sets"
+                    tal:attributes="value python: set_item['spec'];
+                    selected python: test(set_item['spec'] in here.list_sets_selected, 'selected', '')"
+                    tal:content="python: set_item['name']"></option>
+            </select>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />

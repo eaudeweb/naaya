@@ -10,7 +10,7 @@ setup(name='edw.ZOpenArchives',
     packages=find_packages(),
     zip_safe=False,
     requires=[
-        'lxml',
+        'pyoai >= 2.4.2',# OAI2 client/server protocol implementation
     ],
     install_requires=[
         'Naaya',

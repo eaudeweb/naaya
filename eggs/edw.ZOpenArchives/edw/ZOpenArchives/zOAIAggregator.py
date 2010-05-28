@@ -22,28 +22,27 @@
 
 __doc__ = """ Zope OAI Aggregator """
 
+from urllib import quote
 
-from Globals import HTMLFile
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 from zOAIRepository import zOAIRepository
+from zOAIHarvester import zOAIHarvester
 
+manage_addOAIAggregatorForm = PageTemplateFile('zpt/manage_addOAIAggregatorForm', globals())
 
-manage_addOAIAggregatorForm = HTMLFile('dtml/manage_addOAIAggregatorForm', globals())
-
-def manage_addOAIAggregator(self, id="", title="OAI Aggregator", minutes=18000, REQUEST=None, RESPONSE=None):
-    """ method for adding a new OAI Aggregator """
-
+def manage_addOAIAggregator(self, id='', title="OAI Aggregator", minutes=18000, REQUEST=None):
+    """ """
     if id == '':
-        if RESPONSE is not None:
-            RESPONSE.redirect(self.absolute_url()+'/manage_main?error_message=' + 'Vous%20devez%20choisir%20un%20titre')
-            return None
+        error = "id field is required"
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST.get('HTTP_REFERER', self.absolute_url() + '/manage_main?') + '&error_message=%s' % quote(error))
+        else:
+            raise ValueError(error)
 
-    try:
-        OAIO = zOAIAggregator(id, title, minutes)
-    except:
-        import traceback
-        traceback.print_exc()
-        
+    OAIO = zOAIAggregator(id, title, minutes)
     self._setObject(id, OAIO)
     OAIO = getattr(self, id)
     OAIO.initialize()
@@ -51,101 +50,56 @@ def manage_addOAIAggregator(self, id="", title="OAI Aggregator", minutes=18000, 
     if REQUEST is not None:
         return REQUEST.RESPONSE.redirect(self.absolute_url()+'/manage_main?updat_menu=1')
 
-
-
 class zOAIAggregator(zOAIRepository):
-    """ """
+    """ This is the container that stores the fetched data from OAI servers """
 
     meta_type = 'Open Archive Aggregator'
 
-    manage_main = HTMLFile("dtml/manage_OAIAggregatorMainForm",globals())
+    security = ClassSecurityInfo()
 
-    def add_Indexes(self, cat):
-        """
-        """
-        # general searching - from web form
-        #cat.addIndex('OAI_Date', 'DateIndex')
-        cat.addIndex('OAI_Date', 'FieldIndex')
-        try:
-            OAI_Fulltext_extras = Empty()
-            OAI_Fulltext_extras.doc_attr = 'OAI_Fulltext'
-            OAI_Fulltext_extras.index_type = 'Okapi BM25 Rank'
-            OAI_Fulltext_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('OAI_Fulltext', 'ZCTextIndex', OAI_Fulltext_extras)
-        except:
-            import traceback
-            traceback.print_exc()
-            cat.addIndex('OAI_Fulltext', 'TextIndex')
-        try:
-            OAI_Title_extras = Empty()
-            OAI_Title_extras.doc_attr = 'OAI_Title'
-            OAI_Title_extras.index_type = 'Cosine Measure'
-            OAI_Title_extras_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('OAI_Title', 'ZCTextIndex', OAI_Title_extras)
-        except:
-            cat.addIndex('OAI_Title', 'TextIndex')
-        try:
-            dc_creator_extras = Empty()
-            dc_creator_extras.doc_attr = 'dc_creator'
-            dc_creator_extras.index_type = 'Cosine Measure'
-            dc_creator_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('dc_creator', 'ZCTextIndex',dc_creator_extras)
-        except:
-            cat.addIndex('dc_creator', 'TextIndex')
-        try:
-            dc_author_extras = Empty()
-            dc_author_extras.doc_attr = 'dc_author'
-            dc_author_extras.index_type = 'Cosine Measure'
-            dc_author_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('dc_author', 'ZCTextIndex',dc_author_extras)
-        except:
-            cat.addIndex('dc_author', 'TextIndex')
-        try:
-            dc_description_extras = Empty()
-            dc_description_extras.doc_attr = 'dc_description'
-            dc_description_extras.index_type = 'Okapi BM25 Rank'
-            dc_description_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('dc_description', 'ZCTextIndex',dc_description_extras)
-        except:
-            cat.addIndex('dc_description', 'TextIndex')
-        try:
-            dc_type_extras = Empty()
-            dc_type_extras.doc_attr = 'dc_type'
-            dc_type_extras.index_type = 'Cosine Measure'
-            dc_type_extras.lexicon_id = 'Lexicon'
-            cat.addIndex('dc_type', 'ZCTextIndex',dc_type_extras)
-        except:
-            cat.addIndex('dc_type', 'TextIndex')
-        cat.addIndex('meta_type', 'FieldIndex')
-        # OAI Search stuff -
-        #
-        cat.addIndex('OAI_Identifier', 'FieldIndex')
-        cat.addIndex('OAI_Set', 'KeywordIndex')
-        cat.addIndex('expiration', 'FieldIndex')
+    all_meta_types = ({'name': zOAIHarvester.meta_type, 'action': '/manage_addProduct/edw.ZOpenArchives/manage_addOAIHarvesterForm', 'product': zOAIHarvester.meta_type}, )
 
-    def add_MetadataColumns(self, cat):
-        """
-        """
+
+    security.declarePrivate('add_Indexes')
+    def add_Indexes(self, catalog):
+        """ """
+        catalog.addIndex('OAI_Date', 'FieldIndex')
+        catalog.addIndex('OAI_Fulltext', 'TextIndexNG3')
+        catalog.addIndex('OAI_Title', 'TextIndexNG3')
+        catalog.addIndex('dc_creator', 'TextIndexNG3')
+        catalog.addIndex('dc_author', 'TextIndexNG3')
+        catalog.addIndex('dc_description', 'TextIndexNG3')
+        catalog.addIndex('dc_type', 'TextIndexNG3')
+        catalog.addIndex('meta_type', 'FieldIndex')
+
+        #OAI Search
+        catalog.addIndex('OAI_Identifier', 'FieldIndex')
+        catalog.addIndex('OAI_Set', 'KeywordIndex')
+        catalog.addIndex('expiration', 'FieldIndex')
+
+    security.declarePrivate('add_Indexes')
+    def add_MetadataColumns(self, catalog):
+        """ """
         try:
-            cat.manage_addColumn('id')
+            catalog.manage_addColumn('id')
         except:
             pass
         try:
-            cat.manage_addColumn('title')
+            catalog.manage_addColumn('title')
         except:
             pass
+        catalog.manage_addColumn('header')
+        catalog.manage_addColumn('metadata')
+        catalog.manage_addColumn('OAI_Date')
+        catalog.manage_addColumn('OAI_Title')
+        catalog.manage_addColumn('OAI_Identifier')
+        catalog.manage_addColumn('dc_creator')
+        catalog.manage_addColumn('dc_author')
+        catalog.manage_addColumn('dc_type')
+        catalog.manage_addColumn('dc_identifier')
+        catalog.manage_addColumn('dc_description')
 
-        cat.manage_addColumn('header')
-        cat.manage_addColumn('metadata')
-        cat.manage_addColumn('OAI_Date')
-        cat.manage_addColumn('OAI_Title')
-        cat.manage_addColumn('OAI_Identifier')
-        cat.manage_addColumn('dc_creator')
-        cat.manage_addColumn('dc_author')
-        cat.manage_addColumn('dc_type')
-        cat.manage_addColumn('dc_identifier')
-        cat.manage_addColumn('dc_description')
-
+    security.declarePrivate('getHarvesters')
     def getHarvesters(self):
         """ """
         harvesters_list =[]
@@ -154,19 +108,14 @@ class zOAIAggregator(zOAIRepository):
             harvesters_list.append(harvesters[i][1])
         return harvesters_list
 
-    manage_preferences = HTMLFile("dtml/manage_OAIAggregatorPrefsForm",globals())
+    security.declareProtected(view_management_screens, 'manage_preferences')
+    manage_preferences = PageTemplateFile("zpt/manage_OAIAggregatorPrefsForm",globals())
 
-    def manage_OAIRepositoryPrefs(self, title, updat_period, token_expiration, results_limit, REQUEST=None, RESPONSE=None):
+    security.declareProtected(view_management_screens, 'manage_OAIRepositoryPrefs')
+    def manage_OAIRepositoryPrefs(self, title, def_update, token_expiration, results_limit, REQUEST=None, RESPONSE=None):
         """ save preferences """
         self.title = title
-        self.def_updat = updat_period
+        self.def_update = def_update
         self.token_expiration = token_expiration
         self.results_limit = results_limit
         RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
-
-
-##########
-# empty class for creation of catalog initialization
-#
-
-class Empty: pass

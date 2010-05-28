@@ -1,0 +1,32 @@
+<span tal:replace="structure here/manage_page_header" />
+<h2>Add an OAI Harvester</h2>
+<form method="post" action="manage_addOAIHarvester">
+<table>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input type="text" name="title" size="30" value="" /></td>
+    </tr>
+    <tr>
+        <td class="form-label"><strong>Site host</strong> (ex: ahousat.library.ubc.ca:80)</td>
+        <td><input type="text" name="host" size="30" value="" /></td>
+    </tr>
+    <tr>
+        <td class="form-label"><strong>Site url</strong> (ex: /oai.php)</td>
+        <td><input type="text" name="url" size="30" value="" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="update_period">
+                <option
+                tal:repeat="item python: (('daily', 1000), ('weekly', 7000), ('monthly', 30000),)"
+                tal:attributes="value python: item[1]"
+                tal:content="python: item[0]">
+                </option>
+            </select>
+        </td>
+    </tr>
+    <tr><td></td><td><input type="hidden" name="submitted" value="1" /><input type="submit" value="Add" /></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />

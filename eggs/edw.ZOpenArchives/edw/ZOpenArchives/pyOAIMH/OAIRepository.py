@@ -20,51 +20,50 @@
 #										#
 #################################################################################
 
-"""
-class which implements the OAI repository protocol  ie, a server
-"""
-            
+""" class which implements the OAI repository protocol ie, a server """
+
 import xml.dom.minidom
 from types import UnicodeType
 
 class OAIRepository:
-
     # grammar for requests, for arguments:
     #   0->optional, 1->required, 2->exclusive
-    #
-
     OAI_Grammar = {
-        'Identify' : {},
-        'ListSets' : {}, 
-        'ListMetadataFormats' : {'identifier' : 0},
-        'GetRecord' : {'identifier' : 1,
-                       'metadataPrefix' : 1},
-        'ListRecords' : {'set' : 0,
-                         'from' : 0,
-                         'until' : 0,
-                         'metadataPrefix' : 1,
-                         'resumptionToken' : 2},
-        'ListIdentifiers' : {'set' : 0,
-                             'from' : 0,
-                             'until' : 0,
-                             'resumptionToken' : 2}
+        'Identify':{},
+        'ListSets':{},
+        'ListMetadataFormats': {'identifier': 0},
+        'GetRecord':{
+            'identifier': 1,
+            'metadataPrefix': 1
+        },
+        'ListRecords':{
+            'set': 0,
+            'from': 0,
+            'until': 0,
+            'metadataPrefix': 1,
+            'resumptionToken': 2
+        },
+        'ListIdentifiers':{
+            'set': 0,
+            'from': 0,
+            'until': 0,
+            'resumptionToken' : 2
         }
-
+    }
 
     default_encoding = 'UTF-8'
-
-    oai_ns = { 'xmlns' : "http://www.openarchives.org/OAI/2.0/",
-                  'xmlns:xsi' : "http://www.w3.org/2001/XMLSchema-instance",
-                  'xsi:schemaLocation': "http://www.openarchives.org/OAI/2.0/  http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd"
-                  }
+    oai_ns = {
+        'xmlns': "http://www.openarchives.org/OAI/2.0/",
+        'xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance",
+        'xsi:schemaLocation': "http://www.openarchives.org/OAI/2.0/  http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd"
+    }
 
     def __init__(self):
         """ """
         self._repository=None   # dict for repository info
 
     def initialize(self):
-        """
-        """
+        """ """
         self._repository = {}
 
         # must include only one of these
@@ -80,8 +79,6 @@ class OAIRepository:
         # may include multiple of these
         self.compression(['None'])
         self.description([''])
-        # self.update_theRepository()
-
     ## functions for interface choices
 
     def get_GranularityOptions(self):
@@ -90,7 +87,7 @@ class OAIRepository:
 
     def get_DeletedRecordOptions(self):
         """ """
-        return( [['Yes','persistent'], ['Partial','transient'],['No', 'no']] ) 
+        return( [['Yes','persistent'], ['Partial','transient'],['No', 'no']] )
 
     ## methods to process incoming requests
     #
@@ -205,7 +202,6 @@ class OAIRepository:
             #   to make sure that we have implemented the method
             #   which will handle the verb
             #   - eg, do_Identify, do_ListRecords
-            #
             verb = args['verb']
             method_name = 'do_' + verb
             method = getattr(self, method_name, None)
@@ -238,7 +234,7 @@ class OAIRepository:
         ISO format according to granularity iso8869
         """
         pass
-    
+
     def get_earliestDatestamp(self):
         """
         get the date string for the earliest returns
@@ -259,15 +255,15 @@ class OAIRepository:
         same format than get_ListRecords for one result
         """
         pass
-    
+
     def get_ListMetadataFormats(self, args={}):
         """
         if there is an identifier, look for its metadata formats
         else get metadata options for whole repository
         """
         pass
-    
-    def update_theRepository(self, force_update=None):
+
+    def update_Repository(self, force_update=None):
         """ when changes need to be saved """
         pass
 
@@ -275,7 +271,7 @@ class OAIRepository:
     ####
     #### METHODS TO PROCESS EACH TYPE OF REQUEST
     ####
-    
+
     def do_Identify(self, xmldoc, identify, args={}):
         """
         create Identify XML response
@@ -364,7 +360,7 @@ class OAIRepository:
     def do_ListRecords(self, xmldoc=None, listrecord=None, args={}):
         """
         create ListRecords XML response
-        
+
         xmldoc - head of xml document
         identify - parent dom element for all of this stuff
         args - dict with args from Identify request
@@ -388,7 +384,7 @@ class OAIRepository:
                 if len(list) > 0:
                     clone = list[0].cloneNode(1)
                     record.appendChild(clone)
-            
+
             # add <metadata> info
             if metadata != "":
                 metadata =  xml_declaration + metadata
@@ -406,7 +402,7 @@ class OAIRepository:
                 if len(list) > 0 :
                     clone = list[0].cloneNode(1)
                     record.appendChild(clone)
-                
+
             listrecord.appendChild(record)
 
         # add resumption token if necessary
@@ -424,7 +420,7 @@ class OAIRepository:
     def do_GetRecord(self, xmldoc, getrecord, args={}):
         """
         create Identify XML response
-        
+
         xmldoc - head of xml document
         getrecord - parent dom element for all of this stuff
         args - dict with args from Identify request
@@ -451,7 +447,7 @@ class OAIRepository:
                 if len(list) > 0:
                     clone = list[0].cloneNode(1)
                     record.appendChild(clone)
-            
+
             # add <metadata> info
             if metadata != "":
                 metadata =  xml_declaration + metadata
@@ -485,7 +481,7 @@ class OAIRepository:
     #    the inputs could be verified
     # if a value is passed in, the attribute gets set
     #    else the current attribute is returned
-    
+
     def repositoryName(self, value=None):
         """ input a string """
         if value == None:
@@ -515,7 +511,7 @@ class OAIRepository:
         if value == None:
             return self._repository['earliestDatestamp']
         self._repository['earliestDatestamp'] = value
-        
+
     def deletedRecord(self, value=None):
         """ input a string """
         if value == None:
@@ -541,7 +537,7 @@ class OAIRepository:
         if value == None:
             return self._repository['compression']
         self._repository['compression'] = filter(None, value)
-        
+
     def description(self, value=None):
         """ input a list """
         if value == None:
