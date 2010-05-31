@@ -22,6 +22,8 @@ setup(name='Naaya',
           'gdata >= 2.0.5',
           'mimeparse >= 0.1.2',
           'python-dateutil',
+          'edw-pycaptcha',
+          'edw-localizer',
 
           # only used for testing:
           'twill >= 0.9',
