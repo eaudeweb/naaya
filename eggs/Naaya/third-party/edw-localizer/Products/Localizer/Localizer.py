@@ -1,10 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2000-2004  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2004  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,15 +12,13 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
 from urllib import unquote
 
 # Import from itools
-from itools import i18n
+from itools.i18n import get_language_name
 
 # Import from Zope
 from AccessControl import ClassSecurityInfo
@@ -30,18 +28,11 @@ from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
      unregisterBeforeTraverse, queryBeforeTraverse, NameCaller
 from zLOG import LOG, ERROR, INFO, PROBLEM
 
-# Import from iHotfix
-from Products import iHotfix
-
 # Import Localizer modules
 from LocalFiles import LocalDTMLFile
 from MessageCatalog import MessageCatalog
-from Utils import lang_negotiator
+from utils import lang_negotiator, _
 from LanguageManager import LanguageManager
-
-
-_ = iHotfix.translation(globals())
-N_ = iHotfix.dummy
 
 
 
@@ -227,7 +218,7 @@ class Localizer(LanguageManager, Folder):
 
         langs = []
         for x in ob_languages:
-            langs.append({'id': x, 'title': i18n.get_language_name(x),
+            langs.append({'id': x, 'title': get_language_name(x),
                           'selected': x == ob_language})
 
         return langs
@@ -246,7 +237,7 @@ class Localizer(LanguageManager, Folder):
         if expires is None:
             response.setCookie('LOCALIZER_LANGUAGE', lang, path=path)
         else:
-            response.setCookie('LOCALIZER_LANGUAGE', lang, path=path, 
+            response.setCookie('LOCALIZER_LANGUAGE', lang, path=path,
                                expires=unquote(expires))
         # Comes back
         if goto is None:

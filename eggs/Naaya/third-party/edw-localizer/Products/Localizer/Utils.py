@@ -1,10 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2000-2003  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2003  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,20 +12,22 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.zope import get_context
+from itools import get_abspath
+from itools.i18n import AcceptLanguageType
+from itools.gettext import register_domain, DomainAware as BaseDomainAware
 
 # Import from Zope
 from Globals import package_home
 
+# Import from Localizer
+from patches import get_request
+
 
 # Package home
 ph = package_home(globals())
-
 
 # Initializes a list with the charsets
 charsets = [ x.strip() for x in open(ph + '/charsets.txt').readlines() ]
@@ -39,185 +41,220 @@ def lang_negotiator(available_languages):
     and the list of available languages. Returns the first user pref.
     language that is available, if none is available returns None.
     """
-    context = get_context()
-    request, response = context.request, context.response
+    request = get_request()
+    if request is None:
+        return None
 
-    lang = request.accept_language.select_language(available_languages)
+    try:
+        accept = request['AcceptLanguage']
+    except KeyError:
+        return None
+    else:
+        lang = accept.select_language(available_languages)
 
     # XXX Here we should set the Vary header, but, which value should it have??
-##    response.set_header('Vary', 'accept-language')
-##    response.set_header('Vary', '*')
+##    response = request.RESPONSE
+##    response.setHeader('Vary', 'accept-language')
+##    response.setHeader('Vary', '*')
 
     return lang
 
 
+# Provide an API to access translations stored as MO files in the 'locale'
+# directory. This code has been moved from Localizer.
+
+class DomainAware(BaseDomainAware):
+
+    def select_language(cls, languages):
+        request = get_request()
+        accept = request.get_header('accept-language', default='')
+        accept = AcceptLanguageType.decode(accept)
+        return accept.select_language(languages)
+
+    select_language = classmethod(select_language)
+
+
+class translation(DomainAware):
+
+    def __init__(self, namespace):
+        domain = get_abspath(namespace, 'locale')
+        self.class_domain = domain
+        register_domain(domain, domain)
+
+
+    def __call__(self, message, language=None):
+        return DomainAware.gettext(message, language, self.class_domain)
+
+_ = translation(globals())
+
+
 # Defines strings that must be internationalized
-def N_(message): pass
-N_('Contents')     # Tabs of the management screens
-N_('View')
-N_('Properties')
-N_('Security')
-N_('Undo')
-N_('Ownership')
-N_('Find')
+# Tabs of the management screens
+u'Contents'
+u'View'
+u'Properties'
+u'Security'
+u'Undo'
+u'Ownership'
+u'Find'
 # Languages
-N_('Abkhazian')
-N_('Afar')
-N_('Afrikaans')
-N_('Albanian')
-N_('Amharic')
-N_('Arabic')
-N_('Armenian')
-N_('Assamese')
-N_('Aymara')
-N_('Azerbaijani')
-N_('Bashkir')
-N_('Basque')
-N_('Bengali')
-N_('Bhutani')
-N_('Bihari')
-N_('Bislama')
-N_('Bosnian')
-N_('Breton')
-N_('Bulgarian')
-N_('Burmese')
-N_('Belarusian')
-N_('Cambodian')
-N_('Catalan')
-N_('Chinese')
-N_('Chinese/China')
-N_('Chinese/Taiwan')
-N_('Cornish')
-N_('Corsican')
-N_('Croatian')
-N_('Czech')
-N_('Danish')
-N_('Dutch')
-N_('Dutch/Belgium')
-N_('English')
-N_('English/United Kingdom')
-N_('English/United States')
-N_('Esperanto')
-N_('Estonian')
-N_('Faroese')
-N_('Fiji')
-N_('Finnish')
-N_('French')
-N_('French/Belgium')
-N_('French/Canada')
-N_('French/France')
-N_('French/Switzerland')
-N_('Frisian')
-N_('Galician')
-N_('Georgian')
-N_('German')
-N_('German/Austria')
-N_('German/Germany')
-N_('German/Switzerland')
-N_('Greek')
-N_('Greenlandic')
-N_('Guarani')
-N_('Gujarati')
-N_('Hausa')
-N_('Hebrew')
-N_('Hindi')
-N_('Hungarian')
-N_('Icelandic')
-N_('Indonesian')
-N_('Interlingua')
-N_('Interlingue')
-N_('Inuktitut')
-N_('Inupiak')
-N_('Irish')
-N_('Italian')
-N_('Japanese')
-N_('Javanese')
-N_('Kannada')
-N_('Kashmiri')
-N_('Kazakh')
-N_('Kinyarwanda')
-N_('Kirghiz')
-N_('Kirundi')
-N_('Korean')
-N_('Kurdish')
-N_('Laothian')
-N_('Latin')
-N_('Latvian')
-N_('Lingala')
-N_('Lithuanian')
-N_('Luxembourgish')
-N_('Macedonian')
-N_('Malagasy')
-N_('Malay')
-N_('Malayalam')
-N_('Maltese')
-N_('Maori')
-N_('Marathi')
-N_('Moldavian')
-N_('Mongolian')
-N_('Nauru')
-N_('Nepali')
-N_('Northern Saami')
-N_('Norwegian')
-N_('Occitan')
-N_('Oriya')
-N_('Oromo')
-N_('Pashto')
-N_('Persian')
-N_('Polish')
-N_('Portuguese')
-N_('Portuguese/Brazil')
-N_('Punjabi')
-N_('Quechua')
-N_('Rhaeto-Romance')
-N_('Romanian')
-N_('Russian')
-N_('Samoan')
-N_('Sangho')
-N_('Sanskrit')
-N_('Scots Gaelic')
-N_('Serbian')
-N_('Serbo-Croatian')
-N_('Sesotho')
-N_('Setswana')
-N_('Shona')
-N_('Sindhi')
-N_('Sinhalese')
-N_('Siswati')
-N_('Slovak')
-N_('Slovenian')
-N_('Somali')
-N_('Spanish')
-N_('Spanish/Argentina')
-N_('Spanish/Colombia')
-N_('Spanish/Mexico')
-N_('Spanish/Spain')
-N_('Sundanese')
-N_('Swahili')
-N_('Swedish')
-N_('Tagalog')
-N_('Tajik')
-N_('Tamil')
-N_('Tatar')
-N_('Telugu')
-N_('Thai')
-N_('Tibetan')
-N_('Tigrinya')
-N_('Tonga')
-N_('Tsonga')
-N_('Turkish')
-N_('Turkmen')
-N_('Twi')
-N_('Uighur')
-N_('Ukrainian')
-N_('Urdu')
-N_('Uzbek')
-N_('Vietnamese')
-N_('Volapuk')
-N_('Welsh')
-N_('Wolof')
-N_('Xhosa')
-N_('Yiddish')
-N_('Yoruba')
-N_('Zhuang')
-N_('Zulu')
+u'Abkhazian'
+u'Afar'
+u'Afrikaans'
+u'Albanian'
+u'Amharic'
+u'Arabic'
+u'Armenian'
+u'Assamese'
+u'Aymara'
+u'Azerbaijani'
+u'Bashkir'
+u'Basque'
+u'Bengali'
+u'Bhutani'
+u'Bihari'
+u'Bislama'
+u'Bosnian'
+u'Breton'
+u'Bulgarian'
+u'Burmese'
+u'Belarusian'
+u'Cambodian'
+u'Catalan'
+u'Chinese'
+u'Chinese/China'
+u'Chinese/Taiwan'
+u'Cornish'
+u'Corsican'
+u'Croatian'
+u'Czech'
+u'Danish'
+u'Dutch'
+u'Dutch/Belgium'
+u'English'
+u'English/United Kingdom'
+u'English/United States'
+u'Esperanto'
+u'Estonian'
+u'Faroese'
+u'Fiji'
+u'Finnish'
+u'French'
+u'French/Belgium'
+u'French/Canada'
+u'French/France'
+u'French/Switzerland'
+u'Frisian'
+u'Galician'
+u'Georgian'
+u'German'
+u'German/Austria'
+u'German/Germany'
+u'German/Switzerland'
+u'Greek'
+u'Greenlandic'
+u'Guarani'
+u'Gujarati'
+u'Hausa'
+u'Hebrew'
+u'Hindi'
+u'Hungarian'
+u'Icelandic'
+u'Indonesian'
+u'Interlingua'
+u'Interlingue'
+u'Inuktitut'
+u'Inupiak'
+u'Irish'
+u'Italian'
+u'Japanese'
+u'Javanese'
+u'Kannada'
+u'Kashmiri'
+u'Kazakh'
+u'Kinyarwanda'
+u'Kirghiz'
+u'Kirundi'
+u'Korean'
+u'Kurdish'
+u'Laothian'
+u'Latin'
+u'Latvian'
+u'Lingala'
+u'Lithuanian'
+u'Luxembourgish'
+u'Macedonian'
+u'Malagasy'
+u'Malay'
+u'Malayalam'
+u'Maltese'
+u'Maori'
+u'Marathi'
+u'Moldavian'
+u'Mongolian'
+u'Nauru'
+u'Nepali'
+u'Northern Saami'
+u'Norwegian'
+u'Occitan'
+u'Oriya'
+u'Oromo'
+u'Pashto'
+u'Persian'
+u'Polish'
+u'Portuguese'
+u'Portuguese/Brazil'
+u'Punjabi'
+u'Quechua'
+u'Rhaeto-Romance'
+u'Romanian'
+u'Russian'
+u'Samoan'
+u'Sangho'
+u'Sanskrit'
+u'Scots Gaelic'
+u'Serbian'
+u'Serbo-Croatian'
+u'Sesotho'
+u'Setswana'
+u'Shona'
+u'Sindhi'
+u'Sinhalese'
+u'Siswati'
+u'Slovak'
+u'Slovenian'
+u'Somali'
+u'Spanish'
+u'Spanish/Argentina'
+u'Spanish/Colombia'
+u'Spanish/Mexico'
+u'Spanish/Spain'
+u'Sundanese'
+u'Swahili'
+u'Swedish'
+u'Tagalog'
+u'Tajik'
+u'Tamil'
+u'Tatar'
+u'Telugu'
+u'Thai'
+u'Tibetan'
+u'Tigrinya'
+u'Tonga'
+u'Tsonga'
+u'Turkish'
+u'Turkmen'
+u'Twi'
+u'Uighur'
+u'Ukrainian'
+u'Urdu'
+u'Uzbek'
+u'Vietnamese'
+u'Volapuk'
+u'Welsh'
+u'Wolof'
+u'Xhosa'
+u'Yiddish'
+u'Yoruba'
+u'Zhuang'
+u'Zulu'

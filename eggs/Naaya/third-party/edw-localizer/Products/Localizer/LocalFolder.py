@@ -1,10 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2000-2004  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2004  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,26 +12,17 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Zope
 from Globals import package_home
 from OFS.Folder import Folder
 
-# Import from iHotfix
-from Products import iHotfix
-
 # Import from Localizer
 from LanguageManager import LanguageManager
 from LocalFiles import LocalDTMLFile
 from LocalAttributes import LocalAttribute, LocalAttributes
-
-
-_ = iHotfix.translation(globals())
-N_ = iHotfix.dummy
-
+from utils import _
 
 
 
@@ -69,7 +60,7 @@ class LocalFolder(LanguageManager, LocalAttributes, Folder):
     def manage_options(self):
         """ """
         options = Folder.manage_options[:1] \
-                  + ({'label': N_('Attributes'),
+                  + ({'label': u'Attributes',
                     'action': 'manage_attributes'},) \
                   + LanguageManager.manage_options \
                   + Folder.manage_options[1:]
@@ -82,7 +73,7 @@ class LocalFolder(LanguageManager, LocalAttributes, Folder):
 
         return r
 
-    
+
     # Manage attributes
     manage_attributes = LocalDTMLFile('ui/LocalFolder_attributes', globals())
 

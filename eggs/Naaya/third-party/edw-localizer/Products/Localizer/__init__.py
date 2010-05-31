@@ -1,41 +1,42 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2000-2005  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
-
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2005  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-# First check itools and iHotfix are installed
+# Check whether itools is installed
+msg = ('itools 0.16 or later is needed, download from '
+       'http://www.ikaaro.org/itools')
 try:
     import itools
 except ImportError:
-    raise ImportError, ('itools is not installed, download from'
-                        ' http://www.ikaaro.org/itools')
-try:
-    from Products import iHotfix
-except ImportError:
-    raise ImportError, ('iHotfix is not installed, download from'
-                        ' http://www.ikaaro.org/localizer')
+    raise ImportError, msg
+# Check itools is version 0.16 or later
+if itools.__version__ < '0.16':
+    raise ImportError, msg
+
+# Import from the Standard Library
+import os.path
 
 # Import from Zope
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
 import ZClasses
 from Products.PageTemplates.GlobalTranslationService import \
      setGlobalTranslationService
 
 # Import from Localizer
+from patches import get_request
 import Localizer, LocalContent, MessageCatalog, LocalFolder
 from LocalFiles import LocalDTMLFile, LocalPageTemplateFile
 from LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -59,16 +60,23 @@ class GlobalTranslationService:
 
 
     def translate(self, domain, msgid, *args, **kw):
-        if domain == 'default':
-            domain = 'gettext'
-
         context = kw.get('context')
         if context is None:
             # Placeless!
             return msgid
 
+        if domain is None or domain == 'default':
+            domain = 'gettext'
+
         # Find it by acquisition
         translation_service = getattr(context, domain, None)
+
+        # Try to get a catalog from a Localizer Object
+        if translation_service is None:
+            localizerObj = getattr(context, "Localizer", None)
+            if localizerObj is not None:
+                translation_service = getattr(localizerObj, domain, None)
+
         if translation_service is not None:
             from MessageCatalog import MessageCatalog
             if isinstance(translation_service, MessageCatalog):
@@ -98,6 +106,15 @@ except ImportError:
 
 
 def initialize(context):
+    # Check Localizer is not installed with a name different than Localizer
+    # (this is a common mistake).
+    filename = os.path.split(os.path.split(__file__)[0])[1]
+    if filename != 'Localizer':
+        message = (
+            "The Localizer product must be installed within the 'Products'"
+            " folder with the name 'Localizer' (not '%s').") % filename
+        raise RuntimeError, message
+
     # XXX This code has been written by Cornel Nitu, it may be a solution to
     # upgrade instances.
 ##    root = context._ProductContext__app

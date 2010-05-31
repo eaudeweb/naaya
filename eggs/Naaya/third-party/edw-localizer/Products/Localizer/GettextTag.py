@@ -1,20 +1,18 @@
-# -*- coding: ISO-8859-1 -*-
-# Localizer, Zope product that provides internationalization services
-# Copyright (C) 2000-2002  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
-
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2002  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 Localizer
@@ -26,9 +24,10 @@ Adds a new DTML tag:
 </dtml-gettext>
 """
 
-
+# Import from the Standard Library
 from types import StringType
 
+# Import from Zope
 from DocumentTemplate.DT_Util import Eval, ParseError, parse_params, \
      InstanceDict, namespace, render_blocks
 
@@ -81,7 +80,7 @@ class GettextTag:
 
 
     def __call__(self, md):
-        # In which language, if any? 
+        # In which language, if any?
         lang = get_value(self.lang, md)
 
         # Get the message!!
