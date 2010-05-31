@@ -87,6 +87,8 @@ class GeoWidget(Widget):
             return None
         return value
 
+    hidden_template = PageTemplateFile('../zpt/property_widget_hidden_geo', globals())
+
     template = PageTemplateFile('../zpt/property_widget_geo', globals())
 
 InitializeClass(GeoWidget)
