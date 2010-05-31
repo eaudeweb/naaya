@@ -1,11 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Localizer, Zope product that provides internationalization services
-# Copyright (C) 2000-2004  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2004  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,34 +12,29 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
 from urlparse import urlparse
 
-# Import itools modules
-from itools import i18n
+# Import from itools
+from itools.i18n import Multilingual, get_language_name, get_languages
 
 # Import from Zope
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-# Import from iHotfix
-from Products.iHotfix import dummy as N_
-
 # Import from Localizer
 from LocalFiles import LocalDTMLFile
-from Utils import lang_negotiator
+from utils import lang_negotiator
 
 
-class LanguageManager(i18n.Multilingual):
+class LanguageManager(Multilingual):
     """ """
 
     security = ClassSecurityInfo()
 
-    manage_options = ({'label': N_('Languages'), 'action': 'manage_languages',
+    manage_options = ({'label': u'Languages', 'action': 'manage_languages',
                        'help': ('Localizer', 'LM_languages.stx')},)
 
 
@@ -65,7 +59,7 @@ class LanguageManager(i18n.Multilingual):
         """
         if id is None:
             id = self.get_default_language()
-        return i18n.get_language_name(id)
+        return get_language_name(id)
 
 
     security.declarePublic('get_available_languages')
@@ -100,7 +94,7 @@ class LanguageManager(i18n.Multilingual):
         """
         Returns all ISO languages, used by 'manage_languages'.
         """
-        return i18n.get_languages()
+        return get_languages()
 
 
     security.declareProtected('Manage languages', 'manage_addLanguage')
@@ -128,7 +122,6 @@ class LanguageManager(i18n.Multilingual):
 
         if REQUEST is not None:
             RESPONSE.redirect("%s/manage_languages" % REQUEST['URL1'])
-
 
 
     # Unicode support, custom ZMI

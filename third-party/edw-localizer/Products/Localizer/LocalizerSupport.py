@@ -1,10 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2002-2004  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2002-2004  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,9 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 This module makes more easy to implement multilingual Zope products based
@@ -25,14 +23,14 @@ It provides dummy versions of some Localizer features. To internationalize
 your code copy and paste this module to your product directory and, in the
 modules you need it, just type:
 
-  from LocalizerSupport import _, N_
+  from LocalizerSupport import _
   from LocalizerSupport import LocalDTMLFile as DTMLFile
   from LocalizerSupport import LocalPageTemplateFile as PageTemplateFile
 
 Note that the 'as' keyword is new to Python 2.0, if to support older
 versions is a requirement you should type this instead:
 
-  from LocalizerSupport import _, N_
+  from LocalizerSupport import _
   from LocalizerSupport import LocalDTMLFile, LocalPageTemplateFile
 
   DTMLFile = LocalDTMLFile
@@ -56,18 +54,21 @@ Of course, you don't need to import the features you don't need.
 __version__ = '1.1.0'
 
 
+def N_(message, language=None):
+    """
+    Used to markup a string for translation but without translating it,
+    this is known as deferred translations.
+    """
+    return message
+
+
 
 try:
-    from Products import iHotfix
-    _ = iHotfix.translation(globals())
-    N_ = iHotfix.dummy
-
     from Products.Localizer import LocalDTMLFile, LocalPageTemplateFile
+    from Products.Localizer import _
 except ImportError:
     # For Python code
-    def _(s, language=None):
-        return s
-    N_ = _
+    _ = N_
 
 
     # For DTML and Page Templates

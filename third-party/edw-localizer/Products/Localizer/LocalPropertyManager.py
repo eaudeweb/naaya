@@ -1,10 +1,10 @@
-# -*- coding: ISO-8859-1 -*-
-# Copyright (C) 2000-2004  Juan David Ib·Òez Palomar <jdavid@itaapy.com>
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2000-2004  Juan David Ib√°√±ez Palomar <jdavid@itaapy.com>
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -12,9 +12,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
 from urllib import quote
@@ -24,18 +22,10 @@ from time import time
 from AccessControl import ClassSecurityInfo
 import Globals
 
-# Import from iHotfix
-from Products import iHotfix
-
 # Import from Localizer
 from LanguageManager import LanguageManager
 from LocalAttributes import LocalAttribute, LocalAttributesBase
 from LocalFiles import LocalDTMLFile
-
-
-# To translate.
-_ = iHotfix.translation(globals())
-N_ = iHotfix.dummy
 
 
 # XXX
@@ -56,7 +46,7 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
     _local_properties_metadata = ()
 
     # Local properties are stored here
-    # Example: {'title': {'en': ('Title', timestamp), 'es': ('TÌtul', timestamp)}}
+    # Example: {'title': {'en': ('Title', timestamp), 'es': ('T√≠tul', timestamp)}}
     _local_properties = {}
 
     # Useful to find or index all LPM instances
@@ -74,16 +64,16 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
         """ """
         if self.need_upgrade():
             # This instance needs to be upgraded
-            options = ({'label': N_('Upgrade'), 'action': 'manage_upgradeForm',
+            options = ({'label': u'Upgrade', 'action': 'manage_upgradeForm',
                         'help': ('Localizer', 'LPM_upgrade.stx')},)
         else:
             options = ()
 
         return options \
-               + ({'label': N_('Local properties'),
+               + ({'label': u'Local properties',
                    'action': 'manage_localPropertiesForm',
                    'help': ('Localizer', 'LPM_properties.stx')},
-                   {'label': N_('Translate properties'),
+                   {'label': u'Translate properties',
                    'action': 'manage_transPropertiesForm',
                    'help': ('Localizer', 'LPM_translate.stx')},) \
                + LanguageManager.manage_options
@@ -105,52 +95,6 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
     security.declareProtected('View management screens',
                               'manage_transPropertiesForm')
     manage_transPropertiesForm = LocalDTMLFile('ui/LPM_translations', globals())
-
-
-    security.declarePublic('get_batch_size')
-    def get_batch_size(self):
-        """
-        Returns the size of the batch for the web interface.
-        For now it's a constant value.
-        """
-        return 5
-
-
-    security.declarePublic('get_batch_size')
-    def get_batch_start(self, start, index):
-        """
-        Returns the right batch_start, used in the web interfaces.
-        """
-        # Get the size of the batch
-        size = self.get_batch_size()
-
-        start2 = index - size + 1
-        if start2 < 0:
-            start2 = 0
-
-        if start < start2:
-            return start2
-
-        return start
-
-
-    security.declarePublic('get_url')
-    def get_url(self, url, batch_start, batch_index, lang_hide, **kw):
-        """
-        Used in the 'localPropertiesForm' to generate the urls.
-        """
-        params = []
-        for key, value in kw.items():
-            params.append('%s=%s' % (key, quote(value)))
-
-        params.extend(['batch_start:int=%d' % batch_start,
-                       'batch_index:int=%d' % batch_index])
-
-        for lang in lang_hide:
-            params.append('lang_hide:tuple=%s' % lang)
-
-
-        return url + '?' + '&amp;'.join(params)
 
 
     security.declareProtected('Manage properties', 'set_localpropvalue')
@@ -352,7 +296,7 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
     def need_upgrade(self):
         """ """
         return hasattr(self.aq_base, 'original_language')
-        
+
 
     manage_upgradeForm = LocalDTMLFile('ui/LPM_upgrade', globals())
     def manage_upgrade(self, REQUEST=None, RESPONSE=None):
@@ -391,17 +335,8 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
             raise AttributeError, "%s instance has no attribute '%s'" \
                                   % (self.__class__.__name__, name)
 
-        return property.get(lang, '')
- 
-    security.declareProtected('Manage properties', 'del_localprop_with_empty_values')
-    def del_localprop_with_empty_values(self, id, lang, value):
-        """ """
-        properties = self._local_properties.copy()
-        if properties.has_key(id):
-            if properties[id].has_key(lang):
-                if properties[id][lang] and properties[id][lang][0] == '':
-                    del properties[id][lang]
-        self._local_properties = properties
+        return self.getLocalAttribute(id, lang)
+
 
 
 Globals.InitializeClass(LocalPropertyManager)

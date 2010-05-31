@@ -7,13 +7,12 @@ both user interfaces and content.
 
 Requirements
 
-  - Python 2.3.4 or later
+  - Python 2.4 or later
 
-  - Zope 2.7.4 or later
+  - Zope 2.9 or later
 
-  - itools 0.7.3 or later (download from http://www.ikaaro.org/itools)
-
-  - iHotfix 0.5.2 or later (download from http://www.ikaaro.org/localizer)
+  - itools 0.20.2 or later (download from
+    "http://www.ikaaro.org/itools":http://www.ikaaro.org/itools)
 
 
 Installation
@@ -21,21 +20,21 @@ Installation
   Download Localizer. Unpack the tarball and install it in the "Products"
   directory::
 
-    $ tar xzf Localizer-1.1.0.tar.gz
-    $ cp -r Localizer-1.1.0 <Zope instance>/Products/Localizer
+    $ tar xzf Localizer-1.2.2.tar.gz
+    $ cp -r Localizer-1.2.2 <Zope instance>/Products/Localizer
 
   Another option, case you are running Unix, is to use symbolic links::
 
-    $ ln -s Localizer-1.1.0 <Zope instance>/Products/Localizer
+    $ ln -s Localizer-1.2.2 <Zope instance>/Products/Localizer
 
 
 Resources
 
   - "Home site":http://www.localizer.org
 
-  - "Mailing list":http://in-girum.net/mailman/listinfo/localizer
+  - "Mailing list":http://mail.ikaaro.org/mailman/listinfo/localizer
 
-  - "Bug Tracker":http://in-girum.net/cgi-bin/bugzilla/index.cgi
+  - "Bug Tracker":http://bugs.ikaaro.org/
 
 
 Examples of sites powered by Localizer
@@ -57,13 +56,13 @@ Examples of sites powered by Localizer
 
 Author and License
 
-  Copyright 2001-2005  J. David Ibáñez (jdavid@itaapy.com)
+  Copyright 2001-2007  J. David Ibáñez (jdavid@itaapy.com)
             2001 Universitat Jaume I
 
-  This program is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public License
-  as published by the Free Software Foundation; either version 2
-  of the License, or (at your option) any later version.
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -71,5 +70,6 @@ Author and License
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+  along with this program.  If not, see
+  "http://www.gnu.org/licenses/":http://www.gnu.org/licenses/
+

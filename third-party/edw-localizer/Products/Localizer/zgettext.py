@@ -1,22 +1,20 @@
 #!/usr/bin/env python
-# -*- coding: ISO-8859-1 -*-
-# Localizer, Zope product that provides internationalization services
-# Copyright (C) 2001 AndrÈs Marzal Varo
-#               2001-2002 J. David Ib·Òez <jdavid@itaapy.com>
-
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-
+# -*- coding: UTF-8 -*-
+# Copyright (C) 2001 Andr√©s Marzal Varo
+# Copyright (C) 2001-2002 J. David Ib√°√±ez <jdavid@itaapy.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
 zgettext.py is a script that parses DTML files and generates .pot and .po
@@ -32,30 +30,34 @@ Future (XXX):
 Anyway, the trend is to levereage the gettext tools as much as posible.
 """
 
-
 # Import from the Standard Library
-import os
-import re
+from os import listdir, mkdir, remove, system
+from os.path import exists, isdir
+from re import compile, DOTALL, findall
 import sys
-import tempfile
-import time
+from tempfile import mktemp
+from time import gmtime, strftime, time
+
+# Import from itools
+from itools.handlers import get_handler
+from itools.gettext import POFile
 
 
 
 # Exceptions
-class UnknownStatus(Exception): pass
+class UnknownStatus(Exception):
+    pass
 
 
 
 def create_mo_files():
-    for filename in [ x for x in os.listdir('locale') if x.endswith('.po') ]:
+    for filename in [ x for x in listdir('locale') if x.endswith('.po') ]:
         language = filename[:-3]
-        os.system('msgfmt locale/%s.po -o locale/%s.mo' % (language, language))
+        system('msgfmt locale/%s.po -o locale/%s.mo' % (language, language))
 
 
 def parse_generic(text, commands=('gettext', 'ugettext')):
-    """
-    Search for patterns like: gettext('message').
+    """Search for patterns like: gettext('message').
 
     XXX
     Originally it was used to parse Python code, but it fails to parse
@@ -68,21 +70,20 @@ def parse_generic(text, commands=('gettext', 'ugettext')):
     r = []
     for command in commands:
         pattern = command + '\s*\(\s*(\'.*?[^\\\\]\'|\".*?[^\\\\]\")\s*\)'
-        regex = re.compile(pattern, re.DOTALL)
-        r.extend([ x[1:-1] for x in re.findall(regex, text) ])
+        regex = compile(pattern, DOTALL)
+        r.extend([ x[1:-1] for x in findall(regex, text) ])
 
     return r
 
 
 def parse_dtml(text):
-    """
-    Extract the messages from a DTML template.
+    """Extract the messages from a DTML template.
     """
     messages = parse_generic(text)
 
     # Search the "<dtml-gettext>message</dtml-gettext>" pattern
-    regex = re.compile('<dtml-gettext(.*?)>(.*?)</dtml-gettext>', re.DOTALL)
-    for parameters, message in re.findall(regex, text):
+    regex = compile('<dtml-gettext(.*?)>(.*?)</dtml-gettext>', DOTALL)
+    for parameters, message in findall(regex, text):
         if parameters.find('verbatim') == -1:
             message = ' '.join([ x.strip() for x in message.split() ])
         messages.append(message)
@@ -91,8 +92,7 @@ def parse_dtml(text):
 
 
 def parse_zpt(text):
-    """
-    Extract the messages from a ZPT template.
+    """Extract the messages from a ZPT template.
 
     XXX It should be improved to parse the i18n namespace.
     """
@@ -101,16 +101,16 @@ def parse_zpt(text):
 
 def do_all(filenames, languages):
     # Create the locale directory
-    if not os.path.isdir('./locale'):
+    if not isdir('./locale'):
         try:
-            os.mkdir('./locale')
+            mkdir('./locale')
         except OSError, msg:
             sys.stderr.write('Error: Cannot create directory "locale".\n%s\n'
                              % msg)
             sys.exit(1)
 
     # Create the pot file
-    if not os.path.exists('locale/locale.pot'):
+    if not exists('locale/locale.pot'):
         f = open('locale/locale.pot', 'w')
         f.write("# SOME DESCRIPTIVE TITLE.\n")
         f.write("# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER\n")
@@ -121,8 +121,8 @@ def do_all(filenames, languages):
         f.write('msgid ""\n')
         f.write('msgstr ""\n')
         f.write('"Project-Id-Version: PACKAGE VERSION\\n"\n')
-        f.write('"POT-Creation-Date: %s\\n"\n'
-                % time.strftime('%Y-%m-%d %H:%m+%Z', time.gmtime(time.time())))
+        f.write('"POT-Creation-Date: %s\\n"\n' % strftime('%Y-%m-%d %H:%m+%Z',
+                                                          gmtime(time())))
         f.write('"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"\n')
         f.write('"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"\n')
         f.write('"Language-Team: LANGUAGE <LL@li.org>\\n"\n')
@@ -151,7 +151,7 @@ def do_all(filenames, languages):
 
     # Write a PO file with the messages from DTML and ZPT
     if messages:
-        filename = tempfile.mktemp('.po')
+        filename = mktemp('.po')
         filenames.append(filename)
 
         f = open(filename, 'w')
@@ -167,33 +167,36 @@ def do_all(filenames, languages):
 
     # Parse the rest of the files
     if filenames2:
-        filename = tempfile.mktemp('.po')
+        po = POFile()
+        for filename in filenames2:
+            handler = get_handler(filename)
+            for msgid, line_number in handler.get_messages():
+                po.set_message(msgid, references={filename: [line_number]})
+        filename = mktemp('.po')
         filenames.append(filename)
-        os.system('xgettext --omit-header --keyword=ugettext --keyword=N_ --output=%s %s' % (filename, ' '.join(filenames2)))
-
+        open(filename, 'w').write(po.to_str())
 
     # Create the POT file
     if filenames:
-        filename = tempfile.mktemp('.po')
-        os.system('msgcat --output-file=%s %s'
-                  % (filename, ' '.join(filenames)))
-        os.system('msgmerge -U locale/locale.pot %s' % filename)
+        filename = mktemp('.po')
+        cmd = 'msgcat -s --output-file=%s %s' % (filename, ' '.join(filenames))
+        system(cmd)
+        system('msgmerge -U locale/locale.pot %s' % filename)
 
         # Remove temporal files
-        os.remove(filename)
+        remove(filename)
         for filename in filenames:
-            os.remove(filename)
+            remove(filename)
 
     # Generate the PO files
     for language in languages:
-        if os.path.exists('./locale/%s.po' % language):
+        if exists('./locale/%s.po' % language):
             # a .po file already exist, merge it with locale.pot
-            os.system('msgmerge -U locale/%s.po locale/locale.pot' % language)
+            system('msgmerge -U locale/%s.po locale/locale.pot' % language)
         else:
             # po doesn't exist, just copy locale.pot
             text = open('./locale/locale.pot').read()
             open('./locale/%s.po' % language, 'w').write(text)
-
 
 
 
