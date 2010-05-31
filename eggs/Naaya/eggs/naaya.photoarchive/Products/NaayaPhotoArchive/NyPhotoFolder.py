@@ -535,7 +535,8 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                     err = 'Please select a valid zip or image to upload'
                 else:
                     self._add_photo(id=filename, title=filename, file=the_file,
-                                    lang=self.gl_get_selected_language(), **schema_raw_data)
+                                    lang=self.gl_get_selected_language(),
+                                    **schema_raw_data)
                     err = ''
 
         # Return
