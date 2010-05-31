@@ -26,6 +26,7 @@
 
 <p i18n:translate="">
     The metadata below will be set on all photos you are now uploading.
+    Leave title empty to use the filename.
 </p>
 
 <!-- Schema properties -->
