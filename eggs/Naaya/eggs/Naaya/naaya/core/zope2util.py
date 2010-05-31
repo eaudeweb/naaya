@@ -32,6 +32,7 @@ from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
+from naaya.core.utils import path_in_site
 
 def redirect_to(tmpl):
     """
@@ -113,11 +114,15 @@ class RestrictedToolkit(SimpleItem):
         """
         return json.dumps(obj)
 
-    def json_loads(self, json):
+    def json_loads(self, json_data):
         """
         Convert JSON data to a Python object
         """
-        return json.loads(obj)
+        return json.loads(json_data)
+
+    def path_in_site(self, obj):
+        """ Return path relative to site root """
+        return path_in_site(obj)
 
 InitializeClass(RestrictedToolkit)
 
