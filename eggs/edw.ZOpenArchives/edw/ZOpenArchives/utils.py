@@ -2,6 +2,7 @@
 
 import string
 import operator
+import datetime
 
 bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
           '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
@@ -24,7 +25,9 @@ def processId(p_id):
     if isinstance(p_id, unicode): x = p_id.encode('utf-8')
     else: x = str(p_id)
     x = x.strip()
-    return x.translate(TRANSMAP)
+    x = x.translate(TRANSMAP)
+    if x[0] == '_': x = x[1:]
+    return x
 
 def latin1_to_ascii (unicrap):
     """This takes a UNICODE string and replaces Latin-1 characters with
@@ -96,3 +99,11 @@ def utSortDictsListByKey(p_list, p_key, p_desc=1):
         if p_desc:
             l_temp.reverse()
         return map(operator.getitem, l_temp, (-1,)*l_len)
+
+def DT2dt(date):
+    """Convert Zope's DateTime to Pythons's datetime
+    Stolen from Plone-2.1.4/ATContentTypes/utils.py
+    """
+    # seconds (parts[6]) is a float, so we map to int
+    args = map(int, date.parts()[:6])
+    return datetime.datetime(*args)

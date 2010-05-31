@@ -22,42 +22,39 @@
 
 __doc__ = """ Produit ZCatalog Harvester """
 
-
-import urllib
-import string
-import DateTime
 import sys
+import DateTime
+import string
+import urllib
 import xml.dom.minidom
 
 import App
-
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
 from Acquisition import Implicit
 from Globals import HTMLFile, Persistent
 from OFS.Folder import Folder
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.ZCatalog import ZCatalog
 
 from zOAIRecord import manage_addOAIRecord, create_ObjectMetadata
 
 from utils import utConvertLinesToList, utConvertListToLines, processId
 
-manage_addZCatalogHarvesterForm = HTMLFile('dtml/manage_addZCatalogHarvesterForm', globals())
-
-def manage_addZCatalogHarvester(self, id="", title="Zope OAI Server", update_period=None, autopublish=1, autopublishRoles = [], pref_meta_types=[], REQUEST=None, RESPONSE=None):
+manage_addZCatalogHarvesterForm = PageTemplateFile('zpt/manage_addZCatalogHarvesterForm', globals())
+def manage_addZCatalogHarvester(self, id="", title="Zope OAI Server", update_period=None, autopublish=1, autopublishRoles = [], pref_meta_types=[], REQUEST=None):
     """ method for adding a new Zope OAI Server """
     if id == '':
-        if RESPONSE is not None:
-            RESPONSE.redirect(self.absolute_url()+'/manage_main?error_message=' + 'Please%20choose%20a%20title')
-            return None
-    id = 'OAI_' + id
-    pref_meta_types = utConvertLinesToList(pref_meta_types)
-    try:
-        ZCATO = ZCatalogHarvester(id, title, update_period, autopublish, autopublishRoles, pref_meta_types)
-    except:
-        import traceback
-        traceback.print_exc()
+        error = "id field is required"
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST.get('HTTP_REFERER', self.absolute_url() + '/manage_main?') + '&error_message=%s' % urllib.quote(error))
+        else:
+            raise ValueError(error)
 
+    id = 'OAI_' + processId(id)
+    pref_meta_types = utConvertLinesToList(pref_meta_types)
+    ZCATO = ZCatalogHarvester(id, title, update_period, autopublish, autopublishRoles, pref_meta_types)
     self._setObject(id, ZCATO)
     ZCATO = getattr(self, id)
     ZCATO.initialize()
@@ -76,20 +73,13 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
     default_catalog = 'OAI_Catalog'
     default_encoding = 'UTF-8'
 
+    security = ClassSecurityInfo()
 
     manage_options= (
-        {'label': 'Contents',
-         'action': 'manage_main'
-         },
-
-        {'label': 'Preferences',
-         'action': 'manage_preferences'
-         },
-
-        {'label': 'Update',
-         'action': 'manage_update'
-         },
-        )
+        {'label': 'Contents', 'action': 'manage_main'},
+        {'label': 'Preferences', 'action': 'manage_preferences'},
+        {'label': 'Update', 'action': 'manage_update'},
+    )
 
     def __init__(self, id, title, update_period, autopublish, autopublishRoles, pref_meta_types):
         """
@@ -107,17 +97,16 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         self.force_update = 1
         self.metadata_prefix = None
 
+    security.declarePrivate('initialize')
     def initialize(self):
-        """
-        set generic metadata prefix
-        """
+        """ set generic metadata prefix """
         self.last_update = None
         self.metadata_prefix = 'oai_dc'
         self.allowedRoles = ['Anonymous']
         self.add_oai_index()
         self.update_ZCatalogHarvester()
 
-
+    security.declareProtected(view_management_screens, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """
         main method for the OAI server. processes
@@ -127,6 +116,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         self.the_request = REQUEST.URL0
         return self.process_Request(args=REQUEST.form)
 
+    security.declarePrivate('get_myContainer')
     def get_myContainer(self):
         """ get my parent container """
         # need to do this loop because having problems
@@ -139,14 +129,15 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
             self = parent
         return parent
 
+    security.declarePrivate('get_theSiteCatalog')
     def get_theSiteCatalog(self):
         """
         get the catalog in the portail site
         looking for the one with same name as this object
         """
-        catalog = getattr( self.get_myContainer().get_myContainer(), 'portal_catalog')
-        return catalog
+        return self.getSite().getCatalogTool()
 
+    security.declarePrivate('add_oai_index')
     def add_oai_index(self):
         """
         add the oai index to the site catalog
@@ -159,34 +150,39 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         except:
             pass
 
+    security.declarePrivate('delete_oai_index')
     def delete_oai_index(self):
         """delete the index from the site catalog chosen to publish"""
         cat = self.get_theSiteCatalog()
         cat.delIndex('oai_state')
 
+    security.declarePrivate('update_ZCatalogHarvester')
     def update_ZCatalogHarvester(self):
         """get cataloged objects, set update time, re-index"""
         self.last_update = DateTime.DateTime()
         self.update_CatalogItems()
         self.reindex_object()
 
+    security.declarePrivate('update_CatalogItems')
     def update_CatalogItems(self):
         """ update get all items in catalog """
         # always do manual publish - in case someone adds other
         #   information that they want shared, other than what
         #   autopublish provides
         #self.process_Manualpublish()
-        if self.autopublish == 1:
+        if self.autopublish == "1":
             self.process_Autopublish()
         else:
             self.process_Manualpublish()
         # now look for objects which have been deleted in the portal catalog
         #TOSEE - self.process_deletedObjects()
 
+    security.declarePrivate('delete_Records')
     def delete_Records(self):
         """ sometimes it's necessary to clean out the records """
         self.manage_delObjects( ids = self.objectIds('Open Archive Record') )
 
+    security.declarePrivate('process_Autopublish')
     def process_Autopublish(self):
         """method to process all objects in the Portal catalog just uses Dublin Core """
         if self.pref_meta_types is not None and self.pref_meta_types != []:
@@ -282,6 +278,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
                 manage_addOAIRecord(self, metadata_format='oai_dc', id=pid, xml=record_xml)
         self.force_update = 0
 
+    security.declarePrivate('process_Manualpublish')
     def process_Manualpublish(self):
         """
         need to create different types of objects depending
@@ -387,9 +384,9 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
                     manage_addOAIRecord(self, metadata_format=metadata, id=pid, xml=record_xml)
         self.force_update = 0
 
+    security.declarePrivate('process_deletedObjects')
     def process_deletedObjects(self):
-        """
-        """
+        """ """
         # look for items not updated, and mark as deleted
         catalog = getattr( self.get_myContainer(), self.default_catalog )
         for item in catalog.searchResults( {'last_update':self.last_update,
@@ -401,34 +398,37 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
             # TODO: deleted record support - yes, no, transient
             record.mark_recordDeleted()
 
+    security.declarePrivate('index_object')
     def index_object(self):
-        """
-        """
+        """ """
         try:
             getattr(self, self.default_catalog).catalog_object(self, urllib.unquote('/' + self.absolute_url(1) ))
         except:
             pass
 
+    security.declarePrivate('unindex_object')
     def unindex_object(self):
-        """
-        """
+        """ """
         try:
             getattr(self, self.default_catalog).uncatalog_object(urllib.unquote('/' + self.absolute_url(1) ))
         except:
             pass
 
+    security.declarePrivate('reindex_object')
     def reindex_object(self):
-        """
-        """
+        """ """
         self.unindex_object()
         self.index_object()
 
-#### OBJECT MANAGEMENT STUFF ####
+    ###################
+    # ZMI Views
+    ###################
 
-    #manage_main = HTMLFile("dtml/manage_OAIHarvesterMainForm",globals())
+    security.declareProtected(view_management_screens, 'manage_preferences')
+    manage_preferences = PageTemplateFile("zpt/manage_ZCatalogHarvesterPrefsForm", globals())
 
-    manage_preferences = HTMLFile("dtml/manage_ZCatalogHarvesterPrefsForm",globals())
-    def manage_ZCatalogHarvesterPrefs(self, title, update_period,autopublish, autopublishRoles=[], pref_meta_types=[], REQUEST=None, RESPONSE=None):
+    security.declareProtected(view_management_screens, 'manage_ZCatalogHarvesterPrefs')
+    def manage_ZCatalogHarvesterPrefs(self, title, update_period, autopublish, autopublishRoles=[], pref_meta_types=[], REQUEST=None):
         """ save preferences """
         self.title = title
         if self.autopublish != autopublish:
@@ -440,23 +440,21 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         self.force_update = 1
         self.reindex_object() # need to recatalog update_period
         self.update_ZCatalogHarvester()
-        RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_preferences?manage_tabs_message=Settings%20saved')
 
 
-    manage_update = HTMLFile("dtml/manage_ZCatalogHarvesterUpdateForm",globals())
-    def manage_ZCatalogHarvesterUpdate(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(view_management_screens, 'manage_update')
+    manage_update = HTMLFile("dtml/manage_ZCatalogHarvesterUpdateForm", globals())
+
+    security.declareProtected(view_management_screens, 'manage_ZCatalogHarvesterUpdate')
+    def manage_ZCatalogHarvesterUpdate(self, REQUEST=None):
         """ update catalog records """
-        # TODO: update will also need to check existing records for deletions on server, etc
         self.update_ZCatalogHarvester()
-        # self.handle_deletedObject()
-        RESPONSE.redirect(self.absolute_url() + '/manage_update?manage_tabs_message=Site%20records%20updated')
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_update?manage_tabs_message=Site%20records%20updated')
 
+    security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
-        """ """
+        """ XXX: This method is deprecated """
         # self.delete_oai_index()
         self.unindex_object()
-        BTreeFolder.inheritedAttribute("manage_beforeDelete")(self,item,container)
-
-    def commit_Changes(self):
-        """ """
-        self._p_changed = 1
+        BTreeFolder.inheritedAttribute("manage_beforeDelete")(self, item, container)
