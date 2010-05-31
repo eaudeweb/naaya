@@ -513,10 +513,9 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     def uploadPhotoOrZip(self, upload_file=None, REQUEST=None, **kwargs):
         """ Upload one image or a zipped folder of images
         """
+        schema_raw_data = kwargs
         if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
+            schema_raw_data.update(REQUEST.form)
 
         # File not empty
         filename = getattr(upload_file, 'filename', None)
@@ -534,7 +533,10 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                 if not is_image:
                     err = 'Please select a valid zip or image to upload'
                 else:
-                    self._add_photo(id=filename, title=filename, file=the_file,
+                    if not schema_raw_data.get('title', None):
+                        schema_raw_data['title'] = filename
+
+                    self._add_photo(id=filename, file=the_file,
                                     lang=self.gl_get_selected_language(),
                                     **schema_raw_data)
                     err = ''
@@ -741,7 +743,7 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                 return getattr(self, prop_name)
         form_helper = get_schema_helper_for_metatype(self, self.photo_metatype, value_callback)
         def fields_filter(item):
-            return item['name'] in self.inherit_fields
+            return item['name'] in self.inherit_fields.union(['title'])
         form_items = list(filter(fields_filter, form_helper.form_items()))
         return self._upload_html(REQUEST, form_items=form_items)
 
