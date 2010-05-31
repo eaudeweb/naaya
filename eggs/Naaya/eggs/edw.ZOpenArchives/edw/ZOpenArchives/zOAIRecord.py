@@ -69,10 +69,8 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
     default_catalog = 'OAI_Catalog'
 
     manage_options= (
-        {'label': 'Information',
-         'action': 'index_html'
-         },
-        )
+        { 'label': 'Information', 'action': 'index_html'},
+    )
 
     index_html = HTMLFile("dtml/manage_OAIRecordForm",globals())
 
@@ -154,9 +152,8 @@ class zOAIRecord(OAIRecord,App.Management.Navigation, SimpleItem, Implicit):
         self.unindex_object()
         zOAIRecord.inheritedAttribute("manage_beforeDelete")(self,item,container)
 
-# ###########
-# OAI Catalog Metadata Methods
-
+    # ###########
+    # OAI Catalog Metadata Methods
     # prefix of 'dc_' is necessary for advSearchXML
 
     def do_HeaderListInterface(self,info_tags=[]):

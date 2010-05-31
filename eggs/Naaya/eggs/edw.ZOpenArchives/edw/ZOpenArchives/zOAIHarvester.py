@@ -80,8 +80,6 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
         {'label': 'Contents', 'action': 'manage_main' },
     )
 
-    #all_meta_types =
-
     security = ClassSecurityInfo()
 
     def __init__(self, id, host, url, title, update_period):
@@ -94,7 +92,7 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
         self.update_period = update_period
 
     security.declarePrivate('handle_addOAIRecord')
-    def handle_addOAIRecord(self, dom=None):
+    def handle_addOAIRecord(self, dom=None, metadata_prefix=None):
         """ Create or update <record> given its DOM node """
         # get record header
         header = None
@@ -117,20 +115,19 @@ class zOAIHarvester(OAIHarvester, App.Management.Navigation, BTreeFolder2, Persi
         else:
             identifier = self.getDOMElementText(id, encode=self.default_encoding)
         # treat identifier
-        metadata_format = self.current_request['metadataPrefix'].encode(self.default_encoding)
+        metadata_format = metadata_prefix.encode(self.default_encoding)
         identifier = string.strip(identifier)
         identifier = identifier.encode(self.default_encoding) + '-' + metadata_format
         identifier = processId(identifier)
         # check if record object already exists with this ID
         #   if so, do an update
         OAIR = self._getOb( identifier, None)
-        if OAIR != None:
+        if OAIR is not None:
             OAIR.handle_DOM(dom)
             OAIR.reindex_object()
         else:
             manage_addOAIRecord(self, id=identifier,
-                                           metadata_format=self.current_request['metadataPrefix'],
-                                           dom=dom)
+                metadata_format=metadata_format, dom=dom)
 
     ######################
     ####  ZMI Interfaces

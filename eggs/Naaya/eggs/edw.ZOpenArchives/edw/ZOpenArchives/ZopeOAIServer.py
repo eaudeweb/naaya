@@ -22,6 +22,7 @@
 
 __doc__ = """ Zope OAI Server """
 
+from DateTime import DateTime
 from datetime import datetime, timedelta
 
 from AccessControl import ClassSecurityInfo
@@ -31,6 +32,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from zOAIRepository import zOAIRepository
 from ZCatalogHarvester import ZCatalogHarvester
+
+from utils import DT2dt
 
 manage_addZopeOAIServerForm = PageTemplateFile('zpt/manage_addZopeOAIServerForm', globals())
 
@@ -93,7 +96,7 @@ class ZopeOAIServer(zOAIRepository, Navigation):
         nStor = self.get_myNamespaceStorage()
         list = []
         for ns_obj in nStor.objectValues():
-            list.append( apply( getattr(ns_obj, 'get_ns'+attr),( )))
+            list.append( apply( getattr(ns_obj, 'get_ns' + attr),( )))
         return list
 
     security.declareProtected(view_management_screens, 'update_repository')
@@ -101,7 +104,12 @@ class ZopeOAIServer(zOAIRepository, Navigation):
         """ Get all harvester objects, send update command """
         now = datetime.now()
         for item in self.get_myCatalog().searchResults({'meta_type': ZCatalogHarvester.meta_type}):
-            next_update = item.last_update + timedelta(minutes=item.update_period)
+            if isinstance(item.last_update, DateTime):
+                last_update = DT2dt(item.last_update)
+            else:
+                last_update = item.last_update
+
+            next_update = last_update + timedelta(minutes=int(item.update_period))
             if force_update or now > next_update:
                 zc_harvester = item.getObject()
                 zc_harvester.update_ZCatalogHarvester()

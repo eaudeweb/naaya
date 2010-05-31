@@ -29,16 +29,15 @@ import string
 import lxml.etree # Create objects form xml elements
 from urllib import urlencode
 from datetime import datetime
-
 from xml.sax import make_parser, saxutils
 from xml.sax.handler import ContentHandler
 import xml.dom.minidom
 
-from CreateURL import CreateURL
+import transaction
+
 from edw.ZOpenArchives.utils import utSortDictsListByKey
 
 class ServerError(Exception): pass
-class HTTPLibError(Exception): pass
 
 class OAIHarvester:
     default_encoding = 'UTF-8'
@@ -354,9 +353,10 @@ class OAIHarvester:
 
         for metadata_prefix in  self.site_metadata.keys():
             if metadata_prefix in lNameSpaceMetaDataPrefix:
-                pass
-                #self.issue_ListRecords( oai_metadataPrefix = metadata_prefix )
-
+                if self.list_sets_all == '0' and self.list_sets_selected is not []:
+                    self.issue_ListRecords(oai_metadataPrefix = metadata_prefix, oai_sets = self.list_sets_selected)
+                else:
+                    self.issue_ListRecords(oai_metadataPrefix = metadata_prefix)
         self.set_siteStatus('lastUpdate', datetime.now().strftime('%Y-%m-%d %H:%M'))
 
     def issue_Identify(self):
@@ -371,7 +371,7 @@ class OAIHarvester:
             self.handle_Identify(dom=dom)
 
         if response.code != 200:
-            self.set_siteStatus('status', "%s (%s)" % (response.message, response.code) )
+            self.set_siteStatus('status', "%s (%s)" % (response.msg, response.code) )
             raise ServerError
 
     def handle_Identify(self, dom=None):
@@ -548,8 +548,8 @@ class OAIHarvester:
             })
         self.list_sets = utSortDictsListByKey(sets, 'name', 0) #Order alphabeticaly
 
-    def issue_ListRecords(self, oai_metadataPrefix, oai_from=None,
-                          oai_until=None, oai_set=None, oai_setSpec=None ):
+    def issue_ListRecords(self, oai_metadataPrefix, oai_from='',
+                          oai_until='', oai_sets=[], oai_setSpec='' ):
         """
         method to issue the 'oai/?verb=ListRecords&metadataPrefix=oai_dc'
         req args = metadataPrefix
@@ -560,53 +560,39 @@ class OAIHarvester:
           update ones which exist
           get next batch if more
         """
-        # save this info until the end, so we can now
-        #   a little about the request (metadataPrefix)
-        self.current_request =  { 'verb':'ListRecords',
-                                  'metadataPrefix':oai_metadataPrefix,
-                                  'from':oai_from,
-                                  'until':oai_until,
-                                  'set':oai_set,
-                                  'setSpec':oai_setSpec
-                                  }
-        url_obj = CreateURL( self.current_request )
-        while 1:
-            url = url_obj.getURL()
-            try:
-                returncode, returnmsg, headers, data = self.http_connect('?'+url)
-                if returncode != 200:
-                    break
-                else:
-                    self.set_siteStatus('status', 'Available')
+        def update(oai_set = None):
+            # save this info until the end, so we can now
+            #   a little about the request (metadataPrefix)
+            query_set = (
+                ('verb', 'ListRecords', ),
+                ('metadataPrefix', oai_metadataPrefix, ),
+                ('from', oai_from, ),
+                ('until', oai_until, ),
+                ('set', oai_set, ),
+                ('setSpec', oai_setSpec, ),
+            )
+            response, data = self._get_url(query_set)
 
-                    dom = xml.dom.minidom.parseString(data)
-                    if self.handle_Error(dom.getElementsByTagName("error")) != 0:
-                        print "ERROR: List Records ", data
-                        break
+            if response.code != 200:
+                self.set_siteStatus('status', "%s (%s)" % (response.msg, response.code) )
+                raise ServerError
+            else:
+                self.set_siteStatus('status', 'Available')
 
-                    self.handle_ListRecords(dom.getElementsByTagName("ListRecords"))
-                    resume_node = dom.getElementsByTagName("resumptionToken")
-                    if resume_node == None or len(resume_node) == 0:
-                        break
+                dom = xml.dom.minidom.parseString(data)
+                if self.handle_Error(dom.getElementsByTagName("error")) != 0:
+                    raise ServerError('ERROR: List Records')
 
-                    resumeToken_value = self.handle_Resume(resume_node[0])
-                    if resumeToken_value == None:
-                        break
-                    url_obj.addProperty( { 'resumptionToken':resumeToken_value } )
-                    url_obj.delProperty( ['metadataPrefix','from','until','set','setSpec'] )
-            except:
-                import traceback
-                traceback.print_exc()
-                self.set_siteStatus('status', 'Unavailable')
-                raise HTTPLibError
+                self.handle_ListRecords(dom.getElementsByTagName("ListRecords"),
+                    oai_metadataPrefix)
 
-        # outside of the WHILE
-        self.current_request = None
-        if returncode != 200:
-            self.set_siteStatus('status', "%s (%s)" % (returnmsg,returncode) )
-            raise ServerError
+        if isinstance(oai_sets, list):
+            for setspec in oai_sets:
+                update(setspec)
+        else:
+            update()
 
-    def handle_ListRecords(self, ListRecords):
+    def handle_ListRecords(self, ListRecords, oai_metadataPrefix):
         """
         calls handle_addOAIRecord on all records found:
           this is a hook for a subclass to implement
@@ -615,10 +601,10 @@ class OAIHarvester:
             i = 0
             the_ListRecord = ListRecords[0]
             for record in the_ListRecord.getElementsByTagName("record"):
-                i = i+1
-                self.handle_addOAIRecord( dom=record )
-                if i%10:
-                    get_transaction().commit()
+                i += 1
+                self.handle_addOAIRecord(dom=record, metadata_prefix=oai_metadataPrefix)
+                if i % 10:
+                    transaction.commit()
 
     def handle_addOAIRecord(self, record):
         """
@@ -627,31 +613,6 @@ class OAIHarvester:
         depends on the database you have
         """
 
-
-    def http_connect(self, get_url):
-        """
-        connect to site given GET url
-        return connection results
-        """
-        h = httplib.HTTPConnection(self.site_host)
-        h.connect()
-        if sys.version_info[0] >= 2 and sys.version_info[1] >= 3:
-            h.sock.settimeout(120.0)
-        else:
-            h.sock.set_timeout(120)
-
-        h.request('GET', self.site_url + get_url)
-        r1 = h.getresponse()
-        returncode = r1.status
-        returnmsg = r1.reason
-        headers = r1.msg
-
-        data = None
-        if returncode == 200:  # OK
-            data = r1.read()
-        h.close()
-        return ( returncode, returnmsg, headers, data )
-
     def _get_url(self, data = None):
         """ Return GET request to site_url, site_host
         Data as a list of tuples of key, values or a string"""
@@ -659,5 +620,6 @@ class OAIHarvester:
             data = urlencode(data)
         elif not isinstance(data, str):
             raise ValueError("Bad data")
+
         con = urllib2.urlopen("http://%s%s" % (self.site_host, self.site_url), data = data)
         return (con, con.read(), )
