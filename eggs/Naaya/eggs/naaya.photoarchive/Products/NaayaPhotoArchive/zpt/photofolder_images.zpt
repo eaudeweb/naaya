@@ -1,0 +1,38 @@
+<metal:block define-macro="images">
+
+<div class="g-album-content" id="album-content"
+tal:define="
+	nb_photos python:len(here.getObjects());
+	filter_q python:request.get('q', '');
+	page python:request.get('page', 0);
+	paginator paginator;
+	follow_link python:True;
+	">
+	<tal:block repeat="photo python:paginator.get_page(page)">
+	<div tal:define="ind repeat/photo/index" class="thumbnail-layout"
+		tal:attributes="style python:'z-index: %d' % (int(nb_photos) - int(ind))">
+		<tal:block define="photo_id photo/getId">
+		<div  tal:attributes="
+			onmouseover string:do_hover('div_${photo_id}', 'image-details-hover');
+			onmouseout string:do_out('div_${photo_id}', 'image-details')"
+			class="image-holder" metal:define-slot="image">
+			<a tal:omit-tag="not:follow_link" tal:attributes="href photo/absolute_url; title photo/title">
+				<img tal:attributes="src string:${photo/absolute_url}/view?display=Album; alt photo/title"/>
+			</a>
+		</div>
+		<div class="image-details" tal:attributes="id string:div_${photo_id}" metal:define-slot="details">
+			<a tal:omit-tag="not:follow_link" tal:attributes="href photo/absolute_url; title string:Image information">
+				<img src="/misc_/NaayaPhotoArchive/InfoIcon.png"/>
+			</a>
+			<input type="checkbox" name="ids:list" tal:attributes="value photo_id; id photo_id" />
+			<label tal:attributes="for photo_id" tal:content="structure python:here.word_break(photo.title_or_id())" />
+		</div>
+		</tal:block>
+	</div>
+	</tal:block>
+</div>
+<div style="clear: left;">
+	<div metal:use-macro="here/macro_utils/macros/paginator" />
+</div>
+
+</metal:block>

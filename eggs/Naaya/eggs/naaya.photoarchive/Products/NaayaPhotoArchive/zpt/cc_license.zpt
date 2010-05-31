@@ -1,0 +1,20 @@
+<script>
+(function() {
+    var textarea = document.getElementById('license_statement');
+    var field_div = textarea.parentNode;
+    var license_extra = document.createElement('div');
+    license_extra.setAttribute('style', 'clear: both;');
+    license_extra.innerHTML =
+        '<div style="display: inline;" class="buttons">' +
+            '<a href="javascript:;">Use Creative Commons by-nc license<'+'/a> ' +
+        '<'+'/div>' +
+        '(<a href="http://creativecommons.org/about/licenses/" target="_blank">what is this?<'+'/a>)';
+    field_div.insertBefore(license_extra, textarea);
+    license_extra.firstChild.onclick = function() {
+        textarea.value = cc_license_text;
+    }
+    var cc_license_text = "This work is licensed under a Creative Commons " +
+        "Attribution-Noncommercial License " +
+        "(http://creativecommons.org/licenses/by-nc/3.0/).";
+})()
+</script>

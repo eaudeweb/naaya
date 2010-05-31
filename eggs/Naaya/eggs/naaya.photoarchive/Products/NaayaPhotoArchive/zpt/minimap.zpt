@@ -1,0 +1,23 @@
+<div tal:define="portal_map here/getGeoMapTool;" style="margin: 1em;">
+    <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
+    <div id="minimap"></div>
+    <script type="text/javascript"
+        tal:content="string: var minimap_points = ${options/points};" />
+    <script type="text/javascript">
+    ( function() {
+        var map_div = document.getElementById("minimap");
+		var minimap = new YMap(map_div, YAHOO_MAP_REG, new YSize(230, 160));
+		var first_point = new YGeoPoint(minimap_points[0].lat, minimap_points[0].lon)
+		minimap.drawZoomAndCenter(first_point, 16);
+		for (var i in minimap_points) {
+			var point = new YGeoPoint(minimap_points[i].lat, minimap_points[i].lon);
+			minimap.addMarker(point);
+			map_div.firstChild.nextSibling.style.display = 'none';
+			map_div.firstChild.nextSibling.nextSibling.style.display = 'none';
+			//map_div.firstChild.nextSibling.nextSibling.nextSibling.style.display = 'none';
+			//map_div.firstChild.nextSibling.nextSibling.nextSibling.nextSibling.style.display = 'none';
+
+		}
+    } )();
+    </script>
+</div>
