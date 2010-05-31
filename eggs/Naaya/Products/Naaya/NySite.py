@@ -1480,6 +1480,29 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 l_tree.append((l_folder, -1, depth))
         return l_tree
 
+    def getSiteMapTree(self, obj, showitems, expand, sort_order=1):
+        """ return the tree of obj's children
+            (with levels expanded according to parameters """
+        output = {'ob': obj, 'has_children': False}
+        if obj.meta_type == 'Naaya Folder':
+            objects_list = obj.getFolders()
+            if showitems:
+                objects_list += obj.getObjects()
+        elif obj is self or obj.meta_type in self.get_naaya_containers_metatypes():
+            objects_list = obj.objectValues(self.get_naaya_containers_metatypes())
+        else:
+            objects_list = None
+
+        if objects_list:
+            output['has_children'] = True
+            if expand=='all' or path_in_site(obj) in expand:
+                children=[]
+                for ob in objects_list:
+                    children.append(self.getSiteMapTree(ob, showitems, expand, sort_order=sort_order))
+                output['children'] = children
+
+        return output
+
     def processExpand(self, expand, node):
         #process a click in the site map tree on an expand button
         return self.joinToList(self.addToList(expand, str(node)))
