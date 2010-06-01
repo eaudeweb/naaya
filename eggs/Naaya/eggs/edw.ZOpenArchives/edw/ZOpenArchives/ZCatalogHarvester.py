@@ -43,7 +43,7 @@ from zOAIRecord import manage_addOAIRecord, create_ObjectMetadata
 from utils import utConvertLinesToList, utConvertListToLines, processId
 
 manage_addZCatalogHarvesterForm = PageTemplateFile('zpt/manage_addZCatalogHarvesterForm', globals())
-def manage_addZCatalogHarvester(self, id="", title="Zope OAI Server", update_period=None, autopublish=1, autopublishRoles = [], pref_meta_types=[], REQUEST=None):
+def manage_addZCatalogHarvester(self, id="", title="Zope OAI Server", update_period=None, autopublish='1', autopublishRoles = [], pref_meta_types=[], REQUEST=None):
     """ method for adding a new Zope OAI Server """
     if id == '':
         error = "id field is required"
@@ -135,7 +135,10 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         get the catalog in the portail site
         looking for the one with same name as this object
         """
-        return self.getSite().getCatalogTool()
+        try:
+            return self.getSite().getCatalogTool()
+        except AttributeError: #Test case
+            return self.aq_parent.aq_parent._getOb('catalog')
 
     security.declarePrivate('add_oai_index')
     def add_oai_index(self):
@@ -188,7 +191,7 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
         if self.pref_meta_types is not None and self.pref_meta_types != []:
             searchDict = {'meta_type': self.pref_meta_types}
         else:
-            searchDict = {'oai_state':'shared'}
+            searchDict = {'oai_state': 'shared'}
         for item in ZCatalog.searchResults( self.get_theSiteCatalog(), searchDict ):
             # get object and create its metadata structure, check to make sure that the object still exists
             #   not just the reference in the catalog
@@ -455,6 +458,6 @@ class ZCatalogHarvester(App.Management.Navigation,BTreeFolder2, Persistent, Impl
     security.declarePrivate('manage_beforeDelete')
     def manage_beforeDelete(self, item, container):
         """ XXX: This method is deprecated """
-        # self.delete_oai_index()
         self.unindex_object()
-        BTreeFolder.inheritedAttribute("manage_beforeDelete")(self, item, container)
+        BTreeFolder2.inheritedAttribute("manage_beforeDelete")(self, item, container)
+
