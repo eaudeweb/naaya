@@ -1,5 +1,0 @@
-2010-05-27
-
-* plugaale (Alexandru Plugaru)
- This package is very old, having a lot of DTMLs and many more old libraries in
- use.
