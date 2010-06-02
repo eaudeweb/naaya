@@ -27,6 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import Interface, implements
 from zope.component import adapts, provideAdapter
 from OFS.interfaces import IItem
+import zLOG
 
 #Product imports
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
