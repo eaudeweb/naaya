@@ -112,9 +112,9 @@ function get_height(the_window) {
         );
 
         if (scrollHeight < offsetHeight) {
-            return $(the_document.body).height();
+            return $(the_document.body).height() + 25;
         } else {
-            return scrollHeight;
+            return scrollHeight + 25;
         }
     } else {
         // handle "good" browsers
