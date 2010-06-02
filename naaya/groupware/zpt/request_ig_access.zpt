@@ -30,7 +30,11 @@
         </form>
         <tal:block tal:condition="python:logged_in and not needs_permission">
             <p i18n:translate="">
-                You are already a member of this interest group.
+                You are already a member of this interest group. Please
+                <a tal:attributes="href string:mailto:${here/administrator_email}"
+                   i18n:name="contact_link"
+                   i18n:translate="">contact the administrator</a>
+                if you need extra permissions.
             </p>
             <a href="./" i18n:translate="">Go to IG home page.</a>
         </tal:block>
