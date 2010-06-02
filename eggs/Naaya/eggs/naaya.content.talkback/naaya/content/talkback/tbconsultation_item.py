@@ -534,7 +534,10 @@ class NyTalkBackConsultation(NyRoleManager,
         """ """
 
         if not self.checkPermissionReviewTalkBackConsultation():
-            return 'no-permission'
+            if self.isAnonymousUser():
+                return 'not-logged-in'
+            else:
+                return 'no-permission'
 
         if self.get_days_left()[1] <= 0:
             return 'deadline-reached'

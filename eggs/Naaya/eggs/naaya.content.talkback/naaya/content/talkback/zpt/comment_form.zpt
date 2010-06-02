@@ -55,19 +55,27 @@
     </tal:block>
 </div>
 
-<div tal:condition="python:cannot_comment">
-    <p class="talkback-cannot_comment"
-      tal:define="consultation_url python:here.get_consultation().absolute_url()">
-        <span i18n:translate="">You cannot post comments to this consultation because</span>
-        <span tal:condition="python:cannot_comment == 'no-permission'"
-          i18n:translate="">you do not have the required permission.</span>
-        <span tal:condition="python:cannot_comment == 'deadline-reached'"
-          i18n:translate="">the deadline for this consultation has been reached.</span>
-        You can <a tal:attributes="href string:${here/absolute_url}/log_in_authenticated"
-          >login</a> or <a tal:attributes="href string:${consultation_url}/requestrole_html"
-          >request reviewer rights</a> at the
-          <a tal:attributes="href consultation_url">consultation index</a>.
-    </p>
-</div>
+<p tal:condition="cannot_comment" class="talkback-cannot_comment">
+<tal:block condition="python:cannot_comment=='no-permission'"
+    tal:define="consultation_url python:here.get_consultation().absolute_url()"
+    i18n:translate="">You cannot post comments to this consultation
+    because you do not have the required permission.
+
+    Please <a tal:attributes="href string:${consultation_url}/requestrole_html"
+    i18n:name="request_role" i18n:translate="">request reviewer rights</a>.
+</tal:block>
+
+<tal:block condition="python:cannot_comment=='not-logged-in'"
+    i18n:translate="">You cannot post comments to this consultation
+    because you are not authenticated. Please
+    <a tal:attributes="href string:${here/absolute_url}/log_in_authenticated"
+    i18n:name="login" i18n:translate="" target="_parent">log in</a>.
+</tal:block>
+
+<tal:block condition="python:cannot_comment == 'deadline-reached'"
+    i18n:translate="">You cannot post comments to this consultation
+    because the deadline for this consultation has been reached.
+</tal:block>
+</p>
 
 </tal:block>
