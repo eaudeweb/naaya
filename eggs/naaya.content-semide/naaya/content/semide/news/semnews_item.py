@@ -150,20 +150,7 @@ def _create_NySemNews_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
-def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
-    """ """
-    if REQUEST is not None:
-        schema_raw_data = dict(REQUEST.form)
-    else:
-        schema_raw_data = kwargs
-
-    #process parameters
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-
-    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-
+def create_month_folder(self, contributor, schema_raw_data):
     #Creating archive folder
     news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
     news_date_year = str(news_date.year())
@@ -180,10 +167,27 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
                         contributor=contributor,
                         title="News for %s/%s" %
                         (news_date_year, news_date_month)))
+    month_folder.folder_meta_types.append(config['meta_type'])
+    return month_folder
 
+def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
+    """ """
+    if REQUEST is not None:
+        schema_raw_data = dict(REQUEST.form)
+    else:
+        schema_raw_data = kwargs
+
+    #process parameters
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
+    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+
+    month_folder = create_month_folder(self, contributor, schema_raw_data)
     ob = _create_NySemNews_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    ob.news_date = news_date
+    ob.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -408,10 +412,17 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-        self.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
+
+        new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
+        if self.news_date != new_news_date: #Date changed.. the directory also changes
+            self.news_date = new_news_date
+
+            month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
+            cut_data = self.aq_parent.manage_cutObjects([self.id, ])
+            month_folder.manage_pasteObjects(cut_data)
+            moved = True
 
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
@@ -433,7 +444,12 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
         self.recatalogNyObject(self)
 
-        if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+        if REQUEST:
+            if moved:
+                return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
+                    month_folder._getOb(self.id).absolute_url())
+            else:
+                return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -487,10 +503,6 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-
-        self.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-
-
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -498,6 +510,16 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+
+        new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
+        if self.news_date != new_news_date: #Date changed.. the directory also changes
+            self.news_date = new_news_date
+
+            month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
+            cut_data = self.aq_parent.manage_cutObjects([self.id, ])
+            month_folder.manage_pasteObjects(cut_data)
+
+            moved = True
 
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
@@ -518,8 +540,11 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-
+            if moved: #Redirect to moved location
+                url = month_folder._getOb(self.id).absolute_url()
+            else:
+                url = self.absolute_url()
+            return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (url, _lang))
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/semnews_manage_edit', globals())
