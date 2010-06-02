@@ -62,7 +62,8 @@
     because you do not have the required permission.
 
     Please <a tal:attributes="href string:${consultation_url}/requestrole_html"
-    i18n:name="request_role" i18n:translate="">request reviewer rights</a>.
+    i18n:name="request_role" i18n:translate=""
+    target="_parent">request reviewer rights</a>.
 </tal:block>
 
 <tal:block condition="python:cannot_comment=='not-logged-in'"
