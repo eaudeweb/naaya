@@ -30,12 +30,27 @@
 </div>
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
-	<tal:block tal:condition="python:days_left[0] == 1 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) left for this consultation.</span></tal:block>
-	<tal:block tal:condition="python:days_left[0] == 0 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) until this consultation starts.</span></tal:block>
-	<span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter" i18n:translate="">Consultation deadline has been reached.</span>
-	<a class="consultation-special-button" tal:condition="not:here/checkTalkBackConsultationUser" tal:attributes="href string:${here/absolute_url}/log_in_authenticated" rel="nofollow">Log in to comment</a>
-	<a class="consultation-special-button" tal:condition="python:here.checkTalkBackConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/requestrole_html?role=reviewer" rel="nofollow">Apply for reviewer rights</a>
-	<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
+    <tal:block condition="python:days_left[0] == 1 and days_left[1] > 0">
+        <span tal:content="python:days_left[1]" class="consultation_day_counter" />
+        <span i18n:translate="">day(s) left for this consultation.</span>
+    </tal:block>
+    <tal:block condition="python:days_left[0] == 0 and days_left[1] > 0">
+        <span tal:content="python:days_left[1]" class="consultation_day_counter" />
+        <span i18n:translate="">day(s) until this consultation starts.</span>
+    </tal:block>
+    <span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter"
+        i18n:translate="">Consultation deadline has been reached.</span>
+    <a class="consultation-special-button"
+       tal:condition="not:here/checkTalkBackConsultationUser"
+       tal:attributes="href string:${here/absolute_url}/log_in_authenticated"
+       rel="nofollow">Log in to comment</a>
+    <a class="consultation-special-button"
+       tal:condition="python:here.checkTalkBackConsultationUser() == 2 and here.public_registration"
+       tal:attributes="href string:${here/absolute_url}/requestrole_html?role=reviewer"
+       rel="nofollow">Apply for reviewer rights</a>
+    <p tal:condition="python:days_left[1] <= 0" i18n:translate="">
+        Comments are disabled since the deadline for this consultation has passed.
+    </p>
 </div>
 
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
