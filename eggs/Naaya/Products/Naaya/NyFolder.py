@@ -21,6 +21,7 @@
 
 #Python imports
 from copy import copy, deepcopy
+import operator
 
 #Zope imports
 from DateTime import DateTime
@@ -472,15 +473,31 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getPublishedFolders(self):
-        folders = [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
-        return self.utSortObjsListByAttr(folders, 'sortorder', 0)
+        folders = []
+        for obj in self.objectValues(self.get_naaya_containers_metatypes()):
+            if getattr(obj, 'approved', False):
+                continue
+            if getattr(obj, 'submitted', False):
+                continue
+            folders.append(obj)
+        folders.sort(operator.attrgetter('sortorder'))
+        return folders
 
     def getPublishedObjects(self, items=0):
-        doc_metatypes = [m for m in self.get_meta_types() if m not in self.get_naaya_containers_metatypes()]
-        res = [x for x in self.objectValues(doc_metatypes) if x.submitted==1 and x.approved==1]
+        doc_metatypes = [m for m in self.get_meta_types()
+                         if m not in self.get_naaya_containers_metatypes()]
+        result = []
+        for obj in self.objectValues(doc_metatypes):
+            if getattr(obj, 'approved', False):
+                continue
+            if getattr(obj, 'submitted', False):
+                continue
+            result.append(obj)
+
         if items:
-            return res[:items]
-        return res
+            result = result[:items]
+
+        return result
 
     def getPublishedContent(self):
         r = self.getPublishedFolders()
