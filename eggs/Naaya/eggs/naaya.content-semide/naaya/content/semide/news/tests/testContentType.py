@@ -16,48 +16,59 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+
+import transaction
 from unittest import TestSuite, makeSuite
-from naaya.content.semide.news.semnews_item import addNySemNews
 from Products.Naaya.tests import NaayaTestCase
+from naaya.content.semide.news.semnews_item import addNySemNews, config
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for NaayaContent object
     """
     def afterSetUp(self):
+        self._portal().manage_install_pluggableitem(config['meta_type'])
         self.login()
-        
+
     def beforeTearDown(self):
         self.logout()
 
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Semide News """
-        addNySemNews(self._portal().info, id='doc1', title='doc1', lang='en', news_date="12/12/2000", coverage="all")
-        addNySemNews(self._portal().info, id='doc1_fr', title='doc1_fr', lang='fr', news_date="12/12/2000", coverage="all")
-        
-        docs = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide News'])
-        
-        #Get added NyDocument
+        addNySemNews(self._portal().info, id='doc1', title='doc1', lang='en', news_date="12/12/2010", coverage="all")
+        addNySemNews(self._portal().info, id='doc1_fr', title='doc1_fr', lang='fr', news_date="12/11/2000", coverage="all")
+        transaction.commit()
+
+        docs = self._portal().getCatalogedObjectsCheckView(meta_type=[config['meta_type']])
+
+        #Get added
         for x in docs:
             if x.getLocalProperty('title', 'en') == 'doc1':
                 meta = x
             if x.getLocalProperty('title', 'fr') == 'doc1_fr':
                 meta_fr = x
-        
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'doc1')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'doc1_fr')
-        
-        #Change NyDocument title
+
+        self.assertEqual('/'.join(meta.getPhysicalPath()[:-1]), '/portal/info/2010/12')
+        self.assertEqual('/'.join(meta_fr.getPhysicalPath()[:-1]), '/portal/info/2000/11')
+
+
+        #Change title and date
         meta.saveProperties(title='doc1_edited', lang='en', news_date="12/12/2000", coverage="all")
         meta_fr.saveProperties(title='doc1_fr_edited', lang='fr', news_date="12/12/2000", coverage="all")
-        
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'doc1_edited')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'doc1_fr_edited')
-        
-        #delete NyDocument
-        self._portal().info.manage_delObjects([meta.id])
-        self._portal().info.manage_delObjects([meta_fr.id])
-        
-        brains = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Semide News'])
+
+        self.assertEqual(self._portal().info['2000']['12'].doc1.id, 'doc1')
+        self.assertEqual(self._portal().info['2000']['12'].doc1_fr.id, 'doc1_fr')
+
+        #delete
+        self._portal().info['2000']['12'].manage_delObjects([meta.id])
+        self._portal().info['2000']['12'].manage_delObjects([meta_fr.id])
+
+        brains = self._portal().getCatalogedObjectsCheckView(meta_type=[config['meta_type']])
         self.assertEqual(len(brains), 0)
 
 def test_suite():

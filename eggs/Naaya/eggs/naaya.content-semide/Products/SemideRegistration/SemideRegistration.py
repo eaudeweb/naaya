@@ -59,7 +59,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
             id = slugify(id)
         else:
             id = slugify(title)
-        if lang is None: 
+        if lang is None:
             lang = self.gl_get_selected_language()
         ob = SemideRegistration(id, title, conference_details, administrative_email, start_date, end_date, introduction, lang)
         self.gl_add_languages(ob)
@@ -116,7 +116,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
 
-    security.declarePrivate('loadDefaultContent')
+    security.declarePrivate('_loadRegistrationForms')
     def _loadRegistrationForms(self):
         """ load registration forms """
         registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
@@ -319,7 +319,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             self.unicode2UTF8(part.city), self.unicode2UTF8(part.postal_code), self.unicode2UTF8(part.country),
             self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.mobile_number),
             part.email, self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.passport_no),
-            self.unicode2UTF8(part.languages), 
+            self.unicode2UTF8(part.languages),
             arrival_date, part.arrival_time,
             self.unicode2UTF8(part.arrival_flight_number), self.unicode2UTF8(part.arrival_flight_company),
             departure_date, part.departure_time,
@@ -348,8 +348,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 departure_date = 'n/a'
             data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
                         self.unicode2UTF8(part.country), self.unicode2UTF8(part.media_name), self.unicode2UTF8(part.media_type), self.unicode2UTF8(part.media_description).replace('\r\n', ' ').replace('\n', ' '),
-                        self.unicode2UTF8(part.media_position), self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, 
-                        self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.mobile_number), arrival_date, 
+                        self.unicode2UTF8(part.media_position), self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email,
+                        self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.mobile_number), arrival_date,
                         self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight), part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight),
                         part.departure_time))
         return self.create_csv(data, filename='press_participants.csv', RESPONSE=REQUEST.RESPONSE)
