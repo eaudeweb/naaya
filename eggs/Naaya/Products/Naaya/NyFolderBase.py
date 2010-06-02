@@ -322,33 +322,44 @@ class NyFolderBase(Folder, NyPermissions):
         if hasattr(self, 'folder_meta_types'):
             folder_meta_types = self.folder_meta_types
         else:
-            folder_meta_types = [METATYPE_FOLDER, 'Naaya Forum', 'Naaya Mega Survey',
-                    'Naaya Photo Gallery', 'Naaya Photo Folder',
-                    'Naaya TalkBack Consultation']
+            folder_meta_types = [METATYPE_FOLDER,
+                                 'Naaya Forum', 'Naaya Mega Survey',
+                                 'Naaya Photo Gallery', 'Naaya Photo Folder',
+                                 'Naaya TalkBack Consultation']
 
         r = []
         ra = r.append
+
         #check for adding folders
         if METATYPE_FOLDER in folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
                 ra(('folder_add_html', LABEL_NYFOLDER))
+
         # check for adding dynamic registered content types
         for dynamic_key, dynamic_value in self._dynamic_content_types.items():
             if dynamic_key in folder_meta_types:
                 if self.checkPermission(dynamic_value[2]):
                     ra(dynamic_value[:2])
+
         #check pluggable content
         pc = self.get_pluggable_content()
         schema_tool = self.getSchemaTool()
+
         for k in self.get_pluggable_installed_meta_types():
-            if k in folder_meta_types:
-                if self.checkPermission(pc[k]['permission']):
-                    schema = schema_tool.getSchemaForMetatype(k)
-                    if schema is not None:
-                        meta_label = schema.title_or_id()
-                    else:
-                        meta_label = pc[k]['label']
-                    ra((pc[k]['add_form'], meta_label))
+            if k not in folder_meta_types:
+                continue
+            if k not in pc:
+                continue
+            if not self.checkPermission(pc[k]['permission']):
+                continue
+
+            schema = schema_tool.getSchemaForMetatype(k)
+            if schema is not None:
+                meta_label = schema.title_or_id()
+            else:
+                meta_label = pc[k]['label']
+            ra((pc[k]['add_form'], meta_label))
+
         return r
 
 class ObjectListingPortlet(object):
