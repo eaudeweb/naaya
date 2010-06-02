@@ -118,7 +118,21 @@
         });
     }
 
+    function draw_points_on_map(points) {
+        $.each(points, function(i, p) {
+            the_map.addMarker(new YGeoPoint(p.lat, p.lon));
+        });
+        var first_point = new YGeoPoint(points[0].lat, points[0].lon);
+        the_map.drawZoomAndCenter(first_point, 16);
+    }
+
     window.naaya_map_engine = {
+        map_with_points: function(map_div_id, points) {
+            the_map = new YMap(document.getElementById(map_div_id));
+            the_map.setMapType(base_layer_names[config.base_layer]);
+            the_map.disableKeyControls();
+            draw_points_on_map(points);
+        },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
             the_map.drawZoomAndCenter(config.initial_address, 14);

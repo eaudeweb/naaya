@@ -162,6 +162,10 @@
     }
 
     window.naaya_map_engine = {
+        map_with_points: function(map_div_id, points) {
+            $('div#'+map_div_id).text(
+                'map_with_points not implemented for google maps');
+        },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
             go_to_address_with_zoom(config.initial_address,
