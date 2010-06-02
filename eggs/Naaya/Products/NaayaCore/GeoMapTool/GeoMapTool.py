@@ -1123,4 +1123,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/javascript')
         return translations_js + 'var naaya_map_i18n = naaya_i18n_catalog;'
 
+    security.declareProtected(view_management_screens, 'manage_test_html')
+    manage_test_html = PageTemplateFile('zpt/manage_test', globals())
+
 InitializeClass(GeoMapTool)
