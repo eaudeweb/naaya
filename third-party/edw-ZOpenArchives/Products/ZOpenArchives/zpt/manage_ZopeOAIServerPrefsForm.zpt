@@ -1,0 +1,66 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+<p>This Zope OAI Server is a container for ZCatalog Harvesters. The following preferences determine how the server handles its responses.</p>
+<form action="manage_ZopeOAIServerPrefs">
+<table>
+    <tr>
+        <td>Protocol Version:</td>
+        <td tal:content="here/protocolVersion"></td>
+    </tr>
+    <tr>
+        <td>Datestamp:</td>
+        <td tal:content="here/earliestDatestamp"></td>
+    </tr>
+    <tr>
+        <td>Base URL:</td>
+        <td tal:content="here/baseURL"></td>
+    </tr>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input name="title" size="40" tal:attributes="value here/title" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Auto Publish:</td>
+        <td>
+            <select name="def_autopublish">
+                <option tal:attributes="selected python: test(here.def_autopublish == '1', 'selected', '')" value='1'>Yes</option>
+                <option tal:attributes="selected python: test(here.def_autopublish == '0', 'selected', '')" value='0'>No</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Autopublish Roles:</td>
+        <td><textarea name="def_autopublishRoles" rows="3" cols="30" tal:content="here/def_autopublishRoles">Anonymous</textarea></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="def_update">
+                <option tal:attributes="selected python: test(here.def_update == '1000', 'selected', '')" value="1000">daily</option>
+                <option tal:attributes="selected python: test(here.def_update == '7000', 'selected', '')" value="7000">weekly</option>
+                <option tal:attributes="selected python: test(here.def_update == '30000', 'selected','')" value="30000">monthly</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Repository Name:</td>
+        <td><input name="repositoryName" size="40" tal:attributes="value here/repositoryName" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Repository Administrators:</td>
+        <td>
+            <textarea name="adminEmailList" rows="3" cols="30"><tal:block tal:repeat="email python: here.adminEmail()" tal:replace="email" /></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Results limit:</td>
+        <td><input type="text" name="results_limit" tal:attributes="value here/results_limit" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Token expiration (minutes):</td>
+        <td><input type="text" name="token_expiration" tal:attributes="value here/token_expiration" /></td>
+    </tr>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />
