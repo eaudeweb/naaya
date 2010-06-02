@@ -1,0 +1,28 @@
+<span tal:replace="structure here/manage_page_header" />
+<h2>Add an OAI Aggregator</h2>
+<form method="post" action="manage_addOAIAggregator">
+<table>
+    <tr>
+        <td class="form-label">Id:</td>
+        <td><input name="id" value="oai"></td>
+    </tr>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input name="title" size="30" value="Open Archive Aggregator"></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="minutes">
+                <option
+                tal:repeat="item python: (('daily', 1000), ('weekly', 7000), ('monthly', 30000),)"
+                tal:attributes="value python: item[1]"
+                tal:content="python: item[0]">
+                </option>
+            </select>
+        </td>
+    </tr>
+    <tr><td></td><td><input type="hidden" name="submitted" value="1" /><input type="submit" value="Add" /></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />

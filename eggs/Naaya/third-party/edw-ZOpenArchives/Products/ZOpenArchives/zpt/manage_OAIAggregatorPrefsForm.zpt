@@ -1,0 +1,31 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+<p class="form-help">This is an OAI Aggregrator object</p>
+<form action="manage_OAIRepositoryPrefs">
+<table>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input name="title" size="40" tal:attributes="value here/title" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Results limit:</td>
+        <td><input name="results_limit" size="40" tal:attributes="value here/results_limit" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Token expiration (minutes):</td>
+        <td><input name="site_url" size="40" tal:attributes="value here/token_expiration" /></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="def_update">
+                <option tal:attributes="selected python: test(here.def_update == '1000', 'selected', '')" value="1">daily</option>
+                <option tal:attributes="selected python: test(here.def_update == '7000', 'selected', '')" value="7">weekly</option>
+                <option tal:attributes="selected python: test(here.def_update == '30000', 'selected','')" value="30">monthly</option>
+            </select>
+        </td>
+    </tr>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />

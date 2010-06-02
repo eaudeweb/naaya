@@ -1,0 +1,41 @@
+<span tal:replace="structure here/manage_page_header" />
+<h2>Add Zoai Server</h2>
+<form method="post" action="manage_addZopeOAIServer">
+<table>
+    <tr>
+        <td class="form-label">Id:</td>
+        <td><input name="id" value="zoai"></td>
+    </tr>
+    <tr>
+        <td class="form-label">Title:</td>
+        <td><input name="title" size="30" value="Zope OAI Server"></td>
+    </tr>
+    <tr>
+        <td class="form-label">Auto Publish:</td>
+        <td>
+            <select name="def_autopublish">
+                <option value='1'>Yes</option>
+                <option value='0'>No</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="form-label">Autopublish Roles:</td>
+        <td><textarea name="def_autopublishRoles" rows="3" cols="30">Anonymous</textarea></td>
+    </tr>
+    <tr>
+        <td class="form-label">Update interval:</td>
+        <td>
+            <select name="def_update_time">
+                <option
+                tal:repeat="item python: (('daily', 1000), ('weekly', 7000), ('monthly', 30000),)"
+                tal:attributes="value python: item[1]"
+                tal:content="python: item[0]">
+                </option>
+            </select>
+        </td>
+    </tr>
+    <tr><td></td><td><input type="hidden" name="submitted" value="1" /><input type="submit" value="Add" /></td></tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer" />
