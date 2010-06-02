@@ -20,6 +20,8 @@
 
     function refresh_points() {
         var bounds = get_bounds();
+        if(bounds === null)
+            return;
         load_map_points(bounds, function(places) {
             the_points_layer.DeleteAllShapes();
             $.each(places, function() {
@@ -38,6 +40,10 @@
 
     function get_bounds() {
         var bing_bounds = the_map.GetMapView();
+        if(bing_bounds.BottomRightLatLong.Latitude === null) {
+            // we're probably in bird's eye view
+            return null;
+        }
         return {
             'lat_min': bing_bounds.BottomRightLatLong.Latitude,
             'lat_max': bing_bounds.TopLeftLatLong.Latitude,
