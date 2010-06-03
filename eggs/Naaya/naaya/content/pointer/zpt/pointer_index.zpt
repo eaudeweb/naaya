@@ -10,6 +10,8 @@
         <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
         <meta tal:attributes="content here/contributor" name="author" />
         <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
     </metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
