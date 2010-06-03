@@ -475,9 +475,9 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
     def getPublishedFolders(self):
         folders = []
         for obj in self.objectValues(self.get_naaya_containers_metatypes()):
-            if getattr(obj, 'approved', False):
+            if not getattr(obj, 'approved', False):
                 continue
-            if getattr(obj, 'submitted', False):
+            if not getattr(obj, 'submitted', False):
                 continue
             folders.append(obj)
         folders.sort(operator.attrgetter('sortorder'))
@@ -488,9 +488,9 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                          if m not in self.get_naaya_containers_metatypes()]
         result = []
         for obj in self.objectValues(doc_metatypes):
-            if getattr(obj, 'approved', False):
+            if not getattr(obj, 'approved', False):
                 continue
-            if getattr(obj, 'submitted', False):
+            if not getattr(obj, 'submitted', False):
                 continue
             result.append(obj)
 
