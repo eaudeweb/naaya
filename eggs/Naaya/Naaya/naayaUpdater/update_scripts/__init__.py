@@ -155,7 +155,7 @@ class UpdateScript(Item, Acquisition.Implicit):
                     report += '<h4>SUCCESS</h4>'
                 else:
                     report += '<h4>FAILED</h4>'
-                report += log_data
+                report += html_quote(log_data)
 
         return self.update_template(REQUEST, report=report, form=REQUEST.form)
 
@@ -166,4 +166,5 @@ class UpdateScript(Item, Acquisition.Implicit):
         """ redirect to manage_workspace """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_workspace')
 
-
+def html_quote(v):
+    return v.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
