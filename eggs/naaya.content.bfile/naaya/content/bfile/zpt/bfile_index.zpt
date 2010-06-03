@@ -1,4 +1,15 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<metal:block metal:fill-slot="title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block fill-slot="head">
+    <link rel="alternate" type="application/rdf+xml" title="RDF"
+          tal:attributes="href here/absolute_url" />
+</metal:block>
+
+<metal:block fill-slot="body">
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <span tal:replace="here/title_or_id" />
 	<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -111,4 +122,5 @@ $('a', versions_slot).click(function() {
 
 <tal:block content="structure here/comments_box" />
 
-<tal:block content="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
