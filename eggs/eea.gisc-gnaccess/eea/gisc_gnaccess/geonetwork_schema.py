@@ -49,3 +49,18 @@ def list_metadata(db_statement):
             item['isHarvested'] = bool_filter(item['isHarvested'])
             item['isTemplate'] = bool_filter(item['isTemplate'])
             yield item
+
+def gen_metadata(db_statement):
+    fields = ['id', 'uuid', 'schemaId', 'isTemplate', 'isHarvested',
+              'createDate', 'changeDate', 'data', 'source', 'title',
+              'root', 'harvestUuid', 'owner', 'groupOwner', 'harvestUri',
+              'rating', 'popularity']
+    query = "SELECT %s FROM Metadata" % ','.join(fields)
+    with db_statement(query) as result_lines:
+        for line in result_lines:
+            item = dict(zip(fields, line))
+            for f in ['id', 'owner', 'groupOwner', 'rating', 'popularity']:
+                if f in item and item[f] is not None:
+                    item[f] = item[f].value
+            yield item
+
