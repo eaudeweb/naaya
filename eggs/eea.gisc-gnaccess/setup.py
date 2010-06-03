@@ -10,10 +10,10 @@ setup(name='eea.gisc-gnaccess',
     install_requires=['repoze.configuration', 'jpype'],
     entry_points="""\
         [console_scripts]
-        gnaccess = eea.gisc_gnaccess.cmd:main
+        gnaccess = eea.gisc_gnaccess.command:main
 
         [repoze.configuration.directive]
         gisc_gnaccess_javadb = eea.gisc_gnaccess.javadb:config_directive
-        gisc_gnaccess_output = eea.gisc_gnaccess.cmd:config_directive
+        gisc_gnaccess_output = eea.gisc_gnaccess.command:config_directive
     """,
 )

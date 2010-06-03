@@ -1,8 +1,9 @@
 --- !gisc_gnaccess_javadb
 # get user & password from geonetwork (web/geonetwork/WEB-INF/db/account.prop)
-db_user: GdMVieFp
-db_password: VOxVn6PU
-java_classpath: "/path/to/geonetwork/WEB-INF/lib/mkjdbc.jar"
+db_user: AhTJxJUW
+db_password: GroKItO1
+java_classpath: "/path/to/geonetwork/web/geonetwork/WEB-INF/lib/mkjdbc.jar"
 
 --- !gisc_gnaccess_output
-output_file: "/path/to/dump.json"
+report_points_of_contact: "/path/to/report_points_of_contact.csv"
+report_distribution_info: "/path/to/report_distribution_info.csv"
