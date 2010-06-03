@@ -480,7 +480,7 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             if not getattr(obj, 'submitted', False):
                 continue
             folders.append(obj)
-        folders.sort(operator.attrgetter('sortorder'))
+        folders.sort(key=operator.attrgetter('sortorder'))
         return folders
 
     def getPublishedObjects(self, items=0):
