@@ -227,7 +227,6 @@ a:visited {
 	background: #f2f2f2;
 }
 .left_portlet ul li a {
-	display:block;
 	font-weight: normal;
 	text-decoration: none;
 	color: #44464B;
@@ -299,7 +298,6 @@ a:visited {
 	background: #f2f2f2;
 }
 .right_portlet ul li a {
-	display:block;
 	font-weight: normal;
 	text-decoration: none;
 	color: #44464B;
