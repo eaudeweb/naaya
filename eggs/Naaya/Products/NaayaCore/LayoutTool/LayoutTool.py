@@ -34,6 +34,7 @@ from Products.NaayaCore.constants import *
 from managers.combosync_tool import combosync_tool
 import Skin
 from Style import Style
+from naaya.core.zope2util import folder_manage_main_plus
 
 def manage_addLayoutTool(self, REQUEST=None):
     """ """
@@ -178,5 +179,8 @@ class LayoutTool(Folder, combosync_tool):
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_layout_html')
     manage_layout_html = PageTemplateFile('zpt/layout_layout', globals())
+
+    manage_main = folder_manage_main_plus
+    ny_before_listing = PageTemplateFile('zpt/manage_main_header', globals())
 
 InitializeClass(LayoutTool)
