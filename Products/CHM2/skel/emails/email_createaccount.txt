@@ -1,0 +1,10 @@
+
+This is an automatically generated message to inform you that an account has been created
+for you on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) 
+with the following credentials:
+
+Name: @@NAME@@
+Username: @@USERNAME@@
+Email: @@EMAIL@@
+
+Time of post - @@TIMEOFPOST@@

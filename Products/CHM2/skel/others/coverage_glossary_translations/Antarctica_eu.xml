@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Basque">
+    <body>
+      <trans-unit approved="1" id="Antarctica">
+        <source>Antarctica</source>
+        <target>Antartika</target>
+        <context-group name="Antarctica"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
