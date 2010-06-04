@@ -1,9 +1,0 @@
-Hi @@LASTNAME@@, @@FIRSTNAME@@,
-
-You got this mail as result of your request for your password for the @@PORTAL_TITLE@@ portal located at @@PORTAL_URL@@.
-
-You login information follows below:
-Username: @@USERNAME@@
-Password: @@PASSWORD@@
-
-Since this mail was sent to you in plain text format it is recomended that you log in and change your password.
