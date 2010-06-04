@@ -17,7 +17,7 @@
 
 	<div class="field">
 		<label tal:attributes="for prop_id" class="widget-title">
-			<span i18n:translate="" tal:content="here/title" />
+			<tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
 			<span tal:condition="here/required" class="mandatory_field">*</span>
 		</label>
 		<p class="form-errors" tal:condition="errors" tal:content="errors" />
