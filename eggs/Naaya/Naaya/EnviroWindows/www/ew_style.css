@@ -1222,3 +1222,18 @@ text-decoration: underline;
 	border-top: 3px solid #CCCCCC;
 	border-bottom: 3px solid #CCCCCC;
 }
+
+/* Google translate Widget */
+#google_translate_element{
+	display: none;
+	border:1px solid #CCCCCC;
+	padding:1px 4px 0 5px;
+	position:absolute;
+	right:5px;
+	top:30px;
+	background: #FFF;
+}
+
+a.goog-logo-link{
+	background-image: none !important;
+}
