@@ -1,5 +1,0 @@
-Hi, @@LASTNAME@@, @@FIRSTNAME@@,
-
-Your account on @@PORTAL_TITLE@@ located at @@PORTAL_URL@@ has been deactivated on @@TIMEOFPOST@@
-
-Regards
