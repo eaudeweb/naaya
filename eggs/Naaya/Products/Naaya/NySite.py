@@ -181,6 +181,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     display_subobject_count = ""
     default_logo = ''
 
+    _Delete_objects_Permission = ['Administrator']
+
     def __init__(self, id, portal_uid, title, lang):
         """ """
         self.id = id
