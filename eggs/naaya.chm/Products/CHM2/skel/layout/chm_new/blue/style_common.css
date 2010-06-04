@@ -1,0 +1,61 @@
+.right_link_portlet .portlet_content li {
+		color: #006cad;
+}
+.right_link_portlet a{
+	color: #004a80;
+}
+.buttons a {
+	background-color: #004a80;
+}
+#admin_this_folder a {
+	border: 1px solid #004A80;
+}
+#admin_this_folder a:hover {
+	background: #b9cad4;
+}
+#toolbar{
+	background-color: #c2dceb;
+}
+div#toolbar input {
+	background-color: #004a80;
+}
+td.title-column a{
+	color: #0f75b3;
+}
+.available_langs a{
+	border-right: 1px solid #0F75B3;
+}
+.available_langs a:first-child {
+	border-left:1px solid #0F75B3;
+}
+#tabbedmenu li, .tabbedmenu li {
+	border-top: 1px solid #19699f;
+	border-left: 1px solid #19699f;
+	border-right: 1px solid #19699f;
+}
+#tabbedmenu a, .tabbedmenu a {
+	color: #19699f;
+}
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
+	background-color: #19699f;
+}
+#tabbedmenu a, #tabbedmenu a:visited, .tabbedmenu a, .tabbedmenu a:visited {
+	color: #19699f;
+}
+.deletecomment {
+	border: 1px solid #004A80;
+	background-image: url('images/trash.gif');
+}
+.addcomment {
+	border: 1px solid #004A80;
+	background-image: url('images/addcomment.gif');
+}
+.logincomment {
+	background-image: url('images/logintoadd.gif');
+}
+.commentbox_title {
+	background-image: url('images/comment.gif');
+}
+.forum_message_top {
+	color: #006CAD;
+}

@@ -1,0 +1,53 @@
+.right_link_portlet .portlet_content li {
+		color: #726d48;
+}
+.right_link_portlet a{
+	color: #4c2c07;
+}
+.buttons a {
+	background-color: #4c2c07;
+}
+#admin_this_folder a {
+	border: 1px solid #4c2c07;
+}
+#admin_this_folder a:hover {
+	background: #d4d3b9;
+}
+#toolbar{
+	background-color: #ebe8c2;
+}
+div#toolbar input {
+	background-color: #4c2c07;
+}
+td.title-column a{
+	color: #726d48;
+}
+.available_langs a{
+	border-right: 1px solid #726d48;
+}
+.available_langs a:first-child {
+	border-left:1px solid #726d48;
+}
+#tabbedmenu li, .tabbedmenu li {
+	border-top: 1px solid #827a00;
+	border-left: 1px solid #827a00;
+	border-right: 1px solid #827a00;
+}
+#tabbedmenu a, .tabbedmenu a {
+	color: #827a00;
+}
+#tabbedmenu #currenttab, .tabbedmenu .currenttab {
+	background-color: #827a00;
+}
+#tabbedmenu a, #tabbedmenu a:visited, .tabbedmenu a, .tabbedmenu a:visited {
+	color: #827a00;
+}
+.deletecomment {
+	border: 1px solid #4c2c07;
+}
+.addcomment {
+	border: 1px solid #4c2c07;
+}
+.forum_message_top {
+	color: #726d48;
+}
