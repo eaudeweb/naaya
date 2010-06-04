@@ -27,12 +27,9 @@ function toggleSelect() {
 </script>
 
 <!-- Add object widget -->
+<div style="float: right">
 <br />
 <dtml-if filtered_meta_types>
-  <table width="100%" cellspacing="0" cellpadding="0" border="0">
-  <tr>
-  <td align="left" valign="top">&nbsp;</td>
-  <td align="right" valign="top">
   <div class="form-element">
   <form action="&dtml-URL1;/" method="get">
   <dtml-if "_.len(filtered_meta_types) > 1">
@@ -54,10 +51,8 @@ function toggleSelect() {
   </dtml-if>
   </form>
   </div>
-  </td>
-  </tr>
-  </table>
 </dtml-if>
+</div>
 
 <dtml-var ny_before_listing missing="">
 
