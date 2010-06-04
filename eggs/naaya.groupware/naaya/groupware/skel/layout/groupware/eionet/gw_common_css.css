@@ -26,12 +26,8 @@
 	border: 1px solid #999 !important;
 	color: #f40000;
 }
-.message-information {
-	color: #77b81f;
-}
 .message-information fieldset, .information fieldset {
 	border: 1px solid #999 !important;
-	color: #77b81f;
 }
 .fieldset_div {
 	margin: 5px 0px;
