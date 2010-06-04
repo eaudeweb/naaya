@@ -167,7 +167,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	background: #fff;
 }
 .left_portlet ul li a {
-	display:block;
 	font-weight: normal;
 	text-decoration: underline;
 	color: #44464B;
@@ -247,7 +246,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	background: #fff;
 }
 .right_portlet ul li a {
-	display:block;
 	font-weight: normal;
 	text-decoration: underline;
 	color: #44464B;
