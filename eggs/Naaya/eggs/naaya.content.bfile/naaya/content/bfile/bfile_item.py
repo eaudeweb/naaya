@@ -297,8 +297,10 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         notify(NyContentObjectEditEvent(self, contributor))
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                      (self.absolute_url(), _lang))
 
     def _versions_for_tmpl(self):
         """
