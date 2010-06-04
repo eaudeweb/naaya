@@ -143,7 +143,7 @@ class CHMSite(NySite):
         #add Forum instance
         manage_addNyForum(self, id='portal_forum', title='CHM Forum', description='', categories=['CHM', 'Biodiversity', 'Other'], file_max_size=0, REQUEST=None)
         #add EC CHM to network portals list
-        self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
+        #self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
 
     def get_data_path(self):
         """ """
