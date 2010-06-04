@@ -33,9 +33,9 @@
 			id prop_id" />
 		<tal:block tal:condition="python:glossary is not None">
 			<label tal:attributes="for string:pick-${glossary}" class="invisible" i18n:translate="">Pick keywords</label>
-			<input type="button" value="Pick" tal:attributes="
+			<input type="button" value="Pick" i18n:attributes="value" tal:attributes="
 				id string:pick-${glossary};
-				onclick string:javascript:fPick('${glossary/absolute_url}/GlossMap_html?ctrl=${prop_id}');" i18n:attributes="value" />
+				onclick string:javascript:fPick('${glossary/absolute_url}/GlossMap_html?ctrl=${prop_id}');" />
 		</tal:block>
 	</div>
 </tal:block>
