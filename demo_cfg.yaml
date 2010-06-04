@@ -1,7 +1,7 @@
 --- !gisc_gnaccess_javadb
 # get user & password from geonetwork (web/geonetwork/WEB-INF/db/account.prop)
-db_user: AhTJxJUW
-db_password: GroKItO1
+db_user: username
+db_password: password # don't store password on svn
 java_classpath: "/path/to/geonetwork/web/geonetwork/WEB-INF/lib/mkjdbc.jar"
 
 --- !gisc_gnaccess_output
