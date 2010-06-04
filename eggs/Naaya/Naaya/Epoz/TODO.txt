@@ -1,3 +1,0 @@
-Fix bugs...
-
-- Unicode doesn't work propertly for uTidylib. Someone an idea?
