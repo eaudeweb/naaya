@@ -35,7 +35,7 @@
 			<label tal:attributes="for string:pick-${glossary}" class="invisible" i18n:translate="">Pick keywords</label>
 			<input type="button" value="Pick" tal:attributes="
 				id string:pick-${glossary};
-				onclick string:javascript:fPick('${glossary/absolute_url}/GlossMap_html?ctrl=${prop_id}');" i18n:attributes="" />
+				onclick string:javascript:fPick('${glossary/absolute_url}/GlossMap_html?ctrl=${prop_id}');" i18n:attributes="value" />
 		</tal:block>
 	</div>
 </tal:block>
