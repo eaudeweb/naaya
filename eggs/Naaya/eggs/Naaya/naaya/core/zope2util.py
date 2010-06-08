@@ -32,7 +32,9 @@ from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
+
 from naaya.core.utils import path_in_site
+from naaya.core.utils import force_to_unicode
 
 def redirect_to(tmpl):
     """
@@ -225,3 +227,40 @@ folder_manage_main_plus = DTMLFile('zpt/folder_main_plus', globals())
 The OFS.ObjectManager `manage_main` template, modified to render two
 extra pieces of content: ``ny_before_listing`` and ``ny_after_listing``.
 """
+
+def exorcize_local_properties(obj):
+    """
+    remove any data set by LocalPropertyManager, recover plain
+    (non-localized) string values, and set them as simple properties.
+
+    Returns `None` if nothing was touched, or a list of extracted
+    property names (which may be empty if we only removed empty
+    LocalPropertyManager data structures).
+    """
+
+    obj.getId() # make sure it's loaded from zodb
+    changed = False
+
+    names = []
+    default_lang = obj.__dict__.get('_default_lang', 'en')
+    if '_local_properties' in obj.__dict__:
+        for name, localdata in obj.__dict__['_local_properties'].items():
+            if default_lang in localdata:
+                value = localdata[default_lang][0]
+            else:
+                value = localdata.values()[0][0]
+            obj.__dict__[name] = force_to_unicode(value)
+            changed = True
+            names.append(name)
+
+    for attrname in ['_default_language', '_languages', '_local_properties',
+                     '_local_properties_metadata']:
+        if attrname in obj.__dict__:
+            del obj.__dict__[attrname]
+            changed = True
+
+    if changed:
+        obj._p_changed = True
+        return names
+    else:
+        return None
