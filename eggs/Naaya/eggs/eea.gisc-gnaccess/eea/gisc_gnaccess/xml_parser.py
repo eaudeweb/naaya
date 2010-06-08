@@ -77,7 +77,10 @@ def get_multiple_char_data(data, main_path, **kwpaths):
                     if k not in values[-1]:
                         values[-1][k] = data
                     else:
-                        values[-1][k] = values[-1][k] + ', ' + data
+                        if type(values[-1][k]) != type([]):
+                            values[-1][k] = [values[-1][k], data]
+                        else:
+                            values[-1][k] = values[-1][k].append(data)
 
     p = xml.parsers.expat.ParserCreate('utf-8')
     p.StartElementHandler = start_element
@@ -89,45 +92,41 @@ def get_multiple_char_data(data, main_path, **kwpaths):
 
 
 def get_title(data):
-    path = ['gmd:MD_Metadata',
-                'gmd:identificationInfo', 
-                    'gmd:MD_DataIdentification',
-                        'gmd:citation',
-                            'gmd:CI_Citation',
-                                'gmd:title',
-                                    'gco:CharacterString']
+    path = ['gmd:identificationInfo', 
+                'gmd:citation',
+                    'gmd:CI_Citation',
+                        'gmd:title',
+                            'gco:CharacterString']
     values = get_char_data(data, path)
     if len(values) == 0:
         return ''
     return values[0]
     
 def get_points_of_contact(data):
-    main_path = ['gmd:MD_Metadata',
-            'gmd:identificationInfo',
-                'gmd:MD_DataIdentification',
+    main_path = ['gmd:identificationInfo',
                     'gmd:pointOfContact',
                         'gmd:CI_ResponsibleParty']
     organisation_subpath = ['gmd:organisationName',
                                'gco:CharacterString']
     email_subpath = ['gmd:contactInfo',
-                        'gmd:CI_Contact',
-                            'gmd:address',
-                                'gmd:CI_Address',
-                                    'gmd:electronicMailAddress',
-                                        'gco:CharacterString']
-    values = get_multiple_char_data(data, main_path, organisation=organisation_subpath, email=email_subpath)
+                        'gmd:address',
+                            'gmd:electronicMailAddress',
+                                'gco:CharacterString']
+    role_subpath = ['gmd:role',
+                        'gmd:CI_RoleCode']
+    values = get_multiple_char_data(data, main_path,
+                                     organisation=organisation_subpath,
+                                     email=email_subpath,
+                                     role=role_subpath)
     return values
 
 def get_distribution_info(data):
-    path = ['gmd:MD_Metadata',
-                'gmd:distributionInfo', 'gmd:MD_Distribution',
-                    'gmd:transferOptions', 'gmd:MD_DigitalTransferOptions',
-                        'gmd:onLine', 'gmd:CI_OnlineResource',
-                            'gmd:linkage', 'gmd:URL']
-    values = get_char_data(data, path)
-    if len(values) == 0:
-        return ''
-    return values[0]
+    path = ['gmd:distributionInfo',
+                'gmd:transferOptions',
+                    'gmd:onLine',
+                        'gmd:linkage',
+                             'gmd:URL']
+    return get_char_data(data, path)
 
 if __name__ == '__main__':
     import doctest
