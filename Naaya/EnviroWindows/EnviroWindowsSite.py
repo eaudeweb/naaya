@@ -161,6 +161,14 @@ class EnviroWindowsSite(NySite):
             for p in v:
                 linkchecker_ob.manage_addProperty(k, p)
 
+        addNyFolder(self, id='events', title='Events', publicinterface=1)
+        self._getOb('events').folder_meta_types=['Naaya Event']
+        event_folder_custom_index = (
+            "<metal:block use-macro=\"python:here.getFormsTool()."
+            "getForm('event_folder_index').macros['page']\" />")
+        self['events']['index'].pt_edit(text=event_folder_custom_index,
+                                        content_type='')
+
     #object getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
