@@ -16,6 +16,7 @@
 <metal:block metal:fill-slot="body">
 <div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
 	<metal:block metal:define-slot="page-middle">
+    <metal:block define-macro="folder-title">
 	<h1>
 		<img tal:attributes="
 			src python:test(here.approved, here.icon, here.icon_marked);
@@ -37,6 +38,7 @@
 			</span>
 		</span>
 	</h1>
+    </metal:block>
 
 	<p tal:condition="python:here.description!=''"
 		tal:content="structure here/description" />
