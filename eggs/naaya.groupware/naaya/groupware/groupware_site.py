@@ -73,6 +73,9 @@ class GroupwareSite(NySite):
                                              '', 'yes')
         self.getPortletsTool().assign_portlet('library', 'right', 'portlet_latestuploads_rdf', True)
 
+        #set default main topics
+        self.getPropertiesTool().manageMainTopics(['about', 'library'])
+
     def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER']
         user_roles = self.getAuthenticationTool().get_all_user_roles(user)
