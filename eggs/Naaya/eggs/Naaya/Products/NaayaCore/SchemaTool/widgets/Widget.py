@@ -31,7 +31,6 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers.utils import utils
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 
 from geo import Geo
 
@@ -95,11 +94,8 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
 
-class Widget(Folder, LocalPropertyManager):
-    # Widget is a LocalPropertyManager because some old instances still
-    # have their "title" property set as a LocalProperty/LocalAttribute
-    """ Abstract class for widget
-    """
+class Widget(Folder):
+    """ Abstract class for widget """
     meta_type = 'Naaya Schema Widget'
     meta_sortorder = 100 # used to sort the list of available widget types
 
