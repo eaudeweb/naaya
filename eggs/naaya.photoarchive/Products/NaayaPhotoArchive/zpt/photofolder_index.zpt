@@ -37,9 +37,9 @@
 	</a>
 	</div>
 	<div class="toolbar" tal:condition="here/checkPermissionEditObject">
-		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit album</span></a>
-		<a tal:attributes="href string:${here/absolute_url}/changecover_html"><span  i18n:translate="">Album cover</span></a>
-		<a tal:attributes="href string:${here/absolute_url}/restrict_html"><span i18n:translate="">Restrict access</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit album</a>
+		<a tal:attributes="href string:${here/absolute_url}/changecover_html" i18n:translate="">Album cover</a>
+		<a tal:attributes="href string:${here/absolute_url}/restrict_html" i18n:translate="">Restrict access</a>
 	</div>
 	<div style="clear: both"></div>
 </div>
