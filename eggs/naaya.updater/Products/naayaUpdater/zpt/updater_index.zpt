@@ -1,0 +1,33 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<tal:block metal:use-macro="here/standard_template.pt/macros/page">
+<tal:block metal:fill-slot="head">
+	<title>Naaya updater</title>
+</tal:block>
+
+<tal:block metal:fill-slot="body">
+<h3>Naaya updater</h3>
+
+<form action="" method="get">
+	<label for="module_paths">Python modules</label>
+	<br />
+	<textarea id="module_paths" name="module_paths" cols="50" rows="3"
+		tal:content="python:here.utConvertListToLines(here.scripts_packages)"/>
+	<input type="submit" value="Refresh updates list"/>
+</form>
+<tal:block condition="here/scripts_packages">
+<tal:block repeat="module_path here/scripts_packages">
+<ul tal:define="updates python:here.get_updates_from_module(module_path)">
+	<li tal:repeat="update updates">
+		<a tal:attributes="href python:here.get_update_script_url(update.id)"
+			tal:content="python:here.get_update_script_title(update.id)"/>
+	</li>
+</ul>
+</tal:block>
+</tal:block>
+</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/manage_page_footer" />
+

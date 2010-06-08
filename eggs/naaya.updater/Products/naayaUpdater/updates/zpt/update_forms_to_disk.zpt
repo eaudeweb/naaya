@@ -1,0 +1,141 @@
+<tal:block define="objs python:request.get('index_html', None) and here.list_updates() or [];">
+<h1 tal:replace="structure here/manage_page_header" />
+<h2 tal:replace="structure here/manage_tabs" />
+
+<h3 tal:content="here/title|string:" />
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+
+function detail(site) {
+	  var ctl_frm = document.getElementById(site+'_forms');
+	  if(ctl_frm) {
+		  if (ctl_frm.style.display == '' || ctl_frm.style.display == 'block') {
+				  ctl_frm.style.display = 'none'
+		  } else {
+			  ctl_frm.style.display = 'block'
+		  }
+	  }
+    var ctl_frm = document.getElementById(site+'_skin');
+    if(ctl_frm) {
+      if (ctl_frm.style.display == '' || ctl_frm.style.display == 'block') {
+          ctl_frm.style.display = 'none'
+      } else {
+        ctl_frm.style.display = 'block'
+      }
+    }
+		  
+}
+//-->
+</script>
+<h4>Update instructions</h4>
+In order to apply update, first press 'Show report' to preview which forms needs update for each portal.
+<br />
+The summary table will show the portals to update. Ones that needs update will have their name as hyperlink. When you press on the 
+portal's name you will see a summary with forms which needs update, as follows:
+<br />
+<ul>
+  <li>
+    Forms marked in <span style="color:red">red</span> are different from the disk version. They will continue to be served from database and not from disk.
+  <li>
+    Forms marked in black needs only their properties updated and their content will be served from disk.
+  </li>
+</ul>
+
+<form action="." method="post" name="objectItems" id="objectItems">
+
+<!-- Update actions -->
+<div class="submit">
+	<input type="submit" name="index_html:method" value="Show report">
+	<input type="submit" name="update:method" value="Run update">
+</div>
+
+<!-- Update info -->
+<tal:block tal:condition="not:request/index_html|nothing">
+	<div>
+	  <strong>Last run: </strong>
+	  <span tal:content="here/last_run"  tal:condition="here/last_run"/>
+	  <span tal:content="string:Never"  tal:condition="not:here/last_run"/>
+	</div>
+	<fieldset tal:condition="here/objectValues">
+		<legend style="padding: 5px">Update logs</legend>
+		<div tal:repeat="log here/objectValues">
+			<a tal:attributes="href log/absolute_url" tal:content="log/title_or_id" />
+		</div>
+	</fieldset>
+</tal:block>
+
+<!-- List objects to update -->
+<tal:block  tal:condition="python:request.get('index_html', None)"> 
+<strong>Select items to update or leave unselected to update all.</strong>
+<table>
+  <tr class="list-header">
+    <th style="width: 2%" tal:condition="here/select_updates">
+      <input type="checkbox" name="select_all" value="select_all" onclick="toggleSelect(this)"/>
+    </th>
+    <th style="width: 2%">Site</th>
+    <th>Portal forms status</th>
+    <th>Portal skins</th>
+  </tr>
+  <tal:block define="site_updates python:here.buildUpdateSummary() or [];">
+  <tr tal:repeat="ob site_updates" class="row-hilite">
+    <td tal:condition="here/select_updates" valign="top">
+      <input type="checkbox" name="ids:list" tal:attributes="value python:ob.getSiteObject().absolute_url(1)" />
+    </td>
+    <td valign="top">
+      <a tal:condition="ob/isUpdateNeeded" tal:content="python:ob.getName()" tal:attributes="href python:'javascript:detail(\'%s\')' % ob.getName()" />
+      <span tal:condition="not: ob/isUpdateNeeded" tal:content="python:ob.getName()" />
+    </td>
+    <td valign="top">
+      <ul tal:attributes="id python:'%s_forms' % ob.getName()" style="display:none">
+       <tal:block repeat="frm python: ob.getFormsStatus()">
+         <tal:block define="st python:ob.getFormsStatus()[frm] or 0">
+           <tal:block tal:condition="not: st">
+             <li>
+               <span tal:content="frm"/>
+             </li>
+           </tal:block>
+           <tal:block tal:condition="st">
+             <li style="color: red">
+               <span tal:content="frm"/>(differs from disk)
+             </li>
+           </tal:block>
+         </tal:block>
+       </tal:block>
+      </ul>
+    </td>
+    <td valign="top">
+      <ul tal:attributes="id python:'%s_skin' % ob.getName()" style="display:none">
+       <tal:block repeat="frm python: ob.getSkinsStatus()">
+         <tal:block define="st python:ob.getSkinsStatus()[frm] or 0">
+           <tal:block tal:condition="not: st">
+             <li>
+	             <span tal:content="frm"/>
+             </li>
+           </tal:block>
+           <tal:block tal:condition="st">
+             <li style="color:red">
+               <span tal:content="frm"/>(differs from disk)
+             </li>
+           </tal:block>
+         </tal:block>
+       </tal:block>
+      </ul>
+    </td>
+  </tr>
+  </tal:block>
+</table>
+</tal:block>
+<div tal:condition="python:request.get('index_html', '') and not objs">
+  Nothing to update.
+</div>
+
+</form>
+
+<h1 tal:replace="structure here/manage_page_footer" />
+</tal:block>
