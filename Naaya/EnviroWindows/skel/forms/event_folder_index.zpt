@@ -52,7 +52,7 @@
 this_absolute_url python:here.absolute_url(0);
 objects_info python:here.getArchiveListing(here, 'start_date', True);
 objects_list python:objects_info[2];
-all_events objects_list;
+all_events python:[x for x in objects_list if x[2].meta_type=='Naaya Event'];
 dummy python:all_events.reverse();
 upcoming_events python:[x for x in all_events if x[2].end_date >= here.utGetTodayDate()];
 expired_events python:[x for x in all_events if x[2].end_date < here.utGetTodayDate()];
