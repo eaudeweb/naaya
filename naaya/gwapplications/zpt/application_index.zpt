@@ -56,7 +56,7 @@
                     <th scope="row">Rejected on</th>
                     <td><span tal:content="here/pretty_rejected_date"/></td>
                 </tr>
-            <table>
+            </table>
 
             <p tal:condition="pending">If you wish to approve this application please review and if necessary, change the fields below,
             then press the <em>Approve</em> button. If you wish to reject the application
