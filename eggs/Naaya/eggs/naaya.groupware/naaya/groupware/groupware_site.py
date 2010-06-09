@@ -1,10 +1,12 @@
 # Python imports
+import os
 
 # Zope imports
 import Globals
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PythonScripts.PythonScript import manage_addPythonScript
 from App.ImageFile import ImageFile
 
 # Product imports
@@ -67,10 +69,17 @@ class GroupwareSite(NySite):
         if rdf_calendar_available:
             events_rdf = self.getSyndicationTool()['latestevents_rdf']
             manage_addRDFCalendar(self, id="portal_rdfcalendar", title="Events calendar")
-            summary_add = self['portal_rdfcalendar'].manage_addProduct['RDFSummary']
-            summary_add.manage_addRDFSummary('latest_events', 'events',
-                                             events_rdf.absolute_url(),
-                                             '', 'yes')
+            rdfcalendar_ob = self._getOb('portal_rdfcalendar')
+            #summary_add = self['portal_rdfcalendar'].manage_addProduct['RDFSummary']
+            #summary_add.manage_addRDFSummary('latest_events', 'events',
+            #                                 events_rdf.absolute_url(),
+            #                                 '', 'yes')
+
+            #adding local_events Script (Python)
+            manage_addPythonScript(rdfcalendar_ob, 'local_events')
+            local_events_ob = rdfcalendar_ob._getOb('local_events')
+            local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
+
         self.getPortletsTool().assign_portlet('library', 'right', 'portlet_latestuploads_rdf', True)
 
         #set default main topics
