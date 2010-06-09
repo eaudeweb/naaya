@@ -87,7 +87,6 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         lang = kwargs.get('lang', container.gl_get_selected_language())
     widget = klass(id, title=title, lang=lang, **kwargs)
 
-    container.gl_add_languages(widget)
     container._setObject(id, widget)
     widget = container._getOb(id)
     if REQUEST is not None:
