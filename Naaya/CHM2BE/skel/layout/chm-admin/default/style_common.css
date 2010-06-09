@@ -89,6 +89,30 @@
 		margin-bottom: 1em;
 	}
 
+	.message fieldset {
+		border: 1px solid #00AFCE;
+		margin: 0pt 1em 1em;
+		padding: 1em;
+		line-height: 2em;
+	}
+	.message fieldset legend {
+		border: 1px dashed #00AFCE;
+		padding: 0.7em 2em;
+		margin-top: 1em;
+		font-weight: bold;
+	}
+
+	#content {
+		margin-left: 1em;
+	}
+
+	#content fieldset {
+		border: 1px solid #00AFCE;
+		margin: 0pt 1em 1em;
+		padding: 1em;
+		line-height: 2em;
+	}
+
 	/* Operations buttons */
 	.floated-buttons {
 		float: right;
