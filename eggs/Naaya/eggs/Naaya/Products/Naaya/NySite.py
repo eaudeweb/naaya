@@ -96,6 +96,7 @@ from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.NaayaCore.managers.utils import vcard_file
 from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
+from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
@@ -3782,6 +3783,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     def translate_url(self, *args):
         return translate_url(*args)
+
+    rdf_cataloged_items = rdf_cataloged_items
 
     rstk = RestrictedToolkit()
 
