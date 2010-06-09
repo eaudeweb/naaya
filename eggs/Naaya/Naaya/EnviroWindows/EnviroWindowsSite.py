@@ -17,6 +17,7 @@
 # Alin Voinea
 
 #Python imports
+import os
 from StringIO import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED, BadZipfile
 
@@ -31,9 +32,8 @@ from App.ImageFile import ImageFile
 from zope.interface import Interface, implements
 from zope.component import adapts, provideAdapter
 
-#Zope imports
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
-from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
+from Products.PythonScripts.PythonScript            import manage_addPythonScript
 
 #Product imports
 from constants                                      import *
@@ -129,11 +129,10 @@ class EnviroWindowsSite(NySite):
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
         rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        #TODO: to change the RDF Summary url maybe
-        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example',
-                             'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
-        rdfcal_ob = self._getOb(ID_RDFCALENDAR)
-        #rdfcal_ob._getOb('example').update()
+        #adding local_events Script (Python)
+        manage_addPythonScript(rdfcalendar_ob, 'local_events')
+        local_events_ob = rdfcalendar_ob._getOb('local_events')
+        local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
 
         #dynamic property for folder: tooltip
         dynprop_tool = self.getDynamicPropertiesTool()
