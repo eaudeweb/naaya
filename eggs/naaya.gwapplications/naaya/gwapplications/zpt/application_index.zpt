@@ -15,7 +15,9 @@
                                pending python:not here.approved and not here.rejected;
                                deleted python:here.approved and not created_url">
             <h1>Interest group application</h1>
-            <table>
+            <table class="datatable">
+				<col style="width:12em"/>
+				<col style="min-width: 20em"/>
                 <tr>
                     <th scope="row">Portal title</th>
                     <td><span tal:content="data/site_title"/></td>
