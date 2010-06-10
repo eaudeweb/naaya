@@ -3,12 +3,14 @@ following HTML snippet:</p>
 
 <pre tal:define="site_url here/absolute_url">
 &lt;iframe
-src="<tal:block content="string:${site_url}/embed_map_html"/>&quot;
+src="<tal:block content="string:${site_url}/embed_map_html?"
+/><u>path=some/folder</u>&amp;<u>address=Europe</u>"
 width="600" height="500" frameborder="0" scrolling="no"&gt;
-&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
-&lt;/iframe&gt;
+&lt;p&gt;Your browser does not support iframes.&lt;/p&gt;&lt;/iframe&gt;
 </pre>
-<p i18n:translate="">The following URL parameters can be used:</p>
+<p i18n:translate="">
+The URL can be customized with the following parameters (underlined above):
+</p>
 <dl>
     <dt>address=&lt;place name&gt;</dt>
     <dd i18n:translate="">Center the map to a certain location.</dd>
