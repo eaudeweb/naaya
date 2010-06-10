@@ -50,9 +50,6 @@ class TextAreaWidget(Widget):
     columns = 50
     tinymce = False
 
-    def isEmptyDatamodel(self, value):
-        return not bool(value)
-
     template = PageTemplateFile('../zpt/property_widget_textarea', globals())
 
 InitializeClass(TextAreaWidget)

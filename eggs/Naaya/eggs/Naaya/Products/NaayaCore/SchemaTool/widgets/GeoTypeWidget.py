@@ -39,9 +39,6 @@ class GeoTypeWidget(Widget):
     # Constructor
     _constructors = (addGeoTypeWidget,)
 
-    def isEmptyDatamodel(self, value):
-        return not bool(value)
-
     def _convert_to_form_string(self, value):
         if isinstance(value, int):
             value = str(value)
