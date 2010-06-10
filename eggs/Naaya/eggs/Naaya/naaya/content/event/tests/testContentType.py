@@ -25,39 +25,39 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """
     def afterSetUp(self):
         self.login()
-        
+
     def beforeTearDown(self):
         self.logout()
 
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Events """
         #add NyEvent
-        addNyEvent(self._portal().info, id='event1', title='event1', lang='en')
-        addNyEvent(self._portal().info, id='event1_fr', title='event1_fr', lang='fr')
-        
+        addNyEvent(self._portal().info, id='event1', title='event1', lang='en', start_date="10/10/2000")
+        addNyEvent(self._portal().info, id='event1_fr', title='event1_fr', lang='fr', start_date="10/10/2000")
+
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'])
-        
+
         #get added NyEvent
         for x in meta:
             if x.getLocalProperty('title', 'en') == 'event1':
                 meta = x
             if x.getLocalProperty('title', 'fr') == 'event1_fr':
                 meta_fr = x
-            
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'event1')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'event1_fr')
-        
+
         #change NyEvent title
-        meta.saveProperties(title='event1_edited', lang='en')
-        meta_fr.saveProperties(title='event1_fr_edited', lang='fr')
-        
+        meta.saveProperties(title='event1_edited', lang='en', start_date='10/10/2000')
+        meta_fr.saveProperties(title='event1_fr_edited', lang='fr', start_date='10/10/2000')
+
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'event1_edited')
         self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'event1_fr_edited')
-        
+
         #delete NyEvent
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
-        
+
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'])
         self.assertEqual(meta, [])
 

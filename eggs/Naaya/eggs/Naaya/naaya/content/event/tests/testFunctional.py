@@ -30,7 +30,8 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.event.event_item import addNyEvent
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
-        addNyEvent(self.portal.myfolder, id='myevent', title='My event', submitted=1, contributor='contributor')
+        addNyEvent(self.portal.myfolder, id='myevent', title='My event',
+            submitted=1, contributor='contributor', start_date="10/10/2000")
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
@@ -56,6 +57,7 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         form['coverage:utf8:ustring'] = 'test_event_coverage'
         form['keywords:utf8:ustring'] = 'keyw1, keyw2'
         form['details:utf8:ustring'] = 'test_event_details'
+        form['start_date'] = '10/10/2000'
 
         event_types = form.find_control('event_type:utf8:ustring').get_items()
         labels = set()
@@ -175,7 +177,8 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
         from naaya.content.event.event_item import addNyEvent
-        addNyEvent(self.portal.info, id='ver_event', title='ver_event', submitted=1)
+        addNyEvent(self.portal.info, id='ver_event', title='ver_event',
+                   submitted=1, start_date="10/10/2000")
         import transaction; transaction.commit()
 
     def beforeTearDown(self):

@@ -119,7 +119,7 @@ class NyZipExport(NaayaTestCase):
 
     def test_export_event(self):
         addNyEvent(self.test_folder, id='interesting_event',
-                   title='Great event')
+                   title='Great event', start_date='10/10/2000')
 
         export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
@@ -294,5 +294,3 @@ def test_suite():
     if not skip:
         suite.addTest(makeSuite(NyZipExport))
     return suite
-
-

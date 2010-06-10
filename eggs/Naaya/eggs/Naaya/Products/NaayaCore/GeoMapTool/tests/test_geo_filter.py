@@ -137,6 +137,7 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
                 'data': {
                     'id': 'event123',
                     'title': 'Event',
+                    'start_date': '10/10/2000',
                     'geo_location.lat': '35.3',
                     'geo_location.lon': '15.0',
                     'geo_location.address': 'Testing event',
