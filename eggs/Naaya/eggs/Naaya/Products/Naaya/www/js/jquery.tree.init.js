@@ -31,16 +31,10 @@ $(document).ready(function(){
                 // If the tree_container has xxx_tree id the target input should have xxx_tree_target class
                 var target = $('.' + TREE_OBJ.container.attr('id') + '_target');
                 if (target.length){
-                    val = $(NODE).attr('title');
-                    if (val == '/'){
-                        target.val(val);
-                    }
-                    else{
-                        target.val(val);
-                    }
-                }
-                else
+                    target.val($(NODE).attr('title'));
+                } else {
                     alert('Error: Please set up the target input class');
+                }
             }
         },
         types : {
