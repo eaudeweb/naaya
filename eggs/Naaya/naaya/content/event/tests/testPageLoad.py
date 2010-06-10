@@ -6,7 +6,8 @@ class PageLoadTests(NaayaTestCase):
     def afterSetUp(self):
         portal = self.app.portal
         addNyFolder(portal, 'test_folder')
-        addNyEvent(portal.test_folder, id='test_event', title='Test event')
+        addNyEvent(portal.test_folder, id='test_event', title='Test event',
+                   start_date="10/10/2000")
 
     def beforeTearDown(self):
         self.app.portal.test_folder.manage_delObjects('test_event')

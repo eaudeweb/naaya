@@ -195,6 +195,8 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
         elif type_name == 'NyMediaFile':
             form.find_control('file').add_file(StringIO('the_FLV_data'),
                 filename='testvid.flv', content_type='video/x-flv')
+        elif type_name == 'event_item':
+            form['start_date'] = '10/10/2000'
 
     def test_dynamic_properties(self):
         """
