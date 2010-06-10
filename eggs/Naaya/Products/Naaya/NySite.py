@@ -1325,7 +1325,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                         icon=item.approved and item.icon or item.icon_marked
                     ),
                     attributes=dict(
-                        title=item.absolute_url(1)
+                        title=path_in_site(item)
                     ),
                     children = children_items
                 ))
