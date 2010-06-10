@@ -47,9 +47,6 @@ class PointerWidget(Widget):
     width = 50
     size_max = 0
 
-    def isEmptyDatamodel(self, value):
-        return not bool(value)
-
     def _convert_to_form_string(self, value):
         if isinstance(value, int):
             value = str(value)

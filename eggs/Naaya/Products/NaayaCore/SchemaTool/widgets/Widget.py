@@ -180,7 +180,7 @@ class Widget(Folder):
     # To be implemented or ovewritten (if needed) by widget concrete classes.
     #
     def isEmptyDatamodel(self, value):
-        return value is None
+        return not bool(value)
 
     def parseFormData(self, data):
         return data

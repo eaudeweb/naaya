@@ -55,37 +55,11 @@ from naaya.core.zope2util import DT2dt
 from interfaces import INyEvent
 
 #module constants
-PROPERTIES_OBJECT = {
-    'id':               (0, '', ''),
-    'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
-    'description':      (0, '', ''),
-    'coverage':         (0, '', ''),
-    'keywords':         (0, '', ''),
-    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
-    'discussion':       (0, '', ''),
-    'location':         (0, '', ''),
-    'location_address': (0, '', ''),
-    'location_url':     (0, '', ''),
-    'start_date':       (0, MUST_BE_DATETIME, 'The Start date field must contain a valid date.'),
-    'end_date':         (0, MUST_BE_DATETIME, 'The End date field must contain a valid date.'),
-    'host':             (0, '', ''),
-    'agenda_url':       (0, '', ''),
-    'event_url':        (0, '', ''),
-    'details':          (0, '', ''),
-    'topitem':          (0, '', ''),
-    'event_type':       (0, '', ''),
-    'contact_person':   (0, '', ''),
-    'contact_email':    (0, '', ''),
-    'contact_phone':    (0, '', ''),
-    'contact_fax':      (0, '', ''),
-    'lang':             (0, '', '')
-}
 DEFAULT_SCHEMA = {
     'location':         dict(sortorder=100, widget_type='String',   label='Event location'),
     'location_address': dict(sortorder=110, widget_type='String',   label='Location address'),
     'location_url':     dict(sortorder=120, widget_type='String',   label='Location URL'),
-    'start_date':       dict(sortorder=130, widget_type='Date',     label='Start date', data_type='date'),
+    'start_date':       dict(sortorder=130, widget_type='Date',     label='Start date', data_type='date', required=True),
     'end_date':         dict(sortorder=140, widget_type='Date',     label='End date', data_type='date'),
     'host':             dict(sortorder=150, widget_type='String',   label='Host'),
     'agenda_url':       dict(sortorder=160, widget_type='String',   label='Agenda URL'),
@@ -111,7 +85,6 @@ config = {
         'forms': ['event_add', 'event_edit', 'event_index'],
         'add_form': 'event_add_html',
         'description': 'This is Naaya Event type.',
-        'properties': PROPERTIES_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyEvent',
         '_module': sys.modules[__name__],
