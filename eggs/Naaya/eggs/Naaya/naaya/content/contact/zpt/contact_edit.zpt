@@ -2,8 +2,10 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Edit Contact</h1>
 
-<p metal:fill-slot="description" i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+<p metal:fill-slot="description">
+	<tal:block i18n:translate="">
+		Change the properties in the form below and click <strong i18n:name="save-button" i18n:translate="">Save changes</strong>. Fields marked with <span i18n:name="mandatory" class="mandatory_field">*</span> are mandatory.
+	</tal:block>
 </p>
 
 </tal:block>
