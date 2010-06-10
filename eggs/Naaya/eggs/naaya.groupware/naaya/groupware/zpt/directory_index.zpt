@@ -9,7 +9,8 @@
 						search_string request/form/search_string|nothing;">
 	<h1 i18n:translate="">Interest Group Directory search</h1>
 	<p i18n:translate="">
-	Search members of this Interest Group</p>
+	Search for members of this Interest Group. Leave name blank to show all.
+	</p>
 	<form action="search_directory" method="get">
 		<label for="search_string" i18n:translate="">
 			Name contains</label>
@@ -24,34 +25,30 @@
 		users matching your query.
 	</p>
 	<form action="user_details" method="get">
-		<table class="datatable" style="min-width: 80%;">
-			<col style="width: 2em"/>
-			<col style="min-width: 20em"/>
-			<col style="min-width: 20em"/>
-			<thead>
-				<th></th>
-				<th i18n:translate="">First Name</th>
-				<th i18n:translate="">Last Name</th>
-				<th tal:condition="is_member" i18n:translate="">User ID</th>
-				<th tal:condition="is_member" i18n:translate="">Email</th>
-				<th tal:condition="is_member" i18n:translate="">Access level</th>
-			</thead>
-			<tbody>
-				<tr tal:repeat="user userlist">
-					<td>
-						<input type="radio" name="selected_user"
-							   tal:attributes="value user/userid"/>
-					</td>
-					<td tal:content="user/firstname"></td>
-					<td tal:content="user/lastname"></td>
-					<td tal:content="user/userid" tal:condition="is_member"></td>
-					<td tal:content="user/email" tal:condition="is_member"></td>
-					<td tal:content="user/access_level" tal:condition="is_member"></td>
-				</tr>
-			</tbody>
-		</table>
-		<input type="submit" value="Details"/>
-	</form>
+	<table class="datatable" style="min-width: 80%;">
+		<thead>
+			<th i18n:translate="">Name</th>
+			<tal:block condition="is_member">
+				<th i18n:translate="">User ID</th>
+				<th i18n:translate="">Email</th>
+				<th i18n:translate="">Access level</th>
+			</tal:block>
+		</thead>
+		<tbody>
+			<tr tal:repeat="user userlist">
+				<tal:block define="url string:${here/absolute_url}/user_details?selected_user=${user/userid}">
+					<td><a tal:content="string:${user/firstname}
+					                           ${user/lastname}"
+					       tal:attributes="href url"></a></td>
+					<tal:block condition="is_member">
+						<td tal:content="user/userid"></td>
+						<td tal:content="user/email"></td>
+						<td tal:content="user/access_level"></td>
+					</tal:block>
+				</tal:block>
+			</tr>
+		</tbody>
+	</table>
 	</tal:block>
 	<tal:block tal:condition="python:search_string and not userlist">
 		<p>
