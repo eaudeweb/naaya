@@ -1156,9 +1156,9 @@ text-decoration: underline;
     ew_print_css = ImageFile('www/ew_print.css', globals())
     ew_style_css = ImageFile('www/ew_style.css', globals())
 
-    security.declareProtected(view, 'folder_listing')
-    folder_listing = PageTemplateFile(
-       'zpt/folder_listing', globals())
+    #security.declareProtected(view, 'folder_listing')
+    #folder_listing = PageTemplateFile(
+    #   'zpt/folder_listing', globals())
 
 InitializeClass(EnviroWindowsSite)
 
