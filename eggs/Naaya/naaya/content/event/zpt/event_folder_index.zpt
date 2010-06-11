@@ -1,12 +1,8 @@
 <metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
 <metal:block fill-slot="page-middle">
     <div class="custom-syndication" style="float: right; margin:5px;">
-    <!--
-    Latest events <a tal:attributes="href string: ${site_url}/portal_syndication/latestevents_rdf;
-    title string: 'Latest events';"><img alt="Syndication (XML)" tal:attributes="src string: ${site_url}/misc_/NaayaCore/xml.png"></a>
-    |-->
     Upcoming events <a tal:attributes="href string: ${site_url}/portal_syndication/upcomingevents_rdf;
-    title string: 'Latest events';"><img alt="Syndication (XML)" tal:attributes="src string: ${site_url}/misc_/NaayaCore/xml.png"></a>
+    title string: 'Latest events';"><img alt="Syndication (XML)" tal:attributes="src string: ${site_url}/misc_/NaayaCore/xml.png" /></a>
     </div>
     <br />
     <h1>
@@ -30,14 +26,38 @@
             </span>
         </span>
     </h1>
-
     <p tal:condition="python:here.description!=''"
         tal:content="structure here/description" />
-    <tal:block define="folder_listing_info python: here.folder_listing_info('start_date')">
+	<tal:block  tal:define="
+	listing_info python: here.folder_listing_info('start_date');
+	objects_list python:listing_info['objects'];
+	all_events python:[x for x in objects_list if x['self'].meta_type=='Naaya Event'];
+	dummy python:all_events.reverse();
+	upcoming_events python:[x for x in all_events if getattr(x['self'], 'start_date', here.utGetTodayDate()) >= here.utGetTodayDate()];
+	expired_events python:[x for x in all_events if getattr(x['self'], 'end_date', here.utGetTodayDate()) and getattr(x['self'], 'start_date', here.utGetTodayDate())  < here.utGetTodayDate()];
+	list_expired python:request.get('list_expired', '');
+	list_all_events python:request.get('list_all_events', '');
+	object_list_custom python:test(list_expired, expired_events, test(list_all_events, all_events, upcoming_events))">
     <metal:block use-macro="here/folder_listing/macros/content">
-        <metal:block fill-slot="menu_extension">
-            <span tal:replace="structure here/menusubmissions" />
-        </metal:block>
+		<metal:block fill-slot="menu_extension">
+			<div class="admin_this_folder">
+				<a tal:attributes="href string:${here/absolute_url}?list_all_events=True" tal:condition="not:list_all_events">
+					<span class="buttons">
+						<span i18n:translate="">Show all events</span>
+					</span>
+				</a>
+				<a tal:attributes="href string:${here/absolute_url}?list_expired=True" tal:condition="python: not list_expired or list_all_events">
+					<span class="buttons">
+						<span i18n:translate="">Show past events</span>
+					</span>
+				</a>
+				<a tal:attributes="href string:${here/absolute_url}" tal:condition="python:list_expired or list_all_events">
+					<span class="buttons">
+						<span i18n:translate="">Show upcoming events</span>
+					</span>
+				</a>
+			</div>
+		</metal:block>
         <metal:block fill-slot="table_objects_default">
 				<tal:block define="
 					del_permission python:object_info['del_permission'];
@@ -103,6 +123,6 @@
 				</tal:block>
 			</metal:block>
     </metal:block>
-    </tal:block>
+	</tal:block>
 </metal:block>
 </metal:block>
