@@ -3,7 +3,7 @@
 <tal:block define="site_url python:here.getSite().absolute_url();
 	listing_info folder_listing_info|here/folder_listing_info;
 	folders_list python:listing_info['folders'];
-	objects_list python:listing_info['objects'];
+	objects_list object_list_custom|python:listing_info['objects'];
 	btn_select python:listing_info['btn_select'];
 	btn_delete python:listing_info['btn_delete'];
 	btn_copy python:listing_info['btn_copy'];
@@ -12,6 +12,7 @@
 	can_operate python:listing_info['can_operate'];
 	ratings here/folder_listing_ratings">
 
+<metal:block define-slot="folder-listing">
 <script type="text/javascript">
 $(document).ready(function(){
 	// Multiple items operations
@@ -190,6 +191,10 @@ $(document).ready(function(){
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
+					<td tal:condition="ratings" class="type">
+						<tal:block condition="object/user_rating_view|nothing"
+							replace="structure object/user_rating_stars"/>
+					</td>
 				</tal:block>
 			</metal:block>
 			<metal:block define-slot="table_folders_extend">
@@ -250,7 +255,7 @@ $(document).ready(function(){
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
-					<td tal:condition="ratings" class="type" style="width: 15%;">
+					<td tal:condition="ratings" class="type" style="width: 12%;">
 						<tal:block define="user_rating object/user_rating_stars_numbers|nothing"
 							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
@@ -265,7 +270,6 @@ $(document).ready(function(){
 		</tr>
 	</table>
 </form>
-
+</metal:block>
 </tal:block>
-
 </metal:block>
