@@ -588,7 +588,7 @@ class CHMSite(NySite):
             err = ''
         if err:
             if REQUEST:
-                self.setSessionErrorsTrans(err)
+                self.setSessionErrorsTrans(str(err))
                 self.setCreateAccountSession(username, firstname, lastname, email, password)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if not err:
@@ -758,7 +758,7 @@ class CHMSite(NySite):
         else:
             success = True
         if REQUEST:
-            if err != '': self.setSessionErrorsTrans([err])
+            if err != '': self.setSessionErrorsTrans(str(err))
             if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
 
@@ -780,7 +780,7 @@ class CHMSite(NySite):
         else:
             success = True
         if REQUEST:
-            if err != '': self.setSessionErrorsTrans([err])
+            if err != '': self.setSessionErrorsTrans(str(err))
             if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
 
