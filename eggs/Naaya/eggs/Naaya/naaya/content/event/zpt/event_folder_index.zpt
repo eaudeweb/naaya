@@ -28,8 +28,7 @@
     </h1>
     <p tal:condition="python:here.description!=''"
         tal:content="structure here/description" />
-	<tal:block  tal:define="
-	listing_info python: here.folder_listing_info('start_date');
+	<tal:block  tal:define="listing_info python: here.folder_listing_info('start_date');
 	objects_list python:listing_info['objects'];
 	all_events python:[x for x in objects_list if x['self'].meta_type=='Naaya Event'];
 	dummy python:all_events.reverse();
@@ -41,22 +40,45 @@
     <metal:block use-macro="here/folder_listing/macros/content">
 		<metal:block fill-slot="menu_extension">
 			<div class="admin_this_folder">
-				<a tal:attributes="href string:${here/absolute_url}?list_all_events=True" tal:condition="not:list_all_events">
-					<span class="buttons">
-						<span i18n:translate="">Show all events</span>
-					</span>
-				</a>
-				<a tal:attributes="href string:${here/absolute_url}?list_expired=True" tal:condition="python: not list_expired or list_all_events">
-					<span class="buttons">
-						<span i18n:translate="">Show past events</span>
-					</span>
-				</a>
-				<a tal:attributes="href string:${here/absolute_url}" tal:condition="python:list_expired or list_all_events">
-					<span class="buttons">
-						<span i18n:translate="">Show upcoming events</span>
-					</span>
-				</a>
+				<a class="buttons"
+				   tal:attributes="href string:${here/absolute_url}?list_all_events=True"
+				   tal:condition="not:list_all_events" i18n:translate="">Show all events</a>&nbsp;
+				<a class="buttons"
+				   tal:attributes="href string:${here/absolute_url}?list_expired=True"
+				   tal:condition="python: not list_expired or list_all_events" i18n:translate="">Show past events</a>
+				<a class="buttons"
+				   tal:attributes="href string:${here/absolute_url}"
+				   tal:condition="python:list_expired or list_all_events" i18n:translate="">Show upcoming events</a>
 			</div>
+			<tal:block tal:condition="list_all_events">
+				<h2 i18n:translate="">All events:</h2>
+			</tal:block>
+			<tal:block tal:condition="not:list_all_events">
+			<tal:block tal:condition="list_expired">
+			 <h2 i18n:translate="">Past events:</h2>
+			 <span tal:define="channel python:here.getSyndicationTool().pastevents_rdf">
+				 <a tal:attributes="href channel/absolute_url" style="background-color: #FFFFFF;">
+					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+				 </a>
+				 <a tal:attributes="href string:${channel/absolute_url}/?feed=atom" style="background-color: #FFFFFF;">
+					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+				 </a>
+
+			 </span>
+			 </tal:block>
+			 <tal:block tal:condition="not:list_expired">
+			 <h2 i18n:translate="">Upcoming events:</h2>
+			 <span tal:define="channel python:here.getSyndicationTool().upcomingevents_rdf">
+				 <a tal:attributes="href channel/absolute_url" style="background-color: #FFFFFF;">
+					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+				 </a>
+				 <a tal:attributes="href string:${channel/absolute_url}/?feed=atom" style="background-color: #FFFFFF;">
+					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+				 </a>
+
+			 </span>
+			 </tal:block>
+			</tal:block>
 		</metal:block>
         <metal:block fill-slot="table_objects_default">
 				<tal:block define="
