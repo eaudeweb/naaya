@@ -67,17 +67,21 @@ class GroupwareSite(NySite):
         self.loadSkeleton(Globals.package_home(globals()))
 
         if rdf_calendar_available:
-            events_rdf = self.getSyndicationTool()['latestevents_rdf']
             manage_addRDFCalendar(self, id="portal_rdfcalendar", title="Events calendar")
             rdfcalendar_ob = self._getOb('portal_rdfcalendar')
-            #summary_add = self['portal_rdfcalendar'].manage_addProduct['RDFSummary']
-            #summary_add.manage_addRDFSummary('latest_events', 'events',
-            #                                 events_rdf.absolute_url(),
-            #                                 '', 'yes')
+
+            #adding range index to catalog
+            class Empty(object):
+                pass
+            extra = Empty() #Extra has to be an object.. see DateRangeIndex
+            extra.since_field = 'start_date'
+            extra.until_field = 'end_date'
+            self.getCatalogTool().addIndex('resource_interval', 'DateRangeIndex', extra=extra)
 
             #adding local_events Script (Python)
             manage_addPythonScript(rdfcalendar_ob, 'local_events')
             local_events_ob = rdfcalendar_ob._getOb('local_events')
+            local_events_ob._params = 'year=None, month=None, day=None'
             local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
 
         self.getPortletsTool().assign_portlet('library', 'right', 'portlet_latestuploads_rdf', True)
