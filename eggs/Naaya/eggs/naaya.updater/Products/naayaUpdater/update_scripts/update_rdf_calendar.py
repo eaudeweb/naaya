@@ -46,7 +46,7 @@ class UpdateRDFCalendar(UpdateScript):
                 #adding local_events Script (Python) from Naaya skel
                 manage_addPythonScript(rdfcalendar_ob, 'local_events')
                 local_events_ob = rdfcalendar_ob._getOb('local_events')
+                local_events_ob._params = 'year=None, month=None, day=None'
                 local_events_ob.write(script_content)
                 self.log.debug('Added local_events (Python Script) to RDFCalendar')
         return True
-
