@@ -161,10 +161,18 @@
         });
     }
 
+    function draw_points_on_map(points) {
+        $.each(points, function(i, p) {
+            the_map.addOverlay(new GMarker(new GLatLng(p.lat, p.lon)));
+        });
+        var first_point = new GLatLng(points[0].lat, points[0].lon);
+        the_map.setCenter(first_point, 10);
+    }
+
     window.naaya_map_engine = {
         map_with_points: function(map_div_id, points) {
-            $('div#'+map_div_id).text(
-                'map_with_points not implemented for google maps');
+            setup_map(map_div_id);
+            draw_points_on_map(points);
         },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
