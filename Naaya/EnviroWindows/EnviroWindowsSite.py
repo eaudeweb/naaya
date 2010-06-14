@@ -132,6 +132,7 @@ class EnviroWindowsSite(NySite):
         #adding local_events Script (Python)
         manage_addPythonScript(rdfcalendar_ob, 'local_events')
         local_events_ob = rdfcalendar_ob._getOb('local_events')
+        local_events_ob._params = 'year=None, month=None, day=None'
         local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
 
         #dynamic property for folder: tooltip
