@@ -22,26 +22,7 @@ from Globals import package_home
 from zipfile import ZipFile
 
 from zope2util import CaptureTraverse
-
-content_types = {
-    '.html' : 'text/html',
-    '.htm'  : 'text/html',
-    '.xml'  : 'text/xml',
-    '.css'  : 'text/css',
-    '.js'   : 'application/x-javascript',
-    '.gif'  : 'image/gif',
-    '.jpg'  : 'image/jpeg',
-    '.jpeg' : 'image/jpeg',
-    '.png'  : 'image/png',
-    '.swf'  : 'application/x-shockwave-flash',
-}
-
-def get_content_type(path):
-    if not path.rfind('.') > path.rfind('/'):
-        return None
-    
-    ext = path[path.rfind('.'):]
-    return content_types.get(ext, None)
+from utils import mimetype_from_filename
 
 class StaticServeFromZip(object):
     """ Serves static files from the filesystem """
@@ -64,7 +45,7 @@ class StaticServeFromZip(object):
         
         try:
             data = zf.read(self._path)
-            content_type = get_content_type(self._path)
+            content_type = mimetype_from_filename(self._path)
             if content_type:
                 REQUEST.RESPONSE.setHeader('content-type', content_type)
                 REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=31556926')
@@ -93,7 +74,7 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
 
         try:
             data = fd.read()
-            content_type = get_content_type(filepath)
+            content_type = mimetype_from_filename(filepath)
             if content_type:
                 REQUEST.RESPONSE.setHeader('content-type', content_type)
                 if cache:
