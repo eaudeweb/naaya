@@ -22,7 +22,7 @@ def get_char_data(data, path):
         if len(matched) == len(path):
             values.append(data)
 
-    p = xml.parsers.expat.ParserCreate('utf-8')
+    p = xml.parsers.expat.ParserCreate(encoding='utf-8')
     p.StartElementHandler = start_element
     p.EndElementHandler = end_element
     p.CharacterDataHandler = char_data
@@ -82,7 +82,7 @@ def get_multiple_char_data(data, main_path, **kwpaths):
                         else:
                             values[-1][k] = values[-1][k].append(data)
 
-    p = xml.parsers.expat.ParserCreate('utf-8')
+    p = xml.parsers.expat.ParserCreate(encoding='utf-8')
     p.StartElementHandler = start_element
     p.EndElementHandler = end_element
     p.CharacterDataHandler = char_data

@@ -83,8 +83,9 @@ def dump_points_of_contact_report(context, db_statement):
     organisations2 = {}
     for m in metadatas:
         id = str(m['id'])
-        title = get_title(m['data'])
-        contacts = get_points_of_contact(m['data'])
+        data = m['data'].encode('utf-8')
+        title = get_title(data)
+        contacts = get_points_of_contact(data)
         for c in contacts:
             org_name = c['organisation']
             if type(c['email']) == type([]):
@@ -133,8 +134,9 @@ def dump_distribution_info_report(context, db_statement):
     url_icon = context.registry['url_icon']   
     jstree = []
     for m in metadatas:
-        title = get_title(m['data'])
-        url_list = get_distribution_info(m['data'])
+        data = m['data'].encode('utf-8')
+        title = get_title(data)
+        url_list = get_distribution_info(data)
         url_tree = []
         for url in url_list:
             url_tree.append({'data': {'title': url, 'icon': url_icon, 'attributes': {'href': url}}})
