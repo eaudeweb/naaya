@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import path
 
 def relative_object_path(obj, ancestor):
     """
@@ -75,3 +76,34 @@ def cooldown(name, interval):
     else:
         _cooldown_map[name] = now
         return False
+
+mimetype_map = {
+    '.css'  : 'text/css',
+    '.html' : 'text/html',
+    '.htm'  : 'text/html',
+    '.txt'  : 'text/plain',
+    '.xml'  : 'text/xml',
+
+    '.gif'  : 'image/gif',
+    '.jpg'  : 'image/jpeg',
+    '.jpeg' : 'image/jpeg',
+    '.png'  : 'image/png',
+
+    '.doc'  : 'application/msword',
+    '.pdf'  : 'application/pdf',
+    '.xls'  : 'application/vnd.ms-excel',
+    '.ppt'  : 'application/vnd.ms-powerpoint',
+    '.swf'  : 'application/x-shockwave-flash',
+    '.js'   : 'application/x-javascript',
+    '.rar'  : 'application/x-rar-compressed',
+    '.zip'  : 'application/zip',
+
+    '.mp3'  : 'audio/mpeg',
+
+    '.mpeg' : 'video/mpeg',
+    '.mpg'  : 'video/mpeg',
+}
+
+def mimetype_from_filename(filename, default=None):
+    ext = path.splitext(filename)[1]
+    return mimetype_map.get(ext, default)
