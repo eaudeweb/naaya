@@ -13,14 +13,15 @@ class TestCase(NaayaFunctionalTestCase):
                    start_date='12/12/2010', end_date='12/12/2010', lang='fr')
 
     def test_rdf_cataloged_items(self):
-        items = self.portal.rdf_cataloged_items(config['meta_type'])
+        items = self.portal.rdf_cataloged_items(config['meta_type'],
+                                                year=2010, month=12)
         self.assertEqual(len(items), 2)
         #self.assertEqual(items[0]['title'], u'event1')
 
         #Overriding field
         items = self.portal.rdf_cataloged_items(config['meta_type'], {
             'startdate': 'releasedate',
-        })
+        }, year=2010, month=12)
         self.assertEqual(items[0]['startdate'], items[0]['updated'])
 
 def test_suite():

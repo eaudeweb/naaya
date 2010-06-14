@@ -1,8 +1,9 @@
 """ Helper functions for RDFCalendar and RDFSummary Products """
 
+import calendar
 from DateTime import DateTime
 
-def rdf_cataloged_items(self, meta_type, relations=None, lang=None):
+def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None, day=None, lang=None):
     """Returns a list of dicts that is handled in RDFCalendar.
     This function is usually called via a Script (Python) in RDFCalendar
     Has similar functionality with RDFSummary product, but for Catalogued
@@ -53,8 +54,24 @@ def rdf_cataloged_items(self, meta_type, relations=None, lang=None):
     }
 
     items = []
-    search_results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-        meta_type)
+    query_dict = None
+    year = int(year)
+    month = int(month)
+    if day:
+        day = int(day)
+        dates = [DateTime(year, month, day), ]
+    else:
+        dates = [DateTime(year, month, day)
+                    for day in range(1, calendar.monthrange(year, month)[1] + 1)]
+
+    search_results = []
+    for date in dates: # This is stupid...
+        results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
+            meta_type, resource_interval=date-1)
+        search_results.extend([result for result in results if result not in search_results])
+        results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
+            meta_type, resource_interval=date+1)
+        search_results.extend([result for result in results if result not in search_results])
 
     for ob in search_results:
         item = {}
