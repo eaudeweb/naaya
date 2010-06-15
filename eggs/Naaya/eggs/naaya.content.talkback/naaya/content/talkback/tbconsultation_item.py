@@ -376,9 +376,10 @@ class NyTalkBackConsultation(NyRoleManager,
         if not title:
             self.setSession('title', title)
             self.setSession('description', description)
-            self.setSessionErrors(['The Title field must have a value.'])
+            self.setSessionErrorsTrans('The Title field must have a value.')
             if REQUEST:
-                return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+                return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                                 (self.absolute_url(), lang))
             else:
                 raise ValueError('The title field must have a value.')
 
@@ -389,7 +390,8 @@ class NyTalkBackConsultation(NyRoleManager,
                              releasedate, lang)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declarePrivate('addDynProp')

@@ -188,7 +188,8 @@ class TalkBackConsultationComment(NyFSFile):
             raise Unauthorized
         self.message = cleanup_message(message)
         if REQUEST is not None:
-            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            self.setSessionInfoTrans('Saved changes (${date})',
+                                     date=DateTime())
             back_url = REQUEST.form.get('back_url',
                                         self.get_section().absolute_url())
             REQUEST.RESPONSE.redirect(back_url)
