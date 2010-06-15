@@ -148,8 +148,8 @@ class Paragraph(Folder):
             next_paragraph = paragraphs[paragraphs.index(self.id)+1]
             next_paragraph = self.get_section()._getOb(next_paragraph)
         except IndexError:
-            self.setSessionErrors([
-                'Bad paragraph index while merging paragraphs'])
+            self.setSessionErrorsTrans(
+                'Bad paragraph index while merging paragraphs')
             REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
             return
 
@@ -180,8 +180,8 @@ class Paragraph(Folder):
         paragraphs = section.paragraph_ids
         index = paragraphs.index(self.id)
         if index + 1 >= len(paragraphs):
-            self.setSessionErrors([
-                'Bad paragraph index while merging paragraphs'])
+            self.setSessionErrorsTrans(
+                'Bad paragraph index while merging paragraphs')
             REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
             return
 
@@ -228,7 +228,7 @@ class Paragraph(Folder):
             errors.append("Can't reply to non-existent comment")
 
         if errors:
-            self.setSessionErrors(errors)
+            self.setSessionErrorsTrans(errors)
             self.setSession('contributor_name', contributor_name)
             self.setSession('message', message)
             return REQUEST.RESPONSE.redirect(next_page)
@@ -248,7 +248,7 @@ class Paragraph(Folder):
         success_message = "Comment submitted successfully."
         if not approved:
             success_message += " An administrator will review it for approval."
-        self.setSessionInfo([success_message])
+        self.setSessionInfoTrans(success_message)
         REQUEST.RESPONSE.redirect(next_page)
 
     security.declareProtected(view, 'comment_form')
@@ -274,7 +274,8 @@ class Paragraph(Folder):
         """ Save body edits """
         self.body = body
         if REQUEST is not None:
-            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            self.setSessionInfoTrans('Saved changes (${date})',
+                                     date=DateTime())
             self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
 
     #forms
