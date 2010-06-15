@@ -242,7 +242,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 if not REQUEST:
                     raise
                 datamodel[widget.getWidgetId()] = None
-                errors.append(ex)
+                errors.append(str(ex))
 
         #check Captcha/reCaptcha
         if not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
