@@ -118,17 +118,17 @@ class session_manager:
         elif isinstance(messages, (list, tuple)): # This is the 3rd example
             translated_messages = []
             for message in messages:
-                if isinstance(message, (str, unicode)):
-                    trans_message = translate(message)
-                elif isinstance(message, (list, tuple)):
+                if isinstance(message, (list, tuple)):
                     message_str = message[0] #the message
                     try:
                         interpolation_params = message[1]
                     except IndexError:
                         interpolation_params = {}
                     trans_message = translate(message_str, interpolation_params)
+                elif isinstance(message, (str, unicode)):
+                    trans_message = translate(message)
                 else:
-                    raise ValueError("Invalid arguments")
+                    trans_message = translate(str(message))
 
                 if not trans_message: # There is no translation return unmodified
                     trans_message = message
