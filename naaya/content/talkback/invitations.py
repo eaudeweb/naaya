@@ -75,13 +75,13 @@ class InvitationsContainer(SimpleItem):
                         (formdata['name'], inviter_name)
                 else:
                     self._send_invitation(**kwargs)
-                    self.setSessionInfo(['Invitation for %s '
-                                         'has been sent.' %
-                                            formdata['name']])
+                    self.setSessionInfoTrans('Invitation for ${name} '
+                                             'has been sent.',
+                                             name=formdata['name'])
                     return REQUEST.RESPONSE.redirect(self.absolute_url() + '/create')
             except FormError, e:
-                self.setSessionErrors(['The form contains errors. Please '
-                                       'correct them and try again.'])
+                self.setSessionErrorsTrans('The form contains errors. Please '
+                                           'correct them and try again.')
                 formerrors = dict(e.errors)
 
         else:
@@ -192,9 +192,11 @@ class InvitationsContainer(SimpleItem):
         invite.enabled = value
 
         if REQUEST is not None:
-            action = value and 'restored' or 'revoked'
-            self.setSessionInfo(['Invitation for %s has been %s.' %
-                                 (invite.name, action)])
+            if value:
+                msg = 'Invitation for ${name} has been restored.'
+            else:
+                msg = 'Invitation for ${name} has been revoked.'
+            self.setSessionInfoTrans(msg, name=invite.name)
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     _welcome_html = NaayaPageTemplateFile('zpt/invitations_welcome', globals(),
