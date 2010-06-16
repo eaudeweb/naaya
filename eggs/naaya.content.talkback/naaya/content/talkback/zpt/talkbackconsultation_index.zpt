@@ -55,24 +55,42 @@
 
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
 
-<table class="datatable talkback-section_list" tal:condition="here/list_sections">
+<form tal:define="manage_perm here/checkPermissionManageTalkBackConsultation"
+      tal:attributes="action string:${here/absolute_url}/delete_sections"
+      tal:omit-tag="not: manage_perm">
+<table class="datatable talkback-section_list"
+       tal:condition="here/list_sections">
 <thead>
-	<tr>
-		<th i8n:translate="">Section</th>
-		<th i8n:translate="">Comments</th>
-		<th class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation" i8n:translate="" />
-	</tr>
+    <tr>
+        <th tal:condition="manage_perm"
+            class="talkback-section_list-edit_column" />
+        <th i8n:translate="">Section</th>
+        <th i8n:translate="">Comments</th>
+        <th tal:condition="manage_perm"
+            class="talkback-section_list-edit_column" />
+    </tr>
 </thead>
 <tbody>
-	<tr tal:repeat="section here/list_sections">
-		<td><a tal:attributes="href section/absolute_url" tal:content="section/title_or_id" /></td>
-		<td tal:content="section/comment_count" />
-		<td class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation">
-			<a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="" rel="nofollow">Edit</a>
-		</td>
-	</tr>
+    <tr tal:repeat="section here/list_sections">
+        <td tal:condition="manage_perm"
+            class="talkback-section_list-edit_column">
+            <input type="checkbox" name="section_id:list"
+                   tal:attributes="value section/getId" />
+        </td>
+        <td><a tal:attributes="href section/absolute_url"
+               tal:content="section/title_or_id"></a></td>
+        <td tal:content="section/comment_count" />
+        <td tal:condition="manage_perm"
+            class="talkback-section_list-edit_column">
+            <a tal:attributes="href string:${section/absolute_url}/edit_html"
+               rel="nofollow" i18n:translate="">Edit</a>
+        </td>
+    </tr>
 </tbody>
 </table>
+<input tal:condition="manage_perm"
+       type="submit" value="Delete" i18n:attributes="value" />
+</form>
 
 <p tal:condition="python:not here.list_sections() and here.checkPermissionManageTalkBackConsultation()" i18n:translate="">You have not added any sections to this consultation yet.
 You can add a section by clicking on the <em>Add Section</em> link on the top bar.</p>
