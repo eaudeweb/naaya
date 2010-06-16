@@ -436,7 +436,7 @@ class plugLDAPUserFolder(PlugBase):
         The user may have site-level roles because they are part of an
         LDAP group. If so, return them.
         """
-        return self.getSite().getAdditionalRoles(user)
+        return self.getSite().acl_satellite.getAdditionalRoles(user)
 
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
