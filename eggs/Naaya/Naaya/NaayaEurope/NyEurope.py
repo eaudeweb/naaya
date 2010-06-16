@@ -105,7 +105,7 @@ class NyEurope(SimpleItem, PropertyManager, country_manager):
         """
         Return the selection list for Europe countries.
         """
-        return self.getPortletsTool().getRefListById(ID_REFLIST).get_list()
+        return self.getPortletsTool().getRefTreeById(ID_REFLIST).get_list()
 
     security.declarePublic('getEuropeCountryTitle')
     def getEuropeCountryTitle(self, id):
