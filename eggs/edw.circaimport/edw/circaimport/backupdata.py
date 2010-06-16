@@ -16,7 +16,7 @@ def read_index(f, warn):
     n = 0
     for line in reader:
         n += 1
-        print n
+        #print n
         fix_exceptions(names, line, warn)
         yield dict( (names[i], line[i].decode('latin-1'))
                     for i in range(len(names)) )
@@ -60,6 +60,9 @@ def walk_backup(index_file, open_backup_file, actor):
         description = line['ABSTRACT']
         date = parse_date(line['UPLOADDATE'])
         userid = parse_userid(line['OWNER'])
+        keywords = line['KEYWORDS']
+        reference = line['REFERENCE']
+        status = line['STATUS']
         doc_zip_path = line['FILENAME']
         doc_split_path = doc_zip_path.split('/')
         doc_filename = doc_split_path[-1].encode('utf-8')
@@ -69,8 +72,30 @@ def walk_backup(index_file, open_backup_file, actor):
         doc_id = doc_dpl_name[:-len('.dpl')]
         if doc_id.startswith('_'):
             doc_id = 'file' + doc_id
+
+        full_path = parent_path+'/'+doc_id
+        if not doc_langver.startswith('EN_'):
+            actor.warn('non-english content: %r at %r' %
+                       (doc_langver, full_path))
+
         if line['RANKING'] != 'Public':
-            actor.warn('RANKING != PUBLIC: %r' % line)
+            actor.warn('ranking is %r for %r' %
+                       (str(line['RANKING']), full_path))
+
+        if description.lower() == 'n/a':
+            description = ''
+        if status.lower() == 'n/a':
+            status = ''
+        if reference.lower() == 'n/a':
+            reference = ''
+
+        if status not in ('Draft', ''):
+            description = ( ("<p>Status: %s</p>\n" % status)
+                            + description)
+
+        if reference:
+            description = ( ("<p>Reference: %s</p>\n" % reference)
+                            + description)
 
         assert parent_path in known_folders
 
@@ -81,11 +106,11 @@ def walk_backup(index_file, open_backup_file, actor):
             assert url.startswith('http://'), "bad url: %r" % url
             actor.url_entry(parent_path, doc_id,
                             doc_filename, url,
-                            title, description, date, userid)
+                            title, description, keywords, date, userid)
         else:
             actor.document_entry(parent_path, doc_id,
                                  doc_filename, doc_data_file,
-                                 title, description, date, userid)
+                                 title, description, keywords, date, userid)
 
     for line in read_index(index_file, actor.warn):
         filename = line['FILENAME']
