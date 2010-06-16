@@ -489,6 +489,16 @@ class NyTalkBackConsultation(NyRoleManager,
                   NyContainer.manage_options[3:8]
         return l_options
 
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'delete_sections')
+    def delete_sections(self, REQUEST):
+        """ remove the specified sections """
+        section_ids = REQUEST.form['section_id']
+        self.manage_delObjects(list(section_ids))
+        self.setSessionInfoTrans('Removed ${count} sections.',
+                                 count=str(len(section_ids)))
+        REQUEST.RESPONSE.redirect(self.absolute_url())
+
     def get_user_name(self):
         # first, check if we have an invite key
         invitation = self.invitations.get_current_invitation(self.REQUEST)
