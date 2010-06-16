@@ -8,12 +8,12 @@ class DemoActor(object):
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
-                       title, description, date, userid):
+                       title, description, keywords, date, userid):
         pass #print ('document %r (%r, %s)' % (title, userid, date))
         self.count['files'] += 1
 
     def url_entry(self, parent_path, ob_id, filename, url,
-                  title, description, date, userid):
+                  title, description, keywords, date, userid):
         pass #print ('url %r (%r, %s)' % (title, userid, date))
         self.count['urls'] += 1
 
@@ -70,7 +70,7 @@ class ZopeActor(object):
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
-                       title, description, date, userid):
+                       title, description, keywords, date, userid):
         from StringIO import StringIO
         assert isinstance(data_file, StringIO)
         data_file.filename = filename
@@ -85,6 +85,10 @@ class ZopeActor(object):
         if orig_path in self.rename:
             ob_path = self.rename.get(orig_path)
             the_file = self.context.restrictedTraverse(ob_path)
+            self.warn('new document version for %r' % orig_path)
+            if keywords or description:
+                self.warn('ignoring keywords=%r, description=%r' %
+                          (keywords, description))
 
         else:
             kwargs = {
@@ -93,6 +97,7 @@ class ZopeActor(object):
                 'releasedate': nydateformat(date),
                 'title': title,
                 'description': description,
+                'keywords': keywords,
                 '_send_notifications': False,
             }
             assert ob_id not in parent.objectIds()
@@ -105,7 +110,7 @@ class ZopeActor(object):
         self.count['files'] += 1
 
     def url_entry(self, parent_path, ob_id, filename, url,
-                  title, description, date, userid):
+                  title, description, keywords, date, userid):
         parent = get_parent(self.context, parent_path)
         orig_path = parent_path + '/' + ob_id
 
@@ -116,6 +121,7 @@ class ZopeActor(object):
             'releasedate': nydateformat(date),
             'title': title,
             'description': description,
+            'keywords': keywords,
             'locator': url,
             '_send_notifications': False,
         }
