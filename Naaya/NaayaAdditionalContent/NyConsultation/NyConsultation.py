@@ -176,7 +176,11 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security = ClassSecurityInfo()
 
-    ny_access = NyAccess([PERMISSION_REVIEW_CONSULTATION, PERMISSION_VIEW_CONSULTATION, PERMISSION_MANAGE_CONSULTATION])
+    edit_access = NyAccess('edit_access', {
+        PERMISSION_REVIEW_CONSULTATION: "Submit comments",
+        PERMISSION_VIEW_CONSULTATION: "View consultation",
+        PERMISSION_MANAGE_CONSULTATION: "Administer consultation",
+    })
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, contributor, releasedate, lang):
         """ """
@@ -729,11 +733,6 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'instructions_html')
     instructions_html = PageTemplateFile('zpt/instructions', globals())
-
-    security.declareProtected(change_permissions, 'edit_access_html')
-    def edit_access_html(self):
-        """ """
-        return NyConsultation.ny_access.index_html.__of__(self)()
 
 InitializeClass(NyConsultation)
 
