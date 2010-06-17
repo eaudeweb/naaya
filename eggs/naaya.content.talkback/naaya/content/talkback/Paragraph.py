@@ -31,6 +31,7 @@ from DateTime import DateTime
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from comment_item import addComment, TalkBackConsultationComment, cleanup_message
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
 
 
@@ -116,7 +117,7 @@ class Paragraph(Folder):
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'split_body')
     def split_body(self, body_0=None, body_1=None, REQUEST=None):
         """ """
-        if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
+        if REQUEST is not None and REQUEST.REQUEST_METHOD != 'POST':
             return self._split_content_html(self, REQUEST)
 
         if body_0 is None or body_1 is None:
@@ -128,7 +129,9 @@ class Paragraph(Folder):
         addParagraph(section, body=body_1, sort_index=my_index+1)
         self.body = body_0
 
-        if REQUEST:
+        if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(section.absolute_url() + '/edit_html')
             REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
                     (section.absolute_url(), self.get_anchor()) )
@@ -165,6 +168,7 @@ class Paragraph(Folder):
         self.get_section().remove_paragraph(next_paragraph.id)
 
         # refresh the section page
+        self.setSessionInfoTrans("Merged paragraphs")
         REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
                                    (self.get_section().absolute_url(),
                                     self.get_anchor()) )
@@ -190,6 +194,7 @@ class Paragraph(Folder):
         section._p_changed = 1
 
         # refresh the section page
+        self.setSessionInfoTrans("Swapped paragraphs")
         REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
                                    (self.get_section().absolute_url(),
                                     self.get_anchor()) )
