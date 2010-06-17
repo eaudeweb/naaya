@@ -34,7 +34,11 @@ from Products.Naaya.NySite import NySite
 class NyAccessTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         addNyFolder(self.portal.info, 'testfolder', contributor='admin', submission=1)
-        self.portal.info.testfolder._setOb('ny_access', NyAccess(['View', 'View History']))
+        # NOTE: this is *not* the way to use NyAccess. It should never
+        # be stored in the database. It should be set as an attribute
+        # to a *class*, like NyForum.
+        self.portal.info.testfolder._setOb('ny_access', NyAccess('ny_access',
+            {'View': 'View', 'View History': 'View History'}))
 
         transaction.commit()
 

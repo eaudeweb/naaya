@@ -1,23 +1,26 @@
-<tal:block define="
-	ny_access here/ny_access;
-	roles ny_access/getRoles;
-	permissions ny_access/permissions;
-	mapping ny_access/getPermissionMapping;
-	permissions_with_acquired_roles ny_access/getPermissionsWithAcquiredRoles;
-	">
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="here/standard_template_macro">
 
+<metal:block fill-slot="body" tal:define="
+	roles here/getRoles;
+	permissions here/permissions;
+	sorted_zope_perm python:permissions.keys();
+	dummy python:sorted_zope_perm.sort();
+	mapping here/getPermissionMapping;
+	permissions_with_acquired_roles here/getPermissionsWithAcquiredRoles;
+	">
 	<h1 i18n:translate="">Edit permissions for this item</h1>
 	<div class="floated-buttons">
 		<span class="buttons">
-			<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
+			<a tal:attributes="href here/aq_parent/absolute_url"
+			   i18n:translate="">Back to index</a>
 		</span>
 	</div>
 	<div class="clearer"></div>
-	<form method="post" action="ny_access/savePermissionMapping">
+	<form method="post" tal:attributes="action
+	                 string:${here/absolute_url}/savePermissionMapping">
 		<table class="datatable">
 			<tr>
-				<th i18n:translate="">Also acquire from parent</th>
+				<th i18n:translate="">Acquire from parent</th>
 				<th i18n:translate="">Permission</th>
 				<th tal:attributes="colspan python:len(roles)">Roles</th>
 			</tr>
@@ -28,25 +31,26 @@
 					<span tal:replace="role"/>
 				</th>
 			</tr>
-			<tr tal:repeat="permission permissions">
+			<tr tal:repeat="zope_perm sorted_zope_perm">
 				<td>
 					<input type="checkbox" tal:attributes="
-						name string:aq${repeat/permission/index};
-						checked python:permission in permissions_with_acquired_roles;
+						name string:aq${repeat/zope_perm/index};
+						checked python:zope_perm in permissions_with_acquired_roles;
 					"/>
 				</td>
-				<td tal:content="permission"></td>
+				<td tal:content="python:permissions[zope_perm]"
+				    tal:attributes="title zope_perm"></td>
 				<td tal:repeat="role roles">
 					<input type="checkbox" tal:attributes="
-						name string:r${repeat/role/index}p${repeat/permission/index};
-						checked python:role in mapping[permission];
+						name string:r${repeat/role/index}p${repeat/zope_perm/index};
+						checked python:role in mapping[zope_perm];
 					"/>
 				</td>
 			</tr>
 		</table>
 		<input type="submit" value="Save changes" i18n:attributes="value" />
 	</form>
+</metal:block>
 
 
-<span tal:replace="structure here/standard_html_footer" />
-</tal:block>
+</metal:block>
