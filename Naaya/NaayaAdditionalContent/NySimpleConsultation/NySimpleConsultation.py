@@ -177,7 +177,10 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security = ClassSecurityInfo()
 
-    ny_access = NyAccess([PERMISSION_REVIEW_SIMPLECONSULTATION, PERMISSION_MANAGE_SIMPLECONSULTATION])
+    edit_access = NyAccess('edit_access', {
+        PERMISSION_REVIEW_SIMPLECONSULTATION: "Submit comments",
+        PERMISSION_MANAGE_SIMPLECONSULTATION: "Administer consultation",
+    })
 
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, contributor, releasedate, lang):
         """ """
@@ -426,11 +429,6 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
-
-    security.declareProtected(change_permissions, 'edit_access_html')
-    def edit_access_html(self):
-        """ """
-        return NySimpleConsultation.ny_access.index_html.__of__(self)()
 
 
 InitializeClass(NySimpleConsultation)
