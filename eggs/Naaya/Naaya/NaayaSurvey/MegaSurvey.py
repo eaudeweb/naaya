@@ -89,7 +89,13 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
     security = ClassSecurityInfo()
 
-    ny_access = NyAccess([PERMISSION_ADD_ANSWER, PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT, PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS])
+    edit_access = NyAccess('edit_access', {
+        PERMISSION_ADD_ANSWER: "Submit answer",
+        PERMISSION_ADD_REPORT: "Create report",
+        PERMISSION_ADD_ATTACHMENT: "Attach file",
+        PERMISSION_VIEW_ANSWERS: "View answers",
+        PERMISSION_VIEW_REPORTS: "View reports",
+    })
 
     def __init__(self, id, **kwargs):
         """ """
@@ -149,11 +155,6 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
     edit_reports_html = NaayaPageTemplateFile('zpt/megasurvey_edit_reports',
                         globals(), 'NaayaSurvey.megasurvey_edit_reports')
-
-    security.declareProtected(change_permissions, 'edit_access_html')
-    def edit_access_html(self):
-        """ """
-        return MegaSurvey.ny_access.index_html.__of__(self)()
 
     #
     # change the security of the inherited methods
