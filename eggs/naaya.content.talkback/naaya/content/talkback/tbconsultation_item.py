@@ -261,7 +261,11 @@ class NyTalkBackConsultation(NyRoleManager,
 
     security = ClassSecurityInfo()
 
-    ny_access = NyAccess([PERMISSION_REVIEW_TALKBACKCONSULTATION, PERMISSION_MANAGE_TALKBACKCONSULTATION, PERMISSION_INVITE_TO_TALKBACKCONSULTATION])
+    edit_access = NyAccess('edit_access', {
+        PERMISSION_REVIEW_TALKBACKCONSULTATION: "Submit comments",
+        PERMISSION_MANAGE_TALKBACKCONSULTATION: "Administer consultation",
+        PERMISSION_INVITE_TO_TALKBACKCONSULTATION: "Send invitations",
+    })
 
     def __init__(self,
                  id,
@@ -607,12 +611,6 @@ class NyTalkBackConsultation(NyRoleManager,
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
                                        'tbconsultation_index')
-
-    security.declareProtected(change_permissions, 'edit_access_html')
-    def edit_access_html(self):
-        """ """
-        return NyTalkBackConsultation.ny_access.index_html.__of__(self)()
-
 
     # header and footer templates are proxied since invited reviewers
     # have "View" permission only in this folder; if the consultation
