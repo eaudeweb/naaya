@@ -86,7 +86,11 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     _Add_Edit_Delete_Naaya_Forum_Topic_Permission = ['Administrator', 'Manager']
     _Naaya___Skip_Captcha_Permission = ['Administrator', 'Manager']
 
-    ny_access = NyAccess([PERMISSION_MODIFY_FORUMTOPIC, PERMISSION_ADD_FORUMMESSAGE, PERMISSION_MODIFY_FORUMMESSAGE])
+    edit_access = NyAccess('edit_access', {
+        PERMISSION_MODIFY_FORUMTOPIC: "Modify topic",
+        PERMISSION_ADD_FORUMMESSAGE: "Add message",
+        PERMISSION_MODIFY_FORUMMESSAGE: "Modify message",
+    })
 
     #constructors
     security.declareProtected(view_management_screens, 'manage_addNyForumTopic_html')
@@ -341,10 +345,5 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
 
     security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
     forum_add_html = PageTemplateFile('zpt/forum_add', globals())
-
-    security.declareProtected(change_permissions, 'edit_access_html')
-    def edit_access_html(self):
-        """ """
-        return NyForum.ny_access.index_html.__of__(self)()
 
 InitializeClass(NyForum)
