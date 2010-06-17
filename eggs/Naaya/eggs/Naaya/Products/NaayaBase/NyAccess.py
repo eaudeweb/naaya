@@ -21,19 +21,24 @@
 import re
 
 # Zope imports
-from Acquisition import Implicit
+from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import change_permissions
-import transaction
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+import transaction
 
 # Product imports
 
-class NyAccess(Implicit):
+class NyAccess(SimpleItem):
     security = ClassSecurityInfo()
 
-    def __init__(self, permissions):
+    title = "Edit permissions"
+
+    def __init__(self, id, permissions):
+        assert isinstance(permissions, dict) # old code used a list here
+        self.id = id
         self.permissions = permissions
 
     security.declareProtected(change_permissions, 'getRoles')
@@ -47,19 +52,19 @@ class NyAccess(Implicit):
     def getPermissionsWithAcquiredRoles(self):
         """ Return the permissions which acquire roles from their parents """
         ret = []
-        for p_name in self.permissions:
-            permission = Permission(p_name, (), self.aq_parent)
+        for zope_perm in self.permissions:
+            permission = Permission(zope_perm, (), self.aq_parent)
             if isinstance(permission.getRoles(), list):
-                ret.append(p_name)
+                ret.append(zope_perm)
         return ret
 
     security.declareProtected(change_permissions, 'getPermissionMapping')
     def getPermissionMapping(self):
         """ Return the permission mapping for the parent """
         ret = {}
-        for p_name in self.permissions:
-            permission = Permission(p_name, (), self.aq_parent)
-            ret[p_name] = permission.getRoles()
+        for zope_perm in self.permissions:
+            permission = Permission(zope_perm, (), self.aq_parent)
+            ret[zope_perm] = permission.getRoles()
         return ret
 
     security.declareProtected(change_permissions, 'setPermissionMapping')
@@ -68,28 +73,28 @@ class NyAccess(Implicit):
         Change the permission mapping for the parent.
         This leaves the other permissions (not in mapping.keys()) unchanged
         """
-        for p_name in mapping:
-            permission = Permission(p_name, (), self.aq_parent)
-            permission.setRoles(mapping[p_name])
+        for zope_perm in mapping:
+            permission = Permission(zope_perm, (), self.aq_parent)
+            permission.setRoles(mapping[zope_perm])
 
         transaction.commit()
 
     security.declareProtected(change_permissions, 'savePermissionMapping')
-    def savePermissionMapping(self, REQUEST=None):
+    def savePermissionMapping(self, REQUEST):
         """
         This is called from index_html
         calls setPermissionMapping after converting the arguments
         """
-        if REQUEST is None:
-            return
 
         roles = self.getRoles()
 
         permissionsWithAcquiredRoles = []
 
+        sorted_zope_perm = sorted(self.permissions.keys())
+
         mapping = {}
-        for p in self.permissions:
-            mapping[p] = []
+        for zope_perm in self.permissions:
+            mapping[zope_perm] = []
 
         for key in REQUEST.form.keys():
             m = re.match('r(\d+)p(\d+)', key)
@@ -97,23 +102,27 @@ class NyAccess(Implicit):
                 groups = m.groups()
                 r_i, p_i = int(groups[0]), int(groups[1])
 
-                mapping[self.permissions[p_i]].append(roles[r_i])
+                mapping[sorted_zope_perm[p_i]].append(roles[r_i])
             else:
                 m = re.match('aq(\d+)', key)
                 groups = m.groups()
                 p_i = int(groups[0])
 
-                permissionsWithAcquiredRoles.append(self.permissions[p_i])
+                zope_perm = sorted_zope_perm[p_i]
+                permissionsWithAcquiredRoles.append(zope_perm)
 
-        for p in mapping:
-            if p in permissionsWithAcquiredRoles:
-                mapping[p] = list(mapping[p])
+        for zope_perm in mapping:
+            if zope_perm in permissionsWithAcquiredRoles:
+                mapping[zope_perm] = list(mapping[zope_perm])
             else:
-                mapping[p] = tuple(mapping[p])
+                mapping[zope_perm] = tuple(mapping[zope_perm])
 
         self.setPermissionMapping(mapping)
+
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                 date=self.utGetTodayDate())
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
 
     security.declareProtected(change_permissions, 'index_html')
     index_html = PageTemplateFile('zpt/ny_access', globals())
-
