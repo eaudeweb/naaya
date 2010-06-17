@@ -133,7 +133,7 @@ def make_id(parent, temp_parent=None,
             id='', title='',
             prefix='', removelist=None):
     """
-    Generates a valid unique id based on a suggested id, title or prefix 
+    Generates a valid unique id based on a suggested id, title or prefix
     The generated id is checked for uniqueness in the parent folder
     and if passed, in a second, 'temporary' folder
     """
@@ -244,7 +244,7 @@ class list_utils:
         """Gets a comma separated string and returns a list"""
         res = []
         if s!='':
-            res = s.split(separator)
+            res = [x for x in s.split(separator) if x.strip() != '']
         return res
 
     def joinToList(self, l):
