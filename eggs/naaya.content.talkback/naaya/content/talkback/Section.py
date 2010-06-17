@@ -31,6 +31,7 @@ from Acquisition import Implicit
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from parser import parse
 from Paragraph import addParagraph
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
 
 
@@ -153,6 +154,8 @@ class Section(Folder):
         """ """
         self.title = title
         if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')

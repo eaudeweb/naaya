@@ -20,10 +20,11 @@
 
 <p>Users can comment on each <em>paragraph</em>. To join two consecutive paragraphs, select <em>Merge with next paragraph</em> from the first one. To split a paragraph in two, or insert a new one, select <em>Split paragraph</em>.</p>
 
-<div class="talkback-section">
+<div class="talkback-section talkback-section-edit">
     <tal:block repeat="paragraph here/get_paragraphs">
         <a tal:attributes="name paragraph/get_anchor"></a>
-            <div tal:content="structure paragraph/body" />
+            <div class="talkback-paragraph"
+                 tal:content="structure paragraph/body" />
             <a i18n:translate="" class="button_sect_edit"
                 tal:attributes="href string:${paragraph/absolute_url}/split_body"
                 >Split paragraph</a>
