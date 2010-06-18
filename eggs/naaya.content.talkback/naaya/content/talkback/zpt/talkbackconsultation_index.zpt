@@ -56,25 +56,28 @@
 <div tal:content="structure python:here.getLocalProperty('description', lang)" />
 
 <form tal:define="manage_perm here/checkPermissionManageTalkBackConsultation"
-      tal:attributes="action string:${here/absolute_url}/delete_sections"
-      tal:omit-tag="not: manage_perm">
+      tal:attributes="action here/absolute_url"
+      tal:omit-tag="not: manage_perm"
+      name="section_list" method="POST">
 <table class="datatable talkback-section_list"
        tal:condition="here/list_sections">
 <thead>
     <tr>
         <th tal:condition="manage_perm"
-            class="talkback-section_list-edit_column" />
+            class="talkback-section_list-edit_column"></th>
         <th i8n:translate="">Section</th>
         <th i8n:translate="">Comments</th>
         <th tal:condition="manage_perm"
-            class="talkback-section_list-edit_column" />
+            class="talkback-section_list-edit_column"></th>
     </tr>
 </thead>
 <tbody>
     <tr tal:repeat="section here/list_sections">
         <td tal:condition="manage_perm"
             class="talkback-section_list-edit_column">
-            <input type="checkbox" name="section_id:list"
+            <input type="checkbox" name="del_section_id:list"
+                   tal:attributes="value section/getId" />
+            <input type="hidden" name="sort_section_id:list"
                    tal:attributes="value section/getId" />
         </td>
         <td><a tal:attributes="href section/absolute_url"
@@ -89,7 +92,11 @@
 </tbody>
 </table>
 <input tal:condition="manage_perm"
-       type="submit" value="Delete" i18n:attributes="value" />
+       type="submit" name="delete_sections:method"
+       value="Delete" i18n:attributes="value" />
+<input tal:condition="manage_perm"
+       type="submit" name="save_sort_order:method"
+       value="Save sort order" i18n:attributes="value" />
 </form>
 
 <p tal:condition="python:not here.list_sections() and here.checkPermissionManageTalkBackConsultation()" i18n:translate="">You have not added any sections to this consultation yet.
@@ -101,5 +108,13 @@ You can add a section by clicking on the <em>Add Section</em> link on the top ba
 
 
 </tal:block>
+
+<script>
+$(function(){
+    var tbody = $('form[name=section_list] table.talkback-section_list tbody');
+    tbody.css('cursor', 'move');
+    tbody.sortable({axis: 'y'});
+});
+</script>
 
 <span tal:replace="structure here/standard_html_footer" />
