@@ -670,20 +670,23 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Given a userid, try to get its full name. If userid is None then we
         assume it's an anonymous user, and return `"Anonymous User"`. If we
         can't find the user, return an empty string.
+
+        This function returns `unicode` objects, unlike the rest of
+        Naaya's user code, that prefers utf8-encoded strings.
         """
         if userid is None:
-            return "Anonymous User"
+            return u"Anonymous User"
 
         if userid in self.user_names():
-            return self.getUserFullName(self.getUser(userid))
+            return self.getUserFullName(self.getUser(userid)).decode('utf-8')
 
         for source in self.getSources():
             source_acl = source.getUserFolder()
             name = source.getUserFullName(userid, source_acl)
             if name is not None:
-                return name
+                return name.decode('utf-8')
 
-        return ''
+        return u''
 
     security.declarePrivate('get_current_userid')
     def get_current_userid(self):
