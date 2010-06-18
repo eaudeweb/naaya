@@ -21,6 +21,7 @@
 #Python imports
 import os
 import sys
+import operator
 
 #Zope imports
 from Globals import InitializeClass
@@ -267,6 +268,8 @@ class NyTalkBackConsultation(NyRoleManager,
         PERMISSION_INVITE_TO_TALKBACKCONSULTATION: "Send invitations",
     })
 
+    section_sort_order = tuple()
+
     def __init__(self,
                  id,
                  title,
@@ -454,9 +457,26 @@ class NyTalkBackConsultation(NyRoleManager,
     security.declareProtected(view, 'list_sections')
     def list_sections(self):
         """ """
-        sections = self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
-        sections.sort(lambda x,y: cmp(x.title, y.title))
-        return sections
+        metatypes = [METATYPE_TALKBACKCONSULTATION_SECTION]
+        sections = dict(self.objectItems(metatypes))
+
+        output = []
+        for section_id in self.section_sort_order:
+            if section_id in sections:
+                output.append(sections.pop(section_id))
+
+        output.extend(sorted(sections.values(),
+                             key=operator.attrgetter('title')))
+
+        return output
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'save_sort_order')
+    def save_sort_order(self, sort_section_id, REQUEST=None):
+        """ save the sort order of sections """
+        self.section_sort_order = tuple(sort_section_id)
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
@@ -495,13 +515,13 @@ class NyTalkBackConsultation(NyRoleManager,
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'delete_sections')
-    def delete_sections(self, REQUEST):
+    def delete_sections(self, del_section_id, REQUEST=None):
         """ remove the specified sections """
-        section_ids = REQUEST.form['section_id']
-        self.manage_delObjects(list(section_ids))
+        self.manage_delObjects(list(del_section_id))
         self.setSessionInfoTrans('Removed ${count} sections.',
-                                 count=str(len(section_ids)))
-        REQUEST.RESPONSE.redirect(self.absolute_url())
+                                 count=str(len(del_section_id)))
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def get_user_name(self):
         # first, check if we have an invite key
