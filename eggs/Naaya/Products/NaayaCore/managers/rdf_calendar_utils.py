@@ -3,7 +3,8 @@
 import calendar
 from DateTime import DateTime
 
-def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None, day=None, lang=None):
+def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
+                        day=None, lang=None):
     """Returns a list of dicts that is handled in RDFCalendar.
     This function is usually called via a Script (Python) in RDFCalendar
     Has similar functionality with RDFSummary product, but for Catalogued
@@ -14,6 +15,7 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None, 
     relations -- The relation between the fields of the object and the fields
                  of the dictionary that is to be returned
     lang -- Default language
+    year, month, day -- filtering used to search
 
     """
 
@@ -59,19 +61,24 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None, 
     month = int(month)
     if day:
         day = int(day)
-        dates = [DateTime(year, month, day), ]
+        dates = [DateTime(year, month, day, 0, 0, 0),
+                 DateTime(year, month, day, 23, 59, 59), ]
     else:
-        dates = [DateTime(year, month, day)
-                    for day in range(1, calendar.monthrange(year, month)[1] + 1)]
+        dates = [DateTime(year, month, 1, 0, 0, 0),
+                 DateTime(year, month,
+                          calendar.monthrange(year, month)[1], 23, 59, 59 ), ]
+
 
     search_results = []
-    for date in dates: # This is stupid...
+    for date in dates:
         results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-            meta_type, resource_interval=date-1)
-        search_results.extend([result for result in results if result not in search_results])
+            meta_type, start_date={'query': dates, 'range': 'min:max'})
+        search_results.extend([result for result in results if result
+                               not in search_results])
         results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-            meta_type, resource_interval=date+1)
-        search_results.extend([result for result in results if result not in search_results])
+            meta_type, end_date={'query': dates.reverse(), 'range': 'min:max'})
+        search_results.extend([result for result in results if result
+                               not in search_results])
 
     for ob in search_results:
         item = {}
