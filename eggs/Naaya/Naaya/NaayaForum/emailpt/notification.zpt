@@ -1,0 +1,19 @@
+<subject i18n:translate="">
+    <tal:block content="options/title" i18n:name="message-title" /> (posted on <tal:block content="options/site_title" i18n:name="website-title" />)
+</subject>
+
+<body_text>
+<tal:block i18n:translate="">
+On <tal:block content="options/postdate" i18n:name="message-postdate" />, <tal:block content="options/author" i18n:name="message-author" /> replied to your message:
+</tal:block>
+
+<tal:block content="structure options/description" />
+
+<tal:block i18n:translate="">
+You can see message here: <tal:block content="options/url" i18n:name="message-url" />
+</tal:block>
+
+-------------------------------------------------------------------------------------
+<tal:block i18n:translate="">This is an automatically generated email - please do not reply to it.</tal:block>
+
+</body_text>

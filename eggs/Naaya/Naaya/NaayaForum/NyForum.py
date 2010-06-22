@@ -37,9 +37,14 @@ from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
+from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
 STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
+
+email_templates = {
+    'notification-on-reply': EmailPageTemplateFile('emailpt/notification.zpt', globals()),
+}
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
@@ -49,7 +54,6 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
     file_max_size = abs(int(file_max_size))
     ob = NyForum(id, title, description, categories, file_max_size)
     self._setObject(id, ob)
-    self._getOb(id).loadDefaultData()
     if not REQUEST:
         return id
     # Redirect
@@ -122,17 +126,17 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         if not hasattr(self, 'file_max_size'):
             self.file_max_size = 0
 
-    security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
-        """
-        Load data:
-            - specific email template
-        """
-        #load specific email template
-        emailtool_ob = self.getEmailTool()
-        if emailtool_ob._getOb(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID, None) is None:
-            content = self.futRead(join(NAAYAFORUM_PRODUCT_PATH, 'data', '%s.txt' % EMAILTEMPLATE_NOTIFICATIONONREPLY_ID), 'r')
-            emailtool_ob.manage_addEmailTemplate(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID, EMAILTEMPLATE_NOTIFICATIONONREPLY_TITLE, content)
+    security.declarePrivate('_get_template')
+    def _get_template(self, name):
+        template = self._getOb('emailpt_%s' % name, None)
+        if template is not None:
+            return template.render_email
+
+        template = email_templates.get(name, None)
+        if template is not None:
+            return template.render_email
+
+        raise ValueError('template for %r not found' % name)
 
     #api
     def get_forum_object(self): return self
@@ -211,21 +215,34 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         for B{notify} flag. If on, then send email notification.
         """
         #process the list of emails
-        authenticationtool_ob = self.getAuthenticationTool()
-        d = {}
-        for x in msg.get_message_parents(msg):
-            if x.notify:
-                ob = authenticationtool_ob.getUser(x.author)
-                if ob: d[ob.email] = 0
+        portal = self.getSite()
+        authenticationtool_ob = portal.getAuthenticationTool()
+        emails = set()
+        for m in msg.get_message_parents(msg):
+            if m.notify:
+                user = authenticationtool_ob.getUser(m.author)
+                if user: emails.add(user.email)
+        
+        #build message body
+        msg_body = {
+            'url': '%s#%s' % (msg.get_topic_path(), msg.id),
+            'site_title': self.site_title,
+            'title': msg.title_or_id(),
+            'description': self.html2text(msg.description, trim_length=None),
+            'author': msg.author,
+            'postdate': self.utShowFullDateTime(msg.postdate),
+                   }
+        
+        template = self._get_template('notification-on-reply')
+        mail_data = template(**msg_body)
+
         #send emails
-        emailtool_ob = self.getEmailTool()
-        email_template = emailtool_ob._getOb(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID)
-        l_from = self.getSite().mail_address_from
-        l_subject = email_template.title
-        l_content = email_template.body
-        l_content = l_content.replace('@@URL@@', '%s#%s' % (msg.get_topic_path(), msg.id))
-        for e in d.keys():
-            emailtool_ob.sendEmail(l_content, e, l_from, l_subject)
+        email_tool = portal.getEmailTool()
+        for email in emails:
+            email_tool.sendEmail(p_content = mail_data['body_text'],
+                                 p_to = email,
+                                 p_from = email_tool._get_from_address(),
+                                 p_subject = mail_data['subject'])
 
     security.declareProtected(view, 'checkTopicsPermissions')
     def checkTopicsPermissions(self):
