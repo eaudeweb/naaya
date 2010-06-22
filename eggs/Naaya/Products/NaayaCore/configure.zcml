@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
+  <include package=".CatalogTool" />
   <include package=".GeoMapTool" />
   <include package=".NotificationTool" />
   <include package=".PortletsTool" />
