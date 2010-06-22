@@ -68,17 +68,14 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
                  DateTime(year, month,
                           calendar.monthrange(year, month)[1], 23, 59, 59 ), ]
 
+    search_results = set()
+    results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
+        meta_type, start_date={'query': dates, 'range': 'max'})
+    search_results.update(results)
+    results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
+        meta_type, end_date={'query': dates,  'range': 'min'})
+    search_results.update(results)
 
-    search_results = []
-    for date in dates:
-        results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-            meta_type, start_date={'query': dates, 'range': 'min:max'})
-        search_results.extend([result for result in results if result
-                               not in search_results])
-        results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-            meta_type, end_date={'query': dates, 'range': 'min:max'})
-        search_results.extend([result for result in results if result
-                               not in search_results])
     for ob in search_results:
         item = {}
         for key in keys:
