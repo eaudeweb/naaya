@@ -25,6 +25,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, INFO
+from zope import interface
 
 # Products import
 from Products.ExtFile.ExtFile import manage_addExtFile
@@ -34,6 +35,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from permissions import PERMISSION_VIEW_ANSWERS
+from interfaces import INySurveyAnswer
 
 gUtil = utils()
 
@@ -69,6 +71,9 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
 
 class SurveyAnswer(Folder):
     """ Class used to store survey answers"""
+
+    interface.implements(INySurveyAnswer)
+
     meta_type = "Naaya Survey Answer"
     meta_label = "Survey Answer"
     icon = 'misc_/NaayaSurvey/NySurveyAnswer.gif'
