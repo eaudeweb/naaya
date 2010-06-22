@@ -26,7 +26,6 @@ from OFS.Image import cookId
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.ExtFile.ExtFile import ExtFile
 
 class publication_item(Implicit, NyContentData, NyFSFile):
     """ """
@@ -45,12 +44,9 @@ class publication_item(Implicit, NyContentData, NyFSFile):
     def __setstate__(self, state):
         """ Updates """
         NyFSFile.inheritedAttribute("__setstate__") (self, state)
-        if not hasattr(self, '__name__'):
-            self.__name__ = self.id
-        if not hasattr(self, '_ext_file'):
-            self._ext_file = ExtFile(self.id, self.title)
-        if not hasattr(self, 'content_type'):
-            self.content_type = self.getContentType()
+        if 'id' in self.__dict__:
+            self.__name__ = self.__dict__['id']
+            del self.__dict__['id']
 
     def del_file_title(self):
         """
