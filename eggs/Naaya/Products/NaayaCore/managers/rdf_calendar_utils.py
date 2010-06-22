@@ -76,10 +76,9 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
         search_results.extend([result for result in results if result
                                not in search_results])
         results = self.getSite().getCatalogedObjectsCheckView(meta_type=\
-            meta_type, end_date={'query': dates.reverse(), 'range': 'min:max'})
+            meta_type, end_date={'query': dates, 'range': 'min:max'})
         search_results.extend([result for result in results if result
                                not in search_results])
-
     for ob in search_results:
         item = {}
         for key in keys:
