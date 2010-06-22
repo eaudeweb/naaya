@@ -18,6 +18,9 @@ class BingMapEngine(SimpleItem):
 
     security = ClassSecurityInfo()
 
+    # default values
+    base_layer = 'Road'
+
     def __init__(self, id):
         super(BingMapEngine, self).__init__()
         self._setId(id)
@@ -25,15 +28,25 @@ class BingMapEngine(SimpleItem):
     _html_setup = PageTemplateFile('setup', globals())
     security.declarePrivate('html_setup')
     def html_setup(self, request, global_config):
-        return self._html_setup(js_config=json.dumps(global_config))
+        js_config = dict(global_config, **{
+            'base_layer': self.base_layer,
+        })
+        options = {
+            'js_config': json.dumps(js_config),
+        }
+        return self._html_setup(**options)
 
+    _config_html = PageTemplateFile('configure', globals())
     security.declarePrivate('config_html')
     def config_html(self):
-        return ""
+        return self._config_html(all_layers=[
+                {'name': 'Road', 'label': "Road"},
+                {'name': 'Hybrid', 'label': "Hybrid"},
+                {'name': 'Aerial', 'label': "Aerial"}])
 
     security.declarePrivate('save_config')
     def save_config(self, form_data):
-        pass
+        self.base_layer = form_data['bing_base_layer']
 
     security.declareProtected(view, 'naaya_bing_js')
     naaya_bing_js = ImageFile('naaya_bing.js', globals())

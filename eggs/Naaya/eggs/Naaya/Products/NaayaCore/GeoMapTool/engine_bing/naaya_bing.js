@@ -3,6 +3,7 @@
     var the_map;
     var the_points_layer = null;
     var icon_url = {}
+    var map_base_layer = VEMapStyle[config.base_layer];
 
     $.each(config.icons, function() {
         icon_url["mk_" + this.id] = this.url;
@@ -78,14 +79,14 @@
     }
 
     function load_map_show_point(point) {
-        the_map.LoadMap(point, 14);
+        the_map.LoadMap(point, 14, map_base_layer);
         after_load_map();
         var marker = new VEShape(VEShapeType.Pushpin, point);
         the_points_layer.AddShape(marker);
     }
 
     function load_map_find_address(address) {
-        the_map.LoadMap();
+        the_map.LoadMap(null, null, map_base_layer);
         after_load_map();
         the_map.Find(null, address);
     }
