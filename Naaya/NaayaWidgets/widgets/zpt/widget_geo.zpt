@@ -13,9 +13,9 @@
 
     <tal:block define="geomap_tool here/getGeoMapTool;
                        setup_map python:geomap_tool.setup_map_engine_html;
-                       lat datamodel/lat;
-                       lon datamodel/lon;
-                       address datamodel/address;
+                       lat datamodel/lat|nothing;
+                       lon datamodel/lon|nothing;
+                       address datamodel/address|nothing;
                        coord_json python:here.rstk.json_dumps({
                                     'lat': lat, 'lon': lon});">
     <p i18n:translate="" tal:condition="lat">
@@ -28,6 +28,7 @@
         Address: <tal:block i18n:name="" content="address" /><br />
     </p>
 
+    <tal:block condition="datamodel">
     <div id="map"
          tal:attributes="style string:overflow: hidden;;
                                       width: ${geomap_tool/objmap_width_px}px;;
@@ -42,6 +43,7 @@
                             naaya_js_map_coords);
     });
     </script>
+    </tal:block>
     </tal:block>
 
     <span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
