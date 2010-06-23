@@ -71,6 +71,9 @@ class CSVImportTool(Implicit, Item):
                     columns.append(widget.title + ' - ' + subname)
             else:
                 columns.append(widget.title)
+        dynprop_tool = self.getSite().getDynamicPropertiesTool()
+        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
+            columns.append(dyn_prop.name)
         csv.writer(output).writerow(columns)
         if as_attachment and REQUEST is not None:
             filename = schema.title_or_id() + ' bulk upload.csv'
