@@ -1,0 +1,12 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:five="http://namespaces.zope.org/five">
+
+  <five:registerPackage
+      package="naaya.ew_aoa_library"
+      initialize="naaya.ew_aoa_library.initialize"
+      />
+
+  <subscriber handler=".viewer.survey_answer_created" />
+  <subscriber handler=".viewer.survey_answer_removed" />
+
+</configure>

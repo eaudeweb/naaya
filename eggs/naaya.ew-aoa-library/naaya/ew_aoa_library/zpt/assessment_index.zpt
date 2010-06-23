@@ -1,0 +1,18 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<!-- <metal:block metal:fill-slot="title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block> -->
+
+<metal:block fill-slot="body">
+<link rel="stylesheet" type="text/css" media="all"
+      tal:define="stool here/portal_survey;"
+      tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<h1 tal:content="here/title_or_id"></h1>
+
+<tal:block content="structure here/render_answer" />
+
+</metal:block>
+
+</metal:block>
