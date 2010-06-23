@@ -9,10 +9,41 @@
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode geoWidget">
-    <strong tal:content="here/title" class="widget-title" />
-    <br />
-    <span tal:condition="python: datamodel is not None"
-          tal:content="datamodel" />
+    <strong tal:content="here/title" class="widget-title"></strong>
+
+    <tal:block define="geomap_tool here/getGeoMapTool;
+                       setup_map python:geomap_tool.setup_map_engine_html;
+                       lat datamodel/lat;
+                       lon datamodel/lon;
+                       address datamodel/address;
+                       coord_json python:here.rstk.json_dumps({
+                                    'lat': lat, 'lon': lon});">
+    <p i18n:translate="" tal:condition="lat">
+        Latitude: <tal:block i18n:name="" content="lat" />
+    </p>
+    <p i18n:translate="" tal:condition="lon">
+        Longitude: <tal:block i18n:name="" content="lon" /><br />
+    </p>
+    <p i18n:translate="" tal:condition="address">
+        Address: <tal:block i18n:name="" content="address" /><br />
+    </p>
+
+    <div id="map"
+         tal:attributes="style string:overflow: hidden;;
+                                      width: ${geomap_tool/objmap_width_px}px;;
+                                      height: ${geomap_tool/objmap_height_px}px"
+         ></div>
+    <tal:block content="structure python:setup_map(request)" />
+    <script tal:content="structure string:var naaya_js_map_coords =
+                            ${coord_json};"></script>
+    <script>
+    $(function() {
+        var map_engine = naaya_map_engine.object_index_map('map',
+                            naaya_js_map_coords);
+    });
+    </script>
+    </tal:block>
+
     <span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
         No response
     </span>
