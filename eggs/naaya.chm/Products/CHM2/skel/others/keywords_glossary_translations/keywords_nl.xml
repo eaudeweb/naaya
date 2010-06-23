@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+<file original="glossary_keywords" product-name="CHM Glossary" product-version="1.1.x" datatype="plaintext" source-language="English" target-language="Dutch" date="2005-11-02T11:33:18Z" xml:space="default">
+<export>
+
+
+<trans-unit id="11" approved="1" >
+<source>Abundance and distribution of species</source>
+<target>Aantal en verspreiding van soorten</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="12" approved="1" >
+<source>Status of threathened species</source>
+<target>Status van bedreigde soorten</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="13" approved="1" >
+<source>Extent of selected biomes, ecosystems and habitats</source>
+<target>Areaal van specifieke biomen, ecosystemen en habitats</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="14" approved="1" >
+<source>Genetic diversity</source>
+<target>Genetische diversiteit</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="15" approved="1" >
+<source>Coverage of protected areas</source>
+<target>Omvang van beschermde gebieden</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="16" approved="1" >
+<source>Island biodiversity</source>
+<target>Biodiversiteit van Eilanden</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="17" approved="1" >
+<source>Mountain biodiversity</source>
+<target>Biodiversiteit van Bergen</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="18" approved="1" >
+<source>Identification, Monitoring, Indicators and Assessments</source>
+<target>Identificatie, Monitoring, Indicatoren en Evaluaties</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status en trends van componenten van biologische diversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="21" approved="1" >
+<source>Forest under sustainable management</source>
+<target>Bossen onder duurzaam beheer</target>
+<context-group name="Sustainable_use_of_biological_diversity">Duurzaam gebruik van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="22" approved="1" >
+<source>Agricultural practices potentially supporting biodiversity</source>
+<target>Landbouw praktijken welke potentieel gunstig zijn voor biodiversiteit</target>
+<context-group name="Sustainable_use_of_biological_diversity">Duurzaam gebruik van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="23" approved="1" >
+<source>Sustainable fishery and aquaculture management</source>
+<target>Duurzame visserij en aquacultuur management</target>
+<context-group name="Sustainable_use_of_biological_diversity">Duurzaam gebruik van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="24" approved="1" >
+<source>Products derived from sustainable sources</source>
+<target>Producten vanuit duurzame bronnen</target>
+<context-group name="Sustainable_use_of_biological_diversity">Duurzaam gebruik van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="25" approved="1" >
+<source>Ecological Footprint</source>
+<target>Ecologische Voetafdruk</target>
+<context-group name="Sustainable_use_of_biological_diversity">Duurzaam gebruik van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="31" approved="1" >
+<source>Nitrogen deposition</source>
+<target>Stikstof depositie</target>
+<context-group name="Threats_to_biodiversity">Bedreigingen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="32" approved="1" >
+<source>Invasive alien species</source>
+<target>Invasieve exotische soorten</target>
+<context-group name="Threats_to_biodiversity">Bedreigingen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="33" approved="1" >
+<source>Climate change</source>
+<target>Klimaatverandering</target>
+<context-group name="Threats_to_biodiversity">Bedreigingen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="34" approved="1" >
+<source>Desertification</source>
+<target>Woestijnvorming</target>
+<context-group name="Threats_to_biodiversity">Bedreigingen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="41" approved="1" >
+<source>Marine Trophic Index</source>
+<target>Mariene Trofische index</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="42" approved="1" >
+<source>Fragmentation of natural and semi-natural areas</source>
+<target>Fragmentatie van natuurlijke en semi-natuurlijke gebieden</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="43" approved="1" >
+<source>Fragmentation of river systems</source>
+<target>Fragmentatie van riviersystemen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="44" approved="1" >
+<source>Nutrients in transitional, coastal and marine waters</source>
+<target>Nutriënten in kust- en zeewateren</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="45" approved="1" >
+<source>Water quality of freshwater ecosystems</source>
+<target>Waterkwaliteit van zoetwater ecosystemen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="46" approved="1" >
+<source>Health and well-being of humans</source>
+<target>Gezondheid en welzijn van mensen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="47" approved="1" >
+<source>Biodiversity for food and medicine</source>
+<target>Biodiversiteit voor voedsel en medicijnen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="48" approved="1" >
+<source>Biodiversity and  tourism</source>
+<target>Biodiversiteit en toerisme</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integriteit van ecosystemen en ecosysteemdiensten</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="51" approved="1" >
+<source>Traditional knowledge</source>
+<target>Traditionele kennis</target>
+<context-group name="Knowledge_of_biodiversity">Kennis van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="52" approved="1" >
+<source>Innovations</source>
+<target>Innovaties</target>
+<context-group name="Knowledge_of_biodiversity">Kennis van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="53" approved="1" >
+<source>Best practices</source>
+<target>Praktijkvoorbeelden</target>
+<context-group name="Knowledge_of_biodiversity">Kennis van biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="61" approved="1" >
+<source>Financing biodiversity management</source>
+<target>Financiering van beheer van biodiversiteit</target>
+<context-group name="Resources_for_biodiversity">Hulpbronnen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+ 
+<trans-unit id="62" approved="1" >
+<source>Technology transfer and cooperation</source>
+<target>Technologieoverdracht en samenwerking</target>
+<context-group name="Resources_for_biodiversity">Hulpbronnen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="63" approved="1" >
+<source>Liability and Redress</source>
+<target>Aansprakelijkheid en compensatie</target>
+<context-group name="Resources_for_biodiversity">Hulpbronnen voor biodiversiteit</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy7" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Access_to_genetic_resources_and_benefit-sharing">Toegang tot genetische bronnen en het delen van voordelen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy8" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Public_opinion_about_biodiversity_and_public_awareness">Publieke opinie over biodiversiteit en besef van urgentie</context-group>
+<note></note>
+</trans-unit>
+
+</export>
+</file>
+</xliff>
+
