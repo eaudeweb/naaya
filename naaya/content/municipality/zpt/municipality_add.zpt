@@ -1,0 +1,86 @@
+<tal:block
+	metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_add').macros['page']">
+	<p metal:fill-slot="description" i18n:translate="">
+		Fill the properties in the form below and click <strong>Submit</strong>.
+		Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	</p>
+	<tal:block metal:fill-slot="schema_properties"
+				define="form_items form_helper/form_items;
+						form_items python:list(form_items)">
+		<tal:block repeat="form_item python:form_items[0:15]">	
+			<tal:block replace="structure form_item/html"/>
+		</tal:block>
+
+		<div class="field">
+			<label class="widget-title" for="ambassador_species" i18n:translate="">
+				Ambassador species<span class="mandatory_field">*</span>
+			</label>
+			<input type="text" id="ambassador_species" value="" size="50"
+				   name="ambassador_species:utf8:ustring" />
+		</div>
+		<div class="field">
+			<label class="widget-title" for="ambassador_species_description">
+				Short description of ambassador species:
+			</label>
+			<tal:block define="editor here/getEditorTool;
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+				replace="structure python:editor.render('ambassador_species_description', curr_lang, image_support=True)" />
+			<textarea id="ambassador_species_description" rows="10" cols="50"
+					name="ambassador_species_description:utf8:ustring"></textarea>
+		</div>
+		<div class="field">
+			<label class="widget-title" for="ambassador_species_picture" i18n:translate="">
+				Upload a picture of the ambassador species:</label>
+			<input id="ambassador_species_picture" type="file" name="ambassador_species_picture" />
+		</div>
+
+		<tal:block define="form_item python:form_items[15]">
+			<tal:block replace="structure form_item/html"/>
+			<div class="textarea_message" i18n:translate="">Describe in a narrative way.
+			For example: The species already is included in the existing communication
+			of the municipality; The habitat of the species is abundant in the municipality;
+			The governors of the municipality find the species important.</div>
+		</tal:block>
+		<tal:block define="form_item python:form_items[16]">
+			<tal:block replace="structure form_item/html"/>
+			<div class="textarea_message" i18n:translate="">Describe in a narrative way.
+			For example: By having an election among the inhabitants;
+			The governors have chosen; First an inventory of important species was made.</div>
+		</tal:block>
+		<tal:block define="form_item python:form_items[17]">
+			<tal:block replace="structure form_item/html"/>
+			<div class="textarea_message" i18n:translate="">Describe in a narrative way.</div>
+		</tal:block>
+		<tal:block define="form_item python:form_items[18]">
+			<tal:block replace="structure form_item/html"/>
+			<div class="textarea_message" i18n:translate="">Describe in a narrative way.</div>
+		</tal:block>
+		<tal:block define="form_item python:form_items[19]">
+			<tal:block replace="structure form_item/html"/>
+			<div class="textarea_message" i18n:translate="">For example: in communication products;
+			in policy plans and measures; in education; on the municipal website.</div>
+		</tal:block>
+	</tal:block>
+	<tal:block metal:fill-slot="custom_properties">
+		<tal:block condition="not:here/checkPermissionSkipCaptcha">
+			<span tal:condition="here/recaptcha_is_present"
+			tal:replace="structure python:here.show_recaptcha(here)" />
+			<tal:block condition="not:here/recaptcha_is_present">
+				<div class="field">
+					<img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+				</div>
+				<div class="field">
+					<label for="contact_word"><span i18n:translate="">Word verification</span></label>
+					<input type="text" name="contact_word" size="50" id="contact_word"
+						value="" />(required)<br />
+					<em i18n:translate="">please type the word you see in the above picture.</em>
+				</div>
+			</tal:block>
+		</tal:block>
+<!-->		<div class="field-inline">
+			<label class="widget-title" for="species_picture">Picture</label>
+			<br />
+			<input id="expert_picture" type="file" name="expert_picture" />
+		</div>-->
+	</tal:block>
+</tal:block>
