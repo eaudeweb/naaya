@@ -703,7 +703,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         json_element_list = json.dumps(elements_list)
         return json_element_list
 
-    def xliff_import(self, file, REQUEST=None):
+    def xliff_import(self, file, add_themes_from_folders='', REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
             designed by a group of software providers.
             It is specified by www.oasis-open.org
@@ -740,11 +740,16 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         self.manage_addGlossaryFolder(folder_id, translation['context'], [], '', '', 1)
                         folder = self._getOb(folder_id)
                         folder.set_translations_list(target_language, translation['context'])
+                        if add_themes_from_folders:
+                            self.addTheme(name=translation['context'], code=l_context_name)
+                            self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
                     except Exception, error:
                         #print error
                         pass
                 else:
                     folder.set_translations_list(target_language, translation['context'])
+                    if add_themes_from_folders:
+                	self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
                 if target_language in self.get_english_names():
                     obj.entry = translation['source']
                     obj.translations[target_language] = translation['target']
@@ -756,7 +761,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         elem_ob.cu_recatalog_object(elem_ob)
                     else:
                         try:
-                            folder.manage_addGlossaryElement(elem_id, obj.entry, '', [], '', self.utConvertToInt(translation['approved'].encode('utf-8')))
+                    	    elem_subjects = []
+                            if add_themes_from_folders:
+                        	elem_subjects = [l_context_name]
+                    	    folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
                         except Exception, error:
                             #print error
                             pass
