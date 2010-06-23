@@ -2482,7 +2482,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addnetworkportal')
     def admin_addnetworkportal(self, title='', url='', REQUEST=None):
         """ """
-        err, res = '', '', None
+        err, res = '', None
         success = False
         xconn = XMLRPCConnector(self.http_proxy)
         if url.endswith('/'): url = url[:-1]
@@ -2500,7 +2500,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatenetworkportal')
     def admin_updatenetworkportal(self, id='', REQUEST=None):
         """ """
-        err, res = '', '', None
+        err, res = '', None
         success = False
         networkportal = self.get_networkportal_item(id)
         if networkportal:
