@@ -27,7 +27,7 @@ try: import wsgiref.validate
 except: wsgiref = None
 
 from App.version_txt import getZopeVersion
-from ZPublisher.Response import Response
+from ZServer.HTTPResponse import ZServerHTTPResponse
 from ZPublisher.Test import publish_module
 
 import NaayaTestCase
@@ -70,7 +70,7 @@ class TwillMixin(object):
             print '...'
 
         outstream = StringIO()
-        response = Response(stdout=outstream, stderr=sys.stderr)
+        response = ZServerHTTPResponse(stdout=outstream, stderr=sys.stderr)
         extra = {
             'SESSION': self.app.REQUEST.SESSION,
             'AUTHENTICATED_USER': self.app.REQUEST.AUTHENTICATED_USER,
@@ -80,8 +80,10 @@ class TwillMixin(object):
 
         output = outstream.getvalue()
         headers, body = output.split(newline*2, 1)
-        headers = [header.split(': ', 1) for header in headers.split(newline)]
-        status = headers.pop(0)[1]
+        header_lines = headers.split(newline)
+        assert header_lines[0].startswith('HTTP/1.0 ')
+        status = header_lines[0][len('HTTP/1.0 '):]
+        headers = [header.split(': ', 1) for header in header_lines[1:]]
 
         if self.wsgi_debug:
             print 'wsgi_request done, status="%s"' % status
