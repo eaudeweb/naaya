@@ -1,0 +1,21 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<!-- <metal:block metal:fill-slot="title">
+    <title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block> -->
+
+<metal:block fill-slot="body">
+
+<h1 tal:content="here/title_or_id"></h1>
+
+<ul>
+    <li tal:repeat="assessment here/iter_assessments">
+        <a tal:define="url assessment/absolute_url"
+           tal:attributes="href string:${url}"
+           tal:content="assessment/title_or_id"></a>
+    </li>
+</ul>
+
+</metal:block>
+
+</metal:block>
