@@ -32,6 +32,7 @@ from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
+from decimal import Decimal
 
 from naaya.core.utils import path_in_site
 from naaya.core.utils import force_to_unicode
@@ -56,6 +57,12 @@ def redirect_to(tmpl):
         }
         REQUEST.RESPONSE.redirect(url)
     return redirect
+
+def json_default(value):
+    if isinstance(value, Decimal):
+        return str(value)
+    else:
+        raise ValueError('Can not encode value %r' % value)
 
 class RestrictedToolkit(SimpleItem):
     """
@@ -114,7 +121,7 @@ class RestrictedToolkit(SimpleItem):
         """
         Convert a Python object to JSON
         """
-        return json.dumps(obj)
+        return json.dumps(obj, default=json_default)
 
     def json_loads(self, json_data):
         """
