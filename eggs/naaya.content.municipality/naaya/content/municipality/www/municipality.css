@@ -106,3 +106,8 @@ padding-bottom: 1em;
 	font-weight: bold;
 	margin-top: 5em;
 }
+
+.form-errors
+{
+	color: red;
+}
