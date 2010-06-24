@@ -25,6 +25,7 @@ from decimal import Decimal
 from datetime import datetime
 
 #Zope imports
+from Persistence import Persistent
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
@@ -44,7 +45,7 @@ from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.NyCheckControl import NyCheckControl
+from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -66,7 +67,7 @@ PREFIX_OBJECT = 'municipality'
 ADDITIONAL_STYLE = open(ImageFile('www/municipality.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
-    'province': dict(sortorder=100, widget_type='Select', label='Province', list_id='provinces'),
+    'province': dict(sortorder=100, widget_type='Select', label='Province', required=True, list_id='provinces'),
     'municipality': dict(sortorder=110, widget_type='String', label='Municipality', required=True, localized=True),
     'contact_person': dict(sortorder=120, widget_type='String', label='Contact person'),
     'email':    dict(sortorder=130, widget_type='String', label='Email address'),
@@ -168,7 +169,8 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     _send_notifications = schema_raw_data.pop('_send_notifications', True)
 
-    _title = '%s, %s' % (schema_raw_data.get('municipality',''), schema_raw_data.get('province',''))
+    _title = '%s, %s' % (schema_raw_data.get('municipality',''),
+                        self.get_node_title('provinces', schema_raw_data.get('province','')))
     schema_raw_data['title'] = _title
     _contact_word = schema_raw_data.get('contact_word', '')
 
@@ -178,7 +180,13 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ob = _create_NyMunicipality_object(self, id, _title, contributor)
 
+    ambassador_species = schema_raw_data.pop('ambassador_species', '')
+    ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
+    ambassador_species_picture = schema_raw_data.pop('ambassador_species_picture', None)
+
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+    ob.process_species(ambassador_species, ambassador_species_description, ambassador_species_picture, form_errors)
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -192,6 +200,8 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            ob.setSession('ambassador_species', ambassador_species)
+            ob.setSession('ambassador_species_description', ambassador_species_description)
             REQUEST.RESPONSE.redirect('%s/municipality_add_html' % self.absolute_url())
             return
 
@@ -204,7 +214,7 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.submitThis()
 
     #Process uploaded files
-    #ob.save_file(schema_raw_data, 'picture', 'municipality_picture')
+    #ob.save_file(schema_raw_data, 'picture', 'species_picture')
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -223,10 +233,17 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
-class municipality_item(Implicit, NyContentData):
-    """ """
+class AmbassadorSpecies(Persistent):
+    def __init__(self, title, description='', picture=None):
+        self.title = title
+        self.description = description
+        picture_test = picture is not None and picture.filename
+        if picture_test:
+            self.picture = make_blobfile(picture, removed=False, timestamp=datetime.utcnow())
+        else:
+            self.picture = None
 
-class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
+class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyValidation, NyContentType):
     """ """
     implements(INyMunicipality)
     meta_type = METATYPE_OBJECT
@@ -237,7 +254,6 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
     def manage_options(self):
         """ """
         l_options = ()
-        l_options += municipality_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         #l_options += NyVersioning.manage_options
         return l_options
@@ -247,9 +263,8 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
     def __init__(self, id, title, contributor):
         """ """
         self.id = id
-        municipality_item.__init__(self)
+        NyContentData.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
-        NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
@@ -284,22 +299,6 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
-    #site actions
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
-    def commitVersion(self, REQUEST=None):
-        """ """
-        raise NotImplementedError
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
-    def startVersion(self, REQUEST=None):
-        """ """
-        raise NotImplementedError
-
-    def isVersionable(self):
-        """ Municipality objects are not versionable
-        """
-        return False
-
     def obfuscated_email(self):
         ret = self.email
         if self.email:
@@ -329,11 +328,17 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         schema_raw_data['title'] = obj.title
+        ambassador_species = schema_raw_data.pop('ambassador_species', '')
+        ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
+        ambassador_species_picture = schema_raw_data.pop('ambassador_species_picture', None)
 
         #Process uploaded file
-        #self.save_file(schema_raw_data, 'picture', 'municipality_picture')
+        #self.save_file(schema_raw_data, 'picture', 'species_picture')
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+        self.process_species(ambassador_species, ambassador_species_description,\
+                        ambassador_species_picture, form_errors)
 
         if form_errors:
             if REQUEST is not None:
@@ -373,6 +378,17 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
         topics = getattr(ptool, 'municipalities_topics', None)
         return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
 
+    def process_species(self, ambassador_species, ambassador_species_description,
+                        ambassador_species_picture, form_errors):
+        picture_test = ambassador_species_picture is not None and ambassador_species_picture.filename
+        if (ambassador_species_description or picture_test) and not ambassador_species:
+            form_errors['ambassador_species'] = ['The species name is mandatory!']
+        elif ambassador_species:
+            new_species = AmbassadorSpecies(ambassador_species,
+                                            ambassador_species_description,
+                                            ambassador_species_picture)
+            self.species.append(new_species)
+
     def save_file(self, schema_raw_data, object_attribute, form_field):
         _uploaded_file = schema_raw_data.pop(form_field, None)
         if _uploaded_file is not None and _uploaded_file.filename:
@@ -384,8 +400,8 @@ class NyMunicipality(municipality_item, NyAttributes, NyItem, NyCheckControl, Ny
 
     def render_picture(self, RESPONSE):
         """ Render municipality picture """
-        if hasattr(self, 'picture') and self.picture:
-            return self.picture.send_data(RESPONSE, as_attachment=False)
+        #if hasattr(self, 'picture') and self.picture:
+        return self.species[0].picture.send_data(RESPONSE, as_attachment=False)
 
     def delete_picture(self, REQUEST=None):
         """ Delete attached municipality picture """

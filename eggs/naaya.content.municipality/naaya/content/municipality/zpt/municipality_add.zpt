@@ -13,10 +13,15 @@
 
 		<div class="field">
 			<label class="widget-title" for="ambassador_species" i18n:translate="">
-				Ambassador species<span class="mandatory_field">*</span>
+				Ambassador species
 			</label>
-			<input type="text" id="ambassador_species" value="" size="50"
-				   name="ambassador_species:utf8:ustring" />
+			<span tal:condition="request/SESSION/ambassador_species-errors|nothing"
+				class="form-errors" i18n:translate="">
+				The species name is mandatory!
+			</span>
+			<input type="text" id="ambassador_species" size="50"
+					tal:attributes="value request/SESSION/ambassador_species|nothing"
+					name="ambassador_species:utf8:ustring" />
 		</div>
 		<div class="field">
 			<label class="widget-title" for="ambassador_species_description">
@@ -26,7 +31,8 @@
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
 				replace="structure python:editor.render('ambassador_species_description', curr_lang, image_support=True)" />
 			<textarea id="ambassador_species_description" rows="10" cols="50"
-					name="ambassador_species_description:utf8:ustring"></textarea>
+					name="ambassador_species_description:utf8:ustring"
+					tal:content="request/SESSION/ambassador_species_description|nothing"></textarea>
 		</div>
 		<div class="field">
 			<label class="widget-title" for="ambassador_species_picture" i18n:translate="">
