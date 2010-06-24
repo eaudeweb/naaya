@@ -28,7 +28,8 @@ except: wsgiref = None
 
 from App.version_txt import getZopeVersion
 from ZServer.HTTPResponse import ZServerHTTPResponse
-from ZPublisher.Test import publish_module
+from ZPublisher.Request import Request
+from ZPublisher.Publish import publish
 
 import NaayaTestCase
 
@@ -36,6 +37,54 @@ if getZopeVersion() < (2, 10, 9):
     newline = '\n'
 else:
     newline = '\r\n'
+
+
+def test_publish(environ, response, extra):
+    """
+    copied from publish_module in ZPublisher/Test.py, simplified, and
+    modified to accept streaming responses
+    """
+    must_die=0
+    after_list=[None]
+    try:
+        try:
+            stdout=response.stdout
+            request=Request(environ['wsgi.input'], environ, response)
+            from zope.publisher.browser import setDefaultSkin
+            setDefaultSkin(request)
+
+            for k, v in extra.items(): request[k]=v
+            response = publish(request, 'Zope2', after_list, debug=0)
+        except SystemExit, v:
+            must_die=sys.exc_info()
+            response.exception(must_die)
+        except ImportError, v:
+            if isinstance(v, TupleType) and len(v)==3: must_die=v
+            else: must_die=sys.exc_info()
+            response.exception(1, v)
+        except:
+            response.exception()
+
+        if response:
+            stdout.write(str(response))
+            producer = response._bodyproducer
+            if producer is not None:
+                while True:
+                    data = producer.more()
+                    if not data:
+                        break
+                    stdout.write(data)
+
+        # The module defined a post-access function, call it
+        if after_list[0] is not None: after_list[0]()
+
+    finally:
+        request.close()
+
+    if must_die:
+        try: raise must_die[0], must_die[1], must_die[2]
+        finally: must_die=None
+
 
 class TwillMixin(object):
     wsgi_debug = False
@@ -76,7 +125,7 @@ class TwillMixin(object):
             'AUTHENTICATED_USER': self.app.REQUEST.AUTHENTICATED_USER,
         }
 
-        publish_module('Zope2', environ=environ, response=response, extra=extra, stdin=environ['wsgi.input'])
+        test_publish(environ, response, extra)
 
         output = outstream.getvalue()
         headers, body = output.split(newline*2, 1)
