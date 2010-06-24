@@ -9,14 +9,13 @@ def extract_checkboxmatrix(answer, widget_name):
     widget = answer.getSurveyTemplate()[widget_name]
     datamodel = answer.get(widget_name)
     if datamodel is None:
-        return []
+        return
 
-    out = []
     for index, row_answers in enumerate(datamodel):
-        for answer in row_answers:
-            out.append( (widget.rows[index], widget.choices[answer]) )
-
-    return out
+        if row_answers:
+            row_answer_names = tuple(widget.choices[answer]
+                                     for answer in row_answers)
+            yield (widget.rows[index], row_answer_names)
 
 def extract_multipleselect(answer, widget_name):
     widget = answer.getSurveyTemplate()[widget_name]
@@ -27,18 +26,30 @@ def extract_multipleselect(answer, widget_name):
         return [widget.choices[n] for n in datamodel]
 
 geo_type_map = {
-    ('Global',   'Green Economy'):  'symbol634',
-    ('Global',   'Water'):          'symbol634',
-    ('Regional', 'Green Economy'):  'symbol997',
-    ('Regional', 'Water'):          'symbol997',
-    ('National', 'Green Economy'):  'symbol767',
-    ('National', 'Water'):          'symbol767',
+    'Global': {
+        ('Green Economy',):         'symbol825',
+        ('Water',):                 'symbol814',
+        ('Green Economy', 'Water'): 'symbol851',
+    },
+    'Regional': {
+        ('Green Economy',):         'symbol862',
+        ('Water',):                 'symbol817',
+        ('Green Economy', 'Water'): 'symbol987',
+    },
+    'National': {
+        ('Green Economy',):         'symbol268',
+        ('Water',):                 'symbol256',
+        ('Green Economy', 'Water'): 'symbol166',
+    },
 }
 
 def extract_geo_type(answer):
-    for key in extract_checkboxmatrix(answer, 'w_theme'):
-        if key in geo_type_map:
-            return geo_type_map[key]
+    for row_name, answer_names in extract_checkboxmatrix(answer, 'w_theme'):
+        try:
+            return geo_type_map[row_name][answer_names]
+        except KeyError:
+            continue
+
     else:
         return None
 
