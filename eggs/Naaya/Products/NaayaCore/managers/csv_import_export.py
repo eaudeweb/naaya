@@ -351,6 +351,9 @@ class CSVExportTool(Implicit, Item):
 
         return json.dumps(data, default=json_encode, **kwargs)
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
+    index_html = PageTemplateFile('../zpt/bulk_export', globals())
+
 InitializeClass(CSVExportTool)
 
 def json_encode(ob):
@@ -365,7 +368,7 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
         RESPONSE.setHeader('Content-Length', length)
     RESPONSE.setHeader('Pragma', 'public')
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
-    RESPONSE.setHeader('Content-Disposition', "inline; filename*=UTF-8''%s"
+    RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
         % urllib.quote(filename))
 
 def relative_path_to_site(ob):
