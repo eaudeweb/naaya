@@ -14,8 +14,9 @@ Zope, and create a `Naaya EnviroWindows AoA Library Viewer` object.
 `Survey path` is a path (relative to the site's root) to the
 `Naaya Survey` that contains assessment data.
 
-You also need to create a Python script in ZODB, in the ``portal_map``
-object, named ``custom_filter`` with the following content::
+You also need to create a Python script in ZODB in the ``portal_map``
+object, named ``custom_filter``, that receives two arguments (``filters``
+and ``kwargs``), with the following content::
     for filter in filters:
         filter['meta_type'].append('Naaya EW_AOA Shadow Object')
     return filters
