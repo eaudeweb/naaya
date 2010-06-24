@@ -47,6 +47,11 @@ TRANSLATE_TESTABLES = ['contact_item', 'document_item', 'event_item',
                   'exfile_item', 'file_item', 'geopoint_item',
                   'news_item', 'pointer_item', 'story_item', 'url_item']
 
+INSTALL_UNINSTALL_TESTABLES = ['Naaya News', 'Naaya Story', 'Naaya Blob File',
+    'Naaya URL', 'Naaya Extended File', 'Naaya Document', 'Naaya Pointer',
+    'Naaya Media File', 'Naaya Event', 'Naaya TalkBack Consultation',
+    'Naaya File', 'Naaya GeoPoint']
+
 
 def _list_content_types():
     for content_type in get_pluggable_content().values():
@@ -107,6 +112,8 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
         """ """
         acl = self.portal.getAuthenticationTool()
         for content_type in content_types:
+            if content_type['meta_type'] not in INSTALL_UNINSTALL_TESTABLES:
+                continue
             if content_type['meta_type'] in self.portal.get_pluggable_installed_meta_types():
                 # permission should be added by the skel
                 self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
