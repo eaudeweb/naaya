@@ -15,7 +15,10 @@
 	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
 		title here/get_meta_label;
 		alt here/get_meta_label" />
-		<span tal:replace="string:${here/personal_title} ${here/title}" />
+		<tal:block define="province here/province;
+							global province python:here.get_node_title('provinces', province)">
+			<span tal:replace="string:${here/municipality}, ${province}" />
+		</tal:block>
 		<span class="available_langs"
 			tal:condition="python:here.check_item_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>
@@ -28,47 +31,33 @@
 </h1>
 
 <div class="boxes-right">
-	<div class="box" tal:condition="here/picture">
+	<div class="box">
 		<div class="body">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture"
 			alt="Expert picture" width="230" i18n:attributes="alt"/>
 		</div>
 	</div>
-
-	<div class="link-box">
-		<a i18n:translate="" tal:condition="here/cv"
-			tal:attributes="href string:${here/absolute_url}/serve_file">
-			Download CV
-		</a>
-		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">
-			Download vCard
-		</a>
-		<tal:block condition="python:here.has_coordinates() and here.picture"
-			tal:define="map python:request.get('map', '')">
-			<a i18n:translate="" tal:condition="not: map"
-			tal:attributes="href string:${here/absolute_url}?map=True">View map</a>
-			<a i18n:translate="" tal:condition="map"
-			tal:attributes="href string:${here/absolute_url}">Hide map</a>
-		</tal:block>
-	</div>
-
-	<!-- Details box -->
-	<div class="box"
-				tal:condition="python:(here.has_coordinates() and not here.picture) or request.get('map', '')">
-		<!-- Map widget -->
-		<div class="minimap">
-			<tal:block content="structure here/minimap" />
-		</div>
-	</div>
 </div>
 
-<div class="main-content" tal:define="
-				geo_location here/geo_location;
-				address geo_location/address|string:;
-				main_topics python:here.getExpertTopics(here.main_topics);
-				sub_topics python:here.getExpertTopics(here.sub_topics);
-				">
-	<div class="description" tal:condition="here/description"
+<div class="main-content">
+<table class="datatable" style="width: 50%">
+	<tr>
+		<td class="label" i18n:translate="">Province</td>
+		<td tal:content="province" />
+	</tr>
+	<tr>
+		<td class="label" i18n:translate="">Municipality</td>
+		<td tal:content="here/municipality" />
+	</tr>
+	<tr tal:condition="here/contact_person">
+		<td class="label" i18n:translate="">Contact person</td>
+		<td tal:content="here/contact_person" />
+	</tr>
+	<tr tal:condition="here/email">
+		<td class="label" i18n:translate="">Email address</td>
+		<td tal:content="here/email" />
+	</tr>
+	<!--><div class="description" tal:condition="here/description"
 		tal:content="structure here/description"/>
 	<div tal:condition="here/obfuscated_email">
 		<span tal:replace="here/obfuscated_email" />
@@ -131,7 +120,8 @@
 		&#171; <a tal:attributes=" href string:${here/absolute_url}/experts_list" i18n:translate="">
 			Experts list
 		</a>
-	</div>
+	</div>-->
 
 </div>
+
 <tal:block content="structure here/standard_html_footer" />
