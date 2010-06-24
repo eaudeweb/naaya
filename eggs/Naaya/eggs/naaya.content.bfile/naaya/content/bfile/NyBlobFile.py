@@ -57,9 +57,10 @@ class NyBlobFile(Persistent):
                 header_value += ";filename*=UTF-8''%s" % utf8_fname
             RESPONSE.setHeader('Content-Disposition', header_value)
 
-        if not hasattr(RESPONSE, '_streaming'):
+        if hasattr(RESPONSE, '_streaming'):
+            return self.open_iterator()
+        else:
             return self.open().read()
-        return self.open_iterator()
 
     def __repr__(self):
         return '<%(cls)s %(fname)r (%(mime)s, %(size)d bytes)>' % {
