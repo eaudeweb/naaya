@@ -66,7 +66,7 @@ class AoALibraryViewer(SimpleItem):
 
         return obj.__of__(self)
 
-    security.declareProtected(view_management_screens, 'iter_assessments')
+    security.declareProtected(view, 'iter_assessments')
     def iter_assessments(self):
         survey = self.target_survey()
         for answer in survey.objectValues(survey_answer_metatype):
