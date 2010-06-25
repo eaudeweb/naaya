@@ -10,6 +10,69 @@
 	    <tal:block replace="structure form_item/html" />
 	</tal:block>
 
+<!-- Start of add / delete species block -->
+
+	<fieldset class="fieldset_edit">
+		<legend class="widget-title" i18n:translate="">
+			Add a new ambassador species
+		</legend>
+		<div class="field">
+			<label class="widget-title" for="ambassador_species" i18n:translate="">
+				Ambassador species
+			</label>
+			<span tal:condition="request/SESSION/ambassador_species-errors|nothing"
+				class="form-errors" i18n:translate="">
+				The species name is mandatory!
+			</span>
+			<input type="text" id="ambassador_species" size="50"
+					tal:attributes="value request/SESSION/ambassador_species|nothing"
+					name="ambassador_species:utf8:ustring" />
+		</div>
+		<div class="field">
+			<label class="widget-title" for="ambassador_species_description">
+				Short description of ambassador species:
+			</label>
+			<tal:block define="editor here/getEditorTool;
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+				replace="structure python:editor.render('ambassador_species_description', curr_lang, image_support=True)" />
+			<textarea id="ambassador_species_description" rows="10" cols="50"
+					name="ambassador_species_description:utf8:ustring"
+					tal:content="request/SESSION/ambassador_species_description|nothing"></textarea>
+		</div>
+		<div class="field">
+			<label class="widget-title" for="ambassador_species_picture" i18n:translate="">
+				Upload a picture of the ambassador species:</label>
+			<input id="ambassador_species_picture" type="file" name="ambassador_species_picture" />
+		</div>
+	</fieldset>
+
+	<fieldset class="fieldset_edit" condition="here/species">
+		<legend class="widget-title" i18n:translate="">
+			Selected ambassador species
+		</legend>
+		<table class="datatable" style="width: 75%">
+			<tr>
+				<th style="width: 10%" i18n:translate="">Delete</th>
+				<th style="width: 45%" i18n:translate="">Ambassador species</th>
+				<th style="width: 45%" i18n:translate="">Picture</th>
+			</tr>
+			<tal:block repeat="species here/species">
+				<tr tal:define="index repeat/species/index">
+					<td><input type="checkbox" name="delete_species" tal:attributes="value index"/></td>
+					<td>
+						<strong><span tal:replace="species/title"/></strong><br/>
+						<span tal:replace="structure species/description"/><br/>
+					</td>
+					<td>
+						<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
+							alt="Ambassador species picture" i18n:attributes="alt"/>
+					</td>
+				</tr>
+			</tal:block>
+		</table>
+	</fieldset>
+<!-- End of add / delete species block -->
+
 	<tal:block repeat="form_item python:form_items[15:]">
 	    <tal:block replace="structure form_item/html" />
 	</tal:block>
