@@ -30,15 +30,6 @@
 		</span>
 </h1>
 
-<div class="boxes-right">
-	<div class="box">
-		<div class="body">
-			<img tal:attributes="src string:${here/absolute_url}/render_picture"
-			alt="Expert picture" width="230" i18n:attributes="alt"/>
-		</div>
-	</div>
-</div>
-
 <div class="main-content">
 <table class="datatable" style="width: 50%">
 	<tr>
@@ -57,70 +48,58 @@
 		<td class="label" i18n:translate="">Email address</td>
 		<td tal:content="here/email" />
 	</tr>
-	<!--><div class="description" tal:condition="here/description"
-		tal:content="structure here/description"/>
-	<div tal:condition="here/obfuscated_email">
-		<span tal:replace="here/obfuscated_email" />
-	</div>
-	<div tal:condition="here/webpage">
-		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
-	</div>
-	<div tal:condition="here/phone" tal:content="here/phone"/>
-	<div tal:condition="here/mobile" tal:content="string:${here/mobile} (mobile)"/>
-	<div tal:condition="here/instant_messaging"
-		tal:content="string:${here/instant_messaging} (instant messaging)"/>
-	<div tal:condition="address">
-		<span tal:content="address"/>
-	</div>
-	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main areas of expertise</h4>
-		<ul>
-			<tal:block repeat="topic main_topics">
-				<li tal:content="topic/title"/>
+	<tr tal:condition="here/phone">
+		<td class="label" i18n:translate="">Telephone number</td>
+		<td tal:content="here/phone" />
+	</tr>
+	<tr tal:define="choice here/choice;
+					choice python:here.get_node_title('ambassador_choices', choice)">
+		<td class="label" i18n:translate="">Our municipality</td>
+		<td tal:content="choice" />
+	</tr>
+	<tal:block condition="here/species" repeat="species here/species">
+		<tr tal:define="index repeat/species/index">
+			<td/>
+			<td class="box">
+				<strong><span tal:replace="species/title"/></strong><br/>
+				<span tal:replace="structure species/description"/><br/>
+				<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
+					alt="Ambassador species picture" i18n:attributes="alt"/>
+			</td>
+		</tr>
+	</tal:block>
+	<tr tal:condition="here/explain_why">
+		<td class="label" i18n:translate="">Why we chose this/these species:</td>
+		<td tal:content="structure here/explain_why" />
+	</tr>
+	<tr tal:condition="here/explain_how">
+		<td class="label" i18n:translate="">How we chose this/these species:</td>
+		<td tal:content="structure here/explain_how" />
+	</tr>
+	<tr tal:condition="here/importance1">
+		<td class="label" i18n:translate="">The selected ambassador species is/are
+			important to our municipality because:</td>
+		<td tal:content="structure here/importance1" />
+	</tr>
+	<tr tal:condition="here/importance2">
+		<td class="label" i18n:translate="">Our municipality is important for
+			the ambassador species because:</td>
+		<td tal:content="structure here/importance2" />
+	</tr>
+	<tr tal:condition="here/usage">
+		<td class="label" i18n:translate="">Please explain how you use
+			the ambassador species in your municipality:</td>
+		<td tal:content="structure here/usage" />
+	</tr>
+	<tr tal:condition="python:here.link1 or here.link2">
+		<td class="label" i18n:translate="">Interesting links:</td>
+		<td>
+			<tal:block condition="here/link1">
+				<span tal:replace="here/link1"/><br/><br/>
 			</tal:block>
-		</ul>
-	</div>
-	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary areas of expertise</h4>
-		<ul>
-			<tal:block repeat="topic sub_topics">
-				<li tal:content="topic/title"/>
-			</tal:block>
-		</ul>
-	</div>
-	<div tal:condition="here/ref_lang">
-		<strong i18n:translate="">Working languages:</strong>
-		<span tal:replace="here/ref_lang"/>
-	</div>
-
-	<a name="Employment"></a>
-	<div tal:define="EmploymentHistory here/getEmploymentHistory"
-		tal:condition="EmploymentHistory">
-		<h4 i18n:translate="">Employment History</h4>
-		<span />
-		<ul>
-			<tal:block repeat="ob EmploymentHistory">
-				<li>
-					<span tal:condition="ob/start_date" tal:replace="ob/start_date" /><span tal:condition="not:ob/start_date" i18n:translate="" >Unknown</span>
-					-
-					<span tal:condition="ob/end_date" tal:replace="ob/end_date" /><span tal:condition="not:ob/end_date" i18n:translate="" >Present</span>,
-				<tal:block define="ob_name ob/organisation; inst python:here.find_OrganisationByName(ob_name)">
-					<span>
-						<span tal:condition="not: inst" tal:replace="ob/organisation" />
-						<a style="text-decoration: underline;" tal:condition="inst"
-						tal:attributes="href string:${inst/absolute_url}"
-						tal:content="ob/organisation" />
-					</span>
-				</tal:block>
-				</li>
-			</tal:block>
-		</ul>
-	</div>
-	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/experts_list" i18n:translate="">
-			Experts list
-		</a>
-	</div>-->
+			<tal:block condition="here/link2" tal:content="here/link2"/>
+		</td>
+	</tr>
 
 </div>
 
