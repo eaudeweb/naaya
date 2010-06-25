@@ -111,3 +111,16 @@ padding-bottom: 1em;
 {
 	color: red;
 }
+
+.label
+{
+	width: 33%;
+	font-weight: bold;
+}
+
+.fieldset_edit
+{
+	border: 1px solid #BBC6CD;
+	margin:2em 0 0 1em;
+	width:70%;
+}

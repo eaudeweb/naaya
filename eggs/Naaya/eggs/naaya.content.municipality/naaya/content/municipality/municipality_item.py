@@ -72,7 +72,7 @@ DEFAULT_SCHEMA = {
     'contact_person': dict(sortorder=120, widget_type='String', label='Contact person'),
     'email':    dict(sortorder=130, widget_type='String', label='Email address'),
     'phone':    dict(sortorder=140, widget_type='String', label='Telephone number'),
-    'choice':   dict(sortorder=150, widget_type='Select', label='Our municipality:', list_id='ambassador_choices'),
+    'choice':   dict(sortorder=150, widget_type='Select', label='Our municipality:', required=True, list_id='ambassador_choices'),
     'explain_why': dict(sortorder=200, widget_type='TextArea', label='Please explain why you chose this / these species:', localized=True, tinymce=True),
     'explain_how': dict(sortorder=210, widget_type='TextArea', label='Please explain how you chose this / these species:', localized=True, tinymce=True),
     'importance1': dict(sortorder=220, widget_type='TextArea', label='The selected ambassador species is / are important to our municipality because:', localized=True, tinymce=True),
@@ -328,12 +328,15 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         schema_raw_data['title'] = obj.title
+
+        delete_species = list(schema_raw_data.pop('delete_species', ''))
+        #import pdb;pdb.set_trace()
+        for list_index in delete_species:
+            self.species.pop(int(list_index))
+
         ambassador_species = schema_raw_data.pop('ambassador_species', '')
         ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
         ambassador_species_picture = schema_raw_data.pop('ambassador_species_picture', None)
-
-        #Process uploaded file
-        #self.save_file(schema_raw_data, 'picture', 'species_picture')
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -343,6 +346,8 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         if form_errors:
             if REQUEST is not None:
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                self.setSession('ambassador_species', ambassador_species)
+                self.setSession('ambassador_species_description', ambassador_species_description)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
                 return
             else:
@@ -398,10 +403,11 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
                                         removed=False,
                                         timestamp=datetime.utcnow()))
 
-    def render_picture(self, RESPONSE):
+    def render_picture(self, RESPONSE, list_index=0):
         """ Render municipality picture """
-        #if hasattr(self, 'picture') and self.picture:
-        return self.species[0].picture.send_data(RESPONSE, as_attachment=False)
+        list_index = int(list_index)
+        if len(self.species) > list_index and self.species[list_index].picture is not None:
+            return self.species[list_index].picture.send_data(RESPONSE, as_attachment=False)
 
     def delete_picture(self, REQUEST=None):
         """ Delete attached municipality picture """
