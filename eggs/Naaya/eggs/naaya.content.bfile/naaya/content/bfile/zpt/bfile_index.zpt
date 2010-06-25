@@ -28,7 +28,7 @@
 <!-- Map widget -->
 <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
-<table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+<table class="datatable" tal:define="portal_map here/getGeoMapTool;">
 
 <tr tal:define="current_version options/current_version|nothing">
     <th i18n:translate="">Download</th>
@@ -68,15 +68,15 @@
     table.ny-bfile-all-versions { display: table; }
 </style></noscript>
 
-<table class="ny-bfile-all-versions">
+<table class="datatable ny-bfile-all-versions">
 <caption i18n:translate="">All versions</caption>
 <thead>
     <tr>
-        <td i18n:translate="">#</td>
-        <td i18n:translate="">File name</td>
-        <td i18n:translate="">Upload date</td>
-        <td i18n:translate="">Size</td>
-        <td i18n:translate="">Content type</td>
+        <th i18n:translate="">#</th>
+        <th i18n:translate="">File name</th>
+        <th i18n:translate="">Upload date</th>
+        <th i18n:translate="">Size</th>
+        <th i18n:translate="">Content type</th>
     </tr>
 </thead>
 <tbody>
