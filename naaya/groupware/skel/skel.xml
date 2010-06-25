@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
-    <forms>
-        <form id="site_login" title="Portal login"/>
-        <form id="site_admin_properties" title="Portal properties"/>
-        <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
-        <form id="folder_index" title="Folder index customisation for Groupware"/>
-    </forms>
+	<forms>
+		<form id="site_login" title="Portal login"/>
+		<form id="site_admin_properties" title="Portal properties"/>
+		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
+		<form id="folder_index" title="Folder index customisation for Groupware"/>
+	</forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
 			<template id="standard_template" title="Customized standard template"/>
@@ -33,7 +33,8 @@
 		</skin>
 	</layout>
 
-	<portlets left="portlet_navigation,portlet_places,portlet_notifications" center="portlet_maincategories,portlet_latestuploads_rdf">
+	<portlets left="portlet_navigation,portlet_places,portlet_notifications" center="ig_description,portlet_latestuploads_rdf">
+		<portlet id="ig_description" title="IG description" />
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
 			<link id="105" title="Europa" description="EU website" url="http://www.europa.eu" relative="0" permission="" order="3"/>
