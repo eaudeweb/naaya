@@ -137,7 +137,6 @@ config = {
             },
     }
 
-security.declareProtected(PERMISSION_ADD_OBJECT, 'municipality_add_html')
 def municipality_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
@@ -154,7 +153,6 @@ def _create_NyMunicipality_object(parent, id, title, contributor):
     ob.after_setObject()
     return ob
 
-security.declareProtected(PERMISSION_ADD_OBJECT, 'addNyMunicipality')
 def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a Municipality type of object.
@@ -374,7 +372,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_edit')
 
-    security.declareProtected(PERMISSION_ADD_OBJECTS, 'process_species')
+    security.declareProtected(PERMISSION_ADD_OBJECT, 'process_species')
     def process_species(self, ambassador_species, ambassador_species_description,
                         ambassador_species_picture, form_errors):
         picture_test = ambassador_species_picture is not None and ambassador_species_picture.filename
