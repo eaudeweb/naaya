@@ -46,7 +46,7 @@
 	</tr>
 	<tr tal:condition="here/email">
 		<td class="label" i18n:translate="">Email address</td>
-		<td tal:content="here/email" />
+		<td tal:content="here/obfuscated_email" />
 	</tr>
 	<tr tal:condition="here/phone">
 		<td class="label" i18n:translate="">Telephone number</td>
@@ -64,7 +64,7 @@
 				<strong><span tal:replace="species/title"/></strong><br/>
 				<span tal:replace="structure species/description"/><br/>
 				<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
-					alt="Ambassador species picture" i18n:attributes="alt"/>
+					alt="Ambassador species picture" i18n:attributes="alt" width="200"/>
 			</td>
 		</tr>
 	</tal:block>
