@@ -65,7 +65,7 @@
 					</td>
 					<td>
 						<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
-							alt="Ambassador species picture" i18n:attributes="alt"/>
+							alt="Ambassador species picture" i18n:attributes="alt" width="200"/>
 					</td>
 				</tr>
 			</tal:block>
@@ -79,16 +79,6 @@
 </tal:block>
 
 <tal:block metal:fill-slot="custom_properties">
-	<!--><div class="field-inline">
-		<div tal:condition="here/picture|nothing">
-			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="320" />
-			<br />
-			<a tal:attributes="href string:${here/absolute_url}/delete_picture" i18n:translate="">Delete</a>
-		</div>
-		<label class="widget-title" for="expert_picture" i18n:translate="">Picture</label>
-		<br />
-		<input id="expert_picture" type="file" name="expert_picture" />
-	</div>-->
 </tal:block>
 
 </tal:block>

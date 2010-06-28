@@ -47,11 +47,9 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from Products.NaayaCore.managers.utils import utils, make_id
-from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyMunicipality
 
@@ -139,6 +137,7 @@ config = {
             },
     }
 
+security.declareProtected(PERMISSION_ADD_OBJECT, 'municipality_add_html')
 def municipality_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
@@ -155,6 +154,7 @@ def _create_NyMunicipality_object(parent, id, title, contributor):
     ob.after_setObject()
     return ob
 
+security.declareProtected(PERMISSION_ADD_OBJECT, 'addNyMunicipality')
 def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
     Create a Municipality type of object.
@@ -213,9 +213,6 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    #Process uploaded files
-    #ob.save_file(schema_raw_data, 'picture', 'species_picture')
-
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
@@ -255,7 +252,6 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """ """
         l_options = ()
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
-        #l_options += NyVersioning.manage_options
         return l_options
 
     security = ClassSecurityInfo()
@@ -299,6 +295,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
+    security.declareProtected(view, 'obfuscated_email')
     def obfuscated_email(self):
         ret = self.email
         if self.email:
@@ -330,7 +327,6 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         schema_raw_data['title'] = obj.title
 
         delete_species = list(schema_raw_data.pop('delete_species', ''))
-        #import pdb;pdb.set_trace()
         for list_index in delete_species:
             self.species.pop(int(list_index))
 
@@ -378,11 +374,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         """ """
         return self.getFormsTool().getContent({'here': self}, 'municipality_edit')
 
-    def getMunicipalityTopics(self, category):
-        ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'municipalities_topics', None)
-        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
-
+    security.declareProtected(PERMISSION_ADD_OBJECTS, 'process_species')
     def process_species(self, ambassador_species, ambassador_species_description,
                         ambassador_species_picture, form_errors):
         picture_test = ambassador_species_picture is not None and ambassador_species_picture.filename
@@ -394,32 +386,12 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
                                             ambassador_species_picture)
             self.species.append(new_species)
 
-    def save_file(self, schema_raw_data, object_attribute, form_field):
-        _uploaded_file = schema_raw_data.pop(form_field, None)
-        if _uploaded_file is not None and _uploaded_file.filename:
-            setattr(self,
-                        object_attribute,
-                        make_blobfile(_uploaded_file,
-                                        removed=False,
-                                        timestamp=datetime.utcnow()))
-
+    security.declareProtected(view, 'render_picture')
     def render_picture(self, RESPONSE, list_index=0):
         """ Render municipality picture """
         list_index = int(list_index)
         if len(self.species) > list_index and self.species[list_index].picture is not None:
             return self.species[list_index].picture.send_data(RESPONSE, as_attachment=False)
-
-    def delete_picture(self, REQUEST=None):
-        """ Delete attached municipality picture """
-        self.picture = None
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
-
-    def has_coordinates(self):
-        """ check if the current object has map coordinates"""
-        if self.geo_location:
-            return self.geo_location.lat and self.geo_location.lon
-        return False
 
 InitializeClass(NyMunicipality)
 
