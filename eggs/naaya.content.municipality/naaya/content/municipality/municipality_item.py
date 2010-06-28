@@ -103,16 +103,6 @@ def setupContentType(site):
         ptool.manage_addRefTree('ambassador_choices')
         for k, v in AMBASSADOR_CHOICES.items():
             ptool.ambassador_choices.manage_addRefTreeNode(k, v)
-    #Create catalog index if it doesn't exist
-    ctool = site.getCatalogTool()
-
-    if not 'province' in ctool.indexes():
-        try:
-            ctool.addIndex('province', 'KeywordIndex', extra={'indexed_attrs' : 'province'})
-            ctool.manage_reindexIndex(['province'])
-        except:
-            print 'Failed to create province index. Naaya Municipality content type may not work properly'
-
 
 # this dictionary is updated at the end of the module
 config = {
@@ -359,6 +349,16 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         list_index = int(list_index)
         if len(self.species) > list_index and self.species[list_index].picture is not None:
             return self.species[list_index].picture.send_data(RESPONSE, as_attachment=False)
+
+    security.declarePrivate('objectkeywords')
+    def objectkeywords(self, lang):
+        return u' '.join([self._objectkeywords(lang), self.province, self.municipality,
+            self.getLocalProperty('explain_why', lang),
+            self.getLocalProperty('explain_how', lang),
+            self.getLocalProperty('importance1', lang),
+            self.getLocalProperty('importance2', lang),
+            self.getLocalProperty('usage', lang)]
+            )
 
 InitializeClass(NyMunicipality)
 
