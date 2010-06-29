@@ -1,0 +1,11 @@
+<form tal:attributes="action here/absolute_url" method="post">
+
+<input tal:condition="not: nocall:here/validation_html|nothing"
+       type="submit" name="manage_create_validation_html:method"
+       value="Create custom validation HTML" />
+<br/>
+<input tal:condition="not: nocall:here/validation_onsubmit|nothing"
+       type="submit" name="manage_create_validation_onsubmit:method"
+       value="Create custom validation function" />
+
+</form>
