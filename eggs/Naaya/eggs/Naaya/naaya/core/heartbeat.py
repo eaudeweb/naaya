@@ -40,3 +40,32 @@ def cleanup_unsubmitted_objects(site, hb):
         return
 
     site.cleanupUnsubmittedObjects(site.get_site_uid())
+
+def physical_path(ob):
+    return '/'.join(ob.getPhysicalPath())
+
+@adapter(INySite, IHeartbeat)
+def rdfcalendar_cron(site, hb):
+    """
+    Update any RDFCalendar objects in the site's root
+    """
+    import transaction
+    print 'rdfcal update for %r' % physical_path(site)
+
+    name = 'site rdfcalendar %r' % physical_path(site)
+    if cooldown(name, timedelta(hours=6)):
+        print 'nah'
+        return
+    print 'go!'
+
+    transaction.commit() # commit earlier stuff; fresh transaction
+
+    try:
+        for rdfcal in site.objectValues(['RDF Calendar']):
+            rdfcal.manage_updateChannels()
+    except:
+        site.log_current_error()
+        transaction.abort()
+    else:
+        transaction.get().note("RDFCalendar cron %r" % physical_path(site))
+        transaction.commit()
