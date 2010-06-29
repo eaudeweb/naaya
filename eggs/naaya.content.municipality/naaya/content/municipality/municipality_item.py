@@ -57,6 +57,7 @@ from interfaces import INyMunicipality
 METATYPE_OBJECT = 'Naaya Municipality'
 LABEL_OBJECT = 'Municipality'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Municipality objects'
+PERMISSION_EDIT_OBJECTS = 'Naaya - Edit Naaya Municipality objects'
 OBJECT_FORMS = ['municipality_add', 'municipality_edit', 'municipality_index']
 OBJECT_CONSTRUCTORS = ['municipality_add_html', 'addNyMunicipality']
 OBJECT_ADD_FORM = 'municipality_add_html'
