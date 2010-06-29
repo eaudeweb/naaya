@@ -50,13 +50,10 @@ def rdfcalendar_cron(site, hb):
     Update any RDFCalendar objects in the site's root
     """
     import transaction
-    print 'rdfcal update for %r' % physical_path(site)
 
     name = 'site rdfcalendar %r' % physical_path(site)
     if cooldown(name, timedelta(hours=6)):
-        print 'nah'
         return
-    print 'go!'
 
     transaction.commit() # commit earlier stuff; fresh transaction
 
