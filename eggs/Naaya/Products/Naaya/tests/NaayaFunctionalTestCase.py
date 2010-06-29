@@ -141,6 +141,7 @@ class TwillMixin(object):
         headers = [ (header[0], ', '.join(header[1:])) for header in headers ]
         if 'content-type' not in (header[0].lower() for header in headers):
             headers.append( ('Content-Type', 'text/html; charset=utf-8') )
+        headers = filter(lambda h: h[0] != 'Connection', headers)
         start_response(status, headers)
         return [body]
 
