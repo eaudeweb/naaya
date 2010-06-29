@@ -70,6 +70,11 @@
 				</ol>
 			</tal:block>
 
+			<tal:block define="tmpl nocall:here/validation_html|nothing"
+			           condition="tmpl">
+				<metal:block use-macro="tmpl/macros/validate" />
+			</tal:block>
+
 			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
 			<tal:block condition="not:here/checkPermissionSkipCaptcha"
