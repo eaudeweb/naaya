@@ -228,7 +228,7 @@ class AmbassadorSpecies(Persistent):
         else:
             self.picture = None
 
-class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyValidation, NyContentType):
+class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyValidation, NyContentType, utils):
     """ """
     implements(INyMunicipality)
     meta_type = METATYPE_OBJECT
@@ -352,13 +352,22 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.province, self.municipality,
-            self.getLocalProperty('explain_why', lang),
-            self.getLocalProperty('explain_how', lang),
-            self.getLocalProperty('importance1', lang),
-            self.getLocalProperty('importance2', lang),
-            self.getLocalProperty('usage', lang)]
+        return u' '.join([self._objectkeywords(lang),
+            self.municipality,
+            self.specieskeywords(),
+            self.html2text(self.getLocalProperty('explain_why', lang)),
+            self.html2text(self.getLocalProperty('explain_how', lang)),
+            self.html2text(self.getLocalProperty('importance1', lang)),
+            self.html2text(self.getLocalProperty('importance2', lang)),
+            self.html2text(self.getLocalProperty('usage', lang))]
             )
+
+    security.declarePrivate('specieskeywords')
+    def specieskeywords(self):
+        if len(self.species) > 0:
+            species = ['%s %s' % (ob.title, self.html2text(ob.description)) for ob in self.species]
+            return u' '.join(species)
+        return ''
 
 InitializeClass(NyMunicipality)
 
