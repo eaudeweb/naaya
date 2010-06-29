@@ -250,6 +250,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             if captcha_errors:
                 errors.append(captcha_errors)
 
+        try:
+            validation_onsubmit = self['validation_onsubmit']
+        except KeyError:
+            pass
+        else:
+            validation_onsubmit(datamodel, errors)
+
         if errors:
             self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)

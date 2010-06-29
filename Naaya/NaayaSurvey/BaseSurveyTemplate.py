@@ -100,7 +100,12 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
 
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
-        return self.get_widget_meta_types() + self.get_report_meta_types()
+        return (
+            self.get_widget_meta_types() +
+            self.get_report_meta_types() +
+            self._get_meta_types_from_names(['Script (Python)',
+                                             'Page Template'])
+        )
 
     def __init__(self, id, lang=None, **kwargs):
         Folder.__init__(self, id=id)
