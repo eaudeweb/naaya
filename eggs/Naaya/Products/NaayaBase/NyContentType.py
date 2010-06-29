@@ -83,8 +83,13 @@ class SchemaFormHelper(object):
 
         def get_renderer(prop_name, widget):
             value = get_value(prop_name)
+            context = self.context
             errors = self.context.getSession('%s-errors' % prop_name, None)
-            return lambda: widget.render_html(value=value, errors=errors)
+            def render():
+                return widget.render_html(value=value,
+                                          context=context,
+                                          errors=errors)
+            return render
 
         for widget in self.schema.listWidgets():
             prop_name = widget.prop_name()

@@ -17,5 +17,8 @@
         name string:${prop_id}:utf8:ustring;
         id prop_id" />
     <!-- Ajax tree scripts -->
-    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+    <tal:block define="ctx options/context;
+                       tree_initial_node python:here.initial_jstree_node(ctx)">
+        <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+    </tal:block>
 </div>

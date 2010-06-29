@@ -220,12 +220,12 @@ class Widget(Folder):
         """ by default this does nothing; subclasses may override. """
         return value
 
-    def render_html(self, value, errors=None):
+    def render_html(self, value, context=None, errors=None):
         value = self._convert_to_form_string(value)
         if self.visible:
-            return self.template(value=value, errors=errors)
+            return self.template(value=value, context=context, errors=errors)
         else:
-            return self.hidden_template(value=value)
+            return self.hidden_template(value=value, context=context)
 
     def get_widget_type(self):
         classname = self.__class__.__name__

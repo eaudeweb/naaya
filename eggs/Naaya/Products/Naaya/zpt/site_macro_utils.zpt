@@ -77,8 +77,11 @@ You can find the configuration in jquery.tree.init.js
 
 <!-- Initialize tree -->
 <metal:block define-slot="treeinit">
-	<script type="text/javascript" tal:content="string:
+	<script type="text/javascript"
+	tal:define="tree_initial_node tree_initial_node|string:"
+	tal:content="string:
 	var TREE_GET_URL = '${here/absolute_url}/getNavigationSiteMap/';
+	var TREE_INITIAL_NODE = '${tree_initial_node}';
 	var TREE_CONTAINER = '.sitemap_tree'
 "></script>
 	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/jquery_tree_init"></script>
