@@ -14,6 +14,7 @@ Contents:
    site
    pluggable_content
    permissions
+   heartbeat
    stylesheets
    restricted_toolkit
 
