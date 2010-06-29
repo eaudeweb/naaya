@@ -1,16 +1,5 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
-	<br clear="all"/>
-	<div id="admin_this_folder">
-		<tal:block tal:condition="python: not here.hasVersion()">
-			<a tal:attributes="href string:${here/absolute_url}/edit_html">
-				<span i18n:translate="">Edit</span>
-			</a>
-		</tal:block>
-	</div>
-</tal:block>
-
 <h1>
 	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
 		title here/get_meta_label;
@@ -30,8 +19,19 @@
 		</span>
 </h1>
 
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+	<br clear="all"/>
+	<div id="admin_this_folder">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:attributes="href string:${here/absolute_url}/edit_html">
+				<span i18n:translate="">Edit</span>
+			</a>
+		</tal:block>
+	</div>
+</tal:block>
+
 <div class="main-content">
-<table class="datatable" style="width: 50%">
+<table class="datatable">
 	<tr>
 		<td class="label" i18n:translate="">Province</td>
 		<td tal:content="province" />
@@ -69,26 +69,25 @@
 		</tr>
 	</tal:block>
 	<tr tal:condition="here/explain_why">
-		<td class="label" i18n:translate="">Why we chose this/these species:</td>
+		<td class="label" i18n:translate="">Reason for chosing this/these species:</td>
 		<td tal:content="structure here/explain_why" />
 	</tr>
 	<tr tal:condition="here/explain_how">
-		<td class="label" i18n:translate="">How we chose this/these species:</td>
+		<td class="label" i18n:translate="">How this/these species was/were chosen:</td>
 		<td tal:content="structure here/explain_how" />
 	</tr>
 	<tr tal:condition="here/importance1">
-		<td class="label" i18n:translate="">The selected ambassador species is/are
-			important to our municipality because:</td>
+		<td class="label" i18n:translate="">Reason why the selected ambassador species is/are
+			important to this municipality:</td>
 		<td tal:content="structure here/importance1" />
 	</tr>
 	<tr tal:condition="here/importance2">
-		<td class="label" i18n:translate="">Our municipality is important for
-			the ambassador species because:</td>
+		<td class="label" i18n:translate="">Reason why this municipality is important for
+			the ambassador species:</td>
 		<td tal:content="structure here/importance2" />
 	</tr>
 	<tr tal:condition="here/usage">
-		<td class="label" i18n:translate="">Please explain how you use
-			the ambassador species in your municipality:</td>
+		<td class="label" i18n:translate="">Usage of the ambassador species in this municipality:</td>
 		<td tal:content="structure here/usage" />
 	</tr>
 	<tr tal:condition="python:here.link1 or here.link2">
