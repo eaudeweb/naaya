@@ -20,17 +20,21 @@
 # Python imports
 import sys
 from urllib import urlencode
+from os import path
 
 # Zope imports
 from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view
+from AccessControl.Permissions import view, view_management_screens
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.Traversable import path2url
 from ZPublisher import BadRequest, InternalError, NotFound
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, ERROR, DEBUG
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from Products.PythonScripts.PythonScript import manage_addPythonScript
 
 # Product imports
 from Products.Naaya.constants import DEFAULT_SORTORDER
@@ -47,6 +51,7 @@ from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaWidgets.Widget import WidgetError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from naaya.core.zope2util import folder_manage_main_plus
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
 from SurveyReport import manage_addSurveyReport
@@ -500,6 +505,36 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'view_answers_html')
     view_answers_html = NaayaPageTemplateFile('zpt/questionnaire_view_answers',
                         globals(), 'NaayaSurvey.questionnaire_view_answers')
+
+    manage_main = folder_manage_main_plus
+    ny_before_listing = PageTemplateFile('zpt/questionnaire_manage_header',
+                                         globals())
+
+    security.declareProtected(view_management_screens,
+                              'manage_create_validation_html')
+    def manage_create_validation_html(self, REQUEST=None):
+        """ create a blank validation_html template in this survey """
+        datafile = path.join(path.dirname(__file__), 'www',
+                             'initial_validation_html.txt')
+        id = 'validation_html'
+        title = "Custom questionnaire HTML"
+        manage_addPageTemplate(self, id, title, open(datafile).read())
+        if REQUEST is not None:
+            url = self[id].absolute_url() + '/manage_workspace'
+            REQUEST.RESPONSE.redirect(url)
+
+    security.declareProtected(view_management_screens,
+                              'manage_create_validation_onsubmit')
+    def manage_create_validation_onsubmit(self, REQUEST=None):
+        """ create a blank validation_onsubmit template in this survey """
+        datafile = path.join(path.dirname(__file__), 'www',
+                             'initial_validation_onsubmit.txt')
+        id = 'validation_onsubmit'
+        manage_addPythonScript(self, id)
+        self._getOb(id).write(open(datafile, 'rb').read())
+        if REQUEST is not None:
+            url = self[id].absolute_url() + '/manage_workspace'
+            REQUEST.RESPONSE.redirect(url)
 
     security.declarePublic('view_my_answer_html')
     def view_my_answer_html(self, REQUEST):

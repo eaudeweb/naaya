@@ -1,0 +1,5 @@
+<metal:block define-macro="validate">
+
+<!-- custom HTML that will be included in the survey questionnaire -->
+
+</metal:block>
