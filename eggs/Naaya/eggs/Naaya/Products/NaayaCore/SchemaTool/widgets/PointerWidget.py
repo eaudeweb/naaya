@@ -21,6 +21,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, manage_addWidget
+from naaya.core.utils import path_in_site
 
 def addPointerWidget(container, id="", title="Pointer Widget", REQUEST=None, **kwargs):
     """ Contructor for Pointer widget"""
@@ -39,6 +40,8 @@ class PointerWidget(Widget):
          'label': 'Display width'},
         {'id': 'size_max', 'type': 'int', 'mode': 'w',
          'label': 'Maximum input width'},
+        {'id': 'relative', 'type': 'boolean', 'mode': 'w',
+         'label': 'Path relative to object'},
         )
 
     # Constructor
@@ -46,11 +49,18 @@ class PointerWidget(Widget):
 
     width = 50
     size_max = 0
+    relative = False
 
     def _convert_to_form_string(self, value):
         if isinstance(value, int):
             value = str(value)
         return value
+
+    def initial_jstree_node(self, context):
+        if self.relative:
+            return path_in_site(context)
+        else:
+            return ''
 
     template = PageTemplateFile('../zpt/property_widget_pointer', globals())
 

@@ -128,7 +128,7 @@ class Schema(Folder):
         # TODO: if there are other names in kwargs, raise a KeyError
         for name in ['sortorder', 'required', 'localized',
                 'tinymce', 'data_type', 'visible', 'glossary_id',
-                'list_id', 'default']:
+                'list_id', 'default', 'relative']:
             if name in kwargs:
                 value = kwargs[name]
                 if name == 'data_type' and value not in DATA_TYPES:

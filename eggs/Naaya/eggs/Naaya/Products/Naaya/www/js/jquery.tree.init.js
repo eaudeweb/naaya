@@ -1,9 +1,13 @@
 $(document).ready(function(){
+    var initial_url = TREE_GET_URL;
+    if(TREE_INITIAL_NODE) {
+        initial_url += "?node=" + TREE_INITIAL_NODE;
+    }
     $(TREE_CONTAINER).tree({
         data:{
             type : "json",
             opts : {
-                url : TREE_GET_URL
+                url : initial_url
             }
         },
         callback : {
