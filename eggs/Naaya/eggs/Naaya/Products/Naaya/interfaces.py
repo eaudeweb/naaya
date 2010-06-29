@@ -1,4 +1,7 @@
-from zope.interface import Interface, Attribute
+from zope.interface import Interface
+
+# import for compatibility
+from naaya.core.interfaces import IHeartbeat
 
 class INySite(Interface):
     """ Interface for NySite"""
@@ -7,10 +10,6 @@ class INySite(Interface):
 class INyFolder(Interface):
     """ Interface for NyFolder"""
     pass
-
-class IHeartbeat(Interface):
-    """ Interface for Heartbeat """
-    when = Attribute('when')
 
 class IObjectView(Interface):
     """  """

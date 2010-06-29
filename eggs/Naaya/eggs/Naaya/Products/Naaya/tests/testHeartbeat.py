@@ -7,8 +7,9 @@ from zope import component
 
 #Product imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.interfaces import INySite, IHeartbeat
-from Products.Naaya.NySite import Heartbeat
+from Products.Naaya.interfaces import INySite
+from naaya.core.interfaces import IHeartbeat
+from naaya.core.heartbeat import Heartbeat
 
 events = 0
 

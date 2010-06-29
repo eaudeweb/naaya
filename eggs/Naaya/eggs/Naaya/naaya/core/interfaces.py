@@ -1,4 +1,4 @@
-from zope import interface
+from zope.interface import Interface, Attribute
 
 from OFS.interfaces import IItem
 
@@ -8,8 +8,12 @@ class INyObject(IItem):
     def getSite():
         """ Returns the containing NySite instance """
 
-class INyObjectContainer(interface.Interface):
+class INyObjectContainer(Interface):
     """
     An object that may contain other Naaya objects. Useful when generating
     sitemaps or rebuilding the catalog.
     """
+
+class IHeartbeat(Interface):
+    """ Interface for Heartbeat event """
+    when = Attribute('when')

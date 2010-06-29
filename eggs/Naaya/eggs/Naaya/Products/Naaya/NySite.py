@@ -57,7 +57,7 @@ from zope import component, interface
 import transaction
 
 #Product imports
-from interfaces import INySite, IHeartbeat
+from interfaces import INySite
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
@@ -111,6 +111,7 @@ from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method
 from naaya.core.utils import path_in_site
+from naaya.core.utils import cooldown
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 #reCaptcha
@@ -3744,6 +3745,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
         transaction.commit() # commit earlier stuff; fresh transaction
         transaction.get().note('cron heartbeat at %s' % ofs_path(self))
+
+        from naaya.core.heartbeat import Heartbeat
         hb = Heartbeat()
         try:
             component.handle(self, hb)
@@ -3755,20 +3758,19 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def heartbeat(self):
         """ if cooldown has passed does a heartbeat """
 
-        path = '/'.join(self.getPhysicalPath())
-        if heartbeat_cooldown.has_key(path) and\
-            datetime.now() < heartbeat_cooldown[path]:
-                return
+        if cooldown('site heartbeat %r' % '/'.join(self.getPhysicalPath()),
+                    timedelta(minutes=9)):
+            return
 
-        heartbeat_cooldown[path] = datetime.now() + timedelta(minutes=10)
         self.heartbeat_work()
 
     def manage_check_heartbeat(self):
         """ return the time of the last heartbeat """
 
-        path = '/'.join(self.getPhysicalPath())
-        if heartbeat_cooldown.has_key(path):
-            last_heartbeat = heartbeat_cooldown[path] - timedelta(minutes=10)
+        from naaya.core.utils import _cooldown_map
+        name = 'site heartbeat %r' % '/'.join(self.getPhysicalPath())
+        if _cooldown_map.has_key(name):
+            last_heartbeat = _cooldown_map[name]
             time_ever_since = datetime.now() - last_heartbeat
             minutes_ever_since = int(time_ever_since.seconds / 60)
             seconds_ever_since = time_ever_since.seconds % 60
@@ -3789,20 +3791,3 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     rstk = RestrictedToolkit()
 
 InitializeClass(NySite)
-
-heartbeat_cooldown = {}
-
-class Heartbeat(object):
-    interface.implements(IHeartbeat)
-    def __init__(self):
-        self.when = datetime.now()
-
-
-@component.adapter(INySite, IHeartbeat)
-def cleanupUnsubmittedObjectsHeartbeat(site, hb):
-    """
-    Used by heartbeat to clean up unsubmitted objects older than 1 day.
-    """
-    site.cleanupUnsubmittedObjects(site.get_site_uid())
-
-component.provideHandler(cleanupUnsubmittedObjectsHeartbeat)
