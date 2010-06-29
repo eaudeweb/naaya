@@ -5,6 +5,7 @@ var DateTimeShortcuts = {
     calendarDivName1: 'calendarbox', // name of calendar <div> that gets toggled
     calendarDivName2: 'calendarin',  // name of <div> that contains calendar
     clockDivName: 'clockbox',        // name of clock <div> that gets toggled
+    calendarLinkName: 'calendarlink',
     init: function() {
         var inputs = document.getElementsByTagName('input');
         for (i=0; i<inputs.length; i++) {
@@ -27,6 +28,7 @@ var DateTimeShortcuts = {
         today_link.setAttribute('href', 'javascript:DateTimeShortcuts.handleCalendarQuickLink(' + num + ', 0);');
 		today_link.appendChild(document.createTextNode(gettext('Today')));
 		var cal_link = document.createElement('a');
+                cal_link.setAttribute('id', DateTimeShortcuts.calendarLinkName + num);
 		cal_link.setAttribute('href', 'javascript:DateTimeShortcuts.openCalendar(' + num + ');');
 		quickElement('img', cal_link, '', 'src', 'misc_/Naaya/icon_calendar.gif', 'alt', gettext('Calendar'));
         shortcuts_span.appendChild(document.createTextNode('\240'));
@@ -72,7 +74,12 @@ var DateTimeShortcuts = {
         quickElement('a', cancel_p, gettext('Cancel'), 'href', 'javascript:DateTimeShortcuts.dismissCalendar(' + num + ');');
     },
     openCalendar: function(num) {
-        document.getElementById(DateTimeShortcuts.calendarDivName1+num).style.display = 'block';
+        var cal_box = document.getElementById(DateTimeShortcuts.calendarDivName1+num);
+        var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName+num);
+        cal_box.style.position = 'absolute';
+        cal_box.style.left = findPosX(cal_link) + 17 + 'px';
+        cal_box.style.top = findPosY(cal_link) - 75 + 'px';
+        cal_box.style.display = 'block';
         addEvent(window, 'click', function() { DateTimeShortcuts.dismissCalendar(num); return true; });
     },
     dismissCalendar: function(num) {
