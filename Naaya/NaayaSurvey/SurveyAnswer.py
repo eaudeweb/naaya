@@ -50,14 +50,11 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
     while True:
         idSuffix = gUtil.utGenRandomId()
         id = datamodel['id'] = 'answer_%s' % (idSuffix, )
-        try:
-            ob = SurveyAnswer(id, datamodel, respondent)
-            context._setObject(id, ob)
-        except:
-            LOG('NaayaSurvey - SurveyAnswer', INFO, 'manage_addSurveyAnswer: answer with id %s already exists! Trying with another one!' % id)
-            continue
-        break
+        if id not in context.objectIds():
+            break
 
+    ob = SurveyAnswer(id, datamodel, respondent)
+    context._setObject(id, ob)
     ob = context._getOb(id)
 
     # handle files
