@@ -36,7 +36,7 @@
 
     <div class="floated-buttons">
         <span class="buttons">
-            <a tal:attributes="href here/absolute_url" i18n:translate="Clear page"></a>
+            <a tal:attributes="href here/absolute_url" i18n:translate="Clean page"></a>
         </span>
         <span class="buttons">
             <a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="Back to index"></a>
@@ -76,7 +76,7 @@
 
         <tal:block condition="do_search">
         <tal:block define="users python:here.findUsers(search_param, search_term)">
-        <form method="post" action="addUsers" name="formAddUsers"
+        <form method="post" action="setAttendees" name="formAddUsers"
                 tal:condition="python:len(users) > 0">
             <table class="datatable" width="95%">
                 <tr>
@@ -96,6 +96,7 @@
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>
+            <input type="hidden" name="role" value="participant"/>
             <input type="submit" name="add_users" value="Add selected users"/>
         </form>
         <div tal:condition="python:len(users) == 0" i18n:translate="No users matched selected criteria."></div>
@@ -121,7 +122,7 @@
 
         <tal:block condition="do_search">
         <tal:block define="users python:here.findUsersWithRole(search_role)">
-        <form method="post" action="addUsers" name="formAddUsers2"
+        <form method="post" action="setAttendees" name="formAddUsers2"
                 tal:condition="python:len(users) > 0">
             <table class="datatable" width="95%">
                 <tr>
@@ -141,6 +142,7 @@
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>
+            <input type="hidden" name="role" value="participant"/>
             <input type="submit" name="add_users" value="Add selected users"/>
         </form>
         <div tal:condition="python:len(users) == 0" i18n:translate="No users matched selected criteria."></div>
@@ -154,24 +156,14 @@
         <legend i18n:translate="List of participants"></legend>
         <p tal:condition="here/userCanChangePermissions" i18n:translate="Use this form to view and remove participants. You can also nominate one participant as administrator."></p>
         <tal:block define="sort_on python:request.get('sort_on', '');
-                    users python:here.getParticipants(sort_on);">
+                    users python:here.getAttendees(sort_on);">
 
         <tal:block condition="python:len(users)==0">
         <div i18n:translate="No participans."></div>
         </tal:block>
 
         <tal:block condition="python:len(users)!=0">
-        <form tal:condition="here/userCanChangePermissions" method="post" action="setAdministrator" name="formSetAdministrator">
-            <label for="uid" i18n:translate="Select participant"></label>
-            <select id="uid" name="uid" tal:define="admin here/administrator_uid|nothing">
-                <option value="" i18n:translate="No administrator" tal:attributes="selected python:test(admin, False, True)"></option>
-                <option tal:repeat="user users" tal:content="user" tal:attributes="value user; selected python:admin==user"/>
-            </select>
-
-            <input type="submit" name="set_administrator" value="Set as meeting administrator"/>
-        </form>
-
-        <form method="post" action="removeUsers" name="formDeleteUsers">
+        <form method="post" action="onAttendees" name="formOnAttendees">
             <table class="datatable" width="95%">
                 <tr>
                     <th tal:condition="here/userCanChangePermissions" width="30px">
@@ -195,10 +187,14 @@
                         <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=uid"
                              i18n:translate="User ID"></a>
                     </th>
+                    <th>
+                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
+                            i18n:translate="Role"></a>
+                    </th>
                 </tr>
                 <tr tal:repeat="user users"
                         tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
-                    <tal:block define="user_info python:here.getParticipantInfo(user)">
+                    <tal:block define="user_info python:here.getAttendeeInfo(user)">
                     <td tal:condition="here/userCanChangePermissions">
                         <input type="checkbox" name="uids:list" tal:attributes="value user_info/uid"/>
                     </td>
@@ -215,10 +211,13 @@
                         <span tal:condition="phone" tal:replace="phone"/>
                     </td>
                     <td><span tal:replace="user"/></td>
+                    <td><span tal:replace="user_info/role"/></td>
                     </tal:block>
                 </tr>
             </table>
-            <input tal:condition="here/userCanChangePermissions" type="submit" name="remove_users" value="Remove selected participants"/>
+            <input tal:condition="here/userCanChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
+            <input tal:condition="here/userCanChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
+            <input tal:condition="here/userCanChangePermissions" type="submit" name="set_participants" value="Make participants"/>
         </form>
         </tal:block>
 
