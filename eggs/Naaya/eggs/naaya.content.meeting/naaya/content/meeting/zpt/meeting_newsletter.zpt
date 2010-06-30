@@ -18,6 +18,10 @@
     <p i18n:translate="This page allows the administrator to send an email to all the participants of the meeting. The meeting contact email is used as the sender address."></p>
 
     <form method="post" action="send_newsletter" name="formSendNewsletter">
+        <tal:block repeat="uid uids">
+        <input type="hidden" name="uids:list"
+            tal:attributes="value uid"/>
+        </tal:block>
         <div class="field">
             <label class="widget-title" for="subject" i18n:translate="Subject: "></label>
             <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>

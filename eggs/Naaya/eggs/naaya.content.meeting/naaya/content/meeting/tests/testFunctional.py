@@ -325,14 +325,25 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting')
-        self.assertTrue('http://localhost/portal/info/mymeeting/newsletter_html' in self.browser.get_html())
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants' in self.browser.get_html())
 
-        self.browser.go('http://localhost/portal/info/mymeeting/newsletter_html')
-        form = self.browser.get_form('formSendNewsletter')
-        expected_controls = set(['subject:utf8:ustring', 'body_text:utf8:ustring'])
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        form = self.browser.get_form('formOnAttendees')
+        expected_controls = set(['uids:list', 'send_email'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
+
+        self.browser.clicked(form, self.browser.get_form_field(form, 'send_email'))
+        form['uids:list'] = ['test_participant']
+        self.browser.submit()
+
+        form = self.browser.get_form('formSendNewsletter')
+        expected_controls = set(['uids:list', 'subject:utf8:ustring', 'body_text:utf8:ustring'])
+        found_controls = set(c.name for c in form.controls)
+        self.assertTrue(expected_controls <= found_controls,
+            'Missing form controls: %s' % repr(expected_controls - found_controls))
+        self.assertEqual(form['uids:list'], 'test_participant')
 
         self.browser_do_logout()
 
@@ -566,7 +577,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('test_participant', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
-        self.assertTrue('Take the survey' in self.browser.get_html())
+        self.assertTrue('Meeting Survey' in self.browser.get_html())
         self.browser_do_logout()
 
     def test_survey_required(self):

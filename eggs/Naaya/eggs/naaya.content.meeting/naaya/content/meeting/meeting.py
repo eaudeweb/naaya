@@ -35,6 +35,7 @@ from Products.Naaya.NySite import NySite
 from naaya.content.meeting import PARTICIPANT_ROLE
 from participants import Participants
 from reports import MeetingReports
+from utils import getUserEmail
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -348,20 +349,22 @@ class NyMeeting(NyContentData, NyFolder):
         return self.getFormsTool().getContent({'here': self}, 'meeting_menusubmissions')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'newsletter_html')
-    def newsletter_html(self, REQUEST=None, RESPONSE=None):
+    def newsletter_html(self, uids):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'meeting_newsletter')
+        assert isinstance(uids, list)
+        return self.getFormsTool().getContent({'here': self, 'uids': uids}, 'meeting_newsletter')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_newsletter')
-    def send_newsletter(self, REQUEST):
+    def send_newsletter(self, uids, subject, body_text, REQUEST):
         """ """
-        participants_emails = [self.participants.getUserEmail(uid) for uid in self.participants.attendees.keys()]
+        assert isinstance(uids, list)
+        to_emails = [getUserEmail(self.getSite(), uid) for uid in uids]
 
         email_tool = self.getEmailTool()
-        email_tool.sendEmail(p_content=REQUEST.form['body_text'],
-                                p_to=participants_emails,
+        email_tool.sendEmail(p_content=body_text,
+                                p_to=to_emails,
                                 p_from=self.contact_email,
-                                p_subject=REQUEST.form['subject'])
+                                p_subject=subject)
 
         REQUEST.RESPONSE.redirect(self.absolute_url())
 
