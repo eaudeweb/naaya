@@ -284,7 +284,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
         schema_raw_data['title'] = obj.title
 
-        delete_species = list(schema_raw_data.pop('delete_species', ''))
+        delete_species = sorted(list(schema_raw_data.pop('delete_species', '')), reverse=True)
         for list_index in delete_species:
             self.species.pop(int(list_index))
 
