@@ -10,7 +10,7 @@ from persistent.dict import PersistentDict
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.meeting import PARTICIPANT_ROLE
-from utils import getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
+from utils import schemaHasParam, getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
 
 class Participants(SimpleItem):
     security = ClassSecurityInfo()
@@ -31,11 +31,6 @@ class Participants(SimpleItem):
                 return search_term in uid
             if search_param == 'cn':
                 return search_term in cn
-
-        def schema_has_param(acl_folder, param):
-            for item in acl_folder.getLDAPSchema():
-                if item[0] == param:
-                    return True
             return False
 
         auth_tool = self.getAuthenticationTool()
@@ -47,17 +42,18 @@ class Participants(SimpleItem):
             info = 'Local user'
             
             if userMatched(uid, cn):
-                ret.append({'uid': uid, 'cn': cn, 'info': info})
+                ret.append({'uid': uid, 'cn': cn, 'organisation': '', 'info': info})
 
         for source in auth_tool.getSources():
             acl_folder = source.getUserFolder()
-            if schema_has_param(acl_folder, search_param): 
+            if schemaHasParam(acl_folder, search_param): 
                 users = acl_folder.findUser(search_param=search_param, search_term=search_term)
                 for user in users:
-                    uid = user['uid']
-                    cn = user['cn']
-                    info = user['dn']
-                    ret.append({'uid': uid, 'cn': cn, 'info': info})
+                    uid = user.get('uid', '')
+                    cn = user.get('cn', '')
+                    organisation = user.get('o', '')
+                    info = user.get('dn', '')
+                    ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
 
         return ret
 
@@ -70,14 +66,17 @@ class Participants(SimpleItem):
             acl_folder = source.getUserFolder()
             users = source.getUsersByRole(acl_folder, [(search_role, None)])
             for user in users:
-                uid = user['uid']
+                uid = user.get('uid', '')
                 if isinstance(uid, list):
                     uid = uid[0]
-                cn = user['cn']
+                cn = user.get('cn', '')
                 if isinstance(cn, list):
                     cn = cn[0]
-                info = user['dn']
-                ret.append({'uid': uid, 'cn': cn, 'info': info})
+                organisation = user.get('o', '')
+                if isinstance(organisation, list):
+                    organisation = organisation[0]
+                info = user.get('dn', '')
+                ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
 
         return ret
 
@@ -97,7 +96,7 @@ class Participants(SimpleItem):
 
     def setAttendees(self, role, REQUEST):
         """ """
-        uids = REQUEST.form['uids']
+        uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)
         for uid in uids:
             self._set_attendee(uid, role)
@@ -109,7 +108,7 @@ class Participants(SimpleItem):
 
     def delAttendees(self, REQUEST):
         """ """
-        uids = REQUEST.form['uids']
+        uids = REQUEST.form.get('uids', [])
         assert isinstance(uids, list)
         for uid in uids:
             self._del_attendee(uid)
