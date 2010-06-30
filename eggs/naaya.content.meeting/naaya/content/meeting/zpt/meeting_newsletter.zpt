@@ -1,0 +1,34 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+    <metal:block metal:fill-slot="title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="body">
+    <h1>
+        <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
+        <tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="Send message to all participants"></span>
+    </h1>
+
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href here/absolute_url" i18n:translate="Back to index"></a>
+        </span>
+    </div>
+
+    <p i18n:translate="This page allows the administrator to send an email to all the participants of the meeting. The meeting contact email is used as the sender address."></p>
+
+    <form method="post" action="send_newsletter" name="formSendNewsletter">
+        <div class="field">
+            <label class="widget-title" for="subject" i18n:translate="Subject: "></label>
+            <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
+        </div>
+        <div class="field">
+            <label class="widget-title" for="body_text" i18n:translate="Body: "></label>
+            <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
+        </div>
+        <input type="submit" value="Send newsletter"/>
+    </form>
+    </metal:block>
+
+</metal:block>
+
