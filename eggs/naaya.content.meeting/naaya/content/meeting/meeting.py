@@ -322,7 +322,7 @@ class NyMeeting(NyContentData, NyFolder):
         """ """
         if self.survey_required:
             current_user = REQUEST.AUTHENTICATED_USER.getUserName()
-            if current_user in self.participants.uids:
+            if current_user in self.participants.attendees:
                 site = self.getSite()
                 path = str(self.survey_pointer)
                 survey_ob = site.unrestrictedTraverse(path, None)
@@ -355,7 +355,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_newsletter')
     def send_newsletter(self, REQUEST):
         """ """
-        participants_emails = [self.participants.getUserEmail(uid) for uid in self.participants.uids]
+        participants_emails = [self.participants.getUserEmail(uid) for uid in self.participants.attendees.keys()]
 
         email_tool = self.getEmailTool()
         email_tool.sendEmail(p_content=REQUEST.form['body_text'],
