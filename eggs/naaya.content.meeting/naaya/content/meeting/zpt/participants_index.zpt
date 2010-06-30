@@ -218,6 +218,7 @@
             <input tal:condition="here/userCanChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_participants" value="Make participants"/>
+            <input tal:condition="here/userCanChangePermissions" type="submit" name="send_email" value="Send email to selected" />
         </form>
         </tal:block>
 
