@@ -254,7 +254,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._add_user('test_participant')
+        self.portal.info.mymeeting.participants._set_attendee('test_participant', 'participant')
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
@@ -391,8 +391,8 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        form = self.browser.get_form('formSetAdministrator')
-        expected_controls = set(['uid', 'set_administrator'])
+        form = self.browser.get_form('formOnAttendees')
+        expected_controls = set(['uids:list', 'set_administrators'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
@@ -402,18 +402,18 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        form = self.browser.get_form('formSetAdministrator')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'uid'))
-        form['uid'] = ['test_participant']
+        form = self.browser.get_form('formOnAttendees')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'set_administrators'))
+        form['uids:list'] = ['test_participant']
         self.browser.submit()
         self.browser_do_logout()
         assert_admin_access()
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        form = self.browser.get_form('formSetAdministrator')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'uid'))
-        form['uid'] = ['']
+        form = self.browser.get_form('formOnAttendees')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'set_participants'))
+        form['uids:list'] = ['test_participant']
         self.browser.submit()
         self.browser_do_logout()
         assert_participant_access()
@@ -466,8 +466,8 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         form['uids:list'] = ['test_participant']
         self.browser.submit()
 
-        form = self.browser.get_form('formDeleteUsers')
-        expected_controls = set(['uids:list', 'remove_users'])
+        form = self.browser.get_form('formOnAttendees')
+        expected_controls = set(['uids:list', 'del_attendees'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
@@ -517,7 +517,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        form = self.browser.get_form('formDeleteUsers')
+        form = self.browser.get_form('formOnAttendees')
         self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
         form['uids:list'] = ['test_participant']
         self.browser.submit()
@@ -542,7 +542,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._add_user('test_participant')
+        self.portal.info.mymeeting.participants._set_attendee('test_participant', 'participant')
 
         try:
             manage_addSurveyTool(self.portal)
