@@ -61,6 +61,10 @@
                     tal:attributes="selected python:search_param=='cn'"
                     i18n:translate="User name">
                 </option>
+                <option value="o"
+                    tal:attributes="selected python:search_param=='o'"
+                    i18n:translate="Organisation">
+                </option>
                 <option value="uid"
                     tal:attributes="selected python:search_param=='uid'"
                     i18n:translate="User ID">
@@ -86,13 +90,15 @@
                     </th>
                     <th i18n:translate="User name"></th>
                     <th i18n:translate="User ID"></th>
-                    <th width="60%" i18n:translate="Other information"></th>
+                    <th i18n:translate="Organisation"></th>
+                    <th width="50%" i18n:translate="Other information"></th>
                 </tr>
                 <tr tal:repeat="item users"
                         tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
                     <td><input type="checkbox" name="uids:list" tal:attributes="value item/uid"/></td>
                     <td><span tal:replace="item/cn"/></td>
                     <td><span tal:replace="item/uid"/></td>
+                    <td><span tal:replace="item/organisation"/></td>
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>
@@ -132,13 +138,15 @@
                     </th>
                     <th i18n:translate="User name"></th>
                     <th i18n:translate="User ID"></th>
-                    <th width="60%" i18n:translate="Other information"></th>
+                    <th i18n:translate="Organisation"></th>
+                    <th width="50%" i18n:translate="Other information"></th>
                 </tr>
                 <tr tal:repeat="item users"
                         tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
                     <td><input type="checkbox" name="uids:list" tal:attributes="value item/uid"/></td>
                     <td><span tal:replace="item/cn"/></td>
                     <td><span tal:replace="item/uid"/></td>
+                    <td><span tal:replace="item/organisation"/></td>
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>

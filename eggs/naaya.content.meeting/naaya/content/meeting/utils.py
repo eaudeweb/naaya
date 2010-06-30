@@ -5,6 +5,12 @@ def _encode(val):
         return val.encode('utf-8')
     return unicode(val, 'iso-8859-1').encode('utf-8')
 
+def schemaHasParam(acl_folder, param):
+    for item in acl_folder.getLDAPSchema():
+        if item[0] == param:
+            return True
+    return False
+
 def getUserFullName(site, uid):
     auth_tool = site.getAuthenticationTool()
     local_user = auth_tool.getUser(uid)
@@ -14,9 +20,10 @@ def getUserFullName(site, uid):
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
-        user = acl_folder.getUserById(uid, None)
-        if user is not None:
-            return _encode(user.getProperty('cn'))
+        if schemaHasParam(acl_folder, 'cn'):
+            user = acl_folder.getUserById(uid, None)
+            if user is not None:
+                return _encode(user.getProperty('cn'))
 
 def getUserEmail(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -26,9 +33,10 @@ def getUserEmail(site, uid):
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
-        user = acl_folder.getUserById(uid, None)
-        if user is not None:
-            return _encode(user.getProperty('mail'))
+        if schemaHasParam(acl_folder, 'mail'):
+            user = acl_folder.getUserById(uid, None)
+            if user is not None:
+                return _encode(user.getProperty('mail'))
 
 def getUserOrganisation(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -38,9 +46,10 @@ def getUserOrganisation(site, uid):
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
-        user = acl_folder.getUserById(uid, None)
-        if user is not None:
-            return _encode(user.getProperty('o'))
+        if schemaHasParam(acl_folder, 'o'):
+            user = acl_folder.getUserById(uid, None)
+            if user is not None:
+                return _encode(user.getProperty('o'))
 
 def getUserPhoneNumber(site, uid):
     auth_tool = site.getAuthenticationTool()
@@ -50,8 +59,9 @@ def getUserPhoneNumber(site, uid):
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
-        user = acl_folder.getUserById(uid, None)
-        if user is not None:
-            return _encode(user.getProperty('telephoneNumber'))
+        if schemaHasParam(acl_folder, 'telephoneNumber'):
+            user = acl_folder.getUserById(uid, None)
+            if user is not None:
+                return _encode(user.getProperty('telephoneNumber'))
 
 
