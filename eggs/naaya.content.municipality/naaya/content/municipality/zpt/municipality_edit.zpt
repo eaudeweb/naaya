@@ -46,7 +46,7 @@
 		</div>
 	</fieldset>
 
-	<fieldset class="fieldset_edit" condition="here/species">
+	<fieldset class="fieldset_edit" tal:condition="here/species">
 		<legend class="widget-title" i18n:translate="">
 			Selected ambassador species
 		</legend>
