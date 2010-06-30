@@ -124,8 +124,8 @@ class Participants(SimpleItem):
         elif 'set_participants' in REQUEST.form:
             return self.setAttendees('participant', REQUEST)
         elif 'send_email' in REQUEST.form:
-            assert 'uids' in REQUEST.form
-            return self.aq_parent.newsletter_html(REQUEST.form['uids'])
+            if 'uids' in REQUEST.form:
+                return self.aq_parent.newsletter_html(REQUEST.form['uids'])
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
