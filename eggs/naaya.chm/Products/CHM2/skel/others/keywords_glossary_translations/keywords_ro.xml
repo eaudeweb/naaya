@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+<file original="glossary_keywords" product-name="CHM Glossary" product-version="1.1.x" datatype="plaintext" source-language="English" target-language="Romanian" date="2005-11-02T11:33:18Z" xml:space="default">
+<export>
+
+
+<trans-unit id="11" approved="1" >
+<source>Abundance and distribution of species</source>
+<target>Abundenţa şi distribuţia speciilor</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="12" approved="1" >
+<source>Status of threathened species</source>
+<target>Situația speciilor amenințate</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="13" approved="1" >
+<source>Extent of selected biomes, ecosystems and habitats</source>
+<target>Suprafața de biomasă, ecosisteme și habitate</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="14" approved="1" >
+<source>Genetic diversity</source>
+<target>Diversiatea genetică</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="15" approved="1" >
+<source>Coverage of protected areas</source>
+<target>Suprafața ariilor protejate</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="16" approved="1" >
+<source>Island biodiversity</source>
+<target>Diversitatea insulară</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="17" approved="1" >
+<source>Mountain biodiversity</source>
+<target>Diversitatea montană/alpină</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="18" approved="1" >
+<source>Identification, Monitoring, Indicators and Assessments</source>
+<target>Identificarea, monitorizarea, indicatori și evaluări</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Situaţia şi tendinţele componentelor diversităţii biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="21" approved="1" >
+<source>Forest under sustainable management</source>
+<target>Pădurea în conformitate cu un management durabil</target>
+<context-group name="Sustainable_use_of_biological_diversity">Dezvoltarea durabilă a diversității biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="22" approved="1" >
+<source>Agricultural practices potentially supporting biodiversity</source>
+<target>Potențiale practici agricole în sprijinul biodiversității</target>
+<context-group name="Sustainable_use_of_biological_diversity">Dezvoltarea durabilă a diversității biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="23" approved="1" >
+<source>Sustainable fishery and aquaculture management</source>
+<target>Managementul durabil al pescuitului și acvaculturii</target>
+<context-group name="Sustainable_use_of_biological_diversity">Dezvoltarea durabilă a diversității biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="24" approved="1" >
+<source>Products derived from sustainable sources</source>
+<target>Produse derivate din surse durabile</target>
+<context-group name="Sustainable_use_of_biological_diversity">Dezvoltarea durabilă a diversității biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="25" approved="1" >
+<source>Ecological Footprint</source>
+<target>Amprenta ecologică</target>
+<context-group name="Sustainable_use_of_biological_diversity">Dezvoltarea durabilă a diversității biologice</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="31" approved="1" >
+<source>Nitrogen deposition</source>
+<target>Depunerea de azot</target>
+<context-group name="Threats_to_biodiversity">Amenințări asupra biodiversității</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="32" approved="1" >
+<source>Invasive alien species</source>
+<target>Specii alohtone invazive</target>
+<context-group name="Threats_to_biodiversity">Amenințări asupra biodiversității</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="33" approved="1" >
+<source>Climate change</source>
+<target>Schimbări climatice</target>
+<context-group name="Threats_to_biodiversity">Amenințări asupra biodiversității</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="34" approved="1" >
+<source>Desertification</source>
+<target>Deșertificare</target>
+<context-group name="Threats_to_biodiversity">Amenințări asupra biodiversității</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="41" approved="1" >
+<source>Marine Trophic Index</source>
+<target>Indicele trofic marin</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="42" approved="1" >
+<source>Fragmentation of natural and semi-natural areas</source>
+<target>Fragmentarea zonelor naturale şi semi-naturale</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="43" approved="1" >
+<source>Fragmentation of river systems</source>
+<target>Fragmentarea sistemelor de râu</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="44" approved="1" >
+<source>Nutrients in transitional, coastal and marine waters</source>
+<target>Nutrienţi în apele de tranziţie, costiere şi marine</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="45" approved="1" >
+<source>Water quality of freshwater ecosystems</source>
+<target>Calitatea apei ecosistemelor de apă dulce</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="46" approved="1" >
+<source>Health and well-being of humans</source>
+<target>Sănătatea şi bunăstarea oamenilor</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="47" approved="1" >
+<source>Biodiversity for food and medicine</source>
+<target>Biodiversitate pentru alimente şi medicamente</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="48" approved="1" >
+<source>Biodiversity and  tourism</source>
+<target>Biodiversitate și turism</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Integritatea ecosistemelor și bunurile și serviciile ecosistemelor</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="51" approved="1" >
+<source>Traditional knowledge</source>
+<target>Cunoștințe tradiționale</target>
+<context-group name="Knowledge_of_biodiversity">Cunoaşterea biodiversităţii</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="52" approved="1" >
+<source>Innovations</source>
+<target>Inovații</target>
+<context-group name="Knowledge_of_biodiversity">Cunoaşterea biodiversităţii</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="53" approved="1" >
+<source>Best practices</source>
+<target>Bune practici</target>
+<context-group name="Knowledge_of_biodiversity">Cunoaşterea biodiversităţii</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="61" approved="1" >
+<source>Financing biodiversity management</source>
+<target>Finanțarea managementului biodiversității</target>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
+</context-group>
+<note></note>
+</trans-unit>
+ 
+<trans-unit id="62" approved="1" >
+<source>Technology transfer and cooperation</source>
+<target>Cooperarea și transferul de tehnologie</target>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
+</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="63" approved="1" >
+<source>Liability and Redress</source>
+<target>Răspundere și reparație</target>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
+</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy7" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Access_to_genetic_resources_and_benefit-sharing">Accesul la resursele genetice și împărțirea echitabilă a acestora</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy8" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Public_opinion_about_biodiversity_and_public_awareness">Opinia publică și conștientizarea publicului privind biodiversitatea</context-group>
+<note></note>
+</trans-unit>
+
+</export>
+</file>
+</xliff>
+
