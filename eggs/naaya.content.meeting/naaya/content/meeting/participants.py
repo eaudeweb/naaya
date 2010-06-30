@@ -5,7 +5,7 @@ from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import change_permissions, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent.list import PersistentList
+from persistent.dict import PersistentDict
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -20,8 +20,9 @@ class Participants(SimpleItem):
     def __init__(self, id):
         """ """
         self.id = id
-        self.uids = PersistentList()
-        self.administrator_uid = None
+        self.attendees = PersistentDict()
+        #self.uids = PersistentList()
+        #self.administrator_uid = None
 
     def findUsers(self, search_param, search_term):
         """ """
@@ -80,53 +81,52 @@ class Participants(SimpleItem):
 
         return ret
 
-    def _add_user(self, uid):
-        if uid in self.uids:
+    def _set_attendee(self, uid, role):
+        if uid in self.attendees and self.attendees[uid] == role:
             return
 
-        self.aq_parent.manage_setLocalRoles(uid, [PARTICIPANT_ROLE])
-        self.uids.append(uid)
-
-    def addUsers(self, REQUEST):
-        """ """
-        uids = REQUEST.form['uids']
-        assert isinstance(uids, list)
-        for uid in uids:
-            self._add_user(uid)
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
-
-    def _remove_user(self, uid):
-        self.aq_parent.manage_delLocalRoles([uid])
-        self.uids.remove(uid)
-
-    def removeUsers(self, REQUEST):
-        """ """
-        uids = REQUEST.form['uids']
-        assert isinstance(uids, list)
-        for uid in uids:
-            self._remove_user(uid)
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
-
-    security.declareProtected(change_permissions, 'setAdministrator')
-    def setAdministrator(self, uid, REQUEST=None):
-        """ """
-        old_admin = self.administrator_uid
-        if uid:
-            self.aq_parent.manage_delLocalRoles([uid])
-            self.aq_parent.manage_setLocalRoles(uid, ['Administrator'])
-            self.administrator_uid = uid
+        if role == 'participant':
+            zope_role = PARTICIPANT_ROLE
+        elif role == 'administrator':
+            zope_role = 'Administrator'
         else:
-            self.administrator_uid = None
+            return
 
-        if old_admin:
-            self.aq_parent.manage_delLocalRoles([old_admin])
-            if old_admin in self.uids:
-                self.aq_parent.manage_setLocalRoles(old_admin, [PARTICIPANT_ROLE])
+        self.aq_parent.manage_setLocalRoles(uid, [zope_role])
+        self.attendees[uid] = role
 
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(self.absolute_url())
+    def setAttendees(self, role, REQUEST):
+        """ """
+        uids = REQUEST.form['uids']
+        assert isinstance(uids, list)
+        for uid in uids:
+            self._set_attendee(uid, role)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-    def getParticipants(self, sort_on=''):
+    def _del_attendee(self, uid):
+        self.aq_parent.manage_delLocalRoles([uid])
+        del self.attendees[uid]
+
+    def delAttendees(self, REQUEST):
+        """ """
+        uids = REQUEST.form['uids']
+        assert isinstance(uids, list)
+        for uid in uids:
+            self._del_attendee(uid)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    def onAttendees(self, REQUEST):
+        """ """
+        if 'del_attendees' in REQUEST.form:
+            return self.delAttendees(REQUEST)
+        elif 'set_administrators' in REQUEST.form:
+            return self.setAttendees('administrator', REQUEST)
+        elif 'set_participants' in REQUEST.form:
+            return self.setAttendees('participant', REQUEST)
+
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    def getAttendees(self, sort_on=''):
         """ """
         site = self.getSite()
         key = None
@@ -138,19 +138,22 @@ class Participants(SimpleItem):
             key = lambda x: getUserEmail(site, x)
         elif sort_on == 'uid':
             key = lambda x: x
+        elif sort_on == 'role':
+            key = lambda x: self.attendees[x]
 
         if key is None:
-            return self.uids
-        return sorted(self.uids, key=key)
+            return self.attendees.keys()
+        return sorted(self.attendees.keys(), key=key)
 
-    def getParticipantInfo(self, uid):
+    def getAttendeeInfo(self, uid):
         """ """
         site = self.getSite()
         name = getUserFullName(site, uid)
         email = getUserEmail(site, uid)
         organisation = getUserOrganisation(site, uid)
         phone = getUserPhoneNumber(site, uid)
-        return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone}
+        role = self.attendees[uid]
+        return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone, 'role': role}
 
     security.declareProtected(view, 'userCanChangePermissions')
     def userCanChangePermissions(self):
