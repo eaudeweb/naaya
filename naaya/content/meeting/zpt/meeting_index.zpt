@@ -101,7 +101,7 @@
             <p tal:define="site here/getSite">
                 <a tal:condition="here/agenda_pointer" tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}" i18n:translate="Agenda"></a>
                 <a tal:condition="here/minutes_pointer" tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}" i18n:translate="Minutes"></a>
-                <a tal:condition="here/survey_pointer" tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}" i18n:translate="Take the survey"></a>
+                <a tal:condition="here/survey_pointer" tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}" i18n:translate="Meeting Survey"></a>
             </p>
 
             <p>
