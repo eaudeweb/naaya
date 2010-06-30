@@ -12,8 +12,14 @@
 		</tal:block>
 
 		<div class="field">
-			<label class="widget-title" for="ambassador_species" i18n:translate="">
+			<label class="widget-title" i18n:translate="">
 				Ambassador species
+			</label>
+			<div class="textarea_message" i18n:translate="">You can enter one species at a time.
+				If you want to add more species, first complete and submit this form.<br/>
+				Later you can click "edit" and add another species<br/><br/></div>
+			<label class="widget-title" for="ambassador_species" i18n:translate="">
+				Ambassador species name
 			</label>
 			<span tal:condition="request/SESSION/ambassador_species-errors|nothing"
 				class="form-errors" i18n:translate="">
