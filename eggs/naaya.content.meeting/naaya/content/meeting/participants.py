@@ -21,8 +21,6 @@ class Participants(SimpleItem):
         """ """
         self.id = id
         self.attendees = PersistentDict()
-        #self.uids = PersistentList()
-        #self.administrator_uid = None
 
     def findUsers(self, search_param, search_term):
         """ """
@@ -80,14 +78,26 @@ class Participants(SimpleItem):
 
         return ret
 
+    def getParticipants(self):
+        """ """
+        return [uid for uid, role in self.attendees.iteritems() if role != 'waiting']
+
+    def participantsCount(self):
+        """ """
+        return len(self.getParticipants())
+
     def _set_attendee(self, uid, role):
         if uid in self.attendees and self.attendees[uid] == role:
             return
 
         assert role in [PARTICIPANT_ROLE, 'Administrator']
 
-        self.aq_parent.manage_setLocalRoles(uid, [role])
-        self.attendees[uid] = role
+        if self.aq_parent.max_participants > self.participantsCount():
+            self.aq_parent.manage_setLocalRoles(uid, [role])
+            self.attendees[uid] = role
+        else:
+            self.aq_parent.manage_setLocalRoles(uid, [PARTICIPANT_ROLE])
+            self.attendees[uid] = 'waiting'
 
     def setAttendees(self, role, REQUEST):
         """ """

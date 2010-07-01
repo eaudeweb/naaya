@@ -41,6 +41,7 @@ from utils import getUserEmail
 DEFAULT_SCHEMA = {
     'start_date':           dict(sortorder=130, widget_type='Date',     label='Start date', data_type='date', required=True),
     'end_date':             dict(sortorder=140, widget_type='Date',     label='End date', data_type='date'),
+    'max_participants':     dict(sortorder=150, widget_type='String',   label='Maximum number of participants', data_type='int'),
     'contact_person':       dict(sortorder=150, widget_type='String',   label='Contact person'),
     'contact_email':        dict(sortorder=160, widget_type='String',   label='Contact email', required=True),
     'survey_pointer':       dict(sortorder=230, widget_type='Pointer',  label='Link to the Meeting Survey', relative=True),
@@ -206,11 +207,12 @@ class NyMeeting(NyContentData, NyFolder):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'location="%s" start_date="%s" end_date="%s" agenda_pointer="%s" minutes_pointer="%s" survey_pointer="%s" contact_person="%s" contact_email="%s"' % \
+        return 'location="%s" start_date="%s" end_date="%s" max_participants="%s" agenda_pointer="%s" minutes_pointer="%s" survey_pointer="%s" contact_person="%s" contact_email="%s"' % \
             (
                 self.utXmlEncode(self.geo_address()),
                 self.utXmlEncode(self.utNoneToEmpty(self.start_date)),
                 self.utXmlEncode(self.utNoneToEmpty(self.end_date)),
+                self.utXmlEncode(self.max_participants),
                 self.utXmlEncode(self.agenda_pointer),
                 self.utXmlEncode(self.minutes_pointer),
                 self.utXmlEncode(self.survey_pointer),
