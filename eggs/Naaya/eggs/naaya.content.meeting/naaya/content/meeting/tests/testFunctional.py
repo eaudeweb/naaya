@@ -320,30 +320,25 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-    def test_newsletter_page(self):
+    def test_send_emails_page(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting')
-        self.assertTrue('http://localhost/portal/info/mymeeting/participants' in self.browser.get_html())
+        self.assertTrue('http://localhost/portal/info/mymeeting/email_sender' in self.browser.get_html())
 
-        self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        form = self.browser.get_form('formOnAttendees')
-        expected_controls = set(['uids:list', 'send_email'])
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        form = self.browser.get_form('formSendEmail')
+        expected_controls = set(['from_email:utf8:ustring', 'to_uids:list', 'subject:utf8:ustring', 'body_text:utf8:ustring', 'send_email'])
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'send_email'))
-        form['uids:list'] = ['test_participant']
+        form['subject:utf8:ustring'] = 'Test subject'
+        form['body_text:utf8:ustring'] = 'Test body'
         self.browser.submit()
-
-        form = self.browser.get_form('formSendNewsletter')
-        expected_controls = set(['uids:list', 'subject:utf8:ustring', 'body_text:utf8:ustring'])
-        found_controls = set(c.name for c in form.controls)
-        self.assertTrue(expected_controls <= found_controls,
-            'Missing form controls: %s' % repr(expected_controls - found_controls))
-        self.assertEqual(form['uids:list'], 'test_participant')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
 
         self.browser_do_logout()
 
