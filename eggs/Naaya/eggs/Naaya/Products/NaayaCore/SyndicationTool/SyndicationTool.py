@@ -308,7 +308,7 @@ InitializeClass(SyndicationTool)
 
 @component.adapter(INySite, IHeartbeat)
 def feedUpdateSubscriber(site, hb):
-    if cooldown('remote channels %r' % ofs_path(site), timedelta(hours=1)):
+    if cooldown('remote channels %r' % ofs_path(site), timedelta(hours=6)):
         return
 
     site.updateRemoteChannels(site.get_site_uid())
