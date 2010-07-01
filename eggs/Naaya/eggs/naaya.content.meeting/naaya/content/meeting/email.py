@@ -24,7 +24,7 @@ class EmailSender(SimpleItem):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self, 'meeting': self.aq_parent}, 'meeting_newsletter')
+        return self.getFormsTool().getContent({'here': self, 'meeting': self.aq_parent}, 'meeting_emails')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_newsletter')
     def send_email(self, from_email, subject, body_text, REQUEST, to_uids=None):
@@ -42,5 +42,5 @@ class EmailSender(SimpleItem):
         REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
 
 
-NaayaPageTemplateFile('zpt/meeting_newsletter', globals(), 'meeting_newsletter')
+NaayaPageTemplateFile('zpt/email_index', globals(), 'meeting_emails')
 
