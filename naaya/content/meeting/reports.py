@@ -36,7 +36,7 @@ class MeetingReports(SimpleItem):
         meeting_obs = site.getCatalogedObjectsCheckView(meta_type=meeting_config['meta_type'], approved=1)
 
         for meeting_ob in meeting_obs:
-            for uid in meeting_ob.participants.attendees.keys():
+            for uid in meeting_ob.participants.getParticipants():
                 if uid not in participants:
                     participants[uid] = []
                 participants[uid].append(meeting_ob)
@@ -79,7 +79,7 @@ class MeetingReports(SimpleItem):
         meeting_obs = site.getCatalogedObjectsCheckView(meta_type=meeting_config['meta_type'], approved=1)
 
         for i, meeting in enumerate(meeting_obs):
-            for uid in meeting.participants.attendees.keys():
+            for uid in meeting.participants.getParticipants():
                 organisation = getUserOrganisation(site, uid)
                 if organisation not in organisations:
                     organisations[organisation] = {}
