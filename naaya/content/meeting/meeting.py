@@ -72,6 +72,9 @@ config = {
         '_misc': {
                 'NyMeeting.gif': ImageFile('www/meeting.gif', globals()),
                 'NyMeeting_marked.gif': ImageFile('www/meeting_marked.gif', globals()),
+                'Attendees.jpg': ImageFile('www/Attendees.jpg', globals()),
+                'Email.jpg': ImageFile('www/Email.jpg', globals()),
+                'iCalendar.jpg': ImageFile('www/iCalendar.jpg', globals()),
             },
     }
 
@@ -188,6 +191,10 @@ class NyMeeting(NyContentData, NyFolder):
     meta_label = config['label']
     icon = 'misc_/NaayaContent/NyMeeting.gif'
     icon_marked = 'misc_/NaayaContent/NyMeeting_marked.gif'
+
+    attendees_icon = 'misc_/NaayaContent/Attendees.jpg'
+    email_icon = 'misc_/NaayaContent/Email.jpg'
+    icalendar_icon = 'misc_/NaayaContent/iCalendar.jpg'
 
     def manage_options(self):
         """ """
