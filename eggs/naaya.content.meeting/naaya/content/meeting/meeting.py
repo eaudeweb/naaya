@@ -411,7 +411,6 @@ manage_addNyMeeting_html.action = 'addNyMeeting'
 
 #Custom page templates
 NaayaPageTemplateFile('zpt/meeting_menusubmissions', globals(), 'meeting_menusubmissions')
-NaayaPageTemplateFile('zpt/meeting_newsletter', globals(), 'meeting_newsletter')
 
 config.update({
     'on_install': meeting_on_install,
