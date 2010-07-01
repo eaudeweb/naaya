@@ -109,6 +109,7 @@
 
                 <p>
                     <a tal:attributes="href string:${here/absolute_url}/participants" i18n:translate="Participants"></a>
+                    <a tal:attributes="href string:${here/absolute_url}/email_sender" i18n:translate="Send emails"></a>
                 </p>
 
                 <table border="0" cellspacing="2" cellpadding="2">

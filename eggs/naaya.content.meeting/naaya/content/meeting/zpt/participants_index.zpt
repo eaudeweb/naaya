@@ -178,7 +178,7 @@
                 <tr>
                     <th tal:condition="here/userCanChangePermissions" width="30px">
                         <span i18n:translate="Select"></span>
-                        <input type="checkbox" onclick="javascript:toggleSelect(this, 'formDeleteUsers', 'uids:list')"/>
+                        <input type="checkbox" onclick="javascript:toggleSelect(this, 'formOnAttendees', 'uids:list')"/>
                     </th>
                     <th>
                         <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=name"
@@ -228,7 +228,6 @@
             <input tal:condition="here/userCanChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_participants" value="Make participants"/>
-            <input tal:condition="here/userCanChangePermissions" type="submit" name="send_email" value="Send email to selected" />
         </form>
         </tal:block>
 
