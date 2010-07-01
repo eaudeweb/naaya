@@ -1,0 +1,72 @@
+<script type="text/javascript">
+function toggleSelect(checkbox, form_name, name) {
+    var form_array = document.getElementsByName(form_name);
+    if (form_array.length != 1) {
+        alert('Assertion failed: one form with name ' + form_name);
+        return;
+    }
+    var form = form_array[0];
+    for (var i = 0; i < form.elements.length; i++) {
+        var element = form.elements[i];
+        if (element.type == 'checkbox' && element.name == name) {
+            element.checked = checkbox.checked;
+        }
+    }
+}
+</script>
+
+<table class="datatable" width="95%" tal:define="
+        sort_on python:request.get('sort_on', '');
+        users python:here.getAttendees(sort_on)">
+    <tr>
+        <th width="30px" tal:condition="here/userCanChangePermissions">
+            <span i18n:translate="Select"></span>
+            <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, '${form_name}', '${input_name}')"/>
+        </th>
+        <th>
+            <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=name"
+                 i18n:translate="Name"></a>
+        </th>
+        <th>
+            <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=email"
+                 i18n:translate="Email"></a>
+        </th>
+        <th>
+            <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=o"
+                 i18n:translate="Organisation"></a>
+        </th>
+        <th><span i18n:translate="Phone number"></span></th>
+        <th>
+            <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=uid"
+                 i18n:translate="User ID"></a>
+        </th>
+        <th>
+            <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
+                i18n:translate="Role"></a>
+        </th>
+    </tr>
+    <tr tal:repeat="user users"
+            tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
+        <tal:block define="user_info python:here.getAttendeeInfo(user)">
+        <td tal:condition="here/userCanChangePermissions">
+            <input type="checkbox" tal:attributes="name input_name; value user_info/uid"/>
+        </td>
+        <td tal:define="name user_info/name">
+            <span tal:condition="name" tal:replace="name"/>
+        </td>
+        <td tal:define="email user_info/email">
+            <a tal:condition="email" tal:attributes="href string:mailto:${email}" tal:content="email"></a>
+        </td>
+        <td tal:define="organisation user_info/organisation">
+            <span tal:condition="organisation" tal:replace="organisation"/>
+        </td>
+        <td tal:define="phone user_info/phone">
+            <span tal:condition="phone" tal:replace="phone"/>
+        </td>
+        <td><span tal:replace="user"/></td>
+        <td><span tal:replace="user_info/role"/></td>
+        </tal:block>
+    </tr>
+</table>
+
+
