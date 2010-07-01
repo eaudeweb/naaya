@@ -178,5 +178,11 @@ class Participants(SimpleItem):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'meeting_participants_pickrole')
 
+    security.declareProtected(view, 'participants_table')
+    def participants_table(self, form_name, input_name):
+        """ """
+        return self.getFormsTool().getContent({'here': self, 'form_name': form_name, 'input_name': input_name}, 'meeting_participants_table')
+
 NaayaPageTemplateFile('zpt/participants_index', globals(), 'meeting_participants')
 NaayaPageTemplateFile('zpt/participants_pickrole', globals(), 'meeting_participants_pickrole')
+NaayaPageTemplateFile('zpt/participants_table', globals(), 'meeting_participants_table')
