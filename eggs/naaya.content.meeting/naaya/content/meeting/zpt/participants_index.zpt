@@ -102,7 +102,7 @@
                     <td><span tal:replace="item/info"/></td>
                 </tr>
             </table>
-            <input type="hidden" name="role" value="participant"/>
+            <input type="hidden" name="role" tal:attributes="value here/getParticipantRole"/>
             <input type="submit" name="add_users" value="Add selected users"/>
         </form>
         <div tal:condition="python:len(users) == 0" i18n:translate="No users matched selected criteria."></div>
