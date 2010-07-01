@@ -25,32 +25,39 @@ def extract_multipleselect(answer, widget_name):
     else:
         return [widget.choices[n] for n in datamodel]
 
+def extract_singleselect(answer, widget_name):
+    widget = answer.getSurveyTemplate()[widget_name]
+    datamodel = answer.get(widget_name)
+    if datamodel is None:
+        return None
+    else:
+        return widget.choices[datamodel]
+
 geo_type_map = {
     'Global': {
-        ('Green Economy',):         'symbol825',
+        ('Green economy',):         'symbol825',
         ('Water',):                 'symbol814',
-        ('Green Economy', 'Water'): 'symbol851',
+        ('Green economy', 'Water'): 'symbol851',
     },
-    'Regional': {
-        ('Green Economy',):         'symbol862',
+    'Regional/Transboundary': {
+        ('Green economy',):         'symbol862',
         ('Water',):                 'symbol817',
-        ('Green Economy', 'Water'): 'symbol987',
+        ('Green economy', 'Water'): 'symbol987',
     },
-    'National': {
-        ('Green Economy',):         'symbol268',
+    'National/Local': {
+        ('Green economy',):         'symbol268',
         ('Water',):                 'symbol256',
-        ('Green Economy', 'Water'): 'symbol166',
+        ('Green economy', 'Water'): 'symbol166',
     },
 }
 
 def extract_geo_type(answer):
-    for row_name, answer_names in extract_checkboxmatrix(answer, 'w_theme'):
-        try:
-            return geo_type_map[row_name][answer_names]
-        except KeyError:
-            continue
+    themes = tuple(extract_multipleselect(answer, 'w_theme3082'))
+    theme_coverage = extract_singleselect(answer, 'w_theme-coverage')
 
-    else:
+    try:
+        return geo_type_map[theme_coverage][themes]
+    except KeyError:
         return None
 
 widgetidmap = {
