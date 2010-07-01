@@ -495,12 +495,12 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         def assert_access():
             self.browser_do_login('test_participant', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
-            self.assertTrue('Access denied' not in self.browser.get_html()) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants' in self.browser.get_html()) 
             self.browser_do_logout()
         def assert_no_access():
             self.browser_do_login('test_participant', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
-            self.assertTrue('Access denied' in self.browser.get_html()) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants' not in self.browser.get_html()) 
             self.browser_do_logout()
 
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
