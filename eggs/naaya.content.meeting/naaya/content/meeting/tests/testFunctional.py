@@ -13,10 +13,11 @@ from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 from naaya.content.meeting import PARTICIPANT_ROLE
 
 def addPortalMeetingParticipant(portal):
-    portal.acl_users._doAddUser('test_participant', 'participant', [], '', '', '', '')
+    portal.acl_users._doAddUser('test_participant1', 'participant', [], '', '', '', '')
+    portal.acl_users._doAddUser('test_participant2', 'participant', [], '', '', '', '')
 
 def removePortalMeetingParticipant(portal):
-    portal.acl_users._doDelUsers(['test_participant'])
+    portal.acl_users._doDelUsers(['test_participant1', 'test_participant2'])
 
 class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
     """ CreateTestCase for NyMeeting object """
@@ -254,7 +255,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant', PARTICIPANT_ROLE)
+        self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
@@ -266,7 +267,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
     def test_index(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
 
-        self.browser_do_login('test_participant', 'participant')
+        self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting')
         html = self.browser.get_html()
         self.assertTrue('MyMeeting' in html)
@@ -283,7 +284,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
     def test_feed(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
 
-        self.browser_do_login('test_participant', 'participant')
+        self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/portal_syndication/latestuploads_rdf')
         html = self.browser.get_html()
         self.assertTrue('MyMeeting' in html)
@@ -375,7 +376,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
     def test_meeting_administrator(self):
         def assert_participant_access():
-            self.browser_do_login('test_participant', 'participant')
+            self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
             self.assertTrue('Access denied' not in html)
@@ -383,7 +384,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
             self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
             self.browser_do_logout()
         def assert_admin_access():
-            self.browser_do_login('test_participant', 'participant')
+            self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
             self.assertTrue('Access denied' not in html)
@@ -410,7 +411,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formOnAttendees')
         self.browser.clicked(form, self.browser.get_form_field(form, 'set_administrators'))
-        form['uids:list'] = ['test_participant']
+        form['uids:list'] = ['test_participant1']
         self.browser.submit()
         self.browser_do_logout()
         assert_admin_access()
@@ -419,7 +420,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formOnAttendees')
         self.browser.clicked(form, self.browser.get_form_field(form, 'set_participants'))
-        form['uids:list'] = ['test_participant']
+        form['uids:list'] = ['test_participant1']
         self.browser.submit()
         self.browser_do_logout()
         assert_participant_access()
@@ -433,7 +434,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         from naaya.content.meeting.meeting import addNyMeeting
         location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting',
+            title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain', **location)
         self.portal.info.mymeeting.approveThis()
@@ -455,7 +456,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formSearchUsers')
-        self.assertTrue('test_participant' not in self.browser.get_html())
+        self.assertTrue('test_participant1' not in self.browser.get_html())
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:ustring'))
         form['search_param'] = ['uid']
@@ -466,10 +467,10 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
-        self.assertTrue('test_participant' in self.browser.get_html())
+        self.assertTrue('test_participant1' in self.browser.get_html())
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
-        form['uids:list'] = ['test_participant']
+        form['uids:list'] = ['test_participant1', 'test_participant2']
         self.browser.submit()
 
         form = self.browser.get_form('formOnAttendees')
@@ -477,23 +478,27 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         found_controls = set(c.name for c in form.controls)
         self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
-        self.assertTrue('test_participant' in self.browser.get_html())
+        html = self.browser.get_html()
+        self.assertTrue('test_participant1' in html)
+        self.assertTrue('test_participant2' in html)
+        self.assertTrue('Participant' in html)
+        self.assertTrue('waiting' in html)
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
-        form['uids:list'] = ['test_participant']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'del_attendees'))
+        form['uids:list'] = ['test_participant1']
         self.browser.submit()
-        self.assertTrue('test_participant' not in self.browser.get_html())
+        self.assertTrue('test_participant1' not in self.browser.get_html())
 
         self.browser_do_logout()
 
     def test_participant_rights(self):
         def assert_access():
-            self.browser_do_login('test_participant', 'participant')
+            self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
             self.assertTrue('http://localhost/portal/info/mymeeting/participants' in self.browser.get_html()) 
             self.browser_do_logout()
         def assert_no_access():
-            self.browser_do_login('test_participant', 'participant')
+            self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
             self.assertTrue('http://localhost/portal/info/mymeeting/participants' not in self.browser.get_html()) 
             self.browser_do_logout()
@@ -503,7 +508,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
-        self.assertTrue('test_participant' not in self.browser.get_html())
+        self.assertTrue('test_participant1' not in self.browser.get_html())
         self.browser_do_logout()
         assert_no_access()
 
@@ -512,11 +517,11 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('formSearchUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'search_term:utf8:ustring'))
         form['search_param'] = ['uid']
-        form['search_term:utf8:ustring'] = 'test_participant'
+        form['search_term:utf8:ustring'] = 'test_participant1'
         self.browser.submit()
         form = self.browser.get_form('formAddUsers')
         self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
-        form['uids:list'] = ['test_participant']
+        form['uids:list'] = ['test_participant1']
         self.browser.submit()
         self.browser_do_logout()
         assert_access()
@@ -525,7 +530,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
         form = self.browser.get_form('formOnAttendees')
         self.browser.clicked(form, self.browser.get_form_field(form, 'uids:list'))
-        form['uids:list'] = ['test_participant']
+        form['uids:list'] = ['test_participant1']
         self.browser.submit()
         self.browser_do_logout()
         assert_no_access()
@@ -548,7 +553,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant', PARTICIPANT_ROLE)
+        self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
 
         try:
             manage_addSurveyTool(self.portal)
@@ -569,7 +574,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.survey_required = False
         import transaction; transaction.commit()
 
-        self.browser_do_login('test_participant', 'participant')
+        self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
         self.assertTrue('Meeting Survey' in self.browser.get_html())
@@ -579,7 +584,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.survey_required = True
         import transaction; transaction.commit()
 
-        self.browser_do_login('test_participant', 'participant')
+        self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/mysurvey')
         self.browser_do_logout()
