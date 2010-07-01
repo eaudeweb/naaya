@@ -156,9 +156,6 @@ class RefTree(LocalPropertyManager, Folder):
         """ Get tree as a list of dictionaries ordered by weight """
         nodes = self.get_tree_nodes()
         data = []
-        for node in nodes:
-            node.children = self.get_node_children(node.id)
-
         visited = []
         def recurse_get_tree(node):
             if node.id not in visited:
@@ -167,7 +164,7 @@ class RefTree(LocalPropertyManager, Folder):
                     ret_dict = {}
                     ret_dict[node] = []
                     if hasattr(node, 'children'):
-                        ret_dict[node] = map(recurse_get_tree, node.children)
+                        ret_dict[node] = map(recurse_get_tree, self.get_node_children(node.id))
                     return ret_dict
 
         for node in nodes:
