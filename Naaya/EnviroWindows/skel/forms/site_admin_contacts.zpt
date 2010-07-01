@@ -1,37 +1,8 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
 	<tal:block metal:fill-slot="title" />
-
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
-
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-			// Pick trees for import/export
-			var pick_export = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
-			var pick_import = $('<span'+' class="buttons"><a'+' href="#">Pick location<'+'/a><'+'/span>');
-			var tree = $('<div'+' id="location_tree" class="extjs_tree custom-tree"><'+'/div>');
-			function toggle_tree() {
-				$('#location_tree').remove();
-				$(this).after(tree);
-				if (!$('#location_tree').text()){
-					makeTree('location_tree');
-				}
-			}
-			pick_export.click(toggle_tree)
-			pick_import.click(toggle_tree)
-			$('#location_export').after(pick_export);
-			$('#location_import').after(pick_import);
-
-			// Pick tree for mail sending
-			var pick_mail = $('<span'+' class="buttons"><a'+' href="#">'+
-					'Pick location<'+'/a><'+'/span>');
-			pick_mail.click(toggle_tree);
-			$('#location_mail').after(pick_mail);
-		});
-
-	</script>
-
+	<!-- JSTree scripts -->
+	<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
 	<h1 i18n:translate="" tal:condition="python:not section">Contact - listing</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Contacts - vCard import/export</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Contacts - CSV import/export</h1>
@@ -60,8 +31,10 @@
 		<form action="export_contacts_to_csv" method="post">
 			<p i18n:translate="">Select or type the path to a location from whitch to export contacts.
 			If you want to export all portal contacts select the portal root or type <em>/</em></p>
-			<input class="extjs_target" type="text" name="location" id="location_export" size="50"
+			<input class="sitemap_tree1_target" type="text" name="location" id="location_export" size="50"
 				tal:attributes="value python:options.get('location', None)" />
+			<div class="sitemap_tree" id='sitemap_tree1'></div>
+			<div style="clear: both"></div>
 			<br />
 			<input type="submit" value="Export" i18n:attributes="value"/>
 		</form>
@@ -73,7 +46,7 @@
 		If the latitude and longitude are not provided, the system will try to find these coordinates from the
 		<em>Postal address</em> field. The <em>Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()"> defined in the portal</a>.
 		</p>
-		<p i18n:translate=""><strong>TIP:</strong> Make sure that the encoding of your CSV file is either Latin-1 or UTF-8 and 
+		<p i18n:translate=""><strong>TIP:</strong> Make sure that the encoding of your CSV file is either Latin-1 or UTF-8 and
 		that you select the matching <em>Encoding</em> option in the combo box below.
 		</p>
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
@@ -81,7 +54,9 @@
 		<form action="import_contacts_from_csv" method="post" enctype="multipart/form-data">
 			<div style="clear: both"></div>
 			<label for="location" i18n:translate="">Location</label>
-			<input class="extjs_target" type="text" name="location" id="location_import" size="50" />
+			<input class="sitemap_tree2_target" type="text" name="location" id="location_import" size="50" />
+			<div class="sitemap_tree" id='sitemap_tree2'></div>
+			<div style="clear: both"></div>
 			<div class="field">
 				<label for="file" i18n:translate="">File</label>
 				<input type="file" name="file" id="file" value="" />
@@ -112,8 +87,10 @@
 		<form action="export_contacts_vcard" method="post">
 			<p i18n:translate="">Select or type the path to a location from whitch to export contacts.
 			If you want to export all portal contacts select the portal root or type <em>/</em></p>
-			<input class="extjs_target" type="text" name="location" id="location_export" size="50"
+			<input class="sitemap_tree3_target" type="text" name="location" id="location_export" size="50"
 				tal:attributes="value python:options.get('location', None)" />
+			<div class="sitemap_tree" id='sitemap_tree3'></div>
+			<div style="clear: both"></div>
 			<br />
 			<input type="submit" value="Export" i18n:attributes="value"/>
 		</form>
@@ -126,8 +103,10 @@
 				<input type="file" id="vcard_zipfile" name="vcard_zipfile"/>
 			</div>
 			<div class="field">
-				<input class="extjs_target" type="text" name="location" id="location_import" size="50"
+				<input class="sitemap_tree4_target" type="text" name="location" id="location_import" size="50"
 					tal:attributes="value python:options.get('location', None)" />
+				<div class="sitemap_tree" id='sitemap_tree4'></div>
+				<div style="clear: both"></div>
 			</div>
 			<input type="submit" value="Upload contacts" />
 		</form>
@@ -146,8 +125,10 @@
 			</div>
 			<div class="field">
 			<label for="location_mail" i18n:translate="">Location</label>
-				<input class="extjs_target" type="text" name="location" id="location_mail" size="50"
+				<input class="sitemap_tree5_target" type="text" name="location" id="location_mail" size="50"
 					tal:attributes="value python:options.get('location', None)" />
+				<div class="sitemap_tree" id='sitemap_tree5'></div>
+				<div style="clear: both"></div>
 			</div>
 			<div class="field">
 				<label for="subject" i18n:translate="">Mail subject</label>
@@ -184,11 +165,5 @@
 			</tal:block>
 			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em>Contact</em> items</span>
 		</tal:block>
-
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
-		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
-		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
-		<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 	</tal:block>
 </tal:block>
