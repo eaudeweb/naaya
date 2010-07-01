@@ -15,6 +15,16 @@
     </metal:block>
 
     <metal:block fill-slot="body">
+    <script type="text/javascript">
+    function toggleHideShow(id) {
+        var element = document.getElementById(id);
+        if (element.style.display == 'none') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+    </script>
     <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
         <div id="center_content" tal:attributes="style python:test(request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here) or len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
         <metal:block define-slot="page-middle">
@@ -47,13 +57,12 @@
             </metal:block>
 
             <!-- Map widget -->
-            <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+            <div id="map_div">
+                <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+            </div>
 
             <p tal:condition="python:here.description!=''"
                 tal:content="structure here/description" />
-
-            <p><a tal:attributes="href string:${here/absolute_url}/get_ics"
-                  i18n:translate="Download as iCalendar"></a></p>
 
             <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
             <tr tal:condition="here/start_date">
@@ -70,7 +79,7 @@
             <tr tal:condition="here/geo_address">
                 <th i18n:translate="Meeting location"></th>
                 <td>
-                    <span tal:replace="here/geo_address"/>
+                    <a href="javascript:toggleHideShow('map_div')" tal:content="here/geo_address"/>
                 </td>
             </tr>
             <tr tal:define="
@@ -108,8 +117,21 @@
                 </p>
 
                 <p>
-                    <a tal:attributes="href string:${here/absolute_url}/participants" i18n:translate="Participants"></a>
-                    <a tal:attributes="href string:${here/absolute_url}/email_sender" i18n:translate="Send emails"></a>
+                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/get_ics">
+                        <img alt="" tal:attributes="src here/icalendar_icon">
+                        <br />
+                        iCalendar
+                    </a>
+                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/participants">
+                        <img alt="" tal:attributes="src here/attendees_icon">
+                        <br />
+                        Participants
+                    </a>
+                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/email_sender">
+                        <img alt="" tal:attributes="src here/email_icon">
+                        <br />
+                        Send emails
+                    </a>
                 </p>
 
                 <table border="0" cellspacing="2" cellpadding="2">
