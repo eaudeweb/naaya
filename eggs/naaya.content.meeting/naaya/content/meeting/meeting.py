@@ -155,7 +155,6 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
-    ob.setRestrictions(access='other', roles=[PARTICIPANT_ROLE])
 
     # add change permission to administrator
     permission = Permission('Change permissions', (), ob)
@@ -313,25 +312,37 @@ class NyMeeting(NyContentData, NyFolder):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+    def getUserLevel(self, REQUEST):
+        """ """
+        current_user = REQUEST.AUTHENTICATED_USER.getUserName()
+        roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
+        ret = 0
+        if PARTICIPANT_ROLE in roles:
+            ret = 1
+        if 'Administrator' in roles:
+            ret = 2
+        if 'Manager' in roles:
+            ret = 2
+        return ret
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/meeting_manage_edit', globals())
 
     #site pages
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
+    def index_html(self, REQUEST):
         """ """
-        if self.survey_required:
-            current_user = REQUEST.AUTHENTICATED_USER.getUserName()
-            if current_user in self.participants.attendees:
-                site = self.getSite()
-                path = str(self.survey_pointer)
-                survey_ob = site.unrestrictedTraverse(path, None)
-                if survey_ob is not None and survey_ob.meta_type == 'Naaya Mega Survey':
-                    answers = survey_ob.getAnswers()
-                    respondents = [a.respondent for a in answers]
-                    if current_user not in respondents:
-                        REQUEST.RESPONSE.redirect('%s/%s' % (self.getSite().absolute_url(), self.survey_pointer))
+        if self.survey_required and self.getUserLevel(REQUEST) > 0:
+            site = self.getSite()
+            path = str(self.survey_pointer)
+            survey_ob = site.unrestrictedTraverse(path, None)
+            if survey_ob is not None and survey_ob.meta_type == 'Naaya Mega Survey':
+                answers = survey_ob.getAnswers()
+                respondents = [a.respondent for a in answers]
+                current_user = REQUEST.AUTHENTICATED_USER.getUserName()
+                if current_user not in respondents:
+                    REQUEST.RESPONSE.redirect('%s/%s' % (self.getSite().absolute_url(), self.survey_pointer))
 
         if self.publicinterface:
             l_index = self._getOb('index', None)

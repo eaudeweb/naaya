@@ -98,35 +98,40 @@
             <tal:block content="structure python: here.prop_display_tr('keywords')" />
 
             </table>
-            <p tal:define="site here/getSite">
-                <a tal:condition="here/agenda_pointer" tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}" i18n:translate="Agenda"></a>
-                <a tal:condition="here/minutes_pointer" tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}" i18n:translate="Minutes"></a>
-                <a tal:condition="here/survey_pointer" tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}" i18n:translate="Meeting Survey"></a>
-            </p>
 
-            <p>
-                <a tal:attributes="href string:${here/absolute_url}/participants" i18n:translate="Participants"></a>
-            </p>
+            <tal:block condition="python:here.getUserLevel(request) > 0">
 
-            <table border="0" cellspacing="2" cellpadding="2">
-                <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-                    <th i18n:translate="" tal:content="record/name" />
-                    <td tal:content="python:here.getPropertyValue(record.id)"/>
-                </tr>
-            </table>
+                <p tal:define="site here/getSite">
+                    <a tal:condition="here/agenda_pointer" tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}" i18n:translate="Agenda"></a>
+                    <a tal:condition="here/minutes_pointer" tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}" i18n:translate="Minutes"></a>
+                    <a tal:condition="here/survey_pointer" tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}" i18n:translate="Meeting Survey"></a>
+                </p>
 
-            <!-- Make sure the folder listing is displayed after the map -->
-            <div style="clear: both"></div>
+                <p>
+                    <a tal:attributes="href string:${here/absolute_url}/participants" i18n:translate="Participants"></a>
+                </p>
 
-            <span tal:replace="structure here/menusubmissions" />
+                <table border="0" cellspacing="2" cellpadding="2">
+                    <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+                        <th i18n:translate="" tal:content="record/name" />
+                        <td tal:content="python:here.getPropertyValue(record.id)"/>
+                    </tr>
+                </table>
 
-            <metal:block use-macro="here/folder_listing/macros/content" />
+                <!-- Make sure the folder listing is displayed after the map -->
+                <div style="clear: both"></div>
 
-            <p>
-                <a href="index_rdf" target="_blank">
-                    <img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" />
-                </a>
-            </p>
+                <span tal:replace="structure here/menusubmissions" />
+
+                <metal:block use-macro="here/folder_listing/macros/content" />
+
+                <p>
+                    <a href="index_rdf" target="_blank">
+                        <img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" />
+                    </a>
+                </p>
+
+            </tal:block>
         </metal:block>
 
         <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
