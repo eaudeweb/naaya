@@ -84,14 +84,9 @@ class Participants(SimpleItem):
         if uid in self.attendees and self.attendees[uid] == role:
             return
 
-        if role == 'participant':
-            zope_role = PARTICIPANT_ROLE
-        elif role == 'administrator':
-            zope_role = 'Administrator'
-        else:
-            return
+        assert role in [PARTICIPANT_ROLE, 'Administrator']
 
-        self.aq_parent.manage_setLocalRoles(uid, [zope_role])
+        self.aq_parent.manage_setLocalRoles(uid, [role])
         self.attendees[uid] = role
 
     def setAttendees(self, role, REQUEST):
@@ -119,9 +114,9 @@ class Participants(SimpleItem):
         if 'del_attendees' in REQUEST.form:
             return self.delAttendees(REQUEST)
         elif 'set_administrators' in REQUEST.form:
-            return self.setAttendees('administrator', REQUEST)
+            return self.setAttendees('Administrator', REQUEST)
         elif 'set_participants' in REQUEST.form:
-            return self.setAttendees('participant', REQUEST)
+            return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
         elif 'send_email' in REQUEST.form:
             if 'uids' in REQUEST.form:
                 return self.aq_parent.newsletter_html(REQUEST.form['uids'])
@@ -156,6 +151,10 @@ class Participants(SimpleItem):
         phone = getUserPhoneNumber(site, uid)
         role = self.attendees[uid]
         return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone, 'role': role}
+
+    def getParticipantRole(self):
+        """ """
+        return PARTICIPANT_ROLE
 
     security.declareProtected(view, 'userCanChangePermissions')
     def userCanChangePermissions(self):

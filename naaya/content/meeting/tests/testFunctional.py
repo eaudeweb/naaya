@@ -254,7 +254,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant', 'participant')
+        self.portal.info.mymeeting.participants._set_attendee('test_participant', PARTICIPANT_ROLE)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
@@ -553,7 +553,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
         addPortalMeetingParticipant(self.portal)
-        self.portal.info.mymeeting.participants._set_attendee('test_participant', 'participant')
+        self.portal.info.mymeeting.participants._set_attendee('test_participant', PARTICIPANT_ROLE)
 
         try:
             manage_addSurveyTool(self.portal)
