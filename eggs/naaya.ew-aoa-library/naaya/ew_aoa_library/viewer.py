@@ -114,14 +114,20 @@ def viewer_for_survey_answer(answer):
 
 @adapter(INySurveyAnswer, IObjectAddedEvent)
 def survey_answer_created(answer, event):
-    for viewer in viewer_for_survey_answer(answer):
-        catalog = viewer.getSite().getCatalogTool()
-        shadow = viewer.wrap_answer(answer)
-        catalog.catalog_object(shadow, physical_path(shadow))
+    try:
+        for viewer in viewer_for_survey_answer(answer):
+            catalog = viewer.getSite().getCatalogTool()
+            shadow = viewer.wrap_answer(answer)
+            catalog.catalog_object(shadow, physical_path(shadow))
+    except Exception, e:
+        answer.getSite().log_current_error()
 
 @adapter(INySurveyAnswer, IObjectRemovedEvent)
 def survey_answer_removed(answer, event):
-    for viewer in viewer_for_survey_answer(answer):
-        catalog = viewer.getSite().getCatalogTool()
-        shadow = viewer.wrap_answer(answer)
-        catalog.uncatalog_object(physical_path(shadow))
+    try:
+        for viewer in viewer_for_survey_answer(answer):
+            catalog = viewer.getSite().getCatalogTool()
+            shadow = viewer.wrap_answer(answer)
+            catalog.uncatalog_object(physical_path(shadow))
+    except Exception, e:
+        answer.getSite().log_current_error()
