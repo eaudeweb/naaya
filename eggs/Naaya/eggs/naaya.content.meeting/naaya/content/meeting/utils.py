@@ -1,6 +1,8 @@
 # !!!! These should be moved to auth_tool
 
 def _encode(val):
+    if val is None:
+        return ''
     if isinstance(val, unicode):
         return val.encode('utf-8')
     return unicode(val, 'iso-8859-1').encode('utf-8')
