@@ -57,7 +57,7 @@
             </metal:block>
 
             <!-- Map widget -->
-            <div id="map_div">
+            <div id="map_parent_div" style="display: none">
                 <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
             </div>
 
@@ -79,7 +79,7 @@
             <tr tal:condition="here/geo_address">
                 <th i18n:translate="Meeting location"></th>
                 <td>
-                    <a href="javascript:toggleHideShow('map_div')" tal:content="here/geo_address"/>
+                    <a href="javascript:toggleHideShow('map_parent_div')" tal:content="here/geo_address"/>
                 </td>
             </tr>
             <tr tal:define="
