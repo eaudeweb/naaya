@@ -174,57 +174,8 @@
 
         <tal:block condition="python:len(users)!=0">
         <form method="post" action="onAttendees" name="formOnAttendees">
-            <table class="datatable" width="95%">
-                <tr>
-                    <th tal:condition="here/userCanChangePermissions" width="30px">
-                        <span i18n:translate="Select"></span>
-                        <input type="checkbox" onclick="javascript:toggleSelect(this, 'formOnAttendees', 'uids:list')"/>
-                    </th>
-                    <th>
-                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=name"
-                             i18n:translate="Name"></a>
-                    </th>
-                    <th>
-                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=email"
-                             i18n:translate="Email"></a>
-                    </th>
-                    <th>
-                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=o"
-                             i18n:translate="Organisation"></a>
-                    </th>
-                    <th><span i18n:translate="Phone number"></span></th>
-                    <th>
-                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=uid"
-                             i18n:translate="User ID"></a>
-                    </th>
-                    <th>
-                        <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
-                            i18n:translate="Role"></a>
-                    </th>
-                </tr>
-                <tr tal:repeat="user users"
-                        tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
-                    <tal:block define="user_info python:here.getAttendeeInfo(user)">
-                    <td tal:condition="here/userCanChangePermissions">
-                        <input type="checkbox" name="uids:list" tal:attributes="value user_info/uid"/>
-                    </td>
-                    <td tal:define="name user_info/name">
-                        <span tal:condition="name" tal:replace="name"/>
-                    </td>
-                    <td tal:define="email user_info/email">
-                        <a tal:condition="email" tal:attributes="href string:mailto:${email}" tal:content="email"></a>
-                    </td>
-                    <td tal:define="organisation user_info/organisation">
-                        <span tal:condition="organisation" tal:replace="organisation"/>
-                    </td>
-                    <td tal:define="phone user_info/phone">
-                        <span tal:condition="phone" tal:replace="phone"/>
-                    </td>
-                    <td><span tal:replace="user"/></td>
-                    <td><span tal:replace="user_info/role"/></td>
-                    </tal:block>
-                </tr>
-            </table>
+            <tal:block replace="structure python:here.participants_table(form_name='formOnAttendees', input_name='uids:list')"/>
+
             <input tal:condition="here/userCanChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
             <input tal:condition="here/userCanChangePermissions" type="submit" name="set_participants" value="Make participants"/>
