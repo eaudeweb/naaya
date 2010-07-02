@@ -34,6 +34,7 @@ from DateTime import DateTime
 import simplejson as json
 from decimal import Decimal
 
+from Products.NaayaCore.managers.utils import is_valid_email
 from naaya.core.utils import path_in_site
 from naaya.core.utils import force_to_unicode
 
@@ -132,6 +133,10 @@ class RestrictedToolkit(SimpleItem):
     def path_in_site(self, obj):
         """ Return path relative to site root """
         return path_in_site(obj)
+
+    def is_valid_email(self, email_str):
+        """ Check validity of email address """
+        return is_valid_email(email_str)
 
 InitializeClass(RestrictedToolkit)
 
