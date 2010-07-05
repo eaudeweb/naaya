@@ -482,7 +482,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         self.assertTrue('test_participant1' in html)
         self.assertTrue('test_participant2' in html)
         self.assertTrue('Participant' in html)
-        self.assertTrue('On Waiting List' in html)
+        self.assertTrue('Waiting List' in html)
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'del_attendees'))
         form['uids:list'] = ['test_participant1']
