@@ -1,4 +1,5 @@
 <span tal:replace="structure here/standard_html_header" />
+<span tal:condition="python: hasattr(here, 'custom_section_header')" tal:replace="structure here/custom_section_header" />
 <tal:block define="global editor here/getEditorTool;
     global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
     global inline_comments python:request.get('inline_comments', 'off') == 'on';
