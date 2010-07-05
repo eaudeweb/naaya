@@ -66,4 +66,58 @@ def getUserPhoneNumber(site, uid):
             if user is not None:
                 return _encode(user.getProperty('telephoneNumber'))
 
+def findUsers(site, search_param, search_term):
+    def userMatched(uid, cn):
+        if search_param == 'uid':
+            return search_term in uid
+        if search_param == 'cn':
+            return search_term in cn
+        return False
+
+    auth_tool = site.getAuthenticationTool()
+    ret = []
+
+    for user in auth_tool.getUsers():
+        uid = auth_tool.getUserAccount(user)
+        cn = auth_tool.getUserFullName(user)
+        info = 'Local user'
+
+        if userMatched(uid, cn):
+            ret.append({'uid': uid, 'cn': cn, 'organisation': '', 'info': info})
+
+    for source in auth_tool.getSources():
+        acl_folder = source.getUserFolder()
+        if schemaHasParam(acl_folder, search_param):
+            users = acl_folder.findUser(search_param=search_param, search_term=search_term)
+            for user in users:
+                uid = user.get('uid', '')
+                cn = user.get('cn', '')
+                organisation = user.get('o', '')
+                info = user.get('dn', '')
+                ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
+
+    return ret
+
+def findUsersWithRole(site, search_role):
+    auth_tool = site.getAuthenticationTool()
+    ret = []
+
+    for source in auth_tool.getSources():
+        acl_folder = source.getUserFolder()
+        users = source.getUsersByRole(acl_folder, [(search_role, None)])
+        for user in users:
+            uid = user.get('uid', '')
+            if isinstance(uid, list):
+                uid = uid[0]
+            cn = user.get('cn', '')
+            if isinstance(cn, list):
+                cn = cn[0]
+            organisation = user.get('o', '')
+            if isinstance(organisation, list):
+                organisation = organisation[0]
+            info = user.get('dn', '')
+            ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
+
+    return ret
+
 

@@ -10,7 +10,8 @@ from persistent.dict import PersistentDict
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
-from utils import schemaHasParam, getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
+from utils import getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
+from utils import findUsers, findUsersWithRole
 
 class Participants(SimpleItem):
     security = ClassSecurityInfo()
@@ -23,59 +24,11 @@ class Participants(SimpleItem):
 
     def findUsers(self, search_param, search_term):
         """ """
-        def userMatched(uid, cn):
-            if search_param == 'uid':
-                return search_term in uid
-            if search_param == 'cn':
-                return search_term in cn
-            return False
-
-        auth_tool = self.getAuthenticationTool()
-        ret = []
-
-        for user in auth_tool.getUsers():
-            uid = auth_tool.getUserAccount(user)
-            cn = auth_tool.getUserFullName(user)
-            info = 'Local user'
-            
-            if userMatched(uid, cn):
-                ret.append({'uid': uid, 'cn': cn, 'organisation': '', 'info': info})
-
-        for source in auth_tool.getSources():
-            acl_folder = source.getUserFolder()
-            if schemaHasParam(acl_folder, search_param): 
-                users = acl_folder.findUser(search_param=search_param, search_term=search_term)
-                for user in users:
-                    uid = user.get('uid', '')
-                    cn = user.get('cn', '')
-                    organisation = user.get('o', '')
-                    info = user.get('dn', '')
-                    ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
-
-        return ret
+        return findUsers(self.getSite(), search_param, search_term)
 
     def findUsersWithRole(self, search_role):
         """ """
-        auth_tool = self.getAuthenticationTool()
-        ret = []
-
-        for source in auth_tool.getSources():
-            acl_folder = source.getUserFolder()
-            users = source.getUsersByRole(acl_folder, [(search_role, None)])
-            for user in users:
-                uid = user.get('uid', '')
-                if isinstance(uid, list):
-                    uid = uid[0]
-                cn = user.get('cn', '')
-                if isinstance(cn, list):
-                    cn = cn[0]
-                organisation = user.get('o', '')
-                if isinstance(organisation, list):
-                    organisation = organisation[0]
-                info = user.get('dn', '')
-                ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
-
-        return ret
+        return findUsersWithRole(self.getSite(), search_role)
 
     def getParticipants(self):
         """ """
@@ -89,6 +42,9 @@ class Participants(SimpleItem):
 
     def _set_attendee(self, uid, role):
         assert role in [WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE]
+
+        if uid in self.aq_parent.users_with_local_role(role):
+            return
 
         if self.aq_parent.max_participants > self.participantsCount():
             self.aq_parent.manage_setLocalRoles(uid, [role])
