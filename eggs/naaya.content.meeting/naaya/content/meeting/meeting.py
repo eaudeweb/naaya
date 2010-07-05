@@ -32,7 +32,7 @@ from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 
 #Meeting imports
-from naaya.content.meeting import PARTICIPANT_ROLE
+from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
 from participants import Participants
 from email import EmailSender
 from reports import MeetingReports
@@ -82,7 +82,7 @@ config = {
 
 def meeting_on_install(site):
     """
-    !!! Adding PARTICIPANT_ROLE on meeting installation.
+    !!! Adding PARTICIPANT_ROLE and WAITING_ROLE on meeting installation.
     This is given to the participants of the meetings.
     Permissions are set similar to the Authenticated role.
     """
@@ -99,6 +99,14 @@ def meeting_on_install(site):
     b = [x['name'] for x in site.permissionsOfRole(PARTICIPANT_ROLE) if x['selected']=='SELECTED']
     b.extend(permissions)
     site.manage_role(PARTICIPANT_ROLE, b)
+
+    if WAITING_ROLE not in auth_tool.list_all_roles():
+        auth_tool.addRole(WAITING_ROLE, grouppermissions)
+
+    auth_tool.editRole(WAITING_ROLE, grouppermissions)
+    b = [x['name'] for x in site.permissionsOfRole(WAITING_ROLE) if x['selected']=='SELECTED']
+    b.extend(permissions)
+    site.manage_role(WAITING_ROLE, b)
 
     NySite.meeting_reports = MeetingReports('meeting_reports')
     
@@ -327,9 +335,11 @@ class NyMeeting(NyContentData, NyFolder):
         current_user = REQUEST.AUTHENTICATED_USER.getUserName()
         roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
         ret = 0
+        if WAITING_ROLE in roles:
+            ret = 1
         if PARTICIPANT_ROLE in roles:
             ret = 1
-        if 'Administrator' in roles:
+        if ADMINISTRATOR_ROLE in roles:
             ret = 2
         if 'Manager' in roles:
             ret = 2
