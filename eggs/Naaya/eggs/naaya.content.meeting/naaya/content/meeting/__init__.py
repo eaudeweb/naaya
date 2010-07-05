@@ -1,4 +1,4 @@
-WAITING_ROLE = 'On Waiting List'
+WAITING_ROLE = 'Waiting List'
 PARTICIPANT_ROLE = 'Participant'
 ADMINISTRATOR_ROLE = 'Administrator'
 
