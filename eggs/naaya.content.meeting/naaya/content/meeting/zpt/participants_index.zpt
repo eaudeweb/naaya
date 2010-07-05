@@ -43,7 +43,7 @@
         </span>
     </div>
 
-    <p tal:condition="here/userCanChangePermissions" i18n:translate="This page is for managing the meeting participants. You can search and add participants, remove participants and select administrators for this meeting. You can also send emails to all or some of the participants."></p>
+    <p tal:condition="here/userCanChangePermissions" i18n:translate="This page is for managing the meeting participants. You can search and add participants, remove participants and select administrators for this meeting."></p>
     <p tal:condition="not:here/userCanChangePermissions" i18n:translate="This page is for viewing the meeting participants."></p>
 
     <fieldset tal:condition="here/userCanChangePermissions">
