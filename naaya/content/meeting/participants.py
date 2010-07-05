@@ -5,13 +5,16 @@ from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import change_permissions, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent.dict import PersistentDict
+from Globals import InitializeClass
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+
+#Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
 from utils import getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
 from utils import findUsers, findUsersWithRole
+from subscriptions import Subscriptions
 
 class Participants(SimpleItem):
     security = ClassSecurityInfo()
@@ -21,6 +24,7 @@ class Participants(SimpleItem):
     def __init__(self, id):
         """ """
         self.id = id
+        self.subscriptions = Subscriptions('subscriptions')
 
     def findUsers(self, search_param, search_term):
         """ """
@@ -146,6 +150,8 @@ class Participants(SimpleItem):
     def participants_table(self, form_name, input_name):
         """ """
         return self.getFormsTool().getContent({'here': self, 'form_name': form_name, 'input_name': input_name}, 'meeting_participants_table')
+
+InitializeClass(Participants)
 
 NaayaPageTemplateFile('zpt/participants_index', globals(), 'meeting_participants')
 NaayaPageTemplateFile('zpt/participants_pickrole', globals(), 'meeting_participants_pickrole')
