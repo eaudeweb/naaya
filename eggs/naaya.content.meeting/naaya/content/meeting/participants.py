@@ -9,7 +9,7 @@ from persistent.dict import PersistentDict
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.content.meeting import PARTICIPANT_ROLE
+from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
 from utils import schemaHasParam, getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
 
 class Participants(SimpleItem):
@@ -20,7 +20,6 @@ class Participants(SimpleItem):
     def __init__(self, id):
         """ """
         self.id = id
-        self.attendees = PersistentDict()
 
     def findUsers(self, search_param, search_term):
         """ """
@@ -80,24 +79,21 @@ class Participants(SimpleItem):
 
     def getParticipants(self):
         """ """
-        return [uid for uid, role in self.attendees.iteritems() if role != 'waiting']
+        participants = self.aq_parent.users_with_local_role(PARTICIPANT_ROLE)
+        administrators = self.aq_parent.users_with_local_role(ADMINISTRATOR_ROLE)
+        return administrators + participants
 
     def participantsCount(self):
         """ """
         return len(self.getParticipants())
 
     def _set_attendee(self, uid, role):
-        if uid in self.attendees and self.attendees[uid] == role:
-            return
-
-        assert role in [PARTICIPANT_ROLE, 'Administrator']
+        assert role in [WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE]
 
         if self.aq_parent.max_participants > self.participantsCount():
             self.aq_parent.manage_setLocalRoles(uid, [role])
-            self.attendees[uid] = role
         else:
-            self.aq_parent.manage_setLocalRoles(uid, [PARTICIPANT_ROLE])
-            self.attendees[uid] = 'waiting'
+            self.aq_parent.manage_setLocalRoles(uid, [WAITING_ROLE])
 
     def setAttendees(self, role, REQUEST):
         """ """
@@ -109,7 +105,6 @@ class Participants(SimpleItem):
 
     def _del_attendee(self, uid):
         self.aq_parent.manage_delLocalRoles([uid])
-        del self.attendees[uid]
 
     def delAttendees(self, REQUEST):
         """ """
@@ -130,8 +125,20 @@ class Participants(SimpleItem):
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    def _get_attendees(self):
+        """ """
+        attendees = {}
+        for uid in self.aq_parent.users_with_local_role(WAITING_ROLE):
+            attendees[uid] = WAITING_ROLE
+        for uid in self.aq_parent.users_with_local_role(PARTICIPANT_ROLE):
+            attendees[uid] = PARTICIPANT_ROLE
+        for uid in self.aq_parent.users_with_local_role(ADMINISTRATOR_ROLE):
+            attendees[uid] = ADMINISTRATOR_ROLE
+        return attendees
+
     def getAttendees(self, sort_on=''):
         """ """
+        attendees = self._get_attendees()
         site = self.getSite()
         key = None
         if sort_on == 'o':
@@ -143,20 +150,21 @@ class Participants(SimpleItem):
         elif sort_on == 'uid':
             key = lambda x: x
         elif sort_on == 'role':
-            key = lambda x: self.attendees[x]
+            key = lambda x: attendees[x]
 
         if key is None:
-            return self.attendees.keys()
-        return sorted(self.attendees.keys(), key=key)
+            return attendees.keys()
+        return sorted(attendees.keys(), key=key)
 
     def getAttendeeInfo(self, uid):
         """ """
+        attendees = self._get_attendees()
         site = self.getSite()
         name = getUserFullName(site, uid)
         email = getUserEmail(site, uid)
         organisation = getUserOrganisation(site, uid)
         phone = getUserPhoneNumber(site, uid)
-        role = self.attendees[uid]
+        role = attendees[uid]
         return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone, 'role': role}
 
     def getParticipantRole(self):
@@ -186,3 +194,4 @@ class Participants(SimpleItem):
 NaayaPageTemplateFile('zpt/participants_index', globals(), 'meeting_participants')
 NaayaPageTemplateFile('zpt/participants_pickrole', globals(), 'meeting_participants_pickrole')
 NaayaPageTemplateFile('zpt/participants_table', globals(), 'meeting_participants_table')
+
