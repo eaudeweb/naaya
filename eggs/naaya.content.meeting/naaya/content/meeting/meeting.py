@@ -36,6 +36,7 @@ from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_
 from participants import Participants
 from email import EmailSender
 from reports import MeetingReports
+from subscriptions import SignupUsersTool
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -210,12 +211,17 @@ class NyMeeting(NyContentData, NyFolder):
 
     security = ClassSecurityInfo()
 
+    __allow_groups__ = SignupUsersTool()
+
     def __init__(self, id, contributor):
         """ """
         NyFolder.__dict__['__init__'](self, id, contributor)
         self.participants = Participants('participants')
         self.email_sender = EmailSender('email_sender')
         self.survey_required = False
+
+    def getParticipants(self):
+        return self.participants
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):

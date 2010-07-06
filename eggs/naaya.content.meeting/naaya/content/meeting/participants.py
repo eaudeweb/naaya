@@ -26,6 +26,9 @@ class Participants(SimpleItem):
         self.id = id
         self.subscriptions = Subscriptions('subscriptions')
 
+    def getMeeting(self):
+        return self.aq_parent
+
     def resetSubscriptions(self):
         """ """
         self.subscriptions = Subscriptions('subscriptions')
@@ -40,8 +43,9 @@ class Participants(SimpleItem):
 
     def getParticipants(self):
         """ """
-        participants = self.aq_parent.users_with_local_role(PARTICIPANT_ROLE)
-        administrators = self.aq_parent.users_with_local_role(ADMINISTRATOR_ROLE)
+        meeting = self.getMeeting()
+        participants = meeting.users_with_local_role(PARTICIPANT_ROLE)
+        administrators = meeting.users_with_local_role(ADMINISTRATOR_ROLE)
         return administrators + participants
 
     def participantsCount(self):
@@ -49,15 +53,16 @@ class Participants(SimpleItem):
         return len(self.getParticipants())
 
     def _set_attendee(self, uid, role):
+        meeting = self.getMeeting()
         assert role in [WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE]
 
-        if uid in self.aq_parent.users_with_local_role(role):
+        if uid in meeting.users_with_local_role(role):
             return
 
-        if self.aq_parent.max_participants > self.participantsCount():
-            self.aq_parent.manage_setLocalRoles(uid, [role])
+        if meeting.max_participants > self.participantsCount():
+            meeting.manage_setLocalRoles(uid, [role])
         else:
-            self.aq_parent.manage_setLocalRoles(uid, [WAITING_ROLE])
+            meeting.manage_setLocalRoles(uid, [WAITING_ROLE])
 
     def setAttendees(self, role, REQUEST):
         """ """
@@ -71,7 +76,7 @@ class Participants(SimpleItem):
         if self.subscriptions._is_signup(uid):
             self.subscriptions._reject_signup(uid)
 
-        self.aq_parent.manage_delLocalRoles([uid])
+        self.getMeeting().manage_delLocalRoles([uid])
 
     def delAttendees(self, REQUEST):
         """ """
@@ -94,12 +99,13 @@ class Participants(SimpleItem):
 
     def _get_attendees(self):
         """ """
+        meeting = self.getMeeting()
         attendees = {}
-        for uid in self.aq_parent.users_with_local_role(WAITING_ROLE):
+        for uid in meeting.users_with_local_role(WAITING_ROLE):
             attendees[uid] = WAITING_ROLE
-        for uid in self.aq_parent.users_with_local_role(PARTICIPANT_ROLE):
+        for uid in meeting.users_with_local_role(PARTICIPANT_ROLE):
             attendees[uid] = PARTICIPANT_ROLE
-        for uid in self.aq_parent.users_with_local_role(ADMINISTRATOR_ROLE):
+        for uid in meeting.users_with_local_role(ADMINISTRATOR_ROLE):
             attendees[uid] = ADMINISTRATOR_ROLE
         return attendees
 
