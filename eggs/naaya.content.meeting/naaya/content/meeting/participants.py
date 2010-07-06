@@ -26,6 +26,10 @@ class Participants(SimpleItem):
         self.id = id
         self.subscriptions = Subscriptions('subscriptions')
 
+    def resetSubscriptions(self):
+        """ """
+        self.subscriptions = Subscriptions('subscriptions')
+
     def findUsers(self, search_param, search_term):
         """ """
         return findUsers(self.getSite(), search_param, search_term)
@@ -64,6 +68,9 @@ class Participants(SimpleItem):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
+        if self.subscriptions._is_signup(uid):
+            self.subscriptions._reject_signup(uid)
+
         self.aq_parent.manage_delLocalRoles([uid])
 
     def delAttendees(self, REQUEST):
@@ -118,12 +125,19 @@ class Participants(SimpleItem):
 
     def getAttendeeInfo(self, uid):
         """ """
+        if self.subscriptions._is_signup(uid):
+            user = self.subscriptions.getSignup(uid)
+            name = user.name
+            email = user.email
+            organisation = user.organization
+            phone = user.phone
+        else:
+            site = self.getSite()
+            name = getUserFullName(site, uid)
+            email = getUserEmail(site, uid)
+            organisation = getUserOrganisation(site, uid)
+            phone = getUserPhoneNumber(site, uid)
         attendees = self._get_attendees()
-        site = self.getSite()
-        name = getUserFullName(site, uid)
-        email = getUserEmail(site, uid)
-        organisation = getUserOrganisation(site, uid)
-        phone = getUserPhoneNumber(site, uid)
         role = attendees[uid]
         return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone, 'role': role}
 
