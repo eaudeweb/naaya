@@ -1,0 +1,94 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+    <metal:block metal:fill-slot="title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="body">
+    <script type="text/javascript">
+    function toggleSelect(checkbox, form_name, name) {
+        var form_array = document.getElementsByName(form_name);
+        if (form_array.length != 1) {
+            alert('Assertion failed: one form with name ' + form_name);
+            return;
+        }
+        var form = form_array[0];
+        for (var i = 0; i < form.elements.length; i++) {
+            var element = form.elements[i];
+            if (element.type == 'checkbox' && element.name == name) {
+                element.checked = checkbox.checked;
+            }
+        }
+    }
+    </script>
+
+    <tal:block tal:define="meeting here/aq_parent/aq_parent">
+    <h1>
+        <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
+        <tal:block tal:replace="meeting/title" /> - <tal:block tal:replace="here/title" />
+    </h1>
+
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href meeting/participants/absolute_url" i18n:translate="Participants page"></a>
+        </span>
+        <span class="buttons">
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
+        </span>
+    </div>
+
+    <p i18n:translate="">
+        Accept or reject subscribers. All accepted subscribers are added to the participants list.
+    </p>
+
+    <fieldset>
+        <legend i18n:translate="List of signups"></legend>
+        <form method="post" action="manageSignups" name="formManageSignups">
+            <table class="datatable" width="95%" tal:define="signups here/getSignups">
+                <tr>
+                    <th width="30px">
+                        <span i18n:translate="Select"></span>
+                        <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSignups', 'keys:list')"/>
+                    </th>
+                    <th>
+                        <span i18n:translate="Name"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Email"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Organization"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Phone number"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Status"></span>
+                    </th>
+                </tr>
+                <tr tal:repeat="signup here/getSignups">
+                    <td>
+                        <input type="checkbox" name="keys:list"
+                            tal:attributes="value signup/key"/>
+                    </td>
+                    <td tal:content="signup/name"/>
+                    <td tal:define="email signup/email">
+                        <a tal:condition="email"
+                            tal:attributes="href string:mailto:${email}"
+                            tal:content="email"></a>
+                    </td>
+                    <td tal:content="signup/organization"/>
+                    <td tal:content="signup/phone"/>
+                    <td tal:define="accepted signup/accepted"
+                         tal:content="python:test(accepted, 'Accepted', '')"/>
+                </tr>
+            </table>
+            <input type="submit" name="accept" value="Accept as participant(s)"/>
+            <input type="submit" name="reject" value="Reject signup(s)"/>
+        </form>
+
+    </fieldset>
+
+    </tal:block>
+    </metal:block>
+</metal:block>
+
