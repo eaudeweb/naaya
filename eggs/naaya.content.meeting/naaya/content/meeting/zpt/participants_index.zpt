@@ -29,9 +29,10 @@
     }
 
     </script>
+    <tal:block define="meeting here/getMeeting">
     <h1>
-        <img tal:attributes="src python:test(here.aq_parent.approved, here.aq_parent.icon, here.aq_parent.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
-        <tal:block tal:replace="here/aq_parent/title" /> - <tal:block tal:replace="here/title" />
+        <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
+        <tal:block tal:replace="meeting/title" /> - <tal:block tal:replace="here/title" />
     </h1>
 
     <div class="floated-buttons">
@@ -39,7 +40,7 @@
             <a tal:attributes="href here/absolute_url" i18n:translate="Clean page"></a>
         </span>
         <span class="buttons">
-            <a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="Back to index"></a>
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
         </span>
     </div>
 
@@ -184,6 +185,7 @@
 
         </tal:block>
     </fieldset>
+    </tal:block>
     </metal:block>
 </metal:block>
 

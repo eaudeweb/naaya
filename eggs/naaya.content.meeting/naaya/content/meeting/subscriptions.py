@@ -8,6 +8,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Persistence import Persistent
 from BTrees.OOBTree import OOBTree
+from AccessControl.User import BasicUserFolder, SimpleUser
 
 #Naaya imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
@@ -26,6 +27,9 @@ class Subscriptions(SimpleItem):
         super(SimpleItem, self).__init__(id)
         self.id = id
         self._signups = OOBTree()
+
+    def getMeeting(self):
+        return self.aq_parent.aq_parent
 
     def _validate_signup(self, form):
         """ """
@@ -73,7 +77,7 @@ class Subscriptions(SimpleItem):
                                          'meeting_subscription_signup')
             else:
                 self._add_signup(formdata)
-                REQUEST.RESPONSE.redirect(self.aq_parent.aq_parent.absolute_url())
+                REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
 
     def subscribe(self, REQUEST):
         """ """
@@ -94,12 +98,13 @@ class Subscriptions(SimpleItem):
 
     def _accept_signup(self, key):
         """ """
-        self.aq_parent._set_attendee(key, PARTICIPANT_ROLE)
+        self.getMeeting().getParticipants()._set_attendee(key, PARTICIPANT_ROLE)
         self._signups[key].accepted = True
 
     def _reject_signup(self, key):
         """ """
         del self._signups[key]
+        self.getMeeting().getParticipants()._del_attendee(key)
 
     def _is_signup(self, key):
         """ """
@@ -118,6 +123,19 @@ class Subscriptions(SimpleItem):
                 self._reject_signup(key)
         REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    def welcome(self, REQUEST):
+        """ """
+        if 'logout' in REQUEST.form:
+            REQUEST.SESSION['nymt-current-key'] = None
+            return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+
+        key = REQUEST.get('key', None)
+        signup = self.getSignup(key)
+        if signup is not None and signup.accepted:
+            REQUEST.SESSION['nymt-current-key'] = key
+
+        return self.getFormsTool().getContent({'here': self, 'signup': signup}, 'meeting_subscription_welcome')
+
 InitializeClass(Subscriptions)
 
 class SignUp(Persistent):
@@ -129,8 +147,26 @@ class SignUp(Persistent):
         self.phone = phone
         self.accepted = False
 
+class SignupUsersTool(BasicUserFolder):
+    def getMeeting(self):
+        return self.aq_parent
+
+    def authenticate(self, name, password, REQUEST):
+        participants = self.getMeeting().getParticipants()
+        subscriptions = participants.subscriptions
+
+        key = REQUEST.SESSION.get('nymt-current-key', None)
+        signup = subscriptions.getSignup(key)
+        if signup is not None and signup.accepted:
+            print 'Logging in ', key
+            role = participants._get_attendees()[key]
+            return SimpleUser('signup:' + key, '', (role,), [])
+        else:
+            return None
+
 NaayaPageTemplateFile('zpt/subscription_signup', globals(), 'meeting_subscription_signup')
 NaayaPageTemplateFile('zpt/subscription_index', globals(), 'meeting_subscription_index')
+NaayaPageTemplateFile('zpt/subscription_welcome', globals(), 'meeting_subscription_welcome')
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """

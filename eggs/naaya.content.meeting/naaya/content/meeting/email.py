@@ -21,10 +21,13 @@ class EmailSender(SimpleItem):
         """ """
         self.id = id
 
+    def getMeeting(self):
+        return self.aq_parent
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self, 'meeting': self.aq_parent}, 'meeting_emails')
+        return self.getFormsTool().getContent({'here': self, 'meeting': self.getMeeting()}, 'meeting_emails')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_newsletter')
     def send_email(self, from_email, subject, body_text, REQUEST, to_uids=None):
@@ -39,7 +42,7 @@ class EmailSender(SimpleItem):
                                     p_from=from_email,
                                     p_subject=subject)
 
-        REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
+        REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
 
 
 NaayaPageTemplateFile('zpt/email_index', globals(), 'meeting_emails')
