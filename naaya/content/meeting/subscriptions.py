@@ -158,7 +158,6 @@ class SignupUsersTool(BasicUserFolder):
         key = REQUEST.SESSION.get('nymt-current-key', None)
         signup = subscriptions.getSignup(key)
         if signup is not None and signup.accepted:
-            print 'Logging in ', key
             role = participants._get_attendees()[key]
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
