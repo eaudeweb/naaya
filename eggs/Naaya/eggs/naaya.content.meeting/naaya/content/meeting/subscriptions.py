@@ -10,7 +10,11 @@ from Persistence import Persistent
 from BTrees.OOBTree import OOBTree
 
 #Naaya imports
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+
+#meeting imports
+from naaya.content.meeting import PARTICIPANT_ROLE
 
 class Subscriptions(SimpleItem):
     security = ClassSecurityInfo()
@@ -75,6 +79,45 @@ class Subscriptions(SimpleItem):
         """ """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/signup')
 
+    def getSignups(self):
+        """ """
+        return self._signups.itervalues()
+
+    def getSignup(self, key):
+        """ """
+        return self._signups.get(key, None)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
+    def index_html(self, REQUEST):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'meeting_subscription_index')
+
+    def _accept_signup(self, key):
+        """ """
+        self.aq_parent._set_attendee(key, PARTICIPANT_ROLE)
+        self._signups[key].accepted = True
+
+    def _reject_signup(self, key):
+        """ """
+        del self._signups[key]
+
+    def _is_signup(self, key):
+        """ """
+        return self._signups.has_key(key)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
+    def manageSignups(self, REQUEST):
+        """ """
+        keys = REQUEST.form.get('keys', [])
+        assert isinstance(keys, list)
+        if 'accept' in REQUEST.form:
+            for key in keys:
+                self._accept_signup(key)
+        elif 'reject' in REQUEST.form:
+            for key in keys:
+                self._reject_signup(key)
+        REQUEST.RESPONSE.redirect(self.absolute_url())
+
 InitializeClass(Subscriptions)
 
 class SignUp(Persistent):
@@ -84,8 +127,10 @@ class SignUp(Persistent):
         self.email = email
         self.organization = organization
         self.phone = phone
+        self.accepted = False
 
 NaayaPageTemplateFile('zpt/subscription_signup', globals(), 'meeting_subscription_signup')
+NaayaPageTemplateFile('zpt/subscription_index', globals(), 'meeting_subscription_index')
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
