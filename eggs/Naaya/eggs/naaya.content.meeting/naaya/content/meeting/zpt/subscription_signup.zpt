@@ -1,0 +1,68 @@
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+    <metal:block metal:fill-slot="title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
+
+    <metal:block fill-slot="body">
+    <tal:block tal:define="meeting here/aq_parent/aq_parent">
+    <h1>
+        <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
+        <tal:block tal:replace="meeting/title" /> - <tal:block tal:replace="here/title" />
+    </h1>
+
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
+        </span>
+    </div>
+
+    <p i18n:translate="">
+        Signup for this meeting. The administrators will receive your request.
+        If the administrators approve your request you will receive an email with a personalized link and be able to participate in the meeting.
+    </p>
+
+    <form method="post" action="signup" name="formSignup">
+        <div class="field">
+            <label for="first_name" i18n:translate="First name"></label>
+            <p class="form-errors" tal:define="err formerrors/first_name|nothing"
+                tal:condition="err" tal:content="err" />
+            <input type="text" name="first_name:utf8:ustring" id="first_name"
+                 size="50" tal:attributes="value formdata/first_name|nothing" />
+        </div>
+        <div class="field">
+            <label for="last_name" i18n:translate="Last name"></label>
+            <p class="form-errors" tal:define="err formerrors/last_name|nothing"
+                tal:condition="err" tal:content="err" />
+            <input type="text" name="last_name:utf8:ustring" id="last_name"
+                 size="50" tal:attributes="value formdata/last_name|nothing" />
+        </div>
+        <div class="field">
+            <label for="email" i18n:translate="E-mail address"></label>
+            <p class="form-errors" tal:define="err formerrors/email|nothing"
+                tal:condition="err" tal:content="err" />
+            <input type="text" name="email:utf8:ustring" id="email"
+                 size="50" tal:attributes="value formdata/email|nothing" />
+        </div>
+        <div class="field">
+            <label for="organization" i18n:translate="Organization"></label>
+            <p class="form-errors" tal:define="err formerrors/organization|nothing"
+                tal:condition="err" tal:content="err" />
+            <input type="text" name="organization:utf8:ustring" id="organization"
+                 size="50" tal:attributes="value formdata/organization|nothing" />
+        </div>
+        <div class="field">
+            <label for="phone" i18n:translate="Phone number"></label>
+            <p class="form-errors" tal:define="err formerrors/phone|nothing"
+                tal:condition="err" tal:content="err" />
+            <input type="text" name="phone:utf8:ustring" id="phone"
+                 size="50" tal:attributes="value formdata/phone|nothing" />
+        </div>
+
+        <input type="submit" name="add_signup" value="Sign Up" />
+
+    </form>
+
+    </tal:block>
+    </metal:block>
+</metal:block>
+
