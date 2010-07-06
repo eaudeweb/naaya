@@ -589,6 +589,165 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/mysurvey')
         self.browser_do_logout()
 
+class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
+    """ SignupTestCase for NyMeeting object """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='1',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain', **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def testSignupLink(self):
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html())
+
+    def testSubscriptionsLink(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions' in self.browser.get_html())
+        self.browser_do_logout()
+
+    def testSignupValidation(self):
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+
+        form = self.browser.get_form('formSignup')
+        expected_controls = set(['first_name:utf8:ustring', 'last_name:utf8:ustring', 'email:utf8:ustring', 'organization:utf8:ustring', 'phone:utf8:ustring', 'add_signup'])
+        found_controls = set(c.name for c in form.controls)
+        self.assertTrue(expected_controls <= found_controls,
+            'Missing form controls: %s' % repr(expected_controls - found_controls))
+
+        self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
+        form['first_name:utf8:ustring'] = 'test_first_name'
+        form['last_name:utf8:ustring'] = 'test_last_name'
+        self.browser.submit()
+
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        html = self.browser.get_html()
+        self.assertTrue('This field is mandatory' in html)
+        self.assertTrue('test_first_name' in html)
+        self.assertTrue('test_last_name' in html)
+
+        form = self.browser.get_form('formSignup')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
+        form['email:utf8:ustring'] = 'test_email'
+        form['organization:utf8:ustring'] = 'test_organization'
+        form['phone:utf8:ustring'] = 'test_phone'
+        self.browser.submit()
+
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        html = self.browser.get_html()
+        self.assertTrue('This field is mandatory' not in html)
+        self.assertTrue('An email address must contain a single @' in html)
+        self.assertTrue('test_first_name' in html)
+        self.assertTrue('test_last_name' in html)
+        self.assertTrue('test_email' in html)
+
+        form = self.browser.get_form('formSignup')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
+        form['email:utf8:ustring'] = 'test_email@email.com'
+        self.browser.submit()
+
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
+
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        html = self.browser.get_html()
+        self.assertTrue('test_first_name test_last_name' in html)
+        self.assertTrue('mailto:test_email@email.com' in html)
+        self.assertTrue('Accepted' not in html)
+
+        self.browser_do_logout()
+
+    def testSignupLogin(self):
+        def assert_admin_access():
+            self.browser.go('http://localhost/portal/info/mymeeting')
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' in html) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html) 
+        def assert_access():
+            self.browser.go('http://localhost/portal/info/mymeeting')
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html) 
+        def assert_no_access():
+            self.browser.go('http://localhost/portal/info/mymeeting')
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in html) 
+
+        # submit the signup
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+
+        form = self.browser.get_form('formSignup')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
+        form['first_name:utf8:ustring'] = 'test_first_name'
+        form['last_name:utf8:ustring'] = 'test_last_name'
+        form['email:utf8:ustring'] = 'test_email@email.com'
+        form['organization:utf8:ustring'] = 'test_organization'
+        form['phone:utf8:ustring'] = 'test_phone'
+        self.browser.submit()
+
+        # accept the signup
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        html = self.browser.get_html()
+        self.assertTrue('test_first_name test_last_name' in html)
+        self.assertTrue('mailto:test_email@email.com' in html)
+        self.assertTrue('Accepted' not in html)
+
+        form = self.browser.get_form('formManageSignups')
+        expected_controls = set(['keys:list', 'accept', 'reject'])
+        found_controls = set(c.name for c in form.controls)
+        self.assertTrue(expected_controls <= found_controls,
+            'Missing form controls: %s' % repr(expected_controls - found_controls))
+
+        self.assertTrue(form.controls[1].name == 'keys:list')
+        key = form.controls[1]._value
+        self.browser.clicked(form, self.browser.get_form_field(form, 'accept'))
+        form['keys:list'] = [key]
+        self.browser.submit()
+
+        self.browser_do_logout()
+
+        # test login
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in self.browser.get_html())
+        assert_access()
+        # test logout
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
+        assert_no_access()
+
+        # give admin rights
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        form = self.browser.get_form('formOnAttendees')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'set_administrators'))
+        form['uids:list'] = [key]
+        self.browser.submit()
+        self.browser_do_logout()
+
+        # test admin rights
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
+        assert_admin_access()
+        # test logout
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
+        assert_no_access()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyMeetingCreateTestCase))
@@ -596,5 +755,6 @@ def test_suite():
     suite.addTest(makeSuite(NyMeetingFunctionalTestCase))
     suite.addTest(makeSuite(NyMeetingParticipantsTestCase))
     suite.addTest(makeSuite(NyMeetingSurveyTestCase))
+    suite.addTest(makeSuite(NyMeetingSignupTestCase))
     return suite
 
