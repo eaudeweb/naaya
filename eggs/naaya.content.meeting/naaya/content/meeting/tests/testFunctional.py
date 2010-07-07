@@ -6,6 +6,7 @@ from Testing import ZopeTestCase
 
 #Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from Products.NaayaCore.EmailTool.EmailTool import divert_mail
 from Products.NaayaSurvey.SurveyTool import manage_addSurveyTool, SurveyTool
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
@@ -256,9 +257,11 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingParticipant(self.portal)
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
+        self.diverted_mail = divert_mail(True)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
+        divert_mail(False)
         removePortalMeetingParticipant(self.portal)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
@@ -339,7 +342,26 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         form['subject:utf8:ustring'] = 'Test subject'
         form['body_text:utf8:ustring'] = 'Test body'
         self.browser.submit()
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
+        html = self.browser.get_html()
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender/send_email')
+        self.assertTrue('http://localhost/portal/info/mymeeting' in html)
+        self.assertTrue('There was an error sending the email.' in html)
+
+        self.assertEqual(len(self.diverted_mail), 0)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        form = self.browser.get_form('formSendEmail')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'send_email'))
+        form['to_uids:list'] = ['test_participant1']
+        form['subject:utf8:ustring'] = 'Test subject'
+        form['body_text:utf8:ustring'] = 'Test body'
+        self.browser.submit()
+        html = self.browser.get_html()
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/email_sender/send_email')
+        self.assertTrue('http://localhost/portal/info/mymeeting' in html)
+        self.assertTrue('Your email was sent successfully.' in html)
+
+        self.assertEqual(len(self.diverted_mail), 1)
 
         self.browser_do_logout()
 
@@ -602,9 +624,11 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
             contact_person='My Name', contact_email='my.email@my.domain', **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        self.diverted_mail = divert_mail(True)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
+        divert_mail(False)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
         import transaction; transaction.commit()
@@ -729,6 +753,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         form['phone:utf8:ustring'] = 'test_phone'
         self.browser.submit()
 
+        self.assertEqual(len(self.diverted_mail), 0)
+
         # accept the signup
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
@@ -750,6 +776,12 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         self.browser_do_logout()
         assert_access(key)
+        self.assertEqual(len(self.diverted_mail), 1)
+        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key in body)
+        self.assertEqual(addr_to, ['test_email@email.com'])
+        self.assertEqual(addr_from, 'my.email@my.domain')
+        self.assertEqual(subject, 'Signup notification - MyMeeting')
 
         # give admin rights
         self.browser_do_login('admin', '')

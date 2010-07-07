@@ -223,6 +223,9 @@ class NyMeeting(NyContentData, NyFolder):
     def getParticipants(self):
         return self.participants
 
+    def getEmailSender(self):
+        return self.email_sender
+
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.geo_address()])
