@@ -33,7 +33,7 @@ function toggleSelect(checkbox, form_name, name) {
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=o"
-                 i18n:translate="Organisation"></a>
+                 i18n:translate="Organization"></a>
         </th>
         <th><span i18n:translate="Phone number"></span></th>
         <th>
@@ -57,8 +57,8 @@ function toggleSelect(checkbox, form_name, name) {
         <td tal:define="email user_info/email">
             <a tal:condition="email" tal:attributes="href string:mailto:${email}" tal:content="email"></a>
         </td>
-        <td tal:define="organisation user_info/organisation">
-            <span tal:condition="organisation" tal:replace="organisation"/>
+        <td tal:define="organization user_info/organization">
+            <span tal:condition="organization" tal:replace="organization"/>
         </td>
         <td tal:define="phone user_info/phone">
             <span tal:condition="phone" tal:replace="phone"/>
