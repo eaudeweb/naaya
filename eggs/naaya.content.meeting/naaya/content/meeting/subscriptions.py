@@ -66,7 +66,7 @@ class Subscriptions(SimpleItem):
         """ """
         if REQUEST.REQUEST_METHOD == 'GET':
             return self.getFormsTool().getContent({'here': self},
-                                 'meeting_subscription_signup')
+                                 'naaya.content.meeting.subscription_signup')
 
         if REQUEST.REQUEST_METHOD == 'POST':
             formdata, formerrors = self._validate_signup(REQUEST.form)
@@ -74,7 +74,7 @@ class Subscriptions(SimpleItem):
                 return self.getFormsTool().getContent({'here': self,
                                                      'formdata': formdata,
                                                      'formerrors': formerrors},
-                                         'meeting_subscription_signup')
+                                         'naaya.content.meeting.subscription_signup')
             else:
                 self._add_signup(formdata)
                 REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
@@ -94,7 +94,7 @@ class Subscriptions(SimpleItem):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'meeting_subscription_index')
+        return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_index')
 
     def _accept_signup(self, key):
         """ """
@@ -140,7 +140,7 @@ class Subscriptions(SimpleItem):
 
         return self.getFormsTool().getContent({'here': self,
                                                 'signup': signup},
-                                         'meeting_subscription_welcome')
+                                         'naaya.content.meeting.subscription_welcome')
 
 InitializeClass(Subscriptions)
 
@@ -168,9 +168,12 @@ class SignupUsersTool(BasicUserFolder):
         else:
             return None
 
-NaayaPageTemplateFile('zpt/subscription_signup', globals(), 'meeting_subscription_signup')
-NaayaPageTemplateFile('zpt/subscription_index', globals(), 'meeting_subscription_index')
-NaayaPageTemplateFile('zpt/subscription_welcome', globals(), 'meeting_subscription_welcome')
+NaayaPageTemplateFile('zpt/subscription_signup', globals(),
+        'naaya.content.meeting.subscription_signup')
+NaayaPageTemplateFile('zpt/subscription_index', globals(),
+        'naaya.content.meeting.subscription_index')
+NaayaPageTemplateFile('zpt/subscription_welcome', globals(),
+        'naaya.content.meeting.subscription_welcome')
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
