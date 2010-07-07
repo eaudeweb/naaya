@@ -668,26 +668,53 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('test_first_name test_last_name' in html)
         self.assertTrue('mailto:test_email@email.com' in html)
-        self.assertTrue('Accepted' not in html)
+        self.assertTrue('new' in html)
 
         self.browser_do_logout()
 
     def testSignupLogin(self):
-        def assert_admin_access():
+        def assert_admin_access(key):
+            self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in html)
+
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' in html) 
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html) 
-        def assert_access():
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+
+            self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
+            self.assertEqual('http://localhost/portal/info/mymeeting', self.browser.get_url())
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in html)
+
+        def assert_access(key):
+            self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in html)
+
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html) 
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html) 
-        def assert_no_access():
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+
+            self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
+            html = self.browser.get_html()
+            self.assertEqual('http://localhost/portal/info/mymeeting', self.browser.get_url())
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in html)
+
+        def assert_rejected(key):
+            self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' not in html)
+            self.assertTrue('Your key was rejected.' in html)
+
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()
-            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html) 
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in html) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in html)
 
         # submit the signup
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
@@ -708,7 +735,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('test_first_name test_last_name' in html)
         self.assertTrue('mailto:test_email@email.com' in html)
-        self.assertTrue('Accepted' not in html)
+        self.assertTrue('new' in html)
 
         form = self.browser.get_form('formManageSignups')
         expected_controls = set(['keys:list', 'accept', 'reject'])
@@ -721,16 +748,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'accept'))
         form['keys:list'] = [key]
         self.browser.submit()
-
         self.browser_do_logout()
-
-        # test login
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
-        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' in self.browser.get_html())
-        assert_access()
-        # test logout
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
-        assert_no_access()
+        assert_access(key)
 
         # give admin rights
         self.browser_do_login('admin', '')
@@ -740,13 +759,17 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         form['uids:list'] = [key]
         self.browser.submit()
         self.browser_do_logout()
+        assert_admin_access(key)
 
-        # test admin rights
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
-        assert_admin_access()
-        # test logout
-        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=')
-        assert_no_access()
+        # reject rights
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        form = self.browser.get_form('formManageSignups')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'reject'))
+        form['keys:list'] = [key]
+        self.browser.submit()
+        self.browser_do_logout()
+        assert_rejected(key)
 
 def test_suite():
     suite = TestSuite()
