@@ -62,6 +62,10 @@ class Subscriptions(SimpleItem):
 
         self._signups.insert(key, signup)
 
+        email_sender = self.getMeeting().getEmailSender()
+        email_sender.send_signup_email(signup)
+        
+
     def signup(self, REQUEST):
         """ """
         if REQUEST.REQUEST_METHOD == 'GET':

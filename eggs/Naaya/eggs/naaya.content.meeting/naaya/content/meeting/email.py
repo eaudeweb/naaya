@@ -58,7 +58,26 @@ class EmailSender(SimpleItem):
                                                 'result': result},
                         'naaya.content.meeting.email_sendstatus')
 
-    _signup_email = EmailPageTemplateFile('zpt/email_signup_accepted.zpt', globals())
+    _signup_email = EmailPageTemplateFile('zpt/email_signup.zpt', globals())
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_email')
+    def send_signup_email(self, signup):
+        """ """
+        meeting = self.getMeeting()
+        site = self.getSite()
+        from_email = site.administrator_email
+        to_email = meeting.contact_email
+
+        mail_opts = {'meeting': meeting,
+                    'contact_person': meeting.contact_person,
+                    'name': signup.name}
+        mail_data = self._signup_email.render_email(**mail_opts)
+
+        subject = mail_data['subject']
+        body_text = mail_data['body_text']
+
+        return self._send_email(from_email, to_email, subject, body_text)
+
+    _signup_accept_email = EmailPageTemplateFile('zpt/email_signup_accepted.zpt', globals())
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_accepted_email')
     def send_signup_accepted_email(self, signup):
         """ """
@@ -71,7 +90,7 @@ class EmailSender(SimpleItem):
         mail_opts = {'meeting': meeting,
                      'name': signup.name,
                      'login_url': login_url}
-        mail_data = self._signup_email.render_email(**mail_opts)
+        mail_data = self._signup_accept_email.render_email(**mail_opts)
 
         subject = mail_data['subject']
         body_text = mail_data['body_text']
