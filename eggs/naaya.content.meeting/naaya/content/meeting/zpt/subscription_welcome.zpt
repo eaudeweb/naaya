@@ -14,14 +14,25 @@
         Invalid key
     </tal:block>
     <tal:block condition="signup">
-    <p i18n:translate="">
-        Welcome, <tal:block replace="signup/name"/>. You have been accepted to participante to this meeting.
-    </p>
-    <p>
-        <a tal:attributes="href string:${request/ACTUAL_URL}?logout=">Logout</a>
-    </p>
-    </tal:block>
+        <tal:block define="accepted signup/accepted">
+        <tal:block condition="python:accepted == 'new'">
+            Your key is not accepted.
+        </tal:block>
+        <tal:block condition="python:accepted == 'rejected'">
+            Your key was rejected.
+        </tal:block>
+        <tal:block condition="python:accepted == 'accepted'">
+            <p i18n:translate="">
+                Welcome, <tal:block replace="signup/name"/>. You have been accepted to
+            </p>
+            <p>
+                <a tal:attributes="href string:${request/ACTUAL_URL}?logout=">Logout</a>
+            </p>
 
+        </tal:block>
+        </tal:block>
+
+    </tal:block>
     </tal:block>
     </metal:block>
 </metal:block>

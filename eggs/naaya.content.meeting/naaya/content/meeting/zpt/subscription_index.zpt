@@ -78,8 +78,7 @@
                     </td>
                     <td tal:content="signup/organization"/>
                     <td tal:content="signup/phone"/>
-                    <td tal:define="accepted signup/accepted"
-                         tal:content="python:test(accepted, 'Accepted', '')"/>
+                    <td tal:content="signup/accepted"/>
                 </tr>
             </table>
             <input type="submit" name="accept" value="Accept as participant(s)"/>
