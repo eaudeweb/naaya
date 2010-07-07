@@ -99,16 +99,19 @@ class Subscriptions(SimpleItem):
     def _accept_signup(self, key):
         """ """
         self.getMeeting().getParticipants()._set_attendee(key, PARTICIPANT_ROLE)
-        self._signups[key].accepted = True
+        self._signups[key].accepted = 'accepted'
 
     def _reject_signup(self, key):
         """ """
-        del self._signups[key]
-        self.getMeeting().getParticipants()._del_attendee(key)
+        self._signups[key].accepted = 'rejected'
+
+        participants = self.getMeeting().getParticipants()
+        if key in participants._get_attendees():
+            participants._del_attendee(key)
 
     def _is_signup(self, key):
         """ """
-        return self._signups.has_key(key)
+        return self._signups.has_key(key) and self._signups[key].accepted == 'accepted'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
     def manageSignups(self, REQUEST):
@@ -121,7 +124,8 @@ class Subscriptions(SimpleItem):
         elif 'reject' in REQUEST.form:
             for key in keys:
                 self._reject_signup(key)
-        REQUEST.RESPONSE.redirect(self.absolute_url())
+
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def welcome(self, REQUEST):
         """ """
@@ -131,10 +135,12 @@ class Subscriptions(SimpleItem):
 
         key = REQUEST.get('key', None)
         signup = self.getSignup(key)
-        if signup is not None and signup.accepted:
+        if self._is_signup(key): 
             REQUEST.SESSION['nymt-current-key'] = key
 
-        return self.getFormsTool().getContent({'here': self, 'signup': signup}, 'meeting_subscription_welcome')
+        return self.getFormsTool().getContent({'here': self,
+                                                'signup': signup},
+                                         'meeting_subscription_welcome')
 
 InitializeClass(Subscriptions)
 
@@ -145,7 +151,7 @@ class SignUp(Persistent):
         self.email = email
         self.organization = organization
         self.phone = phone
-        self.accepted = False
+        self.accepted = 'new'
 
 class SignupUsersTool(BasicUserFolder):
     def getMeeting(self):
@@ -153,11 +159,10 @@ class SignupUsersTool(BasicUserFolder):
 
     def authenticate(self, name, password, REQUEST):
         participants = self.getMeeting().getParticipants()
-        subscriptions = participants.subscriptions
+        subscriptions = participants.getSubscriptions()
 
         key = REQUEST.SESSION.get('nymt-current-key', None)
-        signup = subscriptions.getSignup(key)
-        if signup is not None and signup.accepted:
+        if subscriptions._is_signup(key):
             role = participants._get_attendees()[key]
             return SimpleUser('signup:' + key, '', (role,), [])
         else:
