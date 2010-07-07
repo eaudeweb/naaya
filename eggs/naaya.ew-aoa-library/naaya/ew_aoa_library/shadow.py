@@ -75,7 +75,7 @@ public_widgets = set([
 def extract_survey_answer_data(answer):
     attrs = {
         'id': answer.getId(),
-        'title': answer.get('w_name-assessment'),
+        'title': answer.get('w_assessment-name'),
         'geo_location': answer.get('w_location'),
         'uploader': answer.get('w_15-information-about-data-uploader'),
         'geo_type': extract_geo_type(answer),
