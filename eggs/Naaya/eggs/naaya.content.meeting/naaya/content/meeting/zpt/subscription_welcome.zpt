@@ -23,7 +23,7 @@
         </tal:block>
         <tal:block condition="python:accepted == 'accepted'">
             <p i18n:translate="">
-                Welcome, <tal:block replace="signup/name"/>. You have been accepted to
+                Welcome, <tal:block replace="signup/name"/>. You have been accepted to participate to this meeting.
             </p>
             <p>
                 <a tal:attributes="href string:${request/ACTUAL_URL}?logout=">Logout</a>
