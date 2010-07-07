@@ -109,7 +109,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     _marker_template = """
         <div class="marker-body">
-            <h3>%s</h3>
             %s
             <small>%s</small>
             <div class="marker-more">
@@ -141,8 +140,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if not has_access:
             access_str = '<div>RESTRICTED ACCESS</div>'
         translate = self.getSite().getPortalTranslations()
-        return self._marker_template % (object.title_or_id(),
-                                        access_str,
+        return self._marker_template % (access_str,
                                         object.description,
                                         object.absolute_url(),
                                         translate("see more"))
