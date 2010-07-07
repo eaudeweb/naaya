@@ -98,8 +98,17 @@ class Subscriptions(SimpleItem):
 
     def _accept_signup(self, key):
         """ """
-        self.getMeeting().getParticipants()._set_attendee(key, PARTICIPANT_ROLE)
-        self._signups[key].accepted = 'accepted'
+        meeting = self.getMeeting()
+        meeting.getParticipants()._set_attendee(key, PARTICIPANT_ROLE)
+        signup = self._signups[key]
+        signup.accepted = 'accepted'
+
+        if not signup.email_sent:
+            email_sender = meeting.getEmailSender()
+            result = email_sender.send_signup_accepted_email(signup)
+
+            if result == 1:
+                signup.email_send = True
 
     def _reject_signup(self, key):
         """ """
@@ -152,6 +161,7 @@ class SignUp(Persistent):
         self.organization = organization
         self.phone = phone
         self.accepted = 'new'
+        self.email_sent = False
 
 class SignupUsersTool(BasicUserFolder):
     def getMeeting(self):
