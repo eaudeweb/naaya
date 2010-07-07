@@ -79,7 +79,15 @@ def extract_survey_answer_data(answer):
         'geo_location': answer.get('w_location'),
         'uploader': answer.get('w_15-information-about-data-uploader'),
         'geo_type': extract_geo_type(answer),
-        'description': "",
+        'description': """<strong>%s</strong><br />
+        %s<br />
+        <a href="%s">%s</a><br />
+        """ % (
+            answer.get('w_submitter-organisation'),
+            answer.get('w_assessment-year'),
+            answer.get('w_assessment-url'),
+            answer.get('w_assessment-url'),
+        ),
         'target_path': path_in_site(answer),
     }
 
