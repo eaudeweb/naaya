@@ -755,7 +755,11 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         form['phone:utf8:ustring'] = 'test_phone'
         self.browser.submit()
 
-        self.assertEqual(len(self.diverted_mail), 0)
+        self.assertEqual(len(self.diverted_mail), 1)
+        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        self.assertTrue('http://localhost/portal/info/mymeeting' in body)
+        self.assertEqual(addr_to, ['my.email@my.domain'])
+        self.assertEqual(subject, 'Signup notification - MyMeeting')
 
         # accept the signup
         self.browser_do_login('admin', '')
@@ -778,8 +782,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
         self.browser_do_logout()
         assert_access(key)
-        self.assertEqual(len(self.diverted_mail), 1)
-        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        self.assertEqual(len(self.diverted_mail), 2)
+        body, addr_to, addr_from, subject = self.diverted_mail[1]
         self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key in body)
         self.assertEqual(addr_to, ['test_email@email.com'])
         self.assertEqual(addr_from, 'my.email@my.domain')
