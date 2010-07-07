@@ -81,7 +81,7 @@ class Subscriptions(SimpleItem):
 
     def subscribe(self, REQUEST):
         """ """
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/signup')
+        return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe')
 
     def getSignups(self):
         """ """
@@ -178,6 +178,8 @@ class SignupUsersTool(BasicUserFolder):
         else:
             return None
 
+NaayaPageTemplateFile('zpt/subscription_subscribe', globals(),
+        'naaya.content.meeting.subscription_subscribe')
 NaayaPageTemplateFile('zpt/subscription_signup', globals(),
         'naaya.content.meeting.subscription_signup')
 NaayaPageTemplateFile('zpt/subscription_index', globals(),
