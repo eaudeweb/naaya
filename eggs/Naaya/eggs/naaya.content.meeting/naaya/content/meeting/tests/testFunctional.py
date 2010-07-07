@@ -369,7 +369,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('Meeting Reports' in html)
         self.assertTrue('jstree' in html)
 
-        self.browser.go('http://localhost/portal/meeting_reports/report_meeting_organisations')
+        self.browser.go('http://localhost/portal/meeting_reports/report_meeting_organizations')
         html = self.browser.get_html()
         self.assertTrue('Meeting Reports' in html)
         self.assertTrue('jstree' in html)
@@ -709,7 +709,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?key=' + key)
             html = self.browser.get_html()
             self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome?logout=' not in html)
-            self.assertTrue('Your key was rejected.' in html)
+            self.assertTrue('You were rejected.' in html)
 
             self.browser.go('http://localhost/portal/info/mymeeting')
             html = self.browser.get_html()

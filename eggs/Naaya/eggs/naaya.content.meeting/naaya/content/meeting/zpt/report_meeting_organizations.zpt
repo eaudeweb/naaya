@@ -12,7 +12,7 @@
         $('#report').tree({
             data: {
                 type: 'json',
-                opts: { static: ${here/meeting_reports/jstree_organisations}
+                opts: { static: ${here/meeting_reports/jstree_organizations}
                         }
             },
             types: {
