@@ -110,7 +110,7 @@
 
             <tal:block condition="python:here.getUserLevel(request) == 0">
             <p>
-                If you are not a participant in this meeting, you can
+                If you want to participante to this meeting, you can
                 <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="subscribe"></a>
                 now.
             </p>
