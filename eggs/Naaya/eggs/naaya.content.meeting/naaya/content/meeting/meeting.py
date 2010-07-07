@@ -383,7 +383,8 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'menusubmissions')
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'meeting_menusubmissions')
+        return self.getFormsTool().getContent({'here': self},
+                            'naaya.content.meeting.meeting_menusubmissions')
 
     def get_ics(self, REQUEST):
         """ Export this meeting as 'ics' """
@@ -426,7 +427,8 @@ manage_addNyMeeting_html.kind = config['meta_type']
 manage_addNyMeeting_html.action = 'addNyMeeting'
 
 #Custom page templates
-NaayaPageTemplateFile('zpt/meeting_menusubmissions', globals(), 'meeting_menusubmissions')
+NaayaPageTemplateFile('zpt/meeting_menusubmissions', globals(),
+        'naaya.content.meeting.meeting_menusubmissions')
 
 config.update({
     'on_install': meeting_on_install,

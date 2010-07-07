@@ -160,7 +160,8 @@ class Participants(SimpleItem):
             phone = getUserPhoneNumber(site, uid)
         attendees = self._get_attendees()
         role = attendees[uid]
-        return {'uid': uid, 'name': name, 'email': email, 'organization': organization, 'phone': phone, 'role': role}
+        return {'uid': uid, 'name': name, 'email': email,
+                 'organization': organization, 'phone': phone, 'role': role}
 
     def getParticipantRole(self):
         """ """
@@ -174,21 +175,29 @@ class Participants(SimpleItem):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'meeting_participants')
+        return self.getFormsTool().getContent({'here': self},
+                        'naaya.content.meeting.participants_index')
 
     security.declareProtected(view, 'pickrole_html')
     def pickrole_html(self, REQUEST):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'meeting_participants_pickrole')
+        return self.getFormsTool().getContent({'here': self},
+                        'naaya.content.meeting.participants_pickrole')
 
     security.declareProtected(view, 'participants_table')
     def participants_table(self, form_name, input_name):
         """ """
-        return self.getFormsTool().getContent({'here': self, 'form_name': form_name, 'input_name': input_name}, 'meeting_participants_table')
+        return self.getFormsTool().getContent({'here': self,
+                                                'form_name': form_name,
+                                                'input_name': input_name},
+                         'naaya.content.meeting.participants_table')
 
 InitializeClass(Participants)
 
-NaayaPageTemplateFile('zpt/participants_index', globals(), 'meeting_participants')
-NaayaPageTemplateFile('zpt/participants_pickrole', globals(), 'meeting_participants_pickrole')
-NaayaPageTemplateFile('zpt/participants_table', globals(), 'meeting_participants_table')
+NaayaPageTemplateFile('zpt/participants_index', globals(),
+        'naaya.content.meeting.participants_index')
+NaayaPageTemplateFile('zpt/participants_pickrole', globals(),
+        'naaya.content.meeting.participants_pickrole')
+NaayaPageTemplateFile('zpt/participants_table', globals(),
+        'naaya.content.meeting.participants_table')
 
