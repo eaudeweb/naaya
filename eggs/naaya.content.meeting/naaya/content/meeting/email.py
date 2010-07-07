@@ -8,6 +8,7 @@ from AccessControl.Permissions import view
 #Naaya imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
 #naaya.content.meeting imports
 from utils import getUserEmail
@@ -31,22 +32,55 @@ class EmailSender(SimpleItem):
                                                  'meeting': self.getMeeting()},
                         'naaya.content.meeting.email_index')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_newsletter')
+    def _send_email(self, p_from, p_to, p_subject, p_content):
+        """ """
+        try:
+            email_tool = self.getEmailTool()
+            return email_tool.sendEmail(p_content=p_content,
+                                p_to=p_to,
+                                p_from=p_from,
+                                p_subject=p_subject)
+        except:
+            return 0
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_email')
     def send_email(self, from_email, subject, body_text, REQUEST, to_uids=None):
         """ """
+        result = 0
         if to_uids is not None:
             assert isinstance(to_uids, list)
             to_emails = [getUserEmail(self.getSite(), uid) for uid in to_uids]
 
-            email_tool = self.getEmailTool()
-            email_tool.sendEmail(p_content=body_text,
-                                    p_to=to_emails,
-                                    p_from=from_email,
-                                    p_subject=subject)
+            result = self._send_email(from_email, to_emails, subject, body_text)
 
-        REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+        return self.getFormsTool().getContent({'here': self,
+                                                'meeting': self.getMeeting(),
+                                                'result': result},
+                        'naaya.content.meeting.email_sendstatus')
+
+    _signup_email = EmailPageTemplateFile('zpt/email_signup_accepted.zpt', globals())
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_accepted_email')
+    def send_signup_accepted_email(self, signup):
+        """ """
+        meeting = self.getMeeting()
+        subscriptions = meeting.getParticipants().getSubscriptions()
+        from_email = meeting.contact_email
+        to_email = signup.email
+        login_url = subscriptions.absolute_url() + '/welcome?key=' + signup.key
+
+        mail_opts = {'meeting': meeting,
+                     'name': signup.name,
+                     'login_url': login_url}
+        mail_data = self._signup_email.render_email(**mail_opts)
+
+        subject = mail_data['subject']
+        body_text = mail_data['body_text']
+
+        return self._send_email(from_email, to_email, subject, body_text)
 
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
         'naaya.content.meeting.email_index')
+NaayaPageTemplateFile('zpt/email_sendstatus', globals(),
+        'naaya.content.meeting.email_sendstatus')
 
