@@ -645,7 +645,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
     def testSignupValidation(self):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/signup' in self.browser.get_html())
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
 
         form = self.browser.get_form('formSignup')
         expected_controls = set(['first_name:utf8:ustring', 'last_name:utf8:ustring', 'email:utf8:ustring', 'organization:utf8:ustring', 'phone:utf8:ustring', 'add_signup'])
@@ -742,7 +743,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
 
         # submit the signup
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/signup' in self.browser.get_html())
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
 
         form = self.browser.get_form('formSignup')
         self.browser.clicked(form, self.browser.get_form_field(form, 'add_signup'))
