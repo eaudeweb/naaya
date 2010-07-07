@@ -40,7 +40,7 @@ def getUserEmail(site, uid):
             if user is not None:
                 return _encode(user.getProperty('mail'))
 
-def getUserOrganisation(site, uid):
+def getUserOrganization(site, uid):
     auth_tool = site.getAuthenticationTool()
     local_user = auth_tool.getUser(uid)
     if local_user is not None:
@@ -83,7 +83,7 @@ def findUsers(site, search_param, search_term):
         info = 'Local user'
 
         if userMatched(uid, cn):
-            ret.append({'uid': uid, 'cn': cn, 'organisation': '', 'info': info})
+            ret.append({'uid': uid, 'cn': cn, 'organization': '', 'info': info})
 
     for source in auth_tool.getSources():
         acl_folder = source.getUserFolder()
@@ -92,9 +92,9 @@ def findUsers(site, search_param, search_term):
             for user in users:
                 uid = user.get('uid', '')
                 cn = user.get('cn', '')
-                organisation = user.get('o', '')
+                organization = user.get('o', '')
                 info = user.get('dn', '')
-                ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
+                ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
 
     return ret
 
@@ -112,11 +112,11 @@ def findUsersWithRole(site, search_role):
             cn = user.get('cn', '')
             if isinstance(cn, list):
                 cn = cn[0]
-            organisation = user.get('o', '')
-            if isinstance(organisation, list):
-                organisation = organisation[0]
+            organization = user.get('o', '')
+            if isinstance(organization, list):
+                organization = organization[0]
             info = user.get('dn', '')
-            ret.append({'uid': uid, 'cn': cn, 'organisation': organisation, 'info': info})
+            ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
 
     return ret
 
