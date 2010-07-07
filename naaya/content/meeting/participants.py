@@ -29,6 +29,9 @@ class Participants(SimpleItem):
     def getMeeting(self):
         return self.aq_parent
 
+    def getSubscriptions(self):
+        return self.subscriptions
+
     def resetSubscriptions(self):
         """ """
         self.subscriptions = Subscriptions('subscriptions')
@@ -83,10 +86,11 @@ class Participants(SimpleItem):
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
-        if self.subscriptions._is_signup(uid):
-            self.subscriptions._reject_signup(uid)
-
         self.getMeeting().manage_delLocalRoles([uid])
+
+        subscriptions = self.getSubscriptions()
+        if subscriptions._is_signup(uid):
+            subscriptions._reject_signup(uid)
 
     def delAttendees(self, REQUEST):
         """ """
@@ -141,8 +145,9 @@ class Participants(SimpleItem):
 
     def getAttendeeInfo(self, uid):
         """ """
-        if self.subscriptions._is_signup(uid):
-            user = self.subscriptions.getSignup(uid)
+        subscriptions = self.getSubscriptions()
+        if subscriptions._is_signup(uid):
+            user = subscriptions.getSignup(uid)
             name = user.name
             email = user.email
             organisation = user.organization
