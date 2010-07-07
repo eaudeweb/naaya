@@ -11,15 +11,15 @@
     </h1>
 
     <tal:block condition="not:signup" i18n:translate="">
-        Invalid key
+        Invalid key.
     </tal:block>
     <tal:block condition="signup">
         <tal:block define="accepted signup/accepted">
         <tal:block condition="python:accepted == 'new'">
-            Your key is not accepted.
+            You were not accepted to participante to this meeting.
         </tal:block>
         <tal:block condition="python:accepted == 'rejected'">
-            Your key was rejected.
+            You were rejected. You can't participante in the meeting.
         </tal:block>
         <tal:block condition="python:accepted == 'accepted'">
             <p i18n:translate="">

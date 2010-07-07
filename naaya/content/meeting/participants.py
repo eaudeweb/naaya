@@ -12,7 +12,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
-from utils import getUserFullName, getUserEmail, getUserOrganisation, getUserPhoneNumber
+from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 from utils import findUsers, findUsersWithRole
 from subscriptions import Subscriptions
 
@@ -129,7 +129,7 @@ class Participants(SimpleItem):
         site = self.getSite()
         key = None
         if sort_on == 'o':
-            key = lambda x: getUserOrganisation(site, x)
+            key = lambda x: getUserOrganization(site, x)
         elif sort_on == 'name':
             key = lambda x: getUserFullName(site, x)
         elif sort_on == 'email':
@@ -150,17 +150,17 @@ class Participants(SimpleItem):
             user = subscriptions.getSignup(uid)
             name = user.name
             email = user.email
-            organisation = user.organization
+            organization = user.organization
             phone = user.phone
         else:
             site = self.getSite()
             name = getUserFullName(site, uid)
             email = getUserEmail(site, uid)
-            organisation = getUserOrganisation(site, uid)
+            organization = getUserOrganization(site, uid)
             phone = getUserPhoneNumber(site, uid)
         attendees = self._get_attendees()
         role = attendees[uid]
-        return {'uid': uid, 'name': name, 'email': email, 'organisation': organisation, 'phone': phone, 'role': role}
+        return {'uid': uid, 'name': name, 'email': email, 'organization': organization, 'phone': phone, 'role': role}
 
     def getParticipantRole(self):
         """ """

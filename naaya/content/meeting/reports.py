@@ -14,7 +14,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #naaya.content.meeting improts
 import meeting as meeting_module
-from utils import getUserFullName, getUserEmail, getUserOrganisation
+from utils import getUserFullName, getUserEmail, getUserOrganization
 
 class MeetingReports(SimpleItem):
     """ """
@@ -22,7 +22,7 @@ class MeetingReports(SimpleItem):
 
     title = "Meeting Reports"
     participant_icon = 'images/report_icons/participant.gif'
-    organisation_icon = 'images/report_icons/organisation.gif'
+    organization_icon = 'images/report_icons/organization.gif'
 
     def __init__(self, id):
         """ """
@@ -71,23 +71,23 @@ class MeetingReports(SimpleItem):
 
         return json.dumps(jstree)
 
-    def jstree_organisations(self):
+    def jstree_organizations(self):
         """ """
-        jstree, organisations = [], {}
+        jstree, organizations = [], {}
         site = self.getSite()
         meeting_config = meeting_module.get_config()
         meeting_obs = site.getCatalogedObjectsCheckView(meta_type=meeting_config['meta_type'], approved=1)
 
         for i, meeting in enumerate(meeting_obs):
             for uid in meeting.participants.getParticipants():
-                organisation = getUserOrganisation(site, uid)
-                if organisation not in organisations:
-                    organisations[organisation] = {}
-                if i not in organisations[organisation]:
-                    organisations[organisation][i] = []
-                organisations[organisation][i].append(uid)
+                organization = getUserOrganization(site, uid)
+                if organization not in organizations:
+                    organizations[organization] = {}
+                if i not in organizations[organization]:
+                    organizations[organization][i] = []
+                organizations[organization][i].append(uid)
 
-        for organisation, values in organisations.iteritems():
+        for organization, values in organizations.iteritems():
             meeting_nodes = []
             for i, uids in values.iteritems():
                 meeting = meeting_obs[i]
@@ -118,8 +118,8 @@ class MeetingReports(SimpleItem):
 
 
             jstree.append({'data':
-                                {'title': organisation,
-                                'icon': self.organisation_icon
+                                {'title': organization,
+                                'icon': self.organization_icon
                             },
                             'children': meeting_nodes
                         })
@@ -130,12 +130,12 @@ class MeetingReports(SimpleItem):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'report_meeting_participants')
 
-    security.declareProtected(view, 'report_meeting_organisations')
-    def report_meeting_organisations(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(view, 'report_meeting_organizations')
+    def report_meeting_organizations(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'report_meeting_organisations')
+        return self.getFormsTool().getContent({'here': self}, 'report_meeting_organizations')
 
 #Custom page templates
 NaayaPageTemplateFile('zpt/report_meeting_participants', globals(), 'report_meeting_participants')
-NaayaPageTemplateFile('zpt/report_meeting_organisations', globals(), 'report_meeting_organisations')
+NaayaPageTemplateFile('zpt/report_meeting_organizations', globals(), 'report_meeting_organizations')
 
