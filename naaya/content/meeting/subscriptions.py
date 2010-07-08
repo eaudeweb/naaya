@@ -109,12 +109,8 @@ class Subscriptions(SimpleItem):
         signup = self._signups[key]
         signup.accepted = 'accepted'
 
-        if not signup.email_sent:
-            email_sender = meeting.getEmailSender()
-            result = email_sender.send_signup_accepted_email(signup)
-
-            if result == 1:
-                signup.email_send = True
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_signup_accepted_email(signup)
 
     def _reject_signup(self, key):
         """ """
@@ -225,7 +221,6 @@ class SignUp(Persistent):
         self.organization = organization
         self.phone = phone
         self.accepted = 'new'
-        self.email_sent = False
 
 class AccountSubscription(Persistent):
     def __init__(self, uid, name, email, organization, phone):
