@@ -76,6 +76,8 @@ config = {
                 'Attendees.jpg': ImageFile('www/Attendees.jpg', globals()),
                 'Email.jpg': ImageFile('www/Email.jpg', globals()),
                 'iCalendar.jpg': ImageFile('www/iCalendar.jpg', globals()),
+                'partigipant.gif': ImageFile('www/participant.gif', globals()),
+                'organization.gif': ImageFile('www/organization.gif', globals()),
             },
     }
 

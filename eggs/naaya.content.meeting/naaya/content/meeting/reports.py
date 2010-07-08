@@ -21,8 +21,8 @@ class MeetingReports(SimpleItem):
     security = ClassSecurityInfo()
 
     title = "Meeting Reports"
-    participant_icon = 'images/report_icons/participant.gif'
-    organization_icon = 'images/report_icons/organization.gif'
+    participant_icon = 'misc_/NaayaContent/participant.gif'
+    organization_icon = 'misc_/NaayaContent/organization.gif'
 
     def __init__(self, id):
         """ """
