@@ -16,6 +16,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #meeting imports
 from naaya.content.meeting import PARTICIPANT_ROLE
+from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 
 class Subscriptions(SimpleItem):
     security = ClassSecurityInfo()
@@ -27,6 +28,7 @@ class Subscriptions(SimpleItem):
         super(SimpleItem, self).__init__(id)
         self.id = id
         self._signups = OOBTree()
+        self._account_subscriptions = OOBTree()
 
     def getMeeting(self):
         return self.aq_parent.aq_parent
@@ -155,6 +157,64 @@ class Subscriptions(SimpleItem):
                                                 'signup': signup},
                                          'naaya.content.meeting.subscription_welcome')
 
+    def _add_account_subscription(self, uid):
+        """ """
+        site = self.getSite()
+        name = getUserFullName(site, uid)
+        email = getUserEmail(site, uid)
+        organization = getUserOrganization(site, uid)
+        phone = getUserPhoneNumber(site, uid)
+
+        account_subscription = AccountSubscription(uid, name, email, organization, phone)
+
+        self._account_subscriptions.insert(uid, account_subscription)
+
+        email_sender = self.getMeeting().getEmailSender()
+        email_sender.send_account_subscription_email(account_subscription)
+
+    def subscribe_account(self, REQUEST):
+        """ """
+        self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
+        return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+
+    def getAccountSubscriptions(self):
+        """ """
+        return self._account_subscriptions.itervalues()
+
+    def getAccountSubscription(self, key):
+        """ """
+        return self._account_subscriptions.get(key, None)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
+    def manageAccountSubscriptions(self, REQUEST):
+        """ """
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        if 'accept' in REQUEST.form:
+            for uid in uids:
+                self._accept_account_subscription(uid)
+        elif 'reject' in REQUEST.form:
+            for uid in uids:
+                self._reject_account_subscription(uid)
+
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    def _accept_account_subscription(self, uid):
+        """ """
+        meeting = self.getMeeting()
+        meeting.getParticipants()._set_attendee(uid, PARTICIPANT_ROLE)
+        account_subscription = self._account_subscriptions[uid]
+
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_account_subscription_accepted_email(account_subscription)
+
+        self._account_subscriptions.pop(uid, None)
+
+    def _reject_account_subscription(self, uid):
+        """ """
+        self._account_subscriptions.pop(uid, None)
+
+
 InitializeClass(Subscriptions)
 
 class SignUp(Persistent):
@@ -166,6 +226,14 @@ class SignUp(Persistent):
         self.phone = phone
         self.accepted = 'new'
         self.email_sent = False
+
+class AccountSubscription(Persistent):
+    def __init__(self, uid, name, email, organization, phone):
+        self.uid = uid
+        self.name = name
+        self.email = email
+        self.organization = organization
+        self.phone = phone
 
 class SignupUsersTool(BasicUserFolder):
     def getMeeting(self):

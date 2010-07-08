@@ -16,6 +16,22 @@
         </span>
     </div>
 
+    <tal:block define="
+        username python:request.AUTHENTICATED_USER.getUserName();
+        site here/getSite;">
+    <p tal:condition="python:username == 'Anonymous User'"
+        i18n:translate="">
+        If you already have a local or EIONET LDAP account you can
+        <a tal:attributes="href string:${site/absolute_url}/login_html?came_from=${request/ACTUAL_URL}">login</a>
+         and request to participate with your account.
+    </p>
+    <p tal:condition="python:username != 'Anonymous User'"
+        i18n:translate="">
+        <a tal:attributes="href string:${here/absolute_url}/subscribe_account">Subscribe</a>
+        to this meeting using the current logged in account.
+    </p>
+    </tal:block>
+
     <p i18n:translate="">
         <a tal:attributes="href string:${here/absolute_url}/signup">Here</a>
         you can signup for a new account to participate to this meeting.

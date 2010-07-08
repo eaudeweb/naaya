@@ -77,6 +77,26 @@ class EmailSender(SimpleItem):
 
         return self._send_email(from_email, to_email, subject, body_text)
 
+    _account_subscription_email = EmailPageTemplateFile('zpt/email_account_subscription.zpt', globals())
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_email')
+    def send_account_subscription_email(self, account_subscription):
+        """ """
+        meeting = self.getMeeting()
+        site = self.getSite()
+        from_email = site.administrator_email
+        to_email = meeting.contact_email
+
+        mail_opts = {'meeting': meeting,
+                    'contact_person': meeting.contact_person,
+                    'name': account_subscription.name}
+        mail_data = self._account_subscription_email.render_email(**mail_opts)
+
+        subject = mail_data['subject']
+        body_text = mail_data['body_text']
+
+        return self._send_email(from_email, to_email, subject, body_text)
+
+
     _signup_accept_email = EmailPageTemplateFile('zpt/email_signup_accepted.zpt', globals())
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_accepted_email')
     def send_signup_accepted_email(self, signup):
@@ -97,6 +117,24 @@ class EmailSender(SimpleItem):
 
         return self._send_email(from_email, to_email, subject, body_text)
 
+    _account_subscription_accept_email = EmailPageTemplateFile('zpt/email_account_subscription_accepted.zpt', globals())
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_accepted_email')
+    def send_account_subscription_accepted_email(self, account_subscription):
+        """ """
+        meeting = self.getMeeting()
+        subscriptions = meeting.getParticipants().getSubscriptions()
+        from_email = meeting.contact_email
+        to_email = account_subscription.email
+
+        mail_opts = {'meeting': meeting,
+                     'uid': account_subscription.uid,
+                     'name': account_subscription.name}
+        mail_data = self._account_subscription_accept_email.render_email(**mail_opts)
+
+        subject = mail_data['subject']
+        body_text = mail_data['body_text']
+
+        return self._send_email(from_email, to_email, subject, body_text)
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
         'naaya.content.meeting.email_index')
