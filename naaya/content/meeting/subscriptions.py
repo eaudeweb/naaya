@@ -114,11 +114,16 @@ class Subscriptions(SimpleItem):
 
     def _reject_signup(self, key):
         """ """
-        self._signups[key].accepted = 'rejected'
+        meeting = self.getMeeting()
+        signup = self._signups[key]
+        signup.accepted = 'rejected'
 
-        participants = self.getMeeting().getParticipants()
+        participants = meeting.getParticipants()
         if key in participants._get_attendees():
             participants._del_attendee(key)
+
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_signup_rejected_email(signup)
 
     def _is_signup(self, key):
         """ """
@@ -208,7 +213,11 @@ class Subscriptions(SimpleItem):
 
     def _reject_account_subscription(self, uid):
         """ """
+        meeting = self.getMeeting()
         self._account_subscriptions.pop(uid, None)
+
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_account_subscription_rejected_email(account_subscription)
 
 
 InitializeClass(Subscriptions)
