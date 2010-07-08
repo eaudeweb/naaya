@@ -43,7 +43,7 @@
     <fieldset>
         <legend i18n:translate="List of signups"></legend>
         <form method="post" action="manageSignups" name="formManageSignups">
-            <table class="datatable" width="95%" tal:define="signups here/getSignups">
+            <table class="datatable" width="95%">
                 <tr>
                     <th width="30px">
                         <span i18n:translate="Select"></span>
@@ -86,6 +86,50 @@
         </form>
 
     </fieldset>
+
+    <fieldset>
+        <legend i18n:translate="List of account subscriptions"></legend>
+        <form method="post" action="manageAccountSubscriptions" name="formManageAccountSubscriptions">
+            <table class="datatable" width="95%">
+                <tr>
+                    <th width="30px">
+                        <span i18n:translate="Select"></span>
+                        <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageAccountSubscriptions', 'uids:list')"/>
+                    </th>
+                    <th>
+                        <span i18n:translate="Name"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Email"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Organization"></span>
+                    </th>
+                    <th>
+                        <span i18n:translate="Phone number"></span>
+                    </th>
+                </tr>
+                <tr tal:repeat="account_subscription here/getAccountSubscriptions">
+                    <td>
+                        <input type="checkbox" name="uids:list"
+                            tal:attributes="value account_subscription/uid"/>
+                    </td>
+                    <td tal:content="account_subscription/name"/>
+                    <td tal:define="email account_subscription/email">
+                        <a tal:condition="email"
+                            tal:attributes="href string:mailto:${email}"
+                            tal:content="email"></a>
+                    </td>
+                    <td tal:content="account_subscription/organization"/>
+                    <td tal:content="account_subscription/phone"/>
+                </tr>
+            </table>
+            <input type="submit" name="accept" value="Accept as participant(s)"/>
+            <input type="submit" name="reject" value="Reject subscription(s)"/>
+        </form>
+
+    </fieldset>
+
 
     </tal:block>
     </metal:block>
