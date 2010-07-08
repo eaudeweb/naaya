@@ -91,6 +91,8 @@ class Participants(SimpleItem):
         subscriptions = self.getSubscriptions()
         if subscriptions._is_signup(uid):
             subscriptions._reject_signup(uid)
+        if subscriptions._is_account_subscription(uid):
+            subscriptions._reject_account_subscription(uid)
 
     def delAttendees(self, REQUEST):
         """ """

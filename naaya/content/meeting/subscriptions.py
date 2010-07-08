@@ -182,9 +182,13 @@ class Subscriptions(SimpleItem):
         """ """
         return self._account_subscriptions.itervalues()
 
-    def getAccountSubscription(self, key):
+    def getAccountSubscription(self, uid):
         """ """
-        return self._account_subscriptions.get(key, None)
+        return self._account_subscriptions.get(uid, None)
+
+    def _is_account_subscription(self, uid):
+        """ """
+        return self._account_subscriptions.has_key(uid) and self._account_subscriptions[uid].accepted == 'accepted'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
     def manageAccountSubscriptions(self, REQUEST):
