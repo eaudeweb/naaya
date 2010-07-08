@@ -114,7 +114,6 @@ class EmailSender(SimpleItem):
         """ """
         meeting = self.getMeeting()
         site = self.getSite()
-        email_tool = site.getEmailTool()
         from_email = site.administrator_email
         to_email = meeting.contact_email
 
@@ -161,7 +160,6 @@ class EmailSender(SimpleItem):
     def send_account_subscription_accepted_email(self, account_subscription):
         """ """
         meeting = self.getMeeting()
-        subscriptions = meeting.getParticipants().getSubscriptions()
         from_email = meeting.contact_email
         to_email = account_subscription.email
 
