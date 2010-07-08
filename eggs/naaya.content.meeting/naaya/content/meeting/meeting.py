@@ -34,7 +34,7 @@ from Products.Naaya.NySite import NySite
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
 from participants import Participants
-from email import EmailSender
+from email import EmailSender, configureEmailNotifications
 from reports import MeetingReports
 from subscriptions import SignupUsersTool
 
@@ -112,6 +112,8 @@ def meeting_on_install(site):
     site.manage_role(WAITING_ROLE, b)
 
     NySite.meeting_reports = MeetingReports('meeting_reports')
+
+    configureEmailNotifications(site)
     
 def meeting_add_html(self):
     """ """
