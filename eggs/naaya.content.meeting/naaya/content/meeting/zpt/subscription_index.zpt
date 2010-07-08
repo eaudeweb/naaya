@@ -108,6 +108,9 @@
                     <th>
                         <span i18n:translate="Phone number"></span>
                     </th>
+                    <th>
+                        <span i18n:translate="Status"></span>
+                    </th>
                 </tr>
                 <tr tal:repeat="account_subscription here/getAccountSubscriptions">
                     <td>
@@ -122,6 +125,7 @@
                     </td>
                     <td tal:content="account_subscription/organization"/>
                     <td tal:content="account_subscription/phone"/>
+                    <td tal:content="account_subscription/accepted"/>
                 </tr>
             </table>
             <input type="submit" name="accept" value="Accept as participant(s)"/>
