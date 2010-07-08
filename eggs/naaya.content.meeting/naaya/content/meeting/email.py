@@ -27,9 +27,15 @@ def configureEmailNotifications(site):
                     {'id': 'naaya.content.meeting.email_signup_accepted',
                      'title': 'Signup accepted',
                      'file': 'zpt/email_signup_accepted.zpt'},
+                    {'id': 'naaya.content.meeting.email_signup_rejected',
+                     'title': 'Signup rejected',
+                     'file': 'zpt/email_signup_rejected.zpt'},
                     {'id': 'naaya.content.meeting.email_account_subscription_accepted',
                      'title': 'Account subscription accepted',
                      'file': 'zpt/email_account_subscription_accepted.zpt'},
+                    {'id': 'naaya.content.meeting.email_account_subscription_rejected',
+                     'title': 'Account subscription rejected',
+                     'file': 'zpt/email_account_subscription_rejected.zpt'},
                 ]
     email_tool = site.getEmailTool()
     for t in templates:
@@ -156,6 +162,19 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_signup_accepted',
                     from_email, to_email, mail_opts)
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_rejected_email')
+    def send_signup_rejected_email(self, signup):
+        """ """
+        meeting = self.getMeeting()
+        from_email = meeting.contact_email
+        to_email = signup.email
+
+        mail_opts = {'meeting': meeting,
+                     'name': signup.name}
+
+        return self._send_email_with_template('naaya.content.meeting.email_signup_rejected',
+                    from_email, to_email, mail_opts)
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_accepted_email')
     def send_account_subscription_accepted_email(self, account_subscription):
         """ """
@@ -168,6 +187,19 @@ class EmailSender(SimpleItem):
                      'name': account_subscription.name}
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_accepted',
                     from_email, to_email, mail_opts)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_rejected_email')
+    def send_account_subscription_rejected_email(self, account_subscription):
+        """ """
+        meeting = self.getMeeting()
+        from_email = meeting.contact_email
+        to_email = account_subscription.email
+
+        mail_opts = {'meeting': meeting,
+                     'name': account_subscription.name}
+        return self._send_email_with_template('naaya.content.meeting.email_account_subscription_rejected',
+                    from_email, to_email, mail_opts)
+
 
 NaayaPageTemplateFile('zpt/email_index', globals(),
         'naaya.content.meeting.email_index')
