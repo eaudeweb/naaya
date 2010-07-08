@@ -1,5 +1,5 @@
-WAITING_ROLE = 'Waiting List'
-PARTICIPANT_ROLE = 'Participant'
+WAITING_ROLE = 'Meeting Waiting List'
+PARTICIPANT_ROLE = 'Meeting Participant'
 ADMINISTRATOR_ROLE = 'Administrator'
 
 from meeting import NyMeeting
