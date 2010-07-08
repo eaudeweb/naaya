@@ -809,6 +809,111 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
         assert_rejected(key)
 
+class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
+    """ AccountSubscriptionTestCase for NyMeeting object """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='1',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain', **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        self.diverted_mail = divert_mail(True)
+        addPortalMeetingParticipant(self.portal)
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        removePortalMeetingParticipant(self.portal)
+        divert_mail(False)
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def testSubscriptionsLink(self):
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html())
+
+    def testSubscriptionsAcceptLink(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions' in self.browser.get_html())
+        self.browser_do_logout()
+
+    def testAccountLogin(self):
+        def assert_admin_access():
+            self.browser_do_login('test_participant1', 'participant')
+            self.browser.go('http://localhost/portal/info/mymeeting')
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+            self.browser_do_logout()
+
+        def assert_access():
+            self.browser_do_login('test_participant1', 'participant')
+            self.browser.go('http://localhost/portal/info/mymeeting')
+            html = self.browser.get_html()
+            self.assertTrue('http://localhost/portal/info/mymeeting/edit_html' not in html)
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in html)
+            self.browser_do_logout()
+
+        # submit the subscription
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertTrue('http://localhost/portal/login_html?came_from=http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html())
+        self.browser_do_login('test_participant1', 'participant')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertTrue('http://localhost/portal/login_html?came_from=http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account' not in self.browser.get_html())
+        self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account' in self.browser.get_html())
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe_account')
+
+        self.assertEqual(len(self.diverted_mail), 1)
+        body, addr_to, addr_from, subject = self.diverted_mail[0]
+        self.assertTrue('http://localhost/portal/info/mymeeting' in body)
+        self.assertEqual(addr_to, ['my.email@my.domain'])
+        self.assertEqual(subject, 'Account subscription notification - MyMeeting')
+        self.browser_do_logout()
+
+        # accept the signup
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        html = self.browser.get_html()
+        self.assertTrue('test_participant1' in html)
+
+        form = self.browser.get_form('formManageAccountSubscriptions')
+        expected_controls = set(['uids:list', 'accept', 'reject'])
+        found_controls = set(c.name for c in form.controls)
+        self.assertTrue(expected_controls <= found_controls,
+            'Missing form controls: %s' % repr(expected_controls - found_controls))
+
+        self.assertTrue(form.controls[1].name == 'uids:list')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'accept'))
+        form['uids:list'] = ['test_participant1']
+        self.browser.submit()
+        self.browser_do_logout()
+
+        assert_access()
+
+        self.assertEqual(len(self.diverted_mail), 2)
+        body, addr_to, addr_from, subject = self.diverted_mail[1]
+        self.assertTrue('http://localhost/portal/info/mymeeting' in body)
+        self.assertTrue('test_participant1' in body)
+        self.assertEqual(addr_from, 'my.email@my.domain')
+        self.assertEqual(subject, 'Account subscription notification - MyMeeting')
+
+        # give admin rights
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        form = self.browser.get_form('formOnAttendees')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'set_administrators'))
+        form['uids:list'] = ['test_participant1']
+        self.browser.submit()
+        self.browser_do_logout()
+        assert_admin_access()
+
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyMeetingCreateTestCase))
@@ -817,5 +922,6 @@ def test_suite():
     suite.addTest(makeSuite(NyMeetingParticipantsTestCase))
     suite.addTest(makeSuite(NyMeetingSurveyTestCase))
     suite.addTest(makeSuite(NyMeetingSignupTestCase))
+    suite.addTest(makeSuite(NyMeetingAccountSubscriptionTestCase))
     return suite
 
