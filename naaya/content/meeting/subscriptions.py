@@ -205,20 +205,23 @@ class Subscriptions(SimpleItem):
         meeting = self.getMeeting()
         meeting.getParticipants()._set_attendee(uid, PARTICIPANT_ROLE)
         account_subscription = self._account_subscriptions[uid]
+        account_subscription.accepted = 'accepted'
 
         email_sender = meeting.getEmailSender()
         result = email_sender.send_account_subscription_accepted_email(account_subscription)
 
-        self._account_subscriptions.pop(uid, None)
-
     def _reject_account_subscription(self, uid):
         """ """
         meeting = self.getMeeting()
-        self._account_subscriptions.pop(uid, None)
+        account_subscription = self._account_subscriptions[uid]
+        account_subscription.accepted = 'rejected'
+
+        participants = meeting.getParticipants()
+        if uid in participants._get_attendees():
+            participants._del_attendee(uid)
 
         email_sender = meeting.getEmailSender()
         result = email_sender.send_account_subscription_rejected_email(account_subscription)
-
 
 InitializeClass(Subscriptions)
 
@@ -238,6 +241,7 @@ class AccountSubscription(Persistent):
         self.email = email
         self.organization = organization
         self.phone = phone
+        self.accepted = 'new'
 
 class SignupUsersTool(BasicUserFolder):
     def getMeeting(self):
