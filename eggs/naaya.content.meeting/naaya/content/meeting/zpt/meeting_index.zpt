@@ -124,21 +124,23 @@
                 </p>
 
                 <p>
-                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/get_ics">
+                    <a style="float: left; text-align: center; padding: 10px" tal:attributes="href string:${here/absolute_url}/get_ics">
                         <img alt="" tal:attributes="src here/icalendar_icon">
                         <br />
                         iCalendar
                     </a>
-                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/participants">
+                    <a style="float: left; text-align: center; padding: 10px" tal:attributes="href string:${here/absolute_url}/participants">
                         <img alt="" tal:attributes="src here/attendees_icon">
                         <br />
                         Participants
                     </a>
-                    <a style="float: left" tal:attributes="href string:${here/absolute_url}/email_sender">
+                    <tal:block condition="python:here.getUserLevel(request) == 2">
+                    <a style="float: left; text-align: center; padding: 10px" tal:attributes="href string:${here/absolute_url}/email_sender">
                         <img alt="" tal:attributes="src here/email_icon">
                         <br />
                         Send emails
                     </a>
+                    </tal:block>
                 </p>
 
                 <table border="0" cellspacing="2" cellpadding="2">
