@@ -83,7 +83,11 @@ class Subscriptions(SimpleItem):
                                          'naaya.content.meeting.subscription_signup')
             else:
                 self._add_signup(formdata)
-                REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+                REQUEST.RESPONSE.redirect(self.absolute_url() + '/signup_successful')
+
+    def signup_successful(self, REQUEST):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_signup_successful')
 
     def subscribe(self, REQUEST):
         """ """
@@ -176,7 +180,11 @@ class Subscriptions(SimpleItem):
     def subscribe_account(self, REQUEST):
         """ """
         self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
-        return REQUEST.RESPONSE.redirect(self.getMeeting().absolute_url())
+        return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscribe_account_successful')
+
+    def subscribe_account_successful(self, REQUEST):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe_successful')
 
     def getAccountSubscriptions(self):
         """ """
@@ -264,8 +272,12 @@ class SignupUsersTool(BasicUserFolder):
 
 NaayaPageTemplateFile('zpt/subscription_subscribe', globals(),
         'naaya.content.meeting.subscription_subscribe')
+NaayaPageTemplateFile('zpt/subscription_subscribe_successful', globals(),
+        'naaya.content.meeting.subscription_subscribe_successful')
 NaayaPageTemplateFile('zpt/subscription_signup', globals(),
         'naaya.content.meeting.subscription_signup')
+NaayaPageTemplateFile('zpt/subscription_signup_successful', globals(),
+        'naaya.content.meeting.subscription_signup_successful')
 NaayaPageTemplateFile('zpt/subscription_index', globals(),
         'naaya.content.meeting.subscription_index')
 NaayaPageTemplateFile('zpt/subscription_welcome', globals(),

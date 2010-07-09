@@ -685,7 +685,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         form['email:utf8:ustring'] = 'test_email@email.com'
         self.browser.submit()
 
-        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
+        self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/signup_successful')
 
         self.browser_do_login('admin', '')
 
