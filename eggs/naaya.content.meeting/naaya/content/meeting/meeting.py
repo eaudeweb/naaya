@@ -183,6 +183,12 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
+
+    subobjects = ob.get_meta_types(1)
+    default_subobjects = ['Naaya Folder', 'Naaya File', 'Naaya URL', 'Naaya Document', 'Naaya Forum', 'Naaya Mega Survey', 'Naaya Media File', 'Naaya Contact']
+    subobjects = list(set(subobjects) & set(default_subobjects))
+    ob.manageSubobjects(ny_subobjects=subobjects)
+
     #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
