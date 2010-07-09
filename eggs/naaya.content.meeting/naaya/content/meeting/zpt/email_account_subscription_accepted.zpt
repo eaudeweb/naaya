@@ -10,6 +10,9 @@ Dear <tal:block content="options/name" i18n:name="name" />,
 Your subscription request for the meeting <tal:block content="options/meeting/title_or_id" i18n:name="meeting_name" /> was accepted.
 </tal:block>
 
+<tal:block condition="options/on_waiting_list" i18n:translate="">
+All the meeting places are full. You are added to the waiting list. If a place opens, the administrator can add you as a participant.
+</tal:block>
 
 <tal:block i18n:translate="">
 You can access the meeting using the following address:
