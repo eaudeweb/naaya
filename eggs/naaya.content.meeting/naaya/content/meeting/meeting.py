@@ -53,6 +53,7 @@ DEFAULT_SCHEMA = {
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['geo_type'].update(visible=True)
+DEFAULT_SCHEMA['coverage'].update(visible=False)
 
 # this dictionary is updated at the end of the module
 config = {
