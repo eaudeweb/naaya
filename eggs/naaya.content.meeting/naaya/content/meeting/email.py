@@ -13,6 +13,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate, EmailPageTemplateFile
 
 #naaya.content.meeting imports
+from naaya.content.meeting import WAITING_ROLE
 from utils import getUserEmail
 
 def configureEmailNotifications(site):
@@ -151,13 +152,15 @@ class EmailSender(SimpleItem):
         """ """
         meeting = self.getMeeting()
         subscriptions = meeting.getParticipants().getSubscriptions()
+        account_info = meeting.getParticipants().getAttendeeInfo(signup.key)
         from_email = meeting.contact_email
         to_email = signup.email
         login_url = subscriptions.absolute_url() + '/welcome?key=' + signup.key
 
         mail_opts = {'meeting': meeting,
                      'name': signup.name,
-                     'login_url': login_url}
+                     'login_url': login_url,
+                     'on_waiting_list': account_info['role'] == WAITING_ROLE}
 
         return self._send_email_with_template('naaya.content.meeting.email_signup_accepted',
                     from_email, to_email, mail_opts)
@@ -179,12 +182,15 @@ class EmailSender(SimpleItem):
     def send_account_subscription_accepted_email(self, account_subscription):
         """ """
         meeting = self.getMeeting()
+        uid = account_subscription.uid
+        account_info = meeting.getParticipants().getAttendeeInfo(uid)
         from_email = meeting.contact_email
         to_email = account_subscription.email
 
         mail_opts = {'meeting': meeting,
-                     'uid': account_subscription.uid,
-                     'name': account_subscription.name}
+                     'uid': uid,
+                     'name': account_subscription.name,
+                     'on_waiting_list': account_info['role'] == WAITING_ROLE}
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_accepted',
                     from_email, to_email, mail_opts)
 
