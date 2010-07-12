@@ -31,3 +31,8 @@ object, it's automatically indexed in the portal's catalog and shown on
 the map, but never stored in the database. Whenever such an object is
 accessed, it's generated from the original answer (and then cached in
 memory).
+
+Customizing a survey
+--------------------
+The `extra` folder contains a custom template and a custom validation
+script, to be uploaded in a `NaayaSurvey` via ZMI.
