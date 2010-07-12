@@ -57,7 +57,7 @@
             </metal:block>
 
             <!-- Map widget -->
-            <div id="map_parent_div" style="display: none">
+            <div id="map_parent_div" style="display: block">
                 <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
             </div>
 
