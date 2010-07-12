@@ -1,7 +1,11 @@
-""" Helper functions for RDFCalendar and RDFSummary Products """
+__doc__ = """Helper functions for RDFCalendar and RDFSummary Products
+
+"""
 
 import calendar
 from DateTime import DateTime
+
+date_format = '%Y-%m-%dT%H:%M:%SZ'
 
 def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
                         day=None, lang=None):
@@ -18,7 +22,6 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
     year, month, day -- filtering used to search
 
     """
-
     if relations is None: #Default relations for Naaya Event content type
         relations = {
             'author': 'contributor', 'subtitle': 'title',
@@ -35,7 +38,7 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
     if lang is None:
         lang = self.getSite().gl_get_selected_language()
 
-    date_format = '%Y-%m-%dT%H:%M:%SZ'
+
 
     def cgetattr(ob, name, *argv):
         """ Call getattr result if callable """
