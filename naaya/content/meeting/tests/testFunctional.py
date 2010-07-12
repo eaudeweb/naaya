@@ -599,7 +599,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('test_participant1', 'participant')
         self.browser.go('http://localhost/portal/info/mymeeting')
         self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting')
-        self.assertTrue('Meeting Survey' in self.browser.get_html())
+        self.assertTrue('Survey' in self.browser.get_html())
         self.browser_do_logout()
 
     def test_survey_required(self):
