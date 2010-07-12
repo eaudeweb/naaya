@@ -87,11 +87,11 @@ def dump_points_of_contact_report(context, db_statement):
         title = get_title(data)
         contacts = get_points_of_contact(data)
         for c in contacts:
-            org_name = c['organisation']
-            if type(c['email']) == type([]):
-                emails = c['email']
+            org_name = c.get('organisation', '')
+            if type(c.get('email', [])) == type([]):
+                emails = c.get('email', [])
             else:
-                emails = [c['email']]
+                emails = [c.get('email', '')]
             role = c.get('role', '')
             
             if org_name not in organisations:
