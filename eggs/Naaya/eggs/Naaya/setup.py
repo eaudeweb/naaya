@@ -10,6 +10,7 @@ setup(name='Naaya',
       zip_safe=False,
       install_requires=[
           'naaya.flowplayer',
+          'naaya.content-compat',
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
           'itools == 0.20.6',
