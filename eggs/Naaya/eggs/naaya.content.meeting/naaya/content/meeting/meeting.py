@@ -79,6 +79,9 @@ config = {
                 'iCalendar.jpg': ImageFile('www/iCalendar.jpg', globals()),
                 'participant.gif': ImageFile('www/participant.gif', globals()),
                 'organization.gif': ImageFile('www/organization.gif', globals()),
+                'Agenda.png': ImageFile('www/Agenda.png', globals()),
+                'Minutes.png': ImageFile('www/Minutes.png', globals()),
+                'survey.gif': ImageFile('www/survey.gif', globals()),
             },
     }
 
@@ -215,6 +218,10 @@ class NyMeeting(NyContentData, NyFolder):
     attendees_icon = 'misc_/NaayaContent/Attendees.jpg'
     email_icon = 'misc_/NaayaContent/Email.jpg'
     icalendar_icon = 'misc_/NaayaContent/iCalendar.jpg'
+
+    agenda_icon = 'misc_/NaayaContent/Agenda.png'
+    minutes_icon = 'misc_/NaayaContent/Minutes.png'
+    survey_icon = 'misc_/NaayaContent/survey.gif'
 
     def manage_options(self):
         """ """
