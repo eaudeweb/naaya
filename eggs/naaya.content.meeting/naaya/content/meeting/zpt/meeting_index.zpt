@@ -118,16 +118,28 @@
             <tal:block condition="python:here.getUserLevel(request) > 0">
 
                 <p tal:define="site here/getSite">
-                    <a tal:condition="here/agenda_pointer" tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}" i18n:translate="Agenda"></a>
-                    <a tal:condition="here/minutes_pointer" tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}" i18n:translate="Minutes"></a>
-                    <a tal:condition="here/survey_pointer" tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}" i18n:translate="Meeting Survey"></a>
-                </p>
-
-                <p>
                     <a style="float: left; text-align: center; padding: 10px" tal:attributes="href string:${here/absolute_url}/get_ics">
                         <img alt="" tal:attributes="src here/icalendar_icon">
                         <br />
                         iCalendar
+                    </a>
+                    <a tal:condition="here/agenda_pointer" style="float: left; text-align: center; padding: 10px"
+                         tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}">
+                        <img alt="" tal:attributes="src here/agenda_icon">
+                        <br />
+                        Agenda
+                    </a>
+                    <a tal:condition="here/minutes_pointer" style="float: left; text-align: center; padding: 10px"
+                         tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}">
+                        <img alt="" tal:attributes="src here/minutes_icon">
+                        <br />
+                        Minutes
+                    </a>
+                    <a tal:condition="here/survey_pointer" style="float: left; text-align: center; padding: 10px"
+                         tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}">
+                        <img alt="" tal:attributes="src here/survey_icon">
+                        <br />
+                        Survey
                     </a>
                     <a style="float: left; text-align: center; padding: 10px" tal:attributes="href string:${here/absolute_url}/participants">
                         <img alt="" tal:attributes="src here/attendees_icon">
