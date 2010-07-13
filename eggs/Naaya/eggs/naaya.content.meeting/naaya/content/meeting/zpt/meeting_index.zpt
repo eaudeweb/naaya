@@ -77,11 +77,13 @@
                 </td>
             </tr>
             <tr tal:condition="here/geo_address">
-                <th i18n:translate="Meeting location"></th>
+                <th i18n:translate="Address"></th>
                 <td>
                     <a href="javascript:toggleHideShow('map_parent_div')" tal:content="here/geo_address"/>
                 </td>
             </tr>
+            <tal:block content="structure python: here.prop_display_tr('location')" />
+            <tal:block content="structure python: here.prop_display_tr('time')" />
             <tr tal:define="
                     contact_person python:here.prop_details('contact_person')"
                 tal:condition="python:contact_person['show']">
