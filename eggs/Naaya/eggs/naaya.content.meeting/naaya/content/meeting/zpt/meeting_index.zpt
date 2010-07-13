@@ -108,6 +108,15 @@
 
             </table>
 
+            <tal:block define="dynamic_properties python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+            <table tal:condition="dynamic_properties" border="0" cellspacing="2" cellpadding="2">
+                <tr tal:repeat="record dynamic_properties">
+                    <th i18n:translate="" tal:content="record/name" />
+                    <td tal:content="python:here.getPropertyValue(record.id)"/>
+                </tr>
+            </table>
+            </tal:block>
+
             <tal:block condition="python:here.getUserLevel(request) == 0">
             <p>
                 <span class="buttons">
@@ -157,13 +166,6 @@
                     </a>
                     </tal:block>
                 </p>
-
-                <table border="0" cellspacing="2" cellpadding="2">
-                    <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-                        <th i18n:translate="" tal:content="record/name" />
-                        <td tal:content="python:here.getPropertyValue(record.id)"/>
-                    </tr>
-                </table>
 
                 <!-- Make sure the folder listing is displayed after the map -->
                 <div style="clear: both"></div>
