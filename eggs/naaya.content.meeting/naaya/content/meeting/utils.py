@@ -91,8 +91,8 @@ def findUsers(site, search_param, search_term):
             users = acl_folder.findUser(search_param=search_param, search_term=search_term)
             for user in users:
                 uid = user.get('uid', '')
-                cn = user.get('cn', '')
-                organization = user.get('o', '')
+                cn = _encode(user.get('cn', ''))
+                organization = _encode(user.get('o', ''))
                 info = user.get('dn', '')
                 ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
 
@@ -112,7 +112,8 @@ def findUsersWithRole(site, search_role):
             cn = user.get('cn', '')
             if isinstance(cn, list):
                 cn = cn[0]
-            organization = user.get('o', '')
+            cn = _encode(cn)
+            organization = _encode(user.get('o', ''))
             if isinstance(organization, list):
                 organization = organization[0]
             info = user.get('dn', '')
