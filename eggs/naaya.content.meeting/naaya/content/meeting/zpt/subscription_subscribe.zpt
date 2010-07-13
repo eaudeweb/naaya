@@ -30,12 +30,18 @@
         <a tal:attributes="href string:${here/absolute_url}/subscribe_account">Subscribe</a>
         to this meeting using the current logged in account.
     </p>
-    </tal:block>
 
-    <p i18n:translate="">
+    <p tal:condition="python:username == 'Anonymous User'"
+        i18n:translate="">
         <a tal:attributes="href string:${here/absolute_url}/signup">Here</a>
         you can signup for a new account to participate to this meeting.
     </p>
+    <p tal:condition="python:username != 'Anonymous User'"
+        i18n:translate="">
+        <a tal:attributes="href string:${here/absolute_url}/signup">Here</a>
+        you can signup for a new account for someone else to participate to this meeting.
+    </p>
+    </tal:block>
 
     </tal:block>
     </metal:block>
