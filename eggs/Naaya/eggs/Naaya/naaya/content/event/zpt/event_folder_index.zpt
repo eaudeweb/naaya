@@ -100,13 +100,15 @@
 							alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
 							title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
 					</td>
-					<td class="title-column">
-                        <span class="object-date" tal:condition="python: getattr(object,'end_date', None) and object.start_date != object.end_date"
-                              tal:content="python: '[' + str(object.start_date.strftime('%d/%m/%Y')) + ' - ' + str(object.end_date.strftime('%d/%m/%Y')) + ']'">
-                        </span>
-                        <span class="object-date" tal:condition="python: not (getattr(object,'end_date', None) and object.start_date != object.end_date)"
-                              tal:content="python: '[' + str(object.start_date.strftime('%d/%m/%Y')) + ']'">
-                        </span>
+					<td class="title-column" tal:define="start_date python: getattr(object, 'start_date')">
+						<tal:block condition="start_date">
+							<span class="object-date" tal:condition="python: getattr(object,'end_date', None) and start_date != object.end_date"
+								  tal:content="python: '[' + str(start_date.strftime('%d/%m/%Y')) + ' - ' + str(object.end_date.strftime('%d/%m/%Y')) + ']'">
+							</span>
+							<span class="object-date" tal:condition="python: not (getattr(object,'end_date', None) and start_date != object.end_date)"
+								  tal:content="python: '[' + str(start_date.strftime('%d/%m/%Y')) + ']'">
+							</span>
+						</tal:block>
 						<a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
 						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
 							<span i18n:translate="">Item only translated in </span>
