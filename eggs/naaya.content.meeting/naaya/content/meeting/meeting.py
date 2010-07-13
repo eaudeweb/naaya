@@ -117,6 +117,32 @@ def meeting_on_install(site):
 
     NySite.meeting_reports = MeetingReports('meeting_reports')
 
+    # add new map symbols for the meeting
+    portal_map = site.getGeoMapTool()
+    if portal_map is not None:
+        new_map_symbols = [('meeting.png', 'Meeting'),
+                        ('conference.png', 'Conference'),
+                        ('workshop.png', 'Workshop')]
+        for i in range(len(new_map_symbols)):
+            new_map_symbols[i] = (os.path.join(
+                                    os.path.dirname(__file__),
+                                    'www',
+                                    'map_symbols',
+                                    new_map_symbols[i][0]),
+                             new_map_symbols[i][1])
+
+        map_symbols = portal_map.getSymbolsListOrdered()
+        map_symbols_titles = [s.title for s in map_symbols]
+        new_map_symbols = [nms for nms in new_map_symbols
+                                    if nms[1] not in map_symbols_titles]
+
+        for filename, symbol_name in new_map_symbols:
+            file = open(filename, 'r')
+            symbol = file.read()
+            file.close()
+
+            portal_map.adminAddSymbol(title=symbol_name, picture=symbol)
+
     configureEmailNotifications(site)
     
 def meeting_add_html(self):
