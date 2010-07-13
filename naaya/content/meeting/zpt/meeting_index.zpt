@@ -117,58 +117,63 @@
             </table>
             </tal:block>
 
+            <p tal:define="site here/getSite">
+            <tal:block condition="python:here.getUserLevel(request) > 0">
+                <a style="float: left; text-align: center; padding: 10px" title="Download meeting to your calendar"
+                      tal:attributes="href string:${here/absolute_url}/get_ics">
+                    <img alt="" tal:attributes="src here/icalendar_icon" />
+                    <br />
+                    iCalendar
+                </a>
+            </tal:block>
+                <a tal:condition="here/agenda_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting agenda"
+                     tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}">
+                    <img alt="" tal:attributes="src here/agenda_icon" />
+                    <br />
+                    Agenda
+                </a>
+            <tal:block condition="python:here.getUserLevel(request) > 0">
+                <a tal:condition="here/minutes_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting minutes"
+                     tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}">
+                    <img alt="" tal:attributes="src here/minutes_icon" />
+                    <br />
+                    Minutes
+                </a>
+                <a tal:condition="here/survey_pointer" style="float: left; text-align: center; padding: 10px" title="Take the meeting survey"
+                     tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}">
+                    <img alt="" tal:attributes="src here/survey_icon" />
+                    <br />
+                    Survey
+                </a>
+                <a style="float: left; text-align: center; padding: 10px" title="View the meeting participants"
+                     tal:attributes="href string:${here/absolute_url}/participants">
+                    <img alt="" tal:attributes="src here/attendees_icon" />
+                    <br />
+                    Participants
+                </a>
+            </tal:block>
+            <tal:block condition="python:here.getUserLevel(request) == 2">
+                <a style="float: left; text-align: center; padding: 10px" title="Send an email to (some) participants"
+                     tal:attributes="href string:${here/absolute_url}/email_sender">
+                    <img alt="" tal:attributes="src here/email_icon" />
+                    <br />
+                    Send emails
+                </a>
+            </tal:block>
+            </p>
+
+            <!-- Make sure the folder listing is displayed after the map -->
+            <div style="clear: both"></div>
+
             <tal:block condition="python:here.getUserLevel(request) == 0">
-            <p>
+            <p tal:define="site here/getSite">
                 <span class="buttons">
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="Click here to participate"></a>
                 </span>
             </p>
             </tal:block>
+ 
             <tal:block condition="python:here.getUserLevel(request) > 0">
-
-                <p tal:define="site here/getSite">
-                    <a style="float: left; text-align: center; padding: 10px" title="Download meeting to your calendar"
-                          tal:attributes="href string:${here/absolute_url}/get_ics">
-                        <img alt="" tal:attributes="src here/icalendar_icon" />
-                        <br />
-                        iCalendar
-                    </a>
-                    <a tal:condition="here/agenda_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting agenda"
-                         tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}">
-                        <img alt="" tal:attributes="src here/agenda_icon" />
-                        <br />
-                        Agenda
-                    </a>
-                    <a tal:condition="here/minutes_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting minutes"
-                         tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}">
-                        <img alt="" tal:attributes="src here/minutes_icon" />
-                        <br />
-                        Minutes
-                    </a>
-                    <a tal:condition="here/survey_pointer" style="float: left; text-align: center; padding: 10px" title="Take the meeting survey"
-                         tal:attributes="href string:${site/absolute_url}/${here/survey_pointer}">
-                        <img alt="" tal:attributes="src here/survey_icon" />
-                        <br />
-                        Survey
-                    </a>
-                    <a style="float: left; text-align: center; padding: 10px" title="View the meeting participants"
-                         tal:attributes="href string:${here/absolute_url}/participants">
-                        <img alt="" tal:attributes="src here/attendees_icon" />
-                        <br />
-                        Participants
-                    </a>
-                    <tal:block condition="python:here.getUserLevel(request) == 2">
-                    <a style="float: left; text-align: center; padding: 10px" title="Send an email to (some) participants"
-                         tal:attributes="href string:${here/absolute_url}/email_sender">
-                        <img alt="" tal:attributes="src here/email_icon" />
-                        <br />
-                        Send emails
-                    </a>
-                    </tal:block>
-                </p>
-
-                <!-- Make sure the folder listing is displayed after the map -->
-                <div style="clear: both"></div>
 
                 <span tal:replace="structure here/menusubmissions" />
 
