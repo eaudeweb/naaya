@@ -42,6 +42,8 @@ from subscriptions import SignupUsersTool
 DEFAULT_SCHEMA = {
     'start_date':           dict(sortorder=130, widget_type='Date',     label='Start date', data_type='date', required=True),
     'end_date':             dict(sortorder=140, widget_type='Date',     label='End date', data_type='date'),
+    'location':             dict(sortorder=143, widget_type='String',   label='Organization/Building/Room'),
+    'time':                 dict(sortorder=146, widget_type='String',   label='Time'),
     'max_participants':     dict(sortorder=150, widget_type='String',   label='Maximum number of participants', data_type='int'),
     'contact_person':       dict(sortorder=150, widget_type='String',   label='Contact person'),
     'contact_email':        dict(sortorder=160, widget_type='String',   label='Contact email', required=True),
