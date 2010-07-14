@@ -76,6 +76,14 @@ class Subscriptions(SimpleItem):
 
         if REQUEST.REQUEST_METHOD == 'POST':
             formdata, formerrors = self._validate_signup(REQUEST.form)
+
+            #check Captcha/reCaptcha
+            if not self.checkPermissionSkipCaptcha():
+                contact_word = REQUEST.form.get('contact_word', '')
+                captcha_validator = self.validateCaptcha(contact_word, REQUEST)
+                if captcha_validator:
+                    formerrors['captcha'] = captcha_validator
+
             if formerrors is not None:
                 return self.getFormsTool().getContent({'here': self,
                                                      'formdata': formdata,
