@@ -6,7 +6,13 @@
         define="schema_helper python:here.get_schema_helper(lang=curr_lang);
 				form_items schema_helper/form_items;
 				form_items python:list(form_items)">
-	<tal:block repeat="form_item python:form_items[0:15]">
+	<tal:block repeat="form_item python:form_items[0:13]">
+	    <tal:block replace="structure form_item/html" />
+	</tal:block>
+    <div class="textarea_message" i18n:translate="">
+        This will not be shown on the website, for administration use only
+    </div>
+	<tal:block repeat="form_item python:form_items[13:15]">
 	    <tal:block replace="structure form_item/html" />
 	</tal:block>
 
