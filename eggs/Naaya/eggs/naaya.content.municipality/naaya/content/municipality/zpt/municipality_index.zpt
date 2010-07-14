@@ -19,7 +19,7 @@
 		</span>
 </h1>
 
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<tal:block condition="python:here.checkPermissionEditObject()">
 	<br clear="all"/>
 	<div id="admin_this_folder">
 		<tal:block tal:condition="python: not here.hasVersion()">
@@ -44,7 +44,7 @@
 		<td class="label" i18n:translate="">Contact person</td>
 		<td tal:content="here/contact_person" />
 	</tr>
-	<tr tal:condition="here/email">
+	<tr tal:condition="python:here.email and here.checkPermissionEditObject()">
 		<td class="label" i18n:translate="">Email address</td>
 		<td tal:content="here/obfuscated_email" />
 	</tr>

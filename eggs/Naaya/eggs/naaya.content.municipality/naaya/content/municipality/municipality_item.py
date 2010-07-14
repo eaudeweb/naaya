@@ -68,8 +68,8 @@ ADDITIONAL_STYLE = open(ImageFile('www/municipality.css', globals()).path).read(
 DEFAULT_SCHEMA = {
     'province': dict(sortorder=100, widget_type='Select', label='Province', required=True, list_id='provinces'),
     'municipality': dict(sortorder=110, widget_type='String', label='Municipality', required=True, localized=True),
-    'contact_person': dict(sortorder=120, widget_type='String', label='Contact person'),
-    'email':    dict(sortorder=130, widget_type='String', label='Email address'),
+    'contact_person': dict(sortorder=120, widget_type='String', label='Contact person', required=True),
+    'email':    dict(sortorder=130, widget_type='String', label='Email address', required=True),
     'phone':    dict(sortorder=140, widget_type='String', label='Telephone number'),
     'choice':   dict(sortorder=150, widget_type='Select', label='Our municipality:', required=True, list_id='ambassador_choices'),
     'explain_why': dict(sortorder=200, widget_type='TextArea', label='Please explain why you chose this / these species:', localized=True, tinymce=True),
