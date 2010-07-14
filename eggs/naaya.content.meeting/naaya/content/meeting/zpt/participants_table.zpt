@@ -42,7 +42,7 @@ function toggleSelect(checkbox, form_name, name) {
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
-                i18n:translate="Role"></a>
+                i18n:translate="Status"></a>
         </th>
     </tr>
     <tr tal:repeat="user users"
