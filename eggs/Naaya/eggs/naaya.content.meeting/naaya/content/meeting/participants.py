@@ -38,10 +38,14 @@ class Participants(SimpleItem):
 
     def findUsers(self, search_param, search_term):
         """ """
+        if len(search_term) == 0:
+            return []
         return findUsers(self.getSite(), search_param, search_term)
 
     def findUsersWithRole(self, search_role):
         """ """
+        if len(search_role) == 0:
+            return []
         return findUsersWithRole(self.getSite(), search_role)
 
     def getParticipants(self):
