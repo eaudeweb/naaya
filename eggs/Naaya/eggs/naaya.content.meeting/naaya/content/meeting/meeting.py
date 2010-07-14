@@ -87,7 +87,8 @@ config = {
             },
     }
 
-
+#add meeting reports to NySite
+NySite.meeting_reports = MeetingReports('meeting_reports')
 
 def meeting_on_install(site):
     """
@@ -100,24 +101,6 @@ def meeting_on_install(site):
         'Naaya - Add Naaya Survey Answer', 'Naaya - View Naaya Survey Answers', 'Naaya - View Naaya Survey Reports']
 
     auth_tool = site.getAuthenticationTool()
-
-    if PARTICIPANT_ROLE not in auth_tool.list_all_roles(): 
-        auth_tool.addRole(PARTICIPANT_ROLE, grouppermissions)
-
-    auth_tool.editRole(PARTICIPANT_ROLE, grouppermissions)
-    b = [x['name'] for x in site.permissionsOfRole(PARTICIPANT_ROLE) if x['selected']=='SELECTED']
-    b.extend(permissions)
-    site.manage_role(PARTICIPANT_ROLE, b)
-
-    if WAITING_ROLE not in auth_tool.list_all_roles():
-        auth_tool.addRole(WAITING_ROLE, grouppermissions)
-
-    auth_tool.editRole(WAITING_ROLE, grouppermissions)
-    b = [x['name'] for x in site.permissionsOfRole(WAITING_ROLE) if x['selected']=='SELECTED']
-    b.extend(permissions)
-    site.manage_role(WAITING_ROLE, b)
-
-    NySite.meeting_reports = MeetingReports('meeting_reports')
 
     # add new map symbols for the meeting
     portal_map = site.getGeoMapTool()
@@ -258,6 +241,7 @@ class NyMeeting(NyContentData, NyFolder):
     security = ClassSecurityInfo()
 
     __allow_groups__ = SignupUsersTool()
+    __ac_roles__ = (PARTICIPANT_ROLE, WAITING_ROLE)
 
     def __init__(self, id, contributor):
         """ """
