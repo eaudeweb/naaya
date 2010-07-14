@@ -82,6 +82,8 @@ class Subscriptions(SimpleItem):
                 contact_word = REQUEST.form.get('contact_word', '')
                 captcha_validator = self.validateCaptcha(contact_word, REQUEST)
                 if captcha_validator:
+                    if formerrors is None:
+                        formerrors = {}
                     formerrors['captcha'] = captcha_validator
 
             if formerrors is not None:
@@ -137,6 +139,20 @@ class Subscriptions(SimpleItem):
         email_sender = meeting.getEmailSender()
         result = email_sender.send_signup_rejected_email(signup)
 
+    def _delete_signup(self, key):
+        """ """
+        meeting = self.getMeeting()
+        signup = self._signups.pop(key, None)
+        if signup is None:
+            return
+
+        participants = meeting.getParticipants()
+        if key in participants._get_attendees():
+            participants._del_attendee(key)
+
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_signup_rejected_email(signup)
+
     def _is_signup(self, key):
         """ """
         return self._signups.has_key(key) and self._signups[key].accepted == 'accepted'
@@ -152,6 +168,9 @@ class Subscriptions(SimpleItem):
         elif 'reject' in REQUEST.form:
             for key in keys:
                 self._reject_signup(key)
+        elif 'delete' in REQUEST.form:
+            for key in keys:
+                self._delete_signup(key)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -217,6 +236,9 @@ class Subscriptions(SimpleItem):
         elif 'reject' in REQUEST.form:
             for uid in uids:
                 self._reject_account_subscription(uid)
+        elif 'delete' in REQUEST.form:
+            for uid in uids:
+                self._delete_account_subscription(uid)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -242,6 +264,21 @@ class Subscriptions(SimpleItem):
 
         email_sender = meeting.getEmailSender()
         result = email_sender.send_account_subscription_rejected_email(account_subscription)
+
+    def _delete_account_subscription(self, uid):
+        """ """
+        meeting = self.getMeeting()
+        account_subscription = self._account_subscriptions.pop(uid, None)
+        if account_subscription is None:
+            return
+
+        participants = meeting.getParticipants()
+        if uid in participants._get_attendees():
+            participants._del_attendee(uid)
+
+        email_sender = meeting.getEmailSender()
+        result = email_sender.send_account_subscription_rejected_email(account_subscription)
+
 
 InitializeClass(Subscriptions)
 
