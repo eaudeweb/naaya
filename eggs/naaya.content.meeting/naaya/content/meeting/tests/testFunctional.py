@@ -384,7 +384,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
     def test_reports(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        self.assertTrue(PARTICIPANT_ROLE in self.portal.getAuthenticationTool().list_all_roles())
+        self.assertTrue(PARTICIPANT_ROLE in self.portal.info.mymeeting.__ac_roles__)
 
         self.browser.go('http://localhost/portal/meeting_reports/report_meeting_participants')
         html = self.browser.get_html()
@@ -416,7 +416,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
 
 
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        self.assertTrue(PARTICIPANT_ROLE in self.portal.getAuthenticationTool().list_all_roles())
+        self.assertTrue(PARTICIPANT_ROLE in self.portal.info.mymeeting.__ac_roles__)
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
@@ -473,7 +473,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
 
     def test_add_participants(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        self.assertTrue(PARTICIPANT_ROLE in self.portal.getAuthenticationTool().list_all_roles())
+        self.assertTrue(PARTICIPANT_ROLE in self.portal.info.mymeeting.__ac_roles__)
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
@@ -526,7 +526,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
             self.browser_do_logout()
 
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        self.assertTrue(PARTICIPANT_ROLE in self.portal.getAuthenticationTool().list_all_roles())
+        self.assertTrue(PARTICIPANT_ROLE in self.portal.info.mymeeting.__ac_roles__)
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/participants')
