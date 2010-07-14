@@ -18,39 +18,39 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
-import os
-from whrandom import choice
 from DateTime import DateTime
+from whrandom import choice
+import os
 import xmlrpclib
 
 #Zope imports
+from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.Permissions import view_management_screens, view
+from Globals import InitializeClass
 from OFS.Cache import Cacheable
-from Globals                                    import InitializeClass
-from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
-from AccessControl                              import ClassSecurityInfo, getSecurityManager
-from AccessControl.Permissions                  import view_management_screens, view
-from OFS.Image                                  import Image, manage_addImage
-from ZPublisher.HTTPRequest                     import record
+from OFS.Image import Image, manage_addImage
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from ZPublisher.HTTPRequest import record
 
 #Product imports
-from constants                                      import *
-from Products.NaayaBase.constants                   import *
-from Products.Naaya.constants                       import *
-from Products.NaayaCore.constants                   import *
+from constants import *
+from Products.NaayaBase.constants import *
+from Products.Naaya.constants import *
+from Products.NaayaCore.constants import *
 
-from naaya.content.document import document_item;   METATYPE_NYDOCUMENT = document_item.config['meta_type']
-
+from naaya.content.document import document_item; METATYPE_NYDOCUMENT = document_item.config['meta_type']
+from naaya.content.semide.document import semdocument_item; METATYPE_NYSEMDOCUMENT = semdocument_item.config['meta_type']
 from naaya.content.semide.country import country_item; METATYPE_NYCOUNTRY = country_item.config['meta_type']
-from naaya.content.semide.funding import semfunding_item; METATYPE_NYSEMFUNDING = semfunding_item.config['meta_type']
-from naaya.content.semide.fieldsite import semfieldsite_item; METATYPE_NYSEMFIELDSITE = semfieldsite_item.config['meta_type']
-from naaya.content.semide.organisation import semorganisation_item; METATYPE_NYSEMORGANISATION = semorganisation_item.config['meta_type']
 from naaya.content.semide.event import semevent_item; METATYPE_NYSEMEVENT = semevent_item.config['meta_type']
-from naaya.content.semide.textlaws import  semtextlaws_item; METATYPE_NYSEMTEXTLAWS = semtextlaws_item.config['meta_type']
-from naaya.content.semide.news import semnews_item; METATYPE_NYSEMNEWS = semnews_item.config['meta_type']
-from naaya.content.semide.thematicdir import semthematicdir_item; METATYPE_NYSEMTHEMATICDIR = semthematicdir_item.config['meta_type']
+from naaya.content.semide.fieldsite import semfieldsite_item; METATYPE_NYSEMFIELDSITE = semfieldsite_item.config['meta_type']
+from naaya.content.semide.funding import semfunding_item; METATYPE_NYSEMFUNDING = semfunding_item.config['meta_type']
 from naaya.content.semide.multimedia import semmultimedia_item; METATYPE_NYSEMMULTIMEDIA = semmultimedia_item.config['meta_type']
+from naaya.content.semide.news import semnews_item; METATYPE_NYSEMNEWS = semnews_item.config['meta_type']
+from naaya.content.semide.organisation import semorganisation_item; METATYPE_NYSEMORGANISATION = semorganisation_item.config['meta_type']
 from naaya.content.semide.project import semproject_item; METATYPE_NYSEMPROJECT = semproject_item.config['meta_type']
+from naaya.content.semide.textlaws import  semtextlaws_item; METATYPE_NYSEMTEXTLAWS = semtextlaws_item.config['meta_type']
+from naaya.content.semide.thematicdir import semthematicdir_item; METATYPE_NYSEMTHEMATICDIR = semthematicdir_item.config['meta_type']
 
 
 from Products.NaayaCore.ProfilesTool.ProfileMeta    import ProfileMeta
@@ -59,25 +59,24 @@ from Products.NaayaCore.managers.utils              import utils, tmpfile
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 
-
+from Products.Naaya.NyFolder                        import addNyFolder
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
-from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
-
-from Products.NaayaPhotoArchive.NyPhotoGallery      import manage_addNyPhotoGallery
-from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLERY
-
-from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
-from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCentre
-from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
-from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
+from Products.NaayaCore.managers.paginator          import ObjectPaginator
 from Products.NaayaForum.NyForum                    import addNyForum
 from Products.NaayaForum.constants                  import METATYPE_NYFORUM, METATYPE_NYFORUMTOPIC, METATYPE_NYFORUMMESSAGE
-
+from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCentre
+from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
+from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
+from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
+from Products.NaayaPhotoArchive.NyPhotoGallery      import manage_addNyPhotoGallery
+from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLERY
+from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
+from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
-from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
-from Products.Naaya.NyFolder                        import addNyFolder
-from Products.NaayaCore.managers.paginator          import ObjectPaginator
+from Products.PythonScripts.PythonScript import manage_addPythonScript
+from Products.ZOpenArchives import (OAIServer, OAIAggregator,
+                                    ZCatalogHarvester,OAIHarvester)
 
 from managers.config_parser                         import config_parser
 from managers.semide_zip                            import SemideZip
@@ -200,9 +199,14 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
         manage_addNyPhotoGallery(self, ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE, contributor=self.getAuthenticationToolPath(1))
 
+        #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
         rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example', 'http://vague.eurecom.fr/portal_syndication/upcomingevents_rdf', '', 'no')
+        #adding local_events Script (Python)
+        manage_addPythonScript(rdfcalendar_ob, 'local_events')
+        local_events_ob = rdfcalendar_ob._getOb('local_events')
+        local_events_ob._params = 'year=None, month=None, day=None'
+        local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
 
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
@@ -394,31 +398,40 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         try:    self.getCatalogTool().addIndex('geozone', 'FieldIndex')
         except: pass
 
-        #dynamic property for folder and country folder: tooltip
-        self.getDynamicPropertiesTool().manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
-        self.getDynamicPropertiesTool()._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='tooltip', name='Tooltip', type='string')
-        self.getDynamicPropertiesTool().manage_addDynamicPropertiesItem(id=METATYPE_NYCOUNTRY, title=METATYPE_NYCOUNTRY)
-        self.getDynamicPropertiesTool()._getOb(METATYPE_NYCOUNTRY).manageAddDynamicProperty(id='tooltip', name='Tooltip', type='string')
+        #SchemaTool custom configuration
+        schema_tool = self.getSchemaTool()
+        widget_args = dict(label="Tooltip", widget_type='String',
+                           data_type='str')
+
+        naaya_folder_schema = schema_tool.getSchemaForMetatype(METATYPE_FOLDER)
+        if naaya_folder_schema:
+            naaya_folder_schema.addWidget('tooltip', **widget_args)
+
+        naaya_country_schema = schema_tool.getSchemaForMetatype(METATYPE_NYCOUNTRY)
+        if naaya_country_schema:
+            naaya_country_schema.addWidget('tooltip', **widget_args)
 
         #set searchable meta types
         sc = self.searchable_content
         sc.extend([METATYPE_NYFORUMTOPIC, METATYPE_NYFORUMMESSAGE])
         self.setSearchableContent(sc)
 
-        #import and addition of OAI aggregator and data provider
-        try:
-            from Products.ZOpenArchives.ZopeOAIServer import manage_addZopeOAIServer
-            from Products.ZOpenArchives.ZCatalogHarvester import manage_addZCatalogHarvester
-            from Products.ZOpenArchives.zOAIAggregator import manage_addOAIAggregator
-            manage_addZopeOAIServer(self, id="zoai", title="Zope OAI Server", autopublish=1, update_time=18000, autopublishRoles = [])
-            manage_addOAIAggregator(self, id="oai_aggregator", title="OAI Aggregator", minutes=18000)
-            zoai = self._getOb('zoai')
-            manage_addZCatalogHarvester(zoai, id='nws_portal_catalog', title='News OAI Provider', update_period=18000, autopublish=1, autopublishRoles = [], pref_meta_types=[METATYPE_NYSEMNEWS])
-            manage_addZCatalogHarvester(zoai, id='evt_portal_catalog', title='Events OAI Provider', update_period=18000, autopublish=1, autopublishRoles = [], pref_meta_types=[METATYPE_NYSEMEVENT])
-            manage_addZCatalogHarvester(zoai, id='doc_portal_catalog', title='Documents OAI Provider', update_period=18000, autopublish=1, autopublishRoles = [], pref_meta_types=[METATYPE_NYDOCUMENT, METATYPE_NYFILE, METATYPE_NYSEMDOCUMENT, METATYPE_NYSEMTEXTLAWS])
-        except:
-            pass
-
+        #Adding OAI Functionality
+        OAIServer.manage_addOAIServer(self, id="zoai",
+                                      title=u"Zope OAI Server")
+        OAIAggregator.manage_addOAIAggregator(self, id="oai_aggregator",
+                                title=u"OAI Aggregator")
+        zoai = self._getOb('zoai')
+        ZCatalogHarvester.manage_addZCatalogHarvester(zoai,
+            id='nws_portal_catalog', title=u'News OAI Provider',
+            search_meta_types=[METATYPE_NYSEMNEWS])
+        ZCatalogHarvester.manage_addZCatalogHarvester(zoai,
+            id='evt_portal_catalog', title=u'Events OAI Provider',
+            search_meta_types=[METATYPE_NYSEMEVENT])
+        ZCatalogHarvester.manage_addZCatalogHarvester(zoai,
+            id='doc_portal_catalog', title=u'Documents OAI Provider',
+            search_meta_types=[METATYPE_NYDOCUMENT, METATYPE_NYSEMDOCUMENT,
+                               METATYPE_NYSEMTEXTLAWS])
 
     def get_data_path(self):
         """ """
@@ -2221,35 +2234,25 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         return self.getFormsTool().getContent({'here': self}, 'site_profilesheet')
 
-    def getOAIAggregators(self):
+    def get_oai_aggregators(self):
         """ """
-        return self.objectValues('Open Archive Aggregator')
-    get_oai_aggregators = getOAIAggregators
-
-    def get_oai_harvesters(self, aggregator):
-        """ returns the list of harvesters """
-        return aggregator.objectValues('Open Archive Harvester')
+        return self.objectValues(OAIAggregator.meta_type)
 
     def get_oai_servers(self):
         """ returns the list of ZoPe OAI servers """
-        return self.objectValues('Zope OAI Server')
-
-    def get_zcatalog_harvesters(self, server):
-        """ returns a list of ZCatalog harvesters """
-        return server.objectValues('ZCatalog Harvester')
+        return self.objectValues(OAIServer.meta_type)
 
     security.declarePublic('oai_trigger')
     def oai_trigger(self, uid):
         """
-        Used by cron tools to trigger the OAI Catalog update.
+        Used by cron tools to trigger the OAI Server update.
 
         @param uid: site uid
         @type uid: string
         """
         if uid==self.get_site_uid():
-            for agg in self.getOAIAggregators():
-                for obj in self.get_oai_harvesters(agg):
-                    obj.do_updateSite()
+            for server in self.get_oai_servers():
+                server.update()
 
     security.declarePublic('agregator_trigger')
     def agregator_trigger(self, uid):
@@ -2260,9 +2263,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         @type uid: string
         """
         if uid==self.get_site_uid():
-            for server in self.get_oai_servers():
-                for obj in self.get_zcatalog_harvesters(server):
-                    obj.update_ZCatalogHarvester()
+            for oai_aggregator in self.getOAIAggregators():
+                oai_aggregator.update()
 
     #highlight searched words
     def getHighlightWordsInText(self, p_text, p_words="", p_highlight_start="<span class='hlighted'>",
