@@ -29,7 +29,7 @@
 
     <div class="floated-buttons">
         <span class="buttons">
-            <a tal:attributes="href meeting/participants/absolute_url" i18n:translate="Participants page"></a>
+            <a tal:attributes="href meeting/participants/absolute_url" i18n:translate="Participants management"></a>
         </span>
         <span class="buttons">
             <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
