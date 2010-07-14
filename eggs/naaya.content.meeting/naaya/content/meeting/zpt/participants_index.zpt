@@ -21,7 +21,7 @@
     }
 
     function pickRole(url) {
-        var wnd = window.open(url, "Pick Role", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+        var wnd = window.open(url, "Pick_Role", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
         wnd.focus();
     }
     function setRole(role) {
