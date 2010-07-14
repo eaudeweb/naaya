@@ -85,21 +85,6 @@ class EnviroWindowsSite(NySite):
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
         self.display_subobject_count = "on"
 
-###
-# Default 'Naaya' configuration
-###############################
-
-    security.declareProtected(view_management_screens, 'addConsultationDynProp')
-    def addConsultationDynProp(self):
-        dynprop_tool = self.getDynamicPropertiesTool()
-        try:
-            dynprop_tool.manage_addDynamicPropertiesItem(id='Naaya Consultation', title='Naaya Consultation')
-            dynprop_tool._getOb('Naaya Consultation').manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
-
-            dynprop_tool.manage_addDynamicPropertiesItem(id='Naaya Simple Consultation', title='Naaya Simple Consultation')
-            dynprop_tool._getOb('Naaya Simple Consultation').manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
-        except: pass
-
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
@@ -135,13 +120,28 @@ class EnviroWindowsSite(NySite):
         local_events_ob._params = 'year=None, month=None, day=None'
         local_events_ob.write(open(os.path.dirname(__file__) + '/skel/others/local_events.py', 'r').read())
 
-        #dynamic property for folder: tooltip
-        dynprop_tool = self.getDynamicPropertiesTool()
-        dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
-        dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
+        #Adding custom SchemaTool properties
+        schema_tool = self.getSchemaTool()
+        naaya_folder_schema = schema_tool.getSchemaForMetatype(METATYPE_FOLDER)
+        widget_args = dict(
+            label='Allow users enrolment here?',
+            data_type='bool',
+            widget_type='Checkbox'
+        )
+        naaya_folder_schema.addWidget('show_contributor_request_role',
+                                      **widget_args)
 
-        #dynamic properties for consultation objects
-        self.addConsultationDynProp()
+        naaya_consultation_schema = schema_tool.getSchemaForMetatype(
+                                        'Naaya Consultation')
+        if naaya_consultation_schema:
+            naaya_consultation_schema.addWidget('show_contributor_request_role',
+                                      **widget_args)
+
+        naaya_simple_consultation_schema = schema_tool.getSchemaForMetatype(
+                                        'Naaya Simple Consultation')
+        if naaya_simple_consultation_schema:
+            naaya_simple_consultation_schema.addWidget(
+                'show_contributor_request_role', **widget_args)
 
         #add survey tool
         try:
@@ -1064,10 +1064,6 @@ text-decoration: underline;
             self.setSessionErrorsTrans(e)
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
 
-        contact_meta = 'Naaya Contact'
-        portal_dynprop = self.getDynamicPropertiesTool()
-        dynprops = portal_dynprop.getDynamicProperties(contact_meta)
-        dynprops = [x.id for x in dynprops]
         lang = self.gl_get_selected_language()
 
         location = self.unrestrictedTraverse(location)
