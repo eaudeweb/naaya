@@ -6,6 +6,9 @@
     lat_id string:${prop_id}.lat;
     lon_id string:${prop_id}.lon;
     address_id string:${prop_id}.address;
+    opt_value_lat opt_value/lat|python:request.SESSION.get(lat_id);
+    opt_value_lon opt_value/lat|python:request.SESSION.get(lon_id);
+    opt_value_address opt_value/lat|python:request.SESSION.get(address_id);
     portal_map here/getGeoMapTool;
     ">
     <label tal:attributes="for prop_id" class="widget-title">
@@ -44,14 +47,14 @@
     <label style="display:inline" tal:attributes="for lat_id"
            class="widget-title" i18n:translate="">Latitude</label>
     <input type="text" size="20" maxlength="20"
-           tal:attributes="value opt_value/lat|nothing;
+           tal:attributes="value opt_value_lat|nothing;
                            name string:${lat_id}:utf8:ustring;
                            id string:${lat_id}" />
     <br />
     <label style="display:inline" tal:attributes="for lon_id"
            class="widget-title" i18n:translate="">Longitude</label>
     <input type="text" size="20" maxlength="20"
-           tal:attributes="value opt_value/lon|nothing;
+           tal:attributes="value opt_value_lon|nothing;
                            name string:${lon_id}:utf8:ustring;
                            id string:${lon_id}" />
 
@@ -77,7 +80,7 @@
         <label tal:attributes="for address_id" class="widget-title"
                i18n:translate="">Address</label>
         <input type="text" size="50"
-               tal:attributes="value opt_value/address|nothing;
+               tal:attributes="value opt_value_address|nothing;
                                name string:${address_id}:utf8:ustring;
                                id string:${address_id}" />
 
