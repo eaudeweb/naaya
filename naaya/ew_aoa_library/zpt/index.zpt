@@ -9,21 +9,24 @@
 <h1 tal:content="here/title_or_id"></h1>
 
 <table class="datatable">
-<thead>
-    <th>Name</th>
-    <th>Theme</th>
+<thead tal:define="url here/absolute_url">
+    <th><a tal:attributes="href url">Name</a></th>
+    <th><a tal:attributes="href string:${url}?sort=theme">Theme</a></th>
     <th>Topic</th>
 </thead>
 <tbody>
-<tr tal:repeat="assessment here/iter_assessments">
+<tr tal:define="items python:list(here.iter_assessments());
+                sort_key python:test(request.form.get('sort', 'title'));
+                dummy python:items.sort(key=lambda x: getattr(x, sort_key));"
+    tal:repeat="i items">
     <td>
-        <a tal:define="url assessment/absolute_url"
+        <a tal:define="url i/absolute_url"
            tal:attributes="href string:${url}"
-           tal:content="assessment/title_or_id"></a>
+           tal:content="i/title_or_id"></a>
     </td>
-    <td tal:content="assessment/theme" />
+    <td tal:content="i/theme" />
     <td>
-        <ul><li tal:repeat="t assessment/topics" tal:content="t" /></ul>
+        <ul><li tal:repeat="t i/topics" tal:content="t" /></ul>
     </td>
 </tr>
 </tbody>
