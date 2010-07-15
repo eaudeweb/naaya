@@ -3,6 +3,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.utils import path_in_site
 
 def extract_checkboxmatrix(answer, widget_name):
@@ -73,22 +74,31 @@ public_widgets = set([
 ])
 
 def extract_survey_answer_data(answer):
+    all_topics = set()
+    for name in [
+            'w_green-economy-topics',
+            'w_resource-efficiency-topics',
+            'w_water-resources-topics',
+            'w_water-resource-management-topics']:
+        all_topics.update(extract_multipleselect(answer, name))
+
     attrs = {
         'id': answer.getId(),
         'title': answer.get('w_assessment-name'),
         'geo_location': answer.get('w_location'),
         'uploader': answer.get('w_15-information-about-data-uploader'),
         'geo_type': extract_geo_type(answer),
-        'description': """<strong>%s</strong><br />
-        %s<br />
-        <a href="%s">%s</a><br />
-        """ % (
-            answer.get('w_submitter-organisation'),
-            answer.get('w_assessment-year'),
-            answer.get('w_assessment-url'),
-            answer.get('w_assessment-url'),
-        ),
+        'description': ('<strong>%s</strong><br />'
+                        '%s<br />'
+                        '<a href="%s">%s</a><br />') % (
+                            answer.get('w_submitter-organisation'),
+                            answer.get('w_assessment-year'),
+                            answer.get('w_assessment-url'),
+                            answer.get('w_assessment-url'),
+                       ),
         'target_path': path_in_site(answer),
+        'theme': extract_singleselect(answer, 'w_theme'),
+        'topics': sorted(all_topics),
     }
 
     if not attrs['title']:
@@ -153,7 +163,8 @@ class AssessmentShadow(SimpleItem):
         return '\n'.join(views)
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/assessment_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/assessment_index', globals(),
+                            'naaya.ew_aoa_library.viewer.index_html')
 
     manage_main = PageTemplateFile('zpt/assessment_manage_main', globals())
 
