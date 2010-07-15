@@ -164,7 +164,7 @@ class AssessmentShadow(SimpleItem):
 
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/assessment_index', globals(),
-                            'naaya.ew_aoa_library.viewer.index_html')
+                            'naaya.ew_aoa_library.shadow.index_html')
 
     manage_main = PageTemplateFile('zpt/assessment_manage_main', globals())
 
