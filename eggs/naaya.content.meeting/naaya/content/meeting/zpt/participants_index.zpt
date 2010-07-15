@@ -36,8 +36,8 @@
     </h1>
 
     <div class="floated-buttons">
-        <span class="buttons">
-            <a tal:attributes="href here/absolute_url" i18n:translate="Clean page"></a>
+        <span tal:condition="here/userCanChangePermissions" class="buttons">
+            <a tal:attributes="href meeting/participants/subscriptions/absolute_url" i18n:translate="Applicants management"></a>
         </span>
         <span class="buttons">
             <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
@@ -55,6 +55,11 @@
             search_param python:request.get('search_param', '');
             search_term python:request.get('search_term', '');
             do_search python:request.has_key('search_user')">
+        <div class="floated-buttons">
+            <span tal:condition="search_term" class="buttons">
+                <a tal:attributes="href here/absolute_url" i18n:translate="See all participants"></a>
+            </span>
+        </div>
         <form method="get" action="." name="formSearchUsers">
             <label for="search_param" i18n:translate="Search for"></label>
             <select id="search_param" name="search_param">
