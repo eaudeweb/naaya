@@ -78,6 +78,9 @@ def getClusters(catalog_tool, filters):
     lat_index = catalog.getIndex('geo_latitude')._index
     lon_index = catalog.getIndex('geo_longitude')._index
 
+    # adjust to cover results outside frame, but very close to margins
+    # trying to fix cluster flickering near margins
+
     # applying the lat and lon indexes to get the rids
     rs = None
     lat_set, lat_dict = _apply_index_with_range_dict_results(lat_index, Decimal(str(tlat_min)), Decimal(str(tlat_max)))
@@ -90,6 +93,10 @@ def getClusters(catalog_tool, filters):
     # OR the filters and apply the index for each one
     for f in filters:
         rs_f = rs
+
+        #adjust geo limits in filters to be consistent with discretized tile limits
+        f['geo_longitude']['query'] = (Decimal(str(tlon_min)), Decimal(str(tlon_max)))
+        f['geo_latitude']['query'] = (Decimal(str(tlat_min)), Decimal(str(tlat_max)))
 
         #this code is from the search function in the catalog implementation in Zope
         for i in catalog.indexes.keys():
