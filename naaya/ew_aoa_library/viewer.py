@@ -8,6 +8,7 @@ from zope.app.container.interfaces import (IObjectAddedEvent,
 from zope import interface
 from zope.component import adapter
 
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 
@@ -97,7 +98,8 @@ class AoALibraryViewer(SimpleItem):
             REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/index', globals())
+    index_html = NaayaPageTemplateFile('zpt/index', globals(),
+                            'naaya.ew_aoa_library.viewer.index_html')
 
     manage_main = PageTemplateFile('zpt/manage_main', globals())
 

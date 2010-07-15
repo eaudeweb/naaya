@@ -8,13 +8,26 @@
 
 <h1 tal:content="here/title_or_id"></h1>
 
-<ul>
-    <li tal:repeat="assessment here/iter_assessments">
+<table class="datatable">
+<thead>
+    <th>Name</th>
+    <th>Theme</th>
+    <th>Topic</th>
+</thead>
+<tbody>
+<tr tal:repeat="assessment here/iter_assessments">
+    <td>
         <a tal:define="url assessment/absolute_url"
            tal:attributes="href string:${url}"
            tal:content="assessment/title_or_id"></a>
-    </li>
-</ul>
+    </td>
+    <td tal:content="assessment/theme" />
+    <td>
+        <ul><li tal:repeat="t assessment/topics" tal:content="t" /></ul>
+    </td>
+</tr>
+</tbody>
+</table>
 
 </metal:block>
 
