@@ -22,19 +22,21 @@
 
 #Zope imports
 import Globals
+from naaya.content.base.constants import (
+    NAAYACONTENT_PRODUCT_NAME,
+    DEFAULT_SORTORDER,
+    MUST_BE_NONEMPTY,
+    MUST_BE_DATETIME,
+    MUST_BE_DATETIME_STRICT,
+    MUST_BE_POSITIV_INT,
+    MUST_BE_POSITIV_FLOAT,
+    MUST_BE_CAPTCHA,
+    MUST_BE_FLVFILE,
+    MUST_BE_VIDEOFILE
+)
 
-#Product imports
-
-NAAYACONTENT_PRODUCT_NAME = 'NaayaContent'
-
-DEFAULT_SORTORDER = 100
-
-#other
-MUST_BE_NONEMPTY =          1010
-MUST_BE_DATETIME =          1020
-MUST_BE_DATETIME_STRICT =   1030
-MUST_BE_POSITIV_INT =       1040
-MUST_BE_POSITIV_FLOAT =     1050
-MUST_BE_CAPTCHA =           1060
-MUST_BE_FLVFILE =           1070
-MUST_BE_VIDEOFILE =         1080
+import warnings
+from naaya.content.base import constants as newlocation
+warnings.warn(
+    '%s is deprecated. Use %s instead'  % (__name__, newlocation.__name__),
+    DeprecationWarning, stacklevel=2)
