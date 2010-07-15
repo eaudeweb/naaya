@@ -191,6 +191,10 @@ def get_discretized_limits(lat_min, lat_max, lon_min, lon_max,
         size_x, size_y=None):
     """
     Returns the tile limits that cover the map borders
+     Used for expanding limits to include whole margin tile,
+     in order to find results
+     also right outside the margins, maintaining the same clusters
+     on map movements
     """
     # default arguments for size_y and centers_step
     if size_y is None:

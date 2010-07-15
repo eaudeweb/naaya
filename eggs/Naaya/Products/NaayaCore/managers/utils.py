@@ -473,7 +473,7 @@ class utils:
         return md5.new(p_string).hexdigest()
 
     def utCleanupId(self, *args, **kw):
-        """See the genRandomId function"""
+        """See the cleanupId function"""
         return cleanupId(*args, **kw)
 
     def utCleanupProfileId(self, p_id=''):
