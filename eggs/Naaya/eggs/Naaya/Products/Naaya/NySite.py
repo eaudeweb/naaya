@@ -3513,7 +3513,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'validateCaptcha')
     def validateCaptcha(self, contact_word, REQUEST):
-        """ Validates captcha or recaptcha, returns errors if invalid """
+        """
+        Deprecated in favour of the `naaya.core.submitter` package.
+
+        Validates captcha or recaptcha, returns errors if invalid.
+        """
 
         if self.recaptcha_is_present():
             if not self.is_valid_recaptcha(self, REQUEST):

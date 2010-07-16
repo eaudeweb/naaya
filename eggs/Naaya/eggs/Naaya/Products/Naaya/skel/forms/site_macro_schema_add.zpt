@@ -60,6 +60,8 @@ function fSet(ctrl, value)
     <tal:block tal:content="structure python:record.render(record.defaultvalue, context)">dynamic html control</tal:block>
 </div>
 
+<tal:block content="structure submitter_info_html|nothing" />
+
 <div class="field">
     <input type="submit" value="Submit" i18n:attributes="value" />
 </div>

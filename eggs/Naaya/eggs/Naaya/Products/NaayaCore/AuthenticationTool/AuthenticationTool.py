@@ -63,6 +63,13 @@ def check_username(name):
     name_expr = re.compile('^[A-Za-z0-9]*$')
     return re.match(name_expr, name)
 
+def is_anonymous(user_obj):
+    """ check if the given user is `anonymous` (i.e. not authenticated) """
+    if user_obj is None or user_obj.getUserName() == 'Anonymous User':
+        return True
+    else:
+        return False
+
 class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                          file_utils, plugins_tool, PropertyManager):
 

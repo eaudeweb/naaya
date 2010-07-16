@@ -1,6 +1,10 @@
 Authentication Tool
 ===================
 
+.. automodule:: Products.NaayaCore.AuthenticationTool.AuthenticationTool
+   :members:
+     is_anonymous
+
 .. autoclass:: Products.NaayaCore.AuthenticationTool.AuthenticationTool.AuthenticationTool
    :members:
      getUserNames,
