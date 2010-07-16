@@ -79,7 +79,11 @@ class SchemaFormHelper(object):
                     else:
                         return prop_type()
             else:
-                return prop_type(val)
+                try:
+                    return prop_type(val)
+                except ValueError:
+                    # in case the string is malformed
+                    return prop_type()
 
         def get_renderer(prop_name, widget):
             value = get_value(prop_name)
