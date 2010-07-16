@@ -276,3 +276,13 @@ def exorcize_local_properties(obj):
         return names
     else:
         return None
+
+def abort_transaction_keep_session(request):
+    """
+    We need to abort the transaction (e.g. an object was created but the
+    add form generated errors). We preserve whatever data has been set on
+    the session.
+    """
+    session = dict(request.SESSION)
+    import transaction; transaction.abort()
+    request.SESSION.update(session)

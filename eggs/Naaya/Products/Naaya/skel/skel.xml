@@ -78,6 +78,7 @@
 		<form id="site_macro_schema_edit" title="Macro for edit forms using schemas"/>
 		<form id="site_menusubmissions" title="Site menu for submissions"/>
 		<form id="site_messages" title="Portal messages page"/>
+		<form id="site_object_index" title="Macros to render bits of object index pages"/>
 		<form id="site_requestrole" title="Portal request role"/>
 		<form id="site_scripts" title="Portal site global scripts"/>
 		<form id="site_search" title="Portal search"/>
