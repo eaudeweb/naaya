@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
 # The contents of this file are subject to the Mozilla Public
 # License Version 1.1 (the "License"); you may not use this file
 # except in compliance with the License. You may obtain a copy of
@@ -77,8 +74,7 @@ class UpdateSemideSites(UpdateScript):
     def _update(self, portal):
         #This should only be enabled on the development version
         self.log.debug('Disabling administrator e-mails')
-        portal.administrator_email = ''
-        portal.notify_on_errors = 0
+        portal.administrator_email = 'alexandru.plugaru@eaudeweb.ro'
 
         self.log.debug('Removing RAMCacheManager(s)')
         self.removeRamCacheManagers(portal)
@@ -95,16 +91,20 @@ class UpdateSemideSites(UpdateScript):
         self._unused_meta_types = ('Naaya Entry', 'Naaya EntryPress', )
         self.remove_unused_meta_types(portal)
 
+        if self.REQUEST.form['action'] != 'Show report':
+            transaction.commit()
+
         self.log.debug('Updating some old portlets')
         self.updatePortlets(portal)
 
         self.log.debug('Migrating photo galleries')
         self.migratePhotoGallery(portal)
 
+        if self.REQUEST.form['action'] != 'Show report':
+            transaction.commit()
+
         self.log.debug('Switching from site_header + site_footer to standard_template')
         self.updateLayout(portal)
-
-        transaction.commit()
 
         self.log.debug('Moving event and news items to year/month folders')
         self.updateEventNews(portal)
