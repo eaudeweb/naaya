@@ -14,7 +14,10 @@
               tal:attributes="href here/absolute_url" />
     </metal:block>
 
-    <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'))"
+                 fill-slot="body">
         <h1>
           <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
             title here/get_meta_label;
@@ -51,7 +54,7 @@
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
         <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-        <tal:block content="structure python: here.prop_display_tr('contributor')" />
+        <metal:block use-macro="site_object_index/macros/contributor_tr" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
 
         <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);

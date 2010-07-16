@@ -56,19 +56,9 @@ function fSet(ctrl, value)
 	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
 	<tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
 </div>
-<tal:block condition="not:here/checkPermissionSkipCaptcha">
-    <span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
-    <tal:block condition="not:here/recaptcha_is_present">
-        <div class="field">
-            <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
-        </div>
-        <div class="field">
-            <label for="contact_word"><span i18n:translate="">Word verification</span></label>
-            <input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
-            <em i18n:translate="">please type the word you see in the above picture.</em>
-        </div>
-    </tal:block>
-</tal:block>
+
+<tal:block content="structure submitter_info_html|nothing" />
+
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>
