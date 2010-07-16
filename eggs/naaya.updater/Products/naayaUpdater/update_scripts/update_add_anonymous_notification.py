@@ -36,16 +36,14 @@ except:
 
 class UpdateAddAnonymousNotification(UpdateScript):
     """ Update add AnonymousNotification  """
-    
+
     id = 'update_add_anonymousNotification'
     title = 'Update add AnonymousNotification portal tool'
-    #meta_type = 'Naaya Update Script'
     creation_date = DateTime('Mar 09, 2010')
     authors = ['Cornel Nitu']
-    #priority = PRIORITY['LOW']
+    priority = PRIORITY['LOW']
     description = 'Adds the AnonymousNotification portal tool'
-    #dependencies = []
-    #categories = []
+    categories = ['Temp']
 
     security = ClassSecurityInfo()
 

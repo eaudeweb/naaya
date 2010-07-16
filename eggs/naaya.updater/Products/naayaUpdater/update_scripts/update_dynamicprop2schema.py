@@ -1,6 +1,6 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
 
 class UpdateDynamicProp2Schema(UpdateScript):
     """ """
@@ -9,6 +9,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
     authors = ['Alexandru Plugaru']
     description = 'Migrate all DynamicPropertiesTool properties to SchemaTool '
     'widgets'
+    priority = PRIORITY['HIGH']
     #Dynamic prop => SchemaWidget Widget, datatype
     relations = {
         "boolean": ("Checkbox", 'bool', ),
