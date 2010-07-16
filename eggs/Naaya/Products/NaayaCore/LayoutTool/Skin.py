@@ -31,6 +31,7 @@ from Products.NaayaCore.constants import *
 import Scheme
 import Template
 import Style
+import DiskFile
 
 
 manage_addSkinForm = PageTemplateFile('zpt/skin_add', globals())
@@ -66,6 +67,7 @@ class Skin(Folder):
         {'name': METATYPE_SCHEME, 'action': 'manage_addSchemeForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL},
         {'name': METATYPE_TEMPLATE, 'action': 'manage_addTemplateForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL},
         {'name': METATYPE_STYLE, 'action': 'manage_addStyle_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
+        {'name': METATYPE_DISKFILE, 'action': 'manage_addDiskFile_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
         {'name': 'Image', 'action': 'manage_addProduct/OFSP/imageAdd', 'permission': 'Add Documents, Images, and Files' },
         {'name': 'Folder', 'action': 'manage_addProduct/OFSP/folderAdd', 'permission': 'Add Folders' },
     )
@@ -74,6 +76,8 @@ class Skin(Folder):
     #constructors
     manage_addStyle_html = Style.manage_addStyle_html
     manage_addStyle = Style.manage_addStyle
+    manage_addDiskFile_html = DiskFile.manage_addDiskFile_html
+    manage_addDiskFile = DiskFile.manage_addDiskFile
     manage_addSchemeForm = Scheme.manage_addSchemeForm
     manage_addScheme = Scheme.manage_addScheme
     manage_addTemplateForm = Template.manage_addTemplateForm

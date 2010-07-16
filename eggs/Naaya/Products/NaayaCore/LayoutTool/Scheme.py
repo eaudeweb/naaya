@@ -30,6 +30,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product imports
 from Products.NaayaCore.constants import *
 import Style
+import DiskFile
 
 manage_addSchemeForm = PageTemplateFile('zpt/scheme_add', globals())
 def manage_addScheme(self, id='', title='', REQUEST=None):
@@ -53,6 +54,7 @@ class Scheme(Folder):
 
     meta_types = (
         {'name': METATYPE_STYLE, 'action': 'manage_addStyle_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
+        {'name': METATYPE_DISKFILE, 'action': 'manage_addDiskFile_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
     )
     def all_meta_types(self, interfaces=None):
         """ """
@@ -67,6 +69,8 @@ class Scheme(Folder):
     #constructors
     manage_addStyle_html = Style.manage_addStyle_html
     manage_addStyle = Style.manage_addStyle
+    manage_addDiskFile_html = DiskFile.manage_addDiskFile_html
+    manage_addDiskFile = DiskFile.manage_addDiskFile
 
     def __init__(self, id, title):
         """ """

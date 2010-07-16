@@ -1,0 +1,50 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<style>
+    dl.metadata {
+        margin: 1em;
+        overflow-y: auto;
+        font-family: monospace;
+    }
+    dl.metadata dt {
+        float: left;
+        clear: left;
+    }
+    dl.metadata dd {
+        float: left;
+        margin-left: .3em;
+        color: #080;
+    }
+    img.preview, pre.preview {
+        border: 1px solid #737373;
+        margin: 0 1em;
+    }
+    pre.preview {
+        background-color: #ddd;
+    }
+    img.preview {
+        background: url("misc_/NaayaCore/checkered.png") repeat;
+    }
+</style>
+
+<dl class="metadata">
+    <dt>Pathspec:</dt>
+    <dd tal:content="here/pathspec" />
+
+    <dt>Filesystem path:</dt>
+    <dd tal:content="options/fs_path" />
+
+    <dt>Content-Type:</dt>
+    <dd tal:content="options/mime_type" />
+</dl>
+
+<pre class="preview"
+     tal:condition="python: options['mime_type'].startswith('text/')"
+     tal:content="options/file_data" />
+
+<img class="preview"
+     tal:condition="python: options['mime_type'].startswith('image/')"
+     tal:attributes="src here/absolute_url" />
+
+<tal:block content="structure here/manage_page_footer"/>
