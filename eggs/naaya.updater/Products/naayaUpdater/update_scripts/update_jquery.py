@@ -33,13 +33,12 @@ class UpdateJquery(UpdateScript):
     """ Replace script tags in standard_template """
     id = 'update_jquery'
     title = 'Update jQuery'
-    #meta_type = 'Naaya Update Script'
     creation_date = DateTime('May 6, 2010')
     authors = ['Alexandru Plugaru',]
-    #priority = PRIORITY['LOW']
+    priority = PRIORITY['LOW']
     description = 'Replaces script tag with jquery from local to Google storage'
     #dependencies = []
-    #categories = []
+    categories = ['Temp']
 
     security = ClassSecurityInfo()
 
