@@ -1,47 +1,22 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA). Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alec Ghica, Eau de Web
-# Cornel Nitu, Eau de Web
-# David Batranu, Eau de Web
-
-#Python imports
-import time
-from os.path import join, isfile
+import copy
 import os
 import sys
-import copy
+import time
 import types
+from os.path import join, isfile
 
-from OFS.Folder import Folder
-import Globals
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
+from OFS.Folder import Folder
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+import Globals
 
 from Products.Naaya import NySite as NySite_module
 from Products.naayaUpdater.utils import *
-try:
-    from naaya.content.base.discover import get_pluggable_content
-except ImportError:
-    from Products.NaayaContent.discover import get_pluggable_content
+from naaya.content.base.discover import get_pluggable_content
 
-from Products.naayaUpdater import update_scripts
 from Products.Naaya.interfaces import INySite
+from Products.naayaUpdater import update_scripts
 from discover import get_module_names, get_module_objects, filter_subclasses
 
 UPDATERID = 'naaya_updates'
@@ -49,7 +24,7 @@ UPDATERTITLE = 'Update scripts for Naaya'
 NAAYAUPDATER_PRODUCT_PATH = Globals.package_home(globals())
 
 class NaayaUpdater(Folder):
-    """NaayaUpdater class"""
+    """ NaayaUpdater class """
 
     meta_type = 'Naaya Updater'
     icon = 'misc_/naayaUpdater/updater.jpg'
@@ -60,9 +35,6 @@ class NaayaUpdater(Folder):
         """ """
         l_options = (
             {'label': 'Updates', 'action': 'index_html'},
-            {'label':'Available content updates', 'action':'available_content_updates',},
-            {'label':'Applied content updates', 'action':'applied_content_updates',},
-            {'label': 'Layout updates', 'action': 'layout_updates'},
             {'label':'Contents', 'action':'manage_main',
              'help':('OFSP','ObjectManager_Contents.stx')},
          )
@@ -71,10 +43,11 @@ class NaayaUpdater(Folder):
     security = ClassSecurityInfo()
 
     def __init__(self, id):
-        """constructor"""
+        """ """
         self.id = id
         self.title = UPDATERTITLE
-        self.pmeta_types = ['Naaya Site', 'CHM Site', 'EnviroWindows Site', 'SEMIDE Site', 'SMAP Site']
+        self.pmeta_types = ['Naaya Site', 'CHM Site', 'EnviroWindows Site',
+                            'SEMIDE Site', 'SMAP Site']
         self.refresh_updates_dict()
 
     def __bobo_traverse__(self, REQUEST, key):
@@ -93,22 +66,14 @@ class NaayaUpdater(Folder):
     def register_update_script(self, key, update_script):
         NaayaUpdater.update_scripts[key] = update_script
 
-    security.declareProtected(view_management_screens, 'get_updates') 
+    security.declareProtected(view_management_screens, 'get_updates')
     def get_updates(self):
         return NaayaUpdater.update_scripts
 
     def update_ids(self): #
         return sorted(NaayaUpdater.update_scripts.keys())
 
-    security.declareProtected(view_management_screens, 'get_update_script_url')
-    def get_update_script_url(self, key): #
-        return self.absolute_url() + '/' + key
-
-    security.declareProtected(view_management_screens, 'get_update_script_title')
-    def get_update_script_title(self, key): #
-        return NaayaUpdater.update_scripts[key].title
-
-    security.declareProtected(view_management_screens, 'get_updates_from_folder')
+    security.declareProtected(view_management_screens, 'get_updates_from_module')
     def get_updates_from_module(self, module_path):
         """ """
         try:
@@ -126,13 +91,51 @@ class NaayaUpdater(Folder):
         except Exception, e:
             print 'Skipping path "%s" - %s' % (module_path, str(e))
             return []
+    security.declareProtected(view_management_screens, 'get_updates_categories')
+    def get_updates_categories(self, module_path):
+        """ Get all update_*.py from update_scripts and group them by category
+        and order by priority.
+        
+        """
+        try:
+                module_names = get_module_names(module_path, 'update_.*')
+                update_cls = {'Other': []} #Category->update_script
+                for name in module_names:
+                    try:
+                        obj_list = get_module_objects(name)
+                        obj_list = filter_subclasses(obj_list,
+                                                     update_scripts.UpdateScript)
+                        for obj in obj_list:
+                            if not obj.categories:
+                                update_cls['Other'].append(obj)
+                            else:
+                                for category in obj.categories:
+                                    if not update_cls.has_key(category):
+                                        update_cls[category] = []
+                                    update_cls[category].append(obj)
+                    except Exception, e:
+                        print 'Skipping module "%s" - %s' % (name, str(e))
+                #Sort by priority
+                for category, cls_list in update_cls.items():
+                    update_cls[category] = sorted(cls_list,
+                                                key=lambda x: x.priority)
+                return update_cls
+        except Exception, e:
+            print 'Skipping path "%s" - %s' % (module_path, str(e))
+            return []
 
     def utConvertListToLines(self, values):
-        """Takes a list of values and returns a value for a textarea control"""
+        """
+        XXX: This should be moved to utils if need
+
+        Takes a list of values and returns a value for a textarea control"""
         return '\r\n'.join(values)
 
     def utConvertLinesToList(self, value):
-        """Takes a value from a textarea control and returns a list of values"""
+        """
+        XXX: This should be moved to utils if need
+
+        Takes a value from a textarea control and returns a list of values"""
         if type(value) == type([]): return value
         elif value == '': return []
         else:
@@ -142,10 +145,10 @@ class NaayaUpdater(Folder):
         return values
 
     ###
-    #General stuff
-    ######
-    security.declareProtected(view_management_screens, 'index_html')
+    # General stuff
+    ###
     _index_html = PageTemplateFile('zpt/updater_index', globals())
+    security.declareProtected(view_management_screens, 'index_html')
     def index_html(self, REQUEST):
         """ """
         module_paths = REQUEST.form.get('module_paths', '')
@@ -153,15 +156,6 @@ class NaayaUpdater(Folder):
             self.scripts_packages = self.utConvertLinesToList(module_paths)
             self.refresh_updates_dict()
         return self._index_html(REQUEST)
-
-    security.declareProtected(view_management_screens, 'available_content_updates')
-    available_content_updates = PageTemplateFile('zpt/available_content_updates', globals())
-
-    security.declareProtected(view_management_screens, 'applied_content_updates')
-    applied_content_updates = PageTemplateFile('zpt/applied_content_updates', globals())
-
-    security.declareProtected(view_management_screens, 'layout_updates')
-    layout_updates = PageTemplateFile('zpt/layout_updates', globals())
 
     security.declareProtected(view_management_screens, 'get_new_content_updates')
     def get_new_content_updates(self):
@@ -227,8 +221,7 @@ class NaayaUpdater(Folder):
         return html_diff(zmi_data, fs_data)
 
 
-#------------------------------------------------------------------------------------------------- API
-
+    #API
     security.declarePrivate('get_root_ny_sites')
     def get_root_ny_sites(self, context, meta_types):
         """ """
@@ -277,9 +270,7 @@ class NaayaUpdater(Folder):
                         return readFile(join(pitem['package_path'], 'zpt', frm_name), 'r')
                     break
 
-#----------------------------------------------------------------------------------------------------------
-#----------------------------------------------------------------------------------------------------------EXTERNAL
-
+    #External  ???
     security.declareProtected(view_management_screens, 'getPortal')
     def getPortal(self, ppath):
         """ """
@@ -308,7 +299,7 @@ class NaayaUpdater(Folder):
         """ """
         return self.pmeta_types
 
-#layout updates
+    #layout updates
     security.declareProtected(view_management_screens, 'updateStyle')
     def updateStyle(self, target_portals=[], style_name='', class_name='', scheme_ids=[], style_declaration=[], REQUEST=None):
         """ update specified class name in given style """
@@ -431,6 +422,5 @@ class NaayaUpdater(Folder):
         if v.startswith(' '): v = v[1:]
         if v.endswith(';'): v = v[:-1]
         return n, v
-
 
 Globals.InitializeClass(NaayaUpdater)

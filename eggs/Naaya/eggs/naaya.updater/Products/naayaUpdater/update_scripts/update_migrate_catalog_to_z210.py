@@ -39,7 +39,7 @@ class MigrateCatalog(UpdateScript):
     #meta_type = 'Naaya Update Script'
     creation_date = DateTime('Aug 27, 2009')
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
+    priority = PRIORITY['HIGH']
     description = ('Updates catalogs to Zope 2.10.'
                    'Replaces textindexng2 with textindexng3.'
                    'WARNING: This update will clear the portal catalog and recatalog only NyContentTypes.'
@@ -106,5 +106,3 @@ class MigrateCatalog(UpdateScript):
         self.recatalog_portal_content(portal)
         self.log.debug('Rebuilt portal catalog')
         return True
-
-
