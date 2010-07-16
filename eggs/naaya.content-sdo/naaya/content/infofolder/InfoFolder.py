@@ -40,6 +40,7 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.NyFolder import NyFolder
 
 from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTraining
@@ -100,6 +101,16 @@ config = {
                 'NyInfoFolder_marked.gif': ImageFile('www/NyInfoFolder_marked.gif', globals()),
             },
     }
+
+#Portal portlets
+NaayaPageTemplateFile('zpt/latest_uploads_portlet', globals(),
+                                     'naaya.content-sdo.infofolder.latest_uploads_portlet')
+NaayaPageTemplateFile('zpt/infofolder_search_portlet', globals(),
+                                     'naaya.content-sdo.infofolder.infofolder_search_portlet')
+NaayaPageTemplateFile('zpt/events_filter', globals(),
+                                     'naaya.content-sdo.infofolder.events_filter')
+NaayaPageTemplateFile('zpt/submit_site_portlet', globals(),
+                                     'naaya.content-sdo.infofolder.submit_site_portlet')
 
 def infofolder_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
