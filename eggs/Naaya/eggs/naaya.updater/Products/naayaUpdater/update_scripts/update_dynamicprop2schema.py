@@ -49,7 +49,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
                         label=prop.name,
                         data_type=data_type,
                         widget_type=widget_type,
-                        sortorder=prop.order,
+                        sortorder=int(prop.order) + 300,
                         required=bool(prop.required),
                         default=prop.defaultvalue
                     )
