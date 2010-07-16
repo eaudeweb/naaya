@@ -3,17 +3,84 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit Municipality</h1>
 
 <tal:block metal:fill-slot="schema_properties"
-        define="schema_helper python:here.get_schema_helper(lang=curr_lang);
+		define="schema_helper python:here.get_schema_helper(lang=curr_lang);
 				form_items schema_helper/form_items;
 				form_items python:list(form_items)">
+
+<script type="text/javascript" src="jquery.Jcrop.min.js"></script>
+<script type="text/javascript" src="jquery.ajaxupload.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var button = $('#picture_upload'), interval;
+		new AjaxUpload(button,{
+			action: 'file_upload/upload_file', 
+			name: 'upload_file',
+			onSubmit : function(file, ext){
+				if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
+						// extension is not allowed
+						alert('Error: invalid file extension');
+						// cancel upload
+						return false;
+				}
+				$('#ambassador_species_picture').empty();
+				button.text('Uploading');
+				this.disable();
+				interval = window.setInterval(function(){
+					var text = button.text();
+					if (text.length < 12){
+						button.text(text + '.');
+					} else {
+						button.text('Uploading');
+					}
+				}, 200);
+			},
+			onComplete: function(file, response){
+				button.text(gettext('Replace picture'));
+				p1 = '<pre'+'>('
+				p2 = ')<'+'/pre'+'>'
+				result = response.replace(p1, '').replace(p2, '').split(", ");
+				address = result[0].replace("'", "").replace("'", "")
+				x = result[1];
+				y = result[2];
+				x2 = result[3];
+				y2 = result[4];
+				window.clearInterval(interval);
+				this.enable();
+				var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
+				doCrop(image, x, y, x2, y2);
+				document.getElementById('upload_picture_url').value = (address);
+			}
+		});
+	});
+	function doCrop(elem, x, y, x2, y2) {
+			jQuery(elem).Jcrop({
+				allowMove:		true,
+				onSelect:		setCoords,
+				bgColor:		'black',
+				bgOpacity:		.4,
+				setSelect:		[ x2, y2, x, y],
+				aspectRatio:	1
+			});
+	}
+	function setCoords(c)
+	{
+		// c.x, c.y, c.x2, c.y2, c.w, c.h
+		document.getElementById('x1').value = (c.x);
+		document.getElementById('y1').value = (c.y);
+		document.getElementById('x2').value = (c.x2);
+		document.getElementById('y2').value = (c.y2);
+	};
+</script>
+
+
 	<tal:block repeat="form_item python:form_items[0:13]">
-	    <tal:block replace="structure form_item/html" />
+		<tal:block replace="structure form_item/html" />
 	</tal:block>
-    <div class="textarea_message" i18n:translate="">
-        This will not be shown on the website, for administration use only
-    </div>
+	<div class="textarea_message" i18n:translate="">
+		This will not be shown on the website, for administration use only
+	</div>
 	<tal:block repeat="form_item python:form_items[13:15]">
-	    <tal:block replace="structure form_item/html" />
+		<tal:block replace="structure form_item/html" />
 	</tal:block>
 
 <!-- Start of add / delete species block -->
@@ -49,10 +116,22 @@
 					tal:content="request/SESSION/ambassador_species_description|nothing"></textarea>
 		</div>
 		<div class="field">
-			<label class="widget-title" for="ambassador_species_picture" i18n:translate="">
-				Upload a picture of the ambassador species:</label>
-			<input id="ambassador_species_picture" type="file" name="ambassador_species_picture" />
+			<span class="buttons">
+				<a i18n:translate="" title="Upload picture" i18n:attributes="title" id="picture_upload">
+					Upload a picture of the ambassador species
+				</a>
+			</span>
+			<span i18n:translate=""></span>
+			<div class="textarea_message" i18n:translate="" style="margin-top: 1em">
+				Please drag the mouse across the image to adjust the crop selection
+			</div>
 		</div>
+		<div id="ambassador_species_picture"></div>
+		<input id="upload_picture_url" type="hidden" name="upload_picture_url" />
+		<input id="x1" type="hidden" name="x1:int" value="0" />
+		<input id="y1" type="hidden" name="y1:int" value="0" />
+		<input id="x2" type="hidden" name="x2:int" value="0" />
+		<input id="y2" type="hidden" name="y2:int" value="0" />
 	</fieldset>
 
 	<fieldset class="fieldset_edit" tal:condition="here/species">
@@ -74,7 +153,7 @@
 					</td>
 					<td>
 						<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
-							alt="Ambassador species picture" i18n:attributes="alt" width="200"/>
+							alt="Ambassador species picture" i18n:attributes="alt" width="190"/>
 					</td>
 				</tr>
 			</tal:block>
@@ -83,7 +162,7 @@
 <!-- End of add / delete species block -->
 
 	<tal:block repeat="form_item python:form_items[15:]">
-	    <tal:block replace="structure form_item/html" />
+		<tal:block replace="structure form_item/html" />
 	</tal:block>
 </tal:block>
 
