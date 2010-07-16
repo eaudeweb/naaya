@@ -63,7 +63,7 @@ class NyBlobFile(Persistent):
             return self.open().read()
 
     def __repr__(self):
-        return '<%(cls)s %(fname)r (%(mime)s, %(size)d bytes)>' % {
+        return '<%(cls)s %(fname)r (%(mime)s, %(size)r bytes)>' % {
             'cls': self.__class__.__name__,
             'fname': self.filename,
             'mime': self.content_type,
