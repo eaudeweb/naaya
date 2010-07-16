@@ -50,6 +50,8 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
+from naaya.core import submitter
+
 from interfaces import INyStory
 
 #module constants
@@ -358,7 +360,6 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _frontpicture = schema_raw_data.pop('frontpicture', '')
-        _contact_word = schema_raw_data.get('contact_word', '')
 
         parent = self.getParentNode()
         id = make_id(parent, title=schema_raw_data.get('title', ''), prefix='story')
@@ -372,11 +373,8 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-        #check Captcha/reCaptcha
-        if not self.checkPermissionSkipCaptcha():
-            captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-            if captcha_validator:
-                form_errors['captcha'] = captcha_validator
+        submitter_errors = submitter.info_check(self.aq_parent, REQUEST, self)
+        form_errors.update(submitter_errors)
 
         if not form_errors:
             parent.manage_renameObjects([self.id], [id])
@@ -485,7 +483,11 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'story_add')
+        parent = self.aq_parent
+        return self.getFormsTool().getContent({
+            'here': self,
+            'submitter_info_html': submitter.info_html(parent, REQUEST),
+        }, 'story_add')
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
