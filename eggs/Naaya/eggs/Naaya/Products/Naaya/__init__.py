@@ -111,6 +111,9 @@ def initialize(context):
     #initialize NaayaContent
     discover.initialize(context)
 
+    from Products.NaayaCore.LayoutTool.DiskFile import allow_path
+    allow_path('Products.Naaya:skel/layout/')
+
 methods = {
     'DragDropCore': DragDropCore,
     'DragDropHidden': DragDropHidden,

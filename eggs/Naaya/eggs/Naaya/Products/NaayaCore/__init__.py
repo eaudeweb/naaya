@@ -213,6 +213,8 @@ misc_ = {
     'Template.gif':ImageFile('LayoutTool/www/Template.gif', globals()),
     'Scheme.gif':ImageFile('LayoutTool/www/Scheme.gif', globals()),
     'Style.gif':ImageFile('LayoutTool/www/Style.gif', globals()),
+    'DiskFile.gif':ImageFile('LayoutTool/www/DiskFile.gif', globals()),
+    'checkered.png':ImageFile('LayoutTool/www/checkered.png', globals()),
     'NotificationTool.gif':ImageFile('NotificationTool/www/NotificationTool.gif', globals()),
     'ProfilesTool.gif':ImageFile('ProfilesTool/www/ProfilesTool.gif', globals()),
     'Profile.gif':ImageFile('ProfilesTool/www/Profile.gif', globals()),
