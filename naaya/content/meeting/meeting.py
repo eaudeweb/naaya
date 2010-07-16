@@ -91,15 +91,7 @@ config = {
 NySite.meeting_reports = MeetingReports('meeting_reports')
 
 def meeting_on_install(site):
-    """
-    !!! Adding PARTICIPANT_ROLE and WAITING_ROLE on meeting installation.
-    This is given to the participants of the meetings.
-    Permissions are set similar to the Authenticated role.
-    """
-    grouppermissions = ['Browse content', 'Add comments']
-    permissions = ['Naaya - Skip Captcha',
-        'Naaya - Add Naaya Survey Answer', 'Naaya - View Naaya Survey Answers', 'Naaya - View Naaya Survey Reports']
-
+    """ """
     auth_tool = site.getAuthenticationTool()
 
     # add new map symbols for the meeting
