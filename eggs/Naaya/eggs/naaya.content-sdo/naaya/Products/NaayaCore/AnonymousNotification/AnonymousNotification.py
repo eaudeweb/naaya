@@ -44,8 +44,12 @@ from Products.NaayaCore.NotificationTool.interfaces import ISubscription, ISubsc
 
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import build_email
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from Products.NaayaCore.managers.utils import is_valid_email
+
+NaayaPageTemplateFile('zpt/notifications_portlet', globals(),
+                        'naaya.content-sdo.AnonymousNotification.notifications_portlet')
 
 class AnonymousSubscription(object):
     """ 
