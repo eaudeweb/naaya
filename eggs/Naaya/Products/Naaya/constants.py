@@ -80,4 +80,6 @@ JS_MESSAGES = [
     'Please select one or more items to cut.',
     'Please select one or more items to delete.',
     'Please select one or more items to rename.',
+# Ajax file upload (CHM NyMunicipality)
+    'Replace picture',
 ]
