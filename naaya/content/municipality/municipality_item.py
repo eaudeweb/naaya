@@ -48,7 +48,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.content.bfile.NyBlobFile import make_blobfile
+from naaya.content.bfile.NyBlobFile import NyBlobFile
 from Products.NaayaCore.managers.utils import utils, make_id
 
 from interfaces import INyMunicipality
@@ -223,11 +223,7 @@ class AmbassadorSpecies(Persistent):
     def __init__(self, title, description='', picture=None):
         self.title = title
         self.description = description
-        picture_test = picture is not None and picture.filename
-        if picture_test:
-            self.picture = make_blobfile(picture, removed=False, timestamp=datetime.utcnow())
-        else:
-            self.picture = None
+        self.picture = picture
 
 class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyValidation, NyContentType, utils):
     """ """
@@ -290,12 +286,25 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
         ambassador_species = schema_raw_data.pop('ambassador_species', '')
         ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
-        ambassador_species_picture = schema_raw_data.pop('ambassador_species_picture', None)
+
+        #picture processing
+        upload_picture_url = schema_raw_data.pop('upload_picture_url', None)
+        if upload_picture_url:
+            temp_folder = self.getSite().temp_folder
+            picture_id = upload_picture_url.split('/')[-1]
+            ambassador_species_picture = getattr(temp_folder, picture_id)
+        else:
+            ambassador_species_picture = None
+        x1 = schema_raw_data.pop('x1')
+        y1 = schema_raw_data.pop('y1')
+        x2 = schema_raw_data.pop('x2')
+        y2 = schema_raw_data.pop('y2')
+        crop_coordinates = (x1, y1, x2, y2)
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         self.process_species(ambassador_species, ambassador_species_description,\
-                        ambassador_species_picture, form_errors)
+                        ambassador_species_picture, crop_coordinates, form_errors)
 
         if form_errors:
             if REQUEST is not None:
@@ -309,6 +318,10 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
+
+        # if the user doesn't have permission to publish objects, the object must be unapproved
+        if not self.glCheckPermissionPublishObjects():
+            self.approveThis(0, None)
 
         self._p_changed = 1
         self.recatalogNyObject(self)
@@ -334,11 +347,13 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_species')
     def process_species(self, ambassador_species, ambassador_species_description,
-                        ambassador_species_picture, form_errors):
-        picture_test = ambassador_species_picture is not None and ambassador_species_picture.filename
+                        ambassador_species_picture, crop_coordinates, form_errors):
+        picture_test = ambassador_species_picture is not None
         if (ambassador_species_description or picture_test) and not ambassador_species:
             form_errors['ambassador_species'] = ['The species name is mandatory!']
         elif ambassador_species:
+            if picture_test:
+                ambassador_species_picture = process_picture(ambassador_species_picture, crop_coordinates)
             new_species = AmbassadorSpecies(ambassador_species,
                                             ambassador_species_description,
                                             ambassador_species_picture)
@@ -385,3 +400,101 @@ config.update({
 
 def get_config():
     return config
+
+from PIL import Image
+from OFS.Image import manage_addFile as manage_addImage
+from cStringIO import StringIO
+
+class FileUpload(Implicit, Item):
+    """
+    Manage file uploads
+    """
+
+    def __init__(self, id):
+        self.id = id
+
+    security = ClassSecurityInfo()
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'upload_file')
+    def upload_file(self, REQUEST):
+        """ """
+        temp_folder = self.getSite().temp_folder
+        file = REQUEST.form.get('upload_file', None)
+        image_size = get_image_size(file)
+        if file is None or not image_size:
+            return None
+        x = image_size[0]
+        y = image_size[1]
+        filename = file.filename
+        id = make_id(temp_folder, id=filename)
+        manage_addImage(temp_folder, id, file=file)
+        ob = getattr(temp_folder, id)
+        ob.filename = filename
+        ob.p_changed = 1
+        if x > y:
+            return (ob.absolute_url(), (x-y)/2, 0, y + (x-y)/2, y)
+        else:
+            return (ob.absolute_url(), 0, (y-x)/2, x, x + (y-x)/2)
+
+InitializeClass(FileUpload)
+
+from Products.Naaya.NySite import NySite
+NySite.file_upload = FileUpload('file_upload')
+
+def get_image_size(file):
+    """
+    Test if the specified uploaded B{file} is a valid image.
+    """
+    try:
+        image = Image.open(file)
+    except: # Python Imaging Library doesn't recognize it as an image
+        return False
+    else:
+        file.seek(0)
+        return image.size
+
+def image2blob(image, filename, content_type):
+    blobfile = NyBlobFile(filename=filename, content_type=content_type)
+    bf_stream = blobfile.open_write()
+    #data = image.data
+    #bf_stream.write(data)
+    bf_stream.write(image)
+    bf_stream.close()
+    blobfile.size = len(image)
+    return blobfile
+
+def process_picture(ambassador_species_picture, crop_coordinates):
+    filename = ambassador_species_picture.filename
+    content_type = ambassador_species_picture.content_type
+    image_string = data2stringIO(ambassador_species_picture.data)
+    img = Image.open(image_string)
+    fmt = img.format
+    crop_size = crop_coordinates[2] - crop_coordinates[0]
+    if crop_size == 0:
+        x = img.size[0]
+        y = img.size[1]
+        crop_size = min(x, y)
+        if x > y:
+            crop_coordinates = ((x-y)/2, 0, y + (x-y)/2, y)
+        else:
+            crop_coordinates = (0, (y-x)/2, x, x + (y-x)/2)
+    img = img.crop(crop_coordinates)
+    if crop_size > 640:
+        crop_size = 190
+    try: img = img.resize((crop_size, crop_size), Image.ANTIALIAS)
+    except AttributeError: img = img.resize((width, height))
+    newimg = StringIO()
+    img.save(newimg, fmt, quality=85)
+    blobfile = image2blob(newimg.getvalue(), filename=filename, content_type=content_type)
+    return blobfile
+
+def data2stringIO(data):
+    str_data = StringIO()
+    if isinstance(data, str):
+        str_data.write(data)
+    else:
+        while data is not None:
+            str_data.write(data.data)
+            data=data.next
+    str_data.seek(0)
+    return str_data
