@@ -171,11 +171,25 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ambassador_species = schema_raw_data.pop('ambassador_species', '')
     ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
-    ambassador_species_picture = schema_raw_data.pop('ambassador_species_picture', None)
+
+    #picture processing
+    upload_picture_url = schema_raw_data.pop('upload_picture_url', None)
+    if upload_picture_url:
+        temp_folder = self.getSite().temp_folder
+        picture_id = upload_picture_url.split('/')[-1]
+        ambassador_species_picture = getattr(temp_folder, picture_id)
+    else:
+        ambassador_species_picture = None
+    x1 = schema_raw_data.pop('x1')
+    y1 = schema_raw_data.pop('y1')
+    x2 = schema_raw_data.pop('x2')
+    y2 = schema_raw_data.pop('y2')
+    crop_coordinates = (x1, y1, x2, y2)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    ob.process_species(ambassador_species, ambassador_species_description, ambassador_species_picture, form_errors)
+    ob.process_species(ambassador_species, ambassador_species_description,
+                    ambassador_species_picture, crop_coordinates, form_errors)
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -303,7 +317,7 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-        self.process_species(ambassador_species, ambassador_species_description,\
+        self.process_species(ambassador_species, ambassador_species_description,
                         ambassador_species_picture, crop_coordinates, form_errors)
 
         if form_errors:
@@ -365,6 +379,8 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         list_index = int(list_index)
         if len(self.species) > list_index and self.species[list_index].picture is not None:
             return self.species[list_index].picture.send_data(RESPONSE, as_attachment=False)
+        else:
+            return None
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
