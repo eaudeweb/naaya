@@ -23,7 +23,7 @@
 				</tal:block>
 				<tal:block tal:condition="python:not country.can_be_seen()" i18n:translate="">[Restricted access]</tal:block>
 			</h2>
-	
+
 			<div id="admin_this_folder" tal:define="portlet_indicators country/get_portlet_indicators;
 							portlet_reports country/get_portlet_reports">
 				<a tal:attributes="href string:${country/absolute_url}/edit_html"><span i18n:translate="">Edit country</span></a>
@@ -31,9 +31,14 @@
 				<a tal:condition="python:portlet_reports is not None" tal:attributes="href string:${country/absolute_url}/editportlet_html?id=${portlet_reports/id}"><span><span i18n:translate="" tal:omit-tag="">Edit</span> <span tal:replace="portlet_reports/title_or_id" /></a>
 			</div>
 			<p tal:condition="python:country.description!=''" tal:content="structure country/description" />
+			<div class="xmlExportButtons" style="margin-top:1em">
+	<tal:block define="ob_url python:here.utUrlEncode(here.absolute_url(1))">
+	<a class="pdf" href='javascript:void(0)' tal:attributes="onclick string:window.location = '${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}'">PDF</a>
+	</tal:block>
+</div>
 			<div class="xmlExportButtons" style="margin-top:1em" tal:condition="python:here.testCountryContext(here)">
 				<tal:block define="ob_url python:here.utUrlEncode(here.absolute_url(1))">
-				<a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
+				<a class="pdf" href='javascript:void(0)' tal:attributes="onclick string:window.location = '${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}'">PDF</a>
 				</tal:block>
 			</div>
 		</div>
