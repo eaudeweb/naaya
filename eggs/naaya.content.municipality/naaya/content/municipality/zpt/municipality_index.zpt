@@ -63,8 +63,9 @@
 			<td class="box">
 				<strong><span tal:replace="species/title"/></strong><br/>
 				<span tal:replace="structure species/description"/><br/>
-				<img tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
-					alt="Ambassador species picture" i18n:attributes="alt" width="200"/>
+				<img tal:condition="species/picture" i18n:attributes="alt" width="200"
+					tal:attributes="src string:${here/absolute_url}/render_picture?list_index=${index}"
+					alt="Ambassador species picture"/>
 			</td>
 		</tr>
 	</tal:block>
