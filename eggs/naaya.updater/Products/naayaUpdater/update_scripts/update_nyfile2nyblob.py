@@ -70,7 +70,9 @@ class Export(object):
             if widget.localized:
                 continue
             name = widget.prop_name()
-            value = self.data.pop(name)
+            value = self.data.pop(name, None)
+            if not value:
+                continue
             yield name, value
 
     @property
@@ -91,6 +93,8 @@ class Import(object):
         @param data: Export instance
         """
         self.context = context
+        if getattr(data, 'logger', None):
+            self.logger = data.logger
         self.versions = data.versions
         self.properties = data.properties
         self.local_properties = data.local_properties
@@ -126,7 +130,7 @@ class Import(object):
     annotations = property(None, annotations)
 
     def finish(self, value):
-        """ Setup other properties
+        """ Setup non-schema properties
         """
         # XXX These should stay in annotations
         self.context.approved = value.pop('approved')
@@ -134,6 +138,62 @@ class Import(object):
         self.context.submitted = value.pop('submitted')
         self.context.discussion = value.pop('discussion', 0)
         self.context.recatalogNyObject(self.context)
+
+        # XXX Comments
+        comments = value.pop('_NyComments__comments_collection', {})
+        if comments:
+            setattr(self.context, '_NyComments__comments_collection', comments)
+
+        # XXX Local roles
+        localroles = value.pop('__ac_local_roles__', {})
+        if localroles:
+            setattr(self.context, '__ac_local_roles__', localroles)
+
+        # XXX Dynamic properties
+        properties = value.pop('_NyProperties__dynamic_properties', {})
+        if properties:
+            setattr(self.context, '_NyProperties__dynamic_properties', properties)
+
+        # XXX Validation
+        validation_by = value.pop('validation_by', '')
+        if validation_by:
+            self.context.validation_by = validation_by
+        validation_date = value.pop('validation_date', None)
+        if validation_date:
+            self.context.validation_date = validation_date
+        validation_comment = value.pop('validation_comment', '')
+        if validation_comment:
+            self.context.validation_comment = validation_comment
+        validation_status = value.pop('validation_status', 0)
+        if validation_status:
+            self.context.validation_status = validation_status
+
+        # XXX Permissions
+        permissions = value.pop('_Naaya___Edit_content_Permission', [])
+        context_permissions = getattr(self.context, '_Naaya___Edit_content_Permission', [])
+        if permissions != context_permissions:
+            setattr(self.context, '_Naaya___Edit_content_Permission', permissions)
+
+        # Languages
+        languages = value.pop('_languages', ())
+        context_languages = getattr(self.context, '_languages', ())
+        if languages != context_languages:
+            setattr(self.context, '_languages', languages)
+
+        # XXX Deprecated attributes
+        checkout = value.pop('checkout', 0)
+        if checkout:
+            self.logger.debug('\t DEPRECATED %30s: \t %r', 'checkout', checkout)
+        checkout_user = value.pop('checkout_user', '')
+        if checkout_user:
+            self.logger.debug('\t DEPRECATED %30s \t %r', 'checkout_user', checkout_user)
+        version = value.pop('version', None)
+        if version:
+            get_data = getattr(version, 'get_data', None)
+            get_data = get_data and get_data(as_string=False)
+            filename = getattr(get_data, 'filename', [])
+            self.logger.debug('\t DEPRECATED %30s \t %r', 'version', filename)
+
     finish = property(None, finish)
 
 #
@@ -156,9 +216,17 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
         name = value.__name__
         contributor = value.contributor
 
-        before = value.__dict__
+        before = value.__dict__.copy()
+
+        bname = before.get('id', '')
+        if bname != name:
+            self.log.debug('\t FIXED BROKEN id: %s => %s', bname, name)
+            before['id'] = name
+
+
         before['meta_type'] = value.meta_type
         export = Export(parent, before)
+        export.logger = self.log
         doc = bfile_item.NyBFile(name, contributor)
         parent.gl_add_languages(doc)
 
@@ -190,6 +258,53 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
                                key, before[key], after[key])
                 raise ValueError('%s: %r' % (key, value))
 
+    def update_control_panel(self, portal):
+        # Uninstall Naaya File
+        if portal.is_pluggable_item_installed('Naaya File'):
+            try:
+                portal.manage_uninstall_pluggableitem('Naaya File')
+            except Exception, err:
+                self.log.debug('==========================================================')
+                self.log.debug('You need to manually uninstall Naaya File in Control Panel')
+                self.log.debug('==========================================================')
+                self.log.error(err)
+            else:
+                self.log.debug('Uninstalled Naaya File in Control Panel')
+
+        # Install Naaya Blob File
+        if not portal.is_pluggable_item_installed('Naaya Blob File'):
+            try:
+                portal.manage_install_pluggableitem('Naaya Blob File')
+            except Exception, err:
+                self.log.debug('=============================================================')
+                self.log.debug('You need to manually install Naaya Blob File in Control Panel')
+                self.log.debug('=============================================================')
+                self.log.error(err)
+            else:
+                self.log.debug('Installed Naaya Blob File in Control Panel')
+
+    def update_subobjects(self, portal):
+        # Subobjects
+        meta_types = portal.adt_meta_types[:]
+        if 'Naaya File' in meta_types:
+            meta_types.remove('Naaya File')
+            meta_types.append('Naaya Blob File')
+            self.log.debug('Updating portal %s subobjects = %s', portal.absolute_url(1), meta_types)
+            portal.portal_properties.manageSubobjects(subobjects=meta_types)
+
+        brains = portal.portal_catalog(meta_type='Naaya Folder')
+        for brain in brains:
+            doc = brain.getObject()
+            if not doc:
+                continue
+
+            meta_types = doc.folder_meta_types[:]
+            if 'Naaya File' in meta_types:
+                meta_types.remove('Naaya File')
+                meta_types.append('Naaya Blob File')
+                self.log.debug('Updating folder %s subobjects = %s', doc.absolute_url(1), meta_types)
+                doc.manageSubobjects(subobjects=meta_types)
+
     def _update(self, portal):
         """ Run updater
         """
@@ -204,3 +319,6 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             doc = brain.getObject()
             self.log.debug('Updating file: %s' % doc.absolute_url(1))
             self.exchange(doc)
+
+        self.update_control_panel(portal)
+        self.update_subobjects(portal)
