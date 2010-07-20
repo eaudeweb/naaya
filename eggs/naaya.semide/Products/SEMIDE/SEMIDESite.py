@@ -734,6 +734,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         if query == '' and nt == '' and nd == '' and gz == []:
             #no criteria then returns the 10 more recent
+            import pdb; pdb.set_trace()
             try:    p_objects = self.unrestrictedTraverse(p_context).getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1)
             except: p_objects = []
             results = self.get_archive_listing(self.sorted_news_listing(p_objects, skey, rkey))

@@ -1,16 +1,17 @@
-naaya.content-semide
+naaya.semide
 
 === Description
 
-This is a custom setup of Naaya for SEMIDE network. It contains custom content types
-which can be found in naaya/content/semide. In Products/SEMIDE you can find tools
-and
+This is a custom setup of Naaya for SEMIDE network. It contains custom content
+types which can be found in naaya/content/semide. SEMIDESite is the custom
+layer on top of Naaya.
 
 === Instalation
 
 SEMIDE requires a few libraries for pdf generation: pyfribidi and a custom version
 of reportlab (custom because it was required to be modified to suport RTL languages)
-After installing the above dependencies it should be easy to install using zc.buildout
+After installing the above dependencies it should be easy to install using
+zc.buildout
 
 === Changes
 
