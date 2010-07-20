@@ -42,12 +42,14 @@ class Export(object):
                 continue
 
             sfile = StringIO(version.data)
+            self.logger.debug('\t VERSION FILENAME: %s', '/'.join(version.filename))
             sfile.filename = version.filename[-1]
             sfile.headers = {'content-type': version.content_type}
             yield sfile
 
         if not extfile.is_broken():
             sfile = StringIO(extfile.data)
+            self.logger.debug('\t FILENAME: %s', '/'.join(extfile.filename))
             sfile.filename = extfile.filename[-1]
             sfile.headers = {'content-type': extfile.content_type}
             yield sfile
