@@ -152,7 +152,11 @@ class Import(object):
         # XXX Dynamic properties
         properties = value.pop('_NyProperties__dynamic_properties', {})
         if properties:
-            setattr(self.context, '_NyProperties__dynamic_properties', properties)
+            self.logger.warn('\t DEPRECATED: '
+                'Dynamic properties are deprecated. '
+                'Please update portal_schemas for NyBFile '
+                'with the following widgets: %s',
+                properties.keys())
 
         # XXX Validation
         validation_by = value.pop('validation_by', '')
@@ -206,7 +210,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
     creation_date = DateTime('Jul 16, 2010')
     authors = ['Alin Voinea']
     priority = PRIORITY['HIGH']
-    description = 'Upgrade diskstorage from ExtFile to Blob.'
+    description = ('Upgrade diskstorage from ExtFile to Blob. '
+                   'See WARNINGs in update log for required manual steps')
 
     def exchange(self, value):
         """ Exchange an old Naaya File for a new and fresh Naaya Blob File
@@ -220,9 +225,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
 
         bname = before.get('id', '')
         if bname != name:
-            self.log.debug('\t FIXED BROKEN id: %s => %s', bname, name)
             before['id'] = name
-
 
         before['meta_type'] = value.meta_type
         export = Export(parent, before)
@@ -264,9 +267,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_uninstall_pluggableitem('Naaya File')
             except Exception, err:
-                self.log.debug('==========================================================')
-                self.log.debug('You need to manually uninstall Naaya File in Control Panel')
-                self.log.debug('==========================================================')
+                self.log.warn('You need to manually uninstall Naaya File in Control Panel')
                 self.log.error(err)
             else:
                 self.log.debug('Uninstalled Naaya File in Control Panel')
@@ -276,9 +277,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             try:
                 portal.manage_install_pluggableitem('Naaya Blob File')
             except Exception, err:
-                self.log.debug('=============================================================')
-                self.log.debug('You need to manually install Naaya Blob File in Control Panel')
-                self.log.debug('=============================================================')
+                self.log.warn('You need to manually install Naaya Blob File in Control Panel')
                 self.log.error(err)
             else:
                 self.log.debug('Installed Naaya Blob File in Control Panel')
@@ -308,6 +307,13 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
     def _update(self, portal):
         """ Run updater
         """
+        ftool = portal.portal_forms
+        templates = set(['file_add', 'file_edit', 'file_index'])
+        customized = templates.intersection(ftool.objectIds())
+        if customized:
+            self.log.warn('Check customized templates in %s/portal_forms: %s',
+                          portal.absolute_url(1), ', '.join(customized))
+
         ctool = portal.portal_catalog
         brains = ctool(meta_type='Naaya File')
         brains = set(brains)
