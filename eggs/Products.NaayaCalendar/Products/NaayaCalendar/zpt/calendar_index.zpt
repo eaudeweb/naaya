@@ -1,0 +1,76 @@
+<span metal:use-macro="here/calendar_template/macros/calendar_page">
+
+<tal:block metal:fill-slot="page_body">
+	<!-- TODO: make Zope do the conversion of parameters to int -->
+	<tal:block define="cyear python:int(request.get('cyear', here.getCurrentYear()));
+	                   cmonth python:int(request.get('cmonth', here.getCurrentMonth()));
+
+	                   next_date python:here.getNextDate(cmonth, cyear);
+	                   prev_date python:here.getPrevDate(cmonth, cyear);
+	                   forw_month python:next_date[0];
+	                   forw_year python:next_date[1];
+	                   back_month python:prev_date[0];
+	                   back_year python:prev_date[1];
+
+	                   date python:here.getMonthRange(cyear, cmonth);
+	                   days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
+
+<!-- Calendar begin -->
+	<table id="calendar-container" cellspacing="1" tal:attributes="summary python:here.title">
+		<!-- Title area begin -->
+		<caption id="calendar-title" tal:content="python:here.title" i18n:translate="">TITLE</caption>
+		<!-- Title area end -->
+
+		<tr>
+		<!-- Month area begin -->
+			<td id="calendar-left-arrow">
+				<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" i18n:attributes="title alt" /></a>
+			</td>
+			<td id="calendar-date" colspan="5">
+				<a title="Month Events" tal:attributes="href string:${here/getIndexURL}cmonth=${cmonth}&cyear=${cyear};" i18n:attributes="title">
+					<span i18n:translate="" tal:content="python:here.getMonthName(cmonth)"/>
+					<span tal:content="cyear"/>
+				</a>
+			</td>
+			<td id="calendar-right-arrow">
+				<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/right_arrow" title="Next month" alt="Next month" i18n:attributes="title alt" /></a>
+			</td>
+		<!-- Month area end -->
+		</tr>
+
+		<tr>
+		<!-- Weeks area begin -->
+			<th class="calendar-week-day" scope="col"
+				tal:repeat="cshortday python:here.getShortWeekdays(here.day_len)"
+				tal:content="python:cshortday[0]"
+				tal:attributes="abbr python:cshortday[1]; id python:cshortday[1];" i18n:translate="">WEEK DAY</th>
+		<!-- Weeks area end -->
+		</tr>
+
+		<!-- Days area begin -->
+		<tr tal:repeat="week days_matrix">
+			<tal:block repeat="day week">
+				<tal:block define="isCurrentDay python:here.isCurrentDay(day, cmonth, cyear);
+				                   hasEvents python:day and here.getEvents(cyear, cmonth, day)">
+				<td tal:attributes="class python:test(isCurrentDay, 'current-day', 'event-day');
+				                    headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
+				    tal:condition="python:hasEvents">
+					<a tal:attributes="href string:${here/getDaysURL}cday=${day}/${cmonth}/${cyear};" tal:content="day"></a>
+				</td>
+				<td tal:attributes="class python:test(isCurrentDay, 'current-day', 'normal-day');
+				                    headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
+				    tal:condition="python:not hasEvents"
+				    tal:content="day">
+				</td>
+				</tal:block>
+			</tal:block>
+		</tr>
+		<!-- Days area end -->
+
+	</table>
+<!-- Calendar end -->
+
+	</tal:block>
+</tal:block>
+
+</span>
