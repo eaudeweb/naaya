@@ -1,49 +1,23 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is EMWIS/SEMIDE.
-# Code created by Finsiel Romania are
-# Copyright (C) EMWIS/SEMIDE. All Rights Reserved.
-#
-# Authors:
-#
-# Alexandru Ghica, Finsiel Romania
-
-#Python imports
 import os
 import time
 import tempfile
-from StringIO   import StringIO
-from zipfile    import *
-from os.path    import join
+from StringIO import StringIO
+from zipfile import ZipFile
+from os.path import join
 
-#Products import
-from Products.SEMIDE.constants              import *
-from Products.NaayaBase.constants           import MESSAGE_SAVEDCHANGES
-from Products.NaayaContent                  import *
-from Products.NaayaPhotoArchive.constants  import METATYPE_NYPHOTO
-from Products.NaayaPhotoArchive.NyPhoto    import addNyPhoto
+from Products.SEMIDE.constants import ZIP_DOWNLOAD_FILENAME
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaPhotoArchive.constants import METATYPE_NYPHOTO
+from Products.NaayaPhotoArchive.NyPhoto import addNyPhoto
 
-class SemideZip:
-    """."""
-
-    def __init__(self):
-        """ constructor """
-        pass
-
+class SemideZip(object):
+    """ """
     #######################
     #   ZIP FUNCTIONS     #
     #######################
 
     def __objectsTree(self, p_ids_list):
-        #return the objects tree    
+        #return the objects tree
         l_ids_list = []
         l_ids_list.append(self)
         l_ids_list.extend(p_ids_list)
@@ -82,7 +56,7 @@ class SemideZip:
                 zfi = ZipInfo(filename)
                 zfi.date_time = timetuple
                 zfi.compress_type = ZIP_DEFLATED
-                if l_ob.meta_type == METATYPE_NYFILE: 
+                if l_ob.meta_type == METATYPE_NYFILE:
                     p_zf.writestr(zfi, str(l_ob.get_data()))
                 elif l_ob.meta_type == METATYPE_NYPHOTO:
                     p_zf.writestr(zfi, str(l_ob.get_data()))
@@ -106,12 +80,6 @@ class SemideZip:
         l_download_ids = self.splitToList(download_ids, '/')
         tempfile.tempdir = path
         tmpfile = tempfile.mktemp(".temp")
-
-# Theoretically creates an empty directory, 48 or 16 for zfi.external_attr:
-#        timetuple = time.localtime()[:6]
-#        zfi = ZipInfo('download/', timetuple)
-#        zfi.external_attr = 48
-#        l_zf.writestr(zfi, '')
 
         l_starting_objs = context.getObjectsByIds(l_download_ids)
         l_filetree = self.__objectsTree(l_starting_objs)
