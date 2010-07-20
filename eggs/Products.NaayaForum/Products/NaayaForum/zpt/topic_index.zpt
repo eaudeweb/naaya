@@ -1,0 +1,84 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" /></h1>
+
+<div class="forum_topic">
+	<div class="forum_message_top"
+		tal:define="add_permission python:here.checkPermissionAddForumMessage() and here.is_topic_opened();
+					edit_permission here/checkPermissionModifyForumTopic"
+		tal:condition="python:add_permission or edit_permission">
+		<div class="message_top_buttons2">
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
+			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span class="buttons" i18n:translate="">Post message</span></a>
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/restrict_html"><span class="buttons" i18n:translate="">Restrict</span></a>
+		</div>
+	</div>
+	<div class="forum_topic_author">
+		<span tal:replace="python:here.utShowFullDateTime(here.postdate)" />,
+		<a tal:attributes="href string:#" tal:content="here/author" />
+	</div>
+	<p tal:content="structure here/description" class="forum_topic_content" />
+	<div tal:define="attachments here/get_attachments" tal:condition="python:len(attachments)>0"
+		class="forum_topic_bottom">
+		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt"  style="text-align: middle" />
+		<span i18n:translate="" tal:omit-tag="">Attachments:</span>
+		<tal:block repeat="file attachments">
+			<a tal:attributes="href file/absolute_url; title file/title_or_id">
+				<span tal:replace="file/title_or_id" />
+				(<span tal:replace="python:here.utShowSize(file.size)" />)
+			</a>
+			<span tal:condition="python:not path('repeat/file/end')" tal:omit-tag="">,</span>
+		</tal:block>
+	</div>
+</div>
+
+<tal:block tal:define="messages here/get_messages_thread">
+
+<tal:block tal:condition="python:len(messages)>0">
+
+<div class="forum_messages_slot">
+	<tal:block tal:repeat="tuple messages">
+	<div tal:define="depth python:tuple[0]*20; item python:tuple[1];
+					add_permission python:item.checkPermissionAddForumMessage() and item.is_topic_opened();
+					edit_permission python:item.checkPermissionModifyForumMessage() and item.is_topic_opened();"
+		tal:attributes="style string:margin-left:${depth}px;;" class="forum_message">
+		<a tal:attributes="name item/id"></a>
+		<div class="forum_message_top">
+			<div class="message_top_buttons" tal:condition="python:add_permission or edit_permission">
+				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Edit</a>
+				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/delete_html" i18n:translate="">Delete</a>
+				<a tal:condition="add_permission" tal:attributes="href string:${item/absolute_url}/reply_html" i18n:translate="">Reply</a>
+			</div>
+			<img src="/misc_/NaayaForum/NyForumMessage.gif" tal:attributes="alt item/meta_label; title item/meta_label"  style="text-align: middle" />
+			<strong tal:content="item/title_or_id" />
+		</div>
+		<div class="forum_message_author">
+			<span tal:replace="python:here.utShowFullDateTime(item.postdate)" />,
+			<a tal:attributes="href string:#" tal:content="item/author" />
+		</div>
+		<div class="forum_message_description" tal:content="structure item/description" />
+		<div tal:define="attachments item/get_attachments" tal:condition="python:len(attachments)>0"
+			class="forum_message_bottom">
+			<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt"  style="text-align: middle" />
+			<span i18n:translate="" tal:omit-tag="">Attachments:</span>
+			<tal:block repeat="file attachments">
+				<a tal:attributes="href file/absolute_url; title file/title_or_id">
+					<span tal:replace="file/title_or_id" />
+					(<span tal:replace="python:here.utShowSize(file.size)" />)
+				</a>
+				<span tal:condition="python:not path('repeat/file/end')" tal:omit-tag="">,</span>
+			</tal:block>
+		</div>
+	</div>
+	</tal:block>
+</div>
+
+</tal:block>
+
+<p tal:condition="python:len(messages)==0">
+	<strong i18n:translate="">[No messages]</strong>
+</p>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

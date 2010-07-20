@@ -1,0 +1,1 @@
+<span tal:replace="python:request.RESPONSE.redirect(here.get_topic_path())" />
