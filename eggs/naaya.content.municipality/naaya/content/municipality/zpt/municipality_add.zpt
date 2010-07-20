@@ -103,7 +103,7 @@
 						name="ambassador_species:utf8:ustring" />
 			</div>
 			<div class="field">
-				<label class="widget-title" for="ambassador_species_description">
+				<label class="widget-title" for="ambassador_species_description" i18n:translate="">
 					Short description of ambassador species:
 				</label>
 				<tal:block define="editor here/getEditorTool;
