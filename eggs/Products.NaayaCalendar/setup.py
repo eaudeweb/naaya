@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1'
+NAME = 'Products.NaayaCalendar'
+PATH = NAME.split('.') + ['version.txt']
+VERSION = open(os.path.join(*PATH)).read().strip
 
-setup(name='Products.NaayaCalendar',
-      version=version,
+setup(name=NAME,
+      version=VERSION,
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
