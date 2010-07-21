@@ -1,9 +1,0 @@
-1.1
-
-Added administration area for the Glossary integrated with the portal pages
-( standard_html_header and standard_html_footer ), protected by a permission
-other than View Management Screens.
-
-1.0
-
-Adapted EEA Glossary product as a separate python product.
