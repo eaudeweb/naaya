@@ -1,10 +1,14 @@
+""" Installer
+"""
 from setuptools import setup, find_packages
 import os
 
-version = '0.1'
+NAME = 'Products.NaayaForum'
+PATH = NAME.split('.') + ['version.txt']
+VERSION = open(os.path.join(*PATH)).read().strip()
 
-setup(name='Products.NaayaForum',
-      version=version,
+setup(name=NAME,
+      version=VERSION,
       description="Naaya Forum",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
@@ -14,10 +18,10 @@ setup(name='Products.NaayaForum',
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='naaya forum',
-      author='Cornel Nitu',
-      author_email='cornel@eaudeweb.ro',
+      author='Eau de Web',
+      author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
-      license='GPL',
+      license='MPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['Products'],
       include_package_data=True,
