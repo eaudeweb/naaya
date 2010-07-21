@@ -1,23 +1,24 @@
+""" Installer
+"""
 from setuptools import setup, find_packages
 import os
 
 NAME = 'Products.NaayaCalendar'
 PATH = NAME.split('.') + ['version.txt']
-VERSION = open(os.path.join(*PATH)).read().strip
+VERSION = open(os.path.join(*PATH)).read().strip()
 
 setup(name=NAME,
       version=VERSION,
       description="",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
       keywords='naaya calendar',
-      author='Alec Ghica',
-      author_email='alec@eaudeweb.ro',
+      author='Eau de Web',
+      author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
