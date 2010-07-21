@@ -20,6 +20,7 @@ setup(name='naaya.semide',
         'Products.RDFSummary',
         'edw-ZOpenArchives',
         'edw-reportlab',
+        'pyfribidi == 0.6.0',
         'python-memcached',
     ]
 )
