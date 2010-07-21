@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.semide',
-    version='0.1',
+    version='1.1',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro',
@@ -10,8 +10,6 @@ setup(name='naaya.semide',
     zip_safe=False,
     install_requires=[
         'Naaya',
-        #'edw-ZOpenArchives',
-        #'edw-reportlab',
         'Products.NaayaCalendar',
         'Products.NaayaForum',
         'Products.NaayaGlossary',
@@ -20,6 +18,8 @@ setup(name='naaya.semide',
         'Products.NaayaThesaurus',
         'Products.RDFCalendar',
         'Products.RDFSummary',
+        'edw-ZOpenArchives',
+        'edw-reportlab',
         'python-memcached',
     ]
 )
