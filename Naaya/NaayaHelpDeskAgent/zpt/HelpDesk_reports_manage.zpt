@@ -1,9 +1,0 @@
-<html>
-	<head><title>HelpDesk Reports</title></head>
-	<body>
-	<tal:block replace="structure here/style_html" />
-	<tal:block replace="structure here/manage_tabs" />
-	<h2>HelpDesk Reports</h2>
-		<tal:block replace="structure here/reports_form_html" />
-	</body>
-</html>
