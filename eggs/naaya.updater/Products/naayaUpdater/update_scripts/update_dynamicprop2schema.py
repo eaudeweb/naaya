@@ -79,4 +79,8 @@ class UpdateDynamicProp2Schema(UpdateScript):
                 dynamic_prop.manageDeleteDynamicProperties(prop.id)
                 self.log.debug('Deleted dynamic prop %r for %s'
                                    % (prop.id, meta_type))
+            #Deleting dynamic moved dynamic property if it's empty
+            if not len(dynamic_prop.getDynamicProperties()):
+                dynamic_prop_tool.manage_delObjects(dynamic_prop.id)
+                self.log.debug('Deleted dynamic property %s', meta_type)
         return True
