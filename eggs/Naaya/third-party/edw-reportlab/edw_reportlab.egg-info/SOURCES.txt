@@ -1,0 +1,12 @@
+README.txt
+setup.py
+edw/__init__.py
+edw/reportlab/__init__.py
+edw_reportlab.egg-info/PKG-INFO
+edw_reportlab.egg-info/SOURCES.txt
+edw_reportlab.egg-info/dependency_links.txt
+edw_reportlab.egg-info/entry_points.txt
+edw_reportlab.egg-info/namespace_packages.txt
+edw_reportlab.egg-info/not-zip-safe
+edw_reportlab.egg-info/requires.txt
+edw_reportlab.egg-info/top_level.txt
