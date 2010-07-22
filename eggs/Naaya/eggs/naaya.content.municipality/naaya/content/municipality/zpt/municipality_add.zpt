@@ -37,10 +37,8 @@
 				},
 				onComplete: function(file, response){
 					button.text(gettext('Replace picture'));
-					p1 = '<pre'+'>('
-					p2 = ')<'+'/pre'+'>'
-					result = response.replace(p1, '').replace(p2, '').split(", ");
-					address = result[0].replace("'", "").replace("'", "")
+					result = response.split("(")[1].split(")")[0].split(",");
+					address = result[0].replace("'", "").replace("'", "");
 					x = result[1];
 					y = result[2];
 					x2 = result[3];
