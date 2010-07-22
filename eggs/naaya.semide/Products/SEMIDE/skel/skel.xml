@@ -6,7 +6,6 @@
 		<form id="folder_basketofapprovals_duplicates" title="NyFolder basket of approvals - duplicates"/>
 		<form id="document_index" title=""/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
-		<form id="folder_index" title=""/>
 		<form id="folder_linkchecker" title="NyFolder link checker"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="pointer_index" title=""/>
