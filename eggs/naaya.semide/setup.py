@@ -19,7 +19,7 @@ setup(name='naaya.semide',
         'Products.RDFCalendar',
         'Products.RDFSummary',
         'edw-ZOpenArchives',
-        'edw-reportlab',
+        'reportlab == 1.20-edw',
         'pyfribidi == 0.6.0',
         'python-memcached',
     ]
