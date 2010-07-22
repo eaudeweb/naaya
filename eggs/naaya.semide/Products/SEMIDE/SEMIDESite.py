@@ -1,29 +1,9 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is EMWIS/SEMIDE.
-# Code created by Finsiel Romania are
-# Copyright (C) EMWIS/SEMIDE. All Rights Reserved.
-#
-# Authors:
-#
-# Alexandru Ghica, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#Python imports
-from DateTime import DateTime
-from whrandom import choice
+from random import choice
 import os
 import xmlrpclib
 
 #Zope imports
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from Globals import InitializeClass
@@ -55,6 +35,7 @@ from naaya.content.semide.thematicdir import semthematicdir_item; METATYPE_NYSEM
 
 from Products.NaayaCore.ProfilesTool.ProfileMeta    import ProfileMeta
 from Products.Naaya.NySite                          import NySite
+from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils              import utils, tmpfile
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
@@ -85,7 +66,15 @@ from managers.decorators                            import cachable, content_typ
 
 from pdf.export_pdf                                 import export_pdf
 from Tools.FlashTool                                import manage_addFlashTool
+import logging
 
+try:
+    import memcache
+    MC = memcache.Client(['127.0.0.1:11211'], debug=0)
+except ImportError:
+    MC = None
+    logging.warning("No memcache support. Make sure the python-memcache is"
+                    "installed and the server is running")
 
 manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
@@ -704,82 +693,54 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                        or cmp(x.sortorder, y.sortorder))
         return self.get_archive_listing(p_objects)
 
-    security.declareProtected(view, 'sorted_news_listing')
-    def sorted_news_listing(self, p_objects=[], skey='', rkey=0):
-        """Return sorted events"""
-        results = []
-        if not skey or skey == 'news_date':
-            p_objects.sort(lambda x,y: cmp(y.news_date, x.news_date) \
-                           or cmp(x.sortorder, y.sortorder))
-            if not rkey: p_objects.reverse()
-            results.extend(p_objects)
-        else:
-            if rkey: rkey=1
-            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
-            results.extend(l_objects)
-        return results
-
     security.declareProtected(view, 'getNewsListing')
     def getNewsListing(self, query='', languages=[], nt='', nd='', nc='', skey='',
-                       rkey='', p_context=None, ps_start='', **kwargs):
+                       rkey='', ps_start='', p_context=None, **kwargs):
+        """ Returns a list of news
+        Use memcache if available.
+
         """
-        Returns a list of news
-        """
-        #default data
         results = []
-        res_per_page = kwargs.get('items', 10) or 10
         gz = kwargs.get('gz', []) #get country list
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-
+        catalog_tool = self.getCatalogTool()
+        search_args = dict(
+            meta_type=[METATYPE_NYSEMNEWS],
+            approved=1,
+            sort_on=skey,
+            sort_order=rkey == '1' and 'descending' or 'ascending'
+        )
         if query == '' and nt == '' and nd == '' and gz == []:
             #no criteria then returns the 10 more recent
-            try:    p_objects = self.unrestrictedTraverse(p_context).getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1)
-            except: p_objects = []
-            results = self.get_archive_listing(self.sorted_news_listing(p_objects, skey, rkey))
+            brains = catalog_tool(**search_args)
         else:
-            r = []
             query = self.utStrEscapeForSearch(query)
             if languages: langs = languages
             else: langs = [self.gl_get_selected_language()]
-            nd = self.utConvertStringToDateTimeObj(nd)
-            try: nc = int(nc)
-            except: nc = 0
-            #build query
-            expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1, objectkeywords_%s=query'
-            #if date is given
-            if nd is not None:
-                expr += ', resource_date=nd'
-                if nc: expr += ', resource_date_range=\'min\''
-                else: expr += ', resource_date_range=\'max\''
-            #if type is given
-            if nt: expr += ', resource_type=[nt]'
-            #search countries in Geographical coverage
+            #Fulltext query
+            for lang in langs:
+                search_args['objectkeywords_' + lang] = query
+            #Geographical coverage
             if gz:
                 for lang in langs:
                     for g in gz:
                         lang_name = self.gl_get_language_name(lang)
                         gz_trans = self.getCoverageGlossaryTrans(g, lang_name)
-                        buf = expr + ', coverage_%s=gz_trans)' % lang
-                        buf = buf % lang
-                        r.extend(eval(buf))
-            else:
-                if not expr.endswith(')'): expr += ')'
-                for lang in langs:
-                    buf = expr % lang
-                    r.extend(eval(buf))
-            dict = {}
-            for x in r:
-                dict[x.id] = x
-            results = self.get_archive_listing(self.sorted_news_listing(dict.values(), skey, rkey))
+                        search_args['coverage_' + lang] = gz_trans
+            #Type
+            if nt:
+                search_args['resource_type'] = nt
+            #Date
+            if nd:
+                search_args['resource_date'] = nd
+                if int(nc):
+                    search_args['resource_date_range'] = 'min'
+                else:
+                    search_args['resource_date_range'] = 'max'
+            brains = catalog_tool(**search_args)
 
-        #batch related
-        batch_obj = batch_utils(res_per_page, len(results[2]), ps_start)
-        if len(results[2]) > 0:
-            paging_informations = batch_obj.butGetPagingInformations()
-        else:
-            paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
-        return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
+        return brains
 
     security.declareProtected(view, 'sortResource')
     def sortResource(self, p_objects=[], skey='', rkey=''):
@@ -2236,11 +2197,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     def get_oai_aggregators(self):
         """ """
-        return self.objectValues(OAIAggregator.meta_type)
+        return self.objectValues(OAIAggregator.OAIAggregator.meta_type)
 
     def get_oai_servers(self):
         """ returns the list of ZoPe OAI servers """
-        return self.objectValues(OAIServer.meta_type)
+        return self.objectValues(OAIServer.OAIServer.meta_type)
 
     security.declarePublic('oai_trigger')
     def oai_trigger(self, uid):
@@ -2263,7 +2224,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         @type uid: string
         """
         if uid==self.get_site_uid():
-            for oai_aggregator in self.getOAIAggregators():
+            for oai_aggregator in self.get_oai_aggregators():
                 oai_aggregator.update()
 
     #highlight searched words

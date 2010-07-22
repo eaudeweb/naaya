@@ -49,6 +49,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -109,6 +110,7 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
 
 config = {
         'product': 'NaayaContent',
@@ -545,6 +547,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
             else:
                 url = self.absolute_url()
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (url, _lang))
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/semnews_manage_edit', globals())
@@ -625,6 +628,9 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         self.manage_addFile(id=file_id, file=file)
 
 InitializeClass(NySemNews)
+
+#Custom folder listing
+NaayaPageTemplateFile('zpt/semnews_folder_index', globals(),'semnews_folder_index')
 
 config.update({
     'constructors': (manage_addNySemNews_html, addNySemNews),
