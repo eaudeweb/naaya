@@ -10,6 +10,9 @@ setup(name='naaya.envirowindows',
     zip_safe=False,
     install_requires=[
         'Naaya',
+        'Products.LDAPUserFolder',
+        'naaya.ew-aoa-library',
+        'naaya.content-sdo',
+        'naaya.content.talkback'
     ]
 )
-
