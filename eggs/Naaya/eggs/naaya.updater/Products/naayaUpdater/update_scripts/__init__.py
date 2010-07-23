@@ -22,6 +22,9 @@ except:
 #Naaya imports
 from Products.ExtFile.ExtFile import ExtFile
 
+from zope.interface import implements
+from Products.naayaUpdater.interfaces import IUpdateScript
+
 _PRIORITIES = ['CRITICAL', 'HIGH', 'LOW']
 PRIORITY = dict([(_PRIORITIES[i], i) for i in range(len(_PRIORITIES))])
 
@@ -29,6 +32,8 @@ LOGS_FOLDERNAME = 'update_logs'
 
 class UpdateScript(Item, Acquisition.Implicit):
     """ """
+    implements(IUpdateScript)
+
     id = 'UpdateScript'
     title = 'Main class for update scripts'
     meta_type = 'Naaya Update Script'

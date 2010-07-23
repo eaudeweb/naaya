@@ -1,12 +1,14 @@
+import logging
+import transaction
 from App.ImageFile import ImageFile
 from OFS import Folder
 
 import NaayaUpdater
 from update_scripts import LOGS_FOLDERNAME
+import NaayaPatches
 
 UpdaterID = NaayaUpdater.UPDATERID
-
-from NaayaPatches import *
+logger = logging.getLogger('naayaUpdater')
 
 def initialize(context):
     """ """
@@ -20,8 +22,8 @@ def initialize(context):
         try:
             updater = NaayaUpdater.NaayaUpdater(id=UpdaterID)
             app._setObject(UpdaterID, updater)
-            get_transaction().note('Added Naaya Updater')
-            get_transaction().commit()
+            logger.info('Added Naaya Updater')
+            transaction.commit()
         except:
             pass
         updater = getattr(app, UpdaterID)
