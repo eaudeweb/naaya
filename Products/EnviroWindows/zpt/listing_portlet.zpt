@@ -1,0 +1,8 @@
+<metal:block use-macro="here/folder_listing/macros/content">
+	<metal:block fill-slot="toolbar_extend">
+		<a tal:condition="python:here.getSite() == here"
+				tal:attributes="href python:'javascript:location.href=\''+here.absolute_url()+'/folder_add_html\''">
+			<span i18n:translate="">Create Folder</span>
+		</a>
+	</metal:block>
+</metal:block>

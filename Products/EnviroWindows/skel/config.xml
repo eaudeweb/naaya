@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<urls>
+		<entry meta_type="Naaya News" property="resourceurl"/>
+		<entry meta_type="Naaya Event" property="location_url"/>
+		<entry meta_type="Naaya Event" property="agenda_url"/>
+		<entry meta_type="Naaya Event" property="event_url"/>
+		<entry meta_type="Naaya Story" property="resourceurl"/>
+	</urls>
+</config>
