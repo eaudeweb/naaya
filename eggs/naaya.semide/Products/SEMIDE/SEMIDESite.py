@@ -68,13 +68,16 @@ from pdf.export_pdf                                 import export_pdf
 from Tools.FlashTool                                import manage_addFlashTool
 import logging
 
+logger = logging.getLogger('SEMIDESite')
+
 try:
     import memcache
     MC = memcache.Client(['127.0.0.1:11211'], debug=0)
 except ImportError:
     MC = None
-    logging.warning("No memcache support. Make sure the python-memcache is"
+    logger.warning("No memcache support. Make sure the python-memcache is"
                     "installed and the server is running")
+
 
 manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
@@ -2460,9 +2463,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         search_method = search_mapping.get(search_by, None)
         search_method = search_method and getattr(site, search_method, None)
         if not search_method:
-            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG,
-                     'Unknown search_by: %s => search_method: %s' % (
-                         search_by, search_method))
+            logger.warn(('SEMIDESite.search_rdf'
+                         'Unknown search_by: %s => search_method: %s'),
+                        search_by, search_method)
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
 
@@ -2476,12 +2479,17 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         try:
             results = search_method(**form)
         except TypeError, err:
-            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG, err)
+            logger.exception(err)
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
 
         # See getNewsListing or similar search methods
-        pag_info, list_results = results
+        # XXX Cleanup
+        if search_method == 'getNewsListing':
+            list_results = results
+        else:
+            page_info, list_results = results
+
         objects = list_results[2]
         objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateSomething(
@@ -2503,9 +2511,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         search_method = search_mapping.get(search_by, None)
         search_method = search_method and getattr(site, search_method, None)
         if not search_method:
-            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG,
-                     'Unknown search_by: %s => search_method: %s' % (
-                         search_by, search_method))
+            logger.exception('Unknown search_by: %s => search_method: %s',
+                             search_by, search_method)
             return self.getSyndicationTool().syndicateAtom(self, [])
 
         # XXX Ugly hack
@@ -2518,7 +2525,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         try:
             results = search_method(**form)
         except TypeError, err:
-            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG, err)
+            logger.exception(err)
             return self.getSyndicationTool().syndicateAtom(self, [])
 
         # See getNewsListing or similar search methods
