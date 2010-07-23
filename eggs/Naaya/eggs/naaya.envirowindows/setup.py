@@ -13,6 +13,11 @@ setup(name='naaya.envirowindows',
         'Products.LDAPUserFolder',
         'naaya.ew-aoa-library',
         'naaya.content-sdo',
-        'naaya.content.talkback'
+        'naaya.content.talkback',
+        'Products.NaayaSurvey',
+        'Products.NaayaSimpleSurvey',
+        'Products.NyConsultation',
+        'Products.RDFCalendar',
+        'Products.RDFSummary',
     ]
 )
