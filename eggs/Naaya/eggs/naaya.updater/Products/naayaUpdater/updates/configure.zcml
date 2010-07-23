@@ -1,0 +1,11 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="naaya">
+
+  <utility
+    name="nyfile2nyblob.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_nyfile2nyblob.UpdateNyFile2NyBlobFile"
+    permission="zope2.ViewManagementScreens" />
+
+</configure>

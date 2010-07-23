@@ -11,7 +11,7 @@ from zope.annotation import IAnnotations
 
 #Naaya imports
 from naaya.content.bfile import bfile_item
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 #
 # Export / Import
 #
