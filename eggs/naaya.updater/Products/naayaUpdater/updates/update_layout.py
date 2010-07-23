@@ -27,11 +27,10 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateLayout(UpdateScript):
     """ Update Portal layout script  """
-    id = 'update_layout_html'
     title = 'Update portal layout'
     authors = ['Alec Ghica']
 
@@ -229,6 +228,3 @@ class UpdateLayout(UpdateScript):
         if file_id in ['style', 'style_rtl', 'style_common', 'style_common_rtl', 'style_handheld', 'style_handheld_rtl', 'style_print', 'common', 'print']:
             return 'style'
         return 'image'
-
-
-
