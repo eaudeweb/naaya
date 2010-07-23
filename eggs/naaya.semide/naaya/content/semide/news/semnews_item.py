@@ -54,7 +54,6 @@ PROPERTIES_OBJECT = {
     'contact_person':   (0, '', ''),
     'contact_email':    (0, '', ''),
     'contact_phone':    (0, '', ''),
-    'rights':           (0, '', ''),
     'news_type':        (0, '', ''),
     'file_link':        (0, '', ''),
     'file_link_local':  (0, '', ''),
@@ -74,14 +73,13 @@ DEFAULT_SCHEMA = {
     'source_link':      dict(sortorder=120, widget_type="String", label="Source link", default="http://"),
     'news_type':        dict(sortorder=130, widget_type="Select", label="News type", list_id="news_types"),
     'subject':          dict(sortorder=150, widget_type="SelectMultiple", label="Subject", localized=True),
-    'creator':          dict(sortorder=160, widget_type="String", label="Creator", localized = True),
-    'creator_email':    dict(sortorder=170, widget_type="String", label="Creator e-mail"),
+    'creator':          dict(sortorder=160, widget_type="String", label="Creator", localized = True, visible=False, default=''),
+    'creator_email':    dict(sortorder=170, widget_type="String", label="Creator e-mail", visible=False, default=''),
     'contact_person':   dict(sortorder=180, widget_type="String", label="Contact name", localized=True),
     'contact_email':    dict(sortorder=190, widget_type="String", label="Contact e-mail", localized=True),
     'contact_phone':    dict(sortorder=200, widget_type="String", label="Contact phone", localized=True),
     'working_langs':    dict(sortorder=210, widget_type="SelectMultiple", label="Working langs"),
     'relation':         dict(sortorder=220, widget_type="String", label="Relation"),
-    'rights':           dict(sortorder=230, widget_type="Select", label="Rights", list_id='rights_types', localized=True),
     'file_link':        dict(sortorder=240, widget_type="String", label="Full description link", localized=True, default="http://"),
 
 }
@@ -118,7 +116,11 @@ def semnews_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemNews', 'form_helper': form_helper}, 'semnews_add')
+    return self.getFormsTool().getContent({'here': self,
+                                           'kind': METATYPE_OBJECT,
+                                           'action': 'addNySemNews',
+                                           'form_helper': form_helper
+                                           }, 'semnews_add')
 
 def _create_NySemNews_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix=PREFIX_OBJECT)
