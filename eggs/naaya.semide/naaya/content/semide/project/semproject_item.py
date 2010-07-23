@@ -109,6 +109,7 @@ DEFAULT_SCHEMA = {
 
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
 
 config = {
         'product': 'NaayaContent',
