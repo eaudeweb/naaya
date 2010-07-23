@@ -2445,13 +2445,17 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     # XXX Use decorators in python 2.4+
     # @content_type_xml
     # @cachable
-    def search_rdf(self, REQUEST=None, RESPONSE=None):
+    def search_rdf(self, REQUEST=None, **kwargs):
         """ """
         search_mapping = RDF_SEARCH_MAPPING
         search_query_mapping = RDF_SEARCH_QUERY_MAPPING
 
         site = self.getSite()
-        form = REQUEST.form
+        if REQUEST.form:
+            form = dict(REQUEST.form)
+        else:
+            form = dict(kwargs)
+
         search_by = form.get('search_by', '')
         search_method = search_mapping.get(search_by, None)
         search_method = search_method and getattr(site, search_method, None)
