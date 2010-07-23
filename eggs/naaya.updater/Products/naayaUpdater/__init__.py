@@ -4,7 +4,7 @@ from App.ImageFile import ImageFile
 from OFS import Folder
 
 import NaayaUpdater
-from update_scripts import LOGS_FOLDERNAME
+from updates import LOGS_FOLDERNAME
 import NaayaPatches
 
 UpdaterID = NaayaUpdater.UPDATERID
@@ -31,8 +31,6 @@ def initialize(context):
 
     if not hasattr(app, LOGS_FOLDERNAME):
         Folder.manage_addFolder(app, LOGS_FOLDERNAME)
-
-    updater.refresh_updates_dict()
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),
