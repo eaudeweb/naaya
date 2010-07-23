@@ -3,11 +3,6 @@
   i18n_domain="naaya">
 
   <include package=".browser" />
-
-  <utility
-    name="nyfile2nyblob.update"
-    provides=".interfaces.IUpdateScript"
-    component=".update_scripts.update_nyfile2nyblob.UpdateNyFile2NyBlobFile"
-    permission="zope2.ViewManagementScreens" />
+  <include package=".updates" />
 
 </configure>

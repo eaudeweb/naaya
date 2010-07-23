@@ -31,7 +31,8 @@ PRIORITY = dict([(_PRIORITIES[i], i) for i in range(len(_PRIORITIES))])
 LOGS_FOLDERNAME = 'update_logs'
 
 class UpdateScript(Item, Acquisition.Implicit):
-    """ """
+    """ Update script
+    """
     implements(IUpdateScript)
 
     id = 'UpdateScript'
