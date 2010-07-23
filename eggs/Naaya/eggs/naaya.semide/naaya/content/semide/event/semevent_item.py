@@ -104,8 +104,8 @@ DEFAULT_SCHEMA = {
     'subject':          dict(sortorder=170, widget_type="SelectMultiple", label="Subject"),
     'source':           dict(sortorder=180, widget_type="String", localized = True, label="Source"),
     'source_link':      dict(sortorder=190, widget_type="String", label="Source link"),
-    'creator':          dict(sortorder=200, widget_type="String", label="Creator"),
-    'creator_email':    dict(sortorder=210, widget_type="String", label="Creator e-mail"),
+    'creator':          dict(sortorder=200, widget_type="String", label="Creator", visible=False, default=''),
+    'creator_email':    dict(sortorder=210, widget_type="String", label="Creator e-mail", visible=False, default=''),
     'contact_person':   dict(sortorder=220, widget_type="String", localized = True, label="Contact name"),
     'contact_email':    dict(sortorder=230, widget_type="String", label="Contact e-mail"),
     'contact_phone':    dict(sortorder=240, widget_type="String", label="Contact phone"),
@@ -117,6 +117,7 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
 
 config = {
     'product': 'NaayaContent',
@@ -193,7 +194,11 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
     #Creating archive folder
-    month_folder = create_month_folder(self, contributor, schema_raw_data)
+    try:
+        month_folder = create_month_folder(self, contributor, schema_raw_data)
+    except:
+        month_folder = self
+
     ob = _create_NySemEvent_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 

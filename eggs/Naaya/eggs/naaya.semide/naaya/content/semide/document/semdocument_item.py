@@ -98,14 +98,15 @@ DEFAULT_SCHEMA = {
     'rights':           dict(sortorder=170, widget_type="Select", label="Rights", list_id='rights_types'),
     'subject':          dict(sortorder=180, widget_type="SelectMultiple", label="Subject", localized=True),
     'relation':         dict(sortorder=190, widget_type='String', label='Relation', localized=True),
-    'file_link':        dict(sortorder=200, widget_type="String", label="File link"),
+    'file_link':        dict(sortorder=240, widget_type="String", label="Full description link", localized=True, default="http://"),
 }
 
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=False)
 
 config = {
-    'product': 'NaayaContent', 
+    'product': 'NaayaContent',
     'module': 'NySemDocument',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': METATYPE_OBJECT,
@@ -153,17 +154,17 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
+
     ob = _create_NySemDocument_object(self, id, contributor)
-        
+
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    
+
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-    
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -171,7 +172,7 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semdocument_add_html' % self.absolute_url())
-    
+
     if 'file' in schema_raw_data:
         ob.handleUpload(schema_raw_data['file'])
 
@@ -180,7 +181,7 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -200,7 +201,7 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semdocument_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNySemDocument(self, param, id, attrs, content, properties, discussion, objects):
     """ """
     #this method is called during the import process
@@ -217,14 +218,14 @@ def importNySemDocument(self, param, id, attrs, content, properties, discussion,
                 #delete the object if exists
                 try: self.manage_delObjects([id])
                 except: pass
-            
+
             #Creating object and setting all object properties (taken from Schema)
             ob = _create_NySemDocument_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
             for prop in ob._get_schema().listPropNames():
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-                
+
             if objects:
                 obj = objects[0]
                 data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
@@ -248,7 +249,7 @@ class semdocument_item(Implicit, NyContentData, NyFSContainer):
     """ """
     meta_type = METATYPE_OBJECT
     file_link_local =   LocalProperty('file_link_local')
-    
+
 class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
     """ """
 
@@ -357,7 +358,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
@@ -368,27 +369,27 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
 
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
-        approved = schema_raw_data.get('approved', None)        
+
+        approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
                 approved_by = None
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-            
+
         self.recatalogNyObject(self)
-        
+
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
@@ -449,7 +450,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
 
@@ -459,7 +460,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
             self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
@@ -487,7 +488,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semdocument_edit')
-    
+
     security.declarePublic('downloadfilename')
     def downloadfilename(self, version=False):
         """ """
@@ -499,7 +500,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
@@ -523,7 +524,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """
@@ -534,7 +535,7 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
             return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     def handleUpload(self, file):
         """
         Upload a file from disk.
