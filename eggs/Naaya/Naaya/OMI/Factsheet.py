@@ -179,6 +179,7 @@ def form_validation (mandatory_fields, REQUEST, **kwargs):
                 has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
+
     return not has_errors
 
 class Factsheet(CatalogAware, Folder):
@@ -262,10 +263,12 @@ class Factsheet(CatalogAware, Folder):
         from FactsheetComment import manage_addComment
         if REQUEST.form.has_key('add_comment'):
             form_valid = form_validation(mandatory_fields_comment, REQUEST, **REQUEST.form)
-            if form_valid:
+            captcha_error = self.captcha_error(REQUEST)
+            if form_valid and not captcha_error:
                manage_addComment(self, REQUEST.get('parent_name'), REQUEST.form)
                return REQUEST.RESPONSE.redirect('%s?page=4' % self.absolute_url())
             REQUEST.set('comment', REQUEST.get('comment'))
+            REQUEST.set('captcha_error', True)
         return self._index_html(REQUEST)
 
     comment_form = PageTemplateFile('zpt/comment', globals())
@@ -429,5 +432,12 @@ class Factsheet(CatalogAware, Folder):
     def canManageFactsheet(self):
         """ Check the permissions to edit/delete factsheets """
         return checkPermission(MANAGE_FACTSHEET, self)
+
+    def captcha_error(self, REQUEST):
+        if not self.checkPermissionSkipCaptcha():
+            _contact_word = REQUEST.get('contact_word', '')
+            return self.validateCaptcha(_contact_word, REQUEST)
+        return None
+
 
 InitializeClass(Factsheet)
