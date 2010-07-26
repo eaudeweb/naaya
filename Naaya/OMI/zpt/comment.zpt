@@ -1,4 +1,23 @@
 <form metal:define-macro="form" action="" method="post">
+	<p class="message-error" tal:define="captcha_error python:request.has_key('captcha_error')"
+		tal:condition="captcha_error" i18n:translate="">
+			The word you typed does not match the one shown in the image. Please try again.
+	</p>
+	<tal:block condition="not:here/checkPermissionSkipCaptcha">
+		<span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
+		<tal:block condition="not:here/recaptcha_is_present">
+			<div>
+				<img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+			</div>
+			<div>
+				<label for="contact_word"><span i18n:translate="">Word verification</span></label>
+				<input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
+				<em i18n:translate="">please type the word you see in the above picture.</em>
+			</div>
+		</tal:block>
+	</tal:block>
+
+	<br/>
 	<div class="message-error" tal:condition="python:request.has_key('request_error')">
 		Please fill in all the mandatory fields!
 	</div>
