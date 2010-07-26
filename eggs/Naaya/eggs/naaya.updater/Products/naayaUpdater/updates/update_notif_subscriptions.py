@@ -23,10 +23,9 @@
 #Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
-from DateTime import DateTime
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.NotificationTool.interfaces import \
     ISubscriptionContainer
 from Products.NaayaCore.NotificationTool.NotificationTool import \
@@ -37,7 +36,7 @@ class UpdateNotifSubscriptions(UpdateScript):
     id = 'update_notif_subscriptions'
     title = 'Migrate storage of notification subscriptions'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Feb 25, 2010')
+    creation_date = 'Feb 25, 2010'
     authors = ['Alex Morega']
     #priority = PRIORITY['LOW']
     description = "Migrates from central notifications index to annotations."

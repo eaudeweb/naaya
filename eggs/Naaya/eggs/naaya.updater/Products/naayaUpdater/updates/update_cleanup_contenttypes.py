@@ -17,7 +17,7 @@
 #
 # Cornel Nitu, Eau de Web
 
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateContentType(UpdateScript):
     """
@@ -28,7 +28,7 @@ class UpdateContentType(UpdateScript):
     id = 'update_cleanup_contenttypes'
     title = 'Cleanup contenttypes'
     #authors = ['Cornel Nitu']
-    #creation_date = DateTime('Feb 11, 2010')
+    #creation_date = 'Feb 11, 2010'
     #priority = PRIORITY['LOW']
     description = 'Cleans portal contenttypes.'
 

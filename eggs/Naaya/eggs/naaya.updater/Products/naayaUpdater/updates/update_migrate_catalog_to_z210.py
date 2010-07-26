@@ -21,14 +21,13 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.Naaya.NyFolder import NyFolder
 from Products.NaayaBase.NyContentType import NyContentType
 
@@ -37,7 +36,7 @@ class MigrateCatalog(UpdateScript):
     id = 'migrate_catalog2z210'
     title = 'Migrate catalogs to Zope 2.10'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Aug 27, 2009')
+    creation_date = 'Aug 27, 2009'
     authors = ['David Batranu']
     priority = PRIORITY['HIGH']
     description = ('Updates catalogs to Zope 2.10.'

@@ -22,14 +22,13 @@
 from os.path import join
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.LayoutTool import Template
 from Products.Naaya.managers.skel_parser import skel_parser
 
@@ -39,7 +38,7 @@ class UpdateExample(UpdateScript):
     id = 'update_standard_template'
     title = 'Update to standard_template'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Dec 14, 2009')
+    creation_date = 'Dec 14, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Adds standard_template and renames old site_header and site_footer'

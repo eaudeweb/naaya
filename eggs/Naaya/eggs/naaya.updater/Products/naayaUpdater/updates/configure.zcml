@@ -8,4 +8,222 @@
     component=".update_layout.UpdateLayout"
     permission="zope2.ViewManagementScreens" />
 
+  <utility
+    name="anonymous_notification.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_add_anonymous_notification.UpdateAddAnonymousNotification"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="forum.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_add_forum.UpdateAddForum"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="analytics.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_analytics.AddStatisticsTool"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="contenttypes.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_cleanup_contenttypes.UpdateContentType"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="css.update_clean"
+    provides="..interfaces.IUpdateScript"
+    component=".update_cleanup.UpdateCSS"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="languages.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_content_languages.UpdateContentLanguages"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="unicode.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_convert_to_unicode.UpdateConvertToUnicode"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="css.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_css.UpdateCSS"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="schema.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_dynamicprop2schema.UpdateDynamicProp2Schema"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="editor.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_editorv2.UpdateExample"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="geomap.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_empty_properties_for_geo_map.UpdateLandscapeType"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="login.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_fix_login.UpdateExample"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="forms.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_forms.UpdateForms"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="geocontent.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_geotagged_content.UpdateGeotaggedContent"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="imagecontainer.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_imagecontainer.UpdateImageContainer"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="jquery.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_jquery.UpdateJquery"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="languages_box.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_languages_box.UpdateLanguagesBox"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="css.update_custom_objects"
+    provides="..interfaces.IUpdateScript"
+    component=".update_list_custom_objects.UpdateCSS"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="localizer.update_data"
+    provides="..interfaces.IUpdateScript"
+    component=".update_localizer_data.UpdateScript"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="localizer.update_strings"
+    provides="..interfaces.IUpdateScript"
+    component=".update_localizer_strings.UpdateLocalizerStrings"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="sections.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_main_sections.UpdateMainSections"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="geomap.update_mapengines"
+    provides="..interfaces.IUpdateScript"
+    component=".update_map_engines.UpdateMapEngines"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="catalog.update_migration"
+    provides="..interfaces.IUpdateScript"
+    component=".update_migrate_catalog_to_z210.MigrateCatalog"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="eggs.update_migration"
+    provides="..interfaces.IUpdateScript"
+    component=".update_migrate_to_eggs.UpdateMigrateToEggs"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="subscriptions.update_notifications"
+    provides="..interfaces.IUpdateScript"
+    component=".update_notif_subscriptions.UpdateNotifSubscriptions"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="notification_tool.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_notification_tool.UpdateNotificationTool"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="portlet_layout.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_portlet_layout.UpdateGeotaggedContent"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="rdf_calendar.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_rdf_calendar.UpdateRDFCalendar"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="contenttypes.update_reinstall"
+    provides="..interfaces.IUpdateScript"
+    component=".update_reinstall_contenttypes.UpdateReinstallContenttypes"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="obsoletes.remove"
+    provides="..interfaces.IUpdateScript"
+    component=".update_remove_obsoletes.UpdateRemoveObsoletes"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="schema.update_titles"
+    provides="..interfaces.IUpdateScript"
+    component=".update_schema_titles.UpdateExample"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="portal_schemas.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_schemas.UpdatePortalSchemas"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="selection_lists.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_selection_lists.UpdateSelectionLists"
+    permission="zope2.ViewManagementScreens" />
+
+<!--
+  <utility
+    name="semide.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_semide_sites.UpdateSemideSites"
+    permission="zope2.ViewManagementScreens" />
+-->
+
+  <utility
+    name="standard_template.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_standard_template.UpdateExample"
+    permission="zope2.ViewManagementScreens" />
+
+  <utility
+    name="talkback.update"
+    provides="..interfaces.IUpdateScript"
+    component=".update_tbcons.UpdateTalkBackCons"
+    permission="zope2.ViewManagementScreens" />
+
 </configure>

@@ -3,7 +3,6 @@ import os
 from copy import deepcopy
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.StandardCacheManagers.RAMCacheManager import RAMCacheManager
 from AccessControl import ClassSecurityInfo
@@ -13,7 +12,7 @@ from ZODB.broken import rebuild
 import transaction
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.SEMIDE.SEMIDESite import SEMIDESite
 import Products.SEMIDE
 from Products.Naaya import NySite as NySite_module
@@ -42,7 +41,7 @@ class UpdateSemideSites(UpdateScript):
     """ Update Semide Sites  """
     id = 'update_semide_sites'
     title = 'Update Semide Sites'
-    creation_date = DateTime('Mar 31, 2010')
+    creation_date = 'Mar 31, 2010'
     authors = ['Alexandru Plugaru']
     priority = PRIORITY['HIGH']
     description = 'Updates all semide sites for compatibility with Naaya trunk version'

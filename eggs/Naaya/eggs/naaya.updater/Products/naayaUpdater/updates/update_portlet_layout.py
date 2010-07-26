@@ -23,7 +23,7 @@
 #Zope imports
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 
 class UpdateGeotaggedContent(UpdateScript):

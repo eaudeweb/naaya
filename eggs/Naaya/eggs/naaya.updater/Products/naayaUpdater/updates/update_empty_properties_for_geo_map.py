@@ -21,21 +21,20 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateLandscapeType(UpdateScript):
     """ Update script  """
     id = 'update_empty_properties_for_geo_map'
     title = 'Update landscape_type and administrative_level from "" to "Unspecified"'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Feb 25, 2010')
+    creation_date = 'Feb 25, 2010'
     authors = ['Valentin Dumitru']
     #priority = PRIORITY['LOW']
     description = 'Update landscape_type and administrative_level from "" to "Unspecified"'

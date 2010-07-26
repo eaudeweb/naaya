@@ -22,11 +22,10 @@
 from decimal import Decimal
 
 #Zope imports
-from DateTime import DateTime
 from Products.Localizer.LocalAttributes import LocalAttribute
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 try:
@@ -40,7 +39,7 @@ class UpdateGeotaggedContent(UpdateScript):
     """ Update reinstall content types script  """
     id = 'update_geotagged_content'
     title = 'Update geotagged content'
-    creation_date = DateTime('Jul 10, 2009')
+    creation_date = 'Jul 10, 2009'
     authors = ['Alex Morega']
     description = 'Converts geo data storage'
 

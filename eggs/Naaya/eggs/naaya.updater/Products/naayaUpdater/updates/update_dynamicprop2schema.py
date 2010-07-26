@@ -1,6 +1,6 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateDynamicProp2Schema(UpdateScript):
     """ """

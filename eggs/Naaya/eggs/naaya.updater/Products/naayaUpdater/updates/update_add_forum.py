@@ -21,24 +21,23 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateAddForum(UpdateScript):
     """ Update add forum script  """
     id = 'update_add_forum'
     title = 'Update add forum to all folders'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Sep 17, 2009')
+    creation_date = 'Sep 17, 2009'
     authors = ['Andrei Laza']
     #priority = PRIORITY['LOW']
-    description = 'Adds the Naaya forum to as subobject to all folders and subsequent added folders.'
+    description = 'Adds the Naaya forum as subobject to all folders and subsequent added folders.'
     #dependencies = []
     #categories = []
 

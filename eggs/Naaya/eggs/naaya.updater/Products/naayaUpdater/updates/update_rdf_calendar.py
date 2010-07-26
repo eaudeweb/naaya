@@ -3,7 +3,7 @@ import sys
 
 from AccessControl import ClassSecurityInfo
 
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 
 try:
