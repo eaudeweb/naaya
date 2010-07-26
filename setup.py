@@ -1,10 +1,12 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.1'
+NAME = 'edw.productsinfo'
+PATH = NAME.split('.') + ['version.txt']
+VERSION = open(os.path.join(*PATH)).read().strip()
 
-setup(name='edw.productsinfo',
-      version=version,
+setup(name=NAME,
+      version=VERSION,
       description="Extract Zope Products info",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),

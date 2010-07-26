@@ -1,17 +1,34 @@
 """ Browser Views
 """
-import Zope2
 import simplejson as json
-from Products.Five.browser import BrowserView
+from zope.publisher.browser import BrowserPage
+from zope.publisher.browser import NotFound
 
-class View(BrowserView):
+class View(BrowserPage):
     """Provides information about installed products
     in Json format, required manager authentication
     """
-    def __call__(self, **kwargs):
-        # check for installed products
+
+    @property
+    def token(self):
+        """ Authentication token
+        """
+        return getattr(self.context, 'edw-productsinfo-key', None)
+
+    def publishTraverse(self, request, name):
+        token = self.token
+        if not token:
+            return json.dumps({
+                'error': 'Unauthorized: Token not set on this instance'
+            })
+
+        if self.token != name:
+            return json.dumps({
+                'error': 'Invalid authentication token'
+            })
+
         products=[]
-        products_folder = Zope2.app().Control_Panel.Products
+        products_folder = self.context.Control_Panel.Products
         for product_name in products_folder.objectIds():
             product = products_folder._getOb(product_name, None)
             if(product is not None and product.thisIsAnInstalledProduct == 1):
@@ -20,3 +37,6 @@ class View(BrowserView):
                     'version': product.version
                 })
         return json.dumps(products)
+
+    def __call__(self, **kwargs):
+        raise NotFound(self.context, 'products.info', self.request)

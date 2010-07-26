@@ -1,13 +1,16 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:five="http://namespaces.zope.org/five"
   i18n_domain="edw">
+
+  <five:registerPackage package="." initialize=".initialize" />
 
   <browser:page
     name="products.info"
     for=".ISite"
     class=".browser.View"
-    permission="zope2.ViewManagementScreens"
+    permission="zope2.View"
     />
 
 </configure>
