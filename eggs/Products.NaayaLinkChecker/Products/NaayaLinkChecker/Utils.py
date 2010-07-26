@@ -24,7 +24,7 @@ from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, CData
 from Queue import Queue
 import re
 import string
-from whrandom import choice
+from random import choice
 
 # Zope imports
 from DateTime import DateTime
@@ -119,10 +119,11 @@ _absolute_url_regex = _get_absolute_url_regex()
 
 
 def get_links_from_text(text):
-    """Extract all absolute URLs from text.
+    """ Extract all absolute URLs from text.
 
-        This functions tries as much as possible to be compliant with RFC 3986 (Uniform Resource Identifier (URI): Generic Syntax).
+    This functions tries as much as possible to be compliant with RFC 3986 (Uniform Resource Identifier (URI): Generic Syntax).
 
+        >>> from Products.NaayaLinkChecker.Utils import get_links_from_text
         >>> get_links_from_text(' http://www.eaudeweb.ro ') == ['http://www.eaudeweb.ro']
         True
         >>> get_links_from_text(' http://dorel@www.eaudeweb.ro ') == ['http://dorel@www.eaudeweb.ro']
@@ -141,7 +142,9 @@ def get_links_from_text(text):
         True
         >>> get_links_from_text(' http://www.emag.ro/hdd/seagate/filter/buffer-(mb)-v153,32-i2102/interfata-v149,s-ata-i3814/last/f3f1mn ') == ['http://www.emag.ro/hdd/seagate/filter/buffer-(mb)-v153,32-i2102/interfata-v149,s-ata-i3814/last/f3f1mn']
         True
+
     """
+
     return _absolute_url_regex.findall(text)
 
 

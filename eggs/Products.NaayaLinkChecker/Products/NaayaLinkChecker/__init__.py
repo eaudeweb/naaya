@@ -21,7 +21,7 @@
 
 
 import LinkChecker
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 
 def initialize(context):
     """ Initialize the LinkChecker product"""
