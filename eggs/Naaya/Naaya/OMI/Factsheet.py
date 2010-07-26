@@ -224,6 +224,7 @@ class Factsheet(CatalogAware, Folder):
         """ """
         return self.manage_addComment(self.REQUEST)
 
+    security.declareProtected(view, 'model_keywords')
     def model_keywords(self):
         """ concatenate all searchable fields in one field """
         keywords = []
@@ -231,10 +232,12 @@ class Factsheet(CatalogAware, Folder):
             keywords.append(getattr(self, field, ''))
         return u' '.join(keywords)
 
+    security.declareProtected(view, 'getPictures')
     def getPictures(self):
         """ return the available emodel pictures """
         return self.objectValues('File')
 
+    security.declareProtected(view, 'getComments')
     def getComments(self, parent_name):
         """ return the available comments"""
         output=[]
@@ -243,12 +246,14 @@ class Factsheet(CatalogAware, Folder):
                 output.append(element)
         return sortObjsList(output, 'created',False)
 
+    security.declareProtected(MANAGE_FACTSHEET, 'removePicture')
     def removePicture(self, pic_id, REQUEST):
         """ Remove a picture"""
         self.manage_delObjects((pic_id))
         if REQUEST:
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
+    security.declareProtected(MANAGE_FACTSHEET, 'deleteObject')
     def deleteObject(self, REQUEST):
         """ Remove an object"""
         id=REQUEST.form.get('object_id')
@@ -274,7 +279,7 @@ class Factsheet(CatalogAware, Folder):
     comment_form = PageTemplateFile('zpt/comment', globals())
     _edit_html = PageTemplateFile('zpt/factsheet', globals())
 
-    security.declareProtected(view, 'edit_html')
+    security.declareProtected(MANAGE_FACTSHEET, 'edit_html')
     def edit_html (self, REQUEST):
         """ Method for editing existing Factsheets - existing object """
         context = self
@@ -419,14 +424,6 @@ class Factsheet(CatalogAware, Folder):
     def is_entitled(self, REQUEST):
         session = REQUEST.SESSION
         return (session.get('authentication_email','') == self.contact_email and session.get('authentication_password','') == self.password) or self.canManageFactsheet()
-
-    def set_credentials(self, REQUEST):
-        session = REQUEST.SESSION
-        if REQUEST.form.has_key('authenticate'):
-            if form_validation(mandatory_fields_authentication, REQUEST, **REQUEST.form):
-                session.set('authentication_email', REQUEST.get('authentication_email'))
-                session.set('authentication_password', REQUEST.get('authentication_password'))
-                return REQUEST.RESPONSE.redirect('edit_html')
 
     security.declarePublic('canManageFactsheet')
     def canManageFactsheet(self):
