@@ -10,7 +10,11 @@ from DateTime import DateTime
 from zope.annotation import IAnnotations
 
 #Naaya imports
-from naaya.content.bfile import bfile_item
+try:
+    from naaya.content.bfile import bfile_item
+except ImportError, err:
+    bfile_item = None
+
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 #
 # Export / Import
@@ -309,6 +313,9 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
     def _update(self, portal):
         """ Run updater
         """
+        if not bfile_item:
+            raise ImportError('naaya.content.bfile is not installed')
+
         ftool = portal.portal_forms
         templates = set(['file_add', 'file_edit', 'file_index'])
         customized = templates.intersection(ftool.objectIds())
