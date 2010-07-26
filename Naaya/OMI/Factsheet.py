@@ -256,6 +256,7 @@ class Factsheet(CatalogAware, Folder):
 
     _index_html = PageTemplateFile('zpt/factsheet_view', globals())
 
+    security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ default view """
         from FactsheetComment import manage_addComment
