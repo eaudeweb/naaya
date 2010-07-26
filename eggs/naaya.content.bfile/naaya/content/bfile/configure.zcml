@@ -6,4 +6,6 @@
 
   <adapter factory=".adapters.BFileZipAdapter" />
 
+  <include package=".updates" />
+
 </configure>
