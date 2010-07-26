@@ -60,11 +60,7 @@ class CheckerThread(Thread):
                     continue
             except Empty:
                 break
-            try:
-                result = self.readhtml(url)
-            except AttributeError:
-                #in Python 2.3 socket doesn't have sslerror attribute
-                result = "SSL error."
+            result = self.readhtml(url)
             self.logresults[url] = str(result)
 
     def readhtml(self, url):
