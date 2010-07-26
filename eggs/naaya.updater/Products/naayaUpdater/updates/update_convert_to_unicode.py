@@ -21,21 +21,20 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateConvertToUnicode(UpdateScript):
     """ Update object attributes to unicode"""
     id = 'update_convert_to_unicode'
     title = 'Update object attributes to unicode'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Jan 20, 2010')
+    creation_date = 'Jan 20, 2010'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Updates object attributes to unicode if needed. Currently only works for Naaya Local Channel `title` and Naaya Portlet `_text`'

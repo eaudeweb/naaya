@@ -22,14 +22,13 @@
 import re
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 
 mapping = {'METATYPE_NYNEWS': "'Naaya News'",
@@ -46,7 +45,7 @@ class UpdateMigrateToEggs(UpdateScript):
     id = 'update_migrate_to_eggs'
     title = 'Migrate portals to eggs'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Oct 14, 2009')
+    creation_date = 'Oct 14, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Migrates existing portals to eggs. Currently it replaces get_constant with the actual meta_type'

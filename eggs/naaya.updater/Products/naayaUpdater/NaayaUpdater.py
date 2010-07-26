@@ -55,7 +55,7 @@ class NaayaUpdater(Folder):
         return script.__of__(self)
 
     # ##########################################################################
-    # XXX Move folowing to utils
+    # XXX Move following to utils
     # ##########################################################################
     def get_portal_path(self, portal):
         """

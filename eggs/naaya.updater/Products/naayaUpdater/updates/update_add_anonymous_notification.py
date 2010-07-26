@@ -21,14 +21,13 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 try:
     from naaya.Products.NaayaCore.AnonymousNotification.AnonymousNotification import AnonymousNotification
 except:
@@ -39,7 +38,7 @@ class UpdateAddAnonymousNotification(UpdateScript):
 
     id = 'update_add_anonymousNotification'
     title = 'Update add AnonymousNotification portal tool'
-    creation_date = DateTime('Mar 09, 2010')
+    creation_date = 'Mar 09, 2010'
     authors = ['Cornel Nitu']
     priority = PRIORITY['LOW']
     description = 'Adds the AnonymousNotification portal tool'

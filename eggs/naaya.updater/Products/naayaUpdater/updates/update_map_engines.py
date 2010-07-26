@@ -1,14 +1,13 @@
-from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateMapEngines(UpdateScript):
     """ Update script  """
     id = 'update_map_engines'
     title = 'Update properties of portal_map'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('May 26, 2010')
+    creation_date = 'May 26, 2010'
     authors = ['ALex Morega']
     #priority = PRIORITY['LOW']
     description = 'Rename configuration parameters and calculate icon sizes'

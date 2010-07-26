@@ -28,7 +28,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
 from Products.NaayaCore.LayoutTool.Template import Template
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser

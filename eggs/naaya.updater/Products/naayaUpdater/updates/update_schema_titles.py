@@ -1,11 +1,10 @@
 #Zope imports
-from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Persistence.mapping import PersistentMapping
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.utils import path_in_site
 from naaya.core.zope2util import exorcize_local_properties
 
@@ -13,7 +12,7 @@ class UpdateExample(UpdateScript):
     """ Convert any Schema widget title from LocalProperty to normal string """
     id = 'update_schema_titles'
     title = 'Convert schema widget titles to string'
-    creation_date = DateTime('Jun 8, 2010')
+    creation_date = 'Jun 8, 2010'
     authors = ['Alex Morega']
     description = ("Convert any Schema widget title from "
                    "LocalProperty to normal string")

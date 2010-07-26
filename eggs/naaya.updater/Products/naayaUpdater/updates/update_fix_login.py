@@ -21,7 +21,6 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -29,14 +28,14 @@ from OFS.Folder import Folder
 from ZPublisher import BeforeTraverse
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateExample(UpdateScript):
     """ Fix portals with broken logins because of ChangeNotification """
     id = 'update_fix_login'
     title = 'Fix login on portals added with ChangeNotification present'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Dec 2, 2009')
+    creation_date = 'Dec 2, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Fix portals that have broken logins because of ChangeNotification'

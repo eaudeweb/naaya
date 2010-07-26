@@ -21,14 +21,13 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 
 
@@ -37,7 +36,7 @@ class UpdateExample(UpdateScript):
     id = 'update_editorv2'
     title = 'Update NaayaEditorTool.v2'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Dec 16, 2009')
+    creation_date = 'Dec 16, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Updates Naaya Editor Tool to latest version. Removes and adds portal_editor. Catalogs Naaya Photo Folder objects.'

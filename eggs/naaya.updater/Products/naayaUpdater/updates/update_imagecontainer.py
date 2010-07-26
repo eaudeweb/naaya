@@ -17,17 +17,16 @@
 #
 # Cornel Nitu, Eau de Web
 
-from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateImageContainer(UpdateScript):
     """ Update add forum script  """
     id = 'update_imagecontainer'
     title = 'Update imagecontainer portal property'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Jul 23, 2010')
+    creation_date = 'Jul 23, 2010'
     authors = ['Cornel Nitu']
     #priority = PRIORITY['LOW']
     description = 'Updates the imageContainer propery on portal'

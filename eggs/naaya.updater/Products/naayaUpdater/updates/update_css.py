@@ -29,11 +29,10 @@ import simplejson as json
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from DateTime import DateTime
 from App.ImageFile import ImageFile
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
@@ -48,7 +47,7 @@ class UpdateCSS(UpdateScript):
     id = 'update_css'
     title = 'Update css'
     authors = ['Alex Morega']
-    creation_date = DateTime('Nov 9, 2009')
+    creation_date = 'Nov 9, 2009'
 
     css_scheme_names = ['scheme_style', 'style', 'style_common']
     css_layout_names = ['common_css', 'style_css',
