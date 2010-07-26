@@ -133,7 +133,7 @@ class Participants(SimpleItem):
         """ """
         attendees = self._get_attendees()
         site = self.getSite()
-        key = None
+
         if sort_on == 'o':
             key = lambda x: getUserOrganization(site, x)
         elif sort_on == 'name':
@@ -144,10 +144,15 @@ class Participants(SimpleItem):
             key = lambda x: x
         elif sort_on == 'role':
             key = lambda x: attendees[x]
+        else:
+            key = None
 
-        if key is None:
-            return attendees.keys()
-        return sorted(attendees.keys(), key=key)
+        attendee_uids = attendees.keys()
+
+        if key is not None:
+            attendee_uids.sort(key=key)
+
+        return attendee_uids
 
     def getAttendeeInfo(self, uid):
         """ """

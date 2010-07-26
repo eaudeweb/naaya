@@ -226,9 +226,7 @@ class NyMeeting(NyContentData, NyFolder):
     minutes_icon = 'misc_/NaayaContent/Minutes.png'
     survey_icon = 'misc_/NaayaContent/survey.gif'
 
-    def manage_options(self):
-        """ """
-        return NyFolder.manage_options
+    manage_options = NyFolder.manage_options
 
     security = ClassSecurityInfo()
 
@@ -365,16 +363,17 @@ class NyMeeting(NyContentData, NyFolder):
         """ """
         current_user = REQUEST.AUTHENTICATED_USER.getUserName()
         roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
-        ret = 0
-        if WAITING_ROLE in roles:
-            ret = 1
-        if PARTICIPANT_ROLE in roles:
-            ret = 1
-        if ADMINISTRATOR_ROLE in roles:
-            ret = 2
+
         if 'Manager' in roles:
-            ret = 2
-        return ret
+            return 2
+        elif ADMINISTRATOR_ROLE in roles:
+            return 2
+        elif PARTICIPANT_ROLE in roles:
+            return 1
+        elif WAITING_ROLE in roles:
+            return 1
+        else:
+            return 0
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
