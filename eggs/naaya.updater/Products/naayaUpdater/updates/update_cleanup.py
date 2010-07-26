@@ -18,11 +18,8 @@
 # Alex Morega, Eau de Web
 
 
-#Zope imports
-from DateTime import DateTime
-
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateCSS(UpdateScript):
     """
@@ -33,7 +30,7 @@ class UpdateCSS(UpdateScript):
     id = 'update_cleanup'
     title = 'Cleanup'
     #authors = ['Alex Morega']
-    #creation_date = DateTime('Nov 12, 2009')
+    #creation_date = 'Nov 12, 2009'
 
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))

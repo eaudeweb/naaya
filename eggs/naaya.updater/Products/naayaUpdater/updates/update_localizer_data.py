@@ -1,18 +1,17 @@
 #Zope imports
-from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Persistence.mapping import PersistentMapping
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.utils import force_to_unicode
 
 class UpdateExample(UpdateScript):
     """ Update Localizer data structures  """
     id = 'update_localizer_data'
     title = 'Update Localizer data structures'
-    creation_date = DateTime('Jun 3, 2010')
+    creation_date = 'Jun 3, 2010'
     authors = ['Alex Morega']
     description = ("Update internal data structures of Localizer's "
                    "message catalogue")

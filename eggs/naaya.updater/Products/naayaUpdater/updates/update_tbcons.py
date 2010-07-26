@@ -23,14 +23,13 @@ import re
 from copy import copy
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 try:
     from Products.NaayaContent.NyTalkBackConsultation.invitations import InvitationsContainer
@@ -42,7 +41,7 @@ class UpdateTalkBackCons(UpdateScript):
     id = 'update_tbcons'
     title = ' TalkBack Consultation update'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Oct 15, 2009')
+    creation_date = 'Oct 15, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Updates TalkBack Consultation objects to the new version.'

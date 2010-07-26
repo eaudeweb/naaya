@@ -21,14 +21,13 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from OFS.Folder import Folder
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsTool
 
 class AddStatisticsTool(UpdateScript):
@@ -36,7 +35,7 @@ class AddStatisticsTool(UpdateScript):
     id = 'update_portal_statistics'
     title = 'Update portal statistics tool'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Dec 10, 2009')
+    creation_date = 'Dec 10, 2009'
     authors = ['Cornel Nitu']
     #priority = PRIORITY['LOW']
     description = 'Creates the portal statistics tool'

@@ -22,7 +22,6 @@
 import traceback
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -37,14 +36,14 @@ except:
 
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateRemoveObsoletes(UpdateScript):
     """ Removes obsolete objects from portal root """
     id = 'update_remove_obsoletes'
     title = 'Remove obsolete object instances'
     #meta_type = 'Naaya Update Script'
-    creation_date = DateTime('Aug 25, 2009')
+    creation_date = 'Aug 25, 2009'
     authors = ['David Batranu']
     #priority = PRIORITY['LOW']
     description = 'Deletes obsolete object instances from portal root. Currently lists broken instances' #TODO: Extend to portal properties

@@ -28,7 +28,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateReinstallContenttypes(UpdateScript):
     """ Update reinstall content types script  """

@@ -29,11 +29,10 @@ import simplejson as json
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from DateTime import DateTime
 from App.ImageFile import ImageFile
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
@@ -49,7 +48,7 @@ class UpdateCSS(UpdateScript):
     title = 'List custom objects'
     authors = ['Alex Morega']
     description = "Shows objects that have been customized (at the moment, just folders with custom indexes)"
-    creation_date = DateTime('Nov 26, 2009')
+    creation_date = 'Nov 26, 2009'
 
     def _update(self, portal):
         self.log.debug(physical_path(portal))

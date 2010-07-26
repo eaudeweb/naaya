@@ -22,19 +22,18 @@
 #Python imports
 
 #Zope imports
-from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateContentLanguages(UpdateScript):
     """ Update content languages script  """
     id = 'content_languages'
     title = 'Content languages'
-    creation_date = DateTime('Jul 1, 2009')
+    creation_date = 'Jul 1, 2009'
     authors = ['Alex Morega']
 
     security = ClassSecurityInfo()

@@ -22,18 +22,18 @@
 
 #Python
 import re
-from DateTime import DateTime
+
 #Zope
 from AccessControl import ClassSecurityInfo
 
 #Naaya
-from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
+from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateJquery(UpdateScript):
     """ Replace script tags in standard_template """
     id = 'update_jquery'
     title = 'Update jQuery'
-    creation_date = DateTime('May 6, 2010')
+    creation_date = 'May 6, 2010'
     authors = ['Alexandru Plugaru',]
     priority = PRIORITY['LOW']
     description = 'Replaces script tag with jquery from local to Google storage'
