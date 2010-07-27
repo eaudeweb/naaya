@@ -1014,7 +1014,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 python:here.portal_map.render_object_map(here.geo_location)"/>
         """
 
-        if not geo_location:
+        if not geo_location or geo_location.missing_lat_lon:
             return ''
 
         return self._object_index_map(coord_json=geo_as_json(geo_location))
