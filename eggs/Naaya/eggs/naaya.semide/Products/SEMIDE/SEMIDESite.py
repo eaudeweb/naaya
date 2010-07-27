@@ -2441,15 +2441,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
 
-        # See getNewsListing or similar search methods
-        # XXX Cleanup
-        if search_method == 'getNewsListing':
-            list_results = results
-        else:
-            page_info, list_results = results
+        objects = [x.getObject() for x in results[
+            int(form.get('ps_start', 0)):int(form.get('items', 10))]]
 
-        objects = list_results[2]
-        objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), objects)
     search_rdf = content_type_xml(cachable(search_rdf))
@@ -2487,9 +2481,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             return self.getSyndicationTool().syndicateAtom(self, [])
 
         # See getNewsListing or similar search methods
-        pag_info, list_results = results
-        objects = list_results[2]
-        objects = [x[2] for x in objects]
+        objects = [x.getObject() for x in results[
+            int(form.get('ps_start', 0)):int(form.get('items', 10))]]
         return self.getSyndicationTool().syndicateAtom(self, objects)
     search_atom = content_type_xml(cachable(search_atom))
 
