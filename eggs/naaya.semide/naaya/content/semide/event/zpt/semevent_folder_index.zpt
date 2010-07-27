@@ -188,26 +188,30 @@
 <tal:block define="objects results_paginator; num_per_page python: int(items)">
   <metal:block use-macro="here/macro_utils/macros/paginator" />
 </tal:block>
-<div class="xmlExportButtons" tal:define="query request/form;
-    dummy python:query.setdefault('skey', 'start_date');
-    dummy python:query.setdefault('rkey', 1);
-    dummy python:query.setdefault('search_by', 'events');
-    dummy python:query.setdefault('ps_start', request.get('start', 0));
-    dummy python:query.setdefault('p_context', here.absolute_url(1));
-    query_str python:here.utUrlLibEncode(query);
-    atom_link python:'?'.join(('search_atom', query_str));
-    rdf_link python:'?'.join(('search_rdf', query_str));">
-
-  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
-  <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
-
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-
-  </tal:block>
-</div>
 </tal:block>
   <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
     [<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
   </p>
   </metal:block>
+<metal:block fill-slot="folder-feeds">
+    <div class="xmlExportButtons" tal:define="query request/form;
+        dummy python:query.setdefault('skey', 'start_date');
+        dummy python:query.setdefault('rkey', 1);
+        dummy python:query.setdefault('search_by', 'events');
+        dummy python:query.setdefault('ps_start', request.get('page', 0));
+        dummy python:query.setdefault('p_context', here.absolute_url(1));
+        dummy python:query.setdefault('items', request.get('items', 10));
+        query_str python:here.utUrlLibEncode(query);
+        atom_link python:'?'.join(('search_atom', query_str));
+        rdf_link python:'?'.join(('search_rdf', query_str));">
+
+      <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
+      <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
+
+      <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
+
+      </tal:block>
+    </div>
+</metal:block>
+
 </metal:block>
