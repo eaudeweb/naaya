@@ -33,8 +33,10 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Semide News """
-        addNySemEvent(self._portal().info, id='doc1', title='doc1', lang='en', start_date="12/12/2010", coverage="all")
-        addNySemEvent(self._portal().info, id='doc1_fr', title='doc1_fr', lang='fr', start_date="12/11/2000", coverage="all")
+        addNySemEvent(self._portal().info, id='doc1', title='doc1', lang='en',
+                      start_date="12/12/2010", coverage="all", archive=1)
+        addNySemEvent(self._portal().info, id='doc1_fr', title='doc1_fr',
+                lang='fr', start_date="12/11/2000", coverage="all", archive=1)
         transaction.commit()
 
         docs = self._portal().getCatalogedObjectsCheckView(meta_type=[config['meta_type']])
