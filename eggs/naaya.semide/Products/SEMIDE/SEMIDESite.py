@@ -705,6 +705,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         results = []
         gz = kwargs.get('gz', []) #get country list
+        if skey not in ('news_date', ):
+            skey = 'news_date'
         try:    ps_start = int(ps_start)
         except: ps_start = 0
         catalog_tool = self.getCatalogTool()
@@ -857,6 +859,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         gz = kwargs.get('gz', []) #get country list
         try:    ps_start = int(ps_start)
         except: ps_start = 0
+        if skey not in ('start_date', ):
+            skey = 'start_date'
         catalog_tool = self.getCatalogTool()
         search_args = dict(
             meta_type=[METATYPE_NYSEMEVENT],
@@ -2473,7 +2477,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             if not req_value:
                 continue
             form.setdefault(value, req_value)
-
         try:
             results = search_method(**form)
         except TypeError, err:
