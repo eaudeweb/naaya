@@ -164,9 +164,12 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    try:
-        month_folder = create_month_folder(self, contributor, schema_raw_data)
-    except:
+    if schema_raw_data.get('archive'):
+        try:
+            month_folder = create_month_folder(self, contributor, schema_raw_data)
+        except:
+            month_folder = self
+    else:
         month_folder = self
     ob = _create_NySemNews_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -210,10 +213,12 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'semnews_manage_add' or l_referer.find('semnews_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'semnews_add_html':
+        elif 'semnews_add_html' in l_referer:
             self.setSession('referer', self.absolute_url())
-            return ob.object_submitted_message(REQUEST)
-            REQUEST.RESPONSE.redirect('%s/semnews_add_html' % self.absolute_url())
+            response = ob.object_submitted_message(REQUEST)
+            if schema_raw_data.get('archive'):
+                response = REQUEST.RESPONSE.redirect(self.absolute_url())
+            return response
     return ob.getId()
 
 def importNySemNews(self, param, id, attrs, content, properties, discussion, objects):
