@@ -1,12 +1,51 @@
 Naaya updater
 =============
+Update tool for naaya sites.
 
-Requires cssutils 0.51 (http://distfiles.master.finkmirrors.net/md5/4f2449508f32afb09732c57dfeb3cb44/cssutils-0.51.zip)
+How it works
+------------
+This package will add at start-up a new node in ZODB in the root of your
+Zope instance called naaya_updates (Within ZMI navigate to
+Root folder > naaya_updates). Here you'll find a list of update scripts. These
+are actually zope3 utility components registered trough zcml (see configure.zcml)
+in this package.
 
-A version slightly modified to work with the naayaUpdater is available at
-https://svn.eionet.europa.eu/repositories/Naaya/trunk/Naaya/Third-Party%20Products/cssutils/cssutils/
-in order to use it do a svn checkout of the above link into the site-packages
-folder of your Zope installation.
+Update scripts (utilities)
+--------------------------
+Update scripts are utilities that provides interface IUpdateScript from this
+package. You can write your own utility from scratch or you can reuse the API
+provided in this package
+
+    >>> from Products.naayaUpdater.updates import UpdateScript
+    >>> class MyUpdateScript(UpdateScript):
+    ...     title = 'Update portal title'
+    ...     def _update(self, portal):
+    ...         portal.title = 'Portal new title'
+
+Optionally you can set the following script properties:
+    - description
+    - priority
+    - creation_date
+    - authors
+
+Now all you have to do is to register this script as utility. Within your
+package configure.zcml:
+
+    <configure
+      xmlns="http://namespaces.zope.org/zope"
+      xmlns:zcml="http://namespaces.zope.org/zcml"
+      i18n_domain="naaya">
+
+      <configure zcml:condition="installed Products.naayaUpdater">
+        <utility
+          name="a-new-script.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component="my.package.updates.my_update_script.MyUpdateScript"
+          permission="zope2.ViewManagementScreens" />
+      </configure>
+
+    </configure>
+
 
 Major code changes that require update scripts
 ----------------------------------------------
