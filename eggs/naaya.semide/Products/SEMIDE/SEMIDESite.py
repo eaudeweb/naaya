@@ -849,99 +849,57 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                         res = res + key + '=' + str(p_value) + '&'
         return res
 
-    security.declareProtected(view, 'sorted_events_listing')
-    def sorted_events_listing(self, p_objects=[], skey='', rkey=0):
-        """Return sorted events"""
-        results = []
-        if not skey or skey == 'start_date':
-            p_objects.sort(lambda x,y: cmp(y.start_date, x.start_date) \
-                           or cmp(x.sortorder, y.sortorder))
-            if not rkey: p_objects.reverse()
-            results.extend(p_objects)
-        else:
-            if rkey: rkey=1
-            l_objects = semide_utils.utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
-            results.extend(l_objects)
-        return results
-
-    def _getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
-                         rkey=0, sd='', ed='', p_context=None,
-                         ps_start='', **kwargs):
-        """
-        Returns a list of events
-        """
-        #default data
-        try:    l_archive = self.unrestrictedTraverse(p_context)
-        except: l_archive = None
-
-        #get result
-        if not l_archive:
-            return []
-
-        if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
-            #no criteria then returns the 10 more recent
-            return l_archive.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1)
-
-        r = []
-        query = self.utStrEscapeForSearch(query)
-        l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1, path=\'/\'.join(l_archive.getPhysicalPath())'
-        if et: l_query += ', resource_type=[et]'
-        if es: l_query += ', resource_status=[es]'
-
-        sd = self.utConvertStringToDateTimeObj(sd)
-        ed = self.utConvertStringToDateTimeObj(ed)
-        if sd and ed:
-            l_query += ', resource_date=[sd, ed], resource_date_range=\'minmax\''
-        elif sd:
-            l_query += ', resource_date=sd, resource_date_range=\'min\''
-        elif ed:
-            l_query += ', resource_date=ed, resource_date_range=\'max\''
-
-        if languages: langs = languages
-        else: langs = [self.gl_get_selected_language()]
-        for lang in langs:
-            expr = l_query
-            if gz:
-                lang_name = self.gl_get_language_name(lang)
-                gz_trans = self.getCoverageGlossaryTrans(gz, lang_name)
-                expr += ', coverage_%s=gz_trans' % lang
-            if query: expr += ', objectkeywords_%s=query' % lang
-            expr += ')'
-            r.extend(eval(expr))
-        return r
-
-
     security.declareProtected(view, 'getEventsListing')
     def getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
                          rkey=0, sd='', ed='', p_context=None,
                          ps_start='', **kwargs):
-        """
-        Returns a list of events
-        """
-        res_per_page = kwargs.get('items', 10) or 10
+        """ Returns a list of events """
+        gz = kwargs.get('gz', []) #get country list
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-
-        gz_list = self.utConvertToList(gz)
-        results = []
-        if not gz_list:
-            gz_list = ['']
-        for gz in gz_list:
-            results.extend(self._getEventsListing(query, languages, et, gz, es,
-                            skey, rkey, sd, ed, p_context, ps_start, **kwargs))
-
-        dict = {}
-        for x in results:
-            dict[x.id] = x
-        results = self.get_archive_listing(self.sorted_events_listing(dict.values(), skey, rkey))
-        #batch related
-        batch_obj = batch_utils(res_per_page, len(results[2]), ps_start)
-        if len(results[2]) > 0:
-            paging_informations = batch_obj.butGetPagingInformations()
+        catalog_tool = self.getCatalogTool()
+        search_args = dict(
+            meta_type=[METATYPE_NYSEMEVENT],
+            approved=1,
+            sort_on=skey,
+            sort_order=rkey == '1' and 'descending' or 'ascending'
+        )
+        if query == '' and et == '' and gz == [] and es == '' and sd == '' and ed == '':
+            #no criteria then returns the 10 more recent
+            brains = catalog_tool(**search_args)
         else:
-            paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
-        return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
+            query = self.utStrEscapeForSearch(query)
+            if languages: langs = languages
+            else: langs = [self.gl_get_selected_language()]
+            #Fulltext query
+            for lang in langs:
+                search_args['objectkeywords_' + lang] = query
+            #Geographical coverage
+            if gz:
+                for lang in langs:
+                    for g in gz:
+                        lang_name = self.gl_get_language_name(lang)
+                        gz_trans = self.getCoverageGlossaryTrans(g, lang_name)
+                        search_args['coverage_' + lang] = gz_trans
+            #Type
+            sd = self.utConvertStringToDateTimeObj(sd)
+            ed = self.utConvertStringToDateTimeObj(ed)
+            if sd and ed:
+                search_args['resource_date'] = [sd, ed]
+                search_args['resource_date_range'] = 'minmax'
+            elif sd:
+                search_args['resource_date'] = sd
+                search_args['resource_date_range'] = 'min'
+            elif ed:
+                search_args['resource_date'] = ed
+                search_args['resource_date_range'] = 'max'
+            if et:
+                search_args['resource_type'] = et
+            if es:
+                search_args['resource_status'] = es
+            brains = catalog_tool(**search_args)
 
+        return brains
     security.declareProtected(view, 'getEventsNFP')
     def getEventsNFP(self, query='', languages=[], et='', gz='', es='', skey='', rkey=0, sd='', ed='', p_context=None, ps_start=''):
         """

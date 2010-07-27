@@ -46,6 +46,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -194,9 +195,12 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
     #Creating archive folder
-    try:
-        month_folder = create_month_folder(self, contributor, schema_raw_data)
-    except:
+    if schema_raw_data.get('archive'):
+        try:
+            month_folder = create_month_folder(self, contributor, schema_raw_data)
+        except:
+            month_folder = self
+    else:
         month_folder = self
 
     ob = _create_NySemEvent_object(month_folder, id, contributor)
@@ -242,10 +246,12 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'semevent_manage_add' or l_referer.find('semevent_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'semevent_add_html':
+        elif 'semevent_add_html' in l_referer:
             self.setSession('referer', self.absolute_url())
-            return ob.object_submitted_message(REQUEST)
-            REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+            response = ob.object_submitted_message(REQUEST)
+            if schema_raw_data.get('archive'):
+                response = REQUEST.RESPONSE.redirect(self.absolute_url())
+            return response
     return ob.getId()
 
 def importNySemEvent(self, param, id, attrs, content, properties, discussion, objects):
@@ -665,6 +671,10 @@ config.update({
     'validation': issubclass(NySemEvent, NyValidation),
     '_class': NySemEvent,
 })
+
+#Custom folder listing
+NaayaPageTemplateFile('zpt/semevent_folder_index', globals(),
+                      'semevent_folder_index')
 
 def get_config():
     return config

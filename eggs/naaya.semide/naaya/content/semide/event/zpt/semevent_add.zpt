@@ -76,5 +76,6 @@
 	</label>
 	<input type="file" name="file" id="file" size="40" value="" />
 </div>
+<input type="hidden" name="archive:int" tal:attributes="value request/archive|string:0"/>
 </tal:block>
 </tal:block>

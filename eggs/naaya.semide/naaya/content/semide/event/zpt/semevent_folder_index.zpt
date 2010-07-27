@@ -1,21 +1,22 @@
 <metal:block define-macro="page" extend-macro="python:here.getFormsTool().getForm('folder_index').macros['page']">
   <metal:block fill-slot="page-middle">
     <tal:block define="sq python:request.get('sq', '');
-        sl python:here.utConvertToList(request.get('sl', []));
-        nt python:request.get('nt', '');
-        nd python:request.get('nd', '');
-        nc python:request.get('nc', '');
-        gz python:request.get('gz', []);
-        gz_str python:here.utUrlLibEncode({'gz': gz});
-        ps_start python:request.get('page', 0);
-        skey python:request.get('skey', 'news_date');
-        rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
-        rkey_param python:test(rkey, '', '&amp;rkey=1');
-        items python:request.get('items', 10);
+  sl python:here.utConvertToList(request.get('sl', []));
+  et python:request.get('et', '');
+  gz python:request.get('gz', []);
+  gz_str python:here.utUrlLibEncode({'gz': gz});
+  es python:request.get('es', '');
+  sd python:request.get('sd', '');
+  ed python:request.get('ed', '');
+  ps_start python:request.get('start', 0);
+  skey python:request.get('skey', 'start_date');
+  rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
+  rkey_param python:test(rkey, '', '&amp;rkey=1');
+  items python:request.get('items', 10);
 
-        page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&${gz_str}&items=${items};
-        results_paginator python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start, gz=gz, items=items);
-        results python: results_paginator[int(ps_start):(int(ps_start) + int(items))];">
+  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&et=${et}&${gz_str}&es=${es}&sd=${sd}&ed=${ed}&items=${items};
+  results_paginator python:here.getEventsListing(sq, sl, et, gz, es, skey, rkey, sd, ed, here.absolute_url(1), ps_start, items=items);
+  results python: results_paginator[int(ps_start):(int(ps_start) + int(items))];">
 
 <h1>
   <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label;
@@ -47,35 +48,32 @@
 </div>
 </tal:block>
 
-<fieldset class="search_field"><legend i18n:translate="">Search news</legend>
-<div class="fieldset_div">
-<form method="get" action="">
-<input type="hidden" name="skey" id="skey" tal:attributes="value skey" />
-<input type="hidden" name="rkey" id="rkey" tal:attributes="value rkey" />
-<div class="field">
-  <label for="sq" i18n:translate="">Query</label>
-  <input type="text" name="sq" id="sq" size="50" tal:attributes="value sq" />
-</div>
-<div class="field">
-  <label for="nt" i18n:translate="">Type</label>
-  <select name="nt" id="nt">
-  <option value=""></option>
-  <option tal:repeat="item here/getNewsTypesList"
-    tal:attributes="value item/id; selected python:item.id == nt"
-    tal:content="item/title" i18n:translate="" />
-  </select>
-</div>
-<div class="field">
-  <label for="nd" i18n:translate="">News date</label>
-  <select name="nc" id="nc">
-  <option value="0" tal:attributes="selected python:nc=='0'">before</option>
-  <option value="1" tal:attributes="selected python:nc=='1'">after</option>
-  </select
-  ><input type="text" name="nd" id="nd" size="10" tal:attributes="value nd" />
-  <em>(mm/dd/yyyy)</em>
-</div>
-
-<div class="clear_float"></div>
+<fieldset class="search_field"><legend i18n:translate="">Search events</legend>
+  <div class="fieldset_div">
+  <form method="get" action="">
+  <input type="hidden" name="skey" id="skey" tal:attributes="value skey" />
+  <input type="hidden" name="rkey" id="rkey" tal:attributes="value rkey" />
+  <div class="field">
+    <label for="sq" i18n:translate="">Query</label>
+    <input type="text" name="sq" id="sq" size="50" tal:attributes="value sq" />
+  </div>
+  <div class="field">
+    <label for="et" i18n:translate="">Type</label>
+    <select name="et" id="et">
+    <option value=""></option>
+    <option tal:repeat="item here/getEventTypesList"
+      tal:attributes="value item/id; selected python:item.id==et" tal:content="item/title" i18n:translate="" />
+    </select>
+  </div>
+  <div class="field">
+    <label for="es" i18n:translate="">Status</label>
+    <select name="es" id="es">
+    <option value=""></option>
+    <option tal:repeat="item here/getEventStatusList"
+      tal:attributes="value item/id; selected python:item.id==es" tal:content="item/title" i18n:translate="" />
+    </select>
+  </div>
+  <div class="clear_float"></div>
   <div class="field">
     <label for="gz" i18n:translate="">Countries</label>
     <select multiple="multiple" size="5" name="gz:list" id="gz" tal:define="langs_list here/getCoverageGlossaryObjects">
@@ -100,17 +98,27 @@
     </select>
   </div>
 
-<div class="field">
-  <label for="items" i18n:translate="">Items per page</label>
-  <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
-  <input type="submit" value="Search" i18n:attributes="value" />
-</div>
-<div class="clear_float"></div>
-</form>
-</div>
+  <div class="field">
+    <label for="sd">Start date between:</label>
+    <input type="text" name="sd" id="sd" size="10" tal:attributes="value sd" /> and <input type="text" name="ed" id="es" size="10" tal:attributes="value ed" />
+    <span>dd/mm/yyyy</span>
+  </div>
+  <div class="field">
+    <label for="items" i18n:translate="">Items per page</label>
+    <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
+  </div>
+  <div class="clear_float"></div>
+  <div class="field">
+    <input type="submit" value="Search" i18n:attributes="value" />
+  </div>
+  </form>
+  </div>
 </fieldset>
 
-<h2><span tal:condition="python:sq=='' and sl==[] and nt=='' and nd==''" i18n:translate="">News</span><span tal:condition="python:not(sq=='' and sl==[] and nt=='' and nd=='')" i18n:translate="">Search results</span></h2>
+<h2>
+  <span tal:condition="python:sq=='' and sl==[] and et=='' and not gz and es=='' and ed=='' and sd==''" i18n:translate="">Upcoming events</span>
+  <span tal:condition="python:not(sq=='' and sl==[] and et=='' and not gz and es=='' and ed=='' and sd=='')" i18n:translate="">Search results</span>
+</h2>
 
 <p i18n:translate="" tal:condition="python:len(results) == 0">No news available</p>
 <form name="objectItems" method="post" action="."
@@ -134,10 +142,10 @@
     tal:condition="btn_select">
     <input type="checkbox" class="select-all" />
   </th>
-  <th>
-    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=news_date${rkey_param};
-        title python:test(skey=='news_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">News date
-    <img tal:attributes="src python:test(skey=='news_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+  <th style="width: 10%;">
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=start_date${rkey_param};
+        title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Starting date
+    <img tal:attributes="src python:test(skey=='start_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
       width="12" height="12" alt=""/>
     </a>
   </th>
@@ -150,12 +158,15 @@
   <th>
     <a i18n:translate="">Author</a>
   </th>
+  <th>
+    <a i18n:translate="">Source</a>
+  </th>
   <th class="edit" tal:condition="btn_delete"><span i18n:translate="" title="not sortable">Edit</span></th>
   </tr>
   <tr tal:repeat="brain results">
     <tal:block define="del_permission python:1; edit_permission python:1; object python: brain.getObject()">
       <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
-      <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.news_date)" /></td>
+      <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.start_date)" /></td>
       <td class="title-column">
         <img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
         <a tal:attributes="href object/absolute_url;title python:here.stripAllHtmlTags(object.description)" tal:content="object/title_or_id" />
@@ -165,6 +176,7 @@
       </tal:block>
       </td>
       <td tal:content="python:test(object.coverage, object.coverage, '-')" />
+      <td tal:content="python:test(object.source, object.source, '-')" />
       <td tal:content="object/contributor" />
       <td class="edit" tal:condition="edit_permission">
         <a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html?archive=1"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
@@ -176,6 +188,23 @@
 <tal:block define="objects results_paginator; num_per_page python: int(items)">
   <metal:block use-macro="here/macro_utils/macros/paginator" />
 </tal:block>
+<div class="xmlExportButtons" tal:define="query request/form;
+    dummy python:query.setdefault('skey', 'start_date');
+    dummy python:query.setdefault('rkey', 1);
+    dummy python:query.setdefault('search_by', 'events');
+    dummy python:query.setdefault('ps_start', request.get('start', 0));
+    dummy python:query.setdefault('p_context', here.absolute_url(1));
+    query_str python:here.utUrlLibEncode(query);
+    atom_link python:'?'.join(('search_atom', query_str));
+    rdf_link python:'?'.join(('search_rdf', query_str));">
+
+  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
+
+  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
+
+  </tal:block>
+</div>
 </tal:block>
   <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
     [<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
