@@ -580,10 +580,11 @@ def search(self, REQUEST):
     """ folder search """
     results = []
     query = REQUEST.get('query', '')
+    path = REQUEST.get('path', '')
     meta_type = self.get_meta_types()
     if query:
         results = []
-        results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=REQUEST.get('path', ''), approved=1))
+        results.extend(self.query_objects_ex(meta_type, query, self.gl_get_selected_language(), path=path, approved=1))
         results = self.utEliminateDuplicatesByURL(results)
         results = [item for item in results if item.can_be_seen()]
 
@@ -601,7 +602,9 @@ def search(self, REQUEST):
     except (EmptyPage, InvalidPage):
         results = paginator.page(paginator.num_pages)
 
-    return self._search(REQUEST, results=results)
+    folder = self.restrictedTraverse(path)
+
+    return _search.__of__(folder)(REQUEST, results=results)
 
 _search = PageTemplateFile('zpt/infofolder_search', globals())
 
