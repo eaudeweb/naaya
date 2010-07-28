@@ -103,45 +103,43 @@
 	</tal:block>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		var button = $('#picture_upload'), interval;
-		new AjaxUpload(button,{
-			action: 'file_upload/upload_file', 
-			name: 'upload_file',
-			onSubmit : function(file, ext){
-				if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-						// extension is not allowed
-						alert('Error: invalid file extension');
-						// cancel upload
-						return false;
-				}
-				$('#ambassador_species_picture').empty();
-				button.text('Uploading');
-				this.disable();
-				interval = window.setInterval(function(){
-					var text = button.text();
-					if (text.length < 12){
-						button.text(text + '.');
-					} else {
-						button.text('Uploading');
-					}
-				}, 200);
-			},
-			onComplete: function(file, response){
-				button.text(gettext('Replace picture'));
-				result = response.split("(")[1].split(")")[0].split(",");
-				address = result[0].replace("'", "").replace("'", "");
-				x = result[1];
-				y = result[2];
-				x2 = result[3];
-				y2 = result[4];
-				window.clearInterval(interval);
-				this.enable();
-				var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
-				doCrop(image, x, y, x2, y2);
-				document.getElementById('upload_picture_url').value = (address);
+	var button = $('#picture_upload'), interval;
+	new AjaxUpload(button,{
+		action: 'file_upload/upload_file', 
+		name: 'upload_file',
+		onSubmit : function(file, ext){
+			if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
+					// extension is not allowed
+					alert('Error: invalid file extension');
+					// cancel upload
+					return false;
 			}
-		});
+			$('#ambassador_species_picture').empty();
+			button.text('Uploading');
+			this.disable();
+			interval = window.setInterval(function(){
+				var text = button.text();
+				if (text.length < 12){
+					button.text(text + '.');
+				} else {
+					button.text('Uploading');
+				}
+			}, 200);
+		},
+		onComplete: function(file, response){
+			button.text(gettext('Replace picture'));
+			result = response.split("(")[1].split(")")[0].split(",");
+			address = result[0].replace("'", "").replace("'", "");
+			x = result[1];
+			y = result[2];
+			x2 = result[3];
+			y2 = result[4];
+			window.clearInterval(interval);
+			this.enable();
+			var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
+			doCrop(image, x, y, x2, y2);
+			document.getElementById('upload_picture_url').value = (address);
+		}
 	});
 	function doCrop(elem, x, y, x2, y2) {
 			jQuery(elem).Jcrop({
