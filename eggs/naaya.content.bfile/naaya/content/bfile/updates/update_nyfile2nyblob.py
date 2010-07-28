@@ -6,7 +6,6 @@ import logging
 from StringIO import StringIO
 
 #Zope imports
-from DateTime import DateTime
 from zope.annotation import IAnnotations
 
 #Naaya imports
@@ -209,7 +208,7 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
     """ Update example script  """
     id = 'update_nyfile_2_nyblobfile'
     title = 'Update NyFiles to NyBlobFiles'
-    creation_date = DateTime('Jul 16, 2010')
+    creation_date = 'Jul 16, 2010'
     authors = ['Alin Voinea']
     priority = PRIORITY['HIGH']
     description = ('Upgrade diskstorage from ExtFile to Blob. '
