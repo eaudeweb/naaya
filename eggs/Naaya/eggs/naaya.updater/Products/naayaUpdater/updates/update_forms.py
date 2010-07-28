@@ -37,9 +37,9 @@ from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
 
 class UpdateForms(UpdateScript):
     """ Update forms in portal_forms """
-    id = 'update_forms'
     title = 'Update forms'
     authors = ['Alex Morega', 'Alexandru Plugaru']
+    creation_date = 'Jan 01, 2010'
 
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))

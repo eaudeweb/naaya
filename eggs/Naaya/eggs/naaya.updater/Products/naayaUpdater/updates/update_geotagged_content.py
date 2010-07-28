@@ -37,7 +37,6 @@ except ImportError:
 
 class UpdateGeotaggedContent(UpdateScript):
     """ Update reinstall content types script  """
-    id = 'update_geotagged_content'
     title = 'Update geotagged content'
     creation_date = 'Jul 10, 2009'
     authors = ['Alex Morega']

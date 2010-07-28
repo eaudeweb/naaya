@@ -28,9 +28,9 @@ from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateGeotaggedContent(UpdateScript):
     """ Update reinstall content types script  """
-    id = 'update_portlet_layout'
     title = 'Update portlet layout'
     authors = ['Alex Morega']
+    creation_date = 'Jan 01, 2010'
 
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))

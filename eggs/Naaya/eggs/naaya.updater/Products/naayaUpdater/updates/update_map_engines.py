@@ -4,16 +4,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateMapEngines(UpdateScript):
     """ Update script  """
-    id = 'update_map_engines'
     title = 'Update properties of portal_map'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'May 26, 2010'
     authors = ['ALex Morega']
-    #priority = PRIORITY['LOW']
     description = 'Rename configuration parameters and calculate icon sizes'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

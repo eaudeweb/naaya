@@ -33,17 +33,11 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateLocalizerStrings(UpdateScript):
     """ Unescape HTMLEntities in translations """
-    id = 'update_localizer_strings'
     title = 'Unescape HTMLEntities in translations'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Jan 25, 2010'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = ('Unescape HTMLEntities in translated portal messages.'
                    'This is needed for the new Localizer used by Naaya since Zope 2.10')
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

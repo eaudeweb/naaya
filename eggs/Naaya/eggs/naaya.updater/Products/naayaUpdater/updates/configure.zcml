@@ -119,7 +119,7 @@
   <utility
     name="localizer.update_data"
     provides="..interfaces.IUpdateScript"
-    component=".update_localizer_data.UpdateScript"
+    component=".update_localizer_data.UpdateLocalizer"
     permission="zope2.ViewManagementScreens" />
 
   <utility

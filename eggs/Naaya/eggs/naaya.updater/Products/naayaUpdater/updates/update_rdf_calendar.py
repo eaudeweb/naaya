@@ -14,11 +14,11 @@ except:
     rdf_calendar_available = False
 
 class UpdateRDFCalendar(UpdateScript):
-    id = 'update_rdf_calendar'
     title = 'Update RDF Calendar'
     description = ('Replaces local RDFSummary objects with Python Script, crea'
                   'te DateIndexes in portal_catalog')
     authors = ['Alexandru Plugaru', ]
+    creation_date = 'Jan 01, 2010'
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

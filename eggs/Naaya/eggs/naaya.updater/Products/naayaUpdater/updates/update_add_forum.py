@@ -31,16 +31,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateAddForum(UpdateScript):
     """ Update add forum script  """
-    id = 'update_add_forum'
     title = 'Update add forum to all folders'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Sep 17, 2009'
     authors = ['Andrei Laza']
-    #priority = PRIORITY['LOW']
     description = 'Adds the Naaya forum as subobject to all folders and subsequent added folders.'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

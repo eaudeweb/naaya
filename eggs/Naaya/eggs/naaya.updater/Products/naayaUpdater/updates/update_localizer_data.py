@@ -7,9 +7,8 @@ from Persistence.mapping import PersistentMapping
 from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.utils import force_to_unicode
 
-class UpdateExample(UpdateScript):
+class UpdateLocalizer(UpdateScript):
     """ Update Localizer data structures  """
-    id = 'update_localizer_data'
     title = 'Update Localizer data structures'
     creation_date = 'Jun 3, 2010'
     authors = ['Alex Morega']

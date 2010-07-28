@@ -42,16 +42,10 @@ match = r"\w*\.get_constant\('(\w*)'\)"
 
 class UpdateMigrateToEggs(UpdateScript):
     """ Migrates existing portals to eggs """
-    id = 'update_migrate_to_eggs'
     title = 'Migrate portals to eggs'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Oct 14, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Migrates existing portals to eggs. Currently it replaces get_constant with the actual meta_type'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

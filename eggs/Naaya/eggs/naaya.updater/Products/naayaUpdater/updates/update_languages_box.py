@@ -77,17 +77,11 @@ body #language a {
 
 class UpdateLanguagesBox(UpdateScript):
     """ Update languages_box script  """
-    id = 'update_languages_box'
     title = 'Update languages box to display language links inline'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Jan 11, 2010'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = ('This update will modify standard_template'
                    'for the new languages_box display.')
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

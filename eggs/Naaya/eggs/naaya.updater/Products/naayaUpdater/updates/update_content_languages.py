@@ -31,11 +31,9 @@ from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateContentLanguages(UpdateScript):
     """ Update content languages script  """
-    id = 'content_languages'
     title = 'Content languages'
     creation_date = 'Jul 1, 2009'
     authors = ['Alex Morega']
-
     security = ClassSecurityInfo()
 
     security.declareProtected(view_management_screens, '_content_languages_html')
@@ -66,7 +64,7 @@ class UpdateContentLanguages(UpdateScript):
                         brain.getPath(), err)
                     continue
                 if ob is None:
-                    logger.debug('WARNING: Broken brain: %s, id %s, getPath: %s', 
+                    logger.debug('WARNING: Broken brain: %s, id %s, getPath: %s',
                                  brain.absolute_url(), brain.data_record_id_,
                                  brain.getPath())
                     continue

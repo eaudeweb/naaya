@@ -25,11 +25,9 @@ class UpdateContentType(UpdateScript):
     ALWAYS be safe to run on ANY site.
     """
 
-    id = 'update_cleanup_contenttypes'
     title = 'Cleanup contenttypes'
-    #authors = ['Cornel Nitu']
-    #creation_date = 'Feb 11, 2010'
-    #priority = PRIORITY['LOW']
+    authors = ['Cornel Nitu']
+    creation_date = 'Feb 11, 2010'
     description = 'Cleans portal contenttypes.'
 
     def _update(self, portal):
