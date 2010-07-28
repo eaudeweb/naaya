@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
+<tal:block condition="python: request.has_key('id_channel')">
 <tal:block tal:define="ob_channel python:here.getSyndicationTool()[request['id_channel']]">
-
 <tal:block tal:condition="python:hasattr(ob_channel, 'url')">
 <h1 i18n:translate=""><span tal:content="python: ob_channel.title_or_id()" /></h1>
 <span i18n:translate="">RDF feed: </span> <a tal:attributes="href string:${ob_channel/url}"><span tal:content="ob_channel/url" /></a>
@@ -22,7 +22,7 @@
 
 <tal:block tal:condition="not:python:hasattr(ob_channel, 'url')">
 <h1 i18n:translate=""><span tal:content="python:ob_channel.title_or_id()" /></h1>
-<span i18n:translate="">RDF channels: </span> 
+<span i18n:translate="">RDF channels: </span>
 <ul>
 <li tal:repeat="channels python:ob_channel.get_channels()"><a tal:attributes="href channels/url"><span tal:content="channels/url" /></a></li>
 
@@ -41,6 +41,6 @@
 	</tal:block>
 	</ul>
 </tal:block>
-
+</tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer" />
