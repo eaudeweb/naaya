@@ -44,7 +44,6 @@ service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)
 
 class UpdateCSS(UpdateScript):
     """ List custom objects """
-    id = 'update_list_custom_objects'
     title = 'List custom objects'
     authors = ['Alex Morega']
     description = "Shows objects that have been customized (at the moment, just folders with custom indexes)"

@@ -33,16 +33,10 @@ from Products.NaayaCore.NotificationTool.NotificationTool import \
 
 class UpdateNotifSubscriptions(UpdateScript):
     """ Migrates from central notifications index to annotations """
-    id = 'update_notif_subscriptions'
     title = 'Migrate storage of notification subscriptions'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Feb 25, 2010'
     authors = ['Alex Morega']
-    #priority = PRIORITY['LOW']
     description = "Migrates from central notifications index to annotations."
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

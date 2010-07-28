@@ -26,11 +26,9 @@ class UpdateCSS(UpdateScript):
     Generic script to clean up obsolete data in Naaya sites. This script must
     ALWAYS be safe to run on ANY site.
     """
-
-    id = 'update_cleanup'
     title = 'Cleanup'
-    #authors = ['Alex Morega']
-    #creation_date = 'Nov 12, 2009'
+    authors = ['Alex Morega']
+    creation_date = 'Nov 12, 2009'
 
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))

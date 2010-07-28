@@ -35,16 +35,10 @@ from Products.Naaya.managers.skel_parser import skel_parser
 
 class UpdateExample(UpdateScript):
     """ Adds standard_template and renames old site_header and site_footer """
-    id = 'update_standard_template'
     title = 'Update to standard_template'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Dec 14, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Adds standard_template and renames old site_header and site_footer'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

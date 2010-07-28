@@ -32,16 +32,10 @@ from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsT
 
 class AddStatisticsTool(UpdateScript):
     """ Add portal statistics tool """
-    id = 'update_portal_statistics'
     title = 'Update portal statistics tool'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Dec 10, 2009'
     authors = ['Cornel Nitu']
-    #priority = PRIORITY['LOW']
     description = 'Creates the portal statistics tool'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

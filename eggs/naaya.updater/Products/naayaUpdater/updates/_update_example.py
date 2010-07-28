@@ -31,16 +31,11 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateExample(UpdateScript):
     """ Update example script  """
-    id = 'update_example'
     title = 'Example of update script'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Aug 1, 2009'
     authors = ['Jane Doe']
-    #priority = PRIORITY['LOW']
+    priority = PRIORITY['LOW']
     description = 'This is an example, change this description when implementing an update.'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

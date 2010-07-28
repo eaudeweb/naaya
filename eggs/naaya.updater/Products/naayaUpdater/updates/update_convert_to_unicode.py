@@ -31,16 +31,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateConvertToUnicode(UpdateScript):
     """ Update object attributes to unicode"""
-    id = 'update_convert_to_unicode'
     title = 'Update object attributes to unicode'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Jan 20, 2010'
     authors = ['David Batranu', 'Alexandru Plugaru']
-    #priority = PRIORITY['LOW']
     description = 'Updates object attributes to unicode if needed. Currently only works for Naaya Local Channel `title` and Naaya Portlet `_text`'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

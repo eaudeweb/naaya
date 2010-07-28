@@ -19,14 +19,14 @@ provided in this package
     >>> from Products.naayaUpdater.updates import UpdateScript
     >>> class MyUpdateScript(UpdateScript):
     ...     title = 'Update portal title'
+    ...     authors = ['John Doe']
+    ...     creation_date = 'Jan 01, 2010'
     ...     def _update(self, portal):
     ...         portal.title = 'Portal new title'
 
 Optionally you can set the following script properties:
     - description
     - priority
-    - creation_date
-    - authors
 
 Now all you have to do is to register this script as utility. Within your
 package configure.zcml:

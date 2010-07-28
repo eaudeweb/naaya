@@ -34,16 +34,10 @@ from Products.Naaya.managers.skel_parser import skel_parser
 
 class UpdateMainSections(UpdateScript):
     """ Update portlet_maincategories  """
-    id = 'update_main_sections'
     title = 'Update main sections portlet'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Jan 20, 2010'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Renames portlet_mainsections so that the new-style portlet will be used. Also updates ep_collapse/ep_expand images.'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

@@ -10,7 +10,6 @@ from naaya.core.zope2util import exorcize_local_properties
 
 class UpdateExample(UpdateScript):
     """ Convert any Schema widget title from LocalProperty to normal string """
-    id = 'update_schema_titles'
     title = 'Convert schema widget titles to string'
     creation_date = 'Jun 8, 2010'
     authors = ['Alex Morega']

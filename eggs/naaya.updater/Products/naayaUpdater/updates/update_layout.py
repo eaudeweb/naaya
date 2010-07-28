@@ -33,7 +33,7 @@ class UpdateLayout(UpdateScript):
     """ Update Portal layout script  """
     title = 'Update portal layout'
     authors = ['Alec Ghica']
-
+    creation_date = 'Jan 01, 2010'
     security = ClassSecurityInfo()
 
     def __init__(self):

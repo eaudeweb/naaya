@@ -40,16 +40,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateRemoveObsoletes(UpdateScript):
     """ Removes obsolete objects from portal root """
-    id = 'update_remove_obsoletes'
     title = 'Remove obsolete object instances'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Aug 25, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Deletes obsolete object instances from portal root. Currently lists broken instances' #TODO: Extend to portal properties
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

@@ -33,16 +33,10 @@ from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 
 class UpdateExample(UpdateScript):
     """ Update portal editor to version 2"""
-    id = 'update_editorv2'
     title = 'Update NaayaEditorTool.v2'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Dec 16, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Updates Naaya Editor Tool to latest version. Removes and adds portal_editor. Catalogs Naaya Photo Folder objects.'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

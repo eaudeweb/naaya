@@ -31,16 +31,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateLandscapeType(UpdateScript):
     """ Update script  """
-    id = 'update_empty_properties_for_geo_map'
     title = 'Update landscape_type and administrative_level from "" to "Unspecified"'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Feb 25, 2010'
     authors = ['Valentin Dumitru']
-    #priority = PRIORITY['LOW']
     description = 'Update landscape_type and administrative_level from "" to "Unspecified"'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')
