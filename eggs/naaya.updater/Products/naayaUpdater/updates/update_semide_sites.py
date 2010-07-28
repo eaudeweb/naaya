@@ -39,15 +39,11 @@ SEMIDE_PRODUCT_PATH = os.path.dirname(Products.SEMIDE.__file__)
 
 class UpdateSemideSites(UpdateScript):
     """ Update Semide Sites  """
-    id = 'update_semide_sites'
     title = 'Update Semide Sites'
     creation_date = 'Mar 31, 2010'
     authors = ['Alexandru Plugaru']
     priority = PRIORITY['HIGH']
     description = 'Updates all semide sites for compatibility with Naaya trunk version'
-    #dependencies = []
-    categories = ['semide']
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

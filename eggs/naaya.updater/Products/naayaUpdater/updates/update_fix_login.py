@@ -32,16 +32,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateExample(UpdateScript):
     """ Fix portals with broken logins because of ChangeNotification """
-    id = 'update_fix_login'
     title = 'Fix login on portals added with ChangeNotification present'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Dec 2, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Fix portals that have broken logins because of ChangeNotification'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

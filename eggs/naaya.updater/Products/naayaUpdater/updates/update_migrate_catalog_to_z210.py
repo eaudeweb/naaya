@@ -33,9 +33,7 @@ from Products.NaayaBase.NyContentType import NyContentType
 
 class MigrateCatalog(UpdateScript):
     """ Migrate catalog to Zope 2.10 """
-    id = 'migrate_catalog2z210'
     title = 'Migrate catalogs to Zope 2.10'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Aug 27, 2009'
     authors = ['David Batranu']
     priority = PRIORITY['HIGH']
@@ -43,9 +41,6 @@ class MigrateCatalog(UpdateScript):
                    'Replaces textindexng2 with textindexng3.'
                    'WARNING: This update will clear the portal catalog and recatalog only NyContentTypes.'
                    'Catalogs contained in glossaries are recognized and properly recataloged with glossary content.')
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
 

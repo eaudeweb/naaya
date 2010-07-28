@@ -10,10 +10,9 @@ class IUpdateScript(Interface):
     """
     title = schema.TextLine(title=u'Title', required=True)
     description = schema.Text(title=u'Description', required=False)
-    creation_date = schema.Date(title=u'Creation date', required=False)
-    authors = schema.Tuple(title=u'Authors', required=False)
-    priority = schema.Int(title=u'Priority', required=True)
-    categories = schema.Tuple(title=u'Categories', required=False)
+    creation_date = schema.Date(title=u'Creation date', required=True)
+    authors = schema.Tuple(title=u'Authors', required=True)
+    priority = schema.Int(title=u'Priority', required=False)
 
     def update(portal, do_dry_run):
         """ Update

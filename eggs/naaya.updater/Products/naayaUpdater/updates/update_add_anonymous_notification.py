@@ -36,14 +36,11 @@ except:
 class UpdateAddAnonymousNotification(UpdateScript):
     """ Update add AnonymousNotification  """
 
-    id = 'update_add_anonymousNotification'
     title = 'Update add AnonymousNotification portal tool'
     creation_date = 'Mar 09, 2010'
     authors = ['Cornel Nitu']
     priority = PRIORITY['LOW']
     description = 'Adds the AnonymousNotification portal tool'
-    categories = ['Temp']
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

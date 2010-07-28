@@ -34,16 +34,10 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateNotificationTool(UpdateScript):
     """ Update Notification tool """
-    id = 'update_notification_tool'
     title = 'Portal notification tool update'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Aug 1, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Updates the notification tool with the new subscription based notification functionality'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')

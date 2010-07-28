@@ -9,31 +9,97 @@
 
 <tal:block metal:fill-slot="body">
 <style type="text/css">
-  dd{
-    font-style: italic;
-    font-size: .9em;
-  }
-  .priority1{
-    background-color: #FFDDDD;
-  }
-  .priority2{
-    background-color: #E5E9FF;
-  }
-  .priority3{
-    background-color: #DDFFE0;
-  }
-</style>
-<h3>Naaya updater</h3>
 
-<dl tal:repeat="script python:view.scripts">
-  <tal:script define="name python:script[0]; update python:script[1]">
-    <dt tal:attributes="class string:priority${update/priority}">
-      <a tal:attributes="href string:${here/absolute_url}/${name}"
-        tal:content="update/title"/>
-    </dt>
-    <dd tal:content="update/description"></dd>
-  </tal:script>
-</dl>
+table.listing {
+  width: 100%;
+}
+
+table.listing td, table.listing th {
+  padding-left: 0.5em;
+}
+
+table.listing a {
+  color: #b00;
+}
+
+.priority0-even {
+  background: #fdc;
+}
+.priority0-even td {
+  border: 1px dotted #e88;
+}
+.priority0-odd {
+  background: #fed;
+}
+.priority0-odd td{
+  border: 1px dotted #e88;
+}
+
+.priority1-even {
+  background: #ffb;
+}
+.priority1-even td {
+  border: 1px dotted #eea;
+}
+.priority1-odd {
+  background: #ffd;
+}
+.priority1-odd td {
+  border: 1px dotted #eea;
+}
+
+.priority2-even {
+  background: #F6F6F6;
+}
+.priority2-even td {
+  border: 1px dotted #ccc;
+}
+
+.priority2-odd {
+  background: #fbfbfb;
+}
+
+.priority2-odd td {
+  border: 1px dotted #ddd;
+}
+
+td.details {
+  font-size: 85%;
+  color: #76797c;
+}
+
+.list-header th {
+  text-align: left;
+}
+</style>
+
+<div tal:repeat="table python:view.table">
+  <tal:scripts define="
+    category python:table[0];
+    scripts python:table[1];">
+    <h3 tal:content="category" />
+    <table cellpadding="0" cellspacing="0" class="listing">
+      <tr class="list-header">
+        <th style="width: 70%">Summary</th>
+        <th>Authors</th>
+        <th style="width: 10%">Created</th>
+      </tr>
+      <tal:row repeat="script scripts">
+        <tr tal:define="even repeat/script/even; css python:even and 'even' or 'odd'"
+            tal:attributes="class string:priority${script/priority}-$css">
+          <td>
+            <a tal:attributes="href string:${here/absolute_url}/${script/id}"
+              tal:content="script/title" />
+          </td>
+          <td class="details"
+          tal:content="python:', '.join(script.authors)"></td>
+          <td class="details"
+          tal:content="script/creation_date|string:[NOT SET]"></td>
+        </tr>
+      </tal:row>
+    </table>
+  </tal:scripts>
+</div>
 
 </tal:block>
 </tal:block>

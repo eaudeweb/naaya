@@ -35,15 +35,12 @@ class UpdateScript(Item, Acquisition.Implicit):
     """
     implements(IUpdateScript)
 
-    id = 'UpdateScript'
     title = 'Main class for update scripts'
     meta_type = 'Naaya Update Script'
-    creation_date = None
+    creation_date = 'Jan 01, 2000'
     authors = ['John Doe']
     priority = PRIORITY['LOW']
     description = ''
-    dependencies = []
-    categories = []
 
     manage_options = (
         {'label': 'Update', 'action': 'manage_update'},

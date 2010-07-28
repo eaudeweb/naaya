@@ -4,12 +4,12 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 
 class UpdateDynamicProp2Schema(UpdateScript):
     """ """
-    id = 'update_dynamicprop2schema'
     title = 'Convert DynamicProperties to SchemaTool'
     authors = ['Alexandru Plugaru']
     description = 'Migrate all DynamicPropertiesTool properties to SchemaTool '
     'widgets'
     priority = PRIORITY['HIGH']
+    creation_date = 'Jan 01, 2010'
     #Dynamic prop => SchemaWidget Widget, datatype
     relations = {
         "boolean": ("Checkbox", 'bool', ),

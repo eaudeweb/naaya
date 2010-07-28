@@ -44,7 +44,6 @@ service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)
 
 class UpdateCSS(UpdateScript):
     """ Update portal_layout stylesheets """
-    id = 'update_css'
     title = 'Update css'
     authors = ['Alex Morega']
     creation_date = 'Nov 9, 2009'

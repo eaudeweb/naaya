@@ -38,16 +38,10 @@ except:
 
 class UpdateTalkBackCons(UpdateScript):
     """ TalkBack Consultation update """
-    id = 'update_tbcons'
     title = ' TalkBack Consultation update'
-    #meta_type = 'Naaya Update Script'
     creation_date = 'Oct 15, 2009'
     authors = ['David Batranu']
-    #priority = PRIORITY['LOW']
     description = 'Updates TalkBack Consultation objects to the new version.'
-    #dependencies = []
-    #categories = []
-
     security = ClassSecurityInfo()
 
     security.declarePrivate('_update')
@@ -77,7 +71,7 @@ class UpdateTalkBackCons(UpdateScript):
         actual_name = re.sub(r'\s*\(\w+\)$', '', com.get_contributor_name())
         contributor_name = getattr(com, 'contributor_name', '')
         if contributor_name and actual_name != contributor_name:
-            # 'contributor_name' field was probably used 
+            # 'contributor_name' field was probably used
             # to comment on behalf of someone else
             added_text = "<p><em>%s:</em></p>" % contributor_name
             com.message = added_text + com.message
