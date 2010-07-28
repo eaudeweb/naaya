@@ -206,7 +206,6 @@ class Import(object):
 #
 class UpdateNyFile2NyBlobFile(UpdateScript):
     """ Update example script  """
-    id = 'update_nyfile_2_nyblobfile'
     title = 'Update NyFiles to NyBlobFiles'
     creation_date = 'Jul 16, 2010'
     authors = ['Alin Voinea']
