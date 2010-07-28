@@ -18,7 +18,8 @@
     </select>
 
     <tal:block condition="here/list_is_tree">
-        <tal:block content="structure string:
+        <tal:block define="translated_title python:here.getSite().getPortalTranslations()(here.title)"
+            content="structure string:
             <script>
                 $$(function() {
                     $('#'+'${prop_id}').hide();
@@ -46,8 +47,7 @@
                                 }
                             })
                         })
-
-                    tree_data_json = {'data':'${here/title}', 'children': tree_data_json, 'attributes': {'rel':'root'}}
+                    tree_data_json = {'data':'${translated_title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
 
                     $('#'+'${prop_id}'+'_tree').tree({
                         selected : selected_nodes,
