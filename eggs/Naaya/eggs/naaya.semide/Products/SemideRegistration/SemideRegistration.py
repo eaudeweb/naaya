@@ -1,32 +1,13 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Eau de Web
-# Valentin Dumitru, Eau de Web
-
 import re
-from os.path import join
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from OFS.Folder import Folder
 import time
 import simplejson as json
+from os.path import join
+
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view, view_management_screens
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from OFS.Folder import Folder
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -93,20 +74,63 @@ class SemideRegistration(LocalPropertyManager, Folder):
         +
         Folder.manage_options[2:]
     )
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile('zpt/registration/index', globals())
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'loadDefaultContent')
-    def loadDefaultContent(self):
-        """ load default content such as: email templates """
-        from TemplatesManager import manage_addTemplatesManager
-        manage_addTemplatesManager(self)
-        self._loadRegistrationForms()
+    security.declareProtected(view_management_screens, '_edit_html')
+    _edit_html = PageTemplateFile('zpt/registration/edit', globals())
+
+    security.declarePublic('registration_form')
+    registration_form = PageTemplateFile('zpt/registration/registration',
+                                         globals())
+
+    security.declarePublic('registration_press_form')
+    registration_press_form = PageTemplateFile(
+        'zpt/registration/registration_press', globals())
+
+    security.declarePublic('view_participant')
+    view_participant = PageTemplateFile('zpt/participant/view_participant',
+                                        globals())
+
+    security.declarePublic('edit_participant')
+    edit_participant = PageTemplateFile('zpt/participant/edit_participant',
+                                        globals())
+
+    security.declarePublic('menu_buttons')
+    menu_buttons = PageTemplateFile('zpt/menu_buttons',
+                                        globals())
+
+    security.declareProtected(view_management_screens, 'participants')
+    participants = PageTemplateFile('zpt/registration/participants', globals())
+
+    security.declareProtected(view_management_screens, 'participants_press')
+    participants_press = PageTemplateFile(
+        'zpt/registration/participants_press', globals())
 
     def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ constructor """
         self.id = id
         self.save_properties(title, conference_details, administrative_email, start_date, end_date, introduction, lang)
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'save_properties')
+    security.declareProtected(view_management_screens, 'loadDefaultContent')
+    def loadDefaultContent(self):
+        """ load default content such as: email templates """
+        from TemplatesManager import manage_addTemplatesManager
+        manage_addTemplatesManager(self)
+        self._loadRegistrationForms()
+
+    security.declarePrivate('_loadRegistrationForms')
+    def _loadRegistrationForms(self):
+        """ load registration forms """
+
+    security.declarePrivate('_deleteRegistrationForms')
+    def _deleteRegistrationForms(self):
+        try:
+            self.manage_delObjects(['registration_form', 'registration_press_form', 'menu_buttons', 'view_participant', 'edit_participant'])
+        except:
+            pass
+
+    security.declareProtected(view_management_screens, 'save_properties')
     def save_properties(self, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ save properties """
         self._setLocalPropValue('title', lang, title)
@@ -116,27 +140,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
 
-    security.declarePrivate('_loadRegistrationForms')
-    def _loadRegistrationForms(self):
-        """ load registration forms """
-        registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
-        manage_addPageTemplate(self, 'registration_form', title='', text=registration_form)
-        registration_press_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration_press.zpt')).read()
-        manage_addPageTemplate(self, 'registration_press_form', title='', text=registration_press_form)
-        view_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'view_participant.zpt')).read()
-        edit_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'edit_participant.zpt')).read()
-        menu_buttons = file(join(constants.PRODUCT_PATH, 'zpt', 'menu_buttons.zpt')).read()
-        manage_addPageTemplate(self, 'menu_buttons', title='', text=menu_buttons)
-        manage_addPageTemplate(self, 'view_participant', title='', text=view_participant)
-        manage_addPageTemplate(self, 'edit_participant', title='', text=edit_participant)
 
-    def _deleteRegistrationForms(self):
-        try:
-            self.manage_delObjects(['registration_form', 'registration_press_form', 'menu_buttons', 'view_participant', 'edit_participant'])
-        except:
-            pass
-
-    security.declareProtected(constants.MANAGE_PERMISSION, 'reloadRegistrationForms')
+    security.declareProtected(view_management_screens, 'reloadRegistrationForms')
     def reloadRegistrationForms(self, REQUEST=None):
         """ reload registration forms """
         self._deleteRegistrationForms()
@@ -144,6 +149,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         if REQUEST:
             return self.manage_main(self, REQUEST, update_menu=1)
 
+    security.declareProtected(view, 'registration_html')
     def registration_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
@@ -185,6 +191,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self.registration_form(REQUEST)
 
+    security.declareProtected(view, 'registration_press_html')
     def registration_press_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
@@ -225,12 +232,6 @@ class SemideRegistration(LocalPropertyManager, Folder):
                     return REQUEST.RESPONSE.redirect(press.absolute_url())
         return self.registration_press_form(REQUEST)
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
-    index_html = PageTemplateFile('zpt/registration/index', globals())
-
-    security.declareProtected(constants.MANAGE_PERMISSION, '_edit_html')
-    _edit_html = PageTemplateFile('zpt/registration/edit', globals())
-
     security.declarePrivate('getEmailTemplate')
     def getEmailTemplate(self, id, lang='en'):
         """ get email template """
@@ -240,6 +241,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         email_template = lang_dir._getOb(id)
         return self.unicode2UTF8(email_template.document_src())
 
+    #XXX: security?
     def registrationOpened(self):
         """ check if the registration is opend to the public """
         now = time.localtime()
@@ -247,6 +249,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             return True
         return False
 
+    #XXX: security?
     def registrationNotClosed(self):
         """ check if the registration is opend to the public """
         now = time.localtime()
@@ -257,7 +260,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             return True
         return False
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'edit_html')
+    security.declareProtected(view_management_screens, 'edit_html')
     def edit_html(self, REQUEST):
         """ edit properties """
         submit =  REQUEST.form.get('edit-submit', '')
@@ -280,7 +283,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                     smtp_port = constants.SMTP_PORT
                     )
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'exportParticipants')
+    security.declareProtected(view_management_screens, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
         data = [('Registration date', 'Registration number', 'Official delegation of',
@@ -329,7 +332,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'exportPress')
+    security.declareProtected(view_management_screens, 'exportPress')
     def exportPress(self, REQUEST=None, RESPONSE=None):
         """ exports the press participants list in CSV format """
         data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Media name',
@@ -362,13 +365,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % filename)
         return content
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'participants')
-    participants = PageTemplateFile('zpt/registration/participants', globals())
-
-    security.declareProtected(constants.MANAGE_PERMISSION, 'participants_press')
-    participants_press = PageTemplateFile('zpt/registration/participants_press', globals())
-
-    security.declareProtected(constants.MANAGE_PERMISSION, 'getParticipants')
+    security.declareProtected(view_management_screens, 'getParticipants')
     def getParticipants(self, skey, rkey, is_journalist):
         """ Returns the list of participants """
         if is_journalist:
@@ -381,7 +378,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             participants.reverse()
         return [p for (key, p) in participants]
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'deleteParticipants')
+    security.declareProtected(view_management_screens, 'deleteParticipants')
     def deleteParticipants(self, ids=[], REQUEST=None):
         """ Deletes selected participants """
         ids = self.utConvertToList(ids)
@@ -391,7 +388,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
     security.declarePublic('canManageParticipants')
     def canManageParticipants(self):
         """ Check the permissions to edit/delete participants """
-        return checkPermission(constants.MANAGE_PERMISSION, self)
+        return checkPermission(view_management_screens, self)
 
     security.declarePublic('getRegistrationTitle')
     def getRegistrationTitle(self):
@@ -419,7 +416,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(id, lang)
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'getCountryList')
+    security.declareProtected(view, 'getCountryList')
     def getCountryList(self):
         """ """
         catalog = self.glossary_coverage.getGlossaryCatalog()
@@ -460,7 +457,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 return node.title
         return None
 
-    security.declareProtected(constants.VIEW_PERMISSION, 'getDelegations')
+    security.declareProtected(view, 'getDelegations')
     def getDelegations(self, meta_type='Semide Participant'):
         """ """
         return json.dumps([ob.delegation_of for ob in self.objectValues(meta_type)])
