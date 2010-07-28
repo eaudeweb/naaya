@@ -9,67 +9,6 @@
 
 <script type="text/javascript" src="jquery.Jcrop.min.js"></script>
 <script type="text/javascript" src="jquery.ajaxupload.min.js"></script>
-<script type="text/javascript">
-	$(document).ready(function(){
-		var button = $('#picture_upload'), interval;
-		new AjaxUpload(button,{
-			action: 'file_upload/upload_file', 
-			name: 'upload_file',
-			onSubmit : function(file, ext){
-				if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-						// extension is not allowed
-						alert('Error: invalid file extension');
-						// cancel upload
-						return false;
-				}
-				$('#ambassador_species_picture').empty();
-				button.text('Uploading');
-				this.disable();
-				interval = window.setInterval(function(){
-					var text = button.text();
-					if (text.length < 12){
-						button.text(text + '.');
-					} else {
-						button.text('Uploading');
-					}
-				}, 200);
-			},
-			onComplete: function(file, response){
-				button.text(gettext('Replace picture'));
-				result = response.split("(")[1].split(")")[0].split(",");
-				address = result[0].replace("'", "").replace("'", "");
-				x = result[1];
-				y = result[2];
-				x2 = result[3];
-				y2 = result[4];
-				window.clearInterval(interval);
-				this.enable();
-				var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
-				doCrop(image, x, y, x2, y2);
-				document.getElementById('upload_picture_url').value = (address);
-			}
-		});
-	});
-	function doCrop(elem, x, y, x2, y2) {
-			jQuery(elem).Jcrop({
-				allowMove:		true,
-				onSelect:		setCoords,
-				bgColor:		'black',
-				bgOpacity:		.4,
-				setSelect:		[ x2, y2, x, y],
-				aspectRatio:	1
-			});
-	}
-	function setCoords(c)
-	{
-		// c.x, c.y, c.x2, c.y2, c.w, c.h
-		document.getElementById('x1').value = (c.x);
-		document.getElementById('y1').value = (c.y);
-		document.getElementById('x2').value = (c.x2);
-		document.getElementById('y2').value = (c.y2);
-	};
-</script>
-
 
 	<tal:block repeat="form_item python:form_items[0:13]">
 		<tal:block replace="structure form_item/html" />
@@ -162,6 +101,67 @@
 	<tal:block repeat="form_item python:form_items[15:]">
 		<tal:block replace="structure form_item/html" />
 	</tal:block>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var button = $('#picture_upload'), interval;
+		new AjaxUpload(button,{
+			action: 'file_upload/upload_file', 
+			name: 'upload_file',
+			onSubmit : function(file, ext){
+				if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
+						// extension is not allowed
+						alert('Error: invalid file extension');
+						// cancel upload
+						return false;
+				}
+				$('#ambassador_species_picture').empty();
+				button.text('Uploading');
+				this.disable();
+				interval = window.setInterval(function(){
+					var text = button.text();
+					if (text.length < 12){
+						button.text(text + '.');
+					} else {
+						button.text('Uploading');
+					}
+				}, 200);
+			},
+			onComplete: function(file, response){
+				button.text(gettext('Replace picture'));
+				result = response.split("(")[1].split(")")[0].split(",");
+				address = result[0].replace("'", "").replace("'", "");
+				x = result[1];
+				y = result[2];
+				x2 = result[3];
+				y2 = result[4];
+				window.clearInterval(interval);
+				this.enable();
+				var image = $('<img'+'>').appendTo('#ambassador_species_picture').attr('src', address);
+				doCrop(image, x, y, x2, y2);
+				document.getElementById('upload_picture_url').value = (address);
+			}
+		});
+	});
+	function doCrop(elem, x, y, x2, y2) {
+			jQuery(elem).Jcrop({
+				allowMove:		true,
+				onSelect:		setCoords,
+				bgColor:		'black',
+				bgOpacity:		.4,
+				setSelect:		[ x2, y2, x, y],
+				aspectRatio:	1
+			});
+	}
+	function setCoords(c)
+	{
+		// c.x, c.y, c.x2, c.y2, c.w, c.h
+		document.getElementById('x1').value = (c.x);
+		document.getElementById('y1').value = (c.y);
+		document.getElementById('x2').value = (c.x2);
+		document.getElementById('y2').value = (c.y2);
+	};
+</script>
 </tal:block>
 
 <tal:block metal:fill-slot="custom_properties">
