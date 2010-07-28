@@ -1206,8 +1206,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         # Errors occured
         if err:
-            if not REQUEST: return err
-            self.setSessionErrorsTrans(err)
+            if not REQUEST:
+                return err
+            self.setSessionErrorsTrans(str(err))
             self.setCreateAccountSession(username, firstname, lastname, email, password)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
