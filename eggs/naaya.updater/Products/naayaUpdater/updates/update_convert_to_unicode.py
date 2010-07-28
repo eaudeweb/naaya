@@ -35,7 +35,7 @@ class UpdateConvertToUnicode(UpdateScript):
     title = 'Update object attributes to unicode'
     #meta_type = 'Naaya Update Script'
     creation_date = 'Jan 20, 2010'
-    authors = ['David Batranu']
+    authors = ['David Batranu', 'Alexandru Plugaru']
     #priority = PRIORITY['LOW']
     description = 'Updates object attributes to unicode if needed. Currently only works for Naaya Local Channel `title` and Naaya Portlet `_text`'
     #dependencies = []
@@ -45,7 +45,7 @@ class UpdateConvertToUnicode(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        self.update_local_channels(portal)
+        self.update_title(portal)
         self.update_portlets(portal)
         return True
 
@@ -56,11 +56,14 @@ class UpdateConvertToUnicode(UpdateScript):
                 continue
             self.convert_attribute(portlet, '_text')
 
-    def update_local_channels(self, portal):
-        syndication = portal.getSyndicationTool()
-        lchannels = syndication.objectValues(['Naaya Local Channel'])
-        for channel in lchannels:
-            self.convert_attribute(channel, 'title')
+    def update_title(self, portal):
+        catalog = portal.getCatalogTool()
+        for brain in catalog(title="1") + catalog(title="NOT 1"):
+            try:
+                obj = brain.getObject()
+            except:
+                continue
+            self.convert_attribute(obj, 'title')
 
     def convert_attribute(self, obj, attr, enc='utf-8'):
         attribute = getattr(obj, attr)
