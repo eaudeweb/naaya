@@ -16,10 +16,11 @@ function toggleSelect(checkbox, form_name, name) {
 </script>
 
 <table class="datatable" width="95%" tal:define="
+        meeting here/getMeeting;
         sort_on python:request.get('sort_on', '');
         users python:here.getAttendees(sort_on)">
     <tr>
-        <th width="30px" tal:condition="here/userCanChangePermissions">
+        <th width="30px" tal:condition="meeting/checkPermissionChangePermissions">
             <span i18n:translate="Select"></span>
             <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, '${form_name}', '${input_name}')"/>
         </th>
@@ -48,7 +49,7 @@ function toggleSelect(checkbox, form_name, name) {
     <tr tal:repeat="user users"
             tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
         <tal:block define="user_info python:here.getAttendeeInfo(user)">
-        <td tal:condition="here/userCanChangePermissions">
+        <td tal:condition="meeting/checkPermissionChangePermissions">
             <input type="checkbox" tal:attributes="name input_name; value user_info/uid"/>
         </td>
         <td tal:define="name user_info/name">

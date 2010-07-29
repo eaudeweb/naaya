@@ -120,7 +120,7 @@
             </tal:block>
 
             <p tal:define="site here/getSite">
-            <tal:block condition="python:here.getUserLevel(request) > 0">
+            <tal:block condition="here/checkPermissionParticipateInMeeting">
                 <a style="float: left; text-align: center; padding: 10px" title="Download meeting to your calendar"
                       tal:attributes="href string:${here/absolute_url}/get_ics">
                     <img alt="" tal:attributes="src here/icalendar_icon" />
@@ -134,7 +134,7 @@
                     <br />
                     Agenda
                 </a>
-            <tal:block condition="python:here.getUserLevel(request) > 0">
+            <tal:block condition="here/checkPermissionParticipateInMeeting">
                 <a tal:condition="here/minutes_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting minutes"
                      tal:attributes="href string:${site/absolute_url}/${here/minutes_pointer}">
                     <img alt="" tal:attributes="src here/minutes_icon" />
@@ -154,7 +154,7 @@
                     Participants
                 </a>
             </tal:block>
-            <tal:block condition="python:here.getUserLevel(request) == 2">
+            <tal:block condition="here/checkPermissionAdminMeeting">
                 <a style="float: left; text-align: center; padding: 10px" title="Send an email to (some) participants"
                      tal:attributes="href string:${here/absolute_url}/email_sender">
                     <img alt="" tal:attributes="src here/email_icon" />
@@ -167,15 +167,15 @@
             <!-- Make sure the folder listing is displayed after the map -->
             <div style="clear: both"></div>
 
-            <tal:block condition="python:here.getUserLevel(request) == 0">
+            <tal:block condition="not: here/checkPermissionParticipateInMeeting">
             <p tal:define="site here/getSite">
                 <span class="buttons">
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="Click here to participate"></a>
                 </span>
             </p>
             </tal:block>
- 
-            <tal:block condition="python:here.getUserLevel(request) > 0">
+
+            <tal:block condition="here/checkPermissionParticipateInMeeting">
 
                 <span tal:replace="structure here/menusubmissions" />
 

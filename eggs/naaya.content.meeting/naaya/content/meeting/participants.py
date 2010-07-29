@@ -12,6 +12,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
+from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 from utils import findUsers, findUsersWithRole
 from subscriptions import Subscriptions
@@ -26,28 +27,29 @@ class Participants(SimpleItem):
         self.id = id
         self.subscriptions = Subscriptions('subscriptions')
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getMeeting')
     def getMeeting(self):
         return self.aq_parent
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSubscriptions')
     def getSubscriptions(self):
         return self.subscriptions
 
-    def resetSubscriptions(self):
-        """ """
-        self.subscriptions = Subscriptions('subscriptions')
-
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsers')
     def findUsers(self, search_param, search_term):
         """ """
         if len(search_term) == 0:
             return []
         return findUsers(self.getSite(), search_param, search_term)
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsersWithRole')
     def findUsersWithRole(self, search_role):
         """ """
         if len(search_role) == 0:
             return []
         return findUsersWithRole(self.getSite(), search_role)
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getParticipants')
     def getParticipants(self):
         """ """
         meeting = self.getMeeting()
@@ -55,6 +57,7 @@ class Participants(SimpleItem):
         administrators = meeting.users_with_local_role(ADMINISTRATOR_ROLE)
         return administrators + participants
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'participantsCount')
     def participantsCount(self):
         """ """
         return len(self.getParticipants())
@@ -81,12 +84,14 @@ class Participants(SimpleItem):
         else:
             meeting.manage_setLocalRoles(uid, [WAITING_ROLE])
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'setAttendees')
     def setAttendees(self, role, REQUEST):
         """ """
-        uids = REQUEST.form.get('uids', [])
-        assert isinstance(uids, list)
-        for uid in uids:
-            self._set_attendee(uid, role)
+        if REQUEST.REQUEST_METHOD == 'POST':
+            uids = REQUEST.form.get('uids', [])
+            assert isinstance(uids, list)
+            for uid in uids:
+                self._set_attendee(uid, role)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
@@ -98,22 +103,26 @@ class Participants(SimpleItem):
         if subscriptions._is_account_subscription(uid):
             subscriptions._reject_account_subscription(uid)
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'delAttendees')
     def delAttendees(self, REQUEST):
         """ """
-        uids = REQUEST.form.get('uids', [])
-        assert isinstance(uids, list)
-        for uid in uids:
-            self._del_attendee(uid)
+        if REQUEST.REQUEST_METHOD == 'POST':
+            uids = REQUEST.form.get('uids', [])
+            assert isinstance(uids, list)
+            for uid in uids:
+                self._del_attendee(uid)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
     def onAttendees(self, REQUEST):
         """ """
-        if 'del_attendees' in REQUEST.form:
-            return self.delAttendees(REQUEST)
-        elif 'set_administrators' in REQUEST.form:
-            return self.setAttendees('Administrator', REQUEST)
-        elif 'set_participants' in REQUEST.form:
-            return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
+        if REQUEST.REQUEST_METHOD == 'POST':
+            if 'del_attendees' in REQUEST.form:
+                return self.delAttendees(REQUEST)
+            elif 'set_administrators' in REQUEST.form:
+                return self.setAttendees('Administrator', REQUEST)
+            elif 'set_participants' in REQUEST.form:
+                return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -129,6 +138,7 @@ class Participants(SimpleItem):
             attendees[uid] = ADMINISTRATOR_ROLE
         return attendees
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getAttendees')
     def getAttendees(self, sort_on=''):
         """ """
         attendees = self._get_attendees()
@@ -154,6 +164,7 @@ class Participants(SimpleItem):
 
         return attendee_uids
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getAttendeeInfo')
     def getAttendeeInfo(self, uid):
         """ """
         subscriptions = self.getSubscriptions()
@@ -174,28 +185,25 @@ class Participants(SimpleItem):
         return {'uid': uid, 'name': name, 'email': email,
                  'organization': organization, 'phone': phone, 'role': role}
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
     def getParticipantRole(self):
         """ """
         return PARTICIPANT_ROLE
 
-    security.declareProtected(view, 'userCanChangePermissions')
-    def userCanChangePermissions(self):
-        """ """
-        return self.checkPermission(change_permissions)
-
-    security.declareProtected(view, 'index_html')
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'index_html')
     def index_html(self, REQUEST):
         """ """
         return self.getFormsTool().getContent({'here': self},
                         'naaya.content.meeting.participants_index')
 
-    security.declareProtected(view, 'pickrole_html')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'pickrole_html')
     def pickrole_html(self, REQUEST):
         """ """
-        return self.getFormsTool().getContent({'here': self},
+        sources = self.getAuthenticationTool().getSources()
+        return self.getFormsTool().getContent({'here': self, 'sources': sources},
                         'naaya.content.meeting.participants_pickrole')
 
-    security.declareProtected(view, 'participants_table')
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'participants_table')
     def participants_table(self, form_name, input_name):
         """ """
         return self.getFormsTool().getContent({'here': self,
