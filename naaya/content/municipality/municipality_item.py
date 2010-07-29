@@ -431,7 +431,7 @@ class FileUpload(Implicit, Item):
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'upload_file')
+    security.declareProtected(PERMISSION_ADD_OBJECT, 'upload_file')
     def upload_file(self, REQUEST):
         """ """
         temp_folder = self.getSite().temp_folder
