@@ -70,9 +70,10 @@ def findUsers(site, search_param, search_term):
     def userMatched(uid, cn):
         if search_param == 'uid':
             return search_term in uid
-        if search_param == 'cn':
-            return search_term in cn
-        return False
+        elif search_param == 'cn':
+            return search_term.encode('utf-8') in cn
+        else:
+            return False
 
     auth_tool = site.getAuthenticationTool()
     ret = []
