@@ -31,6 +31,7 @@ from AccessControl.Permissions                  import view_management_screens, 
 from App.ImageFile import ImageFile
 from zope.interface import Interface, implements
 from zope.component import adapts, provideAdapter
+import zLOG
 
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.PythonScripts.PythonScript            import manage_addPythonScript
@@ -44,7 +45,6 @@ from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.utils              import CSVReader
-from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaContent.NyContact.NyContact import addNyContact
 from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
@@ -150,7 +150,24 @@ class EnviroWindowsSite(NySite):
         except:
             pass
 
+        self._install_link_checker()
+
+        addNyFolder(self, id='events', title='Events', publicinterface=1)
+        self._getOb('events').folder_meta_types=['Naaya Event']
+        event_folder_custom_index = (
+            "<metal:block use-macro=\"python:here.getFormsTool()."
+            "getForm('event_folder_index').macros['page']\" />")
+        self['events']['index'].pt_edit(text=event_folder_custom_index,
+                                        content_type='')
+
+    def _install_link_checker(self):
         #create and configure LinkChecker instance
+        try:
+            from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
+        except ImportError:
+            zLOG.LOG('naaya.envirowindows', zLOG.WARNING,
+                     'Mising Products.LinkChecker')
+            return
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
         linkchecker_ob.manage_edit(proxy='', batch_size=10, catalog_name=ID_CATALOGTOOL)
@@ -160,14 +177,6 @@ class EnviroWindowsSite(NySite):
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
                 linkchecker_ob.manage_addProperty(k, p)
-
-        addNyFolder(self, id='events', title='Events', publicinterface=1)
-        self._getOb('events').folder_meta_types=['Naaya Event']
-        event_folder_custom_index = (
-            "<metal:block use-macro=\"python:here.getFormsTool()."
-            "getForm('event_folder_index').macros['page']\" />")
-        self['events']['index'].pt_edit(text=event_folder_custom_index,
-                                        content_type='')
 
     #object getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
