@@ -4,10 +4,18 @@
   i18n_domain="naaya">
 
   <configure zcml:condition="installed Products.naayaUpdater">
-	<!--<utility-->
-	<!--	name="newsevents_paths.update"-->
-	<!--	provides="Products.naayaUpdater.interfaces.IUpdateScript"-->
-	<!--	component=".update_newsevents_paths.UpdateNewsEventsPathsUpdateScript"-->
-	<!--	permission="zope2.ViewManagementScreens" />-->
+	<!--
+	<utility
+		name="newsevents_paths.update"
+		provides="Products.naayaUpdater.interfaces.IUpdateScript"
+		component=".update_newsevents_paths.UpdateNewsEventsPathsUpdateScript"
+		permission="zope2.ViewManagementScreens" />
+	<utility
+		name="semide.update"
+		provides="..interfaces.IUpdateScript"
+		component=".update_semide_sites.UpdateSemideSites"
+		permission="zope2.ViewManagementScreens" />
+	-->
   </configure>
+
 </configure>
