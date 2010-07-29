@@ -1,7 +1,7 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
-	<title tal:define="category request/category | nothing;
+	<title tal:define="category request/category | here/getDefaultCategory;
 						category_name python:here.getCategoryList(category)[0];"
 			tal:content="string:${here/title} listing - ${category_name} | ${here/site_title}" />
 </metal:block>
@@ -25,7 +25,7 @@
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<tal:block define="
-					global category request/category | nothing;
+					global category request/category|here/getDefaultCategory;
 					global category_item python:request.get('category_item', '');
 					global page python:request.get('page', '');
 					global category_name python:here.getCategoryList(category);

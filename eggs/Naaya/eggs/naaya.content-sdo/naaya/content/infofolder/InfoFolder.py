@@ -297,6 +297,11 @@ class NyInfoFolder(NyFolder):
             list_items = [{'id': c_list.id, 'title': c_list.title} for c_list in self.utSortObjsListByAttr(category_list, 'id', 0)]
             return ptool[ref_list_id].title, list_items
 
+    def getDefaultCategory(self):
+        items_schema = getattr(self, '%s_schema' % self.info_type)
+        #property_id gets the first possible value
+        return [(k, v) for k, v in items_schema.items() if v.has_key('property_type') and v['property_type'] == 'Sdo category'][0][0]
+
     def splitFolderCategories(self):
         """ Splits folder categories in two for better viewing """
         left = self.folder_categories[::2]
@@ -329,8 +334,8 @@ class NyInfoFolder(NyFolder):
 
     def itemsPaginator(self, REQUEST):
         """ """
-        category = REQUEST.get('category', '')
-        category_item = REQUEST.get('category_item', '')
+        category = REQUEST.get('category', self.getDefaultCategory())
+        category_item = REQUEST.get('category_item', '1')
 
         items_list = self.getInfosByCategoryId(category, category_item)
         paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)   #Show 10 documents per page
