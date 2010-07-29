@@ -272,11 +272,15 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
             ret = self.email.replace('@', ' at ')
         return ret
 
+    def checkPermissionEditObjects(self):
+        """
+        Check the permissions to edit NyMunicipality objects.
+        """
+        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
         if self.hasVersion():
             obj = self.version
