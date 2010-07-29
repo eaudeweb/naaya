@@ -416,11 +416,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     syndicationtool_ob.add_channeltype_item(channeltype.id, channeltype.title)
                 for channel in skel_handler.root.syndication.scriptchannels:
                     language = self.utEmptyToNone(channel.language)
-                    type = self.utEmptyToNone(channel.type)
+                    ch_type = self.utEmptyToNone(channel.type)
                     body = self.futRead(join(skel_path, 'syndication', '%s.py' % channel.id), 'r')
                     channel_ob = syndicationtool_ob._getOb(channel.id, None)
                     if channel_ob is None:
-                        syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, type, body, channel.numberofitems, channel.portlet)
+                        syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, ch_type, body, channel.numberofitems, channel.portlet)
                         channel_ob = syndicationtool_ob._getOb(channel.id)
                     else:
                         channel_ob.write(body)
@@ -429,8 +429,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                         portletstool_ob._getOb('%s%s' % (PREFIX_PORTLET, channel.id)).pt_edit(text=content, content_type='')
                 for channel in skel_handler.root.syndication.localchannels:
                     language = self.utEmptyToNone(channel.language)
-                    type = self.utEmptyToNone(channel.type)
-                    syndicationtool_ob.manage_addLocalChannel(channel.id, channel.title, channel.description, language, type, channel.objmetatype.split(','), channel.numberofitems, 1)
+                    ch_type = self.utEmptyToNone(channel.type)
+                    syndicationtool_ob.manage_addLocalChannel(channel.id, channel.title, channel.description, language, ch_type, channel.objmetatype.split(','), channel.numberofitems, 1)
                 for channel in skel_handler.root.syndication.remotechannels:
                     syndicationtool_ob.manage_addRemoteChannel(channel.id, channel.title, channel.url, channel.numbershownitems, 1)
             #load portlets and links lists
