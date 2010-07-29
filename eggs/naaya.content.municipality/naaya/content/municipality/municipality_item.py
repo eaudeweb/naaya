@@ -454,8 +454,8 @@ class FileUpload(Implicit, Item):
 
 InitializeClass(FileUpload)
 
-from Products.Naaya.NySite import NySite
-NySite.file_upload = FileUpload('file_upload')
+from Products.Naaya.NyFolder import NyFolder
+NyFolder.file_upload = FileUpload('file_upload')
 
 def get_image_size(file):
     """
