@@ -10,7 +10,6 @@ setup(name='naaya.envirowindows',
     zip_safe=False,
     install_requires=[
         'Naaya',
-        'Products.NaayaLinkChecker',
         'Products.RDFCalendar',
         'Products.RDFSummary',
     ]
