@@ -206,14 +206,6 @@
     component=".update_selection_lists.UpdateSelectionLists"
     permission="zope2.ViewManagementScreens" />
 
-<!--
-  <utility
-    name="semide.update"
-    provides="..interfaces.IUpdateScript"
-    component=".update_semide_sites.UpdateSemideSites"
-    permission="zope2.ViewManagementScreens" />
--->
-
   <utility
     name="standard_template.update"
     provides="..interfaces.IUpdateScript"
