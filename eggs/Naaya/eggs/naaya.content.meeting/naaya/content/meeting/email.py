@@ -8,12 +8,12 @@ from AccessControl.Permissions import view
 import zLOG
 
 #Naaya imports
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate, EmailPageTemplateFile
 
 #naaya.content.meeting imports
 from naaya.content.meeting import WAITING_ROLE
+from naaya.content.meeting import PERMISSION_ADMIN_MEETING
 from utils import getUserEmail
 
 def configureEmailNotifications(site):
@@ -60,7 +60,7 @@ class EmailSender(SimpleItem):
     def getMeeting(self):
         return self.aq_parent
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self,
@@ -101,7 +101,7 @@ class EmailSender(SimpleItem):
                 'Email sending failed for template %s - %s' % (template_id, str(e)))
             return 0
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_email')
     def send_email(self, from_email, subject, body_text, REQUEST, to_uids=None):
         """ """
         result = 0
@@ -116,7 +116,7 @@ class EmailSender(SimpleItem):
                                                 'result': result},
                         'naaya.content.meeting.email_sendstatus')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_signup_email')
     def send_signup_email(self, signup):
         """ """
         meeting = self.getMeeting()
@@ -131,7 +131,7 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_signup',
                     from_email, to_email, mail_opts)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_account_subscription_email')
     def send_account_subscription_email(self, account_subscription):
         """ """
         meeting = self.getMeeting()
@@ -147,7 +147,7 @@ class EmailSender(SimpleItem):
                     from_email, to_email, mail_opts)
 
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_accepted_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_signup_accepted_email')
     def send_signup_accepted_email(self, signup):
         """ """
         meeting = self.getMeeting()
@@ -165,7 +165,7 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_signup_accepted',
                     from_email, to_email, mail_opts)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_signup_rejected_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_signup_rejected_email')
     def send_signup_rejected_email(self, signup):
         """ """
         meeting = self.getMeeting()
@@ -178,7 +178,7 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_signup_rejected',
                     from_email, to_email, mail_opts)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_accepted_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_account_subscription_accepted_email')
     def send_account_subscription_accepted_email(self, account_subscription):
         """ """
         meeting = self.getMeeting()
@@ -194,7 +194,7 @@ class EmailSender(SimpleItem):
         return self._send_email_with_template('naaya.content.meeting.email_account_subscription_accepted',
                     from_email, to_email, mail_opts)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'send_account_subscription_rejected_email')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'send_account_subscription_rejected_email')
     def send_account_subscription_rejected_email(self, account_subscription):
         """ """
         meeting = self.getMeeting()

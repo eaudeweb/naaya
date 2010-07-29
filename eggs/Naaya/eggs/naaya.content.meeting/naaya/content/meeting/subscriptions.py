@@ -9,13 +9,14 @@ from Globals import InitializeClass
 from Persistence import Persistent
 from BTrees.OOBTree import OOBTree
 from AccessControl.User import BasicUserFolder, SimpleUser
+from AccessControl.Permissions import view
 
 #Naaya imports
-from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 #meeting imports
 from naaya.content.meeting import PARTICIPANT_ROLE
+from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
 
 class Subscriptions(SimpleItem):
@@ -30,6 +31,7 @@ class Subscriptions(SimpleItem):
         self._signups = OOBTree()
         self._account_subscriptions = OOBTree()
 
+    security.declareProtected(view, 'getMeeting')
     def getMeeting(self):
         return self.aq_parent.aq_parent
 
@@ -66,8 +68,8 @@ class Subscriptions(SimpleItem):
 
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_signup_email(signup)
-        
 
+    security.declareProtected(view, 'signup')
     def signup(self, REQUEST):
         """ """
         if REQUEST.REQUEST_METHOD == 'GET':
@@ -95,23 +97,27 @@ class Subscriptions(SimpleItem):
                 self._add_signup(formdata)
                 REQUEST.RESPONSE.redirect(self.absolute_url() + '/signup_successful')
 
+    security.declareProtected(view, 'signup_successful')
     def signup_successful(self, REQUEST):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_signup_successful')
 
+    security.declareProtected(view, 'subscribe')
     def subscribe(self, REQUEST):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe')
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignups')
     def getSignups(self):
         """ """
         return self._signups.itervalues()
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignup')
     def getSignup(self, key):
         """ """
         return self._signups.get(key, None)
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'index_html')
     def index_html(self, REQUEST):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_index')
@@ -157,7 +163,7 @@ class Subscriptions(SimpleItem):
         """ """
         return self._signups.has_key(key) and self._signups[key].accepted == 'accepted'
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'manageSignups')
     def manageSignups(self, REQUEST):
         """ """
         keys = REQUEST.form.get('keys', [])
@@ -174,6 +180,7 @@ class Subscriptions(SimpleItem):
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    security.declareProtected(view, 'welcome')
     def welcome(self, REQUEST):
         """ """
         if 'logout' in REQUEST.form:
@@ -182,7 +189,7 @@ class Subscriptions(SimpleItem):
 
         key = REQUEST.get('key', None)
         signup = self.getSignup(key)
-        if self._is_signup(key): 
+        if self._is_signup(key):
             REQUEST.SESSION['nymt-current-key'] = key
 
         return self.getFormsTool().getContent({'here': self,
@@ -204,19 +211,23 @@ class Subscriptions(SimpleItem):
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_account_subscription_email(account_subscription)
 
+    security.declareProtected(view, 'subscribe_account')
     def subscribe_account(self, REQUEST):
         """ """
         self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscribe_account_successful')
 
+    security.declareProtected(view, 'subscribe_account_successful')
     def subscribe_account_successful(self, REQUEST):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe_successful')
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getAccountSubscriptions')
     def getAccountSubscriptions(self):
         """ """
         return self._account_subscriptions.itervalues()
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getAccountSubscription')
     def getAccountSubscription(self, uid):
         """ """
         return self._account_subscriptions.get(uid, None)
@@ -225,7 +236,7 @@ class Subscriptions(SimpleItem):
         """ """
         return self._account_subscriptions.has_key(uid) and self._account_subscriptions[uid].accepted == 'accepted'
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'manageSignups')
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'manageSignups')
     def manageAccountSubscriptions(self, REQUEST):
         """ """
         uids = REQUEST.form.get('uids', [])
