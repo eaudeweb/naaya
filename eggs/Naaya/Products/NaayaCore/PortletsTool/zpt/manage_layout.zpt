@@ -1,6 +1,7 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure here/manage_tabs" />
 <script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
+<script type="text/javascript" src="misc_/Naaya/jquery-ui.js"></script>
 
 <style>
     table.datatable { border: 1px solid #555; border-collapse:collapse; margin: 1em; }
