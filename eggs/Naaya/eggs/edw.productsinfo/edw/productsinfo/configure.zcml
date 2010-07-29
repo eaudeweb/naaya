@@ -9,7 +9,21 @@
   <browser:page
     name="products.info"
     for=".ISite"
-    class=".browser.View"
+    class=".browser.Info"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="portals.info"
+    for=".ISite"
+    class=".browser.Portals"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    name="portal.errors"
+    for=".ISite"
+    class=".browser.Errors"
     permission="zope2.View"
     />
 
