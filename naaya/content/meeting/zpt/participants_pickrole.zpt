@@ -13,10 +13,7 @@
         <input type="button" name="btnCloseTop" value="Close window" onclick="javascript:self.close();" />
     </p>
 
-    <tal:block define="
-                auth_tool here/getAuthenticationTool;
-                sources auth_tool/getSources"
-            repeat="source sources">
+    <tal:block repeat="source sources">
         <tal:block define="user_folder source/getUserFolder;
                         expand python:source.splitToList(request.get('expand', 'ROOT'));
                 c python:source.connectLDAP(user_folder);
@@ -36,7 +33,7 @@
                                         tal:define="param python:source.joinToList(source.removeFromList(expand, str(role_id)))"
                                         tal:attributes="href string:${here/absolute_url}/pickrole_html?expand=${param}">
                                         <img src="misc_/Naaya/minus.gif" tal:attributes="alt role_description" />
-                                    </a>                        
+                                    </a>
                                     <a tal:condition="python: not source.isInList(expand, role_id)"
                                         tal:define="param python:source.joinToList(source.addToList(expand, str(role_id)))"
                                         tal:attributes="href string:${here/absolute_url}/pickrole_html?expand=${param}">

@@ -9,7 +9,7 @@ import vobject
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens, view, change_permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
@@ -33,6 +33,7 @@ from Products.Naaya.NySite import NySite
 
 #Meeting imports
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
+from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from participants import Participants
 from email import EmailSender, configureEmailNotifications
 from reports import MeetingReports
@@ -121,7 +122,7 @@ def meeting_on_install(site):
             portal_map.adminAddSymbol(title=symbol_name, picture=symbol)
 
     configureEmailNotifications(site)
-    
+
 def meeting_add_html(self):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
@@ -181,8 +182,12 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.submitThis()
 
     # add change permission to administrator
-    permission = Permission('Change permissions', (), ob)
-    permission.setRoles(['Administrator',])
+    permission = Permission(change_permissions, (), ob)
+    permission.setRoles([ADMINISTRATOR_ROLE])
+    permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (), ob)
+    permission.setRoles([WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
+    permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
+    permission.setRoles([ADMINISTRATOR_ROLE])
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -240,9 +245,11 @@ class NyMeeting(NyContentData, NyFolder):
         self.email_sender = EmailSender('email_sender')
         self.survey_required = False
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getParticipants')
     def getParticipants(self):
         return self.participants
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'getEmailSender')
     def getEmailSender(self):
         return self.email_sender
 
@@ -359,21 +366,20 @@ class NyMeeting(NyContentData, NyFolder):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    def getUserLevel(self, REQUEST):
+    security.declareProtected(view, 'checkPermissionParticipateInMeeting')
+    def checkPermissionParticipateInMeeting(self):
         """ """
-        current_user = REQUEST.AUTHENTICATED_USER.getUserName()
-        roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
+        return self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING)
 
-        if 'Manager' in roles:
-            return 2
-        elif ADMINISTRATOR_ROLE in roles:
-            return 2
-        elif PARTICIPANT_ROLE in roles:
-            return 1
-        elif WAITING_ROLE in roles:
-            return 1
-        else:
-            return 0
+    security.declareProtected(view, 'checkPermissionAdminMeeting')
+    def checkPermissionAdminMeeting(self):
+        """ """
+        return self.checkPermission(PERMISSION_ADMIN_MEETING)
+
+    security.declareProtected(view, 'checkPermissionChangePermissions')
+    def checkPermissionChangePermissions(self):
+        """ """
+        return self.checkPermission(change_permissions)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -383,7 +389,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        if self.survey_required and self.getUserLevel(REQUEST) > 0:
+        if self.survey_required and self.checkPermissionParticipateInMeeting():
             site = self.getSite()
             path = str(self.survey_pointer)
             survey_ob = site.unrestrictedTraverse(path, None)
@@ -410,6 +416,7 @@ class NyMeeting(NyContentData, NyFolder):
         return self.getFormsTool().getContent({'here': self},
                             'naaya.content.meeting.meeting_menusubmissions')
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'get_ics')
     def get_ics(self, REQUEST):
         """ Export this meeting as 'ics' """
 

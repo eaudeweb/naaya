@@ -36,7 +36,7 @@
     </h1>
 
     <div class="floated-buttons">
-        <span tal:condition="here/userCanChangePermissions" class="buttons">
+        <span tal:condition="meeting/checkPermissionChangePermissions" class="buttons">
             <a tal:attributes="href meeting/participants/subscriptions/absolute_url" i18n:translate="Applicants management"></a>
         </span>
         <span class="buttons">
@@ -44,10 +44,10 @@
         </span>
     </div>
 
-    <p tal:condition="here/userCanChangePermissions" i18n:translate="This page is for managing the meeting participants. You can search and add participants, remove participants and select administrators for this meeting."></p>
-    <p tal:condition="not:here/userCanChangePermissions" i18n:translate="This page is for viewing the meeting participants."></p>
+    <p tal:condition="meeting/checkPermissionChangePermissions" i18n:translate="This page is for managing the meeting participants. You can search and add participants, remove participants and select administrators for this meeting."></p>
+    <p tal:condition="not:meeting/checkPermissionChangePermissions" i18n:translate="This page is for viewing the meeting participants."></p>
 
-    <fieldset tal:condition="here/userCanChangePermissions">
+    <fieldset tal:condition="meeting/checkPermissionChangePermissions">
         <legend i18n:translate="Search and Add Users"></legend>
         <p i18n:translate="Use this form to find EIONET LDAP or local users and assign them to the meeting."></p>
 
@@ -168,7 +168,7 @@
     </fieldset>
     <fieldset>
         <legend i18n:translate="List of participants"></legend>
-        <p tal:condition="here/userCanChangePermissions"
+        <p tal:condition="meeting/checkPermissionChangePermissions"
              i18n:translate="Use this form to view and remove participants. You can also nominate participants to be administrators or not."></p>
         <p>Currently <em tal:content="here/participantsCount"/> participants out of <em tal:content="here/max_participants"/> maximum participants.</p>
         <tal:block define="sort_on python:request.get('sort_on', '');
@@ -182,9 +182,9 @@
         <form method="post" action="onAttendees" name="formOnAttendees">
             <tal:block replace="structure python:here.participants_table(form_name='formOnAttendees', input_name='uids:list')"/>
 
-            <input tal:condition="here/userCanChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
-            <input tal:condition="here/userCanChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
-            <input tal:condition="here/userCanChangePermissions" type="submit" name="set_participants" value="Make participants"/>
+            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="del_attendees" value="Remove selected participants"/>
+            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="set_administrators" value="Make administrators"/>
+            <input tal:condition="meeting/checkPermissionChangePermissions" type="submit" name="set_participants" value="Make participants"/>
         </form>
         </tal:block>
 

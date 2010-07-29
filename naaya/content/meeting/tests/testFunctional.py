@@ -11,14 +11,15 @@ from Products.NaayaSurvey.SurveyTool import manage_addSurveyTool, SurveyTool
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
 #Meeting imports
-from naaya.content.meeting import PARTICIPANT_ROLE
+from naaya.content.meeting import ADMINISTRATOR_ROLE, PARTICIPANT_ROLE
 
 def addPortalMeetingParticipant(portal):
     portal.acl_users._doAddUser('test_participant1', 'participant', [], '', '', '', '')
     portal.acl_users._doAddUser('test_participant2', 'participant', [], '', '', '', '')
+    portal.acl_users._doAddUser('test_admin', 'admin', [], '', '', '', '')
 
 def removePortalMeetingParticipant(portal):
-    portal.acl_users._doDelUsers(['test_participant1', 'test_participant2'])
+    portal.acl_users._doDelUsers(['test_participant1', 'test_participant2', 'test_admin'])
 
 class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
     """ CreateTestCase for NyMeeting object """
@@ -914,6 +915,208 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         assert_admin_access()
 
 
+class NyMeetingAccess(NaayaFunctionalTestCase):
+    """ Access TestCase for NyMeeting object """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain', **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        self.diverted_mail = divert_mail(True)
+        addPortalMeetingParticipant(self.portal)
+        self.portal.info.mymeeting.participants._set_attendee('test_admin', ADMINISTRATOR_ROLE)
+        self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
+        self.portal.info.mymeeting.participants._set_attendee('test_participant2', PARTICIPANT_ROLE)
+
+        try:
+            manage_addSurveyTool(self.portal)
+        except:
+            pass
+        meeting = self.portal.info.mymeeting
+        manage_addMegaSurvey(meeting, title='MySurvey')
+        meeting.survey_pointer = 'info/mymeeting/mysurvey'
+
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        removePortalMeetingParticipant(self.portal)
+        divert_mail(False)
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def testAnonymous(self):
+        # no login
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertAccessDenied()
+        #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
+        #self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendeeInfo?uid=test_admin')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/pickrole_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
+        self.assertAccessDenied()
+        # no logout
+
+    def testParticipant(self):
+        self.browser_do_login('test_participant1', 'participant')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertAccessDenied()
+        #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
+        #self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendeeInfo?uid=test_admin')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/pickrole_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
+        self.assertAccessDenied()
+        self.browser_do_logout()
+
+    def testWaitingList(self):
+        self.browser_do_login('test_participant2', 'participant')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertAccessDenied()
+        #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
+        #self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendeeInfo?uid=test_admin')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/pickrole_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
+        self.assertAccessDenied()
+        self.browser_do_logout()
+
+    def testAdmin(self):
+        self.browser_do_login('test_admin', 'admin')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertAccessDenied(False)
+        #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
+        #self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendeeInfo?uid=test_admin')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/pickrole_html')
+        self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
+        self.assertAccessDenied(False)
+        self.browser_do_logout()
+
+
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyMeetingCreateTestCase))
@@ -923,5 +1126,6 @@ def test_suite():
     suite.addTest(makeSuite(NyMeetingSurveyTestCase))
     suite.addTest(makeSuite(NyMeetingSignupTestCase))
     suite.addTest(makeSuite(NyMeetingAccountSubscriptionTestCase))
+    suite.addTest(makeSuite(NyMeetingAccess))
     return suite
 
