@@ -366,17 +366,14 @@ class NyMeeting(NyContentData, NyFolder):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    security.declareProtected(view, 'checkPermissionParticipateInMeeting')
     def checkPermissionParticipateInMeeting(self):
         """ """
         return self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING)
 
-    security.declareProtected(view, 'checkPermissionAdminMeeting')
     def checkPermissionAdminMeeting(self):
         """ """
         return self.checkPermission(PERMISSION_ADMIN_MEETING)
 
-    security.declareProtected(view, 'checkPermissionChangePermissions')
     def checkPermissionChangePermissions(self):
         """ """
         return self.checkPermission(change_permissions)
