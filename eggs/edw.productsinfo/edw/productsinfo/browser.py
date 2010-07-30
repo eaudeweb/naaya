@@ -1,6 +1,11 @@
 """ Browser Views
 """
-import simplejson as json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+import Zope2
+from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
 from zope.publisher.browser import BrowserPage
 from zope.publisher.browser import NotFound
 
@@ -23,8 +28,7 @@ class Info(BrowserPage):
             }
         return {}
 
-
-    def json(self):
+    def provide_json(self):
         products=[]
         products_folder = self.context.Control_Panel.Products
         for product_name in products_folder.objectIds():
@@ -40,7 +44,7 @@ class Info(BrowserPage):
         error = self.check_token(name)
         if error:
             return json.dumps(error)
-        return self.json()
+        return self.provide_json()
 
     def __call__(self, **kwargs):
         raise NotFound(self.context, 'products.info', self.request)
@@ -48,11 +52,33 @@ class Info(BrowserPage):
 class Portals(Info):
     """ Provides information about portals
     """
-    def json(self):
-        return json.dumps({'error': 'Not implemented error'})
+    def provide_json(self):
+        root = Zope2.app()
+        portals = []
+        for (id, obj) in root.objectItems():
+            # if it has a valid error_log, then it should be a portal (website)
+            try:
+                erlog = obj._getOb('error_log', None)
+                if erlog is not None and isinstance(erlog, SiteErrorLog):
+                    portals.append(obj.getPhysicalPath()[1])
+            except AttributeError:
+                continue
+        return json.dumps(portals)
 
 class Errors(Info):
     """ Provides portal errors_log
     """
-    def json(self):
-        return json.dumps({'error': 'Not implemented error'})
+    def provide_json(self):
+        er = self.context._getOb('error_log', None)
+        errors = []
+        # double check object type, although 'error_log' is a zope sine-qua-non
+        if er is not None and isinstance(er, SiteErrorLog):
+            er_list = er.getLogEntries()
+            for err in er_list:
+                errors.append({'id': err['id'], 
+                               'error_name': err['value'],
+                               'error_type': err['type'],
+                               'date': err['time'],
+                               'url': er.getPhysicalPath()[2] + '/showEntry?id='
+                               + err['id']})
+        return json.dumps(errors)
