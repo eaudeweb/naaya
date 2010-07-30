@@ -5,7 +5,8 @@
 		title here/get_meta_label;
 		alt here/get_meta_label" />
 		<tal:block define="province here/province;
-							global province python:here.get_node_title('provinces', province)">
+							province python:here.get_node_title('provinces', province);
+							global province python:here.getSite().getPortalTranslations()(province)">
 			<span tal:replace="string:${here/municipality}, ${province}" />
 		</tal:block>
 		<span class="available_langs"
@@ -53,7 +54,8 @@
 		<td tal:content="here/phone" />
 	</tr>
 	<tr tal:define="choice here/choice;
-					choice python:here.get_node_title('ambassador_choices', choice)">
+					choice python:here.get_node_title('ambassador_choices', choice);
+					choice python:here.getSite().getPortalTranslations()(choice)">
 		<td class="label" i18n:translate="">Our municipality</td>
 		<td tal:content="choice" />
 	</tr>
