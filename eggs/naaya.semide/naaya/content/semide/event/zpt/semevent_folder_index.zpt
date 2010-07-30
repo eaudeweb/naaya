@@ -123,12 +123,11 @@
 <p i18n:translate="" tal:condition="python:len(results) == 0">No news available</p>
 <form name="objectItems" method="post" action="."
   tal:condition="python:len(results) > 0" tal:define="
-  objects_info here/checkPermissionManageObjects;
-  btn_select python:objects_info[0];
-  btn_delete python:objects_info[1];
-  btn_copy python:objects_info[2];
-  btn_cut python:objects_info[3];
-  btn_paste python:objects_info[4];">
+  btn_select python: here.checkPermissionEditObject() or False;
+  btn_delete python: here.checkPermissionEditObject() or False;
+  btn_copy python: here.checkPermissionEditObject() or False;
+  btn_cut python: here.checkPermissionEditObject() or False;
+  btn_paste python: here.checkPermissionEditObject() or False;">
   <!-- Toolbar buttons -->
   <metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
@@ -138,8 +137,7 @@
       sortdown_gif string:${here/getSitePath}/images/sortdown.gif;
       req_params python:here.getRequestParams(request)">
   <tr>
-  <th class="checkbox" style="width: 4%;" i18n:translate=""
-    tal:condition="btn_select">
+  <th class="checkbox" style="width: 4%;" tal:condition="btn_select" i18n:translate="">
     <input type="checkbox" class="select-all" />
   </th>
   <th style="width: 10%;">
@@ -164,8 +162,8 @@
   <th class="edit" tal:condition="btn_delete"><span i18n:translate="" title="not sortable">Edit</span></th>
   </tr>
   <tr tal:repeat="brain results">
-    <tal:block define="del_permission python:1; edit_permission python:1; object python: brain.getObject()">
-      <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
+    <tal:block define="object python: brain.getObject()">
+      <td class="checkbox" tal:condition="btn_delete" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
       <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.start_date)" /></td>
       <td class="title-column">
         <img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
@@ -178,7 +176,7 @@
       <td tal:content="python:test(object.coverage, object.coverage, '-')" />
       <td tal:content="python:test(object.source, object.source, '-')" />
       <td tal:content="object/contributor" />
-      <td class="edit" tal:condition="edit_permission">
+      <td class="edit" tal:condition="btn_delete">
         <a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html?archive=1"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
       </td>
     </tal:block>
