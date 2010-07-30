@@ -704,7 +704,10 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         """
         results = []
-        gz = kwargs.get('gz', []) #get country list
+        #get country list
+        gz = kwargs.get('gz', [])
+        if not isinstance(gz, list):
+            gz = [gz]
         if skey not in ('news_date', ):
             skey = 'news_date'
         try:    ps_start = int(ps_start)
@@ -856,6 +859,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                          rkey=0, sd='', ed='', p_context=None,
                          ps_start='', **kwargs):
         """ Returns a list of events """
+        if gz != '' and not isinstance(gz, list):
+            gz = [gz]
         try:    ps_start = int(ps_start)
         except: ps_start = 0
         if skey not in ('start_date', ):
@@ -867,7 +872,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             sort_on=skey,
             sort_order=rkey == '1' and 'descending' or 'ascending'
         )
-        if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
+        if query == '' and et == '' and gz and es == '' and sd == '' and ed == '':
             #no criteria then returns the 10 more recent
             brains = catalog_tool(**search_args)
         else:

@@ -13,7 +13,7 @@
         rkey_param python:test(rkey, '', '&amp;rkey=1');
         items python:request.get('items', 10);
 
-        page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&${gz_str}&items=${items};
+        page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&gz=${gz_str}&items=${items};
         results_paginator python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start, gz=gz, items=items);
         results python: results_paginator[int(ps_start):(int(ps_start) + int(items))];">
 
