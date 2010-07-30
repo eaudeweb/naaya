@@ -6,6 +6,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import change_permissions, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
+from AccessControl.requestmethod import postonly
 
 #Naaya imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -85,13 +86,13 @@ class Participants(SimpleItem):
             meeting.manage_setLocalRoles(uid, [WAITING_ROLE])
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'setAttendees')
+    @postonly
     def setAttendees(self, role, REQUEST):
         """ """
-        if REQUEST.REQUEST_METHOD == 'POST':
-            uids = REQUEST.form.get('uids', [])
-            assert isinstance(uids, list)
-            for uid in uids:
-                self._set_attendee(uid, role)
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        for uid in uids:
+            self._set_attendee(uid, role)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def _del_attendee(self, uid):
@@ -104,25 +105,25 @@ class Participants(SimpleItem):
             subscriptions._reject_account_subscription(uid)
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'delAttendees')
+    @postonly
     def delAttendees(self, REQUEST):
         """ """
-        if REQUEST.REQUEST_METHOD == 'POST':
-            uids = REQUEST.form.get('uids', [])
-            assert isinstance(uids, list)
-            for uid in uids:
-                self._del_attendee(uid)
+        uids = REQUEST.form.get('uids', [])
+        assert isinstance(uids, list)
+        for uid in uids:
+            self._del_attendee(uid)
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
+    @postonly
     def onAttendees(self, REQUEST):
         """ """
-        if REQUEST.REQUEST_METHOD == 'POST':
-            if 'del_attendees' in REQUEST.form:
-                return self.delAttendees(REQUEST)
-            elif 'set_administrators' in REQUEST.form:
-                return self.setAttendees('Administrator', REQUEST)
-            elif 'set_participants' in REQUEST.form:
-                return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
+        if 'del_attendees' in REQUEST.form:
+            return self.delAttendees(REQUEST)
+        elif 'set_administrators' in REQUEST.form:
+            return self.setAttendees('Administrator', REQUEST)
+        elif 'set_participants' in REQUEST.form:
+            return self.setAttendees(PARTICIPANT_ROLE, REQUEST)
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
