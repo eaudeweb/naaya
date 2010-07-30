@@ -18,7 +18,6 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
-
 #Zope imports
 from App.ImageFile import ImageFile
 
@@ -30,7 +29,6 @@ from Tools import FlashTool
 
 def initialize(context):
     """ """
-
     #register classes
     context.registerClass(
         SEMIDESite.SEMIDESite,
@@ -50,7 +48,7 @@ def initialize(context):
                 ),
         icon = 'www/FlashTool.gif'
         )
-    
+
 misc_ = {
     'print.gif':ImageFile('www/print.gif', globals()),
     'Site.gif':ImageFile('www/Site.gif', globals()),

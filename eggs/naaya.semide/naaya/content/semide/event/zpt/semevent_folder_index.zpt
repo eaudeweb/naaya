@@ -8,7 +8,7 @@
   es python:request.get('es', '');
   sd python:request.get('sd', '');
   ed python:request.get('ed', '');
-  ps_start python:request.get('start', 0);
+  ps_start python:request.get('page', 0);
   skey python:request.get('skey', 'start_date');
   rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
   rkey_param python:test(rkey, '', '&amp;rkey=1');
