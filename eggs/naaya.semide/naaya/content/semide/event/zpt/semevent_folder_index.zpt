@@ -183,7 +183,7 @@
   </tr>
 </table>
 </form>
-<tal:block define="objects results_paginator; num_per_page python: int(items)">
+<tal:block define="objects results_paginator; num_per_page python: int(items);">
   <metal:block use-macro="here/macro_utils/macros/paginator" />
 </tal:block>
 </tal:block>
