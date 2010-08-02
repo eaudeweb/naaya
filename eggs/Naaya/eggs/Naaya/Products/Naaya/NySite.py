@@ -108,7 +108,6 @@ from NyVersions import NyVersions
 from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
-from Products.NaayaBase.ggeocoding import geocode, reverse_geocode
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method
 from naaya.core.utils import path_in_site
@@ -3790,13 +3789,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     def translate_url(self, *args):
         return translate_url(*args)
-
-    # functions for geocoding
-    def geocode(self, *args):
-        return geocode(*args)
-
-    def reverse_geocode(self, *args):
-        return reverse_geocode(*args)
 
     rdf_cataloged_items = rdf_cataloged_items
 
