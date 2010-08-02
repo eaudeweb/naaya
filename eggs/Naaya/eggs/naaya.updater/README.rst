@@ -22,7 +22,9 @@ provided in this package
     ...     authors = ['John Doe']
     ...     creation_date = 'Jan 01, 2010'
     ...     def _update(self, portal):
+    ...         self.log.info("Updating title for %r", portal)
     ...         portal.title = 'Portal new title'
+    ...         return True
 
 Optionally you can set the following script properties:
     - description
