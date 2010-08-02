@@ -872,7 +872,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             sort_on=skey,
             sort_order=rkey == '1' and 'descending' or 'ascending'
         )
-        if query == '' and et == '' and gz and es == '' and sd == '' and ed == '':
+        if query == '' and et == '' and not gz and es == '' and sd == '' and ed == '':
             #no criteria then returns the 10 more recent
             brains = catalog_tool(**search_args)
         else:
