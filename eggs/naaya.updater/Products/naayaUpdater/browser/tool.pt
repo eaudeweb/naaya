@@ -88,7 +88,8 @@ td.details {
         <tr tal:define="even repeat/script/even; css python:even and 'even' or 'odd'"
             tal:attributes="class string:priority${script/priority}-$css">
           <td>
-            <a tal:attributes="href string:${here/absolute_url}/${script/id}"
+            <a tal:attributes="href string:${here/absolute_url}/${script/id};
+            title string:${script/description}"
               tal:content="script/title" />
           </td>
           <td class="details"
