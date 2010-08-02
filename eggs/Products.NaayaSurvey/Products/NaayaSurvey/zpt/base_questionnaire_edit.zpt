@@ -13,7 +13,7 @@
 
 		<h1 metal:fill-slot="title" i18n:translate="">Edit Survey</h1>
 
-		<div class="field" metal:fill-slot="doc_discussion" />
+		<div class="field" metal:fill-slot="doc_discussion" ></div>
 
 		<metal:block fill-slot="custom_boxes">
 			<metal:block define-slot="custom_boxes">
@@ -26,7 +26,7 @@
 				<label for="expirationdate"><span i18n:translate="">Expiration date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
 				<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
 				<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
-			<div class="field">
+			</div>
 			<!-- Notify owner -->
 			<div class="field">
 				<label for="notify_owner" i18n:translate="">Notify owner when someone takes the survey</label>
