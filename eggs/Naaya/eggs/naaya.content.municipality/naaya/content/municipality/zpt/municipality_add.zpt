@@ -11,7 +11,25 @@
 	<script type="text/javascript" src="jquery.Jcrop.min.js"></script>
 	<script type="text/javascript" src="jquery.ajaxupload.min.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function(){
+		$(function() {
+			var has_run = false;
+			$('#picture_upload').mouseover(function() {
+				if(has_run) return;
+				has_run = true;
+				upload_button();
+			});
+			var too_old_ie = false;
+			if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)){ //test for MSIE x.x;
+				var ieversion=new Number(RegExp.$1) // capture x.x portion and store as a number
+				if (ieversion<7){
+					too_old_ie = true;
+				};
+			};
+			if (!too_old_ie) {
+				upload_button();
+			};
+		});
+		function upload_button() {
 			var button = $('#picture_upload'), interval;
 			new AjaxUpload(button,{
 				action: 'file_upload/upload_file', 
@@ -22,7 +40,7 @@
 							alert('Error: invalid file extension');
 							// cancel upload
 							return false;
-					}
+					};
 					$('#ambassador_species_picture').empty();
 					button.text('Uploading');
 					this.disable();
@@ -50,7 +68,7 @@
 					document.getElementById('upload_picture_url').value = (address);
 				}
 			});
-		});
+		};
 		function doCrop(elem, x, y, x2, y2) {
 				jQuery(elem).Jcrop({
 					allowMove:		true,
@@ -60,7 +78,7 @@
 					setSelect:		[ x2, y2, x, y],
 					aspectRatio:	1
 				});
-		}
+		};
 		function setCoords(c)
 		{
 			// c.x, c.y, c.x2, c.y2, c.w, c.h
