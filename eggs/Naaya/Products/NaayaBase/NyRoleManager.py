@@ -272,6 +272,9 @@ class NyRoleManager(RoleManager):
         state = self._getStorage4LDAPGroupRolesInfo()
         auth_tool = self.getAuthenticationTool()
 
+        if not hasattr(self, 'acl_satellite'):
+            return state
+
         mapped_roles = self.acl_satellite.getAllLocalRoles()
         for group in mapped_roles:
             roles = mapped_roles[group]
