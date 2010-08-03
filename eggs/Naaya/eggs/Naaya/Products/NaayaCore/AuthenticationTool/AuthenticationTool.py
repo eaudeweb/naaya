@@ -998,7 +998,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         # get groups_for_user[userid] = list of groups
         groups_for_user = {}
-        for group, v in groups_data:
+        for group, v in groups_data.items():
             for userid in v['members']:
                 if userid not in groups_for_user:
                     groups_for_user[userid] = []
