@@ -1,0 +1,3 @@
+<link id="bespin_base" href="/bespin">
+<script type="text/javascript" src="/bespin/BespinEmbedded.js"></script>
+<script type="text/javascript" src="/bespin/load_bespin.js"></script>
