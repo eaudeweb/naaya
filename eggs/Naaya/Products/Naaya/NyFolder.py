@@ -1449,7 +1449,9 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
 
         version = getattr(doc, 'hasVersion', None) and doc.hasVersion()
         context = version and doc.version or doc
-        for key, value in kwargs.items():
+        field_ids = [ob.prop_name() for ob in
+                     context._get_schema().objectValues() if ob.visible]
+        for key in field_ids:
             value = context.getPropertyValue(key, from_lang)
             if not value:
                 continue
