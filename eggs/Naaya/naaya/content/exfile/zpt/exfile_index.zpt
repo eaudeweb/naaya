@@ -50,7 +50,8 @@
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 
         <!-- Map widget -->
-        <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
         <tr tal:condition="python:here.size()>0" tal:define="
             req_lang request/lang|nothing;
