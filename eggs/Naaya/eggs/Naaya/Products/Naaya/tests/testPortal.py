@@ -73,42 +73,6 @@ class NaayaTests(NaayaTestCase.NaayaTestCase):
         self._portal().getAuthenticationTool().manage_delUsers(names=[usr_obj.name])
         self.assertEqual(self._portal().getAuthenticationTool().getUser(usr_name), None)
 
-    def test_roles(self):
-        """ Add, Edit and Delete a Role """
-        new_role = 'Test Role'
-        permissions = ['Add content', 'Edit content']
-        permission = ['Edit content']
-        initial_roles = self._portal().getAuthenticationTool().list_all_roles()
-        modified_roles = initial_roles[:]
-        modified_roles.append(new_role)
-        
-        #add Role
-        test_role = self._portal().getAuthenticationTool().addRole(new_role)
-        get_permissions = self._portal().getAuthenticationTool().getRolePermissions(new_role)
-        list_roles = self._portal().getAuthenticationTool().list_all_roles()
-        self.assertEqual(get_permissions, [])
-        self.assertEqual(list_roles, modified_roles)
-        
-        #add Permisions to role
-        edit_permissions = self._portal().getAuthenticationTool().editRole(new_role, permissions)
-        get_permissions = self._portal().getAuthenticationTool().getRolePermissions(new_role)
-        self.assertEqual(get_permissions, permissions)
-        
-        #remove permission from role
-        edit_permissions = self._portal().getAuthenticationTool().editRole(new_role, permission)
-        get_permissions = self._portal().getAuthenticationTool().getRolePermissions(new_role)
-        self.assertEqual(get_permissions, permission)
-        
-        #remove all permissions from role
-        edit_permissions = self._portal().getAuthenticationTool().editRole(new_role)
-        get_permissions = self._portal().getAuthenticationTool().getRolePermissions(new_role)
-        self.assertEqual(get_permissions, [])
-        
-        #delete role
-        self._portal().getAuthenticationTool().delRole(new_role)
-        list_roles = self._portal().getAuthenticationTool().list_all_roles()
-        self.assertEqual(list_roles, initial_roles)
-
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()

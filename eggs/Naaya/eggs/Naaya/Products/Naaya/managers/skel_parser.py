@@ -230,24 +230,16 @@ class emailtemplate_struct:
 
 class security_struct:
     def __init__(self):
-        self.grouppermissions = []
         self.roles = []
 
-class permission_struct:
-    """ """
-    def __init__(self, name, description, permissions):
-        """ """
-        self.name = name
-        self.description = description
-        self.permissions = permissions
-
 class role_struct:
-    """ """
-    def __init__(self, name, grouppermissions, permissions):
-        """ """
+    def __init__(self, name):
         self.name = name
-        self.grouppermissions = grouppermissions
-        self.permissions = permissions
+        self.permissions = []
+
+class permission_struct:
+    def __init__(self, name):
+        self.name = name
 
 class notification_struct:
     def __init__(self):
@@ -425,13 +417,13 @@ class skel_handler(ContentHandler):
             obj = security_struct()
             stackObj = saxstack_struct('security', obj)
             self.stack.append(stackObj)
-        elif name == 'grouppermissions':
-            obj = permission_struct(attrs['name'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['permissions'].encode('utf-8').split(','))
-            stackObj = saxstack_struct('grouppermissions', obj)
-            self.stack.append(stackObj)
         elif name == 'role':
-            obj = role_struct(attrs['name'].encode('utf-8'), attrs['grouppermissions'].encode('utf-8').split(','), attrs['permissions'].encode('utf-8').split(','))
+            obj = role_struct(attrs['name'].encode('utf-8'))
             stackObj = saxstack_struct('role', obj)
+            self.stack.append(stackObj)
+        elif name == 'permission':
+            obj = permission_struct(attrs['name'].encode('utf-8'))
+            stackObj = saxstack_struct('permission', obj)
             self.stack.append(stackObj)
         elif name == 'notification':
             obj = notification_struct()
@@ -569,11 +561,11 @@ class skel_handler(ContentHandler):
         elif name == 'security':
             self.stack[-2].obj.security = self.stack[-1].obj
             self.stack.pop()
-        elif name == 'grouppermissions':
-            self.stack[-2].obj.grouppermissions.append(self.stack[-1].obj)
-            self.stack.pop()
         elif name == 'role':
             self.stack[-2].obj.roles.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'permission':
+            self.stack[-2].obj.permissions.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'notification':
             self.stack[-2].obj.notification = self.stack[-1].obj
