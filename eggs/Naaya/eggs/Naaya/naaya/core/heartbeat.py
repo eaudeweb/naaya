@@ -66,3 +66,27 @@ def rdfcalendar_cron(site, hb):
     else:
         transaction.get().note("RDFCalendar cron %r" % physical_path(site))
         transaction.commit()
+
+@adapter(INySite, IHeartbeat)
+def linkchecker_cron(site, hb):
+    """
+    Run the link checker
+    """
+    import transaction
+
+    name = 'site link checker %r' % physical_path(site)
+    if cooldown(name, timedelta(days=7)):
+        return
+
+    transaction.commit() # commit earlier stuff; fresh transaction
+
+    try:
+        for link_checker in site.objectValues(['Naaya LinkChecker']):
+            if hasattr(link_checker, 'cronCheck'):
+                link_checker.cronCheck()
+    except:
+        site.log_current_error()
+        transaction.abort()
+    else:
+        transaction.get().note("LinkChecker cron %r" % physical_path(site))
+        transaction.commit()
