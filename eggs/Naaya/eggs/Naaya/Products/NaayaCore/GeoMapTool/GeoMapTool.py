@@ -1010,8 +1010,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         `geo_location` -- a ``Geo`` object
 
         Example usage::
-            <tal:block content="structure
-                python:here.portal_map.render_object_map(here.geo_location)"/>
+                <tal:block condition="python:here.prop_details('geo_location')['show']"
+                    content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
         """
 
         if not geo_location or geo_location.missing_lat_lon:

@@ -40,7 +40,8 @@
         </tal:block>
 
         <!-- Map widget -->
-        <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
