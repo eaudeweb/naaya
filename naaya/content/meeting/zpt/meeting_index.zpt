@@ -57,7 +57,8 @@
             </metal:block>
 
             <!-- Map widget -->
-            <div id="map_parent_div" style="display: block">
+            <div id="map_parent_div" style="display: block"
+                    tal:condition="python:here.prop_details('geo_location')['show']">
                 <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
             </div>
 
@@ -76,12 +77,14 @@
                 </tal:block>
                 </td>
             </tr>
+           <tal:block condition="python:here.prop_details('geo_location')['show']">
             <tr tal:condition="here/geo_address">
                 <th i18n:translate="Address"></th>
                 <td>
                     <a href="javascript:toggleHideShow('map_parent_div')" tal:content="here/geo_address"/>
                 </td>
             </tr>
+            </tal:block>
             <tal:block content="structure python: here.prop_display_tr('location')" />
             <tal:block content="structure python: here.prop_display_tr('time')" />
             <tr tal:define="
