@@ -252,6 +252,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         log_entries, all_urls = self.checkLinks(urlsinfo, total)
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
 
+    security.declarePrivate('cronCheck')
+    def cronCheck(self):
+        urlsinfo, total = self.processObjects()
+        log_entries, all_urls = self.checkLinks(urlsinfo, total)
+        self.manage_addLogEntry('_cron', time.localtime(), log_entries)
+
     security.declareProtected('Run Manual Check', 'manualCheck')
     def manualCheck(self):
         """ extract the urls from the objects,
