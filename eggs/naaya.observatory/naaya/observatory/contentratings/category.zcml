@@ -1,0 +1,11 @@
+<configure
+	xmlns="http://namespaces.zope.org/zope"
+	xmlns:contentratings="http://namespaces.plone.org/contentratings"
+	i18n_domain="naaya">
+
+	<contentratings:category
+		for="naaya.content.geopoint.geopoint_item.NyGeoPoint"
+		title="Observatory Rating"
+		name="Observatory Rating"
+	/>
+</configure>
