@@ -32,6 +32,7 @@
 		<form id="site_admin_documentation" title="Portal administration - documentation"/>
 		<form id="site_admin_editor" title="Portal administration - editor settings"/>
 		<form id="site_admin_edituser" title="Portal administration - edit user"/>
+		<form id="site_admin_editrole" title="Portal administration - edit role"/>
 		<form id="site_admin_email" title="Portal administration - email settings"/>
 		<form id="site_admin_folderportlets" title="Portal administration - portlets for folders section"/>
 		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
@@ -221,33 +222,93 @@
 		<emailtemplate id="email_modifyaccount" title="Account modified notification"/>
 	</emails>
 	<security>
-		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
-			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
-		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
-			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Consultation objects,Naaya - Add Naaya Simple Consultation objects,Take ownership"/>
-		<grouppermissions name="Add comments" description="Posibility to add comments for each type of content."
-			permissions="Naaya - Add comments for content"/>
-		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
-			permissions="Naaya - Access administrative area,Naaya - Edit content,Take ownership"/>
-		<grouppermissions name="Copy content" description="Copy content. Adding, publishing and deleting are not granted as a part of this privilege. In order to be able to paste the copied content, users must have the add permission in the target location."
-			permissions="Naaya - Copy content,Take ownership"/>
-		<grouppermissions name="Publish content" description="Publish Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Publish content,Naaya - Publish direct,Take ownership"/>
-		<grouppermissions name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners."
-			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
-		<grouppermissions name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
-		<grouppermissions name="Translate pages" description="Translate pages in the portal"
-			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
-		<grouppermissions name="Manage Users" description="Create/modify/delete users in the portal"
-			permissions="Naaya - Access administrative area,Manage users"/>
-		<grouppermissions name="Review content" description="Allow posting reviews/comments to consultation objects."
-			permissions="Naaya - Review Consultation,Naaya - Review Simple Consultation"/>
-		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
-		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Skip Captcha"/>
-		<role name="Contributor" grouppermissions="Add content" permissions=""/>
-		<role name="Reviewer" grouppermissions="Review content" permissions=""/>
-		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Naaya - Manage Consultation,Naaya - Manage Simple Consultation,Naaya - Review Consultation,Naaya - Review Simple Consultation,Manage Naaya Glossary,Add Naaya Forum"/>
+
+		<role name="Anonymous">
+			<permission name="Access Transient Objects" />
+			<permission name="Access contents information" />
+			<permission name="Access session data" />
+			<permission name="Query Vocabulary" />
+			<permission name="Search ZCatalog" />
+			<permission name="Use Database Methods" />
+			<permission name="Use mailhost services" />
+			<permission name="View" />
+			<permission name="WebDAV Lock items" />
+			<permission name="WebDAV Unlock items" />
+			<permission name="WebDAV access" />
+		</role>
+
+		<role name="Authenticated">
+			<permission name="Naaya - Add comments for content" />
+		</role>
+
+		<role name="Contributor">
+			<permission name="Naaya - Access administrative area" />
+			<permission name="Naaya - Add Naaya Consultation objects" />
+			<permission name="Naaya - Add Naaya Document objects" />
+			<permission name="Naaya - Add Naaya Event objects" />
+			<permission name="Naaya - Add Naaya File objects" />
+			<permission name="Naaya - Add Naaya Folder objects" />
+			<permission name="Naaya - Add Naaya Media File objects" />
+			<permission name="Naaya - Add Naaya News objects" />
+			<permission name="Naaya - Add Naaya Photo" />
+			<permission name="Naaya - Add Naaya Pointer objects" />
+			<permission name="Naaya - Add Naaya Simple Consultation objects" />
+			<permission name="Naaya - Add Naaya Story objects" />
+			<permission name="Naaya - Add Naaya URL objects" />
+			<permission name="Naaya - Skip Captcha" />
+			<permission name="Take ownership" />
+		</role>
+
+		<role name="Reviewer">
+			<permission name="Naaya - Review Consultation" />
+			<permission name="Naaya - Review Simple Consultation" />
+		</role>
+
+		<role name="Administrator">
+			<permission name="Access Transient Objects" />
+			<permission name="Access contents information" />
+			<permission name="Access session data" />
+			<permission name="Add Naaya Forum" />
+			<permission name="Manage users" />
+			<permission name="Naaya - Access administrative area" />
+			<permission name="Naaya - Add comments for content" />
+			<permission name="Naaya - Add Naaya Consultation objects" />
+			<permission name="Naaya - Add Naaya Document objects" />
+			<permission name="Naaya - Add Naaya Event objects" />
+			<permission name="Naaya - Add Naaya File objects" />
+			<permission name="Naaya - Add Naaya Folder objects" />
+			<permission name="Naaya - Add Naaya Media File objects" />
+			<permission name="Naaya - Add Naaya News objects" />
+			<permission name="Naaya - Add Naaya Photo" />
+			<permission name="Naaya - Add Naaya Pointer objects" />
+			<permission name="Naaya - Add Naaya Simple Consultation objects" />
+			<permission name="Naaya - Add Naaya Story objects" />
+			<permission name="Naaya - Add Naaya URL objects" />
+			<permission name="Naaya - Copy content" />
+			<permission name="Naaya - Delete content" />
+			<permission name="Naaya - Edit content" />
+			<permission name="Naaya - Manage comments for content" />
+			<permission name="Naaya - Manage Consultation" />
+			<permission name="Naaya - Manage Simple Consultation" />
+			<permission name="Naaya - Publish content" />
+			<permission name="Naaya - Publish direct" />
+			<permission name="Naaya - Review Consultation" />
+			<permission name="Naaya - Review Simple Consultation" />
+			<permission name="Naaya - Translate pages" />
+			<permission name="Naaya - Validate content" />
+			<permission name="Naaya - Skip Captcha" />
+			<permission name="Manage Naaya Glossary" />
+			<permission name="Query Vocabulary" />
+			<permission name="Search ZCatalog" />
+			<permission name="Take ownership" />
+			<permission name="Use Database Methods" />
+			<permission name="Use mailhost services" />
+			<permission name="View" />
+			<permission name="WebDAV Lock items" />
+			<permission name="WebDAV Unlock items" />
+			<permission name="WebDAV access" />
+		</role>
+
 	</security>
 	<notification>
 		<newsmetatype meta_type="Naaya News" action="1"/>

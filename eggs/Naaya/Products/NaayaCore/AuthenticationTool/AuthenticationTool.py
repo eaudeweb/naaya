@@ -78,8 +78,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     manage_options = (
         {'label': 'Users', 'action': 'manage_users_html'},
-        {'label': 'Roles', 'action': 'manage_roles_html'},
-        {'label': 'Permissions', 'action': 'manage_permissions_html'},
         {'label': 'Other sources', 'action': 'manage_sources_html'},
         {'label': 'Properties', 'action': 'manage_propertiesForm',
          'help': ('OFSP','Properties.stx')},
@@ -108,7 +106,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self.id = id
         self.title = title
         self.data = PersistentMapping()
-        Role.__dict__['__init__'](self)
         plugins_tool.__dict__['__init__'](self)
 
     security.declarePrivate('loadDefaultData')
@@ -1117,13 +1114,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
     manage_editUser_html = PageTemplateFile('zpt/authentication_edituser', globals())
 
-    manage_permissions_html = PageTemplateFile('zpt/authentication_permissions', globals())
-    manage_addPermission_html = PageTemplateFile('zpt/authentication_addpermission', globals())
-    manage_editPermission_html = PageTemplateFile('zpt/authentication_editpermission', globals())
-
-    manage_roles_html = PageTemplateFile('zpt/authentication_roles', globals())
     manage_addRole_html = PageTemplateFile('zpt/authentication_addrole', globals())
-    manage_editRole_html = PageTemplateFile('zpt/authentication_editrole', globals())
 
     manage_userRoles_html = PageTemplateFile('zpt/authentication_user_roles', globals())
     sitemap = PageTemplateFile('zpt/authentication_sitemap', globals())

@@ -92,8 +92,31 @@
 		<td colspan="4" i18n:translate=""> Users' list empty </td>
 	</tr>
 </table>
+<p>
 <strong>Note:</strong> The users marked with <img src="misc_/Naaya/star.png" alt="New account" /> are added in the last 5 days.
+</p>
 </form>
+
+<p i18n:translate="">Click a role to edit its permissions:</p>
+<table class="datatable">
+<thead>
+    <th i18n:translate="">Role name</th>
+    <th></th>
+</thead>
+<tbody>
+<tal:block repeat="role here/acl_users/list_all_roles">
+    <tr tal:condition="python:role not in ('Manager', 'Owner')">
+        <td tal:content="role" />
+        <td tal:define="baseurl string:${here/absolute_url}/admin_editrole_html;
+                        href string:${baseurl}?role=${role}">
+            <a tal:attributes="href href">
+                <img src="misc_/Naaya/edit" alt="Edit" />
+            </a>
+        </td>
+    </tr>
+</tal:block>
+</tbody>
+</table>
 
 </tal:block>
 </tal:block>

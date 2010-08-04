@@ -1,0 +1,54 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">
+    Edit permissions for
+    <i i18n:name="role_name" tal:content="options/role" />
+</h1>
+
+<metal:block fill-slot="section" tal:define="
+    role options/role;
+    sorted_zope_perm python:options['permission_names'].keys();
+    dummy python:sorted_zope_perm.sort();
+    has_permission python:lambda zp: options['zope_perm_for_role'][zp];
+    ">
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href string:${here/absolute_url}/admin_users_html"
+               i18n:translate="">Back to users</a>
+        </span>
+    </div>
+    <div class="clearer"></div>
+    <form method="post" name="editRole"
+          tal:attributes="action string:${here/absolute_url}/admin_editrole">
+        <input type="hidden" name="role" tal:attributes="value role" />
+        <table class="datatable">
+            <tr>
+                <th i18n:translate=""></th>
+                <th i18n:translate="">Permission</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tal:block repeat="zope_perm sorted_zope_perm">
+            <tr tal:define="input_id string:inperm-${repeat/zope_perm/index}">
+                <td>
+                    <input type="checkbox" tal:attributes="
+                        name string:zope_perm_list:list;
+                        value zope_perm;
+                        id input_id;
+                        checked python:has_permission(zope_perm)"/>
+                </td>
+                <td>
+                    <label tal:content="python:options['permission_names'][zope_perm]"
+                           tal:attributes="title zope_perm; for input_id" />
+                </td>
+            </tr>
+            </tal:block>
+        </table>
+        <input type="submit" value="Save changes" i18n:attributes="value" />
+    </form>
+</metal:block>
+
+
+</metal:block>

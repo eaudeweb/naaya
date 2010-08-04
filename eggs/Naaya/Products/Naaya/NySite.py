@@ -46,6 +46,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permission import Permission
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
@@ -310,19 +311,18 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
             notificationtool_ob = self.getNotificationTool()
+
             #load security permissions and roles
             if skel_handler.root.security is not None:
-                for permission in skel_handler.root.security.grouppermissions:
-                    authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
                 for role in skel_handler.root.security.roles:
-                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
-                    except: pass
-                    #set the grouppermissions
-                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
-                    #set individual permissions
-                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
-                    b.extend(role.permissions)
-                    self.manage_role(role.name, b)
+                    if role.name not in self.__ac_roles__:
+                        authenticationtool_ob.addRole(role.name)
+                    for permission in role.permissions:
+                        p = Permission(permission.name, (), self)
+                        crt_roles = p.getRoles()
+                        ty = type(crt_roles)
+                        p.setRoles(ty(set(crt_roles) ^ set([role.name])))
+
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
@@ -2252,15 +2252,67 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' % (self.absolute_url(), name))
 
+    def get_naaya_permissions_in_site(self):
+        permission_names = {}
+        for pluggable in self.get_pluggable_content().values():
+            if not self.is_pluggable_item_installed(pluggable['meta_type']):
+                continue
+            zope_perm = pluggable['permission']
+            label = "Submit %s objects" % pluggable['_class'].meta_label
+            permission_names[zope_perm] = label
+        permission_names.update(naaya_known_permissions)
+
+        return permission_names
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editrole_html')
+    def admin_editrole_html(self, role, REQUEST):
+        """ """
+
+        permission_names = self.get_naaya_permissions_in_site()
+
+        zope_perm_for_role = {}
+        for zope_perm in permission_names:
+            p = Permission(zope_perm, (), self)
+            zope_perm_for_role[zope_perm] = bool(role in p.getRoles())
+
+        tmpl = self.getFormsTool().getForm('site_admin_editrole').__of__(self)
+        options = {
+            'role': role,
+            'permission_names': permission_names,
+            'zope_perm_for_role': zope_perm_for_role,
+        }
+        return tmpl(REQUEST, **options)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editrole')
+    def admin_editrole(self, role, zope_perm_list, REQUEST=None):
+        """ Change the permissions of a role """
+
+        for zope_perm in self.get_naaya_permissions_in_site():
+            p = Permission(zope_perm, (), self)
+
+            perm_roles = set(p.getRoles())
+            if zope_perm in zope_perm_list:
+                perm_roles.add(role)
+            else:
+                perm_roles.discard(role)
+
+            ty = type(p.getRoles())
+            p.setRoles(ty(perm_roles))
+
+        if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                                      self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
-    def admin_addrole(self, role='', permissions=[], REQUEST=None):
-        """
-        Create a role, with the specified permissions
-        """
+    def admin_addrole(self, role='', REQUEST=None):
+        """ Create a role, redirect to edit permissions page """
         err = ''
         success = False
         try:
-            self.getAuthenticationTool().addRole(role, permissions)
+            self.getAuthenticationTool().addRole(role)
         except Exception, error:
             err = error
         else:
@@ -3075,7 +3127,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     def checkPermissionForLink(self, name, context):
         #checks the given group of permissions in the given context
-        if name != '': return self.getAuthenticationTool().checkGroupPermission(name, context)
+        if name != '': return context.checkPermission(name)
         else: return 1
 
     def checkPermissionAddFolders(self, context):
@@ -3349,9 +3401,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if pitem == None:
                 raise ValueError('Missing pluggable content type "%s"' % meta_type)
 
-            #add content's permission to `Add content` permission group
-            acl = self.getAuthenticationTool()
-            acl.manage_group_permission('Add content', pitem['permission'], 'add')
+            #add content's permission to some roles
+            role_names = ('Manager', 'Administrator', 'Contributor')
+            self.manage_permission(pitem['permission'], role_names, acquire=1)
 
             #run `on_install` function if defined in content's `config`
             if 'on_install' in pitem:
@@ -3361,21 +3413,18 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.__pluggable_installed_content[meta_type] = 1
             self.searchable_content.append(meta_type)
             self._p_changed = 1
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
     security.declareProtected(view_management_screens, 'manage_uninstall_pluggableitem')
     def manage_uninstall_pluggableitem(self, meta_type=None, REQUEST=None):
         """ """
         if meta_type is not None:
-            pitem = self.get_pluggable_item(meta_type)
             #remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
             self.searchable_content = [x for x in self.searchable_content if x != meta_type]
-            if pitem:
-                #remove content's permission from `Add content` permission group
-                acl = self.getAuthenticationTool()
-                acl.manage_group_permission('Add content', pitem['permission'], 'remove')
-            self._p_changed = 1
+            # not removing the permission (why bother?)
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
     def is_logged(self, REQUEST=None):
@@ -3795,3 +3844,21 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     rstk = RestrictedToolkit()
 
 InitializeClass(NySite)
+
+naaya_known_permissions = {
+    'Naaya - Add comments for content': "Submit comments",
+    'Naaya - Copy content': "Copy objects",
+    'Naaya - Delete content': "Delete objects",
+    'Naaya - Edit content': "Edit objects",
+    'Naaya - Manage comments for content': "Manage comments",
+    'Naaya - Publish content': "Administration",
+    'Naaya - Skip Captcha': "Skip captcha verification",
+    'Naaya - Translate pages': "Translate messages",
+    'Naaya - Validate content': "Validate objects",
+}
+
+def register_naaya_permission(zope_perm, label):
+    """
+    Register a permission so that administrators can assign it to roles.
+    """
+    naaya_known_permissions[zope_perm] = label
