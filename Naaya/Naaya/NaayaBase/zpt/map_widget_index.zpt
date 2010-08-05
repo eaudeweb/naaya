@@ -1,0 +1,14 @@
+<tal:block define="portal_map here/getGeoMapTool">
+<tal:block condition="python: here.longitude and here.utIsFloat(here.longitude, 0) and here.latitude and here.utIsFloat(here.latitude, 0)">
+	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+	<span tal:replace="structure python:portal_map.xrjs_simple_loader(here.absolute_url(1))" />
+
+
+<div style="float:right; width: 400px;">
+	<div id="map" style="width: 400px; height: 275px;" tal:condition="python: here.longitude is not None and here.latitude is not None"></div>
+	<a tal:attributes="href string:${portal_map/absolute_url}/" i18n:translate="">See all locations on the map</a>
+</div>
+</tal:block>
+</tal:block>

@@ -1,0 +1,121 @@
+<tal:block metal:use-macro="template/macro_manage_add/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Fill the properties in the form below and click <strong>Add</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties"
+	define="priorities here/getPrioritiesTypesList;
+			first_priority_id python:test(len(priorities), priorities[0].id, '');
+			priority_area python:here.getSession('priority_area', first_priority_id);
+			countries here/getCountriesList;
+			focuses python:here.getFocusesTypesList(priority_area)">
+
+<style>
+.treeview ul{ /*CSS for Simple Tree Menu*/
+margin: 0;
+padding: 0;
+}
+
+.treeview li{ /*Style for LI elements in general (excludes an LI that contains sub lists)*/
+background: white left center;
+list-style-type: none;
+padding-left: 22px;
+margin-bottom: 3px;
+font-size: 1.1em;
+}
+
+.treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */
+background: white url(misc_/SMAP/closed.gif) no-repeat left 1px;
+cursor: hand !important;
+cursor: pointer !important;
+}
+
+
+.treeview li.submenu ul{ /*Style for ULs that are children of LIs (submenu) */
+display: none; /*Hide them by default. Don't delete. */
+}
+
+.treeview .submenu ul li{ /*Style for LIs of ULs that are children of LIs (submenu) */
+padding-left: 5px;
+font-size: 1em;
+cursor: default;
+}
+</style>
+<script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script>
+
+<tr>
+	<td class="form-label" valign="top">Country(ies)</td>
+	<td><select name="country" id="country" multiple="multiple" size="5">
+		<option tal:repeat="c countries"
+			tal:attributes="value c/id" tal:content="c/title" i18n:translate="" >country</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<!-- <a href="javascript:ddtreemenu.flatten('tree', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('tree', 'contact')">Contract All</a> -->
+	<td class="form-label" valign="top">Project(s) area</td>
+	<td>
+		<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
+			<em><strong>Tip:</strong> Select focus(es) of the project by expanding each project</em>
+		</p>
+		<ul id="tree" class="treeview">
+		<tal:block repeat="priority priorities">
+		<li><span tal:content="priority/title" />
+			<ul tal:define="focuses python:here.getFocusesTypesList(priority.id)">
+				<tal:block repeat="fc focuses">
+				<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}" /><span tal:content="fc/title" /></li>
+				</tal:block>
+			</ul>
+		</li>
+		</tal:block>
+		</ul>
+		<script type="text/javascript">
+			ddtreemenu.createTree("tree", false)
+		</script>
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Project scale</td>
+	<td><input type="text" name="main_issues:utf8:ustring" id="main_issues" size="20" value="" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Tools</td>
+	<td><textarea name="tools:utf8:ustring" id="tools" rows="5" cols="40"></textarea></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Locations</td>
+	<td><input type="text" name="location:utf8:ustring" id="location" size="20" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Budget</td>
+	<td><input type="text" name="budget:utf8:ustring" id="budget" size="20" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Timeframe</td>
+	<td><input type="text" name="timeframe:utf8:ustring" id="timeframe" size="20" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Implementing organisation(s)</td>
+	<td><textarea name="organisation:utf8:ustring" id="organisation" rows="5" cols="40"></textarea></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Contact</td>
+	<td><textarea name="contact:utf8:ustring" id="contact" rows="5" cols="40"></textarea></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Donor(s)</td>
+	<td><textarea name="donor:utf8:ustring" id="donor" rows="5" cols="40"></textarea></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Links</td>
+	<td><textarea name="links:utf8:ustring" id="links" rows="5" cols="40"></textarea></td>
+</tr>
+</tal:block>
+</tal:block>

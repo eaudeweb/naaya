@@ -1,0 +1,56 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal map settings</h1>
+
+<tal:block metal:fill-slot="section" 
+		tal:define="map_url here/getGeoMapToolPath;
+					portal_map here/getGeoMapTool;
+					skey python:request.get('skey', 'title');
+					rkey python:request.get('rkey', '');">
+
+<script type="text/javascript">
+<!--
+	function toggleSelect(caller, name)
+	{
+		var frm = caller.form;
+		for(var i=0; i<frm.elements.length; i++){
+			if (frm.elements[i].name != name)
+				continue;
+			frm.elements[i].checked = caller.checked;
+		}
+	}
+//-->;
+</script>
+
+<p i18n:translate="">
+	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
+</p>
+
+<div id="tabbedmenu">
+	<ul>
+		<li><a tal:attributes="href string:${map_url}/admin_map_html" i18n:translate="">General settings</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_maptypes_html" i18n:translate="">Location types</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_mapupload_html" i18n:translate="">Upload locations</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
+		<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_mapduplicatelocations_html" i18n:translate="">Duplicate locations</a></li>
+	</ul>
+</div>
+
+
+<p i18n:translate="">
+This page lists the locations that could be duplicated. The test for duplicates is made on the following fields: <em>location type</em>, <em>address</em>, <em>longitude</em> and <em>latitude</em>.
+</p>
+
+<br clear="all" />
+
+
+<form method="post" name="frmDeleteLocations" id="frmDeleteLocations" action="deleteLocations">
+	<tal:block define="map_ob portal_map; records python:here.getDuplicateLocations(skey, rkey); edit_mode python:True; sortable python:True">
+		<table metal:use-macro="here/locations_table_html/macros/main">
+		</table>
+	</tal:block>
+</form>
+
+</tal:block>
+
+</tal:block>

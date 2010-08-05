@@ -1,0 +1,25 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit Pointer</h1>
+
+<tal:block metal:fill-slot="custom_properties" define="method string:getCompleteNavigationSiteMap">
+<div class="field-inline">
+	<label for="redirect"><span i18n:translate="">Automatically redirect to the pointing item</span></label>
+	<input type="checkbox" name="redirect" id="redirect" tal:attributes="checked python:test(here.getSession('redirect', here.redirect), 'checked', '')" />
+</div>
+<div class="field">
+	<label for="pointer">
+		<span i18n:translate="" tal:omit-tag="">Pointer</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'pointer')" class="mandatory_field"> *</span>
+	</label>
+	<!-- Extjs tree -->
+	<div id="pointer_tree" class="extjs_tree custom-tree"></div>
+	<div style="clear: both"></div>
+	<input class="extjs_target" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
+</div>
+
+<!-- Ajax tree scripts -->
+<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+
+</tal:block>
+</tal:block>

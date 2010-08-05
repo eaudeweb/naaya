@@ -1,0 +1,36 @@
+# portuguese normalizer 
+# language = portuguese
+# encoding = iso-8859-15
+
+á a
+ã a
+à a
+â a
+ä a
+é e
+ê e
+ë e
+í i
+ï i
+ó o
+ô o
+ö o
+ú u
+ü u
+ç c
+Á A
+Ã A
+À A
+Â A
+Ä A
+É E
+Ê E
+Ë E
+Í I
+Ï I
+Ó O
+Ô O
+Ö O
+Ú U
+Ü U
+Ç C

@@ -1,0 +1,240 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title">Administrative user guide</h1>
+
+<tal:block metal:fill-slot="section">
+
+<div>
+
+<fieldset><legend>Table of contents</legend>
+<div><a href="#content_types">Content types</a></div>
+<div><a href="#content_structure">Content structure</a></div>
+<div><a href="#multilinguality">Multilinguality</a></div>
+<div><a href="#links_management">Links management</a></div>
+<div><a href="#gui">Graphical interface</a></div>
+<div><a href="#search_mechanism">Search mechanisms</a></div>
+<div><a href="#admin_centre">Administrative centre</a></div>
+<div><a href="#syndication">Syndication</a></div>
+<div><a href="#security">Users and security</a></div>
+<div><a href="#glossaries">Glossaries and thesauri</a></div>
+<div></div>
+<div></div>
+</fieldset>
+
+<p>
+	This portal is based on the <strong>Naaya</strong> portal toolkit. It is a framework that works on top of the <a href="http://www.zope.org">Zope</a> open source web application server and development system, built for the <strong>European Community Biodiversity Clearing House Mechanism</strong> (<a href="http://biodiversity-chm.eea.eu.int">http://biodiversity-chm.eea.eu.int</a>) and the <strong>EnviroWindows</strong> (<a href="http://www.ewindows.eu.org">http://www.ewindows.eu.org</a>) networks.
+</p>
+<p>An overview of Naaya can be found <a href="http://biodiversity-chm.eea.eu.int/Documents/naaya_overview" title="Naaya overview page">here</a>.</p>
+
+
+<h2><a id="content_types"></a>Content types</h2>
+
+<p>
+	The default content types provided by Naaya portals are generic ones. They are pluggable, in the sense that:
+</p>
+<ul>
+	<li>managers can uninstall a subset of them from a certain portal in which case they will not be available for use inside that website</li>
+	<li>programmers can create new ones place the Python class along with the corresponding add/edit and index forms in the specific folder from the <em>NaayaContent</em> product and managers can import and use them into a Naaya portal</li>
+</ul>
+
+<p>
+	All types of content are based on:
+</p>
+
+<ul>
+	<li>a common set of properties (metadata): e.g. title, description, keywords</li>
+	<li>a set of custom relevant attributes: e.g. binary versions of data for files, start date/end date for events, images for news item</li>
+	<li>dynamic properties that can be added by managers for each type of data and are immediately propagated on existing object instances from a running site; when defining such properties, it is possible to specify their type, if they are searchable, a default value, etc.</li>
+</ul>
+
+<h2><a id="content_structure"></a>Content structure</h2>
+
+<p>
+	The portal content is structured into specialised archives (folders) that group items of the same kind (news, events, stories, photos) and a set of main sections which contain hierarchically arranged information of various types (files, HTML documents, news, events, links to remote sources of information, pointers to local data, etc.).
+</p>
+
+<p>
+	Direct access to these main sections and archives is ensured from each page of the website. 
+</p>
+
+
+<p>
+	Content management workflow (easily changeable and configurable when it comes to types of actors involved):
+</p>
+<img src="misc_/Naaya/workflow" alt="Content management workflow diagram" />
+
+
+<h2><a id="multilinguality"></a>Multilinguality</h2>
+
+<p>
+	Naaya-based portals are multilingual in terms of interface, content, search and syndication. After the installation, the only language available is English. Managers can easily define additional languages in which the portal can be translated by using the <em>Zope Management Console</em>. Add/remove languages operations can be done by accessing the <em>Languages</em> tab of the <em>portal_properties</em> object for each Naaya portal; also from here, the <em>default language</em> of the portal can be set. Once a language is added/deleted, this is immediatelly reflected around the portal interface and content.
+</p>
+<p>
+	When an piece of content (news, file, folder, etc.) is not (fully) translated in the language selected by the end user, only its attributes which are translated in that language are visible.
+</p>
+<p>
+	When an end user opens a page from this portal, a localization process takes place: if the operating system is installed in a language which exists in the list of available languages for the portal, that language is selected. The same thing happens with the browser's highest priority language. Otherwise, the default language of the portal (set by Managers) is selected automatically.
+</p>
+<p>
+	The end user can manually select the navigation language at any time and from any portal page from the list of available languages. This will overwrite all other settings done automatically by the system:
+</p>
+<img src="misc_/Naaya/select_language_box" alt="Select language box" style="border: 1px dashed black;" />
+<p>
+	All Naaya portal pages are encoded in <em>UTF-8</em>(<em>Unicode</em>) which means that all characters and signs from any language are supported.
+</p>
+<h3><a id="multilingual_content"></a>Multilingual content</h3>
+
+<p>
+	All types of content from the portal can be translated in each available language. An item can be added in just one language, which is the content contributor's choice (<em>Posting language</em> field on each submission form):
+</p>
+<div style="text-align: center;"><img src="misc_/Naaya/translate_add" alt="Posting language box on an add form" style="border: 1px dashed black;" /></div>
+
+<p>
+	After that, the item can be edited in order to be translated. <strong>Important note</strong>: not all the properties need to be translated; some of them (e.g. dates, numbers, booleans, email addresses, URLs) are not multilingual and will be filled automatically for each language on the editing forms.
+</p>
+<div style="text-align: center;"><img src="misc_/Naaya/translate_edit" alt="Choosing the language when translating an item" style="border: 1px dashed black;" /></div>
+
+<h3><a id="multilingual_gui"></a>Multilingual interface</h3>
+<p>
+	All labels, explanatory texts, lists of links and their descriptions, the portlets aside from the static ones and other texts that appear on the user interface can be translated by specialised people in any of the available languages using the <em>Translate messages</em> form available in the administration centre. By default, only <em>Administrators</em> and <em>Managers</em> have the right to access this interface.
+</p>
+<p>
+	The translation centre for the interface lists the messages marked for translation in the portal and users can translate them individually. To ease the translation process, when a message is translated in a language, an OK sign will appear next to it in the language column. A message search is available which will narrow down the list of messages to those that contain a certain text. Users can order the list of messages, both ascending and descending: alphabetically or by translation status in a certain language.
+</p>
+<div style="text-align: center;"><img src="misc_/Naaya/translate_messages" alt="Translation centre" style="border: 1px dashed black;" /></div>
+
+<p>
+	<strong>Important notice</strong>: some of the messages contain HTML tags because splitting the texts around the tags would mean taking some phrases out of their context and therefore loose their meaning. <em>All HTML tags MUST NOT be changed during the translation process</em>.
+</p>
+
+<p>
+	Since the number of messages to translate is high, an export can be made in <em>.PO</em> or <em>.XLIFF</em> formats, the texts translated using external tools (e.g. text editors, specific translation tools) and imported back into the portal. Such operation can be made from the <em>Import/Export</em> tab of the <em>Translate messages</em> centre.
+</p>
+
+<p>
+	The <em>PO</em> file is a simple text file which will be downloaded with texts in English and the target language in which the messages have to be translated, while the <em>XLIFF</em> file is XML and it's very good when the translators use desktop programs that know to navigate among the messages, to suggest translations, search messages, escape HTML tags, etc.
+</p>
+
+<h3><a id="multilingual_searches"></a>Multilingual searches</h3>
+<p>
+	The free text searches are performed on the content translated in the language selected by the end user. Only the text attributes of the Naaya content types which are translated in the target language will be searched. It means that, for example, searching an English phrase when the selected language is French might not retrieve any results. 
+</p>
+<p>
+	The search accross multiple websites returns the results in each portal's default language.
+</p>
+<h3><a id="multilingual_syndication"></a>Multilingual syndication</h3>
+<p>
+	All local channels of information generated in RDF format can be downloaded by end users in the language selected in the browser. Only items which are translated in that language are included in the channel. An item is considered translated in a language if at least its title is translated.
+</p>
+<p>
+	When administrators define the relevant channels exposed by their website, they are able to choose the language in which each one of them is generated.
+</p>
+
+<h2><a id="links_management"></a>Links management</h2>
+
+<h2><a id="gui"></a>Graphical interface</h2>
+
+<p>
+	The Naaya platform was developed ensuring the complete separation among data, presentation and business logic. This approach allowed the creation of different layouts each one having one or more color schemes without interfering with in the information published in the portal or with its behavior.
+</p>
+
+<p>
+	For each portal a new layout can be created or existing ones can be used and just the color palette can differ. This implies the definition of a set of standard elements that appear on every page (e.g.  the search bar, the navigation breadcrumb trail, the listing of a set of links, etc.), the way these are presented using style sheets and how these are arranged (top, left side, footer, etc.).
+</p>
+
+<p>
+	All portal pages are based on the same kind of templates for the header and footer, a set of portlets which provide quick access to the important areas of the portal and the variable page content. This offers a consistent look and feel throughout the entire site and gives visitors a sense of place and easy navigation. Moreover, the left and right-side portlets are configurable by administrators from the corresponding area of the administrative centre.
+</p>
+
+<img src="misc_/Naaya/brief_layout" alt="Generic page layout" />
+
+<p>
+	The prebuilt layouts respect modern design standards such as:
+</p>
+<ul>
+	<li>accessibility of the information towards all users (including users with disabilities), all target medias (different browsers, PDAs and mobile phones, TVs, speech synthesizers, Braille interpreters, TVs, printers, etc.) and search engines</li>
+	<li>usability standards</li>
+	<li>modern markup (XHTML, CSS2, SVG)</li>
+</ul>
+
+<h2><a id="search_mechanism"></a>Search mechanisms</h2>
+
+<p>
+	An internal search mechanism is built-in Naaya portals, based on the indexing and cataloging of all data types present. To be noted that this mechanism is also searching inside the uploaded files such as PDF, Word, Excel.
+</p>
+<p>
+	Optionally, an external search facility can be linked for searching across multiple portals of the same network. Websites and web applications built using different technologies can participate in this global search process if they can retrieve the search results via XML/RPC in the specified format.
+</p>
+
+<h2><a id="admin_centre"></a>Administrative centre</h2>
+
+<p>
+	A central space is available for non-technical users in order to view and be guided to execute all operations that can be accomplished to maintain their portal or just parts of it. 
+</p>
+
+<p>
+	Being a matter of content management, graphical interface adjustments, defining the syndication model, translation in different languages or managing users and delegating authority, users with all kinds of roles (administrator, translators, content managers or quality checkers) will find here a set of forms that allow them to do their job without having to contact technical people for that.
+</p>
+
+<h2><a id="syndication"></a>Syndication</h2>
+
+<p>
+	In order for the portal information to be correctly transmitted and picked up to/from remote websites and search engines, it is automatically exported in XML formats, starting from the simple RDF form on to dedicated extended formats. The same approach is used for harvesting data from remote sources.
+</p>
+
+<p>
+	All the necessary mechanisms are included in Naaya so that administrators can easily:
+</p>
+<ul>
+	<li>define and describe the relevant channels in their portal </li>
+	<li>pick up remote channels and publish them in their website based on language, type, area of interest (e.g. latest news from a related organisation's portal)</li>
+</ul>
+
+<p>
+	The data harvested from remote sources is automatically updated on regular basis by the system.
+</p>
+
+<h2><a id="security"></a>Users and security</h2>
+
+<p>
+	The security model of a Naaya-based portal is based on the concept what you see is what you can do, meaning that whenever a user sees the link to an operation, he/she has the necessary rights to execute that operation. By default a set of groups of users (roles) are defined:
+</p>
+<ul>
+	<li>Content contributors</li>
+	<li>Content validators</li>
+	<li>User interface translators </li>
+	<li>Administrators</li>
+	<li>Technical Managers, with full rights to execute any set of operations </li>
+</ul>
+
+<p>
+	The list of roles can be tailored according with each specific portal needs, taking into account the wideness, skills and availability of the community that provides content and administrates the website.
+</p>
+
+<p>
+	Once users are defined in the system (have an account), they might be granted with any subset of the above roles (obviously having the Manager role eliminates the need for additional ones) on the entire portal or just on the locations (folders) they need to perform the operations that fall under their areas of expertise.
+</p>
+
+<h2><a id="glossaries"></a>Glossaries and thesauri</h2>
+
+<p>
+	Specialised multilingual glossaries and thesauri can be added for the harmonization of metadata fields such as keywords and coverage. This is useful for the published data to be properly categorized, indexed and searched.
+</p>
+
+<p>
+	Depending on the areas of interest covered by such a portal, the terms associated with the various data types can come from biodiversity glossaries (the case of the Clearing House Mechanism websites), the agreed EEA's environmental glossary for the EnviroWindows network, etc.
+</p>
+
+<p>
+	An additional Python product for Zope called <strong>NaayaGlossary</strong> accomplishes the job of storing and indexing the terms and a site administrator decides to associate glossaries to the corresponding fields (keywords or geographical coverage of the items) through a friendly Web form from the administration centre. If such a source is detected, the add/edit forms for each type of object published in the portal (news items, documents, files, etc.) are automatically changed to contain picklists instead of simple text inputs. This ensures the flexibility of adding/changing/deleting the source of glossaries terms used.
+</p>
+
+<p>
+	XML/RDF/SKOS import/export procedures allow the transfer of glossaries' data from one or more existing sources to a Naaya portal.
+</p>
+
+</div>
+
+</tal:block>
+
+</tal:block>

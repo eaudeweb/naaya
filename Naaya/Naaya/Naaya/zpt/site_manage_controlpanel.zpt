@@ -1,0 +1,25 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p class="form-help">
+	Pluggable Naaya content types.
+</p>
+
+<tal:block tal:repeat="meta_type here/get_pluggable_metatypes">
+<fieldset
+	tal:define="item python:here.get_pluggable_item(meta_type);
+				installed python:here.is_pluggable_item_installed(meta_type)">
+<legend><strong tal:content="meta_type" /></legend>
+<form method="post" tal:attributes="action python:'%s/%s' % (here.absolute_url(), test(installed, 'manage_uninstall_pluggableitem', 'manage_install_pluggableitem'))">
+	<div class="form-help" tal:content="python:item['description']" />
+	<br />
+	<div class="form-help">Module: <strong tal:content="python:item['module']" />.</div>
+	<div class="form-help">Permission: <strong tal:content="python:item['permission']" />.</div>
+	<input type="hidden" name="meta_type" tal:attributes="value meta_type" />
+	<input type="submit" tal:attributes="value python:test(installed, 'Uninstall', 'Install')" />
+</form>
+</fieldset>
+<br />
+</tal:block>
+
+<span tal:replace="structure here/manage_page_footer" />

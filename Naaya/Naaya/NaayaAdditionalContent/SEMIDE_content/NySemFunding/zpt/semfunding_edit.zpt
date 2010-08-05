@@ -1,0 +1,33 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit Funding</h1>
+
+<tal:block metal:fill-slot="custom_properties">
+<!-- Source -->
+<div class="field">
+	<label for="funding_source"><span i18n:translate="" tal:omit-tag="">Source</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'funding_source')" class="mandatory_field"> *</span></label>
+	<input type="text" name="funding_source:utf8:ustring" id="funding_source" size="50" tal:attributes="value python:here.getSession('funding_source', here.getVersionLocalProperty('funding_source', curr_lang))" />
+</div>
+<!-- Programme -->
+<div class="field">
+	<label for="funding_programme"><span i18n:translate="" tal:omit-tag="">Programme</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'funding_programme')" class="mandatory_field"> *</span></label>
+	<input type="text" name="funding_programme:utf8:ustring" id="funding_programme" size="50" tal:attributes="value python:here.getSession('funding_programme', here.getVersionLocalProperty('funding_programme', curr_lang))" />
+</div>
+<!-- Type -->
+<div class="field-inline">
+	<label for="funding_type"><span i18n:translate="" tal:omit-tag="">Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'funding_type')" class="mandatory_field"> *</span></label>
+	<select name="funding_type" id="funding_type">
+		<option value=""></option>
+		<option tal:repeat="item here/getFundingTypesList"
+			tal:attributes="value item/id; selected python:item.id==here.getSession('funding_type', here.getVersionProperty('funding_type'))"
+			tal:content="python:here.getPortalTranslations().gettext(item.title, curr_lang)" i18n:translate="" />
+	</select>
+</div>
+<!-- Rate -->
+<div class="field">
+	<label for="funding_rate"><span i18n:translate="" tal:omit-tag="">Funding rate</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'funding_rate')" class="mandatory_field"> *</span></label>
+	<input type="text" name="funding_rate:utf8:ustring" id="funding_rate" size="3" maxLength="3" tal:attributes="value python:here.getSession('funding_rate', here.getVersionProperty('funding_rate'))" /> %
+</div>
+</tal:block>
+
+</tal:block>

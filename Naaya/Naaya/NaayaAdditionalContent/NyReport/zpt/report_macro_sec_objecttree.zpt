@@ -1,0 +1,35 @@
+<tal:block metal:define-macro="objs_sublist">
+<tal:block define="permission_edit here/checkPermissionEditObject">
+<div style="margin-right: 180px;">
+	<tal:block repeat="object objects">
+		<div>
+			<div style="float:right;" tal:condition="permission_edit">
+				<a tal:attributes="href string:${object/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" style="border:0;" />
+				</a>
+			</div>
+			<div style="margin: 3px 0px;">&nbsp;
+				<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+			</div>
+		</div>
+		<!--
+		<tal:block define="objs object/getSections">
+			<tal:block repeat="obj objs" condition="objs">
+				<div >
+					<div style="float:right;" tal:condition="permission_edit">
+						<a tal:attributes="href string:${obj/absolute_url}/edit_html">
+							<img src="misc_/Naaya/edit" style="border:0;" />
+						</a>
+					</div>
+					<div class="toc_section2">&nbsp;
+						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id" />
+					</div>
+				</div>
+			</tal:block>
+		</tal:block>
+		-->
+
+	</tal:block>
+</div>
+</tal:block>
+</tal:block>

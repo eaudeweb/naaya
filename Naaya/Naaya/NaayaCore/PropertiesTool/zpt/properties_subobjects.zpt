@@ -1,0 +1,46 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<p class="page-title">Subobjects</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<p class="page-description">
+	The list below presents the types of objects installed on this server.
+	Every time you install a new product and want to add instances of its objects inside Naaya Folders,
+	select them from the list below and press <strong>Save changes</strong>.
+</p>
+
+<form method="post" action="manageSubobjects">
+<fieldset><legend class="form-label">Select the kinds of things that can be added inside Naaya Folders:</legend>
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr>
+		<td style="text-align: center"><strong>Zope objects</strong></td>
+		<td style="text-align: center"><strong>Naaya objects</strong></td>
+	</tr>
+	<tr>
+		<td width="50%" style="text-align: center">
+			<select name="subobjects" size="10" multiple="true">
+				<option tal:repeat="item here/getProductsMetaTypes"
+						tal:attributes="value item; selected python:item in here.adt_meta_types" 
+						tal:content="item">Meta type</option>
+			</select>
+		</td>
+		<td width="50%" style="text-align: center">
+			<select name="ny_subobjects" size="10" multiple="true">
+				<option tal:repeat="item python:here.get_meta_types(1)"
+						tal:attributes="value item; selected python:item in here.adt_meta_types" 
+						tal:content="item">Meta type</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="text-align: center"><input type="submit" value="Save changes" /></td>
+	</tr>
+</table>
+</fieldset>
+</form>
+
+<span tal:replace="structure here/manage_page_footer"/>

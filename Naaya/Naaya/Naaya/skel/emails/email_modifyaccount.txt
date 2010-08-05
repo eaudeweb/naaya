@@ -1,0 +1,5 @@
+
+This is an automatically generated message to inform you that your account on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) has been granted the following role(s):
+
+@@ROLES@@
+

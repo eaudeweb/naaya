@@ -1,0 +1,11 @@
+<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<!-- TODO: to be added -->
+</tal:block>
+
+</tal:block>

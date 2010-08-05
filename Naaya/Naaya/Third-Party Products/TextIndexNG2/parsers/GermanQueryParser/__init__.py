@@ -1,0 +1,1 @@
+from GermanQueryParser import Parser

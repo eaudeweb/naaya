@@ -1,0 +1,57 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<h1 metal:fill-slot="title" i18n:translate="">Edit News</h1>
+
+<tal:block metal:fill-slot="custom_properties"
+	define="languages here/get_languages_mapping;
+			curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<div class="field" tal:define="editor here/getEditorTool">
+	<label for="details"><span i18n:translate="" tal:omit-tag="">Details (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'details')" class="mandatory_field"> *</span></label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details', curr_lang, image_support=True)" />
+	<textarea id="details" name="details:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('details', here.getVersionLocalProperty('details', curr_lang))" />
+</div>
+<div class="field">
+	<label for="expirationdate"><span i18n:translate="" tal:omit-tag="">Expires <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'expirationdate')" class="mandatory_field"> *</span></label>
+	<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" 
+		tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
+</div>
+<div class="field-inline" tal:condition="python:here.checkPermissionPublishObjects()">
+	<label for="topitem"><span i18n:translate="" tal:omit-tag="">Top story</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'topitem')" class="mandatory_field"> *</span></label>
+	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:here.getSession('topitem', here.getVersionProperty('topitem'))==1" />
+</div>
+<div class="field">
+	<label for="smallpicture"><span i18n:translate="" tal:omit-tag="">Small picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'smallpicture')" class="mandatory_field"> *</span></label>
+	<input type="file" name="smallpicture" id="smallpicture" tal:attributes="values python:here.getSession('smallpicture', '')" />
+</div>
+<tal:block tal:condition="python:here.hasSmallPicture(1)">
+<div class="field">
+	<img src="getSmallPicture?version=1" alt="" />
+</div>
+<div class="field">
+	<input type="checkbox" name="del_smallpicture" id="del_smallpicture" tal:attributes="checked python:test(here.getSession('del_smallpicture', ''), 'checked', '')" /> <label for="del_smallpicture" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+</tal:block>
+<div class="field">
+	<label for="bigpicture"><span i18n:translate="" tal:omit-tag="">Big picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'bigpicture')" class="mandatory_field"> *</span></label>
+	<input type="file" name="bigpicture" id="bigpicture" tal:attributes="value python:here.getSession('bigpicture', '')" />
+</div>
+<tal:block tal:condition="python:here.hasBigPicture(1)">
+<div class="field">
+	<img src="getBigPicture?version=1" alt="" />
+</div>
+<div class="field">
+	<input type="checkbox" name="del_bigpicture" id="del_bigpicture" tal:attributes="checked python:test(here.getSession('del_bigpicture', ''), 'checked', '')" /> <label for="del_bigpicture" i18n:translate="">check this if you want do delete this picture</label>
+</div>
+</tal:block>
+<div class="field">
+	<label for="resourceurl"><span i18n:translate="" tal:omit-tag="">Concerned URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'resourceurl')" class="mandatory_field"> *</span></label>
+	<input type="text" name="resourceurl" id="resourceurl" size="50" tal:attributes="value python:here.getSession('resourceurl', here.getVersionProperty('resourceurl'))" />
+</div>
+<div class="field">
+	<label for="source"><span i18n:translate="" tal:omit-tag="">Source</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'source')" class="mandatory_field"> *</span></label>
+	<input type="text" name="source" id="source" size="50" tal:attributes="value python:here.getSession('source', here.getVersionLocalProperty('source', curr_lang))" />
+</div>
+</tal:block>
+
+</tal:block>

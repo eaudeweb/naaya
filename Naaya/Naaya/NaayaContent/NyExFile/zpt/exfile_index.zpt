@@ -1,0 +1,99 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<tal:comment condition="nothing">
+			<!-- XXX Checkout makes not sense in this context -->
+			<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		</tal:comment>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	</tal:block>
+	<tal:comment condition="nothing">
+		<!-- XXX Backward compatible. Remove checkout control in Naaya 2.0 -->
+	</tal:comment>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"><span i18n:translate="">This item has been checked out by another user</span>(<span tal:replace="here/checkout_user" />)</strong>
+</div>
+</tal:block>
+
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
+	content="structure python:here.map_widget_index_html()" />
+
+<table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+<tr tal:condition="python:here.size()>0" tal:define="
+	req_lang request/lang|nothing;
+	downloadfilename python:here.downloadfilename(lang=req_lang)">
+	<th i18n:translate="">Download</th>
+	<td tal:define="download_url here/getDownloadUrl">
+		<a tal:define="size python:here.utShowSizeKb(here.size()); content_type here/content_type; content_type_title python:here.getContentTypeTitle(content_type)"
+			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
+	</td>
+</tr>
+
+<tr tal:condition="python:not here.size()>0">
+	<th i18n:translate="">Download</th>
+	<td>
+		<em><span i18n:translate="">File only available for </span>
+		<span tal:repeat="lang here/gl_get_languages_map">
+			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.checkExFileLang(lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+		</span></em>
+	</td>
+</tr>
+
+<tr>
+	<th i18n:translate="">Release date</th>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)" />
+</tr>
+<tr tal:condition="here/display_contributor">
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
+<tr tal:condition="here/coverage">
+	<th i18n:translate="">Geographical coverage</th>
+	<td tal:content="here/coverage" />
+</tr>
+  <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+                  picture python:portal_map.getSymbolPicture(here.geo_type)"
+                  tal:condition="python: title != '' and here.longitude and here.latitude">
+    <th i18n:translate="">Type</th>
+    <td>
+      <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
+      (<span tal:replace="title" />)
+    </td>
+  </tr>
+<tr tal:condition="here/keywords">
+	<th i18n:translate="">Keywords</th>
+	<td tal:content="here/keywords" />
+</tr>
+</table>
+
+<tal:block define="versions here/getVersions" condition="python:len(versions) > 0">
+<h2 i18n:translate="">Older versions</h2>
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+<th i18n:translate="">Date</th>
+<th i18n:translate="">Created by</th>
+<th i18n:translate="">Download file</th></tr>
+<tr tal:repeat="item python:versions">
+	<td tal:content="python:here.utShowFullDateTime(getattr(item, 'modification_time', context.utGetTodayDate()))">version date</td>
+	<td><span tal:replace="item/username|string:">version user</span></td>
+	<td><a rel="external" tal:attributes="href string:showVersionData?vid=${item/getId}" tal:content="python:here.getVersionFilename(item.getId())">download</a></td>
+</tr>
+</table>
+</tal:block>
+
+<div tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />

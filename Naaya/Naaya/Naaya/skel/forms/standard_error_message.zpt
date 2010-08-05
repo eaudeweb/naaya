@@ -1,0 +1,25 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1>Error page</h1>
+
+<p>An error was encountered. Below you will find a description of the error and some tips.</p>
+
+<p>
+	<strong>URL:</strong> 
+	<span tal:replace="python: request.get('URL', '')" />
+</p>
+
+<p>
+	<strong>Error type:</strong> 
+	<span tal:replace="structure error_type" />
+</p>
+
+<p><strong>Troubleshooting Suggestions</strong></p>
+<ul>
+	<li>The URL may be incorrect</li>
+	<li>The parameters passed to this resource may be incorrect</li>
+</ul>
+
+<span tal:condition="python:error_type != 'NotFound'" tal:replace="python:here.processNotifyOnErrors(error_type, error_value, request)" />
+
+<span tal:replace="structure here/standard_html_footer"/>
