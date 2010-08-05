@@ -1,9 +1,0 @@
-# Example thesaurus
-# encoding = iso-8859-15
-
-# Format:
-# term1 similarterm1, similarterm2, ...
-# term2 similarterm3, similarterm4, ...
-
-computer calculator
-mouse maus

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<export>
-	<ob meta_type="Naaya Folder" param="0" id="reports" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-		<title lang="en"><![CDATA[Reports]]></title>
-		<description lang="en"><![CDATA[]]></description>
-		<coverage lang="en"><![CDATA[]]></coverage>
-		<keywords lang="en"><![CDATA[]]></keywords>
-	</ob>
-</export>

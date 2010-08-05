@@ -1,2 +1,0 @@
-SMAP changes:
-- initial import
