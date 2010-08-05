@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<profilemeta>
-	<property id="flash" value="0" type="int"/>
-	<property id="language" value="" type="string"/>
-	<property id="notify" value="0" type="int"/>
-</profilemeta>
