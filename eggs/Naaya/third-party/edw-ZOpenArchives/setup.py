@@ -10,7 +10,7 @@ setup(name='edw-ZOpenArchives',
     packages=find_packages(),
     zip_safe=False,
     install_requires=[
-        'pyoai >= 2.4.2',
+        'pyoai == 2.5dev-edw',
         'pycountry',
         'sqlalchemy',
         'MySQL-python'
