@@ -1,5 +1,0 @@
-    <div class="field" condition="python:here.canManageProjects()>
-        <label for="data">Import partners from CSV file:</label>
-        <input type="file" id="data" name="data" /><br />
-        <input type="submit" name="import:method" value="Upload data" />
-    </div>

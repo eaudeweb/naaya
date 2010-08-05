@@ -1,1 +1,0 @@
-from FrenchQueryParser import Parser

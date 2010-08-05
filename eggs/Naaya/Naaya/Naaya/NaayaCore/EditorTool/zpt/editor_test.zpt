@@ -1,9 +1,0 @@
-<span tal:replace="structure here/standard_html_header" />
-
-<form action="test_change" method="post">
-	<span tal:replace="structure here/render" />
-	<textarea name="test" cols="100" rows="20" tal:content="here/title_or_id"></textarea>
-	<input type="submit" value="test" />
-</form>
-
-<span tal:replace="structure here/standard_html_footer" />

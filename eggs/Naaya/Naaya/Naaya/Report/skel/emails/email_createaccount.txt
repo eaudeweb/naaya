@@ -1,7 +1,0 @@
-Dear @@NAME@@,
-
-This is an automatically generated message to inform you that your application
-for commenting rights on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@)
-has been approved.
-
-You can now login in this portal using the username @@USERNAME@@

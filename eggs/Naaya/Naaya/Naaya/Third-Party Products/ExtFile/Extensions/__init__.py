@@ -1,1 +1,0 @@
-"""ExtFile extension package."""
