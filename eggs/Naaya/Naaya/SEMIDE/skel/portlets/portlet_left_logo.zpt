@@ -1,8 +1,0 @@
-<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-  <tal:block metal:fill-slot="portlet_title">
-    <!--<span tal:replace="here/title" />-->
-  </tal:block>
-  <tal:block metal:fill-slot="portlet_content">
-    <div class="left-logos"><a href="#"><img tal:attributes="src string:${skin_files_path}/medawater_en.gif" alt=""></a></div>
-  </tal:block>
-</tal:block>
