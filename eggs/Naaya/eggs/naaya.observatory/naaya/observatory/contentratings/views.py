@@ -41,7 +41,7 @@ class ObservatoryRatingView(object):
         return self.adapted.scale
 
     def __call__(self, REQUEST, RESPONSE):
-        rating = round(self.averageRating)
+        rating = int(round(self.averageRating))
         if not (0 <= rating < 5):
             raise RatingOutOfBoundsError(rating)
 
