@@ -1,9 +1,25 @@
 <configure
-  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zope="http://namespaces.zope.org/zope"
   xmlns:five="http://namespaces.zope.org/five"
+  xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="naaya">
 
   <five:registerPackage package="." initialize=".initialize" />
+
+  <zope:permission
+    id="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
+    title="Naaya - Observatory - View Rating"
+    />
+
+  <browser:page
+    name="observatory_rating_view"
+    for=".interfaces.IObservatoryRatable"
+    class=".views.ObservatoryRatingView"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
+  />
+
+  <five:implements class="Products.NaayaBase.NyContentType.NyContentType"
+    interface=".interfaces.IObservatoryRatable" />
 
 </configure>
 
