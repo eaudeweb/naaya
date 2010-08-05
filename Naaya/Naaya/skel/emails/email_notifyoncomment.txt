@@ -1,4 +1,0 @@
-This is an automatically generated message to inform you that 
-a new comment '@@ITEMTITLEORID@@' was added to document @@CONTAINERPATH@@.
-
-Comment added by @@USERNAME@@(@@USEREMAIL@@) on @@UPLOADTIME@@.
