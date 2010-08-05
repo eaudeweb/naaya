@@ -1,0 +1,24 @@
+<tal:block tal:define="channel python:here.getSyndicationTool().lateststories_rdf">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+<tal:block tal:repeat="item channel/get_objects_for_rdf">
+	<div class="title_story"><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a></div>
+	<tal:block tal:condition="here/show_releasedate">
+		<div class="release_story">
+			<span i18n:translate="">Released on </span>
+			<strong tal:content="python:here.utShowDateTime(item.releasedate)" />
+		</div>
+	</tal:block>
+	<div class="content_story" style="height: auto; display: block;">
+		<div style="vertical-align: top;" class="text_story">
+			<img style="float: left; vertical-align: top; margin-right: 0.5em" tal:condition="item/hasFrontPicture" tal:attributes="src string:${item/absolute_url}/getFrontPicture" alt="" />
+			<p class="text_story" tal:content="structure item/description" />
+		</div>
+		<div class="bottom_border"> </div>
+	</div>
+
+</tal:block>
+</tal:block>
+</tal:block>
+</tal:block>

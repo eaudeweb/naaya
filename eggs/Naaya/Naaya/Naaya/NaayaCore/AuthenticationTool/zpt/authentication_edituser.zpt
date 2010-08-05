@@ -1,0 +1,105 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<h2>Edit user</h2>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
+</div>
+
+<tal:block define="user_obj python:here.getUser(request.get('name', '')); 
+	user_firstname python:here.getUserFirstName(user_obj); user_lastname python:here.getUserLastName(user_obj);
+	user_email python:here.getUserEmail(user_obj); user_account python:here.getUserAccount(user_obj);
+	user_password python:here.getUserPassword(user_obj); user_roles python:here.getUserRoles(user_obj); 
+	user_created python:here.getUserCreatedDate(user_obj); user_lastupdated python:here.getUserLastUpdated(user_obj);
+	session python:here.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, user_password)">
+
+<form name="frmEditUser" method="post" action="manage_changeUser">
+
+<table border="0" width="80%" cellspacing="3">
+    <tr>
+        <td>
+        <fieldset tal:condition="here/isSessionErrors"><legend><strong>Errors</strong></legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="80%">
+            <tr tal:repeat="error_value here/getSessionErrors">
+                <td>&nbsp;</td>
+                <td tal:content="error_value">&nbsp;</td>
+            </tr>
+        </table>
+        </fieldset>
+        <br />
+        <fieldset><legend><strong>Personal settings</strong></legend>
+        <table border="0" cellspacing="2" cellpadding="3" width="80%">
+            <tr>
+                <td nowrap="nowrap">First name:</td>
+                <td >
+                    <input type="text" name="firstname" size="35" maxLength="255"
+                        tal:attributes="value here/getSessionUserFirstname">
+                </td>
+
+                <td style="text-align: right" nowrap="nowrap">Last name:</td>
+                <td>
+                    <input type="text" name="lastname" size="35" maxLength="255"
+                        tal:attributes="value here/getSessionUserLastname">
+                </td>
+            </tr>
+            <tr>
+                <td nowrap="nowrap">Email:</td>
+                <td colspan="3">
+                    <input type="text" name="email" size="35" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
+                </td>
+            </tr>
+        </table>
+        </fieldset>
+        <br />
+        <fieldset><legend><strong>User settings</strong></legend>
+        <table border="0" cellspacing="0" cellpadding="3">
+            <tr>
+                <td nowrap="nowrap">Username:</td>
+                <td tal:content="user_account">username</td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td>
+                    <input type="password" name="password" maxLength="255" tal:attributes="value user_password" />
+                </td>
+            </tr>
+            <tr>
+                <td nowrap="nowrap">Password verification:</td>
+                <td>
+                    <input type="password" name="confirm" maxLength="255" tal:attributes="value user_password" />
+                </td>
+            </tr>
+        </table>
+        </fieldset>
+        <br /><input type="hidden" name="name" maxLength="255" tal:attributes="value user_account" />
+        <table width="100%" border="0" cellspacing="0" cellpadding="3">
+            <tr>
+                <td><input type="hidden" name="destination" value="manage_users_html" />
+                    <input type="submit" name="ActionButton" value="Save" class="button" onclick="document.frmEditUser.action='manage_changeUser';" />
+                    <input type="reset" name="ResetButton" value=" Reset " class="button" />
+                    <input type="submit" name="CancelButton" value="Cancel" class="button" onclick="document.frmEditUser.action='manage_changeUser';" />
+                </td>
+            </tr>
+        </table>
+        <br />
+        <fieldset><legend>Record information</legend>
+        <table cellpadding="3" cellspacing="0" border="0">
+            <tr>
+                <td width="20%">Created:</td>
+                <td width="80%" tal:content="python:test(user_created=='', ' - ', user_created)">created</td>
+            </tr>
+            <tr>
+                <td>Last Updated:</td>
+                <td tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)">last updated</td>
+            </tr>
+        </table>
+        </fieldset>
+        </td>
+    </tr>
+</table>
+</form>
+</tal:block>
+<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
+<span tal:replace="structure here/manage_page_footer"/>

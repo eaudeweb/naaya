@@ -1,0 +1,159 @@
+xlHtml ChangeLog
+0.4 12/03/01
+* removed spurrious tab before closing XML tag - Mike Ralphson
+* Fixed bug in trim edges
+* Many signed / unsigned cleanups
+* Updated the xldump utility - Charles Wyble
+* Added xlcdump utility to dump chart information - Charles Wyble
+* Added doxygen doco generation - Rafael Kitover
+* Added patch to support String Formulas - Rafael Kitover
+* Changed unsupported numeric formats to output using floating point technique
+	with the decimal suppressed. Was truncating to MAXINT.
+* Fixed bug where CSV was not escaping currency fields - Rafael Kitover
+* Fixed bug where unknown field types were not escaped in CSV - Rafael Kitover
+* Fixed bug in cell merging where the whole row was selected
+* Fixed bug in mailto hyperlink
+* Now supports custom colors
+* New command line option -nh to suppress header & body tags in html
+* Fixed bug where tab delimited was allowing an extra tab at the EOL
+* Fixed bug in blank cells for CSV output - Thorsten Koch
+* Added test for negative value in cole_fread
+* Optimized html further so it suppresses alignment of blank rows
+* Improved portability to DOS & WIN32
+* Moved everything over to U8, U16, U32, F32, & F64 data types. This is in
+	effort to improve support on 64 bit platforms.
+* Added the xlv script from Asher Blum
+0.3 10/19/01
+* Added drive letter check for DOS & Windows
+* Fixed situation where ellipses were not being rendered correctly
+* Fixed Unicode problem in Label Cells
+* Fixed problem where cells created by row data were not being updated 
+	when the cell was officially created.
+* Program renamed to xlhtml...all lowercase.
+* Moved xlHtml over to a new makefile system. It does a static build now.
+* Finished moving cole library to mkstemp from tempnam()
+* Cole library unlinks temp files after opening so they are deleted
+* Fixed Numeric formats that need a comma
+* Fixed font name to not have Rich Text
+* Added bounds checking to Row Info opcode
+* Fixed hyperlinks that are unicode.
+* Scripts changed to use mkstemp
+* Added support for many currency & accounting formats
+* Aggressive optimizations make smaller html now
+* Fixed several cases where Ascii output had html in it
+* Added CSV output patch from Rob Arnold
+* Added support for multiple fonts in same cell
+* Added patch for continuation from Hironori
+* Added support for multiple style attributes in same cell
+* Added support for Hyperlinks
+* Added XML patch from Jason Venner
+* Added xls-handler for Apache
+0.2.8 01/14/2001
+* Added man page
+* Improved Error Messages - David Brukman
+* Added empty SST strings - David Brukman
+* Fixed bug in RKtoDouble - David Brukman
+* Fixed extended string + rich string
+* Fixed a misplaced array initialization for ws_array
+* Fixed problem where the html closing tags were being output during error
+  messages when -asc option was given
+* Changed all the comments over to standard C comments for increased portability
+0.2.6 12/26/1999
+* xlHtml is now self-scaling to whatever xls file you are viewing
+* More Unicode fixups
+* Added -m command line option to suppress multibyte
+* Added -asc & -dp commandline options to get ascii output and dump spreadsheet parameters.
+* Added -xp -xc -xr commandline options to extract a range of columns and rows on a page. This
+  will facilitate integration with gnuplot.
+* Fixed RK floating point bug
+* Increased precision from 6 digits to 15 digits.
+0.2.4 12/04/1999
+* Added Cell Merging capabilities
+* Added -te command line option to "trim the edges" (empty rows or
+  columns at the edges of a worksheet).
+* Added the contributed excel2text script to let mutt clients see xls 
+  attachments
+* Added a -v command line switch for version information
+* Added code to optimize font size statements similar to font face
+* Fixed Unicode bugs in font name and sheet name - Thanks Hironori !
+* Re-wrote the cole_fread function. Changes were submitted to Arturo.
+0.2.2 11/05/1999
+* Fixed problem with date calculation
+* Fixed cells that had a string with only spaces in it
+* Unicode, unicode, unicode
+* Fixed a formula handling error for Excel 95
+* Many little bug fixes
+* Ported to Borland C++ 5.0 under Win32
+0.2.0 10/11/1999
+* Added support for fraction data formats
+* Added -c command line option to center tables
+* Added -bc command line option to override the background color
+* Added -tc command line optine to override the text color
+* Added -bi command line option to add a background image
+* Added better support for Excel 95 & 5.0. Had to disable
+  colors since it looked crazy. Probably has a different palette.
+* Added -a command line to use aggressive optimization. This doesn't
+  generate closing tags for TD & TR tags. This could be a problem
+  for older browsers.
+* Further reduced generated html output.
+* Program now displays the last saved value of a formula.
+* Added command line option to suppress warning that formula data
+  may be stale or inaccurate.
+* Updated uploader.pl documentation
+* Added nsopen *bash* script in contrib directory
+0.1.8 9/29/1999
+* Added support for text built-in cell format
+* Reduced the amount of html output
+* Upgraded to the cole-2.0.1 Library
+* Moved xlHtml and all its files into the xlHtml directory
+0.1.6 9/25/1999
+* Re-designed the Test.xls file to really workout xlHtml
+* Added support for most built-in cell formats :date, time, 
+  number, and scientific formats
+* Added support for general formatting
+* Fixed MS induced glitch in LabelSST - only very large files
+  would have this problem.
+* Fixed bug in default Row XF's - only seen in colored blank cells
+* Optimized html tags. Avg 40% less html!
+* Added more documentation in README-xlHtml
+* Cleaned out document folder. It had some files that were created 
+  from the ./configure script. Reduced total tar size significantly.
+* Fixed bug in RK number conversion
+0.1.4 9/15/1999
+* Added support for Sub & Superscripting
+* Added -nc command line option to uncolored output
+* Added support for font sizes
+* Added support for vertical alignment
+* Added 16 more colors to built-in palette
+* Added default row formatting
+* Added support for left, center, & right justification
+0.1.2 9/11/1999
+* Added Support for Bold, Underline, and Itallics Fonts
+* Now extracts Font Name
+* Colorizes Fonts based on default palette - 40 colors
+* Continue Record Support added for big files
+* Better protection for corrupt files
+0.1.0 8/23/1999
+* Added Support for RK & MulRK cells
+* Now pulls the title & last updated date from Global Data
+* Added stubs for all cell types that will be supported
+* Minor corrections based on BIFF8 specs
+0.0.6 08/20/1999
+* Added support for Multiple Worksheets
+* Added support for BoolErr for Office 97 files
+* Added support for Worksheet's title from the tab
+* Test.xls in examples directory is now Multi-worksheet
+0.0.4 08/17/1999
+* Added support for Floating Point (Number) Cells
+* Added basic support to collect font info
+* Added basic support to collect cell attributes
+* Added several error messages
+* Added lots of comments to the code
+0.0.2 08/13/1999 First public release.
+* Packaged with the cole library and hacked the Makefile and configure scripts.
+* added disclaimer for floating point since its not correct.
+* string support is finished.
+* Labels are now supported.
+0.0.1 08/8/1999 Initial Release. 
+*So far it supports most strings, empty cells, and integers. 
+

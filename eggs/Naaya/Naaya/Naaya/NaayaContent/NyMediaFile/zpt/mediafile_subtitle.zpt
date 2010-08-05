@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+  <item tal:repeat="sub here/getSubtitle">
+    <title tal:content="sub/title" />
+    <start tal:content="sub/start" />
+    <stop tal:content="sub/stop" />
+    <subtitle tal:content="sub/subtitle" />
+  </item>
+</items>

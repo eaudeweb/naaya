@@ -1,0 +1,106 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><span i18n:translate="">Questions for</span> <a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></h1>
+
+<script language="javascript" type="text/javascript">
+
+function fPick(url)
+{
+	var wnd = window.open(url, "pickuser", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmAdd;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		items.value = value;
+	}
+}
+
+function addRowInnerHTML(tblId)
+{
+	var tblBody = document.getElementById(tblId).tBodies[0];
+	var newRow = tblBody.insertRow(-1);
+	var newCell0 = newRow.insertCell(0);
+
+	newCell0.innerHTML = '<div style="padding: 0.6em; background-color: #E5EFF6;"><label for="adt_comment.page:records" style="vertical-align: top;" i18n:translate="">page #<' + '/' + 'label> <input style="vertical-align: top;" type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" /> <label for="adt_comment.line:records" style="vertical-align: top;" i18n:translate="">line #<' + '/' + 'label> <input style="vertical-align: top;" type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" /> <label for="adt_comment.comment:records" style="vertical-align: top;" i18n:translate="">comment<' + '/' + 'label> <textarea style="vertical-align: bottom;" name="adt_comment.comment:records" id="adt_comment.comment:records" rows="4" cols="50"><' + '/' + 'textarea><' + '/' + 'div>';
+}
+
+function CommButt(p_index)
+{
+	document.getElementById('button_' + p_index).style.display = 'none';
+	document.getElementById(p_index).style.display = 'block';
+}
+
+</script>
+
+<form name="frmAdd" method="post" tal:define="perm_publish_objects here/checkPermissionPublishObjects;"
+	tal:attributes="action action" enctype="multipart/form-data">
+	<tal:block condition="perm_publish_objects">
+	<span i18n:translate="">Contributor username:</span>
+	<input type="text" size="25" name="contributor:utf8:ustring" value="" />
+	<input type="button" value="Pick" id="pick-coverage" 
+		tal:define="site_url here/getSitePath"
+		tal:attributes="onclick string:javascript:fPick('${site_url}/pickuser_html');" />
+	</tal:block>
+	<tal:block define="questions here/getQuestions">
+		<tal:block repeat="q questions">
+			<div class="field">
+				<label tal:content="structure q/title_or_id" tal:attributes="for q/id"/>
+		<div tal:attributes="id string:answ_div${q/id}">
+
+		<textarea tal:attributes="name q/id; id q/id" cols="70" rows="4" style="display: none;"></textarea>
+
+		<input type="button" tal:attributes="name string:button_${q/id}; id string:button_${q/id}; onclick string:CommButt('${q/id}')" value="Answer" style="background-color: #E5EFF6;" i18n:attributes="value" />
+		</div>
+			</div>
+		</tal:block>
+	</tal:block>
+
+	<div class="field">
+		<p i18n:translate="">If you have more recent information to support these questions, please insert it as file. In the file description, clearly indicate the question(s) you are referring  to.</p>
+		<label for="files1" i18n:translate="" style="display: inline;">File</label>
+			<input type="file" name="files" id="files1" /><br />
+		<label for="file_title" i18n:translate="" style="display: inline;">File description</label>
+			<input type="text" name="file_title" id="file_title" />
+	</div>
+
+	<br />
+
+	<table id="tblInnerHTML">
+		<thead>
+		<tr>
+			<th colspan="2" style="text-align: left; font-weight: normal;  padding: 4px 0px;" i18n:translate="">
+			Additionally, you can enter specific comments to the text using the form below. For each comment make clear reference to the page and line numbers as they appear in the <a tal:define="lang_code here/gl_get_selected_language" tal:attributes="href string:chapter_${lang_code}.pdf">PDF file</a>.
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+	<div style="margin: 2px 0px 2px 3px;">
+
+
+	<div style="padding: 0.6em; background-color: #E5EFF6;">
+		<label for="adt_comment.page:records" style="vertical-align: top;" i18n:translate="">page #</label>
+		<input style="vertical-align: top;" type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" />
+		<label for="adt_comment.line:records" style="vertical-align: top;" i18n:translate="">line #</label>
+		<input style="vertical-align: top;" type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" />
+		<label for="adt_comment.comment:records" style="vertical-align: top;" i18n:translate="">comment</label> 
+		<textarea style="vertical-align: bottom;" name="adt_comment.comment:records" id="adt_comment.comment:records" rows="4" cols="50"></textarea>
+	</div>
+
+	<input type="button" value="Add comment" onclick="addRowInnerHTML('tblInnerHTML');" style="background-color: #E5EFF6;" i18n:attributes="value"/>
+
+	<input type="hidden" name="releasedate" id="releasedate" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
+
+	<div class="field">
+		<input type="submit" value="Submit" i18n:attributes="value" />
+	</div>
+</form>
+
+<span tal:replace="python:here.del_pluggable_item_session(kind)" />
+<tal:block tal:replace="structure here/standard_html_footer"/>

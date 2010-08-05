@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<export>
+	<ob meta_type="Naaya Folder" param="0" id="info" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+		<title lang="en"><![CDATA[Information]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<ob meta_type="Naaya Document" param="0" id="accessibility" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Accessibility statement]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[<h2 i18n:translate="">Keyboard shortcuts</h2>
+				<p i18n:translate="">Most browsers support jumping to specific links by typing keys defined on the web site.
+				On Windows, you can press <strong>ALT + an access key</strong>;
+				on Macintosh, you can press <strong>Control + an access key</strong>.
+				In this website the following keyboard shortcuts are defined:</p>
+
+				<ul>
+				<li i18n:translate="">access key 1 - link to home page</li>
+				<li i18n:translate="">access key 2 - skip to main content</li>
+				<li i18n:translate="">access key 4 - search box</li>
+				<li i18n:translate="">access key 9 - feedback and helpdesk</li>
+				<li i18n:translate="">access key 0 - link to accessibility statement (this page)</li>
+				</ul>
+
+			<h2 i18n:translate="">Standards compliance</h2>
+				<ul>
+				<li i18n:translate="">the <a href="http://www.w3.org/TR/WAI-WEBCONTENT/wai-pageauth.html">Web Content Accessibility Guidelines 1.0</a> priority 2 (WAI-AA)</li>
+				<li i18n:translate="">all pages validate <a href="http://www.w3.org/TR/xhtml11/">XHTML 1.1</a></li>
+				<li i18n:translate="">the Cascading Style Sheets respect the <a href="http://www.w3.org/TR/REC-CSS2/">CSS2 Specification</a></li>
+				</ul>
+
+			<h2 i18n:translate="">Navigation aids</h2>
+				<ul>
+				<li i18n:translate="">the breadcrumb trail - links to all parent folders from the current location to the root</li>
+				<li i18n:translate="">a link to skip over the navigation area (access key 2) in order to faster reach the main content in text-browsers and speech synthesizers (the link is invisible in visual browsers and it does not affect the graphic layout)</li>
+
+				<li i18n:translate="">the website is provided with a search engine  (access key 4)</li>
+				<li i18n:translate="">the navigation for the regular end-users does not imply opening of pop-ups windows (note that some of the administrative pages with more complex functionality do) and the return to the previous page can be easily done through the <em>back</em> button from the browser</li>
+				</ul>
+
+			<h2 i18n:translate="">Links</h2>
+				<ul>
+				<li i18n:translate="">many links have <em>title</em> attributes which describe the link in detail</li>
+				<li i18n:translate="">links' names make sense out of context</li>
+				<li i18n:translate="">the links' color is chosen to contrast sufficiently with the background color, and
+				they are distinguishable by having a different text-decoration</li>
+				<li i18n:translate="">visited links and active ones are marked with different colors</li>
+				</ul>
+
+			<h2 i18n:translate="">Images</h2>
+				<ul>
+				<li i18n:translate="">all content images used in the website include descriptive ALT attributes</li>
+				<li i18n:translate="">purely decorative graphics include null ALT attributes so they will not be interpreted by speech synthesizers</li>
+				</ul>
+
+			<h2 i18n:translate="">Visual design</h2>
+				<ul>
+				<li i18n:translate="">this website uses cascading style sheets (CSS and CSS2) for visual layout</li>
+				<li i18n:translate="">only relative font sizes are used, compatible with the user-specified "text size" option in visual browsers</li>
+				<li i18n:translate="">if your browser or browsing device used does not support stylesheets at all, the content of each page is still readable and comprehensible</li>
+				</ul>
+
+			<h2 i18n:translate="">Content structure and other specific elements</h2>
+				<ul>
+				<li i18n:translate="">The HTML code of every page starts with the appropriate DOCTYPE declaration:
+				<code>&lt!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;</code>
+				</li>
+				<li i18n:translate="">The language is identified on every page of the web site:
+				<code>&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"&gt;</code>
+				</li>
+				<li i18n:translate="">the head element of every page has an unique title specific to its content:
+				<code><title>IEBI2010, Expert Groups ToR</title></code>
+				</li>
+				<li i18n:translate="">semantically correct markup: the content is well structured and uses the correct HTML tags for the various semantic elements (headers, lists, accessible tabelar information, etc.)</li>
+				<!--<li i18n:translate="">the website defines its acronyms and abbreviations with the proper tags</li>-->
+				<li i18n:translate="">the forms composing the user interface are well described by labels</li>
+				</ul>]]>
+			</body>
+		</ob>
+		<ob meta_type="Naaya Document" param="0" id="contact" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Contact us]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[<p>
+					This page should contain contact information.
+				</p>]]>
+			</body>
+		</ob>
+	</ob>
+</export>

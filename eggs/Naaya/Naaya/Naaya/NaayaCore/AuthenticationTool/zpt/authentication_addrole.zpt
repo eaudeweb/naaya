@@ -1,0 +1,55 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<h1>Add role</h1>
+
+<form method="post" name="frmAddRole">
+<table width="80%" cellspacing="3">
+<tr>
+	<td>
+		<fieldset><legend><img src="misc_/NaayaCore/Role.gif" style="vertical-align: top" alt="Role icon" />Role name</legend>
+		<table width="80%">
+			<tr>
+				<td>Role name</td>
+				<td><input type="text" name="role" size="45" maxLength="255" /></td>
+			</tr>
+		</table>
+		</fieldset>
+		<br />
+		<tal:block define="permissions here/listPermissions">
+		<fieldset><legend>Permissions</legend>
+		<table border="0" cellspacing="0" cellpadding="4">
+			<tr tal:repeat="permission python:permissions.keys()">
+				<td width="2%" style="vertical-align: top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
+				<td width="2%" style="vertical-align: top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission icon" /></td>
+				<td>
+					<table cellspacing="0" cellpadding="0">
+						<tr>
+							<td><strong><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
+								tal:content="permission">permission name</a></strong></td>
+						</tr>
+						<tr>
+							<td tal:define="description python:here.getPermissionDescription(permission)"
+								tal:content="description">permission description</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		</fieldset>
+		</tal:block>
+
+		<table border="0">
+			<tr>
+				<td class="cell-header" colspan="3">
+					<input type="submit" name="ActionButton" value=" Save " class="button" onclick="document.frmAddRole.action='addRole';" />
+					<input type="reset" name="ResetButton" value=" Reset " class="button" />
+					<input type="submit" name="CancelButton" value=" Cancel " class="button" onclick="document.frmAddRole.action='addRole';" />
+				</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer"/>

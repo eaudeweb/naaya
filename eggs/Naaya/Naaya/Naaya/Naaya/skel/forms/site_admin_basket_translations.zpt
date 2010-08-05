@@ -1,0 +1,38 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Basket of translations</h1>
+
+<tal:block metal:fill-slot="section" tal:define="show python:request.get('show', ''); lang python:request.get('lang', here.gl_get_selected_language())">
+<p i18n:translate="" tal:omit-tag="">
+	This page lists the folders from this portal (grouped by top-level containing folder) that contain items which have not yet been translated in the specified language. Click on "Show items" to expand the list of un-translated content. Click on each link to edit and translate the item.
+</p>
+<br/><br/>
+<form method="get" action="">
+	<label for="lang" i18n:translate="">Show items that have not been translated in </label>
+	<select name="lang" tal:define="translate python:here.getPortalTranslations().gettext">
+		<option tal:repeat="item here/gl_get_languages_map"
+			tal:attributes="value python:item['id']; selected python:item['id'] == lang"
+			tal:content="python:translate(item['title'], item['id'])" />
+	</select>
+	<input type="submit" value="Show"/>
+
+</form>
+
+<tal:block tal:define="translatable_content python:here.getFoldersWithTranslatableContent(lang)" condition="lang">
+	<tal:block tal:repeat="main_folder_url translatable_content/keys" tal:condition="translatable_content">
+		<tal:block tal:condition="content_count" tal:define="content_count python:len(translatable_content[main_folder_url]['content'])">
+			<h2 tal:content="python:translatable_content[main_folder_url]['obj'].title_or_id()"/>
+			<p><span tal:content="content_count"/> <span i18n:translate="">items</span> - [<a tal:attributes="href string:?lang=${lang}&amp;show=${main_folder_url}" i18n:translate="">show items</a>]</p>
+			<ul tal:condition="python:show == main_folder_url">
+				<li tal:repeat="content python:translatable_content[main_folder_url]['content']"><img tal:attributes="src content/icon; title content/meta_label"/><a tal:content="content/title_or_id" tal:attributes="href string:${content/absolute_url}/edit_html?lang=${lang}"/></li>
+			</ul>
+		</tal:block>
+	</tal:block>
+	<p tal:condition="not:translatable_content">
+		<strong><em><span i18n:translate="">No un-translated items in</span> <span tal:replace="python:here.gl_get_language_name(lang)"/></em></strong>
+	</p>
+</tal:block>
+
+
+</tal:block>
+</tal:block>

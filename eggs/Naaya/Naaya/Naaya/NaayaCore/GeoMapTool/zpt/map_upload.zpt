@@ -1,0 +1,172 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal map settings</h1>
+
+<tal:block metal:fill-slot="section" 
+		tal:define="map_url here/getGeoMapToolPath;
+					portal_map here/getGeoMapTool;">
+
+<script type="text/javascript">
+<!--
+function fTreeClick(expand)
+{
+	document.frmUpload.action = '';
+	document.frmUpload.expand.value = expand;
+	document.frmUpload.submit();
+}
+function fTreeNodeClick(node_path, node_title, node_description)
+{
+	document.frmUpload.parent_folder.value = node_path;
+}
+function frmUpload_onsubmit()
+{
+	if (document.frmUpload.parent_folder.value == '') {
+		alert('The Upload in folder field must have a value');
+		return false;
+	}
+	return true;
+}
+//-->
+</script>
+
+<p i18n:translate="">
+	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
+</p>
+
+<div id="tabbedmenu">
+	<ul>
+		<li><a tal:attributes="href string:${map_url}/admin_map_html" i18n:translate="">General settings</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_maptypes_html" i18n:translate="">Location types</a></li>
+		<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_mapupload_html" i18n:translate="">Upload locations</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_mapduplicatelocations_html" i18n:translate="">Duplicate locations</a></li>
+	</ul>
+</div>
+
+
+<p i18n:translate="">
+	Use the form below to upload a text file containing locations. If you export this file from MS Excel, do not forget to specify the encoding of the data when exporting. 
+	<a href="misc_/NaayaCore/template.csv" i18n:translate="">Download the bulk upload template.</a>
+</p>
+
+<br clear="all" />
+
+<form id="frmUpload" name="frmUpload" method="post" onsubmit="javascript: return frmUpload_onsubmit()"
+	  tal:attributes="action string:${map_url}/uploadLocations" enctype="multipart/form-data">
+<table border="0">
+	<tr>
+		<th align="right">
+			<label for="file">
+				<span i18n:translate="">File</span>
+			</label>
+		</th>
+		<td><input type="file" name="file" /></td>
+	</tr>
+	<tr>
+		<th align="right">
+			<label for="dialect">
+				<span i18n:translate="">File format</span>
+			</label>
+		</th>
+		<td>
+			<select name="dialect">
+				<option value="comma" i18n:translate="">CSV (Comma delimited)</option>
+				<option value="tab" i18n:translate="">Text (Tab delimited)</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th align="right">
+			<label for="encoding">
+				<span i18n:translate="">File encoding</span>
+			</label>
+		</th>
+		<td>
+			<select name="encoding">
+				<option value="utf-8" i18n:translate="">UTF-8</option>
+				<option value="latin-1" i18n:translate="">Latin-1</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th align="right">
+			<label for="geo_type">
+				<span i18n:translate="">Locations type</span>
+			</label>
+		</th>
+		<td>
+			<select name="geo_type" id="geo_type">
+				<option tal:repeat="item portal_map/getSymbolsList"
+					tal:attributes="value item/id;"
+					tal:content="item/title" />
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th align="right">
+			<label for="parent_folder">
+				<span i18n:translate="">Upload in folder</span>
+			</label>
+		</th>
+		<td>
+			<tal:block tal:define="expand python:request.get('expand', ''); expand_list python:here.splitToList(expand); tree python:here.getSiteMap(expand_list, None, 0)">
+				<table border="0" cellspacing="1" cellpadding="1" width="100%">
+					<tr tal:repeat="tree_node tree">
+						<td>
+							<table border="0" cellspacing="1" cellpadding="1">
+								<tr>
+									<td>
+										<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
+										<tal:block tal:condition="python:tree_node[1]==-1">
+											<img src="misc_/Naaya/square.gif" alt="" />
+										</tal:block>
+										<tal:block
+											tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
+											tal:condition="python:tree_node[1]==0">
+											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" i18n:attributes="alt" /></a>
+										</tal:block>
+										<tal:block
+											tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
+											tal:condition="python:tree_node[1]==1">
+											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" i18n:attributes="alt" /></a>
+										</tal:block>
+									</td>
+									<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
+									<td><a tal:define="node_path python:tree_node[0].absolute_url(1); node_title python:tree_node[0].title_or_id(); node_description python:tree_node[0].description;" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}', '${node_title}', '${node_description}')" tal:content="python:node_title">folder</a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+				<input type="hidden" name="expand" tal:attributes="value expand" />
+			</tal:block>
+		</td>
+	</tr>
+	<tr>
+		<th></th>
+		<td>
+			<input type="text" name="parent_folder" id="parent_folder" size="40" />
+		</td>
+	</tr>
+	<tr>
+		<th align="right">
+			<label for="approved">
+				<span i18n:translate="">Upload approved</span>
+			</label>
+		</th>
+		<td>
+			<input type="checkbox" id="approved" name="approved:boolean" checked="checked" />
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Import" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</form>
+
+<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+<span tal:content="python:here.delSessionInfo()" tal:omit-tag="" />
+</tal:block>
+
+</tal:block>

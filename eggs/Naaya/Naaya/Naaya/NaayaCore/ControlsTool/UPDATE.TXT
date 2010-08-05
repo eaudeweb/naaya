@@ -1,0 +1,36 @@
+Requierments:
+	- NaayaBase/NyControl.py
+	- Naaya/Naaya.py
+	- Naaya/skel/forms/site_macro_add.zpt
+	- Naaya/skel/forms/site_macro_edit.zpt
+	- NaayaBase/zpt/map_widget_add.zpt
+	- NaayaBase/zpt/map_widget_edit.zpt
+	- NaayaBase/zpt/map_widget_index.zpt
+	- NaayaCore/GeoMapTool
+	- naayaUpdater
+
+How to add the portal_control tool in an existing Naaya portal:
+
+- svn update:
+	- Naaya
+	- NaayaBase
+	- NaayaCore
+	- naayaUpdater
+	- individual content folders from NaayaContent
+
+- Restart Zope
+
+- Run updates from [Zope Root]/naaya_updates in this order:
+	* Step 1 - Create 'portal_control'
+	* Step 2 - Reindex portal catalog
+	* Step 3 - Add geocoding properties
+
+- Update portal forms:
+	- site_macro_add
+	- site_macro_edit
+
+- Reinstall all content types.
+
+
+Geocoding support for content types other than the Geo Point 
+can now be enabled from [portal root]/portal_control Properties tab.
