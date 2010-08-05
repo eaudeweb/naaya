@@ -108,36 +108,6 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         transaction.commit()
 
-    def test_install_uninstall(self):
-        """ """
-        acl = self.portal.getAuthenticationTool()
-        for content_type in content_types:
-            if content_type['meta_type'] not in INSTALL_UNINSTALL_TESTABLES:
-                continue
-            if content_type['meta_type'] in self.portal.get_pluggable_installed_meta_types():
-                # permission should be added by the skel
-                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
-                # uninstall and check
-                self.portal.manage_uninstall_pluggableitem(content_type['meta_type'])
-                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
-                # clean-up -- install and check
-                self.portal.manage_install_pluggableitem(content_type['meta_type'])
-                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
-            else:
-                # permission should be missing
-                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
-                # install and check
-                self.portal.manage_install_pluggableitem(content_type['meta_type'])
-                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
-                # clean-up -- uninstall and check
-                self.portal.manage_uninstall_pluggableitem(content_type['meta_type'])
-                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
-
     def test_new_schema_property(self):
         """
         Check that we can add a new schema property and have
