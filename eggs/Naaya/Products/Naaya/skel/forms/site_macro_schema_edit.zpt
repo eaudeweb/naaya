@@ -74,7 +74,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </script>
 <fieldset metal:define-slot="update_content_language" class="edit_right_box"
 	tal:condition="python:len(languages) > 1 and getattr(site, 'switch_language', 0)">
-	<form action="." method="post">
+	<form name="switch_to_language" action="." method="post">
 		<legend i18n:translate="">Choose correct language</legend>
 		<label for="switch_to" i18n:translate="">Mark as</label>
 		<select name="switch_to" id="switch_to">

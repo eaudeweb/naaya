@@ -378,7 +378,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             # do the "switch to language" operation - move content from 'en' to 'fr'
             self.browser.go('http://localhost/portal/xz_folder/ze-title/edit_html')
-            form = self.browser.get_form('frmEdit')
+            form = self.browser.get_form('switch_to_language')
             self.browser.clicked(form, form.find_control('switchToLanguage:method'))
             self.browser.submit()
 
