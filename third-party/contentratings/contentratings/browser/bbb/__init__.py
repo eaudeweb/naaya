@@ -153,9 +153,9 @@ class UserRatingSetView(object):
                 pass
         if not key:
             # A cheap alternative
-            key = KEYBASE + str(self.context)
+            key = self.KEYBASE + str(self.context)
         else:
-            key = KEYBASE + '-'.join(key)
+            key = self.KEYBASE + '-'.join(key)
         self._key_cache = key
         return key
 
