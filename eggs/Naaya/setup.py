@@ -28,6 +28,6 @@ setup(name='Naaya',
 
           # only used for testing:
           'twill >= 0.9',
-          'webob',
+          'WebOb',
       ]
 )
