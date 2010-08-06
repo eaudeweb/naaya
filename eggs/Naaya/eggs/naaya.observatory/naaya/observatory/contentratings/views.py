@@ -5,6 +5,7 @@ from zope.traversing.namespace import getResource
 import zLOG
 
 from contentratings.interfaces import IUserRating
+from contentratings.browser.bbb import UserRatingSetView
 
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
@@ -26,20 +27,8 @@ class ObservatoryRatingView(object):
         assert int(self.adapted.scale) == 5
 
     @property
-    def averageRating(self):
-        return self.adapted.averageRating
-
-    @property
-    def numberOfRatings(self):
-        return self.adapted.numberOfRatings
-
-    @property
-    def scale(self):
-        return self.adapted.scale
-
-    @property
     def rating(self):
-        return int(round(self.averageRating))
+        return int(round(self.adapted.averageRating))
 
     def __call__(self, REQUEST):
         if not (0 <= self.rating < 5):
@@ -49,8 +38,11 @@ class ObservatoryRatingView(object):
                 'naaya.observatory_rating_%d.icon' % self.rating, REQUEST)
         return resource.GET()
 
-class ObservatoryRatingSetView(object):
+class ObservatoryRatingSetView(UserRatingSetView):
     """A view for setting the rating information"""
+
+    #Overwriting this to have different keys for observatory ratings
+    KEYBASE = 'observatory-anon-rated-'
 
     def __init__(self, context, request):
         self.context = context
@@ -59,26 +51,6 @@ class ObservatoryRatingSetView(object):
                 name=u'Observatory Rating')
 
         assert int(self.adapted.scale) == 5
-
-    @property
-    def averageRating(self):
-        return self.adapted.averageRating
-
-    @property
-    def numberOfRatings(self):
-        return self.adapted.numberOfRatings
-
-    @property
-    def scale(self):
-        return self.adapted.scale
-
-    @property
-    def rating(self):
-        return int(round(self.averageRating))
-
-    def userRating(self, REQUEST):
-        user = REQUEST.AUTHENTICATED_USER.getUserName()
-        return self.adapted.userRating(user)
 
     @property
     def address(self):
@@ -96,13 +68,7 @@ class ObservatoryRatingSetView(object):
         try:
             return reverse_geocode(lat, lon)
         except GeocoderServiceError, e:
-            zLOG.LOG('naaya.observatory', zLOG.INFO, str(e))
+            zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return ''
 
-    def rate(self, rating, REQUEST, orig_url=None):
-        """ Rate an object, attempts to redirect back to the original url """
-        user = REQUEST.AUTHENTICATED_USER.getUserName()
-        self.adapted.rate(rating, user)
-        if orig_url is not None:
-            return REQUEST.RESPONSE.redirect(orig_url)
 
