@@ -124,11 +124,12 @@ class OAIAggregator(OAIRepository):
         catalog.manage_addColumn('dc_type')
         catalog.manage_addColumn('dc_subject')
 
-        engine = create_engine(self.sqlalchemy['connection'])
-        sqlalchemy_setup.metadata.drop_all(engine)
-        sqlalchemy_setup.metadata.create_all(engine)
-        if str(self.sqlalchemy['connection']).startswith('mysqldb'):
-            engine.execute("ALTER TABLE `records_map_full` ADD FULLTEXT(value)")
+        if self.storage == 'SQLAlchemy': #Fails if no mysql server is installed
+            engine = create_engine(self.sqlalchemy['connection'])
+            sqlalchemy_setup.metadata.drop_all(engine)
+            sqlalchemy_setup.metadata.create_all(engine)
+            if str(self.sqlalchemy['connection']).startswith('mysqldb'):
+                engine.execute("ALTER TABLE `records_map_full` ADD FULLTEXT(value)")
 
     security.declarePrivate('update')
     def update(self):
