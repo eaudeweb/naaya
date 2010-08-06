@@ -15,7 +15,6 @@ from contentratings.interfaces import IUserRating
 from contentratings.interfaces import _
 from contentratings.browser.interfaces import IEditorialRatingView
 
-KEYBASE = 'anon-rated-'
 
 try:
     from AccessControl import getSecurityManager
@@ -84,6 +83,8 @@ class UserRatingView(object):
 
 class UserRatingSetView(object):
     """A view for setting the rating information"""
+
+    KEYBASE = 'anon-rated-'
 
     def __init__(self, context, request):
         self.context = context
