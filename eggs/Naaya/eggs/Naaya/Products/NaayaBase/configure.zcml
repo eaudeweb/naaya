@@ -56,8 +56,4 @@
     for=".interfaces.INyRemoveGroupRoleEvent"
     />
 
-  <utility
-    provides=".interfaces.IGeocoder"
-    factory=".ggeocoding.Geocoder" />
-
 </configure>

@@ -68,12 +68,3 @@ class INyRemoveGroupRoleEvent(Interface):
     group = Attribute("Group the roles are removed for")
     roles = Attribute("The list of roles")
 
-class IGeocoder(Interface):
-    """ Interface for geocoding utilities """
-
-    def geocode(address):
-        """ Return lat, lng tuple for specified address """
-
-    def reverse_geocode(lat, lng):
-        """ Return address for specified lat, lng tuple """
-
