@@ -2,6 +2,9 @@ from Products.naayaUpdater.updates import UpdateScript
 
 permission_map = {
     'Publish content': 'Naaya - Publish content',
+    'Manage Users': 'Manage users',
+    'Validate content': 'Naaya - Validate content',
+    'Edit content': 'Naaya - Edit content',
 }
 
 class RemovePermissionGroups(UpdateScript):
