@@ -1,13 +1,12 @@
 import os.path
 
 from zope.component import getAdapter
-from App.ImageFile import ImageFile
+from zope.traversing.namespace import getResource
+import zLOG
 
 from contentratings.interfaces import IUserRating
 
-def imagePath(rating):
-    return os.path.join(os.path.dirname(__file__), 'www',
-            'Picture%d.png' % rating)
+from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
 class RatingOutOfBoundsError(Exception):
     def __init__(self, rating):
@@ -17,8 +16,6 @@ class RatingOutOfBoundsError(Exception):
 
 class ObservatoryRatingView(object):
     """A view for getting the rating information"""
-
-    ratingImages = [ImageFile(imagePath(rating)) for rating in range(5)]
 
     def __init__(self, context, request):
         self.context = context
@@ -40,10 +37,72 @@ class ObservatoryRatingView(object):
     def scale(self):
         return self.adapted.scale
 
-    def __call__(self, REQUEST, RESPONSE):
-        rating = int(round(self.averageRating))
-        if not (0 <= rating < 5):
-            raise RatingOutOfBoundsError(rating)
+    @property
+    def rating(self):
+        return int(round(self.averageRating))
 
-        return self.ratingImages[rating].index_html(REQUEST, RESPONSE)
+    def __call__(self, REQUEST):
+        if not (0 <= self.rating < 5):
+            raise RatingOutOfBoundsError(self.rating)
+
+        resource = getResource(self.context.getSite(),
+                'naaya.observatory_rating_%d.icon' % self.rating, REQUEST)
+        return resource.GET()
+
+class ObservatoryRatingSetView(object):
+    """A view for setting the rating information"""
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.adapted = getAdapter(context, IUserRating,
+                name=u'Observatory Rating')
+
+        assert int(self.adapted.scale) == 5
+
+    @property
+    def averageRating(self):
+        return self.adapted.averageRating
+
+    @property
+    def numberOfRatings(self):
+        return self.adapted.numberOfRatings
+
+    @property
+    def scale(self):
+        return self.adapted.scale
+
+    @property
+    def rating(self):
+        return int(round(self.averageRating))
+
+    def userRating(self, REQUEST):
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+        return self.adapted.userRating(user)
+
+    @property
+    def address(self):
+        address = self.context.geo_address()
+        if address:
+            return address
+
+        if not self.context.geo_location:
+            return ''
+        if self.context.geo_location.missing_lat_lon:
+            return ''
+
+        lat = self.context.geo_latitude()
+        lon = self.context.geo_longitude()
+        try:
+            return reverse_geocode(lat, lon)
+        except GeocoderServiceError, e:
+            zLOG.LOG('naaya.observatory', zLOG.INFO, str(e))
+            return ''
+
+    def rate(self, rating, REQUEST, orig_url=None):
+        """ Rate an object, attempts to redirect back to the original url """
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+        self.adapted.rate(rating, user)
+        if orig_url is not None:
+            return REQUEST.RESPONSE.redirect(orig_url)
 
