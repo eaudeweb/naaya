@@ -1,7 +1,6 @@
 <form method="POST" tal:attributes="
 	action string:${context/absolute_url}/@@observatory_rate/rate">
-	<ol tal:define="
-		user_rating python:view.userRating(request);">
+	<ol tal:define="user_rating view/userRating;">
 		<li tal:repeat="index python:range(5)">
 			<input type="radio" name="rating" tal:attributes="
 				value index;
