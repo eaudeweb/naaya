@@ -4,13 +4,21 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="naaya">
 
+  <!-- Initializations -->
   <five:registerPackage package="." initialize=".initialize" />
 
+  <!-- Permissions -->
   <zope:permission
     id="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
     title="Naaya - Observatory - View Rating"
     />
 
+  <zope:permission
+    id="naaya.PERMISSION_OBSERVATORY_RATE"
+    title="Naaya - Observatory - Rate"
+    />
+
+  <!-- Views -->
   <browser:page
     name="observatory_rating_view"
     for=".interfaces.IObservatoryRatable"
@@ -18,6 +26,37 @@
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
   />
 
+  <browser:page
+    name="observatory_rate"
+    for=".interfaces.IObservatoryRatable"
+    class=".views.ObservatoryRatingSetView"
+    template="zpt/observatory_rate.zpt"
+    permission="naaya.PERMISSION_OBSERVATORY_RATE"
+    allowed_attributes="rate"
+  />
+
+  <!-- Resources -->
+  <browser:resource name="naaya.observatory_rating_0.icon"
+    image="www/Picture0.png"
+    permission="zope.Public" />
+
+  <browser:resource name="naaya.observatory_rating_1.icon"
+    image="www/Picture1.png"
+    permission="zope.Public" />
+
+  <browser:resource name="naaya.observatory_rating_2.icon"
+    image="www/Picture2.png"
+    permission="zope.Public" />
+
+  <browser:resource name="naaya.observatory_rating_3.icon"
+    image="www/Picture3.png"
+    permission="zope.Public" />
+
+  <browser:resource name="naaya.observatory_rating_4.icon"
+    image="www/Picture4.png"
+    permission="zope.Public" />
+
+  <!-- Who implements IObservatoryRatable -->
   <five:implements class="Products.NaayaBase.NyContentType.NyContentType"
     interface=".interfaces.IObservatoryRatable" />
 
