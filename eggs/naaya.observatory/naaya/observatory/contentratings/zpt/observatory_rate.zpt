@@ -1,0 +1,20 @@
+<form method="POST" tal:attributes="
+	action string:${context/absolute_url}/@@observatory_rate/rate">
+	<ol tal:define="
+		user_rating python:view.userRating(request);">
+		<li tal:repeat="index python:range(5)">
+			<input type="radio" name="rating" tal:attributes="
+				value index;
+				checked python:user_rating == index"/>
+			<img alt="" tal:attributes="
+				src string:++resource++naaya.observatory_rating_${index}.icon"/>
+		</li>
+	</ol>
+	<div tal:content="view/address"/>
+
+	<input type="hidden" name="orig_url"
+		tal:attributes="value request/ACTUAL_URL|request/getURL|nothing" />
+
+	<input type="submit" value="Rate" />
+</form>
+
