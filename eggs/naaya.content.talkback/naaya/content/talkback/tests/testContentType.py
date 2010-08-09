@@ -89,14 +89,14 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.assertEqual(meta, [])
 
 class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
-    def do_content_test(self, input_text, expected_output):
+    def assert_parse_ok(self, input_text, expected_output):
         output = parse(''.join(input_text))
         self.failUnless(isinstance(output, list))
         self.failUnlessEqual(len(expected_output), len(output))
         self.failUnlessEqual(set(expected_output), set(output))
 
     def test_two_paragraphs(self):
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p>This is the first paragraph.</p>\n'
             '<p>This is the second one.</p>\n',
             [
@@ -106,7 +106,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
         )
 
     def test_grouping(self):
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p>This is the first paragraph.</p>\nblabla\n'
             '<p>This is the second one.</p> and some more stuff\n',
             [
@@ -118,7 +118,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
         )
 
     def test_empty_paragraph(self):
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p>&nbsp;</p>'
             'blah',
             [
@@ -126,7 +126,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
             ]
         )
 
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p> <span>some text</span></p>'
             'etc',
             [
@@ -136,7 +136,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
         )
 
     def test_toplevel_elements(self):
-        #self.do_content_test(
+        #self.assert_parse_ok(
             #'<img src="blabla" />'
             #'and some other stuff',
             #[
@@ -145,7 +145,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
             #]
         #)
 
-        #self.do_content_test(
+        #self.assert_parse_ok(
             #'some stuff'
             #'<b>and some other stuff</b>'
             #'some final stuff',
@@ -154,7 +154,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
             #]
         #)
 
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p align="center">&nbsp;</p><br />'
             '<p align="center"><strong>Annex</strong></p>',
             [
@@ -164,7 +164,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
 
 
     def test_headings(self):
-        self.do_content_test(
+        self.assert_parse_ok(
             'blah blah'
             '<h2>the heading</h2>'
             'and next content',
@@ -174,7 +174,7 @@ class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
             ]
         )
 
-        self.do_content_test(
+        self.assert_parse_ok(
             '<p><strong>t</strong></p>'
             '<h3>Achievements</h3>'
             '<p>&nbsp;</p>'
