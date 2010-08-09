@@ -1,0 +1,43 @@
+<configure
+  xmlns:zope="http://namespaces.zope.org/zope"
+  xmlns:five="http://namespaces.zope.org/five"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="naaya">
+
+  <!-- Permissions -->
+  <zope:permission
+    id="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    title="Naaya - Observatory - View Map"
+    />
+
+  <!-- Views -->
+  <browser:page
+    name="observatory_map"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    template="zpt/map_view.zpt"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="observatory_xrjs_clusters"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="xrjs_getClusters"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="observatory_xrjs_tooltip"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="xrjs_getTooltip"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <!-- Resources -->
+  <browser:resource name="naaya.observatory_map.js"
+    image="www/maptool.js"
+    permission="zope.Public" />
+
+</configure>
