@@ -37,6 +37,11 @@
 					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 			</span>
 		</span>
+		<a class="b_download" 
+			href="./zip_export/do_export"
+			title="Download the contents of this folder to a Zip file" 
+			i18n:attributes="title"
+			i18n:translate="">Zip download</a>
 	</h1>
     </metal:block>
 
