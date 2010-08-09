@@ -22,8 +22,7 @@ from datetime import datetime, timedelta
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaCore.NotificationTool.NotificationTool import (
-    set_testing_mode as set_notif_testing_mode,
-    list_modified_objects)
+    divert_notifications, list_modified_objects)
 from Products.NaayaCore.NotificationTool.interfaces import \
     ISubscriptionContainer
 
@@ -35,7 +34,7 @@ class NotificationsTest(NaayaTestCase):
 
     def afterSetUp(self):
         self._notifications = []
-        set_notif_testing_mode(True, save_to=self._notifications)
+        divert_notifications(True, save_to=self._notifications)
         self.notif = self.portal.portal_notification
         self._original_config = dict(self.notif.config)
         self.notif.config['enable_instant'] = True
@@ -50,7 +49,7 @@ class NotificationsTest(NaayaTestCase):
         self.portal.manage_delObjects(['notifol'])
         self.notif.config.clear()
         self.notif.config.update(self._original_config)
-        set_notif_testing_mode(False)
+        divert_notifications(False)
 
     def test_get_email(self):
         self.notif.add_account_subscription('contributor', '', 'instant', 'en')

@@ -23,8 +23,7 @@ import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.NotificationTool.NotificationTool import (
-    set_testing_mode as set_notif_testing_mode,
-    walk_subscriptions)
+    divert_notifications, walk_subscriptions)
 
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
@@ -35,7 +34,7 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         self._notifications = []
-        set_notif_testing_mode(True, save_to=self._notifications)
+        divert_notifications(True, save_to=self._notifications)
         addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
         addNyDocument(self.portal.notifol, id='notidoc',
             title='Notifying document', submitted=1, contributor='contributor')
@@ -53,7 +52,7 @@ class NotificationsTest(NaayaFunctionalTestCase):
         _notif.config.update(self._original_config)
         _notif.config.update(self._original_config)
         self.portal.manage_delObjects(['notifol'])
-        set_notif_testing_mode(False)
+        divert_notifications(False)
         transaction.commit()
 
     def _fetch_test_notifications(self):

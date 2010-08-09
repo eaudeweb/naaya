@@ -442,7 +442,7 @@ def _send_notification(email_tool, addr_from, addr_to, subject, body):
 def _mock_send_notification(email_tool, addr_from, addr_to, subject, body):
     mock_saved.append( (addr_from, addr_to, subject, body) )
 
-def set_testing_mode(testing, save_to=[]):
+def divert_notifications(testing, save_to=[]):
     """
     Place the NotificationTool module in testing mode: all notifications will
     be appended to `save_to` instead of being sent via e-mail.
@@ -457,7 +457,7 @@ def set_testing_mode(testing, save_to=[]):
     else:
         send_notification = _send_notification
 
-set_testing_mode(False)
+divert_notifications(False)
 
 def DateTime_from_datetime(dt):
     DT = DateTime(dt.isoformat())

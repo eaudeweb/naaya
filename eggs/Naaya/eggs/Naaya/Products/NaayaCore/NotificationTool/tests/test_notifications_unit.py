@@ -26,7 +26,7 @@ from operator import attrgetter
 import transaction
 
 from Products.NaayaCore.NotificationTool.NotificationTool \
-    import set_testing_mode as set_notif_testing_mode
+    import divert_notifications
 from Products.NaayaCore.NotificationTool.NotificationTool import (
     NotificationTool, walk_subscriptions)
 from Products.NaayaCore.NotificationTool import NotificationTool as \
@@ -43,7 +43,7 @@ class BaseNotificationsTest(NaayaTestCase):
         self._notif_config = dict(notif_tool.config)
         self._notifications = []
         self._subscriptions_to_remove = []
-        set_notif_testing_mode(True, save_to=self._notifications)
+        divert_notifications(True, save_to=self._notifications)
         addNyFolder(self.portal, 'fol1', contributor='contributor')
         addNyFolder(self.portal, 'fol2', contributor='contributor')
 
@@ -88,7 +88,7 @@ class BaseNotificationsTest(NaayaTestCase):
             notif_tool.remove_account_subscription(*args)
         self.portal.manage_delObjects(['fol1', 'fol2'])
         notif_tool.config.update(self._notif_config)
-        set_notif_testing_mode(False)
+        divert_notifications(False)
         transaction.commit()
 
     def _fetch_test_notifications(self):
