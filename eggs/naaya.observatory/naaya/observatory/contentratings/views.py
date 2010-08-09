@@ -38,6 +38,20 @@ class ObservatoryRatingView(object):
                 'naaya.observatory_rating_%d.icon' % self.rating, REQUEST)
         return resource.GET()
 
+class ObservatoryCommentsView(object):
+    """A view for getting the comments"""
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.adapted = getAdapter(context, IUserRating,
+                name=u'Observatory Rating')
+
+        assert int(self.adapted.scale) == 5
+
+    @property
+    def comments_list(self):
+        return self.context.get_comments_list()
+
 class ObservatoryRatingSetView(UserRatingSetView):
     """A view for setting the rating information"""
 
@@ -70,5 +84,15 @@ class ObservatoryRatingSetView(UserRatingSetView):
         except GeocoderServiceError, e:
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return ''
+
+    def rate_and_comment(self, rating, comment='', orig_url=None):
+        """
+        Rate and comment an object
+        attempts to redirect back to the original url
+        """
+        context = self.context.aq_self
+        context.comment_add(body=comment)
+        self.rate(rating, orig_url)
+
 
 
