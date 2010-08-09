@@ -26,21 +26,6 @@ from App.ImageFile import ImageFile
 #Product imports
 import Products.Naaya
 from constants import *
-from CatalogTool import CatalogTool
-from EmailTool import EmailTool
-from TranslationsTool import TranslationsTool
-from SyndicationTool import SyndicationTool
-from AuthenticationTool import AuthenticationTool
-from PropertiesTool import PropertiesTool
-from DynamicPropertiesTool import DynamicPropertiesTool
-from PortletsTool import PortletsTool
-from FormsTool import FormsTool
-from LayoutTool import LayoutTool
-from NotificationTool import NotificationTool
-from ProfilesTool import ProfilesTool
-from EditorTool import EditorTool
-from SchemaTool import SchemaTool
-from GoogleDataTool import AnalyticsTool
 
 try:
     from GeoMapTool import GeoMapTool
@@ -50,6 +35,25 @@ except ImportError:
 
 def initialize(context):
     """ """
+
+    # don't think about importing these top-level like this because
+    # they mess up modules' paths
+    from CatalogTool import CatalogTool
+    from EmailTool import EmailTool
+    from TranslationsTool import TranslationsTool
+    from SyndicationTool import SyndicationTool
+    from AuthenticationTool import AuthenticationTool
+    from PropertiesTool import PropertiesTool
+    from DynamicPropertiesTool import DynamicPropertiesTool
+    from PortletsTool import PortletsTool
+    from FormsTool import FormsTool
+    from LayoutTool import LayoutTool
+    from NotificationTool import NotificationTool
+    from ProfilesTool import ProfilesTool
+    from EditorTool import EditorTool
+    from SchemaTool import SchemaTool
+    from GoogleDataTool import AnalyticsTool
+
     context.registerClass(
         PropertiesTool.PropertiesTool,
         permission = PERMISSION_ADD_NAAYACORE_TOOL,
