@@ -1,112 +1,122 @@
-from NaayaTestCase import NaayaTestCase
+import base64
+from webob import Request
+import transaction
+
+from NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 
-class PageLoadTests(NaayaTestCase):
+class PageLoadTests(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.login()
         portal = self.app.portal
         portal.admin_addremotechannels_aggregator('Test')
         addNyFolder(portal.info, 'test')
+        transaction.commit()
 
     def beforeTearDown(self):
         portal = self.app.portal
         portal.info.manage_delObjects('test')
         ca = portal.getSyndicationTool().objectIds(['Naaya Channel Aggregator'])
         portal.admin_deleteremotechannels_aggregator(ids=ca)
+        transaction.commit()
+
+    def assert_page_ok(self, url, user_id=None):
+        request = Request.blank(url)
+        if user_id is not None:
+            if user_id != 'admin':
+                raise ValueError("I only know about the admin account, "
+                                 "who is %r?" % user_id)
+            request.authorization = 'Basic %s' % base64.b64encode('admin:')
+        response = request.get_response(self.wsgi_request)
+        assert response.status == '200 OK', repr(response)
 
     def test_page_load(self):
-        """
-        Try to render some basic pages; if they raise exceptions the test will fail.
-        """
-        portal = self.app.portal
+        self.assert_page_ok('/portal/')
+        self.assert_page_ok('/portal/messages_html')
+        self.assert_page_ok('/portal/messages_box')
+        self.assert_page_ok('/portal/languages_box')
+        self.assert_page_ok('/portal/login_html')
+        self.assert_page_ok('/portal/logout_html')
+        self.assert_page_ok('/portal/unauthorized_html')
+        self.assert_page_ok('/portal/search_html')
+        self.assert_page_ok('/portal/external_search_html')
+        self.assert_page_ok('/portal/sitemap_html')
+        self.assert_page_ok('/portal/sitemap_add_html')
+        self.assert_page_ok('/portal/feedback_html')
+        self.assert_page_ok('/portal/requestrole_html')
+        self.assert_page_ok('/portal/profile_html')
+        self.assert_page_ok('/portal/localchannels_rdf')
 
-        portal.index_html()
-        portal.messages_html()
-        portal.messages_box()
-        portal.languages_box()
-        portal.login_html()
-        portal.logout_html()
-        portal.unauthorized_html()
-        portal.search_html()
-        portal.external_search_html()
-        portal.sitemap_html()
-        portal.sitemap_add_html()
-        portal.feedback_html()
-        portal.requestrole_html()
-        portal.profile_html()
-        portal.localchannels_rdf()
+        self.assert_page_ok('/portal/admin_centre_html', 'admin')
+        self.assert_page_ok('/portal/admin_metadata_html', 'admin')
+        self.assert_page_ok('/portal/admin_email_html', 'admin')
+        self.assert_page_ok('/portal/admin_logos_html', 'admin')
+        self.assert_page_ok('/portal/admin_properties_html', 'admin')
+        self.assert_page_ok('/portal/admin_layout_html', 'admin')
+        self.assert_page_ok('/portal/admin_documentation_html', 'admin')
+        self.assert_page_ok('/portal/admin_users_html', 'admin')
+        self.assert_page_ok('/portal/admin_adduser_html', 'admin')
+        self.assert_page_ok('/portal/admin_addrole_html', 'admin')
+        self.assert_page_ok('/portal/admin_roles_html', 'admin')
+        self.assert_page_ok('/portal/admin_sources_html', 'admin')
+        self.assert_page_ok('/portal/admin_translations_html', 'admin')
+        self.assert_page_ok('/portal/admin_messages_html', 'admin')
+        self.assert_page_ok('/portal/admin_importexport_html', 'admin')
+        self.assert_page_ok('/portal/admin_linkslists_html', 'admin')
+        self.assert_page_ok('/portal/admin_linkslist_html', 'admin')
+        self.assert_page_ok('/portal/admin_reflists_html', 'admin')
+        self.assert_page_ok('/portal/admin_reflist_html', 'admin')
+        self.assert_page_ok('/portal/admin_network_html', 'admin')
+        self.assert_page_ok('/portal/admin_basket_html', 'admin')
+        self.assert_page_ok('/portal/admin_validation_html', 'admin')
+        self.assert_page_ok('/portal/admin_validation_tree_html', 'admin')
+        self.assert_page_ok('/portal/admin_versioncontrol_html', 'admin')
+        self.assert_page_ok('/portal/admin_maintopics_html', 'admin')
+        self.assert_page_ok('/portal/admin_localchannels_html', 'admin')
+        self.assert_page_ok('/portal/admin_remotechannels_html', 'admin')
+        self.assert_page_ok('/portal/admin_remotechannels_aggregators_html',
+                            'admin')
+        self.assert_page_ok('/portal/admin_specialportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_remotechportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_localchportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_folderportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_linksportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_htmlportlets_html', 'admin')
+        self.assert_page_ok('/portal/admin_delmesg_html', 'admin')
 
-        portal.admin_centre_html()
-        portal.admin_metadata_html()
-        portal.admin_email_html()
-        portal.admin_logos_html()
-        portal.admin_properties_html()
-        portal.admin_layout_html()
-        portal.admin_documentation_html()
-        portal.admin_users_html()
-        portal.admin_adduser_html()
-        portal.admin_addrole_html()
-        portal.admin_roles_html()
-        portal.admin_sources_html()
-        portal.admin_translations_html()
-        portal.admin_messages_html()
-        portal.admin_importexport_html()
-        portal.admin_linkslists_html()
-        portal.admin_linkslist_html()
-        portal.admin_reflists_html()
-        portal.admin_reflist_html()
-        portal.admin_network_html()
-        portal.admin_basket_html()
-        portal.admin_validation_html()
-        portal.admin_validation_tree_html()
-        portal.admin_versioncontrol_html()
-        portal.admin_maintopics_html()
-        portal.admin_localchannels_html()
-        portal.admin_remotechannels_html()
-        portal.admin_remotechannels_aggregators_html()
-        portal.admin_specialportlets_html()
-        portal.admin_remotechportlets_html()
-        portal.admin_localchportlets_html()
-        portal.admin_folderportlets_html()
-        portal.admin_linksportlets_html()
-        portal.admin_htmlportlets_html()
-        portal.admin_delmesg_html()
-
-        id_channel = portal.getSyndicationTool().objectIds([
+        id_channel = self.portal.getSyndicationTool().objectIds([
             'Naaya Channel Aggregator'])[0]
 
-        portal.channel_details_html(request={'id_channel': id_channel})
-        portal.admin_edituser_html(request={'name': 'contributor'})
+        self.assert_page_ok('/portal/channel_details_html?id_channel=%s' %
+                            id_channel)
+        self.assert_page_ok('/portal/admin_edituser_html?name=contributor',
+                            'admin')
 
     def test_folder_page_load(self):
-        """
-        Try to render some basic pages; if they raise exceptions the test will fail.
-        """
-        folder = self.app.portal.info
+        """ Try to render some basic pages """
 
-        folder.index_atom(REQUEST={})
-        folder.index_rdf(REQUEST={})
-        folder.index_html()
-        folder.folder_add_html()
-        folder.feedback_html()
-        folder.comments_rdf()
-        folder.restrict_html()
-        folder.sortorder_html()
-        folder.basketofvalidation_html()
-        folder.basketofapprovals_html()
-        folder.editlogo_html()
-        folder.edit_html()
-        folder.subobjects_html()
+        self.assert_page_ok('/portal/info/index_atom')
+        self.assert_page_ok('/portal/info/index_rdf')
+        self.assert_page_ok('/portal/info/index_html')
+        self.assert_page_ok('/portal/info/folder_add_html', 'admin')
+        self.assert_page_ok('/portal/info/feedback_html')
+        self.assert_page_ok('/portal/info/comments_rdf')
+        self.assert_page_ok('/portal/info/restrict_html', 'admin')
+        self.assert_page_ok('/portal/info/sortorder_html', 'admin')
+        self.assert_page_ok('/portal/info/basketofvalidation_html', 'admin')
+        self.assert_page_ok('/portal/info/basketofapprovals_html', 'admin')
+        self.assert_page_ok('/portal/info/editlogo_html', 'admin')
+        self.assert_page_ok('/portal/info/edit_html', 'admin')
+        self.assert_page_ok('/portal/info/subobjects_html', 'admin')
 
-        folder.administration_feedback_html()
-        folder.administration_portlets_html()
-        folder.administration_source_html()
-        folder.administration_users_html()
-        folder.administration_logo_html()
-        folder.administration_basket_html()
-
-        ids = folder.objectIds()
-        folder.renameobject_html(request={'id': ids})
+        self.assert_page_ok('/portal/info/administration_feedback_html',
+                            'admin')
+        self.assert_page_ok('/portal/info/administration_portlets_html',
+                            'admin')
+        self.assert_page_ok('/portal/info/administration_source_html', 'admin')
+        self.assert_page_ok('/portal/info/administration_users_html', 'admin')
+        self.assert_page_ok('/portal/info/administration_logo_html', 'admin')
+        self.assert_page_ok('/portal/info/administration_basket_html', 'admin')
 
 def test_suite():
     from unittest import TestSuite, makeSuite
