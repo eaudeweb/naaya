@@ -22,7 +22,15 @@ from unittest import TestSuite, makeSuite
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.tests.NaayaTestCase import load_test_file
+
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
 
 class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
     """ check that original photo size download restrictions are enforced """
@@ -45,7 +53,7 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
     def test_restrict_original(self):
         # first make sure the photo object has a photo
-        picture_file = load_test_file('data/pink.png', globals())
+        picture_file = load_file('data/pink.png')
         picture_data = picture_file.getvalue()
         gallery = self.portal.myfolder.g
         gallery.f.myphoto.update_data(picture_file)
