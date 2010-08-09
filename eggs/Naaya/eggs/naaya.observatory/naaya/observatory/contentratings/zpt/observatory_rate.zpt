@@ -1,3 +1,6 @@
+<tal:block define="
+rating_messages python:['Very good', 'Good', 'Average', 'Bad', 'Very bad']">
+
 <form method="POST" tal:attributes="
 	action string:${context/absolute_url}/@@observatory_rate/rate_and_comment">
 	<ol tal:define="user_rating view/userRating;">
@@ -5,7 +8,10 @@
 			<input type="radio" name="rating" tal:attributes="
 				value index;
 				checked python:user_rating == index"/>
+			<label tal:attributes="for string:rating_${index}"
+				tal:content="python:view.message(rating_messages[index])"/>
 			<img alt="" tal:attributes="
+				id string:rating_${index};
 				src string:++resource++naaya.observatory_rating_${index}.icon"/>
 		</li>
 	</ol>
@@ -17,6 +23,7 @@
 	<input type="hidden" name="orig_url"
 		tal:attributes="value request/ACTUAL_URL|request/getURL|nothing" />
 
-	<input type="submit" value="Rate" />
+	<input type="submit" tal:attributes="value python:view.message('Rate')" />
 </form>
+</tal:block>
 

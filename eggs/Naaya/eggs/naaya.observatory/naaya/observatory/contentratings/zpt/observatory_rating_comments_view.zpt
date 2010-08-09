@@ -1,3 +1,5 @@
+<tal:block define="
+rating_messages python:['Very good', 'Good', 'Average', 'Bad', 'Very bad']">
 <ul>
 	<li tal:repeat="item view/comments_list">
 		<span tal:content="item/author"/>
@@ -6,5 +8,9 @@
 	</li>
 </ul>
 
-<img alt="" tal:attributes="
+<label for="rating"
+	tal:content="python:view.message(rating_messages[view.rating])"/>
+<img id="rating" alt="" tal:attributes="
 	src string:++resource++naaya.observatory_rating_${view/rating}.icon"/>
+</tal:block>
+
