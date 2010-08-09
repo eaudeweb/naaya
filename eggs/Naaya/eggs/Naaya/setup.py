@@ -25,6 +25,7 @@ setup(name='Naaya',
           'python-dateutil',
           'edw-pycaptcha >= 0.3.1',
           'edw-localizer == 1.2.2',
+          'edw-extfile >= 2.0.2-edw1',
 
           # only used for testing:
           'twill >= 0.9',
