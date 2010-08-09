@@ -17,6 +17,8 @@
 #
 # Alin Voinea, Eau de Web
 import time
+import os
+from StringIO import StringIO
 from unittest import TestSuite, makeSuite
 from naaya.content.mediafile.mediafile_item import addNyMediaFile
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
@@ -25,7 +27,11 @@ from naaya.content.mediafile.converters.MediaConverter import can_convert
 
 
 class NaayaContentTestCase(FunctionalTestCase):
-    home = package_home(globals())
+    def loadFile(self, filename):
+        filename = os.path.sep.join([package_home(globals()), filename])
+        data = StringIO(open(filename, 'rb').read())
+        data.filename = os.path.basename(filename)
+        return data
     
     """ TestCase for NaayaContent object
     """
