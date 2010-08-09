@@ -14,13 +14,13 @@ from naaya.core.heartbeat import Heartbeat
 events = 0
 
 @component.adapter(INySite, IHeartbeat)
-def testSubscriber(site, hb):
+def mockSubscriber(site, hb):
     global events
     events += 1
 
 class TestHeartbeat(NaayaFunctionalTestCase):
     def afterSetUp(self):
-        component.provideHandler(testSubscriber)
+        component.provideHandler(mockSubscriber)
 
     def beforeTearDown(self):
         pass
