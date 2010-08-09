@@ -24,23 +24,17 @@ import transaction
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaCore.NotificationTool.NotificationTool import \
-    set_testing_mode as notif_testing_mode
+    divert_notifications
 from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
-
-from zope.configuration import xmlconfig
-import Products.NaayaForum
-xmlconfig.file('configure.zcml',
-               package=Products.NaayaForum,
-               context=xmlconfig._getContext())
 
 class NotificationsTestCase(NaayaTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
         self._notifications = []
-        notif_testing_mode(True, self._notifications)
+        divert_notifications(True, self._notifications)
 
         addNyForum(self.portal, id='tforum', title='My Forum')
         tforum = self.portal['tforum']
@@ -66,7 +60,7 @@ class NotificationsTestCase(NaayaTestCase):
         self.portal.manage_delObjects(['tforum'])
         transaction.commit()
 
-        notif_testing_mode(False)
+        divert_notifications(False)
 
     def test_notify_new_topic(self):
         addNyForumTopic(self.portal['tforum'], id='tt2', title='My New Topic')
