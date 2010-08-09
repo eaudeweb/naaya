@@ -40,11 +40,13 @@ class ObservatoryRatingView(object):
 
 class ObservatoryRatingCommentsView(object):
     """A view for rating and comments"""
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
         self.adapted = getAdapter(context, IUserRating,
                 name=u'Observatory Rating')
+        self.message = context.getPortalTranslations()
 
         assert int(self.adapted.scale) == 5
 
@@ -67,6 +69,7 @@ class ObservatoryRatingSetView(UserRatingSetView):
         self.request = request
         self.adapted = getAdapter(context, IUserRating,
                 name=u'Observatory Rating')
+        self.message = context.getPortalTranslations()
 
         assert int(self.adapted.scale) == 5
 
