@@ -1236,3 +1236,9 @@ fieldset dd {
 fieldset dt {
 	padding-left: 0.3em;
 }
+.b_download {
+	float:right;
+	font-size:0.5em;
+	padding-right:0.3em;
+	text-decoration:none;
+}
