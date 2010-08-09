@@ -1,23 +1,3 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-
-import sys
 from StringIO import StringIO
 
 try: import twill
@@ -26,65 +6,7 @@ except: twill = None
 try: import wsgiref.validate
 except: wsgiref = None
 
-from App.version_txt import getZopeVersion
-from ZServer.HTTPResponse import ZServerHTTPResponse
-from ZPublisher.Request import Request
-from ZPublisher.Publish import publish
-
 import NaayaTestCase
-
-if getZopeVersion() < (2, 10, 9):
-    newline = '\n'
-else:
-    newline = '\r\n'
-
-
-def test_publish(environ, response, extra):
-    """
-    copied from publish_module in ZPublisher/Test.py, simplified, and
-    modified to accept streaming responses
-    """
-    must_die=0
-    after_list=[None]
-    try:
-        try:
-            stdout=response.stdout
-            request=Request(environ['wsgi.input'], environ, response)
-            from zope.publisher.browser import setDefaultSkin
-            setDefaultSkin(request)
-
-            for k, v in extra.items(): request[k]=v
-            response = publish(request, 'Zope2', after_list, debug=0)
-        except SystemExit, v:
-            must_die=sys.exc_info()
-            response.exception(must_die)
-        except ImportError, v:
-            if isinstance(v, TupleType) and len(v)==3: must_die=v
-            else: must_die=sys.exc_info()
-            response.exception(1, v)
-        except:
-            response.exception()
-
-        if response:
-            stdout.write(str(response))
-            producer = response._bodyproducer
-            if producer is not None:
-                while True:
-                    data = producer.more()
-                    if not data:
-                        break
-                    stdout.write(data)
-
-        # The module defined a post-access function, call it
-        if after_list[0] is not None: after_list[0]()
-
-    finally:
-        request.close()
-
-    if must_die:
-        try: raise must_die[0], must_die[1], must_die[2]
-        finally: must_die=None
-
 
 class TwillMixin(object):
     wsgi_debug = False
@@ -112,42 +34,17 @@ class TwillMixin(object):
         self.restore_twill_output()
         twill.remove_wsgi_intercept('localhost', 80)
 
-    def wsgi_request(self, environ, start_response):
-        if self.wsgi_debug:
-            print 'wsgi_request start'
-            print environ
-            print '...'
-
-        outstream = StringIO()
-        response = ZServerHTTPResponse(stdout=outstream, stderr=sys.stderr)
-        extra = {
-            'SESSION': self.app.REQUEST.SESSION,
-            'AUTHENTICATED_USER': self.app.REQUEST.AUTHENTICATED_USER,
-        }
-
-        test_publish(environ, response, extra)
-
-        output = outstream.getvalue()
-        headers, body = output.split(newline*2, 1)
-        header_lines = headers.split(newline)
-        assert header_lines[0].startswith('HTTP/1.0 ')
-        status = header_lines[0][len('HTTP/1.0 '):]
-        headers = [header.split(': ', 1) for header in header_lines[1:]]
-
-        if self.wsgi_debug:
-            print 'wsgi_request done, status="%s"' % status
-            print '  ' + '\n'.join([': '.join(header) for header in headers])
-
-        headers = [ (header[0], ', '.join(header[1:])) for header in headers ]
-        if 'content-type' not in (header[0].lower() for header in headers):
-            headers.append( ('Content-Type', 'text/html; charset=utf-8') )
-        headers = filter(lambda h: h[0] != 'Connection', headers)
-        start_response(status, headers)
-        return [body]
-
     def serve_http(self, host='', port=8081):
+        from webob.dec import wsgify
+        @wsgify.middleware
+        def no_hop_by_hop(request, app):
+            """ remove the Connection hop-by-hop header """
+            response = request.get_response(app)
+            del response.headers['Connection']
+            return response
+
         from wsgiref.simple_server import make_server
-        server = make_server(host, port, self.wsgi_request)
+        server = make_server(host, port, no_hop_by_hop(self.wsgi_request))
         print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
         server.serve_forever()
 

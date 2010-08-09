@@ -1,233 +1,86 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alin Voinea, Eau de Web
-# Alex Morega, Eau de Web
-
-
-try:
-    from naaya.content.bfile.tests.blob_patch import patch_testing_db
-except ImportError:
-    cleanup_blob_patch = lambda: None
-else:
-    cleanup_blob_patch = patch_testing_db()
-
-
 import os
-from zope.configuration.xmlconfig import xmlconfig
-from StringIO import StringIO
-from copy import deepcopy
+import unittest
+
 import transaction
-from Testing import ZopeTestCase
-from Testing.ZopeTestCase import user_name, user_password
-from Testing.ZopeTestCase import Functional
-from AccessControl.User import nobody
-from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import noSecurityManager
+
+def wrap_with_request(app):
+    from StringIO import StringIO
+    from ZPublisher.HTTPRequest import HTTPRequest
+    from ZPublisher.HTTPResponse import HTTPResponse
+    from Acquisition import Implicit
+
+    class FakeRootObject(Implicit): pass
+
+    fake_root = FakeRootObject()
+    fake_root.app = app
+
+    stdin = StringIO()
+    environ = {'REQUEST_METHOD': 'GET',
+               'SERVER_NAME': 'nohost',
+               'SERVER_PORT': '80'}
+    request = HTTPRequest(stdin, environ, HTTPResponse(), clean=1)
+
+    anonymous_user = fake_root.app.acl_users._nobody
+    request.AUTHENTICATED_USER = anonymous_user
+
+    fake_root.REQUEST = request
+
+    return fake_root
+
+def portal_fixture(app):
+    from Products.Naaya.NySite import manage_addNySite
+    manage_addNySite(app, 'portal', 'Naaya Test Site')
+    portal = app.portal
+
+    portal.mail_address_from = 'from.zope@example.com'
+    portal.administrator_email = 'site.admin@example.com'
+
+    acl_users = portal.acl_users
+    acl_users._doAddUser('test_user_1_', 'secret', ['Manager'], '', '', '', '')
+    acl_users._doAddUser('contributor', 'contributor', ['Contributor'], '',
+                         'Contributor', 'Test', 'contrib@example.com')
+    acl_users._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
+                         'Reviewer', 'Test', 'reviewer@example.com')
+    acl_users._doAddUser('user1', 'user1', ['Contributor'], '',
+                         'User', 'One', 'user1@example.com')
+    acl_users._doAddUser('user2', 'user2', ['Contributor'], '',
+                         'User', 'Two', 'user2@example.com')
+    acl_users._doAddUser('user3', 'user3', ['Contributor'], '',
+                         'User', 'Three', 'user3@example.com')
 
 
-test_zcml = """<configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:meta="http://namespaces.zope.org/meta"
-    xmlns:five="http://namespaces.zope.org/five">
-
-  <!-- this comes from Five/skel/site.zcml -->
-
-  <include package="Products.Five"/>
-  <meta:redefinePermission from="zope2.Public" to="zope.Public" />
-
-  <five:loadProducts file="meta.zcml" />
-  <five:loadProducts />
-  <five:loadProductsOverrides />
-
-  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-meta.zcml" />
-  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-configure.zcml" />
-
-</configure>
-""" % {'INSTANCE_HOME': INSTANCE_HOME}
-
-xmlconfig(StringIO(test_zcml), testing=True)
-
-ZopeTestCase.installProduct('Localizer')
-ZopeTestCase.installProduct('TextIndexNG3')
-ZopeTestCase.installProduct('NaayaCore')
-ZopeTestCase.installProduct('NaayaContent')
-ZopeTestCase.installProduct('NaayaBase')
-ZopeTestCase.installProduct('naayaHotfix')
-ZopeTestCase.installProduct('Naaya')
-ZopeTestCase.installProduct('PythonScripts')
-ZopeTestCase.installProduct('ZMIntrospection')
-
-class MailDivertLayer(object):
-    def get_log(self):
-        return self.log
-    
-    def clear_log(self):
-        self.log = []
-    
-    def divert(self):
-        class smtplib_replacement(object):
-            class SMTP:
-                def __init__(s, server, port):
-                    self.log.append( ('init', {}) )
-                
-                def sendmail(s, from_addr, to_addr, message):
-                    self.log.append( ('sendmail', {'from': from_addr, 'to': to_addr, 'message': message}) )
-                
-                def quit(s):
-                    self.log.append( ('quit', {}) )
-        
-        from Products.NaayaCore.EmailTool import EmailTool
-        self._orig_smtplib = EmailTool.smtplib
-        EmailTool.smtplib = smtplib_replacement
-        self.log = []
-    
-    def restore(self):
-        from Products.NaayaCore.EmailTool import EmailTool
-        EmailTool.smtplib = self._orig_smtplib
-
-class NaayaLayerClass(object):
-    """Layer to test Naaya.
-
-    The goal of a testrunner layer is to isolate initializations common
-    to a lot of testcases. The setUp of the layer is run only once, then
-    all tests for the testcases belonging to the layer are run.
-    """
-
-    # The setUp of bases is called autmatically first
-    __bases__ = []
-
-    def __init__(self, module, name):
-        self.__module__ = module
-        self.__name__ = name
-        self.mail_divert = MailDivertLayer()
-
+class NaayaTestCase(unittest.TestCase):
     def setUp(self):
-        from Products.ExtFile import ExtFile
-        ExtFile.REPOSITORY_PATH = ['var', 'testing']
-
-        self.app = ZopeTestCase.app()
-        self.install()
-        self.mail_divert.divert()
+        self.afterSetUp()
 
     def tearDown(self):
-        self.mail_divert.restore()
-        repository = os.path.join(INSTANCE_HOME, 'var', 'testing')
-        if os.path.isdir(repository):
-            import shutil
-            shutil.rmtree(repository, 1)
-        cleanup_blob_patch()
+        self.beforeTearDown()
 
-    def install(self):
-        self.addRootUser()
-        self.login()
-        self.addPortal()
-        self.addPortalManager()
-        self.addPortalContributor()
-        self.addPortalReviewer()
-        self.addOtherContributors()
-        self.logout()
-        transaction.commit()
+    def afterSetUp(self):
+        # TODO: deprecate and remove
+        pass
 
-    def addRootUser(self):
-        atool = self.app.acl_users
-        atool._doAddUser('admin', '', ['Manager'], [])
-        
-    def addPortalManager(self, portal_id='portal', user=user_name, password=user_password):
-        portal = getattr(self.app, portal_id)
-        atool = getattr(portal, 'acl_users')
-        atool._doAddUser(user, password, ['Manager'], '', '', '', '')
-    
-    def addPortalContributor(self, portal_id='portal'):
-        portal = getattr(self.app, portal_id)
-        atool = getattr(portal, 'acl_users')
-        atool._doAddUser('contributor', 'contributor', ['Contributor'], '',
-            'Contributor', 'Test', 'contrib@example.com')
+    def beforeTearDown(self):
+        # TODO: deprecate and remove
+        pass
 
-    def addPortalReviewer(self, portal_id='portal'):
-        portal = getattr(self.app, portal_id)
-        atool = getattr(portal, 'acl_users')
-        atool._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
-            'Reviewer', 'Test', 'reviewer@example.com')
-
-    def addOtherContributors(self, portal_id='portal'):
-        portal = getattr(self.app, portal_id)
-        atool = getattr(portal, 'acl_users')
-        atool._doAddUser('user1', 'user1', ['Contributor'], '',
-            'User', 'One', 'user1@example.com')
-        atool._doAddUser('user2', 'user2', ['Contributor'], '',
-            'User', 'Two', 'user2@example.com')
-        atool._doAddUser('user3', 'user3', ['Contributor'], '',
-            'User', 'Three', 'user3@example.com')
-
-    def login(self):
-        '''Logs in.'''
-        aclu = self.app.acl_users
-        user = aclu.getUserById('admin').__of__(aclu)
-        self.app.REQUEST.AUTHENTICATED_USER = user
+    def login(self, name='test_user_1_'):
+        # TODO: deprecate and remove
+        acl_users = self.portal.acl_users
+        user = acl_users.getUserById(name).__of__(acl_users)
+        self.fake_request.AUTHENTICATED_USER = user
+        from AccessControl.SecurityManagement import newSecurityManager
         newSecurityManager(None, user)
 
     def logout(self):
+        # TODO: deprecate and remove
+        self.fake_request.AUTHENTICATED_USER = self.app.acl_users._nobody
+        from AccessControl.SecurityManagement import noSecurityManager
         noSecurityManager()
 
-    def addPortal(self):
-        from Products.Naaya.NySite import manage_addNySite
-        manage_addNySite(self.app, 'portal', 'Naaya Test Site')
-        self.portal = getattr(self.app, 'portal')
-        self.portal.mail_address_from = 'from.zope@example.com'
-        self.portal.administrator_email = 'site.admin@example.com'
-
-NaayaDefaultLayer = NaayaLayerClass(__name__, 'NaayaDefaultLayer')
-
-class NaayaTestCase(ZopeTestCase.PortalTestCase):
-
-    layer = NaayaDefaultLayer
-
-    # configuration is already done in the layer
-    _configure_portal = 0
-
-    def _setup(self):
-        ZopeTestCase.PortalTestCase._setup(self)
-
-        # Some skins need sessions (not sure if it's a good thing).
-        # Localizer too.
-        # Both lines below are needed.
-        from Products.Transience.TransientObject import TransientObject
-        SESSION = TransientObject('x')
-        self.app.REQUEST['SESSION'] = SESSION
-        self.app.REQUEST.SESSION = SESSION
-        self.portal.REQUEST.AUTHENTICATED_USER = nobody
-        self.portal.REQUEST.PARENTS = [self.portal, self.app]
-    
-    def login(self, name=user_name):
-        '''Logs in.'''
-        uf = self.portal.acl_users
-        user = uf.getUserById(name)
-        if not hasattr(user, 'aq_base'):
-            user = user.__of__(uf)
-        self.portal.REQUEST.AUTHENTICATED_USER = user
-        newSecurityManager(None, user)
-    
-    def portalLogin(self, name=user_name):
-        return self.login(name)
-
-    def portalLogout(self):
-        self.portal.REQUEST.AUTHENTICATED_USER = nobody
-        newSecurityManager(None, nobody)
+    def _portal(self):
+        # TODO: deprecate and remove
+        return self.portal
 
     def printLogErrors(self, min_severity=0):
         """Print out the log output on the console.
@@ -256,7 +109,76 @@ class NaayaTestCase(ZopeTestCase.PortalTestCase):
         self.portal.acl_users.editPermission('Add content', **add_content_permissions)
         self.portal.manage_uninstall_pluggableitem(meta_type)
 
-class FunctionalTestCase(Functional, NaayaTestCase):
-    '''Base class for functional Plone tests'''
+FunctionalTestCase = NaayaTestCase # not really, but good enough for us
 
-    __implements__ = (Functional.__implements__, NaayaTestCase.__implements__)
+from nose.plugins import Plugin
+
+class NaayaPortalTestPlugin(Plugin):
+    """
+    Nose plugin that prepares the environment for a NaayaTestCase to run
+    """
+
+    def __init__(self, tzope):
+        Plugin.__init__(self)
+        self.tzope = tzope
+        self.cleanup_portal_layer = None
+        self.cleanup_test_layer = None
+
+    def options(self, parser, env):
+        pass
+
+    def configure(self, options, config):
+        self.enabled = True
+
+    def begin(self):
+        from Products.ExtFile import ExtFile
+        ExtFile.REPOSITORY_PATH = ['var', 'testing']
+
+        cleanup, portal_db_layer = self.tzope.db_layer()
+
+        app = portal_db_layer.open().root()['Application']
+        app.acl_users._doAddUser('admin', '', ['Manager', 'Administrator'], [])
+        transaction.commit()
+
+        fake_root = wrap_with_request(app)
+        wrapped_app = fake_root.app
+        admin_user = wrapped_app.acl_users.getUserById('admin')
+        fake_root.REQUEST.AUTHENTICATED_USER = admin_user
+        portal_fixture(wrapped_app)
+
+        transaction.commit()
+        self.cleanup_portal_layer = cleanup
+
+    def finalize(self, result):
+        assert self.cleanup_test_layer is None
+        self.cleanup_portal_layer()
+        self.cleanup_portal_layer = None
+
+        repository = os.path.join(INSTANCE_HOME, 'var', 'testing')
+        if os.path.isdir(repository):
+            import shutil
+            shutil.rmtree(repository)
+
+    def prepareTestCase(self, testCase):
+        assert self.cleanup_test_layer is None
+        the_test = testCase.test
+
+        if isinstance(the_test, NaayaTestCase):
+            cleanup, test_db_layer = self.tzope.db_layer()
+
+            app = test_db_layer.open().root()['Application']
+            fake_root = wrap_with_request(app)
+            wrapped_app = fake_root.app
+
+            the_test.wsgi_request = self.tzope.wsgi_app
+            the_test.app = wrapped_app
+            the_test.portal = wrapped_app['portal']
+            the_test.fake_request = fake_root.REQUEST
+
+            self.cleanup_test_layer = cleanup
+
+
+    def afterTest(self, test):
+        if self.cleanup_test_layer is not None:
+            self.cleanup_test_layer()
+            self.cleanup_test_layer = None
