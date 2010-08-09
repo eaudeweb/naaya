@@ -22,9 +22,17 @@ import re
 from unittest import TestSuite, makeSuite
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.tests.NaayaTestCase import load_test_file
 
 import patchTestEnv
+
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
 
 class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
@@ -62,7 +70,7 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         form['description:utf8:ustring'] = 'test_photo_description'
         form['author:utf8:ustring'] = 'test_author'
         form['source:utf8:ustring'] = 'test_source'
-        form.find_control('file').add_file(load_test_file('data/test.gif', globals()))
+        form.find_control('file').add_file(load_file('data/test.gif'))
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -88,7 +96,7 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/g/f/testcreatephoto/view?display=Original')
         self.failUnlessEqual(self.browser_get_header('content-type'), 'image/gif')
         self.failUnlessEqual(self.browser.get_html(),
-            load_test_file('data/test.gif', globals()).getvalue())
+            load_file('data/test.gif').getvalue())
 
         self.failIf('XSmall-testcreatephoto' in self.portal.myfolder.g.f.testcreatephoto.objectIds())
         self.browser.go('http://localhost/portal/myfolder/g/f/testcreatephoto/view?display=XSmall')
@@ -172,7 +180,7 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
     def test_photo_thumbnails(self):
         import StringIO
         from PIL import Image
-        picture = load_test_file('data/pink.png', globals())
+        picture = load_file('data/pink.png')
         self.portal.myfolder.g.f.myphoto.update_data(picture)
         import transaction; transaction.commit()
         picture.seek(0)
