@@ -1,6 +1,6 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
-  <subscriber handler="..subscribers.auto_catalog_object" />
-  <subscriber handler="..subscribers.auto_uncatalog_object" />
+  <subscriber handler=".subscribers.auto_catalog_object" />
+  <subscriber handler=".subscribers.auto_uncatalog_object" />
 
 </configure>
