@@ -197,7 +197,6 @@ def addNyTalkBackConsultation(self,
         ob.approveThis(approved, approved_by)
         ob.addDynProp()
         ob.updateRequestRoleStatus(public_registration, lang)
-        ob.checkReviewerRole()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -414,41 +413,6 @@ class NyTalkBackConsultation(NyRoleManager,
         """ Allow public registration for this consultation """
         if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': 'on'}), lang)
         if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': ''}), lang)
-
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'checkReviewerRole')
-    def checkReviewerRole(self):
-        """
-        Checks if the 'Reviewer' role exists,
-        creates and adds review permissions if it doesn't exist
-        """
-
-
-        auth_tool = self.getAuthenticationTool()
-        roles = auth_tool.list_all_roles()
-        PERMISSION_GROUP = 'Review content'
-
-        if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
-            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_TALKBACKCONSULTATION])
-        else:
-            permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
-            if PERMISSION_REVIEW_TALKBACKCONSULTATION not in permissions:
-                permissions.append(PERMISSION_REVIEW_TALKBACKCONSULTATION)
-                auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
-
-        if 'Reviewer' not in roles:
-            auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
-        else:
-            role_permissions = auth_tool.getRolePermissions('Reviewer')
-            if PERMISSION_GROUP not in role_permissions:
-                role_permissions.append(PERMISSION_GROUP)
-                auth_tool.editRole('Reviewer', role_permissions)
-
-        #give permissions to administrators and reviewers
-        admin_permissions = self.permissionsOfRole('Administrator')
-        site = self.getSite()
-        if PERMISSION_MANAGE_TALKBACKCONSULTATION not in admin_permissions:
-            site.manage_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION, ('Administrator', ), acquire=1)
-            site.manage_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION, ('Administrator', 'Reviewer', ), acquire=1)
 
     security.declareProtected(view, 'get_consultation')
     def get_consultation(self):
