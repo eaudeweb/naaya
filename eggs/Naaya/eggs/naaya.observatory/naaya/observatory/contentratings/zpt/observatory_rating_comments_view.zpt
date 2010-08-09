@@ -5,3 +5,6 @@
 		<div tal:content="item/body"/>
 	</li>
 </ul>
+
+<img alt="" tal:attributes="
+	src string:++resource++naaya.observatory_rating_${view/rating}.icon"/>
