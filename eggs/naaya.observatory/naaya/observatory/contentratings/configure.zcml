@@ -27,10 +27,10 @@
   />
 
   <browser:page
-    name="observatory_comments_view"
+    name="observatory_rating_comments_view"
     for=".interfaces.IObservatoryRatable"
-    class=".views.ObservatoryCommentsView"
-    template="zpt/observatory_comments_view.zpt"
+    class=".views.ObservatoryRatingCommentsView"
+    template="zpt/observatory_rating_comments_view.zpt"
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
   />
 

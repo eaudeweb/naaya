@@ -38,8 +38,8 @@ class ObservatoryRatingView(object):
                 'naaya.observatory_rating_%d.icon' % self.rating, REQUEST)
         return resource.GET()
 
-class ObservatoryCommentsView(object):
-    """A view for getting the comments"""
+class ObservatoryRatingCommentsView(object):
+    """A view for rating and comments"""
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -47,6 +47,10 @@ class ObservatoryCommentsView(object):
                 name=u'Observatory Rating')
 
         assert int(self.adapted.scale) == 5
+
+    @property
+    def rating(self):
+        return int(round(self.adapted.averageRating))
 
     @property
     def comments_list(self):
