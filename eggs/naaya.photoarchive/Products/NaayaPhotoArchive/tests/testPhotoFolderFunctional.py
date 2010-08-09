@@ -24,13 +24,21 @@ import zipfile
 from StringIO import StringIO
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.Naaya.tests.NaayaTestCase import load_test_file
 
 from Products.NaayaPhotoArchive.NyPhotoGallery import manage_addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.NyPhoto import addNyPhoto
 
 import patchTestEnv
+
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
 
 
 class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
@@ -71,7 +79,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         form['author:utf8:ustring'] = 'test_album_author'
         form['source:utf8:ustring'] = 'test_album_source'
 
-        picture = load_test_file('data/pink.png', globals())
+        picture = load_file('data/pink.png')
         form.find_control('file').add_file(picture, filename="albumphoto.png", content_type='image/png')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -104,7 +112,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
         form['title:utf8:ustring'] = 'test_create_album_zip'
 
-        pictures_zip = load_test_file('data/test.zip', globals())
+        pictures_zip = load_file('data/test.zip')
         form.find_control('file').add_file(pictures_zip, filename="photos.zip", content_type='application/octet-stream')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
@@ -219,10 +227,10 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_download_zip_all(self):
-        myphoto1 = load_test_file('data/pink.png', globals())
+        myphoto1 = load_file('data/pink.png')
         self.portal.myfolder.mygallery.myalbum.myphoto1.update_data(myphoto1)
 
-        myphoto2 = load_test_file('data/test.gif', globals())
+        myphoto2 = load_file('data/test.gif')
         self.portal.myfolder.mygallery.myalbum.myphoto2.update_data(myphoto2)
         import transaction; transaction.commit()
 
@@ -239,7 +247,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(photo_zip.read('myalbum.zip/myphoto2'), myphoto2.getvalue())
 
     def test_download_zip_selected(self):
-        myphoto2 = load_test_file('data/test.gif', globals())
+        myphoto2 = load_file('data/test.gif')
         self.portal.myfolder.mygallery.myalbum.myphoto2.update_data(myphoto2)
         import transaction; transaction.commit()
 
@@ -257,7 +265,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
 
     def test_cut_paste(self):
         return #TODO: cannot paste from the test; some photos are not correctly pasted (d and d, e-34, and pasting when id exists)
-        photos_zip = load_test_file('data/test.zip', globals())
+        photos_zip = load_file('data/test.zip')
         manage_addNyPhotoGallery(self.portal.myfolder, id='mygallery2', title='My second photo gallery', submitted=1, contributor='contributor')
         manage_addNyPhotoFolder(self.portal.myfolder.mygallery2, id='myalbum', title='My photo album')
         self.portal.myfolder.mygallery2.myalbum.uploadPhotoOrZip(photos_zip)
