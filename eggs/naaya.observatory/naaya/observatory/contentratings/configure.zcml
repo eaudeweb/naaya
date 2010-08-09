@@ -27,12 +27,20 @@
   />
 
   <browser:page
+    name="observatory_comments_view"
+    for=".interfaces.IObservatoryRatable"
+    class=".views.ObservatoryCommentsView"
+    template="zpt/observatory_comments_view.zpt"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
+  />
+
+  <browser:page
     name="observatory_rate"
     for=".interfaces.IObservatoryRatable"
     class=".views.ObservatoryRatingSetView"
     template="zpt/observatory_rate.zpt"
     permission="naaya.PERMISSION_OBSERVATORY_RATE"
-    allowed_attributes="rate"
+    allowed_attributes="rate_and_comment"
   />
 
   <!-- Resources -->
