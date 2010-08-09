@@ -49,12 +49,10 @@ class NyZipExport(NaayaTestCase):
                     contributor='contributor', submitted=1)
         self.test_folder = self.portal['zip_export_folder']
         self.login()
-        self.portalLogin()
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['zip_export_folder'])
         self.logout()
-        self.portalLogout()
 
     def test_export_ok(self):
         self.test_folder.zip_import.do_import(data=zip_one_file)
@@ -233,7 +231,6 @@ class NyZipExport(NaayaTestCase):
         self.test_folder['public_access'].body = '<p>Some html</p>'
         self.test_folder['public_access'].approved = 1
         self.logout()
-        self.portalLogout()
         export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
                          ('Errors are raised: ', export_value))
@@ -261,7 +258,6 @@ class NyZipExport(NaayaTestCase):
         restricted_doc._View_Permission = tuple(new_permission)
 
         self.logout()
-        self.portalLogout()
 
         export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
@@ -274,7 +270,6 @@ class NyZipExport(NaayaTestCase):
                         zip.read('zip_export_folder/public_document.html'))
 
         self.login('contributor')
-        self.portalLogin('contributor')
 
         export_value = self.test_folder.zip_export.do_export()
         self.assertFalse(isinstance(export_value, list),
