@@ -24,14 +24,14 @@ class SurveyToolTestCase(NaayaTestCase):
 
     def testAddSurveyTool(self):
         """Add Survey Tool - manage_addSurveyTool"""
-        id = manage_addSurveyTool(self.getPortal())
+        id = manage_addSurveyTool(self.portal)
         self.assertEqual(id, SurveyTool.portal_id)
-        ob = self.getPortal()._getOb(id, None)
+        ob = self.portal._getOb(id, None)
         self.assertNotEqual(ob, None)
         self.assert_(isinstance(ob, SurveyTool))
 
         # catalog
-        indexes = self.getPortal().getCatalogTool().indexes()
+        indexes = self.portal.getCatalogTool().indexes()
         self.assert_('respondent' in indexes)
 
 def test_suite():
