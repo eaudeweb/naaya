@@ -17,6 +17,7 @@ Contents:
    heartbeat
    stylesheets
    restricted_toolkit
+   testing
 
 Indices and tables
 ==================
