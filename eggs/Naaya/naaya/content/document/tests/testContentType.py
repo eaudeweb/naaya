@@ -23,10 +23,13 @@ from unittest import TestSuite, makeSuite
 
 from DateTime.DateTime import DateTime
 
+import transaction
+
 from naaya.content.document.document_item import addNyDocument
 from Products.Naaya.tests import NaayaTestCase
+from Products.Naaya.tests import NaayaFunctionalTestCase
 
-class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
+class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object
     """
     def afterSetUp(self):
@@ -155,7 +158,11 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
     def test_index_html(self):
         doc = self.do_make_document()
-        page = doc.index_html()
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/info/' + doc.id)
+        page = self.browser.get_html()
+
         self.failUnless(doc.title in page)
         self.failUnless(doc.description in page)
         self.failUnless(doc.body in page)
@@ -163,9 +170,17 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnless(doc.keywords in page)
         self.failUnless(doc.releasedate.strftime('%d/%m/%Y') in page)
 
+        doc.aq_parent.manage_delObjects([doc.id])
+        transaction.commit()
+
     def test_edit_html(self):
         doc = self.do_make_document()
-        page = doc.edit_html()
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/' + doc.id + '/edit_html')
+        page = self.browser.get_html()
+        self.browser_do_logout()
 
         tag = re.search(r'<input[^>]*name="title:utf8:ustring"[^>]*value="([^"]*)[^>]*/>', page)
         self.failUnless(tag, 'Missing <input.../> tag for "title"')
@@ -190,6 +205,10 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         tag = re.search(r'<input[^>]*name="releasedate"[^>]*value="([^"]*)[^>]*/>', page)
         self.failUnless(tag, 'Missing <input.../> tag for "releasedate"')
         self.failUnlessEqual(tag.group(1), doc.releasedate.strftime('%d/%m/%Y'))
+
+        doc.aq_parent.manage_delObjects([doc.id])
+        transaction.commit()
+
 
 def test_suite():
     suite = TestSuite()

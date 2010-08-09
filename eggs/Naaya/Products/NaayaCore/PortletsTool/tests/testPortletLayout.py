@@ -311,7 +311,8 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         self.portal.portal_portlets.assign_portlet('fol', 'right', 'prt2')
         transaction.commit()
 
-        self.failUnless('Test Portlet 2' in self.portal.fol.index_html())
+        self.browser.go('http://localhost/portal/fol')
+        self.failUnless('Test Portlet 2' in self.browser.get_html())
 
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/portal_portlets/admin_layout')
@@ -335,7 +336,8 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
             'from "fol"' in self.browser.get_html())
         self.browser_do_logout()
 
-        self.failIf('Test Portlet 2' in self.portal.fol.index_html())
+        self.browser.go('http://localhost/portal/fol')
+        self.failIf('Test Portlet 2' in self.browser.get_html())
 
 def test_suite():
     suite = TestSuite()
