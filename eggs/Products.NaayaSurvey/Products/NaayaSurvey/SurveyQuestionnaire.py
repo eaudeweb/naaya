@@ -58,6 +58,8 @@ from SurveyReport import manage_addSurveyReport
 from permissions import *
 from questionnaire_item import questionnaire_item
 
+from migrations import available_migrations, perform_migration
+
 class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
     pass
@@ -129,6 +131,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         {'label':'Properties', 'action':'manage_propertiesForm',
          'help':('OFSP','Properties.stx')},
         {'label':'View', 'action':'index_html'},
+        {'label':'Migrations', 'action':'manage_migrate_html'},
         {'label':'Security', 'action':'manage_access',
          'help':('OFSP', 'Security.stx')},
       )
@@ -555,5 +558,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     def showCaptcha(self):
         """Return HTML code for CAPTCHA"""
         return recaptcha_utils.render_captcha(self)
+
+    security.declareProtected(view_management_screens, 'manage_migrate')
+    def manage_migrate(self, REQUEST, widget_id, convert_to):
+        """ convert widget type """
+        perform_migration(self, widget_id, convert_to)
+        self.setSessionInfo(["Changed widget type for %r" % widget_id])
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_migrate_html')
+
+    security.declareProtected(view_management_screens, 'manage_migrate_html')
+    manage_migrate_html = PageTemplateFile('zpt/questionnaire_manage_migrate',
+                                           globals())
+    manage_migrate_html.available_migrations = available_migrations
 
 InitializeClass(SurveyQuestionnaire)
