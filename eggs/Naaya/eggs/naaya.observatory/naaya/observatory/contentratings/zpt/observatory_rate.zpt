@@ -1,5 +1,5 @@
 <form method="POST" tal:attributes="
-	action string:${context/absolute_url}/@@observatory_rate/rate">
+	action string:${context/absolute_url}/@@observatory_rate/rate_and_comment">
 	<ol tal:define="user_rating view/userRating;">
 		<li tal:repeat="index python:range(5)">
 			<input type="radio" name="rating" tal:attributes="
@@ -10,6 +10,9 @@
 		</li>
 	</ol>
 	<div tal:content="view/address"/>
+
+	<textarea id="body" name="comment:utf8:ustring" rows="3" cols="25">
+	</textarea>
 
 	<input type="hidden" name="orig_url"
 		tal:attributes="value request/ACTUAL_URL|request/getURL|nothing" />

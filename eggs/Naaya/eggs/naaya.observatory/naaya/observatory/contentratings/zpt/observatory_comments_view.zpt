@@ -1,0 +1,7 @@
+<ul>
+	<li tal:repeat="item view/comments_list">
+		<span tal:content="item/author"/>
+		<span tal:content="item/date"/>
+		<div tal:content="item/body"/>
+	</li>
+</ul>
