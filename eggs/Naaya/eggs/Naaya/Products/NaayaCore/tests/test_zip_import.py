@@ -19,15 +19,23 @@
 
 from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.Naaya.tests.NaayaTestCase import load_test_file
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.EmailTool import EmailTool
 
-zip_one_file = load_test_file('./data/one_file_zip.zip', globals())
-folder_with_files = load_test_file('./data/folder_with_files_zip.zip', globals())
-complicated_zip = load_test_file('./data/complicated_zip.zip', globals())
-mac_zip = load_test_file('./data/mac_zip.zip', globals())
-spaces_zip = load_test_file('./data/Spaces in filename_zip.zip', globals())
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
+
+zip_one_file = load_file('./data/one_file_zip.zip')
+folder_with_files = load_file('./data/folder_with_files_zip.zip')
+complicated_zip = load_file('./data/complicated_zip.zip')
+mac_zip = load_file('./data/mac_zip.zip')
+spaces_zip = load_file('./data/Spaces in filename_zip.zip')
 
 class NyZipImport(NaayaTestCase):
     """ TestCase for Naaya CSV import """

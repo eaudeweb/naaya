@@ -38,7 +38,6 @@ from Testing.ZopeTestCase import Functional
 from AccessControl.User import nobody
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from Globals import package_home
 
 
 test_zcml = """<configure
@@ -257,25 +256,7 @@ class NaayaTestCase(ZopeTestCase.PortalTestCase):
         self.portal.acl_users.editPermission('Add content', **add_content_permissions)
         self.portal.manage_uninstall_pluggableitem(meta_type)
 
-def load_test_file(filename, globals_):
-    """ Load data from a test file """
-    home = package_home(globals_)
-    filename = os.path.sep.join([home, filename])
-    data = StringIO(open(filename, 'rb').read())
-    data.filename = os.path.basename(filename)
-    return data
-
 class FunctionalTestCase(Functional, NaayaTestCase):
     '''Base class for functional Plone tests'''
 
     __implements__ = (Functional.__implements__, NaayaTestCase.__implements__)
-    
-    home = package_home(globals())
-    
-    def loadFile(self, filename):
-        """ load a file"""
-        filename = os.path.sep.join([self.home, filename])
-        data = StringIO(open(filename, 'rb').read())
-        data.filename = os.path.basename(filename)
-        return data
-

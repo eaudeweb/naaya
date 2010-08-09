@@ -21,8 +21,16 @@ from unittest import TestSuite, makeSuite
 from Testing import ZopeTestCase
 
 from Products.NaayaCore.GeoMapTool.managers.kml_parser import parse_kml
-from Products.Naaya.tests.NaayaTestCase import load_test_file
 
+
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
 
 class KMLParserTestCase(ZopeTestCase.TestCase):
 
@@ -33,7 +41,7 @@ class KMLParserTestCase(ZopeTestCase.TestCase):
         pass
 
     def test_parse(self):
-        kml_file = load_test_file('data/kml_export.kml', globals())
+        kml_file = load_file('data/kml_export.kml')
         expected_data = [{'name': u'Bucharest',
                           'description': u'Bucharest description',
                           'latitude': u'44.31693022912877',

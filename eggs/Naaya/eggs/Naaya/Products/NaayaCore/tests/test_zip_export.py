@@ -19,7 +19,6 @@
 
 from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.Naaya.tests.NaayaTestCase import load_test_file
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
 from naaya.content.contact.contact_item import addNyContact
@@ -29,10 +28,18 @@ from naaya.content.story.story_item import addNyStory
 from zipfile import ZipFile
 from Products.NaayaCore.managers.zip_import_export import IZipExportObject
 
+def load_file(filename):
+    import os
+    from StringIO import StringIO
+    from Globals import package_home
+    filename = os.path.sep.join([package_home(globals()), filename])
+    data = StringIO(open(filename, 'rb').read())
+    data.filename = os.path.basename(filename)
+    return data
 
-folder_with_files = load_test_file('./data/folder_with_files_zip.zip', globals())
-zip_one_file = load_test_file('./data/one_file_zip.zip', globals())
-mac_zip = load_test_file('./data/mac_zip.zip', globals())
+folder_with_files = load_file('./data/folder_with_files_zip.zip')
+zip_one_file = load_file('./data/one_file_zip.zip')
+mac_zip = load_file('./data/mac_zip.zip')
 
 class NyZipExport(NaayaTestCase):
     """ TestCase for Naaya CSV import """
