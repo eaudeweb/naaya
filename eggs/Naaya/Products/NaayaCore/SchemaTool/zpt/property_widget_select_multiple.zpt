@@ -1,4 +1,5 @@
-<div class="field" tal:define="
+<div class="field" style="float:left"
+    tal:define="
     value options/value|nothing;
     errors options/errors;
     prop_id here/prop_name;
@@ -18,112 +19,124 @@
             tal:content="selection_item/title" i18n:translate="" />
     </select>
 
-	<tal:block condition="here/list_is_tree">
-    <p i18n:translate="">
-        Click on the items from list below to select/deselect them.
-    </p>
-        <tal:block define="site_url python:here.getSite().absolute_url();
-                           reflist_title python:here.getPortalTranslations()(here.title)"
-                   content="structure string:
-            <script>
-                $$(function() {
-                    var tree_data_json;
-                    $('#'+'${prop_id}').hide();
-                    $('label[for=${prop_id}]').hide();
+    <script>
+        function init_select_widget(config) {
+            $(function(){
+                if (!config['list_is_tree']) return;
+                prop_id = config['prop_id'];
+                var tree_data_json;
+                $('#'+ prop_id).css({'display': 'none'});
+                $('label[for='+ prop_id+']').css({'display': 'none'});
+                url = 'portal_portlets/'+config['list_id']+'/get_tree_json_data';
 
-                    $.ajax({
-                       type: 'GET',
-                       async: false,
-                       url: '${site_url}/portal_portlets/${here/list_id}/get_tree_json_data',
-                       dataType: 'json',
-                       success : function(data) {
-                        tree_data_json = data;
-                       },
-                       error: function(request, status) {
-                           //console.log('AJAX error', status);
-                       }
-                     });
+                $.ajax({
+                   type: 'GET',
+                   async: false,
+                   url: url,
+                   dataType: 'json',
+                   success : function(data) {
+                    tree_data_json = data;
+                   },
+                   error: function(request, status) {
+                       //console.log('AJAX error', status);
+                   }
+                 });
 
-                    var form_selected = [];
-                    $('#${prop_id} option:selected').each(function(){
-                        form_selected[form_selected.length] = this.value;
-                    });
-                    var selected_nodes = [];
-                    $(tree_data_json).each(function(){
-                        if ($.inArray(this.attributes.id, form_selected) != -1) {
-                            selected_nodes[selected_nodes.length] = this.attributes.id;
-                        }
-                        $(this.children).each(function(){
-                                if (this.attributes !== null && $.inArray(this.attributes.id, form_selected) != -1) {
-                                    selected_nodes[selected_nodes.length] = this.attributes.id;
-                                }
-                            });
-                        });
-
-                    tree_data_json = {'data':'${reflist_title}', 'children': tree_data_json, 'attributes': {'rel':'root'}};
-                    $('#${prop_id}_tree').tree({
-                        selected : selected_nodes,
-                        rules : {
-                            multiple : 'on'
-                        },
-                        data : {
-                            type : 'json',
-                            opts : {
-                                'static' : tree_data_json
-                            }
-                        },
-                        ui : {
-                             selected_parent_close : false
-                        },
-                        types : {
-                            'default' :{
-                                clickable : true,
-                                renameable : false,
-                                deletable : false,
-                                creatable : false,
-                                draggable : false
-                            },
-                            'root' : {
-                                valid_children : ['node'],
-                                clickable : false,
-                                renameable : false,
-                                deletable : false,
-                                creatable : false,
-                                draggable : false,
-                                icon : {
-                                    image : '/misc_/NaayaCore/RefTree.gif'
-                                }
-                            },
-                            'node' : {
-                                valid_children : ['node'],
-                                renameable : true,
-                                max_depth : 2,
-                                icon : {
-                                    image : '/misc_/NaayaCore/RefTreeNode.gif'
-                                }
-                            }
-                        },
-                        callback : {
-                            onload : function(TREE_OBJ){
-                                TREE_OBJ.open_all();
-                            },
-                            onselect : function(NODE, TREE_OBJ){
-                                var node_id = TREE_OBJ.get_node(NODE).attr('id');
-                                $('#${prop_id} option[value='+node_id+']').attr('selected', 'selected');
-                            },
-                            ondeselect : function(NODE, TREE_OBJ){
-                                var node_id = TREE_OBJ.get_node(NODE).attr('id');
-                                $('#${prop_id} option[value='+node_id+']').attr('selected', '');
-                            },
-                            ondblclk : false
-                        }
-                    });
-                    $('#${prop_id}_tree').after('<div style=\'clear: both\'/>');
+                var form_selected = [];
+                $('#'+prop_id+' option:selected').each(function(){
+                    form_selected[form_selected.length] = this.value;
                 });
-            </script>
-            "/>
+                var selected_nodes = [];
+                $(tree_data_json).each(function(){
+                    if ($.inArray(this.attributes.id, form_selected) != -1) {
+                        selected_nodes[selected_nodes.length] = this.attributes.id;
+                    }
+                    $(this.children).each(function(){
+                            if (this.attributes !== null && $.inArray(this.attributes.id, form_selected) != -1) {
+                                selected_nodes[selected_nodes.length] = this.attributes.id;
+                            }
+                        });
+                    });
+
+                tree_data_json = {'data':config['translated_title'], 'children': tree_data_json, 'attributes': {'rel':'root'}};
+                $('#'+prop_id+'_tree').tree({
+                    selected : selected_nodes,
+                    rules : {
+                        multiple : 'on'
+                    },
+                    data : {
+                        type : 'json',
+                        opts : {
+                            'static' : tree_data_json
+                        }
+                    },
+                    ui : {
+                         selected_parent_close : false
+                    },
+                    types : {
+                        'default' :{
+                            clickable : true,
+                            renameable : false,
+                            deletable : false,
+                            creatable : false,
+                            draggable : false
+                        },
+                        'root' : {
+                            valid_children : ['node'],
+                            clickable : false,
+                            renameable : false,
+                            deletable : false,
+                            creatable : false,
+                            draggable : false,
+                            icon : {
+                                image : '/misc_/NaayaCore/RefTree.gif'
+                            }
+                        },
+                        'node' : {
+                            valid_children : ['node'],
+                            renameable : true,
+                            max_depth : 2,
+                            icon : {
+                                image : '/misc_/NaayaCore/RefTreeNode.gif'
+                            }
+                        }
+                    },
+                    callback : {
+                        onload : function(TREE_OBJ){
+                            TREE_OBJ.open_all();
+                        },
+                        onselect : function(NODE, TREE_OBJ){
+                            var node_id = TREE_OBJ.get_node(NODE).attr('id');
+                            $('#'+prop_id+' option[value='+node_id+']').attr('selected', 'selected');
+                        },
+                        ondeselect : function(NODE, TREE_OBJ){
+                            var node_id = TREE_OBJ.get_node(NODE).attr('id');
+                            $('#'+prop_id+' option[value='+node_id+']').attr('selected', '');
+                        },
+                        ondblclk : false
+                    }
+                });
+            });
+        }
+    </script>
+
+
+    <tal:block condition="here/list_is_tree">
+        <p i18n:translate="">
+            Click on the items from list below to select/deselect them.
+        </p>
         <div tal:attributes="id string:${prop_id}_tree"></div>
     </tal:block>
+
+    <script tal:define="js_data python:{
+                            'list_is_tree': here.list_is_tree(),
+                            'list_id': here.list_id,
+                            'translated_title': here.getSite().getPortalTranslations()(here.title),
+                            'prop_id': prop_id,
+                            };
+                        js_data_json python:here.rstk.json_dumps(js_data)"
+            tal:content="string:init_select_widget(${js_data_json})"></script>
+
     <tal:block condition="python:selection_list is None">
     <p i18n:translate="">Missing selection list. Current values:</p>
     <ul>
@@ -137,3 +150,4 @@
     </tal:block>
     <p class="form-errors" tal:condition="errors" tal:content="errors" />
 </div>
+<div class="cleaner"></div>
