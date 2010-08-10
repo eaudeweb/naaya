@@ -17,6 +17,9 @@ assuming your Zope part is called ``zope-instance``::
     eggs = naaya-nose
     arguments = "zope-instance"
 
+The `naaya.content.bfile` package will be part of Naaya core, but until then,
+you should add it manually to the ``eggs`` list of the Zope instance.
+
 Don't forget to add ``naaya-nose`` to the list in `buildout`, `parts` and to
 run ``bin/buildout``. You should now have a ``nynose`` script in the ``bin``
 folder.
