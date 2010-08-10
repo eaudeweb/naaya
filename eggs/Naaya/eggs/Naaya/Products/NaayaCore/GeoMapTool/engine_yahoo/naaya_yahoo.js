@@ -68,13 +68,23 @@
     }
 
     function editor_show_point(point) {
+        if (config.obj_zoom) {
+            zoom_level = config.obj_zoom;
+        } else {
+            zoom_level = 4;
+        }
         the_map.removeMarkersAll();
         the_map.addMarker(point);
-        the_map.drawZoomAndCenter(point, 4);
+        the_map.drawZoomAndCenter(point, zoom_level);
     }
 
     function editor_marker_at_address(address, callback) {
-        the_map.drawZoomAndCenter(address, 4);
+        if (config.obj_zoom) {
+            zoom_level = config.obj_zoom;
+        } else {
+            zoom_level = 4;
+        }
+        the_map.drawZoomAndCenter(address, zoom_level);
         YEvent.Capture(the_map, 'endMapDraw', map_done);
         function map_done() {
             YEvent.Remove(the_map, 'endMapDraw', map_done);

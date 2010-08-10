@@ -79,7 +79,12 @@
     }
 
     function load_map_show_point(point) {
-        the_map.LoadMap(point, 14, map_base_layer);
+        if (config.obj_zoom) {
+            zoom_level = config.obj_zoom;
+        } else {
+            zoom_level = 14;
+        }
+        the_map.LoadMap(point, zoom_level, map_base_layer);
         after_load_map();
         var marker = new VEShape(VEShapeType.Pushpin, point);
         the_points_layer.AddShape(marker);

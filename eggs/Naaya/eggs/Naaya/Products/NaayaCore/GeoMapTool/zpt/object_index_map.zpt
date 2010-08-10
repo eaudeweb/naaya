@@ -5,7 +5,12 @@
                                            height: ${here/objmap_height_px}px;;
                                            overflow: hidden"></div>
 
-<tal:block content="structure python:here.setup_map_engine_html(request)" />
+<tal:block define="zoom_level here/get_object_map_zoom_level|nothing">
+    <tal:block condition="zoom_level" content="
+        structure python:here.setup_map_engine_html(request, obj_zoom=zoom_level)"/>
+    <tal:block condition="not:zoom_level" content="
+        structure python:here.setup_map_engine_html(request)"/>
+</tal:block>
 <script tal:content="structure string:var naaya_js_map_coords =
                         ${options/coord_json};"></script>
 <script>

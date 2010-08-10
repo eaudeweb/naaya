@@ -1070,7 +1070,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def manageProperties(self, REQUEST):
         """ """
         for key in ('initial_address', 'map_height_px',
-                    'objmap_height_px', 'objmap_width_px'):
+                    'objmap_height_px', 'objmap_width_px', 'objmap_zoom'):
             setattr(self, key, REQUEST.form[key])
 
         new_engine = REQUEST.form['engine']
@@ -1092,6 +1092,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         }
         global_config.update(kwargs)
         return self.get_map_engine().html_setup(request, global_config)
+
+    def get_object_map_zoom_level(self):
+        if not hasattr(self, 'objmap_zoom') or not self.objmap_zoom:
+            return None
+
+        if self.current_engine == 'yahoo':
+            return 18 - self.objmap_zoom
+        elif self.current_engine == 'google':
+            return self.objmap_zoom
+        elif self.current_engine == 'bing':
+            return self.objmap_zoom
+        else:
+            return None
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_map_contenttypes_html')
     admin_map_contenttypes_html = PageTemplateFile('zpt/map_contenttypes', globals())
