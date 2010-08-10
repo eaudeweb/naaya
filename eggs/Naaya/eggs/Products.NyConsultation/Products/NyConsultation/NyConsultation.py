@@ -273,7 +273,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         roles = auth_tool.list_all_roles()
         PERMISSION_GROUP = 'Review content'
 
-        if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
+        if PERMISSION_GROUP not in self.get_naaya_permissions_in_site():
             auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_CONSULTATION])
         else:
             permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])

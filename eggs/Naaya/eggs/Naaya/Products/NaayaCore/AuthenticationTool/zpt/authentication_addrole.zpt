@@ -16,10 +16,9 @@
 		</table>
 		</fieldset>
 		<br />
-		<tal:block define="permissions here/listPermissions">
 		<fieldset><legend>Permissions</legend>
 		<table border="0" cellspacing="0" cellpadding="4">
-			<tr tal:repeat="permission python:permissions.keys()">
+			<tr tal:repeat="permission here/get_naaya_permissions_in_site">
 				<td width="2%" style="vertical-align: top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
 				<td width="2%" style="vertical-align: top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission icon" /></td>
 				<td>
@@ -37,7 +36,6 @@
 			</tr>
 		</table>
 		</fieldset>
-		</tal:block>
 
 		<table border="0">
 			<tr>
