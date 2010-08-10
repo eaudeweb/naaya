@@ -1210,3 +1210,10 @@ td.portlet_arrange_center {
 .clearer, .cleaner {
 	clear:both;
 }
+
+.b_download {
+	float:right;
+	font-size:0.5em;
+	padding-right:0.3em;
+	text-decoration:none;
+}
