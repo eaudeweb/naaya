@@ -54,7 +54,7 @@
 	<metal:block use-macro="python:here.getFormsTool().getForm('site_macro_edit').macros['translation_bar']" />
 </div>
 
-<tal:block condition="not:here/hasVersion">
+<div condition="not:here/hasVersion" style="float:right">
 <tal:comment condition="nothing">
 	XXX Support these features in versions, too.
 </tal:comment>
@@ -95,7 +95,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 		</p>
 	</form>
 </fieldset>
-</tal:block>
+</div>
 
 <!-- Edit form -->
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data">
