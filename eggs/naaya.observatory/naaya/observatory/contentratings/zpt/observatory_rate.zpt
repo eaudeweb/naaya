@@ -1,29 +1,178 @@
-<tal:block define="
-rating_messages python:['Very good', 'Good', 'Average', 'Bad', 'Very bad']">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+    tal:define="resource_dir string:++resource++naaya.observatory.contentratings">
+    <head>
+        <link rel="stylesheet" type="text/css" media="screen"
+            tal:attributes="href string:${resource_dir}/css/box.css" />
+        <!--[if lt IE 6]>
+        <link rel="stylesheet" type="text/css" media="screen"
+            tal:attributes="href string:${resource_dir}/css/ie6.css" />
+        <![endif]-->
+        <script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
+        <script type="text/javascript" language="Javascript"
+            tal:attributes="src string:${resource_dir}/js/le.js"></script>
+        <script type="text/javascript" language="Javascript"
+            tal:attributes="src string:${resource_dir}/js/bg.js"></script>
+        <script type="text/javascript" language="Javascript"
+            tal:attributes="src string:${resource_dir}/js/effects.js"></script>
+    </head>
+    <body>
+        <div id="main_box">
+            <div id="box_top">
+                <div id="top_left_corner">
+                </div>
 
-<form method="POST" tal:attributes="
-	action string:${context/absolute_url}/@@observatory_rate/rate_and_comment">
-	<ol tal:define="user_rating view/userRating;">
-		<li tal:repeat="index python:range(5)">
-			<input type="radio" name="rating" tal:attributes="
-				value index;
-				checked python:user_rating == index"/>
-			<label tal:attributes="for string:rating_${index}"
-				tal:content="python:view.message(rating_messages[index])"/>
-			<img alt="" tal:attributes="
-				id string:rating_${index};
-				src string:++resource++naaya.observatory_rating_${index}.icon"/>
-		</li>
-	</ol>
-	<div tal:content="view/address"/>
+                <div id="top_center">
+                </div>
 
-	<textarea id="body" name="comment:utf8:ustring" rows="3" cols="25">
-	</textarea>
+                <div id="top_right_corner">
+                </div>
+            </div>
 
-	<input type="hidden" name="orig_url"
-		tal:attributes="value request/ACTUAL_URL|request/getURL|nothing" />
+            <div class="clear">
+            </div>
 
-	<input type="submit" tal:attributes="value python:view.message('Rate')" />
-</form>
-</tal:block>
+            <div id="box_center">
 
+                <div id="left_bar">
+                </div>
+
+                <div id="center">
+                    <div id="top-bar">
+                        <h2 id="title" tal:content="view/address"></h2>
+
+                        <span id="close">
+                            <a href="javascript:void(0); ">X</a>
+                        </span>
+                    </div>
+
+                    <br />
+
+                    <div class="clear">
+                    </div>
+
+                    <br />
+
+                    <form method="POST" id="rate-form" tal:attributes="
+                        action string:${context/absolute_url}/@@observatory_rate/rate_and_comment">
+                        <input type="hidden" name="type" value="" id="rate-val" />
+                        <input type="hidden" name="rating" value="" id="vote-val" />
+
+                        <div id="rate">
+                            <div align="center" class="rate_item">
+                                <img tal:attributes="src string:${resource_dir}/images/Vegetation.png"
+                                    class="rate-img" id="veg-img"
+                                    onclick="SelectRate('veg');" />
+                            </div>
+
+                            <div align="center" class="rate_item" >
+                                <img tal:attributes="src string:${resource_dir}/images/Water.png"
+                                    class="rate-img" id="wat-img"
+                                    onclick="SelectRate('wat');" />
+                            </div>
+
+                            <div align="center" class="rate_item">
+                                <img tal:attributes="src string:${resource_dir}/images/Soil.png"
+                                    class="rate-img" id="soil-img"
+                                    onclick="SelectRate('soil');" />
+                            </div>
+
+                            <div align="center" class="rate_item">
+                                <img tal:attributes="src string:${resource_dir}/images/Citizens.png"
+                                    class="rate-img" id="cit-img"
+                                    onclick="SelectRate('cit');" />
+                            </div>
+
+                            <p style="padding-top: 3em !important; font-size: 0.9em; font-weight: bold; font-style: italic;"
+                                tal:content="python:view.message('Type comment if any. Thanks!')"/>
+                        </div>
+
+                        <div id="vote">
+                            <div align="center" class="vote_item"
+                                tal:define="message python:view.message('Very good')">
+                                <img tal:attributes="src string:${resource_dir}/images/Very good.png;
+                                        alt message; title message"
+                                    class="vote-img" onclick="SelectVote($(this), 5); " id="_v5"/>
+                                <br />
+                                <small tal:content="message"/>
+                            </div>
+
+                            <div align="center" class="vote_item"
+                                tal:define="message python:view.message('Good')">
+                                <img tal:attributes="src string:${resource_dir}/images/Good.png;
+                                        alt message; title message"
+                                    class="vote-img" onclick="SelectVote($(this), 4); " id="_v4"/>
+                                <br />
+                                <small tal:content="message"/>
+                            </div>
+
+                            <div align="center" class="vote_item"
+                                tal:define="message python:view.message('Average')">
+                                <img tal:attributes="src string:${resource_dir}/images/Average.png;
+                                        alt message; title message"
+                                    class="vote-img" onclick="SelectVote($(this), 3); " id="_v3"/>
+                                <br />
+                                <small tal:content="message"/>
+                            </div>
+
+                            <div align="center" class="vote_item"
+                                tal:define="message python:view.message('Bad')">
+                                <img tal:attributes="src string:${resource_dir}/images/Bad.png;
+                                        alt message; title message"
+                                    class="vote-img" onclick="SelectVote($(this), 2); " id="_v2"/>
+                                <br />
+                                <small tal:content="message"/>
+                            </div>
+
+                            <div align="center" class="vote_item"
+                                tal:define="message python:view.message('Very bad')">
+                                <img tal:attributes="src string:${resource_dir}/images/Very bad.png;
+                                        alt message; title message"
+                                    class="vote-img" onclick="SelectVote($(this), 1); " id="_v1"/>
+                                <br />
+                                <small tal:content="message"/>
+                            </div>
+                        </div>
+
+                        <div class="clear">
+                        </div>
+
+                        <div id="input">
+                            <textarea id="comment" name="comment:utf8:ustring"
+                                rows="7"></textarea>
+                        </div>
+
+                        <div class="clear">
+                        </div>
+                        <br />
+
+                        <div id="buttons">
+                            <input type="submit" name="submit" id="submit"
+                                tal:attributes="value python:view.message('Rate')" />
+                            <input type="reset" name="reset" id="reset"
+                                tal:attributes="value python:view.message('Cancel')" />
+                        </div>
+                    </form>
+                </div>
+
+                <div id="right_bar">
+                </div>
+
+            </div>
+
+            <div class="clear">
+            </div>
+
+            <div id="box_bottom">
+                <div id="bottom_left_corner">
+                </div>
+
+                <div id="bottom_center">
+                </div>
+
+                <div id="bottom_right_corner">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
