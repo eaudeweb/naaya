@@ -40,7 +40,7 @@
                 <td>
                     <select name="permission">
                         <option value="">[None]</option>
-                        <option tal:repeat="item python:here.getAuthenticationTool().listPermissions().keys()"
+                        <option tal:repeat="item here/get_naaya_permissions_in_site"
                                 tal:attributes="value item; selected python:record_data[6]==item"
                                 tal:content="item">permission</option>
                     </select>
