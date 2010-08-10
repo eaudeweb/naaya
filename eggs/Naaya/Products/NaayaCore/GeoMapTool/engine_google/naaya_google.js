@@ -130,7 +130,12 @@
         the_map.clearOverlays();
         var marker = new GMarker(point);
         the_map.addOverlay(marker);
-        the_map.setCenter(point, 14);
+        if (config.obj_zoom) {
+            zoom_level = config.obj_zoom;
+        } else {
+            zoom_level = 14;
+        }
+        the_map.setCenter(point, zoom_level);
     }
 
     function editor_marker_at_address(address, callback) {
@@ -187,7 +192,12 @@
         object_index_map: function(map_div_id, coord) {
             setup_map(map_div_id);
             var point = new GLatLng(coord.lat, coord.lon);
-            the_map.setCenter(point, 14);
+            if (config.obj_zoom) {
+                zoom_level = config.obj_zoom;
+            } else {
+                zoom_level = 14;
+            }
+            the_map.setCenter(point, zoom_level);
             var marker = new GMarker(point);
             the_map.addOverlay(marker);
         },
