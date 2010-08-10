@@ -18,6 +18,8 @@ class RatingOutOfBoundsError(Exception):
 class ObservatoryRatingView(object):
     """A view for getting the rating information"""
 
+    FILE_NAMES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -34,8 +36,9 @@ class ObservatoryRatingView(object):
         if not (0 <= self.rating < 5):
             raise RatingOutOfBoundsError(self.rating)
 
-        resource = getResource(self.context.getSite(),
-                'naaya.observatory_rating_%d.icon' % self.rating, REQUEST)
+        resource = self.context.unrestrictedTraverse(
+                '++resource++naaya.observatory.contentratings/images/%s.png'
+                    % self.FILE_NAMES[self.rating])
         return resource.GET()
 
 class ObservatoryRatingCommentsView(object):
@@ -92,13 +95,15 @@ class ObservatoryRatingSetView(UserRatingSetView):
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return ''
 
-    def rate_and_comment(self, rating, comment='', orig_url=None):
+    def rate_and_comment(self, type, rating, comment='', orig_url=None):
         """
         Rate and comment an object
         attempts to redirect back to the original url
         """
-        context = self.context.aq_self
-        context.comment_add(body=comment)
+        if comment:
+            context = self.context.aq_self
+            context.comment_add(body=comment)
+
         self.rate(rating, orig_url)
 
 

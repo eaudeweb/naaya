@@ -43,25 +43,10 @@
     allowed_attributes="rate_and_comment"
   />
 
-  <!-- Resources -->
-  <browser:resource name="naaya.observatory_rating_0.icon"
-    image="www/Picture0.png"
-    permission="zope.Public" />
-
-  <browser:resource name="naaya.observatory_rating_1.icon"
-    image="www/Picture1.png"
-    permission="zope.Public" />
-
-  <browser:resource name="naaya.observatory_rating_2.icon"
-    image="www/Picture2.png"
-    permission="zope.Public" />
-
-  <browser:resource name="naaya.observatory_rating_3.icon"
-    image="www/Picture3.png"
-    permission="zope.Public" />
-
-  <browser:resource name="naaya.observatory_rating_4.icon"
-    image="www/Picture4.png"
+  <!-- Resource directory -->
+  <browser:resourceDirectory
+    name="naaya.observatory.contentratings"
+    directory="www"
     permission="zope.Public" />
 
   <!-- Who implements IObservatoryRatable -->
