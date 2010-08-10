@@ -174,6 +174,9 @@
 			<div class="textarea_message" i18n:translate="">For example: in communication products;
 			in policy plans and measures; in education; on the municipal website.</div>
 		</tal:block>
+		<tal:block repeat="form_item python:form_items[20:]">
+			<tal:block replace="structure form_item/html" />
+		</tal:block>
 	</tal:block>
 	<tal:block metal:fill-slot="custom_properties">
 		<tal:block condition="not:here/checkPermissionSkipCaptcha">
