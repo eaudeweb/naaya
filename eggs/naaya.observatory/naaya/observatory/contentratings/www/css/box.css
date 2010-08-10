@@ -1,0 +1,220 @@
+/**
+ * This will go in main stylesheet
+*/
+
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    font-family: sans-serif;
+    color: #FFFFFF;
+}
+
+div.clear {
+    clear: both;
+}
+
+a {
+    color: #2D2D2D;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a, input {
+    outline-style: none;
+    -moz-outline-style: none;
+    -webkit-outline-style: none;
+}
+
+/**
+ * END
+*/
+
+/**
+ * Start Rate Box Stylesheet
+*/
+
+div#top_left_corner {
+    width: 18px;
+    background: transparent url(../images/tlc.png) no-repeat top center;
+    padding-bottom: 35px;
+    padding-right: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#top_center {
+    width: 443px;
+    background: transparent url(../images/tb.png) repeat-x top center;
+    padding-bottom: 35px;
+    padding-left: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#top_right_corner {
+    width: 23px;
+    background: transparent url(../images/trc.png) no-repeat top center;
+    padding-bottom: 35px;
+    padding-right: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#left_bar {
+    width: 19px;
+    background: transparent url(../images/l.png) no-repeat top center;
+    height: 257px;
+    padding-right: 0px;
+    padding-top: 0px;
+    margin: 0;
+    margin-top: -15px;
+    float: left;
+}
+
+div#center {
+    width: 443px;
+    height: 257px;
+    background: transparent url(../images/c.png) repeat-x top center;
+    margin-top: -15px;
+    float: left;
+}
+
+div#right_bar {
+    width: 29px;
+    background: transparent url(../images/r.png) no-repeat top left;
+    height: 257px;
+    padding-right: 0px;
+    padding-top: 0px;
+    margin: 0;
+    margin-top: -15px;
+    margin-left: -1px;
+    float: left;
+}
+
+
+div#bottom_left_corner {
+    width: 18px;
+    background: transparent url(../images/blc.png) no-repeat top center;
+    padding-bottom: 35px;
+    padding-right: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#bottom_center {
+    width: 443px;
+    background: transparent url(../images/bb.png) repeat-x top center;
+    padding-bottom: 35px;
+    padding-left: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#bottom_right_corner {
+    width: 23px;
+    background: transparent url(../images/brc.png) no-repeat top center;
+    padding-bottom: 35px;
+    padding-right: 0px;
+    margin: 0;
+    float: left;
+}
+
+div#center #top-bar {
+    position: relative;
+    top: -2em;
+}
+
+h2#title {
+    letter-spacing: -0.05em;
+    float: left;
+    clear: both;
+    letter-spacing: -0.05em;
+}
+
+span#close {
+    color: #FFFFFF;
+    font-weight: bold;
+    float: right;
+    position: relative;
+    top: 1.7em;
+    right: 0em;
+    cursor: pointer;
+}
+
+span#close:hover {
+    color: #333333;
+    cursor: pointer;
+}
+
+div.rate_item, div.vote_item {
+    float: left;
+}
+
+form#rate-form {
+    position: absolute;
+    top: 4em;
+}
+
+div#rate {
+    float: left;
+}
+
+p.type {
+    padding-top: 3em !important; font-size: 0.85em; font-weight: bold; font-style: italic;
+}
+div#vote {
+    float: right;
+}
+
+div.vote_item {
+    margin-right: 0.4em;
+}
+
+div.vote_item small {
+    position: relative;
+    top: 0.4em;
+    font-size: 0.9em;
+    font-weight: bold;
+    font-style: italic;
+}
+
+div#input textarea#comment {
+    background: #565656;
+    width: 415px;
+    height: 90px;
+    border: none;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    font-style: italic;
+    padding: 1em;
+    font-size: 1em;
+    font-family: sans-serif;
+}
+
+div#buttons {
+    float: right;
+}
+
+input#submit, input#reset {
+    background: transparent url("../images/btn_bg.png") repeat-x 50% 50%;
+    color: #FFFFFF;
+    cursor: pointer;
+    border: none;
+    height: 30px;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+input.rate-check:hover, img.rate-img:hover, img.vote-img:hover {
+    cursor: pointer;
+}
+
+img.rate-img, img.vote-img {
+    clear: both;
+}

@@ -1,0 +1,26 @@
+#rate p {
+	clear: both;
+	margin-top: -28px;
+padding-top: 0;
+}
+
+span#close {
+position: relative;
+left: 0;
+bottom: 0;
+}
+
+h2#title {
+position: absolute;
+top: 0.5em;	
+float: left;
+}
+
+div#top_center {
+padding-bottom: 0.4em;
+margin-bottom: 0 !important;
+}
+
+div#left_bar, div#right_bar, div#center {
+	margin-top: -2.5em;
+}
