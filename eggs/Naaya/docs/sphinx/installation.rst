@@ -39,7 +39,7 @@ There is also a top-level ``[buildout]`` section used by `buildout` itself.
 .. _ConfigParser: http://docs.python.org/library/configparser
 
 .. _`buildout configuration`: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/
-.. _README: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/README.txt
+.. _README: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/README.rst
 
 
 
