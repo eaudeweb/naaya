@@ -306,7 +306,7 @@
 		</linkslist>
 		<linkslist id="top" title="Top navigation links" portlet="">
 			<link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>
-			<link id="110" title="Admin" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="3"/>
+			<link id="110" title="Admin" description="" url="/admin_centre_html" relative="1" permission="Naaya - Publish content" order="3"/>
 		</linkslist>
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
 			<item id="Albania" title="Albania"/>
@@ -520,32 +520,6 @@
 			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
 		</reflist>
 	</portlets>
-	<security>
-		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
-			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
-		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
-			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Contact objects,Naaya - Add Naaya Extended File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Photo Folder,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Take ownership"/>
-		<grouppermissions name="Add comments" description="Posibility to add comments for each type of content."
-			permissions="Naaya - Add comments for content"/>
-		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
-			permissions="Naaya - Access administrative area,Naaya - Edit content,Take ownership"/>
-		<grouppermissions name="Copy content" description="Copy content. Adding, publishing and deleting are not granted as a part of this privilege. In order to be able to paste the copied content, users must have the add permission in the target location."
-			permissions="Naaya - Copy content,Take ownership"/>
-		<grouppermissions name="Publish content" description="Publish Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Publish content,Take ownership"/>
-		<grouppermissions name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners."
-			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
-		<grouppermissions name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
-		<grouppermissions name="Translate pages" description="Translate pages in the portal"
-			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
-		<grouppermissions name="Manage Users" description="Create/modify/delete users in the portal"
-			permissions="Naaya - Access administrative area,Manage users"/>
-		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
-		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download,Naaya - Skip Captcha"/>
-		<role name="Contributor" grouppermissions="Add content" permissions=""/>
-		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Add Naaya Forum"/>
-	</security>
 	<properties>
 		<language code="en" />
 	</properties>
