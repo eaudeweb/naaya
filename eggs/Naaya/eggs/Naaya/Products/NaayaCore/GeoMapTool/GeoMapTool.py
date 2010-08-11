@@ -172,6 +172,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.map_height_px = 500
         self.objmap_height_px = 400
         self.objmap_width_px = 400
+        self.objmap_zoom = 14
         self.set_map_engine('google')
 
     def _create_map_engine_if_needed(self):
@@ -1089,14 +1090,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         global_config = {
             'initial_address': self.initial_address,
             'icons': list(self.get_geotype_icons()),
+            'objmap_zoom': self.get_object_map_zoom_level(),
         }
         global_config.update(kwargs)
         return self.get_map_engine().html_setup(request, global_config)
 
     def get_object_map_zoom_level(self):
-        if not hasattr(self, 'objmap_zoom') or not self.objmap_zoom:
-            return None
-
         if self.current_engine == 'yahoo':
             return 18 - self.objmap_zoom
         elif self.current_engine == 'google':

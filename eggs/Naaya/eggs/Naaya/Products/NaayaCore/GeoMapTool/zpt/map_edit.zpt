@@ -43,7 +43,7 @@
                i18n:translate="">zoom level (1-17)</label>
         <input type="text" size="6" name="objmap_zoom:int"
                id="form-objmap_zoom"
-               tal:attributes="value here/objmap_zoom|nothing" />
+               tal:attributes="value here/objmap_zoom" />
     </div>
 
     <div class="field-inline">
