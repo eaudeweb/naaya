@@ -9,6 +9,17 @@ from contentratings.browser.bbb import UserRatingSetView
 
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
+RESOURCES_PATH = '++resource++naaya.observatory.contentratings'
+IMAGES_PATH = RESOURCES_PATH + '/images'
+
+RATING_IMAGE_NAMES = ['Very Bad', 'Bad', 'Average', 'Good', 'Very good']
+RATING_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
+                        for f in RATING_IMAGE_NAMES]
+
+TYPE_IMAGE_NAMES = ['Vegetation', 'Water', 'Soil', 'Citizens']
+TYPE_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
+                    for f in TYPE_IMAGE_NAMES]
+
 class RatingOutOfBoundsError(Exception):
     def __init__(self, rating):
         self.rating = rating
@@ -18,8 +29,6 @@ class RatingOutOfBoundsError(Exception):
 class ObservatoryRatingView(object):
     """A view for getting the rating information"""
 
-    FILE_NAMES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
-
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -29,50 +38,80 @@ class ObservatoryRatingView(object):
         assert int(self.adapted.scale) == 5
 
     @property
+    def resources_path(self):
+        return RESOURCES_PATH
+
+    @property
+    def rating_range(self):
+        return range(5)
+
+    @property
     def rating(self):
         return int(round(self.adapted.averageRating))
 
-    def __call__(self, REQUEST):
+    def rating_image_paths(self, rating):
+        return RATING_IMAGE_PATHS[rating]
+    @property
+    def rating_image_path(self):
+        return self.rating_image_paths(self.rating)
+
+    @property
+    def type(self):
+        return 1
+
+    def type_image_paths(self, type):
+        return TYPE_IMAGE_PATHS[type]
+    @property
+    def type_image_path(self):
+        return self.type_image_paths(self.type)
+
+    @property
+    def type_message(self):
+        translations_tool = self.context.getPortalTranslations()
+        return translations_tool(self.TYPE_MESSAGES[self.type])
+
+    def rating_messages(self, rating):
+        translations_tool = self.context.getPortalTranslations()
+        return translations_tool(self.RATING_MESSAGES[rating])
+    @property
+    def rating_message(self):
+        return self.rating_messages(self.rating)
+
+    def rating_titles(self, rating):
+        translations_tool = self.context.getPortalTranslations()
+        return translations_tool(self.RATING_TITLES[rating])
+    @property
+    def rating_title(self):
+        return self.rating_titles(self.rating)
+
+    def rating_alts(self, rating):
+        translations_tool = self.context.getPortalTranslations()
+        return translations_tool(self.RATING_ALTS[rating])
+    @property
+    def rating_alt(self):
+        return self.rating_alts(self.rating)
+
+    def rating_image(self, REQUEST):
         if not (0 <= self.rating < 5):
             raise RatingOutOfBoundsError(self.rating)
 
-        resource = self.context.unrestrictedTraverse(
-                '++resource++naaya.observatory.contentratings/images/%s.png'
-                    % self.FILE_NAMES[self.rating])
+        resource = self.context.unrestrictedTraverse(self.rating_image_path)
         return resource.GET()
 
-class ObservatoryRatingCommentsView(object):
+class ObservatoryRatingCommentsView(ObservatoryRatingView):
     """A view for rating and comments"""
 
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.adapted = getAdapter(context, IUserRating,
-                name=u'Observatory Rating')
-        self.message = context.getPortalTranslations()
+    RATING_MESSAGES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
+    RATING_TITLES = ['Vote %s' % l for l in RATING_MESSAGES]
+    RATING_ALTS = list(RATING_MESSAGES)
 
-        assert int(self.adapted.scale) == 5
-
-    @property
-    def rating(self):
-        return int(round(self.adapted.averageRating))
-
-    @property
-    def comments_list(self):
-        return self.context.get_comments_list()
-
-class ObservatoryRatingSetView(UserRatingSetView):
-    """A view for setting the rating information"""
-
-    #Overwriting this to have different keys for observatory ratings
-    KEYBASE = 'observatory-anon-rated-'
+    TYPE_MESSAGES = ['Vegetation', 'Water', 'Soil', 'Citizen reported']
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
         self.adapted = getAdapter(context, IUserRating,
                 name=u'Observatory Rating')
-        self.message = context.getPortalTranslations()
 
         assert int(self.adapted.scale) == 5
 
@@ -94,6 +133,26 @@ class ObservatoryRatingSetView(UserRatingSetView):
         except GeocoderServiceError, e:
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return ''
+
+    @property
+    def comments_list(self):
+        return self.context.get_comments_list()
+
+class ObservatoryRatingSetView(UserRatingSetView,
+                               ObservatoryRatingCommentsView):
+    """A view for setting the rating information"""
+
+    #Overwriting this to have different keys for observatory ratings
+    KEYBASE = 'observatory-anon-rated-'
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.adapted = getAdapter(context, IUserRating,
+                name=u'Observatory Rating')
+        self.message = context.getPortalTranslations()
+
+        assert int(self.adapted.scale) == 5
 
     def rate_and_comment(self, type, rating, comment='', orig_url=None):
         """
