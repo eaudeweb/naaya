@@ -1,17 +1,75 @@
-<tal:block define="
-rating_messages python:['Very bad', 'Bad', 'Average', 'Good', 'Very good'];
-rating_message python:rating_messages[view.rating];">
-<ul>
-	<li tal:repeat="item view/comments_list">
-		<span tal:content="item/author"/>
-		<span tal:content="item/date"/>
-		<div tal:content="item/body"/>
-	</li>
-</ul>
+<div id="box_2">
+    <div id="box_2_top_bar">
+        <h2 id="box_2_title" tal:content="view/address"/>
 
-<label for="rating"
-	tal:content="python:view.message(rating_message)"/>
-<img id="rating" alt="" tal:attributes="
-	src string:++resource++naaya.observatory.contentratings/images/${rating_message}.png"/>
-</tal:block>
+        <span class="close">
+            <a href="javascript:void(0); ">x</a>
+        </span>
+
+    </div>
+
+
+<div class="clear">
+</div>
+
+<br />
+
+<div id="box_content">
+<div align="center" class="vote_item" >
+    <img tal:attributes="src view/type_image_path"
+        class="rate-img" id="rate-img" />
+    <br />
+    <small tal:content="view/type_message"/>
+</div>
+
+<div align="center" class="vote_item">
+    <img tal:attributes="
+        src view/rating_image_path;
+        alt view/rating_alt;
+        title view/rating_title;"
+        class="vote-img"/>
+    <br />
+    <small tal:content="view/rating_message"/>
+</div>
+
+<div id="box_2_buttons">
+    <input type="submit" value="Rate" name="submit" id="submit" />
+</div>
+
+<div class="clear">
+</div>
+
+<div id="comments" tal:define="comments_list view/comments_list">
+    <h3>
+        <tal:block i18n:translate="">Comments</tal:block>
+        <small tal:content="python:'('+str(len(comments_list))+')'"/>
+    </h3>
+
+    <ul>
+    <li tal:repeat="item comments_list">
+        <p>
+            <span tal:content="item/author"/>
+            <span tal:content="item/date"/>
+            <span tal:content="item/body"/>
+        </p>
+    </li>
+    </ul>
+</div>
+</div>
+</div>
+
+<link rel="stylesheet" type="text/css" media="screen"
+    tal:attributes="href string:${view/resources_path}/css/box.css" />
+<!--[if lt IE 6]>
+<link rel="stylesheet" type="text/css" media="screen"
+    tal:attributes="href string:${view/resources_path}/css/ie6.css" />
+<![endif]-->
+<script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
+<script type="text/javascript" language="Javascript"
+    tal:attributes="src string:${view/resources_path}/js/le.js"></script>
+<script type="text/javascript" language="Javascript"
+    tal:attributes="src string:${view/resources_path}/js/bg.js"></script>
+<script type="text/javascript" language="Javascript"
+    tal:attributes="src string:${view/resources_path}/js/effects.js"></script>
+
 

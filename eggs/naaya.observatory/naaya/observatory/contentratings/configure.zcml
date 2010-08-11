@@ -23,6 +23,7 @@
     name="observatory_rating_view"
     for=".interfaces.IObservatoryRatable"
     class=".views.ObservatoryRatingView"
+    attribute="rating_image"
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_RATING"
   />
 

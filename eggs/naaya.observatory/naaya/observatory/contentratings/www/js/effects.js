@@ -1,30 +1,5 @@
 $(document).ready(function () {
     /**
-     * Rate Water, Soil, Vegetation, Citizens (images and checkboxes click functions)
-    */
-    //$('#rate-form img[class="rate-img"]').each(function(){
-    //    $(this).click(function(){
-    //        _class = $(this).attr('class').split(' ');
-    //        selected = false;
-    //        if(_class.length){
-    //            for(index = 0; index < _class.length; index ++){
-    //                if(_class[index] == 'selected'){
-    //                    selected = true;
-    //                }
-    //            }
-    //        }
-    //
-    //        if(selected == false){
-    //            $(this).attr('class', 'rate-img selected');
-    //            $(this).css({'border': '1px solid white'});
-    //        }else{
-    //            $(this).attr('class', 'rate-img');
-    //            $(this).css({'border': 'none'});
-    //        }
-    //    });
-    //});
-
-    /**
      * Reset all on #cancel.click
     */
     $('#reset').click(function(){

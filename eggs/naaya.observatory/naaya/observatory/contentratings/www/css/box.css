@@ -218,3 +218,68 @@ input.rate-check:hover, img.rate-img:hover, img.vote-img:hover {
 img.rate-img, img.vote-img {
     clear: both;
 }
+
+/**
+ * BOX2
+*/
+
+div#box_2 {
+    background: #5c5c5c url('../images/c.png') repeat-x top center;
+    height: auto;
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    box-shadow: 2px 2px 15px #2c2c2c;
+    -moz-box-shadow: 2px 2px 15px #2c2c2c; /*border-radius: 5px; padding: 5px 5px 5px 15px;*/
+    -webkit-box-shadow: 2px 2px 15px #2c2c2c;
+}
+
+#box_2_title {
+    font-size: 1.1em;
+}
+
+div#box_2_top_bar {
+    position: relative;
+    left: 1em;
+    float: left;
+}
+
+div#box_2_buttons {
+    float: right;
+    position: relative;
+    top: 0.5em;
+    right: 2.5em;
+}
+
+div#box_content {
+    position: relative;
+    left: 1em;
+}
+
+div#comments {
+
+    padding-bottom: 2em;
+}
+
+div#comments h3 {
+    font-size: 1em;
+    font-style: italic;
+}
+
+div#comments ul {
+    max-height: 4em;
+    overflow: auto;
+    width: 248px;
+}
+
+#comments ul li p {
+    font-size: 0.8em;
+    padding-right: 1em;
+}
+
+#box_2 span.close {
+    position: absolute;
+    top: 1em;
+    left: 21.8em;
+    float: right;
+}
