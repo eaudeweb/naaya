@@ -110,7 +110,7 @@ class CHMProjectRegistration(LocalPropertyManager, Folder):
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
 
-    security.declarePrivate('loadDefaultContent')
+    security.declarePrivate('_loadRegistrationForms')
     def _loadRegistrationForms(self):
         """ load registration forms """
         registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
