@@ -4,7 +4,7 @@ Naaya API documentation
 Contents:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    installation
    authentication_tool
