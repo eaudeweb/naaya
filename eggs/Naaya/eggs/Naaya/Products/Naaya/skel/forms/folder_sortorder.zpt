@@ -25,7 +25,7 @@
 		<tr tal:repeat="folder folders" tal:attributes="class python:test(path('repeat/folder/odd'), 'zebraodd', 'zebraeven')">
 			<td class="center"><img tal:attributes="src folder/icon; alt python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type); title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" /></td>
 			<td>
-				<a tal:attributes="href folder/absolute_url; title folder/description" tal:content="folder/title_or_id"/>
+				<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id"/>
 				<input type="hidden" name="ids" tal:attributes="value folder/id" />
 			</td>
 			<td class="center"><input type="text" size="2" tal:attributes="name string:${folder/id}__sortorder; value folder/sortorder" /></td>
@@ -54,7 +54,7 @@
 		<tr tal:repeat="item items" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
 			<td class="center"><img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" /></td>
 			<td>
-				<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id"/>
+				<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/>
 				<input type="hidden" name="ids" tal:attributes="value item/id" />
 			</td>
 			<td class="center"><input type="text" size="2" tal:attributes="name string:${item/id}__sortorder; value item/sortorder" /></td>

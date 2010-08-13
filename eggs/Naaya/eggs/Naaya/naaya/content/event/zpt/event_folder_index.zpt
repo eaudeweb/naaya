@@ -110,7 +110,7 @@
 								  tal:content="python: '[' + str(start_date.strftime('%d/%m/%Y')) + ']'">
 							</span>
 						</tal:block>
-						<a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">
 							<span i18n:translate="">Item only translated in </span>
 							<span tal:repeat="lang here/gl_get_languages_map">

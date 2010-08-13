@@ -39,8 +39,7 @@
                                 title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
                         </td>
                         <td style="width: 60%;">
-                            <a tal:attributes="href object/absolute_url;
-                                title python:here.stripHTMLTags(object.description)"
+                            <a tal:attributes="href object/absolute_url"
                                 tal:content="object/title_or_id" />
                         </td>
                         <td class="type" style="width: 21%;">
