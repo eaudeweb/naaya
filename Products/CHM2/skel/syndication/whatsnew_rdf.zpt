@@ -8,7 +8,7 @@
 <ul>
 <li tal:repeat="item channel/get_objects_for_rdf">
 	
-	<a tal:attributes="href item/absolute_url; title item/description">
+	<a tal:attributes="href item/absolute_url">
 		<img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" />
 		<tal:block content="item/title_or_id" />
 	</a>
