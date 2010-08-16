@@ -60,6 +60,54 @@ class RoleTest(NaayaFunctionalTestCase):
         (p._Naaya___Add_Naaya_URL_objects_Permission,
          p._Naaya___Edit_content_Permission) = orig_perm
 
+    def test_only_grant_own_permissions(self):
+        p = self.portal
+        orig_perm = p._Naaya___Add_Naaya_URL_objects_Permission
+        self.browser_do_login('admin', '')
+
+        # first try to grant a permission we already have
+
+        # the admin user has the "Manager" role
+        p._Naaya___Add_Naaya_URL_objects_Permission = ('Manager',)
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/admin_editrole_html?'
+                        'role=Contributor')
+        form = self.browser.get_form('editRole')
+        selected = set(form['zope_perm_list:list'])
+        assert 'Naaya - Add Naaya URL objects' not in selected
+        selected.add('Naaya - Add Naaya URL objects')
+        form['zope_perm_list:list'] = list(selected)
+        self.browser.clicked(form, self.browser.get_form_field(form,
+                                        'zope_perm_list:list'))
+        self.browser.submit()
+        assert (set(p._Naaya___Add_Naaya_URL_objects_Permission) ==
+                set(['Manager', 'Contributor']))
+
+        # then try to grant a permission we don't have
+
+        p._Naaya___Add_Naaya_URL_objects_Permission = ('Reviewer',)
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/admin_editrole_html?'
+                        'role=Contributor')
+        form = self.browser.get_form('editRole')
+        selected = set(form['zope_perm_list:list'])
+        assert 'Naaya - Add Naaya URL objects' not in selected
+        selected.add('Naaya - Add Naaya URL objects')
+        form['zope_perm_list:list'] = list(selected)
+        self.browser.clicked(form, self.browser.get_form_field(form,
+                                        'zope_perm_list:list'))
+        self.browser.submit()
+        assert p._Naaya___Add_Naaya_URL_objects_Permission == ('Reviewer',)
+        assert ("You may not grant the 'Naaya - Add Naaya URL objects' "
+                "permission to 'Contributor' because you don't have "
+                "this permission yourself.") in self.browser.get_html()
+
+        self.browser_do_logout()
+        p._Naaya___Add_Naaya_URL_objects_Permission = orig_perm
+        transaction.commit()
+
 
 def test_suite():
     suite = TestSuite()

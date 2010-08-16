@@ -2288,10 +2288,34 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def admin_editrole(self, role, zope_perm_list, REQUEST=None):
         """ Change the permissions of a role """
 
-        for zope_perm in self.get_naaya_permissions_in_site():
-            p = Permission(zope_perm, (), self)
+        def iter_permissions():
+            for zope_perm in self.get_naaya_permissions_in_site():
+                yield zope_perm, Permission(zope_perm, (), self)
 
+        # first pass: check if the user *has* each permission they're granting
+        for zope_perm, p in iter_permissions():
+            if zope_perm in zope_perm_list:
+                if not self.checkPermission(zope_perm):
+                    # ha! we need to block the action.
+                    if REQUEST is None:
+                        raise ValueError("You are not allowed to grant %r "
+                                         "to %r" % (zope_perm, role))
+                    else:
+                        msg = ("You may not grant the ${permission} "
+                               "permission to ${role} because you don't have "
+                               "this permission yourself.")
+                        data = {'permission': repr(zope_perm),
+                                'role': repr(role)}
+                        self.setSessionInfoTrans(msg, **data)
+
+                        url = ('%s/admin_editrole_html?role=%s' %
+                               (self.absolute_url(), role))
+                        return REQUEST.RESPONSE.redirect(url)
+
+        # second pass: all ok; actually set the permissions
+        for zope_perm, p in iter_permissions():
             perm_roles = set(p.getRoles())
+
             if zope_perm in zope_perm_list:
                 perm_roles.add(role)
             else:
