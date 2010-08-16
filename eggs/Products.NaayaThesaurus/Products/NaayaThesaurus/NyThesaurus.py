@@ -109,6 +109,7 @@ class NyThesaurus(Folder):
             {'name': SOURCE_METATYPE,               'action': 'manage_addSource_html',              'product': NAAYATHESAURUS_PRODUCT_NAME},
             {'name': TERMS_METATYPE,                'action': 'manage_addTerms_html',               'product': NAAYATHESAURUS_PRODUCT_NAME},
             {'name': THEME_RELATION_METATYPE,       'action': 'manage_addThemeRelations_html',      'product': NAAYATHESAURUS_PRODUCT_NAME},
+            {'name': NAAYATHESAURUS_CATALOG_TITLE,  'action': 'manage_addThesaurusCatalog',         'product': NAAYATHESAURUS_PRODUCT_NAME},
         ]
         f = lambda x: x['name'] in ('Page Template', 'Script (Python)', 'File', 'Folder', 'DTML Method', 'Image', THEMES_METATYPE)
         for x in filter(f, Products.meta_types):
@@ -142,6 +143,7 @@ class NyThesaurus(Folder):
     manage_addThemeRelations_html = manage_addThemeRelations_html
     manage_addThemeRelations = manage_addThemeRelations
 
+    manage_addThesaurusCatalog = manage_addThesaurusCatalog
 
     #getters
     def getThesaurusOb(self): return self
