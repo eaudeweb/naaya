@@ -41,13 +41,15 @@ geo_type_map = {
 }
 
 
-def extract_geo_type(answer):
-    themes_number = answer.get('w_theme')
+# the "w_theme" answer is now a list, so we can't extract a geo_type.
 
-    try:
-        return geo_type_map[themes_number]
-    except KeyError:
-        return None
+#def extract_geo_type(answer):
+#    themes_number = answer.get('w_theme')
+#
+#    try:
+#        return geo_type_map[themes_number]
+#    except KeyError:
+#        return None
 
 public_widgets = set([
     'w_assessment-name',
@@ -87,7 +89,7 @@ def extract_survey_answer_data(answer):
         'title': answer.get('w_assessment-name'),
         'geo_location': answer.get('w_location'),
         'uploader': answer.get('w_15-information-about-data-uploader'),
-        'geo_type': extract_geo_type(answer),
+        #'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
                         '<a href="%s">%s</a><br />') % (
