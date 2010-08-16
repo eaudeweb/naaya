@@ -27,6 +27,7 @@ function encode_form_value(value) {
 
 function load_map_points(bounds, callback) {
     clear_custom_balloon();
+    clear_new_point();
     setAjaxWait();
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
         '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
@@ -243,3 +244,29 @@ function custom_balloon(point_position, content) {
     clear_custom_balloon = function() { balloon.remove(); }
 }
 var clear_custom_balloon = function() {}
+
+function onclick_onempty(point, point_position) {
+    clear_new_point();
+
+    $.ajax({
+        url: 'observatory_map_new_point?latitude='+point.latitude+'&longitude='+point.longitude,
+        success: function(data) {
+            var map_jq = $('#map');
+            var css = {
+                    position: 'absolute',
+                    'z-index': 1000
+                    };
+            css.left = point_position.x + map_jq.position().left;
+            css.top = map_jq.offset().top + point_position.y;
+
+            var balloon = $('<div>').css(css).html(data);
+            map_jq.parent().append(balloon);
+            clear_new_point = function() { balloon.remove(); }
+        },
+        error: function(req) {
+            if (console) console.error('error getting map data', req);
+        }
+    });
+}
+var clear_new_point = function() {}
+

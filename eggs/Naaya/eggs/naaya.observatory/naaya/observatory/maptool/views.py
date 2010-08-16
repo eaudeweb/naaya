@@ -11,9 +11,11 @@ from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
+import zLOG
 
 from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
 from Products.NaayaCore.GeoMapTool import clusters
+from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
 from naaya.observatory.contentratings.views import RATING_IMAGE_PATHS as SINGLE_RATING_IMAGE_PATHS
 
@@ -35,7 +37,7 @@ class MapView(object):
         self.request = request
         self.portal_map = context.getGeoMapTool()
 
-    def _get_tooltip(self, ob):
+    def get_tooltip(self, ob):
         return """
         <div class="marker-body">
             <small></small>
@@ -45,6 +47,20 @@ class MapView(object):
         </div>
         """ % ob.averageRating
 
+    def get_pin_tooltip(self, pin):
+        pin_view = self.site.unrestrictedTraverse(pin.absolute_url(1) + '/observatory_rating_comments_view')
+        return pin_view()
+
+    def map_new_point(self, latitude, longitude):
+        view = self.site.unrestrictedTraverse(self.site.absolute_url(1) + '/observatory_map_new_point')
+        return view(latitude=latitude, longitude=longitude)
+
+    def address(self, lat, lon):
+        try:
+            return reverse_geocode(lat, lon)
+        except GeocoderServiceError, e:
+            zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
+            return ''
 
     def map_image(self, number, rating, RESPONSE):
         number = int(number)
@@ -162,8 +178,8 @@ class MapView(object):
                 icon_name = 'mk_single_rating_%d' % ob.averageRating
                 return {'lon': ob.longitude,
                         'lat': ob.latitude,
-                        'tooltip': self._get_tooltip(ob),
-                        'label': 'cluster',
+                        'tooltip': self.get_pin_tooltip(ob),
+                        'label': '',
                         'icon_name': icon_name,
                         'id': ob.id}
             else:
@@ -171,8 +187,8 @@ class MapView(object):
                 icon_name = 'mk_rating_%d_%d' % (rating, len(ob.group))
                 return {'lon': ob.lon,
                         'lat': ob.lat,
-                        'tooltip': self._get_tooltip(ob),
-                        'label': '',
+                        'tooltip': self.get_tooltip(ob),
+                        'label': 'cluster',
                         'icon_name': icon_name,
                         'id': ob.id}
 
