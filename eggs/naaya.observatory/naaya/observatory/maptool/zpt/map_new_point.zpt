@@ -1,0 +1,152 @@
+<link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/box.css" />
+<!--[if lt IE 6]>
+<link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie6.css" />
+<![endif]-->
+
+<div id="main_box" tal:define="
+    latitude python:request.get('latitude');
+    longitude python:request.get('longitude');
+    ">
+
+    <div id="box_top">
+        <div id="top_left_corner">
+        </div>
+
+        <div id="top_center">
+        </div>
+
+        <div id="top_right_corner">
+        </div>
+    </div>
+
+    <div class="clear">
+    </div>
+
+    <div id="box_center">
+
+        <div id="left_bar">
+        </div>
+
+        <div id="center">
+            <div id="top-bar">
+                <h2 id="title" tal:content="python:view.address(latitude, longitude)"/>
+
+                <span id="close">
+                    <a href="javascript:clear_new_point();">X</a>
+                </span>
+            </div>
+
+            <div class="clear">
+            </div>
+
+            <form method="" action="" id="rate-form">
+                <input type="hidden" name="rate-val" value="" id="rate-val" />
+                <input type="hidden" name="vote-val" value="" id="vote-val" />
+
+                <div id="rate">
+                    <div align="center" class="rate_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Vegetation.png" onclick="SelectRate('veg'); " class="rate-img" id="veg-img" />
+                    </div>
+
+                    <div align="center" class="rate_item" >
+                        <img src="++resource++naaya.observatory.maptool/images/Water.png"  onclick="SelectRate('wat'); " class="rate-img" id="wat-img" />
+                    </div>
+
+                    <div align="center" class="rate_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Soil.png"  onclick="SelectRate('soil'); "  class="rate-img" id="soil-img" />
+                    </div>
+
+                    <div align="center" class="rate_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Citizens.png"  onclick="SelectRate('cit'); "  class="rate-img" id="cit-img"/>
+                    </div>
+
+                    <p class="type" style="">
+                        Type comment if any. Thanks!
+                    </p>
+                </div>
+
+                <div id="vote">
+                    <div align="center" class="vote_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Very good.png" class="vote-img" onclick="SelectVote($(this), 5); " id="_v5" alt="Very good" title="Vote Very Good"  />
+                        <br />
+                        <small>
+                            Very good
+                        </small>
+                    </div>
+
+
+                    <div align="center" class="vote_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Good.png" class="vote-img" onclick="SelectVote($(this), 4); " id="_v4" alt="Good" title="Vote Good" />
+                        <br />
+                        <small>
+                            Good
+                        </small>
+                    </div>
+
+                    <div align="center" class="vote_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Average.png" class="vote-img" onclick="SelectVote($(this), 3); " id="_v3" alt="Average" title="Vote Average" />
+                        <br />
+                        <small>
+                            Average
+                        </small>
+                    </div>
+
+                    <div align="center" class="vote_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Bad.png" class="vote-img" onclick="SelectVote($(this), 2); " id="_v2" alt="Bad" title="Vote Bad" />
+                        <br />
+                        <small>
+                            Bad
+                        </small>
+                    </div>
+
+                    <div align="center" class="vote_item">
+                        <img src="++resource++naaya.observatory.maptool/images/Very Bad.png" class="vote-img" onclick="SelectVote($(this), 1); " id="_v1" alt="Very Bad" title="Vote Very Bad" />
+                        <br />
+                        <small>
+                            Very bad
+                        </small>
+                    </div>
+                </div>
+
+                <div class="clear">
+                </div>
+
+                <div id="input">
+                    <textarea id="comment" rows="7"></textarea>
+                </div>
+
+                <div class="clear">
+                </div>
+                <br />
+
+                <div id="buttons">
+                    <input type="submit" value="Rate" name="submit" id="submit" />
+                    <input type="reset" value="Cancel" name="reset" id="reset" />
+                </div>
+            </form>
+        </div>
+
+        <div id="right_bar">
+        </div>
+
+    </div>
+
+    <div class="clear">
+    </div>
+
+    <div id="box_bottom">
+        <div id="bottom_left_corner">
+        </div>
+
+        <div id="bottom_center">
+        </div>
+
+        <div id="bottom_right_corner">
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/le.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/bg.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/effects.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/pngfix.js"></script>

@@ -1,8 +1,8 @@
 import os.path
 
-from zope.component import getAdapter
 from zope.traversing.namespace import getResource
 import zLOG
+from Products.Five.browser import BrowserView
 
 from contentratings.interfaces import IUserRating
 from contentratings.browser.bbb import UserRatingSetView
@@ -26,16 +26,12 @@ class RatingOutOfBoundsError(Exception):
     def __str__(self):
         return 'rating is %d' % self.rating
 
-class ObservatoryRatingView(object):
+class ObservatoryRatingView(BrowserView):
     """A view for getting the rating information"""
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.adapted = getAdapter(context, IUserRating,
-                name=u'Observatory Rating')
-
-        assert int(self.adapted.scale) == 5
 
     @property
     def resources_path(self):
@@ -47,7 +43,7 @@ class ObservatoryRatingView(object):
 
     @property
     def rating(self):
-        return int(round(self.adapted.averageRating))
+        return int(round(self.context.averageRating))
 
     def rating_image_paths(self, rating):
         return RATING_IMAGE_PATHS[rating]
@@ -110,24 +106,11 @@ class ObservatoryRatingCommentsView(ObservatoryRatingView):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.adapted = getAdapter(context, IUserRating,
-                name=u'Observatory Rating')
-
-        assert int(self.adapted.scale) == 5
 
     @property
     def address(self):
-        address = self.context.geo_address()
-        if address:
-            return address
-
-        if not self.context.geo_location:
-            return ''
-        if self.context.geo_location.missing_lat_lon:
-            return ''
-
-        lat = self.context.geo_latitude()
-        lon = self.context.geo_longitude()
+        lat = self.context.latitude
+        lon = self.context.longitude
         try:
             return reverse_geocode(lat, lon)
         except GeocoderServiceError, e:
@@ -136,7 +119,9 @@ class ObservatoryRatingCommentsView(ObservatoryRatingView):
 
     @property
     def comments_list(self):
-        return self.context.get_comments_list()
+        return []
+        # TODO
+        #return self.context.get_comments_list()
 
 class ObservatoryRatingSetView(UserRatingSetView,
                                ObservatoryRatingCommentsView):
@@ -148,11 +133,7 @@ class ObservatoryRatingSetView(UserRatingSetView,
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.adapted = getAdapter(context, IUserRating,
-                name=u'Observatory Rating')
         self.message = context.getPortalTranslations()
-
-        assert int(self.adapted.scale) == 5
 
     def rate_and_comment(self, type, rating, comment='', orig_url=None):
         """

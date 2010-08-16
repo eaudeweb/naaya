@@ -1,7 +1,7 @@
-from zope.annotation.interfaces import IAnnotatable
+from zope.interface import Interface
 
-class IObservatoryRatable(IAnnotatable):
+class IObservatoryRatable(Interface):
     """Marker interface that promises that an implementing object may be
-    rated by users using the IUserRating interface.
+    rated by users.
     """
 
