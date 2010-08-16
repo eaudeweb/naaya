@@ -28,6 +28,46 @@
   />
 
   <browser:page
+    name="observatory_map_image"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="map_image"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="reset_observatory"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="reset_observatory"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="add_objects_to_observatory"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="add_objects_to_observatory"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="remove_objects_from_observatory"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="remove_objects_from_observatory"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
+    name="view_objects_in_observatory"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="view_objects_in_observatory"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
+  <browser:page
     name="observatory_xrjs_tooltip"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
@@ -35,9 +75,10 @@
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
   />
 
-  <!-- Resources -->
-  <browser:resource name="naaya.observatory_map.js"
-    image="www/maptool.js"
+  <!-- Resource directory -->
+  <browser:resourceDirectory
+    name="naaya.observatory.maptool"
+    directory="www"
     permission="zope.Public" />
 
 </configure>

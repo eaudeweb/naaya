@@ -230,17 +230,14 @@ function custom_balloon(point_position, content) {
     var map_jq = $('#map');
     var css = {
         position: 'absolute',
-        border: '2px solid #999',
-        background: 'white',
-        padding: '5px'
     };
-    css.left = point_position.left + map_jq.position().left - 70;
-    css.top = map_jq.offset().top + point_position.top;
+    css.left = point_position.left + map_jq.position().left;
+    css.top = map_jq.offset().top + point_position.top - 50;
 
-    var balloon = $('<div>').css(css);
-    var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
-    close_button.click(function(){ clear_custom_balloon(); });
-    balloon.append(close_button, $('<div>').html(content));
+    var balloon = $('<div>').css(css).html(content);
+    //var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
+    //close_button.click(function(){ clear_custom_balloon(); });
+    //balloon.append(close_button, $('<div>').html(content));
     map_jq.parent().append(balloon);
 
     clear_custom_balloon = function() { balloon.remove(); }
