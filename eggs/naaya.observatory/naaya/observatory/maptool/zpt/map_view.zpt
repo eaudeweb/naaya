@@ -1,22 +1,27 @@
 <metal:block metal:use-macro="view/site/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
-	<title><tal:block i18n:translate="">Observatory Map</tal:block> | <span tal:replace="view/site/site_title" /></title>
+    <title><tal:block i18n:translate="">Observatory Map</tal:block> |
+    <span tal:replace="view/site/site_title" /></title>
 </metal:block>
 
 <metal:block metal:fill-slot="head">
-	<meta tal:attributes="content view/site/gl_get_selected_language" name="dc.language" />
-	<meta i18n:attributes="content" content="Interactive map for the Geo-tagged information" name="description" />
+    <meta tal:attributes="content view/site/gl_get_selected_language"
+        name="dc.language" />
+    <meta i18n:attributes="content"
+        content="Interactive map for the Observatory information"
+        name="description" />
 </metal:block>
 
 <metal:block metal:fill-slot="body">
-<tal:block tal:define="geo_types python:request.get('geo_types', view.portal_map.getSymbolsIds());
-                       geo_query python:request.get('geo_query', '');
-                       path python:request.get('path', '');
-                       height python:request.get('height', view.portal_map.map_height_px)">
-<tal:block content="structure python:view.portal_map.setup_map_engine_html(request)" />
+<tal:block tal:define="
+    geo_types python:request.get('geo_types', view.portal_map.getSymbolsIds());
+    geo_query python:request.get('geo_query', '');
+    path python:request.get('path', '');
+    height python:request.get('height', view.portal_map.map_height_px)">
+<tal:block content="structure python:view.setup_map_engine_html(request)" />
 <script type="text/javascript" tal:attributes="src string:${view/portal_map/absolute_url}/map_i18n_js"></script>
-<script type="text/javascript" src="++resource++naaya.observatory_map.js"></script>
+<script type="text/javascript" src="++resource++naaya.observatory.maptool/js/maptool.js"></script>
 <script tal:content="structure python:'var portal_url=%s;' % view.site.rstk.json_dumps(view.site.absolute_url())"></script>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">

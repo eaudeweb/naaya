@@ -7,6 +7,10 @@
         <link rel="stylesheet" type="text/css" media="screen"
             tal:attributes="href string:${view/resources_path}/css/ie6.css" />
         <![endif]-->
+        <!--[if lt IE 7]>
+        <script defer type="text/javascript"
+            tal:attributes="src string:${view/resources_path}/js/pngfix.js"></script>
+        <![endif]-->
         <script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
         <script type="text/javascript" language="Javascript"
             tal:attributes="src string:${view/resources_path}/js/le.js"></script>
