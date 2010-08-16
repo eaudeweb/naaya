@@ -45,7 +45,7 @@
         <em i18n:translate="">No file uploaded</em>
     </td>
 </tr>
-<tr tal:condition="current_version/viewable">
+<tr tal:condition="current_version/viewable|nothing">
     <th i18n:translate="">View</th>
     <td>
         <a tal:attributes="href string:${current_version/url}?action=view"
