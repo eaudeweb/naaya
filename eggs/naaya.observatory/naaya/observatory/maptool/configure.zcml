@@ -75,10 +75,22 @@
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
   />
 
+  <browser:page
+    name="observatory_map_new_point"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    template="zpt/map_new_point.zpt"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
   <!-- Resource directory -->
   <browser:resourceDirectory
     name="naaya.observatory.maptool"
     directory="www"
     permission="zope.Public" />
+
+  <!-- Who implements IObservatoryRatable -->
+  <five:implements class=".pin.PushPin"
+    interface="naaya.observatory.contentratings.interfaces.IObservatoryRatable" />
 
 </configure>
