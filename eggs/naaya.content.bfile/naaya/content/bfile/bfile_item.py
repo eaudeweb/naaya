@@ -177,6 +177,10 @@ def bfile_download(context, path, REQUEST):
     `path` will be the captured path for download. We only care about
     the first component, which should be the version requeseted for
     download.
+
+    * `action` in GET == "view" indicates opening file in browser
+    default value is "download" (optional)
+
     """
     try:
         ver_number = int(path[0]) - 1
@@ -189,7 +193,14 @@ def bfile_download(context, path, REQUEST):
         raise NotFound
 
     RESPONSE = REQUEST.RESPONSE
-    return ver.send_data(RESPONSE, set_filename=False)
+    action = REQUEST.form.get('action', 'download')
+    if action == 'view':    
+        RESPONSE.setHeader('Content-Type', ver.content_type)
+        return ver.open().read()
+    elif action == 'download':
+        return ver.send_data(RESPONSE, set_filename=False)
+    else:
+        raise NotFound
 
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
@@ -323,6 +334,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
             'id': ver_id,
             'is_current': False,
+            'viewable': (version.content_type.startswith('text/')
+                         or version.content_type.startswith('image/')),
         }
 
         versions = [tmpl_version(ver, str(n+1))

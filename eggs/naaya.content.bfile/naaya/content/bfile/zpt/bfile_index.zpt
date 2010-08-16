@@ -29,9 +29,10 @@
 <tal:block condition="python:here.prop_details('geo_location')['show']"
 	content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
-<table class="datatable" tal:define="portal_map here/getGeoMapTool;">
+<table class="datatable" tal:define="portal_map here/getGeoMapTool;
+                                     current_version options/current_version|nothing">
 
-<tr tal:define="current_version options/current_version|nothing">
+<tr>
     <th i18n:translate="">Download</th>
     <td tal:condition="current_version">
         <img tal:attributes="src current_version/icon_url;
@@ -42,6 +43,13 @@
     </td>
     <td tal:condition="not:current_version">
         <em i18n:translate="">No file uploaded</em>
+    </td>
+</tr>
+<tr tal:condition="current_version/viewable">
+    <th i18n:translate="">View</th>
+    <td>
+        <a tal:attributes="href string:${current_version/url}?action=view"
+           tal:content="string: Open in browser"></a>
     </td>
 </tr>
 <tal:block condition="here/releasedate"
