@@ -58,7 +58,7 @@ def getObjectFromCatalog(catalog_tool, rid):
 
 def getClusters(catalog_tool, filters):
     # the objects are searched for in the tile limits (to get the same clusters every time)
-    grid_size = 12
+    grid_size = 12 # geopoints' and clusters' density on map / also depends on map frame size
 
     # unpack map limits
     if filters:

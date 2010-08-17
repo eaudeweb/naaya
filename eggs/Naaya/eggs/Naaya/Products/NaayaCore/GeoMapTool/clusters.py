@@ -54,8 +54,9 @@ def distance(p1, p2):
 def getFullGridSize(size_y, size_x, lat_min, lat_max, lon_min, lon_max):
     """ get the size of the full map grid based on the sizes for the view """
     return (
-            size_y * int(math.floor(180. / abs(lat_max - lat_min))),
-            size_x * int(math.floor(360. / abs(lon_max - lon_min))),
+            int(math.floor(size_y * (360. / abs(lon_max - lon_min)))),#d(lat) is not constant
+            int(math.floor(size_x * (360. / abs(lon_max - lon_min)))),
+            # please note d(lon) not 100% of time constant - google maps inconsistency
             )
 
 def y_from_lat(size_y, lat):
@@ -140,19 +141,6 @@ def calc_new_centers(old_centers, points):
 
     return new_centers, groups
 
-
-def finished_kmeans(new_centers, old_centers, centers_step):
-    """
-    Checks if all the distances between the new center and the old center
-    of every group are smaller than a chosen value (centers_step)
-    """
-    assert len(new_centers) == len(old_centers)
-
-    for i in range(len(new_centers)):
-        if distance(new_centers[i], old_centers[i]) > centers_step:
-            return False
-    return True
-
 def kmeans(lat_min, lat_max, lon_min, lon_max,
         points, size_x, size_y=None, centers_step=None):
     """
@@ -172,20 +160,7 @@ def kmeans(lat_min, lat_max, lon_min, lon_max,
     centers, groups = [], []
     old_centers = get_initial_centers(lat_min, lat_max, lon_min, lon_max,
                                         size_x, size_y)
-    centers, groups = calc_new_centers(old_centers, points)
-
-    while not finished_kmeans(centers, old_centers, centers_step):
-        # remove centers with empty groups
-        old_centers = []
-        for i in range(len(centers)):
-            if len(groups[i]) != 0:
-                old_centers.append(centers[i])
-
-        # next calc_centers
-        centers, groups = calc_new_centers(old_centers, points)
-
-    return centers, groups
-
+    return calc_new_centers(old_centers, points)
 
 def get_discretized_limits(lat_min, lat_max, lon_min, lon_max,
         size_x, size_y=None):
