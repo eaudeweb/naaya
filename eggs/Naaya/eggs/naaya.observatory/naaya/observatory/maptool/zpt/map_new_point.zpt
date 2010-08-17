@@ -6,6 +6,7 @@
 <div id="main_box" tal:define="
     latitude python:request.get('latitude');
     longitude python:request.get('longitude');
+    address python:view.address(latitude, longitude);
     ">
 
     <div id="box_top">
@@ -29,7 +30,7 @@
 
         <div id="center">
             <div id="top-bar">
-                <h2 id="title" tal:content="python:view.address(latitude, longitude)"/>
+                <h2 id="title" tal:content="address"/>
 
                 <span id="close">
                     <a href="javascript:clear_new_point();">X</a>
@@ -42,6 +43,7 @@
             <form method="post" action="" id="rate-form" onsubmit="javascript:submit_rate();return false;">
                 <input type="hidden" name="lat-val" tal:attributes="value latitude" id="lat-val" />
                 <input type="hidden" name="lon-val" tal:attributes="value longitude" id="lon-val" />
+                <input type="hidden" name="address-val" tal:attributes="value address" id="address-val"/>
                 <input type="hidden" name="rate-val" value="" id="rate-val" />
                 <input type="hidden" name="vote-val" value="" id="vote-val" />
 
@@ -114,7 +116,7 @@
                 </div>
 
                 <div id="input">
-                    <textarea id="comment" rows="7"></textarea>
+                    <textarea id="comment-val" name="comment-val" rows="7"></textarea>
                 </div>
 
                 <div class="clear">

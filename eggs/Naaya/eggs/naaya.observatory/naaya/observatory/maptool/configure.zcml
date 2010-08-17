@@ -84,6 +84,14 @@
     allowed_attributes="add_pin_to_observatory"
   />
 
+  <browser:page
+    name="observatory_map_point"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    template="zpt/map_point.zpt"
+    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+  />
+
   <!-- Resource directory -->
   <browser:resourceDirectory
     name="naaya.observatory.maptool"

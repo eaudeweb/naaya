@@ -1,5 +1,5 @@
 import simplejson as json
-from random import randint
+from random import randint, choice
 from time import time
 from StringIO import StringIO
 import os
@@ -18,8 +18,8 @@ from Products.NaayaCore.GeoMapTool import clusters
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
 from naaya.observatory.contentratings.views import RATING_IMAGE_PATHS as SINGLE_RATING_IMAGE_PATHS
-
-from pin import addPushPin, removePushPin, PushPin, ratePushPin, removeRating
+from naaya.observatory.contentratings.views import TYPE_IMAGE_PATHS
+from pin import addPushPin, removePushPin, PushPin, ratePushPin, removeRating, getPushPinRatings
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -193,6 +193,7 @@ class MapView(object):
                         'tooltip': self.get_tooltip(ob),
                         'label': 'cluster',
                         'icon_name': icon_name,
+                        'num_points': len(ob.group),
                         'id': ob.id}
 
         points = [build_point(c) for c in centers if c.averageRating]
@@ -226,14 +227,19 @@ class MapView(object):
                     'h': 37,
             }
 
+    def get_pin_by_id(self, id):
+        return self.site.observatory._getOb(id)
+
     def setup_map_engine_html(self, request, **kwargs):
-        """ render the HTML needed to set up the current map engine """
+        """ render the HTML needed to set up the bing map engine """
+        assert hasattr(self.portal_map, 'engine_bing')
+
         global_config = {
             'initial_address': self.portal_map.initial_address,
             'icons': list(self.get_geotype_icons()),
         }
         global_config.update(kwargs)
-        map_engine = self.portal_map.get_map_engine()
+        map_engine = self.portal_map.engine_bing
         return map_engine.html_setup(request, global_config)
 
     def reset_observatory(self):
@@ -249,7 +255,7 @@ class MapView(object):
         manage_addFieldIndex(catalog, 'longitude')
         manage_addFieldIndex(catalog, 'id_pin')
 
-    def add_pin_to_observatory(self, lat, lon, type, rating):
+    def add_pin_to_observatory(self, lat, lon, address, type, rating, comment=None):
         """ """
         lat, lon = float(lat), float(lon)
         rating = int(rating)
@@ -260,21 +266,21 @@ class MapView(object):
         assert type in TYPE_VALUES
 
         parent = self.site.observatory
-        pin_index = addPushPin(parent, parent.catalog, lat, lon)
-        ratePushPin(parent, parent.catalog, pin_index, type, rating)
+        pin_index = addPushPin(parent, parent.catalog, type, lat, lon, address)
+        ratePushPin(parent, parent.catalog, pin_index, rating, comment)
 
     def add_objects_to_observatory(self):
         parent = self.site.observatory
         for i in range(20*1000):
+            type = choice(TYPE_VALUES)
             latitude = randint(-89, 89)
             longitude = randint(-179, 179)
-            addPushPin(parent, parent.catalog, latitude, longitude)
+            addPushPin(parent, parent.catalog, type, latitude, longitude, '')
 
         for i in range(20*1000):
             pin_index = randint(0, 20*1000-1)
-            type = randint(0, 2)
             rating = 1 + i % 5
-            ratePushPin(parent, parent.catalog, pin_index, type, rating)
+            ratePushPin(parent, parent.catalog, pin_index, rating, None)
 
     def remove_objects_from_observatory(self):
         parent = self.site.observatory
@@ -328,4 +334,37 @@ class MapView(object):
         import pdb; pdb.set_trace()
         pass
 
+    def comments_list(self, pin_id):
+        parent = self.site.observatory
+        ratings = getPushPinRatings(parent, parent.catalog, pin_id)
+        comments = [rating.comment for rating in ratings if rating.comment]
+        return comments
+
+    def type_image_paths(self, type):
+        index = TYPE_VALUES.index(type)
+        return TYPE_IMAGE_PATHS[index]
+
+    TYPE_MESSAGES = ['Vegetation', 'Water', 'Soil', 'Citizen reported']
+    def type_messages(self, type):
+        translations_tool = self.context.getPortalTranslations()
+        index = TYPE_VALUES.index(type)
+        return translations_tool(self.TYPE_MESSAGES[index])
+
+    def rating_image_paths(self, rating):
+        return SINGLE_RATING_IMAGE_PATHS[rating-1]
+
+    RATING_MESSAGES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
+    def rating_messages(self, rating):
+        translations_tool = self.site.getPortalTranslations()
+        return translations_tool(self.RATING_MESSAGES[rating-1])
+
+    RATING_TITLES = ['Vote %s' % l for l in RATING_MESSAGES]
+    def rating_titles(self, rating):
+        translations_tool = self.site.getPortalTranslations()
+        return translations_tool(self.RATING_TITLES[rating-1])
+
+    RATING_ALTS = list(RATING_MESSAGES)
+    def rating_alts(self, rating):
+        translations_tool = self.site.getPortalTranslations()
+        return translations_tool(self.RATING_ALTS[rating-1])
 
