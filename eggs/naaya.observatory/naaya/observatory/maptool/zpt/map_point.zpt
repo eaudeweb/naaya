@@ -1,0 +1,62 @@
+<div id="box_2" tal:define="
+    pin_id python:request.get('id');
+    pin python:view.get_pin_by_id(pin_id);
+    rating pin/averageRating;
+    type pin/type;
+    ">
+    <div id="box_2_top_bar">
+        <h2 id="box_2_title" tal:content="pin/address"/>
+
+        <span class="close">
+            <a href="javascript:clear_point(); ">X</a>
+        </span>
+    </div>
+
+    <div class="clear">
+    </div>
+
+    <br />
+    <div id="box_content">
+        <div align="center" class="vote_item" >
+            <img tal:attributes="src python:view.type_image_paths(type)"
+                class="rate-img" id="rate-img" />
+            <br />
+            <small tal:content="python:view.type_messages(type)"/>
+        </div>
+
+        <div align="center" class="vote_item">
+            <img tal:attributes="
+                src python:view.rating_image_paths(rating);
+                alt python:view.rating_alts(rating);
+                title python:view.rating_titles(rating);"
+                class="vote-img"/>
+            <br />
+            <small tal:content="python:view.rating_messages(rating)"/>
+        </div>
+
+        <div id="box_2_buttons">
+            <input type="button" value="Rate" id="submit"
+                tal:attributes="onclick string:javascript:rate_point(${pin_id})" />
+        </div>
+
+        <div class="clear">
+        </div>
+
+        <div id="comments" tal:define="
+            comments_list python:view.comments_list(pin_id);
+            ">
+            <h3>
+                <tal:block i18n:translate="">Comments</tal:block>
+                <small tal:content="python:'('+str(len(comments_list))+')'"/>
+            </h3>
+
+            <ul>
+            <li tal:repeat="comment comments_list">
+                <span tal:replace="comment"/>
+            </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+

@@ -64,12 +64,7 @@ function load_map_points(bounds, callback) {
         var num_records = 0;
         $.each(response.points, function(i, point) {
             if (point.label === 'cluster') {
-                var m = /(\d+) location\(s\) inside/.exec(point.tooltip);
-                if (m === null) {
-                    num_records++;
-                } else {
-                    num_records += parseInt(m[1]);
-                }
+                num_records += point.num_points;
             } else {
                 num_records++;
             }
@@ -245,7 +240,11 @@ function custom_balloon(point_position, content) {
 }
 var clear_custom_balloon = function() {}
 
-function onclick_onempty(point, point_position) {
+function onctrlclick_onempty(point, point_position) {
+    if (add_new_point_in_progress) {
+        return;
+    }
+    add_new_point_in_progress = true;
     clear_new_point();
 
     $.ajax({
@@ -256,6 +255,7 @@ function onclick_onempty(point, point_position) {
                     position: 'absolute',
                     'z-index': 1000
                     };
+            // compute the positions for the balloon
             if (point_position.x < map_jq.width() / 2) {
                 css.left = point_position.x + map_jq.position().left;
             } else {
@@ -268,17 +268,61 @@ function onclick_onempty(point, point_position) {
                 css.top = map_jq.offset().top + point_position.y - 312;
             }
 
+            // add the ballon
             var balloon = $('<div>').css(css).html(data);
             map_jq.parent().append(balloon);
             clear_new_point = function() { balloon.remove(); }
+            add_new_point_in_progress = false;
         },
         error: function(req) {
             if (console) console.error('error getting map data', req);
+            add_new_point_in_progress = false;
         }
     });
 }
 var clear_new_point = function() {}
+var add_new_point_in_progress = false;
 
-function onclick_onpoint(point, point_position) {
+function onclick_onpoint(point, point_position, point_id) {
+    if (view_point_in_progress) {
+        return;
+    }
+    view_point_in_progress = true;
+    clear_point();
+
+    $.ajax({
+        url: 'observatory_map_point?id='+point_id,
+        success: function(data) {
+            var map_jq = $('#map');
+            var css = {
+                    position: 'absolute',
+                    'z-index': 1000
+                    };
+            // compute the positions for the balloon
+            if (point_position.x < map_jq.width() / 2) {
+                css.left = point_position.x + map_jq.position().left;
+            } else {
+                css.left = point_position.x + map_jq.position().left - 490;
+            }
+
+            if (point_position.y < map_jq.height() / 2) {
+                css.top = map_jq.offset().top + point_position.y;
+            } else {
+                css.top = map_jq.offset().top + point_position.y - 312;
+            }
+
+            // add the ballon
+            var balloon = $('<div>').css(css).html(data);
+            map_jq.parent().append(balloon);
+            clear_point = function() { balloon.remove(); }
+            view_point_in_progress = false;
+        },
+        error: function(req) {
+            if (console) console.error('error getting map data', req);
+            view_point_in_progress = false;
+        }
+    });
 }
+var clear_point = function() {}
+var view_point_in_progress = false;
 
