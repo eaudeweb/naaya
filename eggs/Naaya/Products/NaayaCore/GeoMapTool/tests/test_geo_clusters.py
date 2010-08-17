@@ -27,10 +27,10 @@ from Products.Naaya.NyFolder import addNyFolder
 
 class RequestStub(object):
     #simulates HTTP Request with filled form-data
-    form = {'lon_min': '25.62327117919922', 'lat_max': '44.43549691351629',
+    form = {'lon_min': '24.62327117919922', 'lat_max': '44.43549691351629',
     'address': u'', 'geo_types': [],
     'lon_max': '26.16495895403205', 'geo_query': [u'', ''],
-    'path': '', 'lat_min': '44.07123237879009'}
+    'path': '', 'lat_min': '43.07123237879009'}
 
 class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     symbol_ids = ['symbol1', 'symbol2']
