@@ -1,21 +1,19 @@
 from setuptools import setup, find_packages
 import os
 
-NAME = 'Products.NyConsultation'
+NAME = 'Products.NaayaContent.NyConsultation'
 PATH = NAME.split('.') + ['version.txt']
 VERSION = open(os.path.join(*PATH)).read().strip()
 
 setup(name=NAME,
       version=VERSION,
-      description="",
+      description="NyConsultation",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
-      keywords='naaya consultation',
+      ],
       author='EaudeWeb',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro/',
@@ -25,10 +23,6 @@ setup(name=NAME,
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
-          # -*- Extra requirements: -*-
+          'Naaya',
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
       )
