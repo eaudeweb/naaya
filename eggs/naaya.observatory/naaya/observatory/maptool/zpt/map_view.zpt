@@ -11,6 +11,11 @@
     <meta i18n:attributes="content"
         content="Interactive map for the Observatory information"
         name="description" />
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/le.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/bg.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/effects.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/functions.js"></script>
+<script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/pngfix.js"></script>
 </metal:block>
 
 <metal:block metal:fill-slot="body">

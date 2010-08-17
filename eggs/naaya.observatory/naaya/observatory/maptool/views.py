@@ -24,9 +24,12 @@ from pin import addPushPin, removePushPin, PushPin, ratePushPin, removeRating
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
 
-RATING_IMAGE_NAMES = range(15)
+RATING_IMAGE_NAMES = range(1, 15+1)
 RATING_IMAGE_PATHS = ['%s/rating_%s.png' % (IMAGES_PATH, f)
                         for f in RATING_IMAGE_NAMES]
+
+RATING_VALUES = range(1, 5+1)
+TYPE_VALUES = ['veg', 'wat', 'soil', 'cit']
 
 class MapView(object):
     """A view for the observatory map"""
@@ -154,7 +157,7 @@ class MapView(object):
         points = make_points()
 
         def make_centers():
-            centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 12)
+            centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 10)
             # get ratings for centers
             rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
             for i, g in enumerate(groups):
@@ -183,7 +186,7 @@ class MapView(object):
                         'icon_name': icon_name,
                         'id': ob.id}
             else:
-                rating = int(3*(ob.averageRating+1)-1)
+                rating = int(3*ob.averageRating)
                 icon_name = 'mk_rating_%d_%d' % (rating, len(ob.group))
                 return {'lon': ob.lon,
                         'lat': ob.lat,
@@ -208,8 +211,8 @@ class MapView(object):
         for i, img_path in enumerate(RATING_IMAGE_PATHS):
             for j in range(999):
                 yield {
-                    'id': "rating_%d_%d" % (i, j),
-                    'url': 'observatory_map_image?rating=%s&number=%s' % (i, j),
+                    'id': "rating_%d_%d" % (i+1, j),
+                    'url': 'observatory_map_image?rating=%s&number=%s' % (i+1, j),
                     'w': 38,
                     'h': 37,
                 }
@@ -217,7 +220,7 @@ class MapView(object):
         # single objects images
         for i, img_path in enumerate(SINGLE_RATING_IMAGE_PATHS):
             yield {
-                    'id': "single_rating_%d" % i,
+                    'id': "single_rating_%d" % (i+1),
                     'url': img_path,
                     'w': 38,
                     'h': 37,
@@ -246,18 +249,32 @@ class MapView(object):
         manage_addFieldIndex(catalog, 'longitude')
         manage_addFieldIndex(catalog, 'id_pin')
 
+    def add_pin_to_observatory(self, lat, lon, type, rating):
+        """ """
+        lat, lon = float(lat), float(lon)
+        rating = int(rating)
+
+        assert -90 < lat < 90
+        assert -180 < lon < 180
+        assert rating in RATING_VALUES
+        assert type in TYPE_VALUES
+
+        parent = self.site.observatory
+        pin_index = addPushPin(parent, parent.catalog, lat, lon)
+        ratePushPin(parent, parent.catalog, pin_index, type, rating)
+
     def add_objects_to_observatory(self):
         parent = self.site.observatory
         for i in range(20*1000):
             latitude = randint(-89, 89)
             longitude = randint(-179, 179)
-            addPushPin(parent, parent.catalog, i, latitude, longitude)
+            addPushPin(parent, parent.catalog, latitude, longitude)
 
         for i in range(20*1000):
             pin_index = randint(0, 20*1000-1)
             type = randint(0, 2)
-            rating = i % 5
-            ratePushPin(parent, parent.catalog, i, pin_index, type, rating)
+            rating = 1 + i % 5
+            ratePushPin(parent, parent.catalog, pin_index, type, rating)
 
     def remove_objects_from_observatory(self):
         parent = self.site.observatory
