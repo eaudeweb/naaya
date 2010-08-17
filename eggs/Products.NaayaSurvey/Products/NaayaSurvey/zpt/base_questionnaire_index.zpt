@@ -42,8 +42,7 @@
 </div>
 
 
-<p tal:condition="python:here.description!=''"
-	tal:content="structure here/description" />
+<div tal:condition="here/description" tal:content="structure here/description" />
 
 <p i18n:translate="" tal:condition="here/expired">This survey has expired!</p>
 
