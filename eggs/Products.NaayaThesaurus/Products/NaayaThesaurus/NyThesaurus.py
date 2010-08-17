@@ -63,7 +63,6 @@ def manage_addThesaurus(self, id, title='', REQUEST=None):
 
     #creates the catalog
     manage_addThesaurusCatalog(obj)
-    obj.catalog = getattr(obj, NAAYATHESAURUS_CATALOG_ID)
 
     obj._p_changed = 1
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
