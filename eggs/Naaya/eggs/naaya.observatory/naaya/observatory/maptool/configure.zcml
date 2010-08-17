@@ -81,6 +81,7 @@
     class=".views.MapView"
     template="zpt/map_new_point.zpt"
     permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    allowed_attributes="add_pin_to_observatory"
   />
 
   <!-- Resource directory -->
