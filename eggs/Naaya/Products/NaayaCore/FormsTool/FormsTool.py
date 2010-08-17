@@ -162,6 +162,14 @@ class FormsTool(Folder):
         else:
             return self._default_form(form_id)
 
+    def __getitem__(self, form_id):
+        """
+        Makes it possible to access portal forms by key
+        and therefore by `path:` traversal in zpt.
+
+        """
+        return self.getForm(form_id)
+
     def getContent(self, p_context={}, p_page=None):
         """
         Renders the given form and return the result.
