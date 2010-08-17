@@ -15,7 +15,7 @@
 	</tal:block>
 </tal:block>
 
-<em tal:content="structure here/description" />
+<div tal:content="structure here/description" />
 
 <tal:block replace="structure python:here.render(mode='edit')" />
 

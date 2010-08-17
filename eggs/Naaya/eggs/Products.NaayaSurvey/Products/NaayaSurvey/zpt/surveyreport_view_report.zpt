@@ -22,8 +22,7 @@
 		</span>
 </h1>
 
-<p tal:condition="python:here.description!=''" 
-   tal:content="structure here/description" />
+<div tal:condition="here/description" tal:content="structure here/description" />
 
 <tal:block define="answers options/answers">
 	<p><span tal:replace="python:len(answers)">NNN</span> <span i18n:translate="">answers were analyzed.</span></p>

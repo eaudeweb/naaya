@@ -22,8 +22,7 @@
 		</span>
 </h1>
 
-<p tal:condition="python:here.description!=''"
-	tal:content="structure here/description" />
+<div tal:condition="here/description" tal:content="structure here/description" />
 
 <div class="buttons" tal:condition="here/checkPermissionViewAnswers">
 	<a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Download as CSV</a>
