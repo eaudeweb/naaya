@@ -54,7 +54,7 @@ THEME_RELATION_ITEM_METATYPE =      'Theme Relation'
 
 #other
 NAAYATHESAURUS_CATALOG_TITLE =  'ThesaurusCatalog'
-NAAYATHESAURUS_CATALOG_ID =     'thesaurus_catalog'
+NAAYATHESAURUS_CATALOG_ID =     'catalog'
 
 #default indexez
 THESAURUS_INDEXES = {'meta_type'        :'FieldIndex',
