@@ -256,8 +256,17 @@ function onclick_onempty(point, point_position) {
                     position: 'absolute',
                     'z-index': 1000
                     };
-            css.left = point_position.x + map_jq.position().left;
-            css.top = map_jq.offset().top + point_position.y;
+            if (point_position.x < map_jq.width() / 2) {
+                css.left = point_position.x + map_jq.position().left;
+            } else {
+                css.left = point_position.x + map_jq.position().left - 490;
+            }
+
+            if (point_position.y < map_jq.height() / 2) {
+                css.top = map_jq.offset().top + point_position.y;
+            } else {
+                css.top = map_jq.offset().top + point_position.y - 312;
+            }
 
             var balloon = $('<div>').css(css).html(data);
             map_jq.parent().append(balloon);
@@ -269,4 +278,7 @@ function onclick_onempty(point, point_position) {
     });
 }
 var clear_new_point = function() {}
+
+function onclick_onpoint(point, point_position) {
+}
 

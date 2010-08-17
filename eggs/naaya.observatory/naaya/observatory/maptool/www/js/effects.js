@@ -43,3 +43,4 @@ function SelectVote(el, i){
 
     return false;
 }
+

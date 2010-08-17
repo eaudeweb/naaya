@@ -46,7 +46,7 @@ class ObservatoryRatingView(BrowserView):
         return int(round(self.context.averageRating))
 
     def rating_image_paths(self, rating):
-        return RATING_IMAGE_PATHS[rating]
+        return RATING_IMAGE_PATHS[rating-1]
     @property
     def rating_image_path(self):
         return self.rating_image_paths(self.rating)
@@ -68,27 +68,27 @@ class ObservatoryRatingView(BrowserView):
 
     def rating_messages(self, rating):
         translations_tool = self.context.getPortalTranslations()
-        return translations_tool(self.RATING_MESSAGES[rating])
+        return translations_tool(self.RATING_MESSAGES[rating-1])
     @property
     def rating_message(self):
         return self.rating_messages(self.rating)
 
     def rating_titles(self, rating):
         translations_tool = self.context.getPortalTranslations()
-        return translations_tool(self.RATING_TITLES[rating])
+        return translations_tool(self.RATING_TITLES[rating-1])
     @property
     def rating_title(self):
         return self.rating_titles(self.rating)
 
     def rating_alts(self, rating):
         translations_tool = self.context.getPortalTranslations()
-        return translations_tool(self.RATING_ALTS[rating])
+        return translations_tool(self.RATING_ALTS[rating-1])
     @property
     def rating_alt(self):
         return self.rating_alts(self.rating)
 
     def rating_image(self, REQUEST):
-        if not (0 <= self.rating < 5):
+        if not (1 <= self.rating <= 5):
             raise RatingOutOfBoundsError(self.rating)
 
         resource = self.context.unrestrictedTraverse(self.rating_image_path)
