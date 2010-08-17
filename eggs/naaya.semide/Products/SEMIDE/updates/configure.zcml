@@ -15,11 +15,17 @@
 		provides="..interfaces.IUpdateScript"
 		component=".update_semide_sites.UpdateSemideSites"
 		permission="zope2.ViewManagementScreens" />
-	-->
+
 	<utility
 		name="recover_photos.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
 		component=".update_recover_photos.UpdateRecoverPhotos"
+		permission="zope2.ViewManagementScreens" />
+	-->
+	<utility
+		name="update_thesaurus.update"
+		provides="Products.naayaUpdater.interfaces.IUpdateScript"
+		component=".update_thesaurus.UpdateThesaurus"
 		permission="zope2.ViewManagementScreens" />
   </configure>
 

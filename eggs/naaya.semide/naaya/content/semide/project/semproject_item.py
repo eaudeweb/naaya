@@ -624,9 +624,9 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
 InitializeClass(NySemProject)
 
 config.update({
-    'constructors': (manage_addNySemDocument_html, addNySemProject),
+    'constructors': (manage_addNySemProject_html, addNySemProject),
     'folder_constructors': [
-            ('manage_addNySemDocument_html', manage_addNySemDocument_html),
+            ('manage_addNySemProject_html', manage_addNySemProject_html),
             ('semproject_add_html', semproject_add_html),
             ('addNySemProject', addNySemProject),
             ('import_NySemProject', importNySemProject),
