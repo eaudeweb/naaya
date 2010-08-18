@@ -16,7 +16,6 @@
 		<form id="site_admin_adduser" title="Add new user"/>
 		<form id="site_admin_edituser" title="Edit user form"/>
 		<form id="site_admin_roles" title="Roles"/>
-		<form id="site_admin_role" title="Role details"/>
 		<form id="site_admin_users" title="All users view"/>
 		<form id="site_admin_sources" title="Portal administration - other users sources"/>
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
