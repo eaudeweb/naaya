@@ -11,7 +11,7 @@
 <table class="datatable">
 <thead tal:define="url here/absolute_url">
     <th><a tal:attributes="href url">Name</a></th>
-    <th><a tal:attributes="href string:${url}?sort=theme">Theme</a></th>
+    <th><a tal:attributes="href theme">Theme(s)</a></th>
     <th>Topic</th>
 </thead>
 <tbody>
