@@ -108,7 +108,7 @@ class Directory(Implicit, Item):
                 'userid': user['uid'],
                 'firstname': handle_unicode(user['givenName']),
                 'lastname': handle_unicode(user['sn']),
-                'email': user['mail'],
+                'email': user.get('mail', ''),
                 'access_level': user['access_level'],
                 'organisation': user.get('o', 'N/A'),
                 'postal_address': handle_unicode(
