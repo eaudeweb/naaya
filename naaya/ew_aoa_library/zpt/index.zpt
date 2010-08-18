@@ -1,37 +1,29 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
-<!-- <metal:block metal:fill-slot="title">
-    <title tal:content="string:${here/title} | ${here/site_title}" />
-</metal:block> -->
-
 <metal:block fill-slot="body">
 
 <h1 tal:content="here/title_or_id"></h1>
 
 <table class="datatable">
 <thead tal:define="url here/absolute_url">
-    <th><a tal:attributes="href url">Name</a></th>
-    <th>Themes</th>
-    <th>Topic</th>
-    <th>Reporter</th>
+	<th><a tal:attributes="href url">Name</a></th>
+	<th>Themes</th>
+	<th>Reported by</th>
 </thead>
 <tbody>
 <tr tal:define="items python:list(here.iter_assessments());
-                sort_key python:test(request.form.get('sort', 'title'));
-                dummy python:items.sort(key=lambda x: getattr(x, sort_key));"
-    tal:repeat="i items">
-    <td>
-        <a tal:define="url i/absolute_url"
-           tal:attributes="href string:${url}"
-           tal:content="i/title_or_id"></a>
-    </td>
-    <td>
-        <ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
-    </td>
-    <td>
-        <ul><li tal:repeat="t i/topics" tal:content="t" /></ul>
-    </td>
-    <td tal:content="i/uploader"/>
+				sort_key python:test(request.form.get('sort', 'title'));
+				dummy python:items.sort(key=lambda x: getattr(x, sort_key));"
+	tal:repeat="i items">
+	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)"> 
+	<td>
+			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="i/title_or_id"></a>
+	</td>
+	<td>
+		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
+	</td>
+	<td tal:content="i/uploader"/>
+</tal:block>
 </tr>
 </tbody>
 </table>
