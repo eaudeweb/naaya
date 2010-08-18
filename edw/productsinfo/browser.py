@@ -79,6 +79,7 @@ class Errors(Info):
                                'error_name': err['value'],
                                'error_type': err['type'],
                                'date': err['time'],
+                               'traceback': err['tb_text'],
                                'url': er.getPhysicalPath()[2] + '/showEntry?id='
                                + err['id']})
         return json.dumps(errors)
