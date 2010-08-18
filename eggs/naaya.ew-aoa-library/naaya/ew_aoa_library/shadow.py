@@ -88,7 +88,7 @@ def extract_survey_answer_data(answer):
         'id': answer.getId(),
         'title': answer.get('w_assessment-name'),
         'geo_location': answer.get('w_location'),
-        'uploader': answer.get('w_15-information-about-data-uploader'),
+        'uploader': ('%s %s') % (answer.get('w_submitter-name'), answer.get('w_submitter-organisation'), ),
         #'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
