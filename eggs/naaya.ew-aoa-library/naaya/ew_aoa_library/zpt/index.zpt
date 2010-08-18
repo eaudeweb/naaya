@@ -13,6 +13,7 @@
     <th><a tal:attributes="href url">Name</a></th>
     <th>Themes</th>
     <th>Topic</th>
+    <th>Reporter</th>
 </thead>
 <tbody>
 <tr tal:define="items python:list(here.iter_assessments());
@@ -24,10 +25,13 @@
            tal:attributes="href string:${url}"
            tal:content="i/title_or_id"></a>
     </td>
-    <td tal:content="i/theme" />
+    <td>
+        <ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
+    </td>
     <td>
         <ul><li tal:repeat="t i/topics" tal:content="t" /></ul>
     </td>
+    <td tal:content="i/uploader"/>
 </tr>
 </tbody>
 </table>
