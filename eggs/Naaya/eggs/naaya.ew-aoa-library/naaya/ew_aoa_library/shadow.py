@@ -99,7 +99,7 @@ def extract_survey_answer_data(answer):
                             answer.get('w_assessment-url'),
                        ),
         'target_path': path_in_site(answer),
-        'theme': extract_singleselect(answer, 'w_theme'),
+        'theme': extract_multipleselect(answer, 'w_theme'),
         'topics': sorted(all_topics),
     }
 
