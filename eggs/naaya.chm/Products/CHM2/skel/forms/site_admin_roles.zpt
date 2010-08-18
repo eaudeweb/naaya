@@ -7,7 +7,7 @@
 				user_tool here/getAuthenticationTool;
 				skey python:request.get('skey', 'name');
 				rkey python:request.get('rkey', '');
-				sortdata python:({'sortable': 1, 'key': 'name', 'label': 'Name'}, {'sortable': 0, 'key': '', 'label': 'Permissions'},)">
+				sortdata python:({'sortable': 1, 'key': 'name', 'label': 'Name'},)">
 
 <div class="tabbedmenu">
 	<ul>
@@ -51,8 +51,7 @@
 	</thead>
 	<tbody>
 		<tr tal:repeat="item python:user_tool.display_defined_roles(skey, rkey)">
-			<td><a tal:attributes="href string:${site_url}/admin_role_html?role=${item}" tal:content="item" /></td>
-			<td tal:content="python:', '.join(user_tool.getRolePermissions(item))" />
+			<td><a tal:attributes="href string:${site_url}/admin_editrole_html?role=${item}" tal:content="item" /></td>
 		</tr>
 	</tbody>
 </table>
