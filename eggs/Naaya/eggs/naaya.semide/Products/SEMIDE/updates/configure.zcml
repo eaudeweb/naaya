@@ -21,12 +21,12 @@
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
 		component=".update_recover_photos.UpdateRecoverPhotos"
 		permission="zope2.ViewManagementScreens" />
-	-->
 	<utility
 		name="update_thesaurus.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
 		component=".update_thesaurus.UpdateThesaurus"
 		permission="zope2.ViewManagementScreens" />
+	-->
   </configure>
 
 </configure>
