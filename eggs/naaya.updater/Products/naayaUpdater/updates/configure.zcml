@@ -223,4 +223,10 @@
 	  component=".update_tbcons.UpdateTalkBackCons"
 	  permission="zope2.ViewManagementScreens" />
 
+	<utility
+	  name="files.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_files.UpdateFiles"
+	  permission="zope2.ViewManagementScreens" />
+
 </configure>
