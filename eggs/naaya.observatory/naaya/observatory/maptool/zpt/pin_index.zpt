@@ -1,0 +1,58 @@
+<div id="box_2" tal:define="
+    pin_id python:request.get('id');
+    pin python:view.get_pin_by_id(pin_id);
+    latitude pin/latitude;
+    longitude pin/longitude;
+    ">
+    <div id="box_2_top_bar">
+        <h2 id="box_2_title" tal:content="pin/address"/>
+
+        <span class="close">
+            <a href="javascript:clear_point();">X</a>
+        </span>
+    </div>
+
+    <div class="clear">
+    </div>
+
+    <br />
+    <div id="box_content">
+        <div align="center" class="vote_item" >
+            <img tal:attributes="src python:view.type_image_paths(pin.type)"
+                class="rate-img" id="rate-img" />
+            <br />
+            <small tal:content="python:view.type_messages(pin.type)"/>
+        </div>
+
+        <div align="center" class="vote_item">
+            <img tal:attributes="
+                src python:view.rating_image_paths(pin.rating);
+                alt python:view.rating_alts(pin.rating);
+                title python:view.rating_titles(pin.rating);"
+                class="vote-img"/>
+            <br />
+            <small tal:content="python:view.rating_messages(pin.rating)"/>
+        </div>
+
+        <div id="box_2_buttons">
+            <input type="button" value="Rate" id="submit" tal:attributes="
+            onclick string:javascript:add_point(${latitude}, ${longitude})"
+            />
+        </div>
+
+        <div class="clear">
+        </div>
+
+        <div id="comments">
+            <h3>
+                <tal:block i18n:translate="">Comment</tal:block>
+            </h3>
+
+            <span tal:replace="pin/date"/>
+            <span tal:replace="pin/author"/>
+            <span tal:replace="pin/comment"/>
+        </div>
+    </div>
+</div>
+
+

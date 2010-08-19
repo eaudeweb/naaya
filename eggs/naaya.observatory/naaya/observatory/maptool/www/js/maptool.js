@@ -26,8 +26,8 @@ function encode_form_value(value) {
  */
 
 function load_map_points(bounds, callback) {
-    clear_custom_balloon();
     clear_new_point();
+    clear_point();
     setAjaxWait();
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
         '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
@@ -221,34 +221,17 @@ function showPageElements() {
 	displayParentCheckboxes();
 }
 
-function custom_balloon(point_position, content) {
-    clear_custom_balloon();
-    var map_jq = $('#map');
-    var css = {
-        position: 'absolute',
-    };
-    css.left = point_position.left + map_jq.position().left;
-    css.top = map_jq.offset().top + point_position.top - 50;
-
-    var balloon = $('<div>').css(css).html(content);
-    //var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
-    //close_button.click(function(){ clear_custom_balloon(); });
-    //balloon.append(close_button, $('<div>').html(content));
-    map_jq.parent().append(balloon);
-
-    clear_custom_balloon = function() { balloon.remove(); }
-}
-var clear_custom_balloon = function() {}
-
-function onctrlclick_onempty(point, point_position) {
+function add_point(lat, lon) {
     if (add_new_point_in_progress) {
         return;
     }
     add_new_point_in_progress = true;
     clear_new_point();
+    clear_point();
+    point_position = map_engine.page_coords(lat, lon);
 
     $.ajax({
-        url: 'observatory_map_new_point?latitude='+point.latitude+'&longitude='+point.longitude,
+        url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon,
         success: function(data) {
             var map_jq = $('#map');
             var css = {
@@ -283,15 +266,25 @@ function onctrlclick_onempty(point, point_position) {
 var clear_new_point = function() {}
 var add_new_point_in_progress = false;
 
-function onclick_onpoint(point, point_position, point_id) {
+function view_point(lat, lon, point_id) {
+    // if cluster don't do anything
+    if (point_id == -1) {
+        return;
+    }
+
     if (view_point_in_progress) {
         return;
     }
+    if (viewing_point_id == point_id) {
+        return;
+    }
     view_point_in_progress = true;
+    clear_new_point();
     clear_point();
+    point_position = map_engine.page_coords(lat, lon);
 
     $.ajax({
-        url: 'observatory_map_point?id='+point_id,
+        url: 'observatory_pin?id='+point_id,
         success: function(data) {
             var map_jq = $('#map');
             var css = {
@@ -302,19 +295,23 @@ function onclick_onpoint(point, point_position, point_id) {
             if (point_position.x < map_jq.width() / 2) {
                 css.left = point_position.x + map_jq.position().left;
             } else {
-                css.left = point_position.x + map_jq.position().left - 490;
+                css.left = point_position.x + map_jq.position().left - 300;
             }
 
             if (point_position.y < map_jq.height() / 2) {
                 css.top = map_jq.offset().top + point_position.y;
             } else {
-                css.top = map_jq.offset().top + point_position.y - 312;
+                css.top = map_jq.offset().top + point_position.y - 135;
             }
 
             // add the ballon
             var balloon = $('<div>').css(css).html(data);
             map_jq.parent().append(balloon);
-            clear_point = function() { balloon.remove(); }
+            clear_point = function() {
+                balloon.remove();
+                viewing_point_id = null;
+            }
+            viewing_point_id = point_id;
             view_point_in_progress = false;
         },
         error: function(req) {
@@ -325,4 +322,18 @@ function onclick_onpoint(point, point_position, point_id) {
 }
 var clear_point = function() {}
 var view_point_in_progress = false;
+var viewing_point_id = null;
+
+function onclick_onpoint(lat, lon, point_id) {
+    view_point(lat, lon, point_id);
+}
+function onmouseoverpoint(lat, lon, point_id) {
+    view_point(lat, lon, point_id);
+}
+
+function onmouseoutpoint(lat, lon, point_id) {}
+
+function onctrlclick_onempty(lat, lon) {
+    add_point(lat, lon);
+}
 

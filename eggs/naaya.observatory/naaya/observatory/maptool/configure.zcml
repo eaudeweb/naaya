@@ -4,19 +4,24 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="naaya">
 
-  <!-- Permissions -->
-  <zope:permission
-    id="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-    title="Naaya - Observatory - View Map"
-    />
+  <!-- Initializations -->
+  <five:registerPackage package="." initialize=".initialize" />
 
   <!-- Views -->
   <browser:page
     name="observatory_map"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
-    template="zpt/map_view.zpt"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    template="zpt/map_index.zpt"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    name="observatory_map_icon"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="map_icon"
+    permission="zope.Public"
   />
 
   <browser:page
@@ -24,47 +29,7 @@
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
     attribute="xrjs_getClusters"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-  />
-
-  <browser:page
-    name="observatory_map_image"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="map_image"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-  />
-
-  <browser:page
-    name="reset_observatory"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="reset_observatory"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-  />
-
-  <browser:page
-    name="add_objects_to_observatory"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="add_objects_to_observatory"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-  />
-
-  <browser:page
-    name="remove_objects_from_observatory"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="remove_objects_from_observatory"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
-  />
-
-  <browser:page
-    name="view_objects_in_observatory"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="view_objects_in_observatory"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    permission="zope.Public"
   />
 
   <browser:page
@@ -72,24 +37,32 @@
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
     attribute="xrjs_getTooltip"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    permission="zope.Public"
   />
 
   <browser:page
-    name="observatory_map_new_point"
+    name="observatory_pin_add"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
-    template="zpt/map_new_point.zpt"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    template="zpt/pin_add.zpt"
+    permission="zope.Public"
     allowed_attributes="add_pin_to_observatory"
   />
 
   <browser:page
-    name="observatory_map_point"
+    name="observatory_pin"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
-    template="zpt/map_point.zpt"
-    permission="naaya.PERMISSION_VIEW_OBSERVATORY_MAP"
+    template="zpt/pin_index.zpt"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    name="add_random_pins_to_observatory"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="add_random_pins_to_observatory"
+    permission="zope.Public"
   />
 
   <!-- Resource directory -->
@@ -97,9 +70,5 @@
     name="naaya.observatory.maptool"
     directory="www"
     permission="zope.Public" />
-
-  <!-- Who implements IObservatoryRatable -->
-  <five:implements class=".pin.PushPin"
-    interface="naaya.observatory.contentratings.interfaces.IObservatoryRatable" />
 
 </configure>
