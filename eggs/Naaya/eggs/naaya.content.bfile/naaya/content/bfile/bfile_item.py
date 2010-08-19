@@ -313,6 +313,38 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
                                       (self.absolute_url(), _lang))
 
+    security.declareProtected(view_management_screens, 'manageProperties')
+    def manageProperties(self, REQUEST=None, **kwargs):
+        """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if self.wl_isLocked():
+            raise ResourceLockedError, "File is locked via WebDAV"
+
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _uploaded_file = schema_raw_data.pop('uploaded_file', None)
+        versions_to_remove = schema_raw_data.pop('versions_to_remove', [])
+
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        if form_errors:
+            raise ValueError(form_errors.popitem()[1]) # pick a random error
+
+        user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        
+        for ver_id in versions_to_remove:
+            self.remove_version(int(ver_id) - 1, user)
+        
+        if self.discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
+
     def _versions_for_tmpl(self):
         """
         generate a dictionary with info about all versions, suitable for
