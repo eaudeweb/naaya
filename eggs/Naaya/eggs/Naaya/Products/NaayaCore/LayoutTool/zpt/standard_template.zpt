@@ -4,7 +4,7 @@
     <html xmlns="http://www.w3.org/1999/xhtml"
         tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
         tal:define="site_url here/getSitePath;">
-    <head tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
+    <head metal:define-macro="head" tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
     layout_path python:here.getSite().getLayoutTool().absolute_url();">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
@@ -17,12 +17,14 @@
         </metal:block>
 
         <metal:block define-slot="standard-head-links">
+            <metal:block define-macro="standard-head-links">
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/style_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/common_css" />
             <link rel="stylesheet" type="text/css" media="print"  tal:attributes="href string:${layout_path}/print_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/scheme_style" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
+            </metal:block>
         </metal:block>
 
         <metal:block define-slot="standard-head-content">
