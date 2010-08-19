@@ -3,6 +3,7 @@ from random import randint, choice
 from time import time
 from StringIO import StringIO
 import os
+from datetime import datetime
 
 from PIL import Image
 
@@ -19,7 +20,6 @@ from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
 from naaya.observatory.contentratings.views import RATING_IMAGE_PATHS as SINGLE_RATING_IMAGE_PATHS
 from naaya.observatory.contentratings.views import TYPE_IMAGE_PATHS
-from pin import addPushPin, removePushPin, PushPin, ratePushPin, removeRating, getPushPinRatings
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -50,14 +50,6 @@ class MapView(object):
         </div>
         """ % ob.averageRating
 
-    def get_pin_tooltip(self, pin):
-        pin_view = self.site.unrestrictedTraverse(pin.absolute_url(1) + '/observatory_rating_comments_view')
-        return pin_view()
-
-    def map_new_point(self, latitude, longitude):
-        view = self.site.unrestrictedTraverse(self.site.absolute_url(1) + '/observatory_map_new_point')
-        return view(latitude=latitude, longitude=longitude)
-
     def address(self, lat, lon):
         try:
             return reverse_geocode(lat, lon)
@@ -65,7 +57,7 @@ class MapView(object):
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return ''
 
-    def map_image(self, number, rating, RESPONSE):
+    def map_icon(self, number, rating, RESPONSE):
         number = int(number)
         rating = int(rating)
         current_dir = os.path.dirname(__file__)
@@ -121,7 +113,7 @@ class MapView(object):
         lon_min, lon_max = float(lon_min), float(lon_max)
 
         catalog = self.site.observatory.catalog
-        rating_idx = catalog._catalog.indexes['averageRating']
+        rating_idx = catalog._catalog.indexes['rating']
         lat_idx = catalog._catalog.indexes['latitude']
         lon_idx = catalog._catalog.indexes['longitude']
 
@@ -178,10 +170,10 @@ class MapView(object):
             if len(ob.group) == 1:
                 rid = rids[ob.group[0].id]
                 ob = getObjectFromCatalog(catalog, rid)
-                icon_name = 'mk_single_rating_%d' % ob.averageRating
+                icon_name = 'mk_single_rating_%d' % ob.rating
                 return {'lon': ob.longitude,
                         'lat': ob.latitude,
-                        'tooltip': self.get_pin_tooltip(ob),
+                        'tooltip': '', #self.get_pin_tooltip(ob),
                         'label': '',
                         'icon_name': icon_name,
                         'id': ob.id}
@@ -190,7 +182,7 @@ class MapView(object):
                 icon_name = 'mk_rating_%d_%d' % (rating, len(ob.group))
                 return {'lon': ob.lon,
                         'lat': ob.lat,
-                        'tooltip': self.get_tooltip(ob),
+                        'tooltip': '', #self.get_tooltip(ob),
                         'label': 'cluster',
                         'icon_name': icon_name,
                         'num_points': len(ob.group),
@@ -213,7 +205,7 @@ class MapView(object):
             for j in range(999):
                 yield {
                     'id': "rating_%d_%d" % (i+1, j),
-                    'url': 'observatory_map_image?rating=%s&number=%s' % (i+1, j),
+                    'url': 'observatory_map_icon?rating=%s&number=%s' % (i+1, j),
                     'w': 38,
                     'h': 37,
                 }
@@ -227,9 +219,6 @@ class MapView(object):
                     'h': 37,
             }
 
-    def get_pin_by_id(self, id):
-        return self.site.observatory._getOb(id)
-
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the bing map engine """
         assert hasattr(self.portal_map, 'engine_bing')
@@ -242,103 +231,55 @@ class MapView(object):
         map_engine = self.portal_map.engine_bing
         return map_engine.html_setup(request, global_config)
 
-    def reset_observatory(self):
-        current_observatory = self.site._getOb('observatory', None)
-        if current_observatory is not None:
-            self.site._delOb('observatory')
-        self.site._setOb('observatory', BTreeFolder2(id='observatory'))
-        parent = self.site.observatory
-        manage_addZCatalog(parent, 'catalog', '')
-        catalog = parent.catalog
-        manage_addFieldIndex(catalog, 'averageRating')
-        manage_addFieldIndex(catalog, 'latitude')
-        manage_addFieldIndex(catalog, 'longitude')
-        manage_addFieldIndex(catalog, 'id_pin')
+    SESSION_KEY = '__naaya_observatory_session'
+    def generate_session_key(self):
+        return randint(10**5, 10**10)
 
-    def add_pin_to_observatory(self, lat, lon, address, type, rating, comment=None):
+    def get_author_and_session(self, REQUEST):
+        author = REQUEST.AUTHENTICATED_USER.getUserName()
+        if author == 'Anonymous User':
+            session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
+            if session_key == None:
+                session_key = self.generate_session_key()
+                REQUEST.RESPONSE.setCookie(self.SESSION_KEY, session_key)
+        else:
+            session_key = None
+        return author, session_key
+
+    def query_author_and_session(self, REQUEST):
+        author = REQUEST.AUTHENTICATED_USER.getUserName()
+        if author == 'Anonymous User':
+            session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
+        else:
+            session_key = None
+        return author, session_key
+
+
+    def add_pin_to_observatory(self, lat, lon, address, type, rating, REQUEST,
+            comment=None):
         """ """
         lat, lon = float(lat), float(lon)
         rating = int(rating)
+        date = datetime.now()
+        author, session_key = self.get_author_and_session(REQUEST)
 
-        assert -90 < lat < 90
-        assert -180 < lon < 180
-        assert rating in RATING_VALUES
-        assert type in TYPE_VALUES
+        observatory = self.site.observatory
+        pin_index = observatory.add_pin(type, lat, lon, address,
+                rating, comment, date, author, session_key)
 
-        parent = self.site.observatory
-        pin_index = addPushPin(parent, parent.catalog, type, lat, lon, address)
-        ratePushPin(parent, parent.catalog, pin_index, rating, comment)
-
-    def add_objects_to_observatory(self):
-        parent = self.site.observatory
-        for i in range(20*1000):
+    def add_random_pins_to_observatory(self, num, REQUEST):
+        num = int(num)
+        observatory = self.site.observatory
+        for i in range(num):
+            lat, lon = randint(-89, 89), randint(-179, 179)
             type = choice(TYPE_VALUES)
-            latitude = randint(-89, 89)
-            longitude = randint(-179, 179)
-            addPushPin(parent, parent.catalog, type, latitude, longitude, '')
+            rating = choice(RATING_VALUES)
+            observatory.add_pin_to_observatory(lat, lon, '', type, rating,
+                    REQUEST)
 
-        for i in range(20*1000):
-            pin_index = randint(0, 20*1000-1)
-            rating = 1 + i % 5
-            ratePushPin(parent, parent.catalog, pin_index, rating, None)
-
-    def remove_objects_from_observatory(self):
-        parent = self.site.observatory
-        for i in range(20*1000):
-            removeRating(parent, parent.catalog, i)
-
-        for i in range(20*1000):
-            removePushPin(parent, parent.catalog, i)
-
-    def view_objects_in_observatory(self):
-        catalog = self.site.observatory.catalog
-
-        rating_idx = catalog._catalog.indexes['averageRating']
-        def queryRating(rating):
-            return rating_idx._apply_index({'averageRating': {'query': rating}})
-
-        lat_idx = catalog._catalog.indexes['latitude']
-        def queryLat(lat_min, lat_max):
-            return lat_idx._apply_index({'latitude': {'query': (lat_min, lat_max), 'range': 'min:max'}})
-
-        lon_idx = catalog._catalog.indexes['longitude']
-        def queryLon(lon_min, lon_max):
-            return lon_idx._apply_index({'longitude': {'query': (lon_min, lon_max), 'range': 'min:max'}})
-
-        def filter(lat_min, lat_max, lon_min, lon_max):
-            t_start = time()
-            f = {'latitude': {'query': (lat_min, lat_max),
-                              'range': 'min:max'},
-                 'longitude': {'query': (lon_min, lon_max),
-                               'range': 'min:max'}}
-
-            r_lat = lat_idx._apply_index(f)
-            if r_lat is not None:
-                r_lat = r_lat[0]
-            r_lon = lon_idx._apply_index(f)
-            if r_lon is not None:
-                r_lon = r_lon[0]
-
-            if r_lat is not None and r_lon is not None:
-                w, rs_f = weightedIntersection(r_lat, r_lon)
-            else:
-                rs_f = None
-
-            lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
-            lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
-
-            t_end = time()
-
-            return rs_f, lat_dict, lon_dict, t_end - t_start
-
-        import pdb; pdb.set_trace()
-        pass
-
-    def comments_list(self, pin_id):
-        parent = self.site.observatory
-        ratings = getPushPinRatings(parent, parent.catalog, pin_id)
-        comments = [rating.comment for rating in ratings if rating.comment]
-        return comments
+    def get_pin_by_id(self, id):
+        observatory = self.site.observatory
+        return observatory.get_pin(id)
 
     def type_image_paths(self, type):
         index = TYPE_VALUES.index(type)
