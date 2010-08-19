@@ -10,9 +10,18 @@
 	btn_cut python:listing_info['btn_cut'];
 	btn_paste python:listing_info['btn_paste'];
 	can_operate python:listing_info['can_operate'];
-	ratings here/folder_listing_ratings">
+	ratings here/folder_listing_ratings;
+	iframe python: bool(request.get('iframe', 0))">
 
 <metal:block define-slot="folder-listing">
+<tal:block tal:condition="iframe">
+	<!DOCTYPE html>
+	<tal:block replace="structure python:'<' +'html>'"></tal:block>
+	<metal:block use-macro="python: here.standard_template_macro('head')">
+	<metal:block use-macro="python: here.standard_template_macro('standard-head-links')"></metal:block>
+	</metal:block>
+	<tal:block replace="structure python:'<' +'body>'"></tal:block>
+</tal:block>
 <script type="text/javascript">
 $(document).ready(function(){
 	// Multiple items operations
@@ -271,5 +280,9 @@ $(document).ready(function(){
 	</table>
 </form>
 </metal:block>
+<tal:block tal:condition="iframe"><br>
+<tal:block replace="structure python:'</' +'body>'"></tal:block>
+<tal:block replace="structure python:'</' +'html>'"></tal:block>
+</tal:block>
 </tal:block>
 </metal:block>

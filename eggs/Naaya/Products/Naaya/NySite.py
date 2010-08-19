@@ -3733,8 +3733,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return PageTemplateFile('skel/forms/site_admin_bulk_mail', globals()).__of__(self)()
 
-    def standard_template_macro(self):
-        return self.getLayoutTool().get_standard_template().macros['page']
+    def standard_template_macro(self, macro='page'):
+        return self.getLayoutTool().get_standard_template().macros[macro]
 
     #calendar widget
     security.declareProtected(view, 'calendar_js')
