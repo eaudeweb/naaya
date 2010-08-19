@@ -17,9 +17,10 @@
 <tal:block tal:condition="iframe">
 	<!DOCTYPE html>
 	<tal:block replace="structure python:'<' +'html>'"></tal:block>
-	<metal:block use-macro="python: here.standard_template_macro('head')">
-	<metal:block use-macro="python: here.standard_template_macro('standard-head-links')"></metal:block>
-	</metal:block>
+	<tal:block tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
+    layout_path python:here.getSite().getLayoutTool().absolute_url();">
+		<metal:block use-macro="python: here.standard_template_macro('standard-head-links')"></metal:block>
+	</tal:block>
 	<tal:block replace="structure python:'<' +'body>'"></tal:block>
 </tal:block>
 <script type="text/javascript">
