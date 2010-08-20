@@ -3,6 +3,9 @@ import unittest
 
 import transaction
 
+# Naaya imports
+from Products.NaayaCore.EmailTool import EmailTool
+
 def wrap_with_request(app):
     from StringIO import StringIO
     from ZPublisher.HTTPRequest import HTTPRequest
@@ -51,10 +54,12 @@ def portal_fixture(app):
 
 class NaayaTestCase(unittest.TestCase):
     def setUp(self):
+        self.mail_log, self._restore_mail = self.divert_mail()
         self.afterSetUp()
 
     def tearDown(self):
         self.beforeTearDown()
+        self._restore_mail()
 
     def afterSetUp(self):
         # TODO: deprecate and remove
@@ -108,6 +113,31 @@ class NaayaTestCase(unittest.TestCase):
         add_content_permissions['permissions'].remove(content_type['permission'])
         self.portal.acl_users.editPermission('Add content', **add_content_permissions)
         self.portal.manage_uninstall_pluggableitem(meta_type)
+
+    def divert_mail(self):
+
+        class smtplib_replacement(object):
+            class SMTP:
+                def __init__(s, server, port):
+                    mail_log.append( ('init', {}) )
+
+                def sendmail(s, from_addr, to_addr, message):
+                    mail_log.append( ('sendmail',
+                                      {'from': from_addr,
+                                       'to': to_addr,
+                                       'message': message}) )
+
+                def quit(s):
+                    mail_log.append( ('quit', {}) )
+
+        _orig_smtplib = EmailTool.smtplib
+        EmailTool.smtplib = smtplib_replacement
+        mail_log = []
+
+        def restore():
+            EmailTool.smtplib = _orig_smtplib
+
+        return mail_log, restore
 
 FunctionalTestCase = NaayaTestCase # not really, but good enough for us
 
