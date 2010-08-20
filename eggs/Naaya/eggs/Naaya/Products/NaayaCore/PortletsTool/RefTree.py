@@ -1,41 +1,21 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#Python imports
 import simplejson as json
 
-#Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-#Product related imports
 from Products.NaayaCore.constants import *
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, localizer_patcher
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager,\
+                                                    LocalProperty
+from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, \
+                        localizer_patcher
 from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeForm = PageTemplateFile('zpt/reftree_manage_add', globals())
-def manage_addRefTree(self, id='', title='', description='', lang=None, REQUEST=None):
+def manage_addRefTree(self, id='', title='', description='', lang=None,
+                      REQUEST=None):
     """ """
     id = make_id(self, id=id, title=title, prefix=PREFIX_SUFIX_REFTREE)
     if lang is None: lang = self.gl_get_selected_language()
@@ -65,9 +45,11 @@ class RefTree(LocalPropertyManager, Folder):
 
     security = ClassSecurityInfo()
 
-    meta_types = (
-        {'name': METATYPE_REFTREENODE, 'action': 'manage_addRefTreeNodeForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL},
-    )
+    meta_types = ({
+        'name': METATYPE_REFTREENODE,
+        'action': 'manage_addRefTreeNodeForm',
+        'permission': PERMISSION_ADD_NAAYACORE_TOOL
+    },)
     all_meta_types = meta_types
 
     title = localizer_patcher
@@ -96,35 +78,33 @@ class RefTree(LocalPropertyManager, Folder):
         object.weight = weight # Put this node at the last position
         super(RefTree, self)._setObject(object_id, object, set_owner)
 
-    def move(self, object, parent=None, after=None, before=None):
-        """ Moves object"""
+    def move(self, ob, parent=None, after=None, before=None):
+        """ Moves ob"""
         if after and before:
-            raise ValueError('Provide just one argument after or before not both')
-
-        node_siblings = self.get_node_children(parent) # get new parent's children
+            raise ValueError('Provide just one argument \'after\' or \'before\''
+                             'not both')
+        node_siblings = self.get_node_children(parent)# Get new parent's children
         if not after and not before: # Move to parent
-            if object.parent != parent: #parent changed move node
-                if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+            if ob.parent != parent: # Parent changed move node
+                if parent and self.is_child(ob.getId(), parent):#Check if parent is not child of ob
                     raise ValueError('Illegal move operation')
                 # Check if operation is legal
-                object.parent = parent
+                ob.parent = parent
                 weight = 0
                 for node in node_siblings: # Reordering
                     weight += 1
-                object.weight = weight # Last item
+                ob.weight = weight # Last item
         elif after and not before:
-            # After
-            for node in node_siblings:
+            for node in node_siblings:# After
                 if node.id == after:
-                    if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+                    if parent and self.is_child(ob.getId(), parent): # Check if parent is not child of ob
                         raise ValueError('Illegal move operation')
-                    #import pdb; pdb.set_trace()
-                    object.parent = parent
+                    ob.parent = parent
                     weight = 0
                     for rnode in node_siblings: # Reordering
                         rnode.weight = weight
                         if rnode.id == after:
-                            object.weight = rnode.weight + 1
+                            ob.weight = rnode.weight + 1
                             weight += 1
                         weight += 1
                     break
@@ -132,68 +112,66 @@ class RefTree(LocalPropertyManager, Folder):
             # Before
             for node in node_siblings:
                 if node.id == before:
-                    if parent and self.is_child(self[parent], object.id): # Check if parent is not child of object
+                    if parent and self.is_child(ob.getId(), parent): # Check if parent is not child of ob
                         raise ValueError('Illegal move operation')
-                    object.parent = parent
+                    ob.parent = parent
                     weight = 0
                     for rnode in node_siblings: # Reordering
-                        if rnode.id != object.id:
+                        if rnode.id != ob.id:
                             if rnode.id == before:
                                 if rnode.weight == 0:
-                                    object.weight = 0
+                                    ob.weight = 0
                                 else:
-                                    object.weight = rnode.weight - 1
+                                    ob.weight = rnode.weight - 1
                                 weight += 1
                             rnode.weight = weight
                             weight += 1
                     break
 
-    def get_node_children(self, parent = None):
+    def is_child(self, parent, ob_id):
+        """ Check if ``ob`` is child of ``parent`` recursively"""
+        def recurse(ob):
+            if ob.parent == parent:
+                return True
+            elif ob.parent is not None:
+                return recurse(self[ob.parent])
+            return False
+        return recurse(self[ob_id])
+
+    #api
+    def get_tree_object(self): return self #What is this?
+    def get_tree_path(self, p=0): return self.absolute_url(p) #????
+    def get_tree_nodes(self, sort_by='weight'):
+        """ Get all tree nodes """
+        return self.utSortObjsListByAttr(
+            self.objectValues(METATYPE_REFTREENODE), sort_by, 0)
+
+    def get_node_children(self, parent = None, sort_by='weight'):
         """ return child nodes for parent ordered by weight """
-        return self.utSortObjsListByAttr([x for x in self.get_tree_nodes() if parent == x.parent ], 'weight', 0)
+        return self.utSortObjsListByAttr([x for x in self.get_tree_nodes()
+                                          if parent == x.parent ], sort_by, 0)
 
     def get_tree(self):
         """ Get tree as a list of dictionaries ordered by weight """
         nodes = self.get_tree_nodes()
         data = []
         visited = []
-        def recurse_get_tree(node):
+        def recurse(node):
             if node.id not in visited:
                 if node.parent == None or node.parent in visited:
                     visited.append(node.id)
                     ret_dict = {}
                     ret_dict[node] = []
                     if hasattr(node, 'children'):
-                        ret_dict[node] = map(recurse_get_tree, self.get_node_children(node.id))
+                        ret_dict[node] = map(recurse, self.get_node_children(node.id))
                     return ret_dict
 
         for node in nodes:
-            res = recurse_get_tree(node)
+            res = recurse(node)
             if res:
                 data.append(res)
 
         return data
-
-    def is_child(self, object, parent):
-        """ Check if a node is child of parent """
-        self.found = False
-        self.__is_child_rec(object, parent)
-        return self.found
-
-    def __is_child_rec(self, object, parent):
-        """ Recursive check """
-        if object.parent == parent:
-            self.found = True
-            return True
-        parent_children = self.get_node_children(parent)
-        for child in parent_children:
-            if not self.found:
-                self.is_child(object, child.id)
-
-    #api
-    def get_tree_object(self): return self
-    def get_tree_path(self, p=0): return self.absolute_url(p)
-    def get_tree_nodes(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_REFTREENODE), 'weight', 0)
 
     def __get_tree_thread(self, nodes, parent, depth):
         """
@@ -219,7 +197,7 @@ class RefTree(LocalPropertyManager, Folder):
     def __get_tree_expand(self, nodes, parent, depth, expand):
         """
         Recursive function that process the given nodes and returns
-        a tree like structure. The B{expand} prameter indicates which
+        a tree like structure. The B{expand} param indicates which
         nodes to be expanded
         """
         tree = []
