@@ -3,7 +3,7 @@ from random import randint, choice
 from time import time
 from StringIO import StringIO
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from PIL import Image
 
@@ -13,6 +13,7 @@ from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
 import zLOG
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
 from Products.NaayaCore.GeoMapTool import clusters
@@ -20,6 +21,7 @@ from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
 from naaya.observatory.contentratings.views import RATING_IMAGE_PATHS as SINGLE_RATING_IMAGE_PATHS
 from naaya.observatory.contentratings.views import TYPE_IMAGE_PATHS
+
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -231,6 +233,7 @@ class MapView(object):
         map_engine = self.portal_map.engine_bing
         return map_engine.html_setup(request, global_config)
 
+
     SESSION_KEY = '__naaya_observatory_session'
     def generate_session_key(self):
         return randint(10**5, 10**10)
@@ -271,7 +274,8 @@ class MapView(object):
         num = int(num)
         observatory = self.site.observatory
         for i in range(num):
-            lat, lon = randint(-89, 89), randint(-179, 179)
+            lat = randint(-89*100, 89*100)/100.
+            lon = randint(-179*100, 179*100)/100.
             type = choice(TYPE_VALUES)
             rating = choice(RATING_VALUES)
             observatory.add_pin_to_observatory(lat, lon, '', type, rating,
@@ -308,4 +312,89 @@ class MapView(object):
     def rating_alts(self, rating):
         translations_tool = self.site.getPortalTranslations()
         return translations_tool(self.RATING_ALTS[rating-1])
+
+    def map_distance(self, lats, lons, latf, lonf):
+        import math
+        def deg_to_rad(deg):
+            return deg * math.pi / 180
+        fis, lams = deg_to_rad(lats), deg_to_rad(lons)
+        fif, lamf = deg_to_rad(latf), deg_to_rad(lonf)
+        dfi, dlam = math.fabs(fis - fif), math.fabs(lams - lamf)
+        dang = math.acos(math.sin(fis) * math.sin(fif) +
+                math.cos(fis) * math.cos(fif) * math.cos(dlam))
+        earth_radius = 6371 # in km
+        return earth_radius * dang
+
+    def check_user_can_add_pin(self, lat, lon, author, session_key):
+        """ """
+        tc_start = time()
+        observatory = self.site.observatory
+        catalog = observatory.catalog
+        def filter_rids():
+            f = {'author': author,
+                 'session_key': session_key}
+
+            author_idx = catalog._catalog.indexes['author']
+            session_idx = catalog._catalog.indexes['session_key']
+
+            r_author = author_idx._apply_index(f)
+            if r_author is not None:
+                r_author = r_author[0]
+            r_session = session_idx._apply_index(f)
+            if r_session is not None:
+                r_session = r_session[0]
+
+            if r_author is not None and r_session is not None:
+                w, rs_f = weightedIntersection(r_author, r_session)
+            else:
+                rs_f = None
+            return list(set(rs_f))
+
+        rids = filter_rids()
+        tc_filter = time()
+
+        lat_idx = catalog._catalog.indexes['latitude']
+        lon_idx = catalog._catalog.indexes['longitude']
+        date_idx = catalog._catalog.indexes['date']
+
+        _, lat_dict = _apply_index_with_range_dict_results(lat_idx._index)
+        _, lon_dict = _apply_index_with_range_dict_results(lon_idx._index)
+        _, date_dict = _apply_index_with_range_dict_results(date_idx._index)
+
+        def convert_to_datetime(date_index_val):
+            year = date_index_val / 535680
+            month = (date_index_val / 44640) % 12
+            day = (date_index_val / 1440) % 31
+            hour = (date_index_val / 60) % 24
+            minute = date_index_val % 60
+            return datetime(year, month, day, hour, minute)
+
+        ret = True
+        for rid in rids:
+            clat, clon = lat_dict[rid], lon_dict[rid]
+            if self.map_distance(lat, lon, clat, clon) < 1: #km
+                cdate = convert_to_datetime(date_dict[rid])
+                if datetime.now() - cdate < timedelta(weeks=1):
+                    ret = False
+                    break
+        tc_end = time()
+        print 'check user can add pin', tc_end - tc_start
+        return ret
+
+    _pin_add = PageTemplateFile('zpt/pin_add', globals())
+    def pin_add(self, latitude, longitude, REQUEST):
+        """ """
+        lat, lon = float(latitude), float(longitude)
+        author, session_key = self.query_author_and_session(REQUEST)
+        can_add = self.check_user_can_add_pin(lat, lon, author, session_key)
+
+        if not can_add:
+            return json.dumps({'can_add': can_add})
+
+        address = self.address(lat, lon)
+        html = self._pin_add.__of__(self.context)(latitude=latitude,
+                                                  longitude=longitude,
+                                                  address=address)
+        return json.dumps({'can_add': can_add, 'html': html})
+
 
