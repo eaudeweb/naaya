@@ -1,7 +1,7 @@
 <div id="main_box" tal:define="
-    latitude python:request.get('latitude');
-    longitude python:request.get('longitude');
-    address python:view.address(latitude, longitude);
+    latitude options/latitude;
+    longitude options/longitude;
+    address options/address;
     ">
 
     <div id="box_top">

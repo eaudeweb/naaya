@@ -232,7 +232,14 @@ function add_point(lat, lon) {
 
     $.ajax({
         url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon,
+        dataType: 'json',
         success: function(data) {
+            if (!data.can_add) {
+                add_new_point_in_progress = false;
+                alert('You can not add pin here. To close to a recently added pin!');
+                return;
+            }
+
             var map_jq = $('#map');
             var css = {
                     position: 'absolute',
@@ -252,7 +259,7 @@ function add_point(lat, lon) {
             }
 
             // add the ballon
-            var balloon = $('<div>').css(css).html(data);
+            var balloon = $('<div>').css(css).html(data.html);
             map_jq.parent().append(balloon);
             clear_new_point = function() { balloon.remove(); }
             add_new_point_in_progress = false;
@@ -267,11 +274,6 @@ var clear_new_point = function() {}
 var add_new_point_in_progress = false;
 
 function view_point(lat, lon, point_id) {
-    // if cluster don't do anything
-    if (point_id == -1) {
-        return;
-    }
-
     if (view_point_in_progress) {
         return;
     }
@@ -297,12 +299,7 @@ function view_point(lat, lon, point_id) {
             } else {
                 css.left = point_position.x + map_jq.position().left - 300;
             }
-
-            if (point_position.y < map_jq.height() / 2) {
-                css.top = map_jq.offset().top + point_position.y;
-            } else {
-                css.top = map_jq.offset().top + point_position.y - 135;
-            }
+            css.top = map_jq.offset().top + point_position.y - 120;
 
             // add the ballon
             var balloon = $('<div>').css(css).html(data);
@@ -325,10 +322,16 @@ var view_point_in_progress = false;
 var viewing_point_id = null;
 
 function onclick_onpoint(lat, lon, point_id) {
-    view_point(lat, lon, point_id);
+    if (point_id == -1) {
+        map_engine.set_center_and_zoom_in(lat, lon);
+    } else {
+        view_point(lat, lon, point_id);
+    }
 }
 function onmouseoverpoint(lat, lon, point_id) {
-    view_point(lat, lon, point_id);
+    if (point_id != -1) {
+        view_point(lat, lon, point_id);
+    }
 }
 
 function onmouseoutpoint(lat, lon, point_id) {}
