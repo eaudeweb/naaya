@@ -2,6 +2,7 @@ from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Globals import InitializeClass
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
+from Products.PluginIndexes.DateIndex.DateIndex import manage_addDateIndex
 from OFS.SimpleItem import SimpleItem
 
 from views import TYPE_VALUES, RATING_VALUES
@@ -18,7 +19,7 @@ def manage_addNyObservatory(parent, REQUEST=None):
     manage_addFieldIndex(ob.catalog, 'longitude')
     manage_addFieldIndex(ob.catalog, 'rating')
     manage_addFieldIndex(ob.catalog, 'approved_comment')
-    manage_addFieldIndex(ob.catalog, 'date')
+    manage_addDateIndex(ob.catalog, 'date')
     manage_addFieldIndex(ob.catalog, 'author')
     manage_addFieldIndex(ob.catalog, 'session_key')
 

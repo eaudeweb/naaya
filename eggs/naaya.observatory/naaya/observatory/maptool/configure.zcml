@@ -44,7 +44,7 @@
     name="observatory_pin_add"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
-    template="zpt/pin_add.zpt"
+    attribute="pin_add"
     permission="zope.Public"
     allowed_attributes="add_pin_to_observatory"
   />
@@ -54,6 +54,14 @@
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
     template="zpt/pin_index.zpt"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    name="check_user_can_add_pin"
+    for="Products.Naaya.NySite.NySite"
+    class=".views.MapView"
+    attribute="check_user_can_add_pin"
     permission="zope.Public"
   />
 
