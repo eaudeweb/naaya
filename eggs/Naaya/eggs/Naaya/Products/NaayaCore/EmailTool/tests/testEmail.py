@@ -1,39 +1,7 @@
 from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 
-def divert_mail():
-    from Products.NaayaCore.EmailTool import EmailTool
-
-    class smtplib_replacement(object):
-        class SMTP:
-            def __init__(s, server, port):
-                mail_log.append( ('init', {}) )
-
-            def sendmail(s, from_addr, to_addr, message):
-                mail_log.append( ('sendmail',
-                                  {'from': from_addr,
-                                   'to': to_addr,
-                                   'message': message}) )
-
-            def quit(s):
-                mail_log.append( ('quit', {}) )
-
-    _orig_smtplib = EmailTool.smtplib
-    EmailTool.smtplib = smtplib_replacement
-    mail_log = []
-
-    def restore():
-        EmailTool.smtplib = _orig_smtplib
-
-    return mail_log, restore
-
 class EmailTestCase(FunctionalTestCase):
-    def setUp(self):
-        self.mail_log, self._restore_mail = divert_mail()
-
-    def tearDown(self):
-        self._restore_mail()
-
     def test_mail(self):
         self.portal.getEmailTool().sendEmail('test_content',
             'test_to@example.com', 'test_from@example.com', 'test_subject')
