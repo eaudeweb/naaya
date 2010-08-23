@@ -16,6 +16,9 @@
 <!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie6.css" />
 <![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie8.css" />
+<![endif]-->
 
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/le.js"></script>
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/bg.js"></script>
