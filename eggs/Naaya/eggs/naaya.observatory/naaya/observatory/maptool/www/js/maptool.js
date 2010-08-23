@@ -249,13 +249,13 @@ function add_point(lat, lon) {
             if (point_position.x < map_jq.width() / 2) {
                 css.left = point_position.x + map_jq.position().left;
             } else {
-                css.left = point_position.x + map_jq.position().left - 490;
+                css.left = point_position.x + map_jq.position().left - 458;
             }
 
             if (point_position.y < map_jq.height() / 2) {
                 css.top = map_jq.offset().top + point_position.y;
             } else {
-                css.top = map_jq.offset().top + point_position.y - 312;
+                css.top = map_jq.offset().top + point_position.y - 280;
             }
 
             // add the ballon
