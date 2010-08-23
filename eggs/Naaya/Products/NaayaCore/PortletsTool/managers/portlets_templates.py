@@ -58,7 +58,7 @@ HTML_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool
 </tal:block>'''
 
 LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getPortletsTool().PORTLET_LINKSLIST_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getPortletsTool().PORTLET_LINKSLIST_ID.title_or_id()" i18n:translate=""/></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 	<tal:block tal:repeat="item python:here.getPortletsTool().PORTLET_LINKSLIST_ID.get_links_list()">
