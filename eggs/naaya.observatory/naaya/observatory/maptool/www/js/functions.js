@@ -5,6 +5,7 @@ function submit_rate() {
         data: "lat=" + $('#lat-val').val() +
              "&lon=" + $('#lon-val').val() +
              "&address=" + $('#address-val').val() +
+             "&country=" + $('#country-val').val() +
              "&rating=" + $('#vote-val').val() +
              "&type=" + $('#rate-val').val() +
              "&comment=" + $('#comment-val').val(),

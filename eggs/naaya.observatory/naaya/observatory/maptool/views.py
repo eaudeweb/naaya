@@ -52,12 +52,12 @@ class MapView(object):
         </div>
         """ % ob.averageRating
 
-    def address(self, lat, lon):
+    def reverse_geocode(self, lat, lon):
         try:
             return reverse_geocode(lat, lon)
         except GeocoderServiceError, e:
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
-            return ''
+            return '', ''
 
     def map_icon(self, number, rating, RESPONSE):
         number = int(number)
@@ -258,8 +258,8 @@ class MapView(object):
         return author, session_key
 
 
-    def add_pin_to_observatory(self, lat, lon, address, type, rating, REQUEST,
-            comment=None):
+    def add_pin_to_observatory(self, lat, lon, address, country, type, rating,
+            REQUEST, comment=None):
         """ """
         lat, lon = float(lat), float(lon)
         rating = int(rating)
@@ -267,7 +267,7 @@ class MapView(object):
         author, session_key = self.get_author_and_session(REQUEST)
 
         observatory = self.site.observatory
-        pin_index = observatory.add_pin(type, lat, lon, address,
+        pin_index = observatory.add_pin(type, lat, lon, address, country,
                 rating, comment, date, author, session_key)
 
     def add_random_pins_to_observatory(self, num, REQUEST):
@@ -391,10 +391,11 @@ class MapView(object):
         if not can_add:
             return json.dumps({'can_add': can_add})
 
-        address = self.address(lat, lon)
+        address, country = self.reverse_geocode(lat, lon)
         html = self._pin_add.__of__(self.context)(latitude=latitude,
                                                   longitude=longitude,
-                                                  address=address)
+                                                  address=address,
+                                                  country=country)
         return json.dumps({'can_add': can_add, 'html': html})
 
 

@@ -66,7 +66,7 @@ class NyObservatory(BTreeFolder2):
 InitializeClass(NyObservatory)
 
 class NyPushPin(SimpleItem):
-    def __init__(self, id, type, latitude, longitude, address,
+    def __init__(self, id, type, latitude, longitude, address, country,
             rating, comment, date, author, session_key):
         assert type in TYPE_VALUES
         assert -90 < latitude < 90
@@ -78,6 +78,7 @@ class NyPushPin(SimpleItem):
         self.latitude = latitude
         self.longitude = longitude
         self.address = address
+        self.country = country
         self.rating = rating
         self.comment = comment
         self.approved_comment = False
