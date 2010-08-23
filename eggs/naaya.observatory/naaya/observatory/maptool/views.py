@@ -19,16 +19,16 @@ from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_ran
 from Products.NaayaCore.GeoMapTool import clusters
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
-from naaya.observatory.contentratings.views import RATING_IMAGE_PATHS as SINGLE_RATING_IMAGE_PATHS
-from naaya.observatory.contentratings.views import TYPE_IMAGE_PATHS
-
-
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
 
-RATING_IMAGE_NAMES = range(1, 15+1)
-RATING_IMAGE_PATHS = ['%s/rating_%s.png' % (IMAGES_PATH, f)
+RATING_IMAGE_NAMES = ['Very Bad', 'Bad', 'Average', 'Good', 'Very good']
+RATING_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
                         for f in RATING_IMAGE_NAMES]
+
+TYPE_IMAGE_NAMES = ['Vegetation', 'Water', 'Soil', 'Citizens']
+TYPE_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
+                    for f in TYPE_IMAGE_NAMES]
 
 RATING_VALUES = range(1, 5+1)
 TYPE_VALUES = ['veg', 'wat', 'soil', 'cit']
@@ -59,43 +59,67 @@ class MapView(object):
             zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
             return '', ''
 
-    def map_icon(self, number, rating, RESPONSE):
-        number = int(number)
+    def map_icon(self, rating, type, RESPONSE, number=None):
         rating = int(rating)
-        current_dir = os.path.dirname(__file__)
+        assert type in TYPE_VALUES
+        assert rating in RATING_VALUES
+        if number is not None:
+            number = int(number)
 
-        def apply(main_icon, icons):
-            layer = Image.new('RGBA', main_icon.size, (0,0,0,0))
-            xs = [icon.size[0] for icon in icons]
-            ys = [icon.size[1] for icon in icons]
+        def apply(rating_icon, type_icon, number_icons=None):
+            layer = Image.new('RGBA', rating_icon.size, (0,0,0,0))
+            xr, yr = rating_icon.size
 
-            xm, ym = main_icon.size
+            # add type layer
+            xt, yt = type_icon.size
+            x, y = (xr - xt) / 2, (yr - yt) / 2 - 3
+            layer.paste(type_icon, (x, y))
 
-            dx = (xm - sum(xs)) / 2 # where the first icon starts
-            dy = ym - 5 # where the icon ends
+            if number_icons is None:
+                return layer
 
-            for i, icon in enumerate(icons):
-                x = dx + sum(xs[:i])
-                y = dy - ys[i]
+            # add number layer
+            xns = [icon.size[0] for icon in number_icons]
+            yns = [icon.size[1] for icon in number_icons]
+
+            dx = (xr - sum(xns)) / 2 # where the first icon starts
+            dy = yr - 3 # where the icon ends
+
+            for i, icon in enumerate(number_icons):
+                x = dx + sum(xns[:i])
+                y = dy - yns[i]
                 assert x >= 0 and y >= 0
                 layer.paste(icon, (x, y))
 
             return layer
 
-        pin_icon = Image.open('%s/www/images/rating_%d.png' %
-                (current_dir, rating))
+        current_dir = os.path.dirname(__file__)
+        RATING_FILENAMES = ['very-bad.png', 'bad.png', 'average.png',
+                'good.png', 'very-good.png']
+        rating_filename = RATING_FILENAMES[rating-1]
+        rating_icon = Image.open('%s/www/images/%s' %
+                (current_dir, rating_filename))
 
-        if number < 1000:
-            digits = [int(ds) for ds in str(number)]
-            icon_names = ['%d.png' % d for d in digits]
+        TYPE_FILENAMES = {'veg': 'vegetation.png', 'wat': 'water.png',
+                'soil': 'soil.png', 'cit': 'citizens.png'}
+        type_filename = TYPE_FILENAMES[type]
+        type_icon = Image.open('%s/www/images/%s' %
+                (current_dir, type_filename))
+
+        if number is not None:
+            if number < 1000:
+                digits = [int(ds) for ds in str(number)]
+                number_icon_names = ['no%d.png' % d for d in digits]
+            else:
+                number_icon_names = ['more.png', 'no1.png', 'k.png']
+            number_icon_paths = ['%s/www/images/%s' % (current_dir, icon_name)
+                                for icon_name in number_icon_names]
+            number_icons = [Image.open(icon_path)
+                                for icon_path in number_icon_paths]
         else:
-            icon_names = ['gt.png', '1.png', 'k.png']
-
-        icon_paths = ['%s/www/images/%s' % (current_dir, icon_name)
-                for icon_name in icon_names]
-        icons = [Image.open(icon_path) for icon_path in icon_paths]
-        layer = apply(pin_icon, icons)
-        result_image = Image.composite(layer, pin_icon, layer)
+            number_icons = None
+        layer = apply(rating_icon, type_icon, number_icons)
+        result_image = Image.composite(layer, rating_icon, layer)
 
         out_str = StringIO()
         result_image.save(out_str, 'PNG')
@@ -118,6 +142,7 @@ class MapView(object):
         rating_idx = catalog._catalog.indexes['rating']
         lat_idx = catalog._catalog.indexes['latitude']
         lon_idx = catalog._catalog.indexes['longitude']
+        type_idx = catalog._catalog.indexes['type']
 
         def filter_rids():
             f = {'latitude': {'query': (lat_min, lat_max),
@@ -139,40 +164,50 @@ class MapView(object):
             return list(set(rs_f))
         rids = filter_rids()
 
-        def make_points():
+        def make_points_by_type():
             lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
             lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
+            tyle_set, type_dict = _apply_index_with_range_dict_results(type_idx._index)
 
             # transform objects to points
-            points = []
+            points_by_type = {}
             for i, rid in enumerate(rids):
-                points.append(clusters.Point(i, float(lat_dict[rid]), float(lon_dict[rid])))
-            return points
-        points = make_points()
+                point = clusters.Point(i, float(lat_dict[rid]), float(lon_dict[rid]))
+                type = type_dict[rid]
+                if not points_by_type.has_key(type):
+                    points_by_type[type] = []
+                points_by_type[type].append(point)
+            return points_by_type
+        points_by_type = make_points_by_type()
 
         def make_centers():
-            centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 10)
-            # get ratings for centers
-            rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
-            for i, g in enumerate(groups):
-                l_rat = []
-                for p in g:
-                    p_rat = rating_dict[rids[p.id]]
-                    if p_rat is not None:
-                        l_rat.append(rating_dict[rids[p.id]])
-                if len(l_rat) > 0:
-                    centers[i].averageRating = sum(l_rat) / float(len(l_rat))
-                else:
-                    centers[i].averageRating = None
-                centers[i].group = g
-            return centers
+            all_centers = []
+            for type in TYPE_VALUES:
+                points = points_by_type[type]
+                centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 10)
+                # get ratings for centers
+                rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
+                for i, g in enumerate(groups):
+                    l_rat = []
+                    for p in g:
+                        p_rat = rating_dict[rids[p.id]]
+                        if p_rat is not None:
+                            l_rat.append(rating_dict[rids[p.id]])
+                    if len(l_rat) > 0:
+                        centers[i].averageRating = sum(l_rat) / float(len(l_rat))
+                    else:
+                        centers[i].averageRating = None
+                    centers[i].group = g
+                    centers[i].type = type
+                all_centers.extend(centers)
+            return all_centers
         centers = make_centers()
 
         def build_point(ob):
             if len(ob.group) == 1:
                 rid = rids[ob.group[0].id]
                 ob = getObjectFromCatalog(catalog, rid)
-                icon_name = 'mk_single_rating_%d' % ob.rating
+                icon_name = 'mk_single_rating_%s_%d' % (ob.type, ob.rating)
                 return {'lon': ob.longitude,
                         'lat': ob.latitude,
                         'tooltip': '', #self.get_pin_tooltip(ob),
@@ -180,8 +215,8 @@ class MapView(object):
                         'icon_name': icon_name,
                         'id': ob.id}
             else:
-                rating = int(3*ob.averageRating)
-                icon_name = 'mk_rating_%d_%d' % (rating, len(ob.group))
+                rating = int(ob.averageRating)
+                icon_name = 'mk_rating_%s_%d_%d' % (ob.type, rating, len(ob.group))
                 return {'lon': ob.lon,
                         'lat': ob.lat,
                         'tooltip': '', #self.get_tooltip(ob),
@@ -203,23 +238,31 @@ class MapView(object):
 
     def get_geotype_icons(self):
         # cluster images
-        for i, img_path in enumerate(RATING_IMAGE_PATHS):
-            for j in range(999):
-                yield {
-                    'id': "rating_%d_%d" % (i+1, j),
-                    'url': 'observatory_map_icon?rating=%s&number=%s' % (i+1, j),
-                    'w': 38,
-                    'h': 37,
-                }
+        for rating in RATING_VALUES:
+            for type in TYPE_VALUES:
+                for count in range(1000+1):
+                    id = 'rating_%s_%d_%d' % (type, rating, count)
+                    url = ('observatory_map_icon?type=%s&rating=%s&number=%s'
+                                    % (type, rating, count))
+                    yield {
+                        'id': id,
+                        'url': url,
+                        'w': 38,
+                        'h': 37,
+                    }
 
         # single objects images
-        for i, img_path in enumerate(SINGLE_RATING_IMAGE_PATHS):
-            yield {
-                    'id': "single_rating_%d" % (i+1),
-                    'url': img_path,
-                    'w': 38,
-                    'h': 37,
-            }
+        for rating in RATING_VALUES:
+            for type in TYPE_VALUES:
+                id = 'single_rating_%s_%d' % (type, rating)
+                url = ('observatory_map_icon?type=%s&rating=%s'
+                                % (type, rating))
+                yield {
+                        'id': id,
+                        'url': url,
+                        'w': 38,
+                        'h': 37,
+                }
 
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the bing map engine """
@@ -278,7 +321,7 @@ class MapView(object):
             lon = randint(-179*100, 179*100)/100.
             type = choice(TYPE_VALUES)
             rating = choice(RATING_VALUES)
-            observatory.add_pin_to_observatory(lat, lon, '', type, rating,
+            observatory.add_pin_to_observatory(lat, lon, '', '', type, rating,
                     REQUEST)
 
     def get_pin_by_id(self, id):
@@ -296,7 +339,7 @@ class MapView(object):
         return translations_tool(self.TYPE_MESSAGES[index])
 
     def rating_image_paths(self, rating):
-        return SINGLE_RATING_IMAGE_PATHS[rating-1]
+        return RATING_IMAGE_PATHS[rating-1]
 
     RATING_MESSAGES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
     def rating_messages(self, rating):

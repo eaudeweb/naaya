@@ -2,7 +2,6 @@
   xmlns="http://namespaces.zope.org/zope"
   i18n_domain="naaya">
 
-  <include package=".contentratings" />
   <include package=".maptool" />
 
 </configure>
