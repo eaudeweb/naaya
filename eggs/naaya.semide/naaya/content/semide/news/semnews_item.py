@@ -68,7 +68,7 @@ PROPERTIES_OBJECT = {
 }
 
 DEFAULT_SCHEMA = {
-    'news_date':        dict(sortorder=100, widget_type="Date", label="News date", required=True),
+    'news_date':        dict(sortorder=100, widget_type="Date", data_type="date", label="News date", required=True),
     'source':           dict(sortorder=110, widget_type="String", label="Source", localized=True),
     'source_link':      dict(sortorder=120, widget_type="String", label="Source link", default="http://"),
     'news_type':        dict(sortorder=130, widget_type="Select", label="News type", list_id="news_types"),
@@ -295,7 +295,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
     security.declareProtected(view, 'resource_type')
     def resource_type(self):
-        return self.news_type
+        return getattr(self, 'news_type', None)
 
     security.declareProtected(view, 'resource_date')
     def resource_date(self):
@@ -303,7 +303,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
-        return ' '.join(self.subject)
+            return ' '.join(getattr(self, 'subject', []))
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -385,59 +385,61 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         return self.description
 
 
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-
-        if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
-
-        _lang = self.gl_get_selected_language()
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-
-        if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-        if self.news_date != new_news_date: #Date changed.. the directory also changes
-            self.news_date = new_news_date
-
-            month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
-            cut_data = self.aq_parent.manage_cutObjects([self.id, ])
-            month_folder.manage_pasteObjects(cut_data)
-            moved = True
-
-        self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-
-        approved = schema_raw_data.get('approved', None)
-        if  approved != self.approved:
-            if approved == 0:
-                approved_by = None
-            else:
-                approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            self.approveThis(approved, approved_by)
-
-        self._p_changed = 1
-
-        if schema_raw_data.get('discussion', None):
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
-
-        self.recatalogNyObject(self)
-
-        if REQUEST:
-            if moved:
-                return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
-                    month_folder._getOb(self.id).absolute_url())
-            else:
-                return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+    #security.declareProtected(view_management_screens, 'manageProperties')
+    #def manageProperties(self, REQUEST=None, **kwargs):
+    #    """ """
+    #    if not self.checkPermissionEditObject():
+    #        raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+    #
+    #    if REQUEST is not None:
+    #        schema_raw_data = dict(REQUEST.form)
+    #    else:
+    #        schema_raw_data = kwargs
+    #
+    #    _lang = self.gl_get_selected_language()
+    #    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    #    form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    #
+    #    if form_errors:
+    #        raise ValueError(form_errors.popitem()[1]) # pick a random error
+    #
+    #    new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
+    #    if self.news_date != new_news_date: #Date changed.. the directory also changes
+    #        self.uncatalogNyObject() #removing from catalog
+    #        self.news_date = new_news_date
+    #
+    #        month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
+    #        cut_data = self.aq_parent.manage_cutObjects([self.id, ])
+    #        month_folder.manage_pasteObjects(cut_data)
+    #
+    #        moved = True
+    #    self.updatePropertiesFromGlossary(_lang)
+    #    self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
+    #
+    #    approved = schema_raw_data.get('approved', None)
+    #    if  approved != self.approved:
+    #        if approved == 0:
+    #            approved_by = None
+    #        else:
+    #            approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    #        self.approveThis(approved, approved_by)
+    #
+    #    self._p_changed = 1
+    #
+    #    if schema_raw_data.get('discussion', None):
+    #        self.open_for_comments()
+    #    else:
+    #        self.close_for_comments()
+    #
+    #    self.recatalogNyObject(self)
+    #
+    #    if REQUEST:
+    #        if moved:
+    #            return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
+    #                month_folder._getOb(self.id).absolute_url())
+    #        else:
+    #            return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+    
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -489,7 +491,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-
+        old_news_date = self.news_date
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
             if REQUEST is None:
@@ -500,13 +502,14 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
         new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-        if self.news_date != new_news_date: #Date changed.. the directory also changes
+        moved = False
+        #If month or year changed then move the item to other folder
+        if ((new_news_date.month(), new_news_date.year()) !=
+            (old_news_date.month(), old_news_date.year())):
             self.news_date = new_news_date
-
             month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
             cut_data = self.aq_parent.manage_cutObjects([self.id, ])
             month_folder.manage_pasteObjects(cut_data)
-
             moved = True
 
         if 'file' in schema_raw_data: # Upload file
@@ -517,8 +520,10 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         else:
             self.close_for_comments()
         self._p_changed = 1
-        self.recatalogNyObject(self)
-
+        if moved:
+            month_folder.recatalogNyObject(month_folder._getOb(self.getId()))
+        else:
+            self.recatalogNyObject(self)
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
