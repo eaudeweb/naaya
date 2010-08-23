@@ -13,7 +13,7 @@
         name="description" />
 
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/box.css" />
-<!--[if lt IE 6]>
+<!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie6.css" />
 <![endif]-->
 

@@ -37,126 +37,8 @@ a, input {
  * Start Rate Box Stylesheet
 */
 
-div#top_left_corner {
-    width: 18px;
-    background: transparent url(../images/tlc.png) no-repeat top center;
-    padding-bottom: 35px;
-    padding-right: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#top_center {
-    width: 443px;
-    background: transparent url(../images/tb.png) repeat-x top center;
-    padding-bottom: 35px;
-    padding-left: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#top_right_corner {
-    width: 23px;
-    background: transparent url(../images/trc.png) no-repeat top center;
-    padding-bottom: 35px;
-    padding-right: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#left_bar {
-    width: 19px;
-    background: transparent url(../images/l.png) no-repeat top center;
-    height: 257px;
-    padding-right: 0px;
-    padding-top: 0px;
-    margin: 0;
-    margin-top: -15px;
-    float: left;
-}
-
-div#center {
-    width: 443px;
-    height: 257px;
-    background: transparent url(../images/c.png) repeat-x top center;
-    margin-top: -15px;
-    float: left;
-}
-
-div#right_bar {
-    width: 29px;
-    background: transparent url(../images/r.png) no-repeat top left;
-    height: 257px;
-    padding-right: 0px;
-    padding-top: 0px;
-    margin: 0;
-    margin-top: -15px;
-    margin-left: -1px;
-    float: left;
-}
-
-
-div#bottom_left_corner {
-    width: 18px;
-    background: transparent url(../images/blc.png) no-repeat top center;
-    padding-bottom: 35px;
-    padding-right: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#bottom_center {
-    width: 443px;
-    background: transparent url(../images/bb.png) repeat-x top center;
-    padding-bottom: 35px;
-    padding-left: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#bottom_right_corner {
-    width: 23px;
-    background: transparent url(../images/brc.png) no-repeat top center;
-    padding-bottom: 35px;
-    padding-right: 0px;
-    margin: 0;
-    float: left;
-}
-
-div#center #top-bar {
-    position: relative;
-    top: -2em;
-}
-
-h2#title {
-    letter-spacing: -0.05em;
-    float: left;
-    clear: both;
-    letter-spacing: -0.05em;
-}
-
-span#close {
-    color: #FFFFFF;
-    font-weight: bold;
-    float: right;
-    position: relative;
-    top: 1.7em;
-    right: 0em;
-    cursor: pointer;
-}
-
-span#close:hover {
-    color: #333333;
-    cursor: pointer;
-}
-
 div.rate_item, div.vote_item {
     float: left;
-}
-
-form#rate-form {
-    position: absolute;
-    top: 4em;
 }
 
 div#rate {
@@ -164,8 +46,12 @@ div#rate {
 }
 
 p.type {
-    padding-top: 3em !important; font-size: 0.85em; font-weight: bold; font-style: italic;
+    color: #FFFFFF;
+    position: relative;
+    top: 1em;
+    font-size: 0.85em; font-weight: bold; font-style: italic;
 }
+
 div#vote {
     float: right;
 }
@@ -175,6 +61,7 @@ div.vote_item {
 }
 
 div.vote_item small {
+    color: #FFFFFF;
     position: relative;
     top: 0.4em;
     font-size: 0.9em;
@@ -182,8 +69,8 @@ div.vote_item small {
     font-style: italic;
 }
 
-div#input textarea#comment {
-    background: #565656;
+textarea#comment-val {
+    background: #333333;
     width: 415px;
     height: 90px;
     border: none;
@@ -282,4 +169,65 @@ div#comments ul {
     top: 1em;
     left: 21.8em;
     float: right;
+}
+
+/**
+ * BOX3
+*/
+
+div#box_3 {
+    background: #5c5c5c url('../images/c.png') repeat-x top center;
+    height: 280px;
+    width: 458px;
+    margin: 0;
+    padding: 0;
+    box-shadow: 2px 2px 15px #2c2c2c;
+    -moz-box-shadow: 2px 2px 15px #2c2c2c; /*border-radius: 5px; padding: 5px 5px 5px 15px;*/
+    -webkit-box-shadow: 2px 2px 15px #2c2c2c;
+}
+
+#box_3_title {
+    font-size: 1.1em;
+    background: none !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    font-family: sans-serif;
+    position: relative;
+    top: 0.7em;
+    left: -0.5em;
+}
+
+div#box_3_top_bar {
+    position: relative;
+    left: 1em;
+    float: left;
+}
+
+div#box_3_buttons {
+    float: right;
+    position: relative;
+    top: 0.5em;
+    right: 2.5em;
+}
+
+div#box_content {
+    position: relative;
+    left: 1em;
+}
+
+#box_3 span.close {
+    position: absolute;
+    top: 1em;
+    left: 39em;
+    float: right;
+}
+
+div#rate-items {
+    float: left;
+}
+
+div#vote-items {
+    float: right;
+    position: relative;
+    right: 2em;
 }
