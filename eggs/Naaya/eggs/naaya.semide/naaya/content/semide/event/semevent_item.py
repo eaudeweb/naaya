@@ -95,8 +95,8 @@ PROPERTIES_OBJECT = {
 }
 
 DEFAULT_SCHEMA = {
-    'start_date':       dict(sortorder=100, widget_type="Date", label="Start date", required = True),
-    'end_date':         dict(sortorder=110, widget_type="Date", label="End Date"),
+    'start_date':       dict(sortorder=100, widget_type="Date", data_type="date", label="Start date", required = True),
+    'end_date':         dict(sortorder=110, widget_type="Date", data_type="date", label="End Date"),
     'duration':         dict(sortorder=120, widget_type="String", localized = True, label="Duration"),
     'organizer':        dict(sortorder=130, widget_type="String", localized = True, label="Organizer"),
     'address':          dict(sortorder=140, widget_type="String", localized = True, label="Address"),
@@ -327,11 +327,11 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
 
     security.declareProtected(view, 'resource_type')
     def resource_type(self):
-        return self.event_type
+        return getattr(self, 'event_type', None)
 
     security.declareProtected(view, 'resource_status')
     def resource_status(self):
-        return self.event_status
+        return getattr(self, 'event_status', None)
 
     security.declareProtected(view, 'resource_date')
     def resource_date(self):
@@ -343,7 +343,7 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
 
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
-        return ' '.join(self.subject)
+        return ' '.join(getattr(self, 'subject', []))
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -435,59 +435,60 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         return ''.join(r)
 
     #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-
-        if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
-
-        _lang = self.gl_get_selected_language()
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        if form_errors:
-            raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-
-        new_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
-        if self.start_date != new_date: #Date changed.. the directory also changes
-            self.start_date = new_date
-            month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
-            cut_data = self.aq_parent.manage_cutObjects([self.id, ])
-            month_folder.manage_pasteObjects(cut_data)
-            moved = True
-
-        self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-
-        approved = schema_raw_data.get('approved', None)
-        if  approved != self.approved:
-            if approved == 0:
-                approved_by = None
-            else:
-                approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            self.approveThis(approved, approved_by)
-
-        self._p_changed = 1
-
-        if schema_raw_data.get('discussion', None):
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
-
-        self.recatalogNyObject(self)
-
-        if REQUEST:
-            if moved:
-                return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
-                    month_folder._getOb(self.id).absolute_url())
-            else:
-                return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+    #security.declareProtected(view_management_screens, 'manageProperties')
+    #def manageProperties(self, REQUEST=None, **kwargs):
+    #    """ """
+    #    if not self.checkPermissionEditObject():
+    #        raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+    #
+    #    if REQUEST is not None:
+    #        schema_raw_data = dict(REQUEST.form)
+    #    else:
+    #        schema_raw_data = kwargs
+    #
+    #    _lang = self.gl_get_selected_language()
+    #    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    #    form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    #    if form_errors:
+    #        raise ValueError(form_errors.popitem()[1]) # pick a random error
+    #
+    #    self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
+    #
+    #    new_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
+    #    if self.start_date != new_date: #Date changed.. the directory also changes
+    #        self.uncatalogNyObject() #removing from catalog
+    #        self.start_date = new_date
+    #        month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
+    #        cut_data = self.aq_parent.manage_cutObjects([self.id, ])
+    #        month_folder.manage_pasteObjects(cut_data)
+    #        moved = True
+    #
+    #    self.updatePropertiesFromGlossary(_lang)
+    #    self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
+    #
+    #    approved = schema_raw_data.get('approved', None)
+    #    if  approved != self.approved:
+    #        if approved == 0:
+    #            approved_by = None
+    #        else:
+    #            approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    #        self.approveThis(approved, approved_by)
+    #
+    #    self._p_changed = 1
+    #
+    #    if schema_raw_data.get('discussion', None):
+    #        self.open_for_comments()
+    #    else:
+    #        self.close_for_comments()
+    #
+    #    self.recatalogNyObject(self)
+    #
+    #    if REQUEST:
+    #        if moved:
+    #            return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
+    #                month_folder._getOb(self.id).absolute_url())
+    #        else:
+    #            return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -539,7 +540,7 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
 
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-
+        old_date = self.start_date
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
             if REQUEST is None:
@@ -550,9 +551,11 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-
         new_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
-        if self.start_date != new_date: #Date changed.. the directory also changes
+
+        moved = False
+        if ((new_date.month(), new_date.year()) !=
+            (old_date.month(), old_date.year())):
             self.start_date = new_date
             month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
             cut_data = self.aq_parent.manage_cutObjects([self.id, ])
@@ -567,7 +570,10 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         else:
             self.close_for_comments()
         self._p_changed = 1
-        self.recatalogNyObject(self)
+        if moved:
+            month_folder.recatalogNyObject(month_folder._getOb(self.getId()))
+        else:
+            self.recatalogNyObject(self)
 
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
