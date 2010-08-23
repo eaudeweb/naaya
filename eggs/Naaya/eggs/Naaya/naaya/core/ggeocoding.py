@@ -47,10 +47,25 @@ def _unpack_reverse_geocode_data(result):
     _check_result_is_valid(result)
 
     fresult = result['results'][0]
+
     if not fresult.has_key('formatted_address'):
         raise GeocoderServiceError('Geocoding result parse error')
-    else:
-        return fresult['formatted_address']
+    if not fresult.has_key('address_components'):
+        raise GeocoderServiceError('Geocoding result parse error')
+    for comp in fresult['address_components']:
+        if not comp.has_key('long_name') or not comp.has_key('types'):
+            raise GeocoderServiceError('Geocoding result parse error')
+
+    full_address = fresult['formatted_address']
+    countries = [comp['long_name']
+                 for comp in fresult['address_components']
+                 if 'country' in comp['types']]
+
+    if len(countries) == 0:
+        raise GeocoderServiceError('Geocoding result parse error')
+
+    return full_address, countries[0]
+
 
 def geocode(address):
     params = [('address', address), ('sensor', 'false')]
