@@ -140,9 +140,20 @@ class MapView(object):
 
         catalog = self.site.observatory.catalog
         rating_idx = catalog._catalog.indexes['rating']
+
         lat_idx = catalog._catalog.indexes['latitude']
         lon_idx = catalog._catalog.indexes['longitude']
+        lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
+        lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
+
         type_idx = catalog._catalog.indexes['type']
+        tyle_set, type_dict = _apply_index_with_range_dict_results(type_idx._index)
+
+        tc_start_id_idx = time()
+        id_idx = catalog._catalog.indexes['id']
+        id_set, id_dict = _apply_index_with_range_dict_results(id_idx._index)
+        tc_end_id_idx = time()
+        print 'id_idx', tc_end_id_idx - tc_start_id_idx
 
         def filter_rids():
             f = {'latitude': {'query': (lat_min, lat_max),
@@ -165,9 +176,6 @@ class MapView(object):
         rids = filter_rids()
 
         def make_points_by_type():
-            lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
-            lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
-            tyle_set, type_dict = _apply_index_with_range_dict_results(type_idx._index)
 
             # transform objects to points
             points_by_type = {}
@@ -183,8 +191,12 @@ class MapView(object):
         def make_centers():
             all_centers = []
             for type in TYPE_VALUES:
+                if type not in points_by_type:
+                    continue
                 points = points_by_type[type]
-                centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 10)
+
+                centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 7)
+
                 # get ratings for centers
                 rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
                 for i, g in enumerate(groups):
@@ -203,6 +215,19 @@ class MapView(object):
             return all_centers
         centers = make_centers()
 
+        def cluster_tooltip(ob):
+            lis = []
+            for p in ob.group:
+                id = id_dict[rids[p.id]]
+                lat, lon = lat_dict[rids[p.id]], lon_dict[rids[p.id]]
+                js = 'view_point(%s, %s, \'%s\')' % (lat, lon, id)
+                lis.append('<li><a onclick="%s">Point %s</a></li>'
+                                % (js, id))
+            if len(lis) == 0:
+                return ''
+            lis_str = '\n'.join(lis)
+            return '<ul>%s</ul>' % lis_str
+
         def build_point(ob):
             if len(ob.group) == 1:
                 rid = rids[ob.group[0].id]
@@ -210,16 +235,22 @@ class MapView(object):
                 icon_name = 'mk_single_rating_%s_%d' % (ob.type, ob.rating)
                 return {'lon': ob.longitude,
                         'lat': ob.latitude,
-                        'tooltip': '', #self.get_pin_tooltip(ob),
+                        'tooltip': '',
                         'label': '',
                         'icon_name': icon_name,
                         'id': ob.id}
             else:
                 rating = int(ob.averageRating)
+                display_tooltip = (lat_max - lat_min) < 1.
+                if display_tooltip:
+                    tooltip = cluster_tooltip(ob)
+                else:
+                    tooltip = ''
                 icon_name = 'mk_rating_%s_%d_%d' % (ob.type, rating, len(ob.group))
                 return {'lon': ob.lon,
                         'lat': ob.lat,
-                        'tooltip': '', #self.get_tooltip(ob),
+                        'tooltip': tooltip,
+                        'display_tooltip': display_tooltip,
                         'label': 'cluster',
                         'icon_name': icon_name,
                         'num_points': len(ob.group),
