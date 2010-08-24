@@ -97,6 +97,8 @@ class MapView(object):
         RATING_FILENAMES = ['very-bad.png', 'bad.png', 'average.png',
                 'good.png', 'very-good.png']
         rating_filename = RATING_FILENAMES[rating-1]
+        if type == 'cit' and number is not None:
+            rating_filename = 'gray.png'
         rating_icon = Image.open('%s/www/images/%s' %
                 (current_dir, rating_filename))
 
