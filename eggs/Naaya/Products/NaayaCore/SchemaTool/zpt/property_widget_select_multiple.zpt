@@ -23,11 +23,11 @@
         function init_select_widget(config) {
             $(function(){
                 if (!config['list_is_tree']) return;
-                prop_id = config['prop_id'];
+                var prop_id = config['prop_id'];
                 var tree_data_json;
-                $('#'+ prop_id).css({'display': 'none'});
+                $('#'+ prop_id).hide();
                 $('label[for='+ prop_id+']').css({'display': 'none'});
-                url = 'portal_portlets/'+config['list_id']+'/get_tree_json_data';
+                var url = 'portal_portlets/'+config['list_id']+'/get_tree_json_data';
 
                 $.ajax({
                    type: 'GET',
