@@ -1,0 +1,86 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h2>Graphical layout</h2>
+
+<p>Choose the graphical layout of your portal and the color scheme you desire for it from the default list below. 
+You will be able to change this setting at a later time and also create your own graphical interface or color scheme.</p>
+
+<tal:block tal:define="s_application_data python:request.SESSION.get('application_data', here.getEmptyApplicationData())">
+
+<form tal:attributes="action string:${here/absolute_url}/step5_process" method="post" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<tr>
+    <td width="1%"><input type="radio" name="skin" value="eionet" tal:attributes="checked python:s_application_data['skin']=='eionet'" /></td>
+    <td width="70%"><img src="/misc_/EWApplications/eionet_screenshots.gif" alt="Eionet template" border="0" width="200" height="160" /></td>
+    <td width="30%">
+        <select name="eionet_colourscheme">
+            <option value="orange" tal:attributes="selected python:s_application_data['skin']=='eionet' and s_application_data['colourscheme']=='orange'">Orange</option>
+            <option value="blue" tal:attributes="selected python:s_application_data['skin']=='eionet' and s_application_data['colourscheme']=='blue'">Blue</option>
+            <option value="green" tal:attributes="selected python:s_application_data['skin']=='eionet' and s_application_data['colourscheme']=='green'">Green</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td><input type="radio" name="skin" value="autumn" tal:attributes="checked python:s_application_data['skin']=='autumn'" /></td>
+    <td><img src="/misc_/EWApplications/autumn_screenshots.gif" alt="Autumn template" border="0" width="200" height="160" /></td>
+    <td>
+        <select name="autumn_colourscheme">
+            <option value="brown" tal:attributes="selected python:s_application_data['skin']=='autumn' and s_application_data['colourscheme']=='brown'">Brown</option>
+            <option value="blue" tal:attributes="selected python:s_application_data['skin']=='autumn' and s_application_data['colourscheme']=='blue'">Blue</option>
+            <option value="yellow" tal:attributes="selected python:s_application_data['skin']=='autumn' and s_application_data['colourscheme']=='yellow'">Yellow</option>
+        </select>
+    </td>
+</tr>
+<tr>
+    <td><input type="radio" name="skin" value="metal" tal:attributes="checked python:s_application_data['skin']=='metal'" /></td>
+    <td><img src="/misc_/EWApplications/metal_screenshots.gif" alt="Metal template" border="0" width="200" height="160" /></td>
+    <td>
+        <select name="metal_colourscheme">
+            <option value="blue" tal:attributes="selected python:s_application_data['skin']=='metal' and s_application_data['colourscheme']=='blue'">Blue</option>
+            <option value="green" tal:attributes="selected python:s_application_data['skin']=='metal' and s_application_data['colourscheme']=='green'">Green</option>
+            <option value="orange" tal:attributes="selected python:s_application_data['skin']=='metal' and s_application_data['colourscheme']=='orange'">Orange</option>
+        </select>
+    </td>
+</tr>
+</table>
+
+<p>Upload an icon for your website, which will replace the default EnviroWindows icon in every template. 
+Remember that this image will be scaled at <strong>84 pixels height</strong> and <strong>66 pixels width</strong>.</p>
+<input type="file" name="site_icon" />
+
+<h2>Main topics</h2>
+<p>The data in your upcoming portal will be hierarchically arranged, starting with a few main topics.
+You can specify up to four such topics (top-level folders) that will be created at installation time
+in the fields below. They will be the entry points to the site's information, therefore will be 
+accessible to end-users from all portal pages, regardless of what graphical layout you choose.</p>
+<p>For every topic specify a short and meaningful title since these will have to fit on
+buttons or narrow menus.</p>
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+    <td>First main topic</td>
+    <td><input type="text" name="main_topic_a_title" tal:attributes="value python:s_application_data['main_topic_a_title']" size="40" /></td>
+</tr>
+<tr>
+    <td>Second main topic</td>
+    <td><input type="text" name="main_topic_b_title" tal:attributes="value python:s_application_data['main_topic_b_title']" size="40" /></td>
+</tr>
+<tr>
+    <td>Third main topic</td>
+    <td><input type="text" name="main_topic_c_title" tal:attributes="value python:s_application_data['main_topic_c_title']" size="40" /></td>
+</tr>
+<tr>
+    <td>Forth main topic</td>
+    <td><input type="text" name="main_topic_d_title" tal:attributes="value python:s_application_data['main_topic_d_title']" size="40" /></td>
+</tr>
+<tr>
+    <td><input type="button" value="Previous" tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/step4_html';;" />
+    <input type="submit" value=" Next " /> 
+    <input type="button" value="Cancel" tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/index_html';;" />
+    </td>
+</tr>
+</table>
+</form>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/> 
