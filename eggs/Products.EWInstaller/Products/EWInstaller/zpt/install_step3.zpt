@@ -1,0 +1,71 @@
+<span metal:use-macro="here/install_template_html/macros/page">
+
+    <span metal:fill-slot="page_title" tal:omit-tag="">EWSite install - Step 3</span>
+
+    <span metal:fill-slot="page_description" tal:omit-tag="">
+        <p><br />
+            Enter the following attributes in the form below and click <b>Next</b>.
+            You will be able to change these at a later time when the portal will be running.
+        </p>
+    </span>
+
+    <span metal:fill-slot="page_content" tal:omit-tag="">
+
+        <tal:block tal:define="s_install_data python:request.SESSION.get('install_data', here.getInstallData())">
+
+<form action="install_step3_process" method="post">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+    <td valign="top"><img src="/misc_/EWPublisher/logo.gif" alt="EnviroWindows logo" border="0" width="179" height="208"></td>
+    <td valign="top">
+        <table border="0" cellspacing="2" cellpadding="2" width="100%">
+            <tr>
+                <td class="form-label" width="1%"><input type="radio" name="skin" value="eionet" tal:attributes="checked python:s_install_data['skin']=='eionet'"></td>
+                <td width="60%"><img src="/misc_/EWPublisher/eionet_screenshots.gif" alt="Eionet template" border="0" width="200" height="160"></td>
+                <td width="40%">
+                    <select name="eionet_colourscheme">
+                        <option value="orange" tal:attributes="selected python:s_install_data['skin']=='eionet' and s_install_data['colourscheme']=='orange'">Orange</option>
+                        <option value="blue" tal:attributes="selected python:s_install_data['skin']=='eionet' and s_install_data['colourscheme']=='blue'">Blue</option>
+                        <option value="green" tal:attributes="selected python:s_install_data['skin']=='eionet' and s_install_data['colourscheme']=='green'">Green</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form-label"><input type="radio" name="skin" value="autumn" tal:attributes="checked python:s_install_data['skin']=='autumn'"></td>
+                <td><img src="/misc_/EWPublisher/autumn_screenshots.gif" alt="Autumn template" border="0" width="200" height="160"></td>
+                <td>
+                    <select name="autumn_colourscheme">
+                        <option value="brown" tal:attributes="selected python:s_install_data['skin']=='autumn' and s_install_data['colourscheme']=='brown'">Brown</option>
+                        <option value="blue" tal:attributes="selected python:s_install_data['skin']=='autumn' and s_install_data['colourscheme']=='blue'">Blue</option>
+                        <option value="yellow" tal:attributes="selected python:s_install_data['skin']=='autumn' and s_install_data['colourscheme']=='yellow'">Yellow</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form-label"><input type="radio" name="skin" value="metal" tal:attributes="checked python:s_install_data['skin']=='metal'"></td>
+                <td><img src="/misc_/EWPublisher/metal_screenshots.gif" alt="Metal template" border="0" width="200" height="160"></td>
+                <td>
+                    <select name="metal_colourscheme">
+                        <option value="blue" tal:attributes="selected python:s_install_data['skin']=='metal' and s_install_data['colourscheme']=='blue'">Blue</option>
+                        <option value="green" tal:attributes="selected python:s_install_data['skin']=='metal' and s_install_data['colourscheme']=='green'">Green</option>
+                        <option value="orange" tal:attributes="selected python:s_install_data['skin']=='metal' and s_install_data['colourscheme']=='orange'">Orange</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td>&nbsp;</td>
+    <td>
+        <input type="button" value="Previous" onclick="javascript:document.location.href='install_step2_html';"> <input type="submit" value=" Next "> <input type="button" value="Cancel" tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/install_abort';;">
+    </td>
+</tr>
+</table>
+</form>
+
+        </tal:block>
+
+    </span>
+
+</span>
