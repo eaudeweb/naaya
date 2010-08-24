@@ -20,6 +20,10 @@
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie8.css" />
 <![endif]-->
 
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie8.css" />
+<![endif]-->
+
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/le.js"></script>
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/bg.js"></script>
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/effects.js"></script>
@@ -55,6 +59,19 @@
 		<br clear="all" style="clear:both"/>
 		<div style="display:none" id="map_markers"></div>
 	</div>
+
+	<div id="portalmap">
+	    <div class="portalmap_portlet">
+		<div class="portalmap_portlet_title">
+		    <p i18n:translate="">Drag & Drop pin to rate</p>
+		</div>
+
+		<div>
+		    <img src="++resource++naaya.observatory.maptool/images/pin.png" id="pin" alt="Pin" style="z-index: 9999;" title="Pin"  />
+		</div>
+	    </div>
+	</div>
+
 	<div id="portalmap">
 		<div class="portalmap_portlet">
 			<div class="portalmap_portlet_title">
@@ -129,4 +146,3 @@ window.map_engine = naaya_map_engine.portal_map('map');
 
 </metal:block>
 </metal:block>
-
