@@ -336,7 +336,4 @@ function add_point_to_xy(x, y) {
     var point = map_engine.map_coords(x, y);
     add_point(point.lat, point.lon);
 }
-function onctrlclick_onempty(lat, lon) {
-    add_point(lat, lon);
-}
 
