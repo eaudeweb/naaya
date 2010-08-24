@@ -269,6 +269,12 @@ function add_point(lat, lon) {
 var clear_new_point = function() {}
 var add_new_point_in_progress = false;
 
+function add_point_to_xy(x, y) {
+    var point = map_engine.map_coords(x, y);
+    add_point(point.lat, point.lon);
+}
+
+
 function view_point(lat, lon, point_id) {
     if (view_point_in_progress) {
         return;
@@ -328,12 +334,5 @@ function onmouseoverpoint(lat, lon, point_id) {
     if (point_id != -1) {
         view_point(lat, lon, point_id);
     }
-}
-
-function onmouseoutpoint(lat, lon, point_id) {}
-
-function add_point_to_xy(x, y) {
-    var point = map_engine.map_coords(x, y);
-    add_point(point.lat, point.lon);
 }
 
