@@ -229,6 +229,7 @@ function add_point(lat, lon) {
     clear_new_point();
     clear_point();
     point_position = map_engine.page_coords(lat, lon);
+    console.log(point_position.x + ', ' + point_position.y);
 
     $.ajax({
         url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon,
@@ -251,12 +252,7 @@ function add_point(lat, lon) {
             } else {
                 css.left = point_position.x + map_jq.position().left - 458;
             }
-
-            if (point_position.y < map_jq.height() / 2) {
-                css.top = map_jq.offset().top + point_position.y;
-            } else {
-                css.top = map_jq.offset().top + point_position.y - 280;
-            }
+            css.top = map_jq.offset().top + point_position.y - 280;
 
             // add the ballon
             var balloon = $('<div>').css(css).html(data.html);
@@ -336,6 +332,10 @@ function onmouseoverpoint(lat, lon, point_id) {
 
 function onmouseoutpoint(lat, lon, point_id) {}
 
+function add_point_to_xy(x, y) {
+    var point = map_engine.map_coords(x, y);
+    add_point(point.lat, point.lon);
+}
 function onctrlclick_onempty(lat, lon) {
     add_point(lat, lon);
 }

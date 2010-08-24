@@ -1,4 +1,17 @@
 $(document).ready(function () {
+    $('#pin').draggable({revert: 'valid'});
+    $('#map').droppable({
+        drop: function(event, ui) {
+            /**
+             * Retrieve XY coordinates
+            */
+            x = $('#pin').offset().left - $('#center_content').offset().left +  11;
+            y = $('#pin').offset().top - $('#center_content').offset().top - 70;
+            console.log(x + ', ' + y);
+            add_point_to_xy(x, y);
+        }
+    });
+
     /**
      * Reset all on #cancel.click
     */
@@ -43,4 +56,3 @@ function SelectVote(el, i){
 
     return false;
 }
-
