@@ -1,0 +1,130 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h2>Confirmation</h2>
+
+<p>The information provided in the previous screens is listed below. Review it and go back to make the
+   necessary modifications or click <em>Finish</em> to submit your portal application if these are correct.
+</p>
+
+<tal:block tal:define="s_application_data python:request.SESSION.get('application_data', here.getEmptyApplicationData())">
+
+<form tal:attributes="action string:${here/absolute_url}/confirm_process" method="post">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+    <td valign="top">
+        <table border="0" cellspacing="2" cellpadding="2" width="100%">
+            <tr>
+                <td><strong>Portal title</strong></td>
+                <td><span tal:replace="python:s_application_data['site_title']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Portal subtitle</strong></td>
+                <td><span tal:replace="python:s_application_data['subtitle']"/></td>
+            </tr>
+            <tr>
+                <td valign="top"><strong>Description</strong></td>
+                <td><span tal:replace="python:s_application_data['description']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Publisher</strong></td>
+                <td><span tal:replace="python:s_application_data['publisher']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Contributor</strong></td>
+                <td><span tal:replace="python:s_application_data['contributor']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Creator</strong></td>
+                <td><span tal:replace="python:s_application_data['creator']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Rights</strong></td>
+                <td><span tal:replace="python:s_application_data['rights']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Language</strong></td>
+                <td><span tal:replace="python:s_application_data['language']"/></td>
+            </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr>
+                <td><strong>Contact person</strong></td>
+                <td><span tal:replace="python:s_application_data['contact_name']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Contact email</strong></td>
+                <td><span tal:replace="python:s_application_data['contact_email']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Administrator name</strong></td>
+                <td><span tal:replace="python:s_application_data['administrator_name']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Administrator email</strong></td>
+                <td><span tal:replace="python:s_application_data['administrator_email']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Username</strong></td>
+                <td><span tal:replace="python:s_application_data['username']"/></td>
+            </tr>
+            <tr>
+                <td><strong>Portal URL</strong></td>
+                <td><span tal:replace="python:s_application_data['portal_url']"/></td>
+            </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr>
+                <td><strong>Featured partner site</strong></td>
+                <td><span tal:replace="python:s_application_data['featured']"/></td>
+            </tr>
+            <tr tal:condition="python:s_application_data['featured'] == 'Yes'">
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Topic</strong></td>
+                <td><span tal:replace="python:s_application_data['topic']"/></td>
+            </tr>
+            <tr tal:condition="python:s_application_data['featured'] == 'Yes'">
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Category</strong></td>
+                <td><span tal:replace="python:s_application_data['category']"/></td>
+            </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr>
+                <td valign="top"><strong>Additional functionality</strong></td>
+                <td>
+                    <ul>
+                        <li tal:repeat="item python:s_application_data['products']" tal:content="item">product</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr><td colspan="2">&nbsp;</td></tr>
+            <tr>
+                <td valign="top"><strong>Graphical layout</strong></td>
+                <td><img tal:define="skin python:s_application_data['skin']" tal:attributes="src string:/misc_/EWApplications/${skin}_screenshots.gif; " alt="Default skin" border="0" width="200" height="160" /></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><span tal:replace="python:s_application_data['skin']">skin</span> -- color <span tal:replace="python:s_application_data['colourscheme']">colour scheme</span></td>
+            </tr>
+            <tr>
+                <td valign="top"><strong>Main topics</strong> (top-level folders)</td>
+                <td><ul tal:condition="python:s_application_data['main_topic_a_title']!= '' or 
+                    s_application_data['main_topic_b_title']!= '' or 
+                    s_application_data['main_topic_c_title']!= '' or 
+                    s_application_data['main_topic_d_title']!= ''">
+                <li tal:condition="python:s_application_data['main_topic_a_title']!=''" tal:content="python:s_application_data['main_topic_a_title']" />
+                <li tal:condition="python:s_application_data['main_topic_b_title']!=''" tal:content="python:s_application_data['main_topic_b_title']" />
+                <li tal:condition="python:s_application_data['main_topic_c_title']!=''" tal:content="python:s_application_data['main_topic_c_title']" />
+                <li tal:condition="python:s_application_data['main_topic_d_title']!=''" tal:content="python:s_application_data['main_topic_d_title']" />
+                </ul></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td>
+        <input type="button" value="Previous" tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/step5_html';;" />
+        <input type="submit" value="Finish" />
+        <input type="button" value="Cancel" tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/index_html';;" />
+    </td>
+</tr>
+</table>
+</form>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

@@ -1,0 +1,148 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h2 tal:content="here/title_or_id">Title</h2>
+
+<p>
+    This page presents the details of the portal application <strong><span tal:content="here/title_or_id">Title</span></strong>, 
+    submitted by <strong><span tal:content="python:here.application_data['contact_name']"></span></strong>
+</p>    
+<p tal:condition="python: here.canApproveApplication()">After reviewing the application, you can decide to create a portal
+    (<em>approve</em>) or <em>reject</em> the proposal. Should you approve it, the installation procedure for the new portal
+    will start and a set of friendly Web forms will guide you through the steps. You may cancel the setup operations at anytime
+    and come back at a later time. If you reject the application, you will not be able to re-approve it again.
+</p>
+
+<p>
+<span style="float:left" tal:condition="python:here.canApproveApplication()"><form action="approveApplication"><input type="submit" value="Approve"></form></span>
+<span tal:condition="python:here.canRejectApplication()"><form action="rejectApplication"><input type="submit" value="Reject"></form></span>
+</p>
+
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <th width="20%">Application status:</th>
+        <td width="80%">
+            <table border="0">
+                <tr>
+                    <td><em><tal:block tal:content="string:${here/getStatusLabel}" /></em> <tal:block tal:condition="python:here.status_message != ''" tal:content="string:(${here/status_message})" /></td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tal:block tal:condition="python:here.ewsite_id != ''">
+    <tr>
+        <th>Portal URL:</th>
+        <td><a tal:attributes="href python:here.ewsite_id" tal:content="python:here.ewsite_id">click me</a>
+        </td>
+    </tr>
+    </tal:block>
+	<tr>
+        <th>Request date:</th>
+        <td tal:content="python:here.request_date"></td>
+	</tr>		
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <th>Portal title:</th>
+        <td tal:content="python:here.application_data['site_title']"></td>
+    </tr>
+    <tr>
+        <th>Portal subtitle:</th>
+        <td tal:content="python:here.application_data['subtitle']"></td>
+    </tr>
+    <tr>
+        <th>Description:</th>
+        <td tal:content="python:here.application_data['description']"></td>
+    </tr>
+    <tr>
+        <th>Publisher:</th>
+        <td tal:content="python:here.application_data['publisher']"></td>
+    </tr>
+    <tr>
+        <th>Contributor:</th>
+        <td tal:content="python:here.application_data['contributor']"></td>
+    </tr>
+    <tr>
+        <th>Creator:</th>
+        <td tal:content="python:here.application_data['creator']"></td>
+    </tr>
+    <tr>
+        <th>Rights:</th>
+        <td tal:content="python:here.application_data['rights']"></td>
+    </tr>
+
+    <tr>
+        <th>Language:</th>
+        <td tal:content="python:here.application_data['language']"></td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <th>Contact person:</th>
+        <td tal:content="python:here.application_data['contact_name']"></td>
+    </tr>
+    <tr>
+        <th>Contact email:</th>
+        <td tal:content="python:here.application_data['contact_email']"></td>
+    </tr>
+    <tr>
+        <th>Administrator name:</th>
+        <td tal:content="python:here.application_data['administrator_name']"></td>
+    </tr>
+    <tr>
+        <th>Administrator email:</th>
+        <td tal:content="python:here.application_data['administrator_email']"></td>
+    </tr>
+    <tr>
+        <th>Username:</th>
+        <td tal:content="python:here.application_data['username']"></td>
+    </tr>
+    <tr>
+        <th>Portal URL:</th>
+        <td tal:content="python:here.application_data['portal_url']"></td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <th>Featured partner site:</th>
+        <td tal:content="python:here.application_data['featured']"></td>
+    </tr>
+    <tr>
+        <th>Topic:</th>
+        <td tal:content="python:here.application_data['topic']"></td>
+    </tr>
+    <tr>
+        <th>Category:</th>
+        <td tal:content="python:here.application_data['category']"></td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <th>Additional functionality:</th>
+        <td><ul><li tal:repeat="item python:here.application_data['products']" tal:content="item">product</li>
+        </ul></td>
+    </tr>
+    <tr>
+        <th><strong>Main topics</strong></th>
+        <td><ul tal:condition="python:here.application_data['main_topic_a_title']!= '' or here.application_data['main_topic_b_title']!= '' or here.application_data['main_topic_c_title']!= '' or here.application_data['main_topic_d_title']!= ''">
+        <li tal:condition="python:here.application_data['main_topic_a_title']!=''" tal:content="python:here.application_data['main_topic_a_title']" />
+        <li tal:condition="python:here.application_data['main_topic_b_title']!=''" tal:content="python:here.application_data['main_topic_b_title']" />
+        <li tal:condition="python:here.application_data['main_topic_c_title']!=''" tal:content="python:here.application_data['main_topic_c_title']" />
+        <li tal:condition="python:here.application_data['main_topic_d_title']!=''" tal:content="python:here.application_data['main_topic_d_title']" />
+        </ul></td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <th>Graphical layout:</th>
+        <td>Skin: <strong><span tal:replace="python:here.application_data['skin']">skin</span> -- <span tal:replace="python:here.application_data['colourscheme']">colour scheme</span></strong><br />
+        <img tal:define="skin python:here.application_data['skin']" tal:attributes="src string:/misc_/EWPublisher/${skin}_screenshots.gif; " alt="Selected skin" border="0" width="200" height="160" />
+        
+        <br /><br />
+        <strong>Logo: </strong> <img tal:condition="python:here.hasLogo()" tal:attributes="src string:${here/absolute_url}/getMyPicture" title="Logo icon for the portal" />
+        <tal:block tal:condition="python:not here.hasLogo()" >EnviroWindows logo</tal:block>
+        </td>
+    </tr>
+</table>
+<p>
+<span style="float:left" tal:condition="python:here.canApproveApplication()">
+<form action="approveApplication"><input type="submit" value="Approve" /></form></span>
+<span tal:condition="python:here.canRejectApplication()"><form action="rejectApplication"><input type="submit" value="Reject" /></form></span>
+</p>
+
+<span tal:replace="structure here/standard_html_footer"/>
