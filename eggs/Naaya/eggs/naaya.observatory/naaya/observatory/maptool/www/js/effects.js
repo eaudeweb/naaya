@@ -7,7 +7,6 @@ $(document).ready(function () {
             */
             x = $('#pin').offset().left - $('#center_content').offset().left +  11;
             y = $('#pin').offset().top - $('#center_content').offset().top - 70;
-            console.log(x + ', ' + y);
             add_point_to_xy(x, y);
         }
     });

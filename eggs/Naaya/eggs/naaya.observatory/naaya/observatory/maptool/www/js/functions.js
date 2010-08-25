@@ -1,4 +1,9 @@
 function submit_rate() {
+    if(($('#rate-val').val() == 'cit') && ($('#comment-val').val() == '')){
+        alert('You must enter a comment for citizens rate!');
+        return false;
+    }
+
     $.ajax({
         type: "POST",
         url: "@@observatory_pin_add/add_pin_to_observatory",
@@ -21,4 +26,3 @@ function submit_rate() {
 
     return false;
 }
-

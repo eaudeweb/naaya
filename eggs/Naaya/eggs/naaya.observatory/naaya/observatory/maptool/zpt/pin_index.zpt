@@ -8,7 +8,7 @@
         <h2 id="box_2_title" tal:content="pin/address"/>
 
         <span class="close">
-            <a href="javascript:clear_point();">X</a>
+            <a href="javascript:clear_view_point();">X</a>
         </span>
     </div>
 
@@ -36,7 +36,7 @@
 
         <div id="box_2_buttons">
             <input type="button" value="Rate" id="submit" tal:attributes="
-            onclick string:javascript:add_point(${latitude}, ${longitude})"
+            onclick string:javascript:load_add_point(${latitude}, ${longitude})"
             />
         </div>
 
