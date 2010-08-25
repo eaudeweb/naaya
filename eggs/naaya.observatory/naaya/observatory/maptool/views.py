@@ -256,7 +256,7 @@ class MapView(object):
                         'label': 'cluster',
                         'icon_name': icon_name,
                         'num_points': len(ob.group),
-                        'id': ob.id}
+                        'id': ''}
 
         points = [build_point(c) for c in centers if c.averageRating]
         tc_end = time()
@@ -458,7 +458,7 @@ class MapView(object):
         return ret
 
     _pin_add = PageTemplateFile('zpt/pin_add', globals())
-    def pin_add(self, latitude, longitude, REQUEST):
+    def pin_add(self, latitude, longitude, REQUEST, type=None):
         """ """
         lat, lon = float(latitude), float(longitude)
         author, session_key = self.query_author_and_session(REQUEST)
@@ -471,7 +471,8 @@ class MapView(object):
         html = self._pin_add.__of__(self.context)(latitude=latitude,
                                                   longitude=longitude,
                                                   address=address,
-                                                  country=country)
+                                                  country=country,
+                                                  type=type)
         return json.dumps({'can_add': can_add, 'html': html})
 
 

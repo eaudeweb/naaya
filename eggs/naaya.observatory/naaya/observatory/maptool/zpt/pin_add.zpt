@@ -3,13 +3,14 @@
     longitude options/longitude;
     address options/address;
     country options/country;
+    type options/type;
     ">
 
     <div id="box_3_top_bar">
         <h2 id="box_3_title" tal:content="address"/>
 
         <span class="close">
-            <a href="javascript:clear_new_point();">X</a>
+            <a href="javascript:clear_add_point();">X</a>
         </span>
     </div>
 
@@ -107,7 +108,7 @@
 
             <div id="box_3_buttons">
                 <input type="submit" value="Rate" name="submit" id="submit" class="submit-rate"/>
-                <input type="reset" value="Cancel" name="reset" id="reset" onclick="javascript:clear_new_point(); return false;" />
+                <input type="reset" value="Cancel" name="reset" id="reset" onclick="javascript:clear_add_point(); return false;" />
             </div>
         </form>
     </div>
