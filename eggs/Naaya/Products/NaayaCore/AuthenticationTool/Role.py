@@ -78,7 +78,6 @@ class Role(RoleManager, utils):
         if REQUEST is not None: 
             return REQUEST.RESPONSE.redirect('manage_roles_html')
 
-    security.declareProtected(view_management_screens, 'list_all_roles')
     def list_all_roles(self):
         """
         Returns a list with all roles.
