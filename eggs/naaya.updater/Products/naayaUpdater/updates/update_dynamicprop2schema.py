@@ -42,8 +42,9 @@ class UpdateDynamicProp2Schema(UpdateScript):
 
             for prop in dynamic_prop.getDynamicProperties():
                 widget_type, data_type = self.relations[prop.type]
-                try:
+                try: #Check if widget exists and delete the dyn prop if it does
                     schema.getWidget(prop.id)
+                    self.log.debug('Existing widget %r', prop.id)
                 except KeyError:
                     args = dict(
                         label=prop.name,
@@ -54,31 +55,41 @@ class UpdateDynamicProp2Schema(UpdateScript):
                         default=prop.defaultvalue
                     )
                     if prop.type == 'selection':
-                         #Selection list does not exist
+                        """
+                        If there is no list_id selected then create a Ref Tree
+                        with the nodes given by the value of prop.values
+                        which is newspace separated text.
+                        If there is a list selected in the dynamic property
+                        then just set list_id param of the new widget.
+                        """
                         if isinstance(prop.values, str):
                             if not len(portal.get_list_nodes(prop.id)):
                                 #Create an RefTree
                                 portlets_tool.manage_addRefTree(prop.id)
+                                self.log.debug('Added Ref Tree %r', prop.id)
                                 reftree_ob = portlets_tool._getOb(prop.id)
                                 values = prop.values.replace("\r", '')
-                                selection_items = filter(None, [unicode(x).strip()
-                                                                for x in values.split("\n")])
+                                selection_items = filter(None,
+                                    [unicode(x).strip()
+                                     for x in values.split("\n")])
                                 for item in selection_items:
                                     reftree_ob.manage_addRefTreeNode(str(item),
                                                                      item)
                             args.update({'list_id': prop.id})
-                        elif isinstance(prop.values, dict): #Set up existing
+                        elif isinstance(prop.values, dict):
+                            #An existing list/reftree was selected
+                            assert len(prop.values.keys()) == 1
                             args.update({'list_id': prop.values.keys()[0]})
                         else:
                             raise ValueError('unexpected values type')
                     widget = schema.addWidget(prop.id, **args)
-                    self.log.debug('Created SchemaTool widget %r for %s'
-                                   % (prop.id, meta_type))
+                    self.log.debug('Created SchemaTool widget %r for %s',
+                                   prop.id, meta_type)
 
                 #Deleting dynamic prop from the tool
                 dynamic_prop.manageDeleteDynamicProperties(prop.id)
-                self.log.debug('Deleted dynamic prop %r for %s'
-                                   % (prop.id, meta_type))
+                self.log.debug('Deleted dynamic property %r for %s', prop.id,
+                               meta_type)
             #Deleting dynamic moved dynamic property if it's empty
             if not len(dynamic_prop.getDynamicProperties()):
                 dynamic_prop_tool.manage_delObjects(dynamic_prop.id)
