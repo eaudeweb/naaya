@@ -22,11 +22,11 @@ from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
 
-RATING_IMAGE_NAMES = ['Very Bad', 'Bad', 'Average', 'Good', 'Very good']
+RATING_IMAGE_NAMES = ['very-bad', 'bad', 'average', 'good', 'very-good']
 RATING_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
                         for f in RATING_IMAGE_NAMES]
 
-TYPE_IMAGE_NAMES = ['Vegetation', 'Water', 'Soil', 'Citizens']
+TYPE_IMAGE_NAMES = ['vegetation', 'water', 'soil', 'citizens']
 TYPE_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
                     for f in TYPE_IMAGE_NAMES]
 
@@ -94,16 +94,16 @@ class MapView(object):
             return layer
 
         current_dir = os.path.dirname(__file__)
-        RATING_FILENAMES = ['very-bad.png', 'bad.png', 'average.png',
-                'good.png', 'very-good.png']
+        RATING_FILENAMES = ['very-bad_map.png', 'bad_map.png',
+                'average_map.png', 'good_map.png', 'very-good_map.png']
         rating_filename = RATING_FILENAMES[rating-1]
         if type == 'cit' and number is not None:
             rating_filename = 'gray.png'
         rating_icon = Image.open('%s/www/images/%s' %
                 (current_dir, rating_filename))
 
-        TYPE_FILENAMES = {'veg': 'vegetation.png', 'wat': 'water.png',
-                'soil': 'soil.png', 'cit': 'citizens.png'}
+        TYPE_FILENAMES = {'veg': 'vegetation_map.png', 'wat': 'water_map.png',
+                'soil': 'soil_map.png', 'cit': 'citizens_map.png'}
         type_filename = TYPE_FILENAMES[type]
         type_icon = Image.open('%s/www/images/%s' %
                 (current_dir, type_filename))

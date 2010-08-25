@@ -28,19 +28,19 @@
 
             <div id="rate-items">
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Vegetation.png" onclick="SelectRate('veg');" class="rate-img" id="veg-img" />
+                    <img src="++resource++naaya.observatory.maptool/images/vegetation.png" onclick="SelectRate('veg');" class="rate-img" id="veg-img" />
                 </div>
 
                 <div align="center" class="rate_item" >
-                    <img src="++resource++naaya.observatory.maptool/images/Water.png" onclick="SelectRate('wat');" class="rate-img" id="wat-img" />
+                    <img src="++resource++naaya.observatory.maptool/images/water.png" onclick="SelectRate('wat');" class="rate-img" id="wat-img" />
                 </div>
 
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Soil.png" onclick="SelectRate('soil');"  class="rate-img" id="soil-img" />
+                    <img src="++resource++naaya.observatory.maptool/images/soil.png" onclick="SelectRate('soil');"  class="rate-img" id="soil-img" />
                 </div>
 
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Citizens.png" onclick="SelectRate('cit');"  class="rate-img" id="cit-img"/>
+                    <img src="++resource++naaya.observatory.maptool/images/citizens.png" onclick="SelectRate('cit');"  class="rate-img" id="cit-img"/>
                 </div>
 
                 <br />
@@ -54,14 +54,14 @@
 
             <div id="vote-items">
                 <div align="center" class="vote_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Very good.png" class="vote-img" onclick="SelectVote($(this), 5); " id="_v5" alt="Very good" title="Vote Very Good"  />
+                    <img src="++resource++naaya.observatory.maptool/images/very-good.png" class="vote-img" onclick="SelectVote($(this), 5); " id="_v5" alt="Very good" title="Vote Very Good"  />
                     <br />
                     <small>
                         Very good
                     </small>
                 </div>
                 <div align="center" class="vote_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Good.png" class="vote-img" onclick="SelectVote($(this), 4); " id="_v4" alt="Good" title="Vote Good" />
+                    <img src="++resource++naaya.observatory.maptool/images/good.png" class="vote-img" onclick="SelectVote($(this), 4); " id="_v4" alt="Good" title="Vote Good" />
                     <br />
                     <small>
                         Good
@@ -69,7 +69,7 @@
                 </div>
 
                 <div align="center" class="vote_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Average.png" class="vote-img" onclick="SelectVote($(this), 3); " id="_v3" alt="Average" title="Vote Average" />
+                    <img src="++resource++naaya.observatory.maptool/images/average.png" class="vote-img" onclick="SelectVote($(this), 3); " id="_v3" alt="Average" title="Vote Average" />
                     <br />
                     <small>
                         Average
@@ -77,7 +77,7 @@
                 </div>
 
                 <div align="center" class="vote_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Bad.png" class="vote-img" onclick="SelectVote($(this), 2); " id="_v2" alt="Bad" title="Vote Bad" />
+                    <img src="++resource++naaya.observatory.maptool/images/bad.png" class="vote-img" onclick="SelectVote($(this), 2); " id="_v2" alt="Bad" title="Vote Bad" />
                     <br />
                     <small>
                         Bad
@@ -85,7 +85,7 @@
                 </div>
 
                 <div align="center" class="vote_item">
-                    <img src="++resource++naaya.observatory.maptool/images/Very Bad.png" class="vote-img" onclick="SelectVote($(this), 1); " id="_v1" alt="Very Bad" title="Vote Very Bad" />
+                    <img src="++resource++naaya.observatory.maptool/images/very-bad.png" class="vote-img" onclick="SelectVote($(this), 1); " id="_v1" alt="Very Bad" title="Vote Very Bad" />
                     <br />
                     <small>
                         Very bad

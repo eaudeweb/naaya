@@ -323,14 +323,14 @@ var clear_point = function() {}
 var view_point_in_progress = false;
 var viewing_point_id = null;
 
-function onclick_onpoint(lat, lon, point_id) {
+function onclickpoint(lat, lon, point_id, point_tooltip, callback) {
     if (point_id == -1) {
         map_engine.set_center_and_zoom_in(lat, lon);
     } else {
         view_point(lat, lon, point_id);
     }
 }
-function onmouseoverpoint(lat, lon, point_id) {
+function onmouseoverpoint(lat, lon, point_id, point_tooltip, callback) {
     if (point_id != -1) {
         view_point(lat, lon, point_id);
     }
