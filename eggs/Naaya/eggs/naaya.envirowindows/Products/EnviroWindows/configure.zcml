@@ -4,5 +4,5 @@
     factory="Products.EnviroWindows.EnviroWindowsSite.ObjectListingPortlet"
     name="portlet_objects_listing"
     />
-
+  <include package=".updates" />
 </configure>
