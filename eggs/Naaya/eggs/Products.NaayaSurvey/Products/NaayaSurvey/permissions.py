@@ -30,6 +30,7 @@ PERMISSION_ADD_ATTACHMENT = 'Naaya - Add Naaya Survey Attachment'
 PERMISSION_ADD_QUESTIONNAIRE = 'Naaya - Add Naaya Survey Questionnaire'
 PERMISSION_ADD_ANSWER = 'Naaya - Add Naaya Survey Answer'
 PERMISSION_VIEW_ANSWERS = 'Naaya - View Naaya Survey Answers'
+PERMISSION_EDIT_ANSWERS = 'Naaya - Edit Naaya Survey Answers'
 PERMISSION_VIEW_REPORTS = 'Naaya - View Naaya Survey Reports'
 
 # Mega survey

@@ -1,23 +1,3 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alin Voinea, Eau de Web
-
-# Python imports
 import sys
 from urllib import urlencode
 from os import path
@@ -271,13 +251,22 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             self.setSession('notify_respondent', notify_respondent)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             return
+        add_new = True
+        if REQUEST:
+            answer_id = REQUEST.form.pop('answer_id', None)
+        else:
+            answer_id = None
+        if answer_id or not self.allow_multiple_answers:
+            add_new = False
+            old_answer = self.getMyAnswer()
+            if old_answer is not None:
+                self._delObject(old_answer.id)
+                LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
+                    'Deleted previous answer %s' % (old_answer.absolute_url()))
 
-        old_answer = self.getMyAnswer()
-        if old_answer is not None:
-            self._delObject(old_answer.id)
-            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Deleted previous answer %s' % (old_answer.absolute_url()))
-
-        answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
+        # The answer is deleted above so we can add a new one
+        if answer_id or not self.allow_multiple_answers or add_new:
+            answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
         answer = self._getOb(answer_id)
         if self.notify_owner:
             self.sendNotificationToOwner(answer)
@@ -392,7 +381,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return len(L)
 
     security.declarePublic('getMyAnswer')
-    def getMyAnswer(self):
+    def getMyAnswer(self, multiple=False):
         """Return the answer of the current user or None if it doesn't exist.
 
             If multiple answers exist, only the first one is returned.
@@ -401,6 +390,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             return None
         respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
         catalog = self.getCatalogTool()
+        objects = []
         for brain in catalog({'path': path2url(self.getPhysicalPath()),
                               'meta_type': SurveyAnswer.meta_type,
                               'respondent': respondent}):
@@ -409,8 +399,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # all answers, so we must do the filtering ourselves.
             if obj.respondent != respondent:
                 continue
-            return obj
-        return None
+            if not multiple:
+                return obj
+            else:
+                objects.append(obj)
+        if objects:
+            return objects
+        else:
+            return None
 
     security.declarePublic('getMyAnswerDatamodel')
     def getMyAnswerDatamodel(self):
@@ -485,6 +481,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     def checkPermissionAddAnswer(self):
         """Check if the user has the ADD_ANSWER permission"""
         return self.checkPermission(PERMISSION_ADD_ANSWER)
+
+    def checkPermissionEditAnswers(self):
+        """ Check if the user has  EDIT_ANSWER permission"""
+        return self.checkPermission(PERMISSION_EDIT_ANSWERS)
 
     #
     # Site pages
