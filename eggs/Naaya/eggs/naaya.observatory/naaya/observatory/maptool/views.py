@@ -1,23 +1,21 @@
 import simplejson as json
 from random import randint, choice
 from time import time
-from StringIO import StringIO
-import os
 from datetime import datetime, timedelta
-
-from PIL import Image
 
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
-import zLOG
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
 from Products.NaayaCore.GeoMapTool import clusters
-from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
+
+from session import SessionManager
+from utils import RATING_VALUES, TYPE_VALUES
+from utils import query_reverse_geocode, map_icon, map_distance
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -30,10 +28,7 @@ TYPE_IMAGE_NAMES = ['vegetation', 'water', 'soil', 'citizens']
 TYPE_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
                     for f in TYPE_IMAGE_NAMES]
 
-RATING_VALUES = range(1, 5+1)
-TYPE_VALUES = ['veg', 'wat', 'soil', 'cit']
-
-class MapView(object):
+class MapView(SessionManager):
     """A view for the observatory map"""
 
     def __init__(self, context, request):
@@ -42,91 +37,8 @@ class MapView(object):
         self.request = request
         self.portal_map = context.getGeoMapTool()
 
-    def get_tooltip(self, ob):
-        return """
-        <div class="marker-body">
-            <small></small>
-            <div class="marker-more">
-                <div>Average rating: %s</div>
-            </div>
-        </div>
-        """ % ob.averageRating
-
-    def reverse_geocode(self, lat, lon):
-        try:
-            return reverse_geocode(lat, lon)
-        except GeocoderServiceError, e:
-            zLOG.LOG('naaya.observatory', zLOG.PROBLEM, str(e))
-            return '', ''
-
     def map_icon(self, rating, type, RESPONSE, number=None):
-        rating = int(rating)
-        assert type in TYPE_VALUES
-        assert rating in RATING_VALUES
-        if number is not None:
-            number = int(number)
-
-        def apply(rating_icon, type_icon, number_icons=None):
-            layer = Image.new('RGBA', rating_icon.size, (0,0,0,0))
-            xr, yr = rating_icon.size
-
-            # add type layer
-            xt, yt = type_icon.size
-            x, y = (xr - xt) / 2, (yr - yt) / 2 - 3
-            layer.paste(type_icon, (x, y))
-
-            if number_icons is None:
-                return layer
-
-            # add number layer
-            xns = [icon.size[0] for icon in number_icons]
-            yns = [icon.size[1] for icon in number_icons]
-
-            dx = (xr - sum(xns)) / 2 # where the first icon starts
-            dy = yr - 3 # where the icon ends
-
-            for i, icon in enumerate(number_icons):
-                x = dx + sum(xns[:i])
-                y = dy - yns[i]
-                assert x >= 0 and y >= 0
-                layer.paste(icon, (x, y))
-
-            return layer
-
-        current_dir = os.path.dirname(__file__)
-        RATING_FILENAMES = ['very-bad_map.png', 'bad_map.png',
-                'average_map.png', 'good_map.png', 'very-good_map.png']
-        rating_filename = RATING_FILENAMES[rating-1]
-        if type == 'cit' and number is not None:
-            rating_filename = 'gray.png'
-        rating_icon = Image.open('%s/www/images/%s' %
-                (current_dir, rating_filename))
-
-        TYPE_FILENAMES = {'veg': 'vegetation_map.png', 'wat': 'water_map.png',
-                'soil': 'soil_map.png', 'cit': 'citizens_map.png'}
-        type_filename = TYPE_FILENAMES[type]
-        type_icon = Image.open('%s/www/images/%s' %
-                (current_dir, type_filename))
-
-        if number is not None:
-            if number < 1000:
-                digits = [int(ds) for ds in str(number)]
-                number_icon_names = ['no%d.png' % d for d in digits]
-            else:
-                number_icon_names = ['more.png', 'no1.png', 'k.png']
-            number_icon_paths = ['%s/www/images/%s' % (current_dir, icon_name)
-                                for icon_name in number_icon_names]
-            number_icons = [Image.open(icon_path)
-                                for icon_path in number_icon_paths]
-        else:
-            number_icons = None
-        layer = apply(rating_icon, type_icon, number_icons)
-        result_image = Image.composite(layer, rating_icon, layer)
-
-        out_str = StringIO()
-        result_image.save(out_str, 'PNG')
-        ret = out_str.getvalue()
-        out_str.close()
+        ret = map_icon(rating, type, number)
 
         RESPONSE.setHeader('Content-Type', 'image/png')
         RESPONSE.setHeader('Cache-Control', 'public,max-age=86400')
@@ -239,14 +151,15 @@ class MapView(object):
                     tooltip = cluster_tooltip(ob)
                 else:
                     tooltip = ''
-                icon_name = 'mk_rating_%s_%d_%d' % (ob.type, rating, len(ob.group))
+                num_points = len(ob.group)
+                icon_name = 'mk_rating_%s_%d_%d' % (ob.type, rating, num_points)
                 return {'lon': ob.lon,
                         'lat': ob.lat,
                         'tooltip': tooltip,
                         'display_tooltip': display_tooltip,
                         'label': 'cluster',
                         'icon_name': icon_name,
-                        'num_points': len(ob.group),
+                        'num_points': num_points,
                         'id': ''}
 
         points = [build_point(c) for c in centers if c.averageRating]
@@ -299,30 +212,6 @@ class MapView(object):
         global_config.update(kwargs)
         map_engine = self.portal_map.get_map_engine()
         return map_engine.html_setup(request, global_config)
-
-
-    SESSION_KEY = '__naaya_observatory_session'
-    def generate_session_key(self):
-        return randint(10**5, 10**10)
-
-    def get_author_and_session(self, REQUEST):
-        author = REQUEST.AUTHENTICATED_USER.getUserName()
-        if author == 'Anonymous User':
-            session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
-            if session_key == None:
-                session_key = self.generate_session_key()
-                REQUEST.RESPONSE.setCookie(self.SESSION_KEY, session_key)
-        else:
-            session_key = None
-        return author, session_key
-
-    def query_author_and_session(self, REQUEST):
-        author = REQUEST.AUTHENTICATED_USER.getUserName()
-        if author == 'Anonymous User':
-            session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
-        else:
-            session_key = None
-        return author, session_key
 
 
     def add_pin_to_observatory(self, lat, lon, address, country, type, rating,
@@ -380,18 +269,6 @@ class MapView(object):
         translations_tool = self.site.getPortalTranslations()
         return translations_tool(self.RATING_ALTS[rating-1])
 
-    def map_distance(self, lats, lons, latf, lonf):
-        import math
-        def deg_to_rad(deg):
-            return deg * math.pi / 180
-        fis, lams = deg_to_rad(lats), deg_to_rad(lons)
-        fif, lamf = deg_to_rad(latf), deg_to_rad(lonf)
-        dfi, dlam = math.fabs(fis - fif), math.fabs(lams - lamf)
-        dang = math.acos(math.sin(fis) * math.sin(fif) +
-                math.cos(fis) * math.cos(fif) * math.cos(dlam))
-        earth_radius = 6371 # in km
-        return earth_radius * dang
-
     def check_user_can_add_pin(self, lat, lon, author, session_key):
         """ """
         tc_start = time()
@@ -439,7 +316,7 @@ class MapView(object):
         ret = True
         for rid in rids:
             clat, clon = lat_dict[rid], lon_dict[rid]
-            if self.map_distance(lat, lon, clat, clon) < 1: #km
+            if map_distance(lat, lon, clat, clon) < 1: #km
                 cdate = convert_to_datetime(date_dict[rid])
                 if datetime.now() - cdate < timedelta(weeks=1):
                     ret = False
@@ -458,7 +335,7 @@ class MapView(object):
         if not can_add:
             return json.dumps({'can_add': can_add})
 
-        address, country = self.reverse_geocode(lat, lon)
+        address, country = query_reverse_geocode(lat, lon)
         html = self._pin_add.__of__(self.context)(latitude=latitude,
                                                   longitude=longitude,
                                                   address=address,
