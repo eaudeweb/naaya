@@ -36,7 +36,7 @@ function SelectRate(i){
     $('#' + i + '-img').attr('class', 'rate-img');
     $('#' + i + '-img').css({'border': '1px solid white'});
     $('#rate-val').val(i);
-
+    console.log(i);
     return false;
 }
 

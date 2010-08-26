@@ -36,7 +36,7 @@
 
         <div id="box_2_buttons">
             <input type="button" value="Rate" id="submit" tal:attributes="
-            onclick string:javascript:load_add_point(${latitude}, ${longitude})"
+            onclick string:javascript:load_add_point(${latitude}, ${longitude}, '${pin/type}')"
             />
         </div>
 
@@ -54,5 +54,3 @@
         </div>
     </div>
 </div>
-
-

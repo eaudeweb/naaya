@@ -1,0 +1,18 @@
+<tal:block define="
+    points options/points;
+">
+<div style="border:2px solid #999; background:white; padding:5px">
+    <ul tal:condition="points">
+        <li tal:repeat="point points">
+        <tal:block define="
+                id point/id;
+                lat point/latitude;
+                lon point/longitude;
+                text string:${point/date} - ${point/author}">
+            <a tal:attributes="onclick string:view_point(lat, lon, 'id')"
+                tal:content="text"></a>
+            </tal:block>
+        </li>
+    </ul>
+</div>
+</tal:block>
