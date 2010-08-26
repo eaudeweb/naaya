@@ -34,8 +34,15 @@
         }
     }
 
-    function page_coords(map_coords) {
-        return the_map.fromLatLngToContainerPixel(map_coords);
+    function page_position(lat, lon) {
+        var latlng = new GLatLng(lat, lon);
+        return the_map.fromLatLngToContainerPixel(latlng);
+    }
+
+    function map_coords(x, y) {
+        var point = new GPoint(x, y);
+        var latlng = the_map.fromContainerPixelToLatLng(point);
+        return {'lat': latlng.lat(), 'lon': latlng.lng()};
     }
 
     function refresh_points() {
@@ -47,19 +54,16 @@
                 var point = new GLatLng(place.lat, place.lon);
                 var marker = new GMarker(point, {title:place.label,
                                              icon:icons[place.icon_name]});
-                if (place.label === 'cluster') {
-                    GEvent.addListener(marker, "click", function() {
-                        the_map.setCenter(point, the_map.getZoom() + 1);
-                    });
-                } else {
-                    GEvent.addListener(marker, "click", function() {
-                        load_marker_balloon(place.lat, place.lon,
-                            function(html) {
-                                var p = page_coords(point);
-                                custom_balloon({top: p.y, left: p.x}, html);
-                            });
-                    });
-                }
+                GEvent.addListener(marker, "click", function() {
+                    // onclickpoint function is implemented in geomaptool.js
+                    onclickpoint(place.lat, place.lon,
+                        place.id, place.tooltip);
+                });
+                GEvent.addListener(marker, "mouseover", function() {
+                    // onmouseoverpoint function is implemented in geomaptool.js
+                    onmouseoverpoint(place.lat, place.lon,
+                        place.id, place.tooltip);
+                });
                 the_map.addOverlay(marker);
             });
         });
@@ -126,6 +130,12 @@
         });
     }
 
+    function set_center_and_zoom_in(lat, lon) {
+        var point = new GLatLng(lat, lon);
+        var zoom_level = the_map.getZoom();
+        the_map.setCenter(point, zoom_level+1);
+    }
+
     function editor_show_point(point) {
         the_map.clearOverlays();
         var marker = new GMarker(point);
@@ -181,7 +191,10 @@
             GEvent.addListener(the_map, 'moveend', refresh_points);
             return {
                 go_to_address: go_to_address,
-                refresh_points: refresh_points
+                refresh_points: refresh_points,
+                page_position: page_position,
+                map_coords: map_coords,
+                set_center_and_zoom_in: set_center_and_zoom_in
             };
         },
         object_index_map: function(map_div_id, coord) {

@@ -109,6 +109,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     _marker_template = """
         <div class="marker-body">
+            <h3>%s</h3>
             %s
             <small>%s</small>
             <div class="marker-more">
@@ -140,17 +141,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if not has_access:
             access_str = '<div>RESTRICTED ACCESS</div>'
         translate = self.getSite().getPortalTranslations()
-        return self._marker_template % (access_str,
+        return self._marker_template % (object.title_or_id(),
+                                        access_str,
                                         object.description,
                                         object.absolute_url(),
                                         translate("see more"))
 
-    _cluster_marker_template = """
-        <div class="marker-body">
-            <h3>Cluster</h3>
-            <small>%s location(s) inside</small>
-        </div>
-        """
 
     meta_type = METATYPE_GEOMAPTOOL
     icon = 'misc_/NaayaCore/GeoMapTool.gif'
@@ -566,7 +562,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     'label': 'cluster',
                     'icon_name': ('mk_cluster_%s' %
                                   self._pick_cluster(n_points)),
-                    'tooltip': (self._cluster_marker_template % n_points),
+                    'tooltip': '',
+                    'num_records': n_points,
                 })
 
             for res in single_obs:

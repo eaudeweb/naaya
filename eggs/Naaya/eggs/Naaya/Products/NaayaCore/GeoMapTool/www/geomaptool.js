@@ -63,12 +63,7 @@ function load_map_points(bounds, callback) {
         var num_records = 0;
         $.each(response.points, function(i, point) {
             if (point.label === 'cluster') {
-                var m = /(\d+) location\(s\) inside/.exec(point.tooltip);
-                if (m === null) {
-                    num_records++;
-                } else {
-                    num_records += parseInt(m[1]);
-                }
+                num_records += point.num_records;
             } else {
                 num_records++;
             }
@@ -225,17 +220,19 @@ function showPageElements() {
 	displayParentCheckboxes();
 }
 
-function custom_balloon(point_position, content) {
+function custom_balloon(lat, lon, content) {
     clear_custom_balloon();
     var map_jq = $('#map');
     var css = {
         position: 'absolute',
         border: '2px solid #999',
         background: 'white',
-        padding: '5px'
+        padding: '5px',
+        'z-index': 1000
     };
-    css.left = point_position.left + map_jq.position().left - 70;
-    css.top = map_jq.offset().top + point_position.top;
+    var point_position = map_engine.page_position(lat, lon);
+    css.left = point_position.x + map_jq.position().left - 70;
+    css.top = map_jq.offset().top + point_position.y;
 
     var balloon = $('<div>').css(css);
     var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
@@ -246,3 +243,17 @@ function custom_balloon(point_position, content) {
     clear_custom_balloon = function() { balloon.remove(); }
 }
 var clear_custom_balloon = function() {}
+
+function onclickpoint(lat, lon, point_id, point_tooltip) {
+    if (point_id === '') {
+        map_engine.set_center_and_zoom_in(lat, lon);
+    } else {
+        load_marker_balloon(lat, lon, function(html) {
+            custom_balloon(lat, lon, html);
+        });
+    }
+}
+
+// can be overwritten to get notifications for the mouse over events
+function onmouseoverpoint(lat, lon, point_id, point_tooltip) {}
+
