@@ -151,9 +151,10 @@ div#box_content {
     left: 1em;
 }
 
-div#comments {
+div#comments, #comments ul li a {
     padding-bottom: 2em;
     margin-top: 1em;
+    color: #FFFFFF !important;
 }
 
 div#comments h3 {
@@ -163,14 +164,19 @@ div#comments h3 {
 }
 
 div#comments ul {
-    max-height: 4em;
-    overflow: auto;
+    max-height: 4.5em;
     width: 248px;
+    overflow: auto;
+}
+
+div#comments ul li {
+    list-style: none;
 }
 
 #comments ul li p {
     font-size: 0.8em;
     padding-right: 1em;
+    color: #FFFFFF;
 }
 
 #box_2 span.close {

@@ -1,19 +1,46 @@
 <tal:block define="
     points options/points;
 ">
-<div style="border:2px solid #999; background:white; padding:5px">
-    <ul tal:condition="points">
-        <li tal:repeat="point points">
-        <tal:block define="
-                id point/id;
-                lat point/latitude;
-                lon point/longitude;
-                text string:${point/date} - ${point/author}">
-        <a tal:attributes="
-                onclick string:load_view_point(${lat}, ${lon}, '${id}')"
-            tal:content="text"></a>
-            </tal:block>
-        </li>
-    </ul>
-</div>
+    <div id="box_2">
+        <div id="box_2_top_bar">
+            <h2 id="box_2_title" tal:content="string:Cluster"/>
+
+            <span class="close">
+                <a href="javascript:clear_view_point();">X</a>
+            </span>
+        </div>
+
+        <div class="clear">
+        </div>
+
+        <br />
+        <div id="box_content">
+            <div align="center" class="vote_item" >
+
+            </div>
+
+            <div align="center" class="vote_item">
+
+            </div>
+
+            <div class="clear">
+            </div>
+
+            <div id="comments">
+                <ul tal:condition="points">
+                    <li tal:repeat="point points">&middot;
+                    <tal:block define="
+                            id point/id;
+                            lat point/latitude;
+                            lon point/longitude;
+                            text string:${point/date} - ${point/author}">
+                    <a tal:attributes="
+                            onclick string:load_view_point(${lat}, ${lon}, '${id}')"
+                        tal:content="text"></a>
+                        </tal:block>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </tal:block>
