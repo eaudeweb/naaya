@@ -9,8 +9,9 @@
                 lat point/latitude;
                 lon point/longitude;
                 text string:${point/date} - ${point/author}">
-            <a tal:attributes="onclick string:view_point(lat, lon, 'id')"
-                tal:content="text"></a>
+        <a tal:attributes="
+                onclick string:load_view_point(${lat}, ${lon}, '${id}')"
+            tal:content="text"></a>
             </tal:block>
         </li>
     </ul>
