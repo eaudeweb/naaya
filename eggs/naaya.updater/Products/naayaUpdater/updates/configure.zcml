@@ -229,4 +229,10 @@
 	  component=".update_files.UpdateFiles"
 	  permission="zope2.ViewManagementScreens" />
 
+	<utility
+	  name="survey.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_survey.UpdateSurvey"
+	  permission="zope2.ViewManagementScreens" />
+
 </configure>
