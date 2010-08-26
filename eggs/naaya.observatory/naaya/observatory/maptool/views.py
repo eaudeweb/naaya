@@ -167,12 +167,6 @@ class MapView(SessionManager):
         print 'clusters', tc_end - tc_start
         return json.dumps({'points': points})
 
-    def xrjs_getTooltip(self):
-        """ """
-        my_ob = self.site.info.accessibility
-        my_view = self.site.unrestrictedTraverse(my_ob.absolute_url(1) + '/observatory_rating_comments_view')
-        return my_view()
-
     def get_geotype_icons(self):
         # cluster images
         for rating in RATING_VALUES:
@@ -240,34 +234,6 @@ class MapView(SessionManager):
     def get_pin_by_id(self, id):
         observatory = self.site.observatory
         return observatory.get_pin(id)
-
-    def type_image_paths(self, type):
-        index = TYPE_VALUES.index(type)
-        return TYPE_IMAGE_PATHS[index]
-
-    TYPE_MESSAGES = ['Vegetation', 'Water', 'Soil', 'Citizen reported']
-    def type_messages(self, type):
-        translations_tool = self.context.getPortalTranslations()
-        index = TYPE_VALUES.index(type)
-        return translations_tool(self.TYPE_MESSAGES[index])
-
-    def rating_image_paths(self, rating):
-        return RATING_IMAGE_PATHS[rating-1]
-
-    RATING_MESSAGES = ['Very bad', 'Bad', 'Average', 'Good', 'Very good']
-    def rating_messages(self, rating):
-        translations_tool = self.site.getPortalTranslations()
-        return translations_tool(self.RATING_MESSAGES[rating-1])
-
-    RATING_TITLES = ['Vote %s' % l for l in RATING_MESSAGES]
-    def rating_titles(self, rating):
-        translations_tool = self.site.getPortalTranslations()
-        return translations_tool(self.RATING_TITLES[rating-1])
-
-    RATING_ALTS = list(RATING_MESSAGES)
-    def rating_alts(self, rating):
-        translations_tool = self.site.getPortalTranslations()
-        return translations_tool(self.RATING_ALTS[rating-1])
 
     def check_user_can_add_pin(self, lat, lon, author, session_key):
         """ """
