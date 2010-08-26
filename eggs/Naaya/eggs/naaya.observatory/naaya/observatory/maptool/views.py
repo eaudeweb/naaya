@@ -218,17 +218,8 @@ class MapView(object):
         centers = make_centers()
 
         def cluster_tooltip(ob):
-            lis = []
-            for p in ob.group:
-                id = id_dict[rids[p.id]]
-                lat, lon = lat_dict[rids[p.id]], lon_dict[rids[p.id]]
-                js = 'view_point(%s, %s, \'%s\')' % (lat, lon, id)
-                lis.append('<li><a onclick="%s">Point %s</a></li>'
-                                % (js, id))
-            if len(lis) == 0:
-                return ''
-            lis_str = '\n'.join(lis)
-            return '<ul>%s</ul>' % lis_str
+            ids = [id_dict[rids[p.id]] for p in ob.group]
+            return self.cluster_index(ids)
 
         def build_point(ob):
             if len(ob.group) == 1:
@@ -476,8 +467,9 @@ class MapView(object):
         return json.dumps({'can_add': can_add, 'html': html})
 
     _cluster_index = PageTemplateFile('zpt/cluster_index', globals())
-    def cluster_index(self, point_ids, REQUEST):
+    def cluster_index(self, point_ids, REQUEST=None):
         """ """
-
+        observatory = self.site.observatory
+        points = [observatory.get_pin(id) for id in point_ids]
         return self._cluster_index.__of__(self.context)(points=points)
 
