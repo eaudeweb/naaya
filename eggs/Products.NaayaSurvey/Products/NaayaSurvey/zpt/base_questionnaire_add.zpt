@@ -104,6 +104,15 @@ function fSet(ctrl, value)
 			<option value="1" i18n:translate="">Yes</option>
 		</select>
 	</div>
+	<!-- Allow multiple answers -->
+	<div class="field">
+		<label for="allow_multiple_answers" i18n:translate="">Authenticated users can respond more than one time</label>
+		<select id="allow_multiple_answers" name="allow_multiple_answers">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
+
 	<!-- Submit buttons-->
 	<div class="field">
 		<input type="hidden" name="redirect_url" value="index_html" />

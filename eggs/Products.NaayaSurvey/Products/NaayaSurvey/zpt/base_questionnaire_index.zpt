@@ -39,6 +39,16 @@
 
 	<a tal:condition="here/checkPermissionViewAnswers" href="view_answers_html" i18n:translate="" class="survey-button">View answers</a>
 	<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
+	<tal:block tal:define="my_answers python: here.getMyAnswer(True)" condition="python: my_answers and here.allow_multiple_answers">
+		<div class="my-answers"><h5 i18n:translate="">Your answers so far:</h5>
+			<ul id="my-answers-list">
+				<li  tal:repeat="answer my_answers">
+					<a tal:attributes="href string:${answer/absolute_url}" tal:content="python: here.utShowFullDateTime(answer.modification_time)"></a>
+					(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">edit</a>)
+				</li>
+			</ul>
+		</div>
+	</tal:block>
 </div>
 
 
@@ -50,7 +60,7 @@
 		define="stype here/getSurveyTemplate">
 	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
 		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
-		<p class="message-information" i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
+		<p class="message-information" i18n:translate="" tal:condition="python: my_answer and not here.allow_multiple_answers">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 		      tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
 
@@ -74,7 +84,7 @@
 				<metal:block use-macro="tmpl/macros/validate" />
 			</tal:block>
 
-			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
+			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answer, {})), 'Error')" />
 
 			<tal:block condition="not:here/checkPermissionSkipCaptcha"
 			           content="structure here/showCaptcha" />
@@ -89,8 +99,8 @@
 			</tal:block>
 
 			<div class="surveySubmit">
-				<input tal:condition="not: my_answer" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
-				<input tal:condition="my_answer" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input tal:condition="python: not my_answer or here.allow_multiple_answers" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input tal:condition="python: my_answer and not here.allow_multiple_answers" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 		</form>

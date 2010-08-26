@@ -33,7 +33,10 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
-from permissions import PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER, PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT, PERMISSION_VIEW_ANSWERS, PERMISSION_VIEW_REPORTS
+from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
+                         PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT,
+                         PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS,
+                         PERMISSION_VIEW_REPORTS)
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
@@ -94,6 +97,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         PERMISSION_ADD_REPORT: "Create report",
         PERMISSION_ADD_ATTACHMENT: "Attach file",
         PERMISSION_VIEW_ANSWERS: "View answers",
+        PERMISSION_EDIT_ANSWERS: "Edit answers",
         PERMISSION_VIEW_REPORTS: "View reports",
     })
 
