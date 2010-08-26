@@ -33,14 +33,6 @@
   />
 
   <browser:page
-    name="observatory_xrjs_tooltip"
-    for="Products.Naaya.NySite.NySite"
-    class=".views.MapView"
-    attribute="xrjs_getTooltip"
-    permission="zope.Public"
-  />
-
-  <browser:page
     name="observatory_pin_add"
     for="Products.Naaya.NySite.NySite"
     class=".views.MapView"
