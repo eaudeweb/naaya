@@ -224,11 +224,7 @@ function showPageElements() {
 /*
  * Functions for showing the add pin balloon
  */
-function load_add_point(lat, lon, type) {
-    if(type == 'undefined'){
-      type='';
-    }
-
+function load_add_point(lat, lon) {
     if (load_add_point_in_progress) {
         return;
     }
@@ -237,7 +233,7 @@ function load_add_point(lat, lon, type) {
     clear_view_point();
 
     $.ajax({
-       url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon+'&type=' + type,
+        url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon,
         dataType: 'json',
         success: function(data) {
             if (!data.can_add) {
@@ -304,6 +300,9 @@ function load_view_point(lat, lon, point_id) {
     });
 }
 function view_point(lat, lon, point_tooltip) {
+    clear_add_point();
+    clear_view_point();
+
     var map_jq = $('#map');
     var css = {position: 'absolute', 'z-index': 1000};
 
