@@ -66,7 +66,7 @@
 			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
 		</a>
 	</div>
-    <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.show_contributor_request_role">
+    <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User' and here.getLocalProperty('show_contributor_request_role')">
 		<a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
 	</p>
 	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
