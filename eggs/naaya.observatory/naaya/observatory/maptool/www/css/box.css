@@ -128,7 +128,7 @@ div#box_2 {
     color: #FFFFFF;
     border: none;
     font-family: sans-serif;
-    position: relative;
+    position: absolute;
     top: 0.6em;
     left: -0.5em;
 }
@@ -174,9 +174,9 @@ div#comments ul {
 }
 
 #box_2 span.close {
-    position: absolute;
-    top: 1em;
-    left: 25.8em;
+    position: relative;
+    top: 0.7em;
+    left: 25em;
     float: right;
 }
 

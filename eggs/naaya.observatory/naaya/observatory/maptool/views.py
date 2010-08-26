@@ -306,7 +306,7 @@ class MapView(object):
             'icons': list(self.get_geotype_icons()),
         }
         global_config.update(kwargs)
-        map_engine = self.portal_map.engine_bing
+        map_engine = self.portal_map.get_map_engine()
         return map_engine.html_setup(request, global_config)
 
 
@@ -475,4 +475,9 @@ class MapView(object):
                                                   type=type)
         return json.dumps({'can_add': can_add, 'html': html})
 
+    _cluster_index = PageTemplateFile('zpt/cluster_index', globals())
+    def cluster_index(self, point_ids, REQUEST):
+        """ """
+
+        return self._cluster_index.__of__(self.context)(points=points)
 

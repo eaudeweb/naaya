@@ -24,24 +24,48 @@
             <input type="hidden" name="lon-val" tal:attributes="value longitude" id="lon-val" />
             <input type="hidden" name="address-val" tal:attributes="value address" id="address-val"/>
             <input type="hidden" name="country-val" tal:attributes="value country" id="country-val"/>
-            <input type="hidden" name="rate-val" value="" id="rate-val" />
             <input type="hidden" name="vote-val" value="" id="vote-val" />
+            <input type="hidden" name="rate-val" tal:attributes="value python:test(type,type,'')" id="rate-val" />
 
             <div id="rate-items">
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/vegetation.png" onclick="SelectRate('veg');" class="rate-img" id="veg-img" />
+                    <tal:block condition="python:type not in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/vegetation.png" onclick="SelectRate('veg');" class="rate-img" id="veg-img" />
+                    </tal:block>
+
+                    <tal:block condition="python:type in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/vegetation.png" tal:attributes="style python:test(type=='veg','border: 1px solid #FFFFFF','')" class="rate-img" id="veg-img" />
+                    </tal:block>
                 </div>
 
                 <div align="center" class="rate_item" >
-                    <img src="++resource++naaya.observatory.maptool/images/water.png" onclick="SelectRate('wat');" class="rate-img" id="wat-img" />
+                    <tal:block condition="python:type not in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/water.png" onclick="SelectRate('wat');" class="rate-img" id="wat-img" />
+                    </tal:block>
+
+                    <tal:block condition="python:type in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/water.png" tal:attributes="style python:test(type=='wat','border: 1px solid #FFFFFF','')" class="rate-img" id="wat-img" />
+                    </tal:block>
                 </div>
 
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/soil.png" onclick="SelectRate('soil');"  class="rate-img" id="soil-img" />
+                    <tal:block condition="python:type not in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/soil.png" onclick="SelectRate('soil');" class="rate-img" id="soil-img" />
+                    </tal:block>
+
+                    <tal:block condition="python:type in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/soil.png" tal:attributes="style python:test(type=='soil','border: 1px solid #FFFFFF','')" class="rate-img" id="soil-img" />
+                    </tal:block>
                 </div>
 
                 <div align="center" class="rate_item">
-                    <img src="++resource++naaya.observatory.maptool/images/citizens.png" onclick="SelectRate('cit');"  class="rate-img" id="cit-img"/>
+                    <tal:block condition="python:type not in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/citizens.png" onclick="SelectRate('cit');" class="rate-img" id="cit-img" />
+                    </tal:block>
+
+                    <tal:block condition="python:type in ['cit', 'veg', 'wat', 'soil']">
+                        <img src="++resource++naaya.observatory.maptool/images/citizens.png" tal:attributes="style python:test(type=='cit','border: 1px solid #FFFFFF','')" class="rate-img" id="cit-img" />
+                    </tal:block>
                 </div>
 
                 <br />

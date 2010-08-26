@@ -4,6 +4,16 @@ function submit_rate() {
         return false;
     }
 
+    if(($('#rate-val').val() !== 'cit') && ($('#rate-val').val() !== 'wat') && ($('#rate-val').val() !== 'veg') && ($('#rate-val').val() !== 'soil')){
+        alert('Please select rate type!');
+        return false;
+    }
+
+    if($('#vote-val').val() == ''){
+        alert('Please select vote value!');
+        return false;
+    }
+
     $.ajax({
         type: "POST",
         url: "@@observatory_pin_add/add_pin_to_observatory",
