@@ -224,7 +224,11 @@ function showPageElements() {
 /*
  * Functions for showing the add pin balloon
  */
-function load_add_point(lat, lon) {
+function load_add_point(lat, lon, type) {
+    if(type == 'undefined'){
+      type='';
+    }
+
     if (load_add_point_in_progress) {
         return;
     }
@@ -233,7 +237,7 @@ function load_add_point(lat, lon) {
     clear_view_point();
 
     $.ajax({
-        url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon,
+       url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon+'&type=' + type,
         dataType: 'json',
         success: function(data) {
             if (!data.can_add) {
@@ -256,7 +260,7 @@ function add_point(lat, lon, point_tooltip) {
     var css = {position: 'absolute', 'z-index': 1000};
 
     // compute the positions for the balloon
-    point_position = map_engine.page_coords(lat, lon);
+    point_position = map_engine.page_position(lat, lon);
     if (point_position.x < map_jq.width() / 2) {
         css.left = point_position.x + map_jq.position().left;
     } else {
@@ -283,9 +287,6 @@ function load_view_point(lat, lon, point_id) {
     if (load_view_point_in_progress) {
         return;
     }
-    if (viewed_point_id == point_id) {
-        return;
-    }
     load_view_point_in_progress = true;
     clear_add_point();
     clear_view_point();
@@ -293,7 +294,7 @@ function load_view_point(lat, lon, point_id) {
     $.ajax({
         url: 'observatory_pin?id='+point_id,
         success: function(data) {
-            view_point(lat, lon, point_id, data);
+            view_point(lat, lon, data);
             load_view_point_in_progress = false;
         },
         error: function(req) {
@@ -302,12 +303,12 @@ function load_view_point(lat, lon, point_id) {
         }
     });
 }
-function view_point(lat, lon, point_id, point_tooltip) {
+function view_point(lat, lon, point_tooltip) {
     var map_jq = $('#map');
     var css = {position: 'absolute', 'z-index': 1000};
 
     // compute the positions for the balloon
-    point_position = map_engine.page_coords(lat, lon);
+    point_position = map_engine.page_position(lat, lon);
     if (point_position.x < map_jq.width() / 2) {
         css.left = point_position.x + map_jq.position().left;
     } else {
@@ -318,14 +319,9 @@ function view_point(lat, lon, point_id, point_tooltip) {
     // add the ballon
     var balloon = $('<div>').css(css).html(point_tooltip);
     map_jq.parent().append(balloon);
-    clear_view_point = function() {
-        balloon.remove();
-        viewed_point_id = null;
-    }
-    viewed_point_id = point_id;
+    clear_view_point = function() { balloon.remove(); }
 }
 var load_view_point_in_progress = false;
-var viewed_point_id = null;
 var clear_view_point = function() {}
 
 
