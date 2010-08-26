@@ -12,6 +12,35 @@
     function setup_map(map_div_id) {
         $('div#'+map_div_id).css('position', 'relative');
         the_map = new VEMap(map_div_id);
+        the_map.AttachEvent("onclick", function(evt) {
+            if (evt.elementID === null) return;
+
+            var shape = the_map.GetShapeByID(evt.elementID);
+            var point = shape.GetIconAnchor();
+            // onclickpoint function is implemented in geomaptool.js
+            onclickpoint(point.Latitude, point.Longitude,
+                shape.naaya_id, shape.naaya_tooltip);
+        });
+        the_map.AttachEvent("onmouseover", function(evt) {
+            if (evt.elementID === null) return;
+
+            var shape = the_map.GetShapeByID(evt.elementID);
+            var point = shape.GetIconAnchor();
+            // onmouseoverpoint function is implemented in geomaptool.js
+            onmouseoverpoint(point.Latitude, point.Longitude,
+                shape.naaya_id, shape.naaya_tooltip);
+        });
+    }
+
+    function page_position(lat, lon) {
+        var point = new VELatLong(lat, lon);
+        return the_map.LatLongToPixel(point);
+    }
+
+    function map_coords(x, y) {
+        var pixel = new VEPixel(x, y);
+        var point = the_map.PixelToLatLong(pixel);
+        return {'lat': point.Latitude, 'lon': point.Longitude};
     }
 
     function after_load_map() {
@@ -29,11 +58,9 @@
                 var place = this;
                 var point = new VELatLong(place.lat, place.lon);
                 var marker = new VEShape(VEShapeType.Pushpin, point);
-                if (place.label != 'cluster') {
-                    marker.SetTitle(place.label);
-                    marker.SetDescription(place.tooltip);
-                }
                 marker.SetCustomIcon(icon_url[place.icon_name]);
+                marker.naaya_id = place.id;
+                marker.naaya_tooltip = place.tooltip;
                 the_points_layer.AddShape(marker);
             });
         });
@@ -76,6 +103,12 @@
 
     function go_to_address(address) {
         the_map.Find(null, address);
+    }
+
+    function set_center_and_zoom_in(lat, lon) {
+        var point = new VELatLong(lat, lon);
+        var zoom_level = the_map.GetZoomLevel();
+        the_map.SetCenterAndZoom(point, zoom_level+1);
     }
 
     function load_map_show_point(point) {
@@ -129,7 +162,10 @@
             the_map.AttachEvent('onchangeview', refresh_points);
             return {
                 go_to_address: go_to_address,
-                refresh_points: refresh_points
+                refresh_points: refresh_points,
+                page_position: page_position,
+                map_coords: map_coords,
+                set_center_and_zoom_in: set_center_and_zoom_in
             };
         },
         object_index_map: function(map_div_id, coord) {

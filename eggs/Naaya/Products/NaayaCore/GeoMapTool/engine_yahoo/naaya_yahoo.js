@@ -26,6 +26,17 @@
         the_map.addZoomLong();
     }
 
+    function page_position(lat, lon) {
+        var geopoint = new YGeoPoint(lat, lon);
+        return the_map.convertLatLonXY(geopoint);
+    }
+
+    function map_coords(x, y) {
+        var coordpoint = new YCoordPoint(x, y);
+        var geopoint = the_map.convertXYLatLon(coordpoint);
+        return {'lat': geopoint.Lat, 'lon': geopoint.Lon};
+    }
+
     function refresh_points() {
         var bounds = get_bounds();
         load_map_points(bounds, function(places) {
@@ -34,19 +45,16 @@
                 var place = this;
                 var point = new YGeoPoint(place.lat, place.lon);
                 var marker = new YMarker(point, icons[place.icon_name]);
-                if (place.label === 'cluster') {
-                    YEvent.Capture(marker, 'MouseClick', function() {
-                        the_map.drawZoomAndCenter(point,
-                                the_map.getZoomLevel() - 1);
-                    });
-                } else {
-                    YEvent.Capture(marker, 'MouseClick', function() {
-                        load_marker_balloon(place.lat, place.lon,
-                            function(html) {
-                                marker.openSmartWindow(html);
-                            });
-                    });
-                }
+                YEvent.Capture(marker, 'MouseClick', function() {
+                    // onclickpoint function is implemented in geomaptool.js
+                    onclickpoint(place.lat, place.lon,
+                        place.id, place.tooltip);
+                });
+                YEvent.Capture(marker, 'MouseOver', function() {
+                    // onmouseoverpoint function is implemented in geomaptool.js
+                    onmouseoverpoint(place.lat, place.lon,
+                        place.id, place.tooltip);
+                });
                 the_map.addOverlay(marker);
             });
         });
@@ -65,6 +73,12 @@
 
     function point_to_coord(point) {
         return {lat: point.Lat, lon: point.Lon};
+    }
+
+    function set_center_and_zoom_in(lat, lon) {
+        var point = new YGeoPoint(lat, lon);
+        var zoom_level = the_map.getZoomLevel();
+        the_map.drawZoomAndCenter(point, zoom_level-1);
     }
 
     function editor_show_point(point) {
@@ -142,7 +156,10 @@
                 go_to_address: function(address) {
                     the_map.drawZoomAndCenter(address, 9);
                 },
-                refresh_points: refresh_points
+                refresh_points: refresh_points,
+                page_position: page_position,
+                map_coords: map_coords,
+                set_center_and_zoom_in: set_center_and_zoom_in
             };
         },
         object_index_map: function(map_div_id, coord) {
