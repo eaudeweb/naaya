@@ -18,7 +18,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
         "integer": ("String", 'int', ),
         "float": ("String", 'float', ),
         "text": ("TextArea", 'str', ),
-        "selection": ("Select", 'list', ),
+        "selection": ("Select", 'str', ),
     }
 
 
@@ -51,6 +51,7 @@ class UpdateDynamicProp2Schema(UpdateScript):
                         data_type=data_type,
                         widget_type=widget_type,
                         sortorder=int(prop.order) + 300,
+                        localized=True,
                         required=bool(prop.required),
                         default=prop.defaultvalue
                     )
