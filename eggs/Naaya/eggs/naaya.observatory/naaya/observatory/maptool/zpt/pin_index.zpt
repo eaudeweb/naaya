@@ -67,7 +67,7 @@
             <tal:block condition="python:rating==5">
             <img alt="Very good" title="Vote very good" class="vote-img"
                 tal:attributes="src very_good_image"
-                i18n:attributes="alt title"/>
+                i18n:attributes="alt;title"/>
             <br />
             <small i18n:translate="">Very good</small>
             </tal:block>
@@ -75,7 +75,7 @@
             <tal:block condition="python:rating==4">
             <img alt="Good" title="Vote good" class="vote-img"
                 tal:attributes="src good_image"
-                i18n:attributes="alt title"/>
+                i18n:attributes="alt;title"/>
             <br />
             <small i18n:translate="">Good</small>
             </tal:block>
@@ -83,7 +83,7 @@
             <tal:block condition="python:rating==3">
             <img alt="Average" title="Vote average" class="vote-img"
                 tal:attributes="src average_image"
-                i18n:attributes="alt title"/>
+                i18n:attributes="alt;title"/>
             <br />
             <small i18n:translate="">Average</small>
             </tal:block>
@@ -91,7 +91,7 @@
             <tal:block condition="python:rating==2">
             <img alt="Bad" title="Vote bad" class="vote-img"
                 tal:attributes="src bad_image"
-                i18n:attributes="alt title"/>
+                i18n:attributes="alt;title"/>
             <br />
             <small i18n:translate="">Bad</small>
             </tal:block>
@@ -99,7 +99,7 @@
             <tal:block condition="python:rating==1">
             <img alt="Very bad" title="Vote very bad" class="vote-img"
                 tal:attributes="src very_bad_image"
-                i18n:attributes="alt title"/>
+                i18n:attributes="alt;title"/>
             <br />
             <small i18n:translate="">Very bad</small>
             </tal:block>

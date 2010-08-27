@@ -119,7 +119,7 @@
                     <img tal:attributes="src very_good_image" class="vote-img"
                         onclick="SelectVote($(this), 5); " id="_v5"
                         alt="Very good" title="Vote very good"
-                        i18n:attributes="alt title"/>
+                        i18n:attributes="alt;title"/>
                     <br />
                     <small i18n:translate="">Very good</small>
                 </div>
@@ -127,7 +127,7 @@
                     <img tal:attributes="src good_image" class="vote-img"
                         onclick="SelectVote($(this), 4); " id="_v4"
                         alt="Good" title="Vote good"
-                        i18n:attributes="alt title"/>
+                        i18n:attributes="alt;title"/>
                     <br />
                     <small i18n:translate="">Good</small>
                 </div>
@@ -136,7 +136,7 @@
                     <img tal:attributes="src average_image" class="vote-img"
                         onclick="SelectVote($(this), 3); " id="_v3"
                         alt="Average" title="Vote average"
-                        i18n:attributes="alt title"/>
+                        i18n:attributes="alt;title"/>
                     <br />
                     <small i18n:translate="">Average</small>
                 </div>
@@ -145,7 +145,7 @@
                     <img tal:attributes="src bad_image" class="vote-img"
                         onclick="SelectVote($(this), 2); " id="_v2"
                         alt="Bad" title="Vote bad"
-                        i18n:attributes="alt title"/>
+                        i18n:attributes="alt;title"/>
                     <br />
                     <small i18n:translate="">Bad</small>
                 </div>
@@ -154,7 +154,7 @@
                     <img tal:attributes="src very_bad_image" class="vote-img"
                         onclick="SelectVote($(this), 1); " id="_v1"
                         alt="Very bad" title="Vote very bad"
-                        i18n:attributes="alt title"/>
+                        i18n:attributes="alt;title"/>
                     <br />
                     <small i18n:translate="">Very bad</small>
                 </div>
