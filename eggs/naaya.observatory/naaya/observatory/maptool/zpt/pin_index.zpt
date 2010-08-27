@@ -32,28 +32,28 @@
             <img tal:attributes="src vegetation_image" class="rate-img"
                 id="rate-img" />
             <br />
-            <small>Vegetation</small>
+            <small i18n:translate="">Vegetation</small>
             </tal:block>
 
             <tal:block condition="python:type=='wat'">
             <img tal:attributes="src water_image" class="rate-img"
                 id="rate-img" />
             <br />
-            <small>Water</small>
+            <small i18n:translate="">Water</small>
             </tal:block>
 
             <tal:block condition="python:type=='soil'">
             <img tal:attributes="src soil_image" class="rate-img"
                 id="rate-img" />
             <br />
-            <small>Soil</small>
+            <small i18n:translate="">Soil</small>
             </tal:block>
 
             <tal:block condition="python:type=='cit'">
             <img tal:attributes="src citizens_image" class="rate-img"
                 id="rate-img" />
             <br />
-            <small>Citizen reported</small>
+            <small i18n:translate="">Citizen reported</small>
             </tal:block>
         </div>
 
@@ -66,53 +66,56 @@
             ">
             <tal:block condition="python:rating==5">
             <img alt="Very good" title="Vote very good" class="vote-img"
-                tal:attributes="src very_good_image"/>
+                tal:attributes="src very_good_image"
+                i18n:attributes="alt title"/>
             <br />
-            <small>Very good</small>
+            <small i18n:translate="">Very good</small>
             </tal:block>
 
             <tal:block condition="python:rating==4">
             <img alt="Good" title="Vote good" class="vote-img"
-                tal:attributes="src good_image"/>
+                tal:attributes="src good_image"
+                i18n:attributes="alt title"/>
             <br />
-            <small>Good</small>
+            <small i18n:translate="">Good</small>
             </tal:block>
 
             <tal:block condition="python:rating==3">
             <img alt="Average" title="Vote average" class="vote-img"
-                tal:attributes="src average_image"/>
+                tal:attributes="src average_image"
+                i18n:attributes="alt title"/>
             <br />
-            <small>Average</small>
+            <small i18n:translate="">Average</small>
             </tal:block>
 
             <tal:block condition="python:rating==2">
             <img alt="Bad" title="Vote bad" class="vote-img"
-                tal:attributes="src bad_image"/>
+                tal:attributes="src bad_image"
+                i18n:attributes="alt title"/>
             <br />
-            <small>Bad</small>
+            <small i18n:translate="">Bad</small>
             </tal:block>
 
             <tal:block condition="python:rating==1">
             <img alt="Very bad" title="Vote very bad" class="vote-img"
-                tal:attributes="src very_bad_image"/>
+                tal:attributes="src very_bad_image"
+                i18n:attributes="alt title"/>
             <br />
-            <small>Very bad</small>
+            <small i18n:translate="">Very bad</small>
             </tal:block>
         </div>
 
         <div id="box_2_buttons">
             <input type="button" value="Rate" id="submit" tal:attributes="
             onclick string:load_add_point(${latitude}, ${longitude}, '${type}')"
-            />
+            i18n:attributes="value" />
         </div>
 
         <div class="clear">
         </div>
 
         <div id="comments">
-            <h3>
-                <tal:block i18n:translate="">Comment</tal:block>
-            </h3>
+            <h3 i18n:translate="">Comment</h3>
 
             <span tal:replace="pin/date"/>
             <span tal:replace="pin/author"/>
