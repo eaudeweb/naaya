@@ -6,21 +6,19 @@ class SessionManager(object):
     def generate_session_key(self):
         return randint(10**5, 10**10)
 
-    def get_author_and_session(self, REQUEST):
+    def set_session(self, REQUEST):
         author = REQUEST.AUTHENTICATED_USER.getUserName()
         if author == 'Anonymous User':
             session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
             if session_key == None:
                 session_key = self.generate_session_key()
                 REQUEST.RESPONSE.setCookie(self.SESSION_KEY, session_key)
-        else:
-            session_key = None
-        return author, session_key
+            return session_key
 
-    def query_author_and_session(self, REQUEST):
+    def get_author_and_session(self, REQUEST):
         author = REQUEST.AUTHENTICATED_USER.getUserName()
         if author == 'Anonymous User':
-            session_key = REQUEST.cookies.get(self.SESSION_KEY, None)
+            session_key = REQUEST.cookies.get(self.SESSION_KEY)
         else:
             session_key = None
         return author, session_key

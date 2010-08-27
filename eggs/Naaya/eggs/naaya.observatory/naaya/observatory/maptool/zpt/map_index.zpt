@@ -33,6 +33,7 @@
 
 <metal:block metal:fill-slot="body">
 <tal:block tal:define="
+    session_key python:view.set_session(request);
     geo_types python:request.get('geo_types', view.portal_map.getSymbolsIds());
     geo_query python:request.get('geo_query', '');
     path python:request.get('path', '');
