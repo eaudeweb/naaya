@@ -8,7 +8,7 @@ from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
-from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
 from Products.NaayaCore.GeoMapTool import clusters

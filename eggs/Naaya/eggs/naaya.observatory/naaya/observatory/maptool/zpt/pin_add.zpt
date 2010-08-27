@@ -103,7 +103,7 @@
                 <br />
                 <br />
 
-                <p class="type" style="">
+                <p class="type" style="" i18n:translate="">
                     Type comment if any. Thanks!
                 </p>
             </div>
@@ -118,50 +118,45 @@
                 <div align="center" class="vote_item">
                     <img tal:attributes="src very_good_image" class="vote-img"
                         onclick="SelectVote($(this), 5); " id="_v5"
-                        alt="Very good" title="Vote Very Good"  />
+                        alt="Very good" title="Vote very good"
+                        i18n:attributes="alt title"/>
                     <br />
-                    <small>
-                        Very good
-                    </small>
+                    <small i18n:translate="">Very good</small>
                 </div>
                 <div align="center" class="vote_item">
                     <img tal:attributes="src good_image" class="vote-img"
                         onclick="SelectVote($(this), 4); " id="_v4"
-                        alt="Good" title="Vote Good" />
+                        alt="Good" title="Vote good"
+                        i18n:attributes="alt title"/>
                     <br />
-                    <small>
-                        Good
-                    </small>
+                    <small i18n:translate="">Good</small>
                 </div>
 
                 <div align="center" class="vote_item">
                     <img tal:attributes="src average_image" class="vote-img"
                         onclick="SelectVote($(this), 3); " id="_v3"
-                        alt="Average" title="Vote Average" />
+                        alt="Average" title="Vote average"
+                        i18n:attributes="alt title"/>
                     <br />
-                    <small>
-                        Average
-                    </small>
+                    <small i18n:translate="">Average</small>
                 </div>
 
                 <div align="center" class="vote_item">
                     <img tal:attributes="src bad_image" class="vote-img"
                         onclick="SelectVote($(this), 2); " id="_v2"
-                        alt="Bad" title="Vote Bad" />
+                        alt="Bad" title="Vote bad"
+                        i18n:attributes="alt title"/>
                     <br />
-                    <small>
-                        Bad
-                    </small>
+                    <small i18n:translate="">Bad</small>
                 </div>
 
                 <div align="center" class="vote_item">
                     <img tal:attributes="src very_bad_image" class="vote-img"
                         onclick="SelectVote($(this), 1); " id="_v1"
-                        alt="Very Bad" title="Vote Very Bad" />
+                        alt="Very bad" title="Vote very bad"
+                        i18n:attributes="alt title"/>
                     <br />
-                    <small>
-                        Very bad
-                    </small>
+                    <small i18n:translate="">Very bad</small>
                 </div>
             </div>
 
@@ -180,9 +175,10 @@
 
             <div id="box_3_buttons">
                 <input type="submit" value="Rate" name="submit" id="submit"
-                    class="submit-rate"/>
+                    class="submit-rate" i18n:attributes="value"/>
                 <input type="reset" value="Cancel" name="reset" id="reset"
-                    onclick="javascript:clear_add_point(); return false;" />
+                    onclick="javascript:clear_add_point(); return false;"
+                    i18n:attributes="value"/>
             </div>
         </form>
     </div>
