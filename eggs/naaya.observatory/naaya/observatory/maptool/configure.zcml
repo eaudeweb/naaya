@@ -9,41 +9,41 @@
 
   <!-- Views -->
   <browser:page
-    name="observatory_map"
-    for="Products.Naaya.NySite.NySite"
+    name="map"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     template="zpt/map_index.zpt"
     permission="zope.Public"
   />
 
   <browser:page
-    name="observatory_map_icon"
-    for="Products.Naaya.NySite.NySite"
+    name="map_icon"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     attribute="map_icon"
     permission="zope.Public"
   />
 
   <browser:page
-    name="observatory_xrjs_clusters"
-    for="Products.Naaya.NySite.NySite"
+    name="xrjs_clusters"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     attribute="xrjs_getClusters"
     permission="zope.Public"
   />
 
   <browser:page
-    name="observatory_pin_add"
-    for="Products.Naaya.NySite.NySite"
+    name="pin_add"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     attribute="pin_add"
     permission="zope.Public"
-    allowed_attributes="add_pin_to_observatory"
+    allowed_attributes="submit_pin"
   />
 
   <browser:page
-    name="observatory_pin"
-    for="Products.Naaya.NySite.NySite"
+    name="pin"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     template="zpt/pin_index.zpt"
     permission="zope.Public"
@@ -51,17 +51,17 @@
 
   <browser:page
     name="check_user_can_add_pin"
-    for="Products.Naaya.NySite.NySite"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
     attribute="check_user_can_add_pin"
     permission="zope.Public"
   />
 
   <browser:page
-    name="add_random_pins_to_observatory"
-    for="Products.Naaya.NySite.NySite"
+    name="add_random_pins"
+    for=".observatory.NyObservatory"
     class=".views.MapView"
-    attribute="add_random_pins_to_observatory"
+    attribute="add_random_pins"
     permission="zope.Public"
   />
 
