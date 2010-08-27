@@ -246,3 +246,41 @@ div#vote-items {
     position: relative;
     right: 2em;
 }
+
+#votes-legend {
+    float: left;
+}
+
+#rates-legend {
+    float: right;
+}
+
+#votes-legend strong {
+    float: left;
+    margin-top:  1.5em;
+}
+
+#votes-legend span {
+    float: left;
+    text-align: center;
+    margin-left: 1em;
+}
+
+#rates-legend strong {
+    float: left;
+    margin-top:  1.5em;
+}
+
+#rates-legend span {
+    float: right;
+    text-align: center;
+    margin-left: 1em;
+}
+
+#votes-legend, #rates-legend img {
+    /*margin-bottom: -1em;*/
+}
+
+h2.legend-heading {
+    padding: 0.5em;
+}
