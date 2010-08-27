@@ -3,7 +3,7 @@
 ">
     <div id="box_2">
         <div id="box_2_top_bar">
-            <h2 id="box_2_title" tal:content="string:Cluster"/>
+            <h2 id="box_2_title" i18n:translate="">Cluster</h2>
 
             <span class="close">
                 <a href="javascript:clear_view_point();">X</a>
@@ -35,9 +35,9 @@
                             lon point/longitude;
                             text string:${point/date} - ${point/author}">
                     <a tal:attributes="
-                            onclick string:load_view_point(${lat}, ${lon}, '${id}')"
+                        onclick string:load_view_point(${lat}, ${lon}, '${id}')"
                         tal:content="text"></a>
-                        </tal:block>
+                    </tal:block>
                     </li>
                 </ul>
             </div>
