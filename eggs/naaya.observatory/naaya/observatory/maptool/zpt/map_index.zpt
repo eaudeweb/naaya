@@ -20,10 +20,6 @@
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie8.css" />
 <![endif]-->
 
-<!--[if IE 8]>
-<link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie8.css" />
-<![endif]-->
-
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/le.js"></script>
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/bg.js"></script>
 <script type="text/javascript" language="Javascript" src="++resource++naaya.observatory.maptool/js/effects.js"></script>
@@ -34,8 +30,6 @@
 <metal:block metal:fill-slot="body">
 <tal:block tal:define="
     session_key python:view.set_session(request);
-    geo_types python:request.get('geo_types', view.portal_map.getSymbolsIds());
-    geo_query python:request.get('geo_query', '');
     path python:request.get('path', '');
     height python:request.get('height', view.portal_map.map_height_px)">
 <tal:block content="structure python:view.setup_map_engine_html(request)" />
@@ -44,98 +38,44 @@
 <script tal:content="structure python:'var portal_url=%s;' % view.site.rstk.json_dumps(view.site.absolute_url())"></script>
 
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-	<div id="center_content" style="width: 78%; overflow-x: auto;">
-		<h1 i18n:translate="" tal:content="view/site/title_or_id" />
-		<noscript>
-			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
-		</noscript>
-		<p id="js_links" style="display: none; height: 2em">
-			<span i18n:translate="">Displaying </span>
-			<strong id="record_counter"></strong>
-			<span i18n:translate="">location(s).</span>
-			You can also <a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>, <a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>
-			or <a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a>.
-		</p>
-		<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
-		<br clear="all" style="clear:both"/>
-		<div style="display:none" id="map_markers"></div>
-	</div>
+    <div id="center_content" style="width: 78%; overflow-x: auto;">
+        <h1 i18n:translate="" tal:content="view/site/title_or_id" />
+        <noscript>
+            <p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
+        </noscript>
+        <p id="js_links" style="display: none; height: 2em">
+            <span i18n:translate="">Displaying </span>
+            <strong id="record_counter"></strong>
+            <span i18n:translate="">pin(s).</span>
+        </p>
+        <div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
+        <br clear="all" style="clear:both"/>
+        <div style="display:none" id="map_markers"></div>
+    </div>
 
-	<div id="portalmap">
-	    <div class="portalmap_portlet">
-		<div class="portalmap_portlet_title">
-		    <p i18n:translate="">Drag & Drop pin to rate</p>
-		</div>
+    <div id="portalmap">
+        <div class="portalmap_portlet">
+            <div class="portalmap_portlet_title">
+                <p i18n:translate="">Find address</p>
+            </div>
+            <div>
+                <input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
+                <input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
+            </div>
+        </div>
+    </div>
 
-		<div>
-		    <img src="++resource++naaya.observatory.maptool/images/pin.png" id="pin" alt="Pin" style="z-index: 9999;" title="Pin"  />
-		</div>
-	    </div>
-	</div>
+    <div id="portalmap">
+        <div class="portalmap_portlet">
+        <div class="portalmap_portlet_title">
+            <p i18n:translate="">Drag & Drop pin to rate</p>
+        </div>
 
-	<div id="portalmap">
-		<div class="portalmap_portlet">
-			<div class="portalmap_portlet_title">
-				<p i18n:translate="">Find address</p>
-			</div>
-			<div>
-				<input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
-				<input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
-			</div>
-			<div class="portalmap_portlet_title">
-				<p i18n:translate="">Filter locations</p>
-			</div>
-			<div class="map_filters">
-				<div>
-					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" onkeypress="return handleKeyPress(this, event);" style="width: 60%" />
-					<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Go" onclick="startMapRefresh()" i18n:attributes="value"/>
-					<noscript>
-						<p><small i18n:translate="">eg: "water supply"</small></p>
-					</noscript>
-				</div>
-				<small><a href="javascript:toggleSelect();" title="Check all" i18n:translate="" i18n:attributes="title" id="checkall" style="display:none">Uncheck All</a></small>
-					<ul class="map_legend" id="filter_map" tal:define="parentsList view/portal_map/getParentsListOrdered" tal:condition="parentsList">
-						<tal:block repeat="item parentsList">
-							<tal:block define="children python:view.portal_map.getSymbolChildrenOrdered(item.id);">
-							<li>
-								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox" style="display: none;"
-									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
-								<img tal:condition="python:item.picture is not None"
-									tal:attributes="src string:portal_map/getSymbolPicture?id=${item/id}; alt item/title" width="16" height="16" />
-								<label tal:attributes="for item/id"><span i18n:translate="" tal:content="item/title" /></label>
-								<ul tal:condition="children" class="category_child">
-									<li tal:repeat="child children">
-										<input type="checkbox" name="geo_types:list"
-											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
-										<img tal:condition="python:child.picture is not None"
-											tal:attributes="src string:portal_map/getSymbolPicture?id=${child/id}; alt child/title" width="16" height="16" />
-										<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
-									</li>
-								</ul>
-							</li>
-							</tal:block>
-						</tal:block>
-					</ul>
-					<div>
-						<input type="hidden" id="path" name="path" tal:attributes="value path" />
-						<noscript>
-							<input type="submit" value="List locations" class="map-button" name="list_locations:method" i18n:attributes="value" />
-						</noscript>
-						<noscript>
-							<input type="submit" value="Download GeoRSS" class="map-button" name="export_geo_rss:method" i18n:attributes="value" />
-						</noscript>
-					</div>
-			</div>
-		</div>
-	</div>
-</form>
-<form id="list_locations_form" action="list_locations" method="get" style="display:none">
-	<input type="hidden" name="lat_min" />
-	<input type="hidden" name="lat_max" />
-	<input type="hidden" name="lon_min" />
-	<input type="hidden" name="lon_max" />
-	<input type="hidden" name="symbols" />
-	<input type="hidden" name="geo_query" />
+        <div>
+            <img src="++resource++naaya.observatory.maptool/images/pin.png" id="pin" alt="Pin" style="z-index: 9999;" title="Pin"  />
+        </div>
+        </div>
+    </div>
 </form>
 
 <script type="text/javascript">
