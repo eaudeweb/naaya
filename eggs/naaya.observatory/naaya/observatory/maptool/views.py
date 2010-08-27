@@ -8,7 +8,7 @@ from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
 from Products.NaayaCore.GeoMapTool import clusters
@@ -232,6 +232,11 @@ class MapView(SessionManager):
     def get_pin_by_id(self, id):
         return self.context.get_pin(id)
 
+    def short_string(self, s, limit):
+        if len(s) <= limit:
+            return s
+        return s[:limit-3] + '...'
+
     def check_user_can_add_pin(self, lat, lon, author, session_key):
         """ """
         tc_start = time()
@@ -287,7 +292,7 @@ class MapView(SessionManager):
         print 'check user can add pin', tc_end - tc_start
         return ret
 
-    _pin_add = PageTemplateFile('zpt/pin_add', globals())
+    _pin_add = ViewPageTemplateFile('zpt/pin_add.zpt', globals())
     def pin_add(self, latitude, longitude, REQUEST, type=None):
         """ """
         lat, lon = float(latitude), float(longitude)
@@ -299,16 +304,16 @@ class MapView(SessionManager):
             return json.dumps({'can_add': can_add})
 
         address, country = query_reverse_geocode(lat, lon)
-        html = self._pin_add.__of__(self.context)(latitude=latitude,
-                                                  longitude=longitude,
-                                                  address=address,
-                                                  country=country,
-                                                  type=type)
+        html = self._pin_add(latitude=latitude,
+                             longitude=longitude,
+                             address=address,
+                             country=country,
+                             type=type)
         return json.dumps({'can_add': can_add, 'html': html})
 
-    _cluster_index = PageTemplateFile('zpt/cluster_index', globals())
+    _cluster_index = ViewPageTemplateFile('zpt/cluster_index.zpt', globals())
     def cluster_index(self, point_ids, REQUEST=None):
         """ """
         points = [self.context.get_pin(id) for id in point_ids]
-        return self._cluster_index.__of__(self.context)(points=points)
+        return self._cluster_index(points=points)
 
