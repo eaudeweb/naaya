@@ -31,18 +31,7 @@ function load_map_points(bounds, callback) {
     setAjaxWait();
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
         '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
-    var query = document.getElementById('geo_query').value;
-    if (query === naaya_map_i18n["Type keywords"]) {
-        query = "";
-    }
-    var enc_form = $("form#frmFilterMap").serialize();
-    //don't send explanatory text
-    enc_form = enc_form.replace(encode_form_value(
-                naaya_map_i18n["Type location address"]), "");
-    enc_form = enc_form.replace(encode_form_value(
-                naaya_map_i18n["Type keywords"]), "");
-    var url = portal_url + "/observatory/xrjs_clusters?" +
-              str_bounds + '&' + enc_form + '&geo_query=' + query;
+    var url = portal_url + "/observatory/xrjs_clusters?" + str_bounds;
     $.ajax({
         url: url,
         dataType: 'json',
@@ -70,51 +59,8 @@ function load_map_points(bounds, callback) {
             }
         });
         setRecordCounter(num_records);
-        update_locations_values(bounds, query);
         return response.points;
     }
-}
-
-function update_locations_values(bounds, query){
-	/* update the locations form fields with the new viewport coordinates */
-	var form = document.getElementById('list_locations_form');
-	form.lat_min.value = bounds.lat_min;
-	form.lat_max.value = bounds.lat_max;
-	form.lon_min.value = bounds.lon_min;
-	form.lon_max.value = bounds.lon_max;
-	form.geo_query.value = query;
-	var filter_map = document.getElementById('filter_map');
-	if (filter_map != null) {
-		var symbols = filter_map.getElementsByTagName('input');
-		form.symbols.value = "";
-		for (var i=0;i<symbols.length;i++){
-			if (symbols[i].checked && form.symbols.value.indexOf(symbols[i]) == -1){
-				if (form.symbols.value != ""){
-					form.symbols.value = form.symbols.value + "," + symbols[i].value;
-				}
-				else {form.symbols.value = symbols[i].value;}
-			}
-		}
-		var req_link = "?lat_min=" + bounds.lat_min +
-				"&lat_max=" + bounds.lat_max +
-				"&lon_min=" + bounds.lon_min +
-				"&lon_max=" + bounds.lon_max +
-				"&geo_types=" + form.symbols.value +
-				"&geo_query=" + query;
-	
-		$('#view_as_list').attr('href', "./list_locations" + req_link);
-		$('#download_georss').attr('href', "./export_geo_rss" + req_link);
-		var form_symbols = form.symbols.value.split(',');
-		var req_symbols = "";
-		for (var i=0;i<form_symbols.length; i++) {
-			req_symbols += ("geo_types=" + form_symbols[i]);
-			if (i < form_symbols.length) {
-				req_symbols += "&";
-			}
-		}
-		$('#view_in_google_earth').attr('href', "./downloadLocationsKml?" +
-		       req_symbols + "&geo_query=" + query);
-	}
 }
 
 function setAjaxWait() {
@@ -174,7 +120,6 @@ function displayParentCheckboxes() {
 function showPageElements() {
 	// set explanatory text in search fields
 	var address = document.getElementById('address');
-	var geo_query = document.getElementById('geo_query');
 	address.value = naaya_map_i18n["Type location address"];
 	address.style.color = "#ccc";
 	address.onfocus = function() {
@@ -183,20 +128,10 @@ function showPageElements() {
 		}
 		this.style.color = "#000";
 	}
-	geo_query.value = naaya_map_i18n["Type keywords"];
-	geo_query.style.color = "#ccc";
-	geo_query.onfocus = function() {
-		if (this.value === naaya_map_i18n["Type keywords"]) {
-			this.value = "";
-		}
-		this.style.color = "#000";
-	}
 
-	document.getElementById('checkall').style.display = "inline";
 	document.getElementById('js_links').style.display = "block";
 	a = document.getElementById('address').readOnly = false;
 	document.getElementById('address_button').disabled = false;
-	document.getElementById('geo_query_button').disabled = false;
 	displayParentCheckboxes();
 }
 
