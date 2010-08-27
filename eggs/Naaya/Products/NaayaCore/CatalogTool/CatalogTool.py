@@ -48,6 +48,7 @@ except ImportError:
 
 from interfaces import INyCatalogAware
 from naaya.core.interfaces import INyObjectContainer
+from Products.NaayaBase.interfaces import INyContainer
 
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
@@ -306,6 +307,6 @@ def walk_folder(folder):
         if INyCatalogAware.providedBy(ob):
             yield ob
 
-        if INyObjectContainer.providedBy(ob):
+        if INyObjectContainer.providedBy(ob) or INyContainer.providedBy(ob):
             for ob in walk_folder(ob):
                 yield ob
