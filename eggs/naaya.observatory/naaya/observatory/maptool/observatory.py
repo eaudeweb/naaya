@@ -64,6 +64,10 @@ class NyObservatory(BTreeFolder2):
     def get_pin(self, id):
         return self._getOb(id)
 
+    def index_html(self, REQUEST):
+        """ """
+        return REQUEST.RESPONSE.redirect('%s/map' % self.absolute_url())
+
 InitializeClass(NyObservatory)
 
 class NyPushPin(SimpleItem):
