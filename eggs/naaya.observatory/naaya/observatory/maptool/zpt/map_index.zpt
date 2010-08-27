@@ -51,6 +51,84 @@
         <div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
         <br clear="all" style="clear:both"/>
         <div style="display:none" id="map_markers"></div>
+
+    <br />
+
+    <h2 i18n:translate="" class="legend-heading">
+        Legend
+    </h2>
+
+    <br />
+
+    <div id="votes-legend" style="float: left;">
+        <strong i18n:translate="">
+        Ratings
+        </strong>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/very-good.png" title="Vote very good" alt="Vote very good" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Very good</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/good.png" title="Vote good" alt="Vote good" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Good</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/average.png" title="Vote average" alt="Vote average" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Average</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/bad.png" title="Vote bad" alt="Vote bad" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Bad</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/very-bad.png" title="Vote very bad" alt="Vote very bad" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Very bad</small>
+        </span>
+    </div>
+
+    <div id="rates-legend" style="float: right;">
+        <strong i18n:translate="">
+        Pin types
+        </strong>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/vegetation.png" title="Vegetation" alt="Vegetation" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Vegetation</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/water.png" title="Water" alt="Water" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Water</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/soil.png" title="Soil" alt="Soil" i18n:attributes="title; alt" />
+        <br />
+        <small i18n:translate="">Soil</small>
+        </span>
+
+        <span>
+        <img src="++resource++naaya.observatory.maptool/images/citizens.png" title="Citizen reported" alt="Citizen reported" i18n:attributes="alt; title" />
+        <br />
+        <small i18n:translate="">Citizen reported</small>
+        </span>
+    </div>
+
+    <div class="clear">
+    </div>
+
     </div>
 
     <div id="portalmap">
@@ -76,6 +154,7 @@
         </div>
         </div>
     </div>
+
 </form>
 
 <script type="text/javascript">
