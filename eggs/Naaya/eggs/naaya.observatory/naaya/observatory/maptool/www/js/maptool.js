@@ -41,7 +41,7 @@ function load_map_points(bounds, callback) {
                 naaya_map_i18n["Type location address"]), "");
     enc_form = enc_form.replace(encode_form_value(
                 naaya_map_i18n["Type keywords"]), "");
-    var url = portal_url + "/observatory_xrjs_clusters?" +
+    var url = portal_url + "/observatory/xrjs_clusters?" +
               str_bounds + '&' + enc_form + '&geo_query=' + query;
     $.ajax({
         url: url,
@@ -73,27 +73,6 @@ function load_map_points(bounds, callback) {
         update_locations_values(bounds, query);
         return response.points;
     }
-}
-
-function load_marker_balloon(latitude, longitude, callback) {
-    var query = document.getElementById('geo_query').value;
-    if (query === naaya_map_i18n["Type keywords"]) {
-        query = "";
-    }
-    var enc_form = $("form#frmFilterMap").serialize();
-    //don't send explanatory text
-    enc_form = enc_form.replace(encode_form_value(
-                    naaya_map_i18n["Type location address"]), "");
-    enc_form = enc_form.replace(encode_form_value(
-                    naaya_map_i18n["Type keywords"]), "");
-
-    var url = portal_url + "/observatory_xrjs_tooltip?" +
-            enc_form + '&lat='+ latitude + '&lon=' + longitude +
-            '&geo_query=' + query;
-
-    $.get(url, function(data) {
-        callback(data);
-    });
 }
 
 function update_locations_values(bounds, query){
@@ -237,7 +216,7 @@ function load_add_point(lat, lon, type) {
     clear_view_point();
 
     $.ajax({
-        url: 'observatory_pin_add?latitude='+lat+'&longitude='+lon+'&type='+type,
+        url: 'observatory/pin_add?latitude='+lat+'&longitude='+lon+'&type='+type,
         dataType: 'json',
         success: function(data) {
             if (!data.can_add) {
@@ -292,7 +271,7 @@ function load_view_point(lat, lon, point_id) {
     clear_view_point();
 
     $.ajax({
-        url: 'observatory_pin?id='+point_id,
+        url: 'observatory/pin?id='+point_id,
         success: function(data) {
             view_point(lat, lon, data);
             load_view_point_in_progress = false;
