@@ -295,7 +295,8 @@ class MapView(SessionManager):
     def pin_add(self, latitude, longitude, REQUEST, type=None):
         """ """
         lat, lon = float(latitude), float(longitude)
-        author, session_key = self.query_author_and_session(REQUEST)
+        author, session_key = self.get_author_and_session(REQUEST)
+
         can_add = self.check_user_can_add_pin(lat, lon, author, session_key)
 
         if not can_add:
