@@ -197,8 +197,6 @@ class MapView(SessionManager):
 
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the bing map engine """
-        assert hasattr(self.portal_map, 'engine_bing')
-
         global_config = {
             'initial_address': self.portal_map.initial_address,
             'icons': list(self.get_geotype_icons()),
