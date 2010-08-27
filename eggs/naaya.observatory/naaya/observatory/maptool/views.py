@@ -52,7 +52,7 @@ class MapView(SessionManager):
         lat_min, lat_max = float(lat_min), float(lat_max)
         lon_min, lon_max = float(lon_min), float(lon_max)
 
-        catalog = self.site.observatory.catalog
+        catalog = self.context.catalog
         rating_idx = catalog._catalog.indexes['rating']
 
         lat_idx = catalog._catalog.indexes['latitude']
@@ -173,7 +173,7 @@ class MapView(SessionManager):
             for type in TYPE_VALUES:
                 for count in range(1000+1):
                     id = 'rating_%s_%d_%d' % (type, rating, count)
-                    url = ('observatory_map_icon?type=%s&rating=%s&number=%s'
+                    url = ('map_icon?type=%s&rating=%s&number=%s'
                                     % (type, rating, count))
                     yield {
                         'id': id,
@@ -186,7 +186,7 @@ class MapView(SessionManager):
         for rating in RATING_VALUES:
             for type in TYPE_VALUES:
                 id = 'single_rating_%s_%d' % (type, rating)
-                url = ('observatory_map_icon?type=%s&rating=%s'
+                url = ('map_icon?type=%s&rating=%s'
                                 % (type, rating))
                 yield {
                         'id': id,
@@ -208,7 +208,7 @@ class MapView(SessionManager):
         return map_engine.html_setup(request, global_config)
 
 
-    def add_pin_to_observatory(self, lat, lon, address, country, type, rating,
+    def submit_pin(self, lat, lon, address, country, type, rating,
             REQUEST, comment=None):
         """ """
         lat, lon = float(lat), float(lon)
@@ -216,30 +216,26 @@ class MapView(SessionManager):
         date = datetime.now()
         author, session_key = self.get_author_and_session(REQUEST)
 
-        observatory = self.site.observatory
-        pin_index = observatory.add_pin(type, lat, lon, address, country,
+        pin_id = self.context.add_pin(type, lat, lon, address, country,
                 rating, comment, date, author, session_key)
 
-    def add_random_pins_to_observatory(self, num, REQUEST):
+    def add_random_pins(self, num, REQUEST):
         num = int(num)
-        observatory = self.site.observatory
         for i in range(num):
             lat = randint(-89*100, 89*100)/100.
             lon = randint(-179*100, 179*100)/100.
             type = choice(TYPE_VALUES)
             rating = choice(RATING_VALUES)
-            observatory.add_pin_to_observatory(lat, lon, '', '', type, rating,
+            self.context.add_pin(lat, lon, '', '', type, rating,
                     REQUEST)
 
     def get_pin_by_id(self, id):
-        observatory = self.site.observatory
-        return observatory.get_pin(id)
+        return self.context.get_pin(id)
 
     def check_user_can_add_pin(self, lat, lon, author, session_key):
         """ """
         tc_start = time()
-        observatory = self.site.observatory
-        catalog = observatory.catalog
+        catalog = self.context.catalog
         def filter_rids():
             f = {'author': author,
                  'session_key': session_key}
@@ -313,7 +309,6 @@ class MapView(SessionManager):
     _cluster_index = PageTemplateFile('zpt/cluster_index', globals())
     def cluster_index(self, point_ids, REQUEST=None):
         """ """
-        observatory = self.site.observatory
-        points = [observatory.get_pin(id) for id in point_ids]
+        points = [self.context.get_pin(id) for id in point_ids]
         return self._cluster_index.__of__(self.context)(points=points)
 
