@@ -9,7 +9,8 @@
     images_path string:++resource++naaya.observatory.maptool/images;
     ">
     <div id="box_2_top_bar">
-        <h2 id="box_2_title" tal:content="address"/>
+        <h2 id="box_2_title" tal:attributes="title address"
+            tal:content="python:view.short_string(address, 45)"/>
 
         <span class="close">
             <a href="javascript:clear_view_point();">X</a>

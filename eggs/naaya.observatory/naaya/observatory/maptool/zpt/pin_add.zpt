@@ -8,7 +8,8 @@
     ">
 
     <div id="box_3_top_bar">
-        <h2 id="box_3_title" tal:content="address"/>
+        <h2 id="box_3_title" tal:attributes="title address"
+            tal:content="python:view.short_string(address, 70)"/>
 
         <span class="close">
             <a href="javascript:clear_add_point();">X</a>
@@ -32,10 +33,11 @@
                  tal:attributes="value country" />
             <input type="hidden" name="vote-val" value="" id="vote-val" />
             <input type="hidden" name="rate-val" id="rate-val"
-                tal:attributes="value python:test(type,type,'')" />
+                tal:attributes="value python:type and type or ''" />
 
             <div id="rate-items" tal:define="
                 fixed_type python:type in ['cit', 'veg', 'wat', 'soil'];
+                actived_style    string:border: 1px solid #FFFFFF;
                 vegetation_image string:${images_path}/vegetation.png;
                 water_image      string:${images_path}/water.png;
                 soil_image       string:${images_path}/soil.png;
@@ -50,7 +52,7 @@
 
                     <tal:block condition="fixed_type">
                     <img tal:attributes="src vegetation_image;
-                        style python:test(type=='veg','border: 1px solid #FFFFFF','')"
+                        style python:(type=='veg') and actived_style or ''"
                         class="rate-img" id="veg-img" />
                     </tal:block>
                 </div>
@@ -64,7 +66,7 @@
 
                     <tal:block condition="fixed_type">
                     <img tal:attributes="src water_image;
-                        style python:test(type=='wat','border: 1px solid #FFFFFF','')"
+                        style python:(type=='wat') and actived_style or ''"
                         class="rate-img" id="wat-img" />
                     </tal:block>
                 </div>
@@ -78,7 +80,7 @@
 
                     <tal:block condition="fixed_type">
                     <img tal:attributes="src soil_image;
-                        style python:test(type=='soil','border: 1px solid #FFFFFF','')"
+                        style python:(type=='soil') and actived_style or ''"
                         class="rate-img" id="soil-img" />
                     </tal:block>
                 </div>
@@ -92,7 +94,7 @@
 
                     <tal:block condition="fixed_type">
                     <img tal:attributes="src citizens_image;
-                        style python:test(type=='cit','border: 1px solid #FFFFFF','')"
+                        style python:(type=='cit') and actived_style or ''"
                         class="rate-img" id="cit-img" />
                     </tal:block>
                 </div>
