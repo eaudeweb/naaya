@@ -33,11 +33,13 @@ def map_icon(rating, type, number=None):
 
         # add type layer
         xt, yt = type_icon.size
-        x, y = (xr - xt) / 2, (yr - yt) / 2 - 3
-        layer.paste(type_icon, (x, y))
-
         if number_icons is None:
+            x, y = (xr - xt) / 2, (yr - yt) / 2
+            layer.paste(type_icon, (x, y))
             return layer
+        else:
+            x, y = (xr - xt) / 2, (yr - yt) / 2 - 3
+            layer.paste(type_icon, (x, y))
 
         # add number layer
         xns = [icon.size[0] for icon in number_icons]
