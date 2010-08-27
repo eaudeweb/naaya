@@ -226,8 +226,7 @@ class MapView(SessionManager):
             lon = randint(-179*100, 179*100)/100.
             type = choice(TYPE_VALUES)
             rating = choice(RATING_VALUES)
-            self.context.add_pin(lat, lon, '', '', type, rating,
-                    REQUEST)
+            self.submit_pin(lat, lon, '', '', type, rating, REQUEST)
 
     def get_pin_by_id(self, id):
         return self.context.get_pin(id)
