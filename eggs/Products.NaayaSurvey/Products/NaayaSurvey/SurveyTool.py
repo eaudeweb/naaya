@@ -66,6 +66,7 @@ class SurveyTool(Folder):
 
     css_survey_common = DTMLFile('www/survey_common.css', globals())
     fancy_checkmark = ImageFile('www/fancy_checkmark.gif', globals())
+    survey_js = ImageFile('www/survey.js', globals())
 
     manage_options = (
         {'label':'Contents', 'action':'manage_main',
