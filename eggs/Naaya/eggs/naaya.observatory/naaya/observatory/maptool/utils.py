@@ -8,8 +8,7 @@ import zLOG
 
 from naaya.core.ggeocoding import GeocoderServiceError, reverse_geocode
 
-RATING_VALUES = range(1, 5+1)
-TYPE_VALUES = ['veg', 'wat', 'soil', 'cit']
+from observatory import TYPE_VALUES, RATING_VALUES
 
 def query_reverse_geocode(lat, lon):
     """ calls reverse_geocode and logs the error """

@@ -16,7 +16,7 @@ from Products.NaayaCore.GeoMapTool.clusters import (
         get_discretized_limits, Point, kmeans)
 
 from session import SessionManager
-from utils import RATING_VALUES, TYPE_VALUES
+from observatory import RATING_VALUES, TYPE_VALUES
 from utils import query_reverse_geocode, map_icon, map_distance
 from clusters_catalog import filter_rids, get_index_dict
 
