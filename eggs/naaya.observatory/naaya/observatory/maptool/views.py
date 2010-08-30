@@ -17,7 +17,7 @@ from Products.NaayaCore.GeoMapTool.clusters import (
 
 from session import SessionManager
 from observatory import RATING_VALUES, TYPE_VALUES
-from utils import query_reverse_geocode, map_icon, map_distance
+from utils import query_reverse_geocode, map_icon, map_distance, short_string
 from clusters_catalog import filter_rids, get_index_dict
 
 
@@ -236,9 +236,7 @@ class MapView(SessionManager):
         return self.context.get_pin(id)
 
     def short_string(self, s, limit):
-        if len(s) <= limit:
-            return s
-        return s[:limit-3] + '...'
+        return short_string(s, limit)
 
     def check_user_can_add_pin(self, lat, lon, author, session_key):
         """ """
