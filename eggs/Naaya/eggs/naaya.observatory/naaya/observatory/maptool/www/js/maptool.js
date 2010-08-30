@@ -164,7 +164,9 @@ function load_add_point(lat, lon, type) {
             load_add_point_in_progress = false;
         },
         error: function(req) {
-            if (console) console.error('error getting map data', req);
+            if (typeof(console) != 'undefined') {
+                console.error('error getting map data', req);
+            }
             load_add_point_in_progress = false;
         }
     });
@@ -212,7 +214,9 @@ function load_view_point(lat, lon, point_id) {
             load_view_point_in_progress = false;
         },
         error: function(req) {
-            if (console) console.error('error getting map data', req);
+            if (typeof(console) != 'undefined') {
+                console.error('error getting map data', req);
+            }
             load_view_point_in_progress = false;
         }
     });
