@@ -1,5 +1,5 @@
 <tal:block define="
-    points options/points;
+    pins options/pins;
 ">
     <div id="box_2">
         <h2 class="box_h2" id="box_2_title" i18n:translate="">Cluster</h2>
@@ -25,13 +25,13 @@
             </div>
 
             <div id="comments">
-                <ul tal:condition="points">
-                    <li tal:repeat="point points">&middot;
+                <ul tal:condition="pins">
+                    <li tal:repeat="pin pins">&middot;
                     <tal:block define="
-                            id point/id;
-                            lat point/latitude;
-                            lon point/longitude;
-                            text string:${point/date} - ${point/author}">
+                            id pin/id;
+                            lat pin/latitude;
+                            lon pin/longitude;
+                            text string:${pin/date} - ${pin/author}">
                     <a tal:attributes="
                         onclick string:load_view_point(${lat}, ${lon}, '${id}')"
                         tal:content="text"></a>

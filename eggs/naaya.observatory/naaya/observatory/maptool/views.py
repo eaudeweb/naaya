@@ -10,13 +10,15 @@ from BTrees.IIBTree import IISet, union, weightedIntersection
 from App.Common import rfc1123_date
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from Products.NaayaCore.GeoMapTool.clusters_catalog import _apply_index_with_range_dict_results, getObjectFromCatalog
-from Products.NaayaCore.GeoMapTool import clusters
+from Products.NaayaCore.GeoMapTool.clusters_catalog import (
+        _apply_index_with_range_dict_results, getObjectFromCatalog)
+from Products.NaayaCore.GeoMapTool.clusters import (
+        get_discretized_limits, Point, kmeans)
 
 from session import SessionManager
 from utils import RATING_VALUES, TYPE_VALUES
 from utils import query_reverse_geocode, map_icon, map_distance
-from clusters_catalog import filter_rids
+from clusters_catalog import filter_rids, get_index_dict
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -49,31 +51,106 @@ class MapView(SessionManager):
 
     def xrjs_getClusters(self, lat_min, lat_max, lon_min, lon_max):
         """ """
+        def make_points(r_list, lan_dict, lon_dict, type_dict, rating_dict):
+            points = []
+            for i, rid in enumerate(r_list):
+                point = Point(i, float(lat_dict[rid]), float(lon_dict[rid]))
+                point.type = type_dict[rid]
+                point.rating = rating_dict[rid]
+                points.append(point)
+            return points
+
+        def make_points_by_type(points):
+            points_by_type = {}
+            for point in points:
+                if not point.type in points_by_type:
+                    points_by_type[point.type] = []
+
+                points_by_type[point.type].append(point)
+            return points_by_type
+
+        def make_clusters(points_by_type, lat_min, lat_max,
+                          lon_min, lon_max, grid_size):
+            def average_rating(points):
+                assert len(points) > 0
+
+                ratings = [point.rating for point in points]
+                return sum(ratings) / float(len(ratings))
+
+            all_clusters = []
+            for type, points in points_by_type.iteritems():
+                centers, groups = kmeans(lat_min, lat_max,
+                                                  lon_min, lon_max,
+                                                  points, grid_size)
+                clusters = []
+                for i, points in enumerate(groups):
+                    if len(points) > 0:
+                        clusters.append({
+                            'center': centers[i],
+                            'points': points,
+                            'type': type,
+                            'averageRating': average_rating(points),
+                            })
+
+                all_clusters.extend(clusters)
+            return all_clusters
+
+        def point_data(cluster, r_list):
+            def cluster_tooltip(cluster, r_list):
+                cluster_rids = [r_list[point.id] for point in cluster['points']]
+                pins = [getObjectFromCatalog(catalog, rid) for rid in cluster_rids]
+                return self.cluster_index(pins=pins)
+
+            num_points = len(cluster['points'])
+            if num_points == 1:
+                point = cluster['points'][0]
+                pin = getObjectFromCatalog(catalog, r_list[point.id])
+                icon_name = 'mk_single_rating_%s_%d' % (pin.type, pin.rating)
+
+                return {'id': pin.id,
+                        'icon_name': icon_name,
+                        'lat': pin.latitude,
+                        'lon': pin.longitude,
+                        'display_tooltip': False,
+                        'tooltip': '',
+                        'label': ''}
+            else:
+                rating = int(cluster['averageRating'])
+
+                display_tooltip = (lat_max - lat_min) < 1.
+                if display_tooltip:
+                    tooltip = cluster_tooltip(cluster, r_list)
+                else:
+                    tooltip = ''
+                icon_name = 'mk_rating_%s_%d_%d' % (cluster['type'],
+                                                    rating,
+                                                    num_points)
+                return {'id': '',
+                        'icon_name': icon_name,
+                        'lat': cluster['center'].lat,
+                        'lon': cluster['center'].lon,
+                        'display_tooltip': display_tooltip,
+                        'tooltip': tooltip,
+                        'label': 'cluster',
+                        'num_points': num_points}
+
         tc_start = time()
         lat_min, lat_max = float(lat_min), float(lat_max)
         lon_min, lon_max = float(lon_min), float(lon_max)
 
         grid_size = 7
-        tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(
+        tlat_min, tlat_max, tlon_min, tlon_max = get_discretized_limits(
             lat_min, lat_max, lon_min, lon_max, grid_size)
 
         catalog = self.context.catalog
-        rating_idx = catalog._catalog.indexes['rating']
 
-        lat_idx = catalog._catalog.indexes['latitude']
-        lon_idx = catalog._catalog.indexes['longitude']
-        lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, tlat_min, tlat_max)
-        lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, tlon_min, tlon_max)
-
-        type_idx = catalog._catalog.indexes['type']
-        tyle_set, type_dict = _apply_index_with_range_dict_results(type_idx._index)
-
-        tc_start_id_idx = time()
-        id_idx = catalog._catalog.indexes['id']
-        id_set, id_dict = _apply_index_with_range_dict_results(id_idx._index)
-        tc_end_id_idx = time()
-        print 'id_idx', tc_end_id_idx - tc_start_id_idx
-
+        tc_start_apply_idxs = time()
+        type_dict = get_index_dict('type', catalog)
+        lat_dict = get_index_dict('latitude', catalog, tlat_min, tlat_max)
+        lon_dict = get_index_dict('longitude', catalog, tlon_min, tlon_max)
+        rating_dict = get_index_dict('rating', catalog)
+        tc_end_apply_idxs = time()
+        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
 
         map_filters = {'latitude': {'query': (tlat_min, tlat_max),
                                     'range': 'min:max'},
@@ -85,80 +162,11 @@ class MapView(SessionManager):
         else:
             r_list = list(set(rids))
 
-        def make_points_by_type():
-
-            # transform objects to points
-            points_by_type = {}
-            for i, rid in enumerate(r_list):
-                point = clusters.Point(i, float(lat_dict[rid]), float(lon_dict[rid]))
-                type = type_dict[rid]
-                if not points_by_type.has_key(type):
-                    points_by_type[type] = []
-                points_by_type[type].append(point)
-            return points_by_type
-        points_by_type = make_points_by_type()
-
-        def make_centers():
-            all_centers = []
-            for type in TYPE_VALUES:
-                if type not in points_by_type:
-                    continue
-                points = points_by_type[type]
-
-                centers, groups = clusters.kmeans(tlat_min, tlat_max, tlon_min, tlon_max, points, grid_size)
-
-                # get ratings for centers
-                rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
-                for i, g in enumerate(groups):
-                    l_rat = []
-                    for p in g:
-                        p_rat = rating_dict[r_list[p.id]]
-                        if p_rat is not None:
-                            l_rat.append(rating_dict[r_list[p.id]])
-                    if len(l_rat) > 0:
-                        centers[i].averageRating = sum(l_rat) / float(len(l_rat))
-                    else:
-                        centers[i].averageRating = None
-                    centers[i].group = g
-                    centers[i].type = type
-                all_centers.extend(centers)
-            return all_centers
-        centers = make_centers()
-
-        def cluster_tooltip(ob):
-            ids = [id_dict[r_list[p.id]] for p in ob.group]
-            return self.cluster_index(ids)
-
-        def build_point(ob):
-            if len(ob.group) == 1:
-                rid = r_list[ob.group[0].id]
-                ob = getObjectFromCatalog(catalog, rid)
-                icon_name = 'mk_single_rating_%s_%d' % (ob.type, ob.rating)
-                return {'lon': ob.longitude,
-                        'lat': ob.latitude,
-                        'tooltip': '',
-                        'label': '',
-                        'icon_name': icon_name,
-                        'id': ob.id}
-            else:
-                rating = int(ob.averageRating)
-                display_tooltip = (lat_max - lat_min) < 1.
-                if display_tooltip:
-                    tooltip = cluster_tooltip(ob)
-                else:
-                    tooltip = ''
-                num_points = len(ob.group)
-                icon_name = 'mk_rating_%s_%d_%d' % (ob.type, rating, num_points)
-                return {'lon': ob.lon,
-                        'lat': ob.lat,
-                        'tooltip': tooltip,
-                        'display_tooltip': display_tooltip,
-                        'label': 'cluster',
-                        'icon_name': icon_name,
-                        'num_points': num_points,
-                        'id': ''}
-
-        points = [build_point(c) for c in centers if c.averageRating]
+        points = make_points(r_list, lat_dict, lon_dict, type_dict, rating_dict)
+        points_by_type = make_points_by_type(points)
+        clusters = make_clusters(points_by_type, tlat_min, tlat_max,
+                                 tlon_min, tlon_max, grid_size)
+        points = [point_data(cluster, r_list) for cluster in clusters]
         tc_end = time()
         print 'clusters', tc_end - tc_start
         return json.dumps({'points': points})
@@ -249,12 +257,16 @@ class MapView(SessionManager):
 
         # modify if map_distance limit changes
         lat_min, lat_max = lat - 5., lat + 5.
-        lon_min, lon_max = lon - 5., lon + 5.
+        # lon distances differ with latitude (but for performance)
+        lon_min, lon_max = lon - 20., lon + 20.
+        date_min, date_max = datetime.now() - timedelta(weeks=1), datetime.now()
 
         filters = {'latitude': {'query': (lat_min, lat_max),
                                 'range': 'min:max'},
                    'longitude': {'query': (lon_min, lon_max),
                                  'range': 'min:max'},
+                   'date': {'query': (date_min, date_max),
+                            'range': 'min:max'},
                    'author': author,
                    'session_key': session_key}
 
@@ -264,30 +276,18 @@ class MapView(SessionManager):
         else:
             r_list = list(set(rids))
 
-        lat_idx = catalog._catalog.indexes['latitude']
-        lon_idx = catalog._catalog.indexes['longitude']
-        date_idx = catalog._catalog.indexes['date']
-
-        _, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
-        _, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
-        _, date_dict = _apply_index_with_range_dict_results(date_idx._index)
-
-        def convert_to_datetime(date_index_val):
-            year = date_index_val / 535680
-            month = (date_index_val / 44640) % 12
-            day = (date_index_val / 1440) % 31
-            hour = (date_index_val / 60) % 24
-            minute = date_index_val % 60
-            return datetime(year, month, day, hour, minute)
+        tc_start_apply_idxs = time()
+        lat_dict = get_index_dict('latitude', catalog, lat_min, lat_max)
+        lon_dict = get_index_dict('longitude', catalog, lon_min, lon_max)
+        tc_end_apply_idxs = time()
+        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
 
         ret = True
         for rid in r_list:
             clat, clon = lat_dict[rid], lon_dict[rid]
             if map_distance(lat, lon, clat, clon) < 1: #km
-                cdate = convert_to_datetime(date_dict[rid])
-                if datetime.now() - cdate < timedelta(weeks=1):
-                    ret = False
-                    break
+                ret = False
+                break
         tc_end = time()
         print 'check user can add pin', tc_end - tc_start
         return ret
@@ -311,9 +311,5 @@ class MapView(SessionManager):
                              type=type)
         return json.dumps({'can_add': can_add, 'html': html})
 
-    _cluster_index = ViewPageTemplateFile('zpt/cluster_index.zpt', globals())
-    def cluster_index(self, point_ids, REQUEST=None):
-        """ """
-        points = [self.context.get_pin(id) for id in point_ids]
-        return self._cluster_index(points=points)
+    cluster_index = ViewPageTemplateFile('zpt/cluster_index.zpt', globals())
 
