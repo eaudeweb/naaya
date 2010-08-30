@@ -14,7 +14,6 @@ def manage_addNyObservatory(parent, REQUEST=None):
     ob.title = 'Naaya Observatory'
 
     manage_addZCatalog(ob, 'catalog', 'Naaya Observatory Catalog')
-    manage_addFieldIndex(ob.catalog, 'id')
     manage_addFieldIndex(ob.catalog, 'type')
     manage_addFieldIndex(ob.catalog, 'latitude')
     manage_addFieldIndex(ob.catalog, 'longitude')
