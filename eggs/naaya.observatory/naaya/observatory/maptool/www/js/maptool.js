@@ -31,7 +31,7 @@ function load_map_points(bounds, callback) {
     setAjaxWait();
     var str_bounds = 'lat_min=' + bounds.lat_min + '&lat_max=' + bounds.lat_max +
         '&lon_min=' + bounds.lon_min + '&lon_max=' + bounds.lon_max;
-    var url = portal_url + "/observatory/xrjs_clusters?" + str_bounds;
+    var url = "./observatory/xrjs_clusters?" + str_bounds;
     $.ajax({
         url: url,
         dataType: 'json',
