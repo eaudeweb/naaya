@@ -5,8 +5,6 @@ from Products.PluginIndexes.FieldIndex.FieldIndex import manage_addFieldIndex
 from Products.PluginIndexes.DateIndex.DateIndex import manage_addDateIndex
 from OFS.SimpleItem import SimpleItem
 
-from views import TYPE_VALUES, RATING_VALUES
-
 def manage_addNyObservatory(parent, REQUEST=None):
     """ """
     id='observatory'
@@ -68,6 +66,9 @@ class NyObservatory(BTreeFolder2):
         return REQUEST.RESPONSE.redirect('%s/map' % self.absolute_url())
 
 InitializeClass(NyObservatory)
+
+RATING_VALUES = range(1, 5+1)
+TYPE_VALUES = ['veg', 'wat', 'soil', 'cit']
 
 class NyPushPin(SimpleItem):
     def __init__(self, id, type, latitude, longitude, address, country,
