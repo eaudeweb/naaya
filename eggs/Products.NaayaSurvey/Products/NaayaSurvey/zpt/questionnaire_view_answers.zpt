@@ -42,7 +42,7 @@
 						on
 						<tal:block replace="python: here.utShowFullDateTime(answer.modification_time)">date</tal:block>
 					</a>
-					<span tal:condition="can_edit">(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">edit</a>)</span>
+					<span tal:condition="can_edit">(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">change</a>)</span>
 				</li>
 			</tal:block>
 		</ol>

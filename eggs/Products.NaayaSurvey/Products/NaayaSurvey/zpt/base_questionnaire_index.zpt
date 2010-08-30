@@ -43,8 +43,7 @@
 		<div class="my-answers"><h5 i18n:translate="">Your answers so far:</h5>
 			<ul id="my-answers-list">
 				<li  tal:repeat="answer my_answers">
-					<a tal:attributes="href string:${answer/absolute_url}" tal:content="python: here.utShowFullDateTime(answer.modification_time)"></a>
-					(<a tal:attributes="href string:${answer/absolute_url}?edit=1" i18n:translate="">edit</a>)
+					<a tal:attributes="href string:${answer/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(answer.modification_time)"></a>
 				</li>
 			</ul>
 		</div>
