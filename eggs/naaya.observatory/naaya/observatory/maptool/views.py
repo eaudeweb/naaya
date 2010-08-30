@@ -16,6 +16,7 @@ from Products.NaayaCore.GeoMapTool import clusters
 from session import SessionManager
 from utils import RATING_VALUES, TYPE_VALUES
 from utils import query_reverse_geocode, map_icon, map_distance
+from clusters_catalog import filter_rids
 
 RESOURCES_PATH = '++resource++naaya.observatory.maptool'
 IMAGES_PATH = RESOURCES_PATH + '/images'
@@ -52,13 +53,17 @@ class MapView(SessionManager):
         lat_min, lat_max = float(lat_min), float(lat_max)
         lon_min, lon_max = float(lon_min), float(lon_max)
 
+        grid_size = 7
+        tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(
+            lat_min, lat_max, lon_min, lon_max, grid_size)
+
         catalog = self.context.catalog
         rating_idx = catalog._catalog.indexes['rating']
 
         lat_idx = catalog._catalog.indexes['latitude']
         lon_idx = catalog._catalog.indexes['longitude']
-        lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
-        lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
+        lat_set, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, tlat_min, tlat_max)
+        lon_set, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, tlon_min, tlon_max)
 
         type_idx = catalog._catalog.indexes['type']
         tyle_set, type_dict = _apply_index_with_range_dict_results(type_idx._index)
@@ -69,31 +74,22 @@ class MapView(SessionManager):
         tc_end_id_idx = time()
         print 'id_idx', tc_end_id_idx - tc_start_id_idx
 
-        def filter_rids():
-            f = {'latitude': {'query': (lat_min, lat_max),
-                              'range': 'min:max'},
-                 'longitude': {'query': (lon_min, lon_max),
-                               'range': 'min:max'}}
 
-            r_lat = lat_idx._apply_index(f)
-            if r_lat is not None:
-                r_lat = r_lat[0]
-            r_lon = lon_idx._apply_index(f)
-            if r_lon is not None:
-                r_lon = r_lon[0]
-
-            if r_lat is not None and r_lon is not None:
-                w, rs_f = weightedIntersection(r_lat, r_lon)
-            else:
-                rs_f = None
-            return list(set(rs_f))
-        rids = filter_rids()
+        map_filters = {'latitude': {'query': (tlat_min, tlat_max),
+                                    'range': 'min:max'},
+                       'longitude': {'query': (tlon_min, tlon_max),
+                                     'range': 'min:max'}}
+        rids = filter_rids(catalog, map_filters)
+        if rids is None:
+            r_list = []
+        else:
+            r_list = list(set(rids))
 
         def make_points_by_type():
 
             # transform objects to points
             points_by_type = {}
-            for i, rid in enumerate(rids):
+            for i, rid in enumerate(r_list):
                 point = clusters.Point(i, float(lat_dict[rid]), float(lon_dict[rid]))
                 type = type_dict[rid]
                 if not points_by_type.has_key(type):
@@ -109,16 +105,16 @@ class MapView(SessionManager):
                     continue
                 points = points_by_type[type]
 
-                centers, groups = clusters.kmeans(lat_min, lat_max, lon_min, lon_max, points, 7)
+                centers, groups = clusters.kmeans(tlat_min, tlat_max, tlon_min, tlon_max, points, grid_size)
 
                 # get ratings for centers
                 rating_set, rating_dict = _apply_index_with_range_dict_results(rating_idx._index)
                 for i, g in enumerate(groups):
                     l_rat = []
                     for p in g:
-                        p_rat = rating_dict[rids[p.id]]
+                        p_rat = rating_dict[r_list[p.id]]
                         if p_rat is not None:
-                            l_rat.append(rating_dict[rids[p.id]])
+                            l_rat.append(rating_dict[r_list[p.id]])
                     if len(l_rat) > 0:
                         centers[i].averageRating = sum(l_rat) / float(len(l_rat))
                     else:
@@ -130,12 +126,12 @@ class MapView(SessionManager):
         centers = make_centers()
 
         def cluster_tooltip(ob):
-            ids = [id_dict[rids[p.id]] for p in ob.group]
+            ids = [id_dict[r_list[p.id]] for p in ob.group]
             return self.cluster_index(ids)
 
         def build_point(ob):
             if len(ob.group) == 1:
-                rid = rids[ob.group[0].id]
+                rid = r_list[ob.group[0].id]
                 ob = getObjectFromCatalog(catalog, rid)
                 icon_name = 'mk_single_rating_%s_%d' % (ob.type, ob.rating)
                 return {'lon': ob.longitude,
@@ -250,35 +246,30 @@ class MapView(SessionManager):
         """ """
         tc_start = time()
         catalog = self.context.catalog
-        def filter_rids():
-            f = {'author': author,
-                 'session_key': session_key}
 
-            author_idx = catalog._catalog.indexes['author']
-            session_idx = catalog._catalog.indexes['session_key']
+        # modify if map_distance limit changes
+        lat_min, lat_max = lat - 5., lat + 5.
+        lon_min, lon_max = lon - 5., lon + 5.
 
-            r_author = author_idx._apply_index(f)
-            if r_author is not None:
-                r_author = r_author[0]
-            r_session = session_idx._apply_index(f)
-            if r_session is not None:
-                r_session = r_session[0]
+        filters = {'latitude': {'query': (lat_min, lat_max),
+                                'range': 'min:max'},
+                   'longitude': {'query': (lon_min, lon_max),
+                                 'range': 'min:max'},
+                   'author': author,
+                   'session_key': session_key}
 
-            if r_author is not None and r_session is not None:
-                w, rs_f = weightedIntersection(r_author, r_session)
-            else:
-                rs_f = None
-            return list(set(rs_f))
-
-        rids = filter_rids()
-        tc_filter = time()
+        rids = filter_rids(catalog, filters)
+        if rids is None:
+            r_list = []
+        else:
+            r_list = list(set(rids))
 
         lat_idx = catalog._catalog.indexes['latitude']
         lon_idx = catalog._catalog.indexes['longitude']
         date_idx = catalog._catalog.indexes['date']
 
-        _, lat_dict = _apply_index_with_range_dict_results(lat_idx._index)
-        _, lon_dict = _apply_index_with_range_dict_results(lon_idx._index)
+        _, lat_dict = _apply_index_with_range_dict_results(lat_idx._index, lat_min, lat_max)
+        _, lon_dict = _apply_index_with_range_dict_results(lon_idx._index, lon_min, lon_max)
         _, date_dict = _apply_index_with_range_dict_results(date_idx._index)
 
         def convert_to_datetime(date_index_val):
@@ -290,7 +281,7 @@ class MapView(SessionManager):
             return datetime(year, month, day, hour, minute)
 
         ret = True
-        for rid in rids:
+        for rid in r_list:
             clat, clon = lat_dict[rid], lon_dict[rid]
             if map_distance(lat, lon, clat, clon) < 1: #km
                 cdate = convert_to_datetime(date_dict[rid])
