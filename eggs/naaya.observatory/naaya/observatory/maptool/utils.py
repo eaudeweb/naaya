@@ -106,3 +106,8 @@ def map_distance(lats, lons, latf, lonf):
     return earth_radius * dang
 
 
+def short_string(s, limit):
+    if len(s) <= limit:
+        return s
+    return s[:limit-3] + '...'
+
