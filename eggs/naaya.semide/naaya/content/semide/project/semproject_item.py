@@ -1,40 +1,20 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is EMWIS/SEMIDE.
-# Code created by Finsiel Romania are
-# Copyright (C) EMWIS/SEMIDE. All Rights Reserved.
-#
-# Authors:
-#
-# Dragos Chirila, Finsiel Romania
-# Alexandru Plugaru, Eau de Web
-
-#Python
 import os
 import sys
 
-#Zope
 from Acquisition import Implicit
-from Globals                                    import InitializeClass
-from AccessControl                              import ClassSecurityInfo
-from AccessControl.Permissions                  import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from App.ImageFile                              import ImageFile
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from App.ImageFile import ImageFile
 import zope.event
 
-#Naaya
-from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME, MUST_BE_POSITIV_FLOAT
+from naaya.content.base.constants import (MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT,
+                                    MUST_BE_DATETIME, MUST_BE_POSITIV_FLOAT)
 from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS,
 PERMISSION_DELETE_OBJECTS, EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG,
-EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
+EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, EXCEPTION_STARTEDVERSION_MSG,
+MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.NyItem import NyItem
@@ -43,14 +23,16 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
-
+from Products.NaayaBase.NyContentType import NyContentType, NyContentData, \
+                                        NY_CONTENT_BASE_SCHEMA
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 
 from naaya.content.semide.organisation.semorganisation_item import (
-    addNySemOrganisation, semorganisation_add_html, manage_addNySemOrganisation_html,
-    importNySemOrganisation, METATYPE_OBJECT as METATYPE_NYSEMORGANISATION)
+    addNySemOrganisation, semorganisation_add_html,
+    manage_addNySemOrganisation_html, importNySemOrganisation,
+    METATYPE_OBJECT as METATYPE_NYSEMORGANISATION)
 from naaya.content.semide.funding.semfunding_item import (
     addNySemFunding, semfunding_add_html, manage_addNySemFunding_html,
     importNySemFunding, METATYPE_OBJECT as METATYPE_NYSEMFUNDING)
@@ -204,7 +186,7 @@ def addNySemProject(self, id='', contributor=None, REQUEST=None, **kwargs):
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'semproject_manage_add' or l_referer.find('semproject_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'semproject_add_html':
+        elif l_referer.find('semproject_add_html') != -1:
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semproject_add_html' % self.absolute_url())
@@ -620,6 +602,10 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
         except: self.setSessionErrorsTrans('Error while delete data.')
         else: self.setSessionInfoTrans('Item(s) deleted.')
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
+
+#Custom folder listing
+NaayaPageTemplateFile('zpt/semproject_folder_index', globals(),
+                      'semproject_folder_index')
 
 InitializeClass(NySemProject)
 
