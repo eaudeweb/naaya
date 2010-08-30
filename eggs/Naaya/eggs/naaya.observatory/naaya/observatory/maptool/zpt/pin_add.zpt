@@ -7,14 +7,12 @@
     images_path string:++resource++naaya.observatory.maptool/images;
     ">
 
-    <div id="box_3_top_bar">
-        <h2 id="box_3_title" tal:attributes="title address"
-            tal:content="python:view.short_string(address, 70)"/>
+        <h2 class="box_h2" id="box_3_title" tal:attributes="title address"
+            tal:content="python:view.short_string(address, 60)"/>
 
         <span class="close">
-            <a href="javascript:clear_add_point();">X</a>
+            <a class="box_link" i18n:attributes="title Close" href="javascript:clear_add_point();">X</a>
         </span>
-    </div>
 
     <div class="clear">
     </div>
@@ -166,7 +164,7 @@
 
             <div id="comment-area">
                 <textarea name="comment-val" cols="60" rows="7"
-                   id="comment-val"></textarea>
+                   id="comment-val" class="box_textarea"></textarea>
             </div>
 
              <div class="clear">
@@ -174,12 +172,17 @@
             <br />
 
             <div id="box_3_buttons">
-                <input type="submit" value="Rate" name="submit" id="submit"
+                <input type="submit" class="box_input" value="Rate" name="submit" id="submit"
                     class="submit-rate" i18n:attributes="value"/>
-                <input type="reset" value="Cancel" name="reset" id="reset"
+                <input type="reset" value="Cancel" class="box_input" name="reset" id="reset"
                     onclick="javascript:clear_add_point(); return false;"
                     i18n:attributes="value"/>
             </div>
+
+            <div class="clear">
+            </div>
+
+            <br />
         </form>
     </div>
 </div>

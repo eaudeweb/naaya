@@ -2,13 +2,11 @@
     points options/points;
 ">
     <div id="box_2">
-        <div id="box_2_top_bar">
-            <h2 id="box_2_title" i18n:translate="">Cluster</h2>
+        <h2 class="box_h2" id="box_2_title" i18n:translate="">Cluster</h2>
 
-            <span class="close">
-                <a href="javascript:clear_view_point();">X</a>
-            </span>
-        </div>
+        <span class="close">
+            <a class="box_link" i18n:attributes="title Close" href="javascript:clear_view_point();">X</a>
+        </span>
 
         <div class="clear">
         </div>

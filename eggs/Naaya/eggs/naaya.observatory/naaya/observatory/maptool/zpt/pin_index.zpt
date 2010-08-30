@@ -8,14 +8,13 @@
     rating pin/rating;
     images_path string:++resource++naaya.observatory.maptool/images;
     ">
-    <div id="box_2_top_bar">
-        <h2 id="box_2_title" tal:attributes="title address"
-            tal:content="python:view.short_string(address, 45)"/>
 
-        <span class="close">
-            <a href="javascript:clear_view_point();">X</a>
-        </span>
-    </div>
+    <h2 class="box_h2" id="box_2_title" tal:attributes="title address"
+        tal:content="python:view.short_string(address, 35)"/>
+
+    <span class="close">
+        <a class="box_link" i18n:attributes="title Close" href="javascript:clear_view_point();">X</a>
+    </span>
 
     <div class="clear">
     </div>
@@ -106,7 +105,7 @@
         </div>
 
         <div id="box_2_buttons">
-            <input type="button" value="Rate" id="submit" tal:attributes="
+            <input type="button" class="box_input" value="Rate" id="submit" tal:attributes="
             onclick string:load_add_point(${latitude}, ${longitude}, '${type}')"
             i18n:attributes="value" />
         </div>
@@ -115,7 +114,7 @@
         </div>
 
         <div id="comments">
-            <h3 i18n:translate="">Comment</h3>
+            <h3 i18n:translate="" class="box_h3">Comment</h3>
 
             <span tal:replace="pin/date"/>
             <span tal:replace="pin/author"/>
