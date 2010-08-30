@@ -25,7 +25,9 @@ function submit_rate() {
              "&type=" + $('#rate-val').val() +
              "&comment=" + $('#comment-val').val(),
         success: function(data) {
-            if (console) console.log("success adding pin");
+            if (typeof(console) != 'undefined') {
+                console.log("success adding pin");
+            }
             map_engine.refresh_points();
             return false;
         },
