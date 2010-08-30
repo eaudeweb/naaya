@@ -20,16 +20,6 @@ from observatory import RATING_VALUES, TYPE_VALUES
 from utils import query_reverse_geocode, map_icon, map_distance
 from clusters_catalog import filter_rids, get_index_dict
 
-RESOURCES_PATH = '++resource++naaya.observatory.maptool'
-IMAGES_PATH = RESOURCES_PATH + '/images'
-
-RATING_IMAGE_NAMES = ['very-bad', 'bad', 'average', 'good', 'very-good']
-RATING_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
-                        for f in RATING_IMAGE_NAMES]
-
-TYPE_IMAGE_NAMES = ['vegetation', 'water', 'soil', 'citizens']
-TYPE_IMAGE_PATHS = ['%s/%s.png' % (IMAGES_PATH, f)
-                    for f in TYPE_IMAGE_NAMES]
 
 class MapView(SessionManager):
     """A view for the observatory map"""
