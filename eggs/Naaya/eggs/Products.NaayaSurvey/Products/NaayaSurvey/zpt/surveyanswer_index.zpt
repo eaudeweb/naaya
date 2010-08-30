@@ -1,12 +1,12 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <link rel="stylesheet" type="text/css" media="all"
-	tal:define="stool here/portal_survey;"
-	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+	tal:attributes="href string:${here/portal_survey/absolute_url}/css_survey_common" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/portal_survey/absolute_url}/survey_js"></script>
 
 <h1>
 	<img tal:attributes="
