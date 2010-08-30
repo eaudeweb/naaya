@@ -713,12 +713,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         try:    ps_start = int(ps_start)
         except: ps_start = 0
         catalog_tool = self.getCatalogTool()
-        search_args = dict(
-            meta_type=[METATYPE_NYSEMNEWS],
-            approved=1,
-            sort_on=skey,
-            sort_order=rkey == '1' and 'descending' or 'ascending'
-        )
+        search_args = {
+            'meta_type': [METATYPE_NYSEMNEWS],
+            'approved': 1,
+            'sort_on': skey,
+            'sort_order': rkey == '1' and 'descending' or 'ascending'
+        }
         if query == '' and nt == '' and nd == '' and gz == []:
             #no criteria then returns the 10 more recent
             brains = catalog_tool(**search_args)
@@ -866,12 +866,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         if skey not in ('start_date', ):
             skey = 'start_date'
         catalog_tool = self.getCatalogTool()
-        search_args = dict(
-            meta_type=[METATYPE_NYSEMEVENT],
-            approved=1,
-            sort_on=skey,
-            sort_order=rkey == '1' and 'descending' or 'ascending'
-        )
+        search_args = {
+            'meta_type': [METATYPE_NYSEMEVENT],
+            'approved': 1,
+            'sort_on': skey,
+            'sort_order': rkey == '1' and 'descending' or 'ascending'
+        }
         if query == '' and et == '' and not gz and es == '' and sd == '' and ed == '':
             #no criteria then returns the 10 more recent
             brains = catalog_tool(**search_args)
@@ -908,6 +908,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             brains = catalog_tool(**search_args)
 
         return brains
+
     security.declareProtected(view, 'getEventsNFP')
     def getEventsNFP(self, query='', languages=[], et='', gz='', es='', skey='', rkey=0, sd='', ed='', p_context=None, ps_start=''):
         """
@@ -1049,33 +1050,54 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     security.declareProtected(view, 'getProjectsListing')
     def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0,
                            archive=[], ps_start='', gz='', th='', pr='', **kwargs):
-        """
-        Returns a list of projects
-        """
-        #default data
-        results = []
-        res_per_page = kwargs.get('items', 10) or 10
-        dict = {}
+        """ Returns a list of brains """
+        if gz != '' and not isinstance(gz, list):
+            gz = [gz]
         try:    ps_start = int(ps_start)
         except: ps_start = 0
+        if skey not in ('start_date', ):
+            skey = 'start_date'
+        catalog_tool = self.getCatalogTool()
+        search_args = {
+            'meta_type': [METATYPE_NYSEMPROJECT],
+            'approved': 1,
+            'sort_on': skey,
+            'sort_order': rkey == '1' and 'descending' or 'ascending'
+        }
+        if languages: langs = languages
+        else: langs = [self.gl_get_selected_language()]
 
-        gz_list = self.utConvertToList(gz)
-        if not gz_list:
-            gz_list = ['']
-        for gz in gz_list:
-            results.extend(self._getProjectsListing(query, so, languages, skey, rkey,
-                           archive, ps_start, gz, th, pr, **kwargs))
-        for x in results:
-            dict[x.id] = x
-        results = self.get_archive_listing(self.sorted_projects_listing(dict.values(), skey, rkey))
-
-        #batch related
-        batch_obj = batch_utils(res_per_page, len(results[2]), ps_start)
-        if len(results[2]) > 0:
-            paging_informations = batch_obj.butGetPagingInformations()
+        if not (query or so or gz or th or pr):
+            brains = catalog_tool(**search_args)
         else:
-            paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
-        return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
+            query = self.utStrEscapeForSearch(query)
+            #Fulltext query
+            for lang in langs:
+                if query: search_args['objectkeywords_' + lang] = query
+                if pr: search_args['programme_' +  lang] = pr
+            #Geographical coverage
+            if gz:
+                for lang in langs:
+                    for g in gz:
+                        lang_name = self.gl_get_language_name(lang)
+                        gz_trans = self.getCoverageGlossaryTrans(g, lang_name)
+                        search_args['coverage_' + lang] = gz_trans
+            if th:
+                search_args['resource_subject'] = th
+            brains = catalog_tool(**search_args)
+            if so:
+                project_ids = set([brain.id for brain in brains])
+                search_args = {
+                    'meta_type': [METATYPE_NYSEMORGANISATION],
+                    'approved': 1,
+                }
+                for lang in langs:
+                    search_args['objectkeywords_' + lang] = so
+                project_ids = project_ids.intersection(
+                    set([brain.getObject().aq_parent.getId()
+                        for brain in catalog_tool(**search_args)]))
+                brains = catalog_tool(id=list(project_ids))
+        return brains
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getCSSEntity')
     def getCSSEntity(self, marker_start, merker_end):
@@ -1142,7 +1164,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         """
         #set location as the parent NaayaFolder or the root if location is different than that
         p_location = self._getLocation(p_location)
-
         if self._testIsRoot(p_location):
             #if we are in the root of the portal nothing will be displayed
             return ([(x, 0) for x in self.getMainTopics()], None)
