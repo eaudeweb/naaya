@@ -23,6 +23,7 @@ import re
 import sys
 import os
 from cStringIO import StringIO
+from App.ImageFile import ImageFile
 try:
     from PIL import Image, ImageDraw, ImageFont
 except ImportError:
@@ -566,14 +567,18 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         """ """
         if not self.displays.has_key(display):
             if not LISTING_DISPLAYS.has_key(display):
-                display = 'Original'
+                display = 'Medium'
         if not self.check_view_photo_permission(display):
             raise Unauthorized
         if self.aq_parent.watermark_text:
             watermark = True
         else:
             watermark = False
-        photo = self._getDisplay(display, watermark)
+        try:
+            photo = self._getDisplay(display, watermark)
+        except:
+            self.log_current_error()
+            return ImageFile('www/broken_image.gif', globals()).index_html(REQUEST, REQUEST.RESPONSE)
         return photo.index_html(REQUEST=REQUEST)
     
     def check_view_photo_permission(self, display):
