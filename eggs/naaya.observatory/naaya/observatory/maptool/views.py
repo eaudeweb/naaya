@@ -224,7 +224,19 @@ class MapView(SessionManager):
             lon = randint(-179*100, 179*100)/100.
             type = choice(TYPE_VALUES)
             rating = choice(RATING_VALUES)
-            self.submit_pin(lat, lon, '', '', type, rating, REQUEST)
+
+            year = randint(1900, 2010)
+            month = randint(1, 12)
+            day = randint(1, 28)
+            date = datetime(year, month, day)
+
+            # like submit_pin except date was already generated
+            lat, lon = float(lat), float(lon)
+            rating = int(rating)
+            author, session_key = self.get_author_and_session(REQUEST)
+
+            pin_id = self.context.add_pin(type, lat, lon, '', '',
+                    rating, '', date, author, session_key)
 
     def get_pin_by_id(self, id):
         return self.context.get_pin(id)
