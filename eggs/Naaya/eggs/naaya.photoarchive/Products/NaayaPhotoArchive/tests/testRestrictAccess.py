@@ -62,7 +62,7 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
         photo_url = 'http://localhost/portal/myfolder/g/f/myphoto'
 
         # download the photo, making sure it's public by default
-        self.browser.go(photo_url + '/view')
+        self.browser.go(photo_url + '/view?display=Original')
         self.assertEqual(picture_data, self.browser.get_html())
 
         # also get a thumbnail
@@ -76,7 +76,7 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
         transaction.commit()
 
         # try to download original and thumbnail
-        self.browser.go(photo_url + '/view')
+        self.browser.go(photo_url + '/view?display=Original')
         self.assertNotEqual(picture_data, self.browser.get_html())
         self.assertTrue(self.browser.get_url().startswith(
             'http://localhost/portal/login_html'))
@@ -85,7 +85,7 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
         # log in, try to download it again
         self.browser_do_login('admin', '')
-        self.browser.go(photo_url + '/view')
+        self.browser.go(photo_url + '/view?display=Original')
         self.assertEqual(picture_data, self.browser.get_html())
         self.browser_do_logout()
 
