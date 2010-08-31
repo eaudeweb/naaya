@@ -332,3 +332,7 @@ class MapView(SessionManager):
         return '\n'.join([country for country in country_set
                                     if country_matches(country, q)])
 
+    def observamap_i18n_js(self):
+        """ """
+        return ''
+
