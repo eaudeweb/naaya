@@ -46,5 +46,3 @@ class UpdateLandscapeType(UpdateScript):
                 ob._setLocalPropValue('administrative_level', 'en', 'Unspecified')
             portal.recatalogNyObject(ob)
         return True
-
-
