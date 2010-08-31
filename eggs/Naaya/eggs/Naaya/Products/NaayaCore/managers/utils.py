@@ -51,6 +51,8 @@ from OFS.ObjectManager import checkValidId
 #Product imports
 from stripping_tool import stripping_tool
 from Products.NaayaCore.managers.paginator import ObjectPaginator
+from naaya.core.utils import force_to_unicode
+
 #constants
 bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
           '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
@@ -541,8 +543,14 @@ class utils:
 
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
+        def val(obj):
+            val = getattr(obj, p_attr, None)
+            if isinstance(val, (str, unicode)):
+                return force_to_unicode(val)
+            else:
+                return val
         return sorted(p_list,
-                      key=lambda obj: getattr(obj, p_attr, None),
+                      key=val,
                       reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
