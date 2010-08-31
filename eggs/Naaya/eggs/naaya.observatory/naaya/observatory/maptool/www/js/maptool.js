@@ -128,6 +128,15 @@ function showPageElements() {
 		}
 		this.style.color = "#000";
 	}
+	var country = document.getElementById('country');
+	country.value = gettext("Type country name");
+	country.style.color = "#ccc";
+	country.onfocus = function() {
+		if (this.value === gettext("Type country name")) {
+			this.value = "";
+		}
+		this.style.color = "#000";
+	}
 
 	document.getElementById('js_links').style.display = "block";
 	a = document.getElementById('address').readOnly = false;

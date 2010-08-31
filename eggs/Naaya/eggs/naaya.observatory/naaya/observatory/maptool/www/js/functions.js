@@ -1,16 +1,16 @@
 function submit_rate() {
     if(($('#rate-val').val() == 'cit') && ($('#comment-val').val() == '')){
-        alert('You must enter a comment for citizens rate!');
+        alert(gettext('You must enter a comment for citizen reported pins!'));
         return false;
     }
 
     if(($('#rate-val').val() !== 'cit') && ($('#rate-val').val() !== 'wat') && ($('#rate-val').val() !== 'veg') && ($('#rate-val').val() !== 'soil')){
-        alert('Please select rate type!');
+        alert(gettext('Please select pin type!'));
         return false;
     }
 
     if($('#vote-val').val() == ''){
-        alert('Please select vote value!');
+        alert(gettext('Please select rating value!'));
         return false;
     }
 

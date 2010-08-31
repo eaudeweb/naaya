@@ -6,6 +6,9 @@
     water_image      string:${images_path}/water.png;
     soil_image       string:${images_path}/soil.png;
     citizens_image   string:${images_path}/citizens.png;
+    translate        python:here.getPortalTranslations().gettext;
+    t_aver_rating    python:translate('Average rating');
+    t_ratings        python:translate('rating(s)');
     ">
 <div id="country-statistics">
     <strong>
@@ -26,7 +29,7 @@
                 icon_rating python:int(average_rating);"
             tal:attributes="
                 src string:map_icon?type=veg&rating=${icon_rating}&number=${num_ratings};
-                title string:Average rating ${average_rating} of ${num_ratings} rating(s)."
+                title python:t_aver_rating+' '+str(average_rating)+' / '+str(num_ratings)+' '+t_ratings"
             style="vertical-align:middle"/>
         </tal:block>
         <small i18n:translate="">Vegetation</small>
@@ -45,7 +48,7 @@
                 icon_rating python:int(average_rating);"
             tal:attributes="
                 src string:map_icon?type=wat&rating=${icon_rating}&number=${num_ratings};
-                title string:Average rating ${average_rating} of ${num_ratings} rating(s)."
+                title python:t_aver_rating+' '+str(average_rating)+' / '+str(num_ratings)+' '+t_ratings"
             style="vertical-align:middle"/>
         </tal:block>
         <small i18n:translate="">Water</small>
@@ -64,7 +67,7 @@
                 icon_rating python:int(average_rating);"
             tal:attributes="
                 src string:map_icon?type=soil&rating=${icon_rating}&number=${num_ratings};
-                title string:Average rating ${average_rating} of ${num_ratings} rating(s)."
+                title python:t_aver_rating+' '+str(average_rating)+' / '+str(num_ratings)+' '+t_ratings"
             style="vertical-align:middle"/>
         </tal:block>
         <small i18n:translate="">Soil</small>
@@ -83,7 +86,7 @@
                 icon_rating python:int(average_rating);"
             tal:attributes="
                 src string:map_icon?type=cit&rating=${icon_rating}&number=${num_ratings};
-                title string:Average rating ${average_rating} of ${num_ratings} rating(s)."
+                title python:t_aver_rating+' '+str(average_rating)+' / '+str(num_ratings)+' '+t_ratings"
             style="vertical-align:middle"/>
         </tal:block>
         <small i18n:translate="">Citizen reported</small>
