@@ -7,9 +7,12 @@ class UpdateDynamicProp2Schema(UpdateScript):
     title = 'Convert DynamicProperties to SchemaTool'
     authors = ['Alexandru Plugaru']
     description = 'Migrate all DynamicPropertiesTool properties to SchemaTool '
-    'widgets'
+    'widgets. However content types that do not support SchemaTool will be left'
+    'as they are. This script will not change the data as well it will mearly'
+    'migrate the schema.'
     priority = PRIORITY['HIGH']
-    creation_date = 'Jan 01, 2010'
+    creation_date = 'Aug 20, 2010'
+    authors = ['Alexandru Plugaru']
     #Dynamic prop => SchemaWidget Widget, datatype
     relations = {
         "boolean": ("Checkbox", 'bool', ),
