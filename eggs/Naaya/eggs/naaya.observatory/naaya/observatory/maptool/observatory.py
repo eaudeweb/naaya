@@ -18,6 +18,7 @@ def manage_addNyObservatory(parent, REQUEST=None):
     manage_addFieldIndex(ob.catalog, 'rating')
     manage_addFieldIndex(ob.catalog, 'approved_comment')
     manage_addDateIndex(ob.catalog, 'date')
+    manage_addFieldIndex(ob.catalog, 'country')
     manage_addFieldIndex(ob.catalog, 'author')
     manage_addFieldIndex(ob.catalog, 'session_key')
 
@@ -77,6 +78,10 @@ class NyPushPin(SimpleItem):
         assert -90 < latitude < 90
         assert -180 < longitude < 180
         assert rating in RATING_VALUES
+        if author == 'Anonymous User':
+            assert session_key is not None
+        if type == 'cit':
+            assert comment != ''
 
         self._setId(id)
         self.type = type

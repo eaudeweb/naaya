@@ -301,3 +301,34 @@ class MapView(SessionManager):
 
     cluster_index = ViewPageTemplateFile('zpt/cluster_index.zpt', globals())
 
+    def country_statistics(self, country):
+        catalog = self.context.catalog
+        tc_start_apply_idxs = time()
+        country_dict = get_index_dict('country', catalog, country, country)
+        type_dict = get_index_dict('type', catalog)
+        rating_dict = get_index_dict('rating', catalog)
+        tc_end_apply_idxs = time()
+        print 'apply indexes', tc_end_apply_idxs - tc_start_apply_idxs
+
+        statistics = {}
+        for type in TYPE_VALUES:
+            ratings = [rating_dict[rid] for rid in country_dict.keys()
+                                            if type_dict[rid] == type]
+            type_stats = {'num_ratings': len(ratings)}
+            if len(ratings) > 0:
+                average_rating = sum(ratings) / float(len(ratings))
+                type_stats['average_rating'] = average_rating
+            statistics[type] = type_stats
+        return statistics
+
+    def get_countries(self, q):
+        """ """
+        def country_matches(country, q):
+            return country.lower().startswith(q.lower())
+
+        catalog = self.context.catalog
+        country_dict = get_index_dict('country', catalog)
+        country_set = set(country_dict.values())
+        return '\n'.join([country for country in country_set
+                                    if country_matches(country, q)])
+
