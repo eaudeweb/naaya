@@ -48,7 +48,7 @@ function load_map_points(bounds, callback) {
 
     function parse_response_data(response) {
         if(response.error) {
-            alert("Error loading points: " + response.error);
+            alert(gettext("Error loading points: ") + response.error);
         }
         var num_records = 0;
         $.each(response.points, function(i, point) {
@@ -165,7 +165,7 @@ function load_add_point(lat, lon, type) {
         success: function(data) {
             if (!data.can_add) {
                 load_add_point_in_progress = false;
-                alert('You can not add pin here. To close to a recently added pin!');
+                alert(gettext('You can not add pin here. To close to a recently added pin!'));
                 return;
             }
 

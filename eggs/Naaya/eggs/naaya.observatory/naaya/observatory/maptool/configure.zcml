@@ -81,14 +81,6 @@
     permission="zope.Public"
   />
 
-  <browser:page
-    name="observamap_i18n_js"
-    for=".observatory.NyObservatory"
-    class=".views.MapView"
-    attribute="observamap_i18n_js"
-    permission="zope.Public"
-  />
-
   <!-- Resource directory -->
   <browser:resourceDirectory
     name="naaya.observatory.maptool"
