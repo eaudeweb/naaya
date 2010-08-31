@@ -32,9 +32,28 @@ function submit_rate() {
             return false;
         },
         error: function(req) {
-            if(console) console.error("error adding pin:", req);
+            if (typeof(console) != 'undefined') {
+                console.error("error adding pin:", req);
+            }
         }
     });
 
     return false;
+}
+
+function getCountryStatistics() {
+    var country = $("#country").val();
+    $.ajax({
+        type: "GET",
+        url: "./country_statistics",
+        data: "country="+country,
+        success: function(data) {
+            $("#country-statistics-parent").html(data);
+        },
+        error: function(req) {
+            if (typeof(console) != 'undefined') {
+                console.error("error getting statistics for country:", country);
+            }
+        }
+    });
 }
