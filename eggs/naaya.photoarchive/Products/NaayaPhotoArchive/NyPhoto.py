@@ -566,7 +566,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def view(self, REQUEST, display='', **kwargs):
         """ """
         if not self.displays.has_key(display):
-            if not LISTING_DISPLAYS.has_key(display):
+            if not LISTING_DISPLAYS.has_key(display) and display != 'Original':
                 display = 'Medium'
         if not self.check_view_photo_permission(display):
             raise Unauthorized
