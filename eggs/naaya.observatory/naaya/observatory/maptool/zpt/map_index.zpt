@@ -12,6 +12,9 @@
         content="Interactive map for the Observatory information"
         name="description" />
 
+<script type="text/javascript" src="misc_/Naaya/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
+
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/box.css" />
 <!--[if lt IE 8]>
 <link rel="stylesheet" type="text/css" media="screen" href="++resource++naaya.observatory.maptool/css/ie6.css" />
@@ -140,18 +143,23 @@
                 <input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
                 <input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
             </div>
-        </div>
-    </div>
 
-    <div id="portalmap">
-        <div class="portalmap_portlet">
-        <div class="portalmap_portlet_title">
-            <p i18n:translate="">Drag & Drop pin to rate</p>
-        </div>
+            <div class="portalmap_portlet_title">
+                <p i18n:translate="">Drag & Drop pin to rate</p>
+            </div>
+            <div>
+                <img src="++resource++naaya.observatory.maptool/images/pin.png" id="pin" alt="Pin" style="z-index: 9999;" title="Pin"  />
+            </div>
 
-        <div>
-            <img src="++resource++naaya.observatory.maptool/images/pin.png" id="pin" alt="Pin" style="z-index: 9999;" title="Pin"  />
-        </div>
+            <div class="portalmap_portlet_title">
+                <p i18n:translate="">Country statistics</p>
+            </div>
+            <div>
+                <input type="text" id="country" name="country:ustring:utf8"/>
+                <input type="button" name="country_button" id="country_button" value="Go" onclick="getCountryStatistics()"/>
+            </div>
+            <div id="country-statistics-parent">
+            </div>
         </div>
     </div>
 
@@ -161,6 +169,9 @@
 // not using document.ready because then IE6 won't load yahoo maps :(
 showPageElements();
 window.map_engine = naaya_map_engine.portal_map('map');
+$(document).ready(function() {
+    $("#country").autocomplete("./get_countries");
+});
 </script>
 </tal:block>
 

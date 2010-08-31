@@ -65,6 +65,22 @@
     permission="zope.Public"
   />
 
+  <browser:page
+    name="country_statistics"
+    for=".observatory.NyObservatory"
+    class=".views.MapView"
+    template="zpt/country_statistics.zpt"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    name="get_countries"
+    for=".observatory.NyObservatory"
+    class=".views.MapView"
+    attribute="get_countries"
+    permission="zope.Public"
+  />
+
   <!-- Resource directory -->
   <browser:resourceDirectory
     name="naaya.observatory.maptool"
