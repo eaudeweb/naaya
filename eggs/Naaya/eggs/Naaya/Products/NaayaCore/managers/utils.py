@@ -543,14 +543,9 @@ class utils:
 
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
-        def val(obj):
-            val = getattr(obj, p_attr, None)
-            if isinstance(val, (str, unicode)):
-                return force_to_unicode(val)
-            else:
-                return val
-        return sorted(p_list,
-                      key=val,
+        return sorted(p_list, key=lambda obj: isinstance(obj, str) and \
+                      force_to_unicode(getattr(obj, p_attr, '')) or \
+                      getattr(obj, p_attr, None),
                       reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
