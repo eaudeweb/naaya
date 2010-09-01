@@ -34,9 +34,8 @@
 	<div i18n:translate="">Use catalog <br /><small>(catalog's id)</small></div>
 	<div>
 		<input type="text" name="catalog" size="30" tal:attributes="value here/catalog" />
-		<small	tal:condition="here/catalog"
-				tal:content="python:test(here.testCatalog(),'catalog found', 'catalog not found')"
-				tal:attributes="style python:test(here.testCatalog(), 'color:green', 'color:red')" />
+		<small tal:condition="here/get_catalog">catalog found</small>
+		<small tal:condition="not: here/get_catalog">catalog not found</small>
 	</div>
 
 	<div><input type="submit" value="Save" i18n:attributes="value" /></div>

@@ -17,7 +17,7 @@ Naaya Calendar
 		tab of your calendar and fill the "Meta Types (to search for)"
 		property.
 
-		After you filled the "Meta Types (to search for)" at the 
+		After you filled the "Meta Types (to search for)" at the
 		bottom of the page you can set the date properties and
 		visualisation condition for your objects.
 
@@ -44,7 +44,7 @@ Naaya Calendar
 
 		**Important note:** when you add a calendar instance on a page
 		of your portal, make sure you include its stylesheet in the
-		header of the page. The URL of the stylesheet is ``string:${here/getEventCalendarURL}/calendar_style``.
+		header of the page. The URL of the stylesheet is ``string:${here/absolute_url}/calendar_style``.
 
 		The calendar can be easily integrated in any portal's
 		look&feel by changing it's appearance (fonts, colors, borders,
