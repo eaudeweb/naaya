@@ -471,6 +471,19 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 local_roles = self.getLocalRoles(roles_tuple[1])
                 if roles_tuple[0] == username and len(local_roles) > 0:
                     ra((local_roles, folder.absolute_url(1)))
+
+        for source in self.getSources():
+            source_obj = self.getSourceObj(source.getId())
+            groups_roles_map = source_obj.get_groups_roles_map()
+            for group, roles in groups_roles_map.iteritems():
+                if source_obj.user_in_group(user, group):
+                    r_dict = {}
+                    for role in roles:
+                        r_dict.setdefault(role[1]['path'], [])
+                        r_dict[role[1]['path']].append(role[0])
+                    for path, roles in r_dict.iteritems():
+                        ra((roles, path))
+
         return r
 
     def isAdministrator(self, path=''):
