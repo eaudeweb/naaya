@@ -1049,7 +1049,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     security.declareProtected(view, 'getProjectsListing')
     def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0,
-                           archive=[], ps_start='', gz='', th='', pr='', **kwargs):
+                           archive=[], ps_start='', gz='', th='', pr='', path='', **kwargs):
         """ Returns a list of brains """
         if gz != '' and not isinstance(gz, list):
             gz = [gz]
@@ -1062,7 +1062,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             'meta_type': [METATYPE_NYSEMPROJECT],
             'approved': 1,
             'sort_on': skey,
-            'sort_order': rkey == '1' and 'descending' or 'ascending'
+            'sort_order': rkey == '1' and 'descending' or 'ascending',
+            'path': path
         }
         if languages: langs = languages
         else: langs = [self.gl_get_selected_language()]
@@ -2395,10 +2396,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def folder_linkchecker_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_linkchecker')
-
-    def getContext(self, url=''):
-        """ """
-        return self.unrestrictedTraverse(url, None)
 
     #latest comments
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_latest_comments_html')
