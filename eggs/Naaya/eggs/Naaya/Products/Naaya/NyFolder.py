@@ -47,7 +47,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
-from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
+from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent

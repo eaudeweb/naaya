@@ -138,6 +138,16 @@ class RestrictedToolkit(SimpleItem):
         """ Check validity of email address """
         return is_valid_email(email_str)
 
+    def we_provide(self, feature):
+        """ Check if the instance provides certain features """
+        if feature == 'Excel export':
+            try:
+                from xlwt import Workbook
+                return True
+            except ImportError:
+                pass
+        return False
+
 InitializeClass(RestrictedToolkit)
 
 

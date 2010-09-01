@@ -26,6 +26,11 @@ from StringIO import StringIO
 import urllib
 import simplejson as json
 import operator
+try:
+    import xlwt
+    excel_export_available = True
+except:
+    excel_export_available = False
 
 #Zope imports
 import transaction
@@ -218,8 +223,8 @@ class CSVImportTool(Implicit, Item):
 InitializeClass(CSVImportTool)
 
 
-class CSVExportTool(Implicit, Item):
-    title = "CSV export"
+class ExportTool(Implicit, Item):
+    title = "Spreadsheet export"
 
     security = ClassSecurityInfo()
 
@@ -297,6 +302,7 @@ class CSVExportTool(Implicit, Item):
 
         return dump_header, dump_items
 
+    security.declarePrivate('generate_csv_output')
     def generate_csv_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
@@ -309,8 +315,32 @@ class CSVExportTool(Implicit, Item):
 
         return output.getvalue()
 
+    security.declarePrivate('generate_excel_output')
+    def generate_excel_output(self, meta_type, objects):
+        dump_header, dump_items = self._dump_objects(meta_type, objects)
+
+        style = xlwt.XFStyle()
+        normalfont = xlwt.Font()
+        header = xlwt.Font()
+        header.bold = True
+        style.font = header
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Sheet 1')
+        row = 0
+        for col in range(0, len(dump_header)):
+            ws.row(row).set_cell_text(col, dump_header[col], style)
+        style.font = normalfont
+        for item in dump_items:
+            row += 1
+            for col in range(0, len(item)):
+                ws.row(row).set_cell_text(col, item[col], style)
+        output = StringIO()
+        wb.save(output)
+        return output.getvalue()
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export')
-    def export(self, meta_type, as_attachment=False, REQUEST=None):
+    def export(self, meta_type, file_type="CSV", as_attachment=False, REQUEST=None):
         """ """
         if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
             raise Unauthorized
@@ -319,12 +349,23 @@ class CSVExportTool(Implicit, Item):
         objects = search(meta_type=[meta_type],
                          path='/'.join(self.aq_parent.getPhysicalPath()))
 
-        ret = self.generate_csv_output(meta_type, objects)
+        if file_type == 'CSV':
+            ret = self.generate_csv_output(meta_type, objects)
+            content_type = 'text/csv; charset=utf-8'
+            filename = '%s Export.csv' % meta_type
+
+        elif file_type == 'Excel':
+            assert excel_export_available
+            ret = self.generate_excel_output(meta_type, objects)
+            content_type = 'application/vnd.ms-excel'
+            filename = '%s Export.xls' % meta_type
+
+        else: raise ValueError('unknown file format %r' % file_type)
 
         if as_attachment and REQUEST is not None:
-            filename = '%s Export.csv' % meta_type
+            filesize = len(ret)
             set_response_attachment(REQUEST.RESPONSE, filename,
-                'text/csv; charset=utf-8', len(ret))
+                content_type, filesize)
         return ret
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_json')
@@ -354,7 +395,7 @@ class CSVExportTool(Implicit, Item):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'index_html')
     index_html = PageTemplateFile('../zpt/bulk_export', globals())
 
-InitializeClass(CSVExportTool)
+InitializeClass(ExportTool)
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
@@ -363,7 +404,7 @@ def json_encode(ob):
     raise ValueError
 
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
-    RESPONSE.setHeader('Content-Type', 'text/csv; charset=utf-8')
+    RESPONSE.setHeader('Content-Type', content_type)
     if length is not None:
         RESPONSE.setHeader('Content-Length', length)
     RESPONSE.setHeader('Pragma', 'public')
