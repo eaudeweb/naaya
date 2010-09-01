@@ -129,6 +129,18 @@ def meeting_add_html(self):
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyMeeting', 'form_helper': form_helper}, 'meeting_add')
 
+def _check_meeting_dates(self, form_errors):
+    _startdate = getattr(self, 'start_date', '')
+    _enddate = getattr(self, 'end_date', '')
+    if _startdate and _enddate:
+        if _startdate > _enddate:
+            if 'start_date' not in form_errors:
+                form_errors['start_date'] = []
+            if 'end_date' not in form_errors:
+                form_errors['end_date'] = []
+            form_errors['start_date'].append('The start date should be before the end date')
+            form_errors['end_date'].append('The start date should be before the end date')
+
 def _create_NyMeeting_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix='meeting')
     ob = NyMeeting(id, contributor)
@@ -158,6 +170,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NyMeeting_object(self, id, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    _check_meeting_dates(ob, form_errors)
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -314,6 +327,7 @@ class NyMeeting(NyContentData, NyFolder):
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        _check_meeting_dates(self, form_errors)
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
@@ -345,6 +359,7 @@ class NyMeeting(NyContentData, NyFolder):
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        _check_meeting_dates(self, form_errors)
 
         if not form_errors:
             if self.discussion: self.open_for_comments()
