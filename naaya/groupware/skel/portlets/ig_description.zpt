@@ -1,5 +1,3 @@
-<h1 tal:content="here/title_or_id" />
-
 <div style="font: bold; border: 1px solid #346d9f; margin: 0.5em 1em 2em 0.5em; background-color: #dee6ff; padding: 0.3em;">
 	<p>The main sections of the Interest Group are:</p>
 	<ul>
