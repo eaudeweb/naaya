@@ -49,6 +49,7 @@ from question_item import question_item
 from review_item import addConsultationReviewItem
 from RateList import manage_addRateList
 from constants import *
+from naaya.core.zope2util import permission_add_role
 
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
@@ -268,26 +269,14 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         creates and adds review permissions if it doesn't exist
         """
 
-
         auth_tool = self.getAuthenticationTool()
         roles = auth_tool.list_all_roles()
         PERMISSION_GROUP = 'Review content'
 
-        if PERMISSION_GROUP not in self.get_naaya_permissions_in_site():
-            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_CONSULTATION])
-        else:
-            permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
-            if PERMISSION_REVIEW_CONSULTATION not in permissions:
-                permissions.append(PERMISSION_REVIEW_CONSULTATION)
-                auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
-
         if 'Reviewer' not in roles:
-            auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
+            auth_tool.addRole('Reviewer', [PERMISSION_REVIEW_CONSULTATION])
         else:
-            role_permissions = auth_tool.getRolePermissions('Reviewer')
-            if PERMISSION_GROUP not in role_permissions:
-                role_permissions.append(PERMISSION_GROUP)
-                auth_tool.editRole('Reviewer', role_permissions)
+            permission_add_role(self, PERMISSION_REVIEW_CONSULTATION, 'Reviewer')
 
         #give permissions to administrators
         admin_permissions = self.permissionsOfRole('Administrator')
