@@ -24,6 +24,7 @@ naaya.core.zope2util - utilities to make Zope 2 a friendlier place
 import datetime
 
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permission import Permission
 from Acquisition import Implicit
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
@@ -296,3 +297,10 @@ def abort_transaction_keep_session(request):
     session = dict(request.SESSION)
     import transaction; transaction.abort()
     request.SESSION.update(session)
+
+def permission_add_role(context, permission, role):
+    """ Adds a role to a permission"""
+    p = Permission(permission, (), context)
+    crt_roles = p.getRoles()
+    ty = type(crt_roles)
+    p.setRoles(ty(set(crt_roles) ^ set([role])))
