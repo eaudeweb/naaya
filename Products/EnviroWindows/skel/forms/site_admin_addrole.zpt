@@ -27,7 +27,6 @@
 	<td valign="top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission icon" /></td>
 	<td>
 		<strong tal:content="permission" /><br />
-		<span tal:replace="python:authentication_tool.getPermissionDescription(permission)" />
 	</td>
 </tr>
 </table>
