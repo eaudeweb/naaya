@@ -1127,8 +1127,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
     manage_editUser_html = PageTemplateFile('zpt/authentication_edituser', globals())
 
-    manage_addRole_html = PageTemplateFile('zpt/authentication_addrole', globals())
-
     manage_userRoles_html = PageTemplateFile('zpt/authentication_user_roles', globals())
     sitemap = PageTemplateFile('zpt/authentication_sitemap', globals())
 
