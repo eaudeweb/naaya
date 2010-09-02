@@ -46,7 +46,7 @@ from Products.NaayaBase.NyAccess import NyAccess
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
 from simpleconsultation_comment import addSimpleConsultationComment
-
+from naaya.core.zope2util import permission_add_role
 
 #module constants
 PERMISSION_REVIEW_SIMPLECONSULTATION = 'Naaya - Review Simple Consultation'
@@ -277,21 +277,10 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
         roles = auth_tool.list_all_roles()
         PERMISSION_GROUP = 'Review content'
 
-        if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
-            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_SIMPLECONSULTATION])
-        else:
-            permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
-            if PERMISSION_REVIEW_SIMPLECONSULTATION not in permissions:
-                permissions.append(PERMISSION_REVIEW_SIMPLECONSULTATION)
-                auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
-
         if 'Reviewer' not in roles:
-            auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
+            auth_tool.addRole('Reviewer', [PERMISSION_REVIEW_SIMPLECONSULTATION])
         else:
-            role_permissions = auth_tool.getRolePermissions('Reviewer')
-            if PERMISSION_GROUP not in role_permissions:
-                role_permissions.append(PERMISSION_GROUP)
-                auth_tool.editRole('Reviewer', role_permissions)
+            permission_add_role(self, PERMISSION_REVIEW_SIMPLECONSULTATION, 'Reviewer')
 
         #give permissions to administrators
         admin_permissions = self.permissionsOfRole('Administrator')
