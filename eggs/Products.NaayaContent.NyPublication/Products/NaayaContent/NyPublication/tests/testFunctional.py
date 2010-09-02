@@ -12,14 +12,8 @@ class PublicationMixin(object):
 
     def publication_install(self):
         self.portal.manage_install_pluggableitem(self.publication_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.publication_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
 
     def publication_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.publication_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
         self.portal.manage_uninstall_pluggableitem(self.publication_metatype)
 
 
