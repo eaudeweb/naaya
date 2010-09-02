@@ -46,7 +46,7 @@ class UpdatePortalSchemas(UpdateScript):
     title = 'Update portal schemas'
     authors = ['David Batranu']
     creation_date = 'Jan 01, 2010'
- 
+
     security = ClassSecurityInfo()
 
     security.declareProtected(view_management_screens, 'index_html')
@@ -134,5 +134,3 @@ class UpdatePortalSchemas(UpdateScript):
 
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/update_schemas_html?find=true' % self.absolute_url())
-
-

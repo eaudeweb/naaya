@@ -7,13 +7,6 @@
 	  provides="..interfaces.IUpdateScript"
 	  component=".update_layout.UpdateLayout"
 	  permission="zope2.ViewManagementScreens" />
-	<!--
-	<utility
-	  name="anonymous_notification.update"
-	  provides="..interfaces.IUpdateScript"
-	  component=".update_add_anonymous_notification.UpdateAddAnonymousNotification"
-	  permission="zope2.ViewManagementScreens" />
-	-->
 
 	<utility
 	  name="forum.update"
@@ -98,13 +91,7 @@
 	  provides="..interfaces.IUpdateScript"
 	  component=".update_imagecontainer.UpdateImageContainer"
 	  permission="zope2.ViewManagementScreens" />
-	<!--
-	<utility
-	  name="jquery.update"
-	  provides="..interfaces.IUpdateScript"
-	  component=".update_jquery.UpdateJquery"
-	  permission="zope2.ViewManagementScreens" />
-	-->
+
 	<!--
 	<utility
 	  name="languages_box.update"
@@ -223,10 +210,10 @@
 	  component=".update_tbcons.UpdateTalkBackCons"
 	  permission="zope2.ViewManagementScreens" />
 
-	<!--<utility-->
-	<!--  name="files.update"-->
-	<!--  provides="..interfaces.IUpdateScript"-->
-	<!--  component=".update_files.UpdateFiles"-->
-	<!--  permission="zope2.ViewManagementScreens" />-->
+	<utility
+	  name="schema_widgets.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_schema_widgets.UpdateSchemaWidgets"
+	  permission="zope2.ViewManagementScreens" />
 
 </configure>
