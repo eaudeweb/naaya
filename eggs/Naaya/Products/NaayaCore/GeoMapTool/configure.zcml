@@ -1,6 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'
            xmlns:naaya="http://namespaces.zope.org/naaya">
-  <naaya:call factory="..engine_google.register" />
-  <naaya:call factory="..engine_yahoo.register" />
-  <naaya:call factory="..engine_bing.register" />
+  <naaya:call factory=".engine_google.register" />
+  <naaya:call factory=".engine_yahoo.register" />
+  <naaya:call factory=".engine_bing.register" />
 </configure>
