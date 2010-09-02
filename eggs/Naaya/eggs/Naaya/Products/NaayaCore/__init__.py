@@ -28,7 +28,7 @@ import Products.Naaya
 from constants import *
 
 try:
-    from GeoMapTool import GeoMapTool
+    import GeoMapTool
     geo_installed = True
 except ImportError:
     geo_installed = False
@@ -53,6 +53,7 @@ def initialize(context):
     from EditorTool import EditorTool
     from SchemaTool import SchemaTool
     from GoogleDataTool import AnalyticsTool
+    from GeoMapTool import GeoMapTool
 
     context.registerClass(
         PropertiesTool.PropertiesTool,
