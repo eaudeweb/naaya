@@ -12,7 +12,6 @@
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_requestrole" title="Request account page"/>
-		<form id="site_admin_addrole" title="Add new role"/>
 		<form id="site_admin_adduser" title="Add new user"/>
 		<form id="site_admin_edituser" title="Edit user form"/>
 		<form id="site_admin_roles" title="Roles"/>
