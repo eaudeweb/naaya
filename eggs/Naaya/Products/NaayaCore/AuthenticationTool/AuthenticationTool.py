@@ -473,10 +473,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     ra((local_roles, folder.absolute_url(1)))
 
         for source in self.getSources():
-            source_obj = self.getSourceObj(source.getId())
-            groups_roles_map = source_obj.get_groups_roles_map()
-            for group, roles in groups_roles_map.iteritems():
-                if source_obj.user_in_group(user, group):
+            if not hasattr(source, 'get_groups_roles_map'):
+                continue
+            for group, roles in source.get_groups_roles_map().iteritems():
+                if source.user_in_group(user, group):
                     r_dict = {}
                     for role in roles:
                         r_dict.setdefault(role[1]['path'], [])
