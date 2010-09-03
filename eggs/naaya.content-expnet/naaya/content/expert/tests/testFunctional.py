@@ -10,11 +10,11 @@ def add_selection_list(portal, id, values):
     for key, value in values.iteritems():
         portal.portal_portlets[id].manage_add_item(key, value)
 
-def setUp_EW_test_data(portal):
+def setUp_EW_data(portal):
     add_selection_list(portal, 'countries',
         dict((k,k) for k in ["Egypt", "Lybia", "Tunisia"]))
 
-def tearDown_EW_test_data(portal):
+def tearDown_EW_data(portal):
     portal.portal_portlets.manage_delObjects(['countries'])
 
 class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
@@ -22,7 +22,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         self.install_content_type('Naaya Expert')
-        setUp_EW_test_data(self.portal)
+        setUp_EW_data(self.portal)
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.expert.expert_item import addNyExpert
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -32,7 +32,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        tearDown_EW_test_data(self.portal)
+        tearDown_EW_data(self.portal)
         self.remove_content_type('Naaya Expert')
         transaction.commit()
 
