@@ -212,21 +212,22 @@ class Schema(Folder):
 
         return form_data, form_errors
 
+    security.declarePrivate('get_content_type')
+    def get_content_type(self):
+        """ Get content_type with this schema attached"""
+        for content_type in self.get_pluggable_content().values():
+            if self.id == content_type['schema_name']:
+                return content_type
+        return None
+
     security.declarePrivate('getDefaultDefinition')
     def getDefaultDefinition(self):
         """ get initial definition for this schema, from the NyZzz Python module """
-        for content_type in self.get_pluggable_content().values():
-            if self.id == content_type['schema_name']:
-                return content_type['default_schema']
-        return None
-
-    security.declarePrivate('get_meta_type')
-    def get_meta_type(self):
-        """ Get meta_type attribute of the content type """
-        for content_type in self.get_pluggable_content().values():
-            if self.id == content_type['schema_name']:
-                return content_type['meta_type']
-        return None
+        content_type = self.get_content_type()
+        if content_type is not None:
+            return content_type['default_schema']
+        else:
+            return None
 
     def index_html(self, REQUEST):
         """ redirect to admin_html """
