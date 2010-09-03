@@ -209,7 +209,7 @@ def importNyPublication(self, param, id, attrs, content, properties, discussion,
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyPublication_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
+            ob = _create_NyPublication_object(self, id, id, '', self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
             ob.sortorder = attrs['sortorder'].encode('utf-8')
             ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
 
