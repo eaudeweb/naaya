@@ -11,8 +11,7 @@
 				action_url_logout_directly string: 'logout'">
 
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName();
-								auth_tool python:here.getAuthenticationTool();
-								user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());"
+								auth_tool python:here.getAuthenticationTool();"
 								condition="python:user!='Anonymous User'">
 
 <h1 i18n:translate="">Log out</h1>
@@ -28,10 +27,7 @@
 <div class="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
 <br />
 <tal:block tal:define="roles python:here.getAuthenticationTool().getAuthenticatedUserRoles()">
-	<div tal:condition="python:user_obj is None">
-		<!-- List roles for Zope user here -->
-	</div>
-	<tal:block tal:condition="python:len(roles) and user_obj is not None">
+	<tal:block tal:condition="roles">
 		<tal:block i18n:translate="">You have the following rights in this portal:</tal:block><br />
 		<ul>
 			<li tal:repeat="item roles">
@@ -43,7 +39,7 @@
 			</li>
 		</ul>
 	</tal:block>
-	<tal:block tal:condition="python:not len(roles)" i18n:translate="">
+	<tal:block tal:condition="not:roles" i18n:translate="">
 		You have no special rights in this portal.
 	</tal:block>
 </tal:block>
