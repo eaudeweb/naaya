@@ -222,7 +222,7 @@ class Schema(Folder):
 
     security.declarePrivate('get_meta_type')
     def get_meta_type(self):
-        """ get initial definition for this schema, from the NyZzz Python module """
+        """ Get meta_type attribute of the content type """
         for content_type in self.get_pluggable_content().values():
             if self.id == content_type['schema_name']:
                 return content_type['meta_type']
