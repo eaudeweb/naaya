@@ -79,7 +79,7 @@ DEFAULT_SCHEMA = {
     'languages':        dict(sortorder=110, widget_type='String', label='Language(s)'),
     'locator':          dict(sortorder=120, widget_type='String', label='Internet access (URL)', localized=True),
 }
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 # make sure the label is the one we wanted
 DEFAULT_SCHEMA['description'].update({'label': 'Short description of content'})
 
