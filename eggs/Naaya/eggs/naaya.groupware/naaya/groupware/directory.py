@@ -21,79 +21,86 @@ class Directory(Implicit, Item):
         for source in acl_tool.getSources():
             if not isinstance(source, plugLDAPUserFolder):
                 continue
-        source_uf = source.getUserFolder()
-        individual_ldap_users = source.getUsersRoles(source_uf)
-        group_to_role_mapping = source.get_groups_roles_map()
-        self.sources[source.id] = {
-            'user_roles': individual_ldap_users,
-            'group_map': group_to_role_mapping,
-            'source': source,
-        }
+            source_uf = source.getUserFolder()
+            individual_ldap_users = source.getUsersRoles(source_uf)
+            group_to_role_mapping = source.get_groups_roles_map()
+            self.sources[source.id] = {
+                'user_roles': individual_ldap_users,
+                'group_map': group_to_role_mapping,
+                'source': source,
+            }
 
     security.declareProtected(view, 'search_directory')
     def search_directory(self, search_string=u'', REQUEST=None):
         """ """
-        users = self.get_users()
-        if not search_string:
-            user_list = users
-        else:
-            search_string = search_string.lower()
-            user_list = [user for user in users if \
-                         search_string in user['firstname'].lower() or \
-                         search_string in user['lastname'].lower() or \
-                         search_string in user['userid'].lower()]
+        search_string = search_string.lower()
+        local_users_list = self.search_local_users(search_string)
+        external_users_list = self.search_external_users(search_string)
+        user_list = local_users_list + external_users_list
         return self.index_html(user_list=user_list)
 
-    def get_users(self):
-        if not hasattr(self, '_v_external_user_cache'):
-            self._v_external_user_cache = {}
-        cache = self._v_external_user_cache
-        users = []
+    def search_local_users(self, search_string=u''):
+        ret = []
+        portal = self.getSite()
+        acl_tool = portal.getAuthenticationTool()
+        local_users = acl_tool.getUsers()
+        for user in local_users:
+            full_name = user.firstname + ' ' + user.lastname
+            if search_string in full_name.lower():
+                ret.append(self.get_local_user_info(user))
+        return ret
 
+    def search_external_users(self, search_string=u''):
+        ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         self.update_sources_cache(acl_tool)
-
-        local_users = acl_tool.getUsers()
-        external_users = []
         for source_id in self.sources.keys():
             source = self.sources[source_id]['source']
-            individual_users = self.sources[source_id]['user_roles'].keys()
 
-            group_users = []
-            for group_id in self.sources[source_id]['group_map'].keys():
-                group_users.extend(
-                    source.group_member_ids(group_id)
-                )
+            individual_userids = self.sources[source_id]['user_roles'].keys()
+            group_userids_map = self.get_group_userids_map(source_id)
+            group_userids = []
+            for group_users in group_userids_map.values():
+                group_userids.extend(group_users)
+            userids = set(individual_userids + group_userids)
 
-            combined_users = individual_users + group_users
-            for userid in combined_users:
+            users = source.getUserFolder().findUser('cn', search_string)
+            users = [user for user in users if user['uid'] in userids]
 
-                if cache.get(userid, {}):
-                    user_dict = cache[userid]
-                else:
-                    user_dict = source._get_user_by_uid(userid,
-                                                        source.getUserFolder())
-                    cache[userid] = user_dict
+            # precalculate user roles for performance
+            user_roles_map = {}
+            for user in users:
+                user_roles = self.get_external_user_roles(source, user['uid'],
+                                                          group_userids_map)
+                user_roles_map[user['uid']] = user_roles
 
-                user_roles = self.get_external_user_roles(source, userid)
-                user_dict['access_level'] = \
-                         self.get_user_access_level(user_roles)
+            user_info = [self.get_external_user_info(source, user,
+                                                 user_roles_map[user['uid']])
+                          for user in users]
 
-                external_users.append(user_dict)
+            ret.extend(user_info)
 
-        def handle_unicode(s):
-            if not isinstance(s, unicode):
-                try:
-                    return s.decode('utf-8')
-                except:
-                    return s.decode('latin-1')
-            else:
-                return s
+        return ret
 
-        for user in local_users:
-            user_roles = self.get_local_user_roles(user)
-            users.append({
+    def get_user_info(self, userid):
+        portal = self.getSite()
+        acl_tool = portal.getAuthenticationTool()
+        user = acl_tool.getUser(userid)
+        if user is not None:
+            return self.get_local_user_info(user)
+
+        self.update_sources_cache(acl_tool)
+        for source_id in self.sources.keys():
+            source = self.sources[source_id]['source']
+            acl_folder = source.getUserFolder()
+            user = acl_folder.getUserById(userid, None)
+            if user is not None:
+                return self.get_external_user_info(source, user._properties)
+
+    def get_local_user_info(self, user):
+        user_roles = self.get_local_user_roles(user)
+        return {
                 'userid': user.name,
                 'firstname': handle_unicode(user.firstname),
                 'lastname': handle_unicode(user.lastname),
@@ -101,29 +108,33 @@ class Directory(Implicit, Item):
                 'access_level': self.get_user_access_level(user_roles),
                 'organisation': 'N/A',
                 'postal_address': 'N/A',
-            })
+                }
 
-        for user in external_users:
-            users.append({
+    def get_external_user_info(self, source, user, user_roles=None):
+        # user_roles are precalculated for the search directory (perfomance)
+        if user_roles is None:
+            user_roles = self.get_external_user_roles(source, user['uid'])
+        return {
                 'userid': user['uid'],
                 'firstname': handle_unicode(user['givenName']),
                 'lastname': handle_unicode(user['sn']),
                 'email': user.get('mail', ''),
-                'access_level': user['access_level'],
+                'access_level': self.get_user_access_level(user_roles),
                 'organisation': user.get('o', 'N/A'),
                 'postal_address': handle_unicode(
                                     user.get('postalAddress', 'N/A')
                                   ),
-            })
-        self._v_user_cache = users
-        return users
+                }
 
     def get_local_user_roles(self, userob):
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         return acl_tool.getUserRoles(userob)
 
-    def get_external_user_roles(self, source, userid):
+    def get_external_user_roles(self, source, userid, group_userids_map=None):
+        # group_userids_map is precalculated for search directory (performance)
+        if group_userids_map is None:
+            group_userids_map = self.get_group_userids_map(source.id)
         individual_ldap_users = self.sources[source.id]['user_roles']
         group_to_role_mapping = self.sources[source.id]['group_map']
         site_id = self.getSite().getId()
@@ -133,20 +144,19 @@ class Directory(Implicit, Item):
                 if role[1].endswith(site_id):
                     roles.extend(role[0])
         for groupid in group_to_role_mapping.keys():
-            if userid in source.group_member_ids(groupid):
+            if userid in group_userids_map[groupid]:
                 for role, role_location in group_to_role_mapping[groupid]:
                     if not role_location['is_site']:
                         continue
                     roles.append(role)
         return roles
 
-    def get_user_info(self, userid):
-        if not hasattr(self, '_v_user_cache'):
-            self.get_users()
-        for user in self._v_user_cache:
-            if user['userid'] != userid:
-                continue
-            return user
+    def get_group_userids_map(self, source_id):
+        group_userids_map = {}
+        source = self.sources[source_id]['source']
+        for group_id in self.sources[source_id]['group_map'].keys():
+            group_userids_map[group_id] = source.group_member_ids(group_id)
+        return group_userids_map
 
     def get_user_access_level(self, roles):
         access_level = 'N/A'
@@ -164,3 +174,13 @@ class Directory(Implicit, Item):
     user_details = PageTemplateFile('zpt/directory_user_details', globals())
 
 InitializeClass(Directory)
+
+
+def handle_unicode(s):
+    if not isinstance(s, unicode):
+        try:
+            return s.decode('utf-8')
+        except:
+            return s.decode('latin-1')
+    else:
+        return s
