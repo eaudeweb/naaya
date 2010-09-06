@@ -20,8 +20,6 @@
 from Products.Naaya.tests import NaayaTestCase
 from unittest import TestSuite, makeSuite
 
-NaayaTestCase.ZopeTestCase.installProduct('NaayaChatter')
-
 class ChatterTests(NaayaTestCase.NaayaTestCase):
 
     def afterSetUp(self):
