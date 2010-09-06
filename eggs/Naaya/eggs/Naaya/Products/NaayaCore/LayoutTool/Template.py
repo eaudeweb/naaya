@@ -65,6 +65,12 @@ class Template(ZopePageTemplate):
         """ """
         if not context.has_key('args'):
             context['args'] = args
+        try:
+            response = self.REQUEST.RESPONSE
+            if not response.headers.has_key('content-type'):
+                response.setHeader('content-type', self.content_type)
+        except AttributeError:
+            pass
         return self.pt_render(extra_context=context)
 
     def om_icons(self):

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.google.com/schemas/sitemap/0.84"
+				xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84 http://www.google.com/schemas/sitemap/0.84/sitemap.xsd"
+				xmlns:tal="http://xml.zope.org/namespaces/tal">
+
+<url tal:repeat="ob python:here.getCatalogedObjectsCheckView(meta_type=['Naaya Document', 'Naaya File', 'Naaya Folder'], approved=1, howmany=-1, path=['/'.join(x.getPhysicalPath()) for x in here.getMainTopics()])">
+<loc tal:content="ob/absolute_url" />
+<lastmod tal:content="python: ob.releasedate.strftime('%Y-%m-%d')" />
+<changefreq>weekly</changefreq>
+</url>
+
+<url tal:repeat="ob python:here.getCatalogedObjectsCheckView(meta_type=['Naaya News'], approved=1)">
+<loc tal:content="ob/absolute_url" />
+<lastmod tal:content="python: ob.releasedate.strftime('%Y-%m-%d')" />
+<changefreq>daily</changefreq>
+</url>
+
+<url tal:repeat="ob python:here.getCatalogedObjectsCheckView(meta_type=['Naaya Event'], approved=1)">
+<loc tal:content="ob/absolute_url" />
+<lastmod tal:content="python: ob.releasedate.strftime('%Y-%m-%d')" />
+<changefreq>daily</changefreq>
+</url>
+
+</urlset>

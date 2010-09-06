@@ -99,6 +99,7 @@ from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -503,14 +504,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                         self.manage_addFile(id='robots.txt', file='', title='')
                         file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
-                    file_ob._p_changed=1
-                if skel_handler.root.others.sitemap_xml is not None:
-                    content = self.futRead(join(skel_path, 'others', 'sitemap_xml'), 'r')
-                    file_ob = self._getOb('sitemap_xml', None)
-                    if file_ob is None:
-                        self.manage_addProduct['PythonScripts'].manage_addPythonScript(id='sitemap_xml')
-                        file_ob = self._getOb('sitemap_xml')
-                    file_ob.ZPythonScript_edit(params='', body=content)
                     file_ob._p_changed=1
                 if skel_handler.root.others.favicon is not None:
                     content = self.futRead(join(skel_path, 'others', 'favicon.ico'), 'rb')
@@ -3732,6 +3725,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     def standard_template_macro(self, macro='page'):
         return self.getLayoutTool().get_standard_template().macros[macro]
+
+    sitemap_xml = NaayaPageTemplateFile('zpt/sitemap_xml', globals(), 'naaya.google.sitemap')
 
     #calendar widget
     security.declareProtected(view, 'calendar_js')

@@ -32,6 +32,7 @@
         </metal:block>
 
         <metal:block define-slot="head"></metal:block>
+        <tal:block replace="structure here/portal_statistics/ga_verify" />
     </head>
     <metal:block define-slot="standard-body">
         <body>
@@ -119,7 +120,6 @@
                     </div>
                 </div>
             </metal:block>
-            <tal:block replace="structure here/portal_statistics/ga_verify" />
         </body>
     </metal:block>
     </html>
