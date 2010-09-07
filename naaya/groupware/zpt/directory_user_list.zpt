@@ -27,7 +27,8 @@
                 <td tal:content="user/organisation"></td>
                 <tal:block condition="is_member">
                     <td tal:content="user/userid"></td>
-                    <td tal:content="user/email"></td>
+                    <td><a tal:attributes="href string:mailto:${user/email}"
+                            tal:content="user/email"></a></td>
                     <td tal:content="user/access_level"></td>
                 </tal:block>
             </tal:block>
