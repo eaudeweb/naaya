@@ -1,5 +1,7 @@
 import os
 import unittest
+import tempfile
+import shutil
 
 import transaction
 
@@ -171,6 +173,10 @@ class NaayaPortalTestPlugin(Plugin):
         transaction.commit()
         self.cleanup_portal_layer = cleanup
 
+        # prepare a temporary directory for test files, save the old
+        # tempfile.tempdir to restore when unloading the plugin
+        self.old_tmp, tempfile.tempdir = tempfile.tempdir, tempfile.mkdtemp()
+
     def finalize(self, result):
         assert self.cleanup_test_layer is None
         self.cleanup_portal_layer()
@@ -178,8 +184,12 @@ class NaayaPortalTestPlugin(Plugin):
 
         repository = os.path.join(INSTANCE_HOME, 'var', 'testing')
         if os.path.isdir(repository):
-            import shutil
             shutil.rmtree(repository)
+
+        # remove the temporary files created when testing, restore the old
+        # tempfile.tempdir
+        shutil.rmtree(tempfile.tempdir, True)
+        tempfile.tempdir = self.old_tmp
 
     def prepareTestCase(self, testCase):
         assert self.cleanup_test_layer is None
@@ -202,5 +212,7 @@ class NaayaPortalTestPlugin(Plugin):
 
     def afterTest(self, test):
         if self.cleanup_test_layer is not None:
+            import transaction
+            transaction.abort()
             self.cleanup_test_layer()
             self.cleanup_test_layer = None
