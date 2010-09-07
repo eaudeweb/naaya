@@ -4,7 +4,7 @@
 	<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 
-<metal:block metal:fill-slot="body" tal:define="is_member python:here.get_user_access() in ['member', 'admin'];
+<metal:block metal:fill-slot="body" tal:define="is_member here/is_member;
 												userid request/form/selected_user|nothing;
 												userinfo python:here.get_user_info(userid)">
 	<h1 i18n:translate="">User details</h1>
