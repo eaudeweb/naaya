@@ -10,19 +10,30 @@
 <form action="user_details" method="get">
 <table class="datatable" style="min-width: 80%;">
     <thead>
-        <th i18n:translate="">Name</th>
-        <th i18n:translate="">Organisation</th>
+        <th>
+            <a tal:attributes="href string:?search_string=${search_string}&sort_by=name"
+               id="sort_by_name" i18n:translate="">Name</a>
+        </th>
+        <th>
+            <a tal:attributes="href string:?search_string=${search_string}&sort_by=organisation"
+               id="sort_by_organisation" i18n:translate="">Organisation</a>
+        </th>
         <tal:block condition="is_member">
-            <th i18n:translate="">User ID</th>
+            <th>
+                <a tal:attributes="href string:?search_string=${search_string}&sort_by=userid"
+                   id="sort_by_userid" i18n:translate="">User ID</a>
+            </th>
             <th i18n:translate="">Email</th>
-            <th i18n:translate="">Access level</th>
+            <th>
+                <a tal:attributes="href string:?search_string=${search_string}&sort_by=access_level"
+                   id="sort_by_access_level" i18n:translate="">Access level</a>
+            </th>
         </tal:block>
     </thead>
     <tbody>
         <tr tal:repeat="user userlist">
             <tal:block define="url string:${here/absolute_url}/user_details?selected_user=${user/userid}">
-                <td><a tal:content="string:${user/firstname}
-                                           ${user/lastname}"
+                <td><a tal:content="user/name"
                        tal:attributes="href url"></a></td>
                 <td tal:content="user/organisation"></td>
                 <tal:block condition="is_member">

@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Globals import InitializeClass
@@ -31,12 +33,14 @@ class Directory(Implicit, Item):
             }
 
     security.declareProtected(view, 'search_directory')
-    def search_directory(self, search_string=u''):
+    def search_directory(self, search_string=u'', sort_by=''):
         """ """
         search_string = search_string.lower()
         local_users_list = self.search_local_users(search_string)
         external_users_list = self.search_external_users(search_string)
         user_list = local_users_list + external_users_list
+        if sort_by:
+            user_list.sort(key=itemgetter(sort_by))
         return self.user_list_html(search_string=search_string,
                                    user_list=user_list)
 
@@ -46,8 +50,7 @@ class Directory(Implicit, Item):
         acl_tool = portal.getAuthenticationTool()
         local_users = acl_tool.getUsers()
         for user in local_users:
-            full_name = user.firstname + ' ' + user.lastname
-            if search_string in full_name.lower():
+            if search_string in user.name.lower():
                 ret.append(self.get_local_user_info(user))
         return ret
 
@@ -101,10 +104,14 @@ class Directory(Implicit, Item):
 
     def get_local_user_info(self, user):
         user_roles = self.get_local_user_roles(user)
+        firstname = handle_unicode(user.firstname)
+        lastname = handle_unicode(user.lastname)
+        name = firstname + u' ' + lastname
         return {
                 'userid': user.name,
                 'firstname': handle_unicode(user.firstname),
                 'lastname': handle_unicode(user.lastname),
+                'name': name,
                 'email': user.email,
                 'access_level': self.get_user_access_level(user_roles),
                 'organisation': 'N/A',
@@ -119,6 +126,7 @@ class Directory(Implicit, Item):
                 'userid': user['uid'],
                 'firstname': handle_unicode(user['givenName']),
                 'lastname': handle_unicode(user['sn']),
+                'name': handle_unicode(user['cn']),
                 'email': user.get('mail', ''),
                 'access_level': self.get_user_access_level(user_roles),
                 'organisation': handle_unicode(user.get('o', 'N/A')),
