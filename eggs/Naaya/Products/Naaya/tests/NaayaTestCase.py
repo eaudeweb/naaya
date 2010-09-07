@@ -8,6 +8,30 @@ import transaction
 # Naaya imports
 from Products.NaayaCore.EmailTool import EmailTool
 
+def divert_mail():
+    class smtplib_replacement(object):
+        class SMTP:
+            def __init__(s, server, port):
+                mail_log.append( ('init', {}) )
+
+            def sendmail(s, from_addr, to_addr, message):
+                mail_log.append( ('sendmail',
+                                  {'from': from_addr,
+                                   'to': to_addr,
+                                   'message': message}) )
+
+            def quit(s):
+                mail_log.append( ('quit', {}) )
+
+    _orig_smtplib = EmailTool.smtplib
+    EmailTool.smtplib = smtplib_replacement
+    mail_log = []
+
+    def restore():
+        EmailTool.smtplib = _orig_smtplib
+
+    return mail_log, restore
+
 def wrap_with_request(app):
     from StringIO import StringIO
     from ZPublisher.HTTPRequest import HTTPRequest
@@ -56,12 +80,10 @@ def portal_fixture(app):
 
 class NaayaTestCase(unittest.TestCase):
     def setUp(self):
-        self.mail_log, self._restore_mail = self.divert_mail()
         self.afterSetUp()
 
     def tearDown(self):
         self.beforeTearDown()
-        self._restore_mail()
 
     def afterSetUp(self):
         # TODO: deprecate and remove
@@ -107,31 +129,6 @@ class NaayaTestCase(unittest.TestCase):
 
     def remove_content_type(self, meta_type):
         self.portal.manage_uninstall_pluggableitem(meta_type)
-
-    def divert_mail(self):
-
-        class smtplib_replacement(object):
-            class SMTP:
-                def __init__(s, server, port):
-                    mail_log.append( ('init', {}) )
-
-                def sendmail(s, from_addr, to_addr, message):
-                    mail_log.append( ('sendmail',
-                                      {'from': from_addr,
-                                       'to': to_addr,
-                                       'message': message}) )
-
-                def quit(s):
-                    mail_log.append( ('quit', {}) )
-
-        _orig_smtplib = EmailTool.smtplib
-        EmailTool.smtplib = smtplib_replacement
-        mail_log = []
-
-        def restore():
-            EmailTool.smtplib = _orig_smtplib
-
-        return mail_log, restore
 
 FunctionalTestCase = NaayaTestCase # not really, but good enough for us
 
@@ -196,6 +193,7 @@ class NaayaPortalTestPlugin(Plugin):
         the_test = testCase.test
 
         if isinstance(the_test, NaayaTestCase):
+            the_test.mail_log, self.restore_mail = divert_mail()
             cleanup, test_db_layer = self.tzope.db_layer()
 
             app = test_db_layer.open().root()['Application']
@@ -211,6 +209,9 @@ class NaayaPortalTestPlugin(Plugin):
 
 
     def afterTest(self, test):
+        if isinstance(test.test, NaayaTestCase):
+            self.restore_mail()
+            del self.restore_mail
         if self.cleanup_test_layer is not None:
             import transaction
             transaction.abort()
