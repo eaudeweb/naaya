@@ -1,0 +1,43 @@
+<tal:block tal:define="search_string options/search_string|nothing;
+                       userlist options/user_list|nothing;
+                       is_member here/is_member">
+<tal:block tal:condition="userlist">
+<p i18n:translate="">
+    Found <tal:block tal:content="python:len(userlist)"
+             i18n:name="number"/>
+    users matching your query.
+</p>
+<form action="user_details" method="get">
+<table class="datatable" style="min-width: 80%;">
+    <thead>
+        <th i18n:translate="">Name</th>
+        <th i18n:translate="">Organisation</th>
+        <tal:block condition="is_member">
+            <th i18n:translate="">User ID</th>
+            <th i18n:translate="">Email</th>
+            <th i18n:translate="">Access level</th>
+        </tal:block>
+    </thead>
+    <tbody>
+        <tr tal:repeat="user userlist">
+            <tal:block define="url string:${here/absolute_url}/user_details?selected_user=${user/userid}">
+                <td><a tal:content="string:${user/firstname}
+                                           ${user/lastname}"
+                       tal:attributes="href url"></a></td>
+                <td tal:content="user/organisation"></td>
+                <tal:block condition="is_member">
+                    <td tal:content="user/userid"></td>
+                    <td tal:content="user/email"></td>
+                    <td tal:content="user/access_level"></td>
+                </tal:block>
+            </tal:block>
+        </tr>
+    </tbody>
+</table>
+</tal:block>
+<tal:block tal:condition="python:search_string and not userlist">
+    <p>
+        <strong i18n:translate="">No users found matching your query.</strong>
+    </p>
+</tal:block>
+</tal:block>

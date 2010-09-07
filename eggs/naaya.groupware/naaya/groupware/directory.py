@@ -31,13 +31,14 @@ class Directory(Implicit, Item):
             }
 
     security.declareProtected(view, 'search_directory')
-    def search_directory(self, search_string=u'', REQUEST=None):
+    def search_directory(self, search_string=u''):
         """ """
         search_string = search_string.lower()
         local_users_list = self.search_local_users(search_string)
         external_users_list = self.search_external_users(search_string)
         user_list = local_users_list + external_users_list
-        return self.index_html(user_list=user_list)
+        return self.user_list_html(search_string=search_string,
+                                   user_list=user_list)
 
     def search_local_users(self, search_string=u''):
         ret = []
@@ -120,7 +121,7 @@ class Directory(Implicit, Item):
                 'lastname': handle_unicode(user['sn']),
                 'email': user.get('mail', ''),
                 'access_level': self.get_user_access_level(user_roles),
-                'organisation': user.get('o', 'N/A'),
+                'organisation': handle_unicode(user.get('o', 'N/A')),
                 'postal_address': handle_unicode(
                                     user.get('postalAddress', 'N/A')
                                   ),
@@ -170,8 +171,13 @@ class Directory(Implicit, Item):
             access_level = 'Viewer'
         return access_level
 
+    def is_member(self):
+        return self.get_user_access() in ['member', 'admin']
+
     index_html = PageTemplateFile('zpt/directory_index', globals())
     user_details = PageTemplateFile('zpt/directory_user_details', globals())
+
+    user_list_html = PageTemplateFile('zpt/directory_user_list', globals())
 
 InitializeClass(Directory)
 
