@@ -183,8 +183,6 @@ class Directory(Implicit, Item):
         return self.get_user_access() in ['member', 'admin']
 
     index_html = PageTemplateFile('zpt/directory_index', globals())
-    user_details = PageTemplateFile('zpt/directory_user_details', globals())
-
     user_list_html = PageTemplateFile('zpt/directory_user_list', globals())
 
 InitializeClass(Directory)
