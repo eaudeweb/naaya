@@ -5,7 +5,8 @@
 </metal:block>
 
 <metal:block metal:fill-slot="body" tal:define="is_member here/is_member;
-                        search_string request/form/search_string|nothing;">
+                        search_string request/form/search_string|nothing;
+                        sort_by request/sort_by|nothing;">
     <h1 i18n:translate="">Interest Group Directory search</h1>
     <p i18n:translate="">
     Search for members of this Interest Group. Leave name blank to show all.
@@ -18,6 +19,8 @@
     </form>
 
     <div id="search_results">
+        <tal:block condition="python:search_string is not None"
+            tal:content="structure python:here.search_directory(search_string, sort_by)"/>
     </div>
     <div id="search_waiting_response" style="display:none">
         <img src="misc_/Groupware/ajax-loader.gif" align="left"/>
@@ -26,35 +29,59 @@
         </p>
     </div>
 
-    <noscript>
-        <tal:block condition="python:search_string is not None"
-            tal:content="structure python:here.search_directory(search_string)"
-        />
-    </noscript>
-
     <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/misc_/Naaya/jquery.form.js"></script>
     <script type="text/javascript" tal:content="string:var is_member='${is_member}';"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search_form').ajaxForm({
                 url: 'search_directory',
-                beforeSubmit: showWatingForResponse,
+                beforeSubmit: beforeSubmit,
                 success: processResponse,
                 error: searchError
             });
         });
-        function showWatingForResponse() {
-            $('#search_waiting_response').css('display', 'block');
-            $('#search_results').css('display', 'none');
+        function beforeSubmit() {
+            search_string = $('#search_string').val();
+            showWatingForResponse();
         }
         function processResponse(data) {
             $('#search_results').html(data);
+
+            if (is_member == 'False') {
+                sort_attrs = ['name', 'organisation'];
+            } else {
+                sort_attrs = ['name', 'organisation', 'userid', 'access_level']
+            }
+            for (var attr_i = 0; attr_i < sort_attrs.length; attr_i++) {
+                var sort_attr = sort_attrs[attr_i];
+                resetSortLink(sort_attr);
+            }
+
             $('#search_waiting_response').css('display', 'none');
             $('#search_results').css('display', 'block');
         }
         function searchError() {
             $('#search_waiting_response').css('display', 'none');
             alert('Error on search');
+        }
+        function resetSortLink(sort_attr) {
+            $('#sort_by_'+sort_attr).attr('href', '');
+            $('#sort_by_'+sort_attr).click(function() {
+                showWatingForResponse();
+                sort_param = 'sort_by=' + sort_attr;
+                search_param = 'search_string=' + search_string;
+                url_params = '?'+sort_param+'&'+search_param;
+                $.ajax({
+                    url: 'search_directory' + url_params,
+                    success: processResponse,
+                    error: searchError
+                });
+                return false;
+                });
+        }
+        function showWatingForResponse() {
+            $('#search_waiting_response').css('display', 'block');
+            $('#search_results').css('display', 'none');
         }
     </script>
 </metal:block>
