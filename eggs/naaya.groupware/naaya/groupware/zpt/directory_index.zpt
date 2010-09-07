@@ -1,61 +1,62 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
-	<title tal:content="string:${here/title} | ${here/site_title}" />
+    <title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 
-<metal:block metal:fill-slot="body" tal:define="is_member python:here.get_user_access() in ['member', 'admin'];
-						userlist options/user_list|nothing;
-						search_string request/form/search_string|nothing;">
-	<h1 i18n:translate="">Interest Group Directory search</h1>
-	<p i18n:translate="">
-	Search for members of this Interest Group. Leave name blank to show all.
-	</p>
-	<form action="search_directory" method="get">
-		<label for="search_string" i18n:translate="">
-			Name contains</label>
-		<input type="text" name="search_string:utf8:ustring" id="search_string" tal:attributes="value search_string"/>
-		<input type="submit" value="Search"/>
-	</form>
+<metal:block metal:fill-slot="body" tal:define="is_member here/is_member;
+                        search_string request/form/search_string|nothing;">
+    <h1 i18n:translate="">Interest Group Directory search</h1>
+    <p i18n:translate="">
+    Search for members of this Interest Group. Leave name blank to show all.
+    </p>
+    <form id="search_form" action="" method="get">
+        <label for="search_string" i18n:translate="">
+            Name contains</label>
+        <input type="text" name="search_string:utf8:ustring" id="search_string" tal:attributes="value search_string"/>
+        <input type="submit" value="Search"/>
+    </form>
 
-	<tal:block tal:condition="options/user_list|nothing">
-	<p i18n:translate="">
-		Found <tal:block tal:content="python:len(userlist)"
-				 i18n:name="number"/>
-		users matching your query.
-	</p>
-	<form action="user_details" method="get">
-	<table class="datatable" style="min-width: 80%;">
-		<thead>
-			<th i18n:translate="">Name</th>
-			<tal:block condition="is_member">
-				<th i18n:translate="">User ID</th>
-				<th i18n:translate="">Email</th>
-				<th i18n:translate="">Access level</th>
-			</tal:block>
-		</thead>
-		<tbody>
-			<tr tal:repeat="user userlist">
-				<tal:block define="url string:${here/absolute_url}/user_details?selected_user=${user/userid}">
-					<td><a tal:content="string:${user/firstname}
-					                           ${user/lastname}"
-					       tal:attributes="href url"></a></td>
-					<tal:block condition="is_member">
-						<td tal:content="user/userid"></td>
-						<td tal:content="user/email"></td>
-						<td tal:content="user/access_level"></td>
-					</tal:block>
-				</tal:block>
-			</tr>
-		</tbody>
-	</table>
-	</tal:block>
-	<tal:block tal:condition="python:search_string and not userlist">
-		<p>
-			<strong i18n:translate="">No users found matching your query.</strong>
-		</p>
-	</tal:block>
+    <div id="search_results">
+    </div>
+    <div id="search_waiting_response" style="display:none">
+        <img src="misc_/Groupware/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting for search results.
+        </p>
+    </div>
 
+    <noscript>
+        <tal:block condition="python:search_string is not None"
+            tal:content="structure python:here.search_directory(search_string)"
+        />
+    </noscript>
+
+    <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/misc_/Naaya/jquery.form.js"></script>
+    <script type="text/javascript" tal:content="string:var is_member='${is_member}';"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#search_form').ajaxForm({
+                url: 'search_directory',
+                beforeSubmit: showWatingForResponse,
+                success: processResponse,
+                error: searchError
+            });
+        });
+        function showWatingForResponse() {
+            $('#search_waiting_response').css('display', 'block');
+            $('#search_results').css('display', 'none');
+        }
+        function processResponse(data) {
+            $('#search_results').html(data);
+            $('#search_waiting_response').css('display', 'none');
+            $('#search_results').css('display', 'block');
+        }
+        function searchError() {
+            $('#search_waiting_response').css('display', 'none');
+            alert('Error on search');
+        }
+    </script>
 </metal:block>
 
 </metal:block>

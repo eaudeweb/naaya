@@ -193,6 +193,7 @@ misc_ = {
     'jquery.bgiframe.min.js':ImageFile('www/js/jquery.bgiframe.min.js', globals()),
     'jquery.autocomplete.min.js':ImageFile('www/js/jquery.autocomplete.min.js', globals()),
     'jquery.tree.init.js':ImageFile('www/js/jquery.tree.init.js', globals()),
+    'jquery.form.js':ImageFile('www/js/jquery.form.js', globals()),
 
     #CSS files
     'jquery-ui.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
