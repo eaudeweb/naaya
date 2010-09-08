@@ -7,7 +7,6 @@ class AddAllowRegister(UpdateScript):
 
     def _update(self, portal):
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
-        import pdb; pdb.set_trace()
         for meeting in meetings:
             if not hasattr(meeting, 'allow_register'):
                 meeting.allow_register = True
