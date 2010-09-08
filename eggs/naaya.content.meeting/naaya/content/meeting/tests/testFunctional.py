@@ -137,11 +137,13 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         addNyMeeting(self.portal.info, 'mymeeting2', contributor='contributor', submitted=1,
             title='MyMeeting',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.info.mymeeting2.approveThis()
         import transaction; transaction.commit()
@@ -253,7 +255,8 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='10',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingParticipant(self.portal)
@@ -459,7 +462,8 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -571,7 +575,8 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -622,7 +627,8 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -820,7 +826,8 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -925,7 +932,8 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
             title='MyMeeting', max_participants='2',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain', **location)
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -1115,6 +1123,36 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.assertAccessDenied(False)
         self.browser_do_logout()
 
+class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
+    """ Not allowed register TestCase for NyMeeting object """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=False, **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        meeting = self.portal.info.mymeeting
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def test_register_not_allowed(self):
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertTrue('/participants/subscriptions/subscribe' not in self.browser.get_html())
+
+        base_url = 'http://localhost/portal/info/mymeeting/participants/subscriptions/'
+        for rel_url in ['subscribe', 'signup', 'subscribe_account']:
+            self.browser.go(base_url + rel_url)
+            self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/subscription_not_allowed')
 
 
 def test_suite():
@@ -1127,5 +1165,6 @@ def test_suite():
     suite.addTest(makeSuite(NyMeetingSignupTestCase))
     suite.addTest(makeSuite(NyMeetingAccountSubscriptionTestCase))
     suite.addTest(makeSuite(NyMeetingAccess))
+    suite.addTest(makeSuite(NyMeetingRegisterNotAllowed))
     return suite
 

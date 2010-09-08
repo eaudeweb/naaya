@@ -171,11 +171,13 @@
             <div style="clear: both"></div>
 
             <tal:block condition="not: here/checkPermissionParticipateInMeeting">
+            <tal:block condition="here/allow_register">
             <p tal:define="site here/getSite">
                 <span class="buttons">
                     <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="Click here to participate"></a>
                 </span>
             </p>
+            </tal:block>
             </tal:block>
 
             <tal:block condition="here/checkPermissionParticipateInMeeting">
