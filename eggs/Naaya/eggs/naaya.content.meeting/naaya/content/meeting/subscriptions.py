@@ -72,6 +72,10 @@ class Subscriptions(SimpleItem):
     security.declareProtected(view, 'signup')
     def signup(self, REQUEST):
         """ """
+        meeting = self.getMeeting()
+        if not meeting.allow_register:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
+
         if REQUEST.REQUEST_METHOD == 'GET':
             return self.getFormsTool().getContent({'here': self},
                                  'naaya.content.meeting.subscription_signup')
@@ -105,6 +109,10 @@ class Subscriptions(SimpleItem):
     security.declareProtected(view, 'subscribe')
     def subscribe(self, REQUEST):
         """ """
+        meeting = self.getMeeting()
+        if not meeting.allow_register:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
+
         return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_subscribe')
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getSignups')
@@ -214,6 +222,10 @@ class Subscriptions(SimpleItem):
     security.declareProtected(view, 'subscribe_account')
     def subscribe_account(self, REQUEST):
         """ """
+        meeting = self.getMeeting()
+        if not meeting.allow_register:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscription_not_allowed')
+
         self._add_account_subscription(REQUEST.AUTHENTICATED_USER.getId())
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/subscribe_account_successful')
 
@@ -290,6 +302,11 @@ class Subscriptions(SimpleItem):
         email_sender = meeting.getEmailSender()
         result = email_sender.send_account_subscription_rejected_email(account_subscription)
 
+    security.declareProtected(view, 'subscription_not_allowed')
+    def subscription_not_allowed(self, REQUEST):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'naaya.content.meeting.subscription_not_allowed')
+
 
 InitializeClass(Subscriptions)
 
@@ -338,6 +355,8 @@ NaayaPageTemplateFile('zpt/subscription_index', globals(),
         'naaya.content.meeting.subscription_index')
 NaayaPageTemplateFile('zpt/subscription_welcome', globals(),
         'naaya.content.meeting.subscription_welcome')
+NaayaPageTemplateFile('zpt/subscription_not_allowed', globals(),
+        'naaya.content.meeting.subscription_not_allowed')
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """

@@ -1,8 +1,17 @@
 <configure
   xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns:zope="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
   i18n_domain="naaya.content">
 
   <naaya:content factory=".meeting.get_config" />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="add_allow_register_feature.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddAllowRegister"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
 
 </configure>
 
