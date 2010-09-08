@@ -33,15 +33,19 @@ class Directory(Implicit, Item):
             }
 
     security.declareProtected(view, 'search_directory')
-    def search_directory(self, search_string=u'', sort_by=''):
+    def search_directory(self, search_string=u'', sort_by='',
+            reverse_sort='False'):
         """ """
         search_string = search_string.lower()
+        reverse_sort = reverse_sort != 'False'
         local_users_list = self.search_local_users(search_string)
         external_users_list = self.search_external_users(search_string)
         user_list = local_users_list + external_users_list
         if sort_by:
-            user_list.sort(key=itemgetter(sort_by))
+            user_list.sort(key=itemgetter(sort_by), reverse=reverse_sort)
         return self.user_list_html(search_string=search_string,
+                                   sorted_by=sort_by,
+                                   reverse_sorted=reverse_sort,
                                    user_list=user_list)
 
     def search_local_users(self, search_string=u''):

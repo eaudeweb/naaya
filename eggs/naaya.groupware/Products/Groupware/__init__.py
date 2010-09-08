@@ -21,4 +21,6 @@ misc_ = {
     'printer.gif':ImageFile(groupware_folder + '/www/printer.gif'),
     'button_go.gif':ImageFile(groupware_folder + '/www/button_go.gif'),
     'ajax-loader.gif':ImageFile(groupware_folder + '/www/ajax-loader.gif'),
+    'sortup.gif':ImageFile(groupware_folder + '/www/sortup.gif'),
+    'sortdown.gif':ImageFile(groupware_folder + '/www/sortdown.gif'),
 }
