@@ -23,6 +23,7 @@
 #Zope imports
 from AccessControl import getSecurityManager
 from AccessControl.Permissions import view
+from OFS.Uninstalled import BrokenClass
 
 #Product imports
 class catalog_tool:
@@ -46,6 +47,9 @@ class catalog_tool:
         for brain in p_brains:
             try:
                 ob = self.portal_catalog.getobject(brain.data_record_id_)
+                if isinstance(ob, BrokenClass):
+                    raise ValueError("Broken object in catalog: %r" %
+                                     brain.getPath())
             except:
                 self.log_current_error()
             else:
