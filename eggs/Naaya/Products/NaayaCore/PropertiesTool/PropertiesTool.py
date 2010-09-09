@@ -39,6 +39,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.search_tool import search_tool
+from naaya.core.utils import path_in_site
 
 def manage_addPropertiesTool(self, REQUEST=None):
     """
@@ -131,8 +132,8 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site.maintopics = []
         for maintopic in maintopics:
             folder_ob = self.utGetObject(maintopic)
-            site.maintopics.append(folder_ob.absolute_url(1))
-        site._p_changed = 1
+            site.maintopics.append(path_in_site(folder_ob))
+        site._p_changed = True
         if REQUEST: REQUEST.RESPONSE.redirect('manage_maintopics_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageAddContentType')

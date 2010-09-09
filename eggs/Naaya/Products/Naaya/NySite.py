@@ -933,18 +933,10 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getMainTopics')
     def getMainTopics(self):
         """
-        Returns the list of main topic folders
-        sorted by 'order' property
+        Returns the list of main topic folder objects
         """
-        return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self.utGetObject,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
-
-    security.declarePublic('getMainTopicByURL')
-    def getMainTopicByURL(self, url):
-        """
-        Returns the main topic folder object
-        given the URL
-        """
-        return self.utGetObject(url)
+        #return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self.utGetObject,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
+        return [self.utGetObject(path) for path in self.maintopics]
 
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
@@ -2609,29 +2601,48 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_versioncontrol_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
+    #Main topics
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_addmaintopics')
     def admin_addmaintopics(self, title='', lang=None, REQUEST=None):
         """ """
         folder_id = addNyFolder(self, title=title, lang=lang)
         folder_ob = self.utGetObject(folder_id)
         folder_ob.approveThis()
-        self.maintopics.append(folder_ob.absolute_url(1))
-        self._p_changed = 1
+        self.maintopics.append(path_in_site(folder_ob))
+        self._p_changed = True
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_updatemaintopics')
     def admin_updatemaintopics(self, folder_url='', REQUEST=None):
         """ """
+        try:
+            folder_url = path_in_site(self.utGetObject(folder_url))
+        except Exception, e:
+            if REQUEST:
+                self.setSessionErrorsTrans("Path not found")
+                return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' %
+                                                 self.absolute_url())
+            else:
+                raise Exception(e)
+
         if folder_url and folder_url not in self.maintopics:
             self.maintopics.append(folder_url)
-            self._p_changed = 1
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+            self._p_changed = True
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics_navigation')
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_updatemaintopics_navigation')
     def admin_updatemaintopics_navigation(self, REQUEST=None, **kwargs):
         """ Save navigations settings """
         if REQUEST:
@@ -2642,36 +2653,49 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         for field, value in form_data.items():
             if field in self.maintopics_settings.keys():
                 try:
-                    self.maintopics_settings[field] = type(self.maintopics_settings[field])(value)
-                    self._p_changed = 1
+                    self.maintopics_settings[field] = \
+                        type(self.maintopics_settings[field])(value)
+                    self._p_changed = True
                 except ValueError, e:
                     if REQUEST:
                         self.setSessionErrorsTrans("Error saving data")
-                        REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+                        return REQUEST.RESPONSE.redirect(
+                            '%s/admin_maintopics_html' % self.absolute_url())
                     else:
                         raise ValueError(e)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_ordermaintopics')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_ordermaintopics')
     def admin_ordermaintopics(self, positions=None, REQUEST=None):
-        """ """
+        """ Save sortorder to maintopics by creating a new in the new order """
         if positions is not None:
-            sortorder = 0
-            for x in positions.split('|'):
-                try:
-                    ob = self.getMainTopicByURL(x)
-                    ob.sortorder = sortorder
-                    ob._p_changed = 1
-                    sortorder = sortorder + 1
-                except:
-                    pass
+            new_order = filter(lambda path: path in self.maintopics,
+                               positions.split('|'))
+            if len(new_order) == len(self.maintopics):
+                self.maintopics = new_order
+                self._p_changed = True
+            else:
+                error = "Saving positons failed. \
+                        New order list and old list have different length"
+                if REQUEST:
+                    self.setSessionErrorsTrans(error)
+                    return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
+                else:
+                    raise ValueError(error)
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletemaintopics')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_deletemaintopics')
     def admin_deletemaintopics(self, ids=None, delref=None, REQUEST=None):
         """ """
         if ids is not None: ids = self.utConvertToList(ids)
@@ -2688,11 +2712,13 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if not parent: continue
             try: parent.manage_delObjects([doc.getId(),])
             except: self.log_current_error()
+        self._p_changed = True
 
-        self._p_changed = 1
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
+                                      % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannel')
     def admin_addremotechannel(self, title='', url='', numbershownitems='', portlet='',
