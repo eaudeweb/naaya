@@ -24,9 +24,10 @@ from Products.Naaya.tests import NaayaTestCase
 from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.GeoMapTool.clusters import get_discretized_limits
 
 class RequestStub(object):
-    #simulates HTTP Request with filled form-data
+    # simulates HTTP Request with filled form-data
     form = {'lon_min': '24.62327117919922', 'lat_max': '44.43549691351629',
     'address': u'', 'geo_types': [],
     'lon_max': '26.16495895403205', 'geo_query': [u'', ''],
@@ -50,8 +51,6 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
                 submited=1)
 
     def beforeTearDown(self):
-        self.portal.portal_map.admin_set_contenttypes([gt['id'] for gt in self.old_geotagged if gt['geo_enabled']])
-
         ids = [ob_dict['id'] for ob_dict in self.ob_dicts]
         self.portal.geo_clusters_test.manage_delObjects(ids)
 
@@ -64,7 +63,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.setDefaultSearchableContent()
 
     def test_clusters_function(self):
-        #scene setup
+        # scene setup
         self.ob_dicts=[]
         folder = self.portal.geo_clusters_test
         for i in range(self.howmany):
@@ -84,14 +83,13 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             ob = folder._getOb(ob_dict['id'])
             ob.approveThis()
             self.portal.portal_map.catalogNyObject(ob)
-        self.old_geotagged = self.portal.portal_map.list_geotaggable_types()
         schemas = self.portal.portal_schemas.objectValues()
         self.portal.portal_map.admin_set_contenttypes([schema.id for schema in schemas])
 
         cl, sg = self.portal.portal_map.search_geo_clusters()
 
     def test_clusters_close_to_map_bounds(self):
-        #scene setup
+        # scene setup
         folder = self.portal.geo_clusters_test
         self.ob_dicts=[]
         for i in range(self.cluster_count):
@@ -99,7 +97,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             ob_dict['id'] = 'id2_%s' % i
             ob_dict['title'] = 'Title for point in cluster %s' % i
             ob_dict['description'] = 'Description for point in cluster %s' % i
-            #add radial points to the chosen cluster center in self.cluster_pos
+            # add radial points to the chosen cluster center in self.cluster_pos
             ob_dict['geo_location.lat'] = str(self.cluster_pos[0] + ((-1)**(i%2)) * (i*0.0001))
             ob_dict['geo_location.lon'] = str(self.cluster_pos[1] + ((-1)**(i%2)) * (i*0.0001))
             ob_dict['geo_location.address'] = 'Address for point in cluster %s' % i
@@ -112,19 +110,22 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             ob = folder._getOb(ob_dict['id'])
             ob.approveThis()
             self.portal.portal_map.catalogNyObject(ob)
-        self.old_geotagged = self.portal.portal_map.list_geotaggable_types()
         schemas = self.portal.portal_schemas.objectValues()
         self.portal.portal_map.admin_set_contenttypes([schema.id for schema in schemas])
 
         r = RequestStub()
         r.form['geo_types'].extend(self.symbol_ids)
-        #perform search with frame border slicing cluster in half
-        #expecting to get one cluster containing all 20 points
+        # perform search with frame border slicing cluster in half
+        # expecting to get one cluster containing all 20 points
         cluster_obs, single_obs = self.portal.portal_map.search_geo_clusters(REQUEST=r)
-        #some random points may fall into our cluster
-        #greaterequal is best to evaluate for assertion
+        # some random points may fall into our cluster
+        # greaterequal is best to evaluate for assertion
         self.assertTrue(cluster_obs[0][1]>=self.cluster_count)
 
+
+    def test_margin(self):
+        assert (get_discretized_limits(-90., 90., -180., 180., 10)
+                == get_discretized_limits(-89., 89., -179., 179., 10))
 
 def test_suite():
     suite = TestSuite()
