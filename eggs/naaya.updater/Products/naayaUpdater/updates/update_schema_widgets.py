@@ -65,6 +65,8 @@ class UpdateSchemaWidgets(UpdateScript):
                     raise RuntimeError("%r does not have %r" % (
                                        ob.absolute_url(1), widget.id))
                 del ob._local_properties[widget.prop_name()]
+                if isinstance(value, str):
+                    value = unicode(value, 'utf-8')
                 setattr(ob, widget.prop_name(), value)
             ob.recatalogNyObject(ob)
             self.log.info('Updated %r', ob.absolute_url(1))
@@ -80,7 +82,7 @@ class UpdateSchemaWidgets(UpdateScript):
 
         for widget in widgets:
             widget.localized = True
-            self.log.info('%s[%r] is now unlocalized', schema.id, widget.id)
+            self.log.info('%s[%r] is now localized', schema.id, widget.id)
 
         objects = [brain.getObject() for brain in
                    catalog_tool(meta_type=meta_type)]
