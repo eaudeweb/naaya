@@ -177,6 +177,7 @@ misc_ = {
 
     # Utilities JS
     'utils.js':ImageFile('www/js/utils.js', globals()),
+    'mainsections.js':ImageFile('www/js/mainsections.js', globals()),
     'json2.min.js':ImageFile('www/js/json2.min.js', globals()),
 
     # jQuery

@@ -179,6 +179,15 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	text-decoration: underline;
 }
 
+/**
+ * Main sections
+*/
+.expand-toggle{
+	float: right !important;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
 /* right column */
 #right_port {
 	float: left;

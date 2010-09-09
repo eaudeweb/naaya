@@ -42,6 +42,7 @@ from OFS.Folder import Folder, manage_addFolder
 from OFS.Image import manage_addImage
 from OFS.DTMLMethod import addDTMLMethod
 from OFS.DTMLDocument import addDTMLDocument
+from persistent.dict import PersistentDict
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
@@ -218,6 +219,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.folder_customized_feedback = {}
         self.portal_url = ''
         self.maintopics = []
+        self.maintopics_settings = {
+            'expanded': True,
+            'persistent': True,
+            'expand_levels': 1,
+            'max_levels': 2
+        }
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
@@ -2621,6 +2628,28 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if folder_url and folder_url not in self.maintopics:
             self.maintopics.append(folder_url)
             self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics_navigation')
+    def admin_updatemaintopics_navigation(self, REQUEST=None, **kwargs):
+        """ Save navigations settings """
+        if REQUEST:
+            form_data = dict(REQUEST.form)
+        else:
+            form_data = dict(kwargs)
+
+        for field, value in form_data.items():
+            if field in self.maintopics_settings.keys():
+                try:
+                    self.maintopics_settings[field] = type(self.maintopics_settings[field])(value)
+                except ValueError, e:
+                    if REQUEST:
+                        self.setSessionErrorsTrans("Error saving data")
+                        REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+                    else:
+                        raise ValueError(e)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())

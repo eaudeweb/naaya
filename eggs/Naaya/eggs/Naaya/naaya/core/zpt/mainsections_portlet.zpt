@@ -1,144 +1,53 @@
 <tal:block define="skin_files_path python:here.getLayoutTool().getSkinFilesPath();
-                   site_id python:here.getSite().getId();">
-
+                   site_id python:here.getSite().getId();
+				   maintopics_settings python: getattr(here.getSite(), 'maintopics_settings', {});
+				   maintopics_settings_json python: here.rstk.json_dumps(maintopics_settings)">
+<script tal:attributes="src string:/misc_/Naaya/jquery.cookie.js"></script>
+<script tal:attributes="src string:/misc_/Naaya/mainsections.js"></script>
 <script type="text/javascript" tal:content="string:
 	var img_collapse = '${skin_files_path}/ep_collapse.gif';
 	var img_expand = '${skin_files_path}/ep_expand.gif';
 	var mainsections_cookie = '${site_id}-mainsections';
-"/>
-
-<script type="text/javascript">
-// collapse other sections when expanding one;
-var collapse_others = false;
-// expand sections if no value in cookie;
-var default_expanded = true;
-function is_folder_expanded(folderId) {
-	var cookie_val = readCookie(mainsections_cookie);
-	if (cookie_val == null) {
-		return default_expanded;
-	}
-	var cookie_ob = JSON.parse(unescape(cookie_val));
-	if (cookie_ob[folderId] == null) {
-		return default_expanded;
-	}
-	return cookie_ob[folderId] == 'expanded';
-}
-
-function change_cookie_value(folderId, new_value) {
-	var cookie_val = readCookie(mainsections_cookie);
-	if (cookie_val == null) {
-		var cookie_ob = {};
-	}
-	else {
-		var cookie_ob = JSON.parse(unescape(cookie_val));
-		}
-	cookie_ob[folderId] = new_value;
-	var new_cookie_val = JSON.stringify(cookie_ob)
-	createCookie(mainsections_cookie, escape(new_cookie_val), 1);
-}
-
-function expand_folder(folderId) {
-	$('#img'+folderId).attr('src', img_collapse);
-	$('#ul'+folderId).show();
-	if (collapse_others) {
-		$('.mainsection_title img').each(function(){
-			if (this.id.substr(3) != folderId){
-				collapse_folder(this.id.substr(3));
-			}
-		})
-	}
-	change_cookie_value(folderId, 'expanded');
-}
-
-function collapse_folder(folderId) {
-	$('#img'+folderId).attr('src', img_expand);
-	$('#ul'+folderId).hide();
-	change_cookie_value(folderId, 'collapsed');
-}
-
-function toggleFolder(folderId) {
-	if (is_folder_expanded(folderId)) {
-		collapse_folder(folderId);
-	} else {
-		expand_folder(folderId);
-	}
-}
-
-// Javascript cookies functions
-// http://www.quirksmode.org/js/cookies.html
-function createCookie(name,value,days) {
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		var expires = '; expires='+date.toGMTString();
-	}
-	else var expires = '';
-	document.cookie = name+'='+value+expires+'; path=/';
-}
-
-function readCookie(name) {
-	var nameEQ = name + '=';
-	var ca = document.cookie.split(';');
-	for(var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
-}
-
-function eraseCookie(name) {
-	createCookie(name,'',-1);
-}
-
-
-var mainFolderIds = [];
-$(function() {
-	for (var i = 0; i < mainFolderIds.length; i++) {
-		var folderId = mainFolderIds[i];
-
-		if (is_folder_expanded(folderId)) {
-			expand_folder(folderId);
-		} else {
-			collapse_folder(folderId);
-		}
-	}
-});
-</script>
-
+	var maintopics_settings = ${maintopics_settings_json};"/>
 <tal:block tal:repeat="fold here/getMainTopics">
-	<script type="text/javascript" tal:condition="fold/getPublishedFolders" tal:content="string:
-		mainFolderIds.push('${fold/id}');
-	"/>
 	<tal:block metal:use-macro="options/macro">
 		<tal:block metal:fill-slot="portlet_title">
-			<div class="mainsection_title">
-				<img tal:condition="fold/getPublishedFolders" style="vertical-align:middle; float: right;" i18n:attributes="alt"
-					tal:attributes="
-						id string:img${fold/id};
-						src string:${skin_files_path}/ep_none.gif;
-						onclick string:toggleFolder('${fold/id}');"
-						alt='' title=''/>
-				<img tal:condition="not:fold/getPublishedFolders" style="vertical-align:middle; float: right;" i18n:attributes="alt"
-					tal:attributes="
-						id string:img${fold/id};
-						src string:${skin_files_path}/ep_none.gif;"
-						alt='' title=''/>
-				<a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
+			<div tal:define="additional_classes python:
+			(here.absolute_url() == fold.absolute_url() and ' active ' or '') +
+			(len(fold.getPublishedFolders()) and ' expandable ' or '') +
+			(maintopics_settings['expanded'] and ' expanded' or '')"
+			tal:attributes="class string:mainsection_title ${additional_classes};
+			id string:${fold/id}-${repeat/fold/index}">
+				<a tal:attributes="href fold/absolute_url;
+				   class string:mainsection_link${additional_classes}"
+				   tal:content="fold/title_or_id" />
 			</div>
 		</tal:block>
-		<tal:block metal:fill-slot="portlet_content">
-			<ul class="mainsection_content" tal:condition="fold/getPublishedFolders"
-				tal:attributes="
-					id string:ul${fold/id};
-					style python:'display: block';
-					">
-				<li tal:repeat="sub_fold fold/getPublishedFolders">
-					<a tal:attributes="href sub_fold/absolute_url" tal:content="sub_fold/title_or_id" />
-				</li>
-			</ul>
+		<tal:block metal:fill-slot="portlet_content" tal:define="level python:1; show python: True">
+			<metal:block define-macro="recurse">
+				<ul class="mainsection_content"
+					tal:condition="fold/getPublishedFolders"
+					tal:attributes="id string:ul${fold/id};">
+					<tal:block repeat="sub_fold fold/getPublishedFolders">
+						<li tal:define="additional_classes python: (here.absolute_url() == sub_fold.absolute_url() and 'active' or '') +
+							(len(sub_fold.getPublishedFolders()) and ' expandable ' or '') +
+							((maintopics_settings['expanded'] and show) and ' expanded' or '')"
+							tal:attributes="class string:mainsection_item ${additional_classes};
+							id string:${sub_fold/id}-${repeat/sub_fold/index}">
+							<a class="mainsection_nav_link"
+							   tal:attributes="href sub_fold/absolute_url;
+							   class string:mainsection_item ${additional_classes}"
+							   tal:content="sub_fold/title_or_id" />
+							<tal:block define="fold sub_fold; level python: level+1">
+								<tal:block define="show python: maintopics_settings['expand_levels'] >= level" condition="python: maintopics_settings['max_levels'] >= level">
+									<metal:block use-macro="python: here.getSite().getPortletsTool().getPortletMacro('portlet_maincategories', 'recurse')"></metal:block>
+								</tal:block>
+							</tal:block>
+						</li>
+					</tal:block>
+				</ul>
+			</metal:block>
 		</tal:block>
 	</tal:block>
 </tal:block>
-
 </tal:block>
