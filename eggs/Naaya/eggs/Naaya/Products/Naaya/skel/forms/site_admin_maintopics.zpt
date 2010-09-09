@@ -94,7 +94,7 @@
 			<input type="text" name="title:utf8:ustring" id="title" size="50" />
 		</div>
 		<div class="field">
-			<label for="submit-button" class="invisible">Submit button</label>
+			<label for="submit-button" class="invisible" i18n:translate="">Submit button</label>
 			<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
 		</div>
 	</form>
@@ -115,7 +115,7 @@
 					tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html?display_root=0&showitems=0', 300, 500);;" />
 		</div>
 		<div class="field">
-			<label for="submit-button" class="invisible">Submit button</label>
+			<label for="submit-button" class="invisible" i18n:translate="">Submit button</label>
 			<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
 		</div>
 	</form>
@@ -128,45 +128,45 @@
 		Set up default style of navigation and press the <em i18n:name="submit-button" i18n:translate="">Submit</em> button.
 		</p>
 		<div class="field">
-			<label i18n:translate="">
+			<label>
 				<select name="expanded:boolean" tal:define="if_expr python: getattr(here, 'maintopics_settings', {}).get('expanded', True)">
 					<option tal:attributes="selected python: if_expr and 'selected' or ''"
 							value="True" i18n:translate="">Yes</option>
 					<option tal:attributes="selected python: not if_expr and 'selected' or ''"
 							value="False" i18n:translate="">No</option>
 				</select>
-				Default expanded
+				<tal:block i18n:translate="">Default expanded</tal:block>
 			</label>
 			<em class="help-text" i18n:translate="">The above option allows you to specify whenever the maintopics are expanded or colapsed by default </em>
 		</div>
 		<div class="field">
-			<label i18n:translate="">
+			<label>
 				<select name="persistent:boolean" tal:define="if_expr python: getattr(here, 'maintopics_settings', {}).get('persistent', True)">
 					<option tal:attributes="selected python: if_expr and 'selected' or ''"
 							value="True" i18n:translate="">Yes</option>
 					<option tal:attributes="selected python: not if_expr and 'selected' or ''"
 							value="False" i18n:translate="">No</option>
 				</select>
-				Persistent navigation
+				<tal:block i18n:translate="">Persistent navigation</tal:block>
 			</label>
 			<em class="help-text" i18n:translate="">The above option allows the user to keep the state of collapsed/expanded items while navigating the site.</em>
 		</div>
 		<div class="field">
-			<label i18n:translate="" for="expand_levels:int">Expand levels</label>
-			<input type="text" name="expand_levels" id="expand_levels"
+			<label for="expand_levels" i18n:translate="">Expand levels</label>
+			<input type="text" name="expand_levels:int" id="expand_levels"
 				   tal:attributes="value python: getattr(here, 'maintopics_settings', {}).get('expand_levels', 1)"/>
 			<br/>
 			<em class="help-text" i18n:translate="">The above option specifies the depth of the expanded navigation tree.</em>
 		</div>
 		<div class="field">
-			<label i18n:translate="" for="max_levels:int">Maximum levels</label>
-			<input type="text" name="max_levels" id="max_levels"
+			<label for="max_levels" i18n:translate="">Maximum levels</label>
+			<input type="text" name="max_levels:int" id="max_levels"
 				   tal:attributes="value python: getattr(here, 'maintopics_settings', {}).get('max_levels', 2)"/>
 			<br/>
 			<em class="help-text" i18n:translate="">The above option specifies the maximum depth of the navigation tree.</em>
 		</div>
 		<div class="field">
-			<label for="submit-button" class="invisible">Submit button</label>
+			<label for="submit-button" class="invisible" i18n:translate="">Submit button</label>
 			<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
 		</div>
 	</form>
