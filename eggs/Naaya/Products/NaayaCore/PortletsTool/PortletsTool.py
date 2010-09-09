@@ -245,7 +245,7 @@ class PortletsTool(Folder, utils):
         if isinstance(portlet, LegacyPortletWrapper):
             return portlet.portlet.template.macros.get(macro, None)
         else:
-            return portlet.macro.get(macro, None)
+            return portlet.macros.get(macro, None)
 
     def getLinksListById(self, p_id):
         #return the links list with the given id

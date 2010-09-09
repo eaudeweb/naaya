@@ -42,7 +42,6 @@ from OFS.Folder import Folder, manage_addFolder
 from OFS.Image import manage_addImage
 from OFS.DTMLMethod import addDTMLMethod
 from OFS.DTMLDocument import addDTMLDocument
-from persistent.dict import PersistentDict
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
@@ -2644,6 +2643,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if field in self.maintopics_settings.keys():
                 try:
                     self.maintopics_settings[field] = type(self.maintopics_settings[field])(value)
+                    self._p_changed = 1
                 except ValueError, e:
                     if REQUEST:
                         self.setSessionErrorsTrans("Error saving data")
