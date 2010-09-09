@@ -32,7 +32,8 @@ from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 
 #Meeting imports
-from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
+from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
+        ADMINISTRATOR_ROLE, MANAGER_ROLE)
 from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from participants import Participants
 from email import EmailSender, configureEmailNotifications
@@ -130,18 +131,6 @@ def meeting_add_html(self):
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyMeeting', 'form_helper': form_helper}, 'meeting_add')
 
-def _check_meeting_dates(self, form_errors):
-    _startdate = getattr(self, 'start_date', '')
-    _enddate = getattr(self, 'end_date', '')
-    if _startdate and _enddate:
-        if _startdate > _enddate:
-            if 'start_date' not in form_errors:
-                form_errors['start_date'] = []
-            if 'end_date' not in form_errors:
-                form_errors['end_date'] = []
-            form_errors['start_date'].append('The start date should be before the end date')
-            form_errors['end_date'].append('The start date should be before the end date')
-
 def _create_NyMeeting_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix='meeting')
     ob = NyMeeting(id, contributor)
@@ -170,8 +159,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     ob = _create_NyMeeting_object(self, id, contributor)
 
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    _check_meeting_dates(ob, form_errors)
+    form_errors = ob.meeting_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     #check Captcha/reCaptcha
     if not self.checkPermissionSkipCaptcha():
@@ -226,6 +214,21 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     return ob.getId()
+
+def _restrict_meeting_item_view(item):
+    permission = Permission(view, (), item)
+    # tuple means no inheritance for permission
+    permission.setRoles((WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE,
+        MANAGER_ROLE))
+
+def _restrict_meeting_agenda_view(item):
+    permission = Permission(view, (), item)
+    permission.setRoles([])
+
+def on_added_meeting_item(ob, event):
+    """ Catch event to restrict view permission for meeting items """
+    if ob.aq_parent.meta_type == NyMeeting.meta_type:
+        _restrict_meeting_item_view(ob)
 
 class NyMeeting(NyContentData, NyFolder):
     """ """
@@ -313,6 +316,72 @@ class NyMeeting(NyContentData, NyFolder):
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
+    def _check_meeting_dates(self, form_errors):
+        _startdate = getattr(self, 'start_date', '')
+        _enddate = getattr(self, 'end_date', '')
+        if _startdate and _enddate:
+            if _startdate > _enddate:
+                form_errors.setdefault('start_date', [])
+                form_errors['start_date'].append('The start date should be before the end date')
+                form_errors.setdefault('end_date', [])
+                form_errors['end_date'].append('The start date should be before the end date')
+
+    def _check_meeting_pointers(self, form_errors):
+        if getattr(self, 'agenda_pointer', ''):
+            try:
+                agenda = self.unrestrictedTraverse(str(self.agenda_pointer))
+            except KeyError:
+                form_errors.setdefault('agenda_pointer', [])
+                form_errors['agenda_pointer'].append(
+                        'No object at the selected path')
+        if getattr(self, 'survey_pointer', ''):
+            try:
+                agenda = self.unrestrictedTraverse(str(self.survey_pointer))
+            except KeyError:
+                form_errors.setdefault('survey_pointer', [])
+                form_errors['survey_pointer'].append(
+                        'No object at the selected path')
+        if getattr(self, 'minutes_pointer', ''):
+            try:
+                agenda = self.unrestrictedTraverse(str(self.minutes_pointer))
+            except KeyError:
+                form_errors.setdefault('minutes_pointer', [])
+                form_errors['minutes_pointer'].append(
+                        'No object at the selected path')
+
+    security.declarePrivate('meeting_submitted_form')
+    def meeting_submitted_form(self, REQUEST_form, _lang=None, _all_values=True,
+            _override_releasedate=None):
+        """
+        this shoule be used for the meeting instead of process_submitted_form
+        """
+        old_agenda_pointer = getattr(self, 'agenda_pointer', '')
+        form_errors = super(NyFolder, self).process_submitted_form(REQUEST_form,
+                _lang, _all_values, _override_releasedate)
+        self._check_meeting_dates(form_errors) # can modify form_errors
+        self._check_meeting_pointers(form_errors) # can modify form_errors
+
+        new_agenda_pointer = getattr(self, 'agenda_pointer', '')
+        if new_agenda_pointer != old_agenda_pointer:
+            # reset permissions on change agenda
+            if old_agenda_pointer:
+                try:
+                    old_agenda = self.unrestrictedTraverse(str(old_agenda_pointer))
+                except KeyError:
+                    old_agenda = None
+                if old_agenda is not None:
+                    _restrict_meeting_item_view(old_agenda)
+
+            if new_agenda_pointer:
+                try:
+                    new_agenda = self.unrestrictedTraverse(str(new_agenda_pointer))
+                except KeyError:
+                    new_agenda = None
+                if new_agenda is not None:
+                    _restrict_meeting_agenda_view(new_agenda)
+
+        return form_errors
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
@@ -328,8 +397,7 @@ class NyMeeting(NyContentData, NyFolder):
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        _check_meeting_dates(self, form_errors)
+        form_errors = self.meeting_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
@@ -360,8 +428,7 @@ class NyMeeting(NyContentData, NyFolder):
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        _check_meeting_dates(self, form_errors)
+        form_errors = self.meeting_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
             if self.discussion: self.open_for_comments()
