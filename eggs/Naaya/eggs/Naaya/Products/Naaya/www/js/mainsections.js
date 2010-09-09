@@ -13,6 +13,13 @@ $(document).ready(function(){
     //Loading navigation from cookie
     load_navigation();
 
+    //Open up .active link (.expand all .expandable parents)
+    $('.active').parents('.expandable').each(function(){
+        $(this).addClass('expanded');
+    });
+    //Expand .mainsection_title as well
+    $('.active').parents('.left_portlet').find('.mainsection_title:has(.expandable)').addClass('expanded')
+
     //Attaching toggle images to mainsections
     $('.mainsection_title:has(.expandable)').each(function(){
         if (is_expanded($(this))){

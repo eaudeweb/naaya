@@ -223,7 +223,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             'expanded': True,
             'persistent': True,
             'expand_levels': 1,
-            'max_levels': 2
+            'max_levels': 1
         }
         self.keywords_glossary = None
         self.coverage_glossary = None
