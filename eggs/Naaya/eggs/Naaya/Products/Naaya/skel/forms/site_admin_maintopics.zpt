@@ -8,33 +8,20 @@
 		$('input[type=checkbox][name=ids]').click(function(){
 			if ($('input[type=checkbox][name=ids]:checked').length > 0) {
 				$('#delref_box').show();
-			}
-			else {
+			} else {
 				$('#delref_box').hide();
 			}
-		})
-		$('#delref_box').after('<'+'input type="hidden" value="" id="positions" name="positions"/>');
-		set_positions_value()
+		});
+
 		$('#maintopicslist').sortable({
 			axis: 'y',
 			cursor: 'move',
-			update: set_positions_value
-		})
-		function get_mt_order() {
-			var order = new Array();
-			$('#maintopicslist li').each(function(){
-				order.push($(this).attr('itemID'));
-			});
-			return order;
-		}
-		function get_encoded_mt_order() {
-			var order = get_mt_order();
-			return order.join('|');
-		}
-		function set_positions_value() {
-			$('#positions').attr('value', get_encoded_mt_order());
-		}
-	})
+			update: function(event, ui){
+				$('#positions').val($(this).sortable('toArray').join('|'));
+			}
+		});
+	});
+
 	function setupWin(url, theWidth, theHeight)
 	{
 		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
@@ -51,11 +38,11 @@
 	This section allows administrators to manage the main sections.
 	You can set the order by drag and drop the boxes and click <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
 </p>
-<form name="frmDragDrop" method="post">
+<form name="frmDragDrop" method="post" action="">
 	<ul id="maintopicslist" class="boxy">
-		<li tal:repeat="item maintopics" tal:attributes="itemID item/id">
+		<li tal:repeat="item maintopics" tal:attributes="id python:here.rstk.path_in_site(item)">
 			<input type="checkbox" class="chk" name="ids"
-				   tal:attributes="value python:item.absolute_url(1)" />
+				   tal:attributes="value python:here.rstk.path_in_site(item)" />
 			<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
 		</li>
 	</ul>
@@ -65,7 +52,7 @@
 	  <label for="delref" class="chk"
 		i18n:translate="">Check this if you want to delete the folder(s) on remove</label>
 	</div>
-
+	<input type="hidden" id="positions" name="positions" />
 	<input type="submit" name="../admin_ordermaintopics:method" value="Save positions" i18n:attributes="value"/>
 	<input type="submit" name="../admin_deletemaintopics:method" value="Remove" i18n:attributes="value"/>
 </form>
