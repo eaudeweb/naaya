@@ -10,7 +10,7 @@
 	var mainsections_cookie = '${site_id}-mainsections';
 	var maintopics_settings = ${maintopics_settings_json};"/>
 <tal:block tal:repeat="fold here/getMainTopics">
-        <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+        <tal:block metal:use-macro="options/macro">
 		<tal:block metal:fill-slot="portlet_title">
 			<div tal:define="additional_classes python:
 			(here.absolute_url() == fold.absolute_url() and ' active ' or '') +
@@ -39,7 +39,7 @@
 							   tal:content="sub_fold/title_or_id" />
 							<tal:block define="fold sub_fold; level python: level+1">
 								<tal:block condition="python: maintopics_settings['max_levels'] >= level">
-									<metal:block use-macro="python: here.getSite().getPortletsTool().getPortletMacro('portlet_mainsections', 'recurse')"></metal:block>
+									<metal:block use-macro="python: here.getSite().getPortletsTool().getPortletMacro('portlet_maincategories', 'recurse')"></metal:block>
 								</tal:block>
 							</tal:block>
 						</li>
