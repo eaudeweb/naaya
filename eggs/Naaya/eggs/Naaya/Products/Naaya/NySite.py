@@ -124,6 +124,12 @@ from naaya.core.zope2util import RestrictedToolkit, permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip
 
+MAINTOPICS_SETTINGS = {
+    'expanded': True,
+    'persistent': True,
+    'expand_levels': 1,
+    'max_levels': 1
+}
 
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -218,12 +224,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.folder_customized_feedback = {}
         self.portal_url = ''
         self.maintopics = []
-        self.maintopics_settings = {
-            'expanded': True,
-            'persistent': True,
-            'expand_levels': 1,
-            'max_levels': 1
-        }
+        self.maintopics_settings = MAINTOPICS_SETTINGS
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
@@ -2611,7 +2612,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         folder_ob.approveThis()
         self.maintopics.append(path_in_site(folder_ob))
         self._p_changed = True
-        if REQUEST:
+        if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
@@ -2623,19 +2624,18 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         try:
             folder_url = path_in_site(self.utGetObject(folder_url))
-        except Exception, e:
-            if REQUEST:
+        except:
+            if REQUEST is not None:
                 self.setSessionErrorsTrans("Path not found")
                 return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' %
                                                  self.absolute_url())
-            else:
-                raise Exception(e)
+            else: raise
 
         if folder_url and folder_url not in self.maintopics:
             self.maintopics.append(folder_url)
             self._p_changed = True
 
-        if REQUEST:
+        if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
@@ -2651,19 +2651,18 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             form_data = dict(kwargs)
 
         for field, value in form_data.items():
-            if field in self.maintopics_settings.keys():
+            if field in MAINTOPICS_SETTINGS.keys():
                 try:
                     self.maintopics_settings[field] = \
                         type(self.maintopics_settings[field])(value)
                     self._p_changed = True
-                except ValueError, e:
-                    if REQUEST:
+                except ValueError:
+                    if REQUEST is not None:
                         self.setSessionErrorsTrans("Error saving data")
                         return REQUEST.RESPONSE.redirect(
                             '%s/admin_maintopics_html' % self.absolute_url())
-                    else:
-                        raise ValueError(e)
-        if REQUEST:
+                    else: raise
+        if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
@@ -2682,13 +2681,13 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             else:
                 error = "Saving positons failed. \
                         New order list and old list have different length"
-                if REQUEST:
+                if REQUEST is not None:
                     self.setSessionErrorsTrans(error)
                     return REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
                                       % self.absolute_url())
                 else:
                     raise ValueError(error)
-        if REQUEST:
+        if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
@@ -2714,7 +2713,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             except: self.log_current_error()
         self._p_changed = True
 
-        if REQUEST:
+        if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'

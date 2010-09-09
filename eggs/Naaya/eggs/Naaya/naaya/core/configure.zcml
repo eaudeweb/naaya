@@ -1,4 +1,7 @@
 <configure xmlns="http://namespaces.zope.org/zope">
+    <adapter factory="naaya.core.portlets.MainSectionsPortlet"
+             name="portlet_maincategories" />
+
     <subscriber handler="naaya.core.heartbeat.cleanup_unsubmitted_objects" />
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />
     <subscriber handler="naaya.core.heartbeat.linkchecker_cron" />

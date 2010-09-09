@@ -150,7 +150,6 @@
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_localchannels" title="Local channels" />
 		<portlet id="portlet_folder_administration" title="Folder Administration" />
-		<portlet id="portlet_mainsections" title="Main sections navigation" />
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="EauDeWeb" description="Eaudeweb Romania" url="http://www.eaudeweb.ro" relative="0" permission="" order="2"/>
 			<link id="103" title="Naaya" description="Naaya" url="http://naaya.eaudeweb.ro/" relative="0" permission="" order="3"/>
