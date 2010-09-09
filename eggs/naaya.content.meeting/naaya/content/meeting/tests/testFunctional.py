@@ -1154,6 +1154,61 @@ class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
             self.browser.go(base_url + rel_url)
             self.assertEqual(self.browser.get_url(), 'http://localhost/portal/info/mymeeting/participants/subscriptions/subscription_not_allowed')
 
+class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
+    """ All items inside a meeting are restricted except the agenda """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=False, **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        meeting = self.portal.info.mymeeting
+        import transaction; transaction.commit()
+        from naaya.content.document.document_item import addNyDocument
+        addNyDocument(self.portal.info.mymeeting, id='mydoc', title='My document', submitted=1, contributor='contributor')
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def test_make_document_agenda_and_back(self):
+        self.browser.go('http://localhost/portal/info/mymeeting/mydoc')
+        self.assertTrue('http://localhost/portal/login_html?came_from='
+                            in self.browser.get_url())
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['agenda_pointer:utf8:ustring'] = 'info/mymeeting/mydoc'
+        self.browser.submit()
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.browser_do_logout()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/mydoc')
+        self.assertTrue('http://localhost/portal/login_html?came_from='
+                            not in self.browser.get_url())
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['agenda_pointer:utf8:ustring'] = ''
+        self.browser.submit()
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.browser_do_logout()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/mydoc')
+        self.assertTrue('http://localhost/portal/login_html?came_from='
+                            in self.browser.get_url())
 
 def test_suite():
     suite = TestSuite()
@@ -1166,5 +1221,6 @@ def test_suite():
     suite.addTest(makeSuite(NyMeetingAccountSubscriptionTestCase))
     suite.addTest(makeSuite(NyMeetingAccess))
     suite.addTest(makeSuite(NyMeetingRegisterNotAllowed))
+    suite.addTest(makeSuite(NyMeetingItemsRestrictedButAgenda))
     return suite
 
