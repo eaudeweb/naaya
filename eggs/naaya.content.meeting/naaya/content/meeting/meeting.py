@@ -355,6 +355,7 @@ class NyMeeting(NyContentData, NyFolder):
         """
         this shoule be used for the meeting instead of process_submitted_form
         """
+        meeting_path = self.getPhysicalPath()
         old_agenda_pointer = getattr(self, 'agenda_pointer', '')
         form_errors = super(NyFolder, self).process_submitted_form(REQUEST_form,
                 _lang, _all_values, _override_releasedate)
@@ -370,7 +371,9 @@ class NyMeeting(NyContentData, NyFolder):
                 except KeyError:
                     old_agenda = None
                 if old_agenda is not None:
-                    _restrict_meeting_item_view(old_agenda)
+                    if (old_agenda.getPhysicalPath()[:len(meeting_path)] ==
+                            meeting_path):
+                        _restrict_meeting_item_view(old_agenda)
 
             if new_agenda_pointer:
                 try:
@@ -378,7 +381,9 @@ class NyMeeting(NyContentData, NyFolder):
                 except KeyError:
                     new_agenda = None
                 if new_agenda is not None:
-                    _restrict_meeting_agenda_view(new_agenda)
+                    if (new_agenda.getPhysicalPath()[:len(meeting_path)] ==
+                            meeting_path):
+                        _restrict_meeting_agenda_view(new_agenda)
 
         return form_errors
 
