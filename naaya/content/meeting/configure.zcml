@@ -13,5 +13,18 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <zope:subscriber
+      for="naaya.content.base.interfaces.INyContentObject
+           zope.app.container.interfaces.IObjectAddedEvent"
+      handler=".meeting.on_added_meeting_item"
+      />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="restrict_objects_in_meetings.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.RestrictObjectsInMeetings"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
 </configure>
 
