@@ -236,6 +236,17 @@ class PortletsTool(Folder, utils):
                 return LegacyPortletWrapper(ob, p_id)
         return ob
 
+    def getPortletMacro(self, p_id, macro):
+        """Get the portlet by a given id an return a macro defined from that
+        portlet
+
+        """
+        portlet = self.getPortletById(p_id)
+        if isinstance(portlet, LegacyPortletWrapper):
+            return portlet.portlet.template.macros.get(macro, None)
+        else:
+            return portlet.macro.get(macro, None)
+
     def getLinksListById(self, p_id):
         #return the links list with the given id
         try: ob = self._getOb(p_id)
