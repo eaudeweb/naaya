@@ -328,7 +328,7 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
         else:
             if REQUEST is not None:
                 l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-                self.setSessionErrors(r)
+                self.setSessionErrorsTrans(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, content=content, updated_date=updated_date, lang=lang)
@@ -410,11 +410,11 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
             self._p_changed = 1
             self.recatalogNyObject(self)
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
             if REQUEST is not None:
-                self.setSessionErrors(r)
+                self.setSessionErrorsTrans(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, content=content, updated_date=updated_date)

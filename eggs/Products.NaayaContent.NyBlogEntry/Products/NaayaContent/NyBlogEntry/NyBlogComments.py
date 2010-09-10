@@ -130,14 +130,14 @@ class NyBlogComments(NyComments):
         if len(err) > 0:
             if REQUEST:
                 self.setBlogSession(title, body, author, email)
-                self.setSessionErrors(err)
+                self.setSessionErrorsTrans(err)
                 REQUEST.RESPONSE.redirect('%s/blogcomment_add_html' % self.absolute_url())
         else:
             self.delBlogSession()
             self.add_comment_item(id, title, body, author, email, date, self.absolute_url(1))
             self.recatalogNyObject(self)
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #site pages
