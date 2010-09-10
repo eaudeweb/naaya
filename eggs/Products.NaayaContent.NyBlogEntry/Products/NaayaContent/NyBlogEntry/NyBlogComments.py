@@ -106,19 +106,27 @@ class NyBlogComments(NyComments):
         """
         Add a blog comment for this object.
         """
+        username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if username != 'Anonymous User':
+            a_tool = self.getAuthenticationTool()
+            user = a_tool.getUser(username)
+            author = a_tool.getUserFullName(user)
+            email = a_tool.getUserEmail(user)
+
         err = []
         id = self.utCleanupId(id)
         if not id: id = self.utGenRandomId()
-        if author is None: 
+        if author is None:
             author = self.REQUEST.AUTHENTICATED_USER.getUserName()
             email = ''
         if date is None: date = self.utGetTodayDate()
         else: date = self.utGetDate(date)
         if author.strip() == '' or email.strip() == '':
             err.append('Please fill the required fields (name, email)')
-        if contact_word=='' or contact_word!=self.getSession('captcha', None):
-            err.append('The word you typed does not match with the one shown in the image. Please try again.')
-        self.delSession('captcha')
+        if username == 'Anonymous User':
+            if contact_word=='' or contact_word!=self.getSession('captcha', None):
+                err.append('The word you typed does not match with the one shown in the image. Please try again.')
+            self.delSession('captcha')
         if len(err) > 0:
             if REQUEST:
                 self.setBlogSession(title, body, author, email)
