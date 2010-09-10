@@ -212,6 +212,13 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
         self.contributor = contributor
 
     security.declarePrivate('objectkeywords')
+    def getLocalProperty(self, key, lang):
+        if key == 'keywords':
+            return u' '.join(super(NyBlogEntry, self).getLocalProperty(key, lang))
+        else:
+            return super(NyBlogEntry, self).getLocalProperty(key, lang)
+
+    security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('content', lang)])
 
@@ -242,7 +249,7 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', approved='', content='', updated_date='', 
+        sortorder='', approved='', content='', updated_date='',
         releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
