@@ -4,6 +4,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/blog_css" />
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 
@@ -33,9 +34,9 @@
 	<input type="text" name="title:utf8:ustring" id="title" size="70" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
 </div>
 <div class="field">
-	<label for="body"><span i18n:translate="" tal:omit-tag="">Content (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'content')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', curr_lang)" />
-	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getVersionLocalProperty('content', curr_lang)" />
+	<label for="content"><span i18n:translate="" tal:omit-tag="">Content (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'content')" class="mandatory_field"> *</span></label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('content', curr_lang)" />
+	<textarea id="content" name="content:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getVersionLocalProperty('content', curr_lang)" />
 </div>
 <div class="field-inline">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
