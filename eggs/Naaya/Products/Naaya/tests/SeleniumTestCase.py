@@ -106,17 +106,6 @@ class NaayaHttpThread(Thread):
         self._stop = True
 
 class SeleniumTestCase(NaayaTestCase):
-    def start_selenium(self, browser, user='admin', password=''):
-        self.user = user
-        self.password = password
-        site = "http://localhost:%s/" % HTTP_PORT
-
-        self.selenium = selenium("localhost", SELENIUM_GRID_PORT, browser, site)
-        self.selenium.start()
-
-    def stop_selenium(self):
-        self.selenium.stop()
-
     def login_user(self, user, password):
         self.selenium.open("/portal/login_html", True)
         self.selenium.wait_for_page_to_load("30000")
@@ -168,20 +157,24 @@ class NaayaSeleniumTestPlugin(Plugin):
     def prepareTestCase(self, testCase):
         if not isinstance(testCase.test, SeleniumTestCase):
             return
-        testCase.test.start_selenium(self.browsers)
         if not self.naaya_started:
+            self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
+                    self.browsers, "http://localhost:%s/" % HTTP_PORT)
+            self.selenium.start()
             self.naaya_started = True
             self.http_thread = NaayaHttpThread(self.tzope)
             self.http_thread.start()
+        testCase.test.selenium = self.selenium
 
     def afterTest(self, test):
         if not isinstance(test.test, SeleniumTestCase):
             return
-        test.test.stop_selenium()
+        self.selenium.delete_all_visible_cookies()
 
     def finalize(self, result):
         if self.naaya_started:
             self.naaya_started = False
             self.http_thread.stop()
             self.http_thread.join()
+            self.selenium.stop()
 
