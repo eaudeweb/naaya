@@ -26,7 +26,7 @@ $(document).ready(function(){
             $(this).append(collapse_image.clone().addClass('mainsection-toggle'));
         }else{
             $(this).append(expand_image.clone().addClass('mainsection-toggle'));
-            $(this).parents('.left_portlet').find('.mainsection_content:first').hide();
+            $(this).parent().siblings().hide();
         }
     });
 
@@ -46,15 +46,15 @@ $(document).ready(function(){
     $('.expand-toggle').live('click', function(){
         if($(this).hasClass('mainsection-toggle')){
             toggle_image($(this), function(obj){
-                obj.parent().parent().siblings().find('ul').hide().hide();
+                obj.parent().parent().siblings().hide();
             }, function(obj){
-                obj.parent().parent().siblings().find('ul').hide().show();
+                obj.parent().parent().siblings().show();
             });
         }else if ($(this).hasClass('folder-toggle')){
             toggle_image($(this), function(obj){
-                obj.siblings('.mainsection_content').hide();
+                obj.siblings().hide();
             }, function(obj){
-                obj.siblings('.mainsection_content').show();
+                obj.siblings().show();
             });
         }
         //Save current state to cookie if allowed
