@@ -1,4 +1,6 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <subscriber
     handler="Products.NaayaForum.subscribers.handle_forum_object_add"
@@ -29,4 +31,11 @@
     <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
     <implements interface="Products.NaayaCore.NotificationTool.interfaces.ISubscriptionTarget" />
   </class>
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility name="add_forum_releasedate.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.AddForumReleaseDate"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
 </configure>
