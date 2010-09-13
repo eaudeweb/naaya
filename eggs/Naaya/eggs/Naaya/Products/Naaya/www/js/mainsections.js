@@ -46,9 +46,9 @@ $(document).ready(function(){
     $('.expand-toggle').live('click', function(){
         if($(this).hasClass('mainsection-toggle')){
             toggle_image($(this), function(obj){
-                obj.parents('.left_portlet').find('.left_portlet_content ul').hide();
+                obj.parent().parent().siblings().find('ul').hide().hide();
             }, function(obj){
-                obj.parents('.left_portlet').find('.left_portlet_content ul').show();
+                obj.parent().parent().siblings().find('ul').hide().show();
             });
         }else if ($(this).hasClass('folder-toggle')){
             toggle_image($(this), function(obj){
