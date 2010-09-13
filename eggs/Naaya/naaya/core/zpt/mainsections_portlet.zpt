@@ -1,15 +1,19 @@
+<metal:block define-macro="portlet">
 <tal:block define="skin_files_path python:here.getLayoutTool().getSkinFilesPath();
                    site_id python:here.getSite().getId();
 				   maintopics_settings python: getattr(here.getSite(), 'maintopics_settings', {});
 				   maintopics_settings_json python: here.rstk.json_dumps(maintopics_settings);">
-<script tal:attributes="src string:/misc_/Naaya/jquery.cookie.js"></script>
-<script tal:attributes="src string:/misc_/Naaya/mainsections.js"></script>
+<metal:block define-slot="scripts">
+	<script tal:attributes="src string:/misc_/Naaya/jquery.cookie.js"></script>
+	<script tal:attributes="src string:/misc_/Naaya/mainsections.js"></script>
+</metal:block>
 <script type="text/javascript" tal:content="string:
 	var img_collapse = '${skin_files_path}/ep_collapse.gif';
 	var img_expand = '${skin_files_path}/ep_expand.gif';
 	var mainsections_cookie = '${site_id}-mainsections';
-	var maintopics_settings = ${maintopics_settings_json};"/>
-<tal:block tal:repeat="fold here/getMainTopics">
+	var maintopics_settings = ${maintopics_settings_json};"></script>
+
+<tal:block tal:repeat="fold folders|here/getMainTopics">
         <tal:block metal:use-macro="options/macro">
 		<tal:block metal:fill-slot="portlet_title">
 			<div tal:define="additional_classes python:
@@ -50,3 +54,4 @@
 	</tal:block>
 </tal:block>
 </tal:block>
+</metal:block>
