@@ -128,7 +128,9 @@ class CHMSite(NySite):
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
         #create NaayaCalendar instance
         manage_addEventCalendar(self, id="portal_calendar", title='Calendar of Events', description='',
-                            day_len='2', cal_meta_types='Naaya Event', start_day='Monday', catalog=self.getCatalogTool().id, REQUEST=None)
+                            day_len='2', start_day='Monday', catalog=self.getCatalogTool().id, REQUEST=None)
+        calendar = self._getOb('portal_calendar')
+        calendar.cal_meta_types = calendar.setCalMetaTypes('Naaya Event')
         #create index for Naaya Calendar
         extra=Extra_for_DateRangeIndex(since_field='start_date', until_field='end_date')
         self.getCatalogTool().manage_addIndex("resource_interval", 'DateRangeIndex', extra=extra)
