@@ -1,7 +1,7 @@
 <metal:block define-macro="page">
 <span tal:replace="structure here/standard_html_header" />
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/absolute_url}/style_css" />
+	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
 
 <h1>
 	<span tal:replace="string:${here/getAlbumTitle} - ${here/title_or_id}" />
@@ -106,7 +106,7 @@
 				is_authorised python:here.check_view_photo_permission(display);">
 	<div class="g-image-holder" tal:condition="is_authorised">
 		<img name="imgDisplay" tal:attributes="
-			src photo_link; 
+			src photo_link;
 			alt here/title_or_id" />
 	</div>
 	<div class="g-image-description" tal:condition="python:not is_authorised" i18n:translate="">
