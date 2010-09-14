@@ -278,6 +278,8 @@ a.button-like, a.button-like:visited {
 	border-bottom: 1px solid #346d9f;
 	font-size: 85%;
 	line-height: 1.5em;
+	position: relative !important;
+	left: -1em !important;
 }
 #tabbedmenu ul, .tabbedmenu ul {
 	margin:0;
@@ -666,6 +668,8 @@ padding-top: 0.5em;
 	margin-right: 10px;
 /*	border-right: 1px solid green; */
 	padding:0;
+	position: relative;
+	top: 0;
 }
 .second_tab_set .tabs_admin {
 	background-color: white;
@@ -678,6 +682,59 @@ padding-top: 0.5em;
 	padding: 0;
 	margin: 0;
 }
+.second_tab_set ul li {
+	list-style: none;
+	display: inline;
+}
+.second_tab_set ul li a {
+	background-color: #F0F5FB;
+	color: #000000;
+	text-transform: uppercase;
+	font-size: 0.85em;
+	padding: 0.3em 1em;
+	border: 1px solid #346D9F;
+	position: relative;
+	top: -1.1em;
+	left: -4em;
+	border-collapse: inherit;
+}
+.second_tab_set ul li a:hover {
+	background-color: #A8C7EC;
+}
+.second_tab_set ul li a.current_sub {
+	background-color: #454545 !important;
+	color: #FFFFFF !important;
+	border-color: #454545;
+}
+
+.table_indent td {
+	vertical-align: middle;
+}
+.table_indent label {
+	font-size: 100%;
+	font-weight: bold;
+	color: #444444;
+	vertical-align: middle;
+	padding: 3px;
+}
+
+.padding_td {
+	padding-left: 20px;
+}
+
+.ldap_groups ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+div#sub_btns {
+	margin: 1em;
+}
+div#sub_btns a {
+	margin-right: 0.5em;
+}
+
 .second_tabset_content {
 	background-color: #F6F6F7; /* custom-color-mainbackground*/
 	padding: 0px 10px 10px 10px;
