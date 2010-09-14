@@ -279,6 +279,17 @@ class plugLDAPUserFolder(PlugBase):
     security.declareProtected(manage_users, 'map_group_to_role')
     def map_group_to_role(self, group, roles=[], loc='', location='', REQUEST=None):
         """ """
+        def on_error(error_str):
+            if REQUEST is not None:
+                self.setSessionErrorsTrans(error_str)
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            else:
+                raise ValueError(error_str)
+
+        if group == '':
+            return on_error('No group selected')
+        if roles == []:
+            return on_error('No roles selected')
 
         if loc == 'allsite':
             location = ''
@@ -286,8 +297,7 @@ class plugLDAPUserFolder(PlugBase):
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:
-            self.setSessionErrorsTrans('Invalid location path')
-            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            return on_error('Invalid location path')
         ob.acl_satellite.add_group_roles(group, roles)
 
         if REQUEST is not None:
