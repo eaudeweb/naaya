@@ -91,23 +91,27 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name='', roles='', loc='allsite', location='', user_location='', send_mail='', REQUEST=None):
+    def addUserRoles(self, name=[], roles=[], loc='allsite', location='', user_location='', send_mail='', REQUEST=None):
         """ """
+        def on_error(error_str):
+            if REQUEST is not None:
+                self.setSessionErrorsTrans(error_str)
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            else:
+                raise ValueError(error_str)
+
+        if name == []:
+            return on_error('No user selected')
+        if roles == []:
+            return on_error('No roles selected')
+
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
         #process form values
-        if name == '':  name = []
-        else: name = self.utConvertToList(name)
         if loc == 'allsite': location = site
         else: location = self.utGetObject(location)
         if location is None:
-            if REQUEST is not None:
-                self.setSessionErrorsTrans('Invalid location path')
-                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
-            else:
-                raise ValueError('Invalid location')
-        if roles == '': roles = []
-        else: roles = self.utConvertToList(roles)
+            return on_error('Invalid location path')
         #assing roles
         for n in name:
             location.manage_setLocalRoles(n, roles)
