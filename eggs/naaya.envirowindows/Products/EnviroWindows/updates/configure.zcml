@@ -4,11 +4,6 @@
   i18n_domain="naaya">
 
   <configure zcml:condition="installed Products.naayaUpdater">
-	<utility
-		name="update_widget.update"
-		provides="Products.naayaUpdater.interfaces.IUpdateScript"
-		component=".update_widget.UpdateWidget"
-		permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
