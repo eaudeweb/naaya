@@ -45,7 +45,7 @@ register_content(
     module=NyPhotoFolder,
     klass=NyPhotoFolder.NyPhotoFolder,
     module_methods={'manage_addNyPhotoFolder': PERMISSION_ADD_PHOTOFOLDER,
-       'photofolder_add_html': PERMISSION_ADD_PHOTOFOLDER}, 
+       'photofolder_add_html': PERMISSION_ADD_PHOTOFOLDER},
     klass_methods={},
     add_method=('photofolder_add_html', PERMISSION_ADD_PHOTOFOLDER),
 )
@@ -73,7 +73,7 @@ def initialize(context):
                 ),
         icon = 'www/NyPhotoGallery.gif'
         )
-    
+
     context.registerClass(
         NyPhotoFolder.NyPhotoFolder,
         permission = PERMISSION_ADD_PHOTOFOLDER,
@@ -102,7 +102,9 @@ misc_ = {
     'slideshow.gif': ImageFile('www/slideshow.gif', globals()),
     'empty_album.png': ImageFile('www/empty_album.png', globals()),
     'InfoIcon.png':ImageFile('www/InfoIcon.png', globals()),
+
     'jquery.cycle.all.min.js': ImageFile('www/jquery.cycle.all.min.js', globals()),
     'slideshow.css': ImageFile('www/slideshow.css', globals()),
+    'photo_archive.css': ImageFile('www/photo_archive.css', globals()),
     'slideshow.js': ImageFile('www/slideshow.js', globals()),
 }
