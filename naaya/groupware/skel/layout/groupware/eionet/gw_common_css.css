@@ -301,6 +301,8 @@ td.title-column a:hover{
 	border-bottom: 1px solid #346d9f;
 	font-size: 0.8em;
 	line-height: 1.5em;
+	position: relative !important;
+	left: -1em !important;
 }
 #tabbedmenu ul, .tabbedmenu ul {
 	margin:0;
