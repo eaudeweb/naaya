@@ -10,7 +10,7 @@
 ">
 
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/absolute_url}/style_css" />
+	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
 <div class="g-header">
 	<form method="get" action="" class="g-header-form">
 		<label for="q" i18n:translate="">Search photos</label>

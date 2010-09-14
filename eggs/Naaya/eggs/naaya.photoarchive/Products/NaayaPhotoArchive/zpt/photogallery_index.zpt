@@ -5,7 +5,7 @@
 	follow_link python:True;">
 
 <link rel="stylesheet" type="text/css"
-	tal:attributes="href string:${here/absolute_url}/style_css" />
+	tal:attributes="href string:${here/getSitePath}/misc_/NaayaPhotoArchive/photo_archive.css" />
 
 <h1>
 <img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" />

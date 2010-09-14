@@ -139,6 +139,3 @@ class photo_archive_base(object):
             self.setSession(key, value)
         # Return
         REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), lang))
-
-
-    style_css = PageTemplateFile('zpt/NyPhotoArchive.css.zpt', globals())
