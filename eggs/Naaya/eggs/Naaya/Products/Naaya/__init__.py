@@ -121,6 +121,7 @@ methods = {
 
 misc_ = {
     'addcomment.gif': ImageFile('www/addcomment.gif', globals()),
+    'ajax-loader.gif': ImageFile('www/ajax-loader.gif', globals()),
     'checked':ImageFile('www/checked.png', globals()),
     'checkin':ImageFile('www/checkin.gif', globals()),
     'checkout':ImageFile('www/checkout.gif', globals()),
@@ -178,6 +179,7 @@ misc_ = {
     # Utilities JS
     'utils.js':ImageFile('www/js/utils.js', globals()),
     'mainsections.js':ImageFile('www/js/mainsections.js', globals()),
+    'admin.js':ImageFile('www/js/admin.js', globals()),
     'json2.min.js':ImageFile('www/js/json2.min.js', globals()),
 
     # jQuery
