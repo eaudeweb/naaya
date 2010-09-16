@@ -9,6 +9,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
      import plugLDAPUserFolder
 
+from naaya.core.utils import force_to_unicode
+
 
 class Directory(Implicit, Item):
     title = "Interest Group Directory"
@@ -19,7 +21,9 @@ class Directory(Implicit, Item):
         self.id = id
         self.sources = {}
 
+    security.declarePrivate('update_sources_cache')
     def update_sources_cache(self, acl_tool):
+        """ """
         for source in acl_tool.getSources():
             if not isinstance(source, plugLDAPUserFolder):
                 continue
@@ -48,7 +52,9 @@ class Directory(Implicit, Item):
                                    reverse_sorted=reverse_sort,
                                    user_list=user_list)
 
+    security.declarePrivate('search_local_users')
     def search_local_users(self, search_string=u''):
+        """ """
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -58,7 +64,9 @@ class Directory(Implicit, Item):
                 ret.append(self.get_local_user_info(user))
         return ret
 
+    security.declarePrivate('search_external_users')
     def search_external_users(self, search_string=u''):
+        """ """
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -91,7 +99,9 @@ class Directory(Implicit, Item):
 
         return ret
 
+    security.declarePrivate('get_user_info')
     def get_user_info(self, userid):
+        """ """
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         user = acl_tool.getUser(userid)
@@ -106,15 +116,17 @@ class Directory(Implicit, Item):
             if user is not None:
                 return self.get_external_user_info(source, user._properties)
 
+    security.declarePrivate('get_local_user_info')
     def get_local_user_info(self, user):
+        """ """
         user_roles = self.get_local_user_roles(user)
-        firstname = handle_unicode(user.firstname)
-        lastname = handle_unicode(user.lastname)
+        firstname = force_to_unicode(user.firstname)
+        lastname = force_to_unicode(user.lastname)
         name = firstname + u' ' + lastname
         return {
                 'userid': user.name,
-                'firstname': handle_unicode(user.firstname),
-                'lastname': handle_unicode(user.lastname),
+                'firstname': force_to_unicode(user.firstname),
+                'lastname': force_to_unicode(user.lastname),
                 'name': name,
                 'email': user.email,
                 'access_level': self.get_user_access_level(user_roles),
@@ -122,29 +134,35 @@ class Directory(Implicit, Item):
                 'postal_address': 'N/A',
                 }
 
+    security.declarePrivate('get_external_user_info')
     def get_external_user_info(self, source, user, user_roles=None):
+        """ """
         # user_roles are precalculated for the search directory (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user['uid'])
         return {
                 'userid': user['uid'],
-                'firstname': handle_unicode(user['givenName']),
-                'lastname': handle_unicode(user['sn']),
-                'name': handle_unicode(user['cn']),
+                'firstname': force_to_unicode(user['givenName']),
+                'lastname': force_to_unicode(user['sn']),
+                'name': force_to_unicode(user['cn']),
                 'email': user.get('mail', ''),
                 'access_level': self.get_user_access_level(user_roles),
-                'organisation': handle_unicode(user.get('o', 'N/A')),
-                'postal_address': handle_unicode(
+                'organisation': force_to_unicode(user.get('o', 'N/A')),
+                'postal_address': force_to_unicode(
                                     user.get('postalAddress', 'N/A')
                                   ),
                 }
 
+    security.declarePrivate('get_local_user_roles')
     def get_local_user_roles(self, userob):
+        """ """
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         return acl_tool.getUserRoles(userob)
 
+    security.declarePrivate('get_external_user_roles')
     def get_external_user_roles(self, source, userid, group_userids_map=None):
+        """ """
         # group_userids_map is precalculated for search directory (performance)
         if group_userids_map is None:
             group_userids_map = self.get_group_userids_map(source.id)
@@ -164,14 +182,18 @@ class Directory(Implicit, Item):
                     roles.append(role)
         return roles
 
+    security.declarePrivate('get_group_userids_map')
     def get_group_userids_map(self, source_id):
+        """ """
         group_userids_map = {}
         source = self.sources[source_id]['source']
         for group_id in self.sources[source_id]['group_map'].keys():
             group_userids_map[group_id] = source.group_member_ids(group_id)
         return group_userids_map
 
+    security.declarePrivate('get_user_access_level')
     def get_user_access_level(self, roles):
+        """ """
         access_level = 'N/A'
         if 'Contributor' in roles:
             access_level = 'Contributor'
@@ -183,7 +205,9 @@ class Directory(Implicit, Item):
             access_level = 'Viewer'
         return access_level
 
+    security.declareProtected(view, 'is_member')
     def is_member(self):
+        """ """
         return self.get_user_access() in ['member', 'admin']
 
     index_html = PageTemplateFile('zpt/directory_index', globals())
@@ -191,12 +215,3 @@ class Directory(Implicit, Item):
 
 InitializeClass(Directory)
 
-
-def handle_unicode(s):
-    if not isinstance(s, unicode):
-        try:
-            return s.decode('utf-8')
-        except:
-            return s.decode('latin-1')
-    else:
-        return s
