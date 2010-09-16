@@ -167,6 +167,8 @@ class plugLDAPUserFolder(PlugBase):
             return self.sort_list(buf, 1, rkey)
         elif skey == 'group':
             return self.sort_list(buf, 2, rkey)
+        else:
+            return buf
 
     def _parseRole(self, role):
         """Parse a structure like [('dn', {'cn':['value1'], 'description':['value2']})]
@@ -448,17 +450,7 @@ class plugLDAPUserFolder(PlugBase):
         """
         return self.getSite().acl_satellite.getAdditionalRoles(user)
 
-    security.declarePublic('interface_html')
-    interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
-
-    security.declarePublic('pickroles_html')
-    pickroles_html = PageTemplateFile('pickRoles', globals())
-
-    _group_members = PageTemplateFile('ldapGroupMembers', globals())
-    security.declareProtected(manage_users, 'group_members')
-    def group_members(self, REQUEST):
-        """ Show members of a LDAP group """
-        group_id = REQUEST.form['group_id']
+    def get_group_members(self, group_id):
         member_ids = self.group_member_ids(group_id)
         ldap_user_folder = self.getUserFolder()
 
@@ -473,13 +465,13 @@ class plugLDAPUserFolder(PlugBase):
                 'user_name': name,
             }
 
-        options = {
-            'group_id': group_id,
-            'member_ids': member_ids,
-            'members': map(user_data, member_ids),
-        }
-        return self._group_members(REQUEST, **options)
+        return map(user_data, member_ids)
 
+    security.declarePublic('interface_html')
+    interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
+
+    security.declarePublic('pickroles_html')
+    pickroles_html = PageTemplateFile('pickRoles', globals())
 
 InitializeClass(plugLDAPUserFolder)
 
