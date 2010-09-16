@@ -277,16 +277,16 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'personaltitle="%s" firstname="%s" lastname="%s" department="%s" organisation="%s" postaladdress="%s" phone="%s" fax="%s" cellphone="%s" email="%s" webpage="%s"' % \
-            (self.utXmlEncode(self.personaltitle), 
-            self.utXmlEncode(self.firstname), 
-            self.utXmlEncode(self.lastname), 
-            self.utXmlEncode(self.department), 
-            self.utXmlEncode(self.organisation), 
-            self.utXmlEncode(self.postaladdress), 
-            self.utXmlEncode(self.phone), 
-            self.utXmlEncode(self.fax), 
-            self.utXmlEncode(self.cellphone), 
-            self.utXmlEncode(self.email), 
+            (self.utXmlEncode(self.personaltitle),
+            self.utXmlEncode(self.firstname),
+            self.utXmlEncode(self.lastname),
+            self.utXmlEncode(self.department),
+            self.utXmlEncode(self.organisation),
+            self.utXmlEncode(self.postaladdress),
+            self.utXmlEncode(self.phone),
+            self.utXmlEncode(self.fax),
+            self.utXmlEncode(self.cellphone),
+            self.utXmlEncode(self.email),
             self.utXmlEncode(self.webpage))
 
     security.declarePrivate('export_this_body_custom')
@@ -327,13 +327,13 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         ra('URL:%s' % self.utToUtf8(self.webpage))
         ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.utStripAllHtmlTags(self.description)))
         ra('END:VCARD')
-        
+
         if REQUEST:
             response = self.REQUEST.RESPONSE
             response.setHeader('content-type', 'text/x-vCard')
             response.setHeader('charset', 'UTF-8')
             response.setHeader('content-disposition', 'attachment; filename=%s.vcf' % self.id)
-        
+
         return '\n'.join(r)
 
     #zmi actions
@@ -452,7 +452,11 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'contact_edit')
+        if self.hasVersion():
+            obj = self.version
+        else:
+            obj = self
+        return self.getFormsTool().getContent({'here': obj}, 'contact_edit')
 
 InitializeClass(NyContact)
 
