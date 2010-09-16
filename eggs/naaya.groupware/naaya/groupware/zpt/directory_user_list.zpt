@@ -9,9 +9,16 @@
              i18n:name="number"/>
     users matching your query.
 </p>
-<form action="user_details" method="get">
 <table class="datatable" style="min-width: 80%;">
-    <thead tal:define="base_url string:?search_string=${search_string}">
+    <col />
+    <col />
+    <tal:block condition="is_member">
+        <col width="20%" />
+        <col />
+        <col />
+        <col />
+    </tal:block>
+    <tr tal:define="base_url string:?search_string=${search_string}">
         <th>
             <tal:block condition="python:sorted_by!='name' or reverse_sorted">
             <a tal:attributes="href string:${base_url}&sort_by=name"
@@ -22,12 +29,12 @@
                 id="sort_by_name" i18n:translate="">Name</a>
             </tal:block>
             <tal:block condition="python:sorted_by=='name' and not reverse_sorted">
-            <img id="sort_asc_by_name" src="misc_/Groupware/sortup.gif"
-                width="12" height="12" alt="" />
+            <img id="sort_asc_by_name" src="misc_/Naaya/sort_asc.gif"
+                alt="" />
             </tal:block>
             <tal:block condition="python:sorted_by=='name' and reverse_sorted">
-            <img id="sort_desc_by_name" src="misc_/Groupware/sortdown.gif"
-                width="12" height="12" alt="" />
+            <img id="sort_desc_by_name" src="misc_/Naaya/sort_desc.gif"
+                alt="" />
             </tal:block>
         </th>
         <th>
@@ -40,16 +47,16 @@
                id="sort_by_organisation" i18n:translate="">Organisation</a>
             </tal:block>
             <tal:block condition="python:sorted_by=='organisation' and not reverse_sorted">
-            <img id="sort_asc_by_organisation" src="misc_/Groupware/sortup.gif"
-                width="12" height="12" alt="" />
+            <img id="sort_asc_by_organisation" src="misc_/Naaya/sort_asc.gif"
+                alt="" />
             </tal:block>
             <tal:block condition="python:sorted_by=='organisation' and reverse_sorted">
-            <img id="sort_desc_by_organisation" src="misc_/Groupware/sortdown.gif"
-                width="12" height="12" alt="" />
+            <img id="sort_desc_by_organisation" src="misc_/Naaya/sort_desc.gif"
+                alt="" />
             </tal:block>
         </th>
         <tal:block condition="is_member">
-            <th width="20%" i18n:translate="">Postal address</th>
+            <th i18n:translate="">Postal address</th>
             <th i18n:translate="">Email</th>
             <th>
                 <tal:block condition="python:sorted_by!='access_level' or reverse_sorted">
@@ -61,12 +68,12 @@
                    id="sort_by_access_level" i18n:translate="">Access level</a>
                 </tal:block>
                 <tal:block condition="python:sorted_by=='access_level' and not reverse_sorted">
-                <img id="sort_asc_by_access_level" src="misc_/Groupware/sortup.gif"
-                    width="12" height="12" alt="" />
+                <img id="sort_asc_by_access_level" src="misc_/Naaya/sort_asc.gif"
+                    alt="" />
                 </tal:block>
                 <tal:block condition="python:sorted_by=='access_level' and reverse_sorted">
-                <img id="sort_desc_by_access_level" src="misc_/Groupware/sortdown.gif"
-                    width="12" height="12" alt="" />
+                <img id="sort_desc_by_access_level" src="misc_/Naaya/sort_desc.gif"
+                    alt="" />
                 </tal:block>
             </th>
             <th>
@@ -79,29 +86,27 @@
                    id="sort_by_userid" i18n:translate="">User ID</a>
                 </tal:block>
                 <tal:block condition="python:sorted_by=='userid' and not reverse_sorted">
-                <img id="sort_asc_by_userid" src="misc_/Groupware/sortup.gif"
-                    width="12" height="12" alt="" />
+                <img id="sort_asc_by_userid" src="misc_/Naaya/sort_asc.gif"
+                    alt="" />
                 </tal:block>
                 <tal:block condition="python:sorted_by=='userid' and reverse_sorted">
-                <img id="sort_desc_by_userid" src="misc_/Groupware/sortdown.gif"
-                    width="12" height="12" alt="" />
+                <img id="sort_desc_by_userid" src="misc_/Naaya/sort_desc.gif"
+                    alt="" />
                 </tal:block>
             </th>
         </tal:block>
-    </thead>
-    <tbody>
-        <tr tal:repeat="user userlist">
-            <td tal:content="user/name"></td>
-            <td tal:content="user/organisation"></td>
-            <tal:block condition="is_member">
-                <td tal:content="user/postal_address"></td>
-                <td><a tal:attributes="href string:mailto:${user/email}"
-                        tal:content="user/email"></a></td>
-                <td tal:content="user/access_level"></td>
-                <td tal:content="user/userid"></td>
-            </tal:block>
-        </tr>
-    </tbody>
+    </tr>
+    <tr tal:repeat="user userlist">
+        <td tal:content="user/name"></td>
+        <td tal:content="user/organisation"></td>
+        <tal:block condition="is_member">
+            <td tal:content="user/postal_address"></td>
+            <td><a tal:attributes="href string:mailto:${user/email}"
+                    tal:content="user/email"></a></td>
+            <td tal:content="user/access_level"></td>
+            <td tal:content="user/userid"></td>
+        </tal:block>
+    </tr>
 </table>
 </tal:block>
 <tal:block tal:condition="python:search_string and not userlist">
