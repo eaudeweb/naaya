@@ -116,12 +116,10 @@ th {
 	border-bottom: 1.5pt solid black;
 	empty-cells: show;
 }
-
 .sortable td, .datatable td {
 	border-bottom: 1pt solid black;
 	padding: 0.3em;
 }
-
 .sortable th, .datatable th {
 	color: black;
 	font-weight: bold; 
@@ -129,12 +127,10 @@ th {
 	border-bottom: 2pt solid black;
 	padding: 0.3em;
 }
-
 .sortable th.scope-row, .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
 	text-align: left;
 	border-bottom: 1pt solid black;
 }
-
 .sortable th[scope="row"], .datatable th[scope="row"] {
 	text-align: left;
 	border-bottom: 1pt solid black;
@@ -143,11 +139,9 @@ th {
 table .number {
 	text-align: right;
 }
-
 table .center {
 	text-align: center;
 }
-
 table .sum {
 	font-weight: bold;
 }
@@ -160,7 +154,6 @@ table .sum {
 	text-align: center;
 	background-color: #f6f6f6;
 	font-weight: bold;
-/*	border-top:    1px solid white;*/
 	border-bottom: 2px solid white;
 }
 .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
@@ -171,27 +164,43 @@ table .sum {
 	text-align: right;
 	vertical-align:top;
 }
-
 .datatable td, .datatable th  {
 	margin:0;
 	padding: 0.3em;
 	vertical-align: top;
 }
 .datatable td {
-/*	border-top:    2px solid #f6f6f6;*/
 	border-bottom: 2px solid #f6f6f6;
 }
-
 .datatable tr.zebraeven {
 	background-color: #f6f6f6;
 }
-
 .datatable tr:hover, .datatable tr:hover th {
 	background-color: #e4f1bc;
 }
-
 table.datatable {
 	border: 1px solid #b6b6b6;
 	color: #666666;
 	margin: 1em 0em;
+}
+
+/* talkback consultation styles */
+.talkback-section_toc, .talkback-add_comment-p, .tb-comment-head a, .talkback-add_comment_form {
+	display:none
+}
+.tb-comments-tree, .tb-comments-tree ul {
+	border-left:2px solid black;
+	list-style:none;
+	margin-left:0.5em;
+	padding-left:0.5em;
+}
+div.tb-comment-body blockquote {
+	border-left:2px solid #668899;
+	color:#668899;
+	margin-left:0;
+	padding-left:8px;
+	font-style:italic;
+}
+.tb-comment-head {
+	font-weight: bold;
 }
