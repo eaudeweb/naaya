@@ -377,7 +377,11 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'pointer_edit')
+        if self.hasVersion():
+            obj = self.version
+        else:
+            obj = self
+        return self.getFormsTool().getContent({'here': obj}, 'pointer_edit')
 
 InitializeClass(NyPointer)
 

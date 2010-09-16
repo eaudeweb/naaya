@@ -384,7 +384,11 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'geopoint_edit')
+        if self.hasVersion():
+            obj = self.version
+        else:
+            obj = self
+        return self.getFormsTool().getContent({'here': obj}, 'geopoint_edit')
 
 InitializeClass(NyGeoPoint)
 

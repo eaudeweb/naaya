@@ -430,7 +430,11 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'document_edit')
+        if self.hasVersion():
+            obj = self.version
+        else:
+            obj = self
+        return self.getFormsTool().getContent({'here': obj}, 'document_edit')
 
 InitializeClass(NyDocument)
 

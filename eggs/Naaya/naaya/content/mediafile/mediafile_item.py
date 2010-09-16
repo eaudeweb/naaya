@@ -601,7 +601,11 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'mediafile_edit')
+        if self.hasVersion():
+            obj = self.version
+        else:
+            obj = self
+        return self.getFormsTool().getContent({'here': obj}, 'mediafile_edit')
 
     security.declareProtected(view, 'subtitle_xml')
     def subtitle_xml(self, REQUEST=None, RESPONSE=None):

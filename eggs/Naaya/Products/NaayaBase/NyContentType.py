@@ -153,27 +153,6 @@ class NyContentType(object):
             roles.remove('Owner')
             self.manage_permission(PERMISSION_EDIT_OBJECTS, roles, acquire=1)
 
-    def get_schema_helper(self, lang=None):
-        if lang is None:
-            lang = self.gl_get_selected_language()
-        local_properties = self._get_schema().listPropNames(local=True)
-
-        schema = self._get_schema()
-
-        def get_value(prop_name):
-            val = self.getSession(prop_name, '')
-            if val != '':
-                widget = schema.getWidget(prop_name)
-                prop_type = widget.getDataType()
-                return prop_type(val)
-
-            if prop_name in local_properties:
-                return self.getLocalProperty(prop_name, lang)
-            else:
-                return getattr(self, prop_name, '')
-
-        return SchemaFormHelper(self._get_schema(), self, get_value)
-
     security.declarePrivate('process_submitted_form')
     def process_submitted_form(self, REQUEST_form, _lang=None, _all_values=True, _override_releasedate=None):
         """
@@ -352,6 +331,27 @@ class NyContentData(NyProperties):
     def _get_schema(self):
         """ Fetch the schema for this object type """
         return self.getSite()._getOb(ID_SCHEMATOOL).getSchemaForMetatype(self.meta_type)
+
+    security.declareProtected(view, 'get_schema_helper')
+    def get_schema_helper(self, lang=None):
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        local_properties = self._get_schema().listPropNames(local=True)
+
+        schema = self._get_schema()
+        def get_value(prop_name):
+            val = self.getSession(prop_name, '')
+            if val != '':
+                widget = schema.getWidget(prop_name)
+                prop_type = widget.getDataType()
+                return prop_type(val)
+
+            if prop_name in local_properties:
+                return self.getLocalProperty(prop_name, lang)
+            else:
+                return getattr(self, prop_name, '')
+
+        return SchemaFormHelper(self._get_schema(), self, get_value)
 
     security.declareProtected(view, 'prop_details')
     def prop_details(self, prop_name, lang=None):

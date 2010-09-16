@@ -209,6 +209,20 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_save_changes_version(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/ver_event/startVersion')
+
+        form = self.browser.get_form('frmEdit')
+        form['title:utf8:ustring'] = 'ver_event_version'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+
+        form = self.browser.get_form('frmEdit')
+        self.failUnlessEqual(form['title:utf8:ustring'], 'ver_event_version')
+
+        self.browser_do_logout()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyEventFunctionalTestCase))
