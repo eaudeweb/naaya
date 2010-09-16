@@ -60,8 +60,8 @@ function toggleSelect()
 </script>
 
     <tal:block define="user_folder python:here.getUserFolder();
-            skey python:request.get('skey', 'user');
-            rkey python:request.get('rkey', 0);
+            skey python:request.get('skey', '');
+            rkey python:request.get('rkey', '');
             id python:request.get('id', 0);
             site_path python:here.getSitePath();
             source_id python:request.get('id', '');
@@ -73,31 +73,37 @@ function toggleSelect()
     <ul tal:define="base_url string:${site_path}/admin_sources_html?id=${id}">
         <li tal:define="url string:${base_url}&s=manage_all">
         <tal:block tal:condition="python:section=='manage_all'">
-            <a tal:attributes="href url" i18n:translate="" class="current_sub">Manage Users & Groups</a>
+            <a tal:attributes="href url" i18n:translate="" class="current_sub"
+                >Manage Users & Groups</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='manage_all'">
-            <a tal:attributes="href url" i18n:translate="">Manage Users & Groups</a>
+            <a tal:attributes="href url" i18n:translate=""
+                >Manage Users & Groups</a>
         </tal:block>
         </li>
 
         <li tal:define="url string:${base_url}&s=assign_to_users">
         <tal:block tal:condition="python:section=='assign_to_users'">
-            <a tal:attributes="href url" i18n:translate="" class="current_sub">Assign Roles to Users</a>
+            <a tal:attributes="href url" i18n:translate="" class="current_sub"
+                >Assign Roles to Users</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='assign_to_users'">
-            <a tal:attributes="href url" i18n:translate="">Assign Roles to Users</a>
+            <a tal:attributes="href url" i18n:translate=""
+                >Assign Roles to Users</a>
         </tal:block>
         </li>
 
         <li tal:define="url string:${base_url}&s=assign_to_groups">
         <tal:block tal:condition="python:section=='assign_to_groups'">
-            <a tal:attributes="href url" i18n:translate="" class="current_sub">Assign Roles to Groups</a>
+            <a tal:attributes="href url" i18n:translate="" class="current_sub"
+                >Assign Roles to Groups</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='assign_to_groups'">
-            <a tal:attributes="href url" i18n:translate="">Assign Roles to Groups</a>
+            <a tal:attributes="href url" i18n:translate=""
+                >Assign Roles to Groups</a>
         </tal:block>
         </li>
     </ul>
@@ -108,61 +114,108 @@ function toggleSelect()
     <string tal:replace="python:here.deleteCache(user_folder)" />
 
     <tal:block condition="python:section=='manage_all'">
+    <tal:block define="
+        users_roles python:here.getSortedUserRoles(skey, rkey);
+        groups_roles_map here/get_groups_roles_map;
+        base_url string:${site_path}/admin_sources_html?id=${id}&s=${section};">
     <fieldset id="users_field">
-        <legend>LDAP users</legend>
+        <legend i18n:translate="">LDAP users</legend>
 
+        <tal:block condition="python:len(users_roles) > 10">
         <br />
         <a href="#group_field" i18n:translate="">Go to groups</a>
         <br />
+        </tal:block>
 
-        <tal:block define="users_roles python:here.getSortedUserRoles(skey, rkey)" condition="users_roles">
-        <p>
+        <p tal:condition="users_roles" i18n:translate="">
             The list below presents the LDAP users that have roles in
             this portal. You can revoke role(s) assigned to a user by ticking in
             the appropriate check box and clicking on the <em>Revoke selected
             roles</em> button.
         </p>
+        <p tal:condition="not:users_roles" i18n:translate="">
+            No LDAP users have roles in this portal.
+        </p>
 
-        <form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke" id="users_table">
+        <form method="post" name="frmRevoke" id="users_table"
+            tal:condition="users_roles"
+            tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
             <table border="0" cellspacing="2" cellpadding="2" class="datatable">
             <col width="25%"/>
             <col width="20%"/>
             <col width="27.5%"/>
             <col width="*"/>
             <tr>
-                <tal:block tal:condition="python:skey=='cn'">
-                <th>
-                    <a title="Sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=cn&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=cn' % (site_path, id))">User Name</a>
-                </th>
-                </tal:block>
                 <tal:block tal:condition="python:skey!='cn'">
                 <th>
                     <a title="Sortable" rel="nofollow"
-                    tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=cn">User Name</a>
+                        tal:attributes="href string:${base_url}&skey=cn"
+                        i18n:translate="" i18n:attributes="title">User Name</a>
+                    <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
+                        alt="" />
                 </th>
                 </tal:block>
-                <tal:block tal:condition="python:skey=='group'">
-                <th>
+                <tal:block tal:condition="python:skey=='cn'">
+                <th tal:condition="python:rkey==''">
                     <a title="Sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=group&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=group' % (site_path, id))">Group</a>
+                        tal:attributes="href string:${base_url}&skey=cn&rkey=1"
+                        i18n:translate="" i18n:attributes="title">User Name</a>
+                    <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
+                        alt="" />
+                </th>
+                <th tal:condition="python:rkey!=''">
+                    <a title="Reverse sorted - Click to reverse" rel="nofollow"
+                        tal:attributes="href string:${base_url}&skey=cn"
+                        i18n:translate="" i18n:attributes="title">User Name</a>
+                    <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
+                        alt="" />
                 </th>
                 </tal:block>
+
                 <tal:block tal:condition="python:skey!='group'">
                 <th>
                     <a title="Sortable" rel="nofollow"
-                    tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=group">Group</a>
+                        tal:attributes="href string:${base_url}&skey=group"
+                        i18n:translate="" i18n:attributes="title">Group</a>
+                    <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
+                        alt="" />
                 </th>
                 </tal:block>
-                <th><input type="checkbox" name="select_all" onclick="javascript:toggleSelect();" title="Select/Deselect All" /> Roles</th>
-                <th>Location</th>
+                <tal:block tal:condition="python:skey=='group'">
+                <th tal:condition="python:rkey==''">
+                    <a title="Sorted - Click to reverse" rel="nofollow"
+                        tal:attributes="href string:${base_url}&skey=group&rkey=1"
+                        i18n:translate="" i18n:attributes="title">Group</a>
+                    <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
+                        alt="" />
+                </th>
+                <th tal:condition="python:rkey!=''">
+                    <a title="Reverse sorted - Click to reverse" rel="nofollow"
+                        tal:attributes="href string:${base_url}&skey=group"
+                        i18n:translate="" i18n:attributes="title">Group</a>
+                    <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
+                        alt="" />
+                </th>
+                </tal:block>
+
+                <th>
+                    <input type="checkbox" name="select_all"
+                        onclick="javascript:toggleSelect();"
+                        title="Select/Deselect All" i18n:attributes="title"/>
+                    <tal:block i18n:translate="">Roles</tal:block>
+                </th>
+
+                <th i18n:translate="">Location</th>
             </tr>
             <tr tal:repeat="user python:users_roles"
                 tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
-                <td style="vertical-align: top" tal:content="python:user[1] + ' ('+user[0]+')'" />
-                <td style="vertical-align: top" tal:content="python:user[2]" />
+                <td style="vertical-align: top"
+                    tal:content="python:user[1] + ' ('+user[0]+')'" />
+                <td style="vertical-align: top"
+                    tal:content="python:user[2]" />
                 <td colspan="2" style="vertical-align: top">
-                    <table border="0" cellspacing="0" cellpadding="0" tal:define="roles python:user[3]">
+                    <table border="0" cellspacing="0" cellpadding="0"
+                        tal:define="roles python:user[3]">
                     <col width="2%"/>
                     <col width="48%"/>
                     <col width="*"/>
@@ -188,26 +241,29 @@ function toggleSelect()
             <input type="submit" value="Revoke selected roles" />
             </p>
         </form>
-        </tal:block>
     </fieldset>
 
     <fieldset id="group_field">
         <legend i18n:translate="">LDAP groups</legend>
 
+        <tal:block condition="python:len(users_roles) > 10">
         <br />
         <a href="#users_field" i18n:translate="">Go to users</a>
         <br />
+        </tal:block>
 
-        <div id="roles_gr_block">
-            <form method="post"
-              tal:attributes="action string:${here/absolute_url}/revoke_group_role"
-              tal:define="groups_roles_map here/get_groups_roles_map"
-              tal:condition="groups_roles_map">
-            <p i18n:translate="">
-                Roles currently granted for LDAP groups are listed in the table
-                below. To revoke roles, select them and click on the <em>Revoke
-                roles</em> button.
-            </p>
+        <p tal:condition="groups_roles_map" i18n:translate="">
+            Roles currently granted for LDAP groups are listed in the table
+            below. To revoke roles, select them and click on the <em>Revoke
+            roles</em> button.
+        </p>
+        <p tal:condition="not:groups_roles_map" i18n:translate="">
+            No LDAP groups have roles in this portal.
+        </p>
+
+        <form method="post"
+            tal:attributes="action string:${here/absolute_url}/revoke_group_role"
+            tal:condition="groups_roles_map">
             <table class="datatable ldap_groups">
                 <thead>
                 <th i18n:translate="">Group</th>
@@ -216,7 +272,7 @@ function toggleSelect()
                 <tbody>
                 <tr tal:repeat="group_id groups_roles_map">
                     <td>
-                    <a tal:attributes="href string:${here/absolute_url}/group_members?group_id=${group_id};
+                    <a tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&s=group_members&group_id=${group_id};
                                title string:Click to see members of ${group_id}"
                        tal:content="group_id"></a>
                     </td>
@@ -241,15 +297,14 @@ function toggleSelect()
             </table>
             <input type="submit" i18n:attributes="value"
                    value="Revoke selected roles" />
-            <hr />
-            </form>
-        </div>
+        </form>
     </fieldset>
+    </tal:block>
     </tal:block>
 
     <tal:block tal:condition="python:section=='assign_to_users'">
     <fieldset>
-        <legend>LDAP users</legend>
+        <legend i18n:translate="">LDAP users</legend>
 
         <div id="users_search_form">
         <p>
@@ -276,6 +331,9 @@ function toggleSelect()
                 <input type="hidden" name="id" tal:attributes="value source_id" />
                 <input type="submit" name="search_user" value="Search" />
                 </td>
+            </tr>
+            <tr>
+                <td><strong>OR</strong></td>
             </tr>
             <tr>
                 <td width="20"><div style="white-space: nowrap; "><label for="role">which have the role</label> </div></td>
@@ -416,6 +474,30 @@ function toggleSelect()
             </div>
         </tal:block>
     </fieldset>
+    </tal:block>
+
+
+    <tal:block tal:condition="python:section=='group_members'">
+    <tal:block define="group_id request/group_id;
+                       members python:here.get_group_members(group_id);">
+    <fieldset>
+        <legend i18n:translate="">Members of LDAP group
+            "<tal:block i18n:name="group_id" content="group_id" />"
+        </legend>
+
+        <p i18n:translate="">
+            Found <tal:block i18n:name="number" content="python:len(members)"/>
+            users in this LDAP group.
+        </p>
+
+        <ul>
+            <li tal:repeat="member members">
+                <tal:block content="member/user_name" />
+                <em tal:content="string:(${member/user_id})"></em>
+            </li>
+        </ul>
+    </fieldset>
+    </tal:block>
     </tal:block>
 
     <div class="clear"></div>
