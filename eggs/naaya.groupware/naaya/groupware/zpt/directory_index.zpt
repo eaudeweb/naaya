@@ -28,7 +28,7 @@
                                                                 reverse_sort)"/>
     </div>
     <div id="search_waiting_response" style="display:none">
-        <img src="misc_/Groupware/ajax-loader.gif" align="left"/>
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting for search results.
         </p>
