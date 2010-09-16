@@ -20,6 +20,4 @@ misc_ = {
     'site.gif':ImageFile(groupware_folder + '/www/site.gif'),
     'printer.gif':ImageFile(groupware_folder + '/www/printer.gif'),
     'button_go.gif':ImageFile(groupware_folder + '/www/button_go.gif'),
-    'sortup.gif':ImageFile(groupware_folder + '/www/sortup.gif'),
-    'sortdown.gif':ImageFile(groupware_folder + '/www/sortdown.gif'),
 }
