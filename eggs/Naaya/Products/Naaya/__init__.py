@@ -34,57 +34,6 @@ import NySite
 import NyFolder
 import NyFolderBase
 
-#make drag & drop available globally
-def DragDropCore(self, name):
-    """ """
-    js_data = []
-    js_data.append('<script src="misc_/Naaya/core.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/events.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/css.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/coordinates.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/drag.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/dragsort.js" type="text/javascript"></script>')
-    js_data.append('<script src="misc_/Naaya/cookies.js" type="text/javascript"></script>')
-    js_data.append('<script type="text/javascript">')
-    js_data.append('<!--')
-    js_data.append('''var dragsort = ToolMan.dragsort()
-        var junkdrawer = ToolMan.junkdrawer()
-
-        ddl_oldonload = window.onload
-        window.onload = function() {
-            dragsort.makeListSortable(document.getElementById("%s"), verticalOnly, saveOrder)
-            if(ddl_oldonload)
-                ddl_oldonload()
-        }
-
-        function verticalOnly(item) {
-            item.toolManDragGroup.verticalOnly()
-        }
-
-        function speak(id, what) {
-            var element = document.getElementById(id);
-            element.innerHTML = 'Clicked ' + what;
-        }
-
-        function saveOrder(item) {
-            var group = item.toolManDragGroup
-            var list = group.element.parentNode
-            var id = list.getAttribute("id")
-            if (id == null) return
-            group.register('dragend', function() {
-                ToolMan.cookies().set("list-" + id,
-                        junkdrawer.serializeList(list), 365)
-            })
-        }''' % name)
-    js_data.append('//-->')
-    js_data.append('</script>')
-    return '\n'.join(js_data)
-
-def DragDropHidden(self, p_items):
-    """ """
-    return '<input type="hidden" name="positions" value="%s" />' % '|'.join([x.id for x in p_items])
-
-
 def initialize(context):
     """ """
     #register classes
@@ -113,11 +62,6 @@ def initialize(context):
 
     from Products.NaayaCore.LayoutTool.DiskFile import allow_path
     allow_path('Products.Naaya:skel/layout/')
-
-methods = {
-    'DragDropCore': DragDropCore,
-    'DragDropHidden': DragDropHidden,
-}
 
 misc_ = {
     'addcomment.gif': ImageFile('www/addcomment.gif', globals()),

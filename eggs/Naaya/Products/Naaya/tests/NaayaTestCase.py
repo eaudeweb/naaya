@@ -4,6 +4,8 @@ import tempfile
 import shutil
 
 import transaction
+# Zope imports
+from Testing.ZopeTestCase import Functional
 
 # Naaya imports
 from Products.NaayaCore.EmailTool import EmailTool
@@ -130,7 +132,8 @@ class NaayaTestCase(unittest.TestCase):
     def remove_content_type(self, meta_type):
         self.portal.manage_uninstall_pluggableitem(meta_type)
 
-FunctionalTestCase = NaayaTestCase # not really, but good enough for us
+class FunctionalTestCase(NaayaTestCase, Functional): # not really, but good enough for us
+    pass
 
 from nose.plugins import Plugin
 
