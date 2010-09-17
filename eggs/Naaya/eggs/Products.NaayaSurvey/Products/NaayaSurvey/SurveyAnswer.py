@@ -121,25 +121,6 @@ class SurveyAnswer(Folder):
         """Returns the value for widget_id, else default"""
         return getattr(self.aq_explicit, widget_id, default)
 
-    # TODO: Change event handlers after migrating to Zope 2.10
-    security.declarePrivate('manage_afterAdd')
-    def manage_afterAdd(self, item, container):
-        """
-        This method is called, whenever _setObject in ObjectManager gets called.
-        """
-        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
-        catalog_tool = self.getCatalogTool()
-        catalog_tool.catalog_object(self, path2url(self.getPhysicalPath()))
-
-    security.declarePrivate('manage_beforeDelete')
-    def manage_beforeDelete(self, item, container):
-        """
-        This method is called, when the object is deleted.
-        """
-        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
-        catalog_tool = self.getCatalogTool()
-        catalog_tool.uncatalog_object(path2url(self.getPhysicalPath()))
-
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
     # (including anonymous ones) can see all answers. Also setting the view
