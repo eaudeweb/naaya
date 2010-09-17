@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Globals import InitializeClass, DTMLFile
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 from Products.ZCatalog.Catalog import CatalogError
 
 # Naaya imports
