@@ -57,7 +57,7 @@ class GenericViewAdapter(object):
         self.ob = ob
 
     def version_status(self):
-        return False, self.ob.checkPermissionEditObject()
+        return False, False
 provideAdapter(GenericViewAdapter)
 
 
