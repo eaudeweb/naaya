@@ -8,7 +8,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # Naaya imports
 from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
-from Products.NaayaContent.NyExFile.NyExFile import NyExFile, addNyExFile
+from naaya.content.exfile import NyExFile
+from naaya.content.exfile.exfile_item import addNyExFile
 
 def addSurveyAttachment(container, id='', title='', description='', coverage='', keywords='', sortorder='',
     source='file', file='', url='', precondition='', content_type='', downloadfilename='',
