@@ -4,12 +4,77 @@
     <title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block> -->
 
-<metal:block fill-slot="body">
+<metal:block fill-slot="body"
+    tal:define="review_template python:'tools/general_template/general-template' in here.target_path;
+                is_entitled here/glCheckPermissionPublishObjects">
 <link rel="stylesheet" type="text/css" media="all"
       tal:define="stool here/portal_survey;"
       tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
 
 <h1 tal:content="here/title_or_id"></h1>
+
+<div class="widgetViewMode" style="background-color:#FFF9D4"
+    tal:condition="python:review_template and is_entitled"
+    tal:define="is_approved python:here.is_approved(here);
+                suggestions here/suggestions">
+        <tal:block condition="is_approved">
+            <div>
+                <strong i18n:translate="" class="widget-title">
+                    This assessment has been approved
+                </strong>
+            </div>
+            <br/>
+            <div style="width:200px">
+                <a class="survey-button"
+                    tal:attributes="href string:unapprove_assessment" i18n:translate="">
+                        Unapprove assessment
+                </a>
+            </div>
+            <br/>
+        </tal:block>
+        <tal:block condition="not:is_approved">
+            <div>
+                <strong i18n:translate="" class="message-error">
+                    This assessment is not yet approved
+                </strong>
+            </div>
+            <br/>
+            <div style="width:200px">
+                <a class="survey-button"
+                    tal:attributes="href string:approve_assessment" i18n:translate="">
+                        Approve assessment
+                </a>
+            </div>
+            <br/>
+            <form id="send_suggestion" name="send_suggestion" method="post" action=".">
+                <label for="suggestion" i18n:translate="">Send a suggestion to the uploader</label><br/>
+                <textarea id="suggestion" name="suggestion:utf8:ustring" cols="50" rows="5"></textarea><br/>
+                <input type="submit" name="add_suggestion:method" value="Send" i18n:attributes="value"/>
+            </form>
+            <br/>
+        </tal:block>
+        <tal:block condition="suggestions">
+            <div>
+                <strong i18n:translate="" tal:condition="suggestions">
+                    Following suggestion(s) were emailed to the uploader:
+                </strong>
+            </div>
+            <br/>
+            <ul>
+                <li tal:repeat="suggestion suggestions" tal:content="suggestion"/>
+            </ul>
+            <br/>
+            <div style="width:200px">
+                <a class="survey-button"
+                    tal:attributes="href string:remove_suggestions" i18n:translate="">
+                    Remove suggestions
+                </a>
+            </div>
+        </tal:block>
+        <tal:block condition="not:suggestions">
+            <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
+        </tal:block>
+</div>
 
 <tal:block content="structure here/render_answer" />
 
