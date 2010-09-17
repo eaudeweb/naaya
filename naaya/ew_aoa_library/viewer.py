@@ -79,6 +79,12 @@ class AoALibraryViewer(SimpleItem):
             raise KeyError
         return self.wrap_answer(survey[key])
 
+    def get_survey_answer(self, key):
+        survey = self.target_survey()
+        if key not in survey.objectIds(survey_answer_metatype):
+            raise KeyError
+        return survey[key]
+
     security.declareProtected(view_management_screens, 'manage_recatalog')
     def manage_recatalog(self, REQUEST=None):
         """ recatalog our shadow objects """
@@ -102,6 +108,11 @@ class AoALibraryViewer(SimpleItem):
                             'naaya.ew_aoa_library.viewer.index_html')
 
     manage_main = PageTemplateFile('zpt/manage_main', globals())
+
+    security.declarePublic('is_approved')
+    def is_approved(self, answer):
+        survey_answer = self.get_survey_answer(answer.getId())
+        return getattr(survey_answer, 'is_approved', False)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()

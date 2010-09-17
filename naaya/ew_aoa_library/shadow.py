@@ -6,6 +6,8 @@ from AccessControl.Permissions import view, view_management_screens
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.utils import path_in_site
 
+PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
+
 def extract_checkboxmatrix(answer, widget_name):
     widget = answer.getSurveyTemplate()[widget_name]
     datamodel = answer.get(widget_name)
@@ -19,6 +21,8 @@ def extract_checkboxmatrix(answer, widget_name):
             yield (widget.rows[index], row_answer_names)
 
 def extract_multipleselect(answer, widget_name):
+    if answer is None:
+        return []
     widget = answer.getSurveyTemplate()[widget_name]
     datamodel = answer.get(widget_name)
     if datamodel is None:
@@ -34,12 +38,18 @@ def extract_singleselect(answer, widget_name):
     else:
         return widget.choices[datamodel]
 
+def get_library_answer(answer):
+    the_survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
+    for x in the_survey.objectValues('Naaya Survey Answer'):
+        if x.get('w_assessment-name') == answer.get('w_q1-name-assessment-report'):
+            return x
+    return None
+
 geo_type_map = {
     0: 'symbol825', # green economy
     1: 'symbol814', # water
     2: 'symbol851', # green economy and water
 }
-
 
 # the "w_theme" answer is now a list, so we can't extract a geo_type.
 
@@ -51,44 +61,48 @@ geo_type_map = {
 #    except KeyError:
 #        return None
 
-public_widgets = set([
-    'w_assessment-name',
-    'w_assessment-upload',
-    'w_assessment-url',
-    'w_assessment-year',
-    'w_body-conducting-assessment',
-    'w_green-economy',
-    'w_green-economy-topics',
-    'w_information-about-data-uploader',
-    'w_is-formal',
-    'w_location',
-    'w_main-criterion',
-    'w_other-criteria',
-    'w_publicly-available',
-    'w_registration-form-virtual-library',
-    'w_resource-efficiency-topics',
-    'w_specific-scope-or-purpose',
-    'w_theme',
-    'w_theme-coverage',
-    'w_water-related-ecosystem',
-    'w_water-resource-management-topics',
-    'w_water-resources-topics',
-])
+
+restricted_widgets = {
+    'bibliography-details-each-assessment': set([
+        'w_information-about-data-uploader',
+        'w_submitter-name',
+        'w_submitter-email',
+        'w_submitter-organisation',
+        'w_country-or-international-organisation',
+        ]),
+    'general-template': set([
+            'w_part-10-information-about-data-uploader',
+            'w_name',
+            'w_email',
+            'w_organisation',
+            'w_country',
+        ]),
+}
 
 def extract_survey_answer_data(answer):
+    survey_id = get_survey_id(answer)
+    if survey_id == 'bibliography-details-each-assessment':
+        return extract_survey_answer_data_library(answer)
+    if survey_id == 'general-template':
+        return extract_survey_answer_data_general_template(answer)
+
+def extract_survey_answer_data_library(answer):
     all_topics = set()
-    for name in [
-            'w_green-economy-topics',
-            'w_resource-efficiency-topics',
-            'w_water-resources-topics',
-            'w_water-resource-management-topics']:
+    multiple_selects = [
+                        'w_green-economy-topics',
+                        'w_resource-efficiency-topics',
+                        'w_water-resources-topics',
+                        'w_water-resource-management-topics'
+                        ]
+    for name in multiple_selects:
         all_topics.update(extract_multipleselect(answer, name))
 
     attrs = {
         'id': answer.getId(),
         'title': answer.get('w_assessment-name'),
         'geo_location': answer.get('w_location'),
-        'uploader': ('%s, %s') % (answer.get('w_submitter-name'), answer.get('w_submitter-organisation'), ),
+        'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
+                                  answer.get('w_submitter-organisation'), ),
         #'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
@@ -100,6 +114,43 @@ def extract_survey_answer_data(answer):
                        ),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
+        'topics': sorted(all_topics),
+    }
+
+    if not attrs['title']:
+        answer_id = attrs['id']
+        prefix = 'answer_'
+        if answer_id.startswith(prefix):
+            answer_id = answer_id[len(prefix):]
+        attrs['title'] = "Assessment %s" % answer_id
+
+    return attrs
+
+def extract_survey_answer_data_general_template(answer):
+    all_topics = set()
+    multiple_selects = [
+                        'w_green-economy-topics',
+                        'w_resource-efficiency-topics',
+                        'w_water-resources-topics',
+                        'w_water-resource-management-topics'
+                        ]
+    for name in multiple_selects:
+        all_topics.update(extract_multipleselect(get_library_answer(answer), name))
+
+    attrs = {
+        'id': answer.getId(),
+        'title': answer.get('w_q1-name-assessment-report'),
+        'geo_location': answer.get('w_country'),
+        'uploader': ('%s, %s') % (answer.get('w_name'),
+                                  answer.get('w_organisation'), ),
+        #'geo_type': extract_geo_type(answer),
+        'description': ('<strong>%s</strong><br />%s<br />') %
+                        (
+                            answer.get('w_organisation'),
+                            answer.get('w_q3-publishing-year-assessment'),
+                        ),
+        'target_path': path_in_site(answer),
+        'theme': extract_multipleselect(get_library_answer(answer), 'w_theme'),
         'topics': sorted(all_topics),
     }
 
@@ -152,12 +203,13 @@ class AssessmentShadow(SimpleItem):
     security.declareProtected(view, 'render_answer')
     def render_answer(self):
         answer = self.target_answer()
+        survey_id = get_survey_id(answer)
         datamodel = answer.getDatamodel()
         survey_template = answer.getSurveyTemplate()
 
         views = []
         for widget in survey_template.getSortedWidgets():
-            if widget.id not in public_widgets:
+            if widget.id in restricted_widgets[survey_id]:
                 continue
             widget_data = datamodel.get(widget.id)
             views.append(widget.render(mode='view', datamodel=widget_data))
@@ -169,6 +221,57 @@ class AssessmentShadow(SimpleItem):
                             'naaya.ew_aoa_library.shadow.index_html')
 
     manage_main = PageTemplateFile('zpt/assessment_manage_main', globals())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'suggestions')
+    def suggestions(self):
+        survey_answer = self.get_survey_answer(self.getId())
+        return getattr(survey_answer, 'suggestions', [])
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'add_suggestion')
+    def add_suggestion(self, suggestion, REQUEST):
+        """ Adds a suggestion to the survey answer"""
+        survey_answer = self.get_survey_answer(self.getId())
+        if suggestion:
+            if hasattr(survey_answer, 'suggestions'):
+                survey_answer.suggestions.append(suggestion)
+            else:
+                survey_answer.suggestions = [suggestion]
+            survey_answer._p_changed = True
+            email_introduction = 'The administrator of the AoA portal has made the following commentaries regarding your review of the report "%s" submitted at %s?edit=1:\n\n' % (getattr(survey_answer, 'w_q1-name-assessment-report'), survey_answer.absolute_url())
+            email_body = suggestion
+            email_ending = ''
+            email_to = str(survey_answer.w_email)
+            email_from = 'no-reply@aoa.eea.europa.eu'
+            email_subject = 'Suggestion for review of report %s' % getattr(survey_answer, 'w_q1-name-assessment-report')
+            self.getEmailTool().sendEmail(email_introduction+email_body+email_ending, email_to, email_from, email_subject)
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'remove_suggestions')
+    def remove_suggestions(self, REQUEST):
+        """ Removes all suggestions from a survey answer"""
+        survey_answer = self.get_survey_answer(self.getId())
+        survey_answer.suggestions = []
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'approve_assessment')
+    def approve_assessment(self, REQUEST):
+        """ Approve an assessment """
+        survey_answer = self.get_survey_answer(self.getId())
+        survey_answer.is_approved = True
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'unapprove_assessment')
+    def unapprove_assessment(self, REQUEST):
+        """ Unapprove an assessment """
+        survey_answer = self.get_survey_answer(self.getId())
+        survey_answer.is_approved = False
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+def get_survey_id(answer):
+    return answer.aq_parent.id
 
 def shadow_for_answer(answer):
     attrs = extract_survey_answer_data(answer)

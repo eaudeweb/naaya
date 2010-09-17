@@ -4,18 +4,19 @@
 
 <h1 tal:content="here/title_or_id"></h1>
 
-<table class="datatable">
+<table class="datatable" tal:define="review_template python:here.target_path == 'tools/general_template/general-template'">
 <thead tal:define="url here/absolute_url">
 	<th><a tal:attributes="href url">Name</a></th>
 	<th>Themes</th>
 	<th>Reported by</th>
+	<th tal:condition="review_template">Approval status</th>
 </thead>
 <tbody>
 <tr tal:define="items python:list(here.iter_assessments());
 				sort_key python:test(request.form.get('sort', 'title'));
 				dummy python:items.sort(key=lambda x: getattr(x, sort_key));"
 	tal:repeat="i items">
-	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)"> 
+	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td>
 			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="i/title_or_id"></a>
 	</td>
@@ -23,6 +24,10 @@
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
 	<td tal:content="i/uploader"/>
+	<td i18n:translate="" tal:condition="review_template">
+        <span tal:condition="python:here.is_approved(i)">Approved</span>
+        <span tal:condition="python:not here.is_approved(i)">Pending</span>
+    </td>
 </tal:block>
 </tr>
 </tbody>
