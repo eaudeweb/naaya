@@ -531,7 +531,23 @@ function toggleSelect()
                        tal:attributes="onclick string:onclick_pick_location('group-roles');;" />
                 </div>
 
-                <input type="submit" value="Grant roles" i18n:attributes="value"/>
+                <div class="field">
+                    <label for="send_mail" i18n:translate="">
+                        Send a notification email to each user in the group
+                    </label>
+                    <input type="checkbox" id="send_mail" name="send_mail" />
+                </div>
+                <div class="field">
+                    <strong i18n:translate="">
+                        WARNING: sending notification emails can take a long
+                        time for large user groups
+                    </strong>
+                </div>
+
+                <div>
+                    <input type="submit" value="Grant roles"
+                        i18n:attributes="value"/>
+                </div>
             </form>
             </div>
         </tal:block>

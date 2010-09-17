@@ -279,7 +279,8 @@ class plugLDAPUserFolder(PlugBase):
         return groups_roles_map
 
     security.declareProtected(manage_users, 'map_group_to_role')
-    def map_group_to_role(self, group, roles=[], loc='', location='', REQUEST=None):
+    def map_group_to_role(self, group, roles=[], loc='', location='',
+            send_mail='', REQUEST=None):
         """ """
         def on_error(error_str):
             if REQUEST is not None:
@@ -301,6 +302,17 @@ class plugLDAPUserFolder(PlugBase):
         except KeyError:
             return on_error('Invalid location path')
         ob.acl_satellite.add_group_roles(group, roles)
+        if send_mail:
+            userids = self.group_member_ids(group)
+
+            site = self.getSite()
+            auth_tool = site.getAuthenticationTool()
+            emails = auth_tool.getUsersEmails(userids)
+            for email in emails:
+                try:
+                    site.sendAccountModifiedEmail(email, roles, loc, location)
+                except:
+                    pass
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
