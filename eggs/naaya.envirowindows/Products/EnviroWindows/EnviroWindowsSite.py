@@ -46,7 +46,7 @@ from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.utils              import CSVReader
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaContent.NyContact.NyContact import addNyContact
+from naaya.content.contact.contact_item             import addNyContact
 from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
