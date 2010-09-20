@@ -142,10 +142,7 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
     _contact_word = schema_raw_data.get('contact_word', '')
 
     title = schema_raw_data.get('title', '')
-    id = cookId(id, title, _file)[0] #upload from a file
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    id = self.utSlugify(id or schema_raw_data.get('title', '') or PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyPublication_object(self, id, title, '', contributor)
