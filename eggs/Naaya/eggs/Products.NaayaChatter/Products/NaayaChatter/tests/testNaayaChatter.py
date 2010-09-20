@@ -19,6 +19,9 @@
 
 from Products.Naaya.tests import NaayaTestCase
 from unittest import TestSuite, makeSuite
+from Testing import ZopeTestCase
+
+ZopeTestCase.installProduct('NaayaChatter')
 
 class ChatterTests(NaayaTestCase.NaayaTestCase):
 
