@@ -42,6 +42,8 @@ import pickle
 from email.Utils import encode_rfc2231
 from urllib import urlencode
 from StringIO import StringIO
+from unidecode import unidecode
+from warnings import warn
 
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -54,21 +56,6 @@ from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode
 
 #constants
-bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
-          '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
-          '\xC6\xE9\xE8\xEA\xEB\xE6\xCD\xCC\xCE\xCF\xED\xEC' \
-          '\xEE\xEF\xD1\xF1\xD6\xD3\xD2\xD4\xD5\xD8\xF6\xF3' \
-          '\xF2\xF4\xF5\xF8\x8A\x9A\xDF\xDC\xDA\xD9\xDB\xFC' \
-          '\xFA\xF9\xFB\xDD\x9F\xFD\xFF\x8E\x9E'
-
-good_chars= '__________________________AAAAAA' \
-          'aaaaaaCcEEEE' \
-          'EeeeeeIIIIii' \
-          'iiNnOOOOOOoo' \
-          'ooooSssUUUUu' \
-          'uuuYYyyZz'
-
-TRANSMAP = string.maketrans(bad_chars, good_chars)
 
 default_remove_words = [
     "a", "an", "as", "at", "before", "but", "by", "for", "from", "is",
@@ -86,50 +73,101 @@ def is_valid_email(email):
         return True
     return False
 
-def genObjectId(s, num_chars=50, removelist=None):
+def genObjectId(s, num_chars=80, removelist=None):
     '''
+    DEPRECATED! Use slugify(s)
+
     Changes, e.g., "Petty theft" to "petty-theft".
     This function is the Python equivalent of the javascript function
-    of the same name in django/contrib/admin/media/js/urlify.js.
+        of the same name in django/contrib/admin/media/js/urlify.js.
     It can get invoked for any field that has a prepopulate_from
-    attribute defined, although it only really makes sense for
-    SlugFields.
+        attribute defined, although it only really makes sense for
+        SlugFields.
 
     NOTE: this implementation corresponds to the Python implementation
           of the same algorithm in django/contrib/admin/media/js/urlify.js
     '''
-    # remove all these words from the string before urlifying
-    s = toAscii(s)
+    warn('genObjectId is deprecated. Use slugify(s) instead')
+    return slugify(s,num_chars,removelist)
 
+def toAscii(s):
+    '''
+    Functionality now in charge of unidecode
+    '''
+    return unidecode(s)
+
+def slugify(s, maxlen=80, removelist=None):
+    '''
+    Converts unicode to ascii string ready for use in urls/zope id-s
+    You can use the returned value as a param for uniqueId(id,exists)
+    to get an available valid id in context.
+
+     * `s`: unicode string. However, if a `str` is provided, 
+     it's decoded to `unicode` using the "ascii" encoding.
+     * `maxlen`: maximum length of string
+     * `removelist`: list of words to be removed from id.
+    If None, a common En. wordlist will be used (default_remove_words)
+
+    Uses unidecode, converts group of spaces/unacceptable chars
+    to single hyphens. Strips leading/trailing hyphens, lowers case,
+    returns random 5-digit word if id can not be constructed from input.
+
+    '''
+    if maxlen <= 0:
+        raise ValueError("Illegal value for @param maxlen")
     if removelist is None:
         removelist = default_remove_words
+    if type(s) is str:
+        s = force_to_unicode(s) # raises UnicodeDecodeError if non-ascii
+        # coder should take notice `s` must be unicode / ascii str
+    
+    s = str(unidecode(s))
 
     ignore_words = '|'.join([r for r in removelist])
     ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
-    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I)
-    outside_space_pat = re.compile(r'^\s+|\s+$')
+    ignore_chars_pat = re.compile(r'[^-_A-Z0-9\s]', re.I)
+    outside_space_pat = re.compile(r'^[-\s]+|[-\s]+$')
     inside_space_pat = re.compile(r'[-\s]+')
 
     s = ignore_words_pat.sub('', s)  # remove unimportant words
-    s = ignore_chars_pat.sub('', s)  # remove unneeded chars
-    wordlist = s.split()
-    s = ''
+    s = ignore_chars_pat.sub('-', s) # change unneeded chars to hyphens
+    s = outside_space_pat.sub('', s) # trim leading/trailing spaces/hyphens
+    s = inside_space_pat.sub('-', s) # convert spaces or group of spaces/hyphens to single hyphens
+
+    wordlist = s.split('-')
+    picked_words=[]
     for w in wordlist:
-        ns = s + w + ' '
-        if len(ns) <= num_chars:
-            s = ns
+        if (sum([len(x) for x in picked_words])+len(picked_words)+len(w)) <= maxlen:
+            picked_words.append(w)
         else:
             break
-    s = outside_space_pat.sub('', s) # trim leading/trailing spaces
-    s = inside_space_pat.sub('-', s) # convert spaces to hyphens
-    s = s.lower()                    # convert to lowercase
+    s = '-'.join(picked_words).lower() # join with hyphens, convert to lowercase
+    if not s: # empty string unnacceptable
+        return genRandomId(p_length=min(5,maxlen)) # for backwards compat., but also take in mind maxlen
     return s
 
 def cleanupId(p_id=''):
-    if isinstance(p_id, unicode): x = p_id.encode('utf-8')
-    else: x = str(p_id)
-    x = x.strip()
-    return x.translate(TRANSMAP)
+    """
+    DEPRECATED! Use  Use slugify(s)
+    Slugifies/cleanups an id considered correctly formed in the begining
+    """
+    warn('cleanupId is deprecated. Use slugify(s) instead')
+    return slugify(p_id,1000,[])
+
+def uniqueId(id,exists):
+    """
+    Returns an available id
+     * `id`: a valid id - you can use slugify(s) to get one
+     * `exists`: callback exists(id) returns True if id is already taken\
+    (unavailable for use).
+
+    """
+    i = 1
+    search_id = id
+    while(exists(search_id)):
+        search_id = '%s-%d' % (id, i)
+        i += 1
+    return search_id
 
 def make_id(parent, temp_parent=None,
             id='', title='',
@@ -138,63 +176,21 @@ def make_id(parent, temp_parent=None,
     Generates a valid unique id based on a suggested id, title or prefix
     The generated id is checked for uniqueness in the parent folder
     and if passed, in a second, 'temporary' folder
+
+    Refactored to use the new slugify and uniqueId functions
+    Does not strip common words out of id, prefix is appended a 5-digit no.
     """
-    gen_id = cleanupId(id)
-    if not gen_id: gen_id = genObjectId(title, removelist=removelist)
-    if not gen_id: gen_id = prefix + genRandomId(5)
-    i = 1
-    search_id = gen_id
-    while True:
-        condition = parent._getOb(search_id, None) is not None
-        if temp_parent:
-            condition = condition or temp_parent._getOb(search_id, None) is not None
-        if condition:
-            search_id = '%s-%d' % (gen_id, i)
-            i += 1
-        else:
-            break
-    return search_id
-
-def toAscii(s):
-    """Change accented and special characters by ASCII characters.
-
-    >>> toAscii('caf\xe9')
-    'cafe'
-    >>> toAscii(u'caf\xe9-\u1234')
-    'cafe-'
-    """
-
-    if isinstance(s, str):
-        try:
-            s = s.decode('utf-8')
-        except UnicodeDecodeError:
-            pass
-
-    if isinstance(s, unicode):
-        return unicode_to_ascii(s)
+    if(prefix):
+        prefix = prefix + genRandomId(5) # prefix implemented no-id-reuse in prev version, keeping it
+    if(id and removelist is None):
+        removelist=[] # backwards compat: if id given, do not strip any words
+    gen_id=slugify(id or title or prefix,removelist=removelist)
+    if temp_parent:
+        exists_fct = lambda c: (temp_parent._getOb(c,None) or
+                               parent._getOb(c,None)) is not None
     else:
-        return str_to_ascii(s)
-
-def unicode_to_ascii(s):
-    s = unicodedata.normalize('NFKD', s)
-    return s.encode('ascii', 'ignore')
-
-
-def str_to_ascii(s):
-    latin_chars = u'\xc0\xc1\xc2\xc3\xc4\xc5\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd1\xd2\xd3\xd4\xd5\xd6\xd8\xd9\xda\xdb\xdc\xdd\xe0\xe1\xe2\xe3\xe4\xe5\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf1\xf2\xf3\xf4\xf5\xf6\xf8\xf9\xfa\xfb\xfc\xfd\xff'
-    latin_chars = latin_chars.encode("ISO-8859-15")
-
-    translation_map = string.maketrans(
-        latin_chars,
-        r"""AAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy""")
-    s = s.translate(translation_map)
-
-    s = s.replace("\xc6", "AE")
-    s = s.replace("\xe6", "ae")
-    s = s.replace("\xbc", "OE")
-    s = s.replace("\xbd", "oe")
-    s = s.replace("\xdf", "ss")
-    return s
+        exists_fct = lambda c: parent._getOb(c,None) is not None
+    return uniqueId(gen_id,exists_fct)
 
 def genRandomId(p_length=10, p_chars=string.digits):
     """Generate a random numeric id."""
@@ -443,12 +439,14 @@ class utils:
         return ObjectPaginator(objects_list, num_per_page, orphans)
 
     def utGenObjectId(self, *args, **kw):
-        """See the genObjectId function"""
+        """DEPRECATED! Use utSlugify(s)
+        See the genObjectId function"""
+        warn('utGenObjectId is deprecated. Use utSlugify(s) instead')
         return genObjectId(*args, **kw)
 
     def toAscii(self, *args, **kw):
-        """See the toAscii function"""
-        return toAscii(*args, **kw)
+        """ toAscii job now done by unidecode module"""
+        return unidecode(*args, **kw)
 
     def parse_tags(self, tag_names):
         """ parse comma separated text """
@@ -475,8 +473,14 @@ class utils:
         return md5.new(p_string).hexdigest()
 
     def utCleanupId(self, *args, **kw):
-        """See the cleanupId function"""
+        """DEPRECATED! Use utSlugify(s)
+        See the cleanupId function"""
+        warn('utCleanupId is deprecated. Use utSlugify(s) instead')
         return cleanupId(*args, **kw)
+
+    def utSlugify(self, *args, **kw):
+        """See slugify function"""
+        return slugify(*args, **kw)
 
     def utCleanupProfileId(self, p_id=''):
         """ """
