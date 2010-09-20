@@ -1,14 +1,15 @@
-<span tal:replace="structure here/manage_page_header" />
-<span tal:replace="structure here/manage_tabs" />
+<metal:block use-macro="here/update_template/macros/page">
+
+<metal:block fill-slot="body">
 
 <h3>Content languages</h3>
 
 <form method="post">
-<label>Portal IDs (leave empty to list all):<br/>
-<textarea name="portals" tal:content="options/portals|string:"></textarea>
-</label><br/>
-<em>Warning: listing all objects in all sites may take a very long time.</em><br/>
-<input type="submit" name="action" value="list objects" />
+    <label>Portal IDs (leave empty to list all):<br/>
+    <textarea name="portals" tal:content="options/portals|string:"></textarea>
+    </label><br/>
+    <em>Warning: listing all objects in all sites may take a very long time.</em><br/>
+    <input type="submit" name="action" value="list objects" />
 </form>
 
 <style>
@@ -17,29 +18,6 @@
     a.expand { font-size: 80%; }
 </style>
 <noscript><style>div.objects { display: block; }</style></noscript>
-<script src="misc_/naayaUpdater/jquery-1.3.2.min.js"></script>
-<script type="text/javascript">
-$(function() {
-    $('div.objects').each(function() {
-        var objects = $(this);
-        var expanded = false;
-        var button = $('<'+'a class="expand">[expand]<'+'/a>').click(do_expand);
-        objects.before(button);
-        function do_expand() {
-            if(expanded) {
-                button.text('[expand]');
-                objects.hide();
-                expanded = false;
-            }
-            else {
-                button.text('[hide]');
-                objects.show();
-                expanded = true;
-            }
-        }
-    });
-})
-</script>
 
 <tal:block repeat="portal options/portal_output">
     <dl tal:content="string:${portal}:" />
@@ -77,5 +55,32 @@ $(function() {
         </div>
     </dd>
 </tal:block>
+</metal:block>
 
-<span tal:replace="structure here/manage_page_footer" />
+<metal:block fill-slot="additional-scripts">
+    <script src="/misc_/Naaya/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('div.objects').each(function() {
+            var objects = $(this);
+            var expanded = false;
+            var button = $('<'+'a class="expand">[expand]<'+'/a>').click(do_expand);
+            objects.before(button);
+            function do_expand() {
+                if(expanded) {
+                    button.text('[expand]');
+                    objects.hide();
+                    expanded = false;
+                }
+                else {
+                    button.text('[hide]');
+                    objects.show();
+                    expanded = true;
+                }
+            }
+        });
+    })
+    </script>
+</metal:block>
+
+</metal:block>

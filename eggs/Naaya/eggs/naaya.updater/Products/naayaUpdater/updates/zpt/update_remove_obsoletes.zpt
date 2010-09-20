@@ -18,20 +18,6 @@
     <input type="submit" name="action" value="Show obsoletes" />
 
     <tal:block condition="python:request.get('action', '')">
-        <script src="misc_/naayaUpdater/jquery-1.3.2.min.js"></script>
-        <script type="text/javascript">
-            $(function(){
-                $('span.buttons').append(
-                    $('<'+'a>[select all broken]<'+'/a>').click(function() {
-                        $('li.form_item input[type=checkbox][name=broken:list]').attr('checked', 'checked');
-                    }), ' ',
-                    $('<'+'a>[clear selection]<'+'/a>').click(function() {
-                        $('li.form_item input[type=checkbox][name=broken:list]').attr('checked', null);
-                    })
-                );
-                $('span.buttons a').css({'cursor':'pointer'});
-            });
-        </script>
         <br/>
         <span class="buttons"></span>
         <tal:block repeat="portal python:all_obsoletes.keys()" define="all_obsoletes python:here.get_obsoletes(request); obsoletes python:options.get('obsoletes', {})">
@@ -56,4 +42,23 @@
 
 <pre tal:content="structure options/report|nothing" />
 </metal:block>
+
+<metal:block fill-slot="additional-scripts">
+<tal:block condition="python:request.get('action', '')">
+    <script type="text/javascript">
+        $(function(){
+            $('span.buttons').append(
+                $('<'+'a>[select all broken]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=broken:list]').attr('checked', 'checked');
+                }), ' ',
+                $('<'+'a>[clear selection]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=broken:list]').attr('checked', null);
+                })
+            );
+            $('span.buttons a').css({'cursor':'pointer'});
+        });
+    </script>
+</tal:block>
+</metal:block>
+
 </metal:block>
