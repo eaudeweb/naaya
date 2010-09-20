@@ -239,13 +239,13 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
             content_type='text/plain; charset=utf-8')
         self.browser.submit()
 
-        self.portal.myfolder['unicod'].approveThis()
+        self.portal.myfolder['unicodae'].approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/unicod')
+        self.browser.go('http://localhost/portal/myfolder/unicodae')
         html = self.browser.get_html()
         self.assertTrue('download/1/%s' % urllib.quote(filename) in html)
 
-        self.browser.go('http://localhost/portal/myfolder/unicod/'
+        self.browser.go('http://localhost/portal/myfolder/unicodae/'
                         'download/1/%s' % urllib.quote(filename))
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
