@@ -32,7 +32,7 @@ from OFS.Image import cookId
 from AccessControl.Permissions import change_permissions
 
 #Product imports
-from Products.NaayaContent.constants import *
+from naaya.content.base.constants import *
 from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
@@ -43,7 +43,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
-from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
+from naaya.content.exfile.exfile_item import addNyExFile
 from Products.NaayaBase.NyAccess import NyAccess
 from question_item import question_item
 from review_item import addConsultationReviewItem
