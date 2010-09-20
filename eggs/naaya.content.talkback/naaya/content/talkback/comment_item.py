@@ -169,6 +169,13 @@ class TalkBackConsultationComment(NyFSFile):
         """ Allow people with PERMISSION_MANAGE_TALKBACKCONSULTATION """
         if self.checkPermissionManageTalkBackConsultation():
             return True
+
+        auth_tool = self.getAuthenticationTool()
+        if self.invite_key is not None:
+            invite = self.get_consultation().invitations.get_invitation(self.invite_key)
+            if invite.inviter_userid == auth_tool.get_current_userid():
+                return True # contributor was invited by current user
+
         return False
 
     def check_edit_permissions(self):
@@ -176,11 +183,11 @@ class TalkBackConsultationComment(NyFSFile):
         Allow people with PERMISSION_REVIEW_TALKBACKCONSULTATION.
         In the case of invited comments, also allow the inviter.
         """
-        if self.checkPermissionManageTalkBackConsultation():
-            return True # user has review permission
+
+        if self.check_manage_permissions():
+            return True
 
         auth_tool = self.getAuthenticationTool()
-
         owner = self.getOwner()
         if hasattr(owner, 'name'):
             ownerid = owner.name
@@ -188,11 +195,6 @@ class TalkBackConsultationComment(NyFSFile):
                 ownerid = ownerid.encode('utf-8')
             if ownerid == auth_tool.get_current_userid():
                 return True # user can edit his own comments
-
-        if self.invite_key is not None:
-            invite = self.get_consultation().invitations.get_invitation(self.invite_key)
-            if invite.inviter_userid == auth_tool.get_current_userid():
-                return True # contributor was invited by current user
 
         return False
 
