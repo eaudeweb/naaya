@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+<file original="glossary_keywords" product-name="CHM Glossary" product-version="1.1.x" datatype="plaintext" source-language="English" target-language="German" date="2005-11-02T11:33:18Z" xml:space="default">
+<export>
+
+
+<trans-unit id="11" approved="1" >
+<source>Abundance and distribution of species</source>
+<target>Häufigkeit und Verbreitung von Arten</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="12" approved="1" >
+<source>Status of threathened species</source>
+<target>Status gefährdeter Arten</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="13" approved="1" >
+<source>Extent of selected biomes, ecosystems and habitats</source>
+<target>Größe ausgewählter Biome, Ökosysteme und Lebensräume</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="14" approved="1" >
+<source>Genetic diversity</source>
+<target>Genetische Vielfalt</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="15" approved="1" >
+<source>Coverage of protected areas</source>
+<target>Abdeckung durch geschützte Gebiete</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="16" approved="1" >
+<source>Island biodiversity</source>
+<target>Biodiversität der Inseln</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="17" approved="1" >
+<source>Mountain biodiversity</source>
+<target>Biodiversität der Gebirge</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="18" approved="1" >
+<source>Identification, Monitoring, Indicators and Assessments</source>
+<target>Identifizierung, Monitoring, Indikatoren und Erhebungen</target>
+<context-group name="Status_and_trends_of_the_components_of_biological_diversity">Status und Trends der Teilbereiche der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="21" approved="1" >
+<source>Forest under sustainable management</source>
+<target>Nachhaltige Nutzung der biologischen Vielfalt</target>
+<context-group name="Sustainable_use_of_biological_diversity">Nachhaltige Nutzung der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="22" approved="1" >
+<source>Agricultural practices potentially supporting biodiversity</source>
+<target>PLandwirtschaftliche Praxis, die Biodiversität unterstützen kann</target>
+<context-group name="Sustainable_use_of_biological_diversity">Nachhaltige Nutzung der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="23" approved="1" >
+<source>Sustainable fishery and aquaculture management</source>
+<target>Nachhaltige Fischerei und Aquakulturwirtschaft</target>
+<context-group name="Sustainable_use_of_biological_diversity">Nachhaltige Nutzung der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="24" approved="1" >
+<source>Products derived from sustainable sources</source>
+<target>Propdukte aus nachhaltigen Quellen</target>
+<context-group name="Sustainable_use_of_biological_diversity">Nachhaltige Nutzung der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="25" approved="1" >
+<source>Ecological Footprint</source>
+<target>Ökologischer Fußabdruck</target>
+<context-group name="Sustainable_use_of_biological_diversity">Nachhaltige Nutzung der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="31" approved="1" >
+<source>Nitrogen deposition</source>
+<target>Stickstoffeintrag</target>
+<context-group name="Threats_to_biodiversity">Gefahren für die biologische Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="32" approved="1" >
+<source>Invasive alien species</source>
+<target>Invasive gebietsfremde Arten</target>
+<context-group name="Threats_to_biodiversity">Gefahren für die biologische Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="33" approved="1" >
+<source>Climate change</source>
+<target>Klimawandel</target>
+<context-group name="Threats_to_biodiversity">Gefahren für die biologische Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="34" approved="1" >
+<source>Desertification</source>
+<target>Wüstenbildung</target>
+<context-group name="Threats_to_biodiversity">Gefahren für die biologische Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="41" approved="1" >
+<source>Marine Trophic Index</source>
+<target>Marine trophic Index</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="42" approved="1" >
+<source>Fragmentation of natural and semi-natural areas</source>
+<target>Zerschneidung natürlicher und naturnaher Flächen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="43" approved="1" >
+<source>Fragmentation of river systems</source>
+<target>Zerschneidung von Flusssystemen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="44" approved="1" >
+<source>Nutrients in transitional, coastal and marine waters</source>
+<target>Nährstoffe in Ästuargewässern, Küstengewässern und Meeren</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="45" approved="1" >
+<source>Water quality of freshwater ecosystems</source>
+<target>Wasserqualität von Süßwasser-Ökosystemen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="46" approved="1" >
+<source>Health and well-being of humans</source>
+<target>Gesundheit und Wohlfahrt der Menschen</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="47" approved="1" >
+<source>Biodiversity for food and medicine</source>
+<target>Biodiversität für Ernährung und Medizin</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="48" approved="1" >
+<source>Biodiversity and  tourism</source>
+<target>Biodiversität und Tourismus</target>
+<context-group name="Ecosystem_integrity_and_Ecosystem_goods_and_services">Intaktheit von Ökosystemen und Ökosystemleistungen</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="51" approved="1" >
+<source>Traditional knowledge</source>
+<target>Traditionelles Wissen</target>
+<context-group name="Knowledge_of_biodiversity">Kenntnisse der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="52" approved="1" >
+<source>Innovations</source>
+<target>Innovationen</target>
+<context-group name="Knowledge_of_biodiversity">Kenntnisse der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="53" approved="1" >
+<source>Best practices</source>
+<target>Bewehrte Methoden</target>
+<context-group name="Knowledge_of_biodiversity">Kenntnisse der biologischen Vielfalt</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="61" approved="1" >
+<source>Financing biodiversity management</source>
+<target>Finanzierung des Biodiversitäts-Managements</target>
+<context-group name="Resources_for_biodiversity">Ressourcen für die Biodiversität</context-group>
+<note></note>
+</trans-unit>
+ 
+<trans-unit id="62" approved="1" >
+<source>Technology transfer and cooperation</source>
+<target>Technologietransfer und Kooperation</target>
+<context-group name="Resources_for_biodiversity">Ressourcen für die Biodiversität</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="63" approved="1" >
+<source>Liability and Redress</source>
+<target>Haftung und Entschädigung</target>
+<context-group name="Resources_for_biodiversity">Ressourcen für die Biodiversität</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy7" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Access_to_genetic_resources_and_benefit-sharing">Zugang zu genetischen Ressourcen und gerechter Vorteilsausgleich</context-group>
+<note></note>
+</trans-unit>
+
+<trans-unit id="dummy8" approved="1" >
+<source></source>
+<target></target>
+<context-group name="Public_opinion_about_biodiversity_and_public_awareness">Öffentliche Meinung über Biodiversität und öffentliches Bewusstsein</context-group>
+<note></note>
+</trans-unit>
+
+</export>
+</file>
+</xliff>
+
