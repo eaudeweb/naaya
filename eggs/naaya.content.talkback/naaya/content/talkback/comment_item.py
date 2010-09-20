@@ -153,7 +153,7 @@ class TalkBackConsultationComment(NyFSFile):
         if self.approved:
             return True
 
-        if self.check_admin_permissions():
+        if self.check_edit_permissions():
             return True
 
         if self.invite_key is not None:
@@ -165,7 +165,13 @@ class TalkBackConsultationComment(NyFSFile):
 
         return False
 
-    def check_admin_permissions(self):
+    def check_manage_permissions(self):
+        """ Allow people with PERMISSION_MANAGE_TALKBACKCONSULTATION """
+        if self.checkPermissionManageTalkBackConsultation():
+            return True
+        return False
+
+    def check_edit_permissions(self):
         """
         Allow people with PERMISSION_REVIEW_TALKBACKCONSULTATION.
         In the case of invited comments, also allow the inviter.
@@ -173,9 +179,18 @@ class TalkBackConsultationComment(NyFSFile):
         if self.checkPermissionManageTalkBackConsultation():
             return True # user has review permission
 
+        auth_tool = self.getAuthenticationTool()
+
+        owner = self.getOwner()
+        if hasattr(owner, 'name'):
+            ownerid = owner.name
+            if isinstance(ownerid, unicode):
+                ownerid = ownerid.encode('utf-8')
+            if ownerid == auth_tool.get_current_userid():
+                return True # user can edit his own comments
+
         if self.invite_key is not None:
             invite = self.get_consultation().invitations.get_invitation(self.invite_key)
-            auth_tool = self.getAuthenticationTool()
             if invite.inviter_userid == auth_tool.get_current_userid():
                 return True # contributor was invited by current user
 
@@ -184,7 +199,7 @@ class TalkBackConsultationComment(NyFSFile):
     security.declarePublic('save_modifications')
     def save_modifications(self, message, REQUEST=None):
         """ Save body edits """
-        if not self.check_admin_permissions():
+        if not self.check_edit_permissions():
             raise Unauthorized
         self.message = cleanup_message(message)
         if REQUEST is not None:
@@ -197,7 +212,7 @@ class TalkBackConsultationComment(NyFSFile):
     security.declarePublic('approve')
     def approve(self, REQUEST):
         """ approve this comment """
-        if not self.check_admin_permissions():
+        if not self.check_manage_permissions():
             raise Unauthorized
 
         if REQUEST.REQUEST_METHOD != 'POST':
@@ -215,7 +230,7 @@ class TalkBackConsultationComment(NyFSFile):
     security.declarePublic('edit_html')
     def edit_html(self, REQUEST):
         """ edit this comment """
-        if not self.check_admin_permissions():
+        if not self.check_edit_permissions():
             raise Unauthorized
         return self._edit_html(REQUEST)
 

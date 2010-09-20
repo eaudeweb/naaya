@@ -46,10 +46,11 @@
 <metal:block define-macro="embedded-page"
 ><!doctype html>
 <html>
-<head>
+<head tal:define="site here/getSite; site_url site/absolute_url">
     <link href="portal_layout/style_css" type="text/css" rel="stylesheet" />
     <link href="portal_layout/common_css" type="text/css" rel="stylesheet" />
     <link href="portal_layout/additional_style_css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.js"></script>
 </head>
 <body class="tb-embedded"><metal:block define-slot="page-content" /></body>
 </html>
