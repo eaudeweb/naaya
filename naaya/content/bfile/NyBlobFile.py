@@ -47,7 +47,8 @@ class NyBlobFile(Persistent):
     def open_write(self):
         return self._blob.open('w')
 
-    def send_data(self, RESPONSE, as_attachment=True, set_filename=True):
+    def send_data(self, RESPONSE, as_attachment=True, set_filename=True,
+                  REQUEST=None):
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Type', self.content_type)
         if as_attachment:
@@ -56,6 +57,14 @@ class NyBlobFile(Persistent):
                 utf8_fname = urllib.quote(self.filename)
                 header_value += ";filename*=UTF-8''%s" % utf8_fname
             RESPONSE.setHeader('Content-Disposition', header_value)
+
+        # Test for enabling of X-SendFile
+        if REQUEST is not None:
+            ny_xsendfile = REQUEST.get_header("X-NaayaEnableSendfile")
+            if ny_xsendfile is not None and ny_xsendfile=="on":
+                RESPONSE.setHeader("X-Sendfile",
+                                   self._blob._current_filename())
+                return "[body should be replaced by front-end server]"
 
         if hasattr(RESPONSE, '_streaming'):
             return self.open_iterator()
