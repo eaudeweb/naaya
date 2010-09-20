@@ -40,9 +40,7 @@ ut = utils()
 manage_addChatter_html = PageTemplateFile('zpt/chatter_manage_add', globals())
 def manage_addChatter(self, id='', title='', REQUEST=None):
     """ Creates a new Chatter instance"""
-    id = ut.utGenObjectId(title) or ut.utCleanupId(id)
-    if not id or self._getOb(id, None):
-        id = CHATTER_PREFIX + ut.utGenRandomId(6)
+    id = ut.utSlugify(id or title or CHATTER_PREFIX)
     ob = Chatter(id, title)
     self._setObject(id, ob)
     if REQUEST:
