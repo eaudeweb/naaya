@@ -78,13 +78,13 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/g/f')
         self.failUnless('test_create_photo' in html)
 
-        photo = self.portal.myfolder.g.f['testcreatephoto']
+        photo = self.portal.myfolder.g.f['test_create_photo']
         self.failUnlessEqual(photo.description, 'test_photo_description')
         self.failUnlessEqual(photo.author, 'test_author')
         self.failUnlessEqual(photo.source, 'test_source')
         self.failUnlessEqual(photo.approved, 1)
 
-        self.browser.go('http://localhost/portal/myfolder/g/f/testcreatephoto')
+        self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*My folder.*</h1>', html, re.DOTALL))
         self.failUnless('image/gif' in html)
@@ -93,14 +93,16 @@ class NyPhotoFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('test_source' in html)
         self.failUnless('test_create_photo' in html)
 
-        self.browser.go('http://localhost/portal/myfolder/g/f/testcreatephoto/view?display=Original')
+        self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo/view?display=Original')
         self.failUnlessEqual(self.browser_get_header('content-type'), 'image/gif')
         self.failUnlessEqual(self.browser.get_html(),
             load_file('data/test.gif').getvalue())
 
-        self.failIf('XSmall-testcreatephoto' in self.portal.myfolder.g.f.testcreatephoto.objectIds())
-        self.browser.go('http://localhost/portal/myfolder/g/f/testcreatephoto/view?display=XSmall')
-        self.failUnless('XSmall-testcreatephoto' in self.portal.myfolder.g.f.testcreatephoto.objectIds())
+        self.failIf('XSmall-test_create_photo' in
+                     self.portal.myfolder.g.f.test_create_photo.objectIds())
+        self.browser.go('http://localhost/portal/myfolder/g/f/test_create_photo/view?display=XSmall')
+        self.failUnless('XSmall-test_create_photo' in
+                         self.portal.myfolder.g.f.test_create_photo.objectIds())
 
         self.browser_do_logout()
 

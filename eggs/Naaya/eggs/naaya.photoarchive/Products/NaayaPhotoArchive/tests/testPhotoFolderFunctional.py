@@ -89,14 +89,14 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder/mygallery')
         self.failUnless('test_create_album' in html)
 
-        album = self.portal.myfolder.mygallery['testcreatealbum']
+        album = self.portal.myfolder.mygallery['test_create_album']
         self.failUnlessEqual(album.description, 'test_album_description')
         self.failUnlessEqual(album.coverage, 'test_album_coverage')
         self.failUnlessEqual(album.keywords, 'keyw1, keyw2')
         self.failUnlessEqual(album.author, 'test_album_author')
         self.failUnlessEqual(album.source, 'test_album_source')
 
-        self.browser.go('http://localhost/portal/myfolder/mygallery/testcreatealbum')
+        self.browser.go('http://localhost/portal/myfolder/mygallery/test_create_album')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_create_album.*</h1>', html, re.DOTALL))
         self.failUnless('albumphoto.png' in html)
@@ -119,16 +119,16 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
 
-        self.browser.go('http://localhost/portal/myfolder/mygallery/testcreatealbumzip')
+        self.browser.go('http://localhost/portal/myfolder/mygallery/test_create_album_zip')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_create_album_zip.*</h1>', html, re.DOTALL))
 
-        album = self.portal.myfolder.mygallery['testcreatealbumzip']
+        album = self.portal.myfolder.mygallery['test_create_album_zip']
         pics_in_zip = ['a.gif', 'b.gif', 'c-d.gif', 'd and d.gif', 'e-34.gif', 'k.gif']
         for pic in pics_in_zip:
             self.failUnless(pic in html)
 
-        pics_ids = ['a.gif', 'b.gif', 'c-d.gif', 'd_and_d.gif', 'e-34.gif', 'k.gif']
+        pics_ids = ['a.gif', 'b.gif', 'c-d.gif', 'd-and-d.gif', 'e-34.gif', 'k.gif']
         for pic in pics_ids:
             self.failUnless(pic in album.objectIds())
             self.failUnlessEqual(album[pic].approved, 1)

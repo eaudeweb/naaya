@@ -23,6 +23,7 @@ import re
 import sys
 import os
 from cStringIO import StringIO
+from random import choice
 from App.ImageFile import ImageFile
 try:
     from PIL import Image, ImageDraw, ImageFont
@@ -158,7 +159,21 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         self.displays = displays
         NyFSContainer.__init__(self)
         NyContentData.__init__(self)
-    
+
+    def clean_display_id(self, id):
+        """Basic functionality of utils.slugify,
+        but written to maintain case, for special
+        display names (e.g. XSmall, Original)
+
+        """
+        assert id, "Thumbnail ID may not be blank"
+
+        strip_chars_pat = re.compile(r'[^-_\.A-Z0-9]', re.I)
+        to_single_dashes = re.compile(r'-+')
+        id = strip_chars_pat.sub('-', id)
+        id = to_single_dashes.sub('-', id)
+        return id
+
     def _getDisplayId(self, display='Original', watermark = False):
         """ Returns real display object id.
         """
@@ -169,10 +184,13 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         if display == 'Original':
             return watermark + self.getId()
         return watermark + display + '-' + self.getId()
-    
+
     def _getDisplay(self, display='Original', watermark=False):
         """ Returns display object
         """
+        # normalize the display ID as it is saved
+        # in update_data()
+        display = self.clean_display_id(display)
         if not self.is_generated(display, watermark):
             self.__generate_display(display, watermark)
         display = self._getDisplayId(display, watermark)
@@ -210,12 +228,11 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def update_data(self, data, content_type=None, size=None, filename='Original', purge=True, watermark=False):
         if purge:
             self.manage_delObjects(self.objectIds())
-        
-        filename = self.utCleanupId(filename)
+        filename = self.clean_display_id(filename)
         filename = self._getDisplayId(filename, watermark)
         if filename in self.objectIds():
             self.manage_delObjects([filename])
-        
+
         child_id = self.manage_addFile(filename)
         child = self._getOb(child_id)
         if hasattr(data, '__class__') and data.__class__ is Pdata:
