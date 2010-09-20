@@ -194,11 +194,10 @@ def bfile_download(context, path, REQUEST):
 
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
-    if action == 'view':    
-        RESPONSE.setHeader('Content-Type', ver.content_type)
-        return ver.open().read()
+    if action == 'view':
+        return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
     elif action == 'download':
-        return ver.send_data(RESPONSE, set_filename=False)
+        return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
     else:
         raise NotFound
 
