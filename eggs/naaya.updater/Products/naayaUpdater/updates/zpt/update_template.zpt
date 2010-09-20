@@ -30,9 +30,12 @@
 
 <pre tal:content="structure options/report|nothing" />
 </metal:block>
+
 <tal:block metal:define-slot="scripts">
-<script src="/misc_/Naaya/jquery.min.js"></script>
-<script src='/misc_/naayaUpdater/updater.js'></script>
+    <script src="/misc_/Naaya/jquery.min.js"></script>
+    <script src='/misc_/naayaUpdater/updater.js'></script>
+    <tal:block metal:define-slot="additional-scripts"></tal:block>
 </tal:block>
+
 <tal:block content="structure here/manage_page_footer"/>
 </metal:block>
