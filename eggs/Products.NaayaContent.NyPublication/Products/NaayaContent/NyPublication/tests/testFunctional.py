@@ -61,9 +61,9 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         html = self.browser.get_html()
         self.failUnless('<h1>Thank you for your submission</h1>' in html)
 
-        self.portal.myfolder.testpublication.approveThis()
+        self.portal.myfolder.test_publication.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testpublication')
+        self.browser.go('http://localhost/portal/myfolder/test_publication')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_publication.*</h1>', html, re.DOTALL))
         self.failUnless('test_publication_description' in html)
