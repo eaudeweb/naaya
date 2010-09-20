@@ -204,24 +204,21 @@
 <trans-unit id="61" approved="1" >
 <source>Financing biodiversity management</source>
 <target>Finanțarea managementului biodiversității</target>
-<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
-</context-group>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate</context-group>
 <note></note>
 </trans-unit>
  
 <trans-unit id="62" approved="1" >
 <source>Technology transfer and cooperation</source>
 <target>Cooperarea și transferul de tehnologie</target>
-<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
-</context-group>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate</context-group>
 <note></note>
 </trans-unit>
 
 <trans-unit id="63" approved="1" >
 <source>Liability and Redress</source>
 <target>Răspundere și reparație</target>
-<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate
-</context-group>
+<context-group name="Resources_for_biodiversity">Resurse pentru biodiversitate</context-group>
 <note></note>
 </trans-unit>
 
