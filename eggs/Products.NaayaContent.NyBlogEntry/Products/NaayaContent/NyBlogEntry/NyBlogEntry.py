@@ -31,7 +31,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import Products
 
 #Product imports
-from Products.NaayaContent.constants import *
+from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
