@@ -35,6 +35,16 @@ class MockResponse(object):
     def setHeader(self, key, value):
         self.headers[key] = value
 
+class MockRequest(object):
+    def __init__(self):
+        self.headers={}
+
+    def get_header(self, name):
+        return self.headers.get(name)
+
+    def set_header(self, name, value):
+        self.headers[name] = value
+
 class NyBlobFileTestCase(ZopeTestCase.TestCase):
     """ CRUD test for NyBlobFile """
 
@@ -111,6 +121,16 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         ret = bf.send_data(response, set_filename=False)
         self.assertEqual(response.headers, ok_headers)
         self.assertEqual(ret, 'some test data')
+
+        self.assertEqual(response.headers.get('X-Sendfile'), None)
+        request = MockRequest()
+        request.set_header('X-NaayaEnableSendfile', 'on')
+        ret = bf.send_data(response, REQUEST=request)
+        self.assertEqual(ret, "[body should be replaced by front-end server]")
+        self.assertEqual(response.headers.get('X-Sendfile'),
+                         bf._blob._current_filename())
+
+
 
 class NyBlobFileTransactionsTestCase(NaayaTestCase):
     def afterSetUp(self):

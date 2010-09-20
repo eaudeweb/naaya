@@ -34,6 +34,10 @@ class Export(object):
         """ Exports NyExFile versions
         """
         languages = self.data.get('_languages', ())
+        if len(languages)>1:
+            self.logger.debug("\t Object %s has %r languages: %r",
+                             self.data.get('id', 'ERROR'), len(languages),
+                             languages)
         for language in languages:
             nyfile = self.data.pop(language, None)
             if not nyfile:
@@ -420,3 +424,4 @@ class UpdateNyExFile2NyBlobFile(UpdateScript):
 
         self.update_control_panel(portal)
         self.update_subobjects(portal)
+        return True
