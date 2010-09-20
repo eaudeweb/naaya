@@ -14,8 +14,8 @@
 <h1 tal:content="here/title_or_id"></h1>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
-    tal:condition="python:review_template and is_entitled"
-    tal:define="is_approved python:here.is_approved(here);
+    tal:condition="python:review_template and is_entitled">
+    <tal:block define="is_approved python:here.is_approved(here);
                 suggestions here/suggestions">
         <tal:block condition="is_approved">
             <div>
@@ -74,6 +74,7 @@
         <tal:block condition="not:suggestions">
             <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
         </tal:block>
+    </tal:block>
 </div>
 
 <tal:block content="structure here/render_answer" />
