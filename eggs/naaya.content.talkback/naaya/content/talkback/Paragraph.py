@@ -36,8 +36,9 @@ from constants import *
 
 
 def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):
-    id = self.utCleanupId(id)
-    if not id:
+    if id:
+        id = self.utSlugify(id)
+    else:
         id = self.make_paragraph_id()
     ob = Paragraph(id, title, body)
     self._setObject(id, ob)
