@@ -252,20 +252,20 @@ class GeopointImportTest(NaayaTestCase):
             self.fail('Should not raise exception')
         self.failUnlessEqual(len(self.portal.imported.objectIds()), 4)
 
-        doc_one = self.portal.imported._getOb('docone')
+        doc_one = self.portal.imported._getOb('doc_one')
         self.failUnlessEqual(doc_one.title, 'doc_one')
         self.failIf(hasattr(doc_one, 'test_geo_loc'))
         self.failIf(hasattr(doc_one, 'test_geo_type'))
 
-        doc_two = self.portal.imported._getOb('doctwo')
+        doc_two = self.portal.imported._getOb('doc_two')
         self.failUnlessEqual(doc_two.test_geo_loc, Geo('13.45', '22.60'))
         self.failUnlessEqual(doc_two.test_geo_type, 'sym1')
 
-        doc_three = self.portal.imported._getOb('docthree')
+        doc_three = self.portal.imported._getOb('doc_three')
         self.failUnlessEqual(doc_three.test_geo_loc, Geo('8', '9', 'somewhere else'))
         self.failUnlessEqual(doc_three.test_geo_type, 'sym2')
 
-        doc_four = self.portal.imported._getOb('docfour')
+        doc_four = self.portal.imported._getOb('doc_four')
         correct = Geo('44.434295', '26.102965', 'Bucharest')
         self.failUnless(-1 < (doc_four.test_geo_loc.lat - correct.lat)*100 < 1)
         self.failUnless(-1 < (doc_four.test_geo_loc.lon - correct.lon)*100 < 1)
