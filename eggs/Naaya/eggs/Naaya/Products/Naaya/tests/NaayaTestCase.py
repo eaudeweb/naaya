@@ -230,20 +230,13 @@ def _close_connections_to_temporary_db(db):
 
     We close them by force here (but it's probably not the right fix).
     """
-    pool = db.databases['temporary']._pools['']
+    pool = db._pools['']
 
     # close all connections and return them to the pool
     def close_conn(c):
         if c in pool.available:
             return
+        assert c._opened is not None # this must be a "primary" connection
         c.close()
-        pool.repush(c)
     pool.map(close_conn, True)
     assert len(pool.all) == len(pool.available)
-
-    # just to be sure, remove all connections from the pool, preventing their
-    # reuse, in case some rogue object somewhere still holds on to them.
-    while len(pool.available):
-        c = pool.available.pop(0)
-        pool.all.remove(c)
-    assert len(pool.all) == len(pool.available) == 0
