@@ -44,9 +44,9 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.portal.myfolder.testpointer.approveThis()
+        self.portal.myfolder.test_pointer.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testpointer')
+        self.browser.go('http://localhost/portal/myfolder/test_pointer')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_pointer.*</h1>', html, re.DOTALL))
         self.failUnless('test_pointer_description' in html)

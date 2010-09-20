@@ -51,7 +51,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -110,7 +110,8 @@ def file_add_html(self, REQUEST=None, RESPONSE=None):
     }, 'file_add')
 
 def _create_NyFile_object(parent, id, title, file, precondition, contributor):
-    id = make_id(parent, id=id, title=title, prefix='file')
+    id = uniqueId(slugify(id or title or 'file', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyFile_extfile(id, title, file, precondition, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -139,7 +140,8 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     #process parameters
     if _source=='file': id = cookId(id, title, _file)[0] #upload from a file
-    id = make_id(self, id=id, title=title, prefix='file')
+    id = uniqueId(slugify(id or title or 'file', removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
@@ -591,7 +593,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         filename = self.utToUtf8(self.downloadfilename())
-        filename = self.utCleanupId(filename)
+        filename = self.utSlugify(filename, removelist=[])
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')

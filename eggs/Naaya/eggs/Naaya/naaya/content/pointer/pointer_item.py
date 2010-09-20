@@ -45,7 +45,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -104,7 +104,8 @@ def pointer_add_html(self, REQUEST=None, RESPONSE=None):
     }, 'pointer_add')
 
 def _create_NyPointer_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='pointer')
+    id = uniqueId(slugify(id or 'pointer', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyPointer(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -124,7 +125,9 @@ def addNyPointer(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('locator', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='pointer')
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'pointer',
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyPointer_object(self, id, contributor)

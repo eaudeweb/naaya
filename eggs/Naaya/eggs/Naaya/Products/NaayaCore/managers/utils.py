@@ -125,7 +125,7 @@ def slugify(s, maxlen=80, removelist=None):
 
     ignore_words = '|'.join([r for r in removelist])
     ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
-    ignore_chars_pat = re.compile(r'[^-_A-Z0-9\s]', re.I)
+    ignore_chars_pat = re.compile(r'[^-_\.A-Z0-9\s]', re.I)
     outside_space_pat = re.compile(r'^[-\s]+|[-\s]+$')
     inside_space_pat = re.compile(r'[-\s]+')
 

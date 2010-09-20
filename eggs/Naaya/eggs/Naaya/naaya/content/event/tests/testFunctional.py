@@ -77,10 +77,10 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.failUnlessEqual(self.portal.info.testevent.event_type, 'conference')
-        self.portal.info.testevent.approveThis()
+        self.failUnlessEqual(self.portal.info.test_event.event_type, 'conference')
+        self.portal.info.test_event.approveThis()
 
-        self.browser.go('http://localhost/portal/info/testevent')
+        self.browser.go('http://localhost/portal/info/test_event')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_event.*</h1>', html, re.DOTALL))
         self.failUnless('test_event_description' in html)

@@ -76,7 +76,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        geopoint = self.portal.myfolder.testgeopoint
+        geopoint = self.portal.myfolder.test_geopoint
         self.failUnlessEqual(geopoint.title, 'test_geopoint')
         self.failUnlessEqual(geopoint.geo_location,
             Geo('12.587142', '55.681004',
@@ -84,7 +84,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(geopoint.url, 'http://www.eea.europa.eu')
         geopoint.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testgeopoint')
+        self.browser.go('http://localhost/portal/myfolder/test_geopoint')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_geopoint.*</h1>', html, re.DOTALL))
         self.failUnless('test_geopoint_description' in html)

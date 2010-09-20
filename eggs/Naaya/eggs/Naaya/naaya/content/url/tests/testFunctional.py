@@ -46,9 +46,9 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.portal.myfolder.testurl.approveThis()
+        self.portal.myfolder.test_url.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testurl')
+        self.browser.go('http://localhost/portal/myfolder/test_url')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_url.*</h1>', html, re.DOTALL))
         self.failUnless('test_url_description' in html)

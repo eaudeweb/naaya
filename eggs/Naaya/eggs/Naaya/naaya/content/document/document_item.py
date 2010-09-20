@@ -49,7 +49,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 
 #module constants
@@ -95,13 +95,14 @@ config = {
 
 def document_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = make_id(self, prefix='doc')
+    id = uniqueId('doc', lambda x: self._getOb(x, None) is not None)
     self.addNyDocument(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
     else: return id
 
 def _create_NyDocument_object(parent, id, contributor):
-    id = make_id(parent, id=id)
+    id = uniqueId(slugify(id, removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyDocument(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -121,7 +122,9 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('body', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='doc')
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'doc',
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)  
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyDocument_object(self, id, contributor)
@@ -300,7 +303,9 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
 
         parent = self.getParentNode()
-        id = make_id(parent, title=schema_raw_data.get('title', ''), prefix='doc')
+        id = uniqueId(slugify(schema_raw_data.get('title', '') or 'doc',
+                              removelist=[]),
+                      lambda x: parent._getOb(x, None) is not None)
 
         schema_raw_data['title'] = schema_raw_data['title'].replace(self.id, id)
         schema_raw_data['description'] = schema_raw_data['description'].replace(self.id, id)
