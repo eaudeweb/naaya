@@ -66,13 +66,13 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(self.browser.get_url(), 'http://localhost/portal/myfolder')
         self.failUnless('test_create_gallery' in html)
 
-        gallery = self.portal.myfolder['testcreategallery']
+        gallery = self.portal.myfolder['test_create_gallery']
         self.failUnlessEqual(gallery.description, 'test_gallery_description')
         self.failUnlessEqual(gallery.coverage, 'test_gallery_coverage')
         self.failUnlessEqual(gallery.keywords, 'keyw1, keyw2')
         gallery.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testcreategallery')
+        self.browser.go('http://localhost/portal/myfolder/test_create_gallery')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_create_gallery.*</h1>', html, re.DOTALL))
 
