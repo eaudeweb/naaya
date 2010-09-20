@@ -144,8 +144,7 @@ def addNyTalkBackConsultation(self,
     Create a Naaya TalkBack Consultation type of object.
     """
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    id = self.utSlugify(id or title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
 
