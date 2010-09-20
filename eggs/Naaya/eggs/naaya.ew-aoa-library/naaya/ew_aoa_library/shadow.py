@@ -275,6 +275,14 @@ def get_survey_id(answer):
 
 def shadow_for_answer(answer):
     attrs = extract_survey_answer_data(answer)
-    return AssessmentShadow(**attrs)
+    shadow = AssessmentShadow(**attrs)
+    # the security is hardcoded to match the one of the target object
+    try:
+        view_perm_roles = answer.aq_parent._View_Permission 
+    except AttributeError:
+        pass
+    else:
+        shadow._View_Permission = view_perm_roles
+    return shadow
 
 #print "loaded survey data module"
