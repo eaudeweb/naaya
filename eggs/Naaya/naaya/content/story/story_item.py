@@ -49,7 +49,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 
 from interfaces import INyStory
@@ -104,12 +104,13 @@ config = {
 
 def story_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = make_id(self, prefix='story')
+    id = uniqueId('story', lambda x: self._getOb(x, None) is not None)
     self.addNyStory(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
 def _create_NyStory_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='story')
+    id = uniqueId(slugify(id or 'story', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyStory(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -133,7 +134,9 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('topitem', '')
     _frontpicture = schema_raw_data.pop('frontpicture', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='story')
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'story',
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyStory_object(self, id, contributor)
@@ -362,7 +365,8 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         _frontpicture = schema_raw_data.pop('frontpicture', '')
 
         parent = self.getParentNode()
-        id = make_id(parent, title=schema_raw_data.get('title', ''), prefix='story')
+        id = uniqueId(slugify(schema_raw_data.get('title', '') or 'story'),
+                      lambda x: parent._getOb(x, None) is not None)
 
         schema_raw_data['title'] = schema_raw_data['title'].replace(self.id, id)
         schema_raw_data['description'] = schema_raw_data['description'].replace(self.id, id)

@@ -49,7 +49,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -130,7 +130,8 @@ def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
     }, 'mediafile_add')
 
 def _create_NyMediaFile_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='mediafile')
+    id = uniqueId(slugify(id or 'mediafile', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyMediaFile_extfile(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -168,7 +169,9 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     _subtitle = schema_raw_data.pop('subtitle', '')
     _skip_videofile_check = schema_raw_data.pop('_skip_videofile_check', False)
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='mediafile')
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'mediafile',
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 

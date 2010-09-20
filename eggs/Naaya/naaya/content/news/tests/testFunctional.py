@@ -61,9 +61,9 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.portal.info.testnews.approveThis()
+        self.portal.info.test_news.approveThis()
 
-        self.browser.go('http://localhost/portal/info/testnews')
+        self.browser.go('http://localhost/portal/info/test_news')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_news.*</h1>', html, re.DOTALL))
         self.failUnless('test_news_description' in html)

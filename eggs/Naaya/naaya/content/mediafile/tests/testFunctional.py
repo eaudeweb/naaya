@@ -69,18 +69,18 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
-        self.portal.myfolder.testcreatemediafile.approveThis()
+        self.portal.myfolder.test_create_mediafile.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/testcreatemediafile')
+        self.browser.go('http://localhost/portal/myfolder/test_create_mediafile')
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*test_create_mediafile.*</h1>', html, re.DOTALL))
         self.failUnless('test_mediafile_description' in html)
         self.failUnless('test_mediafile_coverage' in html)
         self.failUnless('keyw1, keyw2' in html)
 
-        media_id = self.portal.myfolder.testcreatemediafile.getSingleMediaId()
+        media_id = self.portal.myfolder.test_create_mediafile.getSingleMediaId()
         self.failUnlessEqual(media_id, 'testvid.flv')
-        self.browser.go('http://localhost/portal/myfolder/testcreatemediafile/%s' % media_id)
+        self.browser.go('http://localhost/portal/myfolder/test_create_mediafile/%s' % media_id)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')

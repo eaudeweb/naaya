@@ -52,7 +52,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaBase.NyFSFile import NyFSFile
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import uniqueId, slugify
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -117,7 +117,8 @@ def exfile_add_html(self, REQUEST=None, RESPONSE=None):
     }, 'exfile_add')
 
 def _create_NyExFile_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='exfile')
+    id = uniqueId(slugify(id or 'exfile', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyExFile_extfile(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -144,7 +145,8 @@ def addNyExFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     title = schema_raw_data.get('title', '')
     if _source=='file': id = cookId(id, title, _file)[0] #upload from a file
-    id = make_id(self, id=id, title=title, prefix='exfile')
+    id = uniqueId(slugify(id or title or 'exfile', removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
@@ -765,7 +767,7 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         RESPONSE.setHeader('Content-Type', self.content_type(lang))
         RESPONSE.setHeader('Content-Length', self.size())
         filename = self.downloadfilename(lang, version=False)
-        filename = self.utCleanupId(filename)
+        filename = self.utSlugify(filename, removelist=[])
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')

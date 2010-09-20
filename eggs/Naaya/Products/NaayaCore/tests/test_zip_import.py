@@ -108,7 +108,7 @@ class NyZipImport(NaayaTestCase):
         errors = self.test_folder.zip_import.do_import(data=mac_zip)
         self.assertEqual(errors, [])
         self.assert_same_contents(self.test_folder.objectIds(),
-            ['Picture_1', 'Picture_2'])
+            ['picture-1', 'picture-2'])
 
     def test_folder_exists(self):
         errors = self.test_folder.zip_import.do_import(data=folder_with_files)

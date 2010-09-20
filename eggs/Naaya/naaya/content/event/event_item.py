@@ -49,7 +49,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import slugify, uniqueId
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
 from naaya.core import submitter
@@ -112,7 +112,8 @@ def event_add_html(self, REQUEST=None, RESPONSE=None):
     }, 'event_add')
 
 def _create_NyEvent_object(parent, id, contributor):
-    id = make_id(parent, id=id, prefix='event')
+    id = uniqueId(slugify(id or 'event', removelist=[]),
+                  lambda x: parent._getOb(x, None) is not None)
     ob = NyEvent(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -135,7 +136,9 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('source', '')
     schema_raw_data.setdefault('topitem', '')
 
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='event')
+    id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'event',
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyEvent_object(self, id, contributor)
