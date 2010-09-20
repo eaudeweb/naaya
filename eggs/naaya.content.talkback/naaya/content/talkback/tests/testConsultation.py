@@ -252,6 +252,32 @@ class CommentSubmissionTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_owner_edit_comment(self):
+        self.browser_do_login('reviewer', 'reviewer')
+
+        comment_id = addComment(self.section['000'],
+            contributor='reviewer', message='original comment')
+        transaction.commit()
+
+        self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
+        form = self.browser.get_form('frmEdit')
+
+        form['message:utf8:ustring'] = 'modified comment'
+        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.submit()
+
+        self.assertEqual(self.section['000'][comment_id].message, 'modified comment')
+
+        self.browser_do_logout()
+
+        #login with a different user
+        self.browser_do_login('contributor', 'contributor')
+
+        self.browser.go('%s/000/%s/edit_html' % (self.section_url, comment_id))
+        self.assertRedirectUnauthorizedPage()
+
+        self.browser_do_logout()
+
     def test_sanitized_html(self):
         # We only test a couple of obvious cases, to make sure sanitizing
         # is functioning. The library (currently `scrubber`) has more tests.
