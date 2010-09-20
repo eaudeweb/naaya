@@ -121,9 +121,9 @@ class NyBFileTestCase(NaayaTestCase):
         file_id = addNyBFile(myfolder, uploaded_file=myfile,
                              submitted=1, contributor='contributor')
 
-        self.assertEqual(file_id, 'myfilefortitle')
-        self.assertTrue('myfilefortitle' in myfolder.objectIds())
-        myfile = myfolder['myfilefortitle']
+        self.assertEqual(file_id, 'my_file_for_title')
+        self.assertTrue('my_file_for_title' in myfolder.objectIds())
+        myfile = myfolder['my_file_for_title']
         self.assertEqual(myfile.title, 'my_file_for_title')
 
     def test_add_utf8_filename(self):
@@ -134,7 +134,7 @@ class NyBFileTestCase(NaayaTestCase):
         myfolder = self.portal.myfolder
         file_id = addNyBFile(myfolder, uploaded_file=myfile,
                              submitted=1, contributor='contributor')
-        self.assertEqual(file_id, 'aaaaaaaa1')
+        self.assertEqual(file_id, 'assapa-c-r-_aaaa1') # as returned by unidecode
 
 def test_suite():
     suite = TestSuite()
