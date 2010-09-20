@@ -218,5 +218,32 @@ class NaayaPortalTestPlugin(Plugin):
         if self.cleanup_test_layer is not None:
             import transaction
             transaction.abort()
+            _close_connections_to_temporary_db(test.test.app._p_jar._db)
             self.cleanup_test_layer()
             self.cleanup_test_layer = None
+
+def _close_connections_to_temporary_db(db):
+    """
+    For some unknown reason connections are left open to the session db,
+    generating errors like this::
+        ZODB.DB DB.open() has 22 open connections with a pool_size of 7
+
+    We close them by force here (but it's probably not the right fix).
+    """
+    pool = db.databases['temporary']._pools['']
+
+    # close all connections and return them to the pool
+    def close_conn(c):
+        if c in pool.available:
+            return
+        c.close()
+        pool.repush(c)
+    pool.map(close_conn, True)
+    assert len(pool.all) == len(pool.available)
+
+    # just to be sure, remove all connections from the pool, preventing their
+    # reuse, in case some rogue object somewhere still holds on to them.
+    while len(pool.available):
+        c = pool.available.pop(0)
+        pool.all.remove(c)
+    assert len(pool.all) == len(pool.available) == 0
