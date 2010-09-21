@@ -56,7 +56,7 @@ try:
         f.filename = name
         if '.' in name:
             name = name.rsplit('.', 1)[0]
-        return addNyBFile(location_obj, id=name, uploaded_file=f,
+        return addNyBFile(location_obj, uploaded_file=f,
                           _send_notifications=False)
 
 except ImportError:

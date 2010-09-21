@@ -179,17 +179,20 @@ def make_id(parent, temp_parent=None,
     Refactored to use the new slugify and uniqueId functions
     Does not strip common words out of id, prefix is appended a 5-digit no.
     """
-    if(prefix):
-        prefix = prefix + genRandomId(5) # prefix implemented no-id-reuse in prev version, keeping it
-    if(id and removelist is None):
-        removelist=[] # backwards compat: if id given, do not strip any words
-    gen_id=slugify(id or title or prefix,removelist=removelist)
+    if prefix:
+        # prefix implemented no-id-reuse in prev version, keeping it
+        prefix = prefix + genRandomId(5)
+    if id:
+        gen_id = id
+    else:
+        gen_id = slugify(id or title or prefix, removelist=removelist)
+
     if temp_parent:
         exists_fct = lambda c: (temp_parent._getOb(c,None) or
                                parent._getOb(c,None)) is not None
     else:
         exists_fct = lambda c: parent._getOb(c,None) is not None
-    return uniqueId(gen_id,exists_fct)
+    return uniqueId(gen_id, exists_fct)
 
 def genRandomId(p_length=10, p_chars=string.digits):
     """Generate a random numeric id."""
