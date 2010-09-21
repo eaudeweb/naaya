@@ -8,8 +8,6 @@ import unittest
 from unittest import TestCase, TestSuite, makeSuite
 from nose.plugins import Plugin
 
-from selenium import selenium
-
 from webob.dec import wsgify
 from wsgiref.simple_server import make_server, WSGIRequestHandler, ServerHandler
 
@@ -158,6 +156,7 @@ class NaayaSeleniumTestPlugin(Plugin):
         if not isinstance(testCase.test, SeleniumTestCase):
             return
         if not self.naaya_started:
+            from selenium import selenium
             self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
                     self.browsers, "http://localhost:%s/" % HTTP_PORT)
             self.selenium.start()

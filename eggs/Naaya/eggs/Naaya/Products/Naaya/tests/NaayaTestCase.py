@@ -199,7 +199,8 @@ class NaayaPortalTestPlugin(Plugin):
             the_test.mail_log, self.restore_mail = divert_mail()
             cleanup, test_db_layer = self.tzope.db_layer()
 
-            app = test_db_layer.open().root()['Application']
+            self.db_connection = test_db_layer.open()
+            app = self.db_connection.root()['Application']
             fake_root = wrap_with_request(app)
             wrapped_app = fake_root.app
 
@@ -218,5 +219,6 @@ class NaayaPortalTestPlugin(Plugin):
         if self.cleanup_test_layer is not None:
             import transaction
             transaction.abort()
+            self.db_connection.close()
             self.cleanup_test_layer()
             self.cleanup_test_layer = None
