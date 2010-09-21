@@ -51,7 +51,6 @@ from DateTime import DateTime
 from OFS.ObjectManager import checkValidId
 
 #Product imports
-from stripping_tool import stripping_tool
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode
 
@@ -102,7 +101,7 @@ def slugify(s, maxlen=80, removelist=None):
     You can use the returned value as a param for uniqueId(id,exists)
     to get an available valid id in context.
 
-     * `s`: unicode string. However, if a `str` is provided, 
+     * `s`: unicode string. However, if a `str` is provided,
      it's decoded to `unicode` using the "ascii" encoding.
      * `maxlen`: maximum length of string
      * `removelist`: list of words to be removed from id.
@@ -120,7 +119,7 @@ def slugify(s, maxlen=80, removelist=None):
     if type(s) is str:
         s = force_to_unicode(s) # raises UnicodeDecodeError if non-ascii
         # coder should take notice `s` must be unicode / ascii str
-    
+
     s = str(unidecode(s))
 
     ignore_words = '|'.join([r for r in removelist])
@@ -427,10 +426,15 @@ class utils:
         limit the output length to ``trim_length`` characters.
         """
         soup = BeautifulSoup(html)
-        text = ''.join(soup.findAll(text=True))
-        if trim_length is not None:
+        # TODO: check if BeautifulSoup can replace entities
+        text = ''.join(soup.findAll(text=True)).replace('&nbsp;', ' ')
+        if trim_length:
             text = text[:trim_length]
         return text
+
+    #backwards compatibility
+    def utStripAllHtmlTags(self, html):
+        return self.html2text(html, trim_length=None)
 
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
@@ -595,14 +599,6 @@ class utils:
     def utStrEscapeForSearch(self, p_string):
         """ escape some characters"""
         return re.sub('[(\"{})\[\]]', '', p_string)
-
-    def utStripAllHtmlTags(self, s):
-        #removes all html tags from an html string
-        p = stripping_tool((), ())
-        p.feed(s)
-        p.close()
-        p.cleanup()
-        return ''.join([x.strip() for x in p.result]).replace('&nbsp;', ' ')
 
     def utStripHtmlTags(self, s, all_tags, single_tags):
         #removes the html tags that are not allowe from a string
