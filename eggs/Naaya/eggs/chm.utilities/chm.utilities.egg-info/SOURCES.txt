@@ -1,0 +1,11 @@
+README.txt
+setup.py
+chm/__init__.py
+chm.utilities.egg-info/PKG-INFO
+chm.utilities.egg-info/SOURCES.txt
+chm.utilities.egg-info/dependency_links.txt
+chm.utilities.egg-info/not-zip-safe
+chm.utilities.egg-info/requires.txt
+chm.utilities.egg-info/top_level.txt
+chm/utilities/__init__.py
+chm/utilities/chm_util.py
