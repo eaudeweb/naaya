@@ -39,7 +39,7 @@
 </div>
 <div class="field-inline">
 	<input type="checkbox" name="version" id="version" checked="checked"/>
-	<label for="version" i18:translate="">Check this to create a new version and maintain the previous one(s)</label>
+	<label for="version" i18n:translate="">Check this to create a new version and maintain the previous one(s)</label>
 </div>
 
 </fieldset>
