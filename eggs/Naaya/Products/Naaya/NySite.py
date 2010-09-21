@@ -1761,7 +1761,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     if description:
                         #strip all HTML tags from the description and take just
                         #the first 200 characters
-                        desc = self.utStripAllHtmlTags(description.encode('utf-8', 'ignore'))[:200]
+                        desc = self.html2text(description.encode('utf-8', 'ignore'), trim_length=200)
                         desc = self.utStripMSWordUTF8(desc)
                         # Remove non-ascii unknown chars
                         desc = desc.decode('utf-8', 'ignore').encode('utf-8', 'ignore')
