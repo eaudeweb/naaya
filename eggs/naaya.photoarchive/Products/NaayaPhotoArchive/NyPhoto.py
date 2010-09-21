@@ -39,7 +39,7 @@ from decimal import Decimal
 #Zope imports
 from zope.deprecation import deprecate
 from zope.interface import implements
-from OFS.Image import getImageInfo, cookId, Pdata
+from OFS.Image import getImageInfo, Pdata
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -74,6 +74,20 @@ def photo_add_html(self, REQUEST):
     form_helper = get_schema_helper_for_metatype(self, METATYPE_NYPHOTO)
     return _photo_add_html.__of__(self)(REQUEST, form_helper=form_helper)
 
+def clean_display_id(id):
+    """Basic functionality of utils.slugify,
+    but written to maintain case, for special
+    display names (e.g. XSmall, Original)
+
+    """
+    assert id, "Thumbnail ID may not be blank"
+
+    strip_chars_pat = re.compile(r'[^-_\.A-Z0-9]', re.I)
+    to_single_dashes = re.compile(r'-+')
+    id = strip_chars_pat.sub('-', id)
+    id = to_single_dashes.sub('-', id)
+    return id
+
 def addNyPhoto(self, id='', REQUEST=None, _klass=None, **kwargs):
     """
     Create a Photo type of object.
@@ -101,8 +115,9 @@ def addNyPhoto(self, id='', REQUEST=None, _klass=None, **kwargs):
         _file = ''
 
     #process parameters
-    id, _title = cookId(id, _title, _file)
-    id = make_id(self, id=id, title=_title, prefix=PREFIX_NYPHOTO)
+    if id:
+        id = clean_display_id(id)
+    id = make_id(self, id=id, title=(_title or _file), prefix=PREFIX_NYPHOTO)
     schema_raw_data['title'] = _title
 
     ob = _klass(id, content_type=_content_type, displays=self.displays.copy())
@@ -160,20 +175,6 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         NyFSContainer.__init__(self)
         NyContentData.__init__(self)
 
-    def clean_display_id(self, id):
-        """Basic functionality of utils.slugify,
-        but written to maintain case, for special
-        display names (e.g. XSmall, Original)
-
-        """
-        assert id, "Thumbnail ID may not be blank"
-
-        strip_chars_pat = re.compile(r'[^-_\.A-Z0-9]', re.I)
-        to_single_dashes = re.compile(r'-+')
-        id = strip_chars_pat.sub('-', id)
-        id = to_single_dashes.sub('-', id)
-        return id
-
     def _getDisplayId(self, display='Original', watermark = False):
         """ Returns real display object id.
         """
@@ -190,7 +191,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
         """
         # normalize the display ID as it is saved
         # in update_data()
-        display = self.clean_display_id(display)
+        display = clean_display_id(display)
         if not self.is_generated(display, watermark):
             self.__generate_display(display, watermark)
         display = self._getDisplayId(display, watermark)
@@ -228,7 +229,7 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def update_data(self, data, content_type=None, size=None, filename='Original', purge=True, watermark=False):
         if purge:
             self.manage_delObjects(self.objectIds())
-        filename = self.clean_display_id(filename)
+        filename = clean_display_id(filename)
         filename = self._getDisplayId(filename, watermark)
         if filename in self.objectIds():
             self.manage_delObjects([filename])
