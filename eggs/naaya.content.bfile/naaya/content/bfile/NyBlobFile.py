@@ -49,6 +49,16 @@ class NyBlobFile(Persistent):
 
     def send_data(self, RESPONSE, as_attachment=True, set_filename=True,
                   REQUEST=None):
+        """NyBlobFiles can also be served using X-Sendfile.
+        In order to do so, you need to set X-NaayaEnableSendfile header
+        to "on" by frontend server for each request.
+
+        Lighttpd.conf example (working in proxy mode)::
+         server.modules  += ( "mod_setenv" )
+         setenv.add-request-header = ( "X-NaayaEnableSendfile" => "on" )
+         proxy-core.allow-x-sendfile = "enable"
+
+        """
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Type', self.content_type)
         if as_attachment:
