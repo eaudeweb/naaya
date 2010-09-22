@@ -219,6 +219,7 @@ class NaayaPortalTestPlugin(Plugin):
         if self.cleanup_test_layer is not None:
             import transaction
             transaction.abort()
-            self.db_connection.close()
+            # TODO
+            # self.db_connection.close()
             self.cleanup_test_layer()
             self.cleanup_test_layer = None
