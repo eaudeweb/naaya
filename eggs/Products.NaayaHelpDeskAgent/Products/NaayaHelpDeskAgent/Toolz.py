@@ -21,7 +21,7 @@
 # Generic functions
 
 import re, string,types,time
-from whrandom import choice
+from random import choice
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
 
