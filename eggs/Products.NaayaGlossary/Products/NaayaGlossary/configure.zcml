@@ -1,0 +1,11 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <class class=".NyGlossaryFolder.NyGlossaryFolder">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+  </class>
+
+  <class class=".NyGlossaryElement.NyGlossaryElement">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+  </class>
+
+</configure>
