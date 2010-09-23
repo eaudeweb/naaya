@@ -32,11 +32,6 @@ def initialize(context):
             icon = 'www/HelpDesk.gif'
     )
 
-methods = {
-        'manage_addHelpDeskForm': manage_addHelpDeskForm,
-        'manage_addHelpDesk': manage_addHelpDesk,
-}
-
 misc_ = {
         'HelpDesk':ImageFile('www/HelpDesk.gif', globals()),
         'Issue':ImageFile('www/Issue.gif', globals()),
