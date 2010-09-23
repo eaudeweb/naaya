@@ -32,7 +32,7 @@
 		function upload_button() {
 			var button = $('#picture_upload'), interval;
 			new AjaxUpload(button,{
-				action: 'file_upload/upload_file', 
+				action: 'file_upload/upload_file',
 				name: 'upload_file',
 				onSubmit : function(file, ext){
 					if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
@@ -110,10 +110,10 @@
 				<label class="widget-title" for="ambassador_species" i18n:translate="">
 					Ambassador species name
 				</label>
-				<span tal:condition="request/SESSION/ambassador_species-errors|nothing"
+				<p tal:condition="request/SESSION/ambassador_species-errors|nothing"
 					class="form-errors" i18n:translate="">
 					The species name is mandatory!
-				</span>
+				</p>
 				<input type="text" id="ambassador_species" size="50"
 						tal:attributes="value request/SESSION/ambassador_species|nothing"
 						name="ambassador_species:utf8:ustring" />
