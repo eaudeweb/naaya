@@ -141,6 +141,10 @@ class NaayaSeleniumTestPlugin(Plugin):
         parser.add_option("--ny-selenium-browsers", dest="browsers",
                 help="Select the browsers used in testing. Use one value from "
                 "%s" % BROWSERS, default="*firefox")
+        parser.add_option("--ny-selenium", dest="skip_tests",
+                help=("Enable ny-selenium plugin for running selenium "
+                      "test cases in nynose"),
+                      action="store_false", default=True)
 
     def configure(self, options, config):
         global HTTP_PORT, SELENIUM_GRID_PORT
@@ -149,26 +153,39 @@ class NaayaSeleniumTestPlugin(Plugin):
         HTTP_PORT = options.HTTP_PORT
         SELENIUM_GRID_PORT = options.SELENIUM_GRID_PORT
         self.browsers = options.browsers
+        self.skip_tests = options.skip_tests
 
         self.enabled = True
 
+    def skip_test_callable(self, test):
+        """This replaces the run() method in TestCase `test`"""
+        return
+
     def prepareTestCase(self, testCase):
+        # if regular TestCase, abort selenium init
         if not isinstance(testCase.test, SeleniumTestCase):
             return
-        if not self.naaya_started:
-            from selenium import selenium
-            self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
-                    self.browsers, "http://localhost:%s/" % HTTP_PORT)
-            self.selenium.start()
-            self.naaya_started = True
-            self.http_thread = NaayaHttpThread(self.tzope)
-            self.http_thread.start()
-        testCase.test.selenium = self.selenium
+        else:
+            # We have a SeleniumTestCase
+            if self.skip_tests:
+                return self.skip_test_callable
+            else:
+                if not self.naaya_started:
+                    from selenium import selenium
+                    self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
+                            self.browsers, "http://localhost:%s/" % HTTP_PORT)
+                    self.selenium.start()
+                    self.naaya_started = True
+                    self.http_thread = NaayaHttpThread(self.tzope)
+                    self.http_thread.start()
+                testCase.test.selenium = self.selenium
 
     def afterTest(self, test):
-        if not isinstance(test.test, SeleniumTestCase):
+        if (not isinstance(test.test, SeleniumTestCase) or
+            self.skip_tests):
             return
-        self.selenium.delete_all_visible_cookies()
+        else:
+            self.selenium.delete_all_visible_cookies()
 
     def finalize(self, result):
         if self.naaya_started:
