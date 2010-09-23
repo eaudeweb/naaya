@@ -138,18 +138,6 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         self.approved =     approved
         if REQUEST: REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
-    security.declarePrivate("manage_afterAdd")
-    def manage_afterAdd(self, item, container):
-        """ this method is called, whenever _setObject in ObjectManager gets called """
-        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
-        self.cu_catalog_object(self)
-
-    security.declarePrivate("manage_beforeDelete")
-    def manage_beforeDelete(self, item, container):
-        """ this method is called, when the object is deleted """
-        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
-        self.cu_uncatalog_object(self)
-
     #########################
     #   MANAGEMENT TABS     #
     #########################
