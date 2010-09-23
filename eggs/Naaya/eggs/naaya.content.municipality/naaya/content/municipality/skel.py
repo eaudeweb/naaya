@@ -26,5 +26,5 @@ PROVINCES = {
 AMBASSADOR_CHOICES = {
                         1:'Did not choose a species yet',
                         2:'Is busy selecting an ambassador species',
-                        3:'Already selected ambassador species',
+                        3:'Already has selected ambassador species',
                      }

@@ -188,7 +188,7 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    ob.process_species(ambassador_species, ambassador_species_description,
+    ob.process_species(None, None, ambassador_species, ambassador_species_description,
                     ambassador_species_picture, crop_coordinates, form_errors)
 
     #check Captcha/reCaptcha
@@ -202,9 +202,9 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
             raise ValueError(form_errors.popitem()[1]) # pick a random error
         else:
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+            schema_raw_data['ambassador_species'] = ambassador_species
+            schema_raw_data['ambassador_species_description'] = ambassador_species_description
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            ob.setSession('ambassador_species', ambassador_species)
-            ob.setSession('ambassador_species_description', ambassador_species_description)
             REQUEST.RESPONSE.redirect('%s/municipality_add_html' % self.absolute_url())
             return
 
@@ -235,6 +235,11 @@ def addNyMunicipality(self, id='', REQUEST=None, contributor=None, **kwargs):
 
 class AmbassadorSpecies(Persistent):
     def __init__(self, title, description='', picture=None):
+        self.title = title
+        self.description = description
+        self.picture = picture
+
+    def edit(self, title, description='', picture=None):
         self.title = title
         self.description = description
         self.picture = picture
@@ -296,14 +301,17 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
+        edit_species = schema_raw_data.pop('edit_species', None)
+        delete_picture = schema_raw_data.pop('delete_picture', None)
         schema_raw_data['title'] = obj.title
 
-        delete_species = sorted(list(schema_raw_data.pop('delete_species', '')), reverse=True)
-        for list_index in delete_species:
-            self.species.pop(int(list_index))
+        ambassador_species = schema_raw_data.get('ambassador_species', '')
+        ambassador_species_description = schema_raw_data.get('ambassador_species_description', '')
 
-        ambassador_species = schema_raw_data.pop('ambassador_species', '')
-        ambassador_species_description = schema_raw_data.pop('ambassador_species_description', '')
+        delete_species = sorted(list(schema_raw_data.pop('delete_species', '')), reverse=True)
+        if edit_species is None:
+            for list_index in delete_species:
+                self.species.pop(int(list_index))
 
         #picture processing
         upload_picture_url = schema_raw_data.pop('upload_picture_url', None)
@@ -321,15 +329,20 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-        self.process_species(ambassador_species, ambassador_species_description,
-                        ambassador_species_picture, crop_coordinates, form_errors)
+        species_success = self.process_species(edit_species, delete_picture, ambassador_species, 
+                                ambassador_species_description, ambassador_species_picture,
+                                crop_coordinates, form_errors)
 
         if form_errors:
             if REQUEST is not None:
+                if not species_success:
+                    schema_raw_data['ambassador_species'] = ambassador_species
+                    schema_raw_data['ambassador_species_description'] = ambassador_species_description
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                self.setSession('ambassador_species', ambassador_species)
-                self.setSession('ambassador_species_description', ambassador_species_description)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                if edit_species is not None and not species_success:
+                    REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s&edit_species=%s' % (self.absolute_url(), _lang, edit_species))
+                else:
+                    REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
                 return
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -364,18 +377,30 @@ class NyMunicipality(NyContentData, NyAttributes, NyItem, NyNonCheckControl, NyV
         return self.getFormsTool().getContent({'here': self}, 'municipality_edit')
 
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_species')
-    def process_species(self, ambassador_species, ambassador_species_description,
-                        ambassador_species_picture, crop_coordinates, form_errors):
+    def process_species(self, edit_species, delete_picture, ambassador_species,
+                        ambassador_species_description, ambassador_species_picture,
+                        crop_coordinates, form_errors):
         picture_test = ambassador_species_picture is not None
-        if (ambassador_species_description or picture_test) and not ambassador_species:
-            form_errors['ambassador_species'] = ['The species name is mandatory!']
-        elif ambassador_species:
-            if picture_test:
-                ambassador_species_picture = process_picture(ambassador_species_picture, crop_coordinates)
-            new_species = AmbassadorSpecies(ambassador_species,
-                                            ambassador_species_description,
-                                            ambassador_species_picture)
-            self.species.append(new_species)
+        if picture_test:
+            ambassador_species_picture = process_picture(ambassador_species_picture, crop_coordinates)
+        if edit_species is not None:
+            if not ambassador_species:
+                form_errors['ambassador_species'] = ['The species name is mandatory!']
+            else:
+                if not ambassador_species_picture and not delete_picture:
+                    ambassador_species_picture = self.species[edit_species].picture
+                self.species[edit_species].edit(ambassador_species, ambassador_species_description, ambassador_species_picture)
+                self._p_changed = True
+                return True
+        else:
+            if (ambassador_species_description or picture_test) and not ambassador_species:
+                form_errors['ambassador_species'] = ['The species name is mandatory!']
+            elif ambassador_species:
+                new_species = AmbassadorSpecies(ambassador_species,
+                                                ambassador_species_description,
+                                                ambassador_species_picture)
+                self.species.append(new_species)
+                return True
 
     security.declareProtected(view, 'render_picture')
     def render_picture(self, RESPONSE, list_index=0):
