@@ -114,9 +114,10 @@ def findUsersWithRole(site, search_role):
             if isinstance(cn, list):
                 cn = cn[0]
             cn = _encode(cn)
-            organization = _encode(user.get('o', ''))
+            organization = user.get('o', '')
             if isinstance(organization, list):
                 organization = organization[0]
+            organization = _encode(organization)
             info = user.get('dn', '')
             ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
 
