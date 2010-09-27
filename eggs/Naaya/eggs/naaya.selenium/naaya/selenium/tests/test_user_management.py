@@ -4,6 +4,7 @@ import re
 import optparse
 import transaction
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
+from time import sleep
 
 class NaayaUserManagementTest(SeleniumTestCase):
     def afterSetUp(self):
@@ -25,6 +26,60 @@ class NaayaUserManagementTest(SeleniumTestCase):
         assert self.selenium.is_text_present('Gheorghe Popescu')
         transaction.abort()
         assert self.portal.acl_users.getUser('ghita').name == 'ghita'
+
+    def test_delete_user(self):
+        self.selenium.open("/portal/admin_users_html", True)
+        #Check the last user checkbox
+        self.selenium.click(
+            "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
+        username = self.selenium.get_text(
+            "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
+        self.selenium.click("//input[@value='Delete user']")
+        self.selenium.wait_for_page_to_load("30000")
+        assert self.selenium.is_text_present(username) is False
+
+    def test_search_local_users(self):
+        """Search users using jquery ui autocomplete and normal search using
+        form
+
+        """
+        def check_result(user):
+            "Check if the user is alone in the result list"
+            assert int(self.selenium.\
+             get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) == 2
+            #Also check if the the results are right
+            assert self.selenium.get_text(\
+                '//div[@class="datatable"]/table/tbody/tr[last()]/td[2]') ==\
+            user
+
+        self.selenium.open("/portal/admin_local_users_html", True)
+        self.selenium.type('id=autocomplete-query', ' ')
+        self.selenium.type_keys('id=autocomplete-query', 'contri')
+        sleep(1) #Wait for data to load
+        #The datatable should have only user and header rows
+        check_result(u'contributor')
+        self.selenium.type('id=autocomplete-query', '')
+        self.selenium.type_keys('id=autocomplete-query', ' ')
+        sleep(1)
+        assert int(self.selenium.\
+            get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) > 2
+
+        self.selenium.type('id=autocomplete-query', 'contrib')
+        self.selenium.click('//input[@value="Go"]')
+        self.selenium.wait_for_page_to_load("3000")
+        check_result(u'contributor')
+
+        self.selenium.type('id=autocomplete-query', 'contrib')
+        self.selenium.click('//input[@value="Go"]')
+        self.selenium.wait_for_page_to_load("3000")
+        check_result(u'contributor')
+
+        #Check filtering by role combined with text search
+        self.selenium.select("id=filter-roles", 'Contributor')
+        self.selenium.click('//input[@value="Go"]')
+        self.selenium.wait_for_page_to_load("3000")
+        check_result(u'contributor')
+
 
     def test_add_role(self):
         self.selenium.open("/portal/admin_addrole_html", True)
@@ -55,13 +110,12 @@ class NaayaUserManagementTest(SeleniumTestCase):
             "//table[@class='datatable']/tbody/tr[last()]") ==\
             u'user3 Contributor Entire portal Manager Information'
 
-    def test_delete_user(self):
-        self.selenium.open("/portal/admin_users_html", True)
-        #Check the last user checkbox
-        self.selenium.click(
-            "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
-        username = self.selenium.get_text(
-            "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
-        self.selenium.click("//input[@value='Delete user']")
+    def test_revoke_role(self):
+        self.selenium.open("/portal/admin_roles_html?section=users", True)
+        self.selenium.click("css=.datatable>tbody>tr:last-child td input")
+        role_row_text = self.selenium.get_text(
+            "//table[@class='datatable']/tbody/tr[last()]")
+        self.selenium.click("//input[@value='Revoke selected roles']")
         self.selenium.wait_for_page_to_load("30000")
-        assert self.selenium.is_text_present(username) is False
+        assert self.selenium.get_text(
+            "//table[@class='datatable']/tbody/tr[last()]") != role_row_text
