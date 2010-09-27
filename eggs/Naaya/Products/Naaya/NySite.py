@@ -3925,6 +3925,7 @@ naaya_known_permissions = {
     'Naaya - Skip Captcha': "Skip captcha verification",
     'Naaya - Translate pages': "Translate messages",
     'Naaya - Validate content': "Validate objects",
+    'View': "Access content",
 }
 
 def register_naaya_permission(zope_perm, label):
