@@ -2,104 +2,66 @@ import sys
 import os
 import re
 import optparse
+import transaction
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
-user_data = {
-    'fname': 'Gheorghe',
-    'lname': 'Popescu',
-    'email': 'Gheorghe_Popescu@example.com',
-    'user': 'ghita',
-    'password': 'parolaluighita',
-}
-role_data = {
-    'folder': '',
-    'role': 'Contributor',
-    'email_notification': True,
-}
-
-
 class NaayaUserManagementTest(SeleniumTestCase):
-        #This test verifies the next features:
-        #1. adding a new role
-        #2. adding a new user
-        #3. assigning a role
-        #4. deleting an user
-
-    def selenium_initialize(self):
-        selen = self.selenium
+    def afterSetUp(self):
         self.login_user('admin', '')
 
-    def test_user_management(self):
-        self.selenium_initialize()
-        selen = self.selenium
-        selen.open("/portal/admin_users_html", True)
+    def test_add_user(self):
+        self.selenium.open("/portal/admin_local_users_html", True)
+        self.selenium.click("//input[@value='Add user']")
+        self.selenium.wait_for_page_to_load("30000")
+        self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
+        self.selenium.type("lastname:utf8:ustring", 'Popescu')
+        self.selenium.type("email:utf8:ustring",
+                           'Gheorghe_Popescu@example.com')
+        self.selenium.type("name:utf8:ustring", 'ghita')
+        self.selenium.type("password:utf8:ustring", 'parola')
+        self.selenium.type("confirm:utf8:ustring", 'parola')
+        self.selenium.click("//input[@value='Add']")
+        self.selenium.wait_for_page_to_load("30000")
+        assert self.selenium.is_text_present('Gheorghe Popescu')
+        transaction.abort()
+        assert self.portal.acl_users.getUser('ghita').name == 'ghita'
 
-        role = 'JackOfAll'
-        self.selenium_add_role(role)
-        self.assertFalse(selen.is_text_present('Error'),
-                       'Some data crashed adding a new role')
-        self.selenium_add_user(user_data)
-        self.assertFalse(selen.is_text_present('Error'),
-                       'Some data crashed introducing a user')
-        self.selenium_assign_role(role_data, user_data)
-        self.assertFalse(selen.is_text_present('Error'),
-                       'Some data crashed assigning a role')
-        #self.selenium_delete_user()
-        #self.assertFalse(selen.is_text_present('Error'),
-        #               'Some data crashed deleting a user')
+    def test_add_role(self):
+        self.selenium.open("/portal/admin_addrole_html", True)
+        self.selenium.type("//input[@id='input-role']", "SOMErOLE")
+        self.selenium.click("//input[@value='Add role']")
+        self.selenium.open("/portal/admin_roles_html?section=roles", True)
+        assert self.selenium.is_text_present('SOMErOLE')
+        self.selenium.open("/portal/admin_editrole_html?role=SOMErOLE", True)
+        assert self.selenium.is_text_present('Edit permissions for SOMErOLE')
 
-    def selenium_add_user(self, user_data):
-        selen.open("/portal/admin_users_html", True)
-        selen = self.selenium
-        selen.click("//input[@value='Add user']")
-        selen.wait_for_page_to_load("30000")
+    def test_assign_role(self):
+        "Assign a role"
+        self.selenium.open("/portal/admin_roles_html?section=assign_roles",
+                           True)
+        self.selenium.add_selection("names", "label=user3")
+        self.selenium.add_selection("//select[@name='roles']", 'Manager')
+        self.selenium.click("//input[@value='Pick']")
 
-        selen.type("firstname", user_data['fname'])
-        selen.type("lastname", user_data['lname'])
-        selen.type("email", user_data['email'])
-        selen.type("name", user_data['user'])
-        selen.type("password", user_data['password'])
-        selen.type("confirm", user_data['password'])
-        selen.click("//input[@value='Add']")
-        selen.wait_for_page_to_load("30000")
+        self.selenium.wait_for_pop_up("wwinn", "30000")
+        self.selenium.select_window("name=wwinn")
+        self.selenium.click("link=Information")
+        self.selenium.select_window("null")
 
-    def selenium_add_role(self, role):
-        selen = self.selenium
-        selen.open("/portal/admin_addrole_html", True)
+        self.selenium.click("//input[@value='Assign role']")
+        self.selenium.wait_for_page_to_load("3000")
+        #Check is the user has the assigned roles
+        assert self.selenium.get_text(
+            "//table[@class='datatable']/tbody/tr[last()]") ==\
+            u'user3 Contributor Entire portal Manager Information'
 
-        selen.type("role", role)
-        selen.click("//input[@value='Add role']")
-        selen.wait_for_page_to_load("30000")
-
-    def selenium_assign_role(self, role_data, user_data):
-        selen = self.selenium
-        selen.open("/portal/admin_roles_html", True)
-
-        selen.add_selection("names", "label=%s" % user_data['user'])
-        selen.add_selection("//select[@name='roles']", role_data['role'])
-        if role_data['folder']:
-            selen.click("//input[@value='Pick']")
-            selen.wait_for_pop_up("wwinn", "30000")
-            selen.select_window("name=wwinn")
-            selen.click("link=%s" % role_data['folder'])
-            selen.select_window("null")
-        if role_data['email_notification']:
-            selen.click("send_mail")
-        selen.click("//input[@value='Assign role']")
-        selen.wait_for_page_to_load("3000")
-
-    def selenium_delete_user(self):
-        selen = self.selenium
-        selen.open("/portal/admin_users_html", True)
-        i = 0
-        import pdb; pdb.set_trace()
-        while True:
-            i += 1
-            if selen.is_element_present\
-            ("//div[4]/form/table/tbody/tr[%d]/td[2]/a[text()='%s']"
-             % (i, user_data['user'])):
-                selen.check("//div[4]/form/table/tbody/tr[%d]/td/input" %i)
-                break
-        selen.click("//input[@value='Delete user']")
-        selen.wait_for_page_to_load("30000")
-        self.assertFalse(selen.is_text_present(user_data['user']))
+    def test_delete_user(self):
+        self.selenium.open("/portal/admin_users_html", True)
+        #Check the last user checkbox
+        self.selenium.click(
+            "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
+        username = self.selenium.get_text(
+            "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
+        self.selenium.click("//input[@value='Delete user']")
+        self.selenium.wait_for_page_to_load("30000")
+        assert self.selenium.is_text_present(username) is False
