@@ -103,11 +103,18 @@ class CommentsAdmin(SimpleItem):
         data_file = StringIO()
         csv_writer = csv.writer(data_file)
 
+        html2text = self.getSite().html2text
+        def plain(s, trim=None):
+            return html2text(s, trim)
+
         fields = [
+            ('Section', lambda c: c.get_section().title_or_id()),
+            ('Paragraph', lambda c: c.get_paragraph().absolute_url()),
+            ('Paragraph text', lambda c: plain(c.get_paragraph().body, 100)),
             ('Contributor', lambda c: c.get_contributor_name()),
             ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ('Message', lambda c: c.message),
-            ('Paragraph', lambda c: c.get_paragraph().absolute_url()),
+            ('Message (plain text)', lambda c: plain(c.message)),
         ]
 
         csv_writer.writerow([field[0] for field in fields])
