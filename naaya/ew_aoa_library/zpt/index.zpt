@@ -6,10 +6,12 @@
 
 <table class="datatable" tal:define="review_template python:here.target_path == 'tools/general_template/general-template'">
 <thead tal:define="url here/absolute_url">
-	<th><a tal:attributes="href url">Name</a></th>
-	<th>Themes</th>
-	<th>Reported by</th>
-	<th tal:condition="review_template">Approval status</th>
+	<th><a tal:attributes="href url" i18n:translate="">Name</a></th>
+	<th tal:condition="not:review_template" i18n:translate="">Themes</th>
+	<th tal:condition="review_template" i18n:translate="">Upload date</th>
+	<th i18n:translate="">Reported by</th>
+	<th tal:condition="review_template" i18n:translate="">Approval status</th>
+	<th tal:condition="review_template" i18n:translate="">Approval date</th>
 </thead>
 <tbody>
 <tr tal:define="items python:list(here.iter_assessments());
@@ -20,14 +22,16 @@
 	<td>
 			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="i/title_or_id"></a>
 	</td>
-	<td>
+	<td tal:condition="not:review_template">
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
+	<td tal:condition="review_template" tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="i/uploader"/>
 	<td i18n:translate="" tal:condition="review_template">
-        <span tal:condition="python:here.is_approved(i)">Approved</span>
-        <span tal:condition="python:not here.is_approved(i)">Pending</span>
+        <span tal:condition="python:here.approved_date(i)">Approved</span>
+        <span tal:condition="python:not here.approved_date(i)">Pending</span>
     </td>
+	<td tal:condition="review_template" tal:content="python: here.utShowFullDateTime(here.approved_date(i))"/>
 </tal:block>
 </tr>
 </tbody>
