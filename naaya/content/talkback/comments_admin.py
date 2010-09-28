@@ -104,7 +104,7 @@ class CommentsAdmin(SimpleItem):
         csv_writer = csv.writer(data_file)
 
         fields = [
-            ('Contributor', lambda c: c.contributor),
+            ('Contributor', lambda c: c.get_contributor_name()),
             ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ('Message', lambda c: c.message),
             ('Paragraph', lambda c: c.get_paragraph().absolute_url()),
