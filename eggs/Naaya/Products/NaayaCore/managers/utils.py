@@ -52,7 +52,7 @@ from OFS.ObjectManager import checkValidId
 
 #Product imports
 from Products.NaayaCore.managers.paginator import ObjectPaginator
-from naaya.core.utils import force_to_unicode
+from naaya.core.utils import force_to_unicode, unescape_html_entities
 
 #constants
 
@@ -429,8 +429,7 @@ class utils:
         limit the output length to ``trim_length`` characters.
         """
         soup = BeautifulSoup(html)
-        # TODO: check if BeautifulSoup can replace entities
-        text = ''.join(soup.findAll(text=True)).replace('&nbsp;', ' ')
+        text = unescape_html_entities(''.join(soup.findAll(text=True)))
         if trim_length:
             text = text[:trim_length]
         return text
