@@ -1,3 +1,4 @@
+from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
@@ -152,6 +153,7 @@ def extract_survey_answer_data_general_template(answer):
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(get_library_answer(answer), 'w_theme'),
         'topics': sorted(all_topics),
+        'modification_time': answer.get('modification_time'),
     }
 
     if not attrs['title']:
@@ -258,7 +260,7 @@ class AssessmentShadow(SimpleItem):
     def approve_assessment(self, REQUEST):
         """ Approve an assessment """
         survey_answer = self.get_survey_answer(self.getId())
-        survey_answer.is_approved = True
+        survey_answer.approved_date = DateTime()
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -266,7 +268,7 @@ class AssessmentShadow(SimpleItem):
     def unapprove_assessment(self, REQUEST):
         """ Unapprove an assessment """
         survey_answer = self.get_survey_answer(self.getId())
-        survey_answer.is_approved = False
+        survey_answer.approved_date = None
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 

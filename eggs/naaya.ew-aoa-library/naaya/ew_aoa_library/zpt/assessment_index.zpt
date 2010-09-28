@@ -15,9 +15,9 @@
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
     tal:condition="python:review_template and is_entitled">
-    <tal:block define="is_approved python:here.is_approved(here);
+    <tal:block define="approved_date python:here.approved_date(here);
                 suggestions here/suggestions">
-        <tal:block condition="is_approved">
+        <tal:block condition="approved_date">
             <div>
                 <strong i18n:translate="" class="widget-title">
                     This assessment has been approved
@@ -32,7 +32,7 @@
             </div>
             <br/>
         </tal:block>
-        <tal:block condition="not:is_approved">
+        <tal:block condition="not:approved_date">
             <div>
                 <strong i18n:translate="" class="message-error">
                     This assessment is not yet approved
