@@ -3,7 +3,6 @@
 <head>
     <title>Pick Role</title>
 </head>
-<link rel="stylesheet" type="text/css" href="style_back_css">
 <body>
     <h1>Pick Role</h1>
     <p class="info_text">Click on an item to insert it in the corresponding field.</p>
