@@ -109,10 +109,10 @@ class AoALibraryViewer(SimpleItem):
 
     manage_main = PageTemplateFile('zpt/manage_main', globals())
 
-    security.declarePublic('is_approved')
-    def is_approved(self, answer):
+    security.declarePublic('approved_date')
+    def approved_date(self, answer):
         survey_answer = self.get_survey_answer(answer.getId())
-        return getattr(survey_answer, 'is_approved', False)
+        return getattr(survey_answer, 'approved_date', False)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
