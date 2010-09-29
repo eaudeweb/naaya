@@ -1,10 +1,12 @@
 from time import sleep
 import transaction
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
-
-class NaayaUserManagementTest(SeleniumTestCase):
+from Products.NaayaCore.AuthenticationTool.tests.test_auth_unit import \
+                                                            LDAPBaseUnitTest
+class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
     def afterSetUp(self):
-        self.login_user('admin', '')
+        LDAPBaseUnitTest.afterSetUp(self)
+        self.login_user('admin', 'mypass')
 
     def test_add_user(self):
         self.selenium.open("/portal/admin_adduser_html", True)
@@ -70,8 +72,8 @@ class NaayaUserManagementTest(SeleniumTestCase):
         self.selenium.wait_for_page_to_load("3000")
         self.selenium.open("/portal/admin_edituser_html?name=contributor",
                            True)
-        assert self.selenium.get_value('//input[@name="lastname:utf8:ustring"]') ==\
-                u'Lastname'
+        assert self.selenium.get_value(
+            '//input[@name="lastname:utf8:ustring"]') == u'Lastname'
 
         #Empty form
         self.selenium.type("firstname:utf8:ustring", '')
