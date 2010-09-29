@@ -125,6 +125,12 @@
 	  permission="zope2.ViewManagementScreens" />
 
 	<utility
+	  name="events.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_events.UpdateBrokenEvents"
+	  permission="zope2.ViewManagementScreens" />
+
+	<utility
 	  name="geomap.update_mapengines"
 	  provides="..interfaces.IUpdateScript"
 	  component=".update_map_engines.UpdateMapEngines"
