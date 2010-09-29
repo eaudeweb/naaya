@@ -1,7 +1,3 @@
-import sys
-import os
-import re
-import optparse
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
 

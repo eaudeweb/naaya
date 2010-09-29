@@ -1,12 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
-import sys
-import os
-import re
-import optparse
-
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
+from naaya.content.news.news_item import addNyNews
+import transaction
 
 local_channel_data = {
     'local_title': 'Channel Test',
@@ -17,30 +11,10 @@ local_channel_data = {
     'local_no_items': 0,
 }
 news_data = {
-    'news_title': 'Test news',
-    'description': 'news description',
-    'geo_coverage': 'Region',
-    'keywords': 'test,something',
-    'comments': True,
-    'sort_order': '',
-    'release_date': '',  #like dd/mm/yyyy
-    'details': '',
-    'expiration_date': '',  #like dd/mm/yyyy
-    'concerned_url': '',
-    'source': '',
+    'title': 'Test news',
 }
 news_data_2 = {
-    'news_title': 'Test news 2',
-    'description': 'about testing',
-    'geo_coverage': 'OneCountry',
-    'keywords': 'test,something,python,selenium',
-    'comments': True,
-    'sort_order': '',
-    'release_date': '',  #like dd/mm/yyyy
-    'details': '',
-    'expiration_date': '',  #like dd/mm/yyyy
-    'concerned_url': '',
-    'source': '',
+    'title': 'Test news 2',
 }
 
 
@@ -52,8 +26,11 @@ class NaayaChannelsTest(SeleniumTestCase):
     def selenium_initialize_local(self, news_data, news_data_2):
         """Initializing..."""
         self.login_user('admin', '')
-        self.selenium_add_news(news_data)
-        self.selenium_add_news(news_data_2)
+        addNyNews(self.portal.info, title=news_data['title'],
+                  contributor='admin', submitted=1)
+        addNyNews(self.portal.info, title=news_data_2['title'],
+                  contributor='admin', submitted=1)
+        transaction.commit()
 
     def test_local_channel(self):
         self.selenium_initialize_local(news_data, news_data_2)
@@ -86,49 +63,25 @@ class NaayaChannelsTest(SeleniumTestCase):
         selen = self.selenium
         selen.click("link=Arrange")
         selen.wait_for_page_to_load("30000")
-
-        self.failUnless(selen.is_element_present
-                ("//div[@id='center_content']/h1[text()='Arrange portlets']"))
+        self.assertTrue(selen.is_element_present("//div[@id='center_content']/"
+                                                 "h1[text()='Arrange portlets']"))
 
         selen.select("position", "value=%s" % channel_portlet_data['position_label'])
         selen.select("portlet_id", "label=%s (%s)" % (channel_portlet_data['title'],
-                                            channel_portlet_data['portlet']))
+                     channel_portlet_data['portlet']))
         selen.type("location", channel_portlet_data['display_url'])
         selen.click("//input[@name='action' and @value='Assign']")
         selen.wait_for_page_to_load("30000")
 
-        self.failUnless(selen.is_element_present
-                ("//div[@id='center_content']/h1[text()='Arrange portlets']"))
+        self.assertTrue(selen.is_element_present("//div[@id='center_content']/"
+                                                 "h1[text()='Arrange portlets']"))
 
     def selenium_verify_display(self, channel_portlet_data):
         selen = self.selenium
         selen.open("/portal/info", True)
         self.assertTrue(selen.is_text_present(channel_portlet_data['title']),
                     "Channel  %s not displayed" % channel_portlet_data['title'])
-        self.assertTrue(selen.is_element_present("link=%s" % news_data['news_title']),
-                            "Link %s not displayed" % news_data['news_title'])
-        self.assertTrue(selen.is_element_present("link=%s" % news_data_2['news_title']),
-                            "Link %s not displayed" % news_data_2['news_title'])
-
-    def selenium_add_news(self, news_data):
-        """add news without picture"""
-        selen = self.selenium
-        selen.open("/portal/info", True)
-        selen.select("typetoadd", "value=news_add_html")
-        selen.wait_for_page_to_load("30000")
-
-        selen.type("title", news_data['news_title'])
-        selen.type("coverage", news_data['geo_coverage'])
-        selen.type("keywords", news_data['keywords'])
-        if not news_data['release_date']:
-            selen.click("link=Today")
-        else:
-            selen.type("releasedate", news_data['releade_date'])
-        if news_data['comments']:
-            selen.click("discussion")
-        if news_data['expiration_date']:
-            selen.type("expirationdate", news_data['expiration_date'])
-        selen.type("resourceurl", news_data['concerned_url'])
-        selen.type("source", news_data['source'])
-        selen.click("//input[@value='Submit']")
-        selen.wait_for_page_to_load("30000")
+        self.assertTrue(selen.is_element_present("link=%s" % news_data['title']),
+                            "Link %s not displayed" % news_data['title'])
+        self.assertTrue(selen.is_element_present("link=%s" % news_data_2['title']),
+                            "Link %s not displayed" % news_data_2['title'])
