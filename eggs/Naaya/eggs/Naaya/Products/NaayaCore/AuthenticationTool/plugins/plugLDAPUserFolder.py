@@ -489,6 +489,12 @@ class plugLDAPUserFolder(PlugBase):
     security.declarePublic('section_group_members_html')
     section_group_members_html = PageTemplateFile('plugLDAPUserFolderGroupMembers', globals())
 
+    security.declarePublic('users_roles_html')
+    users_roles_html = PageTemplateFile('plugLDAPUserFolderUsersRoles', globals())
+
+    security.declarePublic('groups_roles_html')
+    groups_roles_html = PageTemplateFile('plugLDAPUserFolderGroupsRoles', globals())
+
     security.declarePublic('pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
 

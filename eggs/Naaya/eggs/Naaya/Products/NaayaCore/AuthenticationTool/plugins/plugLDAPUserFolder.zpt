@@ -72,14 +72,14 @@ function toggleSelect()
                         section_url string:${here/absolute_url}/section_manage_all_html?id=${id}">
         <tal:block tal:condition="python:section=='manage_all'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 class="current_sub"
                 i18n:translate="">Manage Users & Groups</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='manage_all'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 i18n:translate="">Manage Users & Groups</a>
         </tal:block>
         </li>
@@ -89,14 +89,14 @@ function toggleSelect()
                         section_url string:${here/absolute_url}/section_assign_to_users_html?id=${id}">
         <tal:block tal:condition="python:section=='assign_to_users'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 class="current_sub"
                 i18n:translate="">Assign Roles to Users</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='assign_to_users'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 i18n:translate="">Assign Roles to Users</a>
         </tal:block>
         </li>
@@ -106,14 +106,14 @@ function toggleSelect()
                         section_url string:${here/absolute_url}/section_assign_to_groups_html?id=${id}">
         <tal:block tal:condition="python:section=='assign_to_groups'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 class="current_sub"
                 i18n:translate="">Assign Roles to Groups</a>
         </tal:block>
 
         <tal:block tal:condition="python:section!='assign_to_groups'">
             <a tal:attributes="id href_id; href full_url;
-                onclick string:show_fieldset('${href_id}', '${section_url}');;return false;"
+                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
                 i18n:translate="">Assign Roles to Groups</a>
         </tal:block>
         </li>
@@ -124,14 +124,14 @@ function toggleSelect()
 
     <string tal:replace="python:here.deleteCache(user_folder)" />
 
-    <div id="fieldset_wating_response" style="display:none">
+    <div id="section_wating_response" style="display:none">
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting
         </p>
     </div>
 
-    <div id="fieldset_parent">
+    <div id="section_parent">
     <tal:block condition="python:section=='manage_all'">
         <tal:block replace="structure here/section_manage_all_html"/>
     </tal:block>
@@ -152,30 +152,5 @@ function toggleSelect()
     <div class="clear"></div>
 
     <script type="text/javascript">
-        function show_fieldset(id, url) {
-            $('#second_tab_set a.current_sub').removeClass('current_sub');
-            if (id) {
-                $('#'+id).addClass('current_sub');
-            }
-
-            $('#fieldset_wating_response').css('display', 'block');
-            $('#fieldset_parent').css('display', 'none');
-
-            $.ajax({
-                type: 'GET',
-                url: url,
-                success: function(data) {
-                    $('#fieldset_parent').html(data);
-
-                    $('#fieldset_wating_response').css('display', 'none');
-                    $('#fieldset_parent').css('display', 'block');
-                },
-                error: function() {
-                    $('#fieldset_wating_response').css('display', 'none');
-                    alert('Error displaying user management section');
-                }
-            });
-            return false;
-        }
-    </script>
+ </script>
 </tal:block>

@@ -1,0 +1,69 @@
+<tal:block define="
+    users_roles python:here.getSortedUserRoles('', '');
+    groups_roles_map here/get_groups_roles_map;
+    id python:request.get('id', 0);
+    site_path python:here.getSitePath();
+    source_url string:${site_path}/admin_sources_html?id=${id};
+    ajax_group_members_base_url string:${here/absolute_url}/section_group_members_html?id=${id};
+    ">
+<fieldset id="group_field">
+    <legend i18n:translate="">LDAP groups</legend>
+
+    <tal:block condition="python:len(users_roles) > 10">
+    <br />
+    <a href="#users_field" i18n:translate="">Go to users</a>
+    <br />
+    </tal:block>
+
+    <p tal:condition="groups_roles_map" i18n:translate="">
+        Roles currently granted for LDAP groups are listed in the table
+        below. To revoke roles, select them and click on the <em>Revoke
+        roles</em> button.
+    </p>
+    <p tal:condition="not:groups_roles_map" i18n:translate="">
+        No LDAP groups have roles in this portal.
+    </p>
+
+    <form method="post"
+        tal:attributes="action string:${here/absolute_url}/revoke_group_role"
+        tal:condition="groups_roles_map">
+        <table class="datatable ldap_groups">
+            <thead>
+            <th i18n:translate="">Group</th>
+            <th i18n:translate="">Role</th>
+            </thead>
+            <tbody>
+            <tr tal:repeat="group_id groups_roles_map">
+                <td>
+                <a tal:attributes="
+                        href string:${source_url}&s=group_members&group_id=${group_id};
+                        onclick string:show_ldap_section('', '${ajax_group_members_base_url}&group_id=${group_id}');;return false;
+                        title string:Click to see members of ${group_id};"
+                    tal:content="group_id"></a>
+                </td>
+                <td><ul tal:define="
+                        group_roles python:groups_roles_map[group_id]">
+                <li tal:repeat="role_and_location group_roles">
+                    <label tal:define="
+                            role python:role_and_location[0];
+                            location python:role_and_location[1];">
+                    <input type="checkbox" name="roles:list"
+                           tal:attributes="value string:${group_id};;${role};;${location/path}"/>
+                    <em tal:content="role"></em> on
+                    <a tal:condition="not:location/is_site"
+                       tal:content="location/ob/title_or_id"
+                       tal:attributes="href location/ob/absolute_url"
+                       ></a>
+                    <em tal:condition="location/is_site"
+                        >entire portal</em>
+                    </label>
+                </li>
+                </ul></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" i18n:attributes="value"
+               value="Revoke selected roles" />
+    </form>
+</fieldset>
+</tal:block>
