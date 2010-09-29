@@ -33,7 +33,25 @@ class AuthenticationUnitTest(NaayaTestCase):
         self.assertEquals(check_username('!user'), None)
         self.assertEquals(check_username('&*%^@$'), None)
 
-class LDAPUnitTest(NaayaFunctionalTestCase):
+class LDAPBaseUnitTest(NaayaFunctionalTestCase):
+
+    def afterSetUp(self):
+        LDAPDelegate.c_factory = fakeldap.ldapobject.ReconnectLDAPObject
+        fakeldap.clearTree()
+        self.app.manage_delObjects(['acl_users'])
+        self._add_ldap_user_folder()
+
+        dg = ldap_config.defaults.get
+        fakeldap.addTreeItems(dg('users_base'))
+        fakeldap.addTreeItems(dg('groups_base'))
+
+        self._add_user(ldap_config.manager_user)
+        self._add_user(ldap_config.user)
+        self._add_user(ldap_config.user2)
+
+        self.portal.acl_users.manageAddSource('acl_users', 'LDAP')
+        transaction.commit()
+
     def _add_ldap_user_folder(self):
         dg = ldap_config.defaults.get
         manage_addLDAPUserFolder(self.app)
@@ -65,33 +83,13 @@ class LDAPUnitTest(NaayaFunctionalTestCase):
         for role in user_dict['user_roles']:
             if role not in get_group_names():
                 self.app.acl_users.manage_addGroup(role)
+                self.app.acl_users.manage_addGroupMapping(role, role)
         for group in user_dict['ldap_groups']:
             if group not in get_group_names():
                 self.app.acl_users.manage_addGroup(group)
         self.app.acl_users.manage_addUser(REQUEST=None, kwargs=user_dict)
 
-    def setUp(self):
-        NaayaFunctionalTestCase.setUp(self)
-
-        LDAPDelegate.c_factory = fakeldap.ldapobject.ReconnectLDAPObject
-        fakeldap.clearTree()
-        self.app.manage_delObjects(['acl_users'])
-        self._add_ldap_user_folder()
-
-        dg = ldap_config.defaults.get
-        fakeldap.addTreeItems(dg('users_base'))
-        fakeldap.addTreeItems(dg('groups_base'))
-
-        self._add_user(ldap_config.manager_user)
-        self._add_user(ldap_config.user)
-        self._add_user(ldap_config.user2)
-
-        self.portal.acl_users.manageAddSource('acl_users', 'LDAP')
-        transaction.commit()
-
-    def tearDown(self):
-        pass
-
+class LDAPUnitTest(LDAPBaseUnitTest):
     def test_luf_instantiation(self):
         dg = ldap_config.defaults.get
         acl = self.app.acl_users
@@ -121,7 +119,7 @@ class LDAPUnitTest(NaayaFunctionalTestCase):
         ae(len(acl.getSchemaDict()), 2)
         ae(len(acl._groups_store), 0)
         ae(len(acl.getProperty('additional_groups')), 0)
-        ae(len(acl.getGroupMappings()), 0)
+        ae(len(acl.getGroupMappings()), 2)
         ae(len(acl.getServers()), 1)
 
         ug = ldap_config.user.get

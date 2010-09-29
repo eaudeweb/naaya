@@ -81,8 +81,8 @@ user = { 'cn' : 'test'
 manager_user = { 'cn' : 'admin'
                , 'sn' : 'Manager'
                , 'givenName' : 'Test'
-               , 'user_pw' : ''
-               , 'confirm_pw' : ''
+               , 'user_pw' : 'mypass'
+               , 'confirm_pw' : 'mypass'
                , 'user_roles' : ['Manager', 'Administrator']
                , 'ldap_groups' : ['Group3', 'Group4']
                }
@@ -99,5 +99,3 @@ user2 = { 'cn' : 'test2'
         , 'multivalued_attrs' : ['objectClasses']
         , 'ldap_groups' : ['Group1', 'Group2']
         }
-
-
