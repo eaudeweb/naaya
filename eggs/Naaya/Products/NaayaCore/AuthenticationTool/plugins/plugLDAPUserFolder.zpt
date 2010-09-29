@@ -169,6 +169,10 @@ function toggleSelect()
 
                     $('#fieldset_wating_response').css('display', 'none');
                     $('#fieldset_parent').css('display', 'block');
+                },
+                error: function() {
+                    $('#fieldset_wating_response').css('display', 'none');
+                    alert('Error displaying user management section');
                 }
             });
             return false;
