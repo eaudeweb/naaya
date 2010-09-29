@@ -19,6 +19,10 @@
 <p tal:condition="here/description" tal:content="structure here/description" />
 <tal:block define="if python: request.form.get('edit', 0)">
 	<tal:block condition="if">
+		<tal:block define="tmpl nocall:here/aq_parent/validation_html|nothing"
+				   condition="tmpl">
+			<metal:block use-macro="tmpl/macros/validate" />
+		</tal:block>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 				  tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
 		<tal:block define="if python: here.checkPermissionEditAnswers() or (request.AUTHENTICATED_USER.getUserName() != 'Anonymous User' and request.AUTHENTICATED_USER.getUserName() == here.respondent)">
