@@ -1,0 +1,169 @@
+<tal:block define="
+    skey python:request.get('skey', '');
+    rkey python:request.get('rkey', '');
+    id python:request.get('id', 0);
+    site_path python:here.getSitePath();
+    source_url string:${site_path}/admin_sources_html?id=${id};
+    section_url string:${source_url}&s=manage_all;
+    users_roles python:here.getSortedUserRoles(skey, rkey);
+    ajax_base_url string:${here/absolute_url}/users_roles_html?id=${id};
+    ">
+<fieldset id="users_field">
+    <legend i18n:translate="">LDAP users</legend>
+
+    <tal:block condition="python:len(users_roles) > 10">
+    <br />
+    <a href="#group_field" i18n:translate="">Go to groups</a>
+    <br />
+    </tal:block>
+
+    <p tal:condition="users_roles" i18n:translate="">
+        The list below presents the LDAP users that have roles in
+        this portal. You can revoke role(s) assigned to a user by ticking in
+        the appropriate check box and clicking on the <em>Revoke selected
+        roles</em> button.
+    </p>
+    <p tal:condition="not:users_roles" i18n:translate="">
+        No LDAP users have roles in this portal.
+    </p>
+
+    <div id="users_roles_wating_response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting for users roles.
+        </p>
+    </div>
+
+    <form method="post" name="frmRevoke" id="users_table"
+        tal:condition="users_roles"
+        tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
+        <table border="0" cellspacing="2" cellpadding="2" class="datatable">
+        <col width="25%"/>
+        <col width="20%"/>
+        <col width="27.5%"/>
+        <col width="*"/>
+        <tr>
+            <tal:block define="url string:${section_url}&skey=cn">
+            <tal:block tal:condition="python:skey!='cn'">
+            <th>
+                <a title="Sortable" rel="nofollow"
+                    tal:attributes="href url;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn');;return false;"
+                    i18n:translate="" i18n:attributes="title">User Name</a>
+                <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            </tal:block>
+            <tal:block tal:condition="python:skey=='cn'">
+            <th tal:condition="python:rkey==''">
+                <a title="Sorted - Click to reverse" rel="nofollow"
+                    tal:attributes="href string:${url}&rkey=1;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn&rkey=1');;return false;"
+                    i18n:translate="" i18n:attributes="title">User Name</a>
+                <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            <th tal:condition="python:rkey!=''">
+                <a title="Reverse sorted - Click to reverse" rel="nofollow"
+                    tal:attributes="href url;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn');;return false;"
+                    i18n:translate="" i18n:attributes="title">User Name</a>
+                <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            </tal:block>
+            </tal:block>
+
+            <tal:block define="url string:${section_url}&skey=group">
+            <tal:block tal:condition="python:skey!='group'">
+            <th>
+                <a title="Sortable" rel="nofollow"
+                    tal:attributes="href url;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group');;return false;"
+                    i18n:translate="" i18n:attributes="title">Group</a>
+                <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            </tal:block>
+            <tal:block tal:condition="python:skey=='group'">
+            <th tal:condition="python:rkey==''">
+                <a title="Sorted - Click to reverse" rel="nofollow"
+                    tal:attributes="href string:${url}&rkey=1;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group&rkey=1');;return false;"
+                    i18n:translate="" i18n:attributes="title">Group</a>
+                <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            <th tal:condition="python:rkey!=''">
+                <a title="Reverse sorted - Click to reverse" rel="nofollow"
+                    tal:attributes="href url;
+                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group');;return false;"
+                    i18n:translate="" i18n:attributes="title">Group</a>
+                <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
+                    alt="" />
+            </th>
+            </tal:block>
+            </tal:block>
+
+            <th>
+                <input type="checkbox" name="select_all"
+                    onclick="javascript:toggleSelect();"
+                    title="Select/Deselect All" i18n:attributes="title"/>
+                <tal:block i18n:translate="">Roles</tal:block>
+            </th>
+
+            <th i18n:translate="">Location</th>
+        </tr>
+        <tr tal:repeat="user python:users_roles"
+            tal:attributes="class python:test(path('repeat/user/odd'),
+                                                 'odd', 'even')">
+            <td style="vertical-align: top"
+                tal:content="python:user[1] + ' ('+user[0]+')'" />
+            <td style="vertical-align: top"
+                tal:content="python:user[2]" />
+            <td colspan="2" style="vertical-align: top">
+                <table border="0" cellspacing="0" cellpadding="0"
+                    tal:define="roles python:user[3]">
+                <col width="2%"/>
+                <col width="48%"/>
+                <col width="*"/>
+                <tr tal:repeat="role roles">
+                    <tal:block condition="python:role[0] != []">
+                    <td style="vertical-align: top">
+                    <input type="checkbox" name="roles"
+                        tal:attributes="value python:user[0]+'||'+role[1]"
+                        />
+                    </td>
+
+                    <td>
+                    <span tal:replace="python:here.utJoinToString(role[0], ', ')"/>
+                    </td>
+
+                    <td>
+                    <span tal:condition="python:role[1] == ''">
+                        Entire portal
+                    </span>
+                    <tal:block condition="python:role[1] != ''">
+                    <tal:block define="obj python:here.utGetObject(role[1]);
+                                       obj_title obj/title_or_id;
+                                       obj_url obj/absolute_url;">
+                    <span>
+                        <a tal:attributes="href obj_url"
+                           tal:content="obj_title"></a>
+                    </span>
+                    </tal:block>
+                    </tal:block>
+                    </td>
+                    </tal:block>
+                </tr>
+                </table>
+            </td>
+        </tr>
+        </table>
+        <p>
+        <input type="submit" value="Revoke selected roles" />
+        </p>
+    </form>
+
+</fieldset>
+</tal:block>

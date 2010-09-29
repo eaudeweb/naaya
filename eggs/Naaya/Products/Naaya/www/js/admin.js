@@ -43,3 +43,45 @@ $(document).ready(function(){
 function toggleLoader(){
     $('.ajax-loader').toggle();
 }
+
+function show_ldap_section(id, url) {
+    $('#second_tab_set a.current_sub').removeClass('current_sub');
+    if (id) {
+        $('#'+id).addClass('current_sub');
+    }
+
+    $('#section_wating_response').css('display', 'block');
+    $('#section_parent').css('display', 'none');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(data) {
+            $('#section_parent').html(data);
+
+            $('#section_wating_response').css('display', 'none');
+            $('#section_parent').css('display', 'block');
+        },
+        error: function() {
+            $('#section_wating_response').css('display', 'none');
+            alert('Error displaying user management section');
+        }
+    });
+}
+function show_ldap_users_fieldset(url) {
+    $('#users_roles_wating_response').show();
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(data) {
+            $('#users_field').replaceWith(data);
+
+            $('#users_roles_wating_response').hide();
+        },
+        error: function() {
+            $('#users_roles_wating_response').hide();
+            alert('Error displaying users roles');
+        }
+    });
+}
