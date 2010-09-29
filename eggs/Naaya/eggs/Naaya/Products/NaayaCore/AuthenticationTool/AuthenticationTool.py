@@ -39,6 +39,7 @@ from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
 from zope.event import notify
+from persistent.list import PersistentList
 
 #product imports
 from Products.NaayaCore.constants import *
@@ -81,6 +82,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         {'label': 'Other sources', 'action': 'manage_sources_html'},
         {'label': 'Properties', 'action': 'manage_propertiesForm',
          'help': ('OFSP','Properties.stx')},
+        {'label': 'Sending email log',
+         'action': 'manage_send_emails_log_html'},
     )
 
     _properties = (
@@ -1123,6 +1126,31 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return ret
 
+    security.declareProtected(manage_users, 'get_send_emails_log_items')
+    def get_send_emails_log_items(self):
+        """
+        Returns all email errors
+
+        E.g. send email errors are logged on group roles changing.
+        This is done in a separate thread.
+        Errors are appended to '_send_emails_log' attribute.
+        """
+        return getattr(self, '_send_emails_log', PersistentList())[::-1]
+
+    security.declareProtected(manage_users, 'clear_send_emails_log')
+    def clear_send_emails_log(self, REQUEST=None):
+        """
+        Clear all email errors
+
+        E.g. send email errors are logged on group roles changing.
+        This is done in a separate thread.
+        Errors are appended to '_send_emails_log' attribute.
+        """
+        self._send_emails_log = PersistentList()
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('manage_send_emails_log_html')
+
     manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
     manage_editUser_html = PageTemplateFile('zpt/authentication_edituser', globals())
@@ -1132,5 +1160,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     manage_sources_html = PageTemplateFile('zpt/authentication_sources', globals())
     manage_source_html = PageTemplateFile('zpt/authentication_source', globals())
+
+    manage_send_emails_log_html = PageTemplateFile('zpt/authentication_send_emails_log', globals())
 
 InitializeClass(AuthenticationTool)

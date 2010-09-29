@@ -46,6 +46,8 @@ from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEven
 
 from naaya.core.utils import relative_object_path
 
+from send_group_emails_thread import start_sending_emails
+
 plug_name = 'plugLDAPUserFolder'
 plug_doc = 'Plugin for LDAPUserFolder'
 plug_version = '1.0.0'
@@ -304,15 +306,8 @@ class plugLDAPUserFolder(PlugBase):
         ob.acl_satellite.add_group_roles(group, roles)
         if send_mail:
             userids = self.group_member_ids(group)
-
-            site = self.getSite()
-            auth_tool = site.getAuthenticationTool()
-            emails = auth_tool.getUsersEmails(userids)
-            for email in emails:
-                try:
-                    site.sendAccountModifiedEmail(email, roles, loc, location)
-                except:
-                    pass
+            start_sending_emails(self.getSite(),
+                    group, userids, roles, loc, location)
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
