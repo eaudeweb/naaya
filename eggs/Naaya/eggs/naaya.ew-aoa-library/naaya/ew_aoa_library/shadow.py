@@ -241,7 +241,7 @@ class AssessmentShadow(SimpleItem):
             survey_answer._p_changed = True
             email_introduction = 'The administrator of the AoA portal has made the following commentaries regarding your review of the report "%s" submitted at %s?edit=1:\n\n' % (getattr(survey_answer, 'w_q1-name-assessment-report'), survey_answer.absolute_url())
             email_body = suggestion
-            email_ending = '\n Please use link above to edit your answer.'
+            email_ending = ''
             email_to = str(survey_answer.w_email)
             email_from = 'no-reply@aoa.eea.europa.eu'
             email_subject = 'Suggestion for review of report %s' % getattr(survey_answer, 'w_q1-name-assessment-report')
