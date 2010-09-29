@@ -1,31 +1,18 @@
-import sys
-import os
-import re
-import optparse
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
 
 class NaayaPortalPropertiesTest(SeleniumTestCase):
-        #This test verifies the next:
-        #1.Overview
-        #2.Portal Properites -- Metadata
-        #3.Portal Properites -- Portal logos
-        #4.Portal Properites -- Email Settings
-        #5.Portal Properites -- Other Properties
-        #6.notifications
+    """This test verifies the next:
+    - Portal Properites -- Metadata
+    - Portal Properites -- Email Settings
+    - Portal Properites -- Other Properties
+    - notifications
+    
+    """
+
     def selenium_initialize(self):
         selen = self.selenium
         self.login_user('admin', '')
-
-    def test_portal_overview(self):
-        """overview check"""
-        selen = self.selenium
-        self.selenium_initialize()
-        selen.open("/portal/admin_users_html", True)
-        selen.click("link=Overview")
-        selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present
-                            ("//div[@id='center_content']/div[3]/img"))
 
     def test_portal_metadata(self):
         """portal properties testing"""
@@ -40,7 +27,6 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         }
         self.selenium_type_metadata(metadata_feature)
 
-        self.assertTrue(self.selenium_verify_error_page())
         self.assertEqual("%s - %s"
             % (metadata_feature['site_title'],metadata_feature['site_subtitle']),
             selen.get_title(), 'Incorect metadata ')
@@ -48,64 +34,12 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
     def selenium_type_metadata(self,metadata_feature):
         selen = self.selenium
         selen.open("/portal/admin_metadata_html", True)
-        self.assertTrue(selen.is_element_present
-                             ("//div[@id=tabbedmenu]/div.edit-holder"))
 
         selen.type("site_title:utf8:ustring", metadata_feature['site_title'])
         selen.type("site_subtitle:utf8:ustring", metadata_feature['site_subtitle'])
         selen.type("publisher:utf8:ustring", metadata_feature['publisher'])
         selen.type("contributor:utf8:ustring", metadata_feature['contributor'])
         selen.type("rights:utf8:ustring", metadata_feature['rights'])
-        selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
-
-    def test_language_logos(self):
-        selen = self.selenium
-        self.selenium_initialize()
-        selen.open("/portal/admin_logos_html", True)
-        self.assertTrue(selen.is_element_present("//div.logos"))
-
-        self.selenium_add_language('fr')
-        self.selenium_assign_left_logo()
-        self.selenium_assign_right_logo()
-        self.selenium_delete_left_logo()
-        self.selenium_delete_right_logo()
-
-        self.selenium_arrange_logos_bug()
-
-    def selenium_add_language(self, lang):
-        selen = self.selenium
-        self.logout_user()
-        self.login_user('admin', '')
-        selen.open("/portal/portal_properties/manage_languages_html", True)
-        if lang == 'fr':
-            selen.select("language", "label=French [fr]")
-            selen.click("//input[@value='Add']")
-        self.logout_user()
-        self.selenium_initialize()
-
-    def selenium_assign_left_logo(self, lang):
-        selen = self.selenium
-        selen.type("logo", "/home/decebal/Pictures/images.jpeg")
-        selen.click("default_lang_en")
-        selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
-
-    def selenium_delete_left_logo(self, lang):
-        selen = self.selenium
-        selen.click("del_leftlogo_en")
-        selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
-
-    def selenium_assign_right_logo(self, lang):
-        selen = self.selenium
-        selen.type("logobis", "/home/decebal/Pictures/images.jpeg")
-        selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
-
-    def selenium_delete_right_logo(self, lang):
-        selen = self.selenium
-        selen.click("del_rightlogo_en")
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load("30000")
 
@@ -193,10 +127,10 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         """testing Notifications from the administration menu"""
         self.selenium_initialize()
         selen = self.selenium
-        selen.open("/portal_notification/admin_html", True)
+        selen.open("portal/portal_notification/admin_html", True)
         self.selenium_add_subscription()
         self.assertFalse(selen.is_text_present('Error page'),
-                         'Failed to add subscrition')
+                         'Failed to add subscription')
 
     def selenium_add_subscription(self):
         """subscribe to instant notifications"""

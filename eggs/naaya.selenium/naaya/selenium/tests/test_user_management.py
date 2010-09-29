@@ -212,3 +212,4 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.get_text(
             "//table[@class='datatable']/tbody/tr[last()]") != role_row_text
+

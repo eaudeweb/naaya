@@ -1,8 +1,4 @@
-# -*- coding: UTF-8 -*-
-import sys
-import os
-import re
-import optparse
+#encoding: UTF-8
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
 
@@ -128,7 +124,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         """checks if there had been an eror page and compares the input with output"""
         selen = self.selenium
         if selen.is_element_present("//div[@id='middle_port']/"
-                                      "h1[text()='Error page']"):
+                                    "h1[text()='Error page']"):
             return self.fail('Crashed while delivering the translation')
 
     def selenium_verify_translation(self, in_str):
