@@ -1,0 +1,66 @@
+<fieldset>
+    <legend i18n:translate="">LDAP groups</legend>
+    <div id="grant_roles_block">
+    <form name="group-roles" method="post"
+          tal:attributes="action string:${here/absolute_url}/map_group_to_role"
+          id="gr_roles">
+        <p i18n:translate="">
+        Type a LDAP group or select one from the list generated
+        when pressing the <em>pick</em> button, then select what
+        role you wish to grant to that group.
+        </p>
+
+        <div class="field">
+        <label for="ldap_group" i18n:translate="">LDAP group</label>
+        <input type="text" id="ldap_group" name="group"/>
+        <input type="button" name="pickroles2" value="Pick"
+               tal:define="
+                    url string:${here/getPluginPath}/pickroles_html;
+                    js_code string:fPickRoles('${url}', 'ldap_group');"
+               tal:attributes="onclick string:javascript:${js_code}" />
+        </div>
+
+        <div class="field">
+        <label for="portal_roles" i18n:translate="">Role to grant</label>
+        <select multiple="multiple" id="portal_roles" name="roles:list">
+                <tal:block repeat="item here/list_valid_roles">
+                <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+                        tal:attributes="value item" tal:content="item" />
+                <option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
+                </tal:block>
+        </select>
+        </div>
+
+        <div class="field">
+        <input type="radio" name="loc" value="allsite" checked="checked"
+               onclick="emptyLocation('group-roles');"
+               i18n:translate=""/> Entire portal<br />
+        <input type=radio name="loc" value="other"
+               i18n:translate="" /> Pick other...<br />
+        <input type=text name="location" size="40" onclick="pickLocation();" value="" />
+        <input type="button" value="Pick" i18n:translate=""
+               tal:define="site here/getSite;
+                   acl_users site/getAuthenticationTool"
+               tal:attributes="onclick string:onclick_pick_location('group-roles');;" />
+        </div>
+
+        <div class="field">
+            <label for="send_mail" i18n:translate="">
+                Send a notification email to each user in the group
+            </label>
+            <input type="checkbox" id="send_mail" name="send_mail" />
+        </div>
+        <div class="field">
+            <strong i18n:translate="">
+                WARNING: sending notification emails can take a long
+                time for large user groups
+            </strong>
+        </div>
+
+        <div>
+            <input type="submit" value="Grant roles"
+                i18n:attributes="value"/>
+        </div>
+    </form>
+    </div>
+</fieldset>

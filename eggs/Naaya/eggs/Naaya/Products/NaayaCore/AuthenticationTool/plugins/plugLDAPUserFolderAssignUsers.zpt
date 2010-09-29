@@ -1,0 +1,161 @@
+<tal:block define="
+    user_folder python:here.getUserFolder();
+    req_role python:request.get('req_role', '');
+    req_location python:request.get('req_location', '');
+    source_id python:request.get('id', '');
+    ">
+<fieldset id="assign_to_users">
+    <legend i18n:translate="">LDAP users</legend>
+
+    <p>
+        Use this form to find users from the LDAP directory, view their
+        details and assign them roles in the current portal.
+    </p>
+
+    <form method="post" action="" name="frmRoles" id="frmRoles">
+        <input type="hidden" name="s" value="assign_to_users" />
+        <input type="hidden" name="search" value="" />
+        <input type="hidden" name="id" tal:attributes="value source_id" />
+        <input type="hidden" name="dn" />
+        <table border="0" cellspacing="4" cellpadding="0">
+        <tr>
+            <td width="20"><div style="white-space: nowrap; ">
+                <label for="params">Matching criteria</label>
+            </div></td>
+            <td width="1">
+            <select id="params" name="params" tal:define="
+                    ldap_schema python:here.getLDAPSchema(user_folder)">
+                <option tal:repeat="item ldap_schema"
+                    tal:attributes="value python:item[0]"
+                    tal:content="python:'%s (%s)' % (item[1], item[0])"/>
+            </select>
+            </td>
+
+            <td width="1"><label for="term">containing</label></td>
+            <td width="1">
+                <input type="text" id="term" name="term" value="" />
+            </td>
+            <td>
+                <input type="submit" name="search_user" value="Search" />
+            </td>
+        </tr>
+        <tr>
+            <td><strong>OR</strong></td>
+        </tr>
+        <tr>
+            <td width="20"><div style="white-space: nowrap; ">
+                <label for="role">which have the role</label>
+            </div></td>
+            <td width="1">
+                <input type="text" id="role" name="role" size="15" />
+            </td>
+            <td width="1">
+                <input type="button" name="pickroles2" value="   Pick   "
+                    tal:define="
+                        url string:${here/getPluginPath}/pickroles_html;
+                        js_code string:fPickRoles('${url}', 'dn');"
+                    tal:attributes="onclick string:javascript:${js_code}" />
+            </td>
+            <td width="1">&nbsp;</td>
+            <td>
+                <input type="submit" name="search_role" value="Search" />
+            </td>
+        </tr>
+        </table>
+    </form>
+
+    <tal:block define="is_user_search python:request.has_key('search_user');
+                       is_role_search python:request.has_key('search_role');
+                       search_param python:request.get('params', '');
+                       search_term python:request.get('term', '');
+                       role python:request.get('role', '');
+                       dn python:request.get('dn', '');
+                       ldap_users python:here.findLDAPUsers(user_folder,
+                                                            search_param,
+                                                            search_term,
+                                                            role,
+                                                            dn);"
+               condition="python:is_user_search or is_role_search">
+
+    <tal:block condition="ldap_users">
+    <p tal:condition="is_user_search">
+        Users found for <strong tal:content="search_term" /> search term
+    </p>
+    <p tal:condition="is_role_search">
+        Users found with <strong tal:content="role" /> role
+    </p>
+    </tal:block>
+    <p tal:condition="not:ldap_users" i18n:translate="">
+        No LDAP users matching the selected criteria.
+    </p>
+
+    <tal:block condition="python:len(ldap_users) > 10">
+    &middot;&nbsp;
+    <a href="#assign_roles" i18n:translate=""
+        >Jump to assign roles to selected users</a>
+    </tal:block>
+
+    <form name="user-roles" method="post"
+        tal:condition="ldap_users"
+        tal:attributes="action string:${here/absolute_url}/addUserRoles">
+        <table class="datatable" width="95%" id="search_results">
+        <tr>
+            <th></th>
+            <th>User ID</th>
+            <th>Canonical name</th>
+            <th width="60%">Distinguished Name</th>
+        </tr>
+        <tr tal:repeat="item ldap_users"
+            tal:attributes="class python:test(path('repeat/item/odd'),
+                                                 'odd', 'even')">
+            <td>
+                <input type="checkbox" name="name:list"
+                    tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/>
+            </td>
+            <td tal:content="python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">uid</td>
+            <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
+            <td tal:content="python:item['dn']">dn</td>
+        </tr>
+        </table>
+
+        <tal:block tal:condition="python:len(ldap_users) > 10">
+        &middot;&nbsp;<a href="#assign_to_users">Go back to top</a>
+        </tal:block>
+
+        <table border="0" cellspacing="2" cellpadding="2" class="datatable"
+            id="assign_roles">
+        <tr>
+            <td style="vertical-align: top">Roles</td>
+            <td>
+            <select name="roles:list" size="5" multiple="multiple">
+                <tal:block repeat="item here/list_valid_roles">
+                <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+                        tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+                <option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+                </tal:block>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
+            <td>
+            <input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation('user-roles');" /> Entire portal<br />
+            <input type=radio name="loc" value="other" tal:attributes="checked req_location" /> Pick other...<br />
+            <input type=text name="location" size="50" onclick="pickLocation();" value="" tal:attributes="value req_location" />
+            <input type="button" value="Pick" tal:attributes="onclick string:javascript:onclick_pick_location('user-roles');" />
+            </td>
+        </tr>
+        <tr>
+            <td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+            <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
+        </tr>
+        </table>
+        <p>
+        <input type="hidden" name="uf" tal:attributes="value here/obj_path" />
+        <input type="hidden" name="user_location" tal:attributes="value python:test(role, role, 'Users')" />
+        <input type="submit" name="add" value="Assign role" />
+        </p>
+    </form>
+    </tal:block>
+</fieldset>
+</tal:block>

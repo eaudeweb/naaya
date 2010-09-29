@@ -482,6 +482,18 @@ class plugLDAPUserFolder(PlugBase):
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
 
+    security.declarePublic('section_manage_all_html')
+    section_manage_all_html = PageTemplateFile('plugLDAPUserFolderManage', globals())
+
+    security.declarePublic('section_assign_to_users_html')
+    section_assign_to_users_html = PageTemplateFile('plugLDAPUserFolderAssignUsers', globals())
+
+    security.declarePublic('section_assign_to_groups_html')
+    section_assign_to_groups_html = PageTemplateFile('plugLDAPUserFolderAssignGroups', globals())
+
+    security.declarePublic('section_group_members_html')
+    section_group_members_html = PageTemplateFile('plugLDAPUserFolderGroupMembers', globals())
+
     security.declarePublic('pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())
 
