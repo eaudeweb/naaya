@@ -183,6 +183,7 @@
                 <td>
                 <a tal:attributes="
                         href string:${source_url}&s=group_members&group_id=${group_id};
+                        onclick string:show_fieldset('', '${here/absolute_url}/section_group_members_html?id=${id}&group_id=${group_id}');;return false;
                         title string:Click to see members of ${group_id};"
                     tal:content="group_id"></a>
                 </td>
