@@ -23,6 +23,11 @@ import sys
 from itertools import groupby
 from cStringIO import StringIO
 import csv
+try:
+    import xlwt
+    excel_export_available = True
+except:
+    excel_export_available = False
 
 #Zope imports
 from Globals import InitializeClass
@@ -30,12 +35,10 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-#Product imports
 from Paragraph import Paragraph
 from constants import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
                        PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
-
-#local imports
+from Products.NaayaCore.managers.import_export import set_response_attachment
 
 class CommentsAdmin(SimpleItem):
     security = ClassSecurityInfo()
@@ -95,13 +98,47 @@ class CommentsAdmin(SimpleItem):
         }
         return self._admin_template(REQUEST, **options)
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
-                              'export_csv')
-    def export_csv(self, REQUEST, RESPONSE):
-        """ export all comments as CSV """
+    security.declarePrivate('generate_csv_output')
+    def generate_csv_output(self, fields, comments):
 
-        data_file = StringIO()
-        csv_writer = csv.writer(data_file)
+        output = StringIO()
+        csv_writer = csv.writer(output)
+
+        csv_writer.writerow([field[0] for field in fields])
+
+        for n, comment in enumerate(comments):
+            row = [field[1](comment).encode('utf-8') for field in fields]
+            csv_writer.writerow(row)
+        return output.getvalue()
+
+    security.declarePrivate('generate_excel_output')
+    def generate_excel_output(self, fields, comments):
+
+        style = xlwt.XFStyle()
+        normalfont = xlwt.Font()
+        header = xlwt.Font()
+        header.bold = True
+        style.font = header
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Sheet 1')
+        row = 0
+        for col in range(0, len(fields)):
+            ws.row(row).set_cell_text(col, fields[col][0], style)
+        style.font = normalfont
+
+        for comment in comments:
+            row += 1
+            for col in range(0, len(fields)):
+                ws.row(row).set_cell_text(col, fields[col][1](comment), style)
+        output = StringIO()
+        wb.save(output)
+
+        return output.getvalue()
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'export')
+    def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
+        """ """
 
         html2text = self.getSite().html2text
         def plain(s, trim=None):
@@ -109,29 +146,35 @@ class CommentsAdmin(SimpleItem):
 
         fields = [
             ('Section', lambda c: c.get_section().title_or_id()),
-            ('Paragraph', lambda c: c.get_paragraph().absolute_url()),
-            ('Paragraph text', lambda c: plain(c.get_paragraph().body, 100)),
+            ('Paragraph', lambda c: plain(c.get_paragraph().body, 100)),
+            ('Message Id', lambda c: c.getId()),
+            ('In reply to', lambda c: c.reply_to or ''),
+            ('Message', lambda c: plain(c.message)),
             ('Contributor', lambda c: c.get_contributor_name()),
             ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
-            ('Message', lambda c: c.message),
-            ('Message (plain text)', lambda c: plain(c.message)),
+            ('Paragraph url', lambda c: c.get_paragraph().absolute_url()),
         ]
 
-        csv_writer.writerow([field[0] for field in fields])
-
         comments = [c for c in self._iter_comments() if c.approved]
-        comments.sort(key=dict(fields)['Date'])
+        comments.sort(key=lambda c: (c.get_paragraph().id, c.comment_date))
 
-        for comment in comments:
-            row = [field[1](comment).encode('utf-8') for field in fields]
-            csv_writer.writerow(row)
+        if file_type == 'CSV':
+            ret = self.generate_csv_output(fields, comments)
+            content_type = 'text/csv; charset=utf-8'
+            filename = 'comments.csv'
 
-        raw_data = data_file.getvalue()
+        elif file_type == 'Excel':
+            assert excel_export_available
+            ret = self.generate_excel_output(fields, comments)
+            content_type = 'application/vnd.ms-excel'
+            filename = 'comments.xls'
 
-        RESPONSE.setHeader('Content-Type', 'text/csv;charset=utf-8')
-        RESPONSE.setHeader('Content-Length', len(raw_data))
-        RESPONSE.setHeader('Content-Disposition',
-                           "attachment; filename=comments.csv")
-        return raw_data
+        else: raise ValueError('unknown file format %r' % file_type)
+
+        if as_attachment and REQUEST is not None:
+            filesize = len(ret)
+            set_response_attachment(REQUEST.RESPONSE, filename,
+                content_type, filesize)
+        return ret
 
 InitializeClass(CommentsAdmin)
