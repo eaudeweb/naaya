@@ -69,7 +69,8 @@ class OAIAggregator(OAIRepository):
 
     security = ClassSecurityInfo()
 
-    security.declarePrivate('initialize')
+    security.declareProtected(view_management_screens,
+                              'initialize')
     def initialize(self):
         """ Create what OAIRepository requires. ZCatalog and ZCatalog indexes,
         Create a sqlalchemy storage. It is done here and not in OAIRepository
