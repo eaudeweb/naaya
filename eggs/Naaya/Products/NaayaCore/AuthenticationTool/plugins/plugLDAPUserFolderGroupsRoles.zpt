@@ -4,7 +4,6 @@
     id python:request.get('id', 0);
     site_path python:here.getSitePath();
     source_url string:${site_path}/admin_sources_html?id=${id};
-    ajax_group_members_base_url string:${here/absolute_url}/section_group_members_html?id=${id};
     ">
 <fieldset id="group_field">
     <legend i18n:translate="">LDAP groups</legend>
@@ -35,9 +34,9 @@
             <tbody>
             <tr tal:repeat="group_id groups_roles_map">
                 <td>
-                <a tal:attributes="
+                <a class="group_link"
+                    tal:attributes="
                         href string:${source_url}&s=group_members&group_id=${group_id};
-                        onclick string:show_ldap_section('', '${ajax_group_members_base_url}&group_id=${group_id}');;return false;
                         title string:Click to see members of ${group_id};"
                     tal:content="group_id"></a>
                 </td>

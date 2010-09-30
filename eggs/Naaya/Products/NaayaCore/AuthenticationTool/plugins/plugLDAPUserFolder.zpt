@@ -65,57 +65,33 @@ function toggleSelect()
             section python:request.get('s', 'manage_all');
             source_url string:${site_path}/admin_sources_html?id=${id};">
 
-    <div id="second_tab_set" class="second_tab_set">
+    <div class="second_tab_set">
     <ul>
-        <li tal:define="href_id string:tab_manage_all;
-                        full_url string:${source_url}&s=manage_all;
-                        section_url string:${here/absolute_url}/section_manage_all_html?id=${id}">
-        <tal:block tal:condition="python:section=='manage_all'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                class="current_sub"
+        <li>
+            <a id="link_manage_all"
+                tal:attributes="href string:${source_url}&s=manage_all;
+                class python:test(section=='manage_all',
+                                 'current_sub second_tab',
+                                 'second_tab');"
                 i18n:translate="">Manage Users & Groups</a>
-        </tal:block>
-
-        <tal:block tal:condition="python:section!='manage_all'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                i18n:translate="">Manage Users & Groups</a>
-        </tal:block>
         </li>
 
-        <li tal:define="href_id string:tab_assign_to_users;
-                        full_url string:${source_url}&s=assign_to_users;
-                        section_url string:${here/absolute_url}/section_assign_to_users_html?id=${id}">
-        <tal:block tal:condition="python:section=='assign_to_users'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                class="current_sub"
+        <li>
+            <a id="link_assign_to_users"
+                tal:attributes="href string:${source_url}&s=assign_to_users;
+                class python:test(section=='assign_to_users',
+                                 'current_sub second_tab',
+                                 'second_tab');"
                 i18n:translate="">Assign Roles to Users</a>
-        </tal:block>
-
-        <tal:block tal:condition="python:section!='assign_to_users'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                i18n:translate="">Assign Roles to Users</a>
-        </tal:block>
         </li>
 
-        <li tal:define="href_id string:tab_assign_to_groups;
-                        full_url string:${source_url}&s=assign_to_groups;
-                        section_url string:${here/absolute_url}/section_assign_to_groups_html?id=${id}">
-        <tal:block tal:condition="python:section=='assign_to_groups'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                class="current_sub"
+        <li>
+            <a id="link_assign_to_groups"
+                tal:attributes="href string:${source_url}&s=assign_to_groups;
+                class python:test(section=='assign_to_groups',
+                                 'current_sub second_tab',
+                                 'second_tab')"
                 i18n:translate="">Assign Roles to Groups</a>
-        </tal:block>
-
-        <tal:block tal:condition="python:section!='assign_to_groups'">
-            <a tal:attributes="id href_id; href full_url;
-                onclick string:show_ldap_section('${href_id}', '${section_url}');;return false;"
-                i18n:translate="">Assign Roles to Groups</a>
-        </tal:block>
         </li>
     </ul>
     </div>
@@ -128,6 +104,12 @@ function toggleSelect()
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting
+        </p>
+    </div>
+
+    <div id="section_error_response" class="message-error" style="display:none">
+        <p i18n:translate="">
+            Error displaying user management section.
         </p>
     </div>
 
@@ -151,6 +133,4 @@ function toggleSelect()
 
     <div class="clear"></div>
 
-    <script type="text/javascript">
- </script>
 </tal:block>
