@@ -18,7 +18,7 @@
 # Alex Morega, Eau de Web
 
 from unittest import TestSuite, makeSuite
-
+import transaction
 from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.Naaya.tests import NaayaTestCase, NaayaFunctionalTestCase
@@ -251,8 +251,52 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.failUnlessEqual(contact.discussion, False)
         self.failUnlessEqual(contact.releasedate, DateTime(2009, 02, 13))
 
+    def test_multipleselect_widget(self):
+        #https://svn.eionet.europa.eu/projects/Naaya/ticket/400
+        from Products.NaayaCore.PortletsTool.RefTree import manage_addRefTree
+        from Products.NaayaCore.PortletsTool.RefTreeNode import manage_addRefTreeNode
+        from Products.Naaya.NyFolder import addNyFolder
+
+        #add reftree
+        portlets_tool = self.portal.getPortletsTool()
+        manage_addRefTree(portlets_tool, 'theme', 'Theme', 'Theme description', 'en')
+        manage_addRefTreeNode(portlets_tool.theme, 'node1', 'Node 1', lang="en")
+        manage_addRefTreeNode(portlets_tool.theme, 'node2', 'Node 2', lang='en')
+
+        #add new widget
+        schema = self.portal.portal_schemas.NyEvent
+        schema.addWidget('theme', widget_type='SelectMultiple', data_type='list', visible = True, list_id = 'theme')
+
+        #add folder
+        addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
+        transaction.commit()
+
+        #go to event add page
+        self.browser.go('http://localhost/portal/myfolder/event_add_html')
+        form = self.browser.get_form('frmAdd')
+
+        #check widget values
+        field = self.browser.get_form_field(form, 'theme:utf8:ustring:list')
+        self.failUnlessEqual(field.items[0].name, 'node1')
+        self.failUnlessEqual(len(field.items), 2)   #we have 2 nodes in theme reftree
+
+        #add event metadata but omit to fill in values for our widget
+        form['title:utf8:ustring'] = 'test_event'
+        form['description:utf8:ustring'] = 'test_event_description'
+        form['coverage:utf8:ustring'] = 'test_event_coverage'
+        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['details:utf8:ustring'] = 'test_event_details'
+        form['start_date'] = '10/10/2000'
+        # generate a 'click' event so the browser knows what form we want to submit
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        self.browser.submit()
+
+        # check if the changes were saved correctly
+        event = self.portal.myfolder.test_event
+        self.failUnlessEqual(event.title, 'test_event')
+        self.failUnlessEqual(event.theme, [])
+
     def test_hidden_property(self):
-        import transaction
         self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = False
         self.portal.info.contact.discussion = 1
         transaction.commit()
