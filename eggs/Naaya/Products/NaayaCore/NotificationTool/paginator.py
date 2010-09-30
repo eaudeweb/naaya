@@ -163,14 +163,14 @@ class ExPaginator(Paginator):
     >>> paginator = ExPaginator(items, 10)
     >>> paginator.page(1000)
     Traceback (most recent call last):
-    InvalidPage: That page contains no results
+    EmptyPage: That page contains no results
     >>> paginator.page(1000, softlimit=True)
     <Page 100 of 100>
 
     # [bug] graceful handling of non-int args
     >>> paginator.page("str")
     Traceback (most recent call last):
-    InvalidPage: That page number is not an integer
+    PageNotAnInteger: That page number is not an integer
     """
     def _ensure_int(self, num, e):
         # see Django #7307

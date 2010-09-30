@@ -55,6 +55,7 @@ from naaya.core.utils import force_to_unicode
 from naaya.core.utils import ofs_path
 from naaya.core.zope2util import folder_manage_main_plus
 from paginator import DiggPaginator, EmptyPage, InvalidPage
+from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
 from interfaces import ISubscription
@@ -170,18 +171,18 @@ class NotificationTool(Folder):
     def add_account_subscription(self, user_id, location, notif_type, lang):
         """ Subscribe the user `user_id` """
         if notif_type not in ('instant', 'daily', 'weekly', 'monthly'):
-            raise ValueError(('Unknown notification type "${type}"', {'type': notif_type}, ))
+            raise i18n_exception(ValueError, 'Unknown notification type "${type}"', type=notif_type)
         if self.config['enable_%s' % notif_type] is False:
-            raise ValueError(('Notifications of type "${type}" not allowed', {'type': notif_type}, ))
+            raise i18n_exception(ValueError, 'Notifications of type "${type}" not allowed', type=notif_type)
         if notif_type not in self.available_notif_types(location):
-            raise ValueError(('Subscribing to notifications in "${location}" not allowed', {'location': location}, ))
+            raise i18n_exception(ValueError, 'Subscribing to notifications in "${location}" not allowed', location=location)
 
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
         n = match_account_subscription(subscription_container,
                                        user_id, notif_type, lang)
         if n is not None:
-            raise ValueError(('Subscription already exists', ))
+            raise ValueError('Subscription already exists')
 
         subscription = AccountSubscription(user_id, notif_type, lang)
         subscription_container.add(subscription)
@@ -397,7 +398,7 @@ class NotificationTool(Folder):
     def itemsPaginator(self, REQUEST):
         """ """
         items_list = list(self.admin_get_subscriptions())
-        paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)   #Show 10 documents per page
+        paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)
 
         # Make sure page request is an int. If not, deliver first page.
         try:
@@ -405,11 +406,11 @@ class NotificationTool(Folder):
         except ValueError:
             page = 1
 
-        # If page request (9999) is out of range, deliver last page of results.
+        # If requested page is out of range, deliver first page.
         try:
             items = paginator.page(page)
-        except (EmptyPage, InvalidPage):
-            items = paginator.page(paginator.num_pages)
+        except InvalidPage:
+            items = paginator.page(1)
 
         return items
 

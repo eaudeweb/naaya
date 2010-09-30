@@ -438,9 +438,11 @@ class NotificationsUiApiTest(BaseNotificationsTest):
     def test_add_account_subscription(self):
         notif_tool = self.portal.getNotificationTool()
 
-        self.assertRaisesWithMessage(ValueError, ('Notifications of type "${type}" not allowed', {'type': 'instant'}, ),
+        self.assertRaisesWithMessage(ValueError,
+                                     'Notifications of type "instant" not allowed',
             self.add_account_subscription, 'user1', '', 'instant', 'en')
-        self.assertRaisesWithMessage(ValueError, ('Notifications of type "${type}" not allowed', {'type': 'weekly'}, ),
+        self.assertRaisesWithMessage(ValueError,
+                                     'Notifications of type "weekly" not allowed',
             self.add_account_subscription, 'user2', 'fol1', 'weekly', 'en')
 
         notif_tool.config['enable_instant'] = True
