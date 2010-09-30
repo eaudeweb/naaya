@@ -193,7 +193,7 @@ class Schema(Folder):
                 if not _all_values:
                     continue
                 if widget.data_type == 'list':
-                    value = []  #[widget.default, ]??? https://svn.eionet.europa.eu/projects/Naaya/ticket/400 (tests to be made)
+                    value = []
                 else:
                     value = widget.default
 
