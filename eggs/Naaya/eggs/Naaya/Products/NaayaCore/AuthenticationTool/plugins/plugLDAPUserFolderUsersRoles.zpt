@@ -34,6 +34,13 @@
         </p>
     </div>
 
+    <div id="users_roles_error_response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error displaying users roles.
+        </p>
+    </div>
+
     <form method="post" name="frmRevoke" id="users_table"
         tal:condition="users_roles"
         tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
@@ -46,9 +53,8 @@
             <tal:block define="url string:${section_url}&skey=cn">
             <tal:block tal:condition="python:skey!='cn'">
             <th>
-                <a title="Sortable" rel="nofollow"
-                    tal:attributes="href url;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn');;return false;"
+                <a title="Sortable" rel="nofollow" class="sort_link"
+                    tal:attributes="href url"
                     i18n:translate="" i18n:attributes="title">User Name</a>
                 <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
                     alt="" />
@@ -57,16 +63,16 @@
             <tal:block tal:condition="python:skey=='cn'">
             <th tal:condition="python:rkey==''">
                 <a title="Sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href string:${url}&rkey=1;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn&rkey=1');;return false;"
+                    class="sort_link"
+                    tal:attributes="href string:${url}&rkey=1"
                     i18n:translate="" i18n:attributes="title">User Name</a>
                 <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
                     alt="" />
             </th>
             <th tal:condition="python:rkey!=''">
                 <a title="Reverse sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href url;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=cn');;return false;"
+                    class="sort_link"
+                    tal:attributes="href url"
                     i18n:translate="" i18n:attributes="title">User Name</a>
                 <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
                     alt="" />
@@ -77,9 +83,8 @@
             <tal:block define="url string:${section_url}&skey=group">
             <tal:block tal:condition="python:skey!='group'">
             <th>
-                <a title="Sortable" rel="nofollow"
-                    tal:attributes="href url;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group');;return false;"
+                <a title="Sortable" rel="nofollow" class="sort_link"
+                    tal:attributes="href url"
                     i18n:translate="" i18n:attributes="title">Group</a>
                 <img src="misc_/Naaya/sort_not.gif" width="12" height="12"
                     alt="" />
@@ -88,16 +93,16 @@
             <tal:block tal:condition="python:skey=='group'">
             <th tal:condition="python:rkey==''">
                 <a title="Sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href string:${url}&rkey=1;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group&rkey=1');;return false;"
+                    class="sort_link"
+                    tal:attributes="href string:${url}&rkey=1"
                     i18n:translate="" i18n:attributes="title">Group</a>
                 <img src="misc_/Naaya/sort_asc.gif" width="12" height="12"
                     alt="" />
             </th>
             <th tal:condition="python:rkey!=''">
                 <a title="Reverse sorted - Click to reverse" rel="nofollow"
-                    tal:attributes="href url;
-                    onclick string:show_ldap_users_fieldset('${ajax_base_url}&skey=group');;return false;"
+                    class="sort_link"
+                    tal:attributes="href url"
                     i18n:translate="" i18n:attributes="title">Group</a>
                 <img src="misc_/Naaya/sort_desc.gif" width="12" height="12"
                     alt="" />

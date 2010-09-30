@@ -38,50 +38,92 @@ $(document).ready(function(){
             }
         });
     });
+    add_onclick_second_tabs();
+    add_onclick_sort_links();
+    add_onclick_group_links();
 });
 
 function toggleLoader(){
     $('.ajax-loader').toggle();
 }
 
-function show_ldap_section(id, url) {
-    $('#second_tab_set a.current_sub').removeClass('current_sub');
-    if (id) {
-        $('#'+id).addClass('current_sub');
+/**
+ * Functions for LDAPUserFolder
+*/
+function select_second_tab(tabid) {
+    $('.second_tab_set a.current_sub').removeClass('current_sub');
+    if (tabid) {
+        $('#'+tabid).addClass('current_sub');
     }
+}
 
-    $('#section_wating_response').css('display', 'block');
-    $('#section_parent').css('display', 'none');
+function add_onclick_sort_links() {
+    $('.sort_link').click(function() {
+        show_ldap_users_fieldset($(this).attr('href'));
+        return false;
+    });
+}
+
+function add_onclick_second_tabs() {
+    $('.second_tab').click(function() {
+        show_ldap_section($(this).attr('id'), $(this).attr('href'));
+        return false;
+    });
+}
+
+function add_onclick_group_links() {
+    $('.group_link').click(function() {
+        show_ldap_section('', $(this).attr('href'));
+        return false;
+    });
+}
+
+function show_ldap_section(tabid, url) {
+    select_second_tab(tabid);
+
+    $('#section_wating_response').show();
+    $('#section_parent').hide();
 
     $.ajax({
-        type: 'GET',
         url: url,
         success: function(data) {
-            $('#section_parent').html(data);
+            var html = $("#section_parent", $(data)).html();
+            $('#section_parent').html(html);
 
-            $('#section_wating_response').css('display', 'none');
-            $('#section_parent').css('display', 'block');
+            if (tabid == 'link_manage_all') {
+                add_onclick_sort_links();
+                add_onclick_group_links();
+            }
+
+            $('#section_wating_response').hide();
+            $('#section_parent').show();
         },
         error: function() {
-            $('#section_wating_response').css('display', 'none');
-            alert('Error displaying user management section');
+            $('#section_wating_response').hide();
+            $('#section_error_response').show();
         }
     });
 }
+
 function show_ldap_users_fieldset(url) {
     $('#users_roles_wating_response').show();
 
     $.ajax({
-        type: 'GET',
         url: url,
         success: function(data) {
-            $('#users_field').replaceWith(data);
+            var html = $("#users_field", $(data)).html();
+            $('#users_field').html(html);
+
+            add_onclick_sort_links();
 
             $('#users_roles_wating_response').hide();
         },
         error: function() {
             $('#users_roles_wating_response').hide();
-            alert('Error displaying users roles');
+            $('#users_roles_error_response').show();
         }
     });
 }
+/**
+ * End Functions for LDAPUserFolder
+*/
