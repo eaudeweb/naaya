@@ -58,6 +58,10 @@ METATYPE_NYURL = 'Naaya URL'
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
     """ """
+    if REQUEST is not None:
+        # we'll need the SESSION later on; grab it early so we don't
+        # get a ConflictError.
+        REQUEST.SESSION
     ut = utils()
     id = ut.utCleanupId(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
