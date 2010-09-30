@@ -1,22 +1,4 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+from naaya.core.exceptions import localize_exc
 
 #constants
 _SESSION_ERRORS = "site_errors"
@@ -104,6 +86,13 @@ class session_manager:
 
         >>> self._translateSessionMessages(['First message','Second message'])
         ['First message', 'Second message']
+
+        >>> self._translateSessionMessages(ValueError('bad value'))
+        ['bad value']
+
+        >>> from naaya.core.exceptions import i18n_exc
+        >>> self._translateSessionMessages(i18n_exc(ValueError, 'bad ${x}', x='gigi'))
+        ['bad gigi']
         """
 
         if lang is None:
@@ -134,6 +123,8 @@ class session_manager:
                     trans_message = message
                 translated_messages.append(trans_message)
             return translated_messages
+        elif isinstance(messages, Exception):
+            return [ localize_exc(messages, translate) ]
         else:
             raise ValueError("Invalid arguments")
 
