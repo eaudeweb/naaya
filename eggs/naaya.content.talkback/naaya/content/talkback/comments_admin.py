@@ -26,7 +26,7 @@ import csv
 try:
     import xlwt
     excel_export_available = True
-except:
+except ImportError:
     excel_export_available = False
 
 #Zope imports
@@ -52,7 +52,8 @@ class CommentsAdmin(SimpleItem):
     def _iter_comments(self):
         for section in self.list_sections():
             for paragraph in section.get_paragraphs():
-                for comment in paragraph.get_comments():
+                for comment in sorted(paragraph.get_comments(),
+                                      key=lambda c: c.comment_date):
                     yield comment
 
     _comment_template = Paragraph.comments_html
@@ -123,13 +124,13 @@ class CommentsAdmin(SimpleItem):
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
         row = 0
-        for col in range(0, len(fields)):
+        for col in range(len(fields)):
             ws.row(row).set_cell_text(col, fields[col][0], style)
         style.font = normalfont
 
         for comment in comments:
             row += 1
-            for col in range(0, len(fields)):
+            for col in range(len(fields)):
                 ws.row(row).set_cell_text(col, fields[col][1](comment), style)
         output = StringIO()
         wb.save(output)
@@ -156,7 +157,6 @@ class CommentsAdmin(SimpleItem):
         ]
 
         comments = [c for c in self._iter_comments() if c.approved]
-        comments.sort(key=lambda c: (c.get_paragraph().id, c.comment_date))
 
         if file_type == 'CSV':
             ret = self.generate_csv_output(fields, comments)
