@@ -137,9 +137,21 @@ class CommentsAdmin(SimpleItem):
 
         return output.getvalue()
 
+    def _get_comment_replies(self, tree, result):
+        result.append(tree['comment'])
+        for child in tree['children']:
+            self._get_comment_replies(child, result)
+        return result
+
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'export')
     def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
         """ """
+
+        comments = []
+        for section in self.list_sections():
+            for paragraph in section.get_paragraphs():
+                for comment in paragraph.get_comment_tree():
+                    comments.extend(self._get_comment_replies(comment, result=[]))
 
         html2text = self.getSite().html2text
         def plain(s, trim=None):
@@ -155,8 +167,6 @@ class CommentsAdmin(SimpleItem):
             ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ('Paragraph url', lambda c: c.get_paragraph().absolute_url()),
         ]
-
-        comments = [c for c in self._iter_comments() if c.approved]
 
         if file_type == 'CSV':
             ret = self.generate_csv_output(fields, comments)
