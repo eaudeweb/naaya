@@ -64,7 +64,24 @@
         </table>
     </form>
 
-    <tal:block define="is_user_search python:request.has_key('search_user');
+
+    <div id="waiting_for_search_results" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting for search results
+        </p>
+    </div>
+
+    <div id="error_on_search_results" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error searching for users.
+        </p>
+    </div>
+
+    <div id="search_results_parent">
+    <tal:block define="
+                       is_user_search python:request.has_key('search_user');
                        is_role_search python:request.has_key('search_role');
                        search_param python:request.get('params', '');
                        search_term python:request.get('term', '');
@@ -157,5 +174,6 @@
         </p>
     </form>
     </tal:block>
+    </div>
 </fieldset>
 </div>
