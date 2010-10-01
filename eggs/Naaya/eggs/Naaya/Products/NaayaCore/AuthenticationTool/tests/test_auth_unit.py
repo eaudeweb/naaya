@@ -45,6 +45,8 @@ class LDAPBaseUnitTest(NaayaFunctionalTestCase):
         fakeldap.addTreeItems(dg('users_base'))
         fakeldap.addTreeItems(dg('groups_base'))
 
+        self._add_ldap_schema()
+
         self._add_user(ldap_config.manager_user)
         self._add_user(ldap_config.user)
         self._add_user(ldap_config.user2)
@@ -58,23 +60,28 @@ class LDAPBaseUnitTest(NaayaFunctionalTestCase):
         luf = self.app.acl_users
         host, port = dg('server').split(':')
         luf.manage_addServer(host, port=port)
-        luf.manage_edit( dg('title')
-                       , dg('login_attr')
-                       , dg('uid_attr')
-                       , dg('users_base')
-                       , dg('users_scope')
-                       , dg('roles')
-                       , dg('groups_base')
-                       , dg('groups_scope')
-                       , dg('binduid')
-                       , dg('bindpwd')
-                       , binduid_usage = dg('binduid_usage')
-                       , rdn_attr = dg('rdn_attr')
-                       , local_groups = dg('local_groups')
-                       , implicit_mapping = dg('implicit_mapping')
-                       , encryption = dg('encryption')
-                       , read_only = dg('read_only')
-                       )
+        luf.manage_edit(dg('title'),
+                        dg('login_attr'),
+                        dg('uid_attr'),
+                        dg('users_base'),
+                        dg('users_scope'),
+                        dg('roles'),
+                        dg('groups_base'),
+                        dg('groups_scope'),
+                        dg('binduid'),
+                        dg('bindpwd'),
+                        binduid_usage = dg('binduid_usage'),
+                        rdn_attr = dg('rdn_attr'),
+                        local_groups = dg('local_groups'),
+                        implicit_mapping = dg('implicit_mapping'),
+                        encryption = dg('encryption'),
+                        read_only = dg('read_only'))
+
+    def _add_ldap_schema(self):
+        schema = ldap_config.schema
+        luf = self.app.acl_users
+        for item in schema.values():
+            luf.manage_addLDAPSchemaItem(**item)
 
     def _add_user(self, user_dict):
         def get_group_names():
@@ -115,15 +122,15 @@ class LDAPUnitTest(LDAPBaseUnitTest):
         ae(len(acl._cache('anonymous').getCache()), 0)
         ae(len(acl._cache('authenticated').getCache()), 0)
         ae(len(acl._cache('negative').getCache()), 0)
-        ae(len(acl.getSchemaConfig().keys()), 2)
-        ae(len(acl.getSchemaDict()), 2)
+        ae(len(acl.getSchemaConfig().keys()), len(ldap_config.schema))
+        ae(len(acl.getSchemaDict()), len(ldap_config.schema))
         ae(len(acl._groups_store), 0)
         ae(len(acl.getProperty('additional_groups')), 0)
         ae(len(acl.getGroupMappings()), 2)
         ae(len(acl.getServers()), 1)
 
         ug = ldap_config.user.get
-        self.browser_do_login(ug('cn'), ug('user_pw'))
+        self.browser_do_login(ug('uid'), ug('user_pw'))
         self.browser_do_logout()
 
 def test_suite():
