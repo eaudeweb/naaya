@@ -310,7 +310,7 @@
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
 			<item id="Albania" title="Albania"/>
 			<item id="Algeria" title="Algeria"/>
-			<item id="Bosnia&amp;Herzegovina" title="Bosnia&amp;Herzegovina"/>
+			<item id="Bosnia_Herzegovina" title="Bosnia&amp;Herzegovina"/>
 			<item id="Croatia" title="Croatia"/>
 			<item id="Cyprus" title="Cyprus"/>
 			<item id="Egypt" title="Egypt"/>
@@ -324,7 +324,7 @@
 			<item id="Malta" title="Malta"/>
 			<item id="Morocco" title="Morocco"/>
 			<item id="Palestinian Authority" title="Palestinian Authority"/>
-			<item id="Serbia&amp;Montenegro" title="Serbia&amp;Montenegro"/>
+			<item id="Serbia_Montenegro" title="Serbia&amp;Montenegro"/>
 			<item id="Slovenia" title="Slovenia"/>
 			<item id="Spain" title="Spain"/>
 			<item id="Syria" title="Syria"/>
