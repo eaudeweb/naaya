@@ -1,7 +1,4 @@
 <div id="section_parent">
-<fieldset>
-    <legend i18n:translate="">LDAP groups</legend>
-    <div id="grant_roles_block">
     <form name="group-roles" method="post"
           tal:attributes="action string:${here/absolute_url}/map_group_to_role"
           id="gr_roles">
@@ -63,6 +60,4 @@
                 i18n:attributes="value"/>
         </div>
     </form>
-    </div>
-</fieldset>
 </div>
