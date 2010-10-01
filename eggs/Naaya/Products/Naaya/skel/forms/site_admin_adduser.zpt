@@ -1,20 +1,9 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
-
-<tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath">
-
-<div id="tabbedmenu">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-	</li>
-</ul>
-</div>
-<div class="cleaner"> </div>
-
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Add user</metal:block>
+<metal:block fill-slot="second-tabs">
+    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
+</metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
 <form method="post" tal:attributes="action string:${site_url}/admin_adduser">
 <p i18n:translate="">Fill the form below with user's credentials and account and click on <em i18n:name="add-button" i18n:translate="">Add</em>:</p>
 <fieldset><legend i18n:translate="">Personal settings</legend>
@@ -43,5 +32,5 @@
 </form>
 <span tal:replace="here/delUserSession" />
 
-</tal:block>
-</tal:block>
+</metal:block></metal:block>
+</metal:block>

@@ -46,3 +46,51 @@ function Linkify(inputText) {
 
     return replacedText
 }
+
+/**
+*
+*  URL decode
+*  http://www.webtoolkit.info/
+*
+* Use jQuery serialize to encode
+*
+**/
+function url_decode(utftext) {
+    utftext = unescape(utftext)
+    var string = "";
+    var i = 0;
+    var c = c1 = c2 = 0;
+    while ( i < utftext.length ) {
+        c = utftext.charCodeAt(i);
+        if (c < 128) {
+            string += String.fromCharCode(c);
+            i++;
+        }
+        else if((c > 191) && (c < 224)) {
+            c2 = utftext.charCodeAt(i+1);
+            string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+            i += 2;
+        }
+        else {
+            c2 = utftext.charCodeAt(i+1);
+            c3 = utftext.charCodeAt(i+2);
+            string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+            i += 3;
+        }
+    }
+    return string;
+}
+
+/**
+ * Unserialize. Transform uri query into a dictionary
+ * TODO: Treat cases for variables such as xxxx[]=2233 or yyy[ddda]=111
+*/
+function unserialize(data){
+    var return_dict = {};
+    var rows = data.split('&');
+    $.each(rows, function(i, row){
+        var key_val = url_decode(row).split('=');
+        return_dict[key_val[0]] = key_val[1];
+    })
+    return return_dict;
+}

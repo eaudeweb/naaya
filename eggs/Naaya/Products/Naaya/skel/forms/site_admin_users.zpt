@@ -1,122 +1,57 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
-
+<metal:block extend-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']" define-macro="page">
+<metal:block metal:fill-slot="title"><h1><metal:block define-slot="title"><span tal:omit-tag="" i18n:translate="">Users' management</span></metal:block> - <metal:block define-slot="second-title"></metal:block></h1></metal:block>
 <tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				skey python: request.get('skey', 'name');
-				rkey python: request.get('rkey', 0);
-				users python:here.utSortObjsListByAttr(user_tool.getUsers(), skey, rkey)">
+    tal:define="site_url here/getSitePath;
+                user_tool here/getAuthenticationTool;
+                skey python: request.get('skey', 'name');
+                rkey python: request.get('rkey', 0);
+				query python: request.get('query', '');
+				page python: int(request.get('page', 0));
+				per_page python: int(request.get('per_page', 50));
+				filter_role python: request.get('role', '');
+				user_sources python: here.getAuthenticationTool().getSources()">
+<metal:block define-slot="buttons"></metal:block>
+<metal:block define-slot="search-box"></metal:block>
 
-<div class="floated-buttons">
-	<span class="buttons">
-		<a style="float: right" tal:condition="python:user_tool.showBulkDownloadButton() and len(users) > 0"
-				tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
-			<span i18n:translate="">Bulk download</span>
-		</a>
-	</span>
+<metal:block define-slot="tabs"><metal:block define-macro="tabs">
+<div id="tabbedmenu" tal:define="toggle_all_users python:len(user_sources)>0">
+    <ul>
+        <li tal:condition='user_sources'
+			tal:attributes="id python: (
+								('admin_all_users_html' in request.PATH_INFO) or
+								('admin_users_html' in request.PATH_INFO) or
+								('admin_edituser_html' in request.PATH_INFO and request.get('from', '')  == 'all')
+							) and 'currenttab' or ''">
+			<a tal:attributes="href string:${site_url}/admin_all_users_html" i18n:translate="">All users</a>
+		</li>
+		<li tal:attributes="id python: (
+								('admin_local_users_html' in request.PATH_INFO) or
+								('admin_assignroles_html' in request.PATH_INFO) or
+								('admin_adduser_html' in request.PATH_INFO) or
+								('admin_users_html' in request.PATH_INFO and not len(user_sources)) or
+								('admin_edituser_html' in request.PATH_INFO and request.get('from', '')  == 'local')
+							) and 'currenttab' or ''">
+			<a tal:attributes="href string:${site_url}/admin_local_users_html" i18n:translate="">Local users</a>
+		</li>
+        <li tal:repeat="item user_sources"
+			tal:attributes="id python: ('admin_sources_html' in request.PATH_INFO and request.get('id', '') == item.id) and 'currenttab' or ''">
+            <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+        </li>
+		<li tal:attributes="id python: (
+								('admin_roles_html' in request.PATH_INFO) or
+								('admin_editrole_html' in request.PATH_INFO) or
+								('admin_addrole_html' in request.PATH_INFO)
+							) and 'currenttab' or ''">
+			<a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a>
+		</li>
+    </ul>
 </div>
-
-<div id="tabbedmenu">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-	</li>
-</ul>
-</div>
-
-<p i18n:translate="" class="cleaner">
-	This page lists the users defined in this portal along with their credentials.
-	Click on a username to modify the corresponding information.
-	In order to assign roles to users in various parts of the portal, click on the <strong>Users
-	&amp; Roles</strong> button.
-</p>
-
-<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
-<span>
-	<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
-	<input type="submit" value="Delete user"  i18n:attributes="value" class="deluser"/>
-	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
-	<input type="button" value="Users & Roles" onclick="document.location.href='admin_roles_html';"  i18n:attributes="value" />
-</span>
-<table cellspacing="0" cellpadding="4" width="95%" class="datatable">
-	<tr>
-		<th width="5%" align="left" i18n:translate="">Delete</th>
-		<th width="15%" align="left">
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
-				<span i18n:translate="">Username</span>
-			</a>
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
-				<span i18n:translate="">Username</span>
-			</a>
-			<img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-			<img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
-		</th>
-		<th width="30%" align="left">
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
-				<span i18n:translate="">Name</span>
-			</a>
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
-				<span i18n:translate="">Name</span>
-			</a>
-			<img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-			<img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
-		</th>
-		<th width="50%" align="left">
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email" tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" >
-				<span i18n:translate="">Email address</span>
-			</a>
-			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email&rkey=1" tal:condition="python: skey == 'email' and not rkey" >
-				<span i18n:translate="">Email address</span>
-			</a>
-			<img tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-			<img tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
-		</th>
-	</tr>
-	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
-		<td nowrap="nowrap" class="center">
-			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user)" />
-		</td>
-		<td><strong><a tal:define="user_quoted python:here.utUrlEncode(user)"
-						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong>
-			<span tal:condition="python:user_tool.isNewUser(user)">
-				<img src="misc_/Naaya/star.png" alt="New account" />
-			</span>
-		</td>
-		<td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
-		<td tal:content="python:user_tool.getUserEmail(user)" />
-	</tr>
-	<tr tal:condition="python:len(users) == 0">
-		<td colspan="4" i18n:translate=""> Users' list empty </td>
-	</tr>
-</table>
-<p>
-<strong>Note:</strong> The users marked with <img src="misc_/Naaya/star.png" alt="New account" /> are added in the last 5 days.
-</p>
-</form>
-
-<p i18n:translate="">Click a role to edit its permissions:</p>
-<table class="datatable">
-<thead>
-    <th i18n:translate="">Role name</th>
-    <th></th>
-</thead>
-<tbody>
-<tal:block repeat="role here/acl_users/list_all_roles">
-    <tr tal:condition="python:role not in ('Manager', 'Owner')">
-        <td tal:content="role" />
-        <td tal:define="baseurl string:${here/absolute_url}/admin_editrole_html;
-                        href string:${baseurl}?role=${role}">
-            <a tal:attributes="href href">
-                <img src="misc_/Naaya/edit" alt="Edit" />
-            </a>
-        </td>
-    </tr>
+</metal:block></metal:block>
+<metal:block define-slot='second-tabs'></metal:block>
+<div class="cleaner"></div>
+<metal:block define-slot="content">
+	<tal:block condition="user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_all_users').macros['content']"></metal:block></tal:block>
+	<tal:block condition="not: user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['content']"></metal:block></tal:block>
+</metal:block>
 </tal:block>
-</tbody>
-</table>
-
-</tal:block>
-</tal:block>
+</metal:block>

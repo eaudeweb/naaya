@@ -129,12 +129,19 @@
                 <input type="checkbox" name="name:list"
                     tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/>
             </td>
-            <td tal:content="python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">uid</td>
+            <td tal:define="uid python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">
+                <tal:block replace="uid"></tal:block>
+                <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
+                    <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
+                </span>
+            </td>
             <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
             <td tal:content="python:item['dn']">dn</td>
         </tr>
         </table>
-
+        <p>
+            <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" /> are local users</span>.
+        </p>
         <tal:block tal:condition="python:len(ldap_users) > 10">
         &middot;&nbsp;<a href="#assign_to_users">Go back to top</a>
         </tal:block>

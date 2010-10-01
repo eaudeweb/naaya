@@ -1,31 +1,13 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
-
-<tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				authentication_tool here/getAuthenticationTool">
-
-<div id="tabbedmenu">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-	</li>
-</ul>
-</div>
-<div class="cleaner"> </div>
-
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Add role</metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
 <form method="post" name="addrole"
       tal:attributes="action string:${site_url}/admin_addrole">
-
-<div class="field-inline">
-    <label for="input-role" i18n:translate="">Role name</label>
-    <input id="input-role" name="role" size="45" maxLength="255" />
-</div>
-
-<input type="submit" value="Add role" i18n:attributes="value" />
+	<div class="field-inline">
+		<label for="input-role" i18n:translate="">Role name</label>
+		<input id="input-role" name="role" size="45" maxLength="255" />
+	</div>
+	<input type="submit" value="Add role" i18n:attributes="value" />
 </form>
-
-</tal:block>
-</tal:block>
+</metal:block></metal:block>
+</metal:block>

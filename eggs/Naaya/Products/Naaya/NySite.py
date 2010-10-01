@@ -111,9 +111,8 @@ from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
-from naaya.core.utils import call_method
-from naaya.core.utils import path_in_site
-from naaya.core.utils import cooldown
+from naaya.core.utils import call_method, path_in_site, cooldown, is_ajax
+from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 #reCaptcha
@@ -2182,65 +2181,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
-    def admin_deleteusers(self, names=[], REQUEST=None):
-        """ """
-        self.getAuthenticationTool().manage_delUsers(names)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
-    def admin_adduser(self, firstname='', lastname='', email='', name='', password='',
-        confirm='', strict=0, REQUEST=None):
-        """
-        Create a user with the specified information
-        """
-        err = ''
-        success = False
-        try:
-            userinfo = self.getAuthenticationTool().manage_addUser(name,
-                            password, confirm, [], [], firstname, lastname,
-                            email, strict)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if not REQUEST:
-            return userinfo
-
-        if err != '':
-            self.setSessionErrorsTrans(err)
-            self.setUserSession(name, [], [], firstname, lastname, email, '')
-            REQUEST.RESPONSE.redirect('%s/admin_adduser_html' % self.absolute_url())
-        if success:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
-
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
-    def admin_edituser(self, firstname='', lastname='', email='', name='', password='',
-        confirm='', REQUEST=None):
-        """
-        Update the specified user's information
-        """
-        err = ''
-        success = True
-        try:
-            self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
-                lastname, email)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if REQUEST:
-            if err != '':
-                self.setSessionErrorsTrans(err)
-                self.setUserSession(name, [], [], firstname, lastname, email, '')
-            if success:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' % (self.absolute_url(), name))
-
     def get_naaya_permissions_in_site(self):
         permission_names = {}
         for pluggable in self.get_pluggable_content().values():
@@ -2253,13 +2193,109 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
         return permission_names
 
+    #
+    # Admin User management. XXX: Should be moved to AuthenticationTool
+    #
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
+    def admin_adduser(self, firstname='', lastname='', email='', name='',
+                      password='', confirm='', strict=0, REQUEST=None):
+        """
+        Create a user with the specified information. Also check if the
+        username is not assigned in some source.
+        """
+        err = ''
+        success = False
+        try:
+            userinfo = self.getAuthenticationTool().manage_addUser(name,
+                            password, confirm, [], [], firstname, lastname,
+                            email, strict)
+        except ValidationError, error:
+            err = error
+        else:
+            success = True
+
+        if REQUEST is not None:
+            if err != '':
+                self.setSessionErrorsTrans(err)
+                self.setUserSession(name, [], [], firstname, lastname, email,
+                                    '')
+                REQUEST.RESPONSE.redirect('%s/admin_adduser_html' %
+                                          self.absolute_url())
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                                          self.absolute_url())
+        else:
+            return userinfo
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
+    def admin_edituser(self, firstname='', lastname='', email='', name='',
+                       password='', confirm='', REQUEST=None):
+        """
+        Update the specified user's information
+        """
+        err = ''
+        success = True
+        try:
+            self.getAuthenticationTool().manage_changeUser(name, password,
+                            confirm, [], [], firstname, lastname, email)
+        except ValidationError, error:
+            err = error
+        else:
+            success = True
+
+        if REQUEST is not None:
+            if err != '':
+                self.setSessionErrorsTrans(err)
+                self.setUserSession(name, [], [], firstname, lastname, email,
+                                    '')
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' %
+                                      (self.absolute_url(), name))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
+    def admin_deleteusers(self, names=[], REQUEST=None):
+        """ """
+        self.getAuthenticationTool().manage_delUsers(names)
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                                      self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_editrole_html')
+    #Admin User Roles
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
+    def admin_addrole(self, role='', REQUEST=None):
+        """ Create a role, redirect to edit permissions page """
+        err = ''
+        success = False
+        try:
+            self.getAuthenticationTool().addRole(role)
+        except ValidationError, error:
+            err = error
+        else:
+            success = True
+
+        if REQUEST:
+            if err != '':
+                self.setSessionErrorsTrans(err)
+                return REQUEST.RESPONSE.redirect('%s/admin_addrole_html' %
+                                                 self.absolute_url())
+            if success:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                return REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                                                 self.absolute_url())
+
     def admin_editrole_html(self, role, REQUEST):
         """ """
-
         permission_names = self.get_naaya_permissions_in_site()
-
         zope_perm_for_role = {}
         for zope_perm in permission_names:
             p = Permission(zope_perm, (), self)
@@ -2319,36 +2355,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_users_html' %
                                       self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
-    def admin_addrole(self, role='', REQUEST=None):
-        """ Create a role, redirect to edit permissions page """
-        err = ''
-        success = False
-        try:
-            self.getAuthenticationTool().addRole(role)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if REQUEST:
-            if err != '':
-                self.setSessionErrorsTrans(err)
-                return REQUEST.RESPONSE.redirect('%s/admin_addrole_html' % self.absolute_url())
-            if success:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeroles')
-    def admin_revokeroles(self, roles=[], REQUEST=None):
-        """ """
-        self.getAuthenticationTool().manage_revokeUsersRoles(roles)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
-    def admin_addroles(self, names=[], roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
+    def admin_addroles(self, names=[], roles=[], loc='allsite', location='',
+                       send_mail='', REQUEST=None):
         """
+        XXX: Should be assign_roles
+
         Assign the given list of roles to the given list of users at the
         specified location
         """
@@ -2360,8 +2372,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         else:
             try:
                 for name in names:
-                    self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
-            except Exception, error:
+                    self.getAuthenticationTool().manage_addUsersRoles(name,
+                                                        roles, loc, location)
+            except ValidationError, error:
                 err = error
             else:
                 success = True
@@ -2371,13 +2384,35 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     try:
                         email = auth_tool.getUsersEmails([name])[0]
                         fullname = auth_tool.getUsersFullNames([name])[0]
-                        self.sendAccountModifiedEmail(email, roles, loc, location)
+                        self.sendAccountModifiedEmail(email, roles, loc,
+                                                      location)
                     except:
                         err = 'Could not send confirmation mail.'
-        if REQUEST:
+        if REQUEST is not None:
             if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                                 date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
+                                      self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokerole')
+    def admin_revokerole(self, user, location, REQUEST=None):
+        """ Can be called via normal or ajax request.
+        Returns empty string on ajax
+        """
+        self.getAuthenticationTool().manage_revokeUserRole(user, location)
+
+        if REQUEST is not None:
+            if is_ajax(REQUEST):
+                return 'SUCCESS'
+            else:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                         date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
+                                          self.absolute_url())
+    #
+    # END Admin User management. XXX: Should be moved to AuthenticationTool
+    #
 
     security.declareProtected(view, 'admin_welcome_page')
     def admin_welcome_page(self, REQUEST=None):
@@ -2998,33 +3033,51 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         return self.getFormsTool().getContent({'here': self}, 'site_admin_documentation')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_html')
-    def admin_users_html(self, REQUEST=None, RESPONSE=None):
+    def admin_users_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_local_users_html')
+    def admin_local_users_html(self):
+        """ """
+        return self.getFormsTool().getContent({'here': self},
+            'site_admin_local_users')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_all_users_html')
+    def admin_all_users_html(self):
+        """ """
+        return self.getFormsTool().getContent({'here': self},
+            'site_admin_all_users')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser_html')
-    def admin_adduser_html(self, REQUEST=None, RESPONSE=None):
+    def admin_adduser_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_adduser')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser_html')
-    def admin_edituser_html(self, REQUEST=None, RESPONSE=None, **kwargs):
+    def admin_edituser_html(self, **kwargs):
         """ """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_edituser')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_assignroles_html')
+    def admin_assignroles_html(self, **kwargs):
+        """ """
+        kwargs['here'] = self
+        return self.getFormsTool().getContent(kwargs, 'site_admin_assignroles')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole_html')
-    def admin_addrole_html(self, REQUEST=None, RESPONSE=None):
+    def admin_addrole_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_addrole')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_roles_html')
-    def admin_roles_html(self, REQUEST=None, RESPONSE=None):
+    def admin_roles_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_roles')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_sources_html')
-    def admin_sources_html(self, REQUEST=None, RESPONSE=None):
+    def admin_sources_html(self, REQUEST=None):
         """ """
         if REQUEST is not None:
             came_from = REQUEST.get('came_from', None)

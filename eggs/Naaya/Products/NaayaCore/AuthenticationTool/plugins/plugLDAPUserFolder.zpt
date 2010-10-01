@@ -1,3 +1,4 @@
+
 <script type="text/javascript"
         tal:content="string:var sitemap_url='${here/getAuthenticationToolPath
                                                }/sitemap';" />
