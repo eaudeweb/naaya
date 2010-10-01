@@ -1,5 +1,6 @@
-<tal:block define="group_id request/group_id;
-                   members python:here.get_group_members(group_id);">
+<div id="section_parent" tal:define="
+                group_id request/group_id;
+                members python:here.get_group_members(group_id);">
 <fieldset>
     <legend i18n:translate="">Members of LDAP group
         "<tal:block i18n:name="group_id" content="group_id" />"
@@ -17,4 +18,4 @@
         </li>
     </ul>
 </fieldset>
-</tal:block>
+</div>

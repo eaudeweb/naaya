@@ -1,2 +1,4 @@
-<tal:block replace="structure here/users_roles_html"/>
-<tal:block replace="structure here/groups_roles_html"/>
+<div id="section_parent">
+    <tal:block replace="structure here/users_roles_html"/>
+    <tal:block replace="structure here/groups_roles_html"/>
+</div>

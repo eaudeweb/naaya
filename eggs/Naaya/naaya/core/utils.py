@@ -132,3 +132,8 @@ def unescape_html_entities(text):
                 pass
         return text # leave as is
     return re.sub("&#?\w+;", fixup, text)
+
+def is_ajax(request):
+    "Check if an REQUEST object has 'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'"
+    return request.environ.get('HTTP_X_REQUESTED_WITH', '') == \
+            'XMLHttpRequest'

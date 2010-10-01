@@ -44,7 +44,7 @@ from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.Naaya.NySite import NySite
 from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
 
-from naaya.core.utils import relative_object_path
+from naaya.core.utils import relative_object_path, is_ajax
 
 from send_group_emails_thread import start_sending_emails
 
@@ -475,7 +475,22 @@ class plugLDAPUserFolder(PlugBase):
         return map(user_data, member_ids)
 
     security.declarePublic('interface_html')
-    interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
+    _interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
+    def interface_html(self):
+        """ """
+        if is_ajax(self.REQUEST):
+            if 's' in self.REQUEST:
+                section = self.REQUEST['s']
+                if section == 'manage_all':
+                    return self.section_manage_all_html()
+                elif section == 'assign_to_users':
+                    return self.section_assign_to_users_html()
+                elif section == 'assign_to_groups':
+                    return self.section_assign_to_groups_html()
+                elif section == 'group_members':
+                    return self.section_group_members_html()
+                #else return the full page
+        return self._interface_html(self.REQUEST)
 
     security.declarePublic('section_manage_all_html')
     section_manage_all_html = PageTemplateFile('plugLDAPUserFolderManage', globals())

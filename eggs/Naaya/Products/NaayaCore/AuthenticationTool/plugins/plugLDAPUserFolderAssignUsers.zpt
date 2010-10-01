@@ -1,4 +1,4 @@
-<tal:block define="
+<div id="section_parent" tal:define="
     user_folder python:here.getUserFolder();
     req_role python:request.get('req_role', '');
     req_location python:request.get('req_location', '');
@@ -158,4 +158,4 @@
     </form>
     </tal:block>
 </fieldset>
-</tal:block>
+</div>
