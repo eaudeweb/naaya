@@ -26,6 +26,8 @@
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="site_admin_addrole" title="Portal administration - add role"/>
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
+		<form id="site_admin_all_users" title="Portal administration - all users"/>
+		<form id="site_admin_assignroles" title="Portal administration - assign roles"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
 		<form id="site_admin_centre" title="Portal administration - centre"/>
 		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
@@ -46,6 +48,7 @@
 		<form id="site_admin_linksportlets" title="Portal administration - list of links portlets section"/>
 		<form id="site_admin_localchannels" title="Portal administration - local channels"/>
 		<form id="site_admin_localchportlets" title="Portal administration - local channels section"/>
+		<form id="site_admin_local_users" title="Portal administration - local users"/>
 		<form id="site_admin_logos" title="Portal administration - logos"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_messages" title="Portal administration - messages' summary"/>

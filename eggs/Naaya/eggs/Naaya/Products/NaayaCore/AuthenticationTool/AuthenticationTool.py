@@ -1,47 +1,27 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Original Code is Naaya version 1.0
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#python imports
 import re
 import time
 import string
 from copy import copy, deepcopy
 from StringIO import StringIO
 import csv
+import simplejson as json
 
-#zope imports
+from DateTime import DateTime
 from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
 from AccessControl import ClassSecurityInfo
 from AccessControl.User import BasicUserFolder
-from AccessControl.User import SpecialUser
-from AccessControl.Permissions import view_management_screens, view, manage_users
+from AccessControl.User import SpecialUser, SimpleUser
+from AccessControl.Permissions import view_management_screens, view,\
+                                    manage_users
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
 from zope.event import notify
 from persistent.list import PersistentList
 
-#product imports
+from naaya.core.utils import is_ajax, render_macro
+from naaya.core.exceptions import ValidationError, i18n_exception
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import \
      string2object, object2string, InvalidStringError, file_utils, utils
@@ -50,8 +30,10 @@ from plugins_tool import plugins_tool
 from User import User
 from Role import Role
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent, NyDelUserRoleEvent
-
+from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent,\
+                                        NyDelUserRoleEvent
+from Products.NaayaCore.managers.paginator import ObjectPaginator
+from Products.NaayaCore.managers.utils import is_valid_email
 
 def manage_addAuthenticationTool(self, REQUEST=None):
     """ """
@@ -70,6 +52,43 @@ def is_anonymous(user_obj):
         return True
     else:
         return False
+
+class DummyUser(SimpleUser):
+    """ Wrapper for User Sources. It is used for user searchs
+    This object should go away when the Local users have the same api and
+    properties with other user sources.
+
+    Author: Alexandru Plugaru
+    """
+    mapping = {
+        'getUserFirstName': 'firstname',
+        'getUserLastName': 'lastname',
+        'getUserEmail': 'email',
+    }
+    created = DateTime(1970, 1, 1)
+    map = None
+
+    def __init__(self, **kw):
+        for key, val in kw.items():
+            setattr(self, key, val)
+
+    def __getattr__(self, name):
+        """ This """
+        if name in self.mapping.keys():
+            return getattr(self, self.map[name])
+        else:
+            return getattr(super(DummyUser, self), name)
+    def getRoles(self):
+        roles = []
+        for role in self.roles:
+            if isinstance(role, (tuple, list)):
+                for r  in role[0]:
+                    roles.append(r)
+            else:
+                roles.append(role)
+        return roles
+    def getUserCreatedDate(self):
+        return self.created
 
 class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                          file_utils, plugins_tool, PropertyManager):
@@ -125,7 +144,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if not hasattr(self, '_temp_users'):
             self._temp_users = []
         if text in self._temp_users:
-            raise Exception, 'User already request access roles.'
+            raise ValidationError, 'User already request access roles.'
         self._temp_users.append(text)
         self._p_changed = 1
         return text
@@ -213,11 +232,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ Add user from key
         """
         if key not in getattr(self, '_temp_users', []):
-            raise Exception, 'Invalid activation key !'
+            raise ValidationError, 'Invalid activation key !'
         try:
             res = string2object(key)
         except InvalidStringError, err:
-            raise Exception, 'Invalid activation key !'
+            raise ValidationError, 'Invalid activation key !'
         else:
             self._temp_users.remove(key)
             self._doAddUser(**res)
@@ -233,39 +252,46 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
         captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
+        email = email.strip()
         if not check_username(name):
-            raise Exception, 'Username: only letters and numbers allowed'
+            raise ValidationError, 'Username: only letters and numbers allowed'
         if captcha_prov_word != captcha_gen_word:
-            raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
+            raise ValidationError, 'The word you typed does not match with the '
+            'one shown in the image. Please try again.'
         if not firstname:
-            raise Exception, 'The first name must be specified'
+            raise ValidationError, 'The first name must be specified'
         if not lastname:
-            raise Exception, 'The last name must be specified'
+            raise ValidationError, 'The last name must be specified'
         if not email:
-            raise Exception, 'The email must be specified'
-        if getattr(self, 'email_expression', ''):
-            email_expr = re.compile(self.email_expression, re.IGNORECASE)
-            if not re.match(email_expr, email):
-                raise Exception, 'Invalid email address.'
+            raise ValidationError, 'The email must be specified'
+        if not is_valid_email(email):
+            raise ValidationError, 'Invalid email address.'
         if not name:
-            raise Exception, 'An username must be specified'
+            raise ValidationError, 'An username must be specified'
         if not password or not confirm:
-            raise Exception, 'Password and confirmation must be specified'
+            raise ValidationError, 'Password and confirmation must be specified'
+
         name = str(name)
+
         if (self.get_user_with_userid(name) is not None or
             (self._emergency_user and
              name == self._emergency_user.getUserName())):
-            raise Exception, 'Username %r already in use' % name
+            raise i18n_exception(ValidationError,
+                                 'Username ${user} already in use', user=name)
         if (password or confirm) and (password != confirm):
-            raise Exception, 'Password and confirmation do not match'
+            raise ValidationError, 'Password and confirmation do not match'
         if strict:
             users = self.getUserNames()
             for n in users:
                 us = self.getUser(n)
-                if email.strip() == us.email:
-                    raise Exception, 'A user with the specified email already exists, username %s' % n
+                if email == us.email:
+                    raise i18n_exception(ValidationError,
+                            'A user with the specified email already exists, '
+                            'username ${user}', user=n)
                 if firstname == us.firstname and lastname == us.lastname:
-                    raise Exception, 'A user with the specified name already exists, username %s' % n
+                    raise i18n_exception(ValidationError, 'A user with the spe'
+                                         'cified name already exists, username'
+                                         '${user}', user=n)
         #convert data
         roles = self.utConvertToList(roles)
         domains = self.utConvertToList(domains)
@@ -273,9 +299,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # Confirm by mail
         #
         if self.emailConfirmationEnabled():
-            user = self._doAddTempUser(name=name, password=password, roles=roles,
-                                       domains=domains, firstname=firstname,
-                                       lastname=lastname, email=email)
+            user = self._doAddTempUser(name=name, password=password,
+                                       roles=roles, domains=domains,
+                                       firstname=firstname, lastname=lastname,
+                                       email=email)
 
         else:
             user = self._doAddUser(name, password, roles, domains,
@@ -288,35 +315,49 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manage_changeUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
         lastname='', email='', REQUEST=None):
         """ """
+        user_ob = self.getUser(name)
+        email = email.strip()
         if password == '' and confirm == '':
             password = confirm = None
         if not firstname:
-            raise Exception, 'The first name must be specified'
+            raise ValidationError, 'The first name must be specified'
         if not lastname:
-            raise Exception, 'The last name must be specified'
+            raise ValidationError, 'The last name must be specified'
         if not email:
-            raise Exception, 'The email must be specified'
+            raise ValidationError, 'The email must be specified'
+        if not is_valid_email(email):
+            raise ValidationError, 'Invalid email address.'
+
+        #If the e-mail address changed check if it's not used
+        if user_ob.email != email.strip():
+            users = self.getUserNames()
+            for n in users:
+                us = self.getUser(n)
+                if email == us.email:
+                    raise i18n_exception(ValidationError, 'A user with the specified email '
+                        'already exists, username ${user}', user=n)
         if not name:
-            raise Exception, 'An username must be specified'
+            raise ValidationError, 'An username must be specified'
         if not self.getUser(name):
-            raise Exception, 'Unknown user'
+            raise ValidationError, 'Unknown user'
         if (password or confirm) and (password != confirm):
-            raise Exception, 'Password and confirmation do not match'
+            raise ValidationError, 'Password and confirmation do not match'
+
         #convert data
-        user_ob = self.getUser(name)
         roles = self.getUserRoles(user_ob)
         domains = user_ob.getDomains()
         lastupdated = time.strftime('%d %b %Y %H:%M:%S')
-        self._doChangeUser(name, password, roles, domains, firstname, lastname, email, lastupdated)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_users_html')
+        self._doChangeUser(name, password, roles, domains, firstname, lastname,
+                           email, lastupdated)
+        if REQUEST is not None: REQUEST.RESPONSE.redirect('manage_users_html')
 
     security.declareProtected(manage_users, 'manage_addUsersRoles')
     def manage_addUsersRoles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
         """ """
         if not name:
-            raise Exception, 'An username must be specified'
+            raise ValidationError, 'An username must be specified'
         if not roles:
-            raise Exception, 'No roles were specified'
+            raise ValidationError, 'No roles were specified'
         if loc == 'allsite':
             location = ''
             location_obj = self.getSite()
@@ -324,7 +365,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             location = location
             location_obj = self.unrestrictedTraverse(location, None)
             if location_obj is None:
-                raise Exception, 'Invalid location'
+                raise ValidationError, 'Invalid location'
         #convert data
         roles = self.utConvertToList(roles)
         if location == '':
@@ -333,20 +374,17 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             location_obj.manage_setLocalRoles(name, roles)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
 
-    security.declareProtected(manage_users, 'manage_revokeUsersRoles')
-    def manage_revokeUsersRoles(self, roles=[], REQUEST=None):
+    security.declareProtected(manage_users, 'manage_revokeUserRole')
+    def manage_revokeUserRole(self, user, location, REQUEST=None):
         """ """
-        roles = self.utConvertToList(roles)
-        for role in roles:
-            users_roles = string.split(role, '||')
-            user = self.utConvertToList(users_roles[0])
-            location = users_roles[1]
+        user = [user]
+        if location == '':
+            self._doDelUserRoles(user)
+        else:
             location_obj = self.utGetObject(location)
-            if location == '':
-                self._doDelUserRoles(user)
-            else:
-                location_obj.manage_delLocalRoles(user)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
+            location_obj.manage_delLocalRoles(user)
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_userRoles_html')
 
     security.declareProtected(manage_users, 'manage_delUsers')
     def manage_delUsers(self, names=[], REQUEST=None):
@@ -388,6 +426,69 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         users_roles[str(roles_tuple[0])] = []
                     users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
         return users_roles
+
+    security.declareProtected(manage_users, 'search_users')
+    def search_users(self, query, REQUEST=None, **kw):
+        """ Search users based of query and other criteria, returning user
+        like objects or rendered html for an ajax request.
+
+        """
+        if REQUEST is not None:
+            form_data = dict(REQUEST.form)
+        else:
+            form_data = kw
+
+        skey= form_data.get('skey', 'name')
+        rkey = int(form_data.get('rkey', 0))
+        per_page = int(form_data.get('per_page', 50))
+        all_users = bool(form_data.get('all_users', False))
+        filter_role = form_data.get('role', '')
+        query = query.strip()
+
+        def _filter(user):
+            """ Callback used to filter users """
+            return (
+            user.name.lower().find(self.utToUtf8(query).lower()) !=-1 or
+            user.email.lower().find(self.utToUtf8(query).lower()) !=-1 or
+            user.firstname.lower().find(self.utToUtf8(query).lower()) !=-1 or
+            user.lastname.lower().find(self.utToUtf8(query).lower()) !=-1
+            )
+
+        user_objects = self.getUsers()
+        if all_users:
+            dummy_users = []
+            for user_source in self.getSources():
+                user_folder = user_source.getUserFolder()
+                users_roles = user_source.getUsersRoles(user_folder)
+                for name, role in users_roles.items():
+                    full_name = user_source.getUserCanonicalName(name)
+                    dummy = DummyUser(name=name,
+                            firstname=full_name.split(' ')[0],
+                            lastname=u''.join(full_name.split(' ')[1:]),
+                            email=user_source.getUserEmail(name, user_folder),
+                            roles=role)
+                    dummy_users.append(dummy)
+            user_objects.extend(dummy_users)
+        users = filter(_filter, self.utSortObjsListByAttr(
+            user_objects, skey, rkey))
+
+        if filter_role != '':
+            users = filter(lambda u: filter_role in u.getRoles(), users)
+
+        if REQUEST is not None and is_ajax(REQUEST):
+            template = form_data.get('template', '')
+            try:
+                return render_macro(self, template, 'datatable', skey=skey,
+                    rkey=rkey, users=users, all_users_objects=users,
+                    per_page=per_page, site_url=self.getSitePath(),
+                    role=filter_role, user_tool=self.getAuthenticationTool(),
+                    request=REQUEST)
+            except Exception, e:
+                self.getSite().log_current_error()
+                REQUEST.RESPONSE.setStatus(500)
+                return str(e)
+        else:
+            return users
 
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
@@ -952,7 +1053,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         output = StringIO()
         csv_writer = csv.writer(output)
-        csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group(s)', 'Roles', 'Account type'])
+        csv_writer.writerow(['Username', 'Name', 'Organisation',
+                             'Postal address', 'Email address',
+                             'LDAP Group(s)', 'Roles', 'Account type'])
 
         # get local_roles_by_location[location][user] = list of {roles, date, user_granting_roles}
         local_roles_by_location = {}

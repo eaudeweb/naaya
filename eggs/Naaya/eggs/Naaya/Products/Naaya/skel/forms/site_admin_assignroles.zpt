@@ -1,0 +1,55 @@
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Assign roles</metal:block>
+<metal:block fill-slot="second-tabs">
+    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
+</metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
+<p i18n:translate="">
+Select the username from the drop-down list, select the intended role(s) and choose
+the specific location from the portal you want to grant this permissions.
+</p>
+<form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles">
+<table border="0" cellspacing="4" cellpadding="4" width="100%">
+    <tr>
+      <td align="top" width="20%" class="form-label" i18n:translate="">Username:</td>
+      <td align="top" width="*" tal:define="users user_tool/user_names">
+     <select name="names" size="5" multiple="multiple">
+        <option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
+     </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="top" width="20%" i18n:translate="">Roles:</td>
+      <td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
+     <select name="roles" size="5" multiple="multiple">
+        <tal:block repeat="role roles">
+           <option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
+           <option tal:condition="python:role!='Manager'" tal:attributes="value role" tal:content="role" />
+        </tal:block>
+     </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td valign="top" width="20%"><span tal:omit-tag="" i18n:translate="">Location:(folder)</span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span></td>
+      <td valign="top" width="*">
+     <input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();" /> <span i18n:translate="">Entire portal</span><br />
+     <input type=radio name="loc" value="other" /> <span i18n:translate="">Pick other...</span><br />
+     <input type=text name="location" size="40" onclick="pickLocation();" value="" />
+     <input type="button" value="Pick" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);" i18n:attributes="value"/>
+      </td>
+    </tr>
+
+    <tr>
+      <td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+      <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
+    </tr>
+</table>
+<p>
+    <input type="submit" value="Assign role" i18n:attributes="value"/>
+</p>
+</form>
+</metal:block>
+</metal:block>
+</metal:block>

@@ -2,6 +2,38 @@ from datetime import datetime
 from os import path
 import re
 import htmlentitydefs
+import logging
+
+mimetype_map = {
+    '.css'  : 'text/css',
+    '.html' : 'text/html',
+    '.htm'  : 'text/html',
+    '.txt'  : 'text/plain',
+    '.xml'  : 'text/xml',
+
+    '.gif'  : 'image/gif',
+    '.jpg'  : 'image/jpeg',
+    '.jpeg' : 'image/jpeg',
+    '.png'  : 'image/png',
+
+    '.doc'  : 'application/msword',
+    '.pdf'  : 'application/pdf',
+    '.xls'  : 'application/vnd.ms-excel',
+    '.ppt'  : 'application/vnd.ms-powerpoint',
+    '.swf'  : 'application/x-shockwave-flash',
+    '.js'   : 'application/x-javascript',
+    '.rar'  : 'application/x-rar-compressed',
+    '.zip'  : 'application/zip',
+
+    '.mp3'  : 'audio/mpeg',
+
+    '.mpeg' : 'video/mpeg',
+    '.mpg'  : 'video/mpeg',
+}
+
+def mimetype_from_filename(filename, default=None):
+    ext = path.splitext(filename)[1]
+    return mimetype_map.get(ext, default)
 
 def relative_object_path(obj, ancestor):
     """
@@ -79,38 +111,6 @@ def cooldown(name, interval):
         _cooldown_map[name] = now
         return False
 
-mimetype_map = {
-    '.css'  : 'text/css',
-    '.html' : 'text/html',
-    '.htm'  : 'text/html',
-    '.txt'  : 'text/plain',
-    '.xml'  : 'text/xml',
-
-    '.gif'  : 'image/gif',
-    '.jpg'  : 'image/jpeg',
-    '.jpeg' : 'image/jpeg',
-    '.png'  : 'image/png',
-
-    '.doc'  : 'application/msword',
-    '.pdf'  : 'application/pdf',
-    '.xls'  : 'application/vnd.ms-excel',
-    '.ppt'  : 'application/vnd.ms-powerpoint',
-    '.swf'  : 'application/x-shockwave-flash',
-    '.js'   : 'application/x-javascript',
-    '.rar'  : 'application/x-rar-compressed',
-    '.zip'  : 'application/zip',
-
-    '.mp3'  : 'audio/mpeg',
-
-    '.mpeg' : 'video/mpeg',
-    '.mpg'  : 'video/mpeg',
-}
-
-def mimetype_from_filename(filename, default=None):
-    ext = path.splitext(filename)[1]
-    return mimetype_map.get(ext, default)
-
-
 def unescape_html_entities(text):
     # from http://effbot.org/zone/re-sub.htm#unescape-html
     def fixup(m):
@@ -134,6 +134,18 @@ def unescape_html_entities(text):
     return re.sub("&#?\w+;", fixup, text)
 
 def is_ajax(request):
-    "Check if an REQUEST object has 'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'"
+    """Check if an REQUEST object has 'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'
+
+    """
     return request.environ.get('HTTP_X_REQUESTED_WITH', '') == \
             'XMLHttpRequest'
+
+def render_macro(context, template_name, macro, **kw):
+    """ Render just a part of the macro """
+    from Products.PageTemplates.PageTemplate import PageTemplate
+    template = PageTemplate()
+    template.write("<metal:block\
+        use-macro=\"python: here.getFormsTool().getForm('%s').macros['%s']\"\
+        />" % (template_name, macro))
+    kw.update({'here': context, 'context': context})
+    return template.pt_render(extra_context=kw)

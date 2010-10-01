@@ -49,7 +49,7 @@ class User(SimpleUser, Persistent):
     def getRoles(self):
         """Return the list of roles assigned to a user."""
         if self.name == 'Anonymous User': return tuple(self.roles)
-        else: return tuple(self.roles) + ('Authenticated',)
+        else: return tuple(self.roles)
 
     def addRoles(self, location, roles):
         additional_roles = [r for r in roles if r not in self.roles]
@@ -72,4 +72,3 @@ class User(SimpleUser, Persistent):
         except:
             pass
         return self.name
-

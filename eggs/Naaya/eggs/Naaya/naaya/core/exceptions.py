@@ -41,3 +41,8 @@ def localize_exc(exc, gettext):
         msg = msg.replace('${%s}' % name, value)
 
     return msg
+
+class ValidationError(Exception):
+    """Used for signaling errors in HTML form validation
+
+    """

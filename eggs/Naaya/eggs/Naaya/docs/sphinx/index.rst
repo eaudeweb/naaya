@@ -9,14 +9,15 @@ Contents:
    installation
    authentication_tool
    editor_tool
-   notification_tool
-   portlets
-   site
-   pluggable_content
-   permissions
+   exceptions
    heartbeat
-   stylesheets
+   notification_tool
+   permissions
+   pluggable_content
+   portlets
    restricted_toolkit
+   site
+   stylesheets
    testing
 
 Indices and tables
@@ -25,4 +26,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
