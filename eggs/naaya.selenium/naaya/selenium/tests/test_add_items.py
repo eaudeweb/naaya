@@ -19,7 +19,8 @@ class NaayaDocumentTest(SeleniumTestCase):
         selen.click('link=Information')
         selen.wait_for_page_to_load('15000')
         self.assertTrue(selen.is_element_present('typetoadd'),
-                        'An error occured while trying to access `typetoadd` select field name!')
+                        'An error occured while trying to access `typetoadd`'
+                        ' select field name!')
 
     def test_basic_story(self):
         self.selenium_initialize()

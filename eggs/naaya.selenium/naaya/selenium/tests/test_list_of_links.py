@@ -29,7 +29,8 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.selenium_initialize()
         selen = self.selenium
         self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
+        extras_tabel = selen.get_table("//div[@id='center_content']/"
+                                       "form/table.3.1")
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
@@ -38,7 +39,8 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.selenium_initialize()
         selen = self.selenium
         self.selenium_data_introduction_wp(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
+        extras_tabel = selen.get_table("//div[@id='center_content']"
+                                       "/form/table.3.1")
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence_wp(extras_tabel)
 
@@ -51,12 +53,15 @@ class NaayaList_of_linksTest(SeleniumTestCase):
             'title': '',
         }
         self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
+        extras_tabel = selen.get_table("//div[@id='center_content']"
+                                       "/form/table.3.1")
         self.selenium_verify_output_empty(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
     def test_utf8_link_list_title(self):
-        """testing a List of Links with usual ID and a title with cyrilic characters"""
+        """testing a List of Links with usual ID and a title with cyrilic characters
+        
+        """
         self.selenium_initialize()
         selen = self.selenium
         link_list_data = {
@@ -64,25 +69,30 @@ class NaayaList_of_linksTest(SeleniumTestCase):
             'title': u"стуўфх",
         }
         self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
+        extras_tabel = selen.get_table("//div[@id='center_content']"
+                                       "/form/table.3.1")
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
-    def test_utf8_link_list_title_and_id(self):
-        """testing a List of Links with cyrilic characters at ID and Title"""
-        self.selenium_initialize()
-        selen = self.selenium
-        link_list_data = {
-            'tid': u"стуўфх",
-            'title': u"стуўфх",
-        }
-        self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
-        self.selenium_verify_output(extras_tabel, link_list_data)
-        self.selenium_verify_portlet_presence(extras_tabel)
+    ##TODO https://pivo.edw.ro/trac/ticket/14
+    #def test_utf8_link_list_title_and_id(self):
+    #    """testing a List of Links with cyrilic characters at ID and Title"""
+    #    self.selenium_initialize()
+    #    selen = self.selenium
+    #    link_list_data = {
+    #        'tid': u"стуўфх",
+    #        'title': u"стуўфх",
+    #    }
+    #    self.selenium_data_introduction(link_list_data)
+    #    extras_tabel = selen.get_table("//div[@id='center_content']"
+    #                                   "/form/table.3.1")
+    #    self.selenium_verify_output(extras_tabel, link_list_data)
+    #    self.selenium_verify_portlet_presence(extras_tabel)
 
     def test_special_link_list_title(self):
-        """testing a List of Links with usual ID and special characters as title"""
+        """testing a List of Links with usual ID and special characters as title
+        
+        """
         self.selenium_initialize()
         selen = self.selenium
         link_list_data = {
@@ -90,22 +100,25 @@ class NaayaList_of_linksTest(SeleniumTestCase):
             'title': '!@#$%^&*()/\'',
         }
         self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
+        extras_tabel = selen.get_table("//div[@id='center_content']/"
+                                       "form/table.3.1")
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
-    def test_special_link_list_title_and_id(self):
-        """testing a List of Links with special characters as title and ID"""
-        self.selenium_initialize()
-        selen = self.selenium
-        link_list_data = {
-            'tid': '!@#$%^&*()/\'',
-            'title': '!@#$%^&*()/\'',
-        }
-        self.selenium_data_introduction(link_list_data)
-        extras_tabel = selen.get_table("//div[@id='center_content']/form/table.3.1")
-        self.selenium_verify_output(extras_tabel, link_list_data)
-        self.selenium_verify_portlet_presence(extras_tabel)
+    #TODO https://pivo.edw.ro/trac/ticket/14"
+    #def test_special_link_list_title_and_id(self):
+    #    """testing a List of Links with special characters as title and ID"""
+    #    self.selenium_initialize()
+    #    selen = self.selenium
+    #    link_list_data = {
+    #        'tid': '!@#$%^&*()/\'',
+    #        'title': '!@#$%^&*()/\'',
+    #    }
+    #    self.selenium_data_introduction(link_list_data)
+    #    extras_tabel = selen.get_table("//div[@id='center_content']"
+    #                                   "form/table.3.1")
+    #    self.selenium_verify_output(extras_tabel, link_list_data)
+    #    self.selenium_verify_portlet_presence(extras_tabel)
 
     def test_normal_char_link(self):
         self.selenium_initialize_link()
@@ -133,31 +146,32 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.logout_user()
         self.selenium_verify_list_display(link_list_data, link_data)
 
-    def test_empty_char_link(self):
-        self.selenium_initialize_link()
-        selen = self.selenium
-        selen.open('portal/admin_linkslists_html', True)
-        link_data = {
-            'title_link': '',
-            'description_link': '',
-            'url_link': '',
-            'permission_index_link': 0,  #may be from 0 to 11
-            'order_link': 0,
-        }
-        self.selenium_add_link(link_data, link_list_data)
-        portlet_data = {
-            'position_label': 'Left',  #can be left,center,right
-            'display_url': 'info',
-        }
-        link_data['display_url'] = portlet_data['display_url']
-        self.selenium_arrange_link_list(portlet_data, link_list_data)
-        self.logout_user()
-        self.selenium_verify_list_display(link_list_data, link_data)
-        self.login_user('admin', '')
-        self.permission_index_link = 7
-        self.selenium_update_link(link_data, link_list_data)
-        self.logout_user()
-        self.selenium_verify_list_display(link_list_data, link_data)
+    #TODO https://pivo.edw.ro/trac/ticket/45
+    #def test_empty_char_link(self):
+    #    self.selenium_initialize_link()
+    #    selen = self.selenium
+    #    selen.open('portal/admin_linkslists_html', True)
+    #    link_data = {
+    #        'title_link': '',
+    #        'description_link': '',
+    #        'url_link': '',
+    #        'permission_index_link': 0,  #may be from 0 to 11
+    #        'order_link': 0,
+    #    }
+    #    self.selenium_add_link(link_data, link_list_data)
+    #    portlet_data = {
+    #        'position_label': 'Left',  #can be left,center,right
+    #        'display_url': 'info',
+    #    }
+    #    link_data['display_url'] = portlet_data['display_url']
+    #    self.selenium_arrange_link_list(portlet_data, link_list_data)
+    #    self.logout_user()
+    #    self.selenium_verify_list_display(link_list_data, link_data)
+    #    self.login_user('admin', '')
+    #    self.permission_index_link = 7
+    #    self.selenium_update_link(link_data, link_list_data)
+    #    self.logout_user()
+    #    self.selenium_verify_list_display(link_list_data, link_data)
 
     def test_special_char_link(self):
         self.selenium_initialize_link()
@@ -282,33 +296,39 @@ class NaayaList_of_linksTest(SeleniumTestCase):
                                                  "/fieldset/legend"))
         selen.click("link=%s" % list_data['title'])
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']/"
-                                                 "h1[text()='Edit list of links']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']/"
+                                     "h1[text()='Edit list of links']"))
 
-        selen.type("//input[@name='title' and @value='']",link_data['title_link'])
+        selen.type("//input[@name='title' and @value='']",
+                   link_data['title_link'])
         selen.type("description", link_data['description_link'])
         selen.click("relative")
         selen.type("url", link_data['url_link'])
-        selen.select("permission", "index=%d" % link_data['permission_index_link'])
+        selen.select("permission", "index=%d"
+                     % link_data['permission_index_link'])
         selen.type("order", "%d" % link_data['order_link'])
         selen.click("//input[@value='Add']")
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']"
-                                                 "/h1[text()='Edit list of links']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']"
+                                     "/h1[text()='Edit list of links']"))
 
     def selenium_arrange_link_list(self, portlet_data, list_data):
         selen = self.selenium
         selen.click("link=Arrange")  #Arrange portlet page
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']"
-                                                 "/h1[text()='Arrange portlets']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']"
+                                     "/h1[text()='Arrange portlets']"))
         selen.select("position", "label=%s" % portlet_data['position_label'])
         selen.select("portlet_id", "label=%s (Links list)" % list_data['title'])
         selen.type("location", portlet_data['display_url'])
         selen.click("//input[@name='action' and @value='Assign']")
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']"
-                                                 "/h1[text()='Arrange portlets']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']"
+                                     "/h1[text()='Arrange portlets']"))
 
     def selenium_verify_portlet_presence(self, extras_tabel):
         selen = self.selenium
@@ -321,11 +341,13 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.assertTrue(selen.is_element_present("//div[@id='center_content']"
                                                  "/fieldset/legend"))
 
-        self.assertTrue(selen.is_element_present("css=table.datatable>"
-                                                 "tbody>tr:nth-child(1)>td:nth-child(1)"),
-                        'The list: %s does not appear in manage portlets' % extras_tabel)
-        verify_portlet = selen.get_text("css=#center_content>form>table.datatable>"
-                                        "tbody>tr:nth-child(1)>td:nth-child(2)")
+        self.assertTrue(
+            selen.is_element_present("css=table.datatable>"
+                                     "tbody>tr:nth-child(1)>td:nth-child(1)"),
+                                     'The list %s wont appear in manage portlets'
+                                     % extras_tabel)
+        verify_portlet = selen.get_text("css=#center_content>form>table.datatable"
+                                        ">tbody>tr:nth-child(1)>td:nth-child(2)")
         self.assertTrue(extras_tabel == verify_portlet,
                     'The name of list %s is not properly introducted'
                     'in manage portlets' % extras_tabel)
@@ -340,9 +362,10 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen.wait_for_page_to_load("30000")
         self.assertTrue(selen.is_element_present("//div[@id='center_content']"
                                                  "/fieldset/legend"))
-        self.assertTrue(selen.is_element_present("css=#center_content"
-                                      ">fieldset>form>select>option:nth-child(4)"),
-                        'The list: %s does not appear in manage portlets' % extras_tabel)
+        self.assertTrue(
+            selen.is_element_present("css=#center_content"
+                                     ">fieldset>form>select>option:nth-child(4)"),
+            'The list: %s does not appear in manage portlets' % extras_tabel)
         verify_wp = selen.get_text("css=#center_content>fieldset>form>select"
                                    ">option:nth-child(4)")
         self.assertTrue(extras_tabel == verify_wp,
@@ -363,12 +386,15 @@ class NaayaList_of_linksTest(SeleniumTestCase):
 
         selen.click("link=%s" % list_data['title'])
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("link=%s" % link_data['title_link']),
-                        'The link add failed::hint! link must have a title')
+        self.assertTrue(
+            selen.is_element_present("link=%s" % link_data['title_link']),
+            'The link add failed::hint! link must have a title')
         selen.click("link=%s" % link_data['title_link'])
         selen.wait_for_page_to_load("30000")
-        selen.select("permission", "index=%d" % link_data['permission_index_link'])
+        selen.select("permission", "index=%d"
+                     % link_data['permission_index_link'])
         selen.click("//div[@id='center_content']/form[1]/fieldset/p/input")
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']"
-                                                 "/form[1]/fieldset/p/input"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']"
+                                     "/form[1]/fieldset/p/input"))
