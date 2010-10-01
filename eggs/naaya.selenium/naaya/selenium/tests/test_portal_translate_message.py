@@ -1,22 +1,30 @@
 #encoding: UTF-8
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
+from itertools import count
 
 
 class NaayaPortal_translate_messageTest(SeleniumTestCase):
-#This test case verifies the following Naaya features:
-#    1. introduce a traslation with usual chars from english to french for 'Translate message'
-#    2. introduce a traslation empty from english to french for 'Translate message'
-#    3. introduce a traslation utf8 chars from english to french for 'Translate message'
-#    4. introduce a traslation special chars from english to french for 'Translate message'
-#    5. introduce a traslation with a html tag from english to french for 'Translate message'
+    """This test case verifies the following Naaya features:
+    -traslation with usual chars from english to french for 'Translate message'
+    -traslation empty from english to french for 'Translate message'
+    -traslation utf8 chars from english to french for 'Translate message'
+    -traslation special chars from english to french for 'Translate message'
+    -traslation with a html tag from english to french for 'Translate message'
+    
+    """
     def afterSetUp(self):
-        selen = self.selenium
+        "login as admin"
         self.login_user('admin', '')
-        selen.open('/portal/admin_translations_html', True)
-        selen.wait_for_page_to_load("30000")
 
     def load_translate_page(self):
+        """open's the translation page, adds a new language,
+        loads the page where the translation for 'Translate message'
+        must be defined
+        
+        """
         selen = self.selenium
+        selen.open('/portal/admin_translations_html', True)
+        selen.wait_for_page_to_load("30000")
         language = {'tag1': 'en',
                     'tag2': 'fr'}
         selen.open('/portal/admin_translations_html', True)
@@ -51,7 +59,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         selen.wait_for_page_to_load("30000")
 
     def test_normal_translation(self):
-        """normal translation from english to french"""
+        """insert a normal translation from english to french"""
         self.load_translate_page()
         selen = self.selenium
         translation = "translation du mot"
@@ -61,9 +69,27 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
+        self.selenium_verify_translated_sign()
+
+    def test_space_as_translation(self):
+        """insert a space as translation from english to french"""
+        #TODO https://pivo.edw.ro/trac/ticket/44
+        self.load_translate_page()
+        selen = self.selenium
+        translation = " "
+        selen.type("translation:utf8:ustring", translation)
+        selen.click("//input[@value='Save changes']")
+        selen.wait_for_page_to_load("30000")
+
+        self.selenium_verify_error_page()
+        try:
+            self.selenium_verify_translation(translation)
+        except:
+            self.fail("#TODO https://pivo.edw.ro/trac/ticket/44")
+        self.selenium_verify_translated_sign_not_present()
 
     def test_empty_translation(self):
-        """empty translation from english to french"""
+        """insert a empty translation from english to french"""
         self.load_translate_page()
         selen = self.selenium
         translation = ""
@@ -72,23 +98,27 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         selen.wait_for_page_to_load("30000")
 
         self.selenium_verify_error_page()
+        #verify output
         out_str = selen.get_text("//div[@id='center_content']/h1")
         self.assertEqual(out_str, 'Translate message')
+
+        self.selenium_verify_translated_sign_not_present()
 
     def test_utf8_translation(self):
         """cyrilic characters in a translation from english to french"""
         self.load_translate_page()
         selen = self.selenium
-        translation = u"стуўфхцчшщъыьэюяабвгґдеёжӂзіийј"
+        translation = u"стуўфх"
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load("30000")
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
+        self.selenium_verify_translated_sign()
 
     def test_special_translation(self):
-        """special characters in a translation from english to french"""
+        """insert special characters in a translation from english to french"""
         self.load_translate_page()
         selen = self.selenium
         translation = "!@#$%^&*()"
@@ -98,9 +128,11 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
+        self.selenium_verify_translated_sign()
 
     def test_html_tag_translation(self):
-        """special characters in a translation from english to french"""
+        """insert a html tag in a translation from english to french"""
+        #TODO https://pivo.edw.ro/trac/ticket/44
         self.load_translate_page()
         selen = self.selenium
         translation = "<b>"
@@ -111,6 +143,10 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         self.selenium_verify_error_page()
         out_str = selen.get_text("//div[@id='center_content']/h1")
         self.assertNotEqual(out_str, translation)
+        try:
+            self.selenium_verify_translated_sign_not_present()
+        except:
+            self.fail("#TODO https://pivo.edw.ro/trac/ticket/44")
 
     def selenium_add_language(self, lang):
         """This function works only if you are an administrator"""
@@ -121,13 +157,55 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
             selen.click("//input[@value='Add']")
 
     def selenium_verify_error_page(self):
-        """checks if there had been an eror page and compares the input with output"""
+        """Checks if there had been an eror page and compares the input with
+        output
+        
+        """
         selen = self.selenium
         if selen.is_element_present("//div[@id='middle_port']/"
                                     "h1[text()='Error page']"):
             return self.fail('Crashed while delivering the translation')
 
     def selenium_verify_translation(self, in_str):
+        """compares displayed translation with the typed one"""
         selen = self.selenium
         out_str = selen.get_text("//div[@id='center_content']/h1")
-        return self.assertEqual(out_str, in_str)
+        self.assertEqual(out_str, in_str)
+
+    def selenium_verify_translated_sign(self):
+        """verifies the translated "check sign" in the table"""
+        selen = self.selenium
+        selen.click("link=Back to translation form")
+        selen.wait_for_page_to_load('30000')
+        for i in count(1):
+            try:
+                translated = selen.get_text("css=#center_content>table.datatable"
+                                            ">tbody>tr:nth-child(%s)>td:nth-chil"
+                                            "d(2)>a" % i)
+            except:
+                break
+            if (translated == 'Translate message'):
+                self.assertTrue(
+                    selen.is_element_present("css=#center_content>"
+                                             "table.datatable>tbody>"
+                                             "tr:nth-child(%s)>td:nth-child(3)>"
+                                             "img[alt='Translated']" % i))
+
+    def selenium_verify_translated_sign_not_present(self):
+        """verifies if the translated "check sign" in the table is not present"""
+        selen = self.selenium
+        selen.click("link=Back to translation form")
+        selen.wait_for_page_to_load('30000')
+        for i in count(1):
+            try:
+                translated = selen.get_text("css=#center_content>table.datatable"
+                                            ">tbody>tr:nth-child(%s)>td:nth-chil"
+                                            "d(2)>a" % i)
+            except:
+                break
+            if (translated == 'Translate message'):
+                self.assertFalse(
+                    selen.is_element_present("css=#center_content>"
+                                             "table.datatable>tbody>"
+                                             "tr:nth-child(%s)>td:nth-child(3)>"
+                                             "img[alt='Translated']" % i))

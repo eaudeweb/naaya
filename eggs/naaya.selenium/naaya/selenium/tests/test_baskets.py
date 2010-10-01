@@ -28,11 +28,14 @@ class NaayaBasketsTest(SeleniumTestCase):
 
     def test_basket_of_approvals(self):
         "testing the approvals basket's for news items: approve and unnaprove"
-        self.selenium_approve_pending(news_data)  #verifies if the news can be approved
+        self.selenium_approve_pending(news_data)
+        #verifies if the news can be approved
         self.logout_user()
-        self.selenium_verify_news_display(news_data)  #verifies as an anonymous the display of news after approval
+        self.selenium_verify_news_display(news_data)
+        #verifies as an anonymous the display of news after approval
         self.login_user('admin', '')
-        self.selenium_unapprove_news(news_data)  #verifies if the news can be unnaproved
+        self.selenium_unapprove_news(news_data)
+        #verifies if the news can be unnaproved
 
     def test_basket_of_translations(self):
         """testing the translations basket"""
@@ -155,8 +158,8 @@ class NaayaBasketsTest(SeleniumTestCase):
             except:
                 break
             if(aproved_title == news_data['news_title']):
-                selen.check("css=#pblForm>table.datatable>tbody>tr:nth-child(%d)>"
-                      "td:nth-child(6)>input" % i)
+                selen.check("css=#pblForm>table.datatable>tbody>tr:nth-child(%d)"
+                      ">td:nth-child(6)>input" % i)
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load("10000")
         self.assertFalse(selen.is_text_present("No pending items to review."),
@@ -167,5 +170,6 @@ class NaayaBasketsTest(SeleniumTestCase):
     def selenium_verify_news_display(self, news_data):
         selen = self.selenium
         selen.open("/portal/info", True)
-        self.assertTrue(selen.is_element_present("link=%s" % news_data['news_title']),
-            "The news can't be viewed by anonimous after approval")
+        self.assertTrue(selen.is_element_present("link=%s"
+                                                 % news_data['news_title']),
+                        "The news can't be viewed by anonimous after approval")
