@@ -78,6 +78,26 @@ function add_onclick_group_links() {
     });
 }
 
+function ajax_user_search_form() {
+    $('#frmRoles').ajaxForm({
+    beforeSubmit: function() {
+        $('#waiting_for_search_results').show();
+        $('#search_results_parent').hide();
+    },
+    success: function(data) {
+        var html = $("#search_results_parent", $(data)).html();
+        $('#search_results_parent').html(html);
+
+        $('#waiting_for_search_results').hide();
+        $('#search_results_parent').show();
+    },
+    error: function() {
+        $('#error_on_search_results').show();
+        $('#waiting_for_search_results').hide();
+    }
+    });
+}
+
 function show_ldap_section(tabid, url) {
     select_second_tab(tabid);
 
@@ -93,6 +113,8 @@ function show_ldap_section(tabid, url) {
             if (tabid == 'link_manage_all') {
                 add_onclick_sort_links();
                 add_onclick_group_links();
+            } else if (tabid == 'link_assign_to_users') {
+                ajax_user_search_form();
             }
 
             $('#section_wating_response').hide();
