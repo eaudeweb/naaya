@@ -109,7 +109,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             'Password and confirmation do not match')
 
     def test_delete_user(self):
-        self.selenium.open("/portal/admin_users_html", True)
+        self.selenium.open("/portal/admin_local_users_html", True)
         #Check the last user checkbox
         self.selenium.click(
             "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
@@ -161,7 +161,6 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load("3000")
         check_result(u'contributor')
 
-
     def test_add_role(self):
         self.selenium.open("/portal/admin_addrole_html", True)
         self.selenium.type("//input[@id='input-role']", "SOMErOLE")
@@ -185,8 +184,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
 
     def test_assign_role(self):
         "Assign a role"
-        self.selenium.open("/portal/admin_roles_html?section=assign_roles",
-                           True)
+        self.selenium.open("/portal/admin_assignroles_html", True)
         self.selenium.add_selection("names", "label=user3")
         self.selenium.add_selection("//select[@name='roles']", 'Manager')
         self.selenium.click("//input[@value='Pick']")
@@ -198,18 +196,22 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
 
         self.selenium.click("//input[@value='Assign role']")
         self.selenium.wait_for_page_to_load("3000")
+
+        self.selenium.open("/portal/admin_local_users_html", True)
         #Check is the user has the assigned roles
-        assert self.selenium.get_text(
-            "//table[@class='datatable']/tbody/tr[last()]") ==\
-            u'user3 Contributor Entire portal Manager Information'
+        last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
+        assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
+        assert self.selenium.get_text("%s/td/div[@class='user-role'][1]" %
+                                      last_row) == u'Contributor in portal'
+        assert self.selenium.get_text("%s/td/div[@class='user-role'][2]" %
+                                      last_row) == u'Manager in Information'
 
-    def test_revoke_role(self):
-        self.selenium.open("/portal/admin_roles_html?section=users", True)
-        self.selenium.click("css=.datatable>tbody>tr:last-child td input")
-        role_row_text = self.selenium.get_text(
-            "//table[@class='datatable']/tbody/tr[last()]")
-        self.selenium.click("//input[@value='Revoke selected roles']")
+    def test_aaaarevoke_role(self):
+        "Revoke Contributor to user3"
+        self.selenium.open("/portal/admin_local_users_html", True)
+        last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
+        assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
+        self.selenium.click(
+            "%s/td/div[@class='user-role']/a[@class='revoke-role']" % last_row)
         self.selenium.wait_for_page_to_load("3000")
-        assert self.selenium.get_text(
-            "//table[@class='datatable']/tbody/tr[last()]") != role_row_text
-
+        assert self.selenium.get_text('%s/td[last()]' % last_row) == u'-'
