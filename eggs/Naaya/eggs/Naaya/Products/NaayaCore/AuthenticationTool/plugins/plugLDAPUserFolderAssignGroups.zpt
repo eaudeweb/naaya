@@ -1,3 +1,4 @@
+<div id="section_parent">
 <fieldset>
     <legend i18n:translate="">LDAP groups</legend>
     <div id="grant_roles_block">
@@ -64,3 +65,4 @@
     </form>
     </div>
 </fieldset>
+</div>

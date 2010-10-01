@@ -113,7 +113,6 @@ function toggleSelect()
         </p>
     </div>
 
-    <div id="section_parent">
     <tal:block condition="python:section=='manage_all'">
         <tal:block replace="structure here/section_manage_all_html"/>
     </tal:block>
@@ -128,8 +127,7 @@ function toggleSelect()
 
     <tal:block tal:condition="python:section=='group_members'">
         <tal:block replace="structure here/section_group_members_html"/>
-        </tal:block>
-    </div>
+    </tal:block>
 
     <div class="clear"></div>
 
