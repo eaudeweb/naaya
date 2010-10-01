@@ -482,7 +482,11 @@ class plugLDAPUserFolder(PlugBase):
             if 's' in self.REQUEST:
                 section = self.REQUEST['s']
                 if section == 'manage_all':
-                    return self.section_manage_all_html()
+                    if 'skey' in self.REQUEST:
+                        # sort key only for user roles
+                        return self.users_roles_html()
+                    else:
+                        return self.section_manage_all_html()
                 elif section == 'assign_to_users':
                     return self.section_assign_to_users_html()
                 elif section == 'assign_to_groups':
