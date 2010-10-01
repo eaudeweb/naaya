@@ -19,10 +19,12 @@ news_data_2 = {
 
 
 class NaayaChannelsTest(SeleniumTestCase):
-    #This test case verifies the features:
-    #1. Adding a local channel
-    #2. Arranging the local channel's portlet on 'info'
-    #3. the display of the channels portlet and the news added
+    """This test case verifies the features:
+    - Adding a local channel
+    - Arranging the local channel's portlet on 'info' main section
+    - the display of the channels portlet and the news added
+    
+    """
     def selenium_initialize_local(self, news_data, news_data_2):
         """Initializing..."""
         self.login_user('admin', '')
@@ -63,25 +65,32 @@ class NaayaChannelsTest(SeleniumTestCase):
         selen = self.selenium
         selen.click("link=Arrange")
         selen.wait_for_page_to_load("30000")
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']/"
-                                                 "h1[text()='Arrange portlets']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']/"
+                                     "h1[text()='Arrange portlets']"))
 
-        selen.select("position", "value=%s" % channel_portlet_data['position_label'])
-        selen.select("portlet_id", "label=%s (%s)" % (channel_portlet_data['title'],
+        selen.select("position", "value=%s"
+                     % channel_portlet_data['position_label'])
+        selen.select("portlet_id", "label=%s (%s)"
+                     % (channel_portlet_data['title'],
                      channel_portlet_data['portlet']))
         selen.type("location", channel_portlet_data['display_url'])
         selen.click("//input[@name='action' and @value='Assign']")
         selen.wait_for_page_to_load("30000")
 
-        self.assertTrue(selen.is_element_present("//div[@id='center_content']/"
-                                                 "h1[text()='Arrange portlets']"))
+        self.assertTrue(
+            selen.is_element_present("//div[@id='center_content']/"
+                                     "h1[text()='Arrange portlets']"))
 
     def selenium_verify_display(self, channel_portlet_data):
         selen = self.selenium
         selen.open("/portal/info", True)
-        self.assertTrue(selen.is_text_present(channel_portlet_data['title']),
-                    "Channel  %s not displayed" % channel_portlet_data['title'])
-        self.assertTrue(selen.is_element_present("link=%s" % news_data['title']),
-                            "Link %s not displayed" % news_data['title'])
-        self.assertTrue(selen.is_element_present("link=%s" % news_data_2['title']),
-                            "Link %s not displayed" % news_data_2['title'])
+        self.assertTrue(
+            selen.is_text_present(channel_portlet_data['title']),
+            "Channel  %s not displayed" % channel_portlet_data['title'])
+        self.assertTrue(
+            selen.is_element_present("link=%s" % news_data['title']),
+            "Link %s not displayed" % news_data['title'])
+        self.assertTrue(
+            selen.is_element_present("link=%s" % news_data_2['title']),
+            "Link %s not displayed" % news_data_2['title'])
