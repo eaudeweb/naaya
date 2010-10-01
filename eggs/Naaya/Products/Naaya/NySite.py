@@ -935,8 +935,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """
         Returns the list of main topic folder objects
         """
-        #return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self.utGetObject,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
-        return [self.utGetObject(path) for path in self.maintopics]
+        return filter(lambda ob: ob is not None,
+                      (self.utGetObject(path) for path in self.maintopics))
 
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
