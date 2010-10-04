@@ -43,7 +43,7 @@
             </li>
             <li tal:define="url string:${site_url}/admin_assignroles_html">
                 <a tal:attributes="href url; class python: 'admin_assignroles_html' in request.PATH_INFO and 'current_sub' or ''"
-                   i18n:translate="">Assign roles to existing users</a>
+                   i18n:translate="">Assign roles to users</a>
             </li>
         </ul>
     </div>
@@ -61,7 +61,7 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
 <span>
     <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
-    <input type="submit" value="Delete user"  i18n:attributes="value" class="deluser"/>
+    <input type="submit" value="Delete user(s)"  i18n:attributes="value" class="deluser"/>
 </span>
 <input type="hidden" id="template" value="site_admin_local_users" />
 <metal:block define-macro="datatable">
@@ -99,6 +99,7 @@
             </a>
             <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
+            <span class="revoke-roles" style="float:right;" i18n:translate="">Revoke</span>
         </th>
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
@@ -119,7 +120,7 @@
             <br />
             <tal:block replace="python:user_tool.getUserEmail(user)"></tal:block>
         </td>
-        <td tal:define="user_roles python: users_roles[here.utUrlEncode(user)]">
+        <td tal:define="user_roles python: users_roles[str(user)]">
             <div class="user-role"
                  tal:repeat="role python: user_roles">
                 <tal:block condition="python: role[0]">
@@ -146,11 +147,10 @@
 </metal:block>
 </div>
 </metal:block>
+<strong i18n:translate="">Notes:</strong>
 <p>
-    <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span>
-</p>
-<p>
-    <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
+    <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
+    <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
 </p>
 </form>
 </metal:block></metal:block>

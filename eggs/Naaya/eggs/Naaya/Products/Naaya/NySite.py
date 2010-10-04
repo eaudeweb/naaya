@@ -2264,8 +2264,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_users_html' %
-                                      self.absolute_url())
+            REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
+                                '%s/admin_users_html' % self.absolute_url()))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_editrole_html')
@@ -2290,7 +2290,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if success:
                 self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                          date=self.utGetTodayDate())
-                return REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
 
     def admin_editrole_html(self, role, REQUEST):
@@ -2352,7 +2352,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+            REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                       self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')

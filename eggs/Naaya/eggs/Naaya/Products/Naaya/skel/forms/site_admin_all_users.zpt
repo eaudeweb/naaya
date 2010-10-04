@@ -11,7 +11,6 @@
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%">
     <tr>
-        <th width="5%" align="left" i18n:translate="">Delete</th>
         <th align="left">
             <a tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
                 <span i18n:translate="">Username</span>
@@ -64,11 +63,14 @@
         </th>
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
-        <td nowrap="nowrap" class="center">
-            <input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user)" />
-        </td>
-        <td><strong><a tal:define="user_quoted python:here.utUrlEncode(user)"
-                        tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all" tal:content="user">username</a></strong>
+        <td>
+            <strong>
+                <tal:block condition="python: user_tool.getUserSource(user) == 'n/a'">
+                <a tal:define="user_quoted python:here.utUrlEncode(user)"
+                            tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all" tal:content="user">username</a>
+                </tal:block>
+                <tal:block condition="python: not user_tool.getUserSource(user) == 'n/a'" tal:content="user"></tal:block>
+            </strong>
             <span tal:condition="python:user_tool.isNewUser(user)">
                 <img src="misc_/Naaya/star.png" alt="New account" />
             </span>
@@ -92,11 +94,10 @@
 </metal:block>
 </div>
 </metal:block>
+<strong i18n:translate="">Notes:</strong>
 <p>
-    <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt" i18n:name="image" /> are added in the last 5 days.</span>
-</p>
-<p>
-    <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
+    <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
+    <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
 </p>
 </metal:block></metal:block>
 </metal:block>
