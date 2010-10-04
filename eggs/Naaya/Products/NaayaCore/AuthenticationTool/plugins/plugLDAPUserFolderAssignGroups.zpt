@@ -1,5 +1,5 @@
 <div id="section_parent">
-    <form name="group-roles" method="post"
+    <form id="group_roles_form" name="group-roles" method="post"
           tal:attributes="action string:${here/absolute_url}/map_group_to_role"
           id="gr_roles">
         <p i18n:translate="">
@@ -17,6 +17,11 @@
                     js_code string:fPickRoles('${url}', 'ldap_group');"
                tal:attributes="onclick string:javascript:${js_code}" />
         </div>
+        <div id="ldap_group_empty" class="message-error" style="display:none">
+            <p i18n:translate="">
+                No group selected.
+            </p>
+        </div>
 
         <div class="field">
         <label for="portal_roles" i18n:translate="">Role to grant</label>
@@ -27,6 +32,11 @@
                 <option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
                 </tal:block>
         </select>
+        </div>
+        <div id="portal_roles_empty" class="message-error" style="display:none">
+            <p i18n:translate="">
+                No role selected.
+            </p>
         </div>
 
         <div class="field">
@@ -60,4 +70,24 @@
                 i18n:attributes="value"/>
         </div>
     </form>
+
+    <div id="assign_groups_waiting_response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting
+        </p>
+    </div>
+
+    <div id="assign_groups_success_response" style="display:none">
+        <p i18n:translate="">
+            Success assigning group roles.
+        </p>
+    </div>
+
+    <div id="assign_groups_error_response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error assigning group roles.
+        </p>
+    </div>
 </div>

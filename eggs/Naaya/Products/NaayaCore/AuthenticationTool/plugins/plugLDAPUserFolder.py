@@ -251,6 +251,28 @@ class plugLDAPUserFolder(PlugBase):
     def isList(self, l):
         return isinstance(l, list)
 
+    security.declareProtected(manage_users, 'addUserRoles')
+    def addUserRoles(self, name=[], roles=[], loc='allsite', location='',
+            user_location='', send_mail='', REQUEST=None):
+        """ """
+        super(plugLDAPUserFolder, self).addUserRoles(name, roles, loc, location,
+                user_location, send_mail, REQUEST)
+        if REQUEST is not None:
+            if is_ajax(REQUEST):
+                return self.section_assign_to_users_html()
+            else:
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    security.declareProtected(manage_users, 'revokeUserRoles')
+    def revokeUserRoles(self, roles='', REQUEST=None):
+        """ """
+        super(plugLDAPUserFolder, self).revokeUserRoles(roles, REQUEST)
+        if REQUEST is not None:
+            if is_ajax(REQUEST):
+                return self.section_manage_all_html()
+            else:
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
     def get_groups_roles_map(self):
         groups_roles_map = {}
         def add_roles_from_ob(ob):
@@ -310,7 +332,10 @@ class plugLDAPUserFolder(PlugBase):
                     group, userids, roles, loc, location)
 
         if REQUEST is not None:
-            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            if is_ajax(REQUEST):
+                return self.section_assign_to_groups_html()
+            else:
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     security.declareProtected(manage_users, 'revoke_group_role')
     def revoke_group_role(self, roles, REQUEST=None):
@@ -322,7 +347,10 @@ class plugLDAPUserFolder(PlugBase):
             ob.acl_satellite.remove_group_roles(group, [role])
 
         if REQUEST is not None:
-            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+            if is_ajax(REQUEST):
+                return self.section_manage_all_html()
+            else:
+                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def group_member_ids(self, group):
         if not hasattr(self, '_v_ldap_groups_cache'):
@@ -482,11 +510,7 @@ class plugLDAPUserFolder(PlugBase):
             if 's' in self.REQUEST:
                 section = self.REQUEST['s']
                 if section == 'manage_all':
-                    if 'skey' in self.REQUEST:
-                        # sort key only for user roles
-                        return self.users_roles_html()
-                    else:
-                        return self.section_manage_all_html()
+                    return self.section_manage_all_html()
                 elif section == 'assign_to_users':
                     return self.section_assign_to_users_html()
                 elif section == 'assign_to_groups':
@@ -507,12 +531,6 @@ class plugLDAPUserFolder(PlugBase):
 
     security.declarePublic('section_group_members_html')
     section_group_members_html = PageTemplateFile('plugLDAPUserFolderGroupMembers', globals())
-
-    security.declarePublic('users_roles_html')
-    users_roles_html = PageTemplateFile('plugLDAPUserFolderUsersRoles', globals())
-
-    security.declarePublic('groups_roles_html')
-    groups_roles_html = PageTemplateFile('plugLDAPUserFolderGroupsRoles', globals())
 
     security.declarePublic('pickroles_html')
     pickroles_html = PageTemplateFile('pickRoles', globals())

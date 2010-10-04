@@ -109,7 +109,7 @@
         >Jump to assign roles to selected users</a>
     </tal:block>
 
-    <form name="user-roles" method="post"
+    <form id="search_results_form" name="user-roles" method="post"
         tal:condition="ldap_users"
         tal:attributes="action string:${here/absolute_url}/addUserRoles">
         <table class="datatable" width="95%" id="search_results">
@@ -148,13 +148,18 @@
         <tr>
             <td style="vertical-align: top">Roles</td>
             <td>
-            <select name="roles:list" size="5" multiple="multiple">
+            <select id="portal_roles" name="roles:list" size="5" multiple="multiple">
                 <tal:block repeat="item here/list_valid_roles">
                 <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
                         tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
                 <option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
                 </tal:block>
             </select>
+            <div id="portal_roles_empty" class="message-error" style="display:none">
+                <p i18n:translate="">
+                    No role selected.
+                </p>
+            </div>
             </td>
         </tr>
         <tr>
@@ -177,6 +182,28 @@
         <input type="submit" name="add" value="Assign role" />
         </p>
     </form>
+
+    <div id="assign_users_waiting_response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting
+        </p>
+    </div>
+
+    <div id="assign_users_success_response" style="display:none">
+        <p i18n:translate="">
+            Success assigning user roles.
+        </p>
+    </div>
+
+    <div id="assign_users_error_response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error assigning user roles.
+        </p>
+    </div>
+
+
     </tal:block>
     </div>
 </div>
