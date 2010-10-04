@@ -217,7 +217,7 @@ class ZipExportTool(Implicit, Item):
     def __init__(self, id):
         self.id = id
 
-    security.declareProtected(view, 'do_export')
+    security.declareProtected("Naaya - Zip export", 'do_export')
     def do_export(self, REQUEST=None):
         """ """
         if REQUEST and not self.getParentNode().checkPermissionView():
@@ -265,6 +265,7 @@ class ZipExportTool(Implicit, Item):
                 return file_like_object
             return errors
 
+    security.declarePrivate('gather_objects')
     def gather_objects(self, container):
         objects = []
         for obj in container.objectValues():
@@ -273,6 +274,7 @@ class ZipExportTool(Implicit, Item):
                 objects.extend(self.gather_objects(obj))
         return objects
 
+    security.declarePrivate('add_object_to_zip')
     def add_object_to_zip(self, obj, zip_file):
         def file_has_no_extension(path):
             return not len(path.split('/')[-1].split('.')) > 1
@@ -292,6 +294,7 @@ class ZipExportTool(Implicit, Item):
             zip_file.writestr(zip_path, object_zip_data)
             return zip_path
 
+    security.declarePrivate('add_index')
     def add_index(self, zip_file, archive_files):
         index_content = [('Title', 'Type', 'Path')]
         index_content.extend(archive_files)
@@ -300,6 +303,7 @@ class ZipExportTool(Implicit, Item):
         index_content = '\n'.join(index_content)
         zip_file.writestr('index.txt', index_content)
 
+    security.declarePrivate('get_zip_path')
     def get_zip_path(self, obj):
         my_container = self.getParentNode()
         my_container_path = my_container.getPhysicalPath()
@@ -312,6 +316,7 @@ class ZipExportTool(Implicit, Item):
             object_zip_path.append('')
         return '/'.join(object_zip_path)
 
+    security.declarePrivate('get_zip_content')
     def get_zip_content(self, obj):
         try:
             export_adapter = IZipExportObject(obj)
@@ -319,9 +324,11 @@ class ZipExportTool(Implicit, Item):
         except TypeError:
             return ('', '')
 
+    security.declarePrivate('user_has_view_permission')
     def user_has_view_permission(self, obj):
         return obj.checkPermissionView()
 
+    security.declarePrivate('is_exportable')
     def is_exportable(self, obj):
         return obj.approved and self.user_has_view_permission(obj)
 
