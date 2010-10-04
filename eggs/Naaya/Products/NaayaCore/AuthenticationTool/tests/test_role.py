@@ -1,5 +1,4 @@
 from unittest import TestSuite, makeSuite
-
 import transaction
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
