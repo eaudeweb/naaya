@@ -306,11 +306,16 @@ class ExportTool(Implicit, Item):
     def generate_csv_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
+        return self.generate_csv(dump_header, dump_items)
+
+    security.declarePrivate('generate_csv_output')
+    def generate_csv(self, header, rows):
+
         output = StringIO()
         csv_writer = csv.writer(output)
 
-        csv_writer.writerow(dump_header)
-        for item in dump_items:
+        csv_writer.writerow(header)
+        for item in rows:
             csv_writer.writerow([value.encode('utf-8') for value in item])
 
         return output.getvalue()
@@ -319,19 +324,23 @@ class ExportTool(Implicit, Item):
     def generate_excel_output(self, meta_type, objects):
         dump_header, dump_items = self._dump_objects(meta_type, objects)
 
+        return self.generate_excel(dump_header, dump_items)
+
+    security.declarePrivate('generate_excel')
+    def generate_excel(self, header, rows):
         style = xlwt.XFStyle()
         normalfont = xlwt.Font()
-        header = xlwt.Font()
-        header.bold = True
-        style.font = header
+        headerfont = xlwt.Font()
+        headerfont.bold = True
+        style.font = headerfont
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
         row = 0
-        for col in range(0, len(dump_header)):
-            ws.row(row).set_cell_text(col, dump_header[col], style)
+        for col in range(0, len(header)):
+            ws.row(row).set_cell_text(col, header[col], style)
         style.font = normalfont
-        for item in dump_items:
+        for item in rows:
             row += 1
             for col in range(0, len(item)):
                 ws.row(row).set_cell_text(col, item[col], style)
