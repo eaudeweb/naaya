@@ -25,7 +25,11 @@
 <div tal:condition="here/description" tal:content="structure here/description" />
 
 <div class="buttons" tal:condition="here/checkPermissionViewAnswers">
-	<a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Download as CSV</a>
+	<a tal:attributes="href string:${here/absolute_url}/download?file_type=CSV" i18n:translate="">Download as CSV</a>
+	<a tal:condition="python:here.rstk.we_provide('Excel export')"
+        tal:attributes="href string:${here/absolute_url}/download?file_type=Excel" i18n:translate="">
+        Download as Excel
+    </a>
 </div>
 
 
