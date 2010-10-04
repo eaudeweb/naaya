@@ -68,12 +68,11 @@ class GeoWidget(Widget):
         except ValueError:
             raise WidgetError('Invalid geo values for "%s"' % self.title)
 
-    def render_csv(self, datamodel=None, **kwargs):
-        """ Customize render_csv for this widget type """
+    def get_value(self, datamodel=None, **kwargs):
+        """ Return a string with the data in this widget """
         if datamodel is None:
-            return self._render_default_csv()
-        else:
-            return '"%r"' % (datamodel,)
+            return self._get_default_value()
+        return '%r' % (datamodel,)
 
 InitializeClass(GeoWidget)
 
