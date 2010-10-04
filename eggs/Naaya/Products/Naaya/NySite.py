@@ -3977,6 +3977,7 @@ naaya_known_permissions = {
     'Naaya - Publish content': "Administration",
     'Naaya - Skip Captcha': "Skip captcha verification",
     'Naaya - Translate pages': "Translate messages",
+    'Naaya - Zip export': "Export folder as Zip",
     'Naaya - Validate content': "Validate objects",
     'View': "Access content",
 }
