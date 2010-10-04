@@ -52,11 +52,11 @@ class ComboboxWidget(MultipleChoiceWidget):
             return None
         return int(value)
 
-    def render_csv(self, datamodel=None, **kwargs):
-        """ Customize render_csv for this widget type """
+    def get_value(self, datamodel=None, **kwargs):
+        """ Return a string with the data in this widget """
         if datamodel is None:
-            return self._render_default_csv()
-        return self._escape(self.choices[datamodel])
+            return self._get_default_value()
+        return str(self.choices[datamodel])
 
 InitializeClass(ComboboxWidget)
 

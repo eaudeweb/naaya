@@ -103,12 +103,11 @@ class RadioWidget(MultipleChoiceWidget):
             return self.choices[choiceIdx]
         return datamodel[1]
 
-    def render_csv(self, datamodel=None, **kwargs):
-        """ Customize render_csv for this widget type """
+    def get_value(self, datamodel=None, **kwargs):
+        """ Return a string with the data in this widget """
         if not datamodel:
-            return self._render_default_csv()
-        res = self.getChoice(datamodel)
-        return self._escape(res)
+            return self._get_default_value()
+        return str(self.getChoice(datamodel))
 
 InitializeClass(RadioWidget)
 

@@ -76,11 +76,11 @@ class FileWidget(Widget):
             value.seek(0)
             raise WidgetError('The uploaded file for "%s" is too big, the maximum allowed size is %s bytes' % (self.title, max_size_str))
 
-    def render_csv(self, datamodel=None, **kwargs):
-        """ Customize render_csv for this widget type """
+    def get_value(self, datamodel=None, **kwargs):
+        """ Return a string with the data in this widget """
         if datamodel is None:
-            return '"No file"'
-        return '"File uploaded"'
+            return 'No file'
+        return 'File uploaded'
 
 InitializeClass(FileWidget)
 

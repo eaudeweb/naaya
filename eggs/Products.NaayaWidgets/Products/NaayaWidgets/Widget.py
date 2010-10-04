@@ -142,14 +142,8 @@ class Widget(Folder, LocalPropertyManager):
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    def _escape(self, value=''):
-        if '"' in value:
-            value = value.replace('"', '""')
-        ut = utils()
-        return '"%s"' % ut.utToUtf8(value)
-
-    def _render_default_csv(self, **kwargs):
-        return '"No response"'
+    def _get_default_value(self, **kwargs):
+        return 'No response'
     #
     # To be implemented or ovewritten (if needed) by widget concrete classes.
     #
@@ -171,10 +165,12 @@ class Widget(Folder, LocalPropertyManager):
         assert(mode in ('view', 'edit', 'manage'))
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
-    security.declareProtected(view, 'render_csv')
-    def render_csv(self, datamodel=None, **kwargs):
-        """ Render datamodel property as csv """
-        return '""'
+    security.declareProtected(view, 'get_value')
+    def get_value(self, datamodel=None, **kwargs):
+        """ Return a string with the data in this widget """
+        if datamodel is None:
+            return ''
+        return datamodel
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/edit_widget', globals())
