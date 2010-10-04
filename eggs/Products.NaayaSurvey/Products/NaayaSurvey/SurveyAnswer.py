@@ -141,16 +141,16 @@ class SurveyAnswer(Folder):
         else:
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
-    def index_csv(self, REQUEST=None, **kwargs):
-        """ Return values formated as csv.
+    def answer_values(self, REQUEST=None, **kwargs):
+        """ Return values as list.
         """
         datamodel=self.getDatamodel()
         widgets = self.getSortedWidgets()
         atool = self.getSite().getAuthenticationTool()
         ut = utils()
-        respondent = ut.utToUtf8(atool.getUserFullNameByID(self.respondent))
-        res = ['"%s"' % respondent]
+        respondent = atool.getUserFullNameByID(self.respondent)
+        res = [respondent]
         for widget in widgets:
-            res.append(widget.render_csv(
+            res.append(widget.get_value(
                 datamodel=datamodel.get(widget.id, None), **kwargs))
-        return ','.join(res)
+        return res

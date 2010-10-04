@@ -124,15 +124,25 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(view, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
-        RESPONSE.setHeader('Content-Type', 'text/csv')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
+
         answers = self.getAnswers()
         widgets = self.getSortedWidgets()
-        res = '"Respondent",'
-        res += ','.join(['"%s"' % widget.title_or_id() for widget in widgets])
-        res = [res,]
-        res.extend([answer.index_csv() for answer in answers])
-        return '\n'.join(res)
+        header = ['Respondent']
+        header += [widget.title_or_id() for widget in widgets]
+        rows = [answer.answer_values() for answer in answers]
+
+        file_type = REQUEST.get('file_type', 'csv')
+        exporter = self.getSite().csv_export
+        if file_type == 'CSV':
+            RESPONSE.setHeader('Content-Type', 'text/csv')
+            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
+            return exporter.generate_csv(header, rows)
+        if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
+            return exporter.generate_excel(header, rows)
+        else: raise ValueError('unknown file format %r' % file_type)
+
     #
     # Site pages
     #
