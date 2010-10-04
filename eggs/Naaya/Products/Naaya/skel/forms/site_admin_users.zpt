@@ -11,7 +11,7 @@
 				filter_role python: request.get('role', '');
 				user_sources python: here.getAuthenticationTool().getSources()">
 <metal:block define-slot="buttons"></metal:block>
-<metal:block define-slot="search-box"></metal:block>
+
 
 <metal:block define-slot="tabs"><metal:block define-macro="tabs">
 <div id="tabbedmenu" tal:define="toggle_all_users python:len(user_sources)>0">
@@ -48,7 +48,9 @@
 </div>
 </metal:block></metal:block>
 <metal:block define-slot='second-tabs'></metal:block>
-<div class="cleaner"></div>
+<div class="cleaner">&nbsp;</div>
+<metal:block define-slot="search-box"></metal:block>
+<div class="cleaner">&nbsp;</div>
 <metal:block define-slot="content">
 	<tal:block condition="user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_all_users').macros['content']"></metal:block></tal:block>
 	<tal:block condition="not: user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['content']"></metal:block></tal:block>

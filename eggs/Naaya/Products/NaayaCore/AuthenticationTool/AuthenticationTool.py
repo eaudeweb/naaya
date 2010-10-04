@@ -432,6 +432,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ Search users based of query and other criteria, returning user
         like objects or rendered html for an ajax request.
 
+        Arguments:
+
+        all_users -- default False (local users only),
+                     True - to get users from all sources
         """
         if REQUEST is not None:
             form_data = dict(REQUEST.form)
