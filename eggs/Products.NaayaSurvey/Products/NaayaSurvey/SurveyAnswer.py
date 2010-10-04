@@ -147,7 +147,8 @@ class SurveyAnswer(Folder):
         datamodel=self.getDatamodel()
         widgets = self.getSortedWidgets()
         atool = self.getSite().getAuthenticationTool()
-        respondent = atool.getUserFullNameByID(self.respondent)
+        ut = utils()
+        respondent = ut.utToUtf8(atool.getUserFullNameByID(self.respondent))
         res = ['"%s"' % respondent]
         for widget in widgets:
             res.append(widget.render_csv(
