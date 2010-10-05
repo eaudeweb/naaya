@@ -23,7 +23,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('update_sources_cache')
     def update_sources_cache(self, acl_tool):
-        """ """
         for source in acl_tool.getSources():
             if not isinstance(source, plugLDAPUserFolder):
                 continue
@@ -54,7 +53,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('search_local_users')
     def search_local_users(self, search_string=u''):
-        """ """
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -66,7 +64,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('search_external_users')
     def search_external_users(self, search_string=u''):
-        """ """
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
@@ -101,7 +98,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_user_info')
     def get_user_info(self, userid):
-        """ """
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         user = acl_tool.getUser(userid)
@@ -118,7 +114,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_local_user_info')
     def get_local_user_info(self, user):
-        """ """
         user_roles = self.get_local_user_roles(user)
         firstname = force_to_unicode(user.firstname)
         lastname = force_to_unicode(user.lastname)
@@ -136,7 +131,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_external_user_info')
     def get_external_user_info(self, source, user, user_roles=None):
-        """ """
         # user_roles are precalculated for the search directory (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user['uid'])
@@ -155,14 +149,12 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_local_user_roles')
     def get_local_user_roles(self, userob):
-        """ """
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
         return acl_tool.getUserRoles(userob)
 
     security.declarePrivate('get_external_user_roles')
     def get_external_user_roles(self, source, userid, group_userids_map=None):
-        """ """
         # group_userids_map is precalculated for search directory (performance)
         if group_userids_map is None:
             group_userids_map = self.get_group_userids_map(source.id)
@@ -184,7 +176,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_group_userids_map')
     def get_group_userids_map(self, source_id):
-        """ """
         group_userids_map = {}
         source = self.sources[source_id]['source']
         for group_id in self.sources[source_id]['group_map'].keys():
@@ -193,7 +184,6 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_user_access_level')
     def get_user_access_level(self, roles):
-        """ """
         access_level = 'N/A'
         if 'Contributor' in roles:
             access_level = 'Contributor'
