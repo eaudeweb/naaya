@@ -116,6 +116,7 @@ function ldap_refresh_section(tabid, url) {
     select_second_tab(tabid);
     $('#section_wating_response').show();
     $('#section_parent').hide();
+    $('#section_error_response').hide();
 
     $.ajax({
         url: url,
@@ -178,6 +179,7 @@ function ldap_show_groups_fieldset(data) {
 
 function ldap_refresh_users_fieldset(url) {
     $('#users_roles_waiting_response').show();
+    $('#users_roles_error_response').hide();
 
     $.ajax({
         url: url,
@@ -197,6 +199,7 @@ function ldap_user_roles_revoke_form() {
     $('#users_table').ajaxForm({
     beforeSubmit: function() {
         $('#users_roles_waiting_response').show();
+        $('#users_roles_error_response').hide();
     },
     success: function(data) {
             ldap_show_users_fieldset(data);
@@ -214,6 +217,7 @@ function ldap_group_roles_revoke_form() {
     $('#groups_table').ajaxForm({
     beforeSubmit: function() {
         $('#groups_roles_waiting_response').show();
+        $('#groups_roles_error_response').hide();
     },
     success: function(data) {
             ldap_show_groups_fieldset(data);
@@ -239,6 +243,7 @@ function ldap_user_search_form() {
     beforeSubmit: function() {
         $('#waiting_for_search_results').show();
         $('#search_results_parent').hide();
+        $('#error_on_search_results').hide();
     },
     success: function(data) {
         ldap_show_user_search_results(data);
@@ -264,6 +269,8 @@ function ldap_user_roles_assign_form() {
             $('#portal_roles_empty').hide();
         }
         $('#assign_users_waiting_response').show();
+        $('#assign_users_success_response').hide();
+        $('#assign_users_error_response').hide();
     },
     success: function(data) {
         $('#assign_users_waiting_response').hide();
@@ -295,6 +302,8 @@ function ldap_group_roles_assign_form() {
             return false;
         }
         $('#assign_groups_waiting_response').show();
+        $('#assign_groups_success_response').hide();
+        $('#assign_groups_error_response').hide();
     },
     success: function(data) {
         $('#assign_groups_waiting_response').hide();
