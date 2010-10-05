@@ -138,7 +138,8 @@ class IOAIAggregator(IOAIRepository):
     storage = schema.Choice(values=['ZCatalog', 'SQLAlchemy'],
                             title=u"Storage", default="ZCatalog",
                             required=False)
-
+    connection_url = schema.TextLine(title=u"Connection string for SQLAlchemy",
+                                     default=u'', required=False)
     def add_indexes(self):
         """ """
 

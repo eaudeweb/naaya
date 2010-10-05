@@ -48,7 +48,7 @@ OAI Aggregator
 ++++++++++++++
 
 After adding an OAI Aggregator (from ZMI) and providing the preffered data
-storage, to gather the remote server's records an OAI Harverster must be added
+storage, to gather the remote servers' records an OAI Harverster must be added
 to the OAI Aggregator.
 After the OAI Harversters are setup the harverting settings can be refined using OAI Sets.
 Also an manual update can be triggered using the Update tab in ZMI (if there
@@ -65,6 +65,6 @@ After adding an OAI Server (from ZMI), local OAI Harvesters must be setup to
 gather local meta types (one per line in Meta types). The same process of update
 applies to the OAI Server.
 
-The server api url is:
+The server API URL is:
 
 http://path_to_site/zoai/
