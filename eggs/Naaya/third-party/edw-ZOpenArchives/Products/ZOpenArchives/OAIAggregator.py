@@ -69,17 +69,13 @@ class OAIAggregator(OAIRepository):
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(view_management_screens,
-                              'initialize')
+    security.declareProtected(view_management_screens, 'initialize')
     def initialize(self):
         """ Create what OAIRepository requires. ZCatalog and ZCatalog indexes,
         Create a sqlalchemy storage. It is done here and not in OAIRepository
         because it is uncertain if I need SQLAlchemy in OAIServer.
 
         """
-        self.sqlalchemy = {
-            'connection': 'mysql+mysqldb://semide:semide@localhost/semide_oai?charset=utf8&use_unicode=1'
-        }
         super(OAIAggregator, self).initialize()
 
     security.declarePrivate('add_indexes')
@@ -126,10 +122,10 @@ class OAIAggregator(OAIRepository):
         catalog.manage_addColumn('dc_subject')
 
         if self.storage == 'SQLAlchemy': #Fails if no mysql server is installed
-            engine = create_engine(self.sqlalchemy['connection'])
+            engine = create_engine(self.connection_url)
             sqlalchemy_setup.metadata.drop_all(engine)
             sqlalchemy_setup.metadata.create_all(engine)
-            if str(self.sqlalchemy['connection']).startswith('mysqldb'):
+            if str(self.connection_url).startswith('mysqldb'):
                 engine.execute("ALTER TABLE `records_map_full` ADD FULLTEXT(value)")
 
     security.declarePrivate('update')
@@ -371,8 +367,8 @@ class OAIAggregator(OAIRepository):
     def get_session(self):
         """ Get SQLAlchemy session """
         session = sessionmaker(bind=\
-                #create_engine(self.sqlalchemy['connection'], echo=True))()
-                create_engine(self.sqlalchemy['connection']))()
+                #create_engine(self.connection_url, echo=True))()
+                create_engine(self.connection_url))()
         clear_mappers()
         mapper(OAIRecordMapper, sqlalchemy_setup.tables['records_table'])
         mapper(OAIRecordMapMapper,

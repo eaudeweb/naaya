@@ -30,6 +30,10 @@
             </select>
         </td>
     </tr>
+    <tr>
+        <td class="form-label">Connection URL:</td>
+        <td><input name="connection_url:utf-8:ustring" size="100" tal:attributes="value here/connection_url" /></td>
+    </tr>
     <tr><td>&nbsp;</td><td><input type="submit" value="Save changes"></td></tr>
 </table>
 </form>

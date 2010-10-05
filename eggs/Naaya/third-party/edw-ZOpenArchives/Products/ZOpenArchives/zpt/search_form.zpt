@@ -132,6 +132,7 @@ $(document).ready(function(){
 			</tr>
 		</thead>
 		<tbody>
+			<tal:block replace="structure python:here"/>
 			<tal:block tal:repeat="result results">
 			<tr tal:attributes="id string:${repeat/result/index}-row">
 				<td tal:content="result/harvester"></td>
