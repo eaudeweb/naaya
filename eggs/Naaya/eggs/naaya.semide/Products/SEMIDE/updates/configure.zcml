@@ -4,6 +4,11 @@
   i18n_domain="naaya">
 
   <configure zcml:condition="installed Products.naayaUpdater">
+	<utility
+		name="oai.update"
+		provides="Products.naayaUpdater.interfaces.IUpdateScript"
+		component=".update_oai.UpdateOAI"
+		permission="zope2.ViewManagementScreens" />
 	<!--
 	<utility
 		name="newsevents_paths.update"
@@ -15,7 +20,6 @@
 		provides="..interfaces.IUpdateScript"
 		component=".update_semide_sites.UpdateSemideSites"
 		permission="zope2.ViewManagementScreens" />
-
 	<utility
 		name="recover_photos.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
