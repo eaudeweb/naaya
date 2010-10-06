@@ -1,7 +1,7 @@
 import os
 from setuptools import setup, find_packages
 
-version = '2.10.9' # September 2010
+version = '2.10.10' # October 2010
 if 'NAAYA_RELEASE' not in os.environ:
     version += '-dev'
 
