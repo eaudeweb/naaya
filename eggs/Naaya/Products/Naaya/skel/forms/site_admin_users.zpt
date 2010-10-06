@@ -1,5 +1,5 @@
 <metal:block extend-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']" define-macro="page">
-<metal:block metal:fill-slot="title"><h1><metal:block define-slot="title"><span tal:omit-tag="" i18n:translate="">Users' management</span></metal:block> - <metal:block define-slot="second-title"></metal:block></h1></metal:block>
+<metal:block metal:fill-slot="title"><h1><metal:block define-slot="title"><span tal:omit-tag="" i18n:translate="">Users' management</span></metal:block> <tal:block tal:condition="python: 'admin_users_html' not in request.PATH_INFO">-</tal:block> <metal:block define-slot="second-title"></metal:block></h1></metal:block>
 <tal:block metal:fill-slot="section"
     tal:define="site_url here/getSitePath;
                 user_tool here/getAuthenticationTool;
@@ -10,7 +10,10 @@
 				per_page python: int(request.get('per_page', 50));
 				filter_role python: request.get('role', '');
 				user_sources python: here.getAuthenticationTool().getSources()">
-<metal:block define-slot="buttons"></metal:block>
+<metal:block define-slot="buttons">
+	<metal:block tal:condition="python: 'admin_users_html' in request.PATH_INFO"
+				 use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['buttons']"></metal:block>
+</metal:block>
 
 
 <metal:block define-slot="tabs"><metal:block define-macro="tabs">
@@ -49,7 +52,10 @@
 </metal:block></metal:block>
 <metal:block define-slot='second-tabs'></metal:block>
 <div class="cleaner">&nbsp;</div>
-<metal:block define-slot="search-box"></metal:block>
+<metal:block define-slot="search-box">
+	<metal:block tal:condition="python: 'admin_users_html' in request.PATH_INFO"
+				 use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
+</metal:block>
 <div class="cleaner">&nbsp;</div>
 <metal:block define-slot="content">
 	<tal:block condition="user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_all_users').macros['content']"></metal:block></tal:block>
