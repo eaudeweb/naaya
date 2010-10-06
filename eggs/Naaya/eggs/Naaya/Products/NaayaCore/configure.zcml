@@ -24,6 +24,11 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".GeoMapTool.updates.AddObjMapZoom"
              permission="zope2.ViewManagementScreens" />
+
+    <utility name="portal_profiles_to_btree.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".ProfilesTool.updates.ProfilesToolToBTree"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

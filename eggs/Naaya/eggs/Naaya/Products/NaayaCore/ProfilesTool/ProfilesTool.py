@@ -1,33 +1,11 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#Python imports
-
-#Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from BTrees.OOBTree import OOBTree
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 
-#Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Profile import manage_addProfile
@@ -35,13 +13,17 @@ from ProfileSheet import manage_addProfileSheet
 
 def manage_addProfilesTool(self, REQUEST=None):
     """ """
-    ob = ProfilesTool(ID_PROFILESTOOL, TITLE_PROFILESTOOL)
+    ob = BTreeProfilesTool(ID_PROFILESTOOL, TITLE_PROFILESTOOL)
     self._setObject(ID_PROFILESTOOL, ob)
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
-
-class ProfilesTool(Folder, utils):
-    """ """
+class _ProfilesToolMixin(utils):
+    """
+    Business logic for ProfilesTool. It's packaged as a mixin because it
+    can be used with OFS.Folder (still here for backwards compatibility)
+    and BTreeFolder2 (better performance). See ProfilesTool and
+    BTreeProfilesTool below.
+    """
 
     meta_type = METATYPE_PROFILESTOOL
     icon = 'misc_/NaayaCore/ProfilesTool.gif'
@@ -58,12 +40,6 @@ class ProfilesTool(Folder, utils):
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
-
-    def __init__(self, id, title):
-        """ """
-        self.id = id
-        self.title = title
-        self.profiles_meta = {}
 
     #api
     def getProfiles(self): return self.objectValues(METATYPE_PROFILE)
@@ -94,7 +70,7 @@ class ProfilesTool(Folder, utils):
         Given a profile object, it loads all needed sheets according
         with profile metadata definitions.
         """
-        for k, v in self.profiles_meta.items():
+        for k, v in self.profiles_meta.iteritems():
             title = v['title']
             properties = v['properties']
             for x in v['instances']:
@@ -133,5 +109,28 @@ class ProfilesTool(Folder, utils):
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
     manage_controlpanel_html = PageTemplateFile('zpt/profiles_controlpanel', globals())
+
+
+
+
+
+class BTreeProfilesTool(_ProfilesToolMixin, BTreeFolder2):
+    """ Current ProfilesTool implementation based on BTreeFolder2 """
+    def __init__(self, id, title):
+        BTreeFolder2.__init__(self, id)
+        self.title = title
+        self.profiles_meta = {}
+
+InitializeClass(BTreeProfilesTool)
+
+class ProfilesTool(_ProfilesToolMixin, Folder):
+    """
+    Old ProfilesTool implementation, using OFS.Folder. Its name should
+    not change, otherwise old pickles from ZODB won't load properly.
+    """
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+        self.profiles_meta = {}
 
 InitializeClass(ProfilesTool)
