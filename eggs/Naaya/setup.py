@@ -1,7 +1,12 @@
+import os
 from setuptools import setup, find_packages
 
+version = '2.10.9' # September 2010
+if 'NAAYA_RELEASE' not in os.environ:
+    version += '-dev'
+
 setup(name='Naaya',
-      version='1.0dev',
+      version=version,
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
