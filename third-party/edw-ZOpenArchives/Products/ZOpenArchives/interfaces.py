@@ -91,13 +91,14 @@ class IOAIRepository(GenericInterface):
     def add_metadata(self):
         """ """
 
-class IOAIToken(GenericInterface):
+class IOAIToken(Interface):
     """
     OAI Resumption Token is used to restore paused connections. Part of OAI
     protocol.
 
     """
-    parent_id = schema.TextLine(title=u'Parent ID')
+    parent_id = schema.TextLine(title=u'Parent ID', required=False,
+                                default=u"")
     request_args = schema.Dict(title=u'Request Arguments')
     token_args = schema.Dict(title=u'Token Arguments')
 

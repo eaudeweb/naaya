@@ -45,7 +45,7 @@ def manage_addOAIHarvester(self, id='', REQUEST=None, **kwargs):
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                 '/manage_main?manage_tabs_message=%s' % quote(str(e)))
         else:
-            raise Exception(e)
+            raise
     if REQUEST is not None:
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/manage_main?update_menu=1')
@@ -65,7 +65,7 @@ class OAIHarvester(BTreeFolder2, Persistent, Implicit):
     security = ClassSecurityInfo()
 
     def get_connection(self):
-        """ Estanblish connection with the OAI Server """
+        """ Establish connection with the OAI Server """
         metadata_registry = metadata.MetadataRegistry(flags=['xml:lang'])
         #Registering a reader that will return the fields in this form:
         #dc_field:lang_code
@@ -323,9 +323,13 @@ class OAIHarvester(BTreeFolder2, Persistent, Implicit):
         """
         con = self.get_connection()
         self.list_sets = []
-        for set_item in con.listSets():
-            self.list_sets.append({'spec': str(set_item[0]),
+        try:
+            for set_item in con.listSets():
+                self.list_sets.append({'spec': str(set_item[0]),
                                    'name': unicode(set_item[1])})
+        except:
+            try: self.getSite().log_current_error()
+            except: pass
 
     security.declarePrivate('update')
     def update(self):
@@ -337,9 +341,14 @@ class OAIHarvester(BTreeFolder2, Persistent, Implicit):
             records_reponse = []
             for spec in self.list_sets_selected:
                 if self.resume_token:
-                    records_reponse = con.listRecords(metadataPrefix='oai_dc',
+                    try:
+                        records_reponse = con.listRecords(
+                                            metadataPrefix='oai_dc',
                                             resumptionToken=self.resume_token,
                                             setSpec=spec)
+                    except XMLValidationError, e:
+                        logging.error('XMLValidation Error: %r' % str(e))
+                        return
                 else:
                     records_reponse = con.listRecords(metadataPrefix='oai_dc',
                                                            setSpec=spec)
@@ -349,11 +358,15 @@ class OAIHarvester(BTreeFolder2, Persistent, Implicit):
                     self.update_sqlalchemy(records_reponse)
         else:
             #User resume token if update has been stoped in the middle
-            if self.resume_token:
-                records_reponse = con.listRecords(metadataPrefix='oai_dc',
-                                        resumptionToken=self.resume_token)
-            else:
-                records_reponse = con.listRecords(metadataPrefix='oai_dc')
+            try:
+                if self.resume_token:
+                    records_reponse = con.listRecords(metadataPrefix='oai_dc',
+                                            resumptionToken=self.resume_token)
+                else:
+                    records_reponse = con.listRecords(metadataPrefix='oai_dc')
+            except XMLValidationError, e:
+                logging.error('XMLValidation Error: %r' % str(e))
+                return
 
             if self.aq_parent.storage == 'ZCatalog':
                 self.update_zcatalog(records_reponse)

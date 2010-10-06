@@ -8,8 +8,8 @@ from AccessControl.Permissions import view_management_screens
 from Acquisition import Implicit
 from Missing import Missing
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from sqlalchemy import create_engine, and_
-from sqlalchemy.orm import sessionmaker, mapper, clear_mappers
+from sqlalchemy import create_engine, and_, or_
+from sqlalchemy.orm import sessionmaker, mapper, clear_mappers, aliased
 from sqlalchemy.sql import select
 import transaction
 from zope import interface, schema
@@ -150,26 +150,59 @@ class OAIAggregator(OAIRepository):
 
         """
         session = self.get_session()
-        filters = []
+        filters = [] #A list of tuples with table to join, join id, and filter
         record_id_column = OAIRecordMapMapper.record_id
+        record_map_mapper = [OAIRecordMapMapper, True]
+        def get_mapper(mapper):
+            """Return an aliased mapper if this is not the first function call
+            Used to create joins with the same table
+
+            """
+            if mapper[1] is True:
+                mapper[1] = False
+                return mapper[0]
+            else:
+                return aliased(mapper[0])
+
         if form.get('query'):
             record_id_column = OAIRecordMapFullMapper.record_id
-            filters.append(OAIRecordMapFullMapper.value.match(form['query']))
-        if form.get('year'):
-            filters.append(OAIRecordMapMapper.key=='dc_date')
-            filters.append(OAIRecordMapMapper.value==form['year'])
-        if form.get('language'):
-            filters.append(OAIRecordMapMapper.key=='dc_language')
-            filters.append(OAIRecordMapMapper.value==form['language'])
-        if form.get('coverage'):
-            filters.append(OAIRecordMapMapper.key=='dc_coverage')
-            filters.append(OAIRecordMapMapper.value==form['coverage'])
+            filters.append((OAIRecordMapFullMapper,
+                            OAIRecordMapFullMapper.record_id,
+                            OAIRecordMapFullMapper.value.match(form['query'])))
         if form.get('identifier'):
             record_id_column = OAIRecordMapper.id
-            filters.append(OAIRecordMapper.id==form['identifier'])
+            filters.append((OAIRecordMapper,
+                            OAIRecordMapper.id,
+                            OAIRecordMapper.id==form['identifier']))
         if form.get('harvester'):
             record_id_column = OAIRecordMapper.id
-            filters.append(OAIRecordMapper.harvester==form['harvester'])
+            filters.append((OAIRecordMapper,
+                            OAIRecordMapper.id,
+                            OAIRecordMapper.harvester==form['harvester']))
+        if form.get('year'):
+            table = get_mapper(record_map_mapper)
+            filters.append((table,
+                            table.record_id,
+                            and_(table.key=='dc_date',
+                                 table.value==form['year'])))
+        if form.get('keywords'):
+            table = get_mapper(record_map_mapper)
+            filters.append((table,
+                            table.record_id,
+                            and_(table.key=='dc_subject',
+                                 table.value==form['keywords'])))
+        if form.get('language'):
+            table = get_mapper(record_map_mapper)
+            filters.append((table,
+                            table.record_id,
+                            and_(table.key=='dc_language',
+                                 table.value==form['language'])))
+        if form.get('coverage'):
+            table = get_mapper(record_map_mapper)
+            filters.append((table,
+                            table.record_id,
+                            and_(table.key=='dc_coverage',
+                                 table.value==form['coverage'])))
         if form.get('sort_on'):
             order_by = form['sort_on']
         if form.get('sort_order'):
@@ -177,9 +210,18 @@ class OAIAggregator(OAIRepository):
                 or 'descending')
 
         query = session.query(record_id_column)
-        for filter in filters: #Appling filters
-            query = query.filter(filter)
+        joins = []
+        first = True
+        for table, join_key, _filter in filters: #Appling filters
+            query = query.filter(_filter)
+            # Do not join with the first table
+            if first is True: first = False
+            else:
+                if table is not None:
+                    joins.append((table,
+                                  record_id_column==join_key,))
 
+        query = query.join(*joins)
         #How many results
         records_count = query.distinct().count()
 
@@ -367,8 +409,8 @@ class OAIAggregator(OAIRepository):
     def get_session(self):
         """ Get SQLAlchemy session """
         session = sessionmaker(bind=\
-                #create_engine(self.connection_url, echo=True))()
-                create_engine(self.connection_url))()
+                create_engine(self.connection_url, echo=True))()
+                #create_engine(self.connection_url))()
         clear_mappers()
         mapper(OAIRecordMapper, sqlalchemy_setup.tables['records_table'])
         mapper(OAIRecordMapMapper,
