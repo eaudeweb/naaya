@@ -41,7 +41,7 @@ class TestOAIServerFunctional(ZopeTestCase.FunctionalTestCase):
         dom = lxml.etree.fromstring(response.getBody())
         namespace = dom.nsmap[None]
 
-        list_records = dom.find('./{%s}ListRecords/' % namespace)
+        list_records = dom.find('./{%s}ListRecords' % namespace)
         self.assertNotEqual(list_records, None)
 
         records = list_records.findall('./{%s}record' % namespace)

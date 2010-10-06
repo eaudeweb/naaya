@@ -79,6 +79,31 @@ def latin1_to_ascii (unicrap):
             r += str(i)
     return r
 
+def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
+    """
+    Similar to smart_unicode, except that lazy instances are resolved to
+    strings, rather than kept as lazy objects.
+
+    If strings_only is True, don't convert (some) non-string-like objects.
+    """
+    if strings_only and isinstance(s, (types.NoneType, int, long, datetime.datetime, datetime.date, datetime.time, float)):
+        return s
+    try:
+        if not isinstance(s, basestring,):
+            if hasattr(s, '__unicode__'):
+                s = unicode(s)
+            else:
+                s = unicode(str(s), encoding, errors)
+        elif not isinstance(s, unicode):
+            # Note: We use .decode() here, instead of unicode(s, encoding,
+            # errors), so that if s is a SafeString, it ends up being a
+            # SafeUnicode at the end.
+            s = s.decode(encoding, errors)
+    except UnicodeDecodeError, e:
+        # error log
+        pass
+    return s
+
 def utConvertListToLines(values):
     """Takes a list of values and returns a value for a textarea control"""
     if len(values) == 0: return ''

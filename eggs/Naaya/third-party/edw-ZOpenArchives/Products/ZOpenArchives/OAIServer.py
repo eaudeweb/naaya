@@ -296,14 +296,15 @@ class OAIServer(OAIRepository):
         return metadata_formats
 
     security.declarePrivate('listSets')
-    def listSets(self):
+    def listSets(self, **kw):
         """ """
-        raise NotImplementedError
+        return ([], None, )
 
     security.declarePrivate('listRecords')
     def listRecords(self, **kw):
         token = None
         old_token = None
+        parent_id = None
 
         search_dict = {'meta_type': OAIRecord.meta_type}
         search_dict['sort_limit'] = self.results_limit
@@ -315,13 +316,16 @@ class OAIServer(OAIRepository):
             # get token using name and process arguments
             token_name = kw['resumptionToken']
             old_token = self.getTokenStorage()._getOb(token_name, None)
-            parent_id = old_token.id
-            cursor = getattr(old_token, 'cursor')
-            rec_sent = cursor + self.results_limit
-            # put original query args in place (eg, set, from, metadataPrefix)
-            #  plus things from zope
-            for key, value in old_token.token_args.items():
-                search_dict[key] = value
+            if old_token is not None:
+                parent_id = unicode(old_token.id)
+                rec_sent = old_token.token_args['cursor'] + self.results_limit
+
+                # put original query args in place
+                # (eg, set, from, metadataPrefix)
+                # plus things from zope
+                # Not implemented yet
+                #for key, value in old_token.token_args.items():
+                #    search_dict[key] = value
         else:
             rec_sent = cursor = 0
             parent_id = None
@@ -329,6 +333,7 @@ class OAIServer(OAIRepository):
                 search_dict['OAI_Identifier'] = kw['identifier']
 
         results = self.getCatalog().searchResults(search_dict)
+
         the_list = []
         record_count = 0
         len_results = len(results)
@@ -344,6 +349,7 @@ class OAIServer(OAIRepository):
                 isinstance(about, Missing)):
                 continue
             the_list.append([header, metadata, about])
+
             #Create a Token if limit is reached
             if record_count >= self.results_limit:
                 token_args = {}
@@ -355,10 +361,14 @@ class OAIServer(OAIRepository):
                 #   give empty id back
                 records_done = record_count + rec_sent
                 records_left = len_results - records_done
-                if records_left == 0:
-                    token_args['id'] = ""
+                if records_left <= 0:
+                    token_args['id'] = u""
                 token = manage_addOAIToken(self.getTokenStorage(),
                         parent_id=parent_id, request_args=kw,
                         token_args=token_args)
                 break
-        return (the_list, token)
+        if token is not None:
+            token_id = token.id
+        else:
+            token_id = ''
+        return (the_list, token_id)

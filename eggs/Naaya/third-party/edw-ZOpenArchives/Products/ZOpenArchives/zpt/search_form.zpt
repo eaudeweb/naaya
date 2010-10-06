@@ -87,6 +87,7 @@ $(document).ready(function(){
         <div class="field">
             <label for="coverage" class="widget-title" i18n:translate="">Geographical coverage</label>
             <input type="text" size="50" name="coverage" id="coverage" tal:attributes="value python: getattr(request, 'coverage', '')"/>
+			<input type="button" tal:attributes="onclick string:javascript:fPick('${here/absolute_url}/glossary_coverage/GlossMap_html?ctrl=coverage')" id="pick-coverage" value="Pick" i18n:attributes="value">
         </div>
         <div class="field">
             <label for="identifier" class="widget-title" i18n:translate="">Identifier</label>
@@ -115,8 +116,7 @@ $(document).ready(function(){
 </form>
 </div>
 <tal:block tal:define="results_paginator python:here.search(request);
-		   results python: results_paginator.get_page(int(getattr(request, 'page', 0)));
-		   aggregators here/getOAIAggregators"
+		   results python: results_paginator.get_page(int(getattr(request, 'page', 0)));"
 		   tal:condition="results">
 <div id='search_results' style="clear: both;">
 	<h2><strong i18n:translate="">Search Results:</strong></h2>
@@ -132,14 +132,13 @@ $(document).ready(function(){
 			</tr>
 		</thead>
 		<tbody>
-			<tal:block replace="structure python:here"/>
 			<tal:block tal:repeat="result results">
 			<tr tal:attributes="id string:${repeat/result/index}-row">
-				<td tal:content="result/harvester"></td>
+				<td tal:content="python: getattr(here, result['harvester']).title_or_id()"></td>
 				<td>
 					<tal:block condition="python: result.get('dc_identifier')"
 					repeat="dc_identifier result/dc_identifier">
-						<a rel="external" tal:attributes="href dc_identifier" tal:content="dc_identifier" /><br />
+						<a rel="external" tal:attributes="href dc_identifier" tal:content="python: dc_identifier" /><br />
 					</tal:block>
 				</td>
 				<td>
