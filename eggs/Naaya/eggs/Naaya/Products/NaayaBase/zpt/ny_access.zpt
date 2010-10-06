@@ -20,7 +20,7 @@
 	                 string:${here/absolute_url}/savePermissionMapping">
 		<table class="datatable">
 			<tr>
-				<th i18n:translate="">Acquire from parent</th>
+				<th i18n:translate="">Inherit from parent</th>
 				<th i18n:translate="">Permission</th>
 				<th tal:attributes="colspan python:len(roles)">Roles</th>
 			</tr>
