@@ -1,6 +1,7 @@
 <tal:block metal:define-macro="page">
-
 <span tal:replace="structure here/standard_html_header" />
+<script type="text/javascript"
+		tal:attributes="src string:${here/getSitePath}/misc_/Naaya/admin.js"></script>
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
 <tal:block condition="isArabic" replace="structure string:<table width='100%'><tr><td>" />
