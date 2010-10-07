@@ -114,8 +114,9 @@ class plugLDAPUserFolder(PlugBase):
         value = self.canonical_name.get(user, '-')
         if value == '-':
             try:
-                value = self.getUserFullName(user, self.getUserFolder())
-                self.setUserCanonicalName(value)
+                user_object = self._get_user_by_uid(user, self.getUserFolder())
+                value = unicode(user_object.get('cn', ''), 'iso-8859-1')
+                self.setUserCanonicalName(user, value)
             except Exception, e:
                 logging.debug("Could not get user's full name for user %s : %s",
                         user, str(e))
