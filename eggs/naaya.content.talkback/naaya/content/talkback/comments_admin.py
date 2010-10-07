@@ -38,6 +38,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Paragraph import Paragraph
 from constants import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
                        PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.import_export import set_response_attachment
 
 class CommentsAdmin(SimpleItem):
@@ -137,21 +138,25 @@ class CommentsAdmin(SimpleItem):
 
         return output.getvalue()
 
-    def _get_comment_replies(self, tree, result):
-        result.append(tree['comment'])
-        for child in tree['children']:
-            self._get_comment_replies(child, result)
-        return result
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'all_comments')
+    def all_comments(self):
+        def replies(tree):
+            yield tree['comment']
+            for child_comment in tree['children']:
+                for c in replies(child_comment):
+                    yield c
+
+        for section in self.list_sections():
+            for paragraph in section.get_paragraphs():
+                for top_comment in paragraph.get_comment_tree():
+                    for c in replies(top_comment):
+                        yield c
+
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'export')
     def export(self, file_type="CSV", as_attachment=False, REQUEST=None):
         """ """
-
-        comments = []
-        for section in self.list_sections():
-            for paragraph in section.get_paragraphs():
-                for comment in paragraph.get_comment_tree():
-                    comments.extend(self._get_comment_replies(comment, result=[]))
 
         html2text = self.getSite().html2text
         def plain(s, trim=None):
@@ -159,7 +164,7 @@ class CommentsAdmin(SimpleItem):
 
         fields = [
             ('Section', lambda c: c.get_section().title_or_id()),
-            ('Paragraph', lambda c: plain(c.get_paragraph().body, 100)),
+            ('Paragraph', lambda c: c.get_paragraph().plaintext_summary()),
             ('Message Id', lambda c: c.getId()),
             ('In reply to', lambda c: c.reply_to or ''),
             ('Message', lambda c: plain(c.message)),
@@ -167,6 +172,8 @@ class CommentsAdmin(SimpleItem):
             ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
             ('Paragraph url', lambda c: c.get_paragraph().absolute_url()),
         ]
+
+        comments = self.all_comments()
 
         if file_type == 'CSV':
             ret = self.generate_csv_output(fields, comments)
@@ -186,5 +193,10 @@ class CommentsAdmin(SimpleItem):
             set_response_attachment(REQUEST.RESPONSE, filename,
                 content_type, filesize)
         return ret
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'comments_table_html')
+    comments_table_html = NaayaPageTemplateFile('zpt/comments_table',
+                                globals(), 'tbconsultation_comments_table')
 
 InitializeClass(CommentsAdmin)
