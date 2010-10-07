@@ -39,6 +39,9 @@
         </div>
 
     </form>
+
+    <p><a tal:attributes="href string:${here/absolute_url}/comments_table_html"
+          i18n:translate="">View all comments</a></p>
 </tal:block>
 
 

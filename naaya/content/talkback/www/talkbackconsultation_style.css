@@ -264,3 +264,7 @@ dl.tb-invitations.revoked dt {
 dl.tb-comments-unapproved ul.tb-comments-tree {
 	padding: 0;
 }
+
+table.tb-comments-overview {
+    width: 100%;
+}
