@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from urllib import quote
 from oaipmh import server, metadata
+from oaipmh.error import NoSetHierarchyError, BadResumptionTokenError
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -18,6 +19,27 @@ from OAIToken import manage_addOAIToken
 
 from interfaces import IOAIServer
 from utils import create_object, process_form
+
+#possible token keys
+token_keys = ['metadataPrefix', 'offset', 'set', 'from', 'until']
+def unserialize_token(token):
+    "Split comma separated token and return a dictionary with values"
+    token_dict = {}
+    if isinstance(token, str):
+        token_values  = token.split(',')
+        for key in token_keys:
+            try:
+                token_dict[key] = token_values[token_keys.index(key)]
+            except IndexError:
+                token_dict[key] = ''
+        return token_dict
+    raise BadResumptionTokenError, 'unserialization failed'
+
+def serialize_token(token):
+    "Create a comma separated string for inclusion in the URL"
+    if isinstance(token, dict):
+        return ','.join([str(token.get(key, '')) for key in token_keys])
+    raise BadResumptionTokenError, "dict expected"
 
 manage_addOAIServerForm = PageTemplateFile('zpt/manage_addOAIServerForm',
                                            globals())
@@ -59,6 +81,7 @@ class OAIServer(OAIRepository):
     stylesheet.content_type = '	application/xml'
 
     def initialize(self):
+        """ Create a oaipmh server to responde to OAI requests"""
         metadata_registry = metadata.MetadataRegistry()
         metadata_registry.registerWriter('oai_dc', server.oai_dc_writer)
         self.server = server.ServerBase(self, metadata_registry)
@@ -74,7 +97,7 @@ class OAIServer(OAIRepository):
             response = self.server.handleRequest(kwargs)
 
         REQUEST.RESPONSE.setHeader('content-type', 'application/xml')
-        #Adding a stylesheet
+        #Add a stylesheet
         return response.replace("<?xml version='1.0' encoding='UTF-8'?>",
                          "<?xml version='1.0' encoding='UTF-8'?>\n"
                          "<?xml-stylesheet type='text/xsl'"
@@ -82,7 +105,13 @@ class OAIServer(OAIRepository):
 
     security.declarePrivate('add_indexes')
     def add_indexes(self, catalog):
-        """ Add indexes for catalog """
+        """ Add indexes for catalog
+
+        XXX:
+        These indexes are not used currently because the OAI Record now
+        contains 2 attributes: header and metadata.
+
+        """
         # general searching - from web form
         catalog.addIndex('OAI_Date', 'FieldIndex')
         catalog.addIndex('OAI_Fulltext', 'TextIndexNG3')
@@ -112,6 +141,7 @@ class OAIServer(OAIRepository):
         except:
             pass
         catalog.addIndex('expiration', 'FieldIndex')
+        catalog.addIndex('path', 'PathIndex')
 
     def add_metadata(self, catalog):
         """ Adding metadata columns """
@@ -266,13 +296,12 @@ class OAIServer(OAIRepository):
     security.declarePrivate('listIdentifiers')
     def listIdentifiers(self, **kw):
         """ """
-        list_identifiers = []
-
+        raise NotImplementedError
 
     security.declarePrivate('listMetadataFormats')
     def listMetadataFormats(self, **kw):
-        """ returns list of metadata formats in catalog list is of namespace
-        dictionary
+        """ Metadata formats from namespace dictionary
+        TODO: Fix this when the indexes in the ZCatalog are set right.
 
         """
         metadata_formats = []
@@ -289,58 +318,38 @@ class OAIServer(OAIRepository):
                 metadata_formats.append(self.get_namespace_dict(ns_prefix))
             if len(the_list) == 0:
                 raise ValueError("OAI Error: noMetadataFormats")
-        else: # ask catalog for its values for OAI_MetadataFormats
-            results = self.getCatalog().uniqueValuesFor('OAI_MetadataFormat')
-            for ns_prefix in results:
-                metadata_formats.append(self.get_namespace_dict(ns_prefix))
+        else:
+            data_dict = self.get_namespace_dict('oai_dc')
+            metadata_formats.append((data_dict['prefix'], data_dict['schema'],
+                                     data_dict['namespace']))
         return metadata_formats
 
     security.declarePrivate('listSets')
     def listSets(self, **kw):
-        """ """
-        return ([], None, )
+        """ Not supported """
+        raise NoSetHierarchyError
 
     security.declarePrivate('listRecords')
     def listRecords(self, **kw):
         token = None
-        old_token = None
-        parent_id = None
-
+        offset = 0
         search_dict = {'meta_type': OAIRecord.meta_type}
         search_dict['sort_limit'] = self.results_limit
-
-        # we need to get the args for the request
-        #   either from our 'resumption token' or
-        #   from our regular request dictionary
+        """Get the args for the request either from our 'resumption token' or
+        from our regular request dictionary"""
         if kw.has_key('resumptionToken'):
-            # get token using name and process arguments
-            token_name = kw['resumptionToken']
-            old_token = self.getTokenStorage()._getOb(token_name, None)
-            if old_token is not None:
-                parent_id = unicode(old_token.id)
-                rec_sent = old_token.token_args['cursor'] + self.results_limit
-
-                # put original query args in place
-                # (eg, set, from, metadataPrefix)
-                # plus things from zope
-                # Not implemented yet
-                #for key, value in old_token.token_args.items():
-                #    search_dict[key] = value
-        else:
-            rec_sent = cursor = 0
-            parent_id = None
-            if kw.has_key('identifier'):
-                search_dict['OAI_Identifier'] = kw['identifier']
-
+            #Unserialize the token and populate search_dict
+            token = unserialize_token(kw['resumptionToken'])
+            offset = int(token.get('offset', 0))
         results = self.getCatalog().searchResults(search_dict)
 
-        the_list = []
         record_count = 0
         len_results = len(results)
-
-        while (record_count + rec_sent) < len_results:
+        results_list = [] #Return list
+        resumptionToken = ''
+        while (offset + record_count) < len_results:
             # get search record and info
-            record = results[rec_sent+record_count]
+            record = results[offset+record_count]
             header = getattr(record, 'header', "")
             metadata = getattr(record, 'metadata', "")
             about = getattr(record, 'about', "")
@@ -348,27 +357,29 @@ class OAIServer(OAIRepository):
             if (isinstance(header, Missing) or isinstance(metadata, Missing) or
                 isinstance(about, Missing)):
                 continue
-            the_list.append([header, metadata, about])
+
+            results_list.append([header, metadata, about])
 
             #Create a Token if limit is reached
             if record_count >= self.results_limit:
-                token_args = {}
-                token_args['cursor'] = rec_sent
-                token_args['completeListSize'] = len_results
-                date =  DateTime.DateTime() + (self.token_expiration/1440.0)
-                token_args['expirationDate'] = date.HTML4()
-                # if we're done with entire list
-                #   give empty id back
-                records_done = record_count + rec_sent
-                records_left = len_results - records_done
-                if records_left <= 0:
-                    token_args['id'] = u""
-                token = manage_addOAIToken(self.getTokenStorage(),
-                        parent_id=parent_id, request_args=kw,
-                        token_args=token_args)
+                new_token = {}
+                new_token['offset'] = offset + record_count
+                if token is None:
+                    for key, value in kw.items():
+                        if key in token_keys:
+                            new_token[key] = value
+                    resumptionToken = serialize_token(new_token)
+                else:
+                    token['offset'] = new_token['offset']
+                    resumptionToken = serialize_token(token)
+
+                #Not supported in pyoai
+                #token_args = {}
+                #token_args['cursor'] = offset
+                #token_args['completeListSize'] = len_results
+                #token_args['expirationDate'] = (DateTime.DateTime() +
+                #                    (self.token_expiration/1440.0)).HTML4()
+                #token_args['resumptionToken'] = resumptionToken
+
                 break
-        if token is not None:
-            token_id = token.id
-        else:
-            token_id = ''
-        return (the_list, token_id)
+        return (results_list, resumptionToken)

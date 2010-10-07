@@ -17,7 +17,7 @@ from zope import interface
 from OAIRecord import OAIRecord, manage_addOAIRecord
 from interfaces import IZCatalogHarvester
 from utils import processId, create_object, process_form, DT2dt, \
-                utConvertLinesToList
+                utConvertLinesToList, clean_xml
 
 manage_addZCatalogHarvesterForm = PageTemplateFile(
                             'zpt/manage_addZCatalogHarvesterForm', globals())
@@ -108,7 +108,7 @@ class ZCatalogHarvester(BTreeFolder2, Persistent, Implicit):
                 ob_data = {}
 
                 #Header of the record
-                id = 'oai:%s%s' % (processId(self.aq_parent.repository_name).lower(),
+                id = 'oai:%s%s' % (processId(self.aq_parent.repositoryName()).lower(),
                                     ':'.join(ob.getPhysicalPath()).lower())
                 ob_data['OAI_Identifier'] = id
                 header = Header(id, DT2dt(ob.bobobase_modification_time()),
@@ -123,22 +123,22 @@ class ZCatalogHarvester(BTreeFolder2, Persistent, Implicit):
                     title = ob.Title()
                 else:
                     title = ob.title_or_id()
-                m_tags['title'] = [title]
+                m_tags['title'] = [clean_xml(title)]
 
                 if hasattr(ob, 'description') and ob.description:
                     description = re.sub(r'<[^>]*?>', '', ob.description)
                 else:
                     description = 'n/a'
-                m_tags['description'] = [description]
+                m_tags['description'] = [clean_xml(description)]
 
                 if hasattr(ob, 'keywords') and ob.keywords:
                     if getattr(ob.keywords, '__iter__', False):
-                        m_tags['subject'] = ob.keywords
+                        m_tags['subject'] = clean_xml(ob.keywords)
                     elif ',' in ob.coverage:
-                        m_tags['subject'] = [ x.strip() for x in
+                        m_tags['subject'] = [clean_xml(x.strip()) for x in
                                     ob.keywords.split(',') if x.strip() != '']
                     else:
-                        m_tags['subject'] = [ob.keywords]
+                        m_tags['subject'] = [clean_xml(ob.keywords)]
                 else:
                     m_tags['subject'] = ['n/a']
 
@@ -147,7 +147,7 @@ class ZCatalogHarvester(BTreeFolder2, Persistent, Implicit):
                 else:
                     type = ob.meta_type
 
-                m_tags['type'] = [type]
+                m_tags['type'] = [clean_xml(type)]
                 m_tags['date'] = [self.aq_parent.get_date(
                     ob.bobobase_modification_time())]
 

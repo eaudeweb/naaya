@@ -71,9 +71,8 @@ class TestOAIAggregatorFunctional(ZopeTestCase.FunctionalTestCase):
 
         #Search catalog
         catalog = self.app.oai_agg.getCatalog()
-        results = catalog.searchResults(meta_type=OAIRecord.meta_type,
-                                        dc_title='Folder')
-        self.assertEqual(len(results), 1)
+        results = catalog.searchResults(meta_type=OAIRecord.meta_type)
+        self.assertEqual(len(results), 2)
 
         #Adding one folder and repeat the procedure
         manage_addFolder(self.app, 'other_folder', 'Some other folder')
