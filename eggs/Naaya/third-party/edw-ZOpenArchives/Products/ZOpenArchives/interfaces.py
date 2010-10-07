@@ -115,7 +115,7 @@ class IOAIServer(IOAIRepository):
     """
     autopublish_roles = schema.Text(title=u'Autopublish roles',
                                     default=u'Anonymous', required=False)
-    results_limit = schema.Int(title=u'Display Limit', default=1000,
+    results_limit = schema.Int(title=u'Display Limit', default=100,
                                required=False)
     deleted_record = schema.TextLine(title=u'Deleted record support',
                                      default=u'no', #transient, persistent

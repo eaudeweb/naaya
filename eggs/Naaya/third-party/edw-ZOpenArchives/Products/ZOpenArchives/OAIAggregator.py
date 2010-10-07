@@ -409,8 +409,8 @@ class OAIAggregator(OAIRepository):
     def get_session(self):
         """ Get SQLAlchemy session """
         session = sessionmaker(bind=\
-                create_engine(self.connection_url, echo=True))()
-                #create_engine(self.connection_url))()
+                #create_engine(self.connection_url, echo=True))()
+                create_engine(self.connection_url))()
         clear_mappers()
         mapper(OAIRecordMapper, sqlalchemy_setup.tables['records_table'])
         mapper(OAIRecordMapMapper,

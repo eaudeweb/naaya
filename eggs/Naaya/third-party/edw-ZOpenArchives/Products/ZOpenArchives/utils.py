@@ -103,6 +103,17 @@ def force_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
         # error log
         pass
     return s
+space_sub = re.compile('[\x00|\x01|\x02|\x03|\x04|\x05|\x06|\x07|\x08|'
+                       '\x0B|\x0C|\x0E|\x0F|\x7F]',
+                       re.IGNORECASE)
+newline_sub = re.compile('[\x0A|\x1F|x0D]', re.IGNORECASE)
+tab_sub = re.compile('[\x09]', re.IGNORECASE)
+
+def clean_xml(str):
+    """Clean null and control chars"""
+    str = re.sub(space_sub, " ", str)
+    str = re.sub(newline_sub, "\n", str)
+    return re.sub(tab_sub, "\t", str)
 
 def utConvertListToLines(values):
     """Takes a list of values and returns a value for a textarea control"""
