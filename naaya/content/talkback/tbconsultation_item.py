@@ -470,6 +470,11 @@ class NyTalkBackConsultation(NyRoleManager,
         comments_list.sort(key=operator.attrgetter('comment_date'),
                            reverse=True)
 
+        if comments_list:
+            feed_updated = comments_list[0].comment_date
+        else:
+            feed_updated = DateTime()
+
         def atom_date_format(date):
             d = DT2dt(date).strftime('%Y-%m-%dT%H:%M:%S%z')
             return d[:-2] + ':' + d[-2:]
@@ -478,7 +483,8 @@ class NyTalkBackConsultation(NyRoleManager,
             REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
 
         return self._comments_atom(comments_list=comments_list,
-                                   atom_date_format=atom_date_format)
+                                   atom_date_format=atom_date_format,
+                                   feed_updated=feed_updated)
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
