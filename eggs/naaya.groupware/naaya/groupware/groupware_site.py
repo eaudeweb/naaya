@@ -162,7 +162,7 @@ class GroupwareSite(NySite):
 
         user_admin_link = \
              ("%(ig_url)s/admin_sources_html?"
-              "id=%(source_id)s&params=uid&term=%(userid)s&search_user=Search&"
+              "id=%(source_id)s&s=assign_to_users&params=uid&term=%(userid)s&search_user=Search&"
               "req_role=%(role)s&req_location=%(location)s#ldap_user_roles") % \
                   {'role': role,
                    'userid': user.name,
