@@ -100,6 +100,12 @@ class PlugBase(SimpleItem):
             else:
                 raise ValueError(error_str)
 
+        if not isinstance(name, list):
+            if isinstance(name, str):
+                name = [name]
+            else:
+                return on_error('Username selection error')
+
         if name == []:
             return on_error('No user selected')
         if roles == []:
