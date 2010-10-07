@@ -8,6 +8,16 @@
         role you wish to grant to that group.
         </p>
 
+        <div id="assign_groups_success_response" class="information"
+            style="display:none">
+            <fieldset>
+                <legend>Information</legend>
+                <p i18n:translate="">
+                    Success assigning group roles.
+                </p>
+            </fieldset>
+        </div>
+
         <div class="field">
         <label for="ldap_group" i18n:translate="">LDAP group</label>
         <input type="text" id="ldap_group" name="group"/>
@@ -75,12 +85,6 @@
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting
-        </p>
-    </div>
-
-    <div id="assign_groups_success_response" style="display:none">
-        <p i18n:translate="">
-            Success assigning group roles.
         </p>
     </div>
 
