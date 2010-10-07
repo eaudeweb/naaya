@@ -226,6 +226,17 @@ def convertToList(s):
         s = [s]
     return s
 
+def html2text(html, trim_length=512):
+    """
+    Strip all tags from ``html``. If ``trim_length`` is not None,
+    limit the output length to ``trim_length`` characters.
+    """
+    soup = BeautifulSoup(html)
+    text = unescape_html_entities(''.join(soup.findAll(text=True)))
+    if trim_length:
+        text = text[:trim_length]
+    return text
+
 class list_utils:
     """Provides some interface to handle a list of ids: add/remove id from list"""
 
@@ -423,16 +434,8 @@ class utils:
             res.append(word)
         return ' '.join(res)
 
-    def html2text(self, html, trim_length=512):
-        """
-        Strip all tags from ``html``. If ``trim_length`` is not None,
-        limit the output length to ``trim_length`` characters.
-        """
-        soup = BeautifulSoup(html)
-        text = unescape_html_entities(''.join(soup.findAll(text=True)))
-        if trim_length:
-            text = text[:trim_length]
-        return text
+    def html2text(self, *args, **kwargs):
+        return html2text(*args, **kwargs)
 
     #backwards compatibility
     def utStripAllHtmlTags(self, html):
