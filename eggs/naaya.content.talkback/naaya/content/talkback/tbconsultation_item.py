@@ -32,6 +32,7 @@ from Acquisition import Implicit
 from App.ImageFile import ImageFile
 from OFS.Image import cookId
 from AccessControl.Permissions import change_permissions
+from DateTime import DateTime
 
 #Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -48,6 +49,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
+from naaya.core.zope2util import DT2dt
 
 #local imports
 from Section import addSection
@@ -211,6 +213,8 @@ def addNyTalkBackConsultation(self,
                 REQUEST.RESPONSE.redirect(
                     '%s/messages_html' % self.absolute_url()
                 )
+        else:
+            return id
     else:
         if REQUEST is not None:
             self.setSessionErrors(r)
@@ -440,6 +444,41 @@ class NyTalkBackConsultation(NyRoleManager,
         self.section_sort_order = tuple(sort_section_id)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    _comments_atom = NaayaPageTemplateFile('zpt/comments_atom', globals(),
+                                           'tbconsultation_comments_atom')
+    security.declareProtected(view, 'comments_atom')
+    def comments_atom(self, REQUEST=None, days=2):
+        """ ATOM feed with consultation comments """
+
+        if isinstance(days, basestring):
+            try:
+                days = int(days)
+            except:
+                days = 2
+
+        cutoff = DateTime() - days
+        comments_list = []
+        for section in self.list_sections():
+            for paragraph in section.get_paragraphs():
+                for comment in paragraph.get_comments():
+                    if comment.comment_date < cutoff:
+                        continue
+                    if not comment.approved:
+                        continue
+                    comments_list.append(comment)
+        comments_list.sort(key=operator.attrgetter('comment_date'),
+                           reverse=True)
+
+        def atom_date_format(date):
+            d = DT2dt(date).strftime('%Y-%m-%dT%H:%M:%S%z')
+            return d[:-2] + ':' + d[-2:]
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-Type', 'application/atom+xml')
+
+        return self._comments_atom(comments_list=comments_list,
+                                   atom_date_format=atom_date_format)
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
