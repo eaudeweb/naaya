@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from urllib import quote
 from oaipmh import server, metadata
-from oaipmh.error import NoSetHierarchyError, BadResumptionTokenError
+from oaipmh.error import (NoSetHierarchyError, BadResumptionTokenError,
+                          NoRecordsMatchError)
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -293,11 +294,6 @@ class OAIServer(OAIRepository):
         """ Used in pyoai """
         return self
 
-    security.declarePrivate('listIdentifiers')
-    def listIdentifiers(self, **kw):
-        """ """
-        raise NotImplementedError
-
     security.declarePrivate('listMetadataFormats')
     def listMetadataFormats(self, **kw):
         """ Metadata formats from namespace dictionary
@@ -329,8 +325,7 @@ class OAIServer(OAIRepository):
         """ Not supported """
         raise NoSetHierarchyError
 
-    security.declarePrivate('listRecords')
-    def listRecords(self, **kw):
+    def _list_records(self, type='listRecords', **kw):
         token = None
         offset = 0
         search_dict = {'meta_type': OAIRecord.meta_type}
@@ -357,8 +352,10 @@ class OAIServer(OAIRepository):
             if (isinstance(header, Missing) or isinstance(metadata, Missing) or
                 isinstance(about, Missing)):
                 continue
-
-            results_list.append([header, metadata, about])
+            if type == 'listRecords':
+                results_list.append([header, metadata, about])
+            else:
+                results_list.append(header)
 
             #Create a Token if limit is reached
             if record_count >= self.results_limit:
@@ -383,3 +380,16 @@ class OAIServer(OAIRepository):
 
                 break
         return (results_list, resumptionToken)
+
+    security.declarePrivate('listIdentifiers')
+    def listIdentifiers(self, **kw):
+        """ """
+        return self._list_records(type='listIdentifiers', **kw)
+
+    security.declarePrivate('listRecords')
+    def listRecords(self, **kw):
+        return self._list_records(type='listRecords',**kw)
+
+    security.declarePrivate('getRecord')
+    def getRecord(self, **kw):
+        raise NoRecordsMatchError
