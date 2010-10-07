@@ -21,6 +21,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+import logging
 
 #Zope imports
 import Acquisition
@@ -55,6 +56,8 @@ plug_object_type = 'LDAPUserFolder'
 
 
 LDAP_ROOT_ID = 'ROOT'
+
+auth_logger = logging.getLogger('naaya.core.auth')
 
 class ldap_user:
     """Defines a ldap_user. """
@@ -109,6 +112,13 @@ class plugLDAPUserFolder(PlugBase):
 
     def getUserCanonicalName(self, user):
         value = self.canonical_name.get(user, '-')
+        if value == '-':
+            try:
+                value = self.getUserFullName(user, self.getUserFolder())
+                self.setUserCanonicalName(value)
+            except Exception, e:
+                logging.debug("Could not get user's full name for user %s : %s",
+                        user, str(e))
         return self.decode_cn(value)
 
     def setUserCanonicalName(self, user, user_name):
