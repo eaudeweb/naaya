@@ -261,12 +261,20 @@ function ldap_user_search_form() {
 function ldap_user_roles_assign_form() {
     $('#search_results_form').ajaxForm({
     beforeSubmit: function() {
+        var firstuser = $('input[name="name:list"]:checked').val();
+        if (!firstuser) {
+            $('#portal_users_empty').show();
+        } else {
+            $('#portal_users_empty').hide();
+        }
         var roles = $('#portal_roles').val();
         if (!roles) {
             $('#portal_roles_empty').show();
-            return false;
         } else {
             $('#portal_roles_empty').hide();
+        }
+        if (!firstuser || !roles) {
+            return false;
         }
         $('#assign_users_waiting_response').show();
         $('#assign_users_success_response').hide();
