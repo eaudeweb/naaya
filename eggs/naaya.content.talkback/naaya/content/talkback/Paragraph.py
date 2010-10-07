@@ -33,6 +33,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from comment_item import addComment, TalkBackConsultationComment, cleanup_message
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
+from Products.NaayaCore.managers.utils import html2text
 
 
 def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):
@@ -76,6 +77,10 @@ class Paragraph(Folder):
     security.declareProtected(view, 'get_anchor')
     def get_anchor(self):
         return 'tbp-%s' % self.id
+
+    security.declareProtected(view, 'plaintext_summary')
+    def plaintext_summary(self, chars=100):
+        return html2text(self.body, chars)
 
     security.declareProtected(view, 'get_comments')
     def get_comments(self):
