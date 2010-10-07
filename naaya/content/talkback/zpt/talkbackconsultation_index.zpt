@@ -1,5 +1,14 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
 
+<metal:block fill-slot="standard-head-links">
+    <metal:block use-macro="python: here.standard_template_macro(
+                            'standard-head-links')"></metal:block>
+    <link rel="alternate" type="application/atom+xml" title="Comments feed"
+          tal:attributes="href string:${here/absolute_url}/comments_atom"
+          i18n:attributes="title" />
+</metal:block>
+
+<metal:block fill-slot="body">
 <tal:block tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language())">
 
 <h1 tal:content="here/title_or_id" />
@@ -117,4 +126,5 @@ $(function(){
 });
 </script>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
