@@ -222,4 +222,10 @@
 	  component=".update_schema_widgets.UpdateSchemaWidgets"
 	  permission="zope2.ViewManagementScreens" />
 
+	<utility
+	  name="comments.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_comments.UpdateComments"
+	  permission="zope2.ViewManagementScreens" />
+
 </configure>
