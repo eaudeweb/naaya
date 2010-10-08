@@ -59,8 +59,11 @@ class OAIRecord(SimpleItem, Implicit):
     security.declarePrivate('index_object')
     def index_object(self):
         """ """
-        self.getCatalog().catalog_object(self, str('/'.join(
+        try:
+            self.getCatalog().catalog_object(self, str('/'.join(
                                                     self.getPhysicalPath())))
+        except:
+            pass
 
     security.declarePrivate('unindex_object')
     def unindex_object(self):

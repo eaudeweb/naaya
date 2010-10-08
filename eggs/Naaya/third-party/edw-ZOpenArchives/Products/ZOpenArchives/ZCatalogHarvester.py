@@ -188,7 +188,10 @@ class ZCatalogHarvester(BTreeFolder2, Persistent, Implicit):
         for oai_record in self.getCatalog().searchResults(
             meta_type=OAIRecord.meta_type, harvester=self.id):
             if oai_record.id not in visited_records:
-                self.manage_delObjects(oai_record.id)
+                try:
+                    self.manage_delObjects(oai_record.id)
+                except:
+                    continue
 
     security.declarePrivate('clear')
     def clear(self):
