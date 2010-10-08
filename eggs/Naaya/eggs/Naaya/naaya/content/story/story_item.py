@@ -152,7 +152,6 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.setFrontPicture(_frontpicture)
 
     if kwargs.has_key('submitted'): ob.submitThis()
-    if self.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #log post date
     auth_tool = self.getAuthenticationTool()
@@ -344,8 +343,6 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         if _del_frontpicture != '': self.delFrontPicture()
         else: self.setFrontPicture(_frontpicture)
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -390,7 +387,6 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             self.setFrontPicture(_frontpicture)
             self.approveThis(approved, approved_by)
             self.submitThis()
-            if self.discussion: self.open_for_comments()
             self.recatalogNyObject(self)
             notify(NyContentObjectAddEvent(self, self.contributor, schema_raw_data))
             self.setSession('referer', self.getParentNode().absolute_url())
@@ -459,8 +455,6 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         if not form_errors:
             if _del_frontpicture != '': obj.delFrontPicture()
             else: obj.setFrontPicture(_frontpicture)
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date

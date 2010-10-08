@@ -2,8 +2,6 @@
 <skel>
 	<forms>
 		<form id="channel_details" title="Show all items from remote channel" />
-		<form id="comment_add" title="Add comment for content" />
-		<form id="comments_box" title="Box for content comments"/>
 		<form id="folder_add" title="NyFolder add"/>
 		<form id="folder_administration_basket" title="Folder administration - centralized basket form"/>
 		<form id="folder_administration_feedback" title="Folder administration - customize feedback form"/>

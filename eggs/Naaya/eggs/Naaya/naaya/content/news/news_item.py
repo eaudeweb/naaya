@@ -177,7 +177,6 @@ def addNyNews(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -408,8 +407,6 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         if _del_bigpicture != '': self.delBigPicture()
         else: self.setBigPicture(_bigpicture)
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -477,8 +474,6 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             else: self.setSmallPicture(_smallpicture)
             if _del_bigpicture != '': self.delBigPicture()
             else: self.setBigPicture(_bigpicture)
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date

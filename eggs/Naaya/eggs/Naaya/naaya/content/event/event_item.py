@@ -165,7 +165,6 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -331,8 +330,6 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
             self.approveThis(_approved, _approved_by)
 
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -390,8 +387,6 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date

@@ -71,19 +71,6 @@ class NyBase:
         self.contributor = contributor
         self._p_changed = 1
 
-    security.declareProtected(view_management_screens, 'setDiscussions')
-    def setDiscussions(self, discussion):
-        """
-        Set the discussion flag of the current object to open for discussions or not.
-        @param discussion: the discussion flag
-        @type discussion: integer
-        """
-        if discussion:
-            self.open_for_comments()
-        else:
-            self.close_for_comments()
-        self._p_changed = 1
-
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1, approved_by=None):
         """
@@ -285,7 +272,7 @@ class NyBase:
             ra('<coverage lang="%s"><![CDATA[%s]]></coverage>' % (l, self.utToUtf8(self.getLocalProperty('coverage', l))))
             ra('<keywords lang="%s"><![CDATA[%s]]></keywords>' % (l, self.utToUtf8(self.getLocalProperty('keywords', l))))
         ra(self.export_this_body_custom())
-        ra(self.export_this_comments())
+        ra(self.export_comments())
         return ''.join(r)
 
     security.declarePrivate('export_this_body_custom')

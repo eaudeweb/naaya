@@ -1,42 +1,92 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright   European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Dragos Chirila, Finsiel Romania
-
 """
 This module contains the class that handles comments (discussion) for the
 current object.
 
-Only the types of objects for which their class extends the I{NyComments}
+Only the types of objects for which their class extends the I{NyCommentable}
 can be commented.
 """
+from warnings import warn
+from zope.interface import implements
+from zope.component import adapter
+from zope.app.container.interfaces import (IObjectAddedEvent,
+                                           IObjectMovedEvent,
+                                           IObjectEvent)
+from OFS.interfaces import IObjectWillBeMovedEvent
 
-#Python imports
 
-#Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from OFS.SimpleItem import SimpleItem
+from OFS.Folder import Folder
 
 #Product imports
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from constants import *
 from Products.NaayaCore.managers.utils import utils
+import interfaces
 
+def physical_path(obj):
+    return '/'.join(obj.getPhysicalPath())
+
+@adapter(interfaces.INyCommentable, IObjectEvent)
+def handleComentedObject(ob, event):
+    if IObjectAddedEvent.providedBy(event):
+        catalog_comments(ob)
+    elif IObjectMovedEvent.providedBy(event):
+        if event.newParent is not None:
+            catalog_comments(ob)
+    elif IObjectWillBeMovedEvent.providedBy(event):
+        if event.oldParent is not None:
+            uncatalog_comments(ob)
+
+def catalog_comments(obj):
+    catalog = obj.getSite().getCatalogTool()
+    container = obj._get_comments_container()
+    if container is not None:
+        for comment in container.objectValues(NyComment.meta_type):
+            try:
+                catalog.catalog_object(comment, physical_path(comment))
+            except:
+                obj.getSite().log_current_error()
+
+def uncatalog_comments(obj):
+    catalog = obj.getSite().getCatalogTool()
+    container = obj._get_comments_container()
+    if container is not None:
+        for comment in container.objectValues(NyComment.meta_type):
+            try:
+                catalog.uncatalog_object(physical_path(comment))
+            except:
+                obj.getSite().log_current_error()
+
+class NyComment(SimpleItem):
+
+    implements(interfaces.INyComment)
+    meta_type = 'Naaya Comment'
+    security = ClassSecurityInfo()
+
+    def __init__(self, id, title, body, author, releasedate):
+        self.id = id
+        self.title = title
+        self.body = body
+        self.author = author
+        self.releasedate = releasedate
+
+    def export(self):
+        """ Export object in Naaya XML format. """
+        encode = self.getSite().utXmlEncode
+        return '<comment id="%s" title="%s" body="%s" author="%s" date="%s" />' % \
+            (encode(self.id),
+                encode(self.title),
+                encode(self.body),
+                encode(self.author),
+                encode(self.releasedate))
+
+InitializeClass(NyComment)
+
+
+#@obsolete class
 class comment_item(utils):
     """
     Class that implements a comment.
@@ -57,6 +107,7 @@ class comment_item(utils):
         B{date} - posting date
 
         """
+        raise NotImplementedError
         self.id = id
         self.title = title
         self.body = body
@@ -89,134 +140,67 @@ class comment_item(utils):
 
 InitializeClass(comment_item)
 
-class NyComments:
+class NyCommentable:
     """
     Class that handles the validation operation for a single object.
     """
 
+    implements(interfaces.INyCommentable)
     security = ClassSecurityInfo()
 
-    def __init__(self):
-        """
-        Initialize variables:
+    def _get_comments_container(self):
+        return getattr(self, '.comments', None)
 
-        B{discussion} - integer value that say if the object is open
-        for comments or not:
-            - B{1} allow comments
-            - B{0} doesn't allow comments
+    def _add_comments_container(self):
+        folder = Folder(id='.comments')
+        setattr(self, '.comments', folder)
+        return self._get_comments_container()
 
-        B{__comments_collection} - dictionary that stores all the comments
-
-        """
-        self.discussion = 0
-        self.__comments_collection = {}
-
-    #api
-    security.declarePrivate('init_comments')
-    def init_comments(self):
-        """
-        Reset comments.
-        """
-        self.discussion = 0
-        self.__comments_collection = {}
-        self._p_changed = 1
-
-    def is_open_for_comments(self):
-        """
-        Test is the object is open for comments.
-        """
-        return self.discussion == 1
-
-    def get_comments_collection(self):
-        """
-        Get the entire comments collection.
-        """
-        return self.__comments_collection
-
+    security.declareProtected(view, 'get_comments_list')
     def get_comments_list(self):
-        """
-        Return the list of comments sorted by date.
-        """
-        t = [(x.date, x) for x in self.__comments_collection.values()]
-        t.sort()
-        return [val for (key, val) in t]
+        """ Return the list of comments sorted by releasedate. """
+        container = self._get_comments_container()
+        if container:
+            comments = container.objectValues()
+            return sorted(comments, key=lambda c: c.releasedate)
+        else:
+            return []
 
-    def has_comments(self):
-        """
-        Returns the number of comments.
-        """
-        return len(self.__comments_collection.keys()) > 0
-
+    security.declareProtected(view, 'count_comments')
     def count_comments(self):
-        """
-        Returns the number of comments.
-        """
-        return len(self.__comments_collection.keys())
+        """ Returns the number of comments. """
+        container = self._get_comments_container()
+        if container:
+            return len(container.objectIds())
+        else:
+            return 0
 
     security.declarePrivate('open_for_comments')
     def open_for_comments(self):
         """
         Enable(open) comments.
         """
-        self.discussion = 1
-        self._p_changed = 1
+        warn('Function `open_for_comments` is deprecated. NyCommentable reads '
+             'the `discussion` property directly')
 
     security.declarePrivate('close_for_comments')
     def close_for_comments(self):
         """
         Disable(close) comments.
         """
-        self.discussion = 0
-        self._p_changed = 1
+        warn('Function `close_for_comments` is deprecated. NyCommentable reads '
+             'the `discussion` property directly')
 
-    security.declarePrivate('insert_comment_obj')
-    def insert_comment_obj(self, comment_id, comment_ob):
-        self.__comments_collection[comment_id] = comment_ob
-        self._p_changed = 1
-
-    security.declarePrivate('add_comment_item')
-    def add_comment_item(self, id, title, body, author, date):
-        """
-        Create a new comment.
-        """
-        item = comment_item(id, title, body, author, date)
-        self.__comments_collection[id] = item
-        self._p_changed = 1
-        return item
-
-    security.declarePrivate('update_comment_item')
-    def update_comment_item(self, id, title, body):
-        """
-        Modify a comment.
-        """
-        try:
-            item = self.__comments_collection[id]
-        except:
-            pass
-        else:
-            item.title = title
-            item.body = body
-        self._p_changed = 1
-
-    security.declarePrivate('delete_comment_item')
-    def delete_comment_item(self, id):
-        """
-        Delete 1 comment.
-        """
-        try: del(self.__comments_collection[id])
-        except: pass
-        self._p_changed = 1
-
-    security.declarePrivate('export_this_comments')
-    def export_this_comments(self):
+    security.declarePrivate('export_comments')
+    def export_comments(self):
         """
         Export all the comments in XML format.
         """
         r = []
         ra = r.append
         ra('<discussion>')
-        for x in self.get_comments_list():
-            ra(x.export_this())
+        for c in self.get_comments_list():
+            ra(c.export())
         ra('</discussion>')
         return ''.join(r)
 
@@ -226,72 +210,78 @@ class NyComments:
         Import comments.
         """
         if discussion is not None:
-            for comment in discussion.comments:
-                self.comment_add(comment.id, comment.title, comment.body,
-                    comment.author.encode('utf-8'), comment.date.encode('utf-8'))
+            for c in discussion.comments:
+                self._comment_add(c.id,
+                            c.title.encode('utf-8'),
+                            c.body.encode('utf-8'),
+                            c.author.encode('utf-8'),
+                            c.releasedate.encode('utf-8'))
 
     #permissions
     def checkPermissionAddComments(self):
-        """
-        Check for adding comments.
-        """
+        """ Check for adding comments. """
         return self.checkPermission(PERMISSION_COMMENTS_ADD)
 
     def checkPermissionManageComments(self):
-        """
-        Check for managing comments.
-        """
+        """ Check for managing comments. """
         return self.checkPermission(PERMISSION_COMMENTS_MANAGE)
 
-    #site actions
+    def _comment_add(self, title='', body='', author='', releasedate=None):
+        container = self._get_comments_container()
+        if container is None:
+            container = self._add_comments_container()
+
+        id = self.utGenRandomId()
+        ob = NyComment(id, title, body, author, releasedate)
+        container._setObject(id, ob)
+
+        return ob
+
+    def _comment_del(self, id):
+        container = self._get_comments_container()
+        if container:
+            container.manage_delObjects([id])
+
     security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add')
-    def comment_add(self, id='', title='', body='', author=None, date=None, REQUEST=None):
+    def comment_add(self, REQUEST):
         """
         Add a comment for this object.
         """
-        id = self.utCleanupId(id)
-        if not id: id = self.utGenRandomId()
-        if author is None: author = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        if date is None: date = self.utGetTodayDate()
-        else: date = self.utGetDate(date)
-        ob = self.add_comment_item(id, title, body, author, date)
-        self.recatalogNyObject(self)
+        form_data = dict(REQUEST.form)
+        author = REQUEST.AUTHENTICATED_USER.getUserName()
+
+        ob = self._comment_add(title = form_data.get('title'),
+                               body = form_data.get('body'),
+                               author = author,
+                               releasedate = self.utGetTodayDate())
+
         self.notifyFolderMaintainer(self, ob, p_template="email_notifyoncomment")
-        #log post date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+        return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_del')
-    def comment_del(self, id='', REQUEST=None):
+    def comment_del(self, REQUEST):
         """
         Delete a comment.
         """
-        self.delete_comment_item(id)
-        self.recatalogNyObject(self)
-        #log date
-        user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+        id_comment = REQUEST.form.get('id', '')
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+
+        self._comment_del(id_comment)
+
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(user)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    #site pages
-    security.declareProtected(view, 'comments_box')
-    def comments_box(self, REQUEST=None, RESPONSE=None):
-        """
-        List all the comments for this object.
-        """
-        return self.getFormsTool().getContent({'here': self}, 'comments_box')
+        self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+        return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    comments_box = NaayaPageTemplateFile('zpt/comments_box', globals(), 'naaya.base.comments.box')
 
     security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add_html')
-    def comment_add_html(self, REQUEST=None, RESPONSE=None):
-        """
-        Form for adding a new comment.
-        """
-        return self.getFormsTool().getContent({'here': self}, 'comment_add')
+    comment_add_html = NaayaPageTemplateFile('zpt/comment_add', globals(), 'naaya.base.comments.add')
 
-InitializeClass(NyComments)
+InitializeClass(NyCommentable)

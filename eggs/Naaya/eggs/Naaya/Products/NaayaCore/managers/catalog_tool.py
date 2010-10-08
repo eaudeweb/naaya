@@ -306,7 +306,23 @@ class catalog_tool:
         return self.__getObjects(l_results)
 
     def getCommentedObjects(self):
-        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'has_comments': 1}))
+        paths = set()
+        for brain in self.__searchCatalog({'meta_type': 'Naaya Comment'}):
+            pieces = brain.getPath().split('/')
+            # we expect brain.getPath() to returns: `comentable-object-path`/.comments/`comment-numeric-id`
+            assert pieces[-1].isdigit()
+            assert pieces[-2] == '.comments'
+            paths.add('/'.join(pieces[:-2]))    #get commentable-object-path
+        return [self.unrestrictedTraverse(path, None) for path in paths]
+
+    def getLatestComments(self, path, limit=0):
+        brains = self.__searchCatalog({'meta_type': 'Naaya Comment',
+                                        'path': path,
+                                        'sort_on': 'releasedate',
+                                        'sort_order': 'reverse'})
+        if limit:
+            brains = brains[:limit]
+        return self.__getObjects(brains)
 
     def getCatalogCheckedOutObjects(self):
         return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'checkout': 1}))

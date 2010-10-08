@@ -176,7 +176,6 @@ def addNyExFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.handleUpload(_source, _file, _url, _lang)
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -544,8 +543,6 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
             self.approveThis(_approved, _approved_by)
 
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
@@ -642,8 +639,6 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
         self.set_precondition(_precondition, _lang)
 
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         #log date

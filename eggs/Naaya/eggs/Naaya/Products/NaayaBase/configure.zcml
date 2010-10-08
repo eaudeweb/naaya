@@ -56,4 +56,10 @@
     for=".interfaces.INyRemoveGroupRoleEvent"
     />
 
+  <class class=".NyComments.NyComment">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+  </class>
+
+  <subscriber handler=".NyComments.handleComentedObject" />
+
 </configure>

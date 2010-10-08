@@ -42,7 +42,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
-		<td><input type="checkbox" name="discussion" tal:attributes="checked here/is_open_for_comments" /></td>
+		<td><input type="checkbox" name="discussion" tal:attributes="checked here/discussion" /></td>
 	</tr>
 	<tr><td class="form-label" colspan="2"></td></tr>
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>

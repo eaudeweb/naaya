@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns="http://purl.org/rss/1.0/"
+         xmlns:tal="http://xml.zope.org/namespaces/tal">
+
+  <channel tal:define="s python:options['portal']"
+           tal:attributes="rdf:about s/absolute_url">
+    <title tal:content="s/title" />
+    <link tal:content="s/portal_url" />
+    <description tal:content="python:here.html2text(s.description)" />
+    <dc:identifier tal:content="s/portal_url" />
+    <dc:date tal:content="python:here.utGetTodayDate().HTML4()" />
+    <dc:publisher tal:content="s/publisher" />
+    <dc:subject tal:content="s/title" />
+    <dc:language tal:content="options/lang" />
+  </channel>
+
+  <tal:block repeat="c options/comments">
+    <item tal:attributes="rdf:about c/absolute_url">
+      <title tal:content="c/title" />
+      <url tal:content="c/absolute_url" />
+      <description tal:content="python:here.html2text(c.body)" />
+      <dc:date tal:content="python:c.releasedate.HTML4()" />
+      <dc:subject tal:content="c/title" />
+      <dc:creator tal:content="c/author" />
+    </item>
+  </tal:block>
+
+</rdf:RDF>

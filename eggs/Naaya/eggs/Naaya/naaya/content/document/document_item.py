@@ -124,7 +124,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'doc',
                           removelist=[]),
-                  lambda x: self._getOb(x, None) is not None)  
+                  lambda x: self._getOb(x, None) is not None)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyDocument_object(self, id, contributor)
@@ -138,7 +138,6 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
         raise ValueError(form_errors.popitem()[1]) # pick a random error
 
     if kwargs.has_key('submitted'): ob.submitThis()
-    if self.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #log post date
     auth_tool = self.getAuthenticationTool()
@@ -283,8 +282,6 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(_approved, _approved_by)
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -330,7 +327,6 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
 
             self.approveThis(approved, approved_by)
             self.submitThis()
-            if self.discussion: self.open_for_comments()
             self.recatalogNyObject(self)
             notify(NyContentObjectAddEvent(self, self.contributor, schema_raw_data))
             self.setSession('referer', self.getParentNode().absolute_url())
@@ -394,8 +390,6 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date

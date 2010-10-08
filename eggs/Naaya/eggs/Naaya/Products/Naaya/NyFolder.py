@@ -144,7 +144,6 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_Ny
     ob.publicinterface = _publicinterface
     ob.createPublicInterface()
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     event.notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -843,8 +842,6 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
         self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         self.createPublicInterface()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
@@ -890,8 +887,6 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date
@@ -1176,25 +1171,6 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
                     results.append((tag, word))
             return results
 
-    security.declareProtected(view, 'getLatestComments')
-    def getLatestComments(self, folder=None, number=None, date=None):
-        """ get the latest comments """
-        folder_comments = {}
-        if folder is None:  folder = self
-        for obj in folder.getObjects():
-            folder_comments.update(obj.get_comments_collection())
-        if number and date is None:
-            t = [(x.date, x) for x in folder_comments.values()][:number]
-        elif number is None and date:
-            t = [(x.date, x) for x in folder_comments.values() if x.date.isCurrentDay()]
-        elif number and date:
-            t = [(x.date, x) for x in folder_comments.values() if x.date.isCurrentDay()][:number]
-        else:
-            t = [(x.date, x) for x in folder_comments.values()]
-        t.sort()
-        t.reverse()
-        return [val for (key, val) in t]
-
     def _page_result(self, p_result, p_start):
         #Returns results with paging information
         NUMBER_OF_RESULTS_PER_PAGE = 5
@@ -1248,39 +1224,17 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         self.REQUEST.RESPONSE.setHeader('content-type', 'application/xhtml+xml')
         return '\n'.join(r)
 
-
     security.declareProtected(view, 'comments_rdf')
-    def comments_rdf(self, REQUEST=None, RESPONSE=None):
+    def comments_rdf(self, REQUEST):
         """ """
-        comments = self.getLatestComments(date=self.utGetTodayDate())
-        s = self.getSite()
-        lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://purl.org/rss/1.0/">')
-        ra('<channel rdf:about="%s">' % self.utXmlEncode(s.absolute_url()))
-        ra('<title>%s</title>' % s.utXmlEncode(s.title))
-        ra('<link>%s</link>' % self.utXmlEncode(s.portal_url))
-        ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(s.description))
-        ra('<dc:identifier>%s</dc:identifier>' % self.utXmlEncode(s.portal_url))
-        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
-        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.title))
-        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
-        ra('</channel>')
-        for comm in comments:
-            ra('<item rdf:about="%s">' % self.utXmlEncode('%s#%s' % (comm.entry, comm.id)))
-            ra('<title>%s</title>' % self.utXmlEncode(comm.title))
-            ra('<url>%s</url>' % self.utXmlEncode('%s#%s' % (comm.entry, comm.id)))
-            ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(comm.body))
-            ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(comm.date))
-            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(comm.title))
-            ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(comm.author))
-            ra('</item>')
-        ra("</rdf:RDF>")
-        self.REQUEST.RESPONSE.setHeader('content-type', 'application/xhtml+xml')
-        return '\n'.join(r)
+        catalog_tool = self.getCatalogTool()
+        comments = catalog_tool.getLatestComments(self.getPhysicalPath(), limit=20)
+        return self._comments_rdf(REQUEST,
+                                  portal = self.getSite(),
+                                  comments = comments,
+                                  lang = self.gl_get_selected_language())
+
+    _comments_rdf = PageTemplateFile('zpt/comments_rdf', globals())
 
     security.declareProtected(view, 'check_item_title')
     def check_item_title(self, object, obj_title=''):
