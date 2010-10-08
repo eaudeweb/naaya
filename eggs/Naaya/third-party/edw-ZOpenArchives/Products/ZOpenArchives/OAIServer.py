@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from urllib import quote
 from oaipmh import server, metadata
 from oaipmh.error import (NoSetHierarchyError, BadResumptionTokenError,
-                          IdDoesNotExistError)
+                          IdDoesNotExistError, CannotDisseminateFormatError)
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -124,7 +124,7 @@ class OAIServer(OAIRepository):
 
         # general searching - from web form
         catalog.addIndex('h_identifier', 'FieldIndex')
-        catalog.addIndex('h_datestamp', 'FieldIndex')
+        catalog.addIndex('h_datestamp', 'DateIndex')
         catalog.addIndex('h_setspec', 'KeywordIndex')
         catalog.addIndex('h_deleted', 'FieldIndex')
 
@@ -153,6 +153,7 @@ class OAIServer(OAIRepository):
         catalog.manage_addColumn('metadata')
         catalog.manage_addColumn('about')
         catalog.manage_addColumn('meta_type')
+        catalog.manage_addColumn('h_datestamp')
 
     security.declarePrivate('update')
     def update(self, force=False):
@@ -195,6 +196,12 @@ class OAIServer(OAIRepository):
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                 '/manage_main?manage_tabs_message=Harvesters%20updated')
 
+    def validate_metadata_prefix(self, metadataPrefix):
+        try: #Check if format is ok
+            self.get_namespace_dict(metadataPrefix)
+        except AttributeError:
+            raise CannotDisseminateFormatError
+
     ################
     # Protocol
     ################
@@ -231,7 +238,7 @@ class OAIServer(OAIRepository):
             if len(results) == 0:
                 date = datetime.now()
             else:
-                date = results[0].OAI_Date
+                date = results[0].h_datestamp
             self.earliest_datestamp = date
             return date
 
@@ -240,17 +247,22 @@ class OAIServer(OAIRepository):
         """ """
         return self.date_granularity
 
-    def get_date(self, date_str=None):
+    def get_date(self, date=None):
         """ Return fixed date string depending on granularity of server """
-        if date_str == None:
-            date = DateTime.DateTime()
+        if date == None:
+            zope_date = DateTime.DateTime()
+        elif isinstance(date, basestring):
+            zope_date = DateTime.DateTime(date)
+        elif isinstance(date, datetime):
+            zope_date = DateTime.DateTime(str(date))
         else:
-            date = DateTime.DateTime(date_str)
+            zope_date = date
+
         granularity = self.granularity()
         if granularity == 'YYYY-MM-DD':
-            d_str = str(date.strftime("%Y-%m-%d"))
+            d_str = str(zope_date.strftime("%Y-%m-%d"))
         elif granularity == 'YYYY-MM-DDThh:mm:ssZ':
-            d_str = str(date.HTML4())
+            d_str = str(zope_date.HTML4())
         else:
             raise "Unknown granularity: '%s'", granularity
         return d_str
@@ -282,23 +294,18 @@ class OAIServer(OAIRepository):
 
         """
         metadata_formats = []
+        data_dict = self.get_namespace_dict('oai_dc')
         if kw.has_key('identifier'):
             search_dict = {
                 'meta_type': OAIRecord.meta_type,
-                'OAI_Identifier': kw['identifier']
+                'h_identifier': kw['identifier']
             }
-            if len(results) == 0:
-                raise ValueError("OAI Error: idDoesNotExist")
             results = self.getCatalog().searchResults(search_dict)
-            for record in results:
-                ns_prefix = record.metadata_format
-                metadata_formats.append(self.get_namespace_dict(ns_prefix))
-            if len(the_list) == 0:
-                raise ValueError("OAI Error: noMetadataFormats")
-        else:
-            data_dict = self.get_namespace_dict('oai_dc')
-            metadata_formats.append((data_dict['prefix'], data_dict['schema'],
-                                     data_dict['namespace']))
+            if len(results) == 0:
+                raise IdDoesNotExistError
+
+        metadata_formats.append((data_dict['prefix'], data_dict['schema'],
+                                 data_dict['namespace']))
         return metadata_formats
 
     security.declarePrivate('listSets')
@@ -307,21 +314,56 @@ class OAIServer(OAIRepository):
         raise NoSetHierarchyError
 
     def _list_records(self, type='listRecords', **kw):
+        """ Used in ListRecords and ListIdentifiers because they have similar
+        function with the ListIdentifiers having just the header
+
+        Arguments::
+
+            resumptionToken -- A token that allows to iterate OAIRecords
+                               (similar to pagination)
+            from, until -- Date taken from h_datestamp index in ZCatalog
+                    which allows date filtering
+            metadataPrefix -- usually oai_dc
+            setSpec -- OAI Set filtering (not implemented)
+
+        """
+        if 'metadataPrefix' in kw:
+            self.validate_metadata_prefix(kw['metadataPrefix'])
+
         token = None
         offset = 0
         search_dict = {'meta_type': OAIRecord.meta_type}
-        search_dict['sort_limit'] = self.results_limit
+        search_dict['sort_on'] = 'h_datestamp'
+        search_dict['sort_order'] = 'reverse'
         """Get the args for the request either from our 'resumption token' or
         from our regular request dictionary"""
-        if kw.has_key('resumptionToken'):
+        if 'resumptionToken' in kw:
             #Unserialize the token and populate search_dict
             token = unserialize_token(kw['resumptionToken'])
+            if 'metadataPrefix' in token:
+                try:
+                    self.validate_metadata_prefix(token['metadataPrefix'])
+                except CannotDisseminateFormatError:
+                    raise BadResumptionTokenError
             offset = int(token.get('offset', 0))
+            if 'from' in token and token['from'] != '':
+                kw['from_'] = token['from']
+            if 'until' in token and token['until'] != '':
+                kw['until'] = token['until']
+
+        if 'from_' in kw and 'until' in kw:
+            search_dict['h_datestamp'] = {'query': [kw['from_'], kw['until']],
+                                          'range': 'minmax'}
+        elif 'from_' in kw:
+            search_dict['h_datestamp'] = {'query': kw['from_'], 'range': 'min'}
+        elif 'until' in kw:
+            search_dict['h_datestamp'] = {'query': kw['until'], 'range': 'max'}
+
         results = self.getCatalog().searchResults(search_dict)
 
         record_count = 0
         len_results = len(results)
-        results_list = [] #Return list
+        results_list = [] #OAIRecord list
         resumptionToken = ''
         while (offset + record_count) < len_results:
             # get search record and info
@@ -342,16 +384,21 @@ class OAIServer(OAIRepository):
             if record_count >= self.results_limit:
                 new_token = {}
                 new_token['offset'] = offset + record_count
+                new_token['from'] = ('from_' in kw and
+                                     self.get_date(kw['from_']) or '')
+                new_token['until'] = ('until' in kw and
+                                      self.get_date(kw['until']) or '')
+                for key, value in kw.items():
+                    if key in token_keys and key not in new_token:
+                        new_token[key] = value
                 if token is None:
-                    for key, value in kw.items():
-                        if key in token_keys:
-                            new_token[key] = value
                     resumptionToken = serialize_token(new_token)
                 else:
-                    token['offset'] = new_token['offset']
+                    token.update(new_token)
                     resumptionToken = serialize_token(token)
 
                 #Not supported in pyoai
+
                 #token_args = {}
                 #token_args['cursor'] = offset
                 #token_args['completeListSize'] = len_results
