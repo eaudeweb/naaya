@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from urllib import quote
 from oaipmh import server, metadata
 from oaipmh.error import (NoSetHierarchyError, BadResumptionTokenError,
-                          NoRecordsMatchError)
+                          IdDoesNotExistError)
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -104,7 +104,7 @@ class OAIServer(OAIRepository):
                          "<?xml-stylesheet type='text/xsl'"
                          " href='" + self.absolute_url() + "/stylesheet'?>")
 
-    security.declarePrivate('add_indexes')
+    security.declareProtected(view_management_screens, 'add_indexes')
     def add_indexes(self, catalog):
         """ Add indexes for catalog
 
@@ -113,37 +113,30 @@ class OAIServer(OAIRepository):
         contains 2 attributes: header and metadata.
 
         """
-        # general searching - from web form
-        catalog.addIndex('OAI_Date', 'FieldIndex')
-        catalog.addIndex('OAI_Fulltext', 'TextIndexNG3')
-        catalog.addIndex('OAI_Title', 'TextIndexNG3')
 
-        # OAI Search stuff -
-        catalog.addIndex('OAI_Identifier', 'FieldIndex')
-        catalog.addIndex('OAI_Set', 'KeywordIndex')
-        catalog.addIndex('status', 'FieldIndex')
-        catalog.addIndex('OAI_MetadataFormat', 'FieldIndex')
-
-        # dc search indexes
-        catalog.addIndex('dc_title', 'TextIndexNG3')
-        catalog.addIndex('dc_creator', 'KeywordIndex')
-        catalog.addIndex('dc_author', 'KeywordIndex')
-        catalog.addIndex('dc_subject', 'TextIndexNG3')
-        catalog.addIndex('dc_description', 'TextIndexNG3')
-        catalog.addIndex('dc_date', 'KeywordIndex')
-        #Needed in ZCatalogHarvester
-        catalog.addIndex('oai_state', 'FieldIndex')
-
-        # lom search indexes
-        # zope searching - in code
-        catalog.addIndex('last_update', 'FieldIndex')
+        catalog.addIndex('path', 'PathIndex')
         try:
             catalog.addIndex('meta_type', 'FieldIndex')
         except:
             pass
         catalog.addIndex('expiration', 'FieldIndex')
-        catalog.addIndex('path', 'PathIndex')
+        catalog.addIndex('last_update', 'FieldIndex')
 
+        # general searching - from web form
+        catalog.addIndex('h_identifier', 'FieldIndex')
+        catalog.addIndex('h_datestamp', 'FieldIndex')
+        catalog.addIndex('h_setspec', 'KeywordIndex')
+        catalog.addIndex('h_deleted', 'FieldIndex')
+
+        # dc search indexes
+        catalog.addIndex('m_title', 'KeywordIndex')
+        catalog.addIndex('m_creator', 'KeywordIndex')
+        catalog.addIndex('m_author', 'KeywordIndex')
+        catalog.addIndex('m_subject', 'KeywordIndex')
+        catalog.addIndex('m_description', 'KeywordIndex')
+        catalog.addIndex('m_date', 'KeywordIndex')
+
+    security.declareProtected(view_management_screens, 'add_metadata')
     def add_metadata(self, catalog):
         """ Adding metadata columns """
         #Add id and title columns if not present
@@ -160,18 +153,6 @@ class OAIServer(OAIRepository):
         catalog.manage_addColumn('metadata')
         catalog.manage_addColumn('about')
         catalog.manage_addColumn('meta_type')
-
-        catalog.manage_addColumn('OAI_Date')
-        catalog.manage_addColumn('OAI_Title')
-        catalog.manage_addColumn('OAI_Identifier')
-
-        catalog.manage_addColumn('update_interval')
-        catalog.manage_addColumn('last_update')
-
-        catalog.manage_addColumn('dc_creator')
-        catalog.manage_addColumn('dc_author')
-        catalog.manage_addColumn('dc_description')
-        catalog.manage_addColumn('dc_identifier')
 
     security.declarePrivate('update')
     def update(self, force=False):
@@ -244,7 +225,7 @@ class OAIServer(OAIRepository):
         else:
             results = self.getCatalog().searchResults({
                 'meta_type': OAIRecord.meta_type,
-                'sort_on':'OAI_Date',
+                'sort_on':'h_datestamp',
                 'sort_order':'reverse'
             })
             if len(results) == 0:
@@ -392,4 +373,9 @@ class OAIServer(OAIRepository):
 
     security.declarePrivate('getRecord')
     def getRecord(self, **kw):
-        raise NoRecordsMatchError
+        if 'identifier' in kw and kw['identifier'] != '':
+            record = self.getCatalog().searchResults(
+                {'h_identifier': kw.get('identifier')})
+            if len(record):
+                return [record[0].header, record[0].metadata, u'']
+        raise IdDoesNotExistError
