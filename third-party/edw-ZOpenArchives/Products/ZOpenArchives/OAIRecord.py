@@ -25,6 +25,21 @@ class OAIRecord(SimpleItem, Implicit):
 
     security = ClassSecurityInfo()
 
+    def __getattr__(self, name):
+        "Used to provide needed arguments for ZCatalog"
+        if name.startswith('h_'):
+            if hasattr(self, 'header'):
+                return getattr(self.header, name[1:])
+        elif name.startswith('m_'):
+            if hasattr(self, 'metadata'):
+                try:
+                    return self.metadata.getField(name[2:])
+                except:
+                    pass
+        else:
+            return self.__getattribute__(name)
+        raise AttributeError
+
     security.declarePrivate('initialize')
     def initialize(self):
         """ """
