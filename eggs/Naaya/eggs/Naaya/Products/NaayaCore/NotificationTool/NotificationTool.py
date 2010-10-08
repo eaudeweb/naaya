@@ -154,7 +154,8 @@ class NotificationTool(Folder):
         ob = self.getSite().unrestrictedTraverse(location)
         location = relative_object_path(ob, self.getSite())
         try:
-            self.add_account_subscription(user_id, location, notif_type, lang)
+            self.add_account_subscription(user_id.strip(), location,
+                                          notif_type, lang)
         except ValueError, msg:
             self.setSessionErrorsTrans(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')

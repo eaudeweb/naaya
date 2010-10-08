@@ -37,4 +37,9 @@
     <implements interface=".interfaces.ISubscriptionTarget" />
   </class>
 
+  <utility name="remove_notification_userid_spaces.update"
+           provides="Products.naayaUpdater.interfaces.IUpdateScript"
+           component=".updates.RemoveNotifUseridSpaces"
+           permission="zope2.ViewManagementScreens" />
+
 </configure>
