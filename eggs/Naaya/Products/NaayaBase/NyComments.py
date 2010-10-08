@@ -175,6 +175,11 @@ class NyCommentable:
         else:
             return 0
 
+    def is_open_for_comments(self):
+        return self.discussion
+        warn('Function `is_open_for_comments` is deprecated. NyCommentable reads '
+             'the `discussion` property directly')
+
     security.declarePrivate('open_for_comments')
     def open_for_comments(self):
         """
