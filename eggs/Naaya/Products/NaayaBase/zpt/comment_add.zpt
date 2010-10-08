@@ -1,5 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
-<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+<tal:block tal:define="global editor here/getEditorTool"
+           tal:replace="structure editor/includeLibs" />
 
 <h1 i18n:translate="">Add comment</h1>
 
@@ -14,7 +15,7 @@
 </div>
 <div class="field">
 	<label for="body" i18n:translate="">Comment</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', image_support=True)" />
+	<span tal:replace="structure python:editor.render('body', image_support=True)" />
 	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor"></textarea>
 </div>
 <div class="field">

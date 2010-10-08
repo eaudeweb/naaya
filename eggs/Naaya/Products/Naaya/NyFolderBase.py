@@ -191,22 +191,6 @@ class NyFolderBase(Folder, NyPermissions):
                 if object.getLocalProperty('title', lang):
                     return 1
 
-    security.declareProtected(view, 'item_has_comments')
-    def item_has_comments(self, object):
-        """
-        Checks if the object can have comments
-        """
-        if hasattr(object, 'aq_self'):
-            real_object = object.aq_self
-        else:
-            real_object = object
-
-        if hasattr(real_object, 'is_open_for_comments'):
-            return real_object.is_open_for_comments()
-        else:
-            return False
-
-
     security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
     def copyObjects(self, REQUEST=None, **kwargs):
         """ """

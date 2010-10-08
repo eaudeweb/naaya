@@ -12,6 +12,13 @@ class INyFSFile(Interface):
     """ Interface for NyFSFile """
     pass
 
+class INyCommentable(Interface):
+    """ Interface for NyCommentable """
+    pass
+
+class INyComment(Interface):
+    """ Interface for NyComment """
+    pass
 
 class INyAddLocalRoleEvent(Interface):
     """ Local role has been added """
@@ -67,4 +74,3 @@ class INyRemoveGroupRoleEvent(Interface):
     context = Attribute("Site or folder the roles are removed for")
     group = Attribute("Group the roles are removed for")
     roles = Attribute("The list of roles")
-

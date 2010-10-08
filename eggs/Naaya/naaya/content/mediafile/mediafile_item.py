@@ -208,7 +208,6 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.handleMediaUpload(_file)
     ob._setLocalPropValue('subtitle', _lang, _subtitle)
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -415,8 +414,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
             self.approveThis(_approved, _approved_by)
 
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -557,8 +554,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if _source:
             self.saveUpload(file=_file, lang=_lang)
 
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         #log date

@@ -37,10 +37,10 @@ from AccessControl import ClassSecurityInfo
 from interfaces import INyItem
 from NyBase import NyBase
 from NyPermissions import NyPermissions
-from NyComments import NyComments
+from NyComments import NyCommentable
 from NyDublinCore import NyDublinCore
 
-class NyItem(SimpleItem, NyComments, NyBase, NyPermissions, NyDublinCore):
+class NyItem(SimpleItem, NyCommentable, NyBase, NyPermissions, NyDublinCore):
     """
     Class that implements the Naaya simple item type of object.
     """
@@ -58,7 +58,6 @@ class NyItem(SimpleItem, NyComments, NyBase, NyPermissions, NyDublinCore):
         Constructor.
         """
         NyBase.__dict__['__init__'](self)
-        NyComments.__dict__['__init__'](self)
         NyDublinCore.__dict__['__init__'](self)
 
 InitializeClass(NyItem)

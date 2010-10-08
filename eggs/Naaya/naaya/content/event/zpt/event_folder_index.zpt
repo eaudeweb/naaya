@@ -119,9 +119,11 @@
 									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 							</span>
 						</span>
-						<tal:block tal:condition="python:here.item_has_comments(object) and object.count_comments()>0">
-							[<span tal:replace="object/count_comments" />
+						<tal:block condition="object/discussion">
+						<tal:block define="count_comments object/count_comments" condition="count_comments">
+							[<span tal:replace="count_comments" />
 							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
 						</tal:block>
 					</td>
 
