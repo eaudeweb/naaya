@@ -34,7 +34,7 @@
 		</div>
 		</fieldset>
 	</tal:block>
-	<div class="field" tal:condition="python: form_item['name'] == 'subject'" class="field">
+	<div class="field" tal:condition="python: form_item['name'] == 'subject'">
 		<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subject')" class="mandatory_field"> *</span></label>
 		<select name="subject" id="subject" multiple="multiple" size="6">
 			<tal:block repeat="item python:here.getPortalThesaurus().getThemesList(curr_lang)">
