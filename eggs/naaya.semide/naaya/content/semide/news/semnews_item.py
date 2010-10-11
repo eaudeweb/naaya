@@ -68,7 +68,7 @@ PROPERTIES_OBJECT = {
 }
 
 DEFAULT_SCHEMA = {
-    'news_date':        dict(sortorder=100, widget_type="Date", data_type="date", label="News date", required=True),
+    'news_date':        dict(sortorder=100, widget_type="Date", data_type="date", label="News date"),
     'source':           dict(sortorder=110, widget_type="String", label="Source", localized=True),
     'source_link':      dict(sortorder=120, widget_type="String", label="Source link", default="http://"),
     'news_type':        dict(sortorder=130, widget_type="Select", label="News type", list_id="news_types"),
@@ -439,7 +439,7 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     #                month_folder._getOb(self.id).absolute_url())
     #        else:
     #            return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-    
+
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
