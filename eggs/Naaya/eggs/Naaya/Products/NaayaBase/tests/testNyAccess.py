@@ -7,7 +7,6 @@ from Testing import ZopeTestCase
 import transaction
 from AccessControl import getSecurityManager
 from AccessControl.Permission import Permission
-from AccessControl.ImplPython import rolesForPermissionOn
 
 # Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -33,16 +32,6 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
                          {'View': 'View', 'View History': 'View History'}))
 
         transaction.commit()
-
-    def tearDown(self):
-        self.portal.info.testfolder._delOb('ny_access')
-        self.portal.info.manage_delObjects(['testfolder'])
-
-        transaction.commit()
-
-        del self.testfolder
-
-        super(NyAccessTestCase, self).tearDown()
 
     def test_structure(self):
         self.assertTrue(self.testfolder.ny_access.getObject() is self.testfolder)
@@ -84,6 +73,7 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
     def test_users(self):
         set_mapping = {'View': ('Contributor',), 'View History': ('Contributor', 'Reviewer')}
         self.testfolder.ny_access.setPermissionMapping(set_mapping)
+        transaction.commit()
 
         self._test_user_perm('contributor', 'contributor', 'View', 1)
         self._test_user_perm('reviewer', 'reviewer', 'View', None)
@@ -94,6 +84,7 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
     def test_users_functional(self):
         set_mapping = {'View': ('Contributor',), 'View History': ('Contributor', 'Reviewer')}
         self.testfolder.ny_access.setPermissionMapping(set_mapping)
+        transaction.commit()
 
         self.browser_do_login('admin', '')
 
@@ -172,18 +163,6 @@ class NyAccess2LevelTestCase(NaayaFunctionalTestCase):
         permission.setRoles((self.role1, 'Manager'))
 
         transaction.commit()
-
-    def tearDown(self):
-        self.portal.info.manage_delObjects(['testfolderparent'])
-        transaction.commit()
-
-        del self.testfolderparent
-        del self.testfolder
-
-        del self.perm1
-        del self.perm2
-
-        super(NyAccess2LevelTestCase, self).tearDown()
 
     def _acquired(self, soup, role, perm):
         star_id = 'acquired' + role + perm
