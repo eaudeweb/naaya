@@ -8,6 +8,8 @@
 				define="form_items form_helper/form_items;
 						form_items python:list(form_items)">
 
+	<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
+	<script type="text/javascript" src="misc_/Naaya/jquery.autocomplete.min.js"></script>
 	<script type="text/javascript" src="jquery.Jcrop.min.js"></script>
 	<script type="text/javascript" src="jquery.ajaxupload.min.js"></script>
 	<script type="text/javascript">
@@ -28,6 +30,9 @@
 			if (!too_old_ie) {
 				upload_button();
 			};
+			$.get('get_municipalities_titles', function(data) {
+				$('#municipality').autocomplete(data.split("splitter"), {mustMatch:true});
+			});
 		});
 		function upload_button() {
 			var button = $('#picture_upload'), interval;
@@ -89,7 +94,13 @@
 		};
 	</script>
 
-		<tal:block repeat="form_item python:form_items[0:13]">
+		<tal:block repeat="form_item python:form_items[0:11]">
+			<tal:block replace="structure form_item/html" />
+		</tal:block>
+		<div class="textarea_message" i18n:translate="">
+			Please type the beginning of the name and then choose from the offered suggestions
+		</div>
+		<tal:block repeat="form_item python:form_items[11:13]">
 			<tal:block replace="structure form_item/html" />
 		</tal:block>
 		<div class="textarea_message" i18n:translate="">
