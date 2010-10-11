@@ -9,16 +9,6 @@
         details and assign them roles in the current portal.
     </p>
 
-    <div id="assign_users_success_response" class="information"
-        style="display:none">
-        <fieldset>
-            <legend>Information</legend>
-            <p i18n:translate="">
-                Success assigning user roles.
-            </p>
-        </fieldset>
-    </div>
-
     <form method="post" action="" name="frmRoles" id="frmRoles">
         <input type="hidden" name="s" value="assign_to_users" />
         <input type="hidden" name="search" value="" />
