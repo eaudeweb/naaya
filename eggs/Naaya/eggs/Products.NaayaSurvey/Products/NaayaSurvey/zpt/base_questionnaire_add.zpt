@@ -70,12 +70,12 @@ function fSet(ctrl, value)
 		</tal:block>
 	</div>
 	<div class="field">
-		<label for="releasedate" i18n:translate="">Release date</label>
+		<label for="releasedate" i18n:translate="">First day</label>
 		<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 	</div>
 	<!-- Document expiration date -->
 	<div class="field">
-		<label for="expirationdate" i18n:translate="">Expiration date</label>
+		<label for="expirationdate" i18n:translate="">Last day</label>
 		<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="20" tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(DateTime() + 30))" />
 	</div>
 	<!-- Notify owner -->
