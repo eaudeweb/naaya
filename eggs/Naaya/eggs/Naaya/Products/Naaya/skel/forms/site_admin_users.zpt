@@ -52,13 +52,13 @@
 </div>
 </metal:block></metal:block>
 <metal:block define-slot='second-tabs'></metal:block>
-<div class="cleaner">&nbsp;</div>
 <metal:block define-slot="search-box">
 	<tal:block tal:condition="python: 'admin_users_html' in request.PATH_INFO">
+		<div class="cleaner">&nbsp;</div>
 		<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
+		<div class="cleaner">&nbsp;</div>
 	</tal:block>
 </metal:block>
-<div class="cleaner">&nbsp;</div>
 <metal:block define-slot="content">
 	<tal:block condition="user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_all_users').macros['content']"></metal:block></tal:block>
 	<tal:block condition="not: user_sources"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['content']"></metal:block></tal:block>
