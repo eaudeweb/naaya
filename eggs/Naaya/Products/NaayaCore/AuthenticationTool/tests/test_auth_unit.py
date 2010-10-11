@@ -6,12 +6,6 @@ from copy import deepcopy
 from OFS.Folder import Folder
 import transaction
 
-# LDAP imports
-import ldap
-from dataflake.ldapconnection.tests import fakeldap
-from Products.LDAPUserFolder import LDAPDelegate
-from Products.LDAPUserFolder import manage_addLDAPUserFolder
-
 # Naaya imports
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -36,6 +30,17 @@ class AuthenticationUnitTest(NaayaTestCase):
 class LDAPBaseUnitTest(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
+        # check if ldap feature is available
+        from nose.plugins.skip import SkipTest
+        try:
+            import dataflake.ldapconnection
+            import Products.LDAPUserFolder
+            import Products.LDAPUserFolder
+        except ImportError, e:
+            raise SkipTest, e
+
+        from dataflake.ldapconnection.tests import fakeldap
+        from Products.LDAPUserFolder import LDAPDelegate
         LDAPDelegate.c_factory = fakeldap.ldapobject.ReconnectLDAPObject
         fakeldap.clearTree()
         self.app.manage_delObjects(['acl_users'])
@@ -55,6 +60,7 @@ class LDAPBaseUnitTest(NaayaFunctionalTestCase):
         transaction.commit()
 
     def _add_ldap_user_folder(self):
+        from Products.LDAPUserFolder import manage_addLDAPUserFolder
         dg = ldap_config.defaults.get
         manage_addLDAPUserFolder(self.app)
         luf = self.app.acl_users
