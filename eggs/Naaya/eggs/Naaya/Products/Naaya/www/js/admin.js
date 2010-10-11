@@ -93,8 +93,10 @@ function select_second_tab(tabid) {
 }
 
 function ldap_show_section(data) {
-    var html = $('#section_parent', $(data)).html();
-    $('#section_parent').html(html);
+    var html = $('#middle_port', $(data)).html();
+    $('#middle_port').html(html);
+
+    ldap_onclick_second_tabs();
 }
 
 function ldap_ajax_section_manage_all() {
@@ -132,7 +134,6 @@ function ldap_refresh_section(tabid, url) {
             }
 
             $('#section_wating_response').hide();
-            $('#section_parent').show();
         },
         error: function() {
             $('#section_wating_response').hide();
@@ -162,21 +163,6 @@ function ldap_onclick_group_links() {
     });
 }
 
-function ldap_show_users_fieldset(data) {
-    var html = $('#users_field', $(data)).html();
-    $('#users_field').html(html);
-
-    ldap_onclick_sort_links();
-    ldap_user_roles_revoke_form();
-}
-
-function ldap_show_groups_fieldset(data) {
-    var html = $('#groups_field', $(data)).html();
-    $('#groups_field').html(html);
-
-    ldap_group_roles_revoke_form();
-}
-
 function ldap_refresh_users_fieldset(url) {
     $('#users_roles_waiting_response').show();
     $('#users_roles_error_response').hide();
@@ -184,7 +170,8 @@ function ldap_refresh_users_fieldset(url) {
     $.ajax({
         url: url,
         success: function(data) {
-            ldap_show_users_fieldset(data);
+            ldap_show_section(data);
+            ldap_ajax_section_manage_all();
 
             $('#users_roles_waiting_response').hide();
         },
@@ -202,7 +189,8 @@ function ldap_user_roles_revoke_form() {
         $('#users_roles_error_response').hide();
     },
     success: function(data) {
-            ldap_show_users_fieldset(data);
+            ldap_show_section(data);
+            ldap_ajax_section_manage_all();
 
             $('#users_roles_waiting_response').hide();
     },
@@ -220,7 +208,8 @@ function ldap_group_roles_revoke_form() {
         $('#groups_roles_error_response').hide();
     },
     success: function(data) {
-            ldap_show_groups_fieldset(data);
+            ldap_show_section(data);
+            ldap_ajax_section_manage_all();
 
             $('#groups_roles_waiting_response').hide();
     },
@@ -277,12 +266,13 @@ function ldap_user_roles_assign_form() {
             return false;
         }
         $('#assign_users_waiting_response').show();
-        $('#assign_users_success_response').hide();
         $('#assign_users_error_response').hide();
     },
     success: function(data) {
+        ldap_show_section(data);
+        ldap_ajax_section_assign_to_users();
+
         $('#assign_users_waiting_response').hide();
-        $('#assign_users_success_response').show();
     },
     error: function() {
         $('#assign_users_waiting_response').hide();
@@ -310,12 +300,13 @@ function ldap_group_roles_assign_form() {
             return false;
         }
         $('#assign_groups_waiting_response').show();
-        $('#assign_groups_success_response').hide();
         $('#assign_groups_error_response').hide();
     },
     success: function(data) {
+        ldap_show_section(data);
+        ldap_ajax_section_assign_to_groups();
+
         $('#assign_groups_waiting_response').hide();
-        $('#assign_groups_success_response').show();
     },
     error: function() {
         $('#assign_groups_waiting_response').hide();

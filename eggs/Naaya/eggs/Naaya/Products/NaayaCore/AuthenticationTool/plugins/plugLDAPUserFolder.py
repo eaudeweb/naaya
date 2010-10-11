@@ -44,6 +44,7 @@ except:
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.Naaya.NySite import NySite
 from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from naaya.core.utils import relative_object_path, is_ajax
 
@@ -269,20 +270,26 @@ class plugLDAPUserFolder(PlugBase):
         super(plugLDAPUserFolder, self).addUserRoles(name, roles, loc, location,
                 user_location, send_mail, REQUEST)
         if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             if is_ajax(REQUEST):
-                return self.section_assign_to_users_html()
+                url = REQUEST['HTTP_REFERER'] + '&s=assign_to_users'
             else:
-                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+                url = REQUEST['HTTP_REFERER']
+            return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revokeUserRoles')
     def revokeUserRoles(self, roles='', REQUEST=None):
         """ """
         super(plugLDAPUserFolder, self).revokeUserRoles(roles, REQUEST)
         if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             if is_ajax(REQUEST):
-                return self.section_manage_all_html()
+                url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
             else:
-                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+                url = REQUEST['HTTP_REFERER']
+            return REQUEST.RESPONSE.redirect(url)
 
     def get_groups_roles_map(self):
         groups_roles_map = {}
@@ -343,10 +350,13 @@ class plugLDAPUserFolder(PlugBase):
                     group, userids, roles, loc, location)
 
         if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             if is_ajax(REQUEST):
-                return self.section_assign_to_groups_html()
+                url = REQUEST['HTTP_REFERER'] + '&s=assign_to_groups'
             else:
-                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+                url = REQUEST['HTTP_REFERER']
+            return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revoke_group_role')
     def revoke_group_role(self, roles, REQUEST=None):
@@ -358,10 +368,13 @@ class plugLDAPUserFolder(PlugBase):
             ob.acl_satellite.remove_group_roles(group, [role])
 
         if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
             if is_ajax(REQUEST):
-                return self.section_manage_all_html()
+                url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
             else:
-                return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+                url = REQUEST['HTTP_REFERER']
+            return REQUEST.RESPONSE.redirect(url)
 
     def group_member_ids(self, group):
         if not hasattr(self, '_v_ldap_groups_cache'):
@@ -514,22 +527,7 @@ class plugLDAPUserFolder(PlugBase):
         return map(user_data, member_ids)
 
     security.declarePublic('interface_html')
-    _interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
-    def interface_html(self):
-        """ """
-        if is_ajax(self.REQUEST):
-            if 's' in self.REQUEST:
-                section = self.REQUEST['s']
-                if section == 'manage_all':
-                    return self.section_manage_all_html()
-                elif section == 'assign_to_users':
-                    return self.section_assign_to_users_html()
-                elif section == 'assign_to_groups':
-                    return self.section_assign_to_groups_html()
-                elif section == 'group_members':
-                    return self.section_group_members_html()
-                #else return the full page
-        return self._interface_html(self.REQUEST)
+    interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
 
     security.declarePublic('section_manage_all_html')
     section_manage_all_html = PageTemplateFile('plugLDAPUserFolderManage', globals())
