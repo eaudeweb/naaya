@@ -40,12 +40,34 @@
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
     <tal:block condition="python:days_left[0] == 1 and days_left[1] > 0">
-        <span tal:content="python:days_left[1]" class="consultation_day_counter" />
-        <span i18n:translate="">day(s) left for this consultation.</span>
+        <tal:block condition="python: days_left[1] == 1" i18n:translate="">
+            <span class="consultation_day_counter" i18n:name="when"
+                  i18n:translate="">Today</span>
+            is the last day for this consultation.
+        </tal:block>
+        <tal:block condition="python: days_left[1] == 2" i18n:translate="">
+            <span class="consultation_day_counter" i18n:name="when"
+                  i18n:translate="">Tomorrow</span>
+            is the last day for this consultation.
+        </tal:block>
+        <tal:block condition="python: days_left[1] not in (1, 2)"
+                   i18n:translate="">
+            <span class="consultation_day_counter" i18n:name="days"
+                  tal:content="python:days_left[1]" />
+            days left for this consultation.
+        </tal:block>
     </tal:block>
     <tal:block condition="python:days_left[0] == 0 and days_left[1] > 0">
-        <span tal:content="python:days_left[1]" class="consultation_day_counter" />
-        <span i18n:translate="">day(s) until this consultation starts.</span>
+        <tal:block condition="python: days_left[1] > 1" i18n:translate="">
+            <span class="consultation_day_counter" i18n:name="days"
+                  tal:content="python:days_left[1]" />
+            days until this consultation starts.
+        </tal:block>
+        <tal:block condition="python: days_left[1] <= 1" i18n:translate="">
+            This consultation starts
+            <span class="consultation_day_counter" i18n:name="when"
+                  i18n:translate="">tomorrow</span>.
+        </tal:block>
     </tal:block>
     <span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter"
         i18n:translate="">Consultation deadline has been reached.</span>
