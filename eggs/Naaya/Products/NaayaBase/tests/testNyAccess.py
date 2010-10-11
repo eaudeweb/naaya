@@ -166,7 +166,7 @@ class NyAccess2LevelTestCase(NaayaFunctionalTestCase):
 
     def _acquired(self, soup, role, perm):
         star_id = 'acquired' + role + perm
-        return soup.find('span', attrs={'id': star_id}) is not None
+        return soup.find('img', attrs={'id': star_id}) is not None
 
     def test_viewPermissions(self):
         self.browser_do_login('admin', '')
