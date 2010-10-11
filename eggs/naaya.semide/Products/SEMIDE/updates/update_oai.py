@@ -14,5 +14,5 @@ class UpdateOAI(UpdateScript):
             catalog.manage_delColumn(catalog.schema())
             portal.zoai.add_indexes(catalog)
             portal.zoai.add_metadata(catalog)
-            portal.zoai.update(True)
+            #portal.zoai.update(True)
         return True
