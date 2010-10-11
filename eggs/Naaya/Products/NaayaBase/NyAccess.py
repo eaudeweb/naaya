@@ -85,10 +85,9 @@ class NyAccess(SimpleItem):
         for permission in mapping:
             permission_object = Permission(permission, (), self.getObject())
             permission_object.setRoles(mapping[permission])
-        transaction.commit()
 
     security.declareProtected(change_permissions, 'savePermissionMapping')
-    def savePermissionMapping(self, known_roles=[], REQUEST=None):
+    def savePermissionMapping(self, REQUEST, known_roles=[]):
         """
         This is called from index_html
         calls setPermissionMapping after converting the arguments
