@@ -1,42 +1,71 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block metal:fill-slot="title">
+        <title tal:content="string:${here/title} | ${here/site_title}" />
+    </metal:block>
 
-<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/absolute_url}/blog_css" />
+    <metal:block fill-slot="head">
+        <tal:block define="content python:here.html2text(here.content)">
+            <meta tal:condition="content" tal:attributes="content content" name="description" />
+        </tal:block>
+        <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+        <link rel="alternate" type="application/rdf+xml" title="RDF"
+              tal:attributes="href here/absolute_url" />
+    </metal:block>
 
-<tal:block define="username python:request.AUTHENTICATED_USER.getUserName()" >
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'))"
+                 fill-slot="body">
 
-<tal:block condition="python:here.releasedate.lessThan(here.utGetTodayDate()) or username != 'Anonymous User'">
-	<tal:block tal:condition="python:here.checkPermissionEditObject()">
-	<div id="admin_this_folder">
-		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit entry</span></a>
-	</div>
-	</tal:block>
+      <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+          title here/get_meta_label; alt here/get_meta_label" />
+          <span tal:replace="here/title_or_id" />
+          <tal:block condition="is_ratable"
+                          replace="structure here/user_rating_view|nothing"/>
+          <span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+              <span i18n:translate="">Item only translated in </span>
+              <span tal:repeat="lang here/gl_get_languages_map">
+                  <a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+              </span>
+          </span>
+      </h1>
 
-	<div class="entry-container">
-		<h1>
-			<a title="Read more..." tal:attributes="href string:${here/absolute_url}/index_html" tal:content="here/title_or_id">title</a>
-			<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
-				<span i18n:translate="">Item only translated in </span>
-				<span tal:repeat="lang here/gl_get_languages_map">
-					<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-				</span>
-			</span>
-		</h1>
-		<div class="entry-metadata">
-			<span class="entry-comments"><strong><span i18n:translate="">Comments</span>:</strong> <a href="#comments" tal:content="here/count_comments" /></span>
-			<span tal:replace="python:here.utShowDateTime(here.releasedate)" class="postdate" /><tal:block condition="here/display_contributor"> - <a tal:define="author python:here.getAuthenticationTool().getUserFullNameByID(here.contributor); parent here/getParentNode"
-					tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" /></tal:block>
+      <tal:block tal:condition="python:here.checkPermissionEditObject()">
+      <div id="admin_this_folder">
+          <tal:block tal:condition="python: not here.hasVersion()">
+              <a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+              <a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+          </tal:block>
+          <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+          <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+      </div>
+      </tal:block>
 
-			<br />
-			<span class="entry-tags" tal:condition="here/keywords"><strong><span i18n:translate="">Tags</span>:</strong> <tal:block repeat="k here/keywords"><a tal:define="parent here/getParentNode" tal:attributes="href string:${parent/absolute_url}?tag=${k}" tal:content="k" /> </tal:block></span><br />
-		</div>
-		<div class="entry-content" tal:content="structure here/content" />
-	</div>
+      <div class="entry-metadata">
+        <span class="entry-comments">
+          <strong i18n:translate="">Comments:</strong>
+          <a href="#comments" tal:content="here/count_comments" />
+        </span>
+        <span tal:replace="python:here.utShowDateTime(here.releasedate)" class="postdate" />
+        <tal:block condition="here/display_contributor"> -
+          <a tal:define="author python:here.getAuthenticationTool().getUserFullNameByID(here.contributor); parent here/getParentNode"
+            tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" />
+        </tal:block>
 
-	<a name="comments"></a>
-	<span tal:replace="structure here/blogcomments_box" />
-</tal:block>
+        <br />
 
-	<span tal:condition="python:here.releasedate.greaterThanEqualTo(here.utGetTodayDate()) and username == 'Anonymous User'" i18n:translate="">[unpublished]</span>
-</tal:block>
-
-<span tal:replace="structure here/standard_html_footer" />
+        <span class="entry-tags" tal:condition="here/keywords">
+          <strong i18n:translate="">Tags:</strong>
+          <tal:block repeat="k here/keywords">
+            <a tal:define="parent here/getParentNode" tal:attributes="href string:${parent/absolute_url}?tag=${k}" tal:content="k" />
+          </tal:block>
+        </span>
+        <br />
+      </div>
+      <div class="entry-content" tal:content="structure here/content" />
+      <a name="comments"></a>
+      <span tal:replace="structure here/comments_box" />
+    </metal:block>
+</metal:block>
