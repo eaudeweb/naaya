@@ -424,7 +424,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         today = self.utGetTodayDate().earliestTime()
 
         if self.start_date.lessThanEqualTo(today):
-            return (1, int(str(self.end_date - today).split('.')[0]))
+            return (1, int(str((self.end_date + 1) - today).split('.')[0]))
         else:
             return (0, int(str(self.start_date - today).split('.')[0]))
 
