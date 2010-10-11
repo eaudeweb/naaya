@@ -1,55 +1,107 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block fill-slot="body" tal:define="
-	roles here/getRoles;
-	permissions here/permissions;
-	sorted_zope_perm python:permissions.keys();
-	dummy python:sorted_zope_perm.sort();
-	mapping here/getPermissionMapping;
-	permissions_with_acquired_roles here/getPermissionsWithAcquiredRoles;
-	">
-	<h1 i18n:translate="">Edit permissions for this item</h1>
-	<div class="floated-buttons">
-		<span class="buttons">
-			<a tal:attributes="href here/aq_parent/absolute_url"
-			   i18n:translate="">Back to index</a>
-		</span>
-	</div>
-	<div class="clearer"></div>
-	<form method="post" tal:attributes="action
-	                 string:${here/absolute_url}/savePermissionMapping">
-		<table class="datatable">
-			<tr>
-				<th i18n:translate="">Inherit from parent</th>
-				<th i18n:translate="">Permission</th>
-				<th tal:attributes="colspan python:len(roles)">Roles</th>
-			</tr>
-			<tr>
-				<td> </td>
-				<td> </td>
-				<th tal:repeat="role roles">
-					<span tal:replace="role"/>
-				</th>
-			</tr>
-			<tr tal:repeat="zope_perm sorted_zope_perm">
-				<td>
-					<input type="checkbox" tal:attributes="
-						name string:aq${repeat/zope_perm/index};
-						checked python:zope_perm in permissions_with_acquired_roles;
-					"/>
-				</td>
-				<td tal:content="python:permissions[zope_perm]"
-				    tal:attributes="title zope_perm"></td>
-				<td tal:repeat="role roles">
-					<input type="checkbox" tal:attributes="
-						name string:r${repeat/role/index}p${repeat/zope_perm/index};
-						checked python:role in mapping[zope_perm];
-					"/>
-				</td>
-			</tr>
-		</table>
-		<input type="submit" value="Save changes" i18n:attributes="value" />
-	</form>
+    object here/getObject;
+    sorted_permissions here/sortedPermissions;
+    roles here/getValidRoles;
+    mapping here/getPermissionMapping;
+    acquired_mapping here/getPermissionAcquiredMapping;
+    acquiring_permissions here/getPermissionsWithAcquiredRoles;
+    ">
+    <h1 i18n:translate="">Edit permissions for this item</h1>
+    <div class="floated-buttons">
+        <span class="buttons">
+            <a tal:attributes="href object/absolute_url"
+               i18n:translate="">Back to index</a>
+        </span>
+    </div>
+    <div class="clearer"></div>
+    <br />
+    <p class="page-description">
+        This page lists the permissions and assigned roles for the current item.
+        The inherited permissions are shown with stars to the right of each checkbox.
+    </p>
+    <div id="save-permissions-waiting-response" style="display:none">
+        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
+        <p i18n:translate="">
+            Waiting
+        </p>
+    </div>
+    <div id="save-permissions-error-response" class="message-error"
+        style="display:none">
+        <p i18n:translate="">
+            Error saving permission mapping.
+        </p>
+    </div>
+    <form method="post" id="save-permissions" name="save-permissions"
+        tal:attributes="action string:${here/absolute_url}/savePermissionMapping">
+
+        <tal:block repeat="role roles">
+            <input type="hidden" name="known_roles:list"
+                tal:attributes="value role"/>
+        </tal:block>
+
+        <table class="datatable">
+            <tr>
+                <th i18n:translate="">Inherit from parent</th>
+                <th i18n:translate="">Permission</th>
+                <th tal:attributes="colspan python:len(roles)"
+                    i18n:translate="">Roles</th>
+            </tr>
+            <tr>
+                <th> </th>
+                <th> </th>
+                <th tal:repeat="role roles">
+                    <tal:block tal:replace="role"/>
+                </th>
+            </tr>
+            <tr tal:repeat="permission sorted_permissions">
+                <td>
+                    <input type="checkbox" tal:attributes="
+                        name string:acquires${permission};
+                        checked python:permission in acquiring_permissions;
+                    "/>
+                </td>
+                <td tal:content="python:here.permissions[permission]"
+                    tal:attributes="title permission" i18n:translate=""></td>
+                <td tal:repeat="role roles">
+                    <input type="checkbox" tal:attributes="
+                        name string:${permission}:list;
+                        checked python:role in mapping[permission];
+                        value role"/>
+                    <span tal:condition="python:role in acquired_mapping[permission]"
+                        tal:attributes="id string:acquired${role}${permission};"
+                        title="Inherited" i18n:attributes="title">
+                        *
+                    </span>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Save changes" i18n:attributes="value" />
+    </form>
+
+    <script type="text/javascript">
+        function save_permissions_form() {
+            $('#save-permissions').ajaxForm({
+                beforeSubmit: function() {
+                    $('#save-permissions-waiting-response').show();
+                    $('#save-permissions-error-response').hide();
+                },
+                success: function(data) {
+                        var html = $('#middle_port', $(data)).html();
+                        $('#middle_port').html(html);
+                        save_permissions_form();
+
+                        $('#save-permissions-waiting-response').hide();
+                },
+                error: function() {
+                    $('#save-permissions-waiting-response').hide();
+                    $('#save-permissions-error-response').show();
+                }
+            });
+        }
+        $(document).ready(function() { save_permissions_form(); });
+    </script>
 </metal:block>
 
 

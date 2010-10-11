@@ -1,29 +1,10 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Andrei Laza, Eau de Web
-
 # Python imports
-import re
 
 # Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
+from AccessControl.ImplPython import rolesForPermissionOn
 from AccessControl.Permissions import change_permissions
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -41,88 +22,109 @@ class NyAccess(SimpleItem):
         self.id = id
         self.permissions = permissions
 
-    security.declareProtected(change_permissions, 'getRoles')
-    def getRoles(self):
+    security.declareProtected(change_permissions, 'getObject')
+    def getObject(self):
+        """ Returns the object NyAccess is associated to """
+        return self.aq_parent
+
+    security.declareProtected(change_permissions, 'getObjectParent')
+    def getObjectParent(self):
+        """ Returns the parent of the object """
+        return self.getObject().aq_inner.aq_parent
+
+    security.declareProtected(change_permissions, 'sortedPermissions')
+    def sortedPermissions(self):
+        """ """
+        return sorted(self.permissions.keys())
+
+    security.declareProtected(change_permissions, 'getValidRoles')
+    def getValidRoles(self):
         """ """
         roles_to_remove = ['Owner', 'Manager']
-        return [role for role in self.aq_parent.validRoles() if role not in roles_to_remove]
+        return [role for role in self.getObject().validRoles()
+                        if role not in roles_to_remove]
 
-
-    security.declareProtected(change_permissions, 'getPermissionMapping')
+    security.declareProtected(change_permissions, 'getPermissionsWithAcquiredRoles')
     def getPermissionsWithAcquiredRoles(self):
         """ Return the permissions which acquire roles from their parents """
         ret = []
-        for zope_perm in self.permissions:
-            permission = Permission(zope_perm, (), self.aq_parent)
-            if isinstance(permission.getRoles(), list):
-                ret.append(zope_perm)
+        for permission in self.permissions:
+            permission_object = Permission(permission, (), self.getObject())
+            if isinstance(permission_object.getRoles(), list):
+                ret.append(permission)
         return ret
+
+    security.declareProtected(change_permissions, 'getPermissionAcquiredMapping')
+    def getPermissionAcquiredMapping(self):
+        """ """
+        parent = self.getObjectParent()
+        acquiring_permissions = self.getPermissionsWithAcquiredRoles()
+        mapping = {}
+        for permission in self.permissions:
+            if permission in acquiring_permissions:
+                mapping[permission] = rolesForPermissionOn(permission, parent)
+            else:
+                mapping[permission] = []
+        return mapping
 
     security.declareProtected(change_permissions, 'getPermissionMapping')
     def getPermissionMapping(self):
-        """ Return the permission mapping for the parent """
-        ret = {}
-        for zope_perm in self.permissions:
-            permission = Permission(zope_perm, (), self.aq_parent)
-            ret[zope_perm] = permission.getRoles()
-        return ret
+        """ Return the permission mapping for the object """
+        mapping = {}
+        for permission in self.permissions:
+            permission_object = Permission(permission, (), self.getObject())
+            mapping[permission] = permission_object.getRoles()
+        return mapping
 
     security.declareProtected(change_permissions, 'setPermissionMapping')
     def setPermissionMapping(self, mapping):
         """
-        Change the permission mapping for the parent.
+        Change the permission mapping for the object.
         This leaves the other permissions (not in mapping.keys()) unchanged
         """
-        for zope_perm in mapping:
-            permission = Permission(zope_perm, (), self.aq_parent)
-            permission.setRoles(mapping[zope_perm])
-
+        for permission in mapping:
+            permission_object = Permission(permission, (), self.getObject())
+            permission_object.setRoles(mapping[permission])
         transaction.commit()
 
     security.declareProtected(change_permissions, 'savePermissionMapping')
-    def savePermissionMapping(self, REQUEST):
+    def savePermissionMapping(self, known_roles=[], REQUEST=None):
         """
         This is called from index_html
         calls setPermissionMapping after converting the arguments
         """
+        # consistency checks
+        assert isinstance(known_roles, list)
+        assert set(self.getValidRoles()) == set(known_roles)
 
-        roles = self.getRoles()
+        for permission in self.permissions:
+            if permission in REQUEST.form:
+                assert isinstance(REQUEST.form[permission], list)
+            if ('acquires'+permission) in REQUEST.form:
+                assert REQUEST.form['acquires'+permission] == 'on'
 
-        permissionsWithAcquiredRoles = []
-
-        sorted_zope_perm = sorted(self.permissions.keys())
-
+        # make the mapping
         mapping = {}
-        for zope_perm in self.permissions:
-            mapping[zope_perm] = []
+        for permission in self.permissions:
+            roles = []
 
-        for key in REQUEST.form.keys():
-            m = re.match('r(\d+)p(\d+)', key)
-            if m is not None:
-                groups = m.groups()
-                r_i, p_i = int(groups[0]), int(groups[1])
+            if permission in REQUEST.form:
+                roles = REQUEST.form[permission]
 
-                mapping[sorted_zope_perm[p_i]].append(roles[r_i])
-            else:
-                m = re.match('aq(\d+)', key)
-                groups = m.groups()
-                p_i = int(groups[0])
+            if ('acquires'+permission) not in REQUEST.form:
+                # manager role added when roles not acquired from parents
+                roles = tuple(roles + ['Manager'])
 
-                zope_perm = sorted_zope_perm[p_i]
-                permissionsWithAcquiredRoles.append(zope_perm)
+            mapping[permission] = roles
 
-        for zope_perm in mapping:
-            if zope_perm in permissionsWithAcquiredRoles:
-                mapping[zope_perm] = list(mapping[zope_perm])
-            else:
-                mapping[zope_perm] = tuple(mapping[zope_perm])
-
+        #save the mapping
         self.setPermissionMapping(mapping)
 
+        # return to index_html
         self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                  date=self.utGetTodayDate())
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-
     security.declareProtected(change_permissions, 'index_html')
     index_html = PageTemplateFile('zpt/ny_access', globals())
+
