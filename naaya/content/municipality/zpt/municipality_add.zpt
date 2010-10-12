@@ -30,10 +30,31 @@
 			if (!too_old_ie) {
 				upload_button();
 			};
-			$.get('get_municipalities_titles', function(data) {
-				$('#municipality').autocomplete(data.split("splitter"), {mustMatch:true});
-			});
+			var province = $('#province');
+			var current_province = province.val();
+			if (current_province == "")
+			{
+				$('#municipality').attr('disabled', 'disabled');
+			}
+			else
+			{
+				$.get('get_municipalities_titles?province='+current_province, function(data) {
+					$('#municipality').autocomplete(data.split("splitter"), {mustMatch:true});
+				});
+			}
+			setInterval(function() {
+				var new_province = province.val();
+				if(new_province == current_province) return;
+				current_province = new_province;
+				$('#municipality').removeAttr('disabled');
+				$.get('get_municipalities_titles?province='+new_province, function(data) {
+					$('#municipality').unautocomplete();
+					$('#municipality').val('');
+					$('#municipality').autocomplete(data.split("splitter"), {mustMatch:true});
+				});
+			}, 100);
 		});
+
 		function upload_button() {
 			var button = $('#picture_upload'), interval;
 			new AjaxUpload(button,{
@@ -98,7 +119,7 @@
 			<tal:block replace="structure form_item/html" />
 		</tal:block>
 		<div class="textarea_message" i18n:translate="">
-			Please type the beginning of the name and then choose from the offered suggestions
+			Please select the province, type the beginning of the name and then choose from the offered suggestions
 		</div>
 		<tal:block repeat="form_item python:form_items[11:13]">
 			<tal:block replace="structure form_item/html" />
