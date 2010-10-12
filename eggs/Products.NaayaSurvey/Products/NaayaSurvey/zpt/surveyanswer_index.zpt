@@ -32,6 +32,8 @@
 							   rendered python:test(stype, stype.render(mode=test(not here.allow_multiple_answers, 'view', 'edit'), datamodel=here.getDatamodel()), 'Error');"
 					   content="structure rendered">
 			</tal:block>
+			<tal:block condition="not:here/checkPermissionSkipCaptcha"
+					   content="structure here/showCaptcha" />
 			<div class="surveySubmit" tal:condition="here/allow_multiple_answers">
 				<input type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
