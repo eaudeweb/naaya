@@ -140,6 +140,7 @@
 		<channeltype id="Events" title="Events"/>
 		<channeltype id="Stories" title="Stories"/>
 		<scriptchannel id="latestuploads_rdf" title="Latest uploads" description="Latest uploads" language="en" type="Miscellaneous" numberofitems="5" portlet="1"/>
+		<scriptchannel id="latestcomments_rdf" title="Latest comments" description="Latest comments" language="en" type="Miscellaneous" numberofitems="5" portlet="1"/>
 		<scriptchannel id="latestnews_rdf" title="Latest news" description="Latest news" language="en" type="News" numberofitems="5" portlet="1"/>
 		<scriptchannel id="lateststories_rdf" title="Selected stories" description="Selected stories" language="en" type="Stories" numberofitems="5" portlet="1"/>
 		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5" portlet="1"/>
