@@ -227,7 +227,7 @@ class EditorTool(Folder):
             cfg['content_css'] += ',' + old_css
 
         return "<script type=\"text/javascript\">\
-$().ready(function() {$('#%s').tinymce(%s);})\
+$().ready(function() {$('textarea#%s').tinymce(%s);})\
 </script>" % (element, json.dumps(cfg, indent=2))
 
 
