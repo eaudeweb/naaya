@@ -5,7 +5,10 @@ current object.
 Only the types of objects for which their class extends the I{NyCommentable}
 can be commented.
 """
+
+from StringIO import StringIO
 from warnings import warn
+
 from zope.interface import implements
 from zope.component import adapter
 from zope.app.container.interfaces import (IObjectAddedEvent,
@@ -66,6 +69,8 @@ class NyComment(SimpleItem):
     meta_type = 'Naaya Comment'
     security = ClassSecurityInfo()
 
+    icon = 'misc_/Naaya/comment.gif'
+
     def __init__(self, id, title, body, author, releasedate):
         self.id = id
         self.title = title
@@ -82,6 +87,32 @@ class NyComment(SimpleItem):
                 encode(self.body),
                 encode(self.author),
                 encode(self.releasedate))
+
+    def absolute_url(self):
+        """ override `absolute_url` to link to our parent object """
+        obj = self.aq_parent.aq_parent
+        return '%s#comment-%s' % (obj.absolute_url(), self.id)
+
+    def syndicateThis(self, lang):
+        """ Render this comment as a fragment of an RSS 1.0 feed """
+        out = StringIO()
+        title = "Comment by %s: %s" % (self.author, self.title)
+        out.write('<item rdf:about="%s">' % self.absolute_url())
+        out.write('<link>%s</link>' % self.absolute_url())
+        out.write('<title>%s</title>' % self.utXmlEncode(title))
+        out.write('<description><![CDATA[%s]]></description>' %
+                     self.utToUtf8(self.body))
+        out.write('<dc:title>%s</dc:title>' % self.utXmlEncode(title))
+        out.write('<dc:date>%s</dc:date>'
+                     % self.utShowFullDateTimeHTML(self.releasedate))
+        out.write('<dc:description><![CDATA[%s]]></dc:description>' %
+                     self.utToUtf8(self.body))
+        out.write('<dc:contributor>%s</dc:contributor>' %
+                     self.utXmlEncode(self.author))
+        out.write('<dc:language>%s</dc:language>' %
+                     self.utXmlEncode(lang))
+        out.write('</item>')
+        return out.getvalue()
 
 InitializeClass(NyComment)
 
