@@ -124,6 +124,7 @@ dd#admin_textarea{
 	position: relative;
 	top:1px;
 }
+
 #folderfile_list th{
 	background-color: #eeeeee;
 	padding: 0.1em;
@@ -1325,4 +1326,37 @@ img.ajax-loader {
 	clear: both;
 	margin: 0px;
 	padding-top: 15px;
+}
+
+.search-box {
+	clear: both;
+}
+
+/**
+ * Added
+ * Bogdan Tanase - Eau de Web
+ * 12 Oct 2010
+ *
+ * Note: Diff between ew_common.css and common.css
+*/
+
+table#folderfile_list {
+	width: 100%;
+}
+
+.clearer, .cleaner {
+	clear: both;
+}
+
+.b_download {
+	float:right;
+	font-size:0.5em;
+	padding-right:0.3em;
+	text-decoration:none;
+}
+
+.ldap_groups ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
 }
