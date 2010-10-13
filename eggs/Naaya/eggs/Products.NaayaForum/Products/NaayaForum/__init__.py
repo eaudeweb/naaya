@@ -73,9 +73,22 @@ def initialize(context):
         icon = 'www/NyForumMessage.gif'
         )
 
+    register_permissions()
+
 misc_ = {
     'NyForum.gif':ImageFile('www/NyForum.gif', globals()),
     'NyForumTopic.gif':ImageFile('www/NyForumTopic.gif', globals()),
     'NyForumMessage.gif':ImageFile('www/NyForumMessage.gif', globals()),
     'attachment.gif':ImageFile('www/attachment.gif', globals()),
 }
+
+def register_permissions():
+    from Products.Naaya.NySite import register_naaya_permission
+    register_naaya_permission(PERMISSION_ADD_FORUM,
+                              'Submit Forum objects')
+    register_naaya_permission(PERMISSION_MODIFY_FORUMTOPIC,
+                              'Forum - configure topics')
+    register_naaya_permission(PERMISSION_ADD_FORUMMESSAGE,
+                              'Forum - submit messages')
+    register_naaya_permission(PERMISSION_MODIFY_FORUMMESSAGE,
+                              'Forum - edit messages')
