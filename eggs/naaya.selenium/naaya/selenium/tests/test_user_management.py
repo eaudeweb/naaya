@@ -202,10 +202,12 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         #Check is the user has the assigned roles
         last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
-        assert self.selenium.get_text("%s/td/div[@class='user-role'][1]" %
-                                      last_row) == u'Contributor in portal'
-        assert self.selenium.get_text("%s/td/div[@class='user-role'][2]" %
-                                      last_row) == u'Manager in Information'
+        assert (self.selenium.get_text("%s/td/div[@class='user-role'][1]" %
+                                      last_row).replace("\n", '')
+                == u'Contributor in portal')
+        assert (self.selenium.get_text("%s/td/div[@class='user-role'][2]" %
+                                      last_row).replace("\n", '')
+                == u'Manager in Information')
 
     def test_revoke_role(self):
         "Revoke Contributor to user3"
