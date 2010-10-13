@@ -683,3 +683,12 @@ config.update({
 
 def get_config():
     return config
+
+def register_permissions():
+    from Products.Naaya.NySite import register_naaya_permission
+    register_naaya_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION,
+                              'TalkBack Consultation - submit review')
+    register_naaya_permission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
+                              'TalkBack Consultation - invite participants')
+    register_naaya_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'TalkBack Consultation - manage')
