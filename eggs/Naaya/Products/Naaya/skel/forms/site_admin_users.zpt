@@ -16,6 +16,9 @@
 	</tal:block>
 </metal:block>
 
+<div class="floated-buttons">
+	&nbsp;
+</div>
 
 <metal:block define-slot="tabs"><metal:block define-macro="tabs">
 <div id="tabbedmenu" tal:define="toggle_all_users python:len(user_sources)>0">
@@ -50,6 +53,7 @@
 		</li>
     </ul>
 </div>
+<div class="cleaner"></div>
 </metal:block></metal:block>
 <metal:block define-slot='second-tabs'></metal:block>
 <metal:block define-slot="search-box">

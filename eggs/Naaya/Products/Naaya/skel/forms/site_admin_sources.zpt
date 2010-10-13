@@ -4,7 +4,6 @@
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="source_id python:request.get('id', '');
 		               source_obj python:user_tool.getSourceObj(source_id);">
-<div class="cleaner"> </div>
 <tal:block tal:condition="python:source_obj is not None">
 	<span tal:replace="structure source_obj/interface_html" />
 </tal:block>
