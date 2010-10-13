@@ -292,6 +292,10 @@ class NyFolderBase(Folder, NyPermissions):
         schema = self.getSchemaTool().getSchemaForMetatype(meta_type)
         if schema:
             return schema.title_or_id()
+        # Plugable content, no schema
+        pluggable_content = self.get_pluggable_content()
+        if meta_type in pluggable_content:
+            return pluggable_content[meta_type]['label']
         # Dynamic meta types
         meta_item = self._dynamic_content_types.get(meta_type, ())
         if len(meta_item) <= 1 or not meta_item[1]:
