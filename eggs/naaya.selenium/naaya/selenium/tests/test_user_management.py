@@ -115,7 +115,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
         username = self.selenium.get_text(
             "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
-        self.selenium.click("//input[@value='Delete user']")
+        self.selenium.click("//input[@value='Delete user(s)']")
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.is_text_present(username) is False
 
@@ -159,6 +159,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.select("id=filter-roles", 'Contributor')
         self.selenium.click('//input[@value="Go"]')
         self.selenium.wait_for_page_to_load("3000")
+        sleep(1)
         check_result(u'contributor')
 
     def test_add_role(self):
