@@ -61,10 +61,12 @@ class Template(ZopePageTemplate):
         ZopePageTemplate.__dict__['__init__'](self, id, text, content_type)
         self.title = title
 
-    def __call__(self, context={}, *args):
+    def __call__(self, context={}, *args, **kwargs):
         """ """
         if not context.has_key('args'):
             context['args'] = args
+        if kwargs:
+            context['options'] = kwargs
         try:
             response = self.REQUEST.RESPONSE
             if not response.headers.has_key('content-type'):
