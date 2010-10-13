@@ -207,7 +207,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         assert self.selenium.get_text("%s/td/div[@class='user-role'][2]" %
                                       last_row) == u'Manager in Information'
 
-    def test_aaaarevoke_role(self):
+    def test_revoke_role(self):
         "Revoke Contributor to user3"
         self.selenium.open("/portal/admin_local_users_html", True)
         last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
