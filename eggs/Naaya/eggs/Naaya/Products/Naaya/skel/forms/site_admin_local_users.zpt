@@ -99,8 +99,8 @@
             </a>
             <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
-            <span class="revoke-roles" style="float:right;" i18n:translate="">Revoke</span>
         </th>
+        <th i18n:translate="">Revoke</th>
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
         <td nowrap="nowrap" class="center">
@@ -126,14 +126,20 @@
                 <tal:block condition="python: role[0]">
                 <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
                 <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+                </tal:block>
+            </div>
+            <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
+        </td>
+        <td tal:define="user_roles python: users_roles[str(user)]">
+            <div class="user-role" tal:repeat="role python: user_roles">
+                <tal:block condition="python: role[0]">
                 <a class="revoke-role" i18n:attributes="title" title="Revoke role"
-                   tal:define="location python: role[1]"
-                   tal:attributes="href string:${site_url}/admin_revokerole?user=${user}&location=${location}">
+                    tal:define="location python: role[1]"
+                    tal:attributes="href string:${site_url}/admin_revokerole?user=${user}&location=${location}">
                     <img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
                 </a>
                 </tal:block>
             </div>
-            <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
         </td>
     </tr>
     <tr tal:condition="python:len(users) == 0">
