@@ -4,4 +4,6 @@
 
   <naaya:content factory=".tbconsultation_item.get_config" />
 
+  <naaya:call factory=".tbconsultation_item.register_permissions" />
+
 </configure>
