@@ -126,8 +126,6 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         """
         def check_result(user):
             "Check if the user is alone in the result list"
-            assert int(self.selenium.\
-             get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) == 2
             #Also check if the the results are right
             assert self.selenium.get_text(\
                 '//div[@class="datatable"]/table/tbody/tr[last()]/td[2]') ==\
