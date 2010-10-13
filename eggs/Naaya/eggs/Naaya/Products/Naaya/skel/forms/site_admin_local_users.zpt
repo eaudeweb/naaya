@@ -131,7 +131,7 @@
             <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
         </td>
         <td tal:define="user_roles python: users_roles[str(user)]">
-            <div class="user-role" tal:repeat="role python: user_roles">
+            <div class="user-role-revoke" tal:repeat="role python: user_roles">
                 <tal:block condition="python: role[0]">
                 <a class="revoke-role" i18n:attributes="title" title="Revoke role"
                     tal:define="location python: role[1]"
