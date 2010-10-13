@@ -3,9 +3,8 @@
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <metal:block tal:define="
     role options/role;
-    sorted_zope_perm python:options['permission_names'].keys();
-    dummy python:sorted_zope_perm.sort();
     has_permission python:lambda zp: options['zope_perm_for_role'][zp];">
+    <div class="cleaner">&nbsp;</div>
     <form method="post" name="editRole"
         tal:attributes="action string:${here/absolute_url}/admin_editrole">
         <input type="hidden" name="role" tal:attributes="value role" />
@@ -14,12 +13,10 @@
                 <th></th>
                 <th i18n:translate="">Permission</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            <tal:block repeat="zope_perm sorted_zope_perm">
-            <tr tal:define="input_id string:inperm-${repeat/zope_perm/index}">
+            <tal:block repeat="pair options/sorted_perm">
+            <tr tal:define="input_id string:inperm-${repeat/pair/index};
+                            label python:pair[0];
+                            zope_perm python:pair[1]">
                 <td>
                     <input type="checkbox" tal:attributes="
                         name string:zope_perm_list:list;
@@ -28,8 +25,8 @@
                         checked python:has_permission(zope_perm)"/>
                 </td>
                 <td>
-                    <label tal:content="python:options['permission_names'][zope_perm]"
-                           tal:attributes="title zope_perm; for input_id" />
+                    <label tal:attributes="title zope_perm; for input_id"
+                           tal:content="label" />
                 </td>
             </tr>
             </tal:block>

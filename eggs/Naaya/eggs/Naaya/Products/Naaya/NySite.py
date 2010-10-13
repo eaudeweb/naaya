@@ -2267,8 +2267,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
                                 '%s/admin_users_html' % self.absolute_url()))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_editrole_html')
     #Admin User Roles
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
     def admin_addrole(self, role='', REQUEST=None):
@@ -2293,6 +2291,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_editrole_html')
     def admin_editrole_html(self, role, REQUEST):
         """ """
         permission_names = self.get_naaya_permissions_in_site()
@@ -2302,9 +2302,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             zope_perm_for_role[zope_perm] = bool(role in p.getRoles())
 
         tmpl = self.getFormsTool().getForm('site_admin_editrole').__of__(self)
+        sorted_perm = sorted( (permission_names[zope_perm], zope_perm)
+                              for zope_perm in permission_names )
         options = {
             'role': role,
-            'permission_names': permission_names,
+            'sorted_perm': sorted_perm,
             'zope_perm_for_role': zope_perm_for_role,
         }
         return tmpl(REQUEST, **options)
