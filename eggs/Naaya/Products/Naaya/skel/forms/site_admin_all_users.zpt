@@ -1,7 +1,11 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">All users</metal:block>
-<metal:block fill-slot="search-box"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block></metal:block>
 <metal:block fill-slot="buttons"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['buttons']"></metal:block></metal:block>
+<metal:block fill-slot="search-box">
+    <div class="cleaner">&nbsp;</div>
+    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
+    <div class="cleaner">&nbsp;</div>
+</metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
     users python: all_users_objects[page:(page + per_page)];">
