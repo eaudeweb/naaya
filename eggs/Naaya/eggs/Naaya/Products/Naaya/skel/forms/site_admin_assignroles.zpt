@@ -1,8 +1,28 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Assign roles</metal:block>
-<metal:block fill-slot="second-tabs">
-    <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
-</metal:block>
+
+<metal:block fill-slot="buttons"><metal:block define-macro="buttons">
+    <div class="floated-buttons">
+        &nbsp;
+    </div>
+</metal:block></metal:block>
+
+<metal:block fill-slot="second-tabs"><metal:block define-macro="second-tabs">
+    <div class="second_tab_set">
+        <ul>
+            <li tal:define="url string:${site_url}/admin_local_users_html">
+                <a tal:attributes="href url; class python: 'admin_local_users_html' in request.PATH_INFO and 'current_sub' or ''"
+                   i18n:translate="">List local users</a>
+            </li>
+            <li tal:define="url string:${site_url}/admin_assignroles_html">
+                <a tal:attributes="href url; class python: 'admin_assignroles_html' in request.PATH_INFO and 'current_sub' or ''"
+                   i18n:translate="">Assign roles to users</a>
+            </li>
+        </ul>
+    </div>
+    <div class="clear">&nbsp;</div>
+</metal:block></metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <p i18n:translate="">
 Select the username from the drop-down list, select the intended role(s) and choose
