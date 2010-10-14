@@ -1,16 +1,22 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<span style="float: right; width: 20%; word-wrap: break-word;">
-  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-  </tal:block>
-</span>
+<style>
+  #center_content {
+    max-width: 78% !important;
+  }
+  
+  #right_port {
+    float: right !important;
+  }
+</style>
 
 <h1>
 	<img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" />
 	<span tal:replace="here/title_or_id" />
 </h1>
 <p tal:content="structure here/description" />
+
+<div id="center_content">
 
 <tal:block tal:define="info here/checkTopicsPermissions;
 	topics python:info[3];
@@ -102,5 +108,14 @@
 </p>
 
 </tal:block>
+</div>
+
+
+<div id="right_port">
+  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+  </tal:block>
+</div>
+
 
 <span tal:replace="structure here/standard_html_footer" />
