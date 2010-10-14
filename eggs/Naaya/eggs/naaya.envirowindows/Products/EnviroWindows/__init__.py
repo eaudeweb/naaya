@@ -103,7 +103,7 @@ def getScopeList(self):
 
 def getScopeTitle(self, id):
     """ Return the title of an item for the selection list for scope """
-    return get_node_title('scope_list', id)
+    return self.get_node_title('scope_list', id)
 
 def getTopicList(self):
     """ Return the selection list for topic. """
@@ -111,7 +111,7 @@ def getTopicList(self):
 
 def getTopicTitle(self, id):
     """ Return the title of an item for the selection list for topic """
-    return get_node_title('topic_list', id)
+    return self.get_node_title('topic_list', id)
 
 def getLocationList(self):
     """ Return the selection list for locations. """
@@ -119,7 +119,7 @@ def getLocationList(self):
 
 def getLocationTitle(self, id):
     """ Return the title of an item for the selection list for location """
-    return get_node_title('location_list', id)
+    return self.get_node_title('location_list', id)
 
 NySite.getScopeList = getScopeList
 NySite.getScopeTitle = getScopeTitle
