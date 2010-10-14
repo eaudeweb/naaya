@@ -222,7 +222,7 @@ class EnviroWindowsSite(NySite):
     security.declarePublic('getCountryName')
     def getCountryName(self, id):
         """ Return the title of an item for the selection list for countries """
-        return get_node_title('countries', id)
+        return self.get_node_title('countries', id)
 
     security.declarePublic('getPrioritiesTypesList')
     def getPrioritiesTypesList(self):
@@ -232,7 +232,7 @@ class EnviroWindowsSite(NySite):
     security.declarePublic('getPriorityTitle')
     def getPriorityTitle(self, id):
         """ Return the title of an item for the selection list for priorities types """
-        return get_node_title('priorities_types', id)
+        return self.get_node_title('priorities_types', id)
 
     security.declarePublic('getFocusesTypesList')
     def getFocusesTypesList(self, priority_id):
@@ -248,7 +248,7 @@ class EnviroWindowsSite(NySite):
     security.declarePublic('getExpPriorityTitle')
     def getExpPriorityTitle(self, id):
         """ Return the title of an item for the selection list for priorities types """
-        return get_node_title('priorities_types_exp', id)
+        return self.get_node_title('priorities_types_exp', id)
 
     security.declarePublic('getExpFocusesTypesList')
     def getExpFocusesTypesList(self, priority_id):
@@ -271,13 +271,13 @@ class EnviroWindowsSite(NySite):
     def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
         focus_list_id = "focuses_%s" % priority_area_id[:3]
-        return get_node_title(focus_list_id.lower(), focus_id)
+        return self.get_node_title(focus_list_id.lower(), focus_id)
 
     security.declarePublic('getExpFocusTitle')
     def getExpFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
         focus_list_id = "focuses_%s_exp" % priority_area_id[:3]
-        return get_node_title(focus_list_id.lower(), focus_id)
+        return self.get_node_title(focus_list_id.lower(), focus_id)
 
 #####################################################
 # ENVIROWINDOWS functions loaded for compatibility  #
