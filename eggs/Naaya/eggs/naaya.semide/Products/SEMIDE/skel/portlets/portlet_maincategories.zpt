@@ -10,10 +10,10 @@
 					<tal:block tal:define="folder python:item[0];onit python:item[1]">
 							<tal:block condition="python:not same_type(onit,[])">
 								<span tal:condition="onit">
-									<a tal:content="folder/title_or_id" tal:attributes="href folder/absolute_url; title folder/tooltip" class="active_link" />
+									<a tal:content="folder/title_or_id" tal:attributes="href folder/absolute_url; title folder/tooltip|nothing" class="active_link" />
 								</span>
 								<span tal:condition="not:onit">
-									<a tal:content="folder/title_or_id" tal:attributes="href folder/absolute_url; title folder/tooltip" class="inactive_link" />
+									<a tal:content="folder/title_or_id" tal:attributes="href folder/absolute_url; title folder/tooltip|nothing" class="inactive_link" />
 								</span>
 							</tal:block>
 							<tal:block condition="python:same_type(onit,[])">
@@ -21,19 +21,19 @@
 														 submenuonit python:item[0][1];
 														 submenu onit">
 									<span tal:condition="submenuonit">
-										<a tal:attributes="href submenutitle/absolute_url; title submenutitle/tooltip" class="active_link" tal:content="submenutitle/title_or_id" />
+										<a tal:attributes="href submenutitle/absolute_url; title submenutitle/tooltip|nothing" class="active_link" tal:content="submenutitle/title_or_id" />
 									</span>
 									<span tal:condition="not:submenuonit">
-										<a tal:attributes="href submenutitle/absolute_url; title submenutitle/tooltip" class="inactive_link" tal:content="submenutitle/title_or_id" />
+										<a tal:attributes="href submenutitle/absolute_url; title submenutitle/tooltip|nothing" class="inactive_link" tal:content="submenutitle/title_or_id" />
 									</span>
 									<ul tal:condition="submenu">
 										<li tal:repeat="subelement submenu">
 										<tal:block define="subfolder python:subelement[0]; subonit python:subelement[1]">
 											<span tal:condition="subonit">
-												<a tal:content="subfolder/title_or_id" tal:attributes="href subfolder/absolute_url; title subfolder/tooltip" class="active_link" />
+												<a tal:content="subfolder/title_or_id" tal:attributes="href subfolder/absolute_url; title subfolder/tooltip|nothing" class="active_link" />
 											</span>
 											<span tal:condition="not:subonit">
-												<a tal:content="subfolder/title_or_id" tal:attributes="href subfolder/absolute_url; title subfolder/tooltip" class="inactive_link" />
+												<a tal:content="subfolder/title_or_id" tal:attributes="href subfolder/absolute_url; title subfolder/tooltip|nothing" class="inactive_link" />
 											</span>
 										</tal:block>
 										</li>
