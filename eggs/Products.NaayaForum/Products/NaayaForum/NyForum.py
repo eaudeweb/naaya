@@ -310,9 +310,8 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         """
         stats_container = getattr(self, STATISTICS_CONTAINER, None)
         if stats_container is not None:
-            try:
+            if hasattr(stats_container, 'drop'):
                 stats_container.drop()
-            except: pass
             delattr(self, STATISTICS_CONTAINER)
 
     security.declareProtected(view, 'getTopicHits')
