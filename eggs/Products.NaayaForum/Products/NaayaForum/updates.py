@@ -33,8 +33,11 @@ class ZGadFlyMigration(UpdateScript):
                 self.log.debug('Migrating statistics data from  %s' %
                                forum.absolute_url(1))
                 for topic in forum.get_topics():
-                    topics_stats[topic.id] = stats_container.get(
-                                'HITS', topic=topic.absolute_url(1))[0]['HITS']
+                    try:
+                        topics_stats[topic.id] = stats_container.get(
+                            'HITS', topic=topic.absolute_url(1))[0]['HITS']
+                    except:
+                        topics_stats[topic.id] = 0
                 forum._removeStatisticsContainer()
                 stats_container = forum._getStatisticsContainer()
                 for topic_id, hits in topics_stats.iteritems():
