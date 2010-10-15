@@ -1,46 +1,27 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#Python imports
 from os.path import join
 
-#Zope imports
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view, change_permissions
+from zope import interface
 
-#Product imports
+import naaya.sql
 from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils, make_id
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
-from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
+from interfaces import INyForum
+
 STATISTICS_CONTAINER = '.statistics'
-STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
+STATISTICS_COLUMNS = {'topic': 'VARCHAR(80) UNIQUE',
+                      'hits': 'INTEGER DEFAULT 0'}
 
 email_templates = {
     'notification-on-reply': EmailPageTemplateFile('emailpt/notification.zpt', globals()),
@@ -63,6 +44,7 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
 
 class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     """ """
+    interface.implements(INyForum)
 
     meta_type = METATYPE_NYFORUM
     meta_label = LABEL_NYFORUM
@@ -222,7 +204,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
             if m.notify:
                 user = authenticationtool_ob.getUser(m.author)
                 if user: emails.add(user.email)
-        
+
         #build message body
         msg_body = {
             'url': '%s#%s' % (msg.get_topic_path(), msg.id),
@@ -232,7 +214,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
             'author': msg.author,
             'postdate': self.utShowFullDateTime(msg.postdate),
                    }
-        
+
         template = self._get_template('notification-on-reply')
         mail_data = template(**msg_body)
 
@@ -311,33 +293,57 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     def _getStatisticsContainer(self):
         """ Create statistics container if it doesn't exists and return it
         """
-        scontainer = getattr(self, STATISTICS_CONTAINER, None)
-        if not scontainer:
-            return manage_addNyGadflyContainer(self, STATISTICS_CONTAINER,
-                                               **STATISTICS_COLUMNS)
-        return scontainer
+        stats_container = getattr(self, STATISTICS_CONTAINER, None)
+        if stats_container is None:
+            stats_container = naaya.sql.new_db()
+            setattr(self, STATISTICS_CONTAINER, stats_container)
+            table = ("CREATE TABLE HITS"
+                     "(id INTEGER PRIMARY KEY ASC AUTOINCREMENT")
+            for (col, val) in STATISTICS_COLUMNS.items():
+                table += ", " + col + " " + val
+            table += ")"
+            stats_container.cursor().execute(table)
+        return stats_container
+
+    def _removeStatisticsContainer(self):
+        """ Remove statistics container if exists
+        """
+        stats_container = getattr(self, STATISTICS_CONTAINER, None)
+        if stats_container is not None:
+            try:
+                stats_container.drop()
+            except: pass
+            delattr(self, STATISTICS_CONTAINER)
 
     security.declareProtected(view, 'getTopicHits')
     def getTopicHits(self, topic):
         """ Returns statistics for given topic
         """
-        scontainer = self._getStatisticsContainer()
-        res = scontainer.get('HITS', topic=topic)
+        cursor = self._getStatisticsContainer().cursor()
+        cursor.execute("SELECT hits from HITS where topic=?", (topic,))
+        res = cursor.fetchone()
         if not res:
+            cursor.execute("INSERT into HITS(topic) values(?)", (topic,))
             return 0
-        return res[0]['HITS']
+        else:
+            return res[0]
 
     security.declareProtected(view, 'updateTopicHits')
-    def updateTopicHits(self, topic):
+    def updateTopicHits(self, topic, how_many=1):
         """ Update hits for topic
         """
-        scontainer = self._getStatisticsContainer()
-        res = scontainer.get('HITS', topic=topic)
-        if not res:
-            return scontainer.add(hits=1, topic=topic)
-        hits = res[0]['HITS']
-        hits += 1
-        return scontainer.set(key='hits', value=hits, topic=topic)
+        hits = self.getTopicHits(topic) + how_many
+        stats_container = self._getStatisticsContainer()
+        stats_container.cursor().execute("UPDATE HITS set hits=? where topic=?",
+                                    (hits, topic))
+
+    security.declareProtected(view, 'removeTopicHits')
+    def removeTopicHits(self, topic):
+        """ Remove hits record for topic
+        """
+        stats_container = self._getStatisticsContainer()
+        stats_container.cursor().execute("DELETE FROM HITS where topic=?",
+                                         (topic, ))
 
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
