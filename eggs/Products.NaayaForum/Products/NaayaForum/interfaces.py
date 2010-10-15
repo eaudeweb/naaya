@@ -43,3 +43,9 @@ class INyForumTopicEditEvent(INyForumObjectEditEvent):
 
 class INyForumMessageEditEvent(INyForumObjectEditEvent):
     """ Event triggered when a forum message is edited """
+
+class INyForum(Interface):
+    pass
+
+class INyForumTopic(Interface):
+    pass

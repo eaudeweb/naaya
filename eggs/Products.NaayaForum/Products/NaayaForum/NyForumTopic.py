@@ -1,25 +1,3 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
-
-#Python imports
-
 #Zope imports
 from OFS.Folder import Folder
 import Products
@@ -27,6 +5,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
+from zope import interface
 
 #Product imports
 from constants import *
@@ -34,6 +13,7 @@ from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from interfaces import INyForumTopic
 
 try:
     from zope.event import notify as zope_notify
@@ -48,8 +28,7 @@ topic_add_html = PageTemplateFile('zpt/topic_add', globals())
 def addNyForumTopic(self, id='', title='', category='', description='',
     attachment='', notify='', sort_reverse=False, REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYFORUMTOPIC + self.utGenRandomId(6)
+    id = self.utSlugify(id or title or PREFIX_NYFORUMTOPIC)
     if notify: notify = 1
     else: notify = 0
     author, postdate = self.processIdentity()
@@ -78,6 +57,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
 
 class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     """ """
+    interface.implements(INyForumTopic)
 
     meta_type = METATYPE_NYFORUMTOPIC
     meta_label = LABEL_NYFORUMTOPIC
@@ -348,7 +328,7 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         """ """
         # Update hits
         forum = self.aq_inner.aq_parent
-        forum.updateTopicHits(self.absolute_url(1))
+        forum.updateTopicHits(self.id)
 
         return self._index_html(*args, **kwargs)
 

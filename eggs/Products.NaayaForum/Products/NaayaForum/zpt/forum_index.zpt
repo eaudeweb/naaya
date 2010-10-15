@@ -19,7 +19,7 @@
   #center_content {
     max-width: 78% !important;
   }
-  
+
   #right_port {
     float: right !important;
   }
@@ -101,7 +101,7 @@
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />
 			<td tal:content="item/count_messages" />
-			<td tal:content="python:here.getTopicHits(topic=item.absolute_url(1))" />
+			<td tal:content="python:here.getTopicHits(topic=item.id)" />
 			<td tal:define="last item/get_last_message">
 				<span tal:replace="python:here.utShowFullDateTime(last.postdate)" />,
 				<span tal:replace="last/author" />
