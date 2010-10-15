@@ -81,11 +81,16 @@ restricted_widgets = {
 }
 
 def extract_survey_answer_data(answer):
+    mapping = {'bibliography-details-each-assessment':
+                    extract_survey_answer_data_library,
+               'general-template':
+                    extract_survey_answer_data_general_template}
+
     survey_id = get_survey_id(answer)
-    if survey_id == 'bibliography-details-each-assessment':
-        return extract_survey_answer_data_library(answer)
-    if survey_id == 'general-template':
-        return extract_survey_answer_data_general_template(answer)
+    assert survey_id in mapping.keys()
+
+    func = mapping[survey_id]
+    return func(answer)
 
 def extract_survey_answer_data_library(answer):
     all_topics = set()
