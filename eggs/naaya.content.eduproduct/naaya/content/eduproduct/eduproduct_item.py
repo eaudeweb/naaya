@@ -239,7 +239,7 @@ class NyEduProduct(Implicit, NyContentData, NyAttributes, NyItem, NyNonCheckCont
             auth_tool.changeLastPost(contributor)
             notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
