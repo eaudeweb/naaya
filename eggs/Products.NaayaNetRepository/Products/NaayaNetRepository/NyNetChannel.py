@@ -135,7 +135,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_netchannel')
@@ -144,7 +144,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
         self.harvest_feed()
         if REQUEST:
             if self.get_feed_bozo_exception() is not None: self.setSessionErrors([self.get_feed_bozo_exception()])
-            else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #zmi pages
