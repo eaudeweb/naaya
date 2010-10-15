@@ -342,7 +342,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
@@ -377,7 +377,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
         self.recatalogNyObject(self)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     #zmi pages
