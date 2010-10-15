@@ -1,4 +1,18 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block define-macro="page" extend-macro="here/standard_template_macro">
+<metal:block fill-slot="meta">
+    <meta tal:define="description here/description;
+                      content python:here.html2text(description);"
+          tal:condition="content"
+          tal:attributes="content content" name="description" />
+    <meta tal:attributes="content here/contributor" name="author" />
+    <meta tal:attributes="content here/gl_get_selected_language"
+          name="dc.language" />
+    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+          name="title" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</metal:block>
+
+<metal:block fill-slot="body">
 <tal:block define="	selected_lang here/getSelectedLang;
 					language python:here.get_language_by_code(selected_lang);
 					translation python:here.get_translation_by_language(language)">
@@ -48,4 +62,6 @@
 	</table>
 
 </tal:block>
-<tal:block tal:replace="structure here/standard_html_footer"/>
+
+</metal:block>
+</metal:block>

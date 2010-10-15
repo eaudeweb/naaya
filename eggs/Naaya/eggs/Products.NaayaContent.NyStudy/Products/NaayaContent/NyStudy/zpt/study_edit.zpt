@@ -88,7 +88,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
-	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('body', here.getVersionLocalProperty('body', curr_lang)" />
+	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('body', here.getVersionLocalProperty('body', curr_lang))" />
 </div>
 <div class="field">
 	<label for="toc"><span i18n:translate="" tal:omit-tag="">Generate table of contents</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'toc')" class="mandatory_field"> *</span></label>
