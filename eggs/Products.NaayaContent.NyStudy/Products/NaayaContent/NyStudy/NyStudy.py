@@ -416,7 +416,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
             self._p_changed = 1
             self.recatalogNyObject(self)
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
             if REQUEST is not None:

@@ -147,7 +147,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
         self._setLocalPropValue('title', lang, title)
         self._p_changed = 1
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')

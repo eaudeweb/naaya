@@ -396,7 +396,7 @@ class NySemThematicDir(NyFolder):
             auth_tool.changeLastPost(contributor)
             #update remote channels feeds
             if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
                 REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
         else:
             if REQUEST is not None:
