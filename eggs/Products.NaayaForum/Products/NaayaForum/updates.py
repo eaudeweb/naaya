@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from Products.naayaUpdater.updates import UpdateScript
-
+from Products.NaayaBase.NyGadflyContainer import NyGadflyContainer
 class AddForumReleaseDate(UpdateScript):
     title = 'Add release date to NyForum'
     authors = ['Andrei Laza']
@@ -18,3 +18,25 @@ class AddForumReleaseDate(UpdateScript):
                         forum.absolute_url(1))
         return True
 
+class ZGadFlyMigration(UpdateScript):
+    title = 'Migrate ZGadFly stats to naaya.sql'
+    authors = ['Alexandru Plugaru']
+    creation_date = 'Oct 15, 2010'
+
+    def _update(self, portal):
+        topics_stats = {}
+        forums = portal.searchCatalog({'meta_type': 'Naaya Forum'}, None, None)
+        for forum in forums:
+            self.log.debug('Found forum at %s' % forum.absolute_url(1))
+            stats_container = forum._getStatisticsContainer()
+            if isinstance(stats_container, NyGadflyContainer):
+                self.log.debug('Migrating statistics data from  %s' %
+                               forum.absolute_url(1))
+                for topic in forum.get_topics():
+                    topics_stats[topic.id] = stats_container.get(
+                                'HITS', topic=topic.absolute_url(1))[0]['HITS']
+                forum._removeStatisticsContainer()
+                stats_container = forum._getStatisticsContainer()
+                for topic_id, hits in topics_stats.iteritems():
+                    forum.updateTopicHits(topic_id, hits)
+        return True

@@ -1,23 +1,5 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-
 from interfaces import INyForumObjectAddEvent, INyForumObjectEditEvent
+from OFS.interfaces import IObjectWillBeAddedEvent
 
 def handle_forum_object_add(event):
     obj = event.context
@@ -30,3 +12,15 @@ def handle_forum_object_edit(event):
     contributor = event.contributor
     notification_tool = obj.getSite().getNotificationTool()
     notification_tool.notify_instant(obj, contributor, ob_edited=True)
+
+def handle_forum_deletion(ob, event):
+    """The Forum will be moved/removed"""
+    if not IObjectWillBeAddedEvent.providedBy(event):
+        # Object will be removed:
+        ob._removeStatisticsContainer()
+
+def handle_topic_deletion(ob, event):
+    """The ForumTopic will be moved/removed"""
+    if not IObjectWillBeAddedEvent.providedBy(event):
+        # Object will be removed:
+        ob.aq_inner.aq_parent.removeTopicHits(ob.id)

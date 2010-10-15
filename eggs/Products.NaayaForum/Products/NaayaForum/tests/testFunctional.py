@@ -29,6 +29,7 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
 from Products.NaayaForum.NyForumMessage import addNyForumMessage
+from naaya import sql
 
 class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
@@ -71,8 +72,12 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         transaction.commit()
 
     def beforeTearDown(self):
+        # get sqlite db (if any) or create one
+        db = self.portal.forum_id._getStatisticsContainer()
         self.portal.manage_delObjects(['forum_id'])
         transaction.commit()
+        # assert database is deleted
+        self.assertRaises(sql.DbMissing, db.cursor)
 
     def test_edit_forum(self):
         #Check that an unidentified user cannot edit a topic
@@ -161,6 +166,14 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
         self.failUnlessEqual(html, 'some test data')
         self.assertEqual(topic.notify, True)
+
+        # Check hit counter
+        topiclink = 'http://localhost/portal/forum_id/%s' % topic.id
+        gethits = lambda: self.portal.forum_id.getTopicHits(topic.id)
+        self.assertEqual(gethits(), 0)
+        for i in range(13):
+            self.browser.go(topiclink)
+        self.assertEqual(gethits(), 13)
 
         self.browser_do_logout()
 
