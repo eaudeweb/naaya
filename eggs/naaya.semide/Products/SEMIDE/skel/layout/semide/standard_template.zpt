@@ -12,7 +12,10 @@
 		css_common python:test(isArabic, 'style_common_rtl', 'style_common');
 		css_handheld python:test(isArabic, 'style_handheld_rtl', 'style_handheld');">
 
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <metal:block define-slot="meta">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        </metal:block>
+
         <metal:block define-slot="title">
             <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
         </metal:block>

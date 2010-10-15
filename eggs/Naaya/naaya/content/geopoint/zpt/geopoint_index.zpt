@@ -1,17 +1,26 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','application/xhtml+xml;charset=utf-8')" />
 <tal:block define="global portal_map here/getGeoMapTool"/>
 <metal:block metal:use-macro="here/standard_template_macro">
+    <metal:block fill-slot="meta">
+        <meta tal:define="description here/description;
+                          content python:here.html2text(description);"
+              tal:condition="content"
+              tal:attributes="content content" name="description" />
+        <meta tal:condition="here/keywords"
+              tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
+        <meta tal:attributes="content here/gl_get_selected_language"
+              name="dc.language" />
+        <meta tal:attributes="content string:${here/title} | ${here/site_title}"
+              name="title" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </metal:block>
+
     <metal:block metal:fill-slot="title">
         <title tal:content="string:${here/title} | ${here/site_title}" />
     </metal:block>
 
     <metal:block fill-slot="head">
-        <tal:block define="description here/description; content python:here.html2text(description)">
-            <meta tal:condition="content" tal:attributes="content content" name="description" />
-        </tal:block>
-        <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
-        <meta tal:attributes="content here/contributor" name="author" />
-        <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
         <link rel="alternate" type="application/rdf+xml" title="RDF"
               tal:attributes="href here/absolute_url" />
     </metal:block>
