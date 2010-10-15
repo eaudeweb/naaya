@@ -149,7 +149,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
         #update search capabilities
         self.update_search_capabilities()
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')
@@ -198,7 +198,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
                 self._getOb(id).update_netchannel()
                 #update search capabilities
                 self.update_search_capabilities()
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_search_capabilities')

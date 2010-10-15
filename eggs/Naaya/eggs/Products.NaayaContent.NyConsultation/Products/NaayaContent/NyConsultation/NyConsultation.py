@@ -254,7 +254,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'updateRequestRoleStatus')
@@ -325,7 +325,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         """ """
         self.manage_delObjects(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_ratelists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_addratelist')
@@ -333,7 +333,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         """ """
         self.manage_addRateList(id, title, description)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_ratelists_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_editratelist')
@@ -343,7 +343,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         if ob is not None:
             ob.manageProperties(title, description)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_deleteitems')
@@ -353,7 +353,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         if ob is not None:
             ob.manage_delete_items(self.utConvertToList(ids))
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_additem')
@@ -363,7 +363,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         if ob is not None:
             ob.manage_add_item(item, title)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
 
     security.declareProtected(view, 'get_consultation')

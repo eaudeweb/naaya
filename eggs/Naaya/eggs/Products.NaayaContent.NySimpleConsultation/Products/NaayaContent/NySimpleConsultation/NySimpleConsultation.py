@@ -256,7 +256,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
 
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'updateRequestRoleStatus')
