@@ -170,6 +170,11 @@ class SurveyTool(Folder):
         site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', ), acquire=0)
         site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', ), acquire=0)
         site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor', 'Owner'), acquire=0)
+        site.manage_permission(PERMISSION_EDIT_ANSWERS, ('Manager', 'Administrator', ), acquire=0)
+
+    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'noop')
+    def noop(self):
+        pass
 
     # Add tool specific portlets
     security.declareProtected(PERMISSION_ADMINISTRATE, 'manage_updatePortlets')
