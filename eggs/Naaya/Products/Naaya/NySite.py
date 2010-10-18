@@ -77,7 +77,6 @@ from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_m
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
-from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
 from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
@@ -261,7 +260,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
         manage_addNotificationTool(self)
-        manage_addProfilesTool(self)
         manage_addEditorTool(self)
         manage_addGeoMapTool(self)
         manage_addAnalyticsTool(self)
@@ -747,14 +745,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
 
-    security.declarePublic('getProfilesTool')
-    def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
-
     security.declarePublic('getNotificationTool')
     def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
-
-    security.declarePublic('getProfilesTool')
-    def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
 
     security.declarePublic('getEditorTool')
     def getEditorTool(self): return self._getOb(ID_EDITORTOOL)
@@ -790,15 +782,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
     security.declarePublic('getFolderByPath')
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
-
-    security.declarePublic('getProfilesToolPath')
-    def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
-
     security.declarePublic('getNotificationToolPath')
     def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
-    security.declarePublic('getProfilesToolPath')
-    def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
-
     security.declarePublic('getGeoMapToolPath')
     def getGeoMapToolPath(self, p=0): return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
 

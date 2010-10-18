@@ -88,7 +88,6 @@
 		<form id="site_styles" title="Portal site global styles"/>
 		<form id="site_unauthorized" title="Portal logout"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
-		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
 		<form id="sitemap_add" title="Sitemap for picklists"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
 	</forms>
