@@ -58,7 +58,12 @@ class Schema(Folder):
 
     security = ClassSecurityInfo()
 
-    meta_types = ()
+    meta_types = tuple( {
+            'name': meta_type,
+            'action': widget_constructors[
+                            widget_types_by_metatype[meta_type]].func_name,
+            'permission': view_management_screens,
+        } for meta_type in widget_types_by_metatype)
     all_meta_types = meta_types
 
     is_ratable = False
