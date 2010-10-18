@@ -40,6 +40,7 @@
 		<form id="nfp_download" title="NFP Download"/>
 		<form id="site_admin_flash_notification" title="Semide notification confirmation"/>
 		<form id="site_messages" title="Portal messages page"/>
+		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
 	</forms>
 	<layout default_skin_id="semide" default_scheme_id="blue">
 		<skin id="semide" title="SEMIDE">

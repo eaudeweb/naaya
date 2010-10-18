@@ -33,7 +33,10 @@ from naaya.content.semide.textlaws import  semtextlaws_item; METATYPE_NYSEMTEXTL
 from naaya.content.semide.thematicdir import semthematicdir_item; METATYPE_NYSEMTHEMATICDIR = semthematicdir_item.config['meta_type']
 
 
-from Products.NaayaCore.ProfilesTool.ProfileMeta    import ProfileMeta
+from Products.NaayaProfilesTool.ProfileMeta import ProfileMeta
+from Products.NaayaProfilesTool.constants import ID_PROFILESTOOL
+from Products.NaayaProfilesTool.ProfilesTool import manage_addProfilesTool
+
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils              import utils, tmpfile
@@ -184,6 +187,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         self.loadSkeleton(SEMIDE_PRODUCT_PATH)
         self.getLayoutTool().manage_delObjects('skin')
 
+        manage_addProfilesTool(self)
         #overwrite default subobjects for folders
         #self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in [METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION]])
         self.getPortletsTool().manage_delObjects('topnav_links')
@@ -502,6 +506,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
         if len(entries) > 0: return entries[0]
         else: return None
+
+    security.declarePublic('getProfilesTool')
+    def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
+
+    security.declarePublic('getProfilesToolPath')
+    def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
 
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
