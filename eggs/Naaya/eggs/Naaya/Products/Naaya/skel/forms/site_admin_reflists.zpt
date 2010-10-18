@@ -18,20 +18,13 @@
 
 <div id="jstree_container" class="tree tree-default"></div>
 
-
 <noscript tal:define="trees python:here.getPortletsTool().getRefTrees()">
 <p i18n:translate="" style="color: green">You need to have JavaScript enabled in order to modify this list.</p>
 <ul>
 	<li tal:repeat="tree trees">
-		<span tal:content="tree/title_or_id"/>
-		<ul tal:condition="nodes" tal:define="nodes tree/get_tree_data">
-			<li tal:repeat="node nodes">
-				<span tal:content="python:node['data']"/>
-				<ul tal:condition="children" tal:define="children python:node['children']">
-					<li tal:repeat="child children" tal:content="python:child['data']"/>
-				</ul>
-			</li>
-		</ul>
+		<tal:block define="node tree/get_nodes_as_tree">
+			<metal:block use-macro="template/macros/ref_tree_node" />
+		</tal:block>
 	</li>
 </ul>
 </noscript>
@@ -39,4 +32,20 @@
 
 </tal:block>
 
+</tal:block>
+
+
+
+<tal:block condition="nothing">
+<!-- this bit of code should only render if called as a macro -->
+<metal:block define-macro="ref_tree_node">
+    <tal:block content="node/ob/title_or_id" />
+    <ul tal:condition="node/children">
+        <li tal:repeat="child node/children">
+            <tal:block define="node child">
+                <metal:block use-macro="template/macros/ref_tree_node" />
+            </tal:block>
+        </li>
+    </ul>
+</metal:block>
 </tal:block>

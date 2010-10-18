@@ -173,143 +173,43 @@ class RefTree(LocalPropertyManager, Folder):
 
         return data
 
-    def __get_tree_thread(self, nodes, parent, depth):
-        """
-        Recursive function that process the given nodes and returns
-        a tree like structure.
-        """
-        tree = []
-        l = [x for x in nodes if x.parent == parent]
-        map(nodes.remove, l)
-        for x in l:
-            tree.append({'depth': depth, 'ob': x})
-            tree.extend(self.__get_tree_thread(nodes, x.id, depth+1))
-        return tree
-
     security.declareProtected(view, 'get_tree_thread')
     def get_tree_thread(self):
-        """
-        Process all the nodes and returns a structure to be displayed as
-        a tree.
-        """
-        return self.__get_tree_thread(self.get_tree_nodes(), None, 1)
+        """ Construct a flattened representation of this tree.  """
+        nodes = []
 
-    def __get_tree_expand(self, nodes, parent, depth, expand):
-        """
-        Recursive function that process the given nodes and returns
-        a tree like structure. The B{expand} param indicates which
-        nodes to be expanded
-        """
-        tree = []
-        l = [x for x in nodes if x.parent == parent]
-        map(nodes.remove, l)
-        for x in l:
-            expandable = 0
-            for y in nodes:
-                if y.parent == x.id:
-                    expandable = 1
-                    break
-            tree.append({'depth': depth, 'ob': x, 'expandable': expandable})
-            if x.id in expand:
-                tree.extend(self.__get_tree_expand(nodes, x.id, depth+1, expand))
-        return tree
+        def add_node(node, depth):
+            nodes.append({'depth': depth, 'ob': node['ob']})
+            for child_node in node['children']:
+                add_node(child_node, depth+1)
 
-    security.declareProtected(view, 'get_tree_expand')
-    def get_tree_expand(self, expand=[]):
-        """
-        Process nodes an returns only main nodes and the exapndable
-        ones given in B{expand} parameter.
-        """
-        return self.__get_tree_expand(self.get_tree_nodes(), None, 1, expand)
+        for top_node in self.get_nodes_as_tree()['children']:
+            add_node(top_node, 0)
 
-    def get_tree_data(self):
-        tree = self.get_tree_thread()
-        data = []
-        struct = {}
-        for node in tree:
-            node_ob = node['ob']
-            if node['depth'] == 1:
-                struct.setdefault(node_ob.id, [])
-            if node['depth'] == 2:
-                struct.setdefault(node_ob.parent, []).append(node_ob.id)
-        for node, children in struct.items():
-            data_dict = {}
-            data_dict['data'] = self[node].title_or_id()
-            data_dict['attributes'] = {'rel': 'node',
-                                       'id': self[node].getId(),
-                                       }
-            data_dict['children'] = []
-            if children:
-                for child in children:
-                    child_ob = self._getOb(child)
-                    data_dict['children'].append({
-                        'data': child_ob.title_or_id(),
-                        'attributes': {
-                            'rel' : 'node',
-                            'id' : child_ob.getId(),
-                        }
-                    })
-            if data_dict['children']:
-                data_dict['children'] = \
-                         self.utSortDictsListByKey(data_dict['children'],
-                                                   'data', 0)
-            data.append(data_dict)
-        return self.utSortDictsListByKey(data, 'data', 0)
+        return nodes
 
+
+    security.declareProtected(view, 'get_tree_json_data')
     def get_tree_json_data(self):
         """ returns tree data (titles are translated) """
-        data = self.get_tree_data_dict()['children'][0]
+        gettext = self.getSite().getPortalTranslations()
 
-        translate = self.getSite().getPortalTranslations()
-        def do_translations(item):
-            item['data'] = translate(item['data'])
-            for subitem in item['children']:
-                do_translations(subitem)
-
-        for item in data:
-            do_translations(item)
-
-        return json.dumps(data)
-
-    def get_tree_data_for_admin(self):
-        data = self.get_tree_data()
-        return {'data': self.title_or_id(),
-                'children': data,
-                'attributes': {'id': self.getId(),
-                               'rel': 'tree',
-                               }
-                    }
-    def __get_tree_dict(self, tree):
-        """ Build a dict for json repr """
-        data = []
-        for rnode in tree:
-            node = rnode.items()[0][0]
-            children = rnode.items()[0][1]
-            node_dict = {
+        def get_info(node):
+            ob = node['ob']
+            return {
+                'data': gettext(ob.title_or_id()),
                 'attributes': {
-                    'id': node.getId(),
+                    'id': ob.getId(), # TODO: rename for this field, "id"
+                                      # happens to mean someting in HTML.
                     'rel': 'node',
+                    'weight': getattr(ob, 'weight', 0),
                 },
-                'data': node.title_or_id(),
-                'children': [],
-                'weight': getattr(node, 'weight', 0)
+                'children': [get_info(kid) for kid in node['children']],
             }
-            if children:
-                node_dict['children'] = self.utSortDictsListByKey(self.__get_tree_dict(children), 'weight', 0)
-            data.append(node_dict)
-        return self.utSortDictsListByKey(data, 'weight', 0)
 
-    def get_tree_data_dict(self):
-        tree = self.get_tree()
-        data = [self.__get_tree_dict(tree)]
-        return {
-            'data': self.title_or_id(),
-            'children': data,
-            'attributes': {
-                'id': self.getId(),
-                'rel': 'tree',
-            }
-        }
+        top_nodes = self.get_nodes_as_tree()['children']
+        return json.dumps([get_info(node) for node in top_nodes])
+
     def get_list(self):
         return self.get_tree_nodes()
 
@@ -330,5 +230,27 @@ class RefTree(LocalPropertyManager, Folder):
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/reftree_manage_edit', globals())
+
+    security.declareProtected(view, 'get_nodes_as_tree')
+    def get_nodes_as_tree(self):
+        node_obs = self.objectValues([METATYPE_REFTREENODE])
+
+        # pass one: create the output objects
+        # None represents the root node (the reftree itself)
+        out_nodes = {None: {'ob': self, 'children': []}}
+        for ob in node_obs:
+            out_nodes[ob.getId()] = {'ob': ob, 'children': []}
+
+        # pass two: link them in a tree structure
+        top_nodes = []
+        for ob in node_obs:
+            out_nodes[ob.parent]['children'].append(out_nodes[ob.getId()])
+
+        # pass three: sort the nodes on each branch
+        get_weight = lambda n: getattr(n['ob'], 'weight', None)
+        for node in out_nodes.itervalues():
+            node['children'].sort(key=get_weight)
+
+        return out_nodes[None]
 
 InitializeClass(RefTree)
