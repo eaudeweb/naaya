@@ -104,7 +104,12 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             self.get_widget_meta_types() +
             self.get_report_meta_types() +
             self._get_meta_types_from_names(['Script (Python)',
-                                             'Page Template'])
+                                             'Page Template'])+
+            [{
+            'name': "Naaya Survey Answer",
+            'action': 'base_questionnaire_add_html',
+            'permission': 'view',
+            }]
         )
 
     def __init__(self, id, lang=None, **kwargs):
