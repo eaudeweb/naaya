@@ -60,7 +60,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
 
     def test_utf8_link_list_title(self):
         """testing a List of Links with usual ID and a title with cyrilic characters
-        
+
         """
         self.selenium_initialize()
         selen = self.selenium
@@ -91,7 +91,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
 
     def test_special_link_list_title(self):
         """testing a List of Links with usual ID and special characters as title
-        
+
         """
         self.selenium_initialize()
         selen = self.selenium
@@ -280,7 +280,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
 
     def selenium_verify_output_empty(self, out_str, list_data):
         selen = self.selenium
-        in_str = list_data['tid']
+        in_str = unicode(list_data['tid'].lower())
         if not selen.is_text_present("Saved changes"):
             self.assertTrue(selen.is_text_present('warning'),
                             'error adding a link to a list of links')

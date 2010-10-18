@@ -154,11 +154,12 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         check_result(u'contributor')
 
         #Check filtering by role combined with text search
+        self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.select("id=filter-roles", 'Contributor')
         self.selenium.click('//input[@value="Go"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load("30000")
         sleep(1)
-        check_result(u'contributor')
+        check_result(u'user3')
 
     def test_add_role(self):
         self.selenium.open("/portal/admin_addrole_html", True)
@@ -197,7 +198,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load("3000")
 
         self.selenium.open("/portal/admin_local_users_html", True)
-        #Check is the user has the assigned roles
+        #Check is the user has the assigned roles.
         last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
         assert (self.selenium.get_text("%s/td/div[@class='user-role'][1]" %
@@ -212,7 +213,6 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.open("/portal/admin_local_users_html", True)
         last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
-        self.selenium.click(
-            "%s/td/div[@class='user-role']/a[@class='revoke-role']" % last_row)
+        self.selenium.click("%s/td/div[@class='user-role-revoke']/a" % last_row)
         self.selenium.wait_for_page_to_load("3000")
-        assert self.selenium.get_text('%s/td[last()]' % last_row) == u'-'
+        assert self.selenium.get_text('%s/td[last()]' % last_row) == u''
