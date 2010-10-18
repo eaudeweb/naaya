@@ -364,36 +364,22 @@ class ProjectsLister(Implicit, Item):
     _index_template = NaayaPageTemplateFile('zpt/projects_list', globals(), 'projects')
 
     def index_html(self, REQUEST):
-        """
-        Render the list of projects recorded for this site.
-        """
-        return self._index_template(REQUEST, experts=[1,2,3])
+        """ Render the list of projects recorded for this site.  """
+        return self._index_template(REQUEST)
 
-    def topic_filters(self):
-        """ """
-        ret = []
-        ptool = self.getPortletsTool()
-        ctool = self.getCatalogTool()
-        ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'expnet_topics', None)
-        for topic in topics.get_tree_nodes():
-            ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
-        return ret
+    def items_in_topic(self, topic=None, filter_name=None, objects=False):
+        filters = {'meta_type' : 'Naaya Project'}
+        if topic is not None:
+            filters['topics'] = topic
+        if filter_name is not None:
+            filters['title'] = '*%s*' % filter_name
 
-    def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
-        """
-        @param objects: Return full objects, not brains
-        """
-        dict = {'meta_type' : 'Naaya Project'}
-        if not catalog:
-            catalog = self.getCatalogTool()
-        if topic:
-            dict['topics'] = topic
-        if filter_name:
-            dict['title'] = '*%s*' % filter_name
+        catalog = self.getCatalogTool()
         if objects:
-            return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
-        return catalog.search(dict)
+            return [ catalog.getobject(ob.data_record_id_)
+                     for ob in catalog.search(filters) ]
+        else:
+            return catalog.search(filters)
 
 
 from Products.Naaya.NySite import NySite
