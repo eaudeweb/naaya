@@ -1,31 +1,9 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Eau de Web
-# Dragos Chirila
-
-#Python imports
 import os
 from os.path import join, isfile
 from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
 
-#Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
@@ -34,7 +12,6 @@ from AccessControl.Permissions import view_management_screens, view
 from ZPublisher.HTTPRequest import record
 from App.ImageFile import ImageFile
 
-#Product imports
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaContent import *
@@ -55,6 +32,12 @@ from Products.CHM2.managers.captcha_tool import captcha_tool
 
 METATYPE_NYURL = 'Naaya URL'
 
+class Extra_for_DateRangeIndex:
+    """hack for a bug in DateRangeIndex ---'dict' object has no attribute 'since_field' """
+    def __init__(self, **kw):
+        for key in kw.keys():
+            setattr(self, key, kw[key])
+
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
     """ """
@@ -70,12 +53,6 @@ def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
     self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
-
-class Extra_for_DateRangeIndex:
-    """hack for a bug in DateRangeIndex ---'dict' object has no attribute 'since_field' """
-    def __init__(self, **kw):
-        for key in kw.keys():
-            setattr(self, key, kw[key])
 
 class CHMSite(NySite):
     """ """
@@ -673,14 +650,6 @@ class CHMSite(NySite):
         return res
 
     #administration pages
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
-    def admin_deleteusers(self, names=[], page_url='', REQUEST=None):
-        """ """
-        self.getAuthenticationTool().manage_delUsers(names)
-        if REQUEST and page_url:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), page_url))
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup')
     def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
         """ """
@@ -750,72 +719,10 @@ class CHMSite(NySite):
         for id in self.utListDifference(user_wgs, ids):
             self.admin_delusersfromworkgroup(id, [name])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeuserroles')
-    def admin_revokeuserroles(self, name='', roles=[], REQUEST=None):
-        """
-        Revoke roles from an user.
-        """
-        for t in self.utConvertToList(roles):
-            role, location = t.split('||')
-            if location == '/': location = ''
-            loc = self.unrestrictedTraverse(location)
-            if location != '':
-                res = self.utListDifference(loc.get_local_roles_for_userid(name), [role])
-                if len(res): loc.manage_setLocalRoles(name, res)
-                else: loc.manage_delLocalRoles([name])
-            else:
-                self.getAuthenticationTool()._doDelUserRoles([name])
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusersroles')
-    def admin_addusersroles(self, names='', roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
-        """
-        Add roles for an user.
-        """
-        success = False
-        err = ''
-        auth_tool = self.getAuthenticationTool()
-        try:
-            for name in self.utConvertToList(names):
-                auth_tool.manage_addUsersRoles(name, roles, loc, location)
-                if send_mail:
-                    email = auth_tool.getUsersEmails([name])[0]
-                    self.sendAccountModifiedEmail(email, roles, loc, location)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if REQUEST:
-            if err != '': self.setSessionErrorsTrans(str(err))
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
-    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
-        """
-        Add roles for an user.
-        """
-        err = ''
-        success = False
-        auth_tool = self.getAuthenticationTool()
-        try:
-            auth_tool.manage_addUsersRoles(name, roles, loc, location)
-            if send_mail:
-                email = auth_tool.getUsersEmails([name])[0]
-                self.sendAccountModifiedEmail(email, roles, loc, location)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if REQUEST:
-            if err != '': self.setSessionErrorsTrans(str(err))
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s'
+                                             % (self.absolute_url(), name))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusertoworkgroup')
     def admin_addusertoworkgroup(self, id='', name='', REQUEST=None):
@@ -859,8 +766,57 @@ class CHMSite(NySite):
                     self.del_userfrom_workgroup(loc, x[0])
                     if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' % (self.absolute_url(), id))
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' %
+                                             (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeuserroles')
+    def admin_revokeuserroles(self, name='', roles=[], REQUEST=None):
+        """
+        Revoke roles from an user.
+        """
+        for t in self.utConvertToList(roles):
+            role, location = t.split('||')
+            if location == '/': location = ''
+            loc = self.unrestrictedTraverse(location)
+            if location != '':
+                res = self.utListDifference(
+                    loc.get_local_roles_for_userid(name), [role])
+                if len(res): loc.manage_setLocalRoles(name, res)
+                else: loc.manage_delLocalRoles([name])
+            else:
+                self.getAuthenticationTool()._doDelUserRoles([name])
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s'
+                                             % (self.absolute_url(), name))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
+    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='',
+                           send_mail='', REQUEST=None):
+        """
+        Add roles for an user.
+        """
+        err = ''
+        success = False
+        auth_tool = self.getAuthenticationTool()
+        try:
+            auth_tool.manage_addUsersRoles(name, roles, loc, location)
+            if send_mail:
+                email = auth_tool.getUsersEmails([name])[0]
+                self.sendAccountModifiedEmail(email, roles, loc, location)
+        except Exception, error:
+            err = error
+        else:
+            success = True
+        if REQUEST:
+            if err != '': self.setSessionErrorsTrans(str(err))
+            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                                 date=self.utGetTodayDate())
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s'
+                                             % (self.absolute_url(), name))
 
     security.declareProtected(view, 'getCaptcha')
     def getCaptcha(self):
@@ -941,15 +897,17 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users_unnassigned')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_userroles_html')
+    def admin_userroles_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self},
+                    'site_admin_userroles')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup_html')
     def admin_addworkgroup_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_addworkgroup')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userroles_html')
-    def admin_userroles_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_userroles')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_workgroups_html')
     def admin_workgroups_html(self, REQUEST=None, RESPONSE=None):
@@ -960,11 +918,6 @@ class CHMSite(NySite):
     def admin_workgroup_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_workgroup')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_role_html')
-    def admin_role_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_role')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
@@ -1019,12 +972,6 @@ class CHMSite(NySite):
                             reflist_ob.manage_addRefTreeNode(item.id, item.title)
         return 'Script OK.'
 
-    def updateWG(self):
-        """ """
-        self.workgroups = []
-        self._p_changed = 1
-        return 'OK'
-
     security.declareProtected(view, 'links_group_html')
     def links_group_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -1047,12 +994,6 @@ class CHMSite(NySite):
             file.close()
         return 'DUMP OK.'
 
-    security.declareProtected(view_management_screens, 'updatetoVersion2_1')
-    def updatetoVersion2_1(self):
-        """ """
-        self.workgroups = []
-        self._p_changed = 1
-        return 'OK update to 2.1'
 
     #expandable portlets functions
     security.declareProtected(view, 'epFromCookiesToSession')
@@ -1107,14 +1048,6 @@ class CHMSite(NySite):
                 return True
             except:
                 return False
-
-    security.declareProtected(view_management_screens, 'updateCHM')
-    def updateCHM(self):
-        """ update script """
-        self._networkportals_manager__networkportals_collection = {}
-        self.workgroups = []
-        self._p_changed = 1
-        return 'Done'
 
     chm_common_css = ImageFile('www/chm_common.css', globals())
 
