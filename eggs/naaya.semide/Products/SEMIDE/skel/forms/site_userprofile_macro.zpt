@@ -1,0 +1,43 @@
+<tal:block metal:define-macro="page">
+
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
+
+<div class="middle_port">
+	<h1 i18n:translate="">User profile</h1>
+<tal:block tal:condition="python:username!='Anonymous User'">
+	<div id="tabbedmenu">
+	<ul tal:define="profiles_tool python:here.getProfilesTool();
+					profile python:profiles_tool.getProfile(username);
+					sheets profile/getSheets">
+		<li tal:attributes="id python:test(tab_ob is None, 'currenttab', 'notcurrenttab')"><a tal:attributes="href string:${here/getSitePath}/profile_html" i18n:translate="">Account info</a></li>
+		<tal:block tal:repeat="sheet sheets">
+		<li tal:define="ob python:profiles_tool.getInstanceByIdentifier(sheet.instance_identifier)"
+			tal:attributes="id python:test(ob==tab_ob, 'currenttab', 'notcurrenttab')">
+			<a tal:attributes="href string:${ob/absolute_url}/profilesheet_html" tal:content="ob/title_or_id" />
+		</li>
+		</tal:block>
+	</ul>
+	</div>
+	<div class="cleaner"> </div>
+	<tal:block metal:define-slot="section">Profile sheet content</tal:block>
+</tal:block>
+
+<tal:block tal:condition="python:username=='Anonymous User'">
+<p i18n:translate="">
+	You should have an account on this portal in order to edit it's settings.
+</p>
+<p tal:define="site_url here/getSitePath">
+	<a tal:attributes="href string:${site_url}/FlashTool/subscribe_html" i18n:translate="">
+		In order to create an account please follow this link.
+	</a>
+</p>
+</tal:block>
+</div>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
+
+</tal:block>

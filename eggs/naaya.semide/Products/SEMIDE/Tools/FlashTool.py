@@ -1,43 +1,20 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is EMWIS/SEMIDE.
-# Code created by Finsiel Romania are
-# Copyright (C) EMWIS/SEMIDE. All Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Finsiel Romania
-# Alexandru Plugaru, Eau de Web
-
-#Python
 import os
 import re
 
-#Zope
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view, manage_users
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-#Naaya
 import Products.NaayaBase.constants
 import Products.Naaya.constants
 from Products.NaayaCore.managers.utils import utils, tmpfile
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
-from Products.NaayaCore.ProfilesTool.ProfileMeta import ProfileMeta
+from Products.NaayaProfilesTool.ProfileMeta import ProfileMeta
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 
-#SEMIDE
 from naaya.content.file.file_item import config; METATYPE_NYFILE = config['meta_type']
 from naaya.content.semide.document.semdocument_item import config; METATYPE_NYSEMDOCUMENT = config['meta_type']
 from naaya.content.semide.textlaws.semtextlaws_item import config; METATYPE_NYSEMTEXTLAWS = config['meta_type']
