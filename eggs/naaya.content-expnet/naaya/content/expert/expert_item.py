@@ -75,8 +75,8 @@ DEFAULT_SCHEMA = {
     'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
     'webpage':  dict(sortorder=190, widget_type='String', label='Webpage'),
     'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
-    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main areas of expertise', list_id='experts_topics'),
-    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Areas of expertise', list_id='experts_topics'),
+    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main areas of expertise', list_id='expnet_topics'),
+    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Areas of expertise', list_id='expnet_topics'),
     'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
@@ -90,30 +90,8 @@ DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 def setupContentType(site):
-    from skel import TOPICS
-    ptool = site.getPortletsTool()
-    itopics = getattr(ptool, 'experts_topics', None)
-    if not itopics:
-        ptool.manage_addRefTree('experts_topics')
-        for k, v in TOPICS.items():
-            ptool.experts_topics.manage_addRefTreeNode(k, v)
-    #Create catalog index if it doesn't exist
-    ctool = site.getCatalogTool()
-
-    if not 'topics' in ctool.indexes():
-        try:
-            ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
-            ctool.manage_reindexIndex(['topics'])
-        except:
-            print 'Failed to create topics index. Naaya Expert content type may not work properly'
-
-    if not 'title_field' in ctool.indexes():
-        try: 
-            ctool.addIndex('title_field', 'FieldIndex', extra={'indexed_attrs' : 'title'})
-            ctool.manage_reindexIndex(['title_field'])
-        except:
-            print 'Failed to create title_field index. Naaya Expert content type may not work properly'
-
+    from naaya.content.expnet_common.skel import setup_expnet_skel
+    setup_expnet_skel(site)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -383,7 +361,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def getExpertTopics(self, category):
         ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'experts_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
@@ -558,7 +536,7 @@ class ExpertsLister(Implicit, Item):
         ptool = self.getPortletsTool()
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'experts_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         for topic in topics.get_tree_nodes():
             ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
