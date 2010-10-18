@@ -44,7 +44,6 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/sitemap_add_html')
         self.assert_page_ok('/portal/feedback_html')
         self.assert_page_ok('/portal/requestrole_html')
-        self.assert_page_ok('/portal/profile_html')
         self.assert_page_ok('/portal/localchannels_rdf')
 
         self.assert_page_ok('/portal/admin_centre_html', 'admin')
