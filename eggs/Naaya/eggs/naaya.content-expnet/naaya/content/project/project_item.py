@@ -52,8 +52,8 @@ from Products.NaayaCore.managers.utils import make_id
 METATYPE_OBJECT = 'Naaya Project'
 
 DEFAULT_SCHEMA = {
-    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='project_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='project_topics'),
+    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='expnet_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='expnet_topics'),
 }
 
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
@@ -66,20 +66,8 @@ DEFAULT_SCHEMA['geo_location'].update(visible=True)
 
 
 def setupContentType(site):
-    from skel import TOPICS
-    ptool = site.getPortletsTool()
-    itopics = getattr(ptool, 'project_topics', None)
-    if not itopics:
-        ptool.manage_addRefTree('project_topics')
-        for k, v in TOPICS.items():
-            ptool.project_topics.manage_addRefTreeNode(k, v)
-
-    #Create catalog index if it doesn't exist
-    ctool = site.getCatalogTool()
-    try: 
-        ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
-        ctool.manage_reindexIndex(['topics'])
-    except: pass
+    from naaya.content.expnet_common.skel import setup_expnet_skel
+    setup_expnet_skel(site)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -338,7 +326,7 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
     def getTopics(self, category):
         ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'project_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
@@ -387,7 +375,7 @@ class ProjectsLister(Implicit, Item):
         ptool = self.getPortletsTool()
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'project_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         for topic in topics.get_tree_nodes():
             ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
