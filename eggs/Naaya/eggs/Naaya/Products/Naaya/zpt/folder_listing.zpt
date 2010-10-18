@@ -56,9 +56,15 @@ $(document).ready(function(){
 			return false;
 		}
 
-		var form = $('#folder_listing');
-		form.attr('action', action);
-		form.submit();
+		confirmed = true;
+		if (action == 'deleteObjects'){
+			confirmed = confirm(gettext('Are you sure?'));
+		}
+		if (confirmed){
+			var form = $('#folder_listing');
+			form.attr('action', action);
+			form.submit();
+		}
 	});
 })
 </script>
@@ -83,7 +89,6 @@ $(document).ready(function(){
 				i18n:attributes="value"
 				tal:condition="btn_paste" />
 			<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
-				onclick="javascript:return window.confirm('Are you sure?')"
 				i18n:attributes="value"
 				tal:condition="btn_delete" />
 			<input type="submit" value="Rename" class="action-button" name="renameobject_html:method"
