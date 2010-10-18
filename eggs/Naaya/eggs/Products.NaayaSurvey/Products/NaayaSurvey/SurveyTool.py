@@ -172,8 +172,13 @@ class SurveyTool(Folder):
         site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor', 'Owner'), acquire=0)
         site.manage_permission(PERMISSION_EDIT_ANSWERS, ('Manager', 'Administrator', ), acquire=0)
 
-    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'noop')
-    def noop(self):
+    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'bogus')
+    def bogus(self):
+        """ Needed in Naaya Access. It is mandatory that a permission must be
+        declared so it can be used in Naaya Access.
+        This should be removed once this issue is solved
+
+        """
         pass
 
     # Add tool specific portlets
