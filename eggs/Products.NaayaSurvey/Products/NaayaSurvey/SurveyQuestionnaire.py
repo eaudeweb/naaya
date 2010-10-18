@@ -252,17 +252,26 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             return
         add_new = True
+
         if REQUEST:
             answer_id = REQUEST.form.pop('answer_id', None)
         else:
             answer_id = None
-        if answer_id or not self.allow_multiple_answers:
+        if answer_id is not None:
+            # an answer ID was provided explicitly for us to edit, so we
+            # remove the old one
             add_new = False
+            self._delObject(answer_id)
+            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
+                'Deleted previous answer %s while editing' % answer_id)
+
+        if not self.allow_multiple_answers:
+            # look for an old answer and remove it
             old_answer = self.getMyAnswer()
             if old_answer is not None:
                 self._delObject(old_answer.id)
                 LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
-                    'Deleted previous answer %s' % (old_answer.absolute_url()))
+                    'Deleted previous answer %s' % old_answer.absolute_url())
 
         # The answer is deleted above so we can add a new one
         if answer_id or not self.allow_multiple_answers or add_new:
