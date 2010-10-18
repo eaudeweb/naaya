@@ -134,17 +134,30 @@ class PortletsTool(Folder, utils):
 
     #JsTree listing
 
+    security.declareProtected(view, 'get_reftrees_as_json_data')
     def get_reftrees_as_json_data(self):
         """ returns all reftrees (NOT translated) """
-        trees = [x.get_tree_data_dict() for x in self.getRefTrees()]
-        data = {'data': self.getSite().title_or_id(),
-                'children': trees,
-                'attributes' : {
-                    'id': self.getSite().getId(),
-                    'rel': 'root',
-                }
-        }
-        return json.dumps(data)
+        def get_info(node, rel='node'):
+            ob = node['ob']
+            return {
+                'data': ob.title_or_id(),
+                'attributes': {
+                    'id': ob.getId(),
+                    'rel': rel,
+                },
+                'children': [get_info(kid) for kid in node['children']],
+            }
+
+        portal = self.getSite()
+        return json.dumps({
+            'data': portal.title_or_id(),
+            'attributes': {
+                'id': portal.getId(),
+                'rel': 'root',
+            },
+            'children': [ get_info(t.get_nodes_as_tree(), rel='tree')
+                          for t in self.getRefTrees() ],
+        })
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'handle_jstree_actions')
     def handle_jstree_actions(self, data):
