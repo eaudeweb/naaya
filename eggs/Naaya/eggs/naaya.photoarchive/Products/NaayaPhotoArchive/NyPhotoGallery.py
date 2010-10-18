@@ -70,6 +70,8 @@ def manage_addNyPhotoGallery(self, id='', REQUEST=None, contributor=None,
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
     gallery_id = make_id(self, id=id, title=schema_raw_data['title'], prefix=PREFIX_NYPHOTOGALLERY)
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _klass(gallery_id, contributor)
     self.gl_add_languages(ob)
