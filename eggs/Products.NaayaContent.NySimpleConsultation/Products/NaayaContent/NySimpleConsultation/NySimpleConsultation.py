@@ -185,11 +185,11 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, contributor, releasedate, lang):
         """ """
         self.id = id
-        self.contributor = contributor
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         BTreeFolder2.__init__(self)
+        self.contributor = contributor
         try: del self.title
         except: pass
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
