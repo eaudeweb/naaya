@@ -1,23 +1,6 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Workgroups</h1>
-
-<tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				location python:request.get('location', '')">
-
-<div class="tabbedmenu">
-	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-		</li>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
-	</ul>
-</div>
-
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Add workgroup</metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
 <script language="JavaScript">
 <!--
 function setupWin(url, theWidth, theHeight)
@@ -33,9 +16,6 @@ function createKey(key)
 }
 // -->
 </script>
-
-<h2 i18n:translate="" style="clear: left;">Add workgroup</h2>
-
 <p i18n:translate="">
 	Use this page to add a new working group on a specific section (folder). Each user later added to this workgroup will have by default a certain role that you specify here. The roles individual users have inside a workgroup can be later modified from the workgroup page. All fields are mandatory.
 </p>
@@ -74,5 +54,6 @@ function createKey(key)
 <span tal:replace="python:here.delSession('location')" />
 <span tal:replace="python:here.delSession('role')" />
 
-</tal:block>
-</tal:block>
+</metal:block>
+</metal:block>
+</metal:block>

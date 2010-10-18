@@ -1,40 +1,17 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Workgroups</h1>
-
-<tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				skey python:request.get('skey', 'title');
-				rkey python:request.get('rkey', '');
-				sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'title', 'label': 'Title'}, {'sortable': 1, 'key': 'role', 'label': 'Default role'}, {'sortable': 1, 'key': 'location', 'label': 'Location'},)">
-
-<div class="tabbedmenu">
-	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-		</li>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
-	</ul>
-</div>
-
-<h2 i18n:translate="" style="clear: left;">Workgroups listing</h2>
-
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Workgroups</metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
 <p i18n:translate="">
 	A <em>workgroup</em> is a collection of users that have local roles on a portal section (folder) and on its subfolders. The typical case when workgroups are needed is when more people need to collaborate in uploading and modifying content in a section; the administrator creates the folder, defines a <em>workgroup</em> for it and starts assigning users on it.
 </p>
-
 <form action="admin_addworkgroup_html">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
-
 <form metdho="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
 	<table id="folderfile_list" class="sortable" width="70%">
 	<thead>
 		<tr>
-			<tal:block tal:repeat="item sortdata">
+			<tal:block tal:repeat="item python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'title', 'label': 'Title'}, {'sortable': 1, 'key': 'role', 'label': 'Default role'}, {'sortable': 1, 'key': 'location', 'label': 'Location'},)">
 				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
@@ -66,6 +43,6 @@
 	</table>
 	<input type="submit" value="Delete workgroups" i18n:attributes="value" class="submission_button" />
 </form>
-
-</tal:block>
-</tal:block>
+</metal:block>
+</metal:block>
+</metal:block>
