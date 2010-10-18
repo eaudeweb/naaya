@@ -73,8 +73,8 @@
 				address geo_location/address|string:;
 				main_topics python:here.getTopics(here.main_topics);
 				sub_topics python:here.getTopics(here.sub_topics);">
-	<div class="description" tal:condition="here/description"
-		tal:content="structure here/description" />
+	<tal:block condition="here/description"
+		content="structure here/description" />
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
@@ -123,9 +123,10 @@
 		</tal:block>
 	</tal:block>
 	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/organisations_list" i18n:translate="">
-			Organisations list
-		</a>
+		&#171;
+		<a tal:define="site here/getSite"
+		   tal:attributes="href string:${site/absolute_url}/organisations_list"
+		   i18n:translate="">Organisations list</a>
 	</div>
 </div>
 
