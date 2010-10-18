@@ -186,12 +186,12 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     def __init__(self, id, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, contributor, releasedate, lang):
         """ """
         self.id = id
-        self.contributor = contributor
-        self.questions = {}
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         BTreeFolder2.__init__(self)
+        self.contributor = contributor
+        self.questions = {}
         try: del self.title
         except: pass
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang)
