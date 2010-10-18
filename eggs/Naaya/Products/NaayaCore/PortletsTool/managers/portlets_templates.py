@@ -139,7 +139,7 @@ REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE = '''<tal:block define="channel pyt
 </tal:block>
 </tal:block>'''
 
-LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID">
+LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool()['PORTLET_LOCALCHANNEL_ID']">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">
 	<span i18n:translate="" tal:content="channel/title_or_id" />
@@ -168,7 +168,7 @@ FOLDER_PORTLET_TEMPLATE = '''<tal:block tal:define="folder python:here.getFolder
 </tal:block>
 </tal:block>'''
 
-SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool().PORTLET_SCRIPTCHANNEL_ID">
+SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool()['PORTLET_SCRIPTCHANNEL_ID']">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title"><span tal:replace="channel/title_or_id" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
