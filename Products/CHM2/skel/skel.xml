@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
-		<form id="site_search" title="Portal search"/>
-		<form id="site_external_search" title="External search"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
-		<form id="site_sitemap" title="Portal site map"/>
-		<form id="site_urlmap" title="Portal url map"/>
-		<form id="site_admin_urls" title="Portal administration - urls"/>
+		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
 		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
-		<form id="site_requestrole" title="Request account page"/>
-		<form id="site_admin_adduser" title="Add new user"/>
-		<form id="site_admin_edituser" title="Edit user form"/>
-		<form id="site_admin_roles" title="Roles"/>
-		<form id="site_admin_users" title="All users view"/>
-		<form id="site_admin_sources" title="Portal administration - other users sources"/>
-		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
-		<form id="site_admin_workgroups" title="View workgroups"/>
-		<form id="site_admin_workgroup" title="View workgroup"/>
-		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
-		<form id="site_admin_users_assigned" title="View users with roles"/>
+		<form id="site_admin_urls" title="Portal administration - urls"/>
 		<form id="site_admin_userroles" title="View the roles of a user"/>
-		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_links_group" title="Group of links"/>
+		<form id="site_admin_users" title="All users view"/>
+		<form id="site_admin_users_assigned" title="View users with roles"/>
+		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
+		<form id="site_admin_workgroup" title="View workgroup"/>
+		<form id="site_admin_workgroups" title="View workgroups"/>
+		<form id="site_external_search" title="External search"/>
 		<form id="site_index" title="Portal home page"/>
+		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
+		<form id="site_links_group" title="Group of links"/>
+		<form id="site_requestrole" title="Request account page"/>
+		<form id="site_search" title="Portal search"/>
+		<form id="site_sitemap" title="Portal site map"/>
+		<form id="site_urlmap" title="Portal url map"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">

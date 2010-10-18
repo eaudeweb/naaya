@@ -1,28 +1,9 @@
-<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-<h1 metal:fill-slot="title" i18n:translate="">Workgroups</h1>
-
-<tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				users python:user_tool.getUserNames();
-				wg_id python:request.get('w', '');
-				wg python:here.getWorkgroupById(wg_id)">
-
-<div class="tabbedmenu">
-	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-		</li>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
-	</ul>
-</div>
-
-<tal:block tal:condition="wg">
-	<h2 tal:content="python:wg[1]" style="clear: left;"></h2>
-
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
+<metal:block fill-slot="second-title" i18n:translate="">Workgroup: <tal:block
+	replace="python:here.getWorkgroupById(request.get('w', ''))[1]" i18n:name="workgroup"></tal:block></metal:block>
+<metal:block fill-slot="content"><metal:block define-macro="content">
+<tal:block define="wg_id python: request.get('w', ''); wg python:here.getWorkgroupById(wg_id);">
+<tal:block condition="wg">
 <p tal:define="obj python:here.utGetObject(wg[2])">
 	<span i18n:translate="" tal:omit-tag="">
 		This page shows all users that are part of this working group.
@@ -90,7 +71,7 @@
 <p tal:condition="python:not wg" style="clear: left;">
 	Invalid group or no group selected.
 </p>
-
 </tal:block>
-
-</tal:block>
+</metal:block>
+</metal:block>
+</metal:block>
