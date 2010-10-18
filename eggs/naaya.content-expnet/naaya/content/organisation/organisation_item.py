@@ -59,8 +59,8 @@ DEFAULT_SCHEMA = {
     'phone':        dict(sortorder=140, widget_type='String', label='Phone'),
     'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
     'email':        dict(sortorder=170, widget_type='String', label='Email address'),
-    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='organisation_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='organisation_topics'),
+    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='expnet_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='expnet_topics'),
     'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
 }
 
@@ -73,21 +73,8 @@ DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['geo_location'].update(visible=True)
 
 def setupContentType(site):
-    from skel import TOPICS
-    ptool = site.getPortletsTool()
-    itopics = getattr(ptool, 'organisation_topics', None)
-    if not itopics:
-        ptool.manage_addRefTree('organisation_topics')
-        for k, v in TOPICS.items():
-            ptool.organisation_topics.manage_addRefTreeNode(k, v)
-
-    #Create catalog index if it doesn't exist
-    ctool = site.getCatalogTool()
-    try: 
-        ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
-        ctool.manage_reindexIndex(['topics'])
-    except: pass
-
+    from naaya.content.expnet_common.skel import setup_expnet_skel
+    setup_expnet_skel(site)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -402,7 +389,7 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
 
     def getTopics(self, category):
         ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'organisation_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
@@ -485,7 +472,7 @@ class OrganisationLister(Implicit, Item):
         ptool = self.getPortletsTool()
         ctool = self.getCatalogTool()
         ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'organisation_topics', None)
+        topics = getattr(ptool, 'expnet_topics', None)
         for topic in topics.get_tree_nodes():
             ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
         return ret
