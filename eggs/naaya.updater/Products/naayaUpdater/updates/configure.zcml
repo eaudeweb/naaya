@@ -234,5 +234,10 @@
       component=".update_survey.UpdateSurvey"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="portal_profiles.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_portal_profiles.UpdatePortalProfiles"
+      permission="zope2.ViewManagementScreens" />
 
 </configure>
