@@ -84,8 +84,8 @@
 				main_topics python:here.getExpertTopics(here.main_topics);
 				sub_topics python:here.getExpertTopics(here.sub_topics);
 				">
-	<div class="description" tal:condition="here/description"
-		tal:content="structure here/description"/>
+	<tal:block condition="here/description"
+		content="structure here/description" />
 	<div tal:condition="here/obfuscated_email">
 		<span tal:replace="here/obfuscated_email" />
 	</div>
@@ -144,9 +144,10 @@
 		</ul>
 	</div>
 	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/experts_list" i18n:translate="">
-			Experts list
-		</a>
+		&#171;
+		<a tal:define="site here/getSite"
+		   tal:attributes="href string:${site/absolute_url}/experts_list"
+		   i18n:translate="">Experts list</a>
 	</div>
 
 </div>
