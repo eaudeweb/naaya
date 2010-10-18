@@ -1847,31 +1847,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         else:
             return (None, None, None)
 
-    security.declareProtected(view, 'process_profile')
-    def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
-        confirm='', REQUEST=None):
-        """ """
-        err = ''
-        success = False
-        auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
-        user = self.getAuthenticationTool().getUser(auth_user)
-        if password == '': password = confirm = old_pass
-        if user._getPassword() == old_pass:
-            try:
-                self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,              lastname, email)
-                self.credentialsChanged(name, password)
-                #keep authentication
-            except Exception, error:
-                err = error
-            else:
-                success = True
-        else:
-            err = WRONG_PASSWORD
-        if REQUEST:
-            if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/profile_html' % self.absolute_url())
-
     #paging stuff
     def process_querystring(self, p_querystring):
         #eliminates empty values and the 'start' key
@@ -3800,11 +3775,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestrole')
-
-    security.declareProtected(view, 'profile_html')
-    def profile_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_userprofile')
 
     security.declareProtected(view, 'channel_details_html')
     def channel_details_html(self, REQUEST=None, RESPONSE=None, **kwargs):
