@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
-<tal:block define="global req_topic python: request.get('topic', '')" /> 
-<tal:block define="global req_filter python: request.get('q', '')" />
-<h1>List of projects</h1>
+<tal:block define="global req_topic python: request.get('topic', None)" /> 
+<tal:block define="global req_filter python: request.get('q', None)" />
+<h1 i18n:translate="">List of projects</h1>
 
 <div class="boxes-right">
 	<div class="link-box">
@@ -12,26 +12,27 @@
 			<input type="submit" name="search" value="Go" i18n:attributes="value"/>
 		</form>
 	</div>
-	<div class="topic-box" tal:define="topics here/topic_filters">
+	<div class="topic-box" tal:define="items python:here.getPortletsTool()['expnet_topics'].get_nodes_as_tree()['children']">
 		<h4 i18n:translate="">Browse by topic:</h4>
+		<a tal:attributes="href string:${here/absolute_url}"
+		   i18n:translate="">All</a>
+		<span tal:content="python:'(%s)' % len(here.items_in_topic())"
+		      class="object-count"></span>
+		<metal:block define-macro="node-children">
 		<ul>
-			<tal:block repeat="topic topics">
-				<li tal:define="tp python:topic[0]; cnt python:topic[1]">
-					<a tal:condition="not: tp"
-					tal:attributes="href string:${here/absolute_url}">
-						<span i18n:translate="" tal:condition="req_topic">All</span>
-						<strong i18n:translate="" tal:condition="not:req_topic">All</strong>
-						<span class="gray" tal:content="cnt" />
-					</a>
-					<a tal:condition="tp"
-					tal:attributes="href string:${here/absolute_url}?topic=${tp/id}"
-					i18n:translate="">
-					<span tal:replace="tp/title" tal:condition="python:req_topic != tp.id"/>
-					<strong tal:content="tp/title" tal:condition="python:req_topic == tp.id"/>
-					<span class="gray" tal:content="cnt" /></a>
-				</li>
-			</tal:block>
+			<li tal:repeat="node items">
+				<a tal:define="url here/absolute_url; topic_id node/ob/id"
+				   tal:attributes="href string:${url}?topic=${topic_id}"
+				   i18n:translate="" tal:content="node/ob/title_or_id"></a>
+				<span tal:content="python:'(%s)' % len(here.items_in_topic(
+				                          node['ob'].getId()))"
+				      class="object-count"></span>
+				<tal:block define="items node/children" condition="items">
+					<metal:block use-macro="template/macros/node-children" />
+				</tal:block>
+			</li>
 		</ul>
+		</metal:block>
 	</div>
 </div>
 
@@ -41,7 +42,7 @@
 			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
 			<span tal:content="structure ob/description" />
 			<br/><br/>
-			<a tal:attributes="href ob/absolute_url" style="text-decoration: underline;">
+			<a tal:attributes="href ob/absolute_url" i18n:translate="">
 				View details
 			</a>
 		</div>

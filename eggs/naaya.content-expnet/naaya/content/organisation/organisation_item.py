@@ -51,8 +51,6 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import make_id
 
 METATYPE_OBJECT = 'Naaya Organisation'
-ADDITIONAL_STYLE = open(ImageFile('www/organisation.css', globals()).path).read()
-
 
 DEFAULT_SCHEMA = {
     'webpage':      dict(sortorder=120, widget_type='String', label='Webpage'),
@@ -91,7 +89,6 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyOrganisation',
         '_module': sys.modules[__name__],
-        'additional_style': ADDITIONAL_STYLE,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyOrganisation.gif'),
         'on_install' : setupContentType,
         '_misc': {
@@ -458,42 +455,19 @@ class OrganisationLister(Implicit, Item):
         """ Index page """
         return self._index_template(REQUEST)
 
-    def topic_filters(self):
-        """Return the list of topics and their count of items inside to be displayed from template.
-        Example:
-        <ul>
-            <li>All (12)</li>
-            <li>Water management (10)</li>
-            <li>Climate change (2)</li>
-        </ul>
-        @return: List of tuples in format: [(None, intCountAll), (topic_obj1, intCountObj1), (topic_obj2, intCountObj2)...]
-        """
-        ret = []
-        ptool = self.getPortletsTool()
-        ctool = self.getCatalogTool()
-        ret.append((None, len(self.items_in_topic(ctool))))
-        topics = getattr(ptool, 'expnet_topics', None)
-        for topic in topics.get_tree_nodes():
-            ret.append((topic, len(self.items_in_topic(ctool, topic.id))))
-        return ret
+    def items_in_topic(self, topic=None, filter_name=None, objects=False):
+        filters = {'meta_type' : METATYPE_OBJECT}
+        if topic is not None:
+            filters['topics'] = topic
+        if filter_name is not None:
+            filters['title'] = '*%s*' % filter_name
 
-    def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
-        """
-        Find the organisations that have associated a specific topic (either as primary or secondary topic).
-        @param topic: The name of the topic to find items in. If None, return all organisations
-        @param objects: Return full objects (True) or just the brains (False). Brains are useful to count: i.e. len(brains_arr)
-        @return: list of NyOrganisation objects if objects=True or list of catalog brains if objects=False.
-        """
-        dict = {'meta_type' : METATYPE_OBJECT}
-        if not catalog:
-            catalog = self.getCatalogTool()
-        if topic:
-            dict['topics'] = topic
-        if filter_name:
-            dict['title'] = '*%s*' % filter_name
+        catalog = self.getCatalogTool()
         if objects:
-            return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
-        return catalog.search(dict)
+            return [ catalog.getobject(ob.data_record_id_)
+                     for ob in catalog.search(filters) ]
+        else:
+            return catalog.search(filters)
 
 from Products.Naaya.NySite import NySite
 NySite.organisations_list = OrganisationLister('organisations_list')
