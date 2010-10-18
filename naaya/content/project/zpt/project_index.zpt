@@ -62,8 +62,8 @@
 <div class="main-content" tal:define="
 				main_topics python:here.getTopics(here.main_topics);
 				sub_topics python:here.getTopics(here.sub_topics);">
-	<div class="description" tal:condition="here/description"
-		tal:content="structure here/description" />
+	<tal:block condition="here/description"
+		content="structure here/description" />
 	<div tal:condition="main_topics">
 		<h4 i18n:translate="">Main topics covered</h4>
 		<ul>
@@ -81,9 +81,10 @@
 		</ul>
 	</div>
 	<div class="footer_link">
-		&#171; <a tal:attributes=" href string:${here/absolute_url}/projects_list" i18n:translate="">
-			Projects list
-		</a>
+		&#171;
+		<a tal:define="site here/getSite"
+		   tal:attributes="href string:${site/absolute_url}/projects_list"
+		   i18n:translate="">Projects list</a>
 	</div>
 </div>
 
