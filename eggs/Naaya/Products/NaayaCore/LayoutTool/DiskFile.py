@@ -12,11 +12,18 @@ from Products.NaayaCore.constants import METATYPE_DISKFILE
 from naaya.core.utils import mimetype_from_filename
 
 
+def remove_excluded(name_list):
+    for name in ('.svn',):
+        if name in name_list:
+            name_list.remove(name)
+
 def list_available_pathspecs():
     out = []
     for allowed_prefix in allowed_path_prefixes:
         root_path = resolve(allowed_prefix)
         for folder_path, folder_names, file_names in os.walk(root_path):
+            remove_excluded(folder_names)
+            remove_excluded(file_names)
             for name in file_names:
                 rel_path = path.join(folder_path, name)[len(root_path):]
                 out.append(allowed_prefix + rel_path)
