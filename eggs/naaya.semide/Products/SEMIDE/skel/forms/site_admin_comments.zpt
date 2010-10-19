@@ -14,9 +14,9 @@
 	<ul tal:condition="python:len(comments_list) > 0">
 	<tal:block repeat="comm comments_list">
 		<li>
-		<span tal:content="comm/comm_ob/title" />, 
-		<span i18n:translate="">posted on:</span> <span tal:content="python:here.utShowDateTime(comm.comm_date)" /><br />
-		<a tal:attributes="href comm/comm_parent/absolute_url" tal:content="comm/comm_parent/title_or_id" />
+		<span tal:content="comm/title" />,
+		<span i18n:translate="">posted on:</span> <span tal:content="python:here.utShowDateTime(comm.releasedate)" /><br />
+		<a tal:attributes="href comm/absolute_url" tal:content="comm/aq_parent/aq_parent/title_or_id" />
 		</li>
 	</tal:block>
 	</ul>
