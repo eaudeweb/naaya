@@ -2447,16 +2447,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_latest_comments')
     def get_latest_comments(self):
         """ """
-        comm_list = []
-        res_number = 20
-
-        objs_list = self.getCatalogedObjects(has_comments=1)
-        for ob in objs_list:
-            if hasattr(ob, 'get_comments_list'):
-                for comm_ob in ob.get_comments_list():
-                    l_comm_ob = DummyComment(ob, comm_ob, comm_ob.releasedate)
-                    comm_list.append(l_comm_ob)
-        return self.utSortObjsListByAttr(comm_list, 'comm_date')[:res_number]
+        return self.getCatalogTool().getLatestComments(path='/', limit=20)
 
     #add main topics
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
