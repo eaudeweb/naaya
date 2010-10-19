@@ -379,12 +379,10 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    #security.declareProtected(view, 'getBrief')
-    #def getBrief(self):
-    #    """ get a brief content """
-    #    return self.content.split('<div class="moretag">&nbsp;</div>')[0]
-    #    #errors, output, errordata = self.EpozTidy(brief, self.absolute_url(1))
-    #    #return output
+    security.declareProtected(view, 'getBrief')
+    def getBrief(self):
+        """ get a brief content """
+        return self.content.split('<div class="moretag">&nbsp;</div>')[0]
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
