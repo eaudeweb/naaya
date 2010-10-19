@@ -2452,9 +2452,10 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         objs_list = self.getCatalogedObjects(has_comments=1)
         for ob in objs_list:
-            for comm_ob in ob.get_comments_list():
-                l_comm_ob = DummyComment(ob, comm_ob, comm_ob.date)
-                comm_list.append(l_comm_ob)
+            if hasattr(ob, 'get_comments_list'):
+                for comm_ob in ob.get_comments_list():
+                    l_comm_ob = DummyComment(ob, comm_ob, comm_ob.releasedate)
+                    comm_list.append(l_comm_ob)
         return self.utSortObjsListByAttr(comm_list, 'comm_date')[:res_number]
 
     #add main topics
