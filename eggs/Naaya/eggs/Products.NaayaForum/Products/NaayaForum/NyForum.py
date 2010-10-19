@@ -327,14 +327,18 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
         else:
             return res[0]
 
-    security.declareProtected(view, 'updateTopicHits')
-    def updateTopicHits(self, topic, how_many=1):
-        """ Update hits for topic
-        """
+    security.declarePrivate('setTopicHits')
+    def setTopicHits(self, topic, how_many=1):
         hits = self.getTopicHits(topic) + how_many
         stats_container = self._getStatisticsContainer()
         stats_container.cursor().execute("UPDATE HITS set hits=? where topic=?",
                                     (hits, topic))
+
+    security.declareProtected(view, 'updateTopicHits')
+    def updateTopicHits(self, topic):
+        """ Update hits for topic
+        """
+        self.setTopicHits(topic, 1)
 
     security.declareProtected(view, 'removeTopicHits')
     def removeTopicHits(self, topic):
