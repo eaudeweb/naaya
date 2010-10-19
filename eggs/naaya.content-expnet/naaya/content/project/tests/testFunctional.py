@@ -33,8 +33,8 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'title:utf8:ustring', 'description:utf8:ustring', 'lang',
-            'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring', 
-            'sub_topics:utf8:ustring:list','main_topics:utf8:ustring:list',
+            'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring',
+            'main_topics:utf8:ustring:list',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
