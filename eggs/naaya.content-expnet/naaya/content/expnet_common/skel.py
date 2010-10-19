@@ -139,7 +139,7 @@ def setup_expnet_skel(portal):
         log.info('Creating ExpNet catalog index "topics"')
         try:
             catalog_tool.addIndex('topics', 'KeywordIndex',
-                           extra={'indexed_attrs' : 'main_topics, sub_topics'})
+                           extra={'indexed_attrs' : 'main_topics'})
             catalog_tool.manage_reindexIndex(['topics'])
         except:
             print ( 'Failed to create topics index. Naaya Expert content '
