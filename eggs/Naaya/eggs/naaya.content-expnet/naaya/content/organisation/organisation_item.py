@@ -53,13 +53,14 @@ from Products.NaayaCore.managers.utils import make_id
 METATYPE_OBJECT = 'Naaya Organisation'
 
 DEFAULT_SCHEMA = {
-    'webpage':      dict(sortorder=120, widget_type='String', label='Webpage'),
-    'phone':        dict(sortorder=140, widget_type='String', label='Phone'),
-    'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
-    'email':        dict(sortorder=170, widget_type='String', label='Email address'),
-    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='expnet_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='expnet_topics'),
-    'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
+    'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
+    'phone':   dict(sortorder=140, widget_type='String', label='Phone'),
+    'fax':     dict(sortorder=160, widget_type='String', label='Fax'),
+    'email':   dict(sortorder=170, widget_type='String', label='Email address'),
+    'main_topics': dict(sortorder=200, widget_type='SelectMultiple',
+                        label='Main topics covered', list_id='expnet_topics'),
+    'contact_details': dict(sortorder=230, widget_type='TextArea',
+                            label='Contact details'),
 }
 
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
