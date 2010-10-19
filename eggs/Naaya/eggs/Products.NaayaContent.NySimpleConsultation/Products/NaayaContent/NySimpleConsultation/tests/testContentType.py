@@ -97,7 +97,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
                   'end_date':'12/12/1212',
                   'public_reg':'1',
                   'allow_file':'1',
-                  'contributor':None,
+                  'contributor':'contributor',
                   'releasedate':releasedate,
                   'lang':'en',
                   'REQUEST':None}
@@ -147,8 +147,8 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnlessEqual(fields['allow_file'],
                              cns.__dict__['allow_file'])
 
-        self.failUnlessEqual(bool(fields['contributor']),
-                             bool(cns.__dict__['contributor']))
+        self.failUnlessEqual(fields['contributor'],
+                             cns.__dict__['contributor'])
 
         self.failUnlessAlmostEqual(fields['releasedate'],
                              cns.__dict__['releasedate'])
@@ -202,8 +202,8 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnlessEqual(fields['allow_file'],
                              cns.__dict__['allow_file'])
 
-        self.failUnlessEqual(bool(fields['contributor']),
-                             bool(cns.__dict__['contributor']))
+        self.failUnlessEqual(fields['contributor'],
+                             cns.__dict__['contributor'])
 
         self.failUnlessAlmostEqual(fields['releasedate'],
                              cns.__dict__['releasedate'])
