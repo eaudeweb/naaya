@@ -35,6 +35,8 @@ from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent,\
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils import is_valid_email
 
+from recover_password import RecoverPassword
+
 def manage_addAuthenticationTool(self, REQUEST=None):
     """ """
     ob = AuthenticationTool(ID_AUTHENTICATIONTOOL, TITLE_AUTHENTICATIONTOOL)
@@ -1269,5 +1271,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     manage_source_html = PageTemplateFile('zpt/authentication_source', globals())
 
     manage_send_emails_log_html = PageTemplateFile('zpt/authentication_send_emails_log', globals())
+
+    recover_password = RecoverPassword('recover_password')
 
 InitializeClass(AuthenticationTool)
