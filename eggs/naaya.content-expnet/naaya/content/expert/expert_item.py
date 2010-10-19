@@ -67,17 +67,25 @@ PREFIX_OBJECT = 'expert'
 ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
-    'personal_title':  dict(sortorder=100, widget_type='String', label='Personal title', localized=True),
-    'name':     dict(sortorder=110, widget_type='String', label='Name', required=True),
-    'surname':  dict(sortorder=120, widget_type='String', label='Surname', required=True),
-    'email':    dict(sortorder=150, widget_type='String', label='Email address'),
-    'phone':    dict(sortorder=170, widget_type='String', label='Phone'),
-    'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
-    'webpage':  dict(sortorder=190, widget_type='String', label='Webpage'),
-    'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
-    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main areas of expertise', list_id='expnet_topics'),
-    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Areas of expertise', list_id='expnet_topics'),
-    'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)'),
+    'personal_title':  dict(sortorder=100, widget_type='String',
+                            label='Personal title', localized=True),
+    'name':    dict(sortorder=110, widget_type='String',
+                    label='Name', required=True),
+    'surname': dict(sortorder=120, widget_type='String', label='Surname',
+                    required=True),
+    'email':   dict(sortorder=150, widget_type='String', label='Email address'),
+    'phone':   dict(sortorder=170, widget_type='String', label='Phone'),
+    'mobile':  dict(sortorder=180, widget_type='String', label='Mobile phone'),
+    'webpage': dict(sortorder=190, widget_type='String', label='Webpage'),
+    'instant_messaging': dict(sortorder=200, widget_type='String',
+                              label='Instant messaging'),
+    'ref_lang': dict(sortorder=210, widget_type='String',
+                     label='Working language(s)'),
+    'main_topics': dict(sortorder=300, widget_type='SelectMultiple',
+                        label='Main areas of expertise',
+                        list_id='expnet_topics'),
+    'details': dict(sortorder=310, widget_type='TextArea', label='Details',
+                    localized=True, tinymce=True),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['title'].update(visible=False, required=False)
