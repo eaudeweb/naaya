@@ -55,8 +55,8 @@ def addComment(self, contributor, message,
     ob = TalkBackConsultationComment(id, contributor, message,
                                      file, reply_to, approved)
     self._setObject(id, ob)
-
     ob = self._getOb(id)
+    ob._save_contributor_name()
     ob.handleUpload(file)
 
     return id
@@ -75,6 +75,7 @@ class TalkBackConsultationComment(NyFSFile):
 
     reply_to = None
     approved = True
+    contributor_name = None
 
     def __init__(self, id, contributor, message, file, reply_to, approved):
         self.contributor = contributor
@@ -84,16 +85,22 @@ class TalkBackConsultationComment(NyFSFile):
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, '', file)
 
+    def _save_contributor_name(self):
+        self.contributor_name = self.get_contributor_name()
+
     def get_contributor_name(self):
+        if self.contributor_name is not None:
+            return self.contributor_name
+
         auth_tool = self.getAuthenticationTool()
         contributor = self.contributor
 
-        if self.contributor.startswith('invite:'):
+        if contributor.startswith('invite:'):
             invite = self.invitations.get_invitation(contributor[7:])
             inviter_name = auth_tool.name_from_userid(invite.inviter_userid)
             return "%s (invited by %s)" % (invite.name, inviter_name)
 
-        elif self.contributor.startswith('anonymous:'):
+        elif contributor.startswith('anonymous:'):
             return "%s (not authenticated)" % contributor[10:]
 
         else:
