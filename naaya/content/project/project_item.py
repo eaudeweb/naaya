@@ -52,8 +52,10 @@ from Products.NaayaCore.managers.utils import make_id
 METATYPE_OBJECT = 'Naaya Project'
 
 DEFAULT_SCHEMA = {
-    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='expnet_topics'),
-    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Topics covered', list_id='expnet_topics'),
+    'main_topics': dict(sortorder=200, widget_type='SelectMultiple',
+                        label='Main topics covered', list_id='expnet_topics'),
+    'details':     dict(sortorder=210, widget_type='TextArea', label='Details',
+                        localized=True, tinymce=True),
 }
 
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
