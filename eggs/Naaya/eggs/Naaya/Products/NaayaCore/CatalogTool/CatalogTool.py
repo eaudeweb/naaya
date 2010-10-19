@@ -48,7 +48,7 @@ except ImportError:
 
 from interfaces import INyCatalogAware
 from naaya.core.interfaces import INyObjectContainer
-from Products.NaayaBase.interfaces import INyContainer
+from Products.NaayaBase.interfaces import INyContainer, INyCommentable
 
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
@@ -306,5 +306,9 @@ def walk_folder(folder):
             yield ob
 
         if INyObjectContainer.providedBy(ob) or INyContainer.providedBy(ob):
-            for ob in walk_folder(ob):
-                yield ob
+            for sub_ob in walk_folder(ob):
+                yield sub_ob
+
+        if INyCommentable.providedBy(ob):
+            for comment_ob in ob.get_comments_list():
+                yield comment_ob
