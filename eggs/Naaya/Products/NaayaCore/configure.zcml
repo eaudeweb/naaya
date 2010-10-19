@@ -14,6 +14,10 @@
   <adapter factory="Products.NaayaCore.managers.zip_import_export.NewsZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.StoryZipAdapter" />
 
+  <subscriber for="Products.Naaya.interfaces.INySite
+                   Products.Naaya.interfaces.IHeartbeat"
+              handler=".AuthenticationTool.recover_password.cleanup_expired_tokens" />
+
   <configure zcml:condition="installed Products.naayaUpdater">
     <utility name="remove_permission_groups.update"
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
