@@ -1,9 +1,17 @@
-<configure
-  xmlns:naaya="http://namespaces.zope.org/naaya"
-  i18n_domain="naaya.content">
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           xmlns:naaya="http://namespaces.zope.org/naaya"
+           i18n_domain="naaya.content">
 
   <naaya:content factory=".tbconsultation_item.get_config" />
 
   <naaya:call factory=".tbconsultation_item.register_permissions" />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility name="userinfo_on_talkback_comments.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.SetUserInfo"
+             permission="zope2.ViewManagementScreens" />
+  </configure>
 
 </configure>
