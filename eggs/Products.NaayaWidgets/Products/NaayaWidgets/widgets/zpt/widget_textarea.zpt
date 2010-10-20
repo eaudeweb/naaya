@@ -46,12 +46,12 @@
 <!-- Visible rows -->
 	<div class="field">
 		<label for="rows" i18n:translate="">Rows</label>
-		<input type="text" size="40" name="width:int" id="width" tal:attributes="value rows"/>
+		<input type="text" size="40" name="rows:int" id="rows" tal:attributes="value rows"/>
 	</div>
 <!-- Visible columns -->
 	<div class="field">
 		<label for="columns" i18n:translate="">Columns</label>
-		<input type="text" size="40" name="size_max:int" id="size_max" tal:attributes="value columns"/>
+		<input type="text" size="40" name="columns:int" id="columns" tal:attributes="value columns"/>
 	</div>
 </metal:block>
 </metal:block>
