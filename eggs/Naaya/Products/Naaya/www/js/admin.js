@@ -43,13 +43,9 @@ $(document).ready(function(){
             self.autocomplete('search', '   ');
         });
     });
-    ldap_onclick_second_tabs();
     ldap_onclick_sort_links();
     ldap_onclick_group_links();
-    ldap_user_roles_revoke_form();
-    ldap_group_roles_revoke_form();
     ldap_user_search_form();
-    ldap_group_roles_assign_form();
 });
 function toggleLoader(){
     $('.ajax-loader').toggle();
@@ -95,15 +91,11 @@ function select_second_tab(tabid) {
 function ldap_show_section(data) {
     var html = $('#middle_port', $(data)).html();
     $('#middle_port').html(html);
-
-    ldap_onclick_second_tabs();
 }
 
 function ldap_ajax_section_manage_all() {
     ldap_onclick_sort_links();
     ldap_onclick_group_links();
-    ldap_user_roles_revoke_form();
-    ldap_group_roles_revoke_form();
 }
 
 function ldap_ajax_section_assign_to_users() {
@@ -111,7 +103,6 @@ function ldap_ajax_section_assign_to_users() {
 }
 
 function ldap_ajax_section_assign_to_groups() {
-    ldap_group_roles_assign_form();
 }
 
 function ldap_refresh_section(tabid, url) {
@@ -139,13 +130,6 @@ function ldap_refresh_section(tabid, url) {
             $('#section_wating_response').hide();
             $('#section_error_response').show();
         }
-    });
-}
-
-function ldap_onclick_second_tabs() {
-    $('.second_tab').click(function() {
-        ldap_refresh_section($(this).attr('id'), $(this).attr('href'));
-        return false;
     });
 }
 
@@ -182,49 +166,9 @@ function ldap_refresh_users_fieldset(url) {
     });
 }
 
-function ldap_user_roles_revoke_form() {
-    $('#users_table').ajaxForm({
-    beforeSubmit: function() {
-        $('#users_roles_waiting_response').show();
-        $('#users_roles_error_response').hide();
-    },
-    success: function(data) {
-            ldap_show_section(data);
-            ldap_ajax_section_manage_all();
-
-            $('#users_roles_waiting_response').hide();
-    },
-    error: function() {
-        $('#users_roles_waiting_response').hide();
-        $('#users_roles_error_response').show();
-    }
-    });
-}
-
-function ldap_group_roles_revoke_form() {
-    $('#groups_table').ajaxForm({
-    beforeSubmit: function() {
-        $('#groups_roles_waiting_response').show();
-        $('#groups_roles_error_response').hide();
-    },
-    success: function(data) {
-            ldap_show_section(data);
-            ldap_ajax_section_manage_all();
-
-            $('#groups_roles_waiting_response').hide();
-    },
-    error: function() {
-        $('#groups_roles_waiting_response').hide();
-        $('#groups_roles_error_response').show();
-    }
-    });
-}
-
 function ldap_show_user_search_results(data) {
     var html = $('#search_results_parent', $(data)).html();
     $('#search_results_parent').html(html);
-
-    ldap_user_roles_assign_form();
 }
 
 function ldap_user_search_form() {
@@ -246,75 +190,6 @@ function ldap_user_search_form() {
     }
     });
 }
-
-function ldap_user_roles_assign_form() {
-    $('#search_results_form').ajaxForm({
-    beforeSubmit: function() {
-        var firstuser = $('input[name="name:list"]:checked').val();
-        if (!firstuser) {
-            $('#portal_users_empty').show();
-        } else {
-            $('#portal_users_empty').hide();
-        }
-        var roles = $('#portal_roles').val();
-        if (!roles) {
-            $('#portal_roles_empty').show();
-        } else {
-            $('#portal_roles_empty').hide();
-        }
-        if (!firstuser || !roles) {
-            return false;
-        }
-        $('#assign_users_waiting_response').show();
-        $('#assign_users_error_response').hide();
-    },
-    success: function(data) {
-        ldap_show_section(data);
-        ldap_ajax_section_assign_to_users();
-
-        $('#assign_users_waiting_response').hide();
-    },
-    error: function() {
-        $('#assign_users_waiting_response').hide();
-        $('#assign_users_error_response').show();
-    }
-    });
-}
-
-function ldap_group_roles_assign_form() {
-    $('#group_roles_form').ajaxForm({
-    beforeSubmit: function() {
-        var group = $('#ldap_group').val();
-        var roles = $('#portal_roles').val();
-        if (!group) {
-            $('#ldap_group_empty').show();
-        } else {
-            $('#ldap_group_empty').hide();
-        }
-        if (!roles) {
-            $('#portal_roles_empty').show();
-        } else {
-            $('#portal_roles_empty').hide();
-        }
-        if (!group || !roles) {
-            return false;
-        }
-        $('#assign_groups_waiting_response').show();
-        $('#assign_groups_error_response').hide();
-    },
-    success: function(data) {
-        ldap_show_section(data);
-        ldap_ajax_section_assign_to_groups();
-
-        $('#assign_groups_waiting_response').hide();
-    },
-    error: function() {
-        $('#assign_groups_waiting_response').hide();
-        $('#assign_groups_error_response').show();
-    }
-    });
-}
-
 
 /**
  * End Functions for LDAPUserFolder
