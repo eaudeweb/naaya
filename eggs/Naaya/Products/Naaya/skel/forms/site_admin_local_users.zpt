@@ -17,7 +17,7 @@
             </tal:block>
         </select>
         <input type="submit" i18n:attributes="value" value="Go" />
-        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' style="display: none;"/><br>
+        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' style="display: none;"/><br />
     </div>
     </form>
 </div>
@@ -35,24 +35,25 @@
 </metal:block></metal:block>
 
 <metal:block fill-slot="second-tabs"><metal:block define-macro="second-tabs">
+    <tal:block define="path_info string:admin_local_users_html|path_info">
     <div class="second_tab_set">
         <ul>
             <li tal:define="url string:${site_url}/admin_local_users_html">
-                <a tal:attributes="href url; class python: 'admin_local_users_html' in request.PATH_INFO and 'current_sub' or ''"
+                <a tal:attributes="href url; class python: 'admin_local_users_html' in path_info and 'current_sub' or ''"
                    i18n:translate="">List local users</a>
             </li>
             <li tal:define="url string:${site_url}/admin_assignroles_html">
-                <a tal:attributes="href url; class python: 'admin_assignroles_html' in request.PATH_INFO and 'current_sub' or ''"
+                <a tal:attributes="href url; class python: 'admin_assignroles_html' in path_info and 'current_sub' or ''"
                    i18n:translate="">Assign roles to users</a>
             </li>
         </ul>
     </div>
     <div class="clear">&nbsp;</div>
+    </tal:block>
 </metal:block></metal:block>
-
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, role=filter_role);
-    users python: all_users_objects[page:(page + per_page)];">
+    users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
 <p i18n:translate="" class="cleaner">
     This page lists the users defined in this portal along with their credentials.
     Click on a username to modify the corresponding information.
@@ -153,12 +154,15 @@
 </metal:block>
 </div>
 </metal:block>
-<strong i18n:translate="">Notes:</strong>
-<p>
-    <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
-    <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
-</p>
+<div class="notes">
+    <strong i18n:translate="">Notes:</strong>
+    <p>
+        <span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
+        <tal:block condition="python: len(here.getAuthenticationTool().getSources())">
+            <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
+        </tal:block>
+    </p>
+</div>
 </form>
 </metal:block></metal:block>
-
 </metal:block>
