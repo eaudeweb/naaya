@@ -240,4 +240,9 @@
       component=".update_portal_profiles.UpdatePortalProfiles"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+	  name="calendar.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_calendar.UpdateCalendar"
+	  permission="zope2.ViewManagementScreens" />
 </configure>
