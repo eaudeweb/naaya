@@ -15,7 +15,14 @@ from Products.Naaya import NyFolder
 from Products.Naaya.NyFolder import addNyFolder
 from testNyFolder import FolderListingInfo
 
+
+
 class TestNySite(NaayaTestCase):
+
+    def _logged_mails(self):
+        for entry_type, entry_data in self.mail_log:
+            if entry_type == 'sendmail':
+                yield entry_data
 
     def afterSetUp(self):
         pass
@@ -52,6 +59,22 @@ class TestNySite(NaayaTestCase):
         
         self.assertNotEqual(aDate, now, "The two dates were equal!")
 
+    def test_notify_on_errors(self):
+        self.portal.notify_on_errors = True
+        self.portal.error_log.setProperties(keep_entries=20, ignored_exceptions=('Unauthorized',))
+        request = self.fake_request
+        request['URL'] = 'http://localhost:8080/portal/test'
+
+        # The Unauthorized error is listed in error_log.
+        self.portal.processNotifyOnErrors(error_type='Unauthorized', error_value='You are not authorized to access this resource', REQUEST=request)
+        sent_mails = list(self._logged_mails())
+        self.assertEquals(len(sent_mails), 0)
+
+        # The NotFound error is not listed in error_log. An email will be send.
+        self.portal.processNotifyOnErrors(error_type='NotFound', error_value='Page is not found', REQUEST=request)
+        sent_mails = list(self._logged_mails())
+        self.assertEquals(len(sent_mails), 1)
+        
 class TestNySiteListing(NaayaFunctionalTestCase):
     """ """
     def afterSetUp(self):
