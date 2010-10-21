@@ -1660,20 +1660,20 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
-        if self.notify_on_errors:
-            error_value = str(error_value)
-            error_type = str(error_type)
-            error_url = REQUEST.get('URL', '')
-            error_ip = self.utGetRefererIp(REQUEST)
-            error_user = REQUEST.AUTHENTICATED_USER.getUserName()
-            error_time = self.utGetTodayDate()
+        ignored_exceptions = self.error_log.getProperties()['ignored_exceptions']
+        if error_type not in ignored_exceptions and self.notify_on_errors:
             if self.portal_url != '':
                 domain_name = self.portal_url.replace('http://', '').replace('https://','')
                 mail_from = 'error@%s' % domain_name
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
-            self.notifyOnErrorsEmail(self.administrator_email, mail_from,
-                                     error_url, error_ip, error_type,
-                                     error_value, error_user, error_time)
+            self.notifyOnErrorsEmail(p_to = self.administrator_email,
+                                    p_from = mail_from,
+                                    p_error_url = REQUEST.get('URL', ''), 
+                                    p_error_ip = self.utGetRefererIp(REQUEST), 
+                                    p_error_type = str(error_type),
+                                    p_error_value = str(error_value),
+                                    p_error_user = REQUEST.AUTHENTICATED_USER.getUserName(),
+                                    p_error_time = self.utGetTodayDate())
 
     #external search
     security.declarePublic('external_search_capabilities')
