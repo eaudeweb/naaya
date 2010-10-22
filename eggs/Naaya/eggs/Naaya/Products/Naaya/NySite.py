@@ -2243,7 +2243,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST:
             if err != '':
                 self.setSessionErrorsTrans(err)
-                return REQUEST.RESPONSE.redirect('%s/admin_addrole_html' %
+                return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
             if success:
                 self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -3863,6 +3863,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     common_css = ImageFile('www/common.css', globals())
     print_css = ImageFile('www/print.css', globals())
     style_css = ImageFile('www/style.css', globals())
+    reset_css = ImageFile('www/reset.css', globals())
 
     def additional_style_css(self, REQUEST):
         """ """
