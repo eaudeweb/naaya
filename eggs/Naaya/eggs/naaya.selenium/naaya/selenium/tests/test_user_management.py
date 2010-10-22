@@ -134,19 +134,15 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.open("/portal/admin_local_users_html", True)
         self.selenium.type('id=autocomplete-query', ' ')
         self.selenium.type_keys('id=autocomplete-query', 'contri')
-        sleep(1) #Wait for data to load
+        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
         #The datatable should have only user and header rows
         check_result(u'contributor')
+
         self.selenium.type('id=autocomplete-query', '')
         self.selenium.type_keys('id=autocomplete-query', ' ')
-        sleep(1)
+        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
         assert int(self.selenium.\
             get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) > 2
-
-        self.selenium.type('id=autocomplete-query', 'contrib')
-        self.selenium.click('//input[@value="Go"]')
-        self.selenium.wait_for_page_to_load("3000")
-        check_result(u'contributor')
 
         self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.click('//input[@value="Go"]')
@@ -157,9 +153,8 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.select("id=filter-roles", 'Contributor')
         self.selenium.click('//input[@value="Go"]')
-        self.selenium.wait_for_page_to_load("30000")
-        sleep(1)
-        check_result(u'user3')
+        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        check_result(u'contributor')
 
     def test_add_role(self):
         self.selenium.open("/portal/admin_addrole_html", True)
@@ -173,14 +168,14 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
     def test_edit_role(self):
         self.selenium.open("/portal/admin_editrole_html?role=Administrator",
                            True)
-        self.selenium.click('id=inperm-6')
-        self.selenium.click('id=inperm-7')
+        self.selenium.click('id=inperm-1')
+        self.selenium.click('id=inperm-2')
         self.selenium.click('//form/input[@type="submit"]')
         self.selenium.wait_for_page_to_load("3000")
         self.selenium.open("/portal/admin_editrole_html?role=Administrator",
                            True)
-        assert self.selenium.get_value('id=inperm-6') == u'off'
-        assert self.selenium.get_value('id=inperm-7') == u'off'
+        assert self.selenium.get_value('id=inperm-1') == u'off'
+        assert self.selenium.get_value('id=inperm-2') == u'off'
 
     def test_assign_role(self):
         "Assign a role"

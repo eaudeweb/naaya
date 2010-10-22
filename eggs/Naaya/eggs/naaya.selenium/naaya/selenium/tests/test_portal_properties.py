@@ -1,13 +1,12 @@
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
-
 class NaayaPortalPropertiesTest(SeleniumTestCase):
     """This test verifies the next:
     - Portal Properites -- Metadata
     - Portal Properites -- Email Settings
     - Portal Properites -- Other Properties
     - notifications
-    
+
     """
 
     def selenium_initialize(self):

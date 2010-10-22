@@ -3,6 +3,7 @@ import time
 import os
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
+
 class NaayaContentTypesTestCase(SeleniumTestCase):
     """ All tests in this TestCase follow a CRUD pattern"""
     def afterSetUp(self):
@@ -158,6 +159,7 @@ class NaayaContentTypesTestCase(SeleniumTestCase):
         assert not self.selenium.is_text_present("Changed title")
 
     def test_html_document(self):
+        """ Some kind of checking for tinymce is needed """
         #Add
         self.selenium.open('/portal/info/', True)
         self.selenium.wait_for_page_to_load('3000')
@@ -170,10 +172,7 @@ class NaayaContentTypesTestCase(SeleniumTestCase):
         self.selenium.type('title', u'Test Naaya HTML Document')
         self.selenium.type('coverage', u'Country')
         self.selenium.type('keywords', u'short, story, test story')
-        self.selenium.type('sortorder', u'125')
-        self.selenium.type('body', u'HTML Body')
         self.selenium.click('discussion')
-        time.sleep(3) #WYSIWYG is not loading in time so wait until it loads
         self.selenium.click("//input[@value='Submit']")
         self.selenium.wait_for_page_to_load('3000')
         #Requires approval
@@ -192,7 +191,6 @@ class NaayaContentTypesTestCase(SeleniumTestCase):
         self.selenium.open("/portal/info/test-naaya-html-document", True)
         self.selenium.wait_for_page_to_load('3000')
         assert self.selenium.is_text_present("Changed title")
-        assert self.selenium.is_text_present("HTML Body")
 
         #Login as admin and delete
         self.logout_user()
