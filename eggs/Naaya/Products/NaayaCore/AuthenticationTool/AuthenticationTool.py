@@ -356,26 +356,23 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if REQUEST is not None: REQUEST.RESPONSE.redirect('manage_users_html')
 
     security.declareProtected(manage_users, 'manage_addUsersRoles')
-    def manage_addUsersRoles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
+    def manage_addUsersRoles(self, name='', roles=[], location='',
+                             REQUEST=None):
         """ """
-        if not name:
-            raise ValidationError, 'An username must be specified'
-        if not roles:
-            raise ValidationError, 'No roles were specified'
-        if loc == 'allsite':
-            location = ''
-            location_obj = self.getSite()
-        elif loc == 'other':
-            location = location
-            location_obj = self.unrestrictedTraverse(location, None)
-            if location_obj is None:
-                raise ValidationError, 'Invalid location'
-        #convert data
         roles = self.utConvertToList(roles)
-        if location == '':
+
+        if not name:
+            raise ValidationError('An username must be specified')
+        if not roles:
+            raise ValidationError('No roles were specified')
+        if location == '' or location == '/':
             self._doChangeUserRoles(name, roles)
         else:
+            location_obj = self.unrestrictedTraverse(location, None)
+            if location_obj is None:
+                raise ValidationError('Invalid location')
             location_obj.manage_setLocalRoles(name, roles)
+
         if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
 
     security.declareProtected(manage_users, 'manage_revokeUserRole')

@@ -264,10 +264,10 @@ class plugLDAPUserFolder(PlugBase):
         return isinstance(l, list)
 
     security.declareProtected(manage_users, 'addUserRoles')
-    def addUserRoles(self, name=[], roles=[], loc='allsite', location='',
+    def addUserRoles(self, name=[], roles=[], location='',
             user_location='', send_mail='', REQUEST=None):
         """ """
-        super(plugLDAPUserFolder, self).addUserRoles(name, roles, loc, location,
+        super(plugLDAPUserFolder, self).addUserRoles(name, roles, location,
                 user_location, send_mail, REQUEST)
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
@@ -321,7 +321,7 @@ class plugLDAPUserFolder(PlugBase):
         return groups_roles_map
 
     security.declareProtected(manage_users, 'map_group_to_role')
-    def map_group_to_role(self, group, roles=[], loc='', location='',
+    def map_group_to_role(self, group, roles=[], location='',
             send_mail='', REQUEST=None):
         """ """
         def on_error(error_str):
@@ -336,9 +336,8 @@ class plugLDAPUserFolder(PlugBase):
         if roles == []:
             return on_error('No roles selected')
 
-        if loc == 'allsite':
+        if location == '/':
             location = ''
-
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:

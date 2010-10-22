@@ -22,7 +22,6 @@
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="messages_box" title="Box for info or error messages"/>
-		<form id="site_admin_addrole" title="Portal administration - add role"/>
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
 		<form id="site_admin_all_users" title="Portal administration - all users"/>
 		<form id="site_admin_assignroles" title="Portal administration - assign roles"/>

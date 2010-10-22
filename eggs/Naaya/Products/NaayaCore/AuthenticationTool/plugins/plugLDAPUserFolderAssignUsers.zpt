@@ -1,3 +1,6 @@
+<tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+</tal:block>
 <div id="section_parent" tal:define="
     user_folder python:here.getUserFolder();
     req_role python:request.get('req_role', '');
@@ -170,10 +173,11 @@
         <tr>
             <td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
             <td>
-            <input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation('user-roles');" /> Entire portal<br />
-            <input type=radio name="loc" value="other" tal:attributes="checked req_location" /> Pick other...<br />
-            <input type=text name="location" size="50" onclick="pickLocation();" value="" tal:attributes="value req_location" />
-            <input type="button" value="Pick" tal:attributes="onclick string:javascript:onclick_pick_location('user-roles');" />
+                <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
+                <em style="font-size: .8em;">(choose a location from the tree below)</em>
+
+                <div id="sitemap_tree" class="sitemap_tree"></div>
+                <div class="cleaner">&nbsp;</div>
             </td>
         </tr>
         <tr>

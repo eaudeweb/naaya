@@ -51,7 +51,7 @@ Optional:
 		<span tal:replace="paginator/hits" />
 		&nbsp;/&nbsp;&nbsp;
 	</div>
-	
+
 	<div class="paginator-body">
 		<span class="paginator-previous" tal:condition="python:paginator.has_previous_page(curr_page)">
 			<a tal:define="page python:curr_page-1" tal:attributes="href string:${query_string}${page}" title="Previous" i18n:attributes="title" i18n:translate="">&laquo;</a>
@@ -93,9 +93,10 @@ You can find the configuration in jquery.tree.init.js
 <!-- Initialize tree -->
 <metal:block define-slot="treeinit">
 	<script type="text/javascript"
-	tal:define="tree_initial_node tree_initial_node|string:"
+	tal:define="tree_initial_node tree_initial_node|string:;
+				tree_get_url tree_get_url|string:${here/absolute_url}/getNavigationSiteMap/"
 	tal:content="string:
-	var TREE_GET_URL = '${here/absolute_url}/getNavigationSiteMap/';
+	var TREE_GET_URL = '${tree_get_url}';
 	var TREE_INITIAL_NODE = '${tree_initial_node}';
 	var TREE_CONTAINER = '.sitemap_tree'
 "></script>

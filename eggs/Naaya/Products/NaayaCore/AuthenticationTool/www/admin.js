@@ -187,6 +187,7 @@ function ldap_user_search_form() {
 
         $('#waiting_for_search_results').hide();
         $('#search_results_parent').show();
+		load_js_tree();
     },
     error: function() {
         $('#error_on_search_results').show();

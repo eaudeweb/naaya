@@ -1270,7 +1270,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     # Generating AjaxTree sitemap
     security.declareProtected(view, 'getNavigationSiteMap')
-    def getNavigationSiteMap(self, REQUEST=None, all=False, **kwargs):
+    def getNavigationSiteMap(self, REQUEST=None, all=False, only_folders=False,
+                             **kwargs):
         """
         Return JSON tree of the sitemap
         Used with javascript tree libraries
@@ -1283,6 +1284,9 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             """ Create a dict with node properties and children """
             res = []
             for item in items:
+                if (only_folders is not False and
+                    item.meta_type != METATYPE_FOLDER):
+                    continue
                 children_items = []
                 if level != stop_level:
                     node = path_in_site(item)
@@ -1668,8 +1672,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
             self.notifyOnErrorsEmail(p_to = self.administrator_email,
                                     p_from = mail_from,
-                                    p_error_url = REQUEST.get('URL', ''), 
-                                    p_error_ip = self.utGetRefererIp(REQUEST), 
+                                    p_error_url = REQUEST.get('URL', ''),
+                                    p_error_ip = self.utGetRefererIp(REQUEST),
                                     p_error_type = str(error_type),
                                     p_error_value = str(error_value),
                                     p_error_user = REQUEST.AUTHENTICATED_USER.getUserName(),
@@ -2318,13 +2322,14 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                                       self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
-    def admin_addroles(self, names=[], roles=[], loc='allsite', location='',
-                       send_mail='', REQUEST=None):
+    def admin_addroles(self, names=[], roles=[], location='', send_mail='',
+                       REQUEST=None):
         """
         XXX: Should be assign_roles
 
-        Assign the given list of roles to the given list of users at the
-        specified location
+        Assign a list of roles to a list of users at the specified location
+        optionaly sending a noitification e-mail
+
         """
         err = ''
         success = False
@@ -2335,7 +2340,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             try:
                 for name in names:
                     self.getAuthenticationTool().manage_addUsersRoles(name,
-                                                        roles, loc, location)
+                                                            roles, location)
             except ValidationError, error:
                 err = error
             else:
