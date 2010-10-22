@@ -8,6 +8,8 @@ Changelog
  * Fix: NotificationTool subscriptions - strip user_id spaces. The update
    script `Remove spaces from ...` will remove existing spaces.
  * Feature: user password reset with email verification
+ * Fix: templates customized in ``portal_forms`` now accept ``**kwargs``
+ * Refactoring for code that walks a `RefTree`
 
 2.10.9 (2010-10-06)
 -------------------
