@@ -76,6 +76,8 @@ from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
+from Products.NaayaCore.LayoutTool.DiskFile import manage_addDiskFile
+from Products.NaayaCore.LayoutTool.DiskTemplate import manage_addDiskTemplate
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
@@ -343,7 +345,14 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     self.createContentType(contenttype.id, contenttype.title, content)
             #forms are loaded from disk at runtime; they can be customized in portal_forms.
             #load skins
-            if skel_handler.root.layout is not None:
+            layout = skel_handler.root.layout
+            if layout is not None:
+                def layout_diskpath_prefix():
+                    assert (layout.diskpath_prefix is not None,
+                            "Please set a `diskpath_prefix` attribute on "
+                            "the <layout> tag")
+                    return layout.diskpath_prefix
+
                 for skin in skel_handler.root.layout.skins:
                     if not layouttool_ob._getOb(skin.id, None):
                         layouttool_ob.manage_addSkin(id=skin.id, title=skin.title)
@@ -368,6 +377,21 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                         image_ob = images_folder._getOb(image.id)
                         image_ob.update_data(data=content)
                         image_ob._p_changed=1
+
+                    for diskfile in skin.diskfiles:
+                        manage_addDiskFile(skin_ob, pathspec='/'.join([
+                            layout_diskpath_prefix(),
+                            'layout',
+                            skin.id,
+                            diskfile.path ]), id=(diskfile.id or ''))
+
+                    for disktemplate in skin.disktemplates:
+                        manage_addDiskTemplate(skin_ob, pathspec='/'.join([
+                            layout_diskpath_prefix(),
+                            'layout',
+                            skin.id,
+                            disktemplate.path ]), id=(disktemplate.id or ''))
+
                     for scheme in skin.schemes:
                         if skin_ob._getOb(scheme.id, None):
                             skin_ob.manage_delObjects([scheme.id])
@@ -385,6 +409,23 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                             image_ob = scheme_ob._getOb(image.id)
                             image_ob.update_data(data=content)
                             image_ob._p_changed=1
+
+                        for diskfile in scheme.diskfiles:
+                            manage_addDiskFile(scheme_ob, pathspec='/'.join([
+                                layout_diskpath_prefix(),
+                                'layout',
+                                skin.id,
+                                scheme.id,
+                                diskfile.path ]), id=(diskfile.id or ''))
+
+                        for disktemplate in scheme.disktemplates:
+                            manage_addDiskTemplate(scheme_ob, pathspec='/'.join([
+                                layout_diskpath_prefix(),
+                                'layout',
+                                skin.id,
+                                scheme.id,
+                                disktemplate.path ]), id=(disktemplate.id or ''))
+
                 if skel_handler.root.layout.default_skin_id and skel_handler.root.layout.default_scheme_id:
                     layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
                 #load logos
