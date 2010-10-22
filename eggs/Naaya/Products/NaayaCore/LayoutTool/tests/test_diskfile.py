@@ -37,20 +37,8 @@ class DiskFileBrowserTest(NaayaFunctionalTestCase):
                            'Products.Naaya:skel/layout/logo.gif')
         transaction.commit()
 
-    def beforeTearDown(self):
-        skin = self.portal.portal_layout.getCurrentSkin()
-        skin.manage_delObjects(['test-logo.gif'])
-        transaction.commit()
-
     def test_get(self):
         self.browser.go('http://localhost/portal/'
                         'portal_layout/skin/test-logo.gif')
         self.assertEqual(self.browser.get_html(), logo_data, "bad content")
         self.assertEqual(self.browser_get_header('content-type'), 'image/gif')
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(DiskFileTest))
-    suite.addTest(makeSuite(DiskFileBrowserTest))
-    return suite

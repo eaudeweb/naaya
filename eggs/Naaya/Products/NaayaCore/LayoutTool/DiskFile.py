@@ -1,3 +1,8 @@
+"""
+DiskFile is a lightweight ZODB object that serves a static file from disk.
+From the outside it's like a read-only File object.
+"""
+
 import os
 from os import path
 import sys
@@ -76,13 +81,15 @@ class DiskFile(SimpleItem):
     icon = 'misc_/NaayaCore/DiskFile.gif'
 
     manage_options = ( (
-        {'label': 'Contents', 'action': 'manage_show'},
+        {'label': 'Contents', 'action': 'manage_main'},
         {'label': 'View', 'action': ''},
     ) + SimpleItem.manage_options)
 
     security = ClassSecurityInfo()
 
-    title = 'Disk file'
+    @property
+    def title(self):
+        return self._get_mime_type()
 
     def __init__(self, id, pathspec):
         self._setId(id)
@@ -104,13 +111,13 @@ class DiskFile(SimpleItem):
         RESPONSE.setHeader('content-type', self._get_mime_type())
         RESPONSE.write(self._get_data())
 
-    _manage_show = PageTemplateFile('zpt/manage_show_disk_file', globals())
-    security.declareProtected(view_management_screens, 'manage_show')
-    def manage_show(self, REQUEST):
+    _manage_main = PageTemplateFile('zpt/disk_file_manage', globals())
+    security.declareProtected(view_management_screens, 'manage_main')
+    def manage_main(self, REQUEST):
         """ """
         options = {
             'fs_path': resolve(self.pathspec),
             'file_data': self._get_data(),
             'mime_type': self._get_mime_type(),
         }
-        return self._manage_show(REQUEST, **options)
+        return self._manage_main(REQUEST, **options)
