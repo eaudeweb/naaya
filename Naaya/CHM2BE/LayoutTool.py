@@ -54,3 +54,6 @@ def get_current_skin(self):
 
 LayoutTool.get_skin_files_path = get_skin_files_path
 LayoutTool.get_current_skin = get_current_skin
+
+from Products.NaayaCore.LayoutTool.DiskFile import allow_path
+allow_path('Products.CHM2BE:skel')
