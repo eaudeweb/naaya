@@ -1,4 +1,15 @@
 /**
+ * Used for selenium testing in case of ajax
+ * Use it in the tests like this:
+ *  selenium.wait_for_condition('window.selenium_ready==true', 100)
+ */
+var selenium_ready;
+$.ajaxSetup({
+    beforeSend : function(xhr, opts){ selenium_ready = false; },
+    complete: function(XMLHttpRequest, textStatus){ selenium_ready = true; }
+});
+
+/**
  * Replaces all links with rel="external" to target="_blank"
  * This is done to ensure html strict validation
 */
