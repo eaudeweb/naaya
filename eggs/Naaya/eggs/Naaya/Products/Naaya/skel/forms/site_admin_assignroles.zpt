@@ -60,17 +60,16 @@ the specific location from the portal you want to grant this permissions.
     </tr>
 
     <tr>
-      <td valign="top" width="20%" class="form-label"><span tal:omit-tag="" i18n:translate="">
-      <label for="radio-location">
-      Location:(folder)
-      </label>
-      </span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span>
-      </td>
-      <td valign="top" width="*">
-     <input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();" /> <span i18n:translate="">Entire portal</span><br />
-     <input type=radio name="loc" value="other" /> <span i18n:translate="">Pick other...</span><br />
-     <input type=text name="location" size="40" onclick="pickLocation();" value="" />
-     <input type="button" value="Pick" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);" i18n:attributes="value"/>
+      <td valign="top" width="20%" class="form-label"><span tal:omit-tag="" i18n:translate="">Location:(folder)</span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span></td>
+      <td>
+        <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
+        <em style="font-size: .8em;">(choose a location from the tree below)</em>
+
+        <div id="sitemap_tree" class="sitemap_tree"></div>
+        <div class="cleaner"></div>
+        <tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+            <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+        </tal:block>
       </td>
     </tr>
 

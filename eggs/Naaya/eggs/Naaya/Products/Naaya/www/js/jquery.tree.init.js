@@ -1,4 +1,10 @@
 $(document).ready(function(){
+    load_js_tree();
+});
+/**
+ * Load JSTree
+*/
+function load_js_tree(){
     var initial_url = TREE_GET_URL;
     if(TREE_INITIAL_NODE) {
         initial_url += "?node=" + TREE_INITIAL_NODE;
@@ -21,7 +27,7 @@ $(document).ready(function(){
             onopen: function(NODE, TREE_OBJ){
                 if ($.inArray(NODE, TREE_OBJ.opened_nodes) == -1){//Reload
                     TREE_OBJ.opened_nodes.push(NODE);
-                    $.getJSON(TREE_GET_URL+'?node=' + $(NODE).attr('title'), function(data){
+                    $.getJSON(TREE_GET_URL, {'node': $(NODE).attr('title')}, function(data){
                         $.each($(NODE).children().children('li'), function(i, node){
                             TREE_OBJ.remove(node);
                         })
@@ -46,5 +52,5 @@ $(document).ready(function(){
                 draggable: false
             }
         }
-   })
-})
+   });
+}

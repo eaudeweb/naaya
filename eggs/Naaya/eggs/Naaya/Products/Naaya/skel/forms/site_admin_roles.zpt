@@ -14,14 +14,11 @@
 		<strong i18n:translate="">Notes:</strong>
 		<p>
 			<span i18n:translate="">&middot;&nbsp;Click edit icon (<img src="misc_/Naaya/edit" alt="icon" i18n:attributes="alt"  i18n:name="image" class="image-icon" title="Edit icon" />) to edit role`s permissions.</span><br />
-			<tal:block condition="python: len(here.getAuthenticationTool().getSources())">
-				<span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
-			</tal:block>
 		</p>
 	</div>
-	
+
 	<div class="cleaner">&nbsp;</div>
-	
+
 	<div class="roles-list">
 		<table class="datatable">
 			<caption i18n:translate="">Roles list</caption>
@@ -44,7 +41,7 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<div id="add-role-form">
 		<table class="datatable">
 			<caption i18n:translate="">Add new role</caption>

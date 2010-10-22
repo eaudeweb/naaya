@@ -40,16 +40,15 @@
         </div>
 
         <div class="field">
-        <input type="radio" name="loc" value="allsite" checked="checked"
-               onclick="emptyLocation('group-roles');"
-               i18n:translate=""/> Entire portal<br />
-        <input type=radio name="loc" value="other"
-               i18n:translate="" /> Pick other...<br />
-        <input type=text name="location" size="40" onclick="pickLocation();" value="" />
-        <input type="button" value="Pick" i18n:translate=""
-               tal:define="site here/getSite;
-                   acl_users site/getAuthenticationTool"
-               tal:attributes="onclick string:onclick_pick_location('group-roles');;" />
+            <label for="location" i18n:translate="">Location</label>
+            <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
+            <em style="font-size: .8em;">(choose a location from the tree below)</em>
+
+            <div id="sitemap_tree" class="sitemap_tree"></div>
+            <div class="cleaner"></div>
+            <tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+                <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+            </tal:block>
         </div>
 
         <div class="field">

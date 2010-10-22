@@ -91,7 +91,7 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name=[], roles=[], loc='allsite', location='', user_location='', send_mail='', REQUEST=None):
+    def addUserRoles(self, name=[], roles=[], location='', user_location='', send_mail='', REQUEST=None):
         """ """
         def on_error(error_str):
             if REQUEST is not None:
@@ -114,7 +114,8 @@ class PlugBase(SimpleItem):
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
         #process form values
-        if loc == 'allsite': location = site
+        if location == "/" or location == '':
+            location = site
         else: location = self.utGetObject(location)
         if location is None:
             return on_error('Invalid location path')
