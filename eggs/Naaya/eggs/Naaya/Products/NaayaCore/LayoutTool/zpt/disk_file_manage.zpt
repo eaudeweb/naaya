@@ -2,6 +2,9 @@
 <tal:block content="structure here/manage_tabs"/>
 
 <style>
+    p.infotext {
+        font-style: italic;
+    }
     dl.metadata {
         margin: 1em;
         overflow-y: auto;
@@ -22,11 +25,18 @@
     }
     pre.preview {
         background-color: #ddd;
+        overflow-x: auto;
     }
     img.preview {
         background: url("misc_/NaayaCore/checkered.png") repeat;
     }
 </style>
+
+<p class="infotext">
+    This object is a <tt>DiskFile</tt>: it displays read-only data from a
+    file on disk. To change its contents, change the file (see
+    "Filesystem path" below).
+</p>
 
 <dl class="metadata">
     <dt>Pathspec:</dt>
@@ -39,12 +49,15 @@
     <dd tal:content="options/mime_type" />
 </dl>
 
-<pre class="preview"
-     tal:condition="python: options['mime_type'].startswith('text/')"
-     tal:content="options/file_data" />
+<tal:block define="mime_type options/mime_type">
+    <pre class="preview"
+         tal:condition="python:( mime_type.startswith('text/')
+                                 or mime_type == 'application/javascript' )"
+         tal:content="options/file_data" />
 
-<img class="preview"
-     tal:condition="python: options['mime_type'].startswith('image/')"
-     tal:attributes="src here/absolute_url" />
+    <img class="preview"
+         tal:condition="python: options['mime_type'].startswith('image/')"
+         tal:attributes="src here/absolute_url" />
+</tal:block>
 
 <tal:block content="structure here/manage_page_footer"/>
