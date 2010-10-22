@@ -23,7 +23,7 @@ class NaayaChannelsTest(SeleniumTestCase):
     - Adding a local channel
     - Arranging the local channel's portlet on 'info' main section
     - the display of the channels portlet and the news added
-    
+
     """
     def selenium_initialize_local(self, news_data, news_data_2):
         """Initializing..."""
@@ -52,10 +52,10 @@ class NaayaChannelsTest(SeleniumTestCase):
 
         selen.type("title", local_channel_data['local_title'])
         selen.type("description", local_channel_data['local_description'])
-        selen.select("//select[@name='language']", 
+        selen.select("//select[@name='language']",
                     "label=%s" % local_channel_data['local_language'])
         selen.select("type", "label=%s" % local_channel_data['local_type'])
-        selen.add_selection("objmetatype", 
+        selen.add_selection("objmetatype",
                             "label=%s" % local_channel_data['local_meta'])
         selen.type("numberofitems", local_channel_data['local_no_items'])
         selen.click("//input[@value='Add']")
