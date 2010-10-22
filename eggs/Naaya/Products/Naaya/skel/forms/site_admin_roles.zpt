@@ -8,7 +8,6 @@
 <tal:block define="site_path python:here.getSitePath();
                         source_url string:${site_path}/admin_roles_html;
                         section python:request.get('section', 'list');">
-	<p i18n:translate="">Click on a role to edit its permissions:</p>
 	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
 	<table class="datatable">
 		<thead><th i18n:translate="">Role name</th><th></th></thead>

@@ -6,6 +6,7 @@ from StringIO import StringIO
 import csv
 import simplejson as json
 
+from App.ImageFile import ImageFile
 from DateTime import DateTime
 from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
@@ -125,6 +126,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     encrypt_passwords = False
     email_expression = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$'
     email_confirmation = False
+    admin_js = ImageFile('www/admin.js', globals())
 
     def __init__(self, id, title):
         self.id = id
