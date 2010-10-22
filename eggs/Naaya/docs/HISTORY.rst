@@ -10,6 +10,8 @@ Changelog
  * Feature: user password reset with email verification
  * Fix: templates customized in ``portal_forms`` now accept ``**kwargs``
  * Refactoring for code that walks a `RefTree`
+ * Improvements to DiskFile object; new DiskTemplate object; can be added
+   from ``skel.xml``.
 
 2.10.9 (2010-10-06)
 -------------------
