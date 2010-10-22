@@ -33,11 +33,23 @@ Optional:
 ">
 
 <div class="paginator" tal:condition="paginator/hits">
+		<div class="cleaner"></div>
+	
+	<div class="paginator-footer">
+		<span i18n:translate="">Showing page</span>
+		<label i18n:translate="" tal:content="label" tal:condition="label" />
+		<span tal:replace="python:curr_page+1" />
+		<span i18n:translate="" tal:omit-tag="">of</span>
+		<span tal:replace="paginator/pages" />
+	</div>
+		
 	<div class="paginator-head">
+		<span i18n:translate="">Showing</span>
 		<label i18n:translate="" tal:content="label" tal:condition="label" />
 		<span tal:replace="python:paginator.first_on_page(curr_page)" /> - <span tal:replace="python:paginator.last_on_page(curr_page)" />
 		<span i18n:translate="" tal:omit-tag="">of</span>
 		<span tal:replace="paginator/hits" />
+		&nbsp;/&nbsp;&nbsp;
 	</div>
 	
 	<div class="paginator-body">
@@ -49,11 +61,14 @@ Optional:
 			<a tal:attributes="href string:${query_string}${page}; title python:page+1"
 				tal:condition="python:page!=curr_page" tal:content="python:page+1" />
 		</span>
+		
 		<span class="paginator-next" tal:condition="python:paginator.has_next_page(curr_page)">
 			<a tal:define="page python:curr_page+1" tal:attributes="href string:${query_string}${page}" title="Next" i18n:attributes="title" i18n:translate="">&raquo;</a>
 		</span>
 	</div>
 </div>
+
+<div class="cleaner">&nbsp;</div>
 
 </metal:block>
 

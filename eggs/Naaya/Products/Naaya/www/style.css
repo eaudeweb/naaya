@@ -1,7 +1,9 @@
+
+
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 90%;
-	background: #fff;
+	background-color: #FFFFFF;
 	margin: 0; padding: 0;
 }
 
@@ -20,16 +22,17 @@ dt {
 	font-weight: bold;
 }
 input[type="button"], input[type="submit"], input[type="reset"], input[type="file"] {
-	background-color: #fff;
-	color: #000;
-	line-height: 2em;
-	border-left:1px solid #bbb;
-	border-top:1px solid #bbb;
-	border-bottom:1px solid #666;
-	border-right:1px solid #666;
+	background-color: #FFFFFF;
+	color: #000000;
+	border-left:1px solid #BBBBBB;
+	border-top:1px solid #BBBBBB;
+	border-bottom:1px solid #666666;
+	border-right:1px solid #666666;
 	padding:0.1em 0.4em;
 	margin: 0em 0.3em;
-	font-size: 90%;
+	font-size: 12px;
+	line-height: 12px;
+	vertical-align: 2px;
 }
 
 /* containers */
