@@ -1,4 +1,4 @@
-# encoding: UTF-8
+from nose.plugins.skip import SkipTest
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
 link_list_data = {
@@ -74,20 +74,22 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
-    ##TODO https://pivo.edw.ro/trac/ticket/14
-    #def test_utf8_link_list_title_and_id(self):
-    #    """testing a List of Links with cyrilic characters at ID and Title"""
-    #    self.selenium_initialize()
-    #    selen = self.selenium
-    #    link_list_data = {
-    #        'tid': u"стуўфх",
-    #        'title': u"стуўфх",
-    #    }
-    #    self.selenium_data_introduction(link_list_data)
-    #    extras_tabel = selen.get_table("//div[@id='center_content']"
-    #                                   "/form/table.3.1")
-    #    self.selenium_verify_output(extras_tabel, link_list_data)
-    #    self.selenium_verify_portlet_presence(extras_tabel)
+    def test_utf8_link_list_title_and_id(self):
+        """testing a List of Links with cyrilic characters at ID and Title"""
+
+        raise SkipTest("https://pivo.edw.ro/trac/ticket/14")
+
+        self.selenium_initialize()
+        selen = self.selenium
+        link_list_data = {
+            'tid': u"стуўфх",
+            'title': u"стуўфх",
+        }
+        self.selenium_data_introduction(link_list_data)
+        extras_tabel = selen.get_table("//div[@id='center_content']"
+                                       "/form/table.3.1")
+        self.selenium_verify_output(extras_tabel, link_list_data)
+        self.selenium_verify_portlet_presence(extras_tabel)
 
     def test_special_link_list_title(self):
         """testing a List of Links with usual ID and special characters as title
@@ -105,20 +107,22 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.selenium_verify_output(extras_tabel, link_list_data)
         self.selenium_verify_portlet_presence(extras_tabel)
 
-    #TODO https://pivo.edw.ro/trac/ticket/14"
-    #def test_special_link_list_title_and_id(self):
-    #    """testing a List of Links with special characters as title and ID"""
-    #    self.selenium_initialize()
-    #    selen = self.selenium
-    #    link_list_data = {
-    #        'tid': '!@#$%^&*()/\'',
-    #        'title': '!@#$%^&*()/\'',
-    #    }
-    #    self.selenium_data_introduction(link_list_data)
-    #    extras_tabel = selen.get_table("//div[@id='center_content']"
-    #                                   "form/table.3.1")
-    #    self.selenium_verify_output(extras_tabel, link_list_data)
-    #    self.selenium_verify_portlet_presence(extras_tabel)
+    def test_special_link_list_title_and_id(self):
+        """testing a List of Links with special characters as title and ID"""
+
+        raise SkipTest("https://pivo.edw.ro/trac/ticket/14")
+
+        self.selenium_initialize()
+        selen = self.selenium
+        link_list_data = {
+            'tid': '!@#$%^&*()/\'',
+            'title': '!@#$%^&*()/\'',
+        }
+        self.selenium_data_introduction(link_list_data)
+        extras_tabel = selen.get_table("//div[@id='center_content']"
+                                       "form/table.3.1")
+        self.selenium_verify_output(extras_tabel, link_list_data)
+        self.selenium_verify_portlet_presence(extras_tabel)
 
     def test_normal_char_link(self):
         self.selenium_initialize_link()
@@ -146,32 +150,33 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.logout_user()
         self.selenium_verify_list_display(link_list_data, link_data)
 
-    #TODO https://pivo.edw.ro/trac/ticket/45
-    #def test_empty_char_link(self):
-    #    self.selenium_initialize_link()
-    #    selen = self.selenium
-    #    selen.open('portal/admin_linkslists_html', True)
-    #    link_data = {
-    #        'title_link': '',
-    #        'description_link': '',
-    #        'url_link': '',
-    #        'permission_index_link': 0,  #may be from 0 to 11
-    #        'order_link': 0,
-    #    }
-    #    self.selenium_add_link(link_data, link_list_data)
-    #    portlet_data = {
-    #        'position_label': 'Left',  #can be left,center,right
-    #        'display_url': 'info',
-    #    }
-    #    link_data['display_url'] = portlet_data['display_url']
-    #    self.selenium_arrange_link_list(portlet_data, link_list_data)
-    #    self.logout_user()
-    #    self.selenium_verify_list_display(link_list_data, link_data)
-    #    self.login_user('admin', '')
-    #    self.permission_index_link = 7
-    #    self.selenium_update_link(link_data, link_list_data)
-    #    self.logout_user()
-    #    self.selenium_verify_list_display(link_list_data, link_data)
+    def test_empty_char_link(self):
+        raise SkipTest("https://pivo.edw.ro/trac/ticket/45")
+
+        self.selenium_initialize_link()
+        selen = self.selenium
+        selen.open('portal/admin_linkslists_html', True)
+        link_data = {
+            'title_link': '',
+            'description_link': '',
+            'url_link': '',
+            'permission_index_link': 0,  #may be from 0 to 11
+            'order_link': 0,
+        }
+        self.selenium_add_link(link_data, link_list_data)
+        portlet_data = {
+            'position_label': 'Left',  #can be left,center,right
+            'display_url': 'info',
+        }
+        link_data['display_url'] = portlet_data['display_url']
+        self.selenium_arrange_link_list(portlet_data, link_list_data)
+        self.logout_user()
+        self.selenium_verify_list_display(link_list_data, link_data)
+        self.login_user('admin', '')
+        self.permission_index_link = 7
+        self.selenium_update_link(link_data, link_list_data)
+        self.logout_user()
+        self.selenium_verify_list_display(link_list_data, link_data)
 
     def test_special_char_link(self):
         self.selenium_initialize_link()
@@ -225,7 +230,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         self.logout_user()
         self.selenium_verify_list_display(link_list_data, link_data)
 
-    def test_utf8_char_link(self):
+    def test_aaaautf8_char_link(self):
         self.selenium_initialize_link()
         selen = self.selenium
         selen.open('portal/admin_linkslists_html', True)
