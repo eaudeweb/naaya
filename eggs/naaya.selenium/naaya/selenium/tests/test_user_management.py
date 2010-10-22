@@ -115,7 +115,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
         username = self.selenium.get_text(
             "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
-        self.selenium.click("//input[@value='Delete user(s)']")
+        self.selenium.click("//input[@value='Delete selected user(s)']")
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.is_text_present(username) is False
 
@@ -157,10 +157,10 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         check_result(u'contributor')
 
     def test_add_role(self):
-        self.selenium.open("/portal/admin_addrole_html", True)
+        self.selenium.open("/portal/admin_roles_html", True)
         self.selenium.type("//input[@id='input-role']", "SOMErOLE")
-        self.selenium.click("//input[@value='Add role']")
-        self.selenium.open("/portal/admin_roles_html?section=roles", True)
+        self.selenium.click("//input[@value='Add new role']")
+        self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.is_text_present('SOMErOLE')
         self.selenium.open("/portal/admin_editrole_html?role=SOMErOLE", True)
         assert self.selenium.is_text_present('Edit permissions for SOMErOLE')
@@ -177,18 +177,14 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         assert self.selenium.get_value('id=inperm-1') == u'off'
         assert self.selenium.get_value('id=inperm-2') == u'off'
 
-    def test_assign_role(self):
-        "Assign a role"
+    def test_aaaassign_role(self):
+        """Assign a role
+        XXX: Do the jstree click
+        """
         self.selenium.open("/portal/admin_assignroles_html", True)
         self.selenium.add_selection("names", "label=user3")
         self.selenium.add_selection("//select[@name='roles']", 'Manager')
-        self.selenium.click("//input[@value='Pick']")
-
-        self.selenium.wait_for_pop_up("wwinn", "3000")
-        self.selenium.select_window("name=wwinn")
-        self.selenium.click("link=Information")
-        self.selenium.select_window("null")
-
+        self.selenium.type('location', "info")
         self.selenium.click("//input[@value='Assign role']")
         self.selenium.wait_for_page_to_load("3000")
 
