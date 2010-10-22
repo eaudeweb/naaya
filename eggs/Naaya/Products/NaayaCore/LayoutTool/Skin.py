@@ -32,6 +32,7 @@ import Scheme
 import Template
 import Style
 import DiskFile
+import DiskTemplate
 
 
 manage_addSkinForm = PageTemplateFile('zpt/skin_add', globals())
@@ -68,6 +69,7 @@ class Skin(Folder):
         {'name': METATYPE_TEMPLATE, 'action': 'manage_addTemplateForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL},
         {'name': METATYPE_STYLE, 'action': 'manage_addStyle_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
         {'name': METATYPE_DISKFILE, 'action': 'manage_addDiskFile_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
+        {'name': METATYPE_DISKTEMPLATE, 'action': 'manage_addDiskTemplate_html', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
         {'name': 'Image', 'action': 'manage_addProduct/OFSP/imageAdd', 'permission': 'Add Documents, Images, and Files' },
         {'name': 'Folder', 'action': 'manage_addProduct/OFSP/folderAdd', 'permission': 'Add Folders' },
     )
@@ -78,6 +80,8 @@ class Skin(Folder):
     manage_addStyle = Style.manage_addStyle
     manage_addDiskFile_html = DiskFile.manage_addDiskFile_html
     manage_addDiskFile = DiskFile.manage_addDiskFile
+    manage_addDiskTemplate_html = DiskTemplate.manage_addDiskTemplate_html
+    manage_addDiskTemplate = DiskTemplate.manage_addDiskTemplate
     manage_addSchemeForm = Scheme.manage_addSchemeForm
     manage_addScheme = Scheme.manage_addScheme
     manage_addTemplateForm = Template.manage_addTemplateForm
