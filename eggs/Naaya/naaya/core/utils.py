@@ -21,7 +21,7 @@ mimetype_map = {
     '.xls'  : 'application/vnd.ms-excel',
     '.ppt'  : 'application/vnd.ms-powerpoint',
     '.swf'  : 'application/x-shockwave-flash',
-    '.js'   : 'application/x-javascript',
+    '.js'   : 'application/javascript',
     '.rar'  : 'application/x-rar-compressed',
     '.zip'  : 'application/zip',
 
