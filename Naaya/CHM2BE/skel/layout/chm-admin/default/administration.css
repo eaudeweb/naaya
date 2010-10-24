@@ -19,7 +19,7 @@ body {
   border-bottom: 1px solid black;
 }
 
-#content {
+#pagecontent {
   color: #333;
   position: relative;
   background-color: white;
@@ -175,7 +175,7 @@ input.langButton {
   margin: 0;
 }
 
-#content h1 {
+#pagecontent h1 {
   clear: left;
   font-size: 150%;
   background: #ccc;
@@ -185,24 +185,24 @@ input.langButton {
   margin: 0;
 }
 
-#content p {
+#pagecontent p {
   margin: 3em 0.5em 0.5em 0.5em;
 }
 
-#content form p {
+#pagecontent form p {
   margin: 0.5em;
 }
 
-#content form {
+#pagecontent form {
   margin: 0.5em;
   border: 2px solid #EEE;
 }
 
-#content form .field {
+#pagecontent form .field {
   padding-left: 1em;
 }
 
-#content form .field-inline {
+#pagecontent form .field-inline {
   padding-left: 1em;
 }
 
@@ -450,7 +450,7 @@ a#top_en,a#bottom_en {
 }
 
 /* Add and edit content */
-#edit #content {
+#edit #pagecontent {
   padding-bottom:20px;
 }
 
