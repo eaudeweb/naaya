@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <div id="content">
+            <div id="pagecontent">
             <div class="backSite top" tal:condition="is_admin">
                 <a tal:attributes="href here/absolute_url">Back to public site</a>
             </div>
