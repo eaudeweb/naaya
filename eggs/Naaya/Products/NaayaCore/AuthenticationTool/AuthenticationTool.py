@@ -487,7 +487,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     rkey=rkey, users=users, all_users_objects=users,
                     per_page=per_page, site_url=self.getSitePath(),
                     role=filter_role, user_tool=self.getAuthenticationTool(),
-                    request=REQUEST)
+                    user_sources=self.getSources(), request=REQUEST)
             except Exception, e:
                 self.getSite().log_current_error()
                 REQUEST.RESPONSE.setStatus(500)

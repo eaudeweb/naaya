@@ -14,16 +14,16 @@
 <metal:block fill-slot="search-box"><metal:block define-macro="search-box">
 <div class="cleaner"></div>
 <div class="search-box">
-    <form method="get" tal:attributes="href string:${user_tool/absolute_url}/search_users">
+    <form method="get" id="search-users-form" tal:attributes="action string:${user_tool/absolute_url}/search_users">
 		<div id="name_filter">
-			<label for="search" i18n:translate="">Search users:</label>
+			<label for="search-users" i18n:translate="">Search users:</label>
 			<div class="input-tip">
-				<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" />
+				<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="search-users" class="search-users" tal:attributes="value python: request.get('query', '')" />
 				<br />
 				<img src="misc_/Naaya/info.png" class="icon-image" title="Note" alt="Note:" i18n:attributes="alt title" />&nbsp;<small i18n:translate="">Leave search box empty to filter by roles</small>
 			</div>
 		</div>
-		
+
 		<div class="filters">
 			<label for="filter-roles" i18n:translate="">with roles:</label>
 			<select name="role" id="filter-roles">
@@ -35,12 +35,12 @@
 			</select>
 			<input type="submit" i18n:attributes="value" value="Go" />
 		</div>
-		
+
 		<div class="loader">
 			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
 		</div>
     </form>
-	
+
 	<div class="cleaner"></div>
 </div>
 <div class="cleaner">&nbsp;</div>
@@ -77,9 +77,7 @@
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, role=filter_role);
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
 
-
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
-	
 <div class="form-buttons">
     <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
     <input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
@@ -179,7 +177,7 @@
             </div>
         </td>
     </tr>
-	
+
     <tr tal:condition="python:len(users) == 0">
         <td colspan="6" i18n:translate="">
 			<p class="table-message">
@@ -206,7 +204,7 @@
 			</tal:block>
 		</p>
 	</div>
-	
+
 	<div class="cleaner">&nbsp;</div>
 
 </form>
