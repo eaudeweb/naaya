@@ -1456,6 +1456,10 @@ div#name_filter, .filters {
 	margin: 0.5em 0.5em 0em 0em;
 }
 
+#name_filter {
+	text-align: right;
+}
+
 div#role_filter {
 	float: left;
 	vertical-align: middle;
@@ -1552,7 +1556,7 @@ img.ajax-loader {
 }
 
 tr.row-odd {
-    background-color: #FCFCFC;
+    background-color: #F7F7F7;
 }
 
 .user-role-revoke {
@@ -1606,9 +1610,8 @@ label:hover {
 
 .search-box {
 	background-color: #F0F5FB;
-    padding: 0.5em 0.5em 0.5em 0em;
-	border-bottom: 1px dotted #999999;
-    border-top: 1px dotted #999999;
+    padding: 0.5em 1em 0.5em 1em;
+	border: 1px dotted #999999;
 	height: 3.5em;
 	margin-top: 1.5em;
 }
@@ -1617,19 +1620,13 @@ label:hover {
 	background-color: #FFFFDD;
 }
 
-.input-tip, .input-tip input {
-	display: inline;
-	position: relative;
-}
-
 /**
  * Paginator
 */
 
 .paginator {
-		border-top: 1px dotted #DFDFDF;
-		margin-top: 1em;
-		padding: 0.5em 0;
+	margin-top: 1em;
+	padding: 0.5em 0;
 	clear: both;
 }
 
@@ -1807,4 +1804,5 @@ form.datatable-form {
 .description-text p {
 	margin: 0;
 	padding: 0;
+	line-height: normal;
 }
