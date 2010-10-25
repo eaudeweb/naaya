@@ -5,10 +5,10 @@
 <metal:block fill-slot="description-text">
     <div class="cleaner">&nbsp;</div>
     <!--<h3>Sample</h3>-->
-    
+
 	<div class="description-text">
 		<p i18n:translate="">
-			This page aggregates the lists of users available on this portal, both local and LDAP users. 
+			This page aggregates the lists of users available on this portal, both local and LDAP users.
 			You can search a user by his name and email or filter the users' list by role.
             <br />
 			The list highlights users created in the past 5 days and identifies users with overlapping accounts (same local and LDAP credentials).
@@ -112,7 +112,7 @@
         <td tal:content="python:', '.join(user.getRoles())" />
         <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
     </tr>
-    
+
     <tr tal:condition="python:len(users) == 0">
         <td colspan="6" i18n:translate="">
             <p class="table-message">
@@ -145,9 +145,54 @@
             </span>.
         </p>
     </div>
-    
+
     <div class="cleaner">&nbsp;</div>
-    
-    <!--<h3>Sample2</h3>-->
+
+<tal:block repeat="user_source user_sources">
+	<tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
+		<h3 i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</h3>
+
+		<p tal:condition="groups_roles_map" i18n:translate="">
+			Roles currently granted for LDAP groups are listed in the table
+			below. To revoke roles, select them and click on the <em>Revoke
+			roles</em> button.
+		</p>
+
+		<p tal:condition="not:groups_roles_map" i18n:translate="">
+			No LDAP groups have roles in this portal.
+		</p>
+		<table class="datatable ldap_groups">
+			<thead>
+				<tr>
+					<th i18n:translate="">Group</th>
+					<th i18n:translate="">Role</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr tal:repeat="group_id groups_roles_map">
+					<td>
+						<a tal:attributes="href string:${here/absolute_url}/admin_sources_html?id=${user_source/id}&s=group_members&group_id=${group_id};
+										   title string:Click to see members of ${group_id};"
+						   tal:content="group_id" />
+					</td>
+					<td>
+						<ul tal:define="group_roles python:groups_roles_map[group_id]">
+							<li tal:repeat="role_and_location group_roles">
+								<tal:block define="role python:role_and_location[0];
+											location python:role_and_location[1];">
+									<em tal:content="role"></em> on
+									<a tal:condition="not:location/is_site"
+									   tal:content="location/ob/title_or_id"
+									   tal:attributes="href location/ob/absolute_url" />
+									<em tal:condition="location/is_site">entire portal</em>
+								</tal:block>
+							</li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</tal:block>
+</tal:block>
 </metal:block></metal:block>
 </metal:block>
