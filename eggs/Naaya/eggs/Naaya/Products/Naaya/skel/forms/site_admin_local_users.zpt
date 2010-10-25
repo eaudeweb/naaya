@@ -16,12 +16,10 @@
 <div class="search-box">
     <form method="get" id="search-users-form" tal:attributes="action string:${user_tool/absolute_url}/search_users">
 		<div id="name_filter">
-			<label for="search-users" i18n:translate="">Search users:</label>
-			<div class="input-tip">
-				<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="search-users" class="search-users" tal:attributes="value python: request.get('query', '')" />
-				<br />
-				<img src="misc_/Naaya/info.png" class="icon-image" title="Note" alt="Note:" i18n:attributes="alt title" />&nbsp;<small i18n:translate="">Leave search box empty to filter by roles</small>
-			</div>
+			<label for="search" i18n:translate="">Search users:</label>
+			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
+			<br />
+			<small i18n:translate="">Leave search box empty to filter by roles</small>
 		</div>
 
 		<div class="filters">
@@ -151,9 +149,13 @@
             </span>
         </td>
         <td>
-            <tal:block replace="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)"></tal:block>
-            <br />
-            <tal:block replace="python:user_tool.getUserEmail(user)"></tal:block>
+			<div class="datatable-username">
+				<tal:block replace="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)"></tal:block>
+			</div>
+			
+			<div class="datatable-email" tal:define="email python:user_tool.getUserEmail(user)">
+				<a tal:attributes="href string:mailto:${email}; title string:Click to open email client" i18n:attributes="title" tal:content="email" />
+			</div>
         </td>
         <td tal:define="user_roles python: users_roles[str(user)]">
             <div class="user-role"

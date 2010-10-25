@@ -2,18 +2,7 @@
 <metal:block fill-slot="second-title" i18n:translate="">All users</metal:block>
 <metal:block fill-slot="buttons"><metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['buttons']"></metal:block></metal:block>
 
-<metal:block fill-slot="description-text">
-    <div class="cleaner">&nbsp;</div>
-    <!--<h3>Sample</h3>-->
-
-	<div class="description-text">
-		<p i18n:translate="">
-			This page aggregates the lists of users available on this portal, both local and LDAP users.
-			You can search a user by his name and email or filter the users' list by role.
-            <br />
-			The list highlights users created in the past 5 days and identifies users with overlapping accounts (same local and LDAP credentials).
-		</p>
-	</div>
+<metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['description-text']">
 </metal:block>
 
 <metal:block fill-slot="search-box">
@@ -108,8 +97,16 @@
             </span>
         </td>
         <td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
-        <td tal:content="python:user_tool.getUserEmail(user)" />
-        <td tal:content="python:', '.join(user.getRoles())" />
+        <td tal:define="email python:user_tool.getUserEmail(user)">
+            <a tal:attributes="href string:mailto:${email}; title string:Send Email to ${email}" i18n:attributes="title">
+                <tal:block replace="email"></tal:block>
+            </a>
+        </td>
+        
+        <td tal:define="roles user/getRoles">
+            <tal:block replace="python:len(roles) and ', '.join(roles) or '-'"></tal:block>
+        </td>
+        
         <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
     </tr>
 
@@ -133,15 +130,15 @@
 </metal:block>
 
     <div class="tip" tal:condition="python:len(users) != 0">
-		<img src="misc_/Naaya/info.png" alt="Info" i18n:attributes="alt" class="icon-image" title="Info note" />
-        <strong i18n:translate="">Notes:</strong>
+		<img src="misc_/Naaya/info.png" alt="Information" i18n:attributes="alt title" class="icon-image" title="Information" />
+        <strong i18n:translate="">Note:</strong>
         <p>
             <span i18n:translate="">
-                <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> - users added in the last 5 days;
+                <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> - added in the past 5 days;
             </span>
             <br class="cleaner" />
             <span i18n:translate="">
-                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> - users with the same username in different sources.
+                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> - local and LDAP accounts for the same username.
             </span>.
         </p>
     </div>
