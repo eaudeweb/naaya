@@ -19,31 +19,33 @@
 <div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
 	<metal:block define-slot="page-middle">
 	<metal:block define-macro="folder-title">
-	<a class="b_download" tal:condition="here/showBulkDownloadButton"
-			tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
-		<span i18n:translate="">Bulk download</span>
-	</a>
-	<h1 tal:define="path python:here.absolute_url(1);">
-		<img tal:attributes="
-			src python:test(here.approved, here.icon, here.icon_marked);
-			title here/get_meta_label;
-			alt here/get_meta_label" />
-		<tal:block tal:replace="here/title_or_id" />
-		<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
-			[Limited access]
-		</tal:block>
-		<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
-			[Restricted access]
-		</tal:block>
-		<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
-			<span i18n:translate="">Item only translated in </span>
-			<span tal:repeat="lang here/gl_get_languages_map">
-				<a tal:content="python:' %s' % lang['title']"
-					tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+	<tal:block define="path python:here.absolute_url(1)">
+		<a class="b_download" tal:condition="here/showBulkDownloadButton"
+				tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
+			<span i18n:translate="">Bulk download</span>
+		</a>
+		<h1>
+			<img tal:attributes="
+				src python:test(here.approved, here.icon, here.icon_marked);
+				title here/get_meta_label;
+				alt here/get_meta_label" />
+			<tal:block tal:replace="here/title_or_id" />
+			<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+				[Limited access]
+			</tal:block>
+			<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+				[Restricted access]
+			</tal:block>
+			<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+				<span i18n:translate="">Item only translated in </span>
+				<span tal:repeat="lang here/gl_get_languages_map">
+					<a tal:content="python:' %s' % lang['title']"
+						tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+						tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+				</span>
 			</span>
-		</span>
-	</h1>
+		</h1>
+	</tal:block>
 	</metal:block>
 
 	<tal:block define="logo here/getFolderLogo">
