@@ -1453,8 +1453,7 @@ a.skiplink {
 
 div#name_filter, .filters {
 	float: left;
-	margin: 0.5em 3em 0em 0em;
-	text-align: right;
+	margin: 0.5em 0.5em 0em 0em;
 }
 
 div#role_filter {
@@ -1616,6 +1615,11 @@ label:hover {
 
 .search-box:hover {
 	background-color: #FFFFDD;
+}
+
+.input-tip, .input-tip input {
+	display: inline;
+	position: relative;
 }
 
 /**

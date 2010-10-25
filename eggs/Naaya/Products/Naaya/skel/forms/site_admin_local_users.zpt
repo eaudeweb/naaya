@@ -17,9 +17,11 @@
     <form method="get" tal:attributes="href string:${user_tool/absolute_url}/search_users">
 		<div id="name_filter">
 			<label for="search" i18n:translate="">Search users:</label>
-			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" size="28" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" />
-			<br />
-			<img src="misc_/Naaya/info.png" class="icon-image" title="Note" alt="Note:" i18n:attributes="alt title" />&nbsp;<small i18n:translate="">Leave search box empty to filter by roles</small>
+			<div class="input-tip">
+				<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" />
+				<br />
+				<img src="misc_/Naaya/info.png" class="icon-image" title="Note" alt="Note:" i18n:attributes="alt title" />&nbsp;<small i18n:translate="">Leave search box empty to filter by roles</small>
+			</div>
 		</div>
 		
 		<div class="filters">
