@@ -13,7 +13,7 @@
                     If you wish to remove yourself from this interest group you can
                     <a href="./relinquish_membership_html" i18n:name="relinquish_link" i18n:translate="">relinquish your membership</a>.
                 </p>
-                <div>
+                <div class="right-floated-tip">
                     <div>Tips</div>
                     <ul>
                         <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging out? Make sure that cookies are allowed in your browser</li>
