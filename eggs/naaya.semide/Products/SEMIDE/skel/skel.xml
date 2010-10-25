@@ -18,7 +18,6 @@
 		<form id="site_search" title=""/>
 		<form id="site_search_advanced" title="Portal advanced search"/>
 		<form id="site_search_google" title="Portal Google Search"/>
-		<form id="url_index" title=""/>
 		<form id="site_admin_linkslists" title=""/>
 		<form id="site_admin_thumbnail" title="Portal administration - thumbnails"/>
 		<form id="site_admin_comments" title="Portal administration - latest comments"/>
