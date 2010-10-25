@@ -1454,6 +1454,7 @@ a.skiplink {
 div#name_filter, .filters {
 	float: left;
 	margin: 0.5em 3em 0em 0em;
+	text-align: right;
 }
 
 div#role_filter {
@@ -1584,7 +1585,8 @@ tr.row-odd {
 .table-message {
 		text-align: center;
 		font-weight: bold;
-		color: #FF0000;
+		font-size: 1em;
+		line-height: 1em;
 }
 
 td.checkbox {
@@ -1604,18 +1606,16 @@ label:hover {
 }
 
 .search-box {
+	background-color: #F0F5FB;
     padding: 0.5em 0.5em 0.5em 0em;
+	border-bottom: 1px dotted #999999;
+    border-top: 1px dotted #999999;
+	height: 3.5em;
+	margin-top: 1.5em;
 }
 
 .search-box:hover {
-    background-color: #FFFFDD;
-}
-
-.search-box {
-    border-bottom: 1px dotted #999999;
-    border-top: 1px dotted #999999;
-    margin-bottom: 1em;
-	height: 2.5em;
+	background-color: #FFFFDD;
 }
 
 /**
@@ -1693,6 +1693,10 @@ a.context-link:hover {
 		border: 0;
 }
 
+form.datatable-form {
+	
+}
+
 /**
  * Temp style
 */
@@ -1715,6 +1719,12 @@ a.context-link:hover {
 .action-form {
 		border-top: 1px dotted #333333;
 		margin: 0 auto;
+		margin-top: 1em;
+		padding: 1em;
+}
+
+.action-form table {
+		margin-bottom: 1em;
 }
 
 .action-form td.form-label {
@@ -1736,6 +1746,7 @@ a.context-link:hover {
 
 .action-form fieldset {
 		border: 1px dotted #333333;
+		padding: 1em;
 }
 
 .action-form fieldset legend {
@@ -1778,4 +1789,18 @@ a.context-link:hover {
 
 #add-role-form input[type="submit"], #add-role-form input[type="reset"] {
 		margin: 0 !important;
+}
+
+
+/**
+ * Description text
+*/
+
+.description-text {
+	margin-top: 1em;
+}
+
+.description-text p {
+	margin: 0;
+	padding: 0;
 }

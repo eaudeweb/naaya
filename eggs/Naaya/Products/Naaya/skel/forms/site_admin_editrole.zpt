@@ -10,14 +10,16 @@
         <input type="hidden" name="role" tal:attributes="value role" />
         <table class="datatable">
             <tr>
-                <th></th>
+                <th width="5%" align="left" i18n:translate="" class="checkbox">
+                    <input type="checkbox" class="select-all" onclick="selectAll();" />
+                </th>
                 <th i18n:translate="">Permission</th>
             </tr>
             <tal:block repeat="pair options/sorted_perm">
             <tr tal:define="input_id string:inperm-${repeat/pair/index};
                             label python:pair[0];
                             zope_perm python:pair[1]">
-                <td>
+                <td class="center checkbox">
                     <input type="checkbox" tal:attributes="
                         name string:zope_perm_list:list;
                         value zope_perm;

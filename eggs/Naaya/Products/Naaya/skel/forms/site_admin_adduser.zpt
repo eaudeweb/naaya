@@ -5,8 +5,11 @@
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <div class="cleaner">&nbsp;</div>
-<p i18n:translate="">Fill the form below with user's credentials and account and click on <em i18n:name="add-button" i18n:translate="">Add</em>:</p>
-
+<div class="tip">
+	<img src="misc_/Naaya/info.png" alt="Info" title="Info" i18n:attributes="title" class="icon-image" />&nbsp;<strong>Info</strong>
+	<br />
+	<p i18n:translate="">Fill the form below with user's credentials and account and click on <em i18n:name="add-button" i18n:translate="">Add</em></p>
+</div>
 <form method="post" tal:attributes="action string:${site_url}/admin_adduser" class="action-form">
 	<div class="cleaner">&nbsp;</div>
 	<fieldset>

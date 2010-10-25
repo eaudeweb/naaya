@@ -68,6 +68,10 @@
 		<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
 	</tal:block>
 </metal:block>
+
+<metal:block define-slot="description-text">
+</metal:block>
+
 <metal:block define-slot="search-box">
 	<tal:block tal:condition="python: 'admin_users_html' in request.PATH_INFO">
 		<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
