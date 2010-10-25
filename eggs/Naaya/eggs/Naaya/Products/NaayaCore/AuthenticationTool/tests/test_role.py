@@ -9,7 +9,7 @@ class RoleTest(NaayaFunctionalTestCase):
         assert "CoolPeople" not in self.portal.acl_users.list_all_roles()
 
         self.browser_do_login('admin', '')
-        self.browser.go('http://localhost/portal/admin_addrole_html')
+        self.browser.go('http://localhost/portal/admin_roles_html')
         form = self.browser.get_form('addrole')
         form['role'] = "CoolPeople"
         self.browser.clicked(form, self.browser.get_form_field(form, 'role'))

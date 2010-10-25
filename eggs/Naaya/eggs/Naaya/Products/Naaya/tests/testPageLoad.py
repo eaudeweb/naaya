@@ -55,7 +55,6 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/admin_documentation_html', 'admin')
         self.assert_page_ok('/portal/admin_users_html', 'admin')
         self.assert_page_ok('/portal/admin_adduser_html', 'admin')
-        self.assert_page_ok('/portal/admin_addrole_html', 'admin')
         self.assert_page_ok('/portal/admin_roles_html', 'admin')
         self.assert_page_ok('/portal/admin_sources_html', 'admin')
         self.assert_page_ok('/portal/admin_translations_html', 'admin')
