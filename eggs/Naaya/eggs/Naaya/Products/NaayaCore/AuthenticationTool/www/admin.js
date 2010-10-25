@@ -2,83 +2,47 @@
  * User management
 */
 $(document).ready(function(){
-    $('.autocomplete').each(function(){
-        var source = $(this).parents('form').attr('href').
-        replace(/http:\/\/[^\/]+\//, '');
-        var template = $('#template').val();
-        var content;
-
-        var self = $(this)
-
-        self.autocomplete({
-            minLength: 3,
-            delay: 300,
-            source: function(request, response) {
-                toggleLoader();
-                var search_query = window.location.search;
-                if (search_query[0] == '?'){ //remove first ?
-                    search_query = search_query.substr(1);
-                }
-                data = unserialize(search_query); //utils.js
-                data['query']=request.term;
-                data['template'] = template;
-                data['role'] = $('#filter-roles').val();
-                if ($('#all_users').length){
-                    data['all_users'] = $('#all_users').val();
-                }
-                $.get(source, data, function(data){
-                    $('.datatable').replaceWith(data);
-                    toggleLoader();
-                });
-			}
-        });
-
-        self.keyup(function(keyCode){
-            if ($(this).val() == ''){
-                $(this).autocomplete("search", '   ');
-            }
-        });
-
-        $('#filter-roles').change(function(e){
-			if (self.val() == ''){
-				self.autocomplete('search', '   ');
-			}else{
-				self.autocomplete('search', self.val());
-			}
-        });
+	$('#search-users').focus();
+	$("#search-users-form").ajaxForm({
+		data: {
+			'template': $('#template').val(),
+			'all_users': $('#all_users').val()
+		},
+		beforeSubmit: function(arr, form, options) {
+			toggleLoader();
+		},
+		success: function(data) {
+			$('.datatable').replaceWith(data);
+			toggleLoader();
+		}
     });
     ldap_onclick_sort_links();
     ldap_onclick_group_links();
     ldap_user_search_form();
 });
+
 function toggleLoader(){
-    $('.ajax-loader').toggle();
-    if ($('#autocomplete-query').attr("disabled") === true){
-        $('#autocomplete-query').attr("disabled", "");
-        $('#autocomplete-query').focus();
-    }else{
-        $('#autocomplete-query').attr("disabled", "disabled");
-    }
+	$('.loader').toggle();
 }
 
 function emptyLocation(){
-   if (document.forms['frmUsersRoles'].loc[0].checked == true)
-       document.forms['frmUsersRoles'].location.value = '';
+	if (document.forms['frmUsersRoles'].loc[0].checked == true)
+		document.forms['frmUsersRoles'].location.value = '';
 }
 
 function pickLocation(){
-   document.forms['frmUsersRoles'].loc[1].checked = true;
+	document.forms['frmUsersRoles'].loc[1].checked = true;
 }
 
 function setupWin(url, theWidth, theHeight){
-   pickLocation();
-   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-   wwinn.focus();
-   return true;
+	pickLocation();
+	wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+	wwinn.focus();
+	return true;
 }
 
 function createKey(key){
-   document.forms['frmUsersRoles'].location.value = key;
+	document.forms['frmUsersRoles'].location.value = key;
 }
 
 /**
@@ -177,22 +141,22 @@ function ldap_show_user_search_results(data) {
 
 function ldap_user_search_form() {
     $('#frmRoles').ajaxForm({
-    beforeSubmit: function() {
-        $('#waiting_for_search_results').show();
-        $('#search_results_parent').hide();
-        $('#error_on_search_results').hide();
-    },
-    success: function(data) {
-        ldap_show_user_search_results(data);
+		beforeSubmit: function() {
+			$('#waiting_for_search_results').show();
+			$('#search_results_parent').hide();
+			$('#error_on_search_results').hide();
+		},
+		success: function(data) {
+			ldap_show_user_search_results(data);
 
-        $('#waiting_for_search_results').hide();
-        $('#search_results_parent').show();
-		load_js_tree();
-    },
-    error: function() {
-        $('#error_on_search_results').show();
-        $('#waiting_for_search_results').hide();
-    }
+			$('#waiting_for_search_results').hide();
+			$('#search_results_parent').show();
+			load_js_tree();
+		},
+		error: function() {
+			$('#error_on_search_results').show();
+			$('#waiting_for_search_results').hide();
+		}
     });
 }
 
