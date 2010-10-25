@@ -1,16 +1,29 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Local users</metal:block>
+
+<metal:block fill-slot="description-text">
+	<div class="cleaner">&nbsp;</div>
+	<div class="description-text">
+		<p i18n:translate="">
+			This page lists the users defined in this portal along with their credentials.
+			Click on a username to modify the corresponding information.
+		</p>
+	</div>
+</metal:block>
+
 <metal:block fill-slot="search-box"><metal:block define-macro="search-box">
 <div class="cleaner"></div>
 <div class="search-box">
     <form method="get" tal:attributes="href string:${user_tool/absolute_url}/search_users">
 		<div id="name_filter">
-			<label for="search" i18n:translate="">Search user(s) containing</label>
-			<input type="text" size="25" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" />
+			<label for="search" i18n:translate="">Search users:</label>
+			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" size="28" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" />
+			<br />
+			<img src="misc_/Naaya/info.png" class="icon-image" title="Note" alt="Note:" i18n:attributes="alt title" />&nbsp;<small i18n:translate="">Leave search box empty to filter by roles</small>
 		</div>
 		
 		<div class="filters">
-			<label for="filter-roles" i18n:translate="">Filter roles</label>
+			<label for="filter-roles" i18n:translate="">with roles:</label>
 			<select name="role" id="filter-roles">
 				<option value="" i18n:translate="">All</option>
 				<tal:block repeat="role user_tool/list_valid_roles">
@@ -22,7 +35,7 @@
 		</div>
 		
 		<div class="loader">
-			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' /><span i18n:translate="">&nbsp;Loading... please wait!</span>
+			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
 		</div>
     </form>
 	
@@ -61,12 +74,9 @@
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, role=filter_role);
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
-<p i18n:translate="" class="cleaner">
-    This page lists the users defined in this portal along with their credentials.
-    Click on a username to modify the corresponding information.
-</p>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
+
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
 	
 <div class="form-buttons">
     <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
@@ -167,8 +177,13 @@
             </div>
         </td>
     </tr>
+	
     <tr tal:condition="python:len(users) == 0">
-        <td colspan="6" i18n:translate=""><p class="table-message"><img src="misc_/Naaya/info.png" title="Note" i18n:attributes="title" alt="Note" class="icon-image" />&nbsp;Users' list empty</p></td>
+        <td colspan="6" i18n:translate="">
+			<p class="table-message">
+				<img src="misc_/Naaya/info.png" title="Note" i18n:attributes="title" alt="Note" class="icon-image" />&nbsp;Users' list empty
+			</p>
+		</td>
     </tr>
 </table>
 <metal:block define-macro="pagination">
