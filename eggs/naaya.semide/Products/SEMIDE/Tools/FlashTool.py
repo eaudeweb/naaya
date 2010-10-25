@@ -336,16 +336,17 @@ class FlashTool(Folder, ProfileMeta, utils):
         archive = self.getFlashArchive()
         #create mail document
         id = '%s_%s' % (self.lastflashdate, p_type)
+        title = u'Flash to be sent on %s (%s version)' % (self.utShowDateTime(self.notif_date), p_type)
         doc_obj = archive._getOb(id, None)
         if doc_obj is None:
-            addNyDocument(archive, id=id, title='', body='')
+            addNyDocument(archive, id=id, title=title)
             doc_obj = archive._getOb(id, None)
             doc_obj.approveThis(0, None)
             doc_obj.submitThis()
         for k in results.keys():
             style = template._getOb("%s_%s" % (p_type, k)).document_src()
             x = self.render_xml(results[k], style)
-            doc_obj.saveProperties(title='Flash to be sent on %s (%s version)' % (self.utShowDateTime(self.notif_date), p_type), body=x, lang=k)
+            doc_obj.saveProperties(title=title, body=x, lang=k)
 
     security.declarePrivate('render_xml')
     def render_xml(self, xml, xslt):
