@@ -440,8 +440,9 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         cal.vevent.add('dtstamp').value = modif_time
 
         cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
-        cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
-                                         datetime.timedelta(days=1))
+        if self.end_date is not None:
+            cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
+                                             datetime.timedelta(days=1))
 
         loc = []
         if self.location:

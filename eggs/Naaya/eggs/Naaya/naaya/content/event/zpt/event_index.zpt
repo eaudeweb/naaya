@@ -54,17 +54,17 @@
 
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-        <p><a tal:attributes="href string:${here/absolute_url}/get_ics"
+        <p tal:condition="here/start_date"><a tal:attributes="href string:${here/absolute_url}/get_ics"
               i18n:translate="">Download as iCalendar</a></p>
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
         <tr tal:condition="here/start_date">
             <th i18n:translate="">Period</th>
             <td>
-            <tal:block condition="python:here.start_date != here.end_date">
+            <tal:block condition="python:here.end_date and here.start_date != here.end_date">
                 [<span tal:replace="python:here.utShowDateTime(here.start_date)"/> - <span tal:replace="python:here.utShowDateTime(here.end_date)"/>]
             </tal:block>
-            <tal:block condition="python:here.start_date == here.end_date">
+            <tal:block condition="python:here.end_date is None or here.start_date == here.end_date">
                 <span tal:replace="python:here.utShowDateTime(here.start_date)"/>
             </tal:block>
             </td>
