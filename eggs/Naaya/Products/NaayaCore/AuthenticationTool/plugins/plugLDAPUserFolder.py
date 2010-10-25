@@ -437,46 +437,48 @@ class plugLDAPUserFolder(PlugBase):
             return ()
 
     def _get_user_by_uid(self, uid, acl_folder):
-        attrs = acl_folder.getSchemaConfig().keys()
-        attrs.extend(['o', 'postalAddress'])
-        users = acl_folder.findUser(search_param='uid', search_term=uid, attrs=attrs)
-        for user in users:
-            if user.get('uid', '') == uid:
-                return user
+        user = acl_folder.getUser(uid)
+        return user
 
-    def _get_user_email(self, user):
-        if user is not None:
-            return unicode(user.get('mail', ''), 'iso-8859-1').encode('utf-8')
-        else:
-            return ''
+    def _get_user_email(self, user, default=''):
+        if user is None or not hasattr(user, 'mail'):
+            return default
+        return user.mail
 
     def getUserEmail(self, p_username, acl_folder):
         #return the email of the given user id
         user = self._get_user_by_uid(p_username, acl_folder)
         return self._get_user_email(user)
 
-    def _get_user_full_name(self, user):
-        if user is not None:
-            return unicode(user.get('cn', ''), 'iso-8859-1').encode('utf-8')
-        else:
-            return ''
+    def _get_user_first_name(self, user, default=''):
+        if user is None or not hasattr(user, 'givenName'):
+            return default
+        return user.givenName
+
+    def _get_user_last_name(self, user, default=''):
+        if user is None or not hasattr(user, 'lastname'):
+            return default
+        return user.lastname
+
+    def _get_user_full_name(self, user, default=''):
+        if user is None or not hasattr(user, 'cn'):
+            return default
+        return user.cn
 
     def getUserFullName(self, p_username, acl_folder):
         #return the full name of the given user id
         user = self._get_user_by_uid(p_username, acl_folder)
         return self._get_user_full_name(user)
 
-    def _get_user_organisation(self, user):
-        if user is not None:
-            return unicode(user.get('o', ''), 'iso-8859-1').encode('utf-8')
-        else:
-            return ''
+    def _get_user_organisation(self, user, default=''):
+        if user is None or not hasattr(user, 'o'):
+            return default
+        return user.o
 
-    def _get_user_postal_address(self, user):
-        if user is not None:
-            return unicode(user.get('postalAddress', ''), 'iso-8859-1').encode('utf-8')
-        else:
-            return ''
+    def _get_user_postal_address(self, user, default=''):
+        if user is None or not hasattr(user, 'postalAddress'):
+            return default
+        return user.postalAddress
 
     def getLDAPUserFirstName(self, dn):
         return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')
