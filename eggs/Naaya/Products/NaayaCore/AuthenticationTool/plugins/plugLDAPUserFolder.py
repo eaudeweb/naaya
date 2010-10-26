@@ -358,13 +358,10 @@ class plugLDAPUserFolder(PlugBase):
             return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revoke_group_role')
-    def revoke_group_role(self, roles, REQUEST=None):
+    def revoke_group_role(self, group_id, role, location, REQUEST=None):
         """ """
-
-        for roledata in roles:
-            group, role, location = roledata.split(';')
-            ob = self.getSite().unrestrictedTraverse(location)
-            ob.acl_satellite.remove_group_roles(group, [role])
+        ob = self.getSite().unrestrictedTraverse(location)
+        ob.acl_satellite.remove_group_roles(group_id, [role])
 
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
