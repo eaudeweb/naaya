@@ -74,13 +74,19 @@
 	<div class="description-text">
 		<p i18n:translate="" tal:condition="user_sources">
 			This page lists all local users defined in this portal (with or without roles), together with the LDAP users and LDAP groups that have roles in this portal.
-			
         </p>
 		<p i18n:translate="" tal:condition="not:user_sources">
 			This page lists the users defined in this portal along with their credentials.
 			Click on a username to modify the corresponding information.
         </p>
 	</div>
+</metal:block>
+
+<metal:block define-slot="section-title">
+	<div class="cleaner">&nbsp;</div>
+    <h3 i18n:translate="">
+        Users list
+    </h3>
 </metal:block>
 
 <metal:block define-slot="search-box">

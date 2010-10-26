@@ -5,12 +5,7 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['description-text']">
 </metal:block>
 
-<metal:block fill-slot="search-box"><br>
-    <div class="cleaner"></div>
-    <h3 i18n:translate="">
-        Users list
-    </h3>
-
+<metal:block fill-slot="search-box">
     <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
@@ -149,10 +144,8 @@
                         <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
                             <tal:block condition="if">
                                 <td colspan="6" i18n:translate="">
-                                    <p class="table-message">
-                                        No local users defined and no roles assigned to LDAP users yet.
-                                    </p>
                                     <p class="table-message" tal:define="source_id python: user_sources[0].id">
+                                        No local users defined and no roles assigned to LDAP users yet.
                                         You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
                                     </p>
                                 </td>
@@ -178,7 +171,7 @@
         <div class="tip" tal:condition="python:len(users) != 0">
             <p>
                 <span i18n:translate="">
-                    <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> added in the past 5 days
+                    <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> local users added in the past 5 days
                 </span>
                 <br class="cleaner" />
                 <span i18n:translate="">
@@ -198,9 +191,8 @@
     <div class="cleaner"></div>
     <div class="description-text">
         <p tal:condition="groups_roles_map" i18n:translate="">
-            Roles currently granted for LDAP groups are listed in the table
-            below. To revoke roles, select them and click on the <em>Revoke
-            roles</em> button.
+            Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
+            below.
         </p>
     </div>
 
@@ -208,7 +200,7 @@
         <table cellspacing="0" cellpadding="3" class="ldap_groups">
             <thead tal:condition="python: len(groups_roles_map) != 0">
                 <tr>
-                    <th i18n:translate="">Group</th>
+                    <th i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</th>
                     <th i18n:translate="">Roles/Location</th>
                 </tr>
             </thead>
@@ -240,7 +232,7 @@
                 <tr tal:condition="not:groups_roles_map">
                     <td colspan="6" i18n:translate="">
                         <p class="table-message">
-                            No LDAP groups have roles in this portal.
+                            No <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups have roles in this portal.
                         </p>
                     </td>
                 </tr>
