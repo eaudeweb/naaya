@@ -453,6 +453,7 @@ padding-top: 0.5em;
 .field-inline label {
 	font-weight: bold;
 	margin-bottom: 0.3em;
+	min-width: 10em;
 }
 .field .invisible {
 	display: none;
@@ -1694,8 +1695,12 @@ a.context-link:hover {
 		border: 0;
 }
 
-form.datatable-form {
-	
+.section-subtitle, .title-inline {
+	display: inline;
+}
+
+.section-subtitle {
+	font-size: 1.1em;
 }
 
 /**
@@ -1830,4 +1835,20 @@ form.datatable-form {
 
 table.ldap_groups th {
 	text-align: left;
+}
+
+table.ldap_groups td.checkbox {
+	text-align: left;
+}
+
+/**
+ * Add user form
+*/
+
+form.user-form .field-inline, form.user-form .field {
+	margin-left: 0em !important;
+}
+
+form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inline input[type="password"]:focus {
+	background-color: #FFFFDD;
 }

@@ -1,6 +1,12 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Assign roles</metal:block>
 
+<metal:block fill-slot="section-title">
+</metal:block>
+
+<metal:block fill-slot="description-text">
+</metal:block>
+
 <metal:block fill-slot="buttons"><metal:block define-macro="buttons">
     <div class="floated-buttons">
         &nbsp;
@@ -80,7 +86,7 @@ the specific location from the portal you want to grant this permissions.
 </table>
 <p class="action-form-buttons">
     <input type="submit" value="Assign role" i18n:attributes="value"/>
-    <input type="reset" value="Clear form" i18n:attributes="value"/>
+    <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html">Back to local users list</a>
 </p>
 </form>
 </metal:block>

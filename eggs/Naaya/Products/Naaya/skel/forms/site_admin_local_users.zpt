@@ -2,13 +2,14 @@
 <metal:block fill-slot="second-title" i18n:translate="">Local users</metal:block>
 
 <metal:block fill-slot="description-text">
-	<div class="cleaner">&nbsp;</div>
 	<div class="description-text">
 		<p i18n:translate="">
-			This page lists the users defined in this portal along with their credentials.
-			Click on a username to modify the corresponding information.
+			This page lists the local users defined in this portal along with their credentials.
 		</p>
 	</div>
+</metal:block>
+
+<metal:block fill-slot="section-title">
 </metal:block>
 
 <metal:block fill-slot="search-box"><metal:block define-macro="search-box">
@@ -31,7 +32,7 @@
 				<option tal:condition="python:role!='Manager'" tal:attributes="value role; selected python: test(filter_role == role, 'selected', '')" tal:content="role" />
 				</tal:block>
 			</select>
-			<input type="submit" i18n:attributes="value" value="Go" />
+			<input type="submit" i18n:attributes="value" value="Search" />
 		</div>
 
 		<div class="loader">
@@ -61,7 +62,7 @@
         <ul>
             <li tal:define="url string:${site_url}/admin_local_users_html">
                 <a tal:attributes="href url; class python: 'admin_local_users_html' in path_info and 'current_sub' or ''"
-                   i18n:translate="">List local users</a>
+                   i18n:translate="">List users</a>
             </li>
             <li tal:define="url string:${site_url}/admin_assignroles_html">
                 <a tal:attributes="href url; class python: 'admin_assignroles_html' in path_info and 'current_sub' or ''"
@@ -117,10 +118,10 @@
         </th>
         <th width="30%" align="left">
             <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
-                <span i18n:translate="">Name/E-mail</span>
+                <span i18n:translate="">Name/Email</span>
             </a>
             <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
-                <span i18n:translate="">Name/E-mail</span>
+                <span i18n:translate="">Name/Email</span>
             </a>
             <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
@@ -135,7 +136,7 @@
             <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
         </th>
-        <th i18n:translate="">Revoke</th>
+        <th i18n:translate="">Revoke roles</th>
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
         <td nowrap="nowrap" class="center checkbox">
@@ -186,11 +187,9 @@
 		<tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
 			<tal:block condition="if">
 				<td colspan="6" i18n:translate="">
-					<p class="table-message">
-						No local users defined yet.
-					</p>
                     <tal:block condition="user_sources">
 					<p class="table-message" tal:define="source_id python: user_sources[0].id">
+						No local users defined yet.
 						You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
 					</p>
                     </tal:block>
@@ -212,14 +211,15 @@
 	</tal:block>
 </metal:block>
 </div>
-<div class="tip" tal:condition="python: len(users) != 0">
-	<img src="misc_/Naaya/info.png" alt="Info" i18n:attributes="alt" class="icon-image" title="Info note" />
-	<strong i18n:translate="">Notes:</strong>
+<div class="tip" tal:condition="python:len(users) != 0">
 	<p>
-		<span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
-		<tal:block condition="python: len(here.getAuthenticationTool().getSources())">
-			<span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
-		</tal:block>
+		<span i18n:translate="">
+			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> local users added in the past 5 days
+		</span>
+		<br class="cleaner" />
+		<span i18n:translate="">
+			<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
+		</span>.
 	</p>
 </div>
 

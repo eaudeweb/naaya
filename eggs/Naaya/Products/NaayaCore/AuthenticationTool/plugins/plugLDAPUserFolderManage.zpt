@@ -5,10 +5,23 @@
     id python:request.get('id', 0);
     site_path python:here.getSitePath();
     source_url string:${site_path}/admin_sources_html?id=${id};
-    section_url string:${source_url}&s=manage_all;">
+    section_url string:${source_url}&s=manage_all;
+    source_title python:here.getAuthenticationTool().getSourceObj(id).title_or_id();
+    ">
 
-<fieldset id="users_field">
-    <legend i18n:translate="">LDAP users</legend>
+<div class="cleaner"></div>
+
+<h3 i18n:translate="">
+    <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
+</h3>
+
+<div class="description-text">
+    <p i18n:translate="">
+        The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
+        this portal.
+        Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
+    </p>
+</div>
 
     <tal:block condition="python:len(users_roles) > 10">
     <br />
@@ -16,14 +29,8 @@
     <br />
     </tal:block>
 
-    <p tal:condition="users_roles" i18n:translate="">
-        The list below presents the LDAP users that have roles in
-        this portal. You can revoke role(s) assigned to a user by ticking in
-        the appropriate check box and clicking on the <em>Revoke selected
-        roles</em> button.
-    </p>
     <p tal:condition="not:users_roles" i18n:translate="">
-        No LDAP users have roles in this portal.
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal.
     </p>
 
     <div id="users_roles_waiting_response" style="display:none">
@@ -39,8 +46,9 @@
             Error displaying users roles.
         </p>
     </div>
+    
     <div class="datatable">
-        <table cellspacing="0" cellpadding="4" width="95%">
+        <table cellspacing="0" cellpadding="4">
             <tr tal:condition="python:len(users_roles) != 0">
                 <th align="left">
                     <a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
@@ -62,16 +70,14 @@
                     <img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
                     <img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
                 </th>
-                <th align="left"><span i18n:translate="">Roles</span></th>
-                <th i18n:translate="">Revoke</th>
+                <th align="left"><span i18n:translate="">Roles/Location</span></th>
+                <th i18n:translate="">Revoke roles</th>
             </tr>
             <tr tal:repeat="user python:users_roles"
             tal:attributes="class python:test(path('repeat/user/odd'),
                                                  'row-odd', 'row-even')">
-                <td style="vertical-align: top"
-                    tal:content="python:user[1] + ' ('+user[0]+')'" />
-                <td style="vertical-align: top"
-                    tal:content="python:user[2]" />
+                <td tal:content="python:user[1] + ' ('+user[0]+')'" ></td>
+                <td tal:content="python:user[2]" />
 
                 <td tal:define="user_roles python: user[3]">
                     <div class="user-role"
@@ -98,27 +104,32 @@
             </tr>
         </table>
     </div>
-</fieldset>
 
-<fieldset id="groups_field" tal:define="
-    groups_roles_map here/get_groups_roles_map;
-    ">
-    <legend i18n:translate="">LDAP groups</legend>
+    <tal:block define="groups_roles_map here/get_groups_roles_map;">
 
+    <div class="cleaner">&nbsp;</div>
+    <h3 i18n:translate="">
+        <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups
+    </h3>
+
+    <div class="cleaner"></div>
+    <div class="description-text">
+        <p tal:condition="groups_roles_map" i18n:translate="">
+            Roles currently granted for <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups are listed in the table
+            below. To revoke roles, select them and click on the <em>Revoke
+            roles</em> button.
+        </p>
+    </div>
+    
     <tal:block condition="python:len(users_roles) > 10">
     <br />
     <a href="#users_field" i18n:translate="">Go to users</a>
     <br />
     </tal:block>
-
-    <p tal:condition="groups_roles_map" i18n:translate="">
-        Roles currently granted for LDAP groups are listed in the table
-        below. To revoke roles, select them and click on the <em>Revoke
-        roles</em> button.
-    </p>
+    
 
     <p tal:condition="not:groups_roles_map" i18n:translate="">
-        No LDAP groups have roles in this portal.
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal.
     </p>
 
     <div id="group_roles_waiting_response" style="display:none">
@@ -134,7 +145,7 @@
             Error displaying group roles.
         </p>
     </div>
-    <!--tal:attributes="action "-->
+
     <tal:block tal:condition="groups_roles_map">
         <table class="datatable ldap_groups">
             <thead>
@@ -151,7 +162,6 @@
                                 title string:Click to see members of ${group_id};"
                             tal:content="group_id"></a>
                     </td>
-                    string:
                     <td>
                         <ul tal:define="group_roles python:groups_roles_map[group_id]">
                             <li tal:repeat="role_and_location group_roles">
@@ -184,6 +194,5 @@
             </tbody>
         </table>
     </tal:block>
-</fieldset>
-
+    </tal:block>
 </div>
