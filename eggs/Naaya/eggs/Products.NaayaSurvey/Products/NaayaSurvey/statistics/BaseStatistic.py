@@ -17,8 +17,13 @@
 #
 # Cristian Ciupitu, Eau de Web
 
+from PIL import Image, ImageOps
+from os import path
+
 # Zope imports
 from OFS.SimpleItem import SimpleItem
+from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass
 
 # Naaya imports
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -61,6 +66,8 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         {'id':'sortorder', 'type':'int','mode':'w', 'label':'Sort order'},
     )
 
+    security = ClassSecurityInfo()
+
     def __init__(self, id, question, lang=None, **kwargs):
         """__init__
 
@@ -71,3 +78,30 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
         self.id = id
         self.question = question
         self.sortorder = kwargs.get('sortorder', question.sortorder)
+
+    security.declarePrivate('get_bitmap_props')
+    def get_bitmap_props(self, file_string, temp_folder):
+        im = Image.open(file_string)
+        height = im.size[1]
+        if len(im.split()) == 4:
+            r, g, b, a = img.split()
+            im = Image.merge("RGB", (r, g, b))
+        file_name = genRandomId(p_length=8)+'.bmp'
+        im.save(path.join(temp_folder, file_name), 'BMP')
+        return {'path': path.join(temp_folder, file_name),
+                'height': height}
+
+    security.declarePrivate('set_bitmap_props')
+    def set_bitmap_props(self, file_string, width, height, temp_folder):
+        im = Image.open(file_string)
+        height = im.size[1]
+        if len(im.split()) == 4:
+            r, g, b, a = img.split()
+            im = Image.merge("RGB", (r, g, b))
+        file_name = genRandomId(p_length=8)+'.bmp'
+        im = im.resize((width, height), Image.ANTIALIAS)
+        im = ImageOps.expand(im, 1, 0)
+        im.save(path.join(temp_folder, file_name), 'BMP')
+        return path.join(temp_folder, file_name)
+
+InitializeClass(BaseStatistic)

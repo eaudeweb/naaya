@@ -19,6 +19,8 @@
 
 # Python imports
 import colorsys
+import urllib
+from cStringIO import StringIO
 
 # Zope imports
 from Globals import InitializeClass
@@ -42,8 +44,8 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     meta_description = """Bar chart for every choice"""
     meta_sortorder = 210
 
-    security.declarePublic('render')
-    def render(self, answers):
+    security.declarePublic('get_chart')
+    def get_chart(self, answers):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
         chart = pygooglechart.GroupedHorizontalBarChart(500, 23 + (len(self.question.getChoices())+1) * 22)
@@ -71,8 +73,41 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
             h += step
         chart.set_colours(colors)
 
+        return chart
+
+    security.declarePublic('render')
+    def render(self, answers):
+        """Render statistics as HTML code"""
+        chart = self.get_chart(answers)
         return self.page(question=self.question,
                          chart_url=chart.get_url())
+
+    security.declarePrivate('add_to_excel')
+    def add_to_excel(self, state):
+        """ adds content to the excel file based on the specific statistic type """
+        import xlwt
+        temp_folder = state['temp_folder']
+        answers = state['answers']
+        ws = state['ws']
+        current_row = state['current_row']
+        chart_url = self.get_chart(answers).get_url()
+
+        #define Excel styles
+        style = xlwt.XFStyle()
+        normalfont = xlwt.Font()
+        headerfont = xlwt.Font()
+        headerfont.bold = True
+        style.font = headerfont
+
+        #write cell elements similarly to the zpt-->html output
+        ws.write(current_row, 1, self.question.title, style)
+        current_row += 1
+        file = urllib.urlopen(chart_url)
+        file_string = StringIO(file.read())
+        bitmap_props = self.get_bitmap_props(file_string, temp_folder)
+        """ insert_bitmap (filename, row, column, delta_x, delta_y) """
+        ws.insert_bitmap(bitmap_props['path'], current_row, 1, 0, 5)
+        state['current_row'] = current_row + int(bitmap_props['height']/17) + 1
 
     page = PageTemplateFile("zpt/multiplechoice_google_barchart_statistics.zpt", globals())
 
