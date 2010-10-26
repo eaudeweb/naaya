@@ -2,6 +2,11 @@
  * User management
 */
 $(document).ready(function(){
+	/**
+	 * Show `<Label> per page` when Javascript is enabled (.paginator-details)
+	*/
+	$('.paginator-details').show();
+	
 	$('#search-users').focus();
 	setupSearchUsers();
 

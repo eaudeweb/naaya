@@ -1586,10 +1586,9 @@ tr.row-odd {
 }
 
 .table-message {
-		text-align: center;
-		font-weight: bold;
-		font-size: 1em;
-		line-height: 1em;
+	font-weight: bold;
+	font-size: 1em;
+	line-height: 1em;
 }
 
 td.checkbox {
@@ -1661,7 +1660,8 @@ label:hover {
 }
 
 .paginator-details {
-		float: right;
+	float: right;
+	display: none;
 }
 
 /**
