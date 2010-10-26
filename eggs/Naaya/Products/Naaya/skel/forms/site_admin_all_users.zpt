@@ -143,15 +143,15 @@
 </metal:block>
 
     <div class="tip" tal:condition="python:len(users) != 0">
-		<img src="misc_/Naaya/info.png" alt="Information" i18n:attributes="alt title" class="icon-image" title="Information" />
-        <strong i18n:translate="">Note:</strong>
+<!--		<img src="misc_/Naaya/info.png" alt="Information" i18n:attributes="alt title" class="icon-image" title="Information" />-->
+<!--        <strong i18n:translate="">Note:</strong>-->
         <p>
             <span i18n:translate="">
-                <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> - added in the past 5 days;
+                <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> added in the past 5 days
             </span>
             <br class="cleaner" />
             <span i18n:translate="">
-                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> - local and LDAP accounts for the same username.
+                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
             </span>.
         </p>
     </div>

@@ -1806,3 +1806,16 @@ form.datatable-form {
 	padding: 0;
 	line-height: normal;
 }
+
+.tip {
+	padding: 0.5em 1em !important;
+}
+
+.tip p {
+	margin: 0 !important;
+	line-height: 1.5em;
+}
+
+.tip img {
+	margin-right: 0.5em;
+}

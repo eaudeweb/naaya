@@ -15,6 +15,13 @@
 <div class="cleaner"></div>
 <div class="search-box">
     <form method="get" id="search-users-form" tal:attributes="action string:${user_tool/absolute_url}/search_users">
+		<div id="name_filter">
+			<label for="search" i18n:translate="">Search users:</label>
+			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
+			<br />
+			<small i18n:translate="">Leave search box empty to filter by roles</small>
+		</div>
+
 		<div class="filters">
 			<label for="filter-roles" i18n:translate="">with roles:</label>
 			<select name="role" id="filter-roles">
@@ -25,13 +32,6 @@
 				</tal:block>
 			</select>
 			<input type="submit" i18n:attributes="value" value="Go" />
-		</div>
-		
-		<div id="name_filter">
-			<label for="search" i18n:translate="">Search users:</label>
-			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
-			<br />
-			<small i18n:translate="">Leave search box empty to filter by roles</small>
 		</div>
 
 		<div class="loader">
@@ -76,11 +76,10 @@
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
-<div class="form-buttons">
+<div class="form-buttons" tal:condition="python: len(users) != 0">
     <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
     <input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
 </div>
-
 
 <input type="hidden" id="template" value="site_admin_local_users" />
 <metal:block define-macro="datatable">
@@ -94,12 +93,14 @@
 			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
 		</select>
 	</div>
-	<div class="cleaner"></div>
 </tal:block>
+
+<div class="cleaner"></div>
+
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%"
        tal:define="users_roles user_tool/getUsersRoles">
-    <tr>
+    <tr  tal:condition="python:len(users) != 0">
         <th width="5%" align="left" i18n:translate="" class="checkbox">
 			<input type="checkbox" class="select-all" onclick="selectAll();" />
 		</th>
@@ -181,11 +182,25 @@
     </tr>
 
     <tr tal:condition="python:len(users) == 0">
-        <td colspan="6" i18n:translate="">
-			<p class="table-message">
-				<img src="misc_/Naaya/info.png" title="Note" i18n:attributes="title" alt="Note" class="icon-image" />&nbsp;Users' list empty
-			</p>
-		</td>
+		<tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
+			<tal:block condition="if">
+				<td colspan="6" i18n:translate="">
+					<p class="table-message">
+						No local users defined yet.
+					</p>
+					<p class="table-message" tal:define="source_id python: user_sources[0].id">
+						You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
+					</p>
+				</td>
+			</tal:block>
+			<tal:block condition="not: if">
+				<td colspan="6" i18n:translate="">
+					<p class="table-message">
+						No users matched this search criteria.
+					</p>
+				</td>
+			</tal:block>
+		</tal:block>
     </tr>
 </table>
 <metal:block define-macro="pagination">
@@ -197,7 +212,7 @@
 </div>
 </metal:block>
 
-	<div class="tip">
+	<div class="tip" tal:condition="python: len(users) != 0">
 		<img src="misc_/Naaya/info.png" alt="Info" i18n:attributes="alt" class="icon-image" title="Info note" />
 		<strong i18n:translate="">Notes:</strong>
 		<p>
