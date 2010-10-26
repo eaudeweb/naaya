@@ -38,6 +38,8 @@
         <p i18n:translate="">
             Waiting for users roles.
         </p>
+        
+        <div class="cleaner"></div>
     </div>
 
     <div id="users_roles_error_response" class="message-error"
@@ -45,6 +47,8 @@
         <p i18n:translate="">
             Error displaying users roles.
         </p>
+        
+        <div class="cleaner"></div>
     </div>
     
     <div class="datatable">
@@ -116,8 +120,7 @@
     <div class="description-text">
         <p tal:condition="groups_roles_map" i18n:translate="">
             Roles currently granted for <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups are listed in the table
-            below. To revoke roles, select them and click on the <em>Revoke
-            roles</em> button.
+            below. Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role assigned to a group.
         </p>
     </div>
     
@@ -147,14 +150,15 @@
     </div>
 
     <tal:block tal:condition="groups_roles_map">
-        <table class="datatable ldap_groups">
+        <div class="datatable">
+        <table class="ldap_groups" cellpadding="2" cellspacing="0">
             <thead>
-                <th i18n:translate="">Group</th>
-                <th i18n:translate="">Role</th>
-                <th i18n:translate="">Revoke</th>
+                <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
+                <th i18n:translate="">Roles/Location</th>
+                <th i18n:translate="">Revoke roles</th>
             </thead>
             <tbody>
-                <tr tal:repeat="group_id groups_roles_map">
+                <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
                     <td>
                         <a class="group_link"
                             tal:attributes="
@@ -193,6 +197,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </tal:block>
     </tal:block>
 </div>
