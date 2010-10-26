@@ -1,9 +1,14 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Add user</metal:block>
+
+<metal:block fill-slot="description-text">
+</metal:block>
+
 <metal:block fill-slot="second-tabs">
     <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content">
+
 <div class="cleaner">&nbsp;</div>
 <div class="tip">
 	<img src="misc_/Naaya/info.png" alt="Info" title="Info" i18n:attributes="title" class="icon-image" />&nbsp;<strong>Info</strong>
@@ -42,7 +47,7 @@
 	<br />
 	
 	<input type="submit" value="Add user" i18n:attributes="value" />
-	<input type="reset" value="Clear form" i18n:attributes="value" />
+	<input type="button" value="Back to local users list" onclick="document.location.href='admin_local_users_html';" i18n:attributes="value" />
 </form>
 <span tal:replace="here/delUserSession" />
 
