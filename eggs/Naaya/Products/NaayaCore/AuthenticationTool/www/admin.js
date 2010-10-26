@@ -12,10 +12,32 @@ $(document).ready(function(){
 			toggleLoader();
 		},
 		success: function(data) {
-			$('.datatable').replaceWith(data);
+			$('.user-results').replaceWith(data);
 			toggleLoader();
 		}
     });
+
+	$('.datatable td.checkbox input[type="checkbox"]').click(function(){
+		if($(this).attr('class') != 'select-all'){
+			if($(this).attr('checked') == false){
+				$('.select-all').attr('checked', false);
+				$(this).attr('checked', false);
+			}else {
+				var not_all = false;
+
+				$.each($('.datatable td.checkbox input[type="checkbox"]'), function(i, e){
+					if($(this).attr('checked') == false){
+						not_all = true;
+					}
+				});
+
+				if(not_all == false){
+					$('.select-all').attr('checked', true);
+				}
+			}
+		}
+	});
+
     ldap_onclick_sort_links();
     ldap_onclick_group_links();
     ldap_user_search_form();
@@ -70,7 +92,9 @@ function ldap_ajax_section_assign_to_users() {
     ldap_user_search_form();
 }
 
+
 function ldap_ajax_section_assign_to_groups() {
+    ldap_group_roles_assign_form();
 }
 
 function ldap_refresh_section(tabid, url) {
@@ -163,3 +187,5 @@ function ldap_user_search_form() {
 /**
  * End Functions for LDAPUserFolder
 */
+
+
