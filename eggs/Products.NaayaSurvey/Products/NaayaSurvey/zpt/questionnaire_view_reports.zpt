@@ -25,6 +25,7 @@
 <tr>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
+	<th/>
 </tr>
 
 <tr tal:repeat="object objects">
@@ -35,10 +36,16 @@
 			title object/meta_type"/>
 	</td>
 	<td class="title-column">
-	<a tal:attributes="
-		href python:'%s/questionnaire_view_report_html?report_id=%s' % (here.absolute_url(), object.id);
-		title object/title"
-		tal:content="object/title" />
+		<a tal:attributes="
+			href string:${here/absolute_url}/questionnaire_view_report_html?report_id=${object/id};
+			title object/title"
+			tal:content="object/title" />
+	</td>
+	<td class="title-column">
+		<a i18n:translate=""
+		tal:attributes="href string:${here/absolute_url}/questionnaire_export?report_id=${object/id}" >
+			Download as Excel
+		</a>
 	</td>
 </tr>
 

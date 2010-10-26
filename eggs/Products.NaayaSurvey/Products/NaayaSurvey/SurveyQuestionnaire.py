@@ -1,6 +1,15 @@
 import sys
-from urllib import urlencode
+import urllib
+import tempfile
+import shutil
 from os import path
+from cStringIO import StringIO
+
+try:
+    import xlwt
+    excel_export_available = True
+except:
+    excel_export_available = False
 
 # Zope imports
 from Acquisition import Implicit
@@ -93,6 +102,15 @@ def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=N
     elif l_referer == 'questionnaire_add_html':
         context.setSession('referer', context.absolute_url())
         REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
+
+def set_response_attachment(RESPONSE, filename, content_type, length=None):
+    RESPONSE.setHeader('Content-Type', content_type)
+    if length is not None:
+        RESPONSE.setHeader('Content-Length', length)
+    RESPONSE.setHeader('Pragma', 'public')
+    RESPONSE.setHeader('Cache-Control', 'max-age=0')
+    RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
+        % urllib.quote(filename))
 
 class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyContainer):
     """ """
@@ -442,6 +460,55 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if not report:
             raise NotFound('Report %s' % (report_id,))
         return report.view_report_html(answers=self.getAnswers())
+
+    security.declarePrivate('generate_excel')
+    def generate_excel(self, report):
+        state = {}
+        wb = xlwt.Workbook(encoding='utf-8')
+        state['ws'] = wb.add_sheet('Report')
+        state['temp_folder'] = tempfile.mkdtemp()
+        state['answers'] = self.getAnswers()
+        separator_style = xlwt.easyxf('borders: top thin')
+        # alternatives for formatting
+        #filled_cell_style = xlwt.easyxf(pattern: pattern solid, fore_colour 0x16')
+        #ws.col(1).width = len('Text in cell') * 256
+        current_row = 1
+        question = ''
+        for statistic in report.getSortedStatistics():
+            if question != statistic.question.title and\
+                report.getSortedStatistics().index(statistic) != 0:
+                question = statistic.question.title
+                state['ws'].write_merge(current_row, current_row, 0, 20, '', separator_style)
+                current_row += 1
+            elif question == statistic.question.title:
+                state['ws'].write_merge(current_row, current_row, 1, 5, '', separator_style)
+                current_row += 1
+            state['current_row'] = current_row
+            statistic.add_to_excel(state)
+            current_row = state['current_row'] + 1
+        shutil.rmtree(state['temp_folder'])
+        #output = StringIO()
+        output = tempfile.NamedTemporaryFile()
+        wb.save(output)
+        output.seek(0)
+        return output.read()
+
+    security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
+    def questionnaire_export(self, report_id, REQUEST):
+        """ """
+        report = self.getSurveyTemplate().getReport(report_id)
+        if not report:
+            raise NotFound('Report %s' % (report_id,))
+        assert excel_export_available
+        ret = self.generate_excel(report)
+        content_type = 'application/vnd.ms-excel'
+        filename = '%s Export.xls' % report.id
+
+        if REQUEST is not None:
+            filesize = len(ret)
+            set_response_attachment(REQUEST.RESPONSE, filename,
+                content_type, filesize)
+        return ret
 
     #
     # utils
