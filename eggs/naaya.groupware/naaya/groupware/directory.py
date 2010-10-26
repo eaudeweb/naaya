@@ -19,21 +19,22 @@ class Directory(Implicit, Item):
 
     def __init__(self, id):
         self.id = id
-        self.sources = {}
 
-    security.declarePrivate('update_sources_cache')
-    def update_sources_cache(self, acl_tool):
+    security.declarePrivate('get_sources_info')
+    def get_sources_info(self, acl_tool):
+        ret = {}
         for source in acl_tool.getSources():
             if not isinstance(source, plugLDAPUserFolder):
                 continue
             source_uf = source.getUserFolder()
             individual_ldap_users = source.getUsersRoles(source_uf)
             group_to_role_mapping = source.get_groups_roles_map()
-            self.sources[source.id] = {
+            ret[source.id] = {
                 'user_roles': individual_ldap_users,
                 'group_map': group_to_role_mapping,
                 'source': source,
             }
+        return ret
 
     security.declareProtected(view, 'search_directory')
     def search_directory(self, search_string=u'', sort_by='',
@@ -67,12 +68,13 @@ class Directory(Implicit, Item):
         ret = []
         portal = self.getSite()
         acl_tool = portal.getAuthenticationTool()
-        self.update_sources_cache(acl_tool)
-        for source_id in self.sources.keys():
-            source = self.sources[source_id]['source']
+        sources_info = self.get_sources_info(acl_tool)
+        for source_id in sources_info.keys():
+            source = sources_info[source_id]['source']
 
-            individual_userids = self.sources[source_id]['user_roles'].keys()
-            group_userids_map = self.get_group_userids_map(source_id)
+            individual_userids = sources_info[source_id]['user_roles'].keys()
+            group_userids_map = self.get_group_userids_map(source_id,
+                                                           sources_info)
             group_userids = []
             for group_users in group_userids_map.values():
                 group_userids.extend(group_users)
@@ -84,7 +86,9 @@ class Directory(Implicit, Item):
             # precalculate user roles for performance
             user_roles_map = {}
             for user in users:
-                user_roles = self.get_external_user_roles(source, user['uid'],
+                user_roles = self.get_external_user_roles(source,
+                                                          user['uid'],
+                                                          sources_info,
                                                           group_userids_map)
                 user_roles_map[user['uid']] = user_roles
 
@@ -104,9 +108,9 @@ class Directory(Implicit, Item):
         if user is not None:
             return self.get_local_user_info(user)
 
-        self.update_sources_cache(acl_tool)
-        for source_id in self.sources.keys():
-            source = self.sources[source_id]['source']
+        sources_info = self.get_user_info(acl_tool)
+        for source_id in sources_info.keys():
+            source = sources_info[source_id]['source']
             acl_folder = source.getUserFolder()
             user = acl_folder.getUserById(userid, None)
             if user is not None:
@@ -154,12 +158,14 @@ class Directory(Implicit, Item):
         return acl_tool.getUserRoles(userob)
 
     security.declarePrivate('get_external_user_roles')
-    def get_external_user_roles(self, source, userid, group_userids_map=None):
+    def get_external_user_roles(self, source, userid, sources_info,
+                                group_userids_map=None):
         # group_userids_map is precalculated for search directory (performance)
         if group_userids_map is None:
-            group_userids_map = self.get_group_userids_map(source.id)
-        individual_ldap_users = self.sources[source.id]['user_roles']
-        group_to_role_mapping = self.sources[source.id]['group_map']
+            group_userids_map = self.get_group_userids_map(source.id,
+                                                           sources_info)
+        individual_ldap_users = sources_info[source.id]['user_roles']
+        group_to_role_mapping = sources_info[source.id]['group_map']
         site_id = self.getSite().getId()
         roles = []
         if userid in individual_ldap_users.keys():
@@ -175,10 +181,10 @@ class Directory(Implicit, Item):
         return roles
 
     security.declarePrivate('get_group_userids_map')
-    def get_group_userids_map(self, source_id):
+    def get_group_userids_map(self, source_id, sources_info):
         group_userids_map = {}
-        source = self.sources[source_id]['source']
-        for group_id in self.sources[source_id]['group_map'].keys():
+        source = sources_info[source_id]['source']
+        for group_id in sources_info[source_id]['group_map'].keys():
             group_userids_map[group_id] = source.group_member_ids(group_id)
         return group_userids_map
 
