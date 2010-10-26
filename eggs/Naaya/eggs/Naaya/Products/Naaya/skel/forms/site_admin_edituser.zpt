@@ -1,66 +1,77 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
-<metal:block fill-slot="second-title" i18n:translate="">Edit user</metal:block>
+
+<metal:block fill-slot="second-title" i18n:translate="">Edit user information</metal:block>
+
 <metal:block fill-slot="second-tabs">
     <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['second-tabs']"></metal:block>
 </metal:block>
-<metal:block fill-slot="content"><metal:block define-macro="content">
-<tal:block define="user_obj python:user_tool.getUser(request.get('name', ''));
-		user_firstname python:user_tool.getUserFirstName(user_obj); user_lastname python:user_tool.getUserLastName(user_obj);
-		user_email python:user_tool.getUserEmail(user_obj); user_account python:user_tool.getUserAccount(user_obj);
-		user_roles python:user_tool.getUserRoles(user_obj);
-		user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
-		session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
 
-<p i18n:translate="" class="cleaner">
-	Change the form below with user's credentials and account and click <em i18n:name="save-button" i18n:translate="">Save changes</em>:
-</p>
+<metal:block fill-slot="description-text"></metal:block>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_edituser">
-	<fieldset><legend i18n:translate="">Personal settings</legend>
-	<dl>
-		<dt i18n:translate="">First name:</dt>
-		<dd><input type="text" name="firstname:utf8:ustring" size="35" maxLength="255" tal:attributes="value here/getSessionUserFirstname" /></dd>
-		<dt i18n:translate="">Last name:</dt>
-		<dd><input type="text" name="lastname:utf8:ustring" size="35" tal:attributes="value here/getSessionUserLastname" /></dd>
-		<dt i18n:translate="">Email address:</dt>
-		<dd><input type="text" name="email:utf8:ustring" size="35" tal:attributes="value here/getSessionUserEmail" /></dd>
-	</dl>
+<metal:block fill-slot="content">
+
+	<tal:block define="user_obj python:user_tool.getUser(request.get('name', ''));
+						user_firstname python:user_tool.getUserFirstName(user_obj); 
+						user_lastname python:user_tool.getUserLastName(user_obj);
+						user_email python:user_tool.getUserEmail(user_obj); 
+						user_account python:user_tool.getUserAccount(user_obj);
+						user_roles python:user_tool.getUserRoles(user_obj);
+						user_created python:user_tool.getUserCreatedDate(user_obj); 
+						user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
+						session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
+
+
+	<form method="post" tal:attributes="action string:${site_url}/admin_edituser">
+		<div class="field-inline">
+			<label for="firstname" i18n:translate="">First name:</label>
+			<input type="text" id="firstname" name="firstname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserFirstname" />
+		</div>
+		<div class="field-inline">
+			<label for="lastname" i18n:translate="">Last name:</label>
+			<input type="text" id="lastname" name="lastname:utf8:ustring" size="50" maxLength="255" tal:attributes="value here/getSessionUserLastname" />
+		</div>
+		<div class="field-inline">
+			<label for="email" i18n:translate="">Email address:</label>
+			<input type="text" id="email" name="email:utf8:ustring" size="45" maxLength="255" tal:attributes="value here/getSessionUserEmail" />
+		</div>
+		<br />
+		<div class="field">
+			<label for="password" i18n:translate="">Password:</label>
+			<input type="password" id="password" name="password:utf8:ustring" value="" maxLength="255" />
+		</div>
+		<div class="field">
+			<label for="confirm" i18n:translate="">Password verification:</label>
+			<input type="password" id="confirm" name="confirm:utf8:ustring" value="" maxLength="255" />
+		</div>
+		<div class="field">
+			<input type="hidden" name="name:utf8:ustring" tal:attributes="value user_account" />
+			<input type="submit" value="Save changes" i18n:attributes="value" />
+			<a tal:attributes="href string:${here/absolute_url}/admin_local_users_html">Back to local users list</a>
+		</div>
+	</form>
+
+	<fieldset>
+		<legend i18n:translate="">Account information</legend>
+		<p>
+			<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created[:-3])" /><br />
+			<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated[:-3])" /><br />
+		</p>
 	</fieldset>
 	<br />
-	<fieldset><legend i18n:translate="">User settings</legend>
-	<dl>
-		<dt i18n:translate="">Username:</dt>
-		<dd tal:content="user_account">username</dd>
-		<dt i18n:translate="">Password:</dt>
-		<dd><input type="password" name="password:utf8:ustring" value="" /></dd>
-		<dt i18n:translate="">Password verification:</dt>
-		<dd><input type="password" name="confirm:utf8:ustring" value="" /></dd>
-	</dl>
+	<fieldset>
+		<legend i18n:translate="">User activity log</legend>
+		<p>
+			<span i18n:translate="" tal:omit-tag="">Last login:</span>
+			<tal:block tal:define="user_lastlogin python:user_tool.getUserLastLogin(user_obj)"
+						tal:content="python:test(user_lastlogin=='', ' - ', user_lastlogin[:-3])" /><br />
+			<span i18n:translate="" tal:omit-tag="">Last activity:</span>
+			<tal:block tal:define="user_lastpost python:user_tool.getUserLastPost(user_obj)"
+						tal:content="python:test(user_lastpost=='', ' - ', user_lastpost[:-3])" />
+		</p>
 	</fieldset>
-	<br />
-	<input type="hidden" name="name:utf8:ustring" tal:attributes="value user_account" />
-	<input type="submit" value="Save changes" i18n:attributes="value" />
-	<br /><br />
-	<fieldset><legend i18n:translate="">Record information</legend>
-	<p>
-		<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created[:-3])" /><br />
-		<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated[:-3])" /><br />
-	</p>
-	</fieldset>
-	<br />
-	<fieldset><legend i18n:translate="">User activity log</legend>
-	<p>
-		<span i18n:translate="" tal:omit-tag="">Last login:</span>
-		<tal:block tal:define="user_lastlogin python:user_tool.getUserLastLogin(user_obj)"
-					tal:content="python:test(user_lastlogin=='', ' - ', user_lastlogin[:-3])" /><br />
-		<span i18n:translate="" tal:omit-tag="">Last activity:</span>
-		<tal:block tal:define="user_lastpost python:user_tool.getUserLastPost(user_obj)"
-					tal:content="python:test(user_lastpost=='', ' - ', user_lastpost[:-3])" />
-	</p>
-	</fieldset>
-</form>
-<span tal:replace="here/delUserSession" />
+	<span tal:replace="here/delUserSession" />
+
 </tal:block>
+</metal:block>
 
-</metal:block></metal:block>
 </metal:block>
