@@ -5,8 +5,7 @@
     id python:request.get('id', 0);
     site_path python:here.getSitePath();
     source_url string:${site_path}/admin_sources_html?id=${id};
-    section_url string:${source_url}&s=manage_all;
-    ">
+    section_url string:${source_url}&s=manage_all;">
 
 <fieldset id="users_field">
     <legend i18n:translate="">LDAP users</legend>
@@ -44,35 +43,26 @@
         <table cellspacing="0" cellpadding="4" width="95%">
             <tr tal:condition="python:len(users_roles) != 0">
                 <th align="left">
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
+                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
                         <span i18n:translate="">Username</span>
                     </a>
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
+                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=user&rkey=1" tal:condition="python: (skey == 'user' and not rkey) or not skey">
                         <span i18n:translate="">Username</span>
                     </a>
-                    <img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-                    <img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                    <img tal:condition="python: (skey == 'user' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+                    <img tal:condition="python: skey == 'user' and rkey" src="misc_/Naaya/sort_desc.gif" />
                 </th>
                 <th align="left">
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
+                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=group" tal:condition="python: (skey == 'group' and rkey) or skey != 'group'" >
                         <span i18n:translate="">Group</span>
                     </a>
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
+                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=group&rkey=1" tal:condition="python: skey == 'group' and not rkey" >
                         <span i18n:translate="">Group</span>
                     </a>
-                    <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-                    <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                    <img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+                    <img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
                 </th>
-                <th align="left">
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
-                        <span i18n:translate="">Roles</span>
-                    </a>
-                    <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
-                        <span i18n:translate="">Roles</span>
-                    </a>
-                    <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-                    <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
-                </th>
+                <th align="left"><span i18n:translate="">Roles</span></th>
                 <th i18n:translate="">Revoke</th>
             </tr>
             <tr tal:repeat="user python:users_roles"
