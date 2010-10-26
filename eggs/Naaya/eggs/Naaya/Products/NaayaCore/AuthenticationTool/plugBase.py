@@ -69,7 +69,7 @@ class PlugBase(SimpleItem):
             for l_roles_tuple in l_item.get_local_roles():
                 l_local_roles = self.getLocalRoles(l_roles_tuple[1])
                 user = l_roles_tuple[0]
-                if self.getUserSource(user) != 'acl_users' and len(l_local_roles)>0:
+                if self.getUserSource(user) == self.title and len(l_local_roles)>0:
                     if l_users_roles.has_key(str(user)):
                         l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
                     else:
