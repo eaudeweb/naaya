@@ -226,9 +226,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def _doDelUsers(self, names):
         """Delete one or more users."""
 
+        #Delete local roles (from folder property)
+        """
+        users_roles = self.getUsersRoles()
+        for user, roles in users_roles.iteritems():
+            if user in names:
+                if len(roles) and len(roles[1]):
+                    location = self.utGetObject(roles[1][1])
+                    if location is not None:
+                        location.manage_delLocalRoles([user])
+        """
         for name in names:
             del self.data[name]
-        self._p_changed = 1
+
+        self._p_changed = True
 
     #zmi actions
     security.declareProtected(manage_users, 'manage_confirmUser')
