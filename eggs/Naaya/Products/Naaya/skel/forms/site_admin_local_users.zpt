@@ -88,7 +88,7 @@
 <tal:block condition="users">
 	<div class="paginator-details">
 		<label for="per-page" i18n:translate="">Users per page</label>
-		<select name="per-page" id="per-page" tal:attributes="onchange string:showPerPageItems('${site_url}/admin_all_users_html');">
+		<select name="per-page" id="per-page">
 			<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
 			<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
 			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
@@ -104,30 +104,30 @@
 			<input type="checkbox" class="select-all" onclick="selectAll();" />
 		</th>
         <th width="15%" align="left">
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
                 <span i18n:translate="">Username</span>
             </a>
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
                 <span i18n:translate="">Username</span>
             </a>
             <img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
         </th>
         <th width="30%" align="left">
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
                 <span i18n:translate="">Name/E-mail</span>
             </a>
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
                 <span i18n:translate="">Name/E-mail</span>
             </a>
             <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
         </th>
         <th align="left">
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
                 <span i18n:translate="">Roles/Location</span>
             </a>
-            <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
+            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_local_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
                 <span i18n:translate="">Roles/Location</span>
             </a>
             <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
@@ -152,7 +152,7 @@
 			<div class="datatable-username">
 				<tal:block replace="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)"></tal:block>
 			</div>
-			
+
 			<div class="datatable-email" tal:define="email python:user_tool.getUserEmail(user)">
 				<a tal:attributes="href string:mailto:${email}; title string:Click to open email client" i18n:attributes="title" tal:content="email" />
 			</div>

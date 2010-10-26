@@ -3,19 +3,33 @@
 */
 $(document).ready(function(){
 	$('#search-users').focus();
-	$("#search-users-form").ajaxForm({
-		data: {
-			'template': $('#template').val(),
-			'all_users': $('#all_users').val()
-		},
-		beforeSubmit: function(arr, form, options) {
-			toggleLoader();
-		},
-		success: function(data) {
-			$('.user-results').replaceWith(data);
-			toggleLoader();
-		}
-    });
+	setupSearchUsers();
+
+	/**
+	 * Intercept items/page select change
+	*/
+	$('#per-page').live('change', function(){
+		setupSearchUsers({'per_page': $(this).val()});
+		$("#search-users-form").submit();
+	});
+
+	//Intercept pagination links
+	$('.paginator-pages, .paginator-next, .paginator-previous').live('click', function(e){
+		e.preventDefault();
+		var data = unserialize($(this).find('a').attr('href'));
+
+		setupSearchUsers({'per_page': data['per_page'], 'page': data['page']});
+		$("#search-users-form").submit();
+		setupSearchUsers();
+	});
+
+	$('.sort-key').live('click', function(e){
+		e.preventDefault();
+		var data = unserialize($(this).attr('href').split('?')[1]);
+		setupSearchUsers(data);
+		$("#search-users-form").submit();
+		setupSearchUsers();
+	});
 
 	$('.datatable td.checkbox input[type="checkbox"]').click(function(){
 		if($(this).attr('class') != 'select-all'){
@@ -38,10 +52,39 @@ $(document).ready(function(){
 		}
 	});
 
+
     ldap_onclick_sort_links();
     ldap_onclick_group_links();
     ldap_user_search_form();
 });
+
+/**
+ * Setup user search ajax form. Additional post data can be provided to
+ * acomodate sort order, pagination and others
+*/
+function setupSearchUsers(data){
+	var local_data = {
+		'template': $('#template').val(),
+		'all_users': $('#all_users').val()
+	};
+
+	if (data){//Extend default post key/values if additional data provided
+		for (i in data){
+			local_data[i] = data[i]
+		}
+	}
+
+	$("#search-users-form").ajaxForm({
+		data: local_data,
+		beforeSubmit: function(arr, form, options) {
+			toggleLoader();
+		},
+		success: function(data) {
+			$('.user-results').replaceWith(data);
+			toggleLoader();
+		}
+	});
+}
 
 function toggleLoader(){
 	$('.loader').toggle();

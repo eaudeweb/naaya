@@ -445,6 +445,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         skey= form_data.get('skey', 'name')
         rkey = int(form_data.get('rkey', 0))
+        page = int(form_data.get('page', 0))
         per_page = int(form_data.get('per_page', 50))
         all_users = bool(form_data.get('all_users', False))
         filter_role = form_data.get('role', '')
@@ -484,7 +485,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             template = form_data.get('template', '')
             try:
                 return render_macro(self, template, 'datatable', skey=skey,
-                    rkey=rkey, users=users, all_users_objects=users,
+                    rkey=rkey, all_users_objects=users,
+                    users=users[(page*per_page):(page * per_page + per_page)],
                     per_page=per_page, site_url=self.getSitePath(),
                     role=filter_role, user_tool=self.getAuthenticationTool(),
                     user_sources=self.getSources(), request=REQUEST)
