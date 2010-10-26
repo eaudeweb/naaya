@@ -81,21 +81,21 @@
     <input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
 </div>
 
-<div class="paginator-details">
-	<label for="per-page" i18n:translate="">Items per page</label>
-	<select name="per-page" id="per-page" tal:attributes="onchange string:showPerPageItems('${site_url}/admin_local_users_html');">
-		<option tal:attributes="selected python: (per_page == 1) and 'selected' or ''" value="1">1</option>
-		<option tal:attributes="selected python: (per_page == 10) and 'selected' or ''" value="10">10</option>
-		<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
-		<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
-		<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
-	</select>
-</div>
-
-<div class="cleaner"></div>
 
 <input type="hidden" id="template" value="site_admin_local_users" />
 <metal:block define-macro="datatable">
+<div class="user-results">
+<tal:block condition="users">
+	<div class="paginator-details">
+		<label for="per-page" i18n:translate="">Users per page</label>
+		<select name="per-page" id="per-page" tal:attributes="onchange string:showPerPageItems('${site_url}/admin_all_users_html');">
+			<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
+			<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
+			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
+		</select>
+	</div>
+	<div class="cleaner"></div>
+</tal:block>
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%"
        tal:define="users_roles user_tool/getUsersRoles">
@@ -193,6 +193,7 @@
 		<metal:block use-macro="here/macro_utils/macros/paginator" />
 	</tal:block>
 </metal:block>
+</div>
 </div>
 </metal:block>
 

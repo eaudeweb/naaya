@@ -13,19 +13,19 @@
     users python: all_users_objects[page:(page + per_page)];">
 <input type="hidden" id="template" value="site_admin_all_users" />
 <input type="hidden" id="all_users" value="True" />
-
-<div class="paginator-details" tal:condition="python:len(users) != 0">
-	<label for="per-page" i18n:translate="">Users per page</label>
-	<select name="per-page" id="per-page" tal:attributes="onchange string:showPerPageItems('${site_url}/admin_all_users_html');">
-		<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
-		<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
-		<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
-	</select>
-</div>
-
-<div class="cleaner"></div>
-
 <metal:block define-macro="datatable">
+<div class="user-results">
+<tal:block condition="users">
+	<div class="paginator-details">
+		<label for="per-page" i18n:translate="">Users per page</label>
+		<select name="per-page" id="per-page" tal:attributes="onchange string:showPerPageItems('${site_url}/admin_all_users_html');">
+			<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
+			<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
+			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
+		</select>
+	</div>
+	<div class="cleaner"></div>
+</tal:block>
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%">
     <tr tal:condition="python:len(users) != 0">
@@ -111,14 +111,25 @@
     </tr>
 
     <tr tal:condition="python:len(users) == 0">
-        <td colspan="6" i18n:translate="">
-            <p class="table-message">
-                No local users defined and no roles assigned to LDAP users yet.
-            </p>
-            <p class="table-message" tal:define="source_id python: user_sources[0].id">
-                You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
-            </p>
-        </td>
+		<tal:block define="if query|filter_role|nothing">
+			<tal:block condition="if">
+				<td colspan="6" i18n:translate="">
+					<p class="table-message">
+						No local users defined and no roles assigned to LDAP users yet.
+					</p>
+					<p class="table-message" tal:define="source_id python: user_sources[0].id">
+						You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
+					</p>
+				</td>
+			</tal:block>
+			<tal:block condition="not: if">
+				<td colspan="6" i18n:translate="">
+					<p class="table-message">
+						No users matched this search criteria.
+					</p>
+				</td>
+			</tal:block>
+		</tal:block>
     </tr>
 </table>
 <metal:block define-macro="pagination" tal:condition="python:len(users) != 0">
@@ -127,6 +138,8 @@
 	</tal:block>
 </metal:block>
 </div>
+</div>
+
 </metal:block>
 
     <div class="tip" tal:condition="python:len(users) != 0">
