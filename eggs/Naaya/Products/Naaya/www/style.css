@@ -443,7 +443,6 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	width: 13em;
 }
 
-
 #breadcrumbtrail {
 	clear: both;
 	line-height: 2em;
@@ -477,29 +476,21 @@ h1 {
 	padding:0.3em 0 0.3em 0.3em;
 }
 h2 {
-	font-size: 1.2em;
-	line-height:1.3em;
+	font-size: 1.3em;
 	padding-left:0.5em;
 	font-weight: bold;
-	margin: 0;
+	margin: 1em 0;
 	color: #333;
 	background: #f0f5fb;
 	border-bottom: 3px solid #bacee7;
 }
 
-/*h3 {*/
-/*	font-size: 0.9em;*/
-/*	line-height:1em;*/
-/*	padding-left:0.5em;*/
-/*	margin: 0;*/
-/*	color: #000;*/
-/*}*/
-
 h3 {
-		line-height: normal;
-		font-size: 1.4em;
-		color: #333333;
-		padding: 0.2em;
+	line-height: normal;
+	font-size: 1.4em;
+	color: #333333;
+	padding: 0.2em;
+	margin: 1em 0;
 }
 
 /* Media file style sheet */
