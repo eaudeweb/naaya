@@ -5,146 +5,160 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['description-text']">
 </metal:block>
 
-<metal:block fill-slot="search-box">
+<metal:block fill-slot="search-box"><br>
+    <div class="cleaner"></div>
+    <h3 i18n:translate="">
+        Users list
+    </h3>
+    
     <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
     users python: all_users_objects[page:(page + per_page)];">
-<input type="hidden" id="template" value="site_admin_all_users" />
-<input type="hidden" id="all_users" value="True" />
-<metal:block define-macro="datatable">
-<div class="user-results">
-<tal:block condition="users">
-	<div class="paginator-details">
-		<label for="per-page" i18n:translate="">Users per page</label>
-		<select name="per-page" id="per-page">
-			<option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
-			<option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
-			<option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
-		</select>
-	</div>
-	<div class="cleaner"></div>
-</tal:block>
-<div class="datatable">
-<table cellspacing="0" cellpadding="4" width="95%">
-    <tr tal:condition="python:len(users) != 0">
-        <th align="left">
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
-                <span i18n:translate="">Username</span>
-            </a>
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
-                <span i18n:translate="">Username</span>
-            </a>
-            <img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-            <img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
-        </th>
-        <th align="left">
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
-                <span i18n:translate="">Name</span>
-            </a>
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
-                <span i18n:translate="">Name</span>
-            </a>
-            <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-            <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
-        </th>
-        <th align="left">
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=email" tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" >
-                <span i18n:translate="">Email address</span>
-            </a>
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=email&rkey=1" tal:condition="python: skey == 'email' and not rkey" >
-                <span i18n:translate="">Email address</span>
-            </a>
-            <img tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-            <img tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
-        </th>
-        <th align="left">
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
-                <span i18n:translate="">Roles</span>
-            </a>
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
-                <span i18n:translate="">Roles</span>
-            </a>
-            <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-            <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
-        </th>
-        <th align="left">
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source" tal:condition="python: (skey == 'source' and rkey) or skey != 'source'" >
-                <span i18n:translate="">Source</span>
-            </a>
-            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source&rkey=1" tal:condition="python: skey == 'source' and not rkey" >
-                <span i18n:translate="">Source</span>
-            </a>
-            <img tal:condition="python: skey == 'source' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-            <img tal:condition="python: skey == 'source' and rkey" src="misc_/Naaya/sort_desc.gif" />
-        </th>
-    </tr>
-    <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
-        <td>
-            <strong>
-                <tal:block condition="python: user_tool.getUserSource(user) == 'n/a'">
-                <a tal:define="user_quoted python:here.utUrlEncode(user)"
-                            tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all" tal:content="user">username</a>
+                                    
+    
+
+    <input type="hidden" id="template" value="site_admin_all_users" />
+    <input type="hidden" id="all_users" value="True" />
+    
+    <metal:block define-macro="datatable">
+    <div class="user-results">
+        <tal:block condition="users">
+        <div class="paginator-details">
+            <label for="per-page" i18n:translate="">Users per page</label>
+            <select name="per-page" id="per-page">
+                <option tal:attributes="selected python: (per_page == 25) and 'selected' or ''" value="25">25</option>
+                <option tal:attributes="selected python: (per_page == 50) and 'selected' or ''" value="50">50</option>
+                <option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
+            </select>
+        </div>
+        
+        <div class="cleaner"></div>
+        </tal:block>
+        
+        <div class="datatable">
+            <table cellspacing="0" cellpadding="4" width="95%">
+                <thead>
+                    <tr tal:condition="python:len(users) != 0">
+                        <th align="left">
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
+                                <span i18n:translate="">Username</span>
+                            </a>
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
+                                <span i18n:translate="">Username</span>
+                            </a>
+                            <img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+                            <img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                        </th>
+                        <th align="left">
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
+                                <span i18n:translate="">Name</span>
+                            </a>
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
+                                <span i18n:translate="">Name</span>
+                            </a>
+                            <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+                            <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                        </th>
+                        <th align="left">
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=email" tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" >
+                                <span i18n:translate="">Email address</span>
+                            </a>
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=email&rkey=1" tal:condition="python: skey == 'email' and not rkey" >
+                                <span i18n:translate="">Email address</span>
+                            </a>
+                            <img tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+                            <img tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                        </th>
+                        <th align="left">
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles" tal:condition="python: (skey == 'roles' and rkey) or skey != 'roles'" >
+                                <span i18n:translate="">Roles/Location</span>
+                            </a>
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=roles&rkey=1" tal:condition="python: skey == 'roles' and not rkey" >
+                                <span i18n:translate="">Roles/Location</span>
+                            </a>
+                            <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+                            <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                        </th>
+                        <th align="left">
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source" tal:condition="python: (skey == 'source' and rkey) or skey != 'source'" >
+                                <span i18n:translate="">Source</span>
+                            </a>
+                            <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=source&rkey=1" tal:condition="python: skey == 'source' and not rkey" >
+                                <span i18n:translate="">Source</span>
+                            </a>
+                            <img tal:condition="python: skey == 'source' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+                            <img tal:condition="python: skey == 'source' and rkey" src="misc_/Naaya/sort_desc.gif" />
+                        </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+                        <td>
+                            <strong>
+                                <tal:block condition="python: user_tool.getUserSource(user) == 'n/a'">
+                                <a tal:define="user_quoted python:here.utUrlEncode(user)"
+                                            tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all" tal:content="user">username</a>
+                                </tal:block>
+                                <tal:block condition="python: not user_tool.getUserSource(user) == 'n/a'" tal:content="user"></tal:block>
+                            </strong>
+                            <span tal:condition="python:user_tool.isNewUser(user)">
+                                <img src="misc_/Naaya/star.png" alt="New account" />
+                            </span>
+                            <span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_tool.getUserSource(user) != 'n/a'">
+                                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
+                            </span>
+                        </td>
+                        <td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
+                        <td tal:define="email python:user_tool.getUserEmail(user)">
+                            <a tal:attributes="href string:mailto:${email}; title string:Send Email to ${email}" i18n:attributes="title">
+                                <tal:block replace="email"></tal:block>
+                            </a>
+                        </td>
+                
+                        <td tal:define="roles user/getRoles">
+                            <tal:block replace="python:len(roles) and ', '.join(roles) or '-'"></tal:block>
+                        </td>
+                
+                        <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
+                    </tr>
+                
+                    <tr tal:condition="python:len(users) == 0">
+                        <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
+                            <tal:block condition="if">
+                                <td colspan="6" i18n:translate="">
+                                    <p class="table-message">
+                                        No local users defined and no roles assigned to LDAP users yet.
+                                    </p>
+                                    <p class="table-message" tal:define="source_id python: user_sources[0].id">
+                                        You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
+                                    </p>
+                                </td>
+                            </tal:block>
+                            <tal:block condition="not: if">
+                                <td colspan="6" i18n:translate="">
+                                    <p class="table-message">
+                                        No users matched this search criteria.
+                                    </p>
+                                </td>
+                            </tal:block>
+                        </tal:block>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <metal:block define-macro="pagination" tal:condition="python:len(users) != 0">
+                <tal:block define="objects all_users_objects; num_per_page per_page;">
+                    <metal:block use-macro="here/macro_utils/macros/paginator" />
                 </tal:block>
-                <tal:block condition="python: not user_tool.getUserSource(user) == 'n/a'" tal:content="user"></tal:block>
-            </strong>
-            <span tal:condition="python:user_tool.isNewUser(user)">
-                <img src="misc_/Naaya/star.png" alt="New account" />
-            </span>
-            <span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_tool.getUserSource(user) != 'n/a'">
-                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
-            </span>
-        </td>
-        <td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
-        <td tal:define="email python:user_tool.getUserEmail(user)">
-            <a tal:attributes="href string:mailto:${email}; title string:Send Email to ${email}" i18n:attributes="title">
-                <tal:block replace="email"></tal:block>
-            </a>
-        </td>
-
-        <td tal:define="roles user/getRoles">
-            <tal:block replace="python:len(roles) and ', '.join(roles) or '-'"></tal:block>
-        </td>
-
-        <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
-    </tr>
-
-    <tr tal:condition="python:len(users) == 0">
-		<tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
-			<tal:block condition="if">
-				<td colspan="6" i18n:translate="">
-					<p class="table-message">
-						No local users defined and no roles assigned to LDAP users yet.
-					</p>
-					<p class="table-message" tal:define="source_id python: user_sources[0].id">
-						You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
-					</p>
-				</td>
-			</tal:block>
-			<tal:block condition="not: if">
-				<td colspan="6" i18n:translate="">
-					<p class="table-message">
-						No users matched this search criteria.
-					</p>
-				</td>
-			</tal:block>
-		</tal:block>
-    </tr>
-</table>
-<metal:block define-macro="pagination" tal:condition="python:len(users) != 0">
-	<tal:block define="objects all_users_objects; num_per_page per_page;">
-		<metal:block use-macro="here/macro_utils/macros/paginator" />
-	</tal:block>
-</metal:block>
-</div>
-</div>
-
-</metal:block>
+            </metal:block>
+        </div>
+    </div>
+    </metal:block>
 
     <div class="tip" tal:condition="python:len(users) != 0">
-<!--		<img src="misc_/Naaya/info.png" alt="Information" i18n:attributes="alt title" class="icon-image" title="Information" />-->
-<!--        <strong i18n:translate="">Note:</strong>-->
         <p>
             <span i18n:translate="">
                 <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> added in the past 5 days
@@ -158,51 +172,65 @@
 
     <div class="cleaner">&nbsp;</div>
 
-<tal:block repeat="user_source user_sources">
-	<tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
-		<h3 i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</h3>
-
-		<p tal:condition="groups_roles_map" i18n:translate="">
-			Roles currently granted for LDAP groups are listed in the table
-			below. To revoke roles, select them and click on the <em>Revoke
-			roles</em> button.
-		</p>
-
-		<p tal:condition="not:groups_roles_map" i18n:translate="">
-			No LDAP groups have roles in this portal.
-		</p>
-		<table class="datatable ldap_groups">
-			<thead>
-				<tr>
-					<th i18n:translate="">Group</th>
-					<th i18n:translate="">Role</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr tal:repeat="group_id groups_roles_map">
-					<td>
-						<a tal:attributes="href string:${here/absolute_url}/admin_sources_html?id=${user_source/id}&s=group_members&group_id=${group_id};
-										   title string:Click to see members of ${group_id};"
-						   tal:content="group_id" />
-					</td>
-					<td>
-						<ul tal:define="group_roles python:groups_roles_map[group_id]">
-							<li tal:repeat="role_and_location group_roles">
-								<tal:block define="role python:role_and_location[0];
-											location python:role_and_location[1];">
-									<em tal:content="role"></em> on
-									<a tal:condition="not:location/is_site"
-									   tal:content="location/ob/title_or_id"
-									   tal:attributes="href location/ob/absolute_url" />
-									<em tal:condition="location/is_site">entire portal</em>
-								</tal:block>
-							</li>
-						</ul>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</tal:block>
-</tal:block>
+    <tal:block repeat="user_source user_sources">
+    <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
+    <h3 i18n:translate="">
+        <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
+    </h3>
+    
+    <div class="cleaner"></div>
+    <div class="description-text">
+        <p tal:condition="groups_roles_map" i18n:translate="">
+            Roles currently granted for LDAP groups are listed in the table
+            below. To revoke roles, select them and click on the <em>Revoke
+            roles</em> button.
+        </p>
+    </div>
+    
+    <div class="datatable">
+        <table cellspacing="0" cellpadding="3" class="ldap_groups">
+            <thead tal:condition="python: len(groups_roles_map) != 0">
+                <tr>
+                    <th i18n:translate="">Group</th>
+                    <th i18n:translate="">Roles/Location</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
+                    <td>
+                        <a tal:attributes="href string:${here/absolute_url}/admin_sources_html?id=${user_source/id}&s=group_members&group_id=${group_id};
+                                           title string:Click to see members of ${group_id};"
+                           tal:content="group_id" />
+                    </td>
+                    
+                    <td>
+                        <ul tal:define="group_roles python:groups_roles_map[group_id]">
+                            <li tal:repeat="role_and_location group_roles">
+                                <tal:block define="role python:role_and_location[0];
+                                            location python:role_and_location[1];">
+                                    <span tal:content="role" /> on
+                                    <a tal:condition="not:location/is_site"
+                                       tal:content="location/ob/title_or_id"
+                                       tal:attributes="href location/ob/absolute_url" />
+                                    <strong tal:condition="location/is_site">entire portal</strong>
+                                </tal:block>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+                
+                <tr tal:condition="not:groups_roles_map">
+                    <td colspan="6" i18n:translate="">
+                        <p class="table-message">
+                            No LDAP groups have roles in this portal.
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </tal:block>
+    </tal:block>
 </metal:block></metal:block>
 </metal:block>
