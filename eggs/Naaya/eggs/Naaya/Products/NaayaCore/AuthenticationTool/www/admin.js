@@ -66,9 +66,9 @@ $(document).ready(function(){
         return false;
     });
 
-	$('.sort_link').live('click', function() {
+	$('.sort_link').live('click', function(e) {
+		e.preventDefault();
         ldap_refresh_users_fieldset($(this).attr('href'));
-        return false;
     });
     ldap_user_search_form();
 });
@@ -171,7 +171,7 @@ function ldap_refresh_section(tabid, url) {
 function ldap_refresh_users_fieldset(url) {
     $('#users_roles_waiting_response').show();
     $('#users_roles_error_response').hide();
-
+	
     $.ajax({
         url: url,
         success: function(data) {
