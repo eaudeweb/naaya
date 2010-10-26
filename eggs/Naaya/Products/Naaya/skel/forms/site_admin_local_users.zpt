@@ -15,13 +15,6 @@
 <div class="cleaner"></div>
 <div class="search-box">
     <form method="get" id="search-users-form" tal:attributes="action string:${user_tool/absolute_url}/search_users">
-		<div id="name_filter">
-			<label for="search" i18n:translate="">Search users:</label>
-			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
-			<br />
-			<small i18n:translate="">Leave search box empty to filter by roles</small>
-		</div>
-
 		<div class="filters">
 			<label for="filter-roles" i18n:translate="">with roles:</label>
 			<select name="role" id="filter-roles">
@@ -32,6 +25,13 @@
 				</tal:block>
 			</select>
 			<input type="submit" i18n:attributes="value" value="Go" />
+		</div>
+		
+		<div id="name_filter">
+			<label for="search" i18n:translate="">Search users:</label>
+			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
+			<br />
+			<small i18n:translate="">Leave search box empty to filter by roles</small>
 		</div>
 
 		<div class="loader">
