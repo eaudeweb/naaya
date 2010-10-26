@@ -14,7 +14,7 @@
 <metal:block fill-slot="search-box"><metal:block define-macro="search-box">
 <div class="cleaner"></div>
 <div class="search-box">
-    <form method="get" id="search-users-form" tal:attributes="action string:${user_tool/absolute_url}/search_users">
+    <form method="get" id="search-users-form" tal:attributes="href string:${user_tool/absolute_url}/search_users" action="">
 		<div id="name_filter">
 			<label for="search" i18n:translate="">Search users:</label>
 			<input type="text" title="You can search by name, email, username (full or part of it)." i18n:attributes="title" name="query" id="autocomplete-query" class="autocomplete" tal:attributes="value python: request.get('query', '')" size="27" />
@@ -76,9 +76,9 @@
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
-<div class="form-buttons" tal:condition="python: len(users) != 0">
+<div class="form-buttons">
     <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
-    <input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
+	<tal:block condition="users"><input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/></tal:block>
 </div>
 
 <input type="hidden" id="template" value="site_admin_local_users" />
@@ -99,6 +99,7 @@
 
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%"
+	   tal:attributes="class python:len(users) and '' or 'empty'"
        tal:define="users_roles user_tool/getUsersRoles">
     <tr  tal:condition="python:len(users) != 0">
         <th width="5%" align="left" i18n:translate="" class="checkbox">
@@ -188,9 +189,11 @@
 					<p class="table-message">
 						No local users defined yet.
 					</p>
+                    <tal:block condition="user_sources">
 					<p class="table-message" tal:define="source_id python: user_sources[0].id">
 						You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
 					</p>
+                    </tal:block>
 				</td>
 			</tal:block>
 			<tal:block condition="not: if">
@@ -209,22 +212,20 @@
 	</tal:block>
 </metal:block>
 </div>
+<div class="tip" tal:condition="python: len(users) != 0">
+	<img src="misc_/Naaya/info.png" alt="Info" i18n:attributes="alt" class="icon-image" title="Info note" />
+	<strong i18n:translate="">Notes:</strong>
+	<p>
+		<span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
+		<tal:block condition="python: len(here.getAuthenticationTool().getSources())">
+			<span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
+		</tal:block>
+	</p>
+</div>
+
+<div class="cleaner">&nbsp;</div>
 </div>
 </metal:block>
-
-	<div class="tip" tal:condition="python: len(users) != 0">
-		<img src="misc_/Naaya/info.png" alt="Info" i18n:attributes="alt" class="icon-image" title="Info note" />
-		<strong i18n:translate="">Notes:</strong>
-		<p>
-			<span i18n:translate="">The users marked with <img src="misc_/Naaya/star.png" alt="New account" i18n:attributes="alt"  i18n:name="image" /> are added in the last 5 days.</span><br />
-			<tal:block condition="python: len(here.getAuthenticationTool().getSources())">
-				<span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" i18n:name="image" /> have the same username in different sources</span>.
-			</tal:block>
-		</p>
-	</div>
-
-	<div class="cleaner">&nbsp;</div>
-
 </form>
 </metal:block></metal:block>
 </metal:block>

@@ -76,18 +76,16 @@ class PlugBase(SimpleItem):
                         l_users_roles[str(user)] = [(l_local_roles, l_item.absolute_url(1))]
         return l_users_roles
 
-    def revokeUserRoles(self, roles='', REQUEST=None):
+    def revokeUserRoles(self, user, location, REQUEST=None):
         """ """
-        #process form values
-        if roles == '': roles = []
-        else: roles = self.utConvertToList(roles)
-        for l_role in roles:
-            l_users_roles = l_role.split('||')
-            if not l_users_roles[1] and getattr(self, 'getSite', None):
-                l_users_roles[1] = self.getSite().getId()
-            l_user = self.utConvertToList(l_users_roles[0])
-            l_location = self.utGetObject(l_users_roles[1])
-            l_location.manage_delLocalRoles(l_user)
+        if location == '' or location == '/':
+            location_ob = self.getSite()
+        else:
+            location_ob = self.utGetObject(location)
+        if location_ob is None:
+            raise ValueError("Invalid location")
+        location_ob.manage_delLocalRoles([user])
+
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 

@@ -3,27 +3,31 @@
 */
 $(document).ready(function(){
 	/**
-	 * Show `<Label> per page` when Javascript is enabled (.paginator-details)
+	* Show `<Label> per page` when Javascript is enabled
+	* (.paginator-details)
 	*/
 	$('.paginator-details').show();
-	
 	$('#search-users').focus();
+	$("#search-users-form").attr('action', $("#search-users-form").attr('href'));
 	setupSearchUsers();
 
+	$('.revoke-role, .deluser').live('click', function(e){
+		return confirm(gettext("Are you sure?"));
+	});
 	/**
 	 * Intercept items/page select change
 	*/
 	$('#per-page').live('change', function(){
-		setupSearchUsers({'per_page': $(this).val()});
+		setupSearchUsers();
 		$("#search-users-form").submit();
 	});
 
 	//Intercept pagination links
 	$('.paginator-pages, .paginator-next, .paginator-previous').live('click', function(e){
 		e.preventDefault();
-		var data = unserialize($(this).find('a').attr('href'));
-
-		setupSearchUsers({'per_page': data['per_page'], 'page': data['page']});
+		var data = unserialize($(this).find('a').attr('href').split('?')[1]);
+		setupSearchUsers({'per_page': data['per_page'], 'page': data['page'],
+						 'skey': data['skey'], 'rkey': data['rkey']});
 		$("#search-users-form").submit();
 		setupSearchUsers();
 	});
@@ -57,20 +61,27 @@ $(document).ready(function(){
 		}
 	});
 
+	$('.group_link').live('click', function() {
+        ldap_refresh_section('', $(this).attr('href'));
+        return false;
+    });
 
-    ldap_onclick_sort_links();
-    ldap_onclick_group_links();
+	$('.sort_link').live('click', function() {
+        ldap_refresh_users_fieldset($(this).attr('href'));
+        return false;
+    });
     ldap_user_search_form();
 });
 
 /**
  * Setup user search ajax form. Additional post data can be provided to
- * acomodate sort order, pagination and others
+ * accommodate sort order, pagination and others
 */
 function setupSearchUsers(data){
 	var local_data = {
 		'template': $('#template').val(),
-		'all_users': $('#all_users').val()
+		'all_users': $('#all_users').val(),
+		'per_page': $('#per-page').val()
 	};
 
 	if (data){//Extend default post key/values if additional data provided
@@ -86,11 +97,21 @@ function setupSearchUsers(data){
 		},
 		success: function(data) {
 			$('.user-results').replaceWith(data);
+			$('.paginator-details').show();
+
+			//Hide delete users button when no users are present
+			if ($('#all_users').length == 0 &&
+				$('.datatable table.empty').length == 0){
+				$('.deluser').hide();
+			}
 			toggleLoader();
 		}
 	});
 }
 
+/**
+ * Ajax loader
+*/
 function toggleLoader(){
 	$('.loader').toggle();
 }
@@ -119,34 +140,11 @@ function createKey(key){
  * Functions for LDAPUserFolder
 */
 
-function select_second_tab(tabid) {
+function ldap_refresh_section(tabid, url) {
     $('.second_tab_set a.current_sub').removeClass('current_sub');
     if (tabid) {
-        $('#'+tabid).addClass('current_sub');
+        $('#' + tabid).addClass('current_sub');
     }
-}
-
-function ldap_show_section(data) {
-    var html = $('#middle_port', $(data)).html();
-    $('#middle_port').html(html);
-}
-
-function ldap_ajax_section_manage_all() {
-    ldap_onclick_sort_links();
-    ldap_onclick_group_links();
-}
-
-function ldap_ajax_section_assign_to_users() {
-    ldap_user_search_form();
-}
-
-
-function ldap_ajax_section_assign_to_groups() {
-    ldap_group_roles_assign_form();
-}
-
-function ldap_refresh_section(tabid, url) {
-    select_second_tab(tabid);
     $('#section_wating_response').show();
     $('#section_parent').hide();
     $('#section_error_response').hide();
@@ -154,36 +152,19 @@ function ldap_refresh_section(tabid, url) {
     $.ajax({
         url: url,
         success: function(data) {
-            ldap_show_section(data);
-
-            if (tabid == 'link_manage_all') {
-                ldap_ajax_section_manage_all();
-            } else if (tabid == 'link_assign_to_users') {
-                ldap_ajax_section_assign_to_users();
+            var html = $('#middle_port', $(data)).html();
+			$('#middle_port').html(html);
+			if (tabid == 'link_assign_to_users') {
+                ldap_user_search_form();
             } else if (tabid == 'link_assign_to_groups') {
-                ldap_ajax_section_assign_to_groups();
+                ldap_group_roles_assign_form();
             }
-
             $('#section_wating_response').hide();
         },
         error: function() {
             $('#section_wating_response').hide();
             $('#section_error_response').show();
         }
-    });
-}
-
-function ldap_onclick_sort_links() {
-    $('.sort_link').click(function() {
-        ldap_refresh_users_fieldset($(this).attr('href'));
-        return false;
-    });
-}
-
-function ldap_onclick_group_links() {
-    $('.group_link').click(function() {
-        ldap_refresh_section('', $(this).attr('href'));
-        return false;
     });
 }
 
@@ -194,9 +175,8 @@ function ldap_refresh_users_fieldset(url) {
     $.ajax({
         url: url,
         success: function(data) {
-            ldap_show_section(data);
-            ldap_ajax_section_manage_all();
-
+            var html = $('#middle_port', $(data)).html();
+			$('#middle_port').html(html);
             $('#users_roles_waiting_response').hide();
         },
         error: function() {
@@ -204,11 +184,6 @@ function ldap_refresh_users_fieldset(url) {
             $('#users_roles_error_response').show();
         }
     });
-}
-
-function ldap_show_user_search_results(data) {
-    var html = $('#search_results_parent', $(data)).html();
-    $('#search_results_parent').html(html);
 }
 
 function ldap_user_search_form() {
@@ -219,8 +194,8 @@ function ldap_user_search_form() {
 			$('#error_on_search_results').hide();
 		},
 		success: function(data) {
-			ldap_show_user_search_results(data);
-
+			var html = $('#search_results_parent', $(data)).html();
+			$('#search_results_parent').html(html);
 			$('#waiting_for_search_results').hide();
 			$('#search_results_parent').show();
 			load_js_tree();
@@ -235,5 +210,3 @@ function ldap_user_search_form() {
 /**
  * End Functions for LDAPUserFolder
 */
-
-

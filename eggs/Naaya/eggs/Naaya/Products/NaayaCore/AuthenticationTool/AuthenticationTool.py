@@ -449,6 +449,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         per_page = int(form_data.get('per_page', 50))
         all_users = bool(form_data.get('all_users', False))
         filter_role = form_data.get('role', '')
+        assert isinstance(query, basestring)
         query = query.strip()
 
         def _filter(user):
@@ -479,7 +480,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             user_objects, skey, rkey))
 
         if filter_role != '':
-            users = filter(lambda u: filter_role in u.getRoles(), users)
+            users_dict = self.getUsersWithRole([filter_role])
+            users = [u for u in users if u.name in users_dict]
 
         if REQUEST is not None and is_ajax(REQUEST):
             template = form_data.get('template', '')
