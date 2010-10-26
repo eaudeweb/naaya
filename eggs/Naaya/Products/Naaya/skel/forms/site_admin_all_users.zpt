@@ -10,18 +10,16 @@
     <h3 i18n:translate="">
         Users list
     </h3>
-    
+
     <metal:block use-macro="python: here.getFormsTool().getForm('site_admin_local_users').macros['search-box']"></metal:block>
 </metal:block>
 <metal:block fill-slot="content"><metal:block define-macro="content" tal:define="
     all_users_objects python: here.getAuthenticationTool().search_users(query, skey=skey, rkey=rkey, all_users=True, role=filter_role);
     users python: all_users_objects[page:(page + per_page)];">
-                                    
-    
 
     <input type="hidden" id="template" value="site_admin_all_users" />
     <input type="hidden" id="all_users" value="True" />
-    
+
     <metal:block define-macro="datatable">
     <div class="user-results">
         <tal:block condition="users">
@@ -33,10 +31,10 @@
                 <option tal:attributes="selected python: (per_page == 100) and 'selected' or ''" value="100">100</option>
             </select>
         </div>
-        
+
         <div class="cleaner"></div>
         </tal:block>
-        
+
         <div class="datatable">
             <table cellspacing="0" cellpadding="4" width="95%">
                 <thead>
@@ -93,7 +91,7 @@
                         </th>
                     </tr>
                 </thead>
-                
+
                 <tbody>
                     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
                         <td>
@@ -117,14 +115,14 @@
                                 <tal:block replace="email"></tal:block>
                             </a>
                         </td>
-                
+
                         <td tal:define="roles user/getRoles">
                             <tal:block replace="python:len(roles) and ', '.join(roles) or '-'"></tal:block>
                         </td>
-                
+
                         <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
                     </tr>
-                
+
                     <tr tal:condition="python:len(users) == 0">
                         <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
                             <tal:block condition="if">
@@ -148,36 +146,33 @@
                     </tr>
                 </tbody>
             </table>
-            
+
             <metal:block define-macro="pagination" tal:condition="python:len(users) != 0">
                 <tal:block define="objects all_users_objects; num_per_page per_page;">
                     <metal:block use-macro="here/macro_utils/macros/paginator" />
                 </tal:block>
             </metal:block>
         </div>
+        <div class="tip" tal:condition="python:len(users) != 0">
+            <p>
+                <span i18n:translate="">
+                    <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> added in the past 5 days
+                </span>
+                <br class="cleaner" />
+                <span i18n:translate="">
+                    <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
+                </span>.
+            </p>
+        </div>
     </div>
     </metal:block>
-
-    <div class="tip" tal:condition="python:len(users) != 0">
-        <p>
-            <span i18n:translate="">
-                <img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> added in the past 5 days
-            </span>
-            <br class="cleaner" />
-            <span i18n:translate="">
-                <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
-            </span>.
-        </p>
-    </div>
-
     <div class="cleaner">&nbsp;</div>
-
     <tal:block repeat="user_source user_sources">
     <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
     <h3 i18n:translate="">
         <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
     </h3>
-    
+
     <div class="cleaner"></div>
     <div class="description-text">
         <p tal:condition="groups_roles_map" i18n:translate="">
@@ -186,7 +181,7 @@
             roles</em> button.
         </p>
     </div>
-    
+
     <div class="datatable">
         <table cellspacing="0" cellpadding="3" class="ldap_groups">
             <thead tal:condition="python: len(groups_roles_map) != 0">
@@ -195,7 +190,7 @@
                     <th i18n:translate="">Roles/Location</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
                     <td>
@@ -203,7 +198,7 @@
                                            title string:Click to see members of ${group_id};"
                            tal:content="group_id" />
                     </td>
-                    
+
                     <td>
                         <ul tal:define="group_roles python:groups_roles_map[group_id]">
                             <li tal:repeat="role_and_location group_roles">
@@ -219,7 +214,7 @@
                         </ul>
                     </td>
                 </tr>
-                
+
                 <tr tal:condition="not:groups_roles_map">
                     <td colspan="6" i18n:translate="">
                         <p class="table-message">

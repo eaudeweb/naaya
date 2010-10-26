@@ -279,9 +279,9 @@ class plugLDAPUserFolder(PlugBase):
             return REQUEST.RESPONSE.redirect(url)
 
     security.declareProtected(manage_users, 'revokeUserRoles')
-    def revokeUserRoles(self, roles='', REQUEST=None):
+    def revokeUserRoles(self, user, location, REQUEST=None):
         """ """
-        super(plugLDAPUserFolder, self).revokeUserRoles(roles, REQUEST)
+        super(plugLDAPUserFolder, self).revokeUserRoles(user, location)
         if REQUEST is not None:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
                                      date=self.utGetTodayDate())
