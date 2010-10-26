@@ -1807,6 +1807,10 @@ form.datatable-form {
 	line-height: normal;
 }
 
+/**
+ * Tip/'Note' box
+*/
+
 .tip {
 	padding: 0.5em 1em !important;
 }
@@ -1818,4 +1822,12 @@ form.datatable-form {
 
 .tip img {
 	margin-right: 0.5em;
+}
+
+/**
+ * All Users LDAP Groups
+*/
+
+table.ldap_groups th {
+	text-align: left;
 }

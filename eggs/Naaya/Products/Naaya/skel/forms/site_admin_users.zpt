@@ -70,16 +70,12 @@
 </metal:block>
 
 <metal:block define-slot="description-text">
-	<div class="cleaner">&nbsp;</div>
+	<div class="cleaner"></div>
 	<div class="description-text">
 		<p i18n:translate="">
 			This page lists all local users defined in this portal (with or without roles), together with the LDAP users and LDAP groups that have roles in this portal.
 			
         </p>
-        
-        <p i18n:translate="">
-			You can search a user by his name and email or filter the users' list by role.
-		</p>
 	</div>
 </metal:block>
 
