@@ -1,9 +1,10 @@
-<div id="section_parent">
+<div id="section_parent"
+    tal:define="source_title python:here.getAuthenticationTool().getSourceObj(request.get('id', '')).title_or_id();">
     <form id="group_roles_form" name="group-roles" method="post"
           tal:attributes="action string:${here/absolute_url}/map_group_to_role"
           id="gr_roles">
         <p i18n:translate="">
-        Type a LDAP group or select one from the list generated
+        Type a <tal:block replace="source_title" /> group or select one from the list generated
         when pressing the <em>pick</em> button, then select what
         role you wish to grant to that group.
         </p>

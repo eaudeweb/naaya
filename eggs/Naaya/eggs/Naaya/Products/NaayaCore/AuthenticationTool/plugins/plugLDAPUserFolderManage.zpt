@@ -9,46 +9,36 @@
     source_title python:here.getAuthenticationTool().getSourceObj(id).title_or_id();
     ">
 
-<div class="cleaner"></div>
+    <div class="cleaner">&nbsp;</div>
 
-<h3 i18n:translate="">
-    <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
-</h3>
+    <h3 i18n:translate="">
+        <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
+    </h3>
 
-<div class="description-text">
-    <p i18n:translate="">
-        The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
-        this portal.
-        Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
-    </p>
-</div>
+    <div class="description-text" tal:condition="python:len(users_roles) != 0">
+        <p i18n:translate="">
+            The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
+            this portal.
+            Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
+        </p>
+    </div>
 
-    <tal:block condition="python:len(users_roles) > 10">
-    <br />
-    <a href="#groups_field" i18n:translate="">Go to groups</a>
-    <br />
-    </tal:block>
-
-    <p tal:condition="not:users_roles" i18n:translate="">
-        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal.
+    <p tal:condition="not:users_roles" i18n:translate="" class="message-empty">
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal. You can <a tal:attributes="href string:${source_url}&s=assign_to_users" title="Assign roles to source`s users">assign roles to users</a>.
     </p>
 
-    <div id="users_roles_waiting_response" style="display:none">
+    <div id="users_roles_waiting_response" style="display:none" class="cleaner">
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting for users roles.
         </p>
-        
-        <div class="cleaner"></div>
     </div>
 
-    <div id="users_roles_error_response" class="message-error"
+    <div id="users_roles_error_response" class="message-error cleaner"
         style="display:none">
         <p i18n:translate="">
             Error displaying users roles.
         </p>
-        
-        <div class="cleaner"></div>
     </div>
     
     <div class="datatable">
@@ -111,7 +101,8 @@
 
     <tal:block define="groups_roles_map here/get_groups_roles_map;">
 
-    <div class="cleaner">&nbsp;</div>
+    <div class="separator"></div>
+    
     <h3 i18n:translate="">
         <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups
     </h3>
@@ -124,15 +115,8 @@
         </p>
     </div>
     
-    <tal:block condition="python:len(users_roles) > 10">
-    <br />
-    <a href="#users_field" i18n:translate="">Go to users</a>
-    <br />
-    </tal:block>
-    
-
-    <p tal:condition="not:groups_roles_map" i18n:translate="">
-        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal.
+    <p tal:condition="not:groups_roles_map" i18n:translate="" class="message-empty">
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal. You can <a tal:attributes="href string:${source_url}&s=assign_to_groups" title="Assign roles to groups" i18n:attributes="title">assign roles to groups</a>
     </p>
 
     <div id="group_roles_waiting_response" style="display:none">

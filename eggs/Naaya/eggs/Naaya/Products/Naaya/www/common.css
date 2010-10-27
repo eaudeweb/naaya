@@ -1568,6 +1568,10 @@ tr.row-odd {
 	margin-top: 1em !important;
 }
 
+.datatable td:last-child {
+	border: none;
+}
+
 .datatable tr.row-even td:last-child, .datatable tr.row-odd td:last-child {
 	border-right: none;
 }
@@ -1577,16 +1581,16 @@ tr.row-odd {
 	background-color: #EFEFEF;
 }
 
-.datatable a {
-		color: #346D9F;
-		text-decoration: underline;
+.datatable a, .table-message a, .message-empty a {
+	color: #346D9F;
+	text-decoration: underline;
 }
 
-.datatable a:hover {
+.datatable a:hover, .table-message a:hover, .message-empty a:hover {
 		text-decoration: none;
 }
 
-.table-message {
+.table-message, .message-empty {
 	font-weight: bold;
 	font-size: 1em;
 	line-height: 1em;
@@ -1597,7 +1601,7 @@ td.checkbox {
 }
 
 .datatable tr.row-odd:hover, .datatable tr.row-even:hover {
-	background-color: #e4f1bc;
+	background-color: #F6FCE3;
 }
 
 label {
@@ -1721,6 +1725,14 @@ a.context-link:hover {
 
 .groups-roles-list {
 	margin-bottom: 1em;
+}
+
+div.separator {
+	height: 1px;
+	background-color: #F6F6F6;
+	width: 100%;
+	clear: both;
+	margin: 0.5em 0em;
 }
 
 /**
