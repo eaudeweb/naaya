@@ -1601,6 +1601,10 @@ th.th-left {
 	text-align: left;
 }
 
+.sortable th a:link, .sortable th a:visited, .sortable th span {
+	display: inline;
+}
+
 /**
  * IE does no support first(last)-child
 */

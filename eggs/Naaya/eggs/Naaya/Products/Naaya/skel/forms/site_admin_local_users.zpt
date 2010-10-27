@@ -77,7 +77,7 @@
     users python: all_users_objects[(page*per_page):(page * per_page + per_page)];">
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
-<div class="form-buttons">
+<div class="form-buttons cleaner">
 	<span class="buttons">
 		<tal:block condition="users">
 			<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title" i18n:translate="">Add new user</a>
@@ -100,12 +100,12 @@
 	</div>
 </tal:block>
 
-<div class="cleaner"></div>
+<div class="cleaner">&nbsp;</div>
 
 <div class="datatable">
 <table cellspacing="0" cellpadding="4" width="95%"
-	   tal:attributes="class python:len(users) and '' or 'empty'"
-       tal:define="users_roles user_tool/getUsersRoles">
+	   tal:attributes="class python:len(users) and 'sortable' or 'empty'"
+       tal:define="users_roles user_tool/getUsersRoles" >
     <tr  tal:condition="python:len(users) != 0">
         <th width="5%" align="left" i18n:translate="" class="checkbox">
 			<input type="checkbox" class="select-all" onclick="selectAll();" />
