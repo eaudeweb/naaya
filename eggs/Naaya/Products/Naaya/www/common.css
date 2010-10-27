@@ -1735,6 +1735,18 @@ div.separator {
 	margin: 0.5em 0em;
 }
 
+tr.tr-hover {
+	padding: 0.5em;
+}
+
+tr.tr-hover:hover {
+	background-color: #FFFFDD;
+}
+
+.assign-form .field, .assign-form .field-inline, .assign-form input[type="checkbox"], .assign-form input[type="submit"] {
+	margin-left: 0em !important;
+}
+
 /**
  * Temp style
 */

@@ -1,16 +1,26 @@
 <div id="section_parent"
     tal:define="source_title python:here.getAuthenticationTool().getSourceObj(request.get('id', '')).title_or_id();">
-    <form id="group_roles_form" name="group-roles" method="post"
-          tal:attributes="action string:${here/absolute_url}/map_group_to_role"
-          id="gr_roles">
-        <p i18n:translate="">
+	
+	<div class="cleaner">&nbsp;</div>
+
+    <h3 i18n:translate="">
+        Assign roles to <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups
+    </h3>
+
+    <div class="description-text">
+		<p i18n:translate="">
         Type a <tal:block replace="source_title" /> group or select one from the list generated
         when pressing the <em>pick</em> button, then select what
         role you wish to grant to that group.
         </p>
-
+    </div>
+	
+    <form id="group_roles_form" name="group-roles" method="post" tal:attributes="action string:${here/absolute_url}/map_group_to_role" id="gr_roles" class="assign-form">
         <div class="field">
-        <label for="ldap_group" i18n:translate="">LDAP group</label>
+        <label for="ldap_group" i18n:translate="">
+			<tal:block replace="source_title" />
+			group
+		</label>
         <input type="text" id="ldap_group" name="group"/>
         <input type="button" name="pickroles2" value="Pick"
                tal:define="
@@ -41,9 +51,9 @@
         </div>
 
         <div class="field">
-            <label for="location" i18n:translate="">Location</label>
+            <label for="location" i18n:translate="">Location (folder):</label>
             <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-            <em style="font-size: .8em;">(choose a location from the tree below)</em>
+            <small>(choose a location from the tree below)</small>
 
             <div id="sitemap_tree" class="sitemap_tree"></div>
             <div class="cleaner"></div>
@@ -52,25 +62,27 @@
             </tal:block>
         </div>
 
-        <div class="field">
+        <div class="field-inline">
+            <input type="checkbox" id="send_mail" name="send_mail" />
+			
             <label for="send_mail" i18n:translate="">
                 Send a notification email to each user in the group
             </label>
-            <input type="checkbox" id="send_mail" name="send_mail" />
         </div>
-        <div class="field">
-            <strong i18n:translate="">
-                WARNING: sending notification emails can take a long
-                time for large user groups
-            </strong>
-        </div>
-
+		
+		<br />
+		
         <div>
-            <input type="submit" value="Grant roles"
-                i18n:attributes="value"/>
+            <input type="submit" value="Grant roles" i18n:attributes="value"/>
         </div>
     </form>
-
+	
+	<div class="tip">
+		<strong i18n:translate="">
+			Sending notification emails can take a long time for large user groups
+		</strong>
+	</div>
+	
     <div id="assign_groups_waiting_response" style="display:none">
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">

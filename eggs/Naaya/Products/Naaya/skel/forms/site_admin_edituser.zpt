@@ -60,7 +60,6 @@
 		<div class="field">
 			<input type="hidden" name="name:utf8:ustring" tal:attributes="value user_account" />
 			<input type="submit" value="Save changes" i18n:attributes="value" />
-			<a tal:attributes="href string:${here/absolute_url}/admin_local_users_html">Back to local users list</a>
 		</div>
 	</form>
 
