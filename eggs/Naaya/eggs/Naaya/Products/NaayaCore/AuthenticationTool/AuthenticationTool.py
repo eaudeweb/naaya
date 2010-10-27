@@ -390,7 +390,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manage_revokeUserRole(self, user, location, REQUEST=None):
         """ """
         user = [user]
-        if location == '':
+        if location == '' or location == '/':
             self._doDelUserRoles(user)
         else:
             location_obj = self.utGetObject(location)
