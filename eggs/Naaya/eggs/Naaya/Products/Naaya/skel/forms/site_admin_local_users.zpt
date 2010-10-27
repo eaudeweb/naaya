@@ -151,7 +151,7 @@
             <span tal:condition="python:user_tool.isNewUser(user)">
                 <img src="misc_/Naaya/star.png" alt="New account" />
             </span>
-            <span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_tool.getUserSource(user) != 'n/a'">
+            <span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_tool.getUserSource(user.getId()) != 'acl_users'">
                 <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
             </span>
         </td>
@@ -220,7 +220,7 @@
 		<span i18n:translate="">
 			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> local users added in the past 5 days
 		</span>
-		
+
 		<tal:block condition="user_sources">
 		<br class="cleaner" />
 		<span i18n:translate="">

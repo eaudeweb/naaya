@@ -89,7 +89,8 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name=[], roles=[], location='', user_location='', send_mail='', REQUEST=None):
+    def addUserRoles(self, name=[], roles=[], location='', user_location='',
+                     send_mail='', REQUEST=None):
         """ """
         def on_error(error_str):
             if REQUEST is not None:
@@ -118,6 +119,8 @@ class PlugBase(SimpleItem):
         if location is None:
             return on_error('Invalid location path')
         #assing roles
+        if not isinstance(roles, list):
+            roles = [roles]
         for n in name:
             location.manage_setLocalRoles(n, roles)
             if send_mail:
