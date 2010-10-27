@@ -1676,6 +1676,20 @@ label:hover {
 		float: left;
 }
 
+.form-buttons a {
+	background-color: #FFFFFF;
+	color: #000000;
+	border-left:1px solid #BBBBBB;
+	border-top:1px solid #BBBBBB;
+	border-bottom:1px solid #666666;
+	border-right:1px solid #666666;
+	padding:0.2em 0.4em 0.3em 0.4em;
+	font-size: 11px;
+	line-height: 11px;
+	vertical-align: 3px;
+	text-decoration: none;
+}
+
 img {
 		vertical-align: middle;
 }
@@ -1700,7 +1714,13 @@ a.context-link:hover {
 }
 
 .section-subtitle {
-	font-size: 1.1em;
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #4E7CB0;
+}
+
+.groups-roles-list {
+	margin-bottom: 1em;
 }
 
 /**
@@ -1818,6 +1838,7 @@ a.context-link:hover {
 
 .tip {
 	padding: 0.5em 1em !important;
+	background-color: #FFFFEF !important; /* Overwrite for site update */
 }
 
 .tip p {

@@ -26,7 +26,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	border-top:1px solid #BBBBBB;
 	border-bottom:1px solid #666666;
 	border-right:1px solid #666666;
-	padding:0.1em 0.4em;
+	padding: 0.1em 0.4em;
 	/*margin: 0em 0.3em;*/
 	font-size: 12px;
 	line-height: 12px;
@@ -489,8 +489,7 @@ h3 {
 	line-height: normal;
 	font-size: 1.4em;
 	color: #333333;
-	padding: 0.2em;
-	margin: 1em 0;
+	margin-left: 0 !important;
 }
 
 /* Media file style sheet */

@@ -9,7 +9,7 @@
 <metal:block fill-slot="section-title">
 	<div class="cleaner">&nbsp;</div>
 	<h3 i18n:translate="" class="title-inline">
-		Edit user information for
+		Edit user information:
 	</h3>
 	
 	<span class="section-subtitle" tal:content="request/name|nothing" />
