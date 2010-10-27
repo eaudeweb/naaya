@@ -80,7 +80,7 @@
 <div class="form-buttons">
 	<span class="buttons">
 		<tal:block condition="users">
-			<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title">Add new user</a>
+			<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title" i18n:translate="">Add new user</a>
 			<input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
 		</tal:block>
 	</span>

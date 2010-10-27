@@ -23,6 +23,7 @@
 		</label>
         <input type="text" id="ldap_group" name="group"/>
         <input type="button" name="pickroles2" value="Pick"
+				i18n:attributes="value"
                tal:define="
                     url string:${here/getPluginPath}/pickroles_html;
                     js_code string:fPickRoles('${url}', 'ldap_group');"
@@ -51,15 +52,15 @@
         </div>
 
         <div class="field">
-            <label for="location" i18n:translate="">
-				Location (folder):
+            <label for="location">
+				<span tal:omit-tag="" i18n:translate="">Location (folder):</span>
 				<br />
 				<noscript>
 					<small i18n:translate="">e.g. folderUrl</small>
 				</noscript>
 			</label>
             <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-            <small>(choose a location from the tree below)</small>
+            <small i18n:translate="">(choose a location from the tree below)</small>
 
             <div id="sitemap_tree" class="sitemap_tree"></div>
             <div class="cleaner"></div>

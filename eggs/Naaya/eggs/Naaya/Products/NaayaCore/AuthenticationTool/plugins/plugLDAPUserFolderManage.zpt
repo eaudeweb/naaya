@@ -21,12 +21,13 @@
     <div class="description-text">
         <p tal:condition="groups_roles_map" i18n:translate="">
             Roles currently granted for <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups are listed in the table
-            below. Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role assigned to a group.
+            below. Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role assigned to a group.
         </p>
     </div>
     
     <p tal:condition="not:groups_roles_map" i18n:translate="" class="message-empty">
-        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal. You can <a tal:attributes="href string:${source_url}&s=assign_to_groups" title="Assign roles to groups" i18n:attributes="title">assign roles to groups</a>.
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups have roles in this portal. 
+        You can <a i18n:name="assign-role-link" tal:attributes="href string:${source_url}&s=assign_to_groups" title="Assign roles to groups" i18n:attributes="title">assign roles to groups</a>.
     </p>
 
     <div id="group_roles_waiting_response" style="display:none">
@@ -104,12 +105,13 @@
         <p i18n:translate="">
             The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
             this portal.
-            Click <img src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
+            Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
         </p>
     </div>
 
     <p tal:condition="not:users_roles" i18n:translate="" class="message-empty">
-        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal. You can <a tal:attributes="href string:${source_url}&s=assign_to_users" title="Assign roles to source`s users">assign roles to these users</a>.
+        No <tal:block i18n:name="source_title" replace="source_title"></tal:block> users have roles in this portal. 
+        You can <a i18n:name="assign-users-link" tal:attributes="href string:${source_url}&s=assign_to_users" title="Assign roles to source`s users">assign roles to these users</a>.
     </p>
 
     <div id="users_roles_waiting_response" style="display:none" class="cleaner">
