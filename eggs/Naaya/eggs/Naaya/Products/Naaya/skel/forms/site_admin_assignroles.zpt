@@ -2,6 +2,9 @@
 <metal:block fill-slot="second-title" i18n:translate="">Assign roles</metal:block>
 
 <metal:block fill-slot="section-title">
+    <h3 i18n:translate="">
+        Assign roles to local users
+    </h3>
 </metal:block>
 
 <metal:block fill-slot="description-text">
@@ -30,65 +33,63 @@
 </metal:block></metal:block>
 
 <metal:block fill-slot="content"><metal:block define-macro="content">
-<p i18n:translate="">
-Select the username from the drop-down list, select the intended role(s) and choose
-the specific location from the portal you want to grant this permissions.
-</p>
-<form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles" class="action-form">
-<table border="0" cellspacing="4" cellpadding="4" width="100%">
-    <tr>
-      <td align="top" width="20%" class="form-label" i18n:translate="">
-        <label for="select-usernames">
-        Username:
-        </label>
-      </td>
-      <td align="top" width="*" tal:define="users user_tool/user_names">
-     <select name="names" size="5" multiple="multiple" id="select-usernames">
-        <option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
-     </select>
-      </td>
-    </tr>
 
-    <tr>
-      <td align="top" width="20%" class="form-label" i18n:translate="">
-        <label for="select-roles">
-        Roles:
-        </label>
-      </td>
-      <td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
-     <select name="roles" size="5" multiple="multiple" id="select-roles">
-        <tal:block repeat="role roles">
-           <option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
-           <option tal:condition="python:role!='Manager'" tal:attributes="value role" tal:content="role" />
-        </tal:block>
-     </select>
-      </td>
-    </tr>
+<tal:block define="users user_tool/user_names;">
+    <form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles" class="assign-form" tal:condition="users">
+        <div class="field">
+            <label for="select-usernames">
+                Username:
+            </label>
+            
+            <select name="names" multiple="multiple" id="select-usernames">
+               <option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
+            </select>
+        </div>
+        
+        <div class="field" tal:define="roles user_tool/list_valid_roles">
+            <label for="select-roles">
+                Roles:
+            </label>
+          
+            <select name="roles" size="5" multiple="multiple" id="select-roles">
+                <tal:block repeat="role roles">
+                <option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
+                <option tal:condition="python:role!='Manager'" tal:attributes="value role" tal:content="role" />
+                </tal:block>
+            </select>
+        </div>
+    
+        <div class="field">
+            <label for="location" i18n:translate="">Location (folder):</label>
+            <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
+            <small>(choose a location from the tree below)</small>
+            
+            <div id="sitemap_tree" class="sitemap_tree"></div>
+            <div class="cleaner"></div>
+            <tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+                <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+            </tal:block>
+        </div>
+        
+        <div class="field-inline">
+            <input type="checkbox" id="send_mail" name="send_mail" checked="checked" />
+            <label class="form-label" for="send_mail" i18n:translate="">Send notification email to selected user(s)</label>
+        </div>
+        
+        <br />
+        
+        <div>
+            <input type="submit" value="Assign role" i18n:attributes="value"/>
+        </div>
+    </form>
+    
+    <p tal:condition="python: len(users) == 0" i18n:translate="" class="message-empty">
+        No local users defined yet.
+		You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
+    </p>
+    
+</tal:block>
 
-    <tr>
-      <td valign="top" width="20%" class="form-label"><span tal:omit-tag="" i18n:translate="">Location:(folder)</span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span></td>
-      <td>
-        <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-        <em style="font-size: .8em;">(choose a location from the tree below)</em>
-
-        <div id="sitemap_tree" class="sitemap_tree"></div>
-        <div class="cleaner"></div>
-        <tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
-            <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
-        </tal:block>
-      </td>
-    </tr>
-
-    <tr>
-      <td><label class="form-label" for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
-      <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
-    </tr>
-</table>
-<p class="action-form-buttons">
-    <input type="submit" value="Assign role" i18n:attributes="value"/>
-    <a tal:attributes="href string:${here/absolute_url}/admin_local_users_html">Back to local users list</a>
-</p>
-</form>
 </metal:block>
 </metal:block>
 </metal:block>

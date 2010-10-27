@@ -220,10 +220,13 @@
 		<span i18n:translate="">
 			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> local users added in the past 5 days
 		</span>
+		
+		<tal:block condition="user_sources">
 		<br class="cleaner" />
 		<span i18n:translate="">
 			<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
 		</span>.
+		</tal:block>
 	</p>
 </div>
 
