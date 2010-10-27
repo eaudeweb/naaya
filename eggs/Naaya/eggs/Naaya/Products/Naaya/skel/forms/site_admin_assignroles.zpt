@@ -37,10 +37,7 @@
     <form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles" class="assign-form" tal:condition="users">
         <metal:block define-slot="usernames">
             <div class="field">
-                <label for="select-usernames">
-                    Username:
-                </label>
-
+                <label for="select-usernames" i18n:translate="">Username:</label>
                 <select name="names" multiple="multiple" id="select-usernames">
                    <option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
                 </select>
@@ -49,10 +46,7 @@
 
         <metal:block define-slot="roles">
             <div class="field" tal:define="roles user_tool/list_valid_roles">
-                <label for="select-roles">
-                    Roles:
-                </label>
-
+                <label for="select-roles" i18n:translate="">Roles:</label>
                 <select name="roles" size="5" multiple="multiple" id="select-roles">
                     <tal:block repeat="role roles">
                     <option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
@@ -66,7 +60,7 @@
             <div class="field">
                 <label for="location" i18n:translate="">Location (folder):</label>
                 <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-                <small>(choose a location from the tree below)</small>
+                <small i18n:translate="">(choose a location from the tree below)</small>
 
                 <div id="sitemap_tree" class="sitemap_tree"></div>
                 <div class="cleaner"></div>
@@ -93,7 +87,7 @@
 
     <p tal:condition="python: len(users) == 0" i18n:translate="" class="message-empty">
         No local users defined yet.
-		You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>.
+		You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:name="add-link">add a local user</a>.
     </p>
 
 </tal:block>
