@@ -145,7 +145,7 @@
                                 <td colspan="6">
                                     <p class="table-message" tal:define="source_id python: user_sources[0].id" i18n:translate="">
                                         No local users defined and no roles assigned to LDAP users yet.
-                                        You can <a i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> 
+                                        You can <a i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a>
 										and/or <a i18n:name="assing-role-link" tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP             user.
                                     </p>
                                 </td>
@@ -182,16 +182,16 @@
         </div>
     </div>
     </metal:block>
-    
+
     <div class="separator"></div>
-    
+
     <tal:block repeat="user_source user_sources">
-    <div class="groups-roles-list">
+    <div class="groups-roles-list" tal:condition="python:user_source.getUserFolder().meta_type == 'LDAPUserFolder'">
         <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
         <h3 i18n:translate="">
             <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
         </h3>
-    
+
         <div class="cleaner"></div>
         <div class="description-text">
             <p tal:condition="groups_roles_map" i18n:translate="">
@@ -199,7 +199,7 @@
                 below.
             </p>
         </div>
-    
+
         <div class="datatable">
             <table cellspacing="0" cellpadding="3" class="ldap_groups" class="sortable">
                 <thead tal:condition="python: len(groups_roles_map) != 0">
@@ -208,7 +208,7 @@
                         <th i18n:translate="">Roles/Location</th>
                     </tr>
                 </thead>
-    
+
                 <tbody>
                     <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
                         <td>
@@ -216,7 +216,7 @@
                                                title string:Click to see members of ${group_id};"
                                tal:content="group_id" />
                         </td>
-    
+
                         <td>
                             <ul tal:define="group_roles python:groups_roles_map[group_id]">
                                 <li tal:repeat="role_and_location group_roles">
@@ -232,7 +232,7 @@
                             </ul>
                         </td>
                     </tr>
-    
+
                     <tr tal:condition="not:groups_roles_map" class="tr-messages">
                         <td colspan="6">
                             <p class="table-message" i18n:translate="">
@@ -244,9 +244,8 @@
             </table>
         </div>
         </tal:block>
-        
+
     </div>
-    
     <div class="separator"></div>
     </tal:block>
 </metal:block></metal:block>
