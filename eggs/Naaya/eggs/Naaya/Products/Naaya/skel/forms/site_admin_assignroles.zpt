@@ -39,7 +39,7 @@
         <metal:block define-slot="usernames">
             <div class="field">
                 <label for="select-usernames" i18n:translate="">Username:</label>
-                <select name="names" multiple="multiple" id="select-usernames">
+                <select name="names" size="10" multiple="multiple" id="select-usernames">
                    <option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
                 </select>
             </div>

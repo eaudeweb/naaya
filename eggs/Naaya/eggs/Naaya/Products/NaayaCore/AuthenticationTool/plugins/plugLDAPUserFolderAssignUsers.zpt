@@ -178,7 +178,9 @@
                 No users selected.
             </p>
         </div>
-
+        
+        <br />
+        
         <div class="tip cleaner">
             <p i18n:translate="">
 				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" 
