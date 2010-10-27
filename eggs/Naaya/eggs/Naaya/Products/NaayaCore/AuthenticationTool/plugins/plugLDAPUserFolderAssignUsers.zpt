@@ -147,7 +147,7 @@
         <div class="datatable">
             <table cellspacing="0" cellpadding="4" id="search_results" class="sortable">
             <tr>
-                <th width="5%" align="left" i18n:translate="" class="checkbox">
+                <th width="5%" align="left" class="checkbox">
                     <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
                 </th>
                 <th>User ID</th>
@@ -217,7 +217,7 @@
             
             <div class="field">
                 <label for="location">
-                    <span tal:omit-tag="" i18n:translate="">Location (folder):</span>
+                    <span tal:omit-tag="" i18n:translate=""><span tal:omit-tag="" i18n:translate="">Location (folder):</span></span>
                     <br />
                     <noscript>
                         <small i18n:translate="">e.g. folderUrl</small>
