@@ -93,7 +93,7 @@
 
     <p tal:condition="python: len(users) == 0" i18n:translate="" class="message-empty">
         No local users defined yet.
-		You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:name="add-link">add a local user</a>.
+		You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:name="add-user-link">add a local user</a>.
     </p>
 
 </tal:block>

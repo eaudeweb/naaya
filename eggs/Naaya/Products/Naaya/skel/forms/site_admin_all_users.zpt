@@ -143,10 +143,10 @@
                         <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
                             <tal:block condition="if">
                                 <td colspan="6" i18n:translate="">
-                                    <p class="table-message">
+                                    <p class="table-message" tal:define="source_id python: user_sources[0].id">
                                         No local users defined and no roles assigned to LDAP users yet.
-                                        You can <a tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> 
-										and/or <a tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP user.
+                                        You can <a i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> 
+										and/or <a i18n:name="assing-role-link" tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP             user.
                                     </p>
                                 </td>
                             </tal:block>
@@ -198,7 +198,8 @@
         <div class="cleaner"></div>
         <div class="description-text">
             <p tal:condition="groups_roles_map" i18n:translate="">
-                Roles currently granted for LDAP groups are listed in the table below.
+                Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
+                below.
             </p>
         </div>
     
