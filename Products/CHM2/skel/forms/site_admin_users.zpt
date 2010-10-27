@@ -28,7 +28,6 @@
 		</li>
 		<li tal:attributes="id python: (
 								('admin_local_users_html' in request.PATH_INFO) or
-								('admin_userroles_html' in request.PATH_INFO) or
 								('admin_assignroles_html' in request.PATH_INFO) or
 								('admin_adduser_html' in request.PATH_INFO) or
 								('admin_users_html' in request.PATH_INFO and not len(user_sources)) or
@@ -42,6 +41,7 @@
         </li>
         <li tal:attributes="id python: (
 								('admin_workgroups_html' in request.PATH_INFO) or
+                                ('admin_userroles_html' in request.PATH_INFO) or
 								('admin_workgroup_html' in request.PATH_INFO) or
 								('admin_addworkgroup_html' in request.PATH_INFO)
 							) and 'currenttab' or ''">
