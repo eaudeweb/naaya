@@ -270,8 +270,6 @@ class plugLDAPUserFolder(PlugBase):
         super(plugLDAPUserFolder, self).addUserRoles(name, roles, location,
                 user_location, send_mail, REQUEST)
         if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=assign_to_users'
             else:
@@ -283,8 +281,7 @@ class plugLDAPUserFolder(PlugBase):
         """ """
         super(plugLDAPUserFolder, self).revokeUserRoles(user, location)
         if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
+            self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
             else:
@@ -349,8 +346,7 @@ class plugLDAPUserFolder(PlugBase):
                     group, userids, roles, loc, location)
 
         if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
+            self.setSessionInfoTrans("Role(s) succesfully assigned")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=assign_to_groups'
             else:
@@ -364,8 +360,7 @@ class plugLDAPUserFolder(PlugBase):
         ob.acl_satellite.remove_group_roles(group_id, [role])
 
         if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
+            self.setSessionInfoTrans("Role(s) revoked")
             if is_ajax(REQUEST):
                 url = REQUEST['HTTP_REFERER'] + '&s=manage_all'
             else:

@@ -2229,9 +2229,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 REQUEST.RESPONSE.redirect('%s/admin_adduser_html' %
                                           self.absolute_url())
             if success:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                         date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/admin_users_html' %
+                self.setSessionInfoTrans("User added")
+                REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
                                           self.absolute_url())
         else:
             return userinfo
@@ -2249,29 +2248,34 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                             confirm, [], [], firstname, lastname, email)
         except ValidationError, error:
             err = error
-        else:
-            success = True
+            success = False
 
         if REQUEST is not None:
             if err != '':
                 self.setSessionErrorsTrans(err)
                 self.setUserSession(name, [], [], firstname, lastname, email,
                                     '')
-            if success:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                         date=self.utGetTodayDate())
+            if success is True:
+                self.setSessionInfoTrans("User edited")
             REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' %
                                       (self.absolute_url(), name))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
     def admin_deleteusers(self, names=[], REQUEST=None):
         """ """
-        self.getAuthenticationTool().manage_delUsers(names)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
-                                '%s/admin_users_html' % self.absolute_url()))
+        if REQUEST is not None:
+            redirect_url = REQUEST.environ.get('HTTP_REFERER',
+                                '%s/admin_users_html' % self.absolute_url())
+        if len(names):
+            self.getAuthenticationTool().manage_delUsers(names)
+        else:
+            if REQUEST is not None:
+                self.setSessionErrorsTrans("Please select a user")
+                return REQUEST.RESPONSE.redirect(redirect_url)
+
+        if REQUEST is not None:
+            self.setSessionInfoTrans("User(s) successfully deleted")
+            REQUEST.RESPONSE.redirect(redirect_url)
 
     #Admin User Roles
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
@@ -2292,8 +2296,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
             if success:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                         date=self.utGetTodayDate())
+                self.setSessionInfoTrans("Role added")
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
 
@@ -2358,8 +2361,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             p.setRoles(ty(perm_roles))
 
         if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
+            self.setSessionInfoTrans("Role edited")
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                       self.absolute_url())
 
@@ -2397,12 +2399,16 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                                                       location)
                     except:
                         err = 'Could not send confirmation mail.'
+
         if REQUEST is not None:
-            if err != '': self.setSessionErrorsTrans(err)
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                                 date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
-                                      self.absolute_url())
+            redirect_url = '%s/admin_local_users_html' % self.absolute_url()
+            if err != '':
+                self.setSessionErrorsTrans(err)
+                REQUEST.RESPONSE.redirect(
+                    REQUEST.environ.get('HTTP_REFERER', redirect_url))
+            elif success:
+                self.setSessionInfoTrans("Role(s) successfully assigned")
+                REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokerole')
     def admin_revokerole(self, user, location, REQUEST=None):
@@ -2415,8 +2421,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if is_ajax(REQUEST):
                 return 'SUCCESS'
             else:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                         date=self.utGetTodayDate())
+                self.setSessionInfoTrans("Role(s) succesfully revoked")
                 REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
                                           self.absolute_url())
     #

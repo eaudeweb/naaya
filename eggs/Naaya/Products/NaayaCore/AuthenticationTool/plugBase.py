@@ -133,6 +133,7 @@ class PlugBase(SimpleItem):
             except:
                 pass
         if REQUEST is not None:
+            self.setSessionInfoTrans("Role(s) successfully assigned")
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def removeUser(self, name):
