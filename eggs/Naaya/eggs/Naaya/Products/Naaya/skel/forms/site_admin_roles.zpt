@@ -16,40 +16,49 @@
                         source_url string:${site_path}/admin_roles_html;
                         section python:request.get('section', 'list');">
 	
-	<div id="add-role-form" class="cleaner">
-		<table class="datatable">
-			<caption i18n:translate="">Add new role</caption>
-			<tbody>
-				<tr>
-					<td>
-						<form method="post" name="addrole" tal:attributes="action string:${site_url}/admin_addrole">
-							  <label for="input-role" i18n:translate="">Role name</label>
-							  <br />
-							  <input id="input-role" name="role" size="25" maxLength="255" />
-							  <br />
-							  <br />
-							  <input type="submit" value="Add new role" i18n:attributes="value" />
-						</form>
-					</td></tr>
-			</tbody>
-		</table>
+	<div class="cleaner">&nbsp;</div>
+	
+	<h3 i18n:translate="">
+		Add new role
+	</h3>
+	
+	<div id="add-role-form" class="cleaner assign-form">
+		<form method="post" name="addrole" tal:attributes="action string:${site_url}/admin_addrole">
+			<div class="field-inline">
+				<label for="input-role" i18n:translate="">
+					Role name:
+				</label>
+				<input id="input-role" name="role" size="25" maxLength="255" />
+				<input type="submit" value="Add new role" i18n:attributes="value" />
+			</div>
+		</form>
 	</div>
 	
-	<div class="roles-list" class="cleaner">
-		<table class="datatable">
-			<caption i18n:translate="">Roles list</caption>
+	<div class="cleaner">&nbsp;</div>
+	<div class="separator"></div>
+	
+	<h3 i18n:translate="">
+		Roles list
+	</h3>
+	
+	<metal:block define-macro="datatable">
+	<div class="datatable roles-list">
+		<table cellspacing="0" cellpadding="4">
 			<thead>
-							<th i18n:translate="">Role name</th>
-							<th i18n:translate="">Edit</th>
+				<tr>
+					<th i18n:translate="">Role name</th>
+					<th i18n:translate="">Edit role`s permissions</th>
+				</tr>
 			</thead>
 			<tbody>
 				<tal:block repeat="role here/acl_users/list_all_roles">
 				<tr tal:condition="python:role not in ('Manager', 'Owner')">
 					<td tal:content="role" />
 					<td tal:define="baseurl string:${here/absolute_url}/admin_editrole_html;
-									href string:${baseurl}?role=${role}">
+									href string:${baseurl}?role=${role}" class="td-center">
 						<a tal:attributes="href href">
-							<img src="misc_/Naaya/edit" alt="Edit" tal:attributes="title string:Edit '${role}' permissions" />
+							Edit
+							<!--<img src="misc_/Naaya/edit" alt="Edit" tal:attributes="title string:Edit '${role}' permissions" />-->
 						</a>
 					</td>
 				</tr>
@@ -57,7 +66,7 @@
 			</tbody>
 		</table>
 	</div>
-
+	</metal:block>
 	
 </tal:block>
 </metal:block>

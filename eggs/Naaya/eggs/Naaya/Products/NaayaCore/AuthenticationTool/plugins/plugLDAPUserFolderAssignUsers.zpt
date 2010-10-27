@@ -95,11 +95,9 @@
     </form>
 
 
-    <div id="waiting_for_search_results" style="display:none">
-        <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
-        <p i18n:translate="">
-            Waiting for search results
-        </p>
+    <div id="waiting_for_search_results" class="loader">
+        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt title" />
+        <span i18n:translate="">&nbsp;Loading... please wait!</span>
     </div>
 
     <div id="error_on_search_results" class="message-error"
@@ -110,6 +108,7 @@
     </div>
 
     <div id="search_results_parent">
+        <br />
     <tal:block define="
                        is_user_search python:request.has_key('search_user');
                        is_role_search python:request.has_key('search_role');
@@ -125,101 +124,128 @@
                condition="python:is_user_search or is_role_search">
 
     <tal:block condition="ldap_users">
-    <p tal:condition="is_user_search">
-        Users found for <strong tal:content="search_term" /> search term
-    </p>
+    <h3 tal:condition="is_user_search">
+        <span i18n:translate="">Users found for</span> '<strong tal:content="search_term" />' <span>search term</span>
+    </h3>
     <p tal:condition="is_role_search">
         Users found with <strong tal:content="role" /> role
     </p>
     </tal:block>
-    <p tal:condition="not:ldap_users" i18n:translate="">
-        No LDAP users matching the selected criteria.
+    
+    <p tal:condition="not:ldap_users" class="message-empty">
+        <strong i18n:translate="">No</strong> <tal:block replace="source_title" /> <strong i18n:translate="">users matching the selected criteria.</strong>
     </p>
 
     <tal:block condition="python:len(ldap_users) > 10">
-    &middot;&nbsp;
-    <a href="#assign_roles" i18n:translate=""
-        >Jump to assign roles to selected users</a>
+    <a href="#assign_roles" i18n:translate="">Jump to assign roles to selected users</a>
     </tal:block>
 
     <form id="search_results_form" name="user-roles" method="post"
         tal:condition="ldap_users"
         tal:attributes="action string:${here/absolute_url}/addUserRoles">
-        <table class="datatable" width="95%" id="search_results">
-        <tr>
-            <th></th>
-            <th>User ID</th>
-            <th>Canonical name</th>
-            <th width="60%">Distinguished Name</th>
-        </tr>
-        <tr tal:repeat="item ldap_users"
-            tal:attributes="class python:test(path('repeat/item/odd'),
-                                                 'odd', 'even')">
-            <td>
-                <input type="checkbox" name="name:list"
-                    tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/>
-            </td>
-            <td tal:define="uid python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">
-                <tal:block replace="uid"></tal:block>
-                <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
-                    <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
-                </span>
-            </td>
-            <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
-            <td tal:content="python:item['dn']">dn</td>
-        </tr>
-        </table>
+        <div class="datatable">
+            <table cellspacing="0" cellpadding="4" id="search_results">
+            <tr>
+                <th width="5%" align="left" i18n:translate="" class="checkbox">
+                    <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
+                </th>
+                <th>User ID</th>
+                <th>Canonical name</th>
+                <th width="60%">Distinguished Name</th>
+            </tr>
+            <tr tal:repeat="item ldap_users"
+                tal:attributes="class python:test(path('repeat/item/odd'),
+                                                     'row-odd', 'row-even')">
+                <td class="checkbox">
+                    <input type="checkbox" name="name:list"
+                        tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/>
+                </td>
+                <td tal:define="uid python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">
+                    <tal:block replace="uid"></tal:block>
+                    <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
+                        <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
+                    </span>
+                </td>
+                <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
+                <td tal:content="python:item['dn']">dn</td>
+            </tr>
+            </table>
+        </div>
         <div id="portal_users_empty" class="message-error" style="display:none">
             <p i18n:translate="">
                 No users selected.
             </p>
         </div>
-        <p>
-            <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" /> are local users</span>.
-        </p>
+        
+        <div class="tip cleaner">
+            <p>
+                <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" /> are local users</span>.
+            </p>
+        </div>
+        
         <tal:block tal:condition="python:len(ldap_users) > 10">
         &middot;&nbsp;<a href="#section_parent">Go back to top</a>
         </tal:block>
-
-        <table border="0" cellspacing="2" cellpadding="2" class="datatable"
-            id="assign_roles">
-        <tr>
-            <td style="vertical-align: top">Roles</td>
-            <td>
-            <select id="portal_roles" name="roles:list" size="5" multiple="multiple">
-                <tal:block repeat="item here/list_valid_roles">
-                <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
-                        tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
-                <option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
-                </tal:block>
-            </select>
+        
+        <br />
+        
+        <h3 i18n:translate="">
+            Assign roles to selected users
+        </h3>
+        
+        <div id="assign_roles" class="assign-form">
+            <div class="field">
+                <label for="portal_roles" i18n:translate="">
+                    Roles
+                </label>
+                
+                <select id="portal_roles" name="roles:list" size="5" multiple="multiple">
+                    <tal:block repeat="item here/list_valid_roles">
+                    <option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+                            tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+                    <option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+                    </tal:block>
+                </select>
+            </div>
+            
             <div id="portal_roles_empty" class="message-error" style="display:none">
                 <p i18n:translate="">
                     No role selected.
                 </p>
             </div>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
-            <td>
+            
+            <div class="field">
+                <label for="location" i18n:translate="">
+                    Location (folder):
+                    <br />
+                    <noscript>
+                        <small i18n:translate="">e.g. folderUrl</small>
+                    </noscript>
+                </label>
+                
                 <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
-                <em style="font-size: .8em;">(choose a location from the tree below)</em>
+                <small i18n:translate="">(choose a location from the tree below)</small>
 
                 <div id="sitemap_tree" class="sitemap_tree"></div>
-                <div class="cleaner">&nbsp;</div>
-            </td>
-        </tr>
-        <tr>
-            <td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
-            <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
-        </tr>
-        </table>
-        <p>
-        <input type="hidden" name="uf" tal:attributes="value here/obj_path" />
-        <input type="hidden" name="user_location" tal:attributes="value python:test(role, role, 'Users')" />
-        <input type="submit" name="add" value="Assign role" />
-        </p>
+                <div class="cleaner"></div>
+                <tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+                    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+                </tal:block>
+            </div>
+
+            <div class="field-inline">
+                <input type="checkbox" id="send_mail" name="send_mail" checked="checked" />
+                <label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label>
+            </div>
+        </div>
+        
+        <br />
+        
+        <div>
+            <input type="hidden" name="uf" tal:attributes="value here/obj_path" />
+            <input type="hidden" name="user_location" tal:attributes="value python:test(role, role, 'Users')" />
+            <input type="submit" name="add" value="Assign role" />
+        </div>
     </form>
 
     <div id="assign_users_waiting_response" style="display:none" class="cleaner">

@@ -139,7 +139,7 @@
                         <td tal:content="python:test(user_tool.getUserSource(user) == 'n/a', 'Local users', user_tool.getUserSource(user) )" />
                     </tr>
 
-                    <tr tal:condition="python:len(users) == 0">
+                    <tr tal:condition="python:len(users) == 0" class="tr-messages">
                         <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
                             <tal:block condition="if">
                                 <td colspan="6" i18n:translate="">
@@ -243,7 +243,7 @@
                         </td>
                     </tr>
     
-                    <tr tal:condition="not:groups_roles_map">
+                    <tr tal:condition="not:groups_roles_map" class="tr-messages">
                         <td colspan="6" i18n:translate="">
                             <p class="table-message">
                                 No <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups have roles in this portal.

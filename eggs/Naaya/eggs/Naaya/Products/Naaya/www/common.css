@@ -1564,16 +1564,13 @@ tr.row-odd {
     text-align: center;
 }
 
-.datatable {
-	margin-top: 1em !important;
-}
-
-.datatable td:last-child {
-	border: none;
+.datatable tr.tr-messages td {
+	border-bottom: none;
+	border-right: none;
 }
 
 .datatable tr.row-even td:last-child, .datatable tr.row-odd td:last-child {
-	border-right: none;
+	border-right: none !important;
 }
 
 .datatable th:hover {
@@ -1598,6 +1595,17 @@ tr.row-odd {
 
 td.checkbox {
 		text-align: center;
+}
+
+th.th-left {
+	text-align: left;
+}
+
+/**
+ * IE does no support first(last)-child
+*/
+td.td-center {
+	text-align: center;
 }
 
 .datatable tr.row-odd:hover, .datatable tr.row-even:hover {
@@ -1815,10 +1823,17 @@ tr.tr-hover:hover {
  * Roles
 */
 
-#add-role-form input[type="submit"], #add-role-form input[type="reset"] {
-		margin: 0 !important;
+.roles-list table {
+	width: 350px !important;
 }
 
+.roles-list table th:first-child {
+	text-align: left;
+}
+
+#add-role-form input[type="submit"], #add-role-form input[type="reset"] {
+	margin: 0 !important;
+}
 
 /**
  * Description text

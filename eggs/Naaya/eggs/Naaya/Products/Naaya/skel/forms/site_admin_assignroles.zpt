@@ -58,7 +58,13 @@
 
         <metal:block define-slot="location">
             <div class="field">
-                <label for="location" i18n:translate="">Location (folder):</label>
+                <label for="location" i18n:translate="">
+                    Location (folder):
+                    <br />
+                    <noscript>
+                        <small i18n:translate="">e.g. folderUrl</small>
+                    </noscript>
+                </label>
                 <input name="location" class="sitemap_tree_target" id="location" type="text" size="50" value="" />
                 <small i18n:translate="">(choose a location from the tree below)</small>
 

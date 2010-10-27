@@ -1,5 +1,12 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Edit permissions for <i i18n:name="role_name" tal:content="options/role" /></metal:block>
+
+<metal:block fill-slot="section-title">
+</metal:block>
+
+<metal:block fill-slot="description-text">
+</metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <metal:block tal:define="
     role options/role;
@@ -8,23 +15,28 @@
     <form method="post" name="editRole"
         tal:attributes="action string:${here/absolute_url}/admin_editrole">
         <input type="hidden" name="role" tal:attributes="value role" />
-        <table class="datatable">
+        <metal:block define-macro="datatable">
+        <div class="datatable roles-list">
+            <table cellspacing="0" cellpadding="4">
             <tr>
                 <th width="5%" align="left" i18n:translate="" class="checkbox">
-                    <input type="checkbox" class="select-all" onclick="selectAll();" />
+                    <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
                 </th>
-                <th i18n:translate="">Permission</th>
+                <th i18n:translate="" class="th-left">Permission</th>
             </tr>
             <tal:block repeat="pair options/sorted_perm">
             <tr tal:define="input_id string:inperm-${repeat/pair/index};
                             label python:pair[0];
-                            zope_perm python:pair[1]">
+                            zope_perm python:pair[1]"
+                tal:attributes="class python:test(path('repeat/pair/odd'),
+                                         'row-odd', 'row-even')">
                 <td class="center checkbox">
+                     
                     <input type="checkbox" tal:attributes="
                         name string:zope_perm_list:list;
                         value zope_perm;
                         id input_id;
-                        checked python:has_permission(zope_perm)"/>
+                        checked python:has_permission(zope_perm)" />
                 </td>
                 <td>
                     <label tal:attributes="title zope_perm; for input_id"
@@ -33,6 +45,11 @@
             </tr>
             </tal:block>
         </table>
+        </div>
+        </metal:block>
+        
+        <br />
+        
         <input type="submit" value="Save changes" i18n:attributes="value" />
     </form>
 </metal:block>

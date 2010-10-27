@@ -187,7 +187,7 @@
         </td>
     </tr>
 
-    <tr tal:condition="python:len(users) == 0">
+    <tr tal:condition="python:len(users) == 0" class="tr-messages">
 		<tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
 			<tal:block condition="if">
 				<td colspan="6" i18n:translate="">
