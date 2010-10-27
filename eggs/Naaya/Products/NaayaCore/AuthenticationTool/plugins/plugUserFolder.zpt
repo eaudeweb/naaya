@@ -1,8 +1,8 @@
-<tal:block tal:define="uf_obj here/getUserFolder">
+<tal:block tal:define="uf_obj here/getUserFolder; user_tool here/getAuthenticationTool; site_url here/absolute_url">
 <form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
-<p>
+<p i18n:translate="">
     This form displays the users defined in this source that have roles in the current portal.
-    You can revoke a role prior assigned to a user by ticking in the appropiate check box 
+    You can revoke a role prior assigned to a user by ticking in the appropiate check box
     and clicking the <em>Revoke selected roles</em> button.
 </p>
 <table border="0" cellspacing="2" cellpadding="2">
@@ -40,69 +40,31 @@
 </table>
 </form>
 
-<script type="text/javascript">
-<!--
-function emptyLocation()
-{	if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
-
-function pickLocation()
-{	document.userRoles.loc[1].checked = true;}
-
-function setupWin(url, theWidth, theHeight)
-{	pickLocation();
-	wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-	wwinn.focus();
-	return true;}
-
-function createKey(key)
-{    document.userRoles.location.value = key;}
-//-->
-</script>
-
-<fieldset><legend>Assign roles to users</legend>
-<p>
+<fieldset><legend i18n:translate="">Assign roles to users</legend>
+<p i18n:translate="">
     Assign a new role to an existing user: select the username from the drop-down field,
     mark the intended role(s) you want to grant and choose the specific location you want to grant them to.
 </p>
 
-<form name="userRoles" method="post" tal:attributes="action string:${here/absolute_url}/addUserRoles">
-<table border="0" cellspacing="2" cellpadding="2">
-	<tr>
-		<td width="20%">Username:</td>
-		<td width="80%">
-			<select name="name">
-				<option tal:repeat="item uf_obj/getUserNames"
+<tal:block define="redirect string:${here/absolute_url}; users uf_obj/getUserNames; action string:${here/absolute_url}/addUserRoles">
+	<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_assignroles').macros['content']">
+		<metal:block fill-slot="usernames">
+			<div class="field">
+				<label for="name" i18n:translate="">User</label>
+				<select name="name" id="name">
+					<option tal:repeat="item uf_obj/getUserNames"
 						tal:attributes="value item" tal:content="item">User</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td style="vertical-align: top">Roles:</td>
-		<td>
-			<select name="roles" size="5" multiple="multiple">
-				<tal:block repeat="item here/list_valid_roles">
-				<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
-						tal:attributes="value item" tal:content="item" />
-				<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
-				</tal:block>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td style="vertical-align: top">Location:(folder)<br />e.g. /folderURL</td>
-		<td>
-			<input type="radio" name="loc" value="all" onclick="emptyLocation();" checked="checked" />Entire portal<br />
-			<input type=radio name="loc" value="other" /> Pick other... (relative URL)<br />
-			<input type=text name="location" size="50" onclick="pickLocation();" value="" />
-			<input type="button" value="Pick" tal:attributes="onclick string:javascript:setupWin('${here/getAuthenticationToolPath}/sitemap', 400, 500);" />
-		</td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="submit" name="add" value="Assign role" /></td>
-	</tr>
-</table>
-</form>
-</fieldset>
-
+				</select>
+			</div>
+		</metal:block>
+		<metal:block fill-slot="notification">
+			<div class="field-inline">
+				<input type="checkbox" id="send_mail" name="send_mail" checked="checked" />
+				<label class="form-label" for="send_mail" i18n:translate="">Send notification email to user</label>
+			</div>
+		</metal:block>
+	</metal:block>
+	</tal:block>
 </tal:block>
+
+
