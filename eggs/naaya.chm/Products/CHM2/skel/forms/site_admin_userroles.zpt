@@ -65,10 +65,10 @@
 					<input type="hidden" name="names" tal:attributes="value name" />
 				</metal:block>
 				<metal:block fill-slot="notification">
-					<tr>
-					  <td><label class="form-label" for="send_mail" i18n:translate="">Send notification email to user</label></td>
-					  <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
-					</tr>
+					<div class="field-inline">
+						<input type="checkbox" id="send_mail" name="send_mail" checked="checked" />
+						<label class="form-label" for="send_mail" i18n:translate="">Send notification email to user</label>
+					</div>
 				</metal:block>
 			</metal:block>
 		</tal:block>
