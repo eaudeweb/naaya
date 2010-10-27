@@ -125,6 +125,7 @@
                condition="python:is_user_search or is_role_search">
 
     <tal:block condition="ldap_users">
+    <div class="separator"></div>
     <h3 tal:condition="is_user_search" i18n:translate="">
 		Users found for '<strong i18n:name="search-text" tal:content="search_term" />' search term
     </h3>
