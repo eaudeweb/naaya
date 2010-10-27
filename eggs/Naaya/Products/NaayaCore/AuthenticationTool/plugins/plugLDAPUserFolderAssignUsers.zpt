@@ -6,12 +6,24 @@
     req_role python:request.get('req_role', '');
     req_location python:request.get('req_location', '');
     source_id python:request.get('id', '');
+    source_title python:here.getAuthenticationTool().getSourceObj(source_id).title_or_id();
     ">
-    <p>
-        Use this form to find users from the LDAP directory, view their
-        details and assign them roles in the current portal.
-    </p>
-
+    
+    <div class="cleaner">&nbsp;</div>
+    
+    <h3 i18n:translate="">
+        Assign roles to <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
+    </h3>
+    
+    <div class="description-text">
+        <p>
+            Use this form to find users from the <tal:block replace="source_title" /> directory, view their
+            details and assign them roles in the current portal.
+        </p>
+    </div>
+    
+    <br />
+    
     <form method="post" action="" name="frmRoles" id="frmRoles">
         <input type="hidden" name="s" value="assign_to_users" />
         <input type="hidden" name="search" value="" />
@@ -192,14 +204,14 @@
         </p>
     </form>
 
-    <div id="assign_users_waiting_response" style="display:none">
+    <div id="assign_users_waiting_response" style="display:none" class="cleaner">
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
         <p i18n:translate="">
             Waiting
         </p>
     </div>
 
-    <div id="assign_users_error_response" class="message-error"
+    <div id="assign_users_error_response" class="message-error cleaner"
         style="display:none">
         <p i18n:translate="">
             Error assigning user roles.

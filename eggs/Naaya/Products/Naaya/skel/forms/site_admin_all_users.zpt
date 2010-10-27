@@ -31,7 +31,6 @@
         </tal:block>
 
         <div class="datatable">
-
             <table cellspacing="0" cellpadding="4" width="95%"
                    tal:define="users_roles user_tool/getUsersRoles;
                                users_sources_roles python: [source.getUsersRoles(here) for source in user_sources]">
@@ -182,7 +181,7 @@
     </div>
     </metal:block>
     
-    <div class="cleaner">&nbsp;</div>
+    <div class="separator"></div>
     
     <tal:block repeat="user_source user_sources">
     <div class="groups-roles-list">
@@ -243,8 +242,10 @@
             </table>
         </div>
         </tal:block>
+        
     </div>
     
+    <div class="separator"></div>
     </tal:block>
 </metal:block></metal:block>
 </metal:block>
