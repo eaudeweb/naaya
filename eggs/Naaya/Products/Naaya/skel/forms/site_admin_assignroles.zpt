@@ -58,8 +58,8 @@
 
         <metal:block define-slot="location">
             <div class="field">
-                <label for="location" i18n:translate="">
-                    Location (folder):
+                <label for="location">
+                    <span tal:omit-tag="" i18n:translate="">Location (folder):</span>
                     <br />
                     <noscript>
                         <small i18n:translate="">e.g. folderUrl</small>

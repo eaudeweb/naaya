@@ -82,7 +82,6 @@
 						tal:content="python:test(user_lastpost=='', ' - ', user_lastpost[:-3])" />
 		</p>
 	</div>
-	
 	<span tal:replace="here/delUserSession" />
 
 </tal:block>

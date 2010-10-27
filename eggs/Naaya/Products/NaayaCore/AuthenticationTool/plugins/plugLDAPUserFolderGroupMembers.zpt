@@ -5,9 +5,7 @@
 	<br />
 	
 	<h3>
-		<strong i18n:translate="">
-		Members of LDAP group
-		</strong>
+		<strong i18n:translate="">Members of LDAP group</strong>
 		"<tal:block content="group_id" />"
 	</h3>
 	

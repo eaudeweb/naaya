@@ -12,12 +12,12 @@
     <div class="cleaner">&nbsp;</div>
     
     <h3 i18n:translate="">
-        Assign roles to <tal:block i18n:name="source_title" replace="source_title"></tal:block> users
+        Assign roles to <tal:block i18n:name="source-title" replace="source_title"></tal:block> users
     </h3>
     
     <div class="description-text">
-        <p>
-            Use this form to find users from the <tal:block replace="source_title" /> directory, view their
+        <p i18n:translate="">
+            Use this form to find users from the <tal:block i18n:name="source-title" replace="source_title" /> directory, view their
             details and assign them roles in the current portal.
         </p>
     </div>
@@ -34,7 +34,7 @@
             <tr class="tr-hover">
                 <td width="20">
                     <div style="white-space: nowrap; ">
-                        <label for="params">Matching criteria</label>
+                        <label for="params" i18n:translate="">Matching criteria</label>
                     </div>
                 </td>
                 
@@ -48,7 +48,7 @@
                 </td>
     
                 <td width="1">
-                    <label for="term">containing</label>
+                    <label for="term" i18n:translate="">containing</label>
                 </td>
                 
                 <td width="1">
@@ -56,20 +56,20 @@
                 </td>
                 
                 <td>
-                    <input type="submit" name="search_user" value="Search" />
+                    <input type="submit" name="search_user" value="Search" i18n:attributes="value" />
                 </td>
             </tr>
         
             <tr>
                 <td>
-                    <strong>OR</strong>
+                    <strong i18n:translate="">OR</strong>
                 </td>
             </tr>
             
             <tr class="tr-hover">
                 <td width="20">
                     <div style="white-space: nowrap; ">
-                        <label for="role">which have the role</label>
+                        <label for="role" i18n:translate="">which have the role</label>
                     </div>
                 </td>
                 
@@ -79,6 +79,7 @@
                 
                 <td width="1">
                     <input type="button" name="pickroles2" value="Pick"
+						i18n:attributes="value"
                         tal:define="
                             url string:${here/getPluginPath}/pickroles_html;
                             js_code string:fPickRoles('${url}', 'dn');"
@@ -88,7 +89,7 @@
                 <td width="1">&nbsp;</td>
                 
                 <td>
-                    <input type="submit" name="search_role" value="Search" />
+                    <input type="submit" name="search_role" value="Search" i18n:attributes="value" />
                 </td>
             </tr>
         </table>
@@ -124,16 +125,16 @@
                condition="python:is_user_search or is_role_search">
 
     <tal:block condition="ldap_users">
-    <h3 tal:condition="is_user_search">
-        <span i18n:translate="">Users found for</span> '<strong tal:content="search_term" />' <span>search term</span>
+    <h3 tal:condition="is_user_search" i18n:translate="">
+		Users found for '<strong i18n:name="search-text" tal:content="search_term" />' search term
     </h3>
-    <p tal:condition="is_role_search">
-        Users found with <strong tal:content="role" /> role
+    <p tal:condition="is_role_search" i18n:translate="">
+        Users found with <strong i18n:name="role-name" tal:content="role" /> role
     </p>
     </tal:block>
     
-    <p tal:condition="not:ldap_users" class="message-empty">
-        <strong i18n:translate="">No</strong> <tal:block replace="source_title" /> <strong i18n:translate="">users matching the selected criteria.</strong>
+    <p tal:condition="not:ldap_users" class="message-empty" i18n:translate="">
+       No <tal:block i18n:name="source" replace="source_title" /> users matching the selected criteria.
     </p>
 
     <tal:block condition="python:len(ldap_users) > 10">
@@ -176,15 +177,15 @@
                 No users selected.
             </p>
         </div>
-        
+
         <div class="tip cleaner">
-            <p>
-                <strong i18n:translate="">Note:</strong> <span i18n:translate="">The users marked with <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" /> are local users</span>.
+            <p i18n:translate="">
+				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" 
+				title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
             </p>
         </div>
-        
         <tal:block tal:condition="python:len(ldap_users) > 10">
-        &middot;&nbsp;<a href="#section_parent">Go back to top</a>
+        &middot;&nbsp;<a href="#section_parent" i18n:translate="">Go back to top</a>
         </tal:block>
         
         <br />
@@ -215,8 +216,8 @@
             </div>
             
             <div class="field">
-                <label for="location" i18n:translate="">
-                    Location (folder):
+                <label for="location">
+                    <span tal:omit-tag="" i18n:translate="">Location (folder):</span>
                     <br />
                     <noscript>
                         <small i18n:translate="">e.g. folderUrl</small>
@@ -244,7 +245,7 @@
         <div>
             <input type="hidden" name="uf" tal:attributes="value here/obj_path" />
             <input type="hidden" name="user_location" tal:attributes="value python:test(role, role, 'Users')" />
-            <input type="submit" name="add" value="Assign role" />
+            <input type="submit" name="add" value="Assign role" i18n:attributes="value" />
         </div>
     </form>
 
