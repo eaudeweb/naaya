@@ -48,10 +48,10 @@
                         </th>
                         <th width="30%" align="left">
                             <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
-                                <span i18n:translate="">Name/E-mail</span>
+                                <span i18n:translate="">Name/Email</span>
                             </a>
                             <a class="sort-key" tal:attributes="href string:${here/absolute_url}/admin_all_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
-                                <span i18n:translate="">Name/E-mail</span>
+                                <span i18n:translate="">Name/Email</span>
                             </a>
                             <img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
                             <img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
@@ -176,10 +176,7 @@
                 <br class="cleaner" />
                 <span i18n:translate="">
                     <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and
-                    <tal:block repeat="user_source user_sources">
-                        <tal:block replace="user_source/title_or_id" />,
-                    </tal:block>
-                    accounts for the same username
+                    LDAP accounts for the same username
                 </span>.
             </p>
         </div>
