@@ -1,3 +1,4 @@
+import re
 from time import sleep
 import transaction
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
@@ -115,7 +116,9 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
         username = self.selenium.get_text(
             "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
-        self.selenium.click("//input[@value='Delete selected user(s)']")
+        self.selenium.click("css=.deluser")
+        assert re.search(r"^Are you sure[\s\S]$",
+                         self.selenium.get_confirmation())
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.is_text_present(username) is False
 
@@ -130,29 +133,30 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             assert self.selenium.get_text(\
                 '//div[@class="datatable"]/table/tbody/tr[last()]/td[2]') ==\
             user
-
+        #Text search contributor string
         self.selenium.open("/portal/admin_local_users_html", True)
-        self.selenium.type('id=autocomplete-query', ' ')
-        self.selenium.type_keys('id=autocomplete-query', 'contri')
+        self.selenium.type('id=autocomplete-query', 'contributor')
+        self.selenium.click('//input[@value="Search"]')
         self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
-        #The datatable should have only user and header rows
         check_result(u'contributor')
 
+        #Empty string search
         self.selenium.type('id=autocomplete-query', '')
-        self.selenium.type_keys('id=autocomplete-query', ' ')
+        self.selenium.click('//input[@value="Search"]')
         self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
         assert int(self.selenium.\
             get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) > 2
 
-        self.selenium.type('id=autocomplete-query', 'contrib')
-        self.selenium.click('//input[@value="Go"]')
-        self.selenium.wait_for_page_to_load("3000")
-        check_result(u'contributor')
+        #Filtering by Manager role
+        self.selenium.select("id=filter-roles", 'Manager')
+        self.selenium.click('//input[@value="Search"]')
+        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        check_result(u'test_user_1_')
 
         #Check filtering by role combined with text search
         self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.select("id=filter-roles", 'Contributor')
-        self.selenium.click('//input[@value="Go"]')
+        self.selenium.click('//input[@value="Search"]')
         self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
         check_result(u'contributor')
 
@@ -177,7 +181,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         assert self.selenium.get_value('id=inperm-1') == u'off'
         assert self.selenium.get_value('id=inperm-2') == u'off'
 
-    def test_aaaassign_role(self):
+    def test_assign_role(self):
         """Assign a role
         XXX: Do the jstree click
         """
@@ -199,11 +203,13 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
                                       last_row).replace("\n", '')
                 == u'Manager in Information')
 
-    def test_revoke_role(self):
+    def test_aaaarevoke_role(self):
         "Revoke Contributor to user3"
         self.selenium.open("/portal/admin_local_users_html", True)
         last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
         self.selenium.click("%s/td/div[@class='user-role-revoke']/a" % last_row)
+        assert re.search(r"^Are you sure[\s\S]$",
+                         self.selenium.get_confirmation())
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.get_text('%s/td[last()]' % last_row) == u''
