@@ -33,8 +33,9 @@
 </metal:block></metal:block>
 
 <metal:block fill-slot="content"><metal:block define-macro="content">
-<tal:block define="users user_tool/user_names;">
+<tal:block define="users user_tool/user_names;redirect redirect|nothing">
     <form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles" class="assign-form" tal:condition="users">
+        <input type="hidden" name="redirect" tal:attributes="value redirect" />
         <metal:block define-slot="usernames">
             <div class="field">
                 <label for="select-usernames" i18n:translate="">Username:</label>

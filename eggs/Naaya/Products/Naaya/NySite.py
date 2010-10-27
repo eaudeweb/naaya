@@ -2367,7 +2367,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
     def admin_addroles(self, names=[], roles=[], location='', send_mail='',
-                       REQUEST=None):
+                       redirect='', REQUEST=None):
         """
         XXX: Should be assign_roles
 
@@ -2401,7 +2401,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                         err = 'Could not send confirmation mail.'
 
         if REQUEST is not None:
-            redirect_url = '%s/admin_local_users_html' % self.absolute_url()
+            if redirect != '':
+                redirect_url = redirect
+            else:
+                redirect_url = ('%s/admin_local_users_html' %
+                                self.absolute_url())
             if err != '':
                 self.setSessionErrorsTrans(err)
                 REQUEST.RESPONSE.redirect(
