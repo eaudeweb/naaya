@@ -293,21 +293,6 @@ class CHMSite(NySite):
             if x['username'] == name: return x['roles']
         return []
 
-    def getUserAdditionalRoles(self, name):
-        """
-        Returns a list with an user additional roles.
-        """
-        r = []
-        for x in self.getAssignedUsers():
-            if x['username'] == name:
-                for y in x['roles']:
-                    wg = self.getWorkgroupByLocation(y[1])
-                    if wg:
-                        if wg[3] != y[0]: r.append(y)
-                    else:
-                        r.append(y)
-        return r
-
     def getUnassignedUsers(self):
         """
         Returns the list of users that do not belong to any group and
@@ -655,7 +640,7 @@ class CHMSite(NySite):
         """ """
         err = []
         if title=='':
-            err.append('Title is required')
+            err.append('Workgroup name is required')
         if location=='':
             err.append('Location is required')
         else:
@@ -807,19 +792,13 @@ class CHMSite(NySite):
                 return REQUEST.RESPONSE.redirect(redirect_url)
             else:
                 raise ValueError("No role(s) provided")
+                
+        auth_tool = self.getAuthenticationTool()
 
-        for t in self.utConvertToList(roles):
-            role, location = t.split('||')
-            if location == '/': location = ''
-            loc = self.unrestrictedTraverse(location)
-            if location != '':
-                res = self.utListDifference(
-                    loc.get_local_roles_for_userid(name), [role])
-                if len(res): loc.manage_setLocalRoles(name, res)
-                else: loc.manage_delLocalRoles([name])
-            else:
-                self.getAuthenticationTool()._doDelUserRoles([name])
-        if REQUEST:
+        for location in self.utConvertToList(roles):
+            auth_tool.manage_revokeUserRole(name, location, REQUEST)
+
+        if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) revoked")
             return REQUEST.RESPONSE.redirect(redirect_url)
 
