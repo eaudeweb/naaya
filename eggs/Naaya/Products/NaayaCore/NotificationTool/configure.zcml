@@ -1,4 +1,5 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <subscriber
     handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_add"
@@ -37,9 +38,11 @@
     <implements interface=".interfaces.ISubscriptionTarget" />
   </class>
 
-  <utility name="remove_notification_userid_spaces.update"
-           provides="Products.naayaUpdater.interfaces.IUpdateScript"
-           component=".updates.RemoveNotifUseridSpaces"
-           permission="zope2.ViewManagementScreens" />
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility name="remove_notification_userid_spaces.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.RemoveNotifUseridSpaces"
+             permission="zope2.ViewManagementScreens" />
+  </configure>
 
 </configure>
