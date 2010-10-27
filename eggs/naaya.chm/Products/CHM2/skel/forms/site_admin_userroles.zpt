@@ -64,6 +64,7 @@
 			</tal:block>
 			<hr />
 			<h3 i18n:translate="">Assign new role(s)</h3>
+			<tal:block define="redirect string:${here/absolute_url}/admin_userroles_html?name=${name}">
 			<metal:block use-macro="python: here.getFormsTool().getForm('site_admin_assignroles').macros['content']">
 				<metal:block fill-slot="usernames">
 					<input type="hidden" name="names" tal:attributes="value name" />
@@ -75,6 +76,7 @@
 					</div>
 				</metal:block>
 			</metal:block>
+			</tal:block>
 		</tal:block>
 	</tal:block>
 </metal:block>
