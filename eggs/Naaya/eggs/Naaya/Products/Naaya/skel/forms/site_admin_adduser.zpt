@@ -50,7 +50,6 @@
 		</div>
 		<div class="field">
 			<input type="submit" value="Add user" i18n:attributes="value" />
-			<a tal:attributes="href string:${here/absolute_url}/admin_local_users_html">Back to local users list</a>
 		</div>
 	</form>
 	<span tal:replace="here/delUserSession" />

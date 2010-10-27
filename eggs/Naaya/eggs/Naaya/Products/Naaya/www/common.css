@@ -1815,28 +1815,6 @@ tr.tr-hover:hover {
  * Roles
 */
 
-.roles-list .datatable, #add-role-form .datatable {
-		min-width: 18.5em;
-}
-
-.roles-tip {
-		min-width: 39em;
-}
-
-#add-role-form .datatable caption, .roles-list .datatable caption {
-		text-align: left;
-}
-
-.roles-list {
-		float: left;
-		clear: both;
-}
-
-#add-role-form {
-		float: left;
-		margin-left: 2em;
-}
-
 #add-role-form input[type="submit"], #add-role-form input[type="reset"] {
 		margin: 0 !important;
 }
