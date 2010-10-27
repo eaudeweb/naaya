@@ -51,7 +51,7 @@
 	</tr>
 </table>
 <input type="hidden" name="id" id="id" tal:attributes="value wg_id" />
-<input type="submit" value="Revoke role(s)" i18n:attributes="value" class="submission_button" />
+<input type="submit" value="Delete user(s) from workgroup" i18n:attributes="value" class="delbutton" />
 </form>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_addusertoworkgroup"
