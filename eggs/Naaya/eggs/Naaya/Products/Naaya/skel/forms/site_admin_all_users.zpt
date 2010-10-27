@@ -181,65 +181,70 @@
         </div>
     </div>
     </metal:block>
+    
     <div class="cleaner">&nbsp;</div>
+    
     <tal:block repeat="user_source user_sources">
-    <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
-    <h3 i18n:translate="">
-        <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
-    </h3>
-
-    <div class="cleaner"></div>
-    <div class="description-text">
-        <p tal:condition="groups_roles_map" i18n:translate="">
-            Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
-            below.
-        </p>
+    <div class="groups-roles-list">
+        <tal:block tal:define="groups_roles_map user_source/get_groups_roles_map;">
+        <h3 i18n:translate="">
+            <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups
+        </h3>
+    
+        <div class="cleaner"></div>
+        <div class="description-text">
+            <p tal:condition="groups_roles_map" i18n:translate="">
+                Roles currently granted for <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups are listed in the table
+                below.
+            </p>
+        </div>
+    
+        <div class="datatable">
+            <table cellspacing="0" cellpadding="3" class="ldap_groups">
+                <thead tal:condition="python: len(groups_roles_map) != 0">
+                    <tr>
+                        <th i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</th>
+                        <th i18n:translate="">Roles/Location</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
+                        <td>
+                            <a tal:attributes="href string:${here/absolute_url}/admin_sources_html?id=${user_source/id}&s=group_members&group_id=${group_id};
+                                               title string:Click to see members of ${group_id};"
+                               tal:content="group_id" />
+                        </td>
+    
+                        <td>
+                            <ul tal:define="group_roles python:groups_roles_map[group_id]">
+                                <li tal:repeat="role_and_location group_roles">
+                                    <tal:block define="role python:role_and_location[0];
+                                                location python:role_and_location[1];">
+                                        <span tal:content="role" /> on
+                                        <a tal:condition="not:location/is_site"
+                                           tal:content="location/ob/title_or_id"
+                                           tal:attributes="href location/ob/absolute_url" />
+                                        <strong tal:condition="location/is_site">entire portal</strong>
+                                    </tal:block>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+    
+                    <tr tal:condition="not:groups_roles_map">
+                        <td colspan="6" i18n:translate="">
+                            <p class="table-message">
+                                No <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups have roles in this portal.
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </tal:block>
     </div>
-
-    <div class="datatable">
-        <table cellspacing="0" cellpadding="3" class="ldap_groups">
-            <thead tal:condition="python: len(groups_roles_map) != 0">
-                <tr>
-                    <th i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</th>
-                    <th i18n:translate="">Roles/Location</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
-                    <td>
-                        <a tal:attributes="href string:${here/absolute_url}/admin_sources_html?id=${user_source/id}&s=group_members&group_id=${group_id};
-                                           title string:Click to see members of ${group_id};"
-                           tal:content="group_id" />
-                    </td>
-
-                    <td>
-                        <ul tal:define="group_roles python:groups_roles_map[group_id]">
-                            <li tal:repeat="role_and_location group_roles">
-                                <tal:block define="role python:role_and_location[0];
-                                            location python:role_and_location[1];">
-                                    <span tal:content="role" /> on
-                                    <a tal:condition="not:location/is_site"
-                                       tal:content="location/ob/title_or_id"
-                                       tal:attributes="href location/ob/absolute_url" />
-                                    <strong tal:condition="location/is_site">entire portal</strong>
-                                </tal:block>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-
-                <tr tal:condition="not:groups_roles_map">
-                    <td colspan="6" i18n:translate="">
-                        <p class="table-message">
-                            No <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups have roles in this portal.
-                        </p>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    </tal:block>
+    
     </tal:block>
 </metal:block></metal:block>
 </metal:block>

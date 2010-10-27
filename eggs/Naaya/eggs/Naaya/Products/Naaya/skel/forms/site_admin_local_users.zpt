@@ -78,8 +78,13 @@
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
 <div class="form-buttons">
-    <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="adduser"/>
-	<tal:block condition="users"><input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/></tal:block>
+	<span class="buttons">
+		<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title">Add new user</a>
+		
+		<tal:block condition="users">
+			<input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
+		</tal:block>
+	</span>
 </div>
 
 <input type="hidden" id="template" value="site_admin_local_users" />
