@@ -2,7 +2,7 @@ import sys
 import urllib
 import tempfile
 import shutil
-from os import path
+import os.path
 from cStringIO import StringIO
 
 try:
@@ -495,7 +495,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
     def questionnaire_export(self, report_id, REQUEST):
-        """ """
+        """ Exports the report in excel format """
         report = self.getSurveyTemplate().getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
@@ -593,7 +593,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                               'manage_create_validation_html')
     def manage_create_validation_html(self, REQUEST=None):
         """ create a blank validation_html template in this survey """
-        datafile = path.join(path.dirname(__file__), 'www',
+        datafile = os.path.join(os.path.dirname(__file__), 'www',
                              'initial_validation_html.txt')
         id = 'validation_html'
         title = "Custom questionnaire HTML"
@@ -606,7 +606,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                               'manage_create_validation_onsubmit')
     def manage_create_validation_onsubmit(self, REQUEST=None):
         """ create a blank validation_onsubmit template in this survey """
-        datafile = path.join(path.dirname(__file__), 'www',
+        datafile = os.path.join(os.path.dirname(__file__), 'www',
                              'initial_validation_onsubmit.txt')
         id = 'validation_onsubmit'
         manage_addPythonScript(self, id)
