@@ -19,7 +19,7 @@
 
 # Python imports
 import colorsys
-import os
+import os.path
 from cStringIO import StringIO
 from PIL import Image
 

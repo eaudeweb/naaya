@@ -81,6 +81,9 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
 
     security.declarePrivate('get_bitmap_props')
     def get_bitmap_props(self, file_string, temp_folder):
+        ''' Opens the passed string as image, stripps the possible a channel,
+        saves the resulting image as BMP in the passed temporary folder
+        and returns its path and height in pixels'''
         im = Image.open(file_string)
         height = im.size[1]
         if len(im.split()) == 4:
@@ -93,6 +96,10 @@ class BaseStatistic(SimpleItem, LocalPropertyManager):
 
     security.declarePrivate('set_bitmap_props')
     def set_bitmap_props(self, file_string, width, height, temp_folder):
+        ''' Opens the passed string as image, stripps the possible a channel,
+        resizes it according to passed parameters,
+        saves the resulting image as BMP in the passed temporary folder
+        and returns its path'''
         im = Image.open(file_string)
         height = im.size[1]
         if len(im.split()) == 4:

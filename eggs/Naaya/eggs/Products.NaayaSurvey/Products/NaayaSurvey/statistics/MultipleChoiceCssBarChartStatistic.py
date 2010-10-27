@@ -18,7 +18,7 @@
 # Cristian Ciupitu, Eau de Web
 
 # Zope imports
-import os
+import os.path
 from cStringIO import StringIO
 from PIL import Image
 
