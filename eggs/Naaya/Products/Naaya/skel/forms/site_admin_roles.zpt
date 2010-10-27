@@ -43,7 +43,7 @@
 	
 	<metal:block define-macro="datatable">
 	<div class="datatable roles-list">
-		<table cellspacing="0" cellpadding="4">
+		<table cellspacing="0" cellpadding="4" class="sortable">
 			<thead>
 				<tr>
 					<th i18n:translate="">Role name</th>

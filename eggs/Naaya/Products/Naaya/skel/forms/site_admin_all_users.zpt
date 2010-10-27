@@ -33,7 +33,7 @@
         <div class="datatable">
             <table cellspacing="0" cellpadding="4" width="95%"
                    tal:define="users_roles user_tool/getUsersRoles;
-                               users_sources_roles python: [source.getUsersRoles(here) for source in user_sources]">
+                               users_sources_roles python: [source.getUsersRoles(here) for source in user_sources]" class="sortable">
                 <thead>
                     <tr tal:condition="python:len(users) != 0">
                         <th align="left">
@@ -203,7 +203,7 @@
         </div>
     
         <div class="datatable">
-            <table cellspacing="0" cellpadding="3" class="ldap_groups">
+            <table cellspacing="0" cellpadding="3" class="ldap_groups" class="sortable">
                 <thead tal:condition="python: len(groups_roles_map) != 0">
                     <tr>
                         <th i18n:translate=""><tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups</th>

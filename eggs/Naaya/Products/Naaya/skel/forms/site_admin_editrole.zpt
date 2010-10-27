@@ -17,7 +17,7 @@
         <input type="hidden" name="role" tal:attributes="value role" />
         <metal:block define-macro="datatable">
         <div class="datatable roles-list">
-            <table cellspacing="0" cellpadding="4">
+            <table cellspacing="0" cellpadding="4" class="sortable">
             <tr>
                 <th width="5%" align="left" i18n:translate="" class="checkbox">
                     <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />

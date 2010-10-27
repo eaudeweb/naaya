@@ -46,7 +46,7 @@
 
     <tal:block tal:condition="groups_roles_map">
         <div class="datatable">
-        <table class="ldap_groups" cellpadding="2" cellspacing="0">
+        <table class="ldap_groups sortable" cellpadding="2" cellspacing="0">
             <thead>
                 <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
                 <th i18n:translate="">Roles/Location</th>
@@ -129,7 +129,7 @@
     </div>
     
     <div class="datatable">
-        <table cellspacing="0" cellpadding="4">
+        <table cellspacing="0" cellpadding="4" class="sortable">
             <tr tal:condition="python:len(users_roles) != 0">
                 <th align="left">
                     <a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">

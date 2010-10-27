@@ -145,7 +145,7 @@
         tal:condition="ldap_users"
         tal:attributes="action string:${here/absolute_url}/addUserRoles">
         <div class="datatable">
-            <table cellspacing="0" cellpadding="4" id="search_results">
+            <table cellspacing="0" cellpadding="4" id="search_results" class="sortable">
             <tr>
                 <th width="5%" align="left" i18n:translate="" class="checkbox">
                     <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
