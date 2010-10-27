@@ -142,8 +142,8 @@
                     <tr tal:condition="python:len(users) == 0" class="tr-messages">
                         <tal:block define="if python: (not request.get('query', '') and not request.get('role', '')) and True or False">
                             <tal:block condition="if">
-                                <td colspan="6" i18n:translate="">
-                                    <p class="table-message" tal:define="source_id python: user_sources[0].id">
+                                <td colspan="6">
+                                    <p class="table-message" tal:define="source_id python: user_sources[0].id" i18n:translate="">
                                         No local users defined and no roles assigned to LDAP users yet.
                                         You can <a i18n:name="add-user-link" tal:attributes="href string:${site_url}/admin_adduser_html" title="Add local user" i18n:attributes="title" i18n:translate="">add a local user</a> 
 										and/or <a i18n:name="assing-role-link" tal:attributes="href string:${site_url}/admin_sources_html?id=${source_id}&s=assign_to_users">assign a role</a> to a LDAP             user.
@@ -151,8 +151,8 @@
                                 </td>
                             </tal:block>
                             <tal:block condition="not: if">
-                                <td colspan="6" i18n:translate="">
-                                    <p class="table-message">
+                                <td colspan="6">
+                                    <p class="table-message" i18n:translate="">
                                         No users matched this search criteria.
                                     </p>
                                 </td>
@@ -234,8 +234,8 @@
                     </tr>
     
                     <tr tal:condition="not:groups_roles_map" class="tr-messages">
-                        <td colspan="6" i18n:translate="">
-                            <p class="table-message">
+                        <td colspan="6">
+                            <p class="table-message" i18n:translate="">
                                 No <tal:block i18n:name="source_title" replace="user_source/title_or_id"></tal:block> groups have roles in this portal.
                             </p>
                         </td>
