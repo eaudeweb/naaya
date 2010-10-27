@@ -41,7 +41,7 @@
 		</tr>
 	</tbody>
 	</table>
-	<input type="submit" value="Delete workgroups" i18n:attributes="value" class="submission_button" />
+	<input type="submit" value="Delete workgroups" i18n:attributes="value" class="delbutton" />
 </form>
 </metal:block>
 </metal:block>
