@@ -654,8 +654,10 @@ class CHMSite(NySite):
     def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
         """ """
         err = []
-        if title=='': err.append('Title is required')
-        if location=='': err.append('Location is required')
+        if title=='':
+            err.append('Title is required')
+        if location=='':
+            err.append('Location is required')
         else:
             try:
                 #check for a valid location
@@ -665,29 +667,40 @@ class CHMSite(NySite):
             else:
                 #check if no group was defiend for this location
                 if self.getWorkgroupByLocation(location):
-                    err.append('A workgroup is already defined for this location')
+                    err.append(
+                        'A workgroup is already defined for this location')
         if role=='':
             err.append('Role is required')
         if err:
-            if REQUEST:
+            if REQUEST is not None:
                 self.setSessionErrorsTrans(err)
                 self.setSession('title', title)
                 self.setSession('location', location)
                 self.setSession('role', role)
-                return REQUEST.RESPONSE.redirect('%s/admin_addworkgroup_html' % self.absolute_url())
+                return REQUEST.RESPONSE.redirect('%s/admin_addworkgroup_html' %
+                                                 self.absolute_url())
         else:
             id = self.utGenRandomId(4)
             self.workgroups.append((id, title, location, role))
-            self._p_changed = 1
-            if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html?w=%s' % (self.absolute_url(), id))
+            self._p_changed = True
+            if REQUEST is not None:
+                self.setSessionInfoTrans("Workgroup added")
+                REQUEST.RESPONSE.redirect('%s/admin_workgroups_html?w=%s' %
+                                                 (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
     def admin_delworkgroup(self, ids=[], REQUEST=None):
         """
         Delete workgroup(s).
         """
+        redirect_url = REQUEST.environ.get('HTTP_REFERER',
+                            '%s/admin_workgroups_html' % self.absolute_url())
+        if len(ids) == 0:
+            if REQUEST is not None:
+                self.setSessionErrorsTrans("No workgroup(s) selected")
+                return REQUEST.RESPONSE.redirect(redirect_url)
+            else:
+                raise ValueError("No workgroup(s) provided")
         for id in self.utConvertToList(ids):
             wg = self.getWorkgroupById(id)
             if wg:
@@ -701,9 +714,9 @@ class CHMSite(NySite):
                 #remove workgroup
                 self.workgroups.remove(wg)
                 self._p_changed = 1
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+        if REQUEST is not None:
+            self.setSessionInfoTrans("Workgroup(s) deleted")
+            return REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userworkgroups')
     def admin_userworkgroups(self, name='', ids=[], REQUEST=None):
@@ -734,7 +747,8 @@ class CHMSite(NySite):
             loc = self.unrestrictedTraverse(wg[2])
             self.add_userto_workgroup(loc, name, [wg[3]])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            self.setSessionInfoTrans("User ${name} assigned to workgroup",
+                                     name=name)
             return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserstoworkgroup')
@@ -756,6 +770,16 @@ class CHMSite(NySite):
         """
         Unassign one or more users from a workgroup.
         """
+        redirect_url = REQUEST.environ.get('HTTP_REFERER',
+                                           '%s/admin_workgroup_html?w=%s' %
+                                            (self.absolute_url(), id))
+        if len(names) == 0:
+            if REQUEST is not None:
+                self.setSessionErrorsTrans("No user(s) selected")
+                return REQUEST.RESPONSE.redirect(redirect_url)
+            else:
+                raise ValueError("No user(s) provided")
+
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -766,16 +790,24 @@ class CHMSite(NySite):
                     self.del_userfrom_workgroup(loc, x[0])
                     if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' %
-                                             (self.absolute_url(), id))
+            self.setSessionInfoTrans("User(s) deleted from workgroup")
+            return REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeuserroles')
     def admin_revokeuserroles(self, name='', roles=[], REQUEST=None):
         """
         Revoke roles from an user.
         """
+        redirect_url = REQUEST.environ.get('HTTP_REFERER',
+                                           '%s/admin_userroles_html?name=%s'
+                                             % (self.absolute_url(), name))
+        if len(roles) == 0:
+            if REQUEST is not None:
+                self.setSessionErrorsTrans("No role(s) selected")
+                return REQUEST.RESPONSE.redirect(redirect_url)
+            else:
+                raise ValueError("No role(s) provided")
+
         for t in self.utConvertToList(roles):
             role, location = t.split('||')
             if location == '/': location = ''
@@ -788,35 +820,8 @@ class CHMSite(NySite):
             else:
                 self.getAuthenticationTool()._doDelUserRoles([name])
         if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s'
-                                             % (self.absolute_url(), name))
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
-    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='',
-                           send_mail='', REQUEST=None):
-        """
-        Add roles for an user.
-        """
-        err = ''
-        success = False
-        auth_tool = self.getAuthenticationTool()
-        try:
-            auth_tool.manage_addUsersRoles(name, roles, loc, location)
-            if send_mail:
-                email = auth_tool.getUsersEmails([name])[0]
-                self.sendAccountModifiedEmail(email, roles, loc, location)
-        except Exception, error:
-            err = error
-        else:
-            success = True
-        if REQUEST:
-            if err != '': self.setSessionErrorsTrans(str(err))
-            if success: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                                 date=self.utGetTodayDate())
-            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s'
-                                             % (self.absolute_url(), name))
+            self.setSessionInfoTrans("Role(s) revoked")
+            return REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(view, 'getCaptcha')
     def getCaptcha(self):
