@@ -11,7 +11,7 @@ $(document).ready(function(){
 	$("#search-users-form").attr('action', $("#search-users-form").attr('href'));
 	setupSearchUsers();
 
-	$('.revoke-role, .deluser').live('click', function(e){
+	$('.revoke-role, .deluser, .delbutton').live('click', function(e){
 		return confirm(gettext("Are you sure?"));
 	});
 	/**
@@ -171,7 +171,7 @@ function ldap_refresh_section(tabid, url) {
 function ldap_refresh_users_fieldset(url) {
     $('#users_roles_waiting_response').show();
     $('#users_roles_error_response').hide();
-	
+
     $.ajax({
         url: url,
         success: function(data) {
