@@ -1,6 +1,8 @@
 import sys
 import optparse
 import time
+import errno
+import socket
 
 from threading import Thread
 
@@ -9,7 +11,8 @@ from unittest import TestCase, TestSuite, makeSuite
 from nose.plugins import Plugin
 
 from webob.dec import wsgify
-from wsgiref.simple_server import make_server, WSGIRequestHandler, ServerHandler
+from wsgiref.simple_server import (make_server, WSGIRequestHandler,
+                                   WSGIServer, ServerHandler)
 
 from NaayaTestCase import NaayaTestCase
 
@@ -43,15 +46,26 @@ def create_user(db, user_id, password, roles):
     app.acl_users._doAddUser(user_id, password, roles, [])
     transaction.commit()
 
+IGNORED_ERRNO = (errno.EPIPE, errno.ECONNRESET, errno.EAGAIN)
+def should_ignore(exc_info):
+    exc_type, exc_value = exc_info[:2]
+    if exc_type is socket.error and exc_value.args[0] in IGNORED_ERRNO:
+        return True
+    else:
+        return False
+
+class QuietServer(WSGIServer):
+    def handle_error(self, request, client_address):
+        if not should_ignore(sys.exc_info()):
+            WSGIServer.handle_error(self, request, client_address)
+
 class QuietServerHandler(ServerHandler):
     """
     Used to suppress tracebacks of broken pipes.
     """
     def log_exception(self, exc_info):
-        import errno
-        if exc_info[1].args[0] == errno.EPIPE:
-            return # don't log broken pipes
-        ServerHandler.log_exception(self, exc_info) # log other
+        if not should_ignore(exc_info):
+            ServerHandler.log_exception(self, exc_info)
 
 class NaayaRequestHandler(WSGIRequestHandler):
     """
@@ -92,7 +106,7 @@ class NaayaHttpThread(Thread):
     def run(self):
         app = self.tzope.wsgi_app
         self.httpd = make_server('127.0.0.1', HTTP_PORT, no_hop_by_hop(app),
-                handler_class=NaayaRequestHandler)
+                server_class=QuietServer, handler_class=NaayaRequestHandler)
         self.httpd.socket.settimeout(1)
 
         while not self._stop:
