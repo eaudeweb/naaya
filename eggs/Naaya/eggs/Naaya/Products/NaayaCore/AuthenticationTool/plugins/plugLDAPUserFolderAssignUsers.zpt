@@ -145,8 +145,7 @@
     <form id="search_results_form" name="user-roles" method="post"
         tal:condition="ldap_users"
         tal:attributes="action string:${here/absolute_url}/addUserRoles">
-        <div class="datatable">
-            <table cellspacing="0" cellpadding="4" id="search_results" class="sortable">
+        <table cellspacing="0" cellpadding="4" id="search_results" class="datatable sortable">
             <tr>
                 <th width="5%" align="left" class="checkbox">
                     <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
@@ -171,8 +170,8 @@
                 <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
                 <td tal:content="python:item['dn']">dn</td>
             </tr>
-            </table>
-        </div>
+        </table>
+        
         <div id="portal_users_empty" class="message-error" style="display:none">
             <p i18n:translate="">
                 No users selected.
