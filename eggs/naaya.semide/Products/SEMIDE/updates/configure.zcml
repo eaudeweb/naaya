@@ -5,11 +5,17 @@
 
   <configure zcml:condition="installed Products.naayaUpdater">
 	<utility
+		name="working_langs.update"
+		provides="Products.naayaUpdater.interfaces.IUpdateScript"
+		component=".update_workinglangs.UpdateWorkingLangs"
+		permission="zope2.ViewManagementScreens" />
+	<!--
+	<utility
 		name="titles.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
 		component=".update_titles.UpdateTitles"
 		permission="zope2.ViewManagementScreens" />
-	<!--
+
 	<utility
 		name="oai.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
