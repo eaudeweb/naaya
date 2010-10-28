@@ -45,8 +45,7 @@
     </div>
 
     <tal:block tal:condition="groups_roles_map">
-        <div class="datatable">
-        <table class="ldap_groups sortable" cellpadding="2" cellspacing="0">
+        <table class="ldap_groups datatable sortable" cellpadding="2" cellspacing="0">
             <thead>
                 <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
                 <th i18n:translate="">Roles/Location</th>
@@ -92,7 +91,6 @@
                 </tr>
             </tbody>
         </table>
-        </div>
     </tal:block>
 
 	<div class="separator"></div>
@@ -128,63 +126,61 @@
         </p>
     </div>
     
-    <div class="datatable">
-        <table cellspacing="0" cellpadding="4" class="sortable">
-            <tr tal:condition="python:len(users_roles) != 0">
-                <th align="left">
-                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
-                        <span i18n:translate="">Username</span>
-                    </a>
-                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=user&rkey=1" tal:condition="python: (skey == 'user' and not rkey) or not skey">
-                        <span i18n:translate="">Username</span>
-                    </a>
-                    <img tal:condition="python: (skey == 'user' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
-                    <img tal:condition="python: skey == 'user' and rkey" src="misc_/Naaya/sort_desc.gif" />
-                </th>
-                <th align="left">
-                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=group" tal:condition="python: (skey == 'group' and rkey) or skey != 'group'" >
-                        <span i18n:translate="">Group</span>
-                    </a>
-                    <a class="sort_link" tal:attributes="href string:${source_url}&skey=group&rkey=1" tal:condition="python: skey == 'group' and not rkey" >
-                        <span i18n:translate="">Group</span>
-                    </a>
-                    <img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
-                    <img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
-                </th>
-                <th align="left"><span i18n:translate="">Roles/Location</span></th>
-                <th i18n:translate="">Revoke roles</th>
-            </tr>
-            <tr tal:repeat="user python:users_roles"
-            tal:attributes="class python:test(path('repeat/user/odd'),
-                                                 'row-odd', 'row-even')">
-                <td tal:content="python:user[1] + ' ('+user[0]+')'" ></td>
-                <td tal:content="python:user[2]" />
+	<table cellspacing="0" cellpadding="4" class="datatable sortable">
+		<tr tal:condition="python:len(users_roles) != 0">
+			<th align="left">
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user" tal:condition="python: (skey == 'user' and rkey) or skey != 'user' and skey">
+					<span i18n:translate="">Username</span>
+				</a>
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=user&rkey=1" tal:condition="python: (skey == 'user' and not rkey) or not skey">
+					<span i18n:translate="">Username</span>
+				</a>
+				<img tal:condition="python: (skey == 'user' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+				<img tal:condition="python: skey == 'user' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</th>
+			<th align="left">
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group" tal:condition="python: (skey == 'group' and rkey) or skey != 'group'" >
+					<span i18n:translate="">Group</span>
+				</a>
+				<a class="sort_link" tal:attributes="href string:${source_url}&skey=group&rkey=1" tal:condition="python: skey == 'group' and not rkey" >
+					<span i18n:translate="">Group</span>
+				</a>
+				<img tal:condition="python: skey == 'group' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+				<img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</th>
+			<th align="left"><span i18n:translate="">Roles/Location</span></th>
+			<th i18n:translate="">Revoke roles</th>
+		</tr>
+		<tr tal:repeat="user python:users_roles"
+		tal:attributes="class python:test(path('repeat/user/odd'),
+											 'row-odd', 'row-even')">
+			<td tal:content="python:user[1] + ' ('+user[0]+')'" ></td>
+			<td tal:content="python:user[2]" />
 
-                <td tal:define="user_roles python: user[3]">
-                    <div class="user-role"
-                         tal:repeat="role python: user_roles">
-                        <tal:block condition="python: role[0]">
-                        <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
-                        <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
-                        </tal:block>
-                    </div>
-                    <tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
-                </td>
+			<td tal:define="user_roles python: user[3]">
+				<div class="user-role"
+					 tal:repeat="role python: user_roles">
+					<tal:block condition="python: role[0]">
+					<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+					<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+					</tal:block>
+				</div>
+				<tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
+			</td>
 
-                <td tal:define="user_roles python: user[3]">
-                    <div class="user-role-revoke" tal:repeat="role python: user_roles">
-                        <tal:block condition="python: role[0]">
-                        <a class="revoke-role" i18n:attributes="title" title="Revoke role"
-                            tal:define="location python: role[1]; username python: user[0]"
-                            tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${username}&location=${location}">
-                            <img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
-                        </a>
-                        </tal:block>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+			<td tal:define="user_roles python: user[3]">
+				<div class="user-role-revoke" tal:repeat="role python: user_roles">
+					<tal:block condition="python: role[0]">
+					<a class="revoke-role" i18n:attributes="title" title="Revoke role"
+						tal:define="location python: role[1]; username python: user[0]"
+						tal:attributes="href string:${here/absolute_url}/revokeUserRoles?user=${username}&location=${location}">
+						<img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+					</a>
+					</tal:block>
+				</div>
+			</td>
+		</tr>
+	</table>
 
     </tal:block>
 </div>

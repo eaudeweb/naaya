@@ -16,8 +16,8 @@
         tal:attributes="action string:${here/absolute_url}/admin_editrole">
         <input type="hidden" name="role" tal:attributes="value role" />
         <metal:block define-macro="datatable">
-        <div class="datatable roles-list">
-            <table cellspacing="0" cellpadding="4" class="sortable">
+        <div class="roles-list">
+            <table cellspacing="0" cellpadding="4" class="datatable sortable">
             <tr>
                 <th width="5%" align="left" class="checkbox">
                     <input type="checkbox" class="select-all" onclick="selectAll(name='zope_perm_list:list');" />
