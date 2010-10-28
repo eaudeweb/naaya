@@ -32,9 +32,15 @@
 	
 	<div class="separator"></div>
 	
+	<div class="description-text">
+		<p class="cleaner">
+			Click edit icon (<img src="misc_/Naaya/edit" alt="edit link" tal:attributes="title string:Edit permissions" i18n:attributes="alt title" />) to edit role`s permissions.
+		</p>
+	</div>
+	
 	<metal:block define-macro="datatable">
 	<div class="roles-list">
-		<table cellspacing="0" cellpadding="4" class="datatable sortable">
+		<table cellspacing="0" cellpadding="4" class="datatable">
 			<thead>
 				<tr>
 					<th i18n:translate="">Role name</th>
@@ -48,8 +54,7 @@
 					<td tal:define="baseurl string:${here/absolute_url}/admin_editrole_html;
 									href string:${baseurl}?role=${role}" class="td-center">
 						<a tal:attributes="href href">
-							Edit
-							<!--<img src="misc_/Naaya/edit" alt="Edit" tal:attributes="title string:Edit '${role}' permissions" />-->
+							<img src="misc_/Naaya/edit" alt="Edit" tal:attributes="title string:Edit '${role}' permissions" />
 						</a>
 					</td>
 				</tr>
