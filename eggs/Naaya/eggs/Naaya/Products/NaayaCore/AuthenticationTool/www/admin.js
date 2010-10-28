@@ -97,11 +97,13 @@ function setupSearchUsers(data){
 		},
 		success: function(data) {
 			$('.user-results').replaceWith(data);
+
 			$('.paginator-details').show();
+			$('.deluser').show();
 
 			//Hide delete users button when no users are present
 			if ($('#all_users').length == 0 &&
-				$('.datatable table.empty').length == 0){
+				$('.user-results table').hasClass('empty')){
 				$('.deluser').hide();
 			}
 			toggleLoader();

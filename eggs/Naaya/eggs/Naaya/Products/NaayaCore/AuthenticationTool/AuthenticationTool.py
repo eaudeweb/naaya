@@ -497,7 +497,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         users = filter(_filter, self.utSortObjsListByAttr(
             user_objects, skey, rkey))
 
-        if filter_role != '':
+        if filter_role == 'noroles':
+            users_dict = self.getUsersRoles()
+            users = [u for u in users if u.name in users_dict and
+                                         users_dict[u.name] == [([], '')]]
+        elif filter_role != '':
             users_dict = self.getUsersWithRole([filter_role])
             users = [u for u in users if u.name in users_dict]
 
