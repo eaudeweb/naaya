@@ -755,7 +755,8 @@ class CHMSite(NySite):
         """
         Unassign one or more users from a workgroup.
         """
-        redirect_url = REQUEST.environ.get('HTTP_REFERER',
+        if REQUEST is not None:
+            redirect_url = REQUEST.get('HTTP_REFERER',
                                            '%s/admin_workgroup_html?w=%s' %
                                             (self.absolute_url(), id))
         if len(names) == 0:
@@ -792,7 +793,7 @@ class CHMSite(NySite):
                 return REQUEST.RESPONSE.redirect(redirect_url)
             else:
                 raise ValueError("No role(s) provided")
-                
+
         auth_tool = self.getAuthenticationTool()
 
         for location in self.utConvertToList(roles):
