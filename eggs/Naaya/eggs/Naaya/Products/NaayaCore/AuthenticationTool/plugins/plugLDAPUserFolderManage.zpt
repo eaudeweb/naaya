@@ -49,7 +49,7 @@
             <thead>
                 <th i18n:translate=""><tal:block i18n:name="source_title" replace="source_title"></tal:block> groups</th>
                 <th i18n:translate="">Roles/Location</th>
-                <th i18n:translate="">Revoke roles</th>
+                <th width="1" i18n:translate="">Revoke roles</th>
             </thead>
             <tbody>
                 <tr tal:repeat="group_id groups_roles_map" tal:attributes="class python:test(path('repeat/group_id/odd'), 'row-odd', 'row-even')">
@@ -149,7 +149,7 @@
 				<img tal:condition="python: skey == 'group' and rkey" src="misc_/Naaya/sort_desc.gif" />
 			</th>
 			<th align="left"><span i18n:translate="">Roles/Location</span></th>
-			<th i18n:translate="">Revoke roles</th>
+			<th width="1" i18n:translate="">Revoke roles</th>
 		</tr>
 		<tr tal:repeat="user python:users_roles"
 		tal:attributes="class python:test(path('repeat/user/odd'),

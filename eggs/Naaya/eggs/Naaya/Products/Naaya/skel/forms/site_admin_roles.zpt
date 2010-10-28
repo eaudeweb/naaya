@@ -16,30 +16,21 @@
                         source_url string:${site_path}/admin_roles_html;
                         section python:request.get('section', 'list');">
 	
-	<div class="cleaner">&nbsp;</div>
-	
-	<h3 i18n:translate="">
-		Add new role
-	</h3>
+	<div class="cleaner"></div>
 	
 	<div id="add-role-form" class="cleaner assign-form">
 		<form method="post" name="addrole" tal:attributes="action string:${site_url}/admin_addrole">
 			<div class="field-inline">
 				<label for="input-role" i18n:translate="">
-					Role name:
+					Add a new role:
 				</label>
 				<input id="input-role" name="role" size="25" maxLength="255" />
-				<input type="submit" value="Add new role" i18n:attributes="value" />
+				<input type="submit" value="Add" i18n:attributes="value" />
 			</div>
 		</form>
 	</div>
 	
-	<div class="cleaner">&nbsp;</div>
 	<div class="separator"></div>
-	
-	<h3 i18n:translate="">
-		Roles list
-	</h3>
 	
 	<metal:block define-macro="datatable">
 	<div class="roles-list">
@@ -47,7 +38,7 @@
 			<thead>
 				<tr>
 					<th i18n:translate="">Role name</th>
-					<th i18n:translate="">Edit role`s permissions</th>
+					<th i18n:translate="">Edit</th>
 				</tr>
 			</thead>
 			<tbody>

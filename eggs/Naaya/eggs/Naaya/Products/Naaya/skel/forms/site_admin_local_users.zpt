@@ -139,7 +139,7 @@
             <img tal:condition="python: skey == 'roles' and not rkey " src="misc_/Naaya/sort_asc.gif" />
             <img tal:condition="python: skey == 'roles' and rkey" src="misc_/Naaya/sort_desc.gif" />
         </th>
-        <th i18n:translate="">Revoke roles</th>
+        <th width="1" i18n:translate="">Revoke roles</th>
     </tr>
     <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
         <td nowrap="nowrap" class="center checkbox">
