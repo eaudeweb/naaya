@@ -39,7 +39,14 @@
 			<input type="checkbox" name="names" tal:attributes="value python:item[0]" />
 		</td>
 		<td tal:define="username python:item[0]">
-			<strong><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${username}" tal:content="username" /></strong>
+			<tal:block define="if python:user_tool.getUserSource(username) == 'acl_users'">
+				<tal:block condition="if">
+					<strong><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${username}" tal:content="username" /></strong>
+				</tal:block>
+				<tal:block condition="not: if">
+					<strong tal:content="username"></strong>
+				</tal:block>
+			</tal:block>
 		</td>
 		<td class="roles_per_folder">
 			<ul>
