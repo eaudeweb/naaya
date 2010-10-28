@@ -1467,6 +1467,10 @@ img.ajax-loader {
  * Bogdan Tanase - Eau de Web
  */
 
+#tabbedmenu {
+	margin-left: 1em;
+}
+
 #tabbedmenu, .tabbedmenu {
     margin-bottom: 0em !important;
 }
@@ -1829,6 +1833,9 @@ tr.tr-hover:hover {
 .tip {
 	padding: 0.5em 1em !important;
 	background-color: #FFFFEF !important; /* Overwrite for site update */
+	border:1px outset #999966;
+	font-size: 0.95em;
+	margin-top: 1em;
 }
 
 .tip p {
