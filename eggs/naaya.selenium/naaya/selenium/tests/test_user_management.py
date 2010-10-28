@@ -112,10 +112,9 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
     def test_delete_user(self):
         self.selenium.open("/portal/admin_local_users_html", True)
         #Check the last user checkbox
-        self.selenium.click(
-            "//div[@class='datatable']/table/tbody/tr[last()]/td/input")
-        username = self.selenium.get_text(
-            "//div[@class='datatable']/table/tbody/tr[last()]/td[2]")
+        last_row = "//table[contains(@class, 'datatable')]/tbody/tr[last()]"
+        self.selenium.click("%s/td/input" % last_row)
+        username = self.selenium.get_text("%s/td[2]" % last_row)
         self.selenium.click("css=.deluser")
         assert re.search(r"^Are you sure[\s\S]$",
                          self.selenium.get_confirmation())
@@ -131,7 +130,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
             "Check if the user is alone in the result list"
             #Also check if the the results are right
             assert self.selenium.get_text(\
-                '//div[@class="datatable"]/table/tbody/tr[last()]/td[2]') ==\
+                "//table[contains(@class, 'datatable')]/tbody/tr[last()]//td[2]") ==\
             user
         #Text search contributor string
         self.selenium.open("/portal/admin_local_users_html", True)
@@ -145,7 +144,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.click('//input[@value="Search"]')
         self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
         assert int(self.selenium.\
-            get_xpath_count('//div[@class="datatable"]/table/tbody/tr')) > 2
+            get_xpath_count('//table[contains(@class, "datatable")]/tbody/tr')) > 2
 
         #Filtering by Manager role
         self.selenium.select("id=filter-roles", 'Manager')
@@ -163,7 +162,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
     def test_add_role(self):
         self.selenium.open("/portal/admin_roles_html", True)
         self.selenium.type("//input[@id='input-role']", "SOMErOLE")
-        self.selenium.click("//input[@value='Add new role']")
+        self.selenium.click("//input[@value='Add']")
         self.selenium.wait_for_page_to_load("3000")
         assert self.selenium.is_text_present('SOMErOLE')
         self.selenium.open("/portal/admin_editrole_html?role=SOMErOLE", True)
@@ -189,12 +188,13 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.add_selection("names", "label=user3")
         self.selenium.add_selection("//select[@name='roles']", 'Manager')
         self.selenium.type('location', "info")
+        self.selenium.click("send_mail")
         self.selenium.click("//input[@value='Assign role']")
         self.selenium.wait_for_page_to_load("3000")
 
         self.selenium.open("/portal/admin_local_users_html", True)
         #Check is the user has the assigned roles.
-        last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
+        last_row = "//table[contains(@class, 'datatable')]/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
         assert (self.selenium.get_text("%s/td/div[@class='user-role'][1]" %
                                       last_row).replace("\n", '')
@@ -203,10 +203,10 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
                                       last_row).replace("\n", '')
                 == u'Manager in Information')
 
-    def test_aaaarevoke_role(self):
+    def test_revoke_role(self):
         "Revoke Contributor to user3"
         self.selenium.open("/portal/admin_local_users_html", True)
-        last_row = "//div[@class='datatable']/table/tbody/tr[last()]"
+        last_row = "//table[contains(@class, 'datatable')]/tbody/tr[last()]"
         assert self.selenium.get_text('%s/td[2]' % last_row) == u'user3'
         self.selenium.click("%s/td/div[@class='user-role-revoke']/a" % last_row)
         assert re.search(r"^Are you sure[\s\S]$",
