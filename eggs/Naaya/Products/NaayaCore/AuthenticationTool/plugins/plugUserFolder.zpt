@@ -1,10 +1,49 @@
-<tal:block tal:define="uf_obj here/getUserFolder; user_tool here/getAuthenticationTool; site_url here/absolute_url">
-<form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
+<tal:block tal:define="uf_obj here/getUserFolder;
+					   user_tool here/getAuthenticationTool;
+					   site_url here/absolute_url;
+					   users_roles python:here.getUsersRoles(uf_obj);
+					   skey python: request.get('skey', 'name');
+					   rkey python: request.get('rkey', 1);">
 <p i18n:translate="">
     This form displays the users defined in this source that have roles in the current portal.
     You can revoke a role prior assigned to a user by ticking in the appropiate check box
     and clicking the <em>Revoke selected roles</em> button.
 </p>
+<div class="datatable">
+	<table cellspacing="0" cellpadding="4"
+			tal:attributes="class python:len(users_roles) and '' or 'empty'">
+		<tr tal:condition="python:len(users_roles) != 0">
+			<th width="15%" align="left" i18n:translate="">Username</th>
+			<th i18n:translate="">Roles/Location</th>
+			<th i18n:translate="">Revoke roles</th>
+		</tr>
+		<tr tal:repeat="user python: users_roles.keys()">
+			<td tal:content="user">user</td>
+			<td tal:define="user_roles python: users_roles[str(user)]">
+				<div class="user-role"
+					 tal:repeat="role python: user_roles">
+					<tal:block condition="python: role[0]">
+					<span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+					<a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+					</tal:block>
+				</div>
+				<tal:block condition="python: user_roles == [([], '')] ">-</tal:block>
+			</td>
+			<td tal:define="user_roles python: users_roles[str(user)]">
+				<div class="user-role-revoke" tal:repeat="role python: user_roles">
+					<tal:block condition="python: role[0]">
+					<a class="revoke-role" i18n:attributes="title" title="Revoke role"
+						tal:define="location python: role[1]"
+						tal:attributes="href string:${site_url}/admin_revokerole?user=${user}&location=${location}">
+						<img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+					</a>
+					</tal:block>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<!--
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<th width="1%"></th>
@@ -12,34 +51,28 @@
 		<th width="45%">Role(s)</th>
 		<th width="35%">Location(s)</th>
 	</tr>
-	<tr tal:define="users_roles python:here.getUsersRoles(uf_obj)"
-		tal:repeat="user python:users_roles.keys()">
-		<td></td>
-		<td style="vertical-align: top" tal:content="user">user</td>
-		<td colspan="2" style="vertical-align: top">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%" tal:define="roles python:users_roles[user]">
-				<tr tal:repeat="role roles">
-					<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
-						<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])">
-					</td>
-					<td width="55%" tal:condition="python:role[0] != []">
-						<span tal:replace="python:here.utJoinToString(role[0], ', ')">roles</span>
-					</td>
-					<td width="*" tal:condition="python:role[0] != []">
-						<span tal:condition="python:role[1] == ''">Zope</span>
-						<span tal:condition="python:role[1] != ''" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
-							<a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
-						</span>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
+<td colspan="2" style="vertical-align: top">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%" tal:define="roles python:users_roles[user]">
+					<tr tal:repeat="role roles">
+						<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
+							<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])">
+						</td>
+						<td width="55%" tal:condition="python:role[0] != []">
+							<span tal:replace="python:here.utJoinToString(role[0], ', ')">roles</span>
+						</td>
+						<td width="*" tal:condition="python:role[0] != []">
+							<span tal:condition="python:role[1] == ''">Zope</span>
+							<span tal:condition="python:role[1] != ''" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
+								<a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
+							</span>
+						</td>
+					</tr>
+				</table>
+			</td>
 	<tr><td></td>
 		<td colspan="3"><input type="submit" value="Revoke roles" /></td></tr>
 </table>
-</form>
-
+-->
 <fieldset><legend i18n:translate="">Assign roles to users</legend>
 <p i18n:translate="">
     Assign a new role to an existing user: select the username from the drop-down field,
@@ -66,5 +99,3 @@
 	</metal:block>
 	</tal:block>
 </tal:block>
-
-
