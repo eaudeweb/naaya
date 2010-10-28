@@ -478,14 +478,21 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for user_source in self.getSources():
                 user_folder = user_source.getUserFolder()
                 users_roles = user_source.getUsersRoles(user_folder)
-                for name, role in users_roles.items():
-                    full_name = user_source.getUserCanonicalName(name)
-                    dummy = DummyUser(name=name,
-                            firstname=full_name.split(' ')[0],
-                            lastname=u''.join(full_name.split(' ')[1:]),
-                            email=user_source.getUserEmail(name, user_folder),
-                            roles=role)
-                    dummy_users.append(dummy)
+                if user_folder.meta_type == 'User Folder':
+                    for username in user_folder.getUserNames():
+                        dummy_users.append(DummyUser(name=username,
+                                    firstname='', lastname='', email='',
+                                    roles=''))
+
+                elif user_folder.meta_type == 'LDAPUserFolder':
+                    for name, role in users_roles.items():
+                        full_name = user_source.getUserCanonicalName(name)
+                        dummy = DummyUser(name=name,
+                                firstname=full_name.split(' ')[0],
+                                lastname=u''.join(full_name.split(' ')[1:]),
+                                email=user_source.getUserEmail(name, user_folder),
+                                roles=role)
+                        dummy_users.append(dummy)
             user_objects.extend(dummy_users)
         users = filter(_filter, self.utSortObjsListByAttr(
             user_objects, skey, rkey))
