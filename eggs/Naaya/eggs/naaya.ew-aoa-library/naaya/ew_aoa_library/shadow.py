@@ -46,22 +46,37 @@ def get_library_answer(answer):
             return x
     return None
 
-geo_type_map = {
-    0: 'symbol825', # green economy
-    1: 'symbol814', # water
-    2: 'symbol851', # green economy and water
+geo_type = {
+    'Green': 'symbol825', # green economy
+    'Water': 'symbol814', # water
+    'Green and water': 'symbol851', # green economy and water
 }
 
-# the "w_theme" answer is now a list, so we can't extract a geo_type.
+theme = {
+    'Green economy': 0, # green economy
+    'Water resources': 1, # water
+    'Water resource management': 2, # green economy and water
+    'Resource efficiency': 3, # green economy and water
+}
 
-#def extract_geo_type(answer):
-#    themes_number = answer.get('w_theme')
-#
-#    try:
-#        return geo_type_map[themes_number]
-#    except KeyError:
-#        return None
+# the "w_theme" answer is now a list, so the assignment of a geo_type changes:
+def extract_geo_type(answer):
+    ''' returns a value if green and water, another value if green without water,
+    a third if water (--> without green), or None if somehow the themes_list is empty'''
+    themes_list = answer.get('w_theme')
+    if theme['Green economy'] in themes_list or theme['Resource efficiency'] in themes_list:
+        if theme['Water resources'] in themes_list or theme['Water resource management'] in themes_list:
+            return geo_type['Green and water']
+        else:
+            return geo_type['Green']
+    if theme['Water resources'] in themes_list or theme['Water resource management'] in themes_list:
+        return geo_type['Water']
+    return None
 
+def general_template_extract_geo_location(answer):
+    ''' returns the geo_location of the corresponding answer from the virtual library '''
+    library_answer = get_library_answer(answer)
+    return library_answer.get('w_location')
 
 restricted_widgets = {
     'bibliography-details-each-assessment': set([
@@ -109,6 +124,7 @@ def extract_survey_answer_data_library(answer):
         'geo_location': answer.get('w_location'),
         'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
                                   answer.get('w_submitter-organisation'), ),
+        #This is commented because (now) we don't want to show library answers on the map
         #'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
@@ -147,10 +163,10 @@ def extract_survey_answer_data_general_template(answer):
     attrs = {
         'id': answer.getId(),
         'title': answer.get('w_q1-name-assessment-report'),
-        'geo_location': answer.get('w_country'),
+        'geo_location': general_template_extract_geo_location(answer),
         'uploader': ('%s, %s') % (answer.get('w_name'),
                                   answer.get('w_organisation'), ),
-        #'geo_type': extract_geo_type(answer),
+        'geo_type': extract_geo_type(get_library_answer(answer)),
         'description': ('<strong>%s</strong><br />%s<br />') %
                         (
                             answer.get('w_organisation'),
