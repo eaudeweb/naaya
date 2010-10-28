@@ -498,7 +498,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def getLanguagesGlossaryTrans(self, p_id, lang_name):
         try:
             gloss_elem = self.getLanguagesGlossary().cu_search_catalog_by_id(p_id)
-            return gloss_elem[0].get_translation_by_language(lang_name)
+            return gloss_elem[0].getObject().get_translation_by_language(lang_name)
         except:
             return ''
 

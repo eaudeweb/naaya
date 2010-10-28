@@ -15,7 +15,7 @@
 	</div>
 	<div tal:condition="python: form_item['name'] == 'subject'" class="field">
 		<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subject')" class="mandatory_field"> *</span></label>
-		<select name="subject" id="subject" multiple="multiple" size="6">
+		<select name="subject:list" id="subject" multiple="multiple" size="6">
 			<tal:block repeat="item python:here.getPortalThesaurus().getThemesList(here.gl_get_selected_language())">
 				<option	tal:condition="item/theme_name"
 						tal:attributes="value item/theme_id;
@@ -30,7 +30,7 @@
 	</div>
 	<div tal:condition="python: form_item['name'] == 'working_langs'"  class="field">
 		<label for="working_langs"><span i18n:translate="" tal:omit-tag="">Working language(s)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'working_langs')" class="mandatory_field"> *</span></label>
-		<select	name="working_langs" id="working_langs" multiple="multiple" size="6"
+		<select	name="working_langs:list" id="working_langs" multiple="multiple" size="6"
 				tal:define="langs_list here/getLanguagesGlossaryObjects">
 			<tal:block repeat="item langs_list">
 				<tal:block	define="lang_name python:here.gl_get_language_name(here.gl_get_selected_language());
