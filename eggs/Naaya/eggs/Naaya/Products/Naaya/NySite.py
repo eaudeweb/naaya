@@ -2426,8 +2426,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                 return 'SUCCESS'
             else:
                 self.setSessionInfoTrans("Role(s) succesfully revoked")
-                REQUEST.RESPONSE.redirect('%s/admin_local_users_html' %
-                                          self.absolute_url())
+                REQUEST.RESPONSE.redirect(REQUEST.environ.get('HTTP_REFERER',
+                            '%s/admin_local_users_html' % self.absolute_url()))
     #
     # END Admin User management. XXX: Should be moved to AuthenticationTool
     #
