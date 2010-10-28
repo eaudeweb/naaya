@@ -1561,6 +1561,19 @@ th.th-left {
 	list-style: none;
 }
 
+.ldap_groups ul {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.ldap_groups ul li {
+	margin: 0.5em 0em;
+}
+
+.ldap_groups tr td:last-child {
+	text-align: center;
+}
+
 /**
  * IE does no support first(last)-child
 */
