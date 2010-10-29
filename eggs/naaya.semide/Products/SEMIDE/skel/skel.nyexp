@@ -799,7 +799,40 @@ function toggleSelect(caller){
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<body lang="en"><![CDATA[]]></body>
+			<body lang="en"><![CDATA[<p><strong>&copy; EMWIS Technical Unit, 2006</strong></p>
+			<p>Reproduction is authorised, provided the source is acknowledged, except where otherwise stated.<br /> Where prior permission must be obtained for the reproduction or use of textual and multimedia information (sound, images, software, etc.), such permission shall cancel the above-mentioned general permission and indicate clearly any restrictions on use.</p>
+			<p>   <strong><br /> <span style="color: #333399;">Disclaimer</span></strong><br /> <br /></p>
+			<p>This website has been produced with the assistance of the European Union. The contents of this website can in no way be taken to reflect the views of the European Union.</p>
+			<p>The EMWIS Technical Unit maintains this server to enhance public access to information about the Euro-Mediterranean Information System on know-how in the Water Field. Our goal is to keep this information correct, timely, accurate, complete, relevant and accessible. If errors are brought to our attention, we will try to correct them.<br /> However, the EMWIS Technical Unit accepts no responsibility or liability whatsoever with regard to the material on this site. This material is:</p>
+			<ul>
+			<li>
+			<p>Information of a general nature that is not intended to address the specific circumstances of any particular individual or entity.</p>
+			</li>
+			<li>
+			<p>Not necessarily comprehensive, complete, accurate or up to date.</p>
+			</li>
+			</ul>
+			<p>In accordance with the Convention for the Protection of Individuals with Regard to Automatic Processing of Personal Data, (Council of Europe, European Treaty ETS No 108) signed at Strasbourg, the 1981-01-28 (See <a href="http://conventions.coe.int/Treaty/EN/Treaties/Html/108.htm">http://conventions.coe.int/Treaty/EN/Treaties/Html/108.htm</a>) any personal data included in this server shall be:</p>
+			<ul>
+			<li>
+			<p>Obtained and processed fairly and lawfully.</p>
+			</li>
+			<li>
+			<p>Stored for specified and legitimate purposes and not used in a way incompatible with those purposes.</p>
+			</li>
+			<li>
+			<p>Adequate, relevant and not excessive in relation to the purposes for which they are stored.</p>
+			</li>
+			<li>
+			<p>Accurate and, where necessary, kept up to date.</p>
+			</li>
+			</ul>
+			<ul>
+			<li>
+			<p>Preserved in a form which permits identification of the data subjects for no longer than is required for the purpose for which those data are stored.</p>
+			</li>
+			</ul>
+			<p> The boundaries and names shown on any map of this server do not imply official endorsement or acceptance by the EMWIS T.U.<br /> The logos, trademarks and other commercial names mentioned in any place on this server do not imply official endorsement or acceptance by the EMWIS T.U.<br /> <br /> Please note that it cannot be guaranteed that a document available online exactly reproduces an officially adopted text, so that only legislation or other documents published in the paper editions of the official publication services of each country are deemed authentic.<br /> The information included in this server is referred to different servers that contain information of public interest. In every case, the correctness, timeliness, accuracy, completeness, relevance, and accessibility of the information are the responsibility of the supplier organization<br /> <br /> The opinions expressed on the website are solely those of the EMWIS T. U. and do not represent those of any country involved in EMWIS or of organisations that support the Technical Unit.<br /> <br /> This disclaimer is not intended to contravene any requirements laid down in applicable national law nor to exclude liability for matters which may not be excluded under that law.</p>]]></body>
 		</ob>
 		<ob meta_type="Naaya URL" param="0" id="webmaster" sortorder="30" contributor="" approved="1" locator="feedback_html" approved_by="" releasedate="" discussion="0" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Webmaster]]></title>
@@ -810,7 +843,133 @@ function toggleSelect(caller){
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<body lang="en"><![CDATA[]]></body>
+			<body lang="en"><![CDATA[<table border="0">
+			<tbody>
+			<tr>
+			<td><strong style="color: #333399;">Address</strong></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+						</td>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<td><br />
+						<span style="color: #333399;">Physical address</span><br />
+						Aux locaux de l'Office International de l'Eau (OIEAU)<br />
+						1er &eacute;tage &agrave; gauche,<br />
+						Place Sophie Laffitte <br />
+						06902 Sophia-Antipolis Cedex<br />
+						FRANCE 
+						<br />
+						</td>
+			<td>&nbsp;</td>
+			<td><span style="color: #333399;">Postal address</span><br />
+						U.T. SEMIDE/EMWIS T.U.<br />
+						BP23<br />
+						06901 SOPHIA ANTIPOLIS<br />
+						FRANCE</td>
+			</tr>
+			<tr>
+			<td>Tel:&nbsp; + 33 4 92 942 290<br />
+						Fax: + 33 4 92 942 295<br />
+						email: <a href="mailto:info@semide.org">info@semide.org</a> <br />
+						</td>
+			<td>&nbsp;<br />
+						</td>
+			<td>&nbsp;</td>
+			</tr>
+			</tbody>
+			</table>
+			<p>
+			<strong style="color: #333399;"><br />
+			How to get to the EMWIS Technical Unit</strong></p>
+			<p>
+			<br />
+			<span style="color: #333399;">Arriving by plane</span><br />
+			&nbsp;<br />
+			<span style="color: #333399;">Arriving by train</span><br />
+			<br />
+			<span style="color: #333399;">Arriving by car</span><br />
+			<br />
+			</p>
+			<div align="center">
+			<br />
+			<a href="http://www.sophia-antipolis.org/sophia-antipolis/plan-acces/plan1.pdf"><img src="/about/contact_html/images/PlansemideSophieLaffitte.jpg" alt="" width="410" height="315" /></a><img src="file:///C:/Users/rosanna/AppData/Local/Temp/moz-screenshot.jpg" alt="" /><img src="file:///C:/Users/rosanna/AppData/Local/Temp/moz-screenshot-1.jpg" alt="" />
+			<div align="center">
+			&nbsp;
+			</div>
+			<div align="center">
+			&nbsp;
+			</div>
+			<div align="center">
+			<a href="http://fr.mappy.com/#d=Place+Sophie+Laffite%2C+Sophia+Antipolis&amp;p=map" target="_blank"><img src="http://www.sophia-antipolis.org/sophia-antipolis/plan-acces/mappy.jpg" border="1" alt="" width="162" height="122" align="baseline" /></a>
+			</div>
+			</div>
+			<p>
+			&nbsp; <br />
+			<br />
+			<strong><span style="color: #333399;">The Team:&nbsp;</span></strong>
+			</p>
+			<p>
+			<strong><span style="color: #333399;"><img style="width: 425px; height: 335px;" src="/about/contact_html/about/contact_html/Jauad_Lidy_Eric.JPG" alt="" width="2255" height="1796" /></span></strong>
+			</p>
+			<table border="0">
+			<tbody>
+			<tr>
+			<td>
+			<p>
+						<span style="color: #333399;">Technical coordinator and Manager</span><br />
+						<a href="/about/contact_html/fol882846/fol773345/doc781808"><span style="color: #0000ff;">Eric Mino</span></a>&nbsp;(at the right)<br />
+						Tel: + 33 4 92 94 22 91<br />
+						<a href="mailto:e.mino@semide.org"><span style="color: #0000ff;">e.mino[at]semide.org</span></a> 
+						</p>
+			</td>
+			</tr>
+			<tr>
+			<td><a href="/about/contact_html/semide/fol882846/fol773345/doc377421"><span style="color: #333399;">Information Manager</span></a><br />
+						<a href="/about/contact_html/fol882846/fol773345/doc377421"><span style="color: #810081;">Jauad El Kharraz</span></a>&nbsp;(at the left)<br />
+						Tel: + 33 4 92 94 22 93<br />
+						<a href="mailto:jauad.el-kharraz@semide.org"><span style="color: #0000ff;">jauad.el-kharraz[at]semide.org</span></a><br />
+						</td>
+			</tr>
+			<tr>
+			<td><span style="color: #333399;">Assistant </span><br />
+						Lidy Thomas (in the middle)<br />
+						Tel: + 33 4 92 94 22 90<br />
+						<a href="mailto:l.Thomas@semide.org"><span style="color: #0000ff;">l.Thomas[at]semide.org</span></a></td>
+			</tr>
+			</tbody>
+			</table>
+			<p><span style="color: #330099;"><span style="color: #000000;">The</span> <span style="color: #333399;">Technical Coordinator and Manager</span></span> participates in all EMWIS activities. He is responsible for:<br />
+			&bull;&nbsp;&nbsp;&nbsp; relations between the Technical Unit (TU), the Steering Committee and the funding organizations<br />
+			&bull;&nbsp;&nbsp; &nbsp;coordinating the activities of the members of the TU and of various external experts<br />
+			&bull;&nbsp;&nbsp; &nbsp;ensuring liaison between the TU and National Focal Points (NFP)<br />
+			&bull;&nbsp;&nbsp; &nbsp;participates in technological and organizational decisions for EMWIS<br />
+			&bull;&nbsp;&nbsp; &nbsp;controling the quality of the TU's activities and the relevance of services provided according to users' expectations<br />
+			&bull;&nbsp;&nbsp; &nbsp;contributing to the management of the website and to EMWIS promotion<br />
+			&bull;&nbsp;&nbsp; the financial and administrative management of the TU<br />
+			&bull;&nbsp;&nbsp; committing expenses for the TU.<br />
+			<br />
+			<br />
+			<span style="color: #330099;"><span style="color: #000000;">The</span> <span style="color: #333399;">Webmaster and Information Manager</span></span> is in charge of organizing, managing and coordinating the collection and sharing of data within the EMWIS framework. He is more especially responsible for:<br />
+			&bull;&nbsp;&nbsp; &nbsp;the content of the EMWIS website<br />
+			&bull;&nbsp;&nbsp; &nbsp;the everyday management of the website, in close collaboration with the technical coordinator<br />
+			&bull;&nbsp;&nbsp; &nbsp;acting as data manager for the International Focal Point<br />
+			&bull;&nbsp;&nbsp; &nbsp;coordinating the information supplied by the NFPs<br />
+			&bull;&nbsp;&nbsp; &nbsp;checking the reliability and integrity of the information provided, as well as monitoring the quality of information in line with EMWIS guidelines.<br />
+			<br />
+			<br />
+			<span style="color: #330099;"><span style="color: #000000;">The</span> <span style="color: #333399;">Information Technology Manager</span></span> is in charge of:<br />
+			&bull;&nbsp;&nbsp; &nbsp;developing the EMWIS website (web pages, search engines, interface with existing systems, push, etc.)<br />
+			&bull;&nbsp;&nbsp; &nbsp;database management<br />
+			&bull;&nbsp;&nbsp; &nbsp;managing Internet communication tools, the TU's local area network (LAN) and videoconference tools.<br />
+			<br />
+			<br />
+			<span style="color: #330099;"><span style="color: #000000;">The</span> <span style="color: #333399;">Multilingual Assistant</span></span> works under the Coordinator&rsquo;s supervision. She is in charge of:<br />
+			&bull;&nbsp;&nbsp; &nbsp;T U office administration;<br />
+			&bull;&nbsp;&nbsp; &nbsp;the practical organisation of seminars and meetings<br />
+			&bull;&nbsp;&nbsp; &nbsp;accounting records and preparing financial reviews<br />
+			&bull;&nbsp;&nbsp; &nbsp;updating the TU's databases.
+			</p>]]></body>
 		</ob>
 		<ob meta_type="Naaya Document" param="0" id="faq" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Frequently asked questions]]></title>
