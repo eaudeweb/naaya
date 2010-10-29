@@ -21,20 +21,18 @@
 # David Batranu, Eau de Web
 
 #Python imports
-from Acquisition import Implicit
 from copy import deepcopy
 import os
 import sys
 
 #Zope imports
+from Acquisition import Implicit
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddEvent
-from naaya.content.base.events import NyContentObjectEditEvent
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -48,6 +46,8 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import slugify, uniqueId
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -124,6 +124,11 @@ def addNyPointer(self, id='', REQUEST=None, contributor=None, **kwargs):
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('locator', '')
+
+    #Remove first '/'
+    if ('pointer' in schema_raw_data and
+        schema_raw_data['pointer'].startswith('/')):
+        schema_raw_data['pointer'] = schema_raw_data['pointer'][1:]
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'pointer',
                           removelist=[]),
@@ -258,11 +263,19 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
+
+        #Remove first '/'
+        if ('pointer' in schema_raw_data and
+            schema_raw_data['pointer'].startswith('/')):
+            schema_raw_data['pointer'] = schema_raw_data['pointer'][1:]
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+                                            _override_releasedate=_releasedate)
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
@@ -323,6 +336,11 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
+            #Remove first '/'
+        if ('pointer' in schema_raw_data and
+            schema_raw_data['pointer'].startswith('/')):
+            schema_raw_data['pointer'] = schema_raw_data['pointer'][1:]
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
@@ -356,7 +374,13 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
         """ """
         from AccessControl import getSecurityManager
 
-        obj = self.getSite().unrestrictedTraverse(self.pointer.encode('utf-8'), None)
+        #Remove first '/'
+        pointer = self.pointer
+        if self.pointer.startswith('/'):
+            pointer = self.pointer[1:]
+
+        obj = self.getSite().unrestrictedTraverse(pointer.encode('utf-8'),
+                                                  None)
         can_view = getSecurityManager().checkPermission(view, obj)
         params = {'here': self, 'restricted': 0, 'missing': 0}
 
