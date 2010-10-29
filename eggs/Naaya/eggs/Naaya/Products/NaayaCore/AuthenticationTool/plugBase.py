@@ -61,6 +61,13 @@ class PlugBase(SimpleItem):
 
     def getUsersRoles(self, p_user_folder, p_meta_types=None):
         #returns a structure with user roles by objects
+        _memo = {}
+        def get_source(user):
+            """ memoize for getUserSource """
+            if user not in _memo:
+                _memo[user] = self.getUserSource(user)
+            return _memo[user]
+
         if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         l_users_roles = {}
         l_folders = self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1)
@@ -69,7 +76,7 @@ class PlugBase(SimpleItem):
             for l_roles_tuple in l_item.get_local_roles():
                 l_local_roles = self.getLocalRoles(l_roles_tuple[1])
                 user = l_roles_tuple[0]
-                if self.getUserSource(user) == self.title and len(l_local_roles)>0:
+                if get_source(user) == self.title and len(l_local_roles)>0:
                     if l_users_roles.has_key(str(user)):
                         l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
                     else:
