@@ -277,23 +277,12 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
                               portal_url='', rdf_max_items=10)
 
         #set default calendar object
-        manage_addEventCalendar(self, ID_CALENDAR, '', '', '1',
-                                [METATYPE_NYSEMEVENT], CALENDAR_STARTING_DAY, ID_CATALOGTOOL)
+        manage_addEventCalendar(self, id=ID_CALENDAR, day_len='1', start_day=CALENDAR_STARTING_DAY, catalog=ID_CATALOGTOOL)
 
         #set default calendar css and images
         cal_ob = self._getOb(ID_CALENDAR)
-
-        style_ob = cal_ob._getOb(ID_CALENDAR_CSS)
-        p_text = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'calendar_style.css'), 'r')
-        style_ob.pt_edit(p_text, 'text/html')
-
-        img_ob = cal_ob._getOb(ID_RIGHT_ARROW)
-        img_content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'right_arrow.gif'), 'rb')
-        img_ob.manage_upload(img_content)
-
-        img_ob = cal_ob._getOb(ID_LEFT_ARROW)
-        img_content = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'left_arrow.gif'), 'rb')
-        img_ob.manage_upload(img_content)
+        
+        cal_ob.cal_meta_types = cal_ob.setCalMetaTypes(METATYPE_NYSEMEVENT)
 
         #add the images for sorted columns
         images_fld = self.getImagesFolder()
