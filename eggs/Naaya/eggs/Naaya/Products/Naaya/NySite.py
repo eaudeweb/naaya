@@ -2395,8 +2395,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
                     try:
                         email = auth_tool.getUsersEmails([name])[0]
                         fullname = auth_tool.getUsersFullNames([name])[0]
-                        self.sendAccountModifiedEmail(email, roles, loc,
-                                                      location)
+                        self.sendAccountModifiedEmail(email, roles,
+                           location, self.unrestrictedTraverse(location, None))
                     except:
                         err = 'Could not send confirmation mail.'
 
