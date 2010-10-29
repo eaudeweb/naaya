@@ -508,7 +508,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if REQUEST is not None and is_ajax(REQUEST):
             template = form_data.get('template', '')
             try:
-                return render_macro(self, template, 'datatable', skey=skey,
+                return render_macro(self.getSite(), template, 'datatable', skey=skey,
                     rkey=rkey, all_users_objects=users,
                     users=users[(page*per_page):(page * per_page + per_page)],
                     per_page=per_page, site_url=self.getSitePath(),
