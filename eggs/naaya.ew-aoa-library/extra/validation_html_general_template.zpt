@@ -1,81 +1,21 @@
 <metal:block define-macro="validate">
 	<script>
-		function apply_glossary_terms(config, labels, curr_lang, edit) {
+		function process_form(config, labels, curr_lang, edit) {
 			$(function(){
+				$('form[name="frmAdd"]').show();
+
 				$('p').each(function(){
 					$(this).html(process_acronyms(config, $(this).html()));
 				});
 				$('.widgetEditMode').each(function(){
 					$(this).html(process_acronyms(config, $(this).html()));
 				});
-				function show_hide(){
-					var confirmation = $('#w_confirmation').val();
-					var assessment = $('#w_q1-name-assessment-report').val();
-					if (assessment == 'Please select' || assessment == 'Пожалуйста выберите')
-					{
-						$('.widgetEditMode').hide();
-						$('#w_q1-name-assessment-report').parent().show();
-						$('.surveySubmit').hide();
-						$('#recaptcha_widget_div').hide();
-						reset_select('#w_confirmation');
-					}
-					else
-					{
-						if (confirmation == 1)
-						{
-							$('.widgetEditMode').show();
-							$('#recaptcha_widget_div').show();
-							$('.surveySubmit').show();
-						}
-						else if (confirmation == 2)
-						{
-							reset_select('#w_q1-name-assessment-report');
-							reset_select('#w_confirmation');
-							$('.widgetEditMode').hide();
-							$('#w_q1-name-assessment-report').parent().show();
-							$('#recaptcha_widget_div').hide();
-							$('.surveySubmit').hide();
-						}
-						else
-						{
-							$('.widgetEditMode').hide();
-							$('#w_q1-name-assessment-report').parent().show();
-							$('#w_confirmation').parent().show();
-							$('#recaptcha_widget_div').hide();
-							$('.surveySubmit').hide();
-						}
-					}
-					if (edit == 1)
-					{
-						$('#w_confirmation').parent().hide();
-						$('#w_q1-name-assessment-report').attr('readonly', 'readonly');
-					}
-				}
+
 				var assessment = $('#w_q1-name-assessment-report').val();
-				var confirmation = $('#w_confirmation').val();
-				$('#w_confirmation').siblings('.tooltips').attr('class', 'red_tooltips');
-				/*$('#w_confirmation').siblings('.tooltips').children(['p']).css('font-weight','bold')
-				$('#w_confirmation').siblings('.tooltips').children(['p']).css('color','red')*/
-				$('#w_confirmation').change(function(){
-					show_hide();
-				});
-				if(curr_lang == 'ru'){
-					$('thead tr').before('<'+'tr><'+'th><'+'/th>\
-							<'+'th colspan="2" style="text-align:center"><'+'strong>Структурный анализ<'+'/strong><'+'/th>\
-							<'+'th colspan="5" style="text-align:center"><'+'strong>ДС-Д-С-В-Р анализ<'+'/strong><'+'/th>\
-							<'+'th colspan="3" style="text-align:center"><'+'strong>Другие виды анализа<'+'/strong><'+'/th>\
-							');
-				}
-				else{
-					$('thead tr').before('<'+'tr><'+'th><'+'/th>\
-							<'+'th colspan="2" style="text-align:center"><'+'strong>Framework analysis<'+'/strong><'+'/th>\
-							<'+'th colspan="5" style="text-align:center"><'+'strong>DPSIR analysis<'+'/strong><'+'/th>\
-							<'+'th colspan="3" style="text-align:center"><'+'strong>Other analyses<'+'/strong><'+'/th>\
-							');
-				}
-				$('table').addClass('datatable');
 				if (edit != 1)
 				{
+					/*If not in edit mode,
+					replace the input with a select with options from virtual library*/
 					$('#w_q1-name-assessment-report').replaceWith('<'+'select\
 						name="w_q1-name-assessment-report:utf8:ustring"\
 						id="w_q1-name-assessment-report"><'+'/select>');
@@ -94,67 +34,159 @@
 						}
 						$('#w_q1-name-assessment-report').append($('<'+'option>').attr('value', labels[i]).text(display_text));
 					}
+					if (assessment.length>0)
+					{
+						/*If the assessment was already selected, put the value back*/
+						$('#w_q1-name-assessment-report').val(assessment);
+					}
 				}
 				else
 				{
+					/*If in edit mode, just size the input at 135 chars*/
 					$('#w_q1-name-assessment-report').attr('size', '135')
 				}
-				if (assessment.length>0)
-				{
-					$('#w_q1-name-assessment-report').val(assessment);
-				}
-				$('#w_confirmation').val(confirmation);
+				show_hide(edit, curr_lang);
+				$('#w_confirmation').siblings('.tooltips').attr('class', 'red_tooltips');
+				$('#w_confirmation').change(function(){
+					show_hide(edit, curr_lang);
+				});
 				apply_table_styling();
-				show_hide();
 				$('#w_q1-name-assessment-report').change(function(){
 					apply_table_styling();
-					show_hide();
+					show_hide(edit, curr_lang);
 				});
-			});
-			function process_acronyms(config, string){
-				for (i=0;i<config.length;i++)
+
+				// If question 5 doesn't have "No" selected, disable and hide 5 part 2
+				if (!$('#w_q5-was-assessment-result-initiative-body-carrying_1').attr('checked'))
 				{
-					acronym = config[i][0];
-					meaning = config[i][1];
-					strings = string.split(acronym);
-					parts = strings.length;
-					if (parts>1)
-					{
-						string = strings[0];
-						for (j=0;j<parts-1;j++)
-						{
-							rightstrings = strings[j+1].split('<'+'/acronym>');
-							within_acronym_tag = rightstrings.length>1 && rightstrings[0].split('<'+'acronym').length==1;
+					disable_question_5_2();
+				}
+				$('#w_q5-was-assessment-result-initiative-body-carrying_0').click(function(){
+					disable_question_5_2();
+				});
+				$('#w_q5-was-assessment-result-initiative-body-carrying_2').click(function(){
+					disable_question_5_2();
+				});
+				$('#w_q5-was-assessment-result-initiative-body-carrying_1').click(function(){
+					enable_question_5_2();
+				});
 
-							leftstrings = strings[j].split('<');
-							case_one = leftstrings.length>1 && leftstrings[leftstrings.length-1].split('>').length==1
-							rightstrings = strings[j+1].split('>');
-							case_two = rightstrings.length>1 && rightstrings[0].split('<').length==1
-							within_acronym_title = case_one || case_two;
-
-							if (within_acronym_tag || within_acronym_title)
-							{
-								string = string+acronym+strings[j+1];
-							}
-							else
-							{
-								new_string='<acronym title="'+meaning+'">'+acronym+'<'+'/acronym>';
-								string = string+new_string+strings[j+1];
-							}
-						};
-					};
-				};
-				return string;
-			};
-			function reset_select(select_id){
+				$('table').addClass('datatable');
+				//Add table header in the current language
 				if(curr_lang == 'ru'){
-					$(select_id).val('Пожалуйста выберите');
+					$('thead tr').before('<'+'tr><'+'th><'+'/th>\
+							<'+'th colspan="2" style="text-align:center"><'+'strong>Структурный анализ<'+'/strong><'+'/th>\
+							<'+'th colspan="5" style="text-align:center"><'+'strong>ДС-Д-С-В-Р анализ<'+'/strong><'+'/th>\
+							<'+'th colspan="3" style="text-align:center"><'+'strong>Другие виды анализа<'+'/strong><'+'/th>\
+							');
 				}
 				else{
-					$(select_id).val('Please select');
+					$('thead tr').before('<'+'tr><'+'th><'+'/th>\
+							<'+'th colspan="2" style="text-align:center"><'+'strong>Framework analysis<'+'/strong><'+'/th>\
+							<'+'th colspan="5" style="text-align:center"><'+'strong>DPSIR analysis<'+'/strong><'+'/th>\
+							<'+'th colspan="3" style="text-align:center"><'+'strong>Other analyses<'+'/strong><'+'/th>\
+							');
+				}
+			});
+		}
+		function enable_question_5_2(){
+			$('#w_if-no-specify-if-commissioned_0').removeAttr("disabled");
+			$('#w_if-no-specify-if-commissioned_1').removeAttr("disabled");
+			$('#w_if-no-specify-if-commissioned_2').removeAttr("disabled");
+			$('#w_if-no-specify-if-commissioned_0').parent().show();
+		}
+		function disable_question_5_2(){
+			$('#w_if-no-specify-if-commissioned_0').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_1').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_2').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_0').parent().hide();
+		}
+		function show_hide(edit, curr_lang){
+			var confirmation = $('#w_confirmation').val();
+			var assessment = $('#w_q1-name-assessment-report').val();
+			if (assessment == 'Please select' || assessment == 'Пожалуйста выберите')
+			{
+				$('.widgetEditMode').hide();
+				$('#w_q1-name-assessment-report').parent().show();
+				$('.surveySubmit').hide();
+				$('#recaptcha_widget_div').hide();
+				reset_select('#w_confirmation', curr_lang);
+			}
+			else
+			{
+				if (confirmation == 1)
+				{
+					$('.widgetEditMode').show();
+					$('#recaptcha_widget_div').show();
+					$('.surveySubmit').show();
+				}
+				else if (confirmation == 2)
+				{
+					reset_select('#w_q1-name-assessment-report', curr_lang);
+					reset_select('#w_confirmation', curr_lang);
+					$('.widgetEditMode').hide();
+					$('#w_q1-name-assessment-report').parent().show();
+					$('#recaptcha_widget_div').hide();
+					$('.surveySubmit').hide();
+				}
+				else
+				{
+					$('.widgetEditMode').hide();
+					$('#w_q1-name-assessment-report').parent().show();
+					$('#w_confirmation').parent().show();
+					$('#recaptcha_widget_div').hide();
+					$('.surveySubmit').hide();
 				}
 			}
+			if (edit == 1)
+			{
+				$('#w_confirmation').parent().hide();
+				$('#w_q1-name-assessment-report').attr('readonly', 'readonly');
+			}
 		}
+		function reset_select(select_id, curr_lang){
+			if(curr_lang == 'ru'){
+				$(select_id).val('Пожалуйста выберите');
+			}
+			else{
+				$(select_id).val('Please select');
+			}
+		}
+		function process_acronyms(config, string){
+			for (i=0;i<config.length;i++)
+			{
+				acronym = config[i][0];
+				meaning = config[i][1];
+				strings = string.split(acronym);
+				parts = strings.length;
+				if (parts>1)
+				{
+					string = strings[0];
+					for (j=0;j<parts-1;j++)
+					{
+						rightstrings = strings[j+1].split('<'+'/acronym>');
+						within_acronym_tag = rightstrings.length>1 && rightstrings[0].split('<'+'acronym').length==1;
+
+						leftstrings = strings[j].split('<');
+						case_one = leftstrings.length>1 && leftstrings[leftstrings.length-1].split('>').length==1
+						rightstrings = strings[j+1].split('>');
+						case_two = rightstrings.length>1 && rightstrings[0].split('<').length==1
+						within_acronym_title = case_one || case_two;
+
+						if (within_acronym_tag || within_acronym_title)
+						{
+							string = string+acronym+strings[j+1];
+						}
+						else
+						{
+							new_string='<acronym title="'+meaning+'">'+acronym+'<'+'/acronym>';
+							string = string+new_string+strings[j+1];
+						}
+					};
+				};
+			};
+			return string;
+		};
 		function apply_table_styling(){
 			assessment = $('#w_q1-name-assessment-report :selected').text();
 			$.get('getAnalysesTopics', {'assessment':assessment}, function(data){
@@ -172,52 +204,52 @@
 		}
 	</script>
 	<script tal:define="methods python:here.getSite().database.acronyms.sql_methods;
-		   acronyms methods/select_acronyms;
-		   our_acronyms python:[
-								'Assessment',
-								'Environmental Impact Assessment (EIA)',
-								'Strategic Impact Assessment (SIA)',
-								'Impact assessment',
-								'Impact Assessment',
-								'Impact assessments',
-								'Environmental Impact Assessment',
-								'Strategic Impact Assessment',
-								'Integrated assessment',
-								'Integrated assessments',
-								'Sectoral assessment',
-								'Sectoral assessments',
-								'Status and trend (or process) assessment',
-								'Thematic assessment',
-								'Thematic assessments',
-								'Ecosystem',
-								'Ecosystems',
-								'Response assessment',
-								'Response assessments',
-								'INSPIRE',
-								'GMES',
-								'Reportnet',
-								'Metadata',
-								'DPSIR',
-								'Оценки',
-								'Оценка',
-								'Достоверность',
-								'Экосистема',
-								'ДС-Д-С-В-Р',
-								'Оценка воздействия',
-								'Оценки воздействия',
-								'Интегрированные оценка',
-								'Интегрированные оценки',
-								'Легитимность',
-								'Метаданные',
-								'Актуальность',
-								'Оценка реагирования',
-								'Оценки реагирования',
-								'Секторальная оценка',
-								'Секторальные оценки',
-								'Оценка состояния и тенденций (или процессов)',
-								'Тематическая оценка',
-								'Тематические оценки',
-								];
+		acronyms methods/select_acronyms;
+		our_acronyms python:[
+							'Assessment',
+							'Environmental Impact Assessment (EIA)',
+							'Strategic Impact Assessment (SIA)',
+							'Impact assessment',
+							'Impact Assessment',
+							'Impact assessments',
+							'Environmental Impact Assessment',
+							'Strategic Impact Assessment',
+							'Integrated assessment',
+							'Integrated assessments',
+							'Sectoral assessment',
+							'Sectoral assessments',
+							'Status and trend (or process) assessment',
+							'Thematic assessment',
+							'Thematic assessments',
+							'Ecosystem',
+							'Ecosystems',
+							'Response assessment',
+							'Response assessments',
+							'INSPIRE',
+							'GMES',
+							'Reportnet',
+							'Metadata',
+							'DPSIR',
+							'Оценки',
+							'Оценка',
+							'Достоверность',
+							'Экосистема',
+							'ДС-Д-С-В-Р',
+							'Оценка воздействия',
+							'Оценки воздействия',
+							'Интегрированные оценка',
+							'Интегрированные оценки',
+							'Легитимность',
+							'Метаданные',
+							'Актуальность',
+							'Оценка реагирования',
+							'Оценки реагирования',
+							'Секторальная оценка',
+							'Секторальные оценки',
+							'Оценка состояния и тенденций (или процессов)',
+							'Тематическая оценка',
+							'Тематические оценки',
+							];
 			js_data python:[(here.getSite().getPortalTranslations()(a.acronym), here.getSite().getPortalTranslations()(a.name))
 				for a in acronyms if a.acronym in our_acronyms];
 			fake python:js_data.sort(key=lambda x:len(x[0]), reverse=True);
@@ -228,6 +260,6 @@
 			curr_lang_json python:here.rstk.json_dumps(curr_lang);
 			edit request/edit|nothing;
 			edit_json python:here.rstk.json_dumps(edit)"
-			tal:content="string:apply_glossary_terms(${js_data_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
+			tal:content="string:process_form(${js_data_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
 	</script>
 </metal:block>
