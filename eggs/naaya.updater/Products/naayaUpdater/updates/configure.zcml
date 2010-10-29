@@ -240,10 +240,4 @@
       component=".update_portal_profiles.UpdatePortalProfiles"
       permission="zope2.ViewManagementScreens" />
 
-	<utility
-	  name="review_answer.update"
-	  provides="..interfaces.IUpdateScript"
-	  component=".update_AoA_review_template_survey_answer.UpdateSurveyAnswer"
-	  permission="zope2.ViewManagementScreens" />
-
 </configure>
