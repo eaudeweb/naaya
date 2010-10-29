@@ -25,7 +25,7 @@ class NyAccess(SimpleItem):
     security.declareProtected(change_permissions, 'getObject')
     def getObject(self):
         """ Returns the object NyAccess is associated to """
-        return self.aq_parent
+        return self.aq_inner.aq_parent
 
     security.declareProtected(change_permissions, 'getObjectParent')
     def getObjectParent(self):
