@@ -32,7 +32,7 @@
 </metal:block>
 
 <tal:block metal:define-slot="scripts">
-    <script src="/misc_/Naaya/jquery.min.js"></script><br>
+    <script src="/misc_/Naaya/jquery.min.js"></script>
     <script src='/misc_/Naaya/utils.js'></script>
     <script src='/misc_/naayaUpdater/updater.js'></script>
     <tal:block metal:define-slot="additional-scripts"></tal:block>
