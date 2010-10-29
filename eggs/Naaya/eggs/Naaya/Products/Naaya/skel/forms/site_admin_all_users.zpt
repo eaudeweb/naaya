@@ -29,7 +29,7 @@
 
         <div class="cleaner">&nbsp;</div>
         </tal:block>
-		
+
 		<table cellspacing="0" cellpadding="4" width="95%"
 			   tal:define="users_roles user_tool/getUsersRoles;
 						   users_sources_roles python: [source.getUsersRoles(here) for source in user_sources]" class="datatable sortable">
@@ -80,18 +80,19 @@
 
 			<tbody>
 				<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+                    <tal:block define="user_source python: user_tool.getUserSource(user.getId())">
 					<td>
 						<strong>
-							<tal:block condition="python: user_tool.getUserSource(user.getId()) == 'acl_users'">
+							<tal:block condition="python: user_source == 'acl_users'">
 							<a tal:define="user_quoted python:here.utUrlEncode(user)"
 										tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=all" tal:content="user">username</a>
 							</tal:block>
-							<tal:block condition="python: not user_tool.getUserSource(user.getId()) == 'acl_users'" tal:content="user"></tal:block>
+							<tal:block condition="python: not user_source == 'acl_users'" tal:content="user"></tal:block>
 						</strong>
 						<span tal:condition="python:user_tool.isNewUser(user)">
 							<img src="misc_/Naaya/star.png" alt="New account" />
 						</span>
-						<span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_tool.getUserSource(user.getId()) != 'acl_users'">
+						<span tal:condition="python: user_tool.getUserAccount(user) in user_tool.user_names() and user_source != 'acl_users'">
 							<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
 						</span>
 					</td>
@@ -104,7 +105,8 @@
 							<a tal:attributes="href string:mailto:${email}; title string:Click to open email client" i18n:attributes="title" tal:content="email" />
 						</div>
 					</td>
-					<tal:block define="if python: user_tool.getUserSource(user.getId()) == 'acl_users'">
+
+					<tal:block define="if python: user_source == 'acl_users'">
 						<tal:block condition="if">
 							<td tal:define="user_roles python: users_roles.get(str(user))">
 								<div class="user-role"
@@ -134,7 +136,8 @@
 							</td>
 						</tal:block>
 					</tal:block>
-					<td tal:content="python:test(user_tool.getUserSource(user.getId()) == 'acl_users', 'Local users', user_tool.getUserSource(user.getId()) )" />
+					<td tal:content="python:test(user_source == 'acl_users', 'Local users', user_source)" />
+                    </tal:block>
 				</tr>
 
 				<tr tal:condition="python:len(users) == 0" class="tr-messages">
@@ -165,7 +168,7 @@
 				<metal:block use-macro="here/macro_utils/macros/paginator" />
 			</tal:block>
 		</metal:block>
-			
+
         <div class="tip" tal:condition="python:len(users) != 0">
             <p>
                 <span i18n:translate="">
