@@ -132,7 +132,7 @@ $(document).ready(function(){
 					versionable python:folder_info['versionable'];
 					editable python:folder_info['editable'];
 					folder python:folder_info['self'];
-					">
+					" on-error="string:RESTRICTED">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
@@ -186,7 +186,7 @@ $(document).ready(function(){
 							[Restricted access]
 						</tal:block>
 						<tal:block condition="folder/discussion">
-						<tal:block define="count_comments folder/count_comments" condition="count_comments">
+						<tal:block define="count_comments folder/count_comments" condition="count_comments" on-error="string:">
 							[<span tal:replace="count_comments" />
 							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
 						</tal:block>
@@ -229,7 +229,7 @@ $(document).ready(function(){
 					versionable python:object_info['versionable'];
 					editable python:object_info['editable'];
 					object python:object_info['self'];
-					">
+					" on-error="string:RESTRICTED">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
@@ -252,7 +252,7 @@ $(document).ready(function(){
 							</span>
 						</span>
 						<tal:block condition="object/discussion">
-						<tal:block define="count_comments object/count_comments" condition="count_comments">
+						<tal:block define="count_comments object/count_comments" condition="count_comments" on-error="string:">
 							[<span tal:replace="count_comments" />
 							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
 						</tal:block>
