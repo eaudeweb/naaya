@@ -51,6 +51,20 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless(re.search(r'<h1>.*test_pointer.*</h1>', html, re.DOTALL))
         self.failUnless('test_pointer_description' in html)
 
+        self.browser.go('http://localhost/portal/myfolder/pointer_add_html')
+        form = self.browser.get_form('frmAdd')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['title:utf8:ustring'] = 'slash_pointer'
+        form['description:utf8:ustring'] = 'slash_pointer'
+        form['coverage:utf8:ustring'] = 'slash_pointer'
+        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+        form['pointer:utf8:ustring'] = '/info'
+        form['redirect:boolean'] = ['on']
+
+        self.browser.submit()
+        self.browser.go('http://localhost/portal/myfolder/slash_pointer')
+        self.failUnlessEqual(self.browser.get_url(),
+                             'http://localhost/portal/info')
         self.browser_do_logout()
 
     def test_add_error(self):
@@ -86,7 +100,7 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mypointer/edit_html')
         form = self.browser.get_form('frmEdit')
         form['redirect:boolean'] = ['on']
-        form['pointer:utf8:ustring'] = 'portal/info'
+        form['pointer:utf8:ustring'] = '/portal/info' #Will result: portal/info
         self.browser.clicked(form, form.find_control('title:utf8:ustring'))
         self.browser.submit()
 
