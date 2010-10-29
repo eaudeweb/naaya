@@ -31,6 +31,8 @@ $(document).ready(function(){
     if (localStorage.form){
         unserialize(localStorage.form);
     }
+    //Create links
+    $('body pre').html(Linkify($('body pre').html()));
 });
 
 /**
