@@ -61,11 +61,6 @@ $(document).ready(function(){
 		}
 	});
 
-	$('.group_link').live('click', function() {
-        ldap_refresh_section('', $(this).attr('href'));
-        return false;
-    });
-
 	$('.sort_link').live('click', function(e) {
 		e.preventDefault();
         ldap_refresh_users_fieldset($(this).attr('href'));
@@ -141,34 +136,6 @@ function createKey(key){
 /**
  * Functions for LDAPUserFolder
 */
-
-function ldap_refresh_section(tabid, url) {
-    $('.second_tab_set a.current_sub').removeClass('current_sub');
-    if (tabid) {
-        $('#' + tabid).addClass('current_sub');
-    }
-    $('#section_wating_response').show();
-    $('#section_parent').hide();
-    $('#section_error_response').hide();
-
-    $.ajax({
-        url: url,
-        success: function(data) {
-            var html = $('#middle_port', $(data)).html();
-			$('#middle_port').html(html);
-			if (tabid == 'link_assign_to_users') {
-                ldap_user_search_form();
-            } else if (tabid == 'link_assign_to_groups') {
-                ldap_group_roles_assign_form();
-            }
-            $('#section_wating_response').hide();
-        },
-        error: function() {
-            $('#section_wating_response').hide();
-            $('#section_error_response').show();
-        }
-    });
-}
 
 function ldap_refresh_users_fieldset(url) {
     $('#users_roles_waiting_response').show();
