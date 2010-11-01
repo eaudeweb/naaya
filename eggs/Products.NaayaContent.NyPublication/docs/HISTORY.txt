@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1dev (unreleased)
+-------------------
+
+- Fix save changes date problem on index page (#413)
+
 1.0dev (unreleased)
 -------------------
 
