@@ -69,9 +69,20 @@ class AoALibraryViewer(SimpleItem):
 
     security.declareProtected(view, 'iter_assessments')
     def iter_assessments(self):
+        ''' '''
         survey = self.target_survey()
         for answer in survey.objectValues(survey_answer_metatype):
             yield self.wrap_answer(answer)
+
+    security.declareProtected(view, 'check_geo_type')
+    def check_geo_type(self):
+        ''' '''
+        thelist = []
+        for shadow in self.iter_assessments():
+            if shadow.geo_location is not None:
+                if shadow.geo_location.lat is None or shadow.geo_location.lon is None:
+                    print shadow.geo_location
+                    print shadow.id
 
     def __getitem__(self, key):
         survey = self.target_survey()

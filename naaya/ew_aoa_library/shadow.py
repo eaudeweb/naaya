@@ -220,6 +220,14 @@ class AssessmentShadow(SimpleItem):
             raise AttributeError
         return self.geo_location.lon
 
+    security.declareProtected(view_management_screens, 'set_geo_location')
+    def set_geo_location(self, lat, lon):
+        ''' set lat and lon properties to the Geo object (if missing...)'''
+        from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+        target_answer = self.target_answer()
+        current_address = target_answer.w_location.address
+        target_answer.w_location = Geo(lat=lat, lon=lon, address=current_address)
+
     security.declareProtected(view_management_screens, 'target_answer')
     def target_answer(self):
         return self.getSite().restrictedTraverse(self.target_path)
