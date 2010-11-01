@@ -10,7 +10,8 @@ from Products.NaayaCore.managers.utils import utils
 from Profile import manage_addProfile
 from ProfileSheet import manage_addProfileSheet
 from constants import (ID_PROFILESTOOL, METATYPE_PROFILESTOOL,
-                       TITLE_PROFILESTOOL)
+                       TITLE_PROFILESTOOL, METATYPE_PROFILE)
+
 def manage_addProfilesTool(self, REQUEST=None):
     """ """
     ob = BTreeProfilesTool(ID_PROFILESTOOL, TITLE_PROFILESTOOL)
