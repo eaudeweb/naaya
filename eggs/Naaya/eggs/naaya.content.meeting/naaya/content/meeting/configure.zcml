@@ -26,5 +26,12 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="add_observers_in_meetings.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddObserversInMeetings"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
 </configure>
 
