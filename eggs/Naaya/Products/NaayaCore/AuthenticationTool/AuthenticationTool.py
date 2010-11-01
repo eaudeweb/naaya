@@ -21,7 +21,7 @@ from DateTime import DateTime
 from zope.event import notify
 from persistent.list import PersistentList
 
-from naaya.core.utils import is_ajax, render_macro
+from naaya.core.utils import is_ajax, render_macro, force_to_unicode
 from naaya.core.exceptions import ValidationError, i18n_exception
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import \
@@ -830,13 +830,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return u"Anonymous User"
 
         if userid in self.user_names():
-            return self.getUserFullName(self.getUser(userid)).decode('utf-8')
+            user_ob = self.getUser(userid)
+            return force_to_unicode(self.getUserFullName(user_ob))
 
         for source in self.getSources():
             source_acl = source.getUserFolder()
             name = source.getUserFullName(userid, source_acl)
             if name is not None:
-                return name.decode('utf-8')
+                return force_to_unicode(name)
 
         return u''
 
