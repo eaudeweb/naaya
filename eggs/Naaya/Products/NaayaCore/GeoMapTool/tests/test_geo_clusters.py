@@ -98,8 +98,8 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
             ob_dict['title'] = 'Title for point in cluster %s' % i
             ob_dict['description'] = 'Description for point in cluster %s' % i
             # add radial points to the chosen cluster center in self.cluster_pos
-            ob_dict['geo_location.lat'] = str(self.cluster_pos[0] + ((-1)**(i%2)) * (i*0.0001))
-            ob_dict['geo_location.lon'] = str(self.cluster_pos[1] + ((-1)**(i%2)) * (i*0.0001))
+            ob_dict['geo_location.lat'] = str(self.cluster_pos[0] + ((-1)**(i%2)) * (i*0.00001))
+            ob_dict['geo_location.lon'] = str(self.cluster_pos[1] + ((-1)**(i%2)) * (i*0.00001))
             ob_dict['geo_location.address'] = 'Address for point in cluster %s' % i
             ob_dict['latitude'] = ob_dict['geo_location.lat']
             ob_dict['longitude'] = ob_dict['geo_location.lon']
