@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.photoarchive',
-      version='1.3.2dev-r15575',
+      version='1.3.2',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       packages=find_packages(),
