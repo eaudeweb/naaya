@@ -11,15 +11,16 @@ from Products.NaayaSurvey.SurveyTool import manage_addSurveyTool, SurveyTool
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
 #Meeting imports
-from naaya.content.meeting import ADMINISTRATOR_ROLE, PARTICIPANT_ROLE
+from naaya.content.meeting import ADMINISTRATOR_ROLE, PARTICIPANT_ROLE, OBSERVER_ROLE
 
-def addPortalMeetingParticipant(portal):
+def addPortalMeetingUsers(portal):
+    portal.acl_users._doAddUser('test_observer', 'observer', [OBSERVER_ROLE], '', '', '', '')
     portal.acl_users._doAddUser('test_participant1', 'participant', [], '', '', '', '')
     portal.acl_users._doAddUser('test_participant2', 'participant', [], '', '', '', '')
     portal.acl_users._doAddUser('test_admin', 'admin', [], '', '', '', '')
 
-def removePortalMeetingParticipant(portal):
-    portal.acl_users._doDelUsers(['test_participant1', 'test_participant2', 'test_admin'])
+def removePortalMeetingUsers(portal):
+    portal.acl_users._doDelUsers(['test_observer', 'test_participant1', 'test_participant2', 'test_admin'])
 
 class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
     """ CreateTestCase for NyMeeting object """
@@ -259,14 +260,14 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
             allow_register=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
-        addPortalMeetingParticipant(self.portal)
+        addPortalMeetingUsers(self.portal)
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
         self.diverted_mail = divert_mail(True)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
         divert_mail(False)
-        removePortalMeetingParticipant(self.portal)
+        removePortalMeetingUsers(self.portal)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
         import transaction; transaction.commit()
@@ -467,11 +468,11 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
-        addPortalMeetingParticipant(self.portal)
+        addPortalMeetingUsers(self.portal)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
-        removePortalMeetingParticipant(self.portal)
+        removePortalMeetingUsers(self.portal)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
         import transaction; transaction.commit()
@@ -580,7 +581,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
-        addPortalMeetingParticipant(self.portal)
+        addPortalMeetingUsers(self.portal)
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
 
         try:
@@ -593,7 +594,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
-        removePortalMeetingParticipant(self.portal)
+        removePortalMeetingUsers(self.portal)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
         import transaction; transaction.commit()
@@ -831,11 +832,11 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
-        addPortalMeetingParticipant(self.portal)
+        addPortalMeetingUsers(self.portal)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
-        removePortalMeetingParticipant(self.portal)
+        removePortalMeetingUsers(self.portal)
         divert_mail(False)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
@@ -937,7 +938,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
-        addPortalMeetingParticipant(self.portal)
+        addPortalMeetingUsers(self.portal)
         self.portal.info.mymeeting.participants._set_attendee('test_admin', ADMINISTRATOR_ROLE)
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
         self.portal.info.mymeeting.participants._set_attendee('test_participant2', PARTICIPANT_ROLE)
@@ -953,7 +954,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
-        removePortalMeetingParticipant(self.portal)
+        removePortalMeetingUsers(self.portal)
         divert_mail(False)
         self.portal.info.manage_delObjects(['mymeeting'])
         self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
@@ -999,6 +1000,47 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
         self.assertAccessDenied()
         # no logout
+
+    def testObserver(self):
+        self.browser_do_login('test_observer', 'observer')
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/email_sender')
+        self.assertAccessDenied()
+        #self.browser.go('http://localhost/portal/info/mymeeting/mysurvey')
+        #self.assertAccessDenied(False)
+
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getParticipants')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendees')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/getAttendeeInfo?uid=test_admin')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/pickrole_html')
+        self.assertAccessDenied()
+
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/signup')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/welcome')
+        self.assertAccessDenied(False)
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignups')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getSignup')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscriptions')
+        self.assertAccessDenied()
+        self.browser.go('http://localhost/portal/info/mymeeting/participants/subscriptions/getAccountSubscription')
+        self.assertAccessDenied()
+        self.browser_do_logout()
 
     def testParticipant(self):
         self.browser_do_login('test_participant1', 'participant')
