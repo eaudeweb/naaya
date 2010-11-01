@@ -4,7 +4,7 @@ from Products.naayaUpdater.updates import UpdateScript
 class UpdateSchemaWidgets(UpdateScript):
     title='Update schema widgets'
     authors = ['Alexandru Plugaru']
-    creation_date = '31 Aug, 2010'
+    creation_date = 'Aug 31, 2010'
     description = "Migrate the data from one type of widget to the other, \
  currently works for localized objects only."
     index_html = PageTemplateFile('zpt/update_schema_widgets', globals())
