@@ -32,7 +32,7 @@ from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 
 #Meeting imports
-from naaya.content.meeting import (WAITING_ROLE, PARTICIPANT_ROLE,
+from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
 from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from participants import Participants
@@ -59,6 +59,7 @@ DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['geo_type'].update(visible=True)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
+DEFAULT_SCHEMA['releasedate'].update(visible=True)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -93,9 +94,31 @@ config = {
 #add meeting reports to NySite
 NySite.meeting_reports = MeetingReports('meeting_reports')
 
+def add_observer_role(site):
+    """
+    !!! Adding OBSERVER_ROLE on meeting installation.
+    This is given to the non participants users of the meetings.
+    Permissions are set similar to the Authenticated role.
+    The role will also get permission to view the meeting as a participant.
+    """
+    permissions = ['Naaya - Skip Captcha',
+                   'Naaya - Add Naaya Survey Answer',
+                   'Naaya - View Naaya Survey Answers',
+                   'Naaya - View Naaya Survey Reports']
+
+    auth_tool = site.getAuthenticationTool()
+
+    if OBSERVER_ROLE not in auth_tool.list_all_roles():
+        auth_tool.addRole(OBSERVER_ROLE)
+
+    b = [x['name'] for x in site.permissionsOfRole(OBSERVER_ROLE)
+                        if x['selected']=='SELECTED']
+    b.extend(permissions)
+    site.manage_role(OBSERVER_ROLE, b)
+
 def meeting_on_install(site):
     """ """
-    auth_tool = site.getAuthenticationTool()
+    add_observer_role(site)
 
     # add new map symbols for the meeting
     portal_map = site.getGeoMapTool()
@@ -187,7 +210,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
     permission = Permission(change_permissions, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE])
     permission = Permission(PERMISSION_PARTICIPATE_IN_MEETING, (), ob)
-    permission.setRoles([WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
+    permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
     permission = Permission(PERMISSION_ADMIN_MEETING, (), ob)
     permission.setRoles([ADMINISTRATOR_ROLE])
 
@@ -218,8 +241,8 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
 def _restrict_meeting_item_view(item):
     permission = Permission(view, (), item)
     # tuple means no inheritance for permission
-    permission.setRoles((WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE,
-        MANAGER_ROLE))
+    permission.setRoles((OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
+                         ADMINISTRATOR_ROLE, MANAGER_ROLE))
 
 def _restrict_meeting_agenda_view(item):
     permission = Permission(view, (), item)
