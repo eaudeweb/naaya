@@ -84,14 +84,12 @@ restricted_widgets = {
         'w_submitter-name',
         'w_submitter-email',
         'w_submitter-organisation',
-        'w_country-or-international-organisation',
         ]),
     'general-template': set([
             'w_part-10-information-about-data-uploader',
             'w_name',
             'w_email',
             'w_organisation',
-            'w_country',
         ]),
 }
 
@@ -124,6 +122,7 @@ def extract_survey_answer_data_library(answer):
         'geo_location': answer.get('w_location'),
         'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
                                   answer.get('w_submitter-organisation'), ),
+        'country': answer.get('w_country-or-international-organisation'),
         'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
@@ -165,6 +164,7 @@ def extract_survey_answer_data_general_template(answer):
         'geo_location': general_template_extract_geo_location(answer),
         'uploader': ('%s, %s') % (answer.get('w_name'),
                                   answer.get('w_organisation'), ),
+        'country': answer.get('w_country'),
         #This is commented because (now) we don't want to show review template answers on the map
         #'geo_type': extract_geo_type(get_library_answer(answer)),
         'description': ('<strong>%s</strong><br />%s<br />') %
