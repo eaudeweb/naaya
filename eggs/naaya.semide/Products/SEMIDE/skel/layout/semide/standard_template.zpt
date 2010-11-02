@@ -49,9 +49,9 @@
             <![endif]-->
         </metal:block>
         <metal:block define-slot="standard-head-content">
-            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
-            <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/utils.js"></script>
+			<tal:block replace="structure python: here.getFormsTool().getForm('site_scripts')()">
+				Default JavaScripts
+			</tal:block>
         </metal:block>
         <metal:block define-slot="head"></metal:block>
 	</head>
