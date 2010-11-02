@@ -64,7 +64,7 @@
         tal:attributes="checked python:test(get_config('enable_monthly'), 'checked', None)" />
     <label for="monthly_day" i18n:translate="">day:</label>
     <select id="monthly_day" name="monthly_day:int">
-        <option tal:repeat="day python:range(31)" tal:content="python:'%d' % day"
+        <option tal:repeat="day python:range(1, 32)" tal:content="python:'%d' % day"
           tal:attributes="value day; selected python:day==get_config('monthly_day')" />
     </select>
     <label for="monthly_hour" i18n:translate="">hour:</label>
