@@ -15,21 +15,115 @@
 <metal:block fill-slot="body">
 
 <h1 tal:content="here/title_or_id"></h1>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#javascript_label').hide();
+		$('#search_label').show();
+		$.expr[':'].icontains = function(obj, index, meta, stack){
+			return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
+		};
+		$('#searchbox').replaceWith('<'+'input type="text" id="searchbox"/>');
+		$('#searchbox').keyup(function(){
+			var searchString = $(this).val();
 
-<table class="datatable" tal:define="review_template python:here.target_path == 'tools/general_template/general-template'">
+			if (searchString.length > 0){
+			  $('.datatable tbody tr').hide();
+			  $('.datatable tr:icontains('+searchString+')').show();
+			}
+			else {
+			  $('.datatable tr').show();
+			}
+		})
+	})
+</script>
+<div>
+	<label id="javascript_label" i18n:translate="" >The filter function requires javascript</label>
+	<label id="search_label" i18n:translate="" >Type to filter reports</label>
+	<label id="searchbox"></label>
+</div>
+<table class="datatable" style="width:100%"
+	tal:define="review_template python:here.target_path == 'tools/general_template/general-template';
+				skey request/skey|string:title;
+				rkey python:bool(request.get('rkey'));
+				items python:list(here.iter_assessments());">
+	<!-- If the "sort by" property has an attribute "lower",
+		convert the value to lower before sorting -->
+	<tal:block condition="python:hasattr(getattr(items[0], skey), 'lower')">
+		<tal:block define="dummy python:items.sort(key=lambda x: getattr(x, skey).lower(), reverse=rkey);" />
+	</tal:block>
+	<tal:block condition="python:not hasattr(getattr(items[0], skey), 'lower')">
+		<tal:block define="dummy python:items.sort(key=lambda x: getattr(x, skey), reverse=rkey);" />
+	</tal:block>
+	<tal:block condition="python:skey == 'approved_date'" >
+		<tal:block define="dummy python:items.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
+	</tal:block>
+
 <thead tal:define="url here/absolute_url">
-	<th><a tal:attributes="href url" i18n:translate="">Name</a></th>
+	<!-- Name -->
+	<th tal:condition="rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=title">Name</a>
+		<img tal:condition="python:skey=='title'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="not:rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=title&rkey=True">Name</a>
+		<img tal:condition="python:skey=='title'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Cannot sort by themes -->
 	<th tal:condition="not:review_template" i18n:translate="">Themes</th>
-	<th i18n:translate="">Last modified</th>
-	<th i18n:translate="">Reported by</th>
-	<th tal:condition="review_template" i18n:translate="">Approval status</th>
-	<th tal:condition="review_template" i18n:translate="">Approval date</th>
+
+	<!-- Last modified -->
+	<th tal:condition="rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=modification_time">Last modified</a>
+		<img tal:condition="python:skey=='modification_time'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="not:rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=modification_time&rkey=True">Last modified</a>
+		<img tal:condition="python:skey=='modification_time'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Reported by -->
+	<th tal:condition="rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader">Reported by</a>
+		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="not:rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader&rkey=True">Reported by</a>
+		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Country -->
+	<th tal:condition="rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=country">Country</a>
+		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="not:rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=country&rkey=True">Country</a>
+		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Approval status -->
+	<th tal:condition="python:review_template and rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval status</a>
+		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="python: review_template and not rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date&rkey=True">Approval status</a>
+		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Approval status -->
+	<th tal:condition="python:review_template and rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval date</a>
+		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="python: review_template and not rkey">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date&rkey=True">Approval date</a>
+		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
 </thead>
 <tbody>
-<tr tal:define="items python:list(here.iter_assessments());
-				sort_key python:test(request.form.get('sort', 'title'));
-				dummy python:items.sort(key=lambda x: getattr(x, sort_key));"
-	tal:repeat="i items">
+<tr tal:repeat="i items">
 	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td>
 			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="i/title_or_id"></a>
@@ -39,7 +133,8 @@
 	</td>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="i/uploader"/>
-	<td i18n:translate="" tal:condition="review_template">
+	<td tal:content="i/country"/>
+	<td i18n:translate="" tal:condition="review_template" >
         <span tal:condition="python:here.approved_date(i)">Approved</span>
         <span tal:condition="python:not here.approved_date(i)">Pending</span>
     </td>
