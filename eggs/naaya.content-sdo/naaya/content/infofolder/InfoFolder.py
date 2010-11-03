@@ -23,6 +23,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
 #Python imports
 from copy import deepcopy
 import os, sys
+from DateTime import DateTime
 
 #Zope imports
 from Globals import InitializeClass
@@ -76,7 +77,7 @@ def setupContentType(site):
             item_no = 0
             for list_item in topics_list['list_items']:
                 item_no += 1
-                itopics.manage_addRefTreeNode(item_no, list_item)
+                itopics.manage_addRefTreeNode(str(item_no), list_item)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -145,7 +146,8 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.info_type = 'enterprises'
 
     ob.set_categories()
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang)
+    _releasedate = DateTime()
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
     if form_errors:
         if REQUEST is None:
