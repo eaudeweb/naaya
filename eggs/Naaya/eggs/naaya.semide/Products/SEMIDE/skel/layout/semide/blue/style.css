@@ -955,3 +955,21 @@ div>ul.proj_projects {
   font-weight: bold;
   padding: 150px 0 150px 0;
 }
+
+.b_download {
+     background: transparent url('misc_/Naaya/NyFolder.gif') no-repeat left center;
+     padding-left: 20px;
+     position: absolute;
+     top: 1.5em;
+     right: 0em;
+     font-size: 11px;
+     display: none;
+}
+
+#center_content {
+      width: 99%;
+      float: left;
+}
+.cleaner {
+    clear: both;
+}
