@@ -344,6 +344,13 @@ class FlashTool(Folder, ProfileMeta, utils):
             doc_obj.approveThis(0, None)
             doc_obj.submitThis()
         for k in results.keys():
+            """
+            overwrite the objectkeywords_{lang} on the instance (object)
+            such that the recatalobObject function doesn't reindex these documents
+            next line is worth 20 secs (performance when generating e-Flash notification message)
+            """
+            setattr(doc_obj, 'objectkeywords_%s' % k, '')
+
             style = template._getOb("%s_%s" % (p_type, k)).document_src()
             x = self.render_xml(results[k], style)
             doc_obj.saveProperties(title=title, body=x, lang=k)
