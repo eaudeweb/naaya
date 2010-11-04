@@ -1,7 +1,10 @@
 Changelog
 =========
 
-2.10.10 (unreleased)
+2.10.11 (unreleased)
+--------------------
+
+2.10.10 (2010-11-04)
 --------------------
  * ProfilesTool refactored to subclass from BTreeFolder2. Update script:
    `Change ProfilesTool to use BTree`.
