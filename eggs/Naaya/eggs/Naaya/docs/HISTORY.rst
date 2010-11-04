@@ -5,6 +5,11 @@ Changelog
 --------------------
  * ProfilesTool refactored to subclass from BTreeFolder2. Update script:
    `Change ProfilesTool to use BTree`.
+ * ProfilesTool moved from NaayaCore to Products.NaayaProfilesTool because it
+   is rarely used and shouldn't be in the Core
+ * Major interface update for Products.NaayaCore.AuthenticationTool.
+   Added ajax interface in user management (administration), fixed a lot of
+   bugs.
  * Fix: NotificationTool subscriptions - strip user_id spaces. The update
    script `Remove spaces from ...` will remove existing spaces.
  * Feature: user password reset with email verification
