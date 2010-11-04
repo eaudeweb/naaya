@@ -1,5 +1,7 @@
+#the_survey = container.getSite()['tools']['virtual_library']['bibliography-details-each-assessment']
+the_survey = container.aq_parent.aq_parent['virtual_library']['bibliography-details-each-assessment']
+
 topics = []
-the_survey = getattr(container.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
 for x in the_survey.objectValues('Naaya Survey Answer'):
   if getattr(x, 'w_assessment-name') == unicode(assessment, 'utf8'):
     topics = {
