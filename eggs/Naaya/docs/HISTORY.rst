@@ -7,9 +7,9 @@ Changelog
    `Change ProfilesTool to use BTree`.
  * ProfilesTool moved from NaayaCore to Products.NaayaProfilesTool because it
    is rarely used and shouldn't be in the Core
- * Major interface update for Products.NaayaCore.AuthenticationTool.
-   Added ajax interface in user management (administration), fixed a lot of
-   bugs.
+ * Major UI update for Products.NaayaCore.AuthenticationTool. Using ajax
+   in user management (administration), fixed a lot of bugs and improved LDAP
+   performance.
  * Fix: NotificationTool subscriptions - strip user_id spaces. The update
    script `Remove spaces from ...` will remove existing spaces.
  * Feature: user password reset with email verification
@@ -17,14 +17,11 @@ Changelog
  * Refactoring for code that walks a `RefTree`
  * Improvements to DiskFile object; new DiskTemplate object; can be added
    from ``skel.xml``.
- * User management LDAP improvements:
-   - Tabbed page: `manage roles`, `assign users roles`, `assign groups roles`
-   - Ajax search and sorting.
-   - Getting user information performance improvement.
  * Meta tags for all content types (index pages). Includes: `description`,
    `keywords`, `contributor`, `dc.language` and `title`
- * Fix: Permissions editor getting target object
- * Permissions editor shows acquired permissions for the object
+ * Permissions editor: shows acquired permissions; fix locating target object
+ * Comments refactored to store information in a hidden folder. Update script:
+   `Migration script from Naaya Comments`.
 
 2.10.9 (2010-10-06)
 -------------------
