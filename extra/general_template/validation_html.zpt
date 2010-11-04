@@ -211,6 +211,6 @@
 			curr_lang_json python:here.rstk.json_dumps(curr_lang);
 			edit request/edit|nothing;
 			edit_json python:here.rstk.json_dumps(edit)"
-			tal:content="string:process_form(${acronym_map_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
+			tal:content="structure string:process_form(${acronym_map_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
 	</script>
 </metal:block>
