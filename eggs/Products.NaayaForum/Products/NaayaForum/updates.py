@@ -25,8 +25,9 @@ class ZGadFlyMigration(UpdateScript):
 
     def _update(self, portal):
         topics_stats = {}
-        forums = portal.searchCatalog({'meta_type': 'Naaya Forum'}, None, None)
-        for forum in forums:
+        catalog = portal.getCatalogTool()
+        for brain in catalog(meta_type='Naaya Forum'):
+            forum = brain.getObject()
             self.log.debug('Found forum at %r' % forum.absolute_url(1))
             stats_container = forum._getStatisticsContainer()
             if isinstance(stats_container, NyGadflyContainer):
@@ -42,6 +43,6 @@ class ZGadFlyMigration(UpdateScript):
                 forum._removeStatisticsContainer()
                 stats_container = forum._getStatisticsContainer()
 
-            for topic in forum.get_topics():
-                forum.setTopicHits(topic.id, topics_stats.get(topic.id, 0))
+                for topic in forum.get_topics():
+                    forum.setTopicHits(topic.id, topics_stats.get(topic.id, 0))
         return True
