@@ -266,25 +266,22 @@ class FlashTool(Folder, ProfileMeta, utils):
         """ search the catalog to find objects for a given date interval """
         news = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS],
                                             approved=1,
-                                            resource_date=self.news_start_date,
-                                            resource_date_range='min',
+                                            resource_date=(self.news_start_date, self.news_end_date),
+                                            resource_date_range='min:max',
                                             path=path)
         events = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT],
                                             approved=1,
-                                            resource_date=self.event_start_date,
-                                            resource_date_range='min',
+                                            resource_date=(self.event_start_date, self.event_end_date),
+                                            resource_date_range='min:max',
                                             path=path)
 
         documents = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMDOCUMENT],
                                             approved=1,
-                                            resource_date=self.doc_start_date,
-                                            resource_date_range='min',
+                                            resource_date=(self.doc_start_date, self.doc_end_date),
+                                            resource_date_range='min:max',
                                             path=path)
 
-        results = [obj for obj in news if obj.news_date <= self.news_end_date]
-        results.extend([obj for obj in events if obj.start_date <= self.event_end_date])
-        results.extend([obj for obj in documents if obj.releasedate <= self.doc_end_date])
-        return results
+        return news + events + documents
 
     security.declarePrivate('filter_objects')
     def filter_objects(self, objects):
