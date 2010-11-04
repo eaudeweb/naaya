@@ -33,7 +33,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
             itopics = getattr(ptool, list_id, None)
             item_no = 0
             for list_item in constants.PARTICIPANT_TYPES:
-                itopics.manage_addRefTreeNode(item_no, list_item)
+                itopics.manage_addRefTreeNode(str(item_no), list_item)
                 item_no += 1
 
         if id:
