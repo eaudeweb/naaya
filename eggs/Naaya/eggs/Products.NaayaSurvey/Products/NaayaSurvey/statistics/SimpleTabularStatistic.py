@@ -101,7 +101,7 @@ class SimpleTabularStatistic(BaseStatistic):
         ws.write(current_row, 1, self.question.title, header_style)
         current_row += 1
         ws.write(current_row, 2, translator('Count'), header_style)
-        ws.write(current_row, 2, translator('Percent'), header_style)
+        ws.write(current_row, 3, translator('Percent'), header_style)
         current_row += 1
         ws.write(current_row, 1, translator('Answered'), header_style)
         ws.write(current_row, 2, answered[0], normal_style)
