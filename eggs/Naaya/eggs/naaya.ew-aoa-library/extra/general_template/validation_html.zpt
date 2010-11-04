@@ -1,14 +1,14 @@
 <metal:block define-macro="validate">
 	<script>
-		function process_form(config, labels, curr_lang, edit) {
+		function process_form(acronym_map, labels, curr_lang, edit) {
 			$(function(){
 				$('form[name="frmAdd"]').show();
 
 				$('p').each(function(){
-					$(this).html(process_acronyms(config, $(this).html()));
+					$(this).html(process_acronyms(acronym_map, $(this).html()));
 				});
 				$('.widgetEditMode').each(function(){
-					$(this).html(process_acronyms(config, $(this).html()));
+					$(this).html(process_acronyms(acronym_map, $(this).html()));
 				});
 
 				var assessment = $('#w_q1-name-assessment-report').val();
@@ -152,11 +152,11 @@
 				$(select_id).val('Please select');
 			}
 		}
-		function process_acronyms(config, string){
-			for (i=0;i<config.length;i++)
+		function process_acronyms(acronym_map, string){
+			for (i=0;i<acronym_map.length;i++)
 			{
-				acronym = config[i][0];
-				meaning = config[i][1];
+				acronym = acronym_map[i][0];
+				meaning = acronym_map[i][1];
 				strings = string.split(acronym);
 				parts = strings.length;
 				if (parts>1)
@@ -203,63 +203,14 @@
 			});
 		}
 	</script>
-	<script tal:define="methods python:here.getSite().database.acronyms.sql_methods;
-		acronyms methods/select_acronyms;
-		our_acronyms python:[
-							'Assessment',
-							'Environmental Impact Assessment (EIA)',
-							'Strategic Impact Assessment (SIA)',
-							'Impact assessment',
-							'Impact Assessment',
-							'Impact assessments',
-							'Environmental Impact Assessment',
-							'Strategic Impact Assessment',
-							'Integrated assessment',
-							'Integrated assessments',
-							'Sectoral assessment',
-							'Sectoral assessments',
-							'Status and trend (or process) assessment',
-							'Thematic assessment',
-							'Thematic assessments',
-							'Ecosystem',
-							'Ecosystems',
-							'Response assessment',
-							'Response assessments',
-							'INSPIRE',
-							'GMES',
-							'Reportnet',
-							'Metadata',
-							'DPSIR',
-							'Оценки',
-							'Оценка',
-							'Достоверность',
-							'Экосистема',
-							'ДС-Д-С-В-Р',
-							'Оценка воздействия',
-							'Оценки воздействия',
-							'Интегрированные оценка',
-							'Интегрированные оценки',
-							'Легитимность',
-							'Метаданные',
-							'Актуальность',
-							'Оценка реагирования',
-							'Оценки реагирования',
-							'Секторальная оценка',
-							'Секторальные оценки',
-							'Оценка состояния и тенденций (или процессов)',
-							'Тематическая оценка',
-							'Тематические оценки',
-							];
-			js_data python:[(here.getSite().getPortalTranslations()(a.acronym), here.getSite().getPortalTranslations()(a.name))
-				for a in acronyms if a.acronym in our_acronyms];
-			fake python:js_data.sort(key=lambda x:len(x[0]), reverse=True);
-			js_data_json python:here.rstk.json_dumps(js_data);
+	<script tal:define="
+			acronym_map_json python:here.rstk.json_dumps(here.getAcronyms());
 			labels here/getAssessmentTitles;
 			labels_json python:here.rstk.json_dumps(labels);
 			curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 			curr_lang_json python:here.rstk.json_dumps(curr_lang);
 			edit request/edit|nothing;
 			edit_json python:here.rstk.json_dumps(edit)"
-			tal:content="string:process_form(${js_data_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
+			tal:content="string:process_form(${acronym_map_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
 	</script>
 </metal:block>
