@@ -18,13 +18,13 @@
 # Valentin Dumitru, Eau de Web
 
 PROVINCES = {
-            1:'Drenthe', 2:'Flevoland', 3:'Friesland ', 4:'Gelderland',
-            5:'Groningen', 6:'Limburg', 7:'North Brabant', 8:'North Holland',
-            9:'Overijssel', 10:'South Holland', 11:'Utrecht', 12:'Zeeland'
+            '1':'Drenthe', '2':'Flevoland', '3':'Friesland ', '4':'Gelderland',
+            '5':'Groningen', '6':'Limburg', '7':'North Brabant', '8':'North Holland',
+            '9':'Overijssel', '10':'South Holland', '11':'Utrecht', '12':'Zeeland'
             }
 
 AMBASSADOR_CHOICES = {
-                        1:'Did not choose a species yet',
-                        2:'Is busy selecting an ambassador species',
-                        3:'Already has selected ambassador species',
+                        '1':'Did not choose a species yet',
+                        '2':'Is busy selecting an ambassador species',
+                        '3':'Already has selected ambassador species',
                      }
