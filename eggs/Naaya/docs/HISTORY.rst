@@ -17,6 +17,14 @@ Changelog
  * Refactoring for code that walks a `RefTree`
  * Improvements to DiskFile object; new DiskTemplate object; can be added
    from ``skel.xml``.
+ * User management LDAP improvements:
+   - Tabbed page: `manage roles`, `assign users roles`, `assign groups roles`
+   - Ajax search and sorting.
+   - Getting user information performance improvement.
+ * Meta tags for all content types (index pages). Includes: `description`,
+   `keywords`, `contributor`, `dc.language` and `title`
+ * Fix: Permissions editor getting target object
+ * Permissions editor shows acquired permissions for the object
 
 2.10.9 (2010-10-06)
 -------------------
