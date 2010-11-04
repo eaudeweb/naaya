@@ -118,6 +118,8 @@ class NaayaHttpThread(Thread):
         self._stop = True
 
 class SeleniumTestCase(NaayaTestCase):
+    _selenium_page_timeout = "5000"
+
     def login_user(self, user, password):
         self.selenium.open("/portal/login_html", True)
         self.selenium.wait_for_page_to_load("30000")
