@@ -51,6 +51,8 @@ from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
+from naaya.core.zope2util import physical_path
+
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
@@ -1043,7 +1045,12 @@ text-decoration: underline;
                            REQUEST=None):
         """ """
         search = self.getCatalogedObjectsCheckView
-        contacts = search(meta_type=['Naaya Contact'], path=location)
+        path = physical_path(self)
+        if location not in ('', '/'):
+            if not location.startswith('/'):
+                location = '/' + location
+            path += location
+        contacts = search(meta_type=['Naaya Contact'], path=path)
         addresses = [contact.email for contact in contacts]
 
         for address in addresses:
