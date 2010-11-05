@@ -60,7 +60,6 @@ OBJECT_CONSTRUCTORS = ['manage_addNySimpleConsultation_html', 'simpleconsultatio
 OBJECT_ADD_FORM = 'simpleconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Simple Consultation type.'
 PREFIX_OBJECT = 'scns'
-ADDITIONAL_STYLE = PageTemplateFile('zpt/simpleconsultation_style', globals()).read()
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -73,6 +72,10 @@ PROPERTIES_OBJECT = {
     'public_registration': (0, '', ''),
     'lang':                (0, '', '')
 }
+
+style_file = open(os.path.join(os.path.dirname(__file__), 'www', 'style.css'))
+ADDITIONAL_STYLE = style_file.read()
+style_file.close()
 
 # this dictionary is updated at the end of the module
 config = {
