@@ -147,6 +147,44 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
 
         return events
 
+    security.declareProtected(view, 'hasEventsByDay')
+    def hasEventsByDay(self, year, month):
+        """Returns if there are any events for each date in this month """
+        brains_by_day = {}
+        catalog = self.unrestrictedTraverse(self.catalog)
+
+        for day in range(1, calendar.monthrange(year, month)[1] + 1):
+            date = DateTime(year, month, day)
+            for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+                start_date_attr = catalog.Indexes[interval_idx].getSinceField()
+                end_date_attr = catalog.Indexes[interval_idx].getUntilField()
+                brains_by_day[day] = catalog({'meta_type': meta_type,
+                                              interval_idx: date})
+
+        # cache getObject + evalPredicate results for each path
+        positive_paths = set()
+        negative_paths = set()
+        ret = {}
+        for day in range(1, calendar.monthrange(year, month)[1] + 1):
+            for brain in brains_by_day[day]:
+                path = brain.getPath()
+                if path in positive_paths:
+                    ret[day] = True
+                    break
+                elif path in negative_paths:
+                    continue
+                event = brain.getObject()
+                predicate = self.cal_meta_types[event.meta_type][1]
+                if evalPredicate(predicate, event):
+                    positive_paths.add(path)
+                    ret[day] = True
+                    break
+                else:
+                    negative_paths.add(path)
+            else:
+                ret[day] = False
+        return ret
+
     security.declareProtected(view, 'getDayEvents')
     def getDayEvents(self, date=''):
         """Return the events for the given day"""
