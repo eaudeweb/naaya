@@ -109,13 +109,12 @@ class Utils:
 
     def utDayLength(self, p_length):
         """ return all day's name by length """
-        l_days = []
+        sorted_weekdays = self.getLongWeekdaysSorted()
         if p_length == 'All':
-            return self.utCombineList(self.getLongWeekdaysSorted(), self.getLongWeekdaysSorted())
-        else:
-            for day in self.getLongWeekdaysSorted():
-                l_days.append(day[:int(p_length)])
-        return self.utCombineList(l_days, self.getLongWeekdaysSorted())
+            return self.utCombineList(sorted_weekdays, sorted_weekdays)
+
+        l_days = [day[:int(p_length)] for day in sorted_weekdays]
+        return self.utCombineList(l_days, sorted_weekdays)
 
     def utCombineList(self, p_f_list, p_s_list):
         """ from two lists makes a single list of tuple """
