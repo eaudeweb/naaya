@@ -557,10 +557,14 @@ class utils:
 
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
-        return sorted(p_list, key=lambda obj: isinstance(obj, str) and \
-                      force_to_unicode(getattr(obj, p_attr, '')) or \
-                      getattr(obj, p_attr, None),
-                      reverse=bool(p_desc))
+
+        def sort_key(obj):
+            attr = getattr(obj, p_attr, None)
+            if isinstance(attr, basestring):
+                return force_to_unicode(attr)
+            else:
+                return attr
+        return sorted(p_list, key=sort_key, reverse=bool(p_desc))
 
     def utSortDictsListByKey(self, p_list, p_key, p_desc=1):
         """Sort a list of objects by an item values"""
