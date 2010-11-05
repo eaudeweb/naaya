@@ -111,6 +111,7 @@ function setupSearchUsers(data){
 */
 function toggleLoader(){
 	$('.loader').toggle();
+	$('.ajax-loader').show();
 }
 
 function emptyLocation(){
