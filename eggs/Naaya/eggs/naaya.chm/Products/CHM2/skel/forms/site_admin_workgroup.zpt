@@ -1,22 +1,31 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Workgroup: <tal:block
 	replace="python:here.getWorkgroupById(request.get('w', ''))[1]" i18n:name="workgroup"></tal:block></metal:block>
+
+<metal:block fill-slot="description-text">
+	<tal:block define="wg_id python: request.get('w', ''); wg python:here.getWorkgroupById(wg_id);">
+	<div class="cleaner">
+	<p tal:define="obj python:here.utGetObject(wg[2])">
+		<span i18n:translate="" tal:omit-tag="">
+			This page shows all users that are part of this working group.
+			Users added to this workgroup have by default the role of
+		</span>
+		<strong tal:content="python:wg[3]" />
+		<span i18n:translate="" tal:omit-tag="">
+			in folder
+		</span>
+		<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id" />.
+		<span i18n:translate="">Click on an individual user to change the role(s) in this workgroup.</span>
+	</p>
+	</div>
+	</tal:block>
+</metal:block>
+
+<metal:block fill-slot="section-title"></metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <tal:block define="wg_id python: request.get('w', ''); wg python:here.getWorkgroupById(wg_id);">
-<tal:block condition="wg">
-<p tal:define="obj python:here.utGetObject(wg[2])">
-	<span i18n:translate="" tal:omit-tag="">
-		This page shows all users that are part of this working group.
-		Users added to this workgroup have by default the role of
-	</span>
-	<strong tal:content="python:wg[3]" />
-	<span i18n:translate="" tal:omit-tag="">
-		in folder
-	</span>
-	<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id" />.
-	<span i18n:translate="">Click on an individual user to change the role(s) in this workgroup.</span>
-</p>
-
+	<tal:block condition="wg">
 <form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
 	tal:define="skey python:request.get('skey', 'username');
@@ -74,11 +83,13 @@
 <input type="hidden" name="id" id="id" tal:attributes="value wg_id" />
 <input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
 </form>
-</tal:block>
+
 <p tal:condition="python:not wg" style="clear: left;">
 	Invalid group or no group selected.
 </p>
 </tal:block>
+</tal:block>
 </metal:block>
 </metal:block>
+
 </metal:block>
