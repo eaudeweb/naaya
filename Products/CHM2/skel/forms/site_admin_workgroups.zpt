@@ -1,9 +1,19 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Workgroups</metal:block>
+
+<metal:block fill-slot="description-text">
+	<div class="cleaner">
+		<p i18n:translate="">
+			A <em>workgroup</em> is a collection of users that have local roles on a portal section (folder) and on its subfolders. The typical case when workgroups are needed is when more people need to collaborate in uploading and modifying content in a section; the administrator creates the folder, defines a <em>workgroup</em> for it and starts assigning users on it.
+		</p>
+	</div>
+</metal:block>
+
+<metal:block fill-slot="section-title">
+</metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content">
-<p i18n:translate="">
-	A <em>workgroup</em> is a collection of users that have local roles on a portal section (folder) and on its subfolders. The typical case when workgroups are needed is when more people need to collaborate in uploading and modifying content in a section; the administrator creates the folder, defines a <em>workgroup</em> for it and starts assigning users on it.
-</p>
+
 <form action="admin_addworkgroup_html">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>

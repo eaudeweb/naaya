@@ -3,6 +3,8 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
+
+
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool;
@@ -34,14 +36,23 @@
 <div class="second_tabset_content">
 	<h2 i18n:translate=""></h2>
 
+<metal:block fill-slot="description-text">
+		<div class="cleaner">
+		<p i18n:translate="">
+				This page shows all users that are part of this working group. 
+				<tal:block tal:define="wg python:here.getWorkgroupById(current_w)">
+				Being part of this workgroup provides a default role of <strong><span tal:replace="python:wg[3]" /></strong> in <span tal:define="obj python:here.utGetObject(wg[2])"> 
+				<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/></span>.
+				</tal:block>
+			</p>
+		</div>
+</metal:block>
+
+<metal:block fill-slot="section-title">
+</metal:block>
+
 <tal:block tal:condition="current_w">
-<p i18n:translate="">
-	This page shows all users that are part of this working group. 
-	<tal:block tal:define="wg python:here.getWorkgroupById(current_w)">
-	Being part of this workgroup provides a default role of <strong><span tal:replace="python:wg[3]" /></strong> in <span tal:define="obj python:here.utGetObject(wg[2])"> 
-	<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/></span>.
-	</tal:block>
-</p>
+
 
 <form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"

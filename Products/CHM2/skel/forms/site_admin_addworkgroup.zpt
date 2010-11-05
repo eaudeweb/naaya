@@ -1,9 +1,22 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
 <metal:block fill-slot="second-title" i18n:translate="">Add workgroup</metal:block>
+
+<metal:block fill-slot="description-text">
+	<div class="cleaner">
+		<p i18n:translate="">
+				Use this page to add a new working group on a specific section (folder). Each user later added to this workgroup will have by default a certain role that you specify here. The roles individual users have inside a workgroup can be later modified from the workgroup page. All fields are mandatory.
+			</p>
+	</div>
+</metal:block>
+
+<metal:block fill-slot="section-title">
+</metal:block>
+
 <metal:block fill-slot="content"><metal:block define-macro="content">
-<p i18n:translate="">
-	Use this page to add a new working group on a specific section (folder). Each user later added to this workgroup will have by default a certain role that you specify here. The roles individual users have inside a workgroup can be later modified from the workgroup page. All fields are mandatory.
-</p>
+
+
+
+
 
 <form method="post" name="frmWorkgroup" tal:attributes="action string:${site_url}/admin_addworkgroup">
 	<div>
