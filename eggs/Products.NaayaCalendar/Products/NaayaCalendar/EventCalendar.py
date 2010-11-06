@@ -173,6 +173,13 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                     break
                 elif path in negative_paths:
                     continue
+
+                # optimization if predicate is missing
+                if not predicate:
+                    positive_paths.add(path)
+                    ret[day] = True
+                    break
+
                 event = brain.getObject()
                 predicate = self.cal_meta_types[event.meta_type][1]
                 if evalPredicate(predicate, event):
