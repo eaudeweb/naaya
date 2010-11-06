@@ -209,8 +209,8 @@ $(document).ready(function(){
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
 					<td tal:condition="ratings" class="type">
-						<tal:block condition="object/user_rating_view|nothing"
-							replace="structure object/user_rating_stars"/>
+						<tal:block condition="folder/user_rating_view|nothing"
+							replace="structure folder/user_rating_stars"/>
 					</td>
 				</tal:block>
 			</metal:block>
