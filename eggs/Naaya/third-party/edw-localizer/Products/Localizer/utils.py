@@ -46,8 +46,14 @@ def lang_negotiator(available_languages):
         return None
 
     try:
+        return request['EDW_SelectedLanguage']
+    except KeyError:
+        pass
+
+    try:
         accept = request['AcceptLanguage']
     except KeyError:
+        request['EDW_SelectedLanguage'] = None
         return None
     else:
         lang = accept.select_language(available_languages)
@@ -57,6 +63,7 @@ def lang_negotiator(available_languages):
 ##    response.setHeader('Vary', 'accept-language')
 ##    response.setHeader('Vary', '*')
 
+    request['EDW_SelectedLanguage'] = lang
     return lang
 
 
