@@ -50,6 +50,14 @@ class Participants(SimpleItem):
             return []
         return findUsersWithRole(self.getSite(), search_role)
 
+    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'isParticipant')
+    def isParticipant(self, userid=None):
+        """ """
+        if userid is None:
+            userid = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+        return userid in self.getParticipants()
+
     security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'getParticipants')
     def getParticipants(self):
         """ """
