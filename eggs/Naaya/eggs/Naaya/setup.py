@@ -25,7 +25,7 @@ setup(name='Naaya',
           'mimeparse >= 0.1.2',
           'python-dateutil',
           'edw-pycaptcha >= 0.3.1',
-          'edw-localizer == 1.2.2',
+          'edw-localizer >= 1.2.2',
           'edw-extfile >= 2.0.2-edw1',
           'Unidecode',
 
