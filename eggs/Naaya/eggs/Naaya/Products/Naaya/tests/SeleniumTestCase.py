@@ -122,17 +122,17 @@ class SeleniumTestCase(NaayaTestCase):
 
     def login_user(self, user, password):
         self.selenium.open("/portal/login_html", True)
-        self.selenium.wait_for_page_to_load("30000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.type("__ac_name", user)
         self.selenium.type("__ac_password", password)
         self.selenium.click("submit")
-        self.selenium.wait_for_page_to_load("30000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
     def logout_user(self):
         self.selenium.open("/portal/login_html", True)
-        self.selenium.wait_for_page_to_load("30000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.click("link=Logout")
-        self.selenium.wait_for_page_to_load("30000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
 class NaayaSeleniumTestPlugin(Plugin):
     """
