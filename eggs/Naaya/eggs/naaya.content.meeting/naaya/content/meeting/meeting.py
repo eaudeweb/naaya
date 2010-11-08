@@ -490,6 +490,11 @@ class NyMeeting(NyContentData, NyFolder):
         """ """
         return self.checkPermission(change_permissions)
 
+    def isParticipant(self, userid=None):
+        """ """
+        participants = self.getParticipants()
+        return participants.isParticipant(userid)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/meeting_manage_edit', globals())
