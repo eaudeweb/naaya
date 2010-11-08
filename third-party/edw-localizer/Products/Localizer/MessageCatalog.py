@@ -221,6 +221,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             raise TypeError, 'only strings can be translated.'
 
         message = message.strip()
+        # assume empty message is always translated as empty message
+        if not message:
+            return message
 
         if default is None:
             default = message
