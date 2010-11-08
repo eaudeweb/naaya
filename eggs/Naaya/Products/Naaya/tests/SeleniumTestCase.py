@@ -99,11 +99,11 @@ def wsgiref_http_server(addr, port, app):
             handler.request_handler = self # backpointer for logging
             handler.run(self.server.get_app())
 
-    self.httpd = make_server('127.0.0.1', HTTP_PORT, no_hop_by_hop(app),
-            server_class=QuietServer, handler_class=NaayaRequestHandler)
-    self.httpd.socket.settimeout(1)
+    httpd = make_server('127.0.0.1', HTTP_PORT, app, server_class=QuietServer,
+                        handler_class=NaayaRequestHandler)
+    httpd.socket.settimeout(1)
 
-    return self.httpd.handle_request # callable to handle one request
+    return httpd.handle_request # callable to handle one request
 
 class NaayaHttpThread(Thread):
     def __init__(self, tzope):
