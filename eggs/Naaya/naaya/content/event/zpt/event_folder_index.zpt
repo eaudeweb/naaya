@@ -31,8 +31,8 @@
 	<tal:block  tal:define="listing_info python: here.folder_listing_info('start_date');
 	objects_list python:listing_info['objects'];
 	all_events python:[x for x in objects_list if x['self'].meta_type=='Naaya Event'];
-	dummy python:all_events.reverse();
 	upcoming_events python:[x for x in all_events if getattr(x['self'], 'start_date', here.utGetTodayDate()) >= here.utGetTodayDate()];
+	dummy python:all_events.reverse();
 	expired_events python:[x for x in all_events if getattr(x['self'], 'end_date', here.utGetTodayDate()) and getattr(x['self'], 'start_date', here.utGetTodayDate())  < here.utGetTodayDate()];
 	list_expired python:request.get('list_expired', '');
 	list_all_events python:request.get('list_all_events', '');
@@ -81,14 +81,17 @@
 			</tal:block>
         <span tal:replace="structure here/menusubmissions" />
 		</metal:block>
+		<metal:block fill-slot="table_head_extend">
+			<th class="onfront" i18n:translate="">On front</th>
+		</metal:block>
         <metal:block fill-slot="table_objects_default">
 				<tal:block define="
-					del_permission python:object_info['del_permission'];
-					copy_permission python:object_info['copy_permission'];
-					edit_permission python:object_info['edit_permission'];
-					versionable python:object_info['versionable'];
-					editable python:object_info['editable'];
-					object python:object_info['self'];
+					del_permission object_info/del_permission;
+					copy_permission object_info/copy_permission;
+					edit_permission object_info/edit_permission;
+					versionable object_info/versionable;
+					editable object_info/editable;
+					object object_info/self;
 					">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
@@ -147,6 +150,22 @@
 							condition="object/is_ratable" replace="structure user_rating"/>
 					</td>
 
+				</tal:block>
+			</metal:block>
+			<metal:block fill-slot="table_objects_extend">
+				<tal:block define="
+					edit_permission python:object_info['edit_permission'];
+					object python:object_info['self'];">
+				<td class="onfront" tal:condition="edit_permission">
+						<a tal:condition="object/topitem"
+							tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to hide event from the front page">
+							<img src="misc_/Naaya/yes.gif" alt="Click to hide event from the front page" i18n:attributes="alt" />
+						</a>
+						<a tal:condition="not: object/topitem"
+						 	tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to show event on the front page">
+							<img src="misc_/Naaya/no.gif" alt="Click to show event on the front page" i18n:attributes="alt" />
+						</a>
+				</td>
 				</tal:block>
 			</metal:block>
     </metal:block>

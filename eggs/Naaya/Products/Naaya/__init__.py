@@ -149,6 +149,10 @@ misc_ = {
     'jquery-ui.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
     'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
     'jquery.autocomplete.css':ImageFile('www/js/css/jquery.autocomplete.css', globals()),
+
+    #Event index
+    'yes.gif':ImageFile('www/yes.gif', globals()),
+    'no.gif':ImageFile('www/no.gif', globals()),
 }
 
 def register_content(module, klass, module_methods, klass_methods, add_method):
