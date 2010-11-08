@@ -61,6 +61,24 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'])
         self.assertEqual(meta, [])
 
+    def test_change_topitem_status(self):
+        """ show/hide event on the front page """
+        #add NyEvent
+        addNyEvent(self._portal().info, id='event1', title='event1', lang='en', start_date="10/10/2000", topitem=False)
+
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'], topitem=1)
+        self.assertEqual(meta, [])
+
+        #show event on the front page
+        self._portal().info.event1.change_topitem_status()
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'], topitem=1)
+        self.assertEqual(meta[0].getLocalProperty('title', 'en'), 'event1')
+
+        #hide event from the front page
+        self._portal().info.event1.change_topitem_status()
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'], topitem=1)
+        self.assertEqual(meta, [])
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NaayaContentTestCase))
