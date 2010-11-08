@@ -122,14 +122,19 @@ def cherrypy_http_server(host, port, app):
     return CherryPyWSGIServer((host, port), app)
 
 class NaayaHttpThread(Thread):
-    def __init__(self, tzope):
+    def __init__(self, tzope, httpd_name):
         super(NaayaHttpThread, self).__init__()
         self.tzope = tzope
+        self.httpd_name = httpd_name
 
     def run(self):
         app = self.tzope.wsgi_app
-        #self._server = cherrypy_http_server('0.0.0.0', HTTP_PORT, app)
-        self._server = wsgiref_http_server('0.0.0.0', HTTP_PORT, app)
+        if self.httpd_name == 'wsgiref':
+            self._server = wsgiref_http_server('0.0.0.0', HTTP_PORT, app)
+        elif self.httpd_name == 'cherrypy':
+            self._server = cherrypy_http_server('0.0.0.0', HTTP_PORT, app)
+        else:
+            raise ValueError("Unknown http server %r" % self.httpd_name)
         self._server.start()
 
     def stop(self):
@@ -179,6 +184,9 @@ class NaayaSeleniumTestPlugin(Plugin):
                 help=("Enable ny-selenium plugin for running selenium "
                       "test cases in nynose"),
                       action="store_false", default=True)
+        parser.add_option("--ny-cherrypy", dest='httpd_name',
+                action='store_const', const='cherrypy', default='wsgiref',
+                help="Use CherryPy when starting a test http server")
 
     def configure(self, options, config):
         global HTTP_PORT, SELENIUM_GRID_PORT
@@ -188,6 +196,7 @@ class NaayaSeleniumTestPlugin(Plugin):
         SELENIUM_GRID_PORT = options.SELENIUM_GRID_PORT
         self.browsers = options.browsers
         self.skip_tests = options.skip_tests
+        self.httpd_name = options.httpd_name
 
         self.enabled = True
 
@@ -206,7 +215,7 @@ class NaayaSeleniumTestPlugin(Plugin):
 
         if not self.naaya_started:
             self.naaya_started = True
-            self.http_thread = NaayaHttpThread(self.tzope)
+            self.http_thread = NaayaHttpThread(self.tzope, self.httpd_name)
             self.http_thread.start()
             from selenium import selenium
             self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
