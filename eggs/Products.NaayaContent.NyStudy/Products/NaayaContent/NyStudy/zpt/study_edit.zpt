@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block define="languages here/get_languages_mapping;
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
@@ -133,4 +134,5 @@ function fSet(ctrl, value)
 </form>
 
 </tal:block>
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
