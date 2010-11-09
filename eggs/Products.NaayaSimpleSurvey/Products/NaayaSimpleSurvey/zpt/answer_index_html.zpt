@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <style type="text/css">
 table {width: 100%; border:1px solid black; table-layout: auto; border-collapse: collapse; empty-cells: show;}
 table td {border:1px solid black}
@@ -865,4 +866,5 @@ th {font-weight: bold; background-color: #FFFF84;}
 
 
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
