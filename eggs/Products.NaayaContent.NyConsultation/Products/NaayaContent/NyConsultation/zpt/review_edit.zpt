@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <script type="text/javascript">
 
@@ -81,4 +82,5 @@ function deleteComment(elem){
 	<div class="field"><input type="submit" value="Edit Review" i18n:attributes="value" /></div>
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
