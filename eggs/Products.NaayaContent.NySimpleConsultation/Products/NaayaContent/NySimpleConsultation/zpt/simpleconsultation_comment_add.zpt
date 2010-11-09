@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block tal:condition="python:not request.get('status', '')">
 
@@ -58,4 +59,5 @@
 	<a tal:attributes="href here/absolute_url">Go back.</a>
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
