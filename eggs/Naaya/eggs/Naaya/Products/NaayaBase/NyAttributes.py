@@ -53,6 +53,11 @@ class NyAttributes:
         @param name: the attribute name
         @return: should return the attribute value or raise an I{AttributeError} exception.
         """
+        # this is for performance reasons
+        # it should be updated if/when adding new computed attributes
+        if name[0] not in 'oict':
+            raise AttributeError, name
+
         if name.startswith('objectkeywords_'):
             parts = name.split('_')
             func, lang = parts[0], parts[1]
