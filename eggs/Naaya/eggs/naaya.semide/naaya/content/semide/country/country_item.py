@@ -53,6 +53,7 @@ from naaya.content.semide.project.semproject_item import METATYPE_OBJECT as META
 
 from Products.NaayaCore.PortletsTool.HTMLPortlet import addHTMLPortlet
 from Products.NaayaCore.SyndicationTool.RemoteChannel import manage_addRemoteChannel
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 #module constants
@@ -636,6 +637,14 @@ class NyCountry(NyFolder):
         return self.getFormsTool().getContent({'here': self}, 'country_editportlet')
 
 Globals.InitializeClass(NyCountry)
+
+#Custom page templates
+NaayaPageTemplateFile('zpt/country_contacts', globals(),
+                      'country_contacts')
+NaayaPageTemplateFile('zpt/country_legislation_water', globals(),
+                      'country_legislation_water')
+NaayaPageTemplateFile('zpt/country_project_water', globals(),
+                      'country_project_water')
 
 config.update({
     'constructors': (manage_addNyCountry_html, addNyCountry),
