@@ -131,7 +131,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         header += [widget.title_or_id() for widget in widgets]
         rows = [answer.answer_values() for answer in answers]
 
-        file_type = REQUEST.get('file_type', 'csv')
+        file_type = REQUEST.get('file_type', 'CSV')
         exporter = self.getSite().csv_export
         if file_type == 'CSV':
             RESPONSE.setHeader('Content-Type', 'text/csv')
