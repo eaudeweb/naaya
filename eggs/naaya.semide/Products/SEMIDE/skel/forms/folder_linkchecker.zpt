@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block define="folder_ob python:here.getContext(request.get('url', ''));
                    linkchecker_ob here/getLinkChecker;">
@@ -113,4 +114,5 @@
 </tal:block>
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

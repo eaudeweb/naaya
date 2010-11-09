@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
@@ -129,4 +130,5 @@
 
 <span tal:replace="structure here/comments_box" />
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

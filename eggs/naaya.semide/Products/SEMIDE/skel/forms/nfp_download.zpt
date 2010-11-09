@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h2 tal:define="l_parent python:here.aq_parent">
 	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
@@ -73,4 +74,5 @@
 
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
