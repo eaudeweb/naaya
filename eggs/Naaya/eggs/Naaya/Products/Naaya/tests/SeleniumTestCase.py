@@ -165,7 +165,8 @@ class NaayaSeleniumTestPlugin(Plugin):
     def __init__(self, tzope):
         super(NaayaSeleniumTestPlugin, self).__init__()
         self.tzope = tzope
-        self.naaya_started = False
+        self.http_thread = None
+        self.selenium = None
 
     def options(self, parser, env):
         Plugin.options(self, parser, env)
@@ -180,7 +181,7 @@ class NaayaSeleniumTestPlugin(Plugin):
         parser.add_option("--ny-selenium-browsers", dest="browsers",
                 help="Select the browsers used in testing. Use one value from "
                 "%s" % BROWSERS, default="*firefox")
-        parser.add_option("--ny-selenium", dest="skip_tests",
+        parser.add_option("--ny-selenium", dest="skip_selenium_tests",
                 help=("Enable ny-selenium plugin for running selenium "
                       "test cases in nynose"),
                       action="store_false", default=True)
@@ -195,7 +196,7 @@ class NaayaSeleniumTestPlugin(Plugin):
         HTTP_PORT = options.HTTP_PORT
         SELENIUM_GRID_PORT = options.SELENIUM_GRID_PORT
         self.browsers = options.browsers
-        self.skip_tests = options.skip_tests
+        self.skip_selenium_tests = options.skip_selenium_tests
         self.httpd_name = options.httpd_name
 
         self.enabled = True
@@ -210,29 +211,38 @@ class NaayaSeleniumTestPlugin(Plugin):
             return
 
         # We have a SeleniumTestCase
-        if self.skip_tests:
+        if self.skip_selenium_tests:
             return self.skip_test_callable
 
-        if not self.naaya_started:
-            self.naaya_started = True
-            self.http_thread = NaayaHttpThread(self.tzope, self.httpd_name)
-            self.http_thread.start()
+        if self.http_thread is None:
+            th = NaayaHttpThread(self.tzope, self.httpd_name)
+            th.start()
+            self.http_thread = th
+
+        if self.selenium is None:
             from selenium import selenium
-            self.selenium = selenium("localhost", SELENIUM_GRID_PORT,
+            my_selenium = selenium("localhost", SELENIUM_GRID_PORT,
                     self.browsers, "http://localhost:%s/" % HTTP_PORT)
-            self.selenium.start()
+            my_selenium.start()
+            # only set self.selenium if no exception was thrown so far
+            self.selenium = my_selenium
 
         testCase.test.selenium = self.selenium
 
     def afterTest(self, test):
-        if not isinstance(test.test, SeleniumTestCase) or self.skip_tests:
+        if not isinstance(test.test, SeleniumTestCase):
             return
-
-        self.selenium.delete_all_visible_cookies()
+        if self.skip_selenium_tests:
+            return
+        if self.selenium is not None:
+            self.selenium.delete_all_visible_cookies()
 
     def finalize(self, result):
-        if self.naaya_started:
-            self.naaya_started = False
+        if self.http_thread is not None:
             self.http_thread.stop()
             self.http_thread.join()
+            self.http_thread = None
+
+        if self.selenium is not None:
             self.selenium.stop()
+            self.selenium = None
