@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block define="location python:here.get_location();
                     available_subscriptions python:here.get_enabled_subscriptions(request)">
 <tal:block tal:define="global errors python: request.SESSION.get('errors', {})" />
@@ -69,4 +70,5 @@
 </form>
 <br />
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
