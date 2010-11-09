@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h1 tal:content="here/title_or_id" />
 
@@ -21,4 +22,5 @@
     Invalid key
 </p>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
