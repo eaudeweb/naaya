@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <h1><tal:block tal:replace="here/site_title" /> <span i18n:translate="" tal:omit-tag="">Sitemap</span></h1>
 
 <p i18n:translate="">
@@ -85,4 +86,5 @@ function fTreeClick(expand)
 <input type="hidden" name="expand" tal:attributes="value expand" />
 </form>
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

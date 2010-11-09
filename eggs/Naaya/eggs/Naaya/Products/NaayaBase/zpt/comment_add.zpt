@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block tal:define="global editor here/getEditorTool"
            tal:replace="structure editor/includeLibs" />
 
@@ -23,4 +24,5 @@
 </div>
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

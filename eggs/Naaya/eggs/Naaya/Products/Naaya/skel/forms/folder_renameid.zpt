@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">Rename items </span></h1>
 
@@ -32,4 +33,5 @@
 <input type="submit" value="Rename" i18n:attributes="value" />
 </form>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

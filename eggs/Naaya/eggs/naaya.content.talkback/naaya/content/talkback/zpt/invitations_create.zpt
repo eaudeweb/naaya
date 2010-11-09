@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <div class="floated-buttons">
     <span class="buttons">
@@ -73,4 +74,5 @@
     <input type="submit" name="do" value="Send invitation" />
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

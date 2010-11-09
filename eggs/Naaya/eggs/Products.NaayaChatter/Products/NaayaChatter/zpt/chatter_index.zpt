@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <style type="text/css" tal:content="here/style_css" ></style>
 
@@ -54,4 +55,5 @@
 
 </div>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block condition="python: request.has_key('id_channel')">
 <tal:block tal:define="ob_channel python:here.getSyndicationTool()[request['id_channel']]">
 <tal:block tal:condition="python:hasattr(ob_channel, 'url')">
@@ -43,4 +44,5 @@
 </tal:block>
 </tal:block>
 </tal:block>
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

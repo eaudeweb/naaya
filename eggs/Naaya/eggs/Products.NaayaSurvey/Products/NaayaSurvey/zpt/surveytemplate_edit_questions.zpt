@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <link rel="stylesheet" type="text/css" media="all"
 	tal:define="stool here/portal_survey;"
@@ -25,4 +26,5 @@ function toggleSelect(caller){
 <tal:block metal:use-macro="here/base_edit_questions_html/macros/main">
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

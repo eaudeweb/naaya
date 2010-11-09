@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block define="
 	table_header python:('None', 'Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other');
 	table_mapping python: {'None': 'none', 'Other': 'Other - specify'};
@@ -606,4 +607,5 @@ th {font-weight: bold; background-color: #FFFF84;}
 
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

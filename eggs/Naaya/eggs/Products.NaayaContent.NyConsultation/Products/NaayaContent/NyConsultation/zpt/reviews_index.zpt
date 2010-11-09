@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 	<div id="tabbedmenu" class="tabbedmenu">
 		<ul>
 			<li><a href="view_statistics_html" i18n:translate="">View statistics</a></li>
@@ -53,4 +54,5 @@
 	</fieldset>
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block define="permission_edit here/checkPermissionEditObject">
 	<script language="javascript" type="text/javascript" tal:condition="permission_edit">
 	<!--
@@ -340,4 +341,5 @@
 
 <span tal:replace="structure here/comments_box" />
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

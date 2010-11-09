@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <fieldset style="width: 30%; float: right; background-color: #E9F1F8;">
 <legend i18n:translate="">Search tips:</legend>
@@ -169,4 +170,5 @@
 
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

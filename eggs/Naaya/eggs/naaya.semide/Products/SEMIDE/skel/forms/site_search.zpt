@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block define="	isArabic here/isArabicLanguage;
 							noArabic not:isArabic">
 <fieldset tal:define="side python:test(noArabic, 'right', 'left')" tal:attributes="style string:width: 30%;; float: ${side};; background-color: #E9F1F8;;"><legend i18n:translate="">Search tips:</legend>
@@ -203,4 +204,5 @@ function fSet(ctrl, value)
 
 </tal:block>
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

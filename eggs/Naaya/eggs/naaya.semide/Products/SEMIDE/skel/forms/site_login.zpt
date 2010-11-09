@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block define="came_from python:request.get('came_from', ''); 
                 action_url python:came_from or 'logged_in';
@@ -91,4 +92,5 @@
 
 
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
