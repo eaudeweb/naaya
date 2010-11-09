@@ -19,7 +19,7 @@
   langs_querystring python:'&sl:list='.join(sl);
   page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&${gz_str}&th=${th}&pr=${pr}&items=${items};
   results_paginator python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr, items=items, path='/'.join(here.getPhysicalPath()));
-  results python: results_paginator[int(ps_start):(int(ps_start) + int(items))];">
+  results python: results_paginator[int(ps_start)*int(items):(int(ps_start)*int(items) + int(items))];">
 <h1>
   <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label;
   alt here/meta_label" border="0" /> <tal:block tal:replace="here/title_or_id" />
