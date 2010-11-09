@@ -16,7 +16,7 @@
 
   page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&et=${et}&${gz_str}&es=${es}&sd=${sd}&ed=${ed}&items=${items};
   results_paginator python:here.getEventsListing(sq, sl, et, gz, es, skey, rkey, sd, ed, here.absolute_url(1), ps_start, items=items);
-  results python: results_paginator[int(ps_start):(int(ps_start) + int(items))];">
+  results python: results_paginator[int(ps_start)*int(items):(int(ps_start)*int(items) + int(items))];">
 
 <h1>
   <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label;
