@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block define="id python:request.get('id', '');
 							group python:here.getPortletsTool().getLinksListById(id);
 							site_url here/getSitePath">
@@ -11,4 +12,5 @@
 	</ul>
 		</tal:block>
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
