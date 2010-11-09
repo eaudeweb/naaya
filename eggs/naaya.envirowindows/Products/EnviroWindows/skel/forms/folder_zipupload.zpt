@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <div id="center_content">
 
 <tal:block tal:define="path python:request.get('path', ''); folder python:here.getObjectByPath(path)">
@@ -17,4 +18,5 @@
 </tal:block>
 </div>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

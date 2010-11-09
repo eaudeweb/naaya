@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -458,4 +459,5 @@ function fDownloadObjects()
 </div>
 </tal:block>
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

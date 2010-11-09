@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h1 i18n:translate="">Change logo</h1>
 
@@ -36,4 +37,5 @@
 </div>
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

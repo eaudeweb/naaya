@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <div class="request_role">
 <h1>Application for additional rights for this portal</h1>
 <h2>Step 3: Select the location</h2>
@@ -143,4 +144,5 @@
 
 <span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
 </div>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

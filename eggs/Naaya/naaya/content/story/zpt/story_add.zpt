@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
@@ -72,4 +73,5 @@ function fSet(ctrl, value)
 </form>
 
 <span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

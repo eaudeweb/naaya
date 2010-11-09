@@ -1,4 +1,5 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <h1 tal:content="here/get_friendly_title"></h1>
 
@@ -13,4 +14,5 @@
 	<span class="chtmsg" tal:content="structure msg/get_msg" />
 </div>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
