@@ -118,6 +118,7 @@ class Widget(Folder):
         {'id':'localized', 'mode':'w', 'type': 'boolean'},
         {'id':'data_type', 'mode':'w', 'type': 'string'},
         {'id':'visible', 'mode':'w', 'type': 'boolean'},
+        {'id':'custom_template', 'mode':'w', 'type':'string', 'label':'Custom template'},
     )
 
     multiple_form_values = False
@@ -128,6 +129,7 @@ class Widget(Folder):
     localized = False
     data_type = 'str'
     visible = True
+    custom_template = ''
 
     def __init__(self, id, title='', lang=None):
         Folder.__init__(self, id=id)
@@ -219,10 +221,27 @@ class Widget(Folder):
         """ by default this does nothing; subclasses may override. """
         return value
 
+    def _get_custom_template(self):
+        if not self.custom_template:
+            return None
+
+        tmpl_custom = self.getSite().unrestrictedTraverse(self.custom_template,
+                                                          None)
+        if tmpl_custom is None:
+            return None
+
+        return tmpl_custom.__of__(self)
+
     def render_html(self, value, context=None, errors=None):
         value = self._convert_to_form_string(value)
+
         if self.visible:
-            return self.template(value=value, context=context, errors=errors)
+            tmpl = self._get_custom_template()
+            if tmpl is None:
+                tmpl = self.template
+
+            return tmpl(value=value, context=context, errors=errors)
+
         else:
             return self.hidden_template(value=value, context=context)
 
@@ -247,8 +266,37 @@ class Widget(Folder):
     def convert_formvalue_to_pythonvalue(self, value):
         return value
 
-    hidden_template = PageTemplateFile('../zpt/property_widget_hidden', globals())
+    hidden_template = PageTemplateFile('../zpt/property_widget_hidden',
+                                       globals())
 
     admin_html = PageTemplateFile('../zpt/admin_schema_property', globals())
+
+    _create_template_button = PageTemplateFile(
+            '../zpt/manage_create_template_button', globals())
+
+    def manage_propertiesForm(self, *args, **kwargs):
+        """ Proxy to PropertyManager's manage_propertiesForm template """
+        html = super(Widget, self).manage_propertiesForm(*args, **kwargs)
+        if self.custom_template:
+            if self._get_custom_template() is None:
+                show = 'create_template'
+            else:
+                show = 'edit_template'
+        else:
+            show = 'help'
+        # hack a create / edit / help button into the property editor form
+        button = self._create_template_button(show=show)
+        return html.replace('</body>', button + '</body>')
+
+    def manage_create_custom_template(self, REQUEST=None):
+        """ """
+        from Products.NaayaCore.LayoutTool.Template import manage_addTemplate
+        parent_path, name = self.custom_template.rsplit('/', 1)
+        parent = self.getSite().unrestrictedTraverse(parent_path)
+        manage_addTemplate(parent, name)
+        ob = parent[name]
+        ob.pt_edit(self.template._text, 'text/html')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
 
 InitializeClass(Widget)
