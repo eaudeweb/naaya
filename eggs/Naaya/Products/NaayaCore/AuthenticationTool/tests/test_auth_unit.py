@@ -1,18 +1,11 @@
-# python imports
-from unittest import TestSuite, makeSuite
-from copy import deepcopy
-
-# Zope imports
-from OFS.Folder import Folder
+from warnings import warn
+from nose.plugins.skip import SkipTest
 import transaction
-
-# Naaya imports
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import check_username
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-
-# test imports
 import ldap_config
+import mock_ldap
 
 
 class AuthenticationUnitTest(NaayaTestCase):
@@ -28,81 +21,36 @@ class AuthenticationUnitTest(NaayaTestCase):
         self.assertEquals(check_username('&*%^@$'), None)
 
 class LDAPBaseUnitTest(NaayaFunctionalTestCase):
-
     def afterSetUp(self):
-        # check if ldap feature is available
-        from nose.plugins.skip import SkipTest
-        try:
-            import dataflake.ldapconnection
-            import Products.LDAPUserFolder
-            import Products.LDAPUserFolder
-        except ImportError, e:
-            raise SkipTest, e
+        warn("LDAPBaseUnitTest is deprecated")
+        if not mock_ldap.is_available:
+            raise SkipTest
 
-        from dataflake.ldapconnection.tests import fakeldap
-        from Products.LDAPUserFolder import LDAPDelegate
-        LDAPDelegate.c_factory = fakeldap.ldapobject.ReconnectLDAPObject
-        fakeldap.clearTree()
-        self.app.manage_delObjects(['acl_users'])
-        self._add_ldap_user_folder()
-
-        dg = ldap_config.defaults.get
-        fakeldap.addTreeItems(dg('users_base'))
-        fakeldap.addTreeItems(dg('groups_base'))
-
-        self._add_ldap_schema()
-
-        self._add_user(ldap_config.manager_user)
-        self._add_user(ldap_config.user)
-        self._add_user(ldap_config.user2)
-
-        self.portal.acl_users.manageAddSource('acl_users', 'LDAP')
+        mock_ldap.quick_setup(self.app, self.portal)
         transaction.commit()
 
     def _add_ldap_user_folder(self):
-        from Products.LDAPUserFolder import manage_addLDAPUserFolder
-        dg = ldap_config.defaults.get
-        manage_addLDAPUserFolder(self.app)
-        luf = self.app.acl_users
-        host, port = dg('server').split(':')
-        luf.manage_addServer(host, port=port)
-        luf.manage_edit(dg('title'),
-                        dg('login_attr'),
-                        dg('uid_attr'),
-                        dg('users_base'),
-                        dg('users_scope'),
-                        dg('roles'),
-                        dg('groups_base'),
-                        dg('groups_scope'),
-                        dg('binduid'),
-                        dg('bindpwd'),
-                        binduid_usage = dg('binduid_usage'),
-                        rdn_attr = dg('rdn_attr'),
-                        local_groups = dg('local_groups'),
-                        implicit_mapping = dg('implicit_mapping'),
-                        encryption = dg('encryption'),
-                        read_only = dg('read_only'))
+        warn("LDAPBaseUnitTest is deprecated")
+        mock_ldap.add_ldap_user_folder(self.app)
 
     def _add_ldap_schema(self):
-        schema = ldap_config.schema
-        luf = self.app.acl_users
-        for item in schema.values():
-            luf.manage_addLDAPSchemaItem(**item)
+        warn("LDAPBaseUnitTest is deprecated")
+        mock_ldap.add_ldap_schema(self.app)
 
     def _add_user(self, user_dict):
-        def get_group_names():
-            return [group[0] for group in self.app.acl_users.getGroups()]
+        warn("LDAPBaseUnitTest is deprecated")
+        mock_ldap.add_user(self.app, user_dict)
 
-        for role in user_dict['user_roles']:
-            if role not in get_group_names():
-                self.app.acl_users.manage_addGroup(role)
-                self.app.acl_users.manage_addGroupMapping(role, role)
-        for group in user_dict['ldap_groups']:
-            if group not in get_group_names():
-                self.app.acl_users.manage_addGroup(group)
-        self.app.acl_users.manage_addUser(REQUEST=None, kwargs=user_dict)
+class LDAPUnitTest(NaayaFunctionalTestCase):
+    def setUp(self):
+        super(LDAPUnitTest, self).setUp()
+        if not mock_ldap.is_available:
+            from nose.plugins.skip import SkipTest
+            raise SkipTest
 
-class LDAPUnitTest(LDAPBaseUnitTest):
+        mock_ldap.quick_setup(self.app, self.portal)
+        transaction.commit()
+
     def test_luf_instantiation(self):
         dg = ldap_config.defaults.get
         acl = self.app.acl_users
@@ -138,9 +86,3 @@ class LDAPUnitTest(LDAPBaseUnitTest):
         ug = ldap_config.user.get
         self.browser_do_login(ug('uid'), ug('user_pw'))
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(AuthenticationUnitTest))
-    suite.addTest(makeSuite(LDAPUnitTest))
-    return suite
