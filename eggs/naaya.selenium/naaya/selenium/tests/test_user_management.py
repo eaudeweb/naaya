@@ -19,14 +19,14 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type("password:utf8:ustring", 'parola')
         self.selenium.type("confirm:utf8:ustring", 'parola')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Gheorghe Popescu')
         transaction.abort()
         assert self.portal.acl_users.getUser('ghita').name == 'ghita'
 
         self.selenium.open("/portal/admin_adduser_html", True)
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('The first name must be specified')
 
         self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
@@ -37,7 +37,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type("password:utf8:ustring", 'parola')
         self.selenium.type("confirm:utf8:ustring", 'parola')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Invalid email address.')
 
         self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
@@ -48,7 +48,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type("password:utf8:ustring", 'parola')
         self.selenium.type("confirm:utf8:ustring", 'parola')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('Username ghita already in use')
 
         self.selenium.type("firstname:utf8:ustring", 'Gheorghe')
@@ -59,7 +59,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type("password:utf8:ustring", 'parola')
         self.selenium.type("confirm:utf8:ustring", 'parola1')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(
             'Password and confirmation do not match')
 
@@ -70,7 +70,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
                            True)
         self.selenium.type('//input[@name="lastname:utf8:ustring"]', 'Lastname')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.open("/portal/admin_edituser_html?name=contributor",
                            True)
         assert self.selenium.get_value(
@@ -83,14 +83,14 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type("password:utf8:ustring", '')
         self.selenium.type("confirm:utf8:ustring", '')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('The first name must be specified')
 
         #Check e-mail validation
         email = self.selenium.get_value('//input[@name="email:utf8:ustring"]')
         self.selenium.type('//input[@name="email:utf8:ustring"]', 'broken_email')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.get_value(
             '//input[@name="email:utf8:ustring"]') == email
         assert self.selenium.is_text_present('Invalid email address.')
@@ -98,14 +98,14 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type('//input[@name="email:utf8:ustring"]',
                            'reviewer@example.com')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(
         'A user with the specified email already exists, username reviewer')
 
         self.selenium.type("password:utf8:ustring", 'parola')
         self.selenium.type("confirm:utf8:ustring", 'parola1')
         self.selenium.click('//input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(
             'Password and confirmation do not match')
 
@@ -118,7 +118,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.click("css=.deluser")
         assert re.search(r"^Are you sure[\s\S]$",
                          self.selenium.get_confirmation())
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(username) is False
 
     def test_search_local_users(self):
@@ -136,34 +136,34 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.open("/portal/admin_local_users_html", True)
         self.selenium.type('id=autocomplete-query', 'contributor')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        self.selenium.wait_for_condition(self._selenium_page_timeout)
         check_result(u'contributor')
 
         #Empty string search
         self.selenium.type('id=autocomplete-query', '')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        self.selenium.wait_for_condition(self._selenium_page_timeout)
         assert int(self.selenium.\
             get_xpath_count('//table[contains(@class, "datatable")]/tbody/tr')) > 2
 
         #Filtering by Manager role
         self.selenium.select("id=filter-roles", 'Manager')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        self.selenium.wait_for_condition(self._selenium_page_timeout)
         check_result(u'test_user_1_')
 
         #Check filtering by role combined with text search
         self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.select("id=filter-roles", 'Contributor')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition('window.selenium_ready == true', 3000)
+        self.selenium.wait_for_condition(self._selenium_page_timeout)
         check_result(u'contributor')
 
     def test_add_role(self):
         self.selenium.open("/portal/admin_roles_html", True)
         self.selenium.type("//input[@id='input-role']", "SOMErOLE")
         self.selenium.click("//input[@value='Add']")
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present('SOMErOLE')
         self.selenium.open("/portal/admin_editrole_html?role=SOMErOLE", True)
         assert self.selenium.is_text_present('Edit permissions for SOMErOLE')
@@ -174,7 +174,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.click('id=inperm-1')
         self.selenium.click('id=inperm-2')
         self.selenium.click('//form/input[@type="submit"]')
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.open("/portal/admin_editrole_html?role=Administrator",
                            True)
         assert self.selenium.get_value('id=inperm-1') == u'off'
@@ -190,7 +190,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.type('location', "info")
         self.selenium.click("send_mail")
         self.selenium.click("//input[@value='Assign role']")
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium.open("/portal/admin_local_users_html", True)
         #Check is the user has the assigned roles.
@@ -211,5 +211,5 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.click("%s/td/div[@class='user-role-revoke']/a" % last_row)
         assert re.search(r"^Are you sure[\s\S]$",
                          self.selenium.get_confirmation())
-        self.selenium.wait_for_page_to_load("3000")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.get_text('%s/td[last()]' % last_row) == u''
