@@ -92,6 +92,7 @@ class FormsTool(Folder):
         """
         pass
 
+    security.declareProtected(view_management_screens, 'listDefaultForms')
     def listDefaultForms(self):
         """
         generator that yields all default forms
@@ -120,7 +121,8 @@ class FormsTool(Folder):
         for form_id, tmpl in naaya_templates.iteritems():
             yield {'id': form_id, 'title': form_id, 'form_ob': tmpl}
 
-    def getFormIds(self):
+    security.declareProtected(view_management_screens, 'registered_form_ids')
+    def registered_form_ids(self):
         return sorted(set(form['id'] for form in self.listDefaultForms()))
 
     def getDefaultForm(self, form_id):
