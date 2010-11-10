@@ -1,55 +1,106 @@
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
 
-<tal:block define="global current_form_id request/form_id|nothing" />
+<tal:block define="global current_form_id request/form_id|nothing;
+                   global registered_form_ids here/registered_form_ids" />
 
 <style>
-    h1 { font-size: 120%; }
-    li.form a { font-family: inherit; }
-    li.form span.customized_form_buttons a { text-decoration: underline; }
-    li.form em { color: red; }
-    li.form a.uncustomize { color: red; }
+    h2 {
+        font-size: 120%;
+    }
+    ul.template_listing a {
+        font-family: monospace;
+    }
+    a.template {
+        color: #448;
+    }
+    li.customized a.template, li.local a.template {
+        color: #00f;
+        font-weight: bold;
+    }
+
+    a.button-for-custom {
+        color: #00f;
+        padding: 0 .2em;
+        margin: 0 .2em;
+        background-color: #ccc;
+    }
 </style>
 
 <script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
 <script>
 $(function() {
-    $('li.form span.customized_form_buttons').each(function() {
-        var form_id = $('> a', $(this).parent()).text();
-        var uncustomize_button = $('<' + 'a>').addClass('uncustomize');
-        uncustomize_button.attr('href', '#')
-        $(this).append('[').append(uncustomize_button).append(']');
-        uncustomize_button.text('revert').click(function(evt) {
-            evt.preventDefault();
-            $.post('./manage_delObjects', {'ids:list': form_id}, do_reload);
-        });
-        function do_reload() {
-            location.reload(true);
-        }
+    $('li.customized').each(function() {
+        var form_id = $('a.template', $(this)).text();
+        var button = make_delete_button(form_id, "Delete custom template?");
+        $(this).append(" ", button.text("revert"));
     });
+
+    $('li.local').each(function() {
+        console.log(this);
+        var form_id = $('a.template', $(this)).text();
+        var button = make_delete_button(form_id, "Delete local template?");
+        $(this).append(" ", button.text("delete"));
+    });
+
+    function make_delete_button(form_id, question) {
+        var button = $('<a href="#" class="button-for-custom">');
+        button.click(function(evt) {
+            evt.preventDefault();
+            button.hide();
+            var no_button = $('<a>').text('cancel').click(function(evt) {
+                confirm_message.remove();
+                button.show();
+            }).addClass('button-for-custom');
+            var yes_button = $('<a>').text('yes').click(function(evt) {
+                $.post('./manage_delObjects', {'ids:list': form_id},
+                       function() {
+                    window.location.reload(true);
+                });
+            }).addClass('button-for-custom').css('color', 'red');
+            var confirm_message = $('<span>').append(
+                    question, " ", no_button, " ", yes_button);
+            button.after(confirm_message);
+        });
+        return button;
+    }
 });
 </script>
 
-<h1>All portal forms</h1>
+<tal:block define="extra_templates python:[tid for tid in here.objectIds()
+                                           if tid not in registered_form_ids]"
+           condition="extra_templates">
+<h2>Extra templates created here</h2>
+<ul class="template_listing">
+    <tal:block repeat="template_id extra_templates">
+        <li class="local">
+            <a class="template"
+               tal:content="template_id"
+               tal:attributes="href python:'%s/%s/manage_workspace' % (
+                                    here.absolute_url(), template_id)"></a>
+        </li>
+    </tal:block>
+</ul>
+</tal:block>
 
-<ul>
-    <tal:block define="customized_form_ids here/objectIds"
-               repeat="form_id here/getFormIds">
-        <li class="form" tal:define="
-          customized python:form_id in customized_form_ids;
-          form_url python:test(customized,
-              '%s/%s/manage_workspace' % (here.absolute_url(), form_id),
-              'manage_customize?form_id=%s' % form_id);
-          ">
-            <a tal:attributes="href form_url"
+<h2>Registered templates</h2>
+<ul class="template_listing">
+    <tal:block define="customized_form_ids here/objectIds;
+                       here_url here/absolute_url"
+               repeat="form_id registered_form_ids">
+        <li tal:define="customized python:form_id in customized_form_ids;
+                        form_url python:test(customized,
+                            '%s/%s/manage_workspace' % (here_url, form_id),
+                            'manage_customize?form_id=%s' % form_id)"
+            tal:attributes="class python:test(customized, 'customized', None)">
+            <a class="template"
+               tal:attributes="href form_url"
                tal:content="form_id"></a>
-            <span class="customized_form_buttons"
-                  tal:condition="customized">
-                <em>(customized)</em>
-                [<a tal:attributes="href string:${here/absolute_url
-                                        }/show_diff?form_id=${form_id}"
-                    >diff</a>]
-            </span>
+            <a class="button-for-custom"
+               tal:condition="customized"
+               tal:attributes="href string:${here/absolute_url
+                                    }/show_diff?form_id=${form_id}"
+               >diff</a>
         </li>
     </tal:block>
 </ul>
