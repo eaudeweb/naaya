@@ -223,7 +223,12 @@ class NaayaSeleniumTestPlugin(Plugin):
             from selenium import selenium
             my_selenium = selenium("localhost", SELENIUM_GRID_PORT,
                     self.browsers, "http://localhost:%s/" % HTTP_PORT)
-            my_selenium.start()
+
+            try:
+                my_selenium.start()
+            except socket.error, e:
+                assert False, "Could no connect to selenium: %s" % e
+
             # only set self.selenium if no exception was thrown so far
             self.selenium = my_selenium
 
