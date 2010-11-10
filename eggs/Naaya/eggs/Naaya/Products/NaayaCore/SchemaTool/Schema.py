@@ -138,6 +138,9 @@ class Schema(Folder):
                 value = kwargs[name]
                 if name == 'data_type' and value not in DATA_TYPES:
                     raise ValueError('Unknown data format "%s"' % value)
+                if name == 'default':
+                    widget.default = value
+                    continue
                 widget.manage_changeProperties(**{name: value})
 
         return widget

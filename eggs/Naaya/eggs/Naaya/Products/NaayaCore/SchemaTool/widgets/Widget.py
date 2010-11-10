@@ -115,7 +115,6 @@ class Widget(Folder):
     _properties=(
         {'id':'sortorder', 'type': 'int', 'mode':'w', 'label': 'Sort order'},
         {'id':'required', 'type': 'boolean', 'mode':'w', 'label': 'Required widget'},
-        {'id':'default','mode':'w', 'type': 'string', 'label': 'Default value'},
         {'id':'localized', 'mode':'w', 'type': 'boolean'},
         {'id':'data_type', 'mode':'w', 'type': 'string'},
         {'id':'visible', 'mode':'w', 'type': 'boolean'},
