@@ -61,10 +61,9 @@ class Template(ZopePageTemplate):
         ZopePageTemplate.__dict__['__init__'](self, id, text, content_type)
         self.title = title
 
-    def __call__(self, context={}, *args, **kwargs):
+    def __call__(self, *args, **kwargs):
         """ """
-        if not context.has_key('args'):
-            context['args'] = args
+        context={'args': args}
         if kwargs:
             context['options'] = kwargs
         try:
