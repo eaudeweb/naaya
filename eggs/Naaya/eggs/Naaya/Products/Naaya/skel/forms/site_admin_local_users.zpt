@@ -80,9 +80,9 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" class="datatable-form">
 <div class="form-buttons cleaner">
 	<span class="buttons">
-		<tal:block condition="users">
+		<tal:block>
 			<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title" i18n:translate="">Add new user</a>
-			<input type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
+			<input tal:condition="users" type="submit" value="Delete selected user(s)"  i18n:attributes="value" class="deluser"/>
 		</tal:block>
 	</span>
 </div>

@@ -2379,7 +2379,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         success = False
         names = self.utConvertToList(names)
         if len(names)<=0:
-            err = 'An username must be specified'
+            err = 'A username must be specified'
         else:
             try:
                 for name in names:

@@ -227,15 +227,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """Delete one or more users."""
 
         #Delete local roles (from folder property)
-        """
         users_roles = self.getUsersRoles()
         for user, roles in users_roles.iteritems():
             if user in names:
-                if len(roles) and len(roles[1]):
-                    location = self.utGetObject(roles[1][1])
-                    if location is not None:
-                        location.manage_delLocalRoles([user])
-        """
+                if roles[0][0] != []:
+                    for pair in roles:
+                        location = self.utGetObject(pair[1])
+                        if location is not None and pair[0] != []:
+                            location.manage_delLocalRoles([user])
         for name in names:
             del self.data[name]
 
@@ -282,7 +281,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if not is_valid_email(email):
             raise ValidationError, 'Invalid email address.'
         if not name:
-            raise ValidationError, 'An username must be specified'
+            raise ValidationError, 'A username must be specified'
         if not password or not confirm:
             raise ValidationError, 'Password and confirmation must be specified'
 
@@ -352,7 +351,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     raise i18n_exception(ValidationError, 'A user with the specified email '
                         'already exists, username ${user}', user=n)
         if not name:
-            raise ValidationError, 'An username must be specified'
+            raise ValidationError, 'A username must be specified'
         if not self.getUser(name):
             raise ValidationError, 'Unknown user'
         if (password or confirm) and (password != confirm):
@@ -373,7 +372,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         roles = self.utConvertToList(roles)
 
         if not name:
-            raise ValidationError('An username must be specified')
+            raise ValidationError('A username must be specified')
         if not roles:
             raise ValidationError('No roles were specified')
         if location == '' or location == '/':
