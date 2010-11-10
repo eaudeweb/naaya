@@ -40,7 +40,7 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         selen.type("contributor:utf8:ustring", metadata_feature['contributor'])
         selen.type("rights:utf8:ustring", metadata_feature['rights'])
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
     def test_email_settings(self):
         selen = self.selenium
@@ -69,7 +69,7 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         else:
             selen.uncheck("notify_on_errors")
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
     def test_portal_other_properties(self):
         selen = self.selenium
@@ -120,7 +120,7 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         else:
             selen.uncheck("display_subobject_count")
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
     def test_notifications(self):
         """testing Notifications from the administration menu"""
@@ -136,9 +136,9 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         selen = self.selenium
         selen.click("enable_instant")
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_element_present("notif_type"))
         selen.type("user_id", "contributor")
         selen.type("location", "info")
         selen.click("//input[@value='Subscribe user']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)

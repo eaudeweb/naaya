@@ -71,9 +71,9 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/info", True)
         selen.click("link=%s" % news_data['news_title'])
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.click("//div[@id='admin_this_folder']/a[2]/span")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         selen.type("title", translation_data['news_title_fr'])
         selen.type("coverage", translation_data['geo_coverage'])
@@ -88,7 +88,7 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen.type("resourceurl", translation_data['concerned_url'])
         selen.type("source", translation_data['source'])
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertFalse(selen.is_text_present("Error"),
                          "Translation not added properly")
 
@@ -96,12 +96,12 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/admin_centre_html", True)
         selen.click("link=Basket of translations")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.select("lang", "label=%s" % translation_data['lang_tag'])
         selen.click("//input[@value='Show']")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.click("link=show items")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_element_present("link=%s" % news_data['news_title']),
                         "Althouth unnapproved, news were displayed")
 
@@ -109,10 +109,10 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/admin_centre_html", True)
         selen.click("link=Basket of translations")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.select("lang", "label=%s" % translation_data['lang_tag'])
         selen.click("//input[@value='Show']")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         #verify if show items still present after approve
         self.assertTrue(selen.is_text_present("show items"),
@@ -122,23 +122,23 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/admin_centre_html", True)
         selen.click("link=Basket of approvals")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertFalse(selen.is_element_present("a[text()=Information]"),
                          "The basket is empty")
         selen.click("link=Information")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         if selen.is_text_present("Approvals"):
             selen.click("link=Approvals")
-            selen.wait_for_page_to_load("10000")
+            selen.wait_for_page_to_load(self._selenium_page_timeout)
         if selen.is_text_present(news_data['news_title']):
             selen.check("css=#pndForm>table.datatable>tbody>tr:nth-child(1)>"
                 "td:nth-child(6)>input")  #pentru approve news
         else:
             self.fail('news not present in pending table')
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_text_present("No pending items to review."),
                          "Approving wrong! element still unapproved")
         self.assertFalse(selen.is_text_present("Error"),
@@ -148,7 +148,7 @@ class NaayaBasketsTest(SeleniumTestCase):
         selen = self.selenium
         selen.open("/portal/info", True)
         selen.click("//div[@id='admin_this_folder']/a[3]/span")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(selen.is_text_present(news_data['news_title']))
         for i in count(1):
@@ -161,7 +161,7 @@ class NaayaBasketsTest(SeleniumTestCase):
                 selen.check("css=#pblForm>table.datatable>tbody>tr:nth-child(%d)"
                       ">td:nth-child(6)>input" % i)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("10000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertFalse(selen.is_text_present("No pending items to review."),
                          "Unapproving wrong! element still approved")
         self.assertFalse(selen.is_text_present("Error"),

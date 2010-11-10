@@ -24,15 +24,15 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         """
         selen = self.selenium
         selen.open('/portal/admin_translations_html', True)
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         language = {'tag1': 'en',
                     'tag2': 'fr'}
         selen.open('/portal/admin_translations_html', True)
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium_add_language(language['tag2'])
         selen.open('/portal/admin_translations_html', True)
         selen.click("link=%s" % language['tag1'])
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(selen.is_element_present("//div"
                                 "[@id='center_content']/form/span/label"))
@@ -40,23 +40,23 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
 
         selen.type("//input[@name='query' and @value='']", "Translate message")
         selen.click("//input[@value='Go']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertFalse(selen.is_element_present("link=Translate message"))
         selen.click("link=Translate messages")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.click("link=Back to translation form")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_element_present("link=Translate message"))
 
         selen.click("link=Translate message")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertEqual("Original label in English language.",
         selen.get_text("//div[@id='center_content']/fieldset[1]/legend"))
 
         selen.click("link=%s" % language['tag2'])
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
     def test_normal_translation(self):
         """insert a normal translation from english to french"""
@@ -65,7 +65,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = "translation du mot"
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
@@ -80,7 +80,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = " "
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         try:
@@ -96,7 +96,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = ""
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         #verify output
@@ -112,7 +112,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = u"стуўфх"
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
@@ -125,7 +125,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = "!@#$%^&*()"
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         self.selenium_verify_translation(translation)
@@ -140,7 +140,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         translation = "<b>"
         selen.type("translation:utf8:ustring", translation)
         selen.click("//input[@value='Save changes']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.selenium_verify_error_page()
         out_str = selen.get_text("//div[@id='center_content']/h1")
@@ -178,7 +178,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         """verifies the translated "check sign" in the table"""
         selen = self.selenium
         selen.click("link=Back to translation form")
-        selen.wait_for_page_to_load('30000')
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         for i in count(1):
             try:
                 translated = selen.get_text("css=#center_content>table.datatable"
@@ -197,7 +197,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         """verifies if the translated "check sign" in the table is not present"""
         selen = self.selenium
         selen.click("link=Back to translation form")
-        selen.wait_for_page_to_load('30000')
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         for i in count(1):
             try:
                 translated = selen.get_text("css=#center_content>table.datatable"

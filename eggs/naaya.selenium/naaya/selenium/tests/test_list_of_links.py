@@ -14,7 +14,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen = self.selenium
         self.login_user('admin', '')
         selen.open("/portal/admin_linkslists_html", True)
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_text_present("Add new list of links"))
         self.assertTrue(selen.is_element_present
                         ("//div[@id='center_content']/fieldset/legend"))
@@ -263,7 +263,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen.type("id", list_data['tid'])
         selen.type("title", list_data['title'])
         selen.click("//input[@value='Add']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertFalse(selen.is_text_present("Error"))
 
     def selenium_data_introduction_wp(self, list_data):
@@ -272,7 +272,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen.type("title", list_data['title'])
         selen.click("portlet")
         selen.click("//input[@value='Add']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertFalse(selen.is_text_present("Error"))
 
     def selenium_verify_output(self, out_str, list_data):
@@ -296,12 +296,12 @@ class NaayaList_of_linksTest(SeleniumTestCase):
     def selenium_add_link(self, link_data, list_data):
         selen = self.selenium
         selen.click("link=Lists of links")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_text_present("Add new list of links"))
         self.assertTrue(selen.is_element_present("//div[@id='center_content']"
                                                  "/fieldset/legend"))
         selen.click("link=%s" % list_data['title'])
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']/"
                                      "h1[text()='Edit list of links']"))
@@ -315,7 +315,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
                      % link_data['permission_index_link'])
         selen.type("order", "%d" % link_data['order_link'])
         selen.click("//input[@value='Add']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']"
                                      "/h1[text()='Edit list of links']"))
@@ -323,7 +323,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
     def selenium_arrange_link_list(self, portlet_data, list_data):
         selen = self.selenium
         selen.click("link=Arrange")  #Arrange portlet page
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']"
                                      "/h1[text()='Arrange portlets']"))
@@ -331,7 +331,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen.select("portlet_id", "label=%s (Links list)" % list_data['title'])
         selen.type("location", portlet_data['display_url'])
         selen.click("//input[@name='action' and @value='Assign']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']"
                                      "/h1[text()='Arrange portlets']"))
@@ -339,11 +339,11 @@ class NaayaList_of_linksTest(SeleniumTestCase):
     def selenium_verify_portlet_presence(self, extras_tabel):
         selen = self.selenium
         selen.click("link=Manage")  # "manage portlets" link
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(selen.is_element_present("link=List of links"))
         selen.click("link=List of links")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_element_present("//div[@id='center_content']"
                                                  "/fieldset/legend"))
 
@@ -361,11 +361,11 @@ class NaayaList_of_linksTest(SeleniumTestCase):
     def selenium_verify_portlet_presence_wp(self, extras_tabel):
         selen = self.selenium
         selen.click("link=Manage")  # "manage portlets" link
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(selen.is_element_present("link=List of links"))
         selen.click("link=List of links")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(selen.is_element_present("//div[@id='center_content']"
                                                  "/fieldset/legend"))
         self.assertTrue(
@@ -381,7 +381,7 @@ class NaayaList_of_linksTest(SeleniumTestCase):
     def selenium_verify_list_display(self, list_data, link_data):
         selen = self.selenium
         selen.open('/portal/%s' % link_data['display_url'] ,True)
-        selen.wait_for_page_to_load("3000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(selen.is_text_present(list_data['title']))
         self.assertTrue(selen.is_text_present(link_data['title_link']))
@@ -391,16 +391,16 @@ class NaayaList_of_linksTest(SeleniumTestCase):
         selen.open("/portal/admin_linkslists_html", True)
 
         selen.click("link=%s" % list_data['title'])
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("link=%s" % link_data['title_link']),
             'The link add failed::hint! link must have a title')
         selen.click("link=%s" % link_data['title_link'])
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         selen.select("permission", "index=%d"
                      % link_data['permission_index_link'])
         selen.click("//div[@id='center_content']/form[1]/fieldset/p/input")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']"
                                      "/form[1]/fieldset/p/input"))
