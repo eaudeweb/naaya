@@ -59,12 +59,12 @@ class NaayaChannelsTest(SeleniumTestCase):
                             "label=%s" % local_channel_data['local_meta'])
         selen.type("numberofitems", local_channel_data['local_no_items'])
         selen.click("//input[@value='Add']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
     def selenium_arrange_folder_portlet(self, channel_portlet_data):
         selen = self.selenium
         selen.click("link=Arrange")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']/"
                                      "h1[text()='Arrange portlets']"))
@@ -76,7 +76,7 @@ class NaayaChannelsTest(SeleniumTestCase):
                      channel_portlet_data['portlet']))
         selen.type("location", channel_portlet_data['display_url'])
         selen.click("//input[@name='action' and @value='Assign']")
-        selen.wait_for_page_to_load("30000")
+        selen.wait_for_page_to_load(self._selenium_page_timeout)
 
         self.assertTrue(
             selen.is_element_present("//div[@id='center_content']/"
