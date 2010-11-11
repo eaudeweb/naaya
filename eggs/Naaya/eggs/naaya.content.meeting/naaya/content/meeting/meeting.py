@@ -102,7 +102,6 @@ def add_observer_role(site):
     The role will also get permission to view the meeting as a participant.
     """
     permissions = ['Naaya - Skip Captcha',
-                   'Naaya - Add Naaya Survey Answer',
                    'Naaya - View Naaya Survey Answers',
                    'Naaya - View Naaya Survey Reports']
 
@@ -503,7 +502,7 @@ class NyMeeting(NyContentData, NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST):
         """ """
-        if self.survey_required and self.checkPermissionParticipateInMeeting():
+        if self.survey_required and self.checkPermissionParticipateInMeeting() and self.isParticipant():
             site = self.getSite()
             path = str(self.survey_pointer)
             survey_ob = site.unrestrictedTraverse(path, None)
