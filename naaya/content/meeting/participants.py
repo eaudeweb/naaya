@@ -55,6 +55,9 @@ class Participants(SimpleItem):
         """ """
         if userid is None:
             userid = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            # fix for signup users
+            if userid.startswith('signup:'):
+                userid = userid[len('signup:'):]
 
         return userid in self.getParticipants()
 
