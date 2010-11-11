@@ -219,6 +219,19 @@ class Subscriptions(SimpleItem):
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_account_subscription_email(account_subscription)
 
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'update_account_subscription')
+    def update_account_subscription(self, uid):
+        """ """
+        site = self.getSite()
+        name = getUserFullName(site, uid)
+        email = getUserEmail(site, uid)
+        organization = getUserOrganization(site, uid)
+        phone = getUserPhoneNumber(site, uid)
+
+        account_subscription = AccountSubscription(uid, name, email, organization, phone)
+
+        self._account_subscriptions.update({uid: account_subscription})
+
     security.declareProtected(view, 'subscribe_account')
     def subscribe_account(self, REQUEST):
         """ """
