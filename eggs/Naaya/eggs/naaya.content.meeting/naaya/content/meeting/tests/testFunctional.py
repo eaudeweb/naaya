@@ -574,7 +574,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         from naaya.content.meeting.meeting import addNyMeeting
         location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting',
+            title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
             allow_register=True, **location)
