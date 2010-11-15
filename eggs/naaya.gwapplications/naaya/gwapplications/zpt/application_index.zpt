@@ -71,17 +71,17 @@
             <form action="." method="post" tal:condition="python:pending or deleted">
                 <div class="field">
                     <label for="id">Interest group id</label>
-                    <input type="text" size="20" name="id" tal:attributes="value here/gen_id"/>
+                    <input type="text" size="40" name="id" tal:attributes="value here/gen_id"/>
                 </div>
 
                 <div class="field">
                     <label for="id">Interest group title</label>
-                    <input type="text" size="20" name="title" tal:attributes="value data/site_title"/>
+                    <input type="text" size="40" name="title" tal:attributes="value data/site_title"/>
                 </div>
 
                 <div class="field">
                     <label for="id">Interest group subtitle</label>
-                    <input type="text" size="20" name="subtitle" tal:attributes="value data/subtitle"/>
+                    <input type="text" size="40" name="subtitle" tal:attributes="value data/subtitle"/>
                 </div>
 
                 <div class="field">
