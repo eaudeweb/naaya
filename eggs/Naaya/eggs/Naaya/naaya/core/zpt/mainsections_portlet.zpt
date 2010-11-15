@@ -37,7 +37,7 @@
 							(len(sub_fold.getPublishedFolders()) and ' expandable ' or '') +
 							(maintopics_settings['expand_levels'] >= level+1 and ' expanded' or '')"
 							tal:attributes="class string:mainsection_item ${additional_classes};
-							id string:${sub_fold/id}-${repeat/sub_fold/index}">
+							id string:${sub_fold/id}-${repeat/fold/index}-${repeat/sub_fold/index}">
 							<a tal:attributes="href sub_fold/absolute_url;
 							   class string:mainsection_item mainsection_nav_link ${additional_classes}"
 							   tal:content="sub_fold/title_or_id" />
