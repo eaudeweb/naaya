@@ -223,6 +223,23 @@ class Participants(SimpleItem):
                                                 'input_name': input_name},
                          'naaya.content.meeting.participants_table')
 
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST=None, RESPONSE=None):
+        """exports the participants listing in an excel file"""
+        assert self.rstk.we_provide('Excel export')
+
+        header = ['Name', 'User ID', 'Email', 'Organisation', 'Phone', 'Status']
+        rows = []
+        participants = self.getAttendees()
+        for participant in participants:
+            part_info = self.getAttendeeInfo(participant)
+            rows.append([part_info['name'], part_info['uid'], part_info['email'], part_info['organization'], part_info['phone'], part_info['role']])
+
+        exporter = self.getSite().csv_export
+        RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.xls' % self.id)
+        return exporter.generate_excel(header, rows)
+
 InitializeClass(Participants)
 
 NaayaPageTemplateFile('zpt/participants_index', globals(),
