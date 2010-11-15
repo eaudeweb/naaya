@@ -116,3 +116,26 @@ def submit (recaptcha_challenge_field,
         return RecaptchaResponse (is_valid=True)
     else:
         return RecaptchaResponse (is_valid=False, error_code = return_values [1])
+
+from Products.Naaya.interfaces import INySite
+from Products.NaayaCore.interfaces import ICaptcha
+from zope.interface import implements
+from zope.component import adapts
+
+class CaptchaProvider(object):
+    implements(ICaptcha)
+    adapts(INySite)
+
+    def __init__(self, site):
+        self.site = site
+
+    @property
+    def is_available(self):
+        return (self.site.recaptcha_private_key and
+                self.site.recaptcha_public_key)
+
+    def render_captcha(self):
+        return render_captcha(self.site)
+
+    def is_valid_captcha(self, request):
+        return is_valid_captcha(self.site, request)

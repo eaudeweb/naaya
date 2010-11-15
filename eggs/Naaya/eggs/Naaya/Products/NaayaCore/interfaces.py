@@ -50,3 +50,17 @@ class IZipImportEvent(Interface):
     """
     context = Attribute("Containing folder")
     zip_contents = Attribute("Zip contents list (zip.namelist())")
+
+class ICaptcha(Interface):
+    """ Captcha functionality: display a challenge; verify the response """
+
+    # `is_available` exists for backwards compatibility. At some point we
+    # should roll the old PyCaptcha code into ICaptcha, and `is_available` will
+    # always be `True`.
+    is_available = Attribute("Is Captcha functionality available?")
+
+    def render_captcha():
+        """ Return HTML code to be presented to the user as challenge. """
+
+    def is_valid_captcha(request):
+        """ Check if the user solved the captcha correctly. """
