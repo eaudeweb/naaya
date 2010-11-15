@@ -24,6 +24,11 @@
              component=".AuthenticationTool.updates.RemovePermissionGroups"
              permission="zope2.ViewManagementScreens" />
 
+    <utility name="remove_ghost_roles.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".AuthenticationTool.updates.RemoveGhostRoles"
+             permission="zope2.ViewManagementScreens" />
+
     <utility name="add_objmap_zoom.update"
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".GeoMapTool.updates.AddObjMapZoom"
