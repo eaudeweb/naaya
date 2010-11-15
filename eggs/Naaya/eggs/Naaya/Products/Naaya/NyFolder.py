@@ -1358,31 +1358,33 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
         if hasattr(doc, 'switch_content_to_language'):
             # this is a Schema-based content type
             doc.switch_content_to_language(lang, new_lang)
-            return
 
-        # TODO: after all relevant content types are ported to Schema, remove
-        # the following.
+        else:
+            # TODO: after all relevant content types are ported to Schema,
+            # remove the following.
 
-        # Reset current translation
-        doc.manageProperties(lang=lang, approved=1)
+            # Reset current translation
+            doc.manageProperties(lang=lang, approved=1)
 
-        # Update attached files
-        if doc.meta_type in ('Naaya Extended File',):
-            files = doc.getFileItems()
-            files[new_lang] = doc.getFileItem(lang)
-            files = dict([(key, value) for key, value in files.items() if key != lang])
-            doc.setFileItems(files)
+            # Update attached files
+            if doc.meta_type in ('Naaya Extended File',):
+                files = doc.getFileItems()
+                files[new_lang] = doc.getFileItem(lang)
+                files = dict([(key, value) for key, value in files.items() if key != lang])
+                doc.setFileItems(files)
 
-        # Create new translation
-        kwargs['lang'] = new_lang
-        deny_args = self._getSwitchToLangDenyArgs(doc.meta_type)
-        kwargs = dict([(key, value) for key, value in kwargs.items()
-                       if key not in deny_args])
+            # Create new translation
+            kwargs['lang'] = new_lang
+            deny_args = self._getSwitchToLangDenyArgs(doc.meta_type)
+            kwargs = dict([(key, value) for key, value in kwargs.items()
+                           if key not in deny_args])
 
-        doc.manageProperties(**kwargs)
+            doc.manageProperties(**kwargs)
 
         # Return
-        REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), new_lang))
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
+                                      (doc.absolute_url(), new_lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'updateSessionFrom')
     def updateSessionFrom(self, REQUEST=None, **kwargs):
