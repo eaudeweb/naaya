@@ -78,7 +78,7 @@
             </select>
 
             <label for="search_term" i18n:translate="containing"></label>
-            <input type="text" id="search_term" name="search_term:utf8:ustring" 
+            <input type="text" id="search_term" name="search_term:utf8:ustring"
                 tal:attributes="value search_term"/>
 
             <input type="submit" name="search_user" value="Search" />
@@ -171,6 +171,9 @@
         <p tal:condition="meeting/checkPermissionChangePermissions"
              i18n:translate="Use this form to view and remove participants. You can also nominate participants to be administrators or not."></p>
         <p>Currently <em tal:content="here/participantsCount"/> participants out of <em tal:content="here/max_participants"/> maximum participants.</p>
+        <span class="buttons" tal:condition="python:here.rstk.we_provide('Excel export')">
+            <a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="Export participants list to Excel"></a>
+        </span>
         <tal:block define="sort_on python:request.get('sort_on', '');
                     users python:here.getAttendees(sort_on);">
 
