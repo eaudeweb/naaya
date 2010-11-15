@@ -76,12 +76,12 @@
 
                 <div class="field">
                     <label for="id">Interest group title</label>
-                    <input type="text" size="40" name="title" tal:attributes="value data/site_title"/>
+                    <input type="text" size="50" name="title" tal:attributes="value data/site_title"/>
                 </div>
 
                 <div class="field">
                     <label for="id">Interest group subtitle</label>
-                    <input type="text" size="40" name="subtitle" tal:attributes="value data/subtitle"/>
+                    <input type="text" size="50" name="subtitle" tal:attributes="value data/subtitle"/>
                 </div>
 
                 <div class="field">
