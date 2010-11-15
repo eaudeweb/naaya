@@ -51,6 +51,8 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaCore.managers.utils import make_id, toAscii
+from naaya.core import submitter
+from naaya.core.zope2util import abort_transaction_keep_session
 
 from NyBlobFile import make_blobfile, trim_filename
 
@@ -88,7 +90,14 @@ def bfile_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
-    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyBFile', 'form_helper': form_helper}, 'bfile_add')
+    return self.getFormsTool().getContent({
+            'here': self,
+            'kind': config['meta_type'],
+            'action': 'addNyBFile',
+            'form_helper': form_helper,
+            'submitter_info_html': submitter.info_html(self, REQUEST),
+        },
+        'bfile_add')
 
 def _create_NyBFile_object(parent, id, contributor):
     id = make_id(parent, id=id, prefix='file')
@@ -110,7 +119,6 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     _uploaded_file = schema_raw_data.pop('uploaded_file', None)
-    _contact_word = schema_raw_data.get('contact_word', '')
 
     title = schema_raw_data.get('title', '')
     if not title:
@@ -126,17 +134,15 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
 
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
         else:
-            import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+            abort_transaction_keep_session(REQUEST)
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/bfile_add_html' % self.absolute_url())
             return
