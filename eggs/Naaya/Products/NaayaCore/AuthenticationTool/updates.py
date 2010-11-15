@@ -30,3 +30,46 @@ class RemovePermissionGroups(UpdateScript):
             links_list._p_changed = True
 
         return True
+
+class RemoveGhostRoles(UpdateScript):
+    title = 'Remove roles of deleted users'
+    authors = ['Valentin Dumitru']
+    creation_date = 'Nov 11, 2010'
+
+    def _update(self, portal):
+        acl_users = portal.acl_users
+        users_roles = _getUsersRoles(portal)
+        for user, roles in users_roles.iteritems():
+            if user not in acl_users.getUserNames() and not _get_user_by_uid(user, portal):
+                for pair in roles:
+                    location = portal.utGetObject(pair[1])
+                    location.manage_delLocalRoles([user])
+                    self.log.info('%r deleted for user %r for location %r', pair[0], user, pair[1])
+        return True
+
+def _getUsersRoles(portal):
+    acl_users = portal.acl_users
+    users_roles = {}
+    p_meta_types = portal.get_containers_metatypes()
+    for folder in _recurse(portal, p_meta_types):
+        for roles_tuple in folder.get_local_roles():
+            local_roles = acl_users.getLocalRoles(roles_tuple[1])
+            if len(local_roles) > 0:
+                if users_roles.has_key(str(roles_tuple[0])):
+                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+                else:
+                    users_roles[str(roles_tuple[0])] = [(local_roles, folder.absolute_url(1))]
+    return users_roles
+
+def _get_user_by_uid(user_id, portal):
+    for source in portal.acl_users.getSources():
+        acl_folder = source.getUserFolder()
+        user_obj = source._get_user_by_uid(user_id, acl_folder)
+        if user_obj:
+            return user_obj
+
+def _recurse(ob, meta_types):
+    for sub_ob in ob.objectValues(meta_types):
+        yield sub_ob
+        for o in _recurse(sub_ob, meta_types):
+            yield o
