@@ -115,9 +115,7 @@ from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, path_in_site, cooldown, is_ajax
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-
-#reCaptcha
-from Products.NaayaCore.managers import recaptcha_utils
+from Products.NaayaCore.interfaces import ICaptcha
 
 from naaya.core.utils import ofs_path
 from naaya.core.zope2util import RestrictedToolkit, permission_add_role
@@ -3687,17 +3685,17 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'recaptcha_is_present')
     def recaptcha_is_present(self):
-        return self.recaptcha_private_key and self.recaptcha_public_key
+        return ICaptcha(self).is_available
 
     security.declareProtected(view, 'show_recaptcha')
     def show_recaptcha(self, context):
         """ Returns HTML code for reCAPTCHA """
-        return recaptcha_utils.render_captcha(context)
+        return ICaptcha(self).render_captcha()
 
     security.declareProtected(view, 'is_valid_recaptcha')
     def is_valid_recaptcha(self, context, REQUEST):
         """ Test if reCaptcha is valid. """
-        return recaptcha_utils.is_valid_captcha(context, REQUEST)
+        return ICaptcha(self).is_valid_captcha(REQUEST)
 
     security.declareProtected(view, 'validateCaptcha')
     def validateCaptcha(self, contact_word, REQUEST):

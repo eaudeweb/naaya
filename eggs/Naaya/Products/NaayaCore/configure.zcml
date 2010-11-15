@@ -14,6 +14,8 @@
   <adapter factory="Products.NaayaCore.managers.zip_import_export.NewsZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.StoryZipAdapter" />
 
+  <adapter factory="Products.NaayaCore.managers.recaptcha_utils.CaptchaProvider" />
+
   <subscriber for="Products.Naaya.interfaces.INySite
                    Products.Naaya.interfaces.IHeartbeat"
               handler=".AuthenticationTool.recover_password.cleanup_expired_tokens" />

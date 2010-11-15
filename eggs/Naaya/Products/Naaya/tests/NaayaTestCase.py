@@ -4,8 +4,12 @@ import tempfile
 import shutil
 
 import transaction
-# Zope imports
 from Testing.ZopeTestCase import Functional
+from zope.interface import alsoProvides
+from Products.Naaya.interfaces import INySite
+
+class ITestSite(INySite):
+    """ Marker interface for a test portal; useful for registering fixtures """
 
 # Naaya imports
 from Products.NaayaCore.EmailTool import EmailTool
@@ -62,6 +66,7 @@ def portal_fixture(app):
     from Products.Naaya.NySite import manage_addNySite
     manage_addNySite(app, 'portal', 'Naaya Test Site')
     portal = app.portal
+    alsoProvides(portal, ITestSite)
 
     portal.mail_address_from = 'from.zope@example.com'
     portal.administrator_email = 'site.admin@example.com'
