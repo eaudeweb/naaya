@@ -3,8 +3,13 @@ import time
 from os import path
 import random
 
+from nose.plugins.skip import SkipTest
 import transaction
+from AccessControl.Permission import Permission
+from zope.component import getGlobalSiteManager
+
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
+from naaya.core.tests import mock_captcha
 
 fixtures_path = path.join(path.dirname(__file__), 'fixtures')
 
@@ -20,6 +25,31 @@ def _wait_for(callback, fail_message=None, timeout=5.):
                          (float(timeout), repr(callback)) )
     assert False, fail_message
 
+def login_with(username, password):
+    """ make a decorator that runs the test while logged in """
+    def decorator(func):
+        def wrapper(self, *args, **kwargs):
+            self.login_user(username, password)
+            func(self, *args, **kwargs)
+            self.logout_user()
+        wrapper.func_name = func.func_name
+        wrapper.__doc__ = func.__doc__
+        return wrapper
+    return decorator
+
+def with_mock_captcha(func):
+    def wrapper(self, *args, **kwargs):
+        gsm = getGlobalSiteManager()
+        mock_captcha_provider = mock_captcha.create_mock()
+        gsm.registerAdapter(mock_captcha_provider)
+        try:
+            return func(self, *args, **kwargs)
+        finally:
+            gsm.unregisterAdapter(mock_captcha_provider)
+    wrapper.func_name = func.func_name
+    wrapper.__doc__ = func.__doc__
+    return wrapper
+
 class _CommonContentTests(SeleniumTestCase):
     """
     Common testing logic for Naaya content types. Because the name starts
@@ -28,14 +58,13 @@ class _CommonContentTests(SeleniumTestCase):
 
     def setUp(self):
         self.rnd = ''.join(random.choice("0123456789") for c in range(6))
-        self.login_user('contributor', 'contributor')
 
     def tearDown(self):
         # maybe the test failed while inside a window or frame
         self.selenium.select_window('')
         self.selenium.select_frame('relative=top')
-        self.logout_user()
 
+    @login_with('contributor', 'contributor')
     def test_add(self):
         self.selenium.open('/portal/info/', True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
@@ -60,13 +89,14 @@ class _CommonContentTests(SeleniumTestCase):
         self.selenium.type('sortorder', u"125")
         self.selenium.click('discussion')
 
-    def _assert_object_added_properly(self, container):
+    def _assert_object_added_properly(self, container,
+                                      submitter='contributor'):
         ob_id = "test-object-%s" % self.rnd
         assert ob_id in container.objectIds()
         ob = container[ob_id]
         assert ob.submitted == True
         assert ob.approved == False
-        assert ob.contributor == 'contributor'
+        assert ob.contributor == submitter
 
     def _add_object(self, parent, **kwargs):
         transaction.abort()
@@ -76,6 +106,7 @@ class _CommonContentTests(SeleniumTestCase):
         transaction.commit()
         return ob_id
 
+    @login_with('contributor', 'contributor')
     def test_edit_title(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
@@ -97,6 +128,7 @@ class _CommonContentTests(SeleniumTestCase):
     def _get_image_container(self, ob):
         return ob.getSite()['images']
 
+    @login_with('contributor', 'contributor')
     def test_edit_description(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
@@ -169,6 +201,7 @@ class _CommonContentTests(SeleniumTestCase):
     def _fill_edit_form_with_error(self):
         self.selenium.type("title", "")
 
+    @login_with('contributor', 'contributor')
     def test_edit_with_error(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
@@ -187,6 +220,7 @@ class _CommonContentTests(SeleniumTestCase):
             "The form contains errors. Please correct them and try again.")
         assert self.selenium.is_text_present('Value required for "Title"')
 
+    @login_with('contributor', 'contributor')
     def test_view(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
@@ -206,8 +240,8 @@ class _CommonContentTests(SeleniumTestCase):
         glossary.xliff_import(xliff_file.read())
         xliff_file.close()
 
+    @login_with('contributor', 'contributor')
     def test_pick_keywords(self):
-        #transaction.abort()
         self._add_glossary('test_glossary_kwds', 'glossary.xliff')
         schema_tool = self.portal['portal_schemas']
         schema = schema_tool.getSchemaForMetatype(self.meta_type)
@@ -228,7 +262,7 @@ class _CommonContentTests(SeleniumTestCase):
                                       self._selenium_page_timeout)
         self.selenium.select_window('pickkeyword')
         self.selenium.click("//img[@alt='Expand']")
-        # TODO wait for page to load?
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self.selenium.click("link=Shrubbery")
         self.selenium.click("link=Ni")
         self.selenium.close()
@@ -242,6 +276,67 @@ class _CommonContentTests(SeleniumTestCase):
         ob = self.portal['info']['test-object-%s' % self.rnd]
         assert ob.keywords == "Shrubbery, Ni"
 
+    @with_mock_captcha
+    def test_with_captcha(self):
+        self.portal.acl_users._doAddUser('other_user', 'other_user', [], '',
+                                    'Other', 'User', 'other_user@example.com')
+        zperm = self.portal.get_pluggable_item(self.meta_type)['permission']
+        p = Permission(zperm, (), self.portal)
+        p.setRoles(p.getRoles() + ['Authenticated'])
+        transaction.commit()
+
+        self.login_user('other_user', 'other_user')
+
+        self.selenium.open('/portal/info/', True)
+        self.selenium.select('typetoadd', 'label=%s' % self.meta_label)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        assert self.selenium.is_element_present(
+                '//input[@name="test-captcha-response"]')
+
+        self._fill_add_form()
+
+        # submit with no captcha response
+        self.selenium.click("//input[@value='Submit']")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        assert self.selenium.is_text_present("Verification words do not match "
+                                             "the ones in the picture.")
+
+        # submit with incorrect captcha response
+        self.selenium.type('test-captcha-response', "blah blah")
+        self.selenium.click("//input[@value='Submit']")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        assert self.selenium.is_text_present("Verification words do not match "
+                                             "the ones in the picture.")
+
+        challenge = self.selenium.get_text(
+                '//span[@id="test-captcha-challenge"]')
+        response = mock_captcha.solve(challenge)
+        self.selenium.type('test-captcha-response', response)
+
+        # submit with proper response
+        self.selenium.click("//input[@value='Submit']")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        assert self.selenium.is_text_present('The administrator will analyze')
+
+        transaction.abort()
+        self._assert_object_added_properly(self.portal['info'],
+                                           submitter='other_user')
+
+        # "skip captcha" permission
+        p = Permission('Naaya - Skip Captcha', (), self.portal)
+        p.setRoles(p.getRoles() + ['Authenticated'])
+        transaction.commit()
+
+        self.selenium.open('/portal/info/', True)
+        self.selenium.select('typetoadd', 'label=%s' % self.meta_label)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        assert not self.selenium.is_element_present(
+                '//input[@name="test-captcha-response"]')
+
+        self.logout_user()
+
 class FolderTest(_CommonContentTests):
     meta_label = "Folder"
     meta_type = "Naaya Folder"
@@ -249,6 +344,9 @@ class FolderTest(_CommonContentTests):
     def add_object(self, parent, **kwargs):
         from Products.Naaya.NyFolder import addNyFolder
         return addNyFolder(parent, **kwargs)
+
+    def test_with_captcha(self):
+        raise SkipTest
 
     # Folders are allowed to have a blank title so, when running
     # test_edit_with_error, submit a blank value for "sort order".
@@ -344,12 +442,14 @@ class BlobFileTest(_CommonContentTests):
         self.portal.info.folder_meta_types += ["Naaya Blob File"]
         transaction.commit()
 
-    def _assert_object_added_properly(self, container):
-        super(BlobFileTest, self)._assert_object_added_properly(container)
+    def _assert_object_added_properly(self, container, *args, **kwargs):
+        super(BlobFileTest, self)._assert_object_added_properly(
+                container, *args, **kwargs)
         # make sure the right content type was added
         ob = container["test-object-%s" % self.rnd]
         assert ob.meta_type == "Naaya Blob File"
 
+    @login_with('contributor', 'contributor')
     def test_upload(self):
         self.selenium.open('/portal/info/', True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
