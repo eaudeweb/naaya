@@ -65,6 +65,45 @@ class _CommonContentTests(SeleniumTestCase):
         self.selenium.select_window('')
         self.selenium.select_frame('relative=top')
 
+    _index_contributor_full_name = False
+    def _assert_index_anonymous_ok(self, ob):
+        txt = self.selenium.get_text
+        releasedate_txt = ob.releasedate.strftime('%d/%m/%Y')
+        assert txt('//tr[th[text()="Release date"]]/td') == releasedate_txt
+
+        if self._index_contributor_full_name:
+            contrib_name = "Contributor Test"
+        else:
+            contrib_name = 'contributor'
+        assert txt('//tr[th[text()="Contributor"]]/td') == contrib_name
+
+    def test_index_anonymous(self):
+        container = self.portal['info']
+        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        transaction.commit()
+
+        self.selenium.open('/portal/info/%s' % ob_id, True)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        transaction.abort()
+        ob = container[ob_id]
+        self._assert_index_anonymous_ok(ob)
+
+    def test_index_no_showcontributor(self):
+        # TODO this test is skipped because the `display_contributor` setting
+        # is not being honoured currently
+        raise SkipTest
+
+        container = self.portal['info']
+        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        self.portal.display_contributor = '' # meaning "false"
+        transaction.commit()
+
+        self.selenium.open('/portal/info/%s' % ob_id, True)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        is_element = self.selenium.is_element_present
+        assert not is_element('//th[text()="Contributor"]')
+
     @login_with('contributor', 'contributor')
     def test_add(self):
         self.selenium.open('/portal/info/', True)
@@ -345,6 +384,9 @@ class FolderTest(_CommonContentTests):
     meta_label = "Folder"
     meta_type = "Naaya Folder"
 
+    def test_index_anonymous(self):
+        raise SkipTest
+
     def add_object(self, parent, **kwargs):
         from Products.Naaya.NyFolder import addNyFolder
         return addNyFolder(parent, **kwargs)
@@ -411,6 +453,7 @@ class UrlTest(_CommonContentTests):
 class EventTest(_CommonContentTests):
     meta_label = "Event"
     meta_type = "Naaya Event"
+    _index_contributor_full_name = True
 
     def _fill_add_form(self):
         super(EventTest, self)._fill_add_form()
@@ -433,6 +476,7 @@ class FileTest(_CommonContentTests):
 class BlobFileTest(_CommonContentTests):
     meta_label = "File"
     meta_type = "Naaya Blob File"
+    _index_contributor_full_name = True
 
     def add_object(self, parent, **kwargs):
         from naaya.content.bfile.bfile_item import addNyBFile
