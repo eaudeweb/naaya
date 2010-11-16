@@ -66,8 +66,16 @@ class _CommonContentTests(SeleniumTestCase):
         self.selenium.select_frame('relative=top')
 
     _index_contributor_full_name = False
-    def _assert_index_anonymous_ok(self, ob):
+    def _assert_index_ok(self, ob):
+        """
+        Called by `test_index` below to verify that the index page is rendered
+        correctly. May be overridden by subclasses but it's probably a good
+        idea to call super.
+        """
         txt = self.selenium.get_text
+
+        assert ("Test Object %s" % self.rnd) in txt('//h1')
+
         releasedate_txt = ob.releasedate.strftime('%d/%m/%Y')
         assert txt('//tr[th[text()="Release date"]]/td') == releasedate_txt
 
@@ -81,7 +89,10 @@ class _CommonContentTests(SeleniumTestCase):
                    "The random value is %s." % self.rnd)
         assert txt('css=p.content-test') == desc_ok
 
-    def test_index_anonymous(self):
+    def test_index(self):
+        """
+        Check the index page as seen by both anonymous and logged-in users.
+        """
         container = self.portal['info']
         title = "Test Object %s" % self.rnd
         ob_id = self._add_object_extra(container, title=title)
@@ -89,12 +100,20 @@ class _CommonContentTests(SeleniumTestCase):
 
         self.selenium.open('/portal/info/%s' % ob_id, True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
-
         transaction.abort()
         ob = container[ob_id]
-        self._assert_index_anonymous_ok(ob)
+        self._assert_index_ok(ob)
+
+        self.login_user('contributor', 'contributor')
+        self.selenium.open('/portal/info/%s' % ob_id, True)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        transaction.abort()
+        ob = container[ob_id]
+        self._assert_index_ok(ob)
+        self.logout_user()
 
     def test_index_no_showcontributor(self):
+        """ Make sure the `display_contributor` option works. """
         # TODO this test is skipped because the `display_contributor` setting
         # is not being honoured currently
         raise SkipTest
@@ -112,6 +131,7 @@ class _CommonContentTests(SeleniumTestCase):
 
     @login_with('contributor', 'contributor')
     def test_add(self):
+        """ Add a content object and check that it was saved properly. """
         self.selenium.open('/portal/info/', True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
@@ -129,6 +149,10 @@ class _CommonContentTests(SeleniumTestCase):
         self._assert_object_added_properly(self.portal['info'])
 
     def _fill_add_form(self):
+        """
+        Fill out the "add object" form in the browser. Subclasses should
+        override this to insert additional required fields.
+        """
         self.selenium.type('title', u"Test Object %s" % self.rnd)
         self.selenium.type('coverage', u"Country")
         self.selenium.type('keywords', u"short, story, test story")
@@ -137,12 +161,20 @@ class _CommonContentTests(SeleniumTestCase):
 
     def _assert_object_added_properly(self, container,
                                       submitter='contributor'):
+        """
+        Called by `test_add` above to verify that the object was saved
+        correctly. May be overridden by subclasses but it's probably a good
+        idea to call super.
+        """
         ob_id = "test-object-%s" % self.rnd
         assert ob_id in container.objectIds()
         ob = container[ob_id]
         assert ob.submitted == True
         assert ob.approved == False
         assert ob.contributor == submitter
+
+    def add_object(self, parent, **kwargs):
+        raise NotImplementedError # should be implemented by subclasses
 
     def _add_object_plain(self, parent, **kwargs):
         """
@@ -171,6 +203,7 @@ class _CommonContentTests(SeleniumTestCase):
 
     @login_with('contributor', 'contributor')
     def test_edit_title(self):
+        """ Edit the object's title (a simple editing operation). """
         container = self.portal['info']
         title = "Test Object %s" % self.rnd
         ob_id = self._add_object_plain(container, title=title)
@@ -191,10 +224,16 @@ class _CommonContentTests(SeleniumTestCase):
         assert container[ob_id].title == new_title
 
     def _get_image_container(self, ob):
+        """
+        Get the container where TinyMCE images for `obj` are saved. It's
+        usually the 'images' folder in the site, but for some objects this
+        may be different.
+        """
         return ob.getSite()['images']
 
     @login_with('contributor', 'contributor')
     def test_edit_description(self):
+        """ An elaborate test that uploads an image in the TinyMCE editor. """
         container = self.portal['info']
         title = "Test Object %s" % self.rnd
         ob_id = self._add_object_plain(container, title=title)
@@ -266,10 +305,18 @@ class _CommonContentTests(SeleniumTestCase):
                                              "there are more")
 
     def _fill_edit_form_with_error(self):
+        """
+        Introduce an error in the edit form so that changes are not saved and
+        we get an error message.
+        """
         self.selenium.type("title", "")
 
     @login_with('contributor', 'contributor')
     def test_edit_with_error(self):
+        """
+        Edit object, but introduce an error, to check that we get the error
+        message.
+        """
         container = self.portal['info']
         title = "Test Object %s" % self.rnd
         ob_id = self._add_object_plain(container, title=title)
@@ -285,23 +332,13 @@ class _CommonContentTests(SeleniumTestCase):
         self._assert_edit_page_error()
 
     def _assert_edit_page_error(self):
+        """
+        Verify that the error message shows up. Subclasses may need to override
+        this.
+        """
         assert self.selenium.is_text_present(
             "The form contains errors. Please correct them and try again.")
         assert self.selenium.is_text_present('Value required for "Title"')
-
-    @login_with('contributor', 'contributor')
-    def test_view(self):
-        container = self.portal['info']
-        title = "Test Object %s" % self.rnd
-        ob_id = self._add_object_plain(container, title=title)
-        transaction.commit()
-
-        self.selenium.open('/portal/info/%s' % ob_id, True)
-        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
-        self._assert_view_page_ok()
-
-    def _assert_view_page_ok(self):
-        assert ("Test Object %s" % self.rnd) in self.selenium.get_text('//h1')
 
     def _add_glossary(self, glossary_id, xliff_name):
         from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
@@ -314,6 +351,7 @@ class _CommonContentTests(SeleniumTestCase):
 
     @login_with('contributor', 'contributor')
     def test_pick_keywords(self):
+        """ Check the button "pick" (from glossary) for keywords """
         self._add_glossary('test_glossary_kwds', 'glossary.xliff')
         schema_tool = self.portal['portal_schemas']
         schema = schema_tool.getSchemaForMetatype(self.meta_type)
@@ -350,6 +388,10 @@ class _CommonContentTests(SeleniumTestCase):
 
     @with_mock_captcha
     def test_with_captcha(self):
+        """
+        Test for captcha: does it show up when it's supposed to? Is it really
+        verified?
+        """
         self.portal.acl_users._doAddUser('other_user', 'other_user', [], '',
                                     'Other', 'User', 'other_user@example.com')
         zperm = self.portal.get_pluggable_item(self.meta_type)['permission']
@@ -413,6 +455,9 @@ class FolderTest(_CommonContentTests):
     meta_label = "Folder"
     meta_type = "Naaya Folder"
 
+    def _assert_index_ok(self, ob):
+        assert ("Test Object %s" % self.rnd) in self.selenium.get_text('//h1')
+
     def test_index_anonymous(self):
         raise SkipTest
 
@@ -421,11 +466,12 @@ class FolderTest(_CommonContentTests):
         return addNyFolder(parent, **kwargs)
 
     def test_with_captcha(self):
+        # TODO folders don't ever ask for captcha. maybe they should.
         raise SkipTest
 
-    # Folders are allowed to have a blank title so, when running
-    # test_edit_with_error, submit a blank value for "sort order".
     def _fill_edit_form_with_error(self):
+        # Folders are allowed to have a blank title so, when running
+        # test_edit_with_error, submit a blank value for "sort order".
         self.selenium.type("sortorder", "")
 
     def _assert_edit_page_error(self):
@@ -445,6 +491,7 @@ class StoryTest(_CommonContentTests):
     meta_label = "Story"
     meta_type = "Naaya Story"
 
+# TODO stories should be containers for their own images
 #    def _get_image_container(self, ob):
 #        return ob
 #
@@ -456,6 +503,7 @@ class DocumentTest(_CommonContentTests):
     meta_label = "HTML Document"
     meta_type = "Naaya Document"
 
+# TODO stories should be containers for their own images
 #    def _get_image_container(self, ob):
 #        return ob
 #
@@ -496,8 +544,8 @@ class EventTest(_CommonContentTests):
         kwargs['end_date'] = '04/11/2010'
         return super(EventTest, self)._add_object_extra(parent, **kwargs)
 
-    def _assert_index_anonymous_ok(self, ob):
-        super(EventTest, self)._assert_index_anonymous_ok(ob)
+    def _assert_index_ok(self, ob):
+        super(EventTest, self)._assert_index_ok(ob)
         txt = self.selenium.get_text
         period_ok = "[02/11/2010 - 04/11/2010]"
         assert txt('//tr[th[text()="Period"]]/td') == period_ok
@@ -548,6 +596,7 @@ class BlobFileTest(_CommonContentTests):
 
     @login_with('contributor', 'contributor')
     def test_upload(self):
+        """ Test the BFile upload functionality. """
         self.selenium.open('/portal/info/', True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
