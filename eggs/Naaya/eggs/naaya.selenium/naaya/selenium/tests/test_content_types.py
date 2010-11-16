@@ -30,6 +30,7 @@ def login_with(username, password):
     def decorator(func):
         def wrapper(self, *args, **kwargs):
             self.login_user(username, password)
+            transaction.abort()
             func(self, *args, **kwargs)
             self.logout_user()
         wrapper.func_name = func.func_name
@@ -99,17 +100,16 @@ class _CommonContentTests(SeleniumTestCase):
         assert ob.contributor == submitter
 
     def _add_object(self, parent, **kwargs):
-        transaction.abort()
         self.login('contributor')
         ob_id = self.add_object(parent, **kwargs)
         self.logout()
-        transaction.commit()
         return ob_id
 
     @login_with('contributor', 'contributor')
     def test_edit_title(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        transaction.commit()
 
         self.selenium.open('/portal/info/%s/edit_html' % ob_id, True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
@@ -132,6 +132,7 @@ class _CommonContentTests(SeleniumTestCase):
     def test_edit_description(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        transaction.commit()
         ob = container[ob_id]
         assert self._get_image_container(ob).objectIds() == []
 
@@ -205,6 +206,7 @@ class _CommonContentTests(SeleniumTestCase):
     def test_edit_with_error(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        transaction.commit()
 
         self.selenium.open('/portal/info/%s/edit_html' % ob_id, True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
@@ -224,6 +226,8 @@ class _CommonContentTests(SeleniumTestCase):
     def test_view(self):
         container = self.portal['info']
         ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        transaction.commit()
+
         self.selenium.open('/portal/info/%s' % ob_id, True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         self._assert_view_page_ok()
