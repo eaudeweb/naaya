@@ -380,7 +380,17 @@ class plugLDAPUserFolder(PlugBase):
         else:
             result = cache[group]
         if result['size'] > 0:
-            group_users = [x.split(',')[0].split('=')[1] for x in result['results'][result['size']-1]['uniqueMember']]
+            group_user_members = result['results'][result['size']-1]['uniqueMember']
+            group_users = []
+            for member in group_user_members:
+                try:
+                    uid = member.split(',')[0].split('=')[1]
+                except IndexError, e:
+                    auth_logger.exception("Can't parse the uid "
+                                          "(skipping member %s)",
+                                          member)
+                else:
+                    group_users.append(uid)
             return group_users
         else:
             return []
