@@ -6,6 +6,8 @@ import random
 import transaction
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 
+fixtures_path = path.join(path.dirname(__file__), 'fixtures')
+
 def _wait_for(callback, fail_message=None, timeout=5.):
     from time import time, sleep
     t0 = time()
@@ -29,7 +31,8 @@ class _CommonContentTests(SeleniumTestCase):
         self.login_user('contributor', 'contributor')
 
     def tearDown(self):
-        # maybe the test failed while inside a frame
+        # maybe the test failed while inside a window or frame
+        self.selenium.select_window('')
         self.selenium.select_frame('relative=top')
         self.logout_user()
 
@@ -124,7 +127,7 @@ class _CommonContentTests(SeleniumTestCase):
         self.selenium.select_frame('//div[@class="mceMiddle"]//iframe')
         self.selenium.click('//li[@id="computer_tab"]//a')
 
-        img_path = path.join(path.dirname(__file__), 'fixtures', 'img.gif')
+        img_path = path.join(fixtures_path, 'img.gif')
         self.selenium.type('file', img_path)
 
         #_wait_for(lambda: self.selenium.is_element_present(
@@ -194,8 +197,54 @@ class _CommonContentTests(SeleniumTestCase):
     def _assert_view_page_ok(self):
         assert ("Test Object %s" % self.rnd) in self.selenium.get_text('//h1')
 
+    def _add_glossary(self, glossary_id, xliff_name):
+        from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
+        manage_addGlossaryCentre(self.portal, glossary_id,
+                                 "Glossary %s" % glossary_id)
+        glossary = self.portal[glossary_id]
+        xliff_file = open(path.join(fixtures_path, xliff_name), 'rb')
+        glossary.xliff_import(xliff_file.read())
+        xliff_file.close()
+
+    def test_pick_keywords(self):
+        #transaction.abort()
+        self._add_glossary('test_glossary_kwds', 'glossary.xliff')
+        schema_tool = self.portal['portal_schemas']
+        schema = schema_tool.getSchemaForMetatype(self.meta_type)
+        schema.getWidget('keywords').glossary_id = 'test_glossary_kwds'
+        transaction.commit()
+
+        self.selenium.open('/portal/info/', True)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        self.selenium.select('typetoadd', 'label=%s' % self.meta_label)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        self._fill_add_form()
+        self.selenium.type('keywords', u"")
+
+        self.selenium.click("//input[@type='button'][@value='Pick']")
+        self.selenium.wait_for_pop_up('pickkeyword',
+                                      self._selenium_page_timeout)
+        self.selenium.select_window('pickkeyword')
+        self.selenium.click("//img[@alt='Expand']")
+        # TODO wait for page to load?
+        self.selenium.click("link=Shrubbery")
+        self.selenium.click("link=Ni")
+        self.selenium.close()
+        self.selenium.select_window('')
+        assert self.selenium.get_value("keywords") == 'Shrubbery, Ni'
+
+        self.selenium.click("//input[@value='Submit']")
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        transaction.abort()
+        ob = self.portal['info']['test-object-%s' % self.rnd]
+        assert ob.keywords == "Shrubbery, Ni"
+
 class FolderTest(_CommonContentTests):
     meta_label = "Folder"
+    meta_type = "Naaya Folder"
 
     def add_object(self, parent, **kwargs):
         from Products.Naaya.NyFolder import addNyFolder
@@ -213,6 +262,7 @@ class FolderTest(_CommonContentTests):
 
 class NewsTest(_CommonContentTests):
     meta_label = "News"
+    meta_type = "Naaya News"
 
     def add_object(self, parent, **kwargs):
         from naaya.content.news.news_item import addNyNews
@@ -220,6 +270,7 @@ class NewsTest(_CommonContentTests):
 
 class StoryTest(_CommonContentTests):
     meta_label = "Story"
+    meta_type = "Naaya Story"
 
 #    def _get_image_container(self, ob):
 #        return ob
@@ -230,6 +281,7 @@ class StoryTest(_CommonContentTests):
 
 class DocumentTest(_CommonContentTests):
     meta_label = "HTML Document"
+    meta_type = "Naaya Document"
 
 #    def _get_image_container(self, ob):
 #        return ob
@@ -240,6 +292,7 @@ class DocumentTest(_CommonContentTests):
 
 class PointerTest(_CommonContentTests):
     meta_label = "Pointer"
+    meta_type = "Naaya Pointer"
 
     def add_object(self, parent, **kwargs):
         from naaya.content.pointer.pointer_item import addNyPointer
@@ -247,6 +300,7 @@ class PointerTest(_CommonContentTests):
 
 class UrlTest(_CommonContentTests):
     meta_label = "URL"
+    meta_type = "Naaya URL"
 
     def add_object(self, parent, **kwargs):
         from naaya.content.url.url_item import addNyURL
@@ -254,6 +308,7 @@ class UrlTest(_CommonContentTests):
 
 class EventTest(_CommonContentTests):
     meta_label = "Event"
+    meta_type = "Naaya Event"
 
     def _fill_add_form(self):
         super(EventTest, self)._fill_add_form()
@@ -267,6 +322,7 @@ class EventTest(_CommonContentTests):
 
 class FileTest(_CommonContentTests):
     meta_label = "File"
+    meta_type = "Naaya File"
 
     def add_object(self, parent, **kwargs):
         from naaya.content.file.file_item import addNyFile
@@ -274,6 +330,7 @@ class FileTest(_CommonContentTests):
 
 class BlobFileTest(_CommonContentTests):
     meta_label = "File"
+    meta_type = "Naaya Blob File"
 
     def add_object(self, parent, **kwargs):
         from naaya.content.bfile.bfile_item import addNyBFile
@@ -300,7 +357,7 @@ class BlobFileTest(_CommonContentTests):
         self.selenium.select('typetoadd', 'label=%s' % self.meta_label)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
-        img_path = path.join(path.dirname(__file__), 'fixtures', 'img.gif')
+        img_path = path.join(fixtures_path, 'img.gif')
         self.selenium.type('uploaded_file', img_path)
         self.selenium.click("//input[@value='Submit']")
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
