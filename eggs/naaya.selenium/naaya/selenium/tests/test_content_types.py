@@ -484,6 +484,26 @@ class EventTest(_CommonContentTests):
     meta_type = "Naaya Event"
     _index_contributor_full_name = True
 
+    def _add_object_extra(self, parent, **kwargs):
+        for name in ('location', 'location_address', 'host', 'contact_person',
+                     'contact_email', 'contact_phone', 'contact_fax'):
+            kwargs[name] = "Test value for '%s' (rnd %s)'" % (name, self.rnd)
+        url_base = "http://example.com/%s" % self.rnd
+        kwargs['location_url'] = url_base + "/location"
+        kwargs['agenda_url'] = url_base + "/agenda"
+        kwargs['event_url'] = url_base + "/event"
+        kwargs['start_date'] = '02/11/2010'
+        kwargs['end_date'] = '04/11/2010'
+        return super(EventTest, self)._add_object_extra(parent, **kwargs)
+
+    def _assert_index_anonymous_ok(self, ob):
+        super(EventTest, self)._assert_index_anonymous_ok(ob)
+        txt = self.selenium.get_text
+        period_ok = "[02/11/2010 - 04/11/2010]"
+        assert txt('//tr[th[text()="Period"]]/td') == period_ok
+        # TODO chek that all values injected by _add_object_extra show up on
+        # the page
+
     def _fill_add_form(self):
         super(EventTest, self)._fill_add_form()
         self.selenium.type('start_date', "05/11/2010")
