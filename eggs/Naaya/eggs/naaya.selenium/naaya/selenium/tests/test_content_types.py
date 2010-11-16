@@ -77,9 +77,14 @@ class _CommonContentTests(SeleniumTestCase):
             contrib_name = 'contributor'
         assert txt('//tr[th[text()="Contributor"]]/td') == contrib_name
 
+        desc_ok = ("A few words about our test object. "
+                   "The random value is %s." % self.rnd)
+        assert txt('css=p.content-test') == desc_ok
+
     def test_index_anonymous(self):
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_extra(container, title=title)
         transaction.commit()
 
         self.selenium.open('/portal/info/%s' % ob_id, True)
@@ -95,7 +100,8 @@ class _CommonContentTests(SeleniumTestCase):
         raise SkipTest
 
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
         self.portal.display_contributor = '' # meaning "false"
         transaction.commit()
 
@@ -138,16 +144,36 @@ class _CommonContentTests(SeleniumTestCase):
         assert ob.approved == False
         assert ob.contributor == submitter
 
-    def _add_object(self, parent, **kwargs):
+    def _add_object_plain(self, parent, **kwargs):
+        """
+        Add a minimal object of the current content type. Another method,
+        `_add_object_extra`, may be used to add an object with more properties
+        (e.g. a BFile object with an uploaded file or a fully filled-out Event
+        object).
+        """
         self.login('contributor')
         ob_id = self.add_object(parent, **kwargs)
         self.logout()
         return ob_id
 
+    def _add_object_extra(self, parent, **kwargs):
+        """
+        Add an elaborate object with many properties, so we can test more of
+        the current content type's features. By default it simply calls
+        `_add_object_plain` with an additional "description" value, but
+        subclasses are encouraged to override.
+        """
+        kwargs['description'] = (
+            '<p class="content-test">'
+            'A few words about our test object. The random value is %s.'
+            '</p>') % self.rnd
+        return self._add_object_plain(parent, **kwargs)
+
     @login_with('contributor', 'contributor')
     def test_edit_title(self):
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
         transaction.commit()
 
         self.selenium.open('/portal/info/%s/edit_html' % ob_id, True)
@@ -170,7 +196,8 @@ class _CommonContentTests(SeleniumTestCase):
     @login_with('contributor', 'contributor')
     def test_edit_description(self):
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
         transaction.commit()
         ob = container[ob_id]
         assert self._get_image_container(ob).objectIds() == []
@@ -244,7 +271,8 @@ class _CommonContentTests(SeleniumTestCase):
     @login_with('contributor', 'contributor')
     def test_edit_with_error(self):
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
         transaction.commit()
 
         self.selenium.open('/portal/info/%s/edit_html' % ob_id, True)
@@ -264,7 +292,8 @@ class _CommonContentTests(SeleniumTestCase):
     @login_with('contributor', 'contributor')
     def test_view(self):
         container = self.portal['info']
-        ob_id = self._add_object(container, title="Test Object %s" % self.rnd)
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
         transaction.commit()
 
         self.selenium.open('/portal/info/%s' % ob_id, True)
