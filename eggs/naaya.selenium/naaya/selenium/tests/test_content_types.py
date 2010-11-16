@@ -451,6 +451,33 @@ class _CommonContentTests(SeleniumTestCase):
 
         self.logout_user()
 
+    @login_with('admin', '')
+    def test_switch_language(self):
+        """ Move content from one language to another. """
+        self.portal.gl_add_site_language('fr')
+        self.portal.switch_language = 'on'
+        container = self.portal['info']
+        title = "Test Object %s" % self.rnd
+        ob_id = self._add_object_plain(container, title=title)
+        ob = container[ob_id]
+        transaction.commit()
+
+        assert ob.getLocalProperty('title', 'en') == title
+        assert ob.getLocalProperty('title', 'fr') == ''
+
+        self.selenium.open('/portal/info/%s/edit_html' % ob_id, True)
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+
+        self.selenium.click('//form[@name="switch_to_language"]'
+                            '/input[@type="submit"]')
+        self.selenium.get_confirmation()
+        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
+        assert self.selenium.get_location().endswith('/edit_html?lang=fr')
+
+        transaction.abort()
+        assert ob.getLocalProperty('title', 'en') == ''
+        assert ob.getLocalProperty('title', 'fr') == title
+
 class FolderTest(_CommonContentTests):
     meta_label = "Folder"
     meta_type = "Naaya Folder"
