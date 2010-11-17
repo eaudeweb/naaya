@@ -193,7 +193,7 @@
 
                 <span tal:replace="structure here/menusubmissions" />
 
-                <metal:block use-macro="here/folder_listing/macros/content" />
+                <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']" />
 
                 <p>
                     <a href="index_rdf" target="_blank">
