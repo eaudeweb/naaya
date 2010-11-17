@@ -1,4 +1,4 @@
-<metal:block use-macro="here/folder_listing/macros/content">
+<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 	<metal:block fill-slot="toolbar_extend">
 		<a tal:condition="python:here.getSite() == here"
 				tal:attributes="href python:'javascript:location.href=\''+here.absolute_url()+'/folder_add_html\''">
