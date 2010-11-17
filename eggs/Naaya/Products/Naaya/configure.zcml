@@ -4,6 +4,8 @@
   <adapter
     factory="Products.Naaya.NyFolderBase.ObjectListingPortlet"
     name="portlet_objects_listing"
+    provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
+    for="Products.Naaya.interfaces.INySite"
     />
 
   <class class=".NyFolder.NyFolder">

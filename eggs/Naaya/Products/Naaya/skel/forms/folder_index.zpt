@@ -44,9 +44,9 @@
 					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 			</span>
 		</span>
-		<a class="b_download" 
+		<a class="b_download"
 			href="./zip_export/do_export"
-			title="Download the contents of this folder to a Zip file" 
+			title="Download the contents of this folder to a Zip file"
 			tal:condition="python: here.checkPermission('Naaya - Zip export')"
 			i18n:attributes="title"
 			i18n:translate="">Zip download</a>
@@ -56,7 +56,7 @@
 	<p tal:condition="python:here.description!=''"
 		tal:content="structure here/description" />
 
-	<metal:block use-macro="here/folder_listing/macros/content">
+	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>

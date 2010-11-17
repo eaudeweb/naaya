@@ -3879,10 +3879,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     folder_lib_toolbar_buttons = PageTemplateFile(
         'zpt/folder_lib_toolbar_buttons', globals())
 
-    security.declareProtected(view, 'folder_listing')
-    folder_listing = PageTemplateFile(
-        'zpt/folder_listing', globals())
-
     security.declareProtected(PERMISSION_ADD_FOLDER, 'folder_add_html')
     folder_add_html = folder_add_html
     security.declareProtected(PERMISSION_ADD_FOLDER, 'addNyFolder')

@@ -37,7 +37,7 @@
 	list_expired python:request.get('list_expired', '');
 	list_all_events python:request.get('list_all_events', '');
 	object_list_custom python:test(list_expired, expired_events, test(list_all_events, all_events, upcoming_events))">
-    <metal:block use-macro="here/folder_listing/macros/content">
+    <metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
 			<div class="admin_this_folder">
 				<a class="buttons"

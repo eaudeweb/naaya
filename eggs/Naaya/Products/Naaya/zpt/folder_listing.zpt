@@ -1,4 +1,4 @@
-<metal:block define-macro="content">
+<metal:block define-macro="listing">
 
 <tal:block define="site_url python:here.getSite().absolute_url();
 	listing_info folder_listing_info|here/folder_listing_info;
