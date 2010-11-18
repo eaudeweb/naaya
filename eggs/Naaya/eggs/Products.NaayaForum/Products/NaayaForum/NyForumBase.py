@@ -9,8 +9,9 @@ from Globals import InitializeClass
 #Product imports
 from constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyDublinCore import NyDublinCore
 
-class NyForumBase(NyAttributes):
+class NyForumBase(NyAttributes, NyDublinCore):
     """
     The base class of Naaya Forum. It implements basic functionality
     common to all classes.
