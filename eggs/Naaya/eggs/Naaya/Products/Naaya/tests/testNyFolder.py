@@ -26,6 +26,8 @@ from BeautifulSoup import BeautifulSoup
 import transaction
 from Testing import ZopeTestCase
 from zope import component
+from AccessControl.Permissions import view
+from AccessControl.Permission import Permission
 
 # Products
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
@@ -113,7 +115,9 @@ class FolderListingInfo:
 
 
 class TestNyFolderListing(NaayaFunctionalTestCase):
-    def afterSetUp(self):
+    def setUp(self):
+        super(TestNyFolderListing, self).setUp()
+
         self.ancestor = self.portal.info
         self.parent_name = 'testparentfolder'
         self.parent2_name = 'testparent2folder'
@@ -130,10 +134,11 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         transaction.commit()
 
-    def beforeTearDown(self):
+    def tearDown(self):
         self.ancestor.manage_delObjects([self.parent_name, self.parent2_name])
         transaction.commit()
 
+        super(TestNyFolderListing, self).tearDown()
 
     def _set_del_permission(self, object, permission):
         object._Naaya___Delete_content_Permission = permission
@@ -443,8 +448,56 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
         self.assertTrue('index' in self.folder.objectIds())
 
+class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
+    def setUp(self):
+        super(TestNyFolderOnlyRoles, self).setUp()
+
+        # get&save roles with view
+        view_perm = Permission(view, (), self.portal)
+        self.site_roles_with_view = view_perm.getRoles()
+
+        # set view only for manager
+        view_perm.setRoles(('Manager'))
+
+        self.portal.acl_users._doAddUser('folder_viewer', 'viewer', [], '', '', '', '')
+
+        self.ancestor = self.portal.info
+        self.folder_name = 'testfolder'
+
+        addNyFolder(self.ancestor, self.folder_name, description='mydescription', contributor='contributor', submission=1)
+        self.folder = getattr(self.ancestor, self.folder_name)
+
+        # set view for auth
+        view_perm = Permission(view, (), self.portal.info.testfolder)
+        view_perm.setRoles(['Authenticated'])
+
+        transaction.commit()
+
+    def tearDown(self):
+        # reset roles with view
+        view_perm = Permission(view, (), self.portal)
+        view_perm.setRoles(self.site_roles_with_view)
+
+        self.ancestor.manage_delObjects([self.folder_name])
+
+        self.portal.acl_users._doDelUsers(['folder_viewer'])
+        transaction.commit()
+
+        super(TestNyFolderOnlyRoles, self).tearDown()
+
+    def test_user_can_view_folder(self):
+        self.browser_do_login('folder_viewer', 'viewer')
+
+        self.browser.go('http://localhost/portal')
+        self.assertNotEqual('http://localhost/portal/info/testfolder', self.browser.get_url())
+
+        self.browser.go('http://localhost/portal/info/testfolder')
+        self.assertEqual('http://localhost/portal/info/testfolder', self.browser.get_url())
+
+        self.browser_do_logout()
 
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestNyFolderListing))
+    suite.addTest(makeSuite(TestNyFolderOnlyRoles))
     return suite
