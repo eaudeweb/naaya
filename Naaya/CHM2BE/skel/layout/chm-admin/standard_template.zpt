@@ -1,12 +1,12 @@
-<tal:block tal:define="
-        site_url here/getSitePath; 
-        is_site python:here.getSite().getId() == here.getId();
-        is_map python:here.getId() == 'portal_map';
-        is_admin python:is_site or is_map">
-
 <metal:block extend-macro="python:here.getLayoutTool().get_standard_template_base().macros['page']" define-macro="page">
     <metal:block fill-slot="standard-head-links">
         <metal:block define-slot="standard-head-links">
+            <tal:block tal:define="
+                site_url here/getSitePath;
+                is_site python:here.getSite().getId() == here.getId();
+                is_map python:here.getId() == 'portal_map';
+                is_admin python:is_site or is_map">
+
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style_common" />
             <style type="text/css" media="screen">@import "http://www.biodiv.be/php/dev/reset.css";</style>
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/administration" />
@@ -19,6 +19,7 @@
             <!--[if lt IE 7]>
                 <style type="text/css" media="screen">@import "http://www.biodiv.be/php/biodiv/adminIE6.css";</style>
             <![endif]-->
+            </tal:block>
         </metal:block>
     </metal:block>
     <metal:block fill-slot="head">
@@ -113,6 +114,12 @@
             </div>
 
             <div id="pagecontent">
+            <tal:block define="
+                is_site python:here.getSite().getId() == here.getId();
+                is_map python:here.getId() == 'portal_map';
+                is_admin python:is_site or is_map
+            ">
+
             <div class="backSite top" tal:condition="is_admin">
                 <a tal:attributes="href here/absolute_url">Back to public site</a>
             </div>
@@ -122,12 +129,6 @@
                                         <!--SITE_HEADERFOOTER_MARKER-->
                                     </metal:block>
             </div>
-
-            <tal:block define="
-                is_site python:here.getSite().getId() == here.getId();
-                is_map python:here.getId() == 'portal_map';
-                is_admin python:is_site or is_map
-            ">
 
             <div class="backSite-bottom" tal:condition="is_admin">
                 <div class="backSite">
@@ -158,4 +159,3 @@
         </metal:block>
     </metal:block>
 </metal:block>
-</tal:block>
