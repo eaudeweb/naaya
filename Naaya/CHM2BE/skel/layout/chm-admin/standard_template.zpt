@@ -113,13 +113,13 @@
                 </div>
             </div>
 
-            <div id="pagecontent">
             <tal:block define="
                 is_site python:here.getSite().getId() == here.getId();
                 is_map python:here.getId() == 'portal_map';
                 is_admin python:is_site or is_map
             ">
 
+            <div id="pagecontent">
             <div class="backSite top" tal:condition="is_admin">
                 <a tal:attributes="href here/absolute_url">Back to public site</a>
             </div>
