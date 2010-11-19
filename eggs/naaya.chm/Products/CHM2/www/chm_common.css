@@ -751,3 +751,42 @@ form.user-form .field-inline, form.user-form .field {
 form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inline input[type="password"]:focus {
 	background-color: #FFFFDD;
 }
+
+/* search page refine search */
+.searchQuery  {
+	background:#fff;
+	padding: 0;
+	margin: 1em 0;
+	border: none;
+	width: 60%;
+	float: left;
+	margin-right: 2%;
+}
+.searchQuery  h2 {
+	background: none;
+}
+.searchQuery input, .searchQuery select  {
+	color:#555555;
+}
+.searchQuery input {
+	height: 1.3em;
+	padding-top: 0.1em;
+}
+.searchQuery .styled_button {
+	height: 2em;
+	padding-top: 0;
+	border: 1px solid #ccc;
+	background: #ddd;
+	cursor: pointer;
+}
+.searchQuery label {
+	margin-bottom: 0.5em;
+}
+.searchQuery ul {
+	margin: 0; padding: 0;
+}
+.searchQuery ul li {
+	padding: 0.3em 0;
+	float: left;
+	width: 15em;
+}
