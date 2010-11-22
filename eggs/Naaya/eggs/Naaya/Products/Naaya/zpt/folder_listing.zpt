@@ -14,7 +14,7 @@
 	iframe python: bool(request.get('iframe', 0))">
 
 <metal:block define-slot="folder-listing">
-<tal:block tal:condition="iframe">
+<tal:block tal:condition="iframe" on-error="string:RESTRICTED">
 	<!DOCTYPE html>
 	<tal:block replace="structure python:'<' +'html>'"></tal:block>
 	<tal:block tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
