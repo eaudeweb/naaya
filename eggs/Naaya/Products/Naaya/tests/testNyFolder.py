@@ -456,35 +456,44 @@ class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
         # get&save roles with view
         view_perm = Permission(view, (), self.portal)
         self.site_roles_with_view = view_perm.getRoles()
-
-        # set view only for manager
         view_perm.setRoles(('Manager'))
 
+        # add user
         self.portal.acl_users._doAddUser('folder_viewer', 'viewer', [],
                                          '', '', '', '')
 
-        self.ancestor = self.portal.info
-        self.folder_name = 'testfolder'
-
-        addNyFolder(self.ancestor, self.folder_name,
+        # add objects
+        addNyFolder(self.portal.info, 'testfolder',
                     description='mydescription', contributor='contributor',
                     submission=1)
-        self.folder = getattr(self.ancestor, self.folder_name)
+        self.portal.info.testfolder.approveThis(1, 'contributor')
 
-        # set view for auth
+        addNyFolder(self.portal.info.testfolder, 'testsubfolder',
+                    description='mydescription', contributor='contributor',
+                    submission=1)
+        self.portal.info.testfolder.testsubfolder.approveThis(1, 'contributor')
+
+        # set view roles for testfolder
         view_perm = Permission(view, (), self.portal.info.testfolder)
         view_perm.setRoles(['Authenticated'])
 
         transaction.commit()
 
+        self.browser_do_login('folder_viewer', 'viewer')
+
     def tearDown(self):
-        # reset roles with view
+        self.browser_do_logout()
+
+        # remove objects
+        self.portal.info.manage_delObjects(['testfolder'])
+
+        # remove user
+        self.portal.acl_users._doDelUsers(['folder_viewer'])
+
+        # reset portal roles with view
         view_perm = Permission(view, (), self.portal)
         view_perm.setRoles(self.site_roles_with_view)
 
-        self.ancestor.manage_delObjects([self.folder_name])
-
-        self.portal.acl_users._doDelUsers(['folder_viewer'])
         transaction.commit()
 
         super(TestNyFolderOnlyRoles, self).tearDown()
@@ -492,20 +501,24 @@ class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
     def test_user_can_view_folder(self):
         folder_url = 'http://localhost/portal/info/testfolder'
 
-        self.browser_do_login('folder_viewer', 'viewer')
-
         self.browser.go(folder_url)
         self.assertEqual(folder_url, self.browser.get_url())
 
-        self.browser_do_logout()
+    def test_user_can_view_folder_listing(self):
+        folder_url = 'http://localhost/portal/info/testfolder'
+        subfolder_url = 'http://localhost/portal/info/testfolder/testsubfolder'
+
+        self.browser.go(folder_url)
+        self.assertTrue(subfolder_url in self.browser.get_html())
+
+    def test_user_can_view_subfolder(self):
+        subfolder_url = 'http://localhost/portal/info/testfolder/testsubfolder'
+
+        self.browser.go(subfolder_url)
+        self.assertEqual(subfolder_url, self.browser.get_url())
 
     def test_user_cant_view_site(self):
         portal_url = 'http://localhost/portal'
 
-        self.browser_do_login('folder_viewer', 'viewer')
-
         self.browser.go(portal_url)
         self.assertNotEqual(portal_url, self.browser.get_url())
-
-        self.browser_do_logout()
-
