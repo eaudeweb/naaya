@@ -69,14 +69,14 @@
 
 <tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
     <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})"
-        on-error="string:" />
+        on-error="python:here.log_page_error(error)" />
 </tal:block>
 </div>
 
 <div id="right_port">
     <tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
         <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})"
-            on-error="string:" />
+            on-error="python:here.log_page_error(error)" />
     </tal:block>
 </div>
 
