@@ -451,9 +451,6 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
 class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
     def setUp(self):
-        # code that makes this test to work is not on svn yet
-        raise SkipTest
-
         super(TestNyFolderOnlyRoles, self).setUp()
 
         # get&save roles with view
@@ -463,12 +460,15 @@ class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
         # set view only for manager
         view_perm.setRoles(('Manager'))
 
-        self.portal.acl_users._doAddUser('folder_viewer', 'viewer', [], '', '', '', '')
+        self.portal.acl_users._doAddUser('folder_viewer', 'viewer', [],
+                                         '', '', '', '')
 
         self.ancestor = self.portal.info
         self.folder_name = 'testfolder'
 
-        addNyFolder(self.ancestor, self.folder_name, description='mydescription', contributor='contributor', submission=1)
+        addNyFolder(self.ancestor, self.folder_name,
+                    description='mydescription', contributor='contributor',
+                    submission=1)
         self.folder = getattr(self.ancestor, self.folder_name)
 
         # set view for auth
@@ -490,13 +490,22 @@ class TestNyFolderOnlyRoles(NaayaFunctionalTestCase):
         super(TestNyFolderOnlyRoles, self).tearDown()
 
     def test_user_can_view_folder(self):
+        folder_url = 'http://localhost/portal/info/testfolder'
+
         self.browser_do_login('folder_viewer', 'viewer')
 
-        self.browser.go('http://localhost/portal')
-        self.assertNotEqual('http://localhost/portal/info/testfolder', self.browser.get_url())
+        self.browser.go(folder_url)
+        self.assertEqual(folder_url, self.browser.get_url())
 
-        self.browser.go('http://localhost/portal/info/testfolder')
-        self.assertEqual('http://localhost/portal/info/testfolder', self.browser.get_url())
+        self.browser_do_logout()
+
+    def test_user_cant_view_site(self):
+        portal_url = 'http://localhost/portal'
+
+        self.browser_do_login('folder_viewer', 'viewer')
+
+        self.browser.go(portal_url)
+        self.assertNotEqual(portal_url, self.browser.get_url())
 
         self.browser_do_logout()
 
