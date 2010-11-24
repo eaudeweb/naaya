@@ -33,6 +33,7 @@ from AccessControl.Permissions import view_management_screens, view, manage_user
 import Products
 from zope.interface import implements
 from zope import event
+from zope.deprecation import deprecate
 
 #Product imports
 from interfaces import INyFolder
@@ -54,6 +55,7 @@ from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyCommonView import NyCommonView
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -206,7 +208,9 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyContainer, utils, NyContentType, NyContentData, NyFolderBase):
+class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
+               NyImportExport, NyContainer, utils, NyContentType, NyContentData,
+               NyFolderBase):
     """ """
 
     implements(INyFolder)
@@ -1261,6 +1265,8 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
 
     #site pages
     security.declareProtected(view, 'standard_html_header')
+    @deprecate('standard_html_header is deprecated and will be removed. '
+               'Use standard_template_macro instead.')
     def standard_html_header(self, REQUEST=None, RESPONSE=None, **args):
         """ """
         context = self.REQUEST.PARENTS[0]
@@ -1273,7 +1279,9 @@ class NyFolder(NyRoleManager, NyAttributes, NyProperties, NyImportExport, NyCont
             args['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
             return pt.pt_render(extra_context=args).split('<!--SITE_HEADERFOOTER_MARKER-->')[0]
 
-    security.declareProtected(view, 'standard_html_header')
+    security.declareProtected(view, 'standard_html_footer')
+    @deprecate('standard_html_footer is deprecated and will be removed. '
+               'Use standard_template_macro instead.')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
         """ """
         context = self.REQUEST.PARENTS[0]

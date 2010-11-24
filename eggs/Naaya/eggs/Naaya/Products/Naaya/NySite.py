@@ -56,6 +56,7 @@ from zope.interface import implements
 from App.ImageFile import ImageFile
 from zope import component, interface
 import transaction
+from zope.deprecation import deprecate
 
 #Product imports
 from interfaces import INySite
@@ -88,6 +89,7 @@ from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.NyImageContainer import NyImageContainer
+from Products.NaayaBase.NyCommonView import NyCommonView
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
 from Products.NaayaCore.managers.captcha_tool import captcha_tool
@@ -118,7 +120,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaCore.interfaces import ICaptcha
 
 from naaya.core.utils import ofs_path
-from naaya.core.zope2util import RestrictedToolkit, permission_add_role
+from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip
 
@@ -145,16 +147,11 @@ def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQ
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
-    NyBase, NyPermissions, NyImportExport, NyVersions,
-    utils, list_utils, file_utils,
-    catalog_tool,
-    search_tool,
-    contenttypes_tool,
-    session_manager,
-    portlets_manager,
-    networkportals_manager,
-    NyFolderBase):
+class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
+             Folder, NyBase, NyPermissions, NyImportExport, NyVersions, utils,
+             list_utils, file_utils, catalog_tool, search_tool,
+             contenttypes_tool, session_manager, portlets_manager,
+             networkportals_manager, NyFolderBase):
     """ """
 
     implements(INySite)
@@ -1701,7 +1698,7 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         self.setSession('body', message_body)
         return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
-    security.declareProtected(view, 'processNotifyOnErrors')
+    security.declarePublic('processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
         ignored_exceptions = self.error_log.getProperties()['ignored_exceptions']
@@ -3291,19 +3288,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     def publish_direct(self):
         raise NotImplemented
 
-    security.declareProtected(view, 'getCaptcha')
-    def getCaptcha(self):
-        """ generate a Captcha image """
-        g = captcha_tool()
-        g.defaultSize = (100, 20)
-        i = g.render()
-        newimg = StringIO()
-        i.save(newimg, "JPEG")
-        newimg.seek(0)
-        #set the word on session
-        self.setSession('captcha', g.solutions[0])
-        return newimg.getvalue()
-
     #sending emails
     def sendConfirmationEmail(self, name, confirm_key, mto):
         # Send confirmation email
@@ -3683,35 +3667,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             if success: self.setSessionInfoTrans('Imported ${objects} contact objects', objects=objects_created)
             return REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
-    security.declareProtected(view, 'recaptcha_is_present')
-    def recaptcha_is_present(self):
-        return ICaptcha(self).is_available
-
-    security.declareProtected(view, 'show_recaptcha')
-    def show_recaptcha(self, context):
-        """ Returns HTML code for reCAPTCHA """
-        return ICaptcha(self).render_captcha()
-
-    security.declareProtected(view, 'is_valid_recaptcha')
-    def is_valid_recaptcha(self, context, REQUEST):
-        """ Test if reCaptcha is valid. """
-        return ICaptcha(self).is_valid_captcha(REQUEST)
-
-    security.declareProtected(view, 'validateCaptcha')
-    def validateCaptcha(self, contact_word, REQUEST):
-        """
-        Deprecated in favour of the `naaya.core.submitter` package.
-
-        Validates captcha or recaptcha, returns errors if invalid.
-        """
-
-        if self.recaptcha_is_present():
-            if not self.is_valid_recaptcha(self, REQUEST):
-                return ['Verification words do not match the ones in the picture.']
-        else:
-            if contact_word != self.getSession('captcha', ''):
-                self.delSession('captcha')
-                return ['The word you typed does not match with the one shown in the image. Please try again.']
 
     security.declareProtected(view, 'HEAD')
     def HEAD(self, REQUEST=None):
@@ -3731,6 +3686,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
 
     #site pages
     security.declareProtected(view, 'standard_html_header')
+    @deprecate('standard_html_header is deprecated and will be removed. '
+               'Use standard_template_macro instead.')
     def standard_html_header(self, REQUEST=None, RESPONSE=None):
         """ """
         context = self.REQUEST.PARENTS[0]
@@ -3740,6 +3697,8 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         return ltool.render_standard_template(context).split('<!--SITE_HEADERFOOTER_MARKER-->')[0]
 
     security.declareProtected(view, 'standard_html_footer')
+    @deprecate('standard_html_footer is deprecated and will be removed. '
+               'Use standard_template_macro instead.')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
         """ """
         context = self.REQUEST.PARENTS[0]
@@ -3747,13 +3706,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         if hasattr(ltool.get_current_skin(), 'site_footer'):
             return ltool.getContent({'here': context}, 'site_footer').split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
         return ltool.render_standard_template(context).split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
-
-    security.declareProtected(view, 'standard_error_message')
-    def standard_error_message(self, client=None, REQUEST=None, **kwargs):
-        """ """
-        context = self.REQUEST.PARENTS[0]
-        kwargs['here'] = context
-        return self.getFormsTool().getContent(kwargs, 'standard_error_message')
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
@@ -3770,12 +3722,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_messages')
 
-    security.declareProtected(view, 'messages_box')
+    security.declarePublic('messages_box')
     def messages_box(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'messages_box')
 
-    security.declareProtected(view, 'languages_box')
+    security.declarePublic('languages_box')
     def languages_box(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'languages_box')
@@ -3790,12 +3742,12 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_login')
 
-    security.declareProtected(view, 'logout_html')
+    security.declarePublic('logout_html')
     def logout_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_logout')
 
-    security.declareProtected(view, 'unauthorized_html')
+    security.declarePublic('unauthorized_html')
     def unauthorized_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_unauthorized')
@@ -3820,22 +3772,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'sitemap_add')
 
-    security.declareProtected(view, 'feedback_html')
-    def feedback_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_feedback')
-
-    security.declareProtected(view, 'requestrole_html')
-    def requestrole_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestrole')
-
-    security.declareProtected(view, 'channel_details_html')
-    def channel_details_html(self, REQUEST=None, RESPONSE=None, **kwargs):
-        """ """
-        kwargs['here'] = self
-        return self.getFormsTool().getContent(kwargs, 'channel_details')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_html')
     def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -3847,13 +3783,13 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
     sitemap_xml = NaayaPageTemplateFile('zpt/sitemap_xml', globals(), 'naaya.google.sitemap')
 
     #calendar widget
-    security.declareProtected(view, 'calendar_js')
+    security.declarePublic('calendar_js')
     calendar_js = DTMLFile('zpt/calendar/calendar_js', globals())
 
-    security.declareProtected(view, 'core_js')
+    security.declarePublic('core_js')
     core_js = DTMLFile('zpt/calendar/core_js', globals())
 
-    security.declarePublic(view, 'i18n_js')
+    security.declarePublic('i18n_js')
     def i18n_js(self, lang='en', REQUEST=None):
         """ translations for messages used by JavaScript """
         portal_translations = self.getPortalTranslations()
@@ -3866,11 +3802,11 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.setHeader('Cache-Control', 'public,max-age=60')
         return 'var naaya_i18n_catalog = %s;' % json.dumps(translations)
 
-    security.declareProtected(view, 'datetime_js')
+    security.declarePublic('datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
 
     #common javascript
-    security.declareProtected(view, 'common_js')
+    security.declarePublic('common_js')
     common_js = DTMLFile('zpt/common_js', globals())
     #
     # Macro libs
@@ -3971,8 +3907,6 @@ class NySite(NyRoleManager, CookieCrumbler, LocalPropertyManager, Folder,
         return translate_url(*args)
 
     rdf_cataloged_items = rdf_cataloged_items
-
-    rstk = RestrictedToolkit()
 
 InitializeClass(NySite)
 
