@@ -12,6 +12,8 @@ from zope.deprecation import deprecate
 #Naaya imports
 from naaya.core.zope2util import RestrictedToolkit
 
+from Products.NaayaCore.interfaces import ICaptcha
+
 class NyCommonView(object):
     """
     This class is for common methods that need to be available for many pages.
@@ -37,17 +39,17 @@ class NyCommonView(object):
 
     security.declareProtected(view, 'recaptcha_is_present')
     def recaptcha_is_present(self):
-        return ICaptcha(self).is_available
+        return ICaptcha(self.getSite()).is_available
 
     security.declareProtected(view, 'show_recaptcha')
     def show_recaptcha(self, context):
         """ Returns HTML code for reCAPTCHA """
-        return ICaptcha(self).render_captcha()
+        return ICaptcha(self.getSite()).render_captcha()
 
     security.declareProtected(view, 'is_valid_recaptcha')
     def is_valid_recaptcha(self, context, REQUEST):
         """ Test if reCaptcha is valid. """
-        return ICaptcha(self).is_valid_captcha(REQUEST)
+        return ICaptcha(self.getSite()).is_valid_captcha(REQUEST)
 
     security.declareProtected(view, 'validateCaptcha')
     def validateCaptcha(self, contact_word, REQUEST):
