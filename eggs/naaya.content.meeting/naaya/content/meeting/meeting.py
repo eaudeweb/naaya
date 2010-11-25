@@ -485,7 +485,6 @@ class NyMeeting(NyContentData, NyFolder):
     def createPublicInterface(self):
         pt_id = 'index'
         if self.publicinterface and self._getOb(pt_id, None) is None:
-            import pdb; pdb.set_trace()
             pt_content = self.getFormsTool().getForm('meeting_index').document_src()
             manage_addPageTemplate(self, id=pt_id, title='Custom index for this meeting', text='')
             pt_obj = self._getOb(pt_id)
