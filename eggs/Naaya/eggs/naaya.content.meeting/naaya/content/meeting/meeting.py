@@ -29,6 +29,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
+from naaya.core.utils import relative_object_path
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 
@@ -48,6 +49,7 @@ DEFAULT_SCHEMA = {
     'location':             dict(sortorder=143, widget_type='String',   label='Organization/Building/Room'),
     'time':                 dict(sortorder=146, widget_type='String',   label='Time'),
     'allow_register':       dict(sortorder=148, widget_type='Checkbox', label='Allow people to register to participate', data_type='bool'),
+    'restrict_items':       dict(sortorder=149, widget_type='Checkbox', label='Restrict user access to the contents in the meeting', default=True, data_type='bool'),
     'max_participants':     dict(sortorder=150, widget_type='String',   label='Maximum number of participants', data_type='int'),
     'contact_person':       dict(sortorder=150, widget_type='String',   label='Contact person'),
     'contact_email':        dict(sortorder=160, widget_type='String',   label='Contact email', required=True),
@@ -244,14 +246,16 @@ def _restrict_meeting_item_view(item):
     permission.setRoles((OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
                          ADMINISTRATOR_ROLE, MANAGER_ROLE))
 
-def _restrict_meeting_agenda_view(item):
+def _unrestrict_meeting_item_view(item):
     permission = Permission(view, (), item)
     permission.setRoles([])
 
 def on_added_meeting_item(ob, event):
     """ Catch event to restrict view permission for meeting items """
-    if ob.aq_parent.meta_type == NyMeeting.meta_type:
-        _restrict_meeting_item_view(ob)
+    parent = ob.aq_inner.aq_parent
+    if parent.meta_type == NyMeeting.meta_type:
+        if getattr(parent, 'restrict_items', True):
+            _restrict_meeting_item_view(ob)
 
 class NyMeeting(NyContentData, NyFolder):
     """ """
@@ -285,6 +289,7 @@ class NyMeeting(NyContentData, NyFolder):
         self.email_sender = EmailSender('email_sender')
         self.survey_required = False
         self.allow_register = True
+        self.restrict_items = True
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'getParticipants')
     def getParticipants(self):
@@ -380,35 +385,27 @@ class NyMeeting(NyContentData, NyFolder):
         """
         meeting_path = self.getPhysicalPath()
         old_agenda_pointer = getattr(self, 'agenda_pointer', '')
-        form_errors = super(NyFolder, self).process_submitted_form(REQUEST_form,
+        form_errors = super(NyMeeting, self).process_submitted_form(REQUEST_form,
                 _lang, _all_values, _override_releasedate)
         self._check_meeting_dates(form_errors) # can modify form_errors
         self._check_meeting_pointers(form_errors) # can modify form_errors
 
-        new_agenda_pointer = getattr(self, 'agenda_pointer', '')
-        if new_agenda_pointer != old_agenda_pointer:
-            # reset permissions on change agenda
-            if old_agenda_pointer:
-                try:
-                    old_agenda = self.unrestrictedTraverse(str(old_agenda_pointer))
-                except KeyError:
-                    old_agenda = None
-                if old_agenda is not None:
-                    if (old_agenda.getPhysicalPath()[:len(meeting_path)] ==
-                            meeting_path):
-                        _restrict_meeting_item_view(old_agenda)
-
-            if new_agenda_pointer:
-                try:
-                    new_agenda = self.unrestrictedTraverse(str(new_agenda_pointer))
-                except KeyError:
-                    new_agenda = None
-                if new_agenda is not None:
-                    if (new_agenda.getPhysicalPath()[:len(meeting_path)] ==
-                            meeting_path):
-                        _restrict_meeting_agenda_view(new_agenda)
+        self._set_items_view_permissions()
 
         return form_errors
+
+    def _set_items_view_permissions(self):
+        if getattr(self, 'restrict_items', True):
+            agenda_pointer = str(getattr(self, 'agenda_pointer', ''))
+            site = self.getSite()
+            for item in self.objectValues():
+                if relative_object_path(item, site) == agenda_pointer:
+                    _unrestrict_meeting_item_view(item)
+                else:
+                    _restrict_meeting_item_view(item)
+        else:
+            for item in self.objectValues():
+                _unrestrict_meeting_item_view(item)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
