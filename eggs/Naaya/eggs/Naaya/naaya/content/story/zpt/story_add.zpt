@@ -7,7 +7,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <tal:block define="global form_helper here/get_schema_helper" />
 
-<h1 tal:content="string:Submit ${form_helper/get_meta_label}" />
+<h1 tal:content="string:Submit ${form_helper/get_meta_label}" i18n:translate="" />
 
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong i18n:name="submit-button" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="mandatory" class="mandatory_field">*</span> are mandatory.
