@@ -3,6 +3,8 @@ Changelog
 
 2.10.11 (unreleased)
 --------------------
+ * Map info balloons no longer require a catalog search; they are requested
+   based on visible markeres on the map.
 
 2.10.10 (2010-11-04)
 --------------------

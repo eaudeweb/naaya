@@ -32,6 +32,7 @@ import simplejson as json
 import csv
 from StringIO import StringIO
 import operator
+from warnings import warn
 
 #Zope imports
 from Globals import InitializeClass
@@ -55,6 +56,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from naaya.core.utils import path_in_site
 
 from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
@@ -267,34 +269,24 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return filters
 
     security.declarePrivate('get_geo_objects')
-    def get_geo_objects(self, lat, lon, path='', geo_types=None, query='',
-            approved=True, landscape_type=[], administrative_level=[], languages=None):
+    def get_geo_objects(self, lat, lon, path='', geo_types=None, query=''):
         """ """
-        catalog_tool = self.getCatalogTool()
 
         eps = Decimal('0.000001')
         lat, lon = Decimal(lat), Decimal(lon)
-        filters = self.build_geo_filters(path=path, geo_types=geo_types,
-                approved=approved,
-                landscape_type=landscape_type, administrative_level=administrative_level,
-                lat_min=lat-eps, lat_max=lat+eps, lon_min=lon-eps, lon_max=lon+eps,
-                query=query, languages=languages)
+        kwargs = {
+            'lat_min': lat - eps,
+            'lat_max': lat + eps,
+            'lon_min': lon - eps,
+            'lon_max': lon + eps,
+            'path': path,
+            'geo_types': geo_types,
+            'query': query,
+        }
 
-        # OR the filters
-        brains = []
-        for f in filters:
-            brains.extend(catalog_tool(f))
-
-        # getting the unique data record ids
-        dict_rids = {}
-        rids = []
-        for b in brains:
-            rid = b.data_record_id_
-            if rid not in dict_rids:
-                dict_rids[rid] = 1
-                rids.append(rid)
-
-        results = map(lambda rid: catalog_tool.getobject(rid), rids)
+        criteria = self._parse_search_terms(None, kwargs)
+        filters = self.build_geo_filters(**criteria)
+        results = self._search_geo_objects(filters)
         return results
 
     security.declarePrivate('_search_geo_objects')
@@ -531,7 +523,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 points.append({
                     'lat': res.geo_location.lat,
                     'lon': res.geo_location.lon,
-                    'id': res.getId(),
+                    'id': path_in_site(res),
                     'label': res.title_or_id(),
                     'icon_name': 'mk_%s' % res.geo_type,
                     'tooltip': self.get_marker(res),
@@ -572,7 +564,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 points.append({
                     'lat': res.geo_location.lat,
                     'lon': res.geo_location.lon,
-                    'id': res.getId(),
+                    'id': path_in_site(res),
                     'label': res.title_or_id(),
                     'icon_name': 'mk_%s' % res.geo_type,
                     'tooltip': self.get_marker(res),
@@ -589,9 +581,27 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return json_response
 
 
+    security.declareProtected(view, 'xrjs_getPointBalloon')
+    def xrjs_getPointBalloon(self, point_id):
+        """ get the map balloon for point  """
+        # we do unrestricted traverse because `get_marker` will check perms
+
+        site = self.getSite()
+        if isinstance(point_id, list):
+            # multiple points requested
+            out = ''
+            for pth in point_id:
+                out += self.get_small_marker(site.unrestrictedTraverse(pth))
+            return out
+        else:
+            ob = site.unrestrictedTraverse(point_id)
+            return self.get_marker(ob)
+
     security.declareProtected(view, 'xrjs_getTooltip')
     def xrjs_getTooltip(self, lat, lon, path='', geo_types=None, geo_query=None):
         """ """
+        warn("`xrjs_getTooltip` is deprecated. Use `xrjs_getPointBalloon` "
+             "instead.")
         obs = self.get_geo_objects(lat, lon, path, geo_types, geo_query)
         if len(obs) == 1:
             return self.utToUtf8(self.get_marker(obs[0]))

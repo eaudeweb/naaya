@@ -4,6 +4,7 @@
     var the_points_layer = null;
     var icon_url = {}
     var map_base_layer = VEMapStyle[config.base_layer];
+    var current_places = [];
 
     $.each(config.icons, function() {
         icon_url["mk_" + this.id] = this.url;
@@ -63,6 +64,7 @@
                 marker.naaya_tooltip = place.tooltip;
                 the_points_layer.AddShape(marker);
             });
+            current_places = places;
         });
     }
 
@@ -151,6 +153,10 @@
         });
     }
 
+    function get_current_places() {
+        return current_places;
+    }
+
     window.naaya_map_engine = {
         map_with_points: function(map_div_id, points) {
             $('div#'+map_div_id).text(
@@ -165,7 +171,8 @@
                 refresh_points: refresh_points,
                 page_position: page_position,
                 map_coords: map_coords,
-                set_center_and_zoom_in: set_center_and_zoom_in
+                set_center_and_zoom_in: set_center_and_zoom_in,
+                get_current_places: get_current_places
             };
         },
         object_index_map: function(map_div_id, coord) {
