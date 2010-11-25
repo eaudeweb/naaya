@@ -1,8 +1,13 @@
 from AccessControl.Permission import Permission
 
 from Products.naayaUpdater.updates import UpdateScript
+from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
+try:
+    from naaya.content.base.discover import get_pluggable_content
+except ImportError:
+    from Products.NaayaContent.discover import get_pluggable_content
 
-from meeting import _restrict_meeting_item_view, _restrict_meeting_agenda_view
+from naaya.content.meeting.meeting import NyMeeting
 from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
@@ -23,6 +28,35 @@ class AddAllowRegister(UpdateScript):
                         meeting.absolute_url(1))
         return True
 
+class AddRestrictItems(UpdateScript):
+    title = 'Add restrict_items attribute for the meetings'
+    authors = ['Andrei Laza']
+    creation_date = 'Nov 25, 2010'
+
+    def _update(self, portal):
+        self.log.debug('Changing meeting schema')
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
+
+        try:
+            schema.getWidget('restrict_items')
+        except KeyError:
+            pass
+        else:
+            schema.manage_delObjects([widgetid_from_propname('restrict_items')])
+
+        property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['restrict_items']
+        schema.addWidget('restrict_items', **property_schema)
+
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            if not hasattr(meeting, 'restrict_items'):
+                meeting.restrict_items = True
+                self.log.debug('Added restrict_items attribute for meeting at %s' %
+                        meeting.absolute_url(1))
+        return True
+
 class RestrictObjectsInMeetings(UpdateScript):
     title = 'Restrict objects in current existing meetings'
     authors = ['Andrei Laza']
@@ -32,22 +66,7 @@ class RestrictObjectsInMeetings(UpdateScript):
         meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
         for meeting in meetings:
             self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
-            items = meeting.objectValues()
-            for item in items:
-                _restrict_meeting_item_view(item)
-                self.log.debug('Restricted permissions for item %s' %
-                        item.absolute_url(1))
-
-            agenda_pointer = getattr(meeting, 'agenda_pointer', '')
-            if agenda_pointer:
-                try:
-                    agenda = portal.unrestrictedTraverse(str(agenda_pointer))
-                except KeyError:
-                    agenda = None
-                if agenda is not None:
-                    self.log.debug('Restricted permissions for agenda %s' %
-                            agenda.absolute_url(1))
-                    _restrict_meeting_agenda_view(agenda)
+            meeting._set_items_view_permissions()
         return True
 
 class AddObserversInMeetings(UpdateScript):

@@ -189,7 +189,7 @@
             </tal:block>
             </tal:block>
 
-            <tal:block condition="here/checkPermissionParticipateInMeeting">
+            <tal:block condition="python:(not here.restrict_items) or here.checkPermissionParticipateInMeeting()">
 
                 <span tal:replace="structure here/menusubmissions" />
 
