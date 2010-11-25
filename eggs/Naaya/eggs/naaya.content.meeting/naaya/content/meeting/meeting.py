@@ -1,4 +1,4 @@
-#Python imports
+#Python impors
 from copy import deepcopy
 import os
 import sys
@@ -11,6 +11,7 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view, change_permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -428,6 +429,9 @@ class NyMeeting(NyContentData, NyFolder):
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+        self.publicinterface = schema_raw_data.pop('publicinterface', 0)
+        self.createPublicInterface()
+
         if _approved != self.approved:
             if _approved == 0: _approved_by = None
             else: _approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -476,6 +480,16 @@ class NyMeeting(NyContentData, NyFolder):
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
+
+    security.declarePrivate('createPublicInterface')
+    def createPublicInterface(self):
+        pt_id = 'index'
+        if self.publicinterface and self._getOb(pt_id, None) is None:
+            import pdb; pdb.set_trace()
+            pt_content = self.getFormsTool().getForm('meeting_index').document_src()
+            manage_addPageTemplate(self, id=pt_id, title='Custom index for this meeting', text='')
+            pt_obj = self._getOb(pt_id)
+            pt_obj.pt_edit(text=pt_content, content_type='text/html')
 
     def checkPermissionParticipateInMeeting(self):
         """ """
