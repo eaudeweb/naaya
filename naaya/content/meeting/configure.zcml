@@ -13,6 +13,13 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="add_restrict_items_feature.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddRestrictItems"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
   <zope:subscriber
       for="naaya.content.base.interfaces.INyContentObject
            zope.app.container.interfaces.IObjectAddedEvent"
