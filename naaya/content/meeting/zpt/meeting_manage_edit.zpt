@@ -41,6 +41,10 @@
 	<td class="form-label">Contact email address</td>
 	<td><input type="text" name="contact_email:utf8:ustring" size="50" tal:attributes="value here/contact_email" /></td>
 </tr>
+<tr>
+    <td class="form-label">Use/create public interface</td>
+    <td><input type="checkbox" name="publicinterface" tal:attributes="checked python:here.publicinterface==1" /></td>
+</tr>
 </tal:block>
 
 </tal:block>
