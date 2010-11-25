@@ -3,6 +3,7 @@
     var the_map;
     var the_geocoder = new GClientGeocoder();
     var icons = {};
+    var current_places = [];
 
     $.each(config.icons, function() {
         var icon = new GIcon(G_DEFAULT_ICON);
@@ -66,6 +67,7 @@
                 });
                 the_map.addOverlay(marker);
             });
+            current_places = places;
         });
     }
 
@@ -179,6 +181,10 @@
         the_map.setCenter(first_point, 10);
     }
 
+    function get_current_places() {
+        return current_places;
+    }
+
     window.naaya_map_engine = {
         map_with_points: function(map_div_id, points) {
             setup_map(map_div_id);
@@ -194,7 +200,8 @@
                 refresh_points: refresh_points,
                 page_position: page_position,
                 map_coords: map_coords,
-                set_center_and_zoom_in: set_center_and_zoom_in
+                set_center_and_zoom_in: set_center_and_zoom_in,
+                get_current_places: get_current_places
             };
         },
         object_index_map: function(map_div_id, coord) {

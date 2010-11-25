@@ -74,21 +74,30 @@ function load_map_points(bounds, callback) {
     }
 }
 
-function load_marker_balloon(latitude, longitude, callback) {
-    var query = document.getElementById('geo_query').value;
-    if (query === naaya_map_i18n["Type keywords"]) {
-        query = "";
-    }
-    var enc_form = $("form#frmFilterMap").serialize();
-    //don't send explanatory text
-    enc_form = enc_form.replace(encode_form_value(
-                    naaya_map_i18n["Type location address"]), "");
-    enc_form = enc_form.replace(encode_form_value(
-                    naaya_map_i18n["Type keywords"]), "");
+function points_nearby(places, lat, lon, radius) {
+    out = [];
+    $.each(places, function() {
+        var place = this;
+        if(distance_to(place.lat, place.lon) > radius)
+            return;
+        out.push(place);
+    });
+    return out;
 
-    var url = portal_map_url + "/xrjs_getTooltip?" +
-            enc_form + '&lat='+ latitude + '&lon=' + longitude +
-            '&geo_query=' + query;
+    function distance_to(lat2, lon2) {
+        var dlat = lat2-lat, dlon = lon2-lon;
+        return Math.sqrt(dlat*dlat + dlon*dlon);
+    }
+}
+
+function load_marker_balloon(points, callback) {
+    var point_id = points[0].id;
+    var args = "";
+    $.each(points, function() {
+        if(this.id === '') return;
+        args += "&point_id=" + encodeURIComponent(this.id);
+    });
+    var url = portal_map_url + "/xrjs_getPointBalloon?" + args.substr(1);
 
     $.get(url, function(data) {
         callback(data);
@@ -248,7 +257,9 @@ function onclickpoint(lat, lon, point_id, point_tooltip) {
     if (point_id === '') {
         map_engine.set_center_and_zoom_in(lat, lon);
     } else {
-        load_marker_balloon(lat, lon, function(html) {
+        var current_places = map_engine.get_current_places();
+        var points = points_nearby(current_places, lat, lon, 0.0001);
+        load_marker_balloon(points, function(html) {
             custom_balloon(lat, lon, html);
         });
     }
