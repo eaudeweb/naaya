@@ -139,12 +139,12 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
             title='MyMeeting',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         addNyMeeting(self.portal.info, 'mymeeting2', contributor='contributor', submitted=1,
             title='MyMeeting',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.info.mymeeting2.approveThis()
         import transaction; transaction.commit()
@@ -257,7 +257,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='10',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingUsers(self.portal)
@@ -464,7 +464,7 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -577,7 +577,7 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -629,7 +629,7 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -828,7 +828,7 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='1',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -934,7 +934,7 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='2',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, **location)
+            allow_register=True, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -1176,7 +1176,7 @@ class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='2',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=False, **location)
+            allow_register=False, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         meeting = self.portal.info.mymeeting
@@ -1207,7 +1207,7 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
             title='MyMeeting', max_participants='2',
             releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=False, **location)
+            allow_register=False, restrict_items=True, **location)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         meeting = self.portal.info.mymeeting
@@ -1252,17 +1252,60 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
         self.assertTrue('http://localhost/portal/login_html?came_from='
                             in self.browser.get_url())
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyMeetingCreateTestCase))
-    suite.addTest(makeSuite(NyMeetingEditingTestCase))
-    suite.addTest(makeSuite(NyMeetingFunctionalTestCase))
-    suite.addTest(makeSuite(NyMeetingParticipantsTestCase))
-    suite.addTest(makeSuite(NyMeetingSurveyTestCase))
-    suite.addTest(makeSuite(NyMeetingSignupTestCase))
-    suite.addTest(makeSuite(NyMeetingAccountSubscriptionTestCase))
-    suite.addTest(makeSuite(NyMeetingAccess))
-    suite.addTest(makeSuite(NyMeetingRegisterNotAllowed))
-    suite.addTest(makeSuite(NyMeetingItemsRestrictedButAgenda))
-    return suite
+
+class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
+    """ """
+
+    def afterSetUp(self):
+        self.portal.manage_install_pluggableitem('Naaya Meeting')
+        from naaya.content.meeting.meeting import addNyMeeting
+        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
+            title='MyMeeting', max_participants='2',
+            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            contact_person='My Name', contact_email='my.email@my.domain',
+            allow_register=False, restrict_items=True, **location)
+        self.portal.info.mymeeting.approveThis()
+        self.portal.recatalogNyObject(self.portal.info.mymeeting)
+        meeting = self.portal.info.mymeeting
+        import transaction; transaction.commit()
+        from Products.Naaya.NyFolder import addNyFolder
+        addNyFolder(self.portal.info.mymeeting, id='myfolder', title='Folder', submitted=1, contributor='contributor')
+        self.portal.info.mymeeting.myfolder.approveThis()
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.info.manage_delObjects(['mymeeting'])
+        self.portal.manage_uninstall_pluggableitem('Naaya Meeting')
+        import transaction; transaction.commit()
+
+    def test_make_meeting_restricted_and_back(self):
+        folder_url = 'http://localhost/portal/info/mymeeting/myfolder'
+        self.browser.go(folder_url)
+        self.assertNotEqual(folder_url, self.browser.get_url())
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['restrict_items:boolean'] = []
+        self.browser.submit()
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.browser_do_logout()
+
+        self.browser.go(folder_url)
+        self.assertEqual(folder_url, self.browser.get_url())
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['restrict_items:boolean'] = ['on']
+        self.browser.submit()
+        self.browser.go('http://localhost/portal/info/mymeeting')
+        self.browser_do_logout()
+
+        self.browser.go(folder_url)
+        self.assertNotEqual(folder_url, self.browser.get_url())
+
 
