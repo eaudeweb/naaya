@@ -27,6 +27,17 @@ $(document).ready(function(){
 })
 // -->
 </script>
+<style type="text/css">
+	.pagination {
+		font-size: 14px;
+	}
+	.paging-link-off{
+		cursor: default;
+		color: #000;
+		text-decoration: none;
+	}
+
+</style>
 <div class="tooltip" style="float: right;">
 	<strong i18n:translate="">Search tips</strong>
 	<table>
@@ -116,9 +127,8 @@ $(document).ready(function(){
 </form>
 </div>
 <tal:block tal:define="results_paginator python:here.search(request);
-		   results python: results_paginator.get_page(int(getattr(request, 'page', 0)));"
-		   tal:condition="results">
-<div id='search_results' style="clear: both;">
+		   results python: results_paginator.get_page(0);">
+<div id='search_results' style="clear: both;" tal:condition="results">
 	<h2><strong i18n:translate="">Search Results:</strong></h2>
 	<table border="0" width="100%" class="sortable">
 		<thead>
@@ -185,12 +195,27 @@ $(document).ready(function(){
 		<strong tal:content="python: results_paginator.first_on_page(int(getattr(request, 'page', 0)))"></strong> -
 		<strong tal:content="python: results_paginator.last_on_page(int(getattr(request, 'page', 0)))"></strong> <span i18n:translate="" tal:omit-tag="">of</span> <strong tal:content="results_paginator/_get_hits"></strong>
 		<div class="pagination" i18n:translate="">Page:
-			<span tal:repeat="page results_paginator/_get_page_range">
-				<a tal:define="current_page python: int(getattr(request, 'page', 0)) == page"
-				   tal:attributes="class python:test(current_page, 'paging-link-off', 'paging-link-on');
-				   href python: test(current_page, 'javascript:void(0)', here.search_page_link(request.form, page))"
-				   tal:content="python: page + 1"></a>
+			<tal:block condition="python: int(getattr(request, 'page', 0)) != 0">
+				<a tal:attributes="href python: here.search_page_link(request.form, 0)">&laquo;</a>
+				<a tal:attributes="href python: here.search_page_link(request.form, int(getattr(request, 'page', 0)) - 1)">&lsaquo;</a>
+			</tal:block>
+			<tal:block define="page_range python: results_paginator.format_page_range(int(getattr(request, 'page', 0)))">
+			<span tal:repeat="page page_range">
+				<tal:block define="if python: page == None">
+					<tal:block condition="if">...</tal:block>
+					<tal:block condition="not: if">
+						<a tal:define="current_page python: int(getattr(request, 'page', 0)) == page"
+						tal:attributes="class python:test(current_page, 'paging-link-off', 'paging-link-on');
+						href python: test(current_page, 'javascript:void(0)', here.search_page_link(request.form, page))"
+						tal:content="python: page + 1"></a>
+					</tal:block>
+				</tal:block>
 			</span>
+			</tal:block>
+			<tal:block condition="python: int(getattr(request, 'page', 0)) + 1 != results_paginator.pages">
+				<a tal:attributes="href python: here.search_page_link(request.form, int(getattr(request, 'page', 0)) + 1)">&rsaquo;</a>
+				<a tal:attributes="href python: here.search_page_link(request.form, results_paginator.pages - 1)">&raquo;</a>
+			</tal:block>
 		</div>
 	</div>
 </div>
