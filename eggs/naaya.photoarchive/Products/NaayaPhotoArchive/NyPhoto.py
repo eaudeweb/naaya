@@ -584,10 +584,14 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
     def view(self, REQUEST, display='', **kwargs):
         """ """
         if not self.displays.has_key(display):
-            if not LISTING_DISPLAYS.has_key(display) and display != 'Original':
-                display = 'Medium'
-        if not self.check_view_photo_permission(display):
-            raise Unauthorized
+            if not LISTING_DISPLAYS.has_key(display):
+                if self.check_view_photo_permission('Original'):
+                    display = 'Original'
+                elif display == 'Original':
+                    raise Unauthorized
+                else:
+                    display = 'Medium'
+
         if self.aq_parent.watermark_text:
             watermark = True
         else:
