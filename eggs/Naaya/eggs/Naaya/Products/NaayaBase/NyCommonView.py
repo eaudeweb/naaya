@@ -2,6 +2,7 @@
 
 #Python imports
 import logging
+from cStringIO import StringIO
 
 #Zope imports
 from AccessControl import ClassSecurityInfo
@@ -13,6 +14,7 @@ from zope.deprecation import deprecate
 from naaya.core.zope2util import RestrictedToolkit
 
 from Products.NaayaCore.interfaces import ICaptcha
+from Products.NaayaCore.managers.captcha_tool import captcha_tool
 
 class NyCommonView(object):
     """
