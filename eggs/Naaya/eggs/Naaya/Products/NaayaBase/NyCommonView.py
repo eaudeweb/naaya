@@ -91,7 +91,7 @@ class NyCommonView(object):
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'standard_error_message')
 
-    security.declarePublic('page_error')
+    security.declarePublic('log_page_error')
     def log_page_error(self, error):
         log = logging.getLogger('naaya.commonview.page_error')
         log.warning('Page error: error type %r, error value %r,'
