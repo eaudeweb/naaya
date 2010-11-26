@@ -2,6 +2,14 @@ from datetime import datetime, timedelta
 from urllib import quote
 import pycountry
 import os
+try:
+    import json
+except:
+    import simplejson as json
+try:
+    from hashlib import sha1
+except:
+    from sha import new as sha1
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -24,6 +32,12 @@ import sqlalchemy_setup
 from interfaces import IOAIAggregator
 from utils import create_object, process_form
 from paginator import ObjectPaginator
+
+try:
+    import memcache
+    memcache_available = True
+except ImportError:
+    memcache_available = False
 
 manage_addOAIAggregatorForm = PageTemplateFile('zpt/manage_addOAIAggregatorForm',
                                            globals())
@@ -222,8 +236,28 @@ class OAIAggregator(OAIRepository):
                                   record_id_column==join_key,))
 
         query = query.join(*joins)
-        #How many results
-        records_count = query.distinct().count()
+        #How many results (cache if possible)
+        records_count = 0
+        if memcache_available:
+            my_keys = dict(form)
+
+            #Don't create useless hits based on these vars
+            if 'per_page' in my_keys:
+                del my_keys['per_page']
+            if 'page' in my_keys:
+                del my_keys['page']
+
+            key = sha1(json.dumps(my_keys)).hexdigest()
+            try:
+                mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+                records_count = mc.get(key)
+                if records_count is None:
+                    records_count = query.distinct().count()
+                    mc.set(key, records_count, 43200)
+            except:
+                records_count = query.distinct().count()
+        else:
+            records_count = query.distinct().count()
 
         limit = int(form.get('per_page', 20))
         offset = limit * int(form.get('page', 0))
