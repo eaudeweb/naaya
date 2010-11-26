@@ -131,6 +131,21 @@ class ObjectPaginator:
             self._page_range = range(0, self._pages)
         return self._page_range
 
+    def format_page_range(self, page, limit=10):
+        """ Format pages in this style:
+        20 21 22 23 24
+
+        """
+        if self._page_range is None:
+            how_many = limit/2
+            start = 0
+            if page - how_many > 0: start = page - how_many
+            end = self._pages
+            if page + how_many < self._pages: end = page + how_many
+
+            self._page_range = range(start, end)
+        return self._page_range
+
     def left(self, page, pages=5):
         left = page - pages
         if left < 0:
