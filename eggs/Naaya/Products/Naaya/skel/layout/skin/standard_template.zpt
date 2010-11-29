@@ -93,7 +93,7 @@
                     <metal:block define-slot="left-port">
                         <div id="left_port">
                             <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'left')">
-                                <tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
+                                <tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
                             </tal:block>
                         </div>
                     </metal:block>
