@@ -13,13 +13,17 @@
     </metal:block>
     <metal:block fill-slot="head">
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
+                <tal:block on-error="python:here.log_page_error(error)">
                 <link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
                 <link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
+                </tal:block>
             </tal:block>
 
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_local_channels()">
+                <tal:block on-error="python:here.log_page_error(error)">
                 <link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
                 <link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
+                </tal:block>
             </tal:block>
 
             <link rel="home" tal:attributes="href python:request['BASE0']" title="Home" />
@@ -171,7 +175,7 @@
                         <tr>
                             <td valign="top" id="left_cell2">
                                 <tal:block tal:repeat="item here/get_left_portlets_objects">
-                                    <tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
+                                    <tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
                                 </tal:block>
                             </td>
                         </tr>
