@@ -1,6 +1,7 @@
 <metal:block extend-macro="python:here.getLayoutTool().get_standard_template_base().macros['page']" define-macro="page">
     <metal:block fill-slot="standard-head-links" tal:define="skin_url python:here.getLayoutTool().get_current_skin().absolute_url()">
         <metal:block define-slot="standard-head-links">
+        <metal:block define-macro="standard-head-links">
             <link rel="stylesheet" type="text/css" media="screen" href="portal_layout/chm_common_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_url}/style" />
             <link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_url}/style_common" />
@@ -12,6 +13,7 @@
             <tal:block content="structure string:<!--[if IE 6]>" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_url}/style_ie6" />
             <tal:block content="structure string:<![endif]-->" />
+        </metal:block>
         </metal:block>
     </metal:block>
     <metal:block fill-slot="head">
