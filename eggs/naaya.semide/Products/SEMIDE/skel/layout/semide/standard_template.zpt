@@ -32,10 +32,14 @@
             <link tal:condition="python:here.meta_type=='SEMIDE Site'" rel="stylesheet" type="text/css" tal:attributes="href string:${site_url}/portal_calendar/calendar_style" />
             <!-- RSS feeds -->
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
+                <tal:block on-error="python:here.log_page_error(error)">
                 <link rel="alternate" type="application/rss+xml" tal:attributes="title channel/title_or_id; href channel/absolute_url" />
+                </tal:block>
             </tal:block>
             <tal:block repeat="channel python:here.getSite().getSyndicationTool().get_local_channels()">
+                <tal:block on-error="python:here.log_page_error(error)">
                 <link rel="alternate" type="application/rss+xml" tal:attributes="title channel/title_or_id; href channel/absolute_url" />
+                </tal:block>
             </tal:block>
 
             <link rel="home" tal:attributes="href python:request['BASE0']" title="Home" />
@@ -183,7 +187,7 @@
         <div id="left_port">
             <br />
             <tal:block tal:repeat="item here/get_left_portlets_objects">
-                <tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
+                <tal:block tal:content="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
             </tal:block>
         </div>
         <!-- END OF LEFT SIDE PORTLETS -->
