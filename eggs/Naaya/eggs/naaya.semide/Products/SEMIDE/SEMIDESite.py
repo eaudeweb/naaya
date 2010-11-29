@@ -262,13 +262,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[fr].xml')))
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
-        #portal_map custom index
-        custom_map_index = self.futRead(os.path.join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
-        portal_map = self.getGeoMapTool()
-        manage_addPageTemplate(portal_map, id='map_index', title='', text='')
-        map_index = portal_map._getOb(id='map_index')
-        map_index.pt_edit(text=custom_map_index, content_type='')
-
         #set the default thesaurus on picklists
         self.admin_properties(show_releasedate=1, rename_id='', http_proxy='',
                               repository_url=ID_THESAURUS,
