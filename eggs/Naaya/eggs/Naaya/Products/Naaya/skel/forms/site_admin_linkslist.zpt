@@ -37,9 +37,9 @@
 	<dd>
 		<select name="permission">
 			<option value="" i18n:translate="">[None]</option>
-			<option tal:repeat="item here/get_naaya_permissions_in_site"
-					tal:attributes="value item; selected python:record_data[6]==item"
-					tal:content="item" />
+			<option tal:repeat="pair options/sorted_perm"
+					tal:attributes="value python:pair[1]; selected python:record_data[6]==pair[1]"
+					tal:content="python:pair[0]" />
 		</select>
 	</dd>
 	<dt i18n:translate="">Order</dt>
