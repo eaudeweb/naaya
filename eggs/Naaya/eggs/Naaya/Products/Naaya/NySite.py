@@ -1880,7 +1880,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     res = self.utSortObjsListByMethod(res, skey, rkey)
                 else:
                     res = self.utSortObjsListByAttr(res, skey, rkey)
-            if len(r):
+            if len(res):
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
