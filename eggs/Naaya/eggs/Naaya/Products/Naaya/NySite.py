@@ -3126,7 +3126,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                              for zope_perm in permission_names)
 
         tmpl = self.getFormsTool().getForm('site_admin_linkslist').__of__(self)
-        options = {'sorted_perm': sorted_perm}
+        options = {'permission_names': permission_names,
+                   'sorted_perm': sorted_perm}
         return tmpl(REQUEST, **options)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')

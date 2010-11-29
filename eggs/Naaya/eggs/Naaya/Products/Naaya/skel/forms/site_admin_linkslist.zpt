@@ -78,7 +78,7 @@
 			<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${linkslist/id}&item=${record/id}#editlink" tal:content="record/title">title</a></td>
 			<td tal:content="record/description">description</td>
 			<td tal:content="python:here.utTruncateString(test(record.relative, '%s%s' % (site_url, record.url), record.url), 40)">url</td>
-			<td tal:content="record/permission">permission</td>
+			<td tal:content="python:options['permission_names'].get(record.permission, '')">permission</td>
 			<td tal:content="record/order">Order</td>
 		</tr>
 	</tbody>
