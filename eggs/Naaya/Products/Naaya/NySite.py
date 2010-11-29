@@ -1874,13 +1874,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     return (None, None, unicode(e))
             r = self.utEliminateDuplicatesByURL(r)
             res = [k for k in r if k.can_be_seen()]
+            if len(res) == 0:
+                return (None, None, None)
             batch_obj = batch_utils(self.numberresultsperpage, len(res), start)
             if skey in ['meta_type', 'title', 'bobobase_modification_time']:
                 if skey == 'bobobase_modification_time':
                     res = self.utSortObjsListByMethod(res, skey, rkey)
                 else:
                     res = self.utSortObjsListByAttr(res, skey, rkey)
-            if len(res):
+            if len(r):
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
