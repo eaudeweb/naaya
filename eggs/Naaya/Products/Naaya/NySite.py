@@ -3121,7 +3121,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslist_html')
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_linkslist')
+        permission_names = self.get_naaya_permissions_in_site()
+        sorted_perm = sorted((permission_names[zope_perm], zope_perm)
+                             for zope_perm in permission_names)
+
+        tmpl = self.getFormsTool().getForm('site_admin_linkslist').__of__(self)
+        options = {'sorted_perm': sorted_perm}
+        return tmpl(REQUEST, **options)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
     def admin_reflists_html(self, REQUEST=None, RESPONSE=None):
