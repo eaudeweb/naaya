@@ -50,6 +50,8 @@ from naaya.core.utils import relative_object_path, is_ajax
 
 from send_group_emails_thread import start_sending_emails
 
+import ldap_cache
+
 plug_name = 'plugLDAPUserFolder'
 plug_doc = 'Plugin for LDAPUserFolder'
 plug_version = '1.0.0'
@@ -58,7 +60,7 @@ plug_object_type = 'LDAPUserFolder'
 
 LDAP_ROOT_ID = 'ROOT'
 
-auth_logger = logging.getLogger('naaya.core.auth')
+log = logging.getLogger('naaya.core.auth.ldap')
 
 class LDAPUserNotFound(Exception):
     pass
@@ -162,6 +164,9 @@ class plugLDAPUserFolder(PlugBase):
 
     def getRootDN(self, acl_folder):
         return acl_folder.groups_base
+
+    def _user_dn(self, user_id):
+        return "uid=%s,%s" % (user_id, self.getUserFolder().users_base)
 
     def getGroupScope(self, acl_folder):
         return acl_folder.groups_scope
@@ -494,18 +499,25 @@ class plugLDAPUserFolder(PlugBase):
         return self.getUserFolder().getUser(user_id)
 
     def get_user_info(self, user_id):
-        zope_user = self.getUserFolder().getUser(uid)
+        # first, try to use the cache
+        cached_record = ldap_cache.get(self._user_dn(user_id), None)
+        if cached_record is not None:
+            log.debug("loading user from cache: %r", user_id)
+            return user_info_from_ldap_cache(user_id, cached_record, self)
+
+        # not in cache, ask LDAPUserFolder
+        zope_user = self._get_zope_user(user_id)
         if zope_user is None:
             raise LDAPUserNotFound(user_id)
         return user_info_from_zope_user(zope_user, self.default_encoding)
 
     def has_user(self, user_id):
-        try:
-            self.get_user_info(user_id)
-        except LDAPUserNotFound:
-            return False
-        else:
+        if ldap_cache.has(self._user_dn(user_id)):
             return True
+        elif self._get_zope_user(user_id) is not None:
+            return True
+        else:
+            return False
 
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
@@ -678,5 +690,37 @@ def user_info_from_zope_user(zope_user, ldap_encoding):
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),
         '_get_zope_user': lambda: zope_user,
+    }
+    return UserInfo(**fields)
+
+def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
+    def get_zope_user():
+        zope_user = ldap_plugin._get_zope_user(user_id)
+        assert zope_user is not None, ("User loaded from cache but "
+                                       "not found via LDAPUserFolder")
+        return zope_user
+
+    encoding = ldap_plugin.default_encoding
+    def extract(name):
+        # encode values back to strings, because the rest of our ancient code
+        # expects that.
+        value = cached_record.get(name, u'')
+        if isinstance(value, list):
+            for i in value:
+                assert isinstance(i, unicode), '%r not unicode' % i
+        else:
+            assert isinstance(value, unicode), '%r not unicode' % value
+        return value
+
+    fields = {
+        'user_id': user_id,
+        'full_name': extract('cn'),
+        'email': extract('mail'),
+        'first_name': extract('givenName'),
+        'last_name': extract('sn'),
+        'organisation': extract('o'),
+        'postal_address': extract('postalAddress'),
+        'phone_number': extract('telephoneNumber'),
+        '_get_zope_user': get_zope_user,
     }
     return UserInfo(**fields)
