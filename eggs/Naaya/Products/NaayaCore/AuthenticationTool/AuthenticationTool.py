@@ -5,6 +5,7 @@ from copy import copy, deepcopy
 from StringIO import StringIO
 import csv
 import simplejson as json
+from warnings import warn
 
 from App.ImageFile import ImageFile
 from DateTime import DateTime
@@ -752,6 +753,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
          - if it's in a known external source, returns the source's title
          - otherwise returns 'n/a'
         """
+
+        if not isinstance(user, basestring):
+            warn("Passign user objects to `getUserSource` is highly suspect.")
+            user = str(user)
+
         user_ob = self.getUser(user)
         if user_ob:
             return 'acl_users'
