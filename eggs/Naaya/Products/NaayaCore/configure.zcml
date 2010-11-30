@@ -20,6 +20,10 @@
                    Products.Naaya.interfaces.IHeartbeat"
               handler=".AuthenticationTool.recover_password.cleanup_expired_tokens" />
 
+  <subscriber for="Products.Naaya.interfaces.INySite
+                   Products.Naaya.interfaces.IHeartbeat"
+              handler=".AuthenticationTool.plugins.ldap_cache.update" />
+
   <configure zcml:condition="installed Products.naayaUpdater">
     <utility name="remove_permission_groups.update"
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
