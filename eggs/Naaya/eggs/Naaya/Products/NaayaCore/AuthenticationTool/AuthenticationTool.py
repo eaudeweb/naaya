@@ -723,12 +723,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     continue
                 userids = source.group_member_ids(group)
                 for userid in userids:
-                    userinfo = source._get_user_by_uid(userid, acl_folder)
+                    user_info = source.get_user_info(userid)
                     group_users[userid] = {
-                        'name': handle_unicode(
-                            source._get_user_full_name(userinfo)),
-                        'email': handle_unicode(
-                            source._get_user_email(userinfo)),
+                        'name': handle_unicode(user_info.full_name),
+                        'email': handle_unicode(user_info.email),
                     }
             #update external users
             external_users.update(group_users)
@@ -762,15 +760,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if user_ob:
             return 'acl_users'
         else:
-            #check sources
             for source in self.getSources():
-                source_acl = source.getUserFolder()
                 # here we convert `user` to `str` because, for some strange
                 # reason, some user IDs are stored as `unicode` in the DB
-                user_ob = source_acl.getUser(str(user))
-                if user_ob:
+                if source.has_user(str(user)):
                     return source.title
-            return 'n/a'
+            else:
+                return 'n/a'
 
     security.declareProtected(manage_users, 'getUsersFullNames')
     def getUsersFullNames(self, users):
@@ -1164,65 +1160,46 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         all_users = list(set(all_users))
 
         # get user_data[userid] = {user_object, source?}
-        user_data = {}
+        user_source = {}
         for userid in all_users:
             user_ob = self.getUser(userid)
             if user_ob is not None:
-                user_data[userid] = {
-                    'user_object': user_ob,
-                    }
+                user_source[userid] = None # means "local"
                 continue
 
             for source in self.getSources():
-                source_acl = source.getUserFolder()
-                user_ob = source._get_user_by_uid(userid, source_acl)
-                if user_ob is not None:
-                    user_data[userid] = {
-                        'user_object': user_ob,
-                        'source': source
-                        }
-                continue
+                # We actually get the user object. Not very bright of us.
+                if source.has_user(userid):
+                    user_source[userid] = source
+                    break
 
-        for userid in user_data.keys():
-            data = user_data[userid]
-            source = data.get('source', None)
-            user = data['user_object']
-
+        for userid, source in user_source.iteritems():
             groups = groups_for_user.get(userid, [])
 
             roles_for_user = roles_by_user.get(userid, {})
 
-            username = self.utToUtf8(userid)
-
             if source is None:
-                first_name = self.utToUtf8(self.getUserFirstName(user))
-                last_name = self.utToUtf8(self.getUserLastName(user))
+                user_type = 'Local'
+                user = self.getUser(userid)
+                first_name = self.getUserFirstName(user)
+                last_name = self.getUserLastName(user)
                 name = first_name + ' ' + last_name
-            else:
-                name = self.utToUtf8(source._get_user_full_name(user))
-
-            if source is None:
                 organisation = ''
-            else:
-                organisation = self.utToUtf8(source._get_user_organisation(user))
-
-            if source is None:
                 postal_address = ''
-            else:
-                postal_address = self.utToUtf8(source._get_user_postal_address(user))
-
-            if source is None:
-                email = self.utToUtf8(self.getUserEmail(user))
-            else:
-                email = self.utToUtf8(source._get_user_email(user))
-
-            if source is None:
+                email = self.getUserEmail(user)
                 groups_str = ''
+
             else:
+                user_type = 'LDAP (source_id=%s)' % source.id
+                user_info = source.get_user_info(userid)
+                name = user_info.full_name
+                organisation = user_info.organisation
+                postal_address = user_info.postal_address
+                email = user_info.email
                 if groups == []:
-                    groups_str = self.utToUtf8(source.getUserLocation(userid))
+                    groups_str = source.getUserLocation(userid)
                 else:
-                    groups_str = self.utToUtf8(', '.join(groups))
+                    groups_str = ', '.join(groups)
 
             roles_info_str_list = []
             for path, roles_infos in roles_for_user.items():
@@ -1249,12 +1226,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
             roles_str = ' | '.join(roles_info_str_list)
 
-            if source is None:
-                type = 'Local'
-            else:
-                type = 'LDAP (source_id=%s)' % source.id
-
-            csv_writer.writerow([username, name, organisation, postal_address, email, groups_str, roles_str, type])
+            csv_writer.writerow([
+                self.utToUtf8(userid),
+                self.utToUtf8(name),
+                self.utToUtf8(organisation),
+                self.utToUtf8(postal_address),
+                self.utToUtf8(email),
+                self.utToUtf8(groups_str),
+                roles_str,
+                user_type,
+            ])
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)

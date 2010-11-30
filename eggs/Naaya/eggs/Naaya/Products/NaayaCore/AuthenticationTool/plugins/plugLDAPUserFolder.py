@@ -60,6 +60,9 @@ LDAP_ROOT_ID = 'ROOT'
 
 auth_logger = logging.getLogger('naaya.core.auth')
 
+class LDAPUserNotFound(Exception):
+    pass
+
 class ldap_user:
     """Defines a ldap_user. """
 
@@ -115,8 +118,8 @@ class plugLDAPUserFolder(PlugBase):
         value = self.canonical_name.get(user, '-')
         if value == '-':
             try:
-                user_object = self._get_user_by_uid(user, self.getUserFolder())
-                value = unicode(user_object.get('cn', ''), 'iso-8859-1')
+                user_info = self.get_user_info(user)
+                value = user_info.full_name
                 self.setUserCanonicalName(user, value)
             except Exception, e:
                 logging.debug("Could not get user's full name for user %s : %s",
@@ -438,67 +441,23 @@ class plugLDAPUserFolder(PlugBase):
         else:
             return ()
 
-    def _get_user_by_uid(self, uid, acl_folder):
-        user = acl_folder.getUser(uid)
-        return user
-
-    def _get_user_email(self, user, default=''):
-        if user is None or not hasattr(user, 'mail'):
-            return default
-        return user.mail
-
     def getUserEmail(self, p_username, acl_folder):
         #return the email of the given user id
-        user = self._get_user_by_uid(p_username, acl_folder)
-        return self._get_user_email(user)
-
-    def _get_user_first_name(self, user, default=''):
-        if user is None or not hasattr(user, 'givenName'):
-            return default
-        return user.givenName
-
-    def _get_user_last_name(self, user, default=''):
-        if user is None or not hasattr(user, 'lastname'):
-            return default
-        return user.lastname
-
-    def _get_user_full_name(self, user, default=''):
-        if user is None or not hasattr(user, 'cn'):
-            return default
-        return user.cn
+        try:
+            user_info = self.get_user_info(p_username)
+        except LDAPUserNotFound:
+            return ''
+        else:
+            return user_info.email.encode(self.default_encoding)
 
     def getUserFullName(self, p_username, acl_folder):
         #return the full name of the given user id
-        user = self._get_user_by_uid(p_username, acl_folder)
-        return self._get_user_full_name(user)
-
-    def _get_user_organisation(self, user, default=''):
-        if user is None or not hasattr(user, 'o'):
-            return default
-        return user.o
-
-    def _get_user_postal_address(self, user, default=''):
-        if user is None or not hasattr(user, 'postalAddress'):
-            return default
-        return user.postalAddress
-
-    def getLDAPUserFirstName(self, dn):
-        return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')
-
-    def getLDAPUserLastName(self, dn):
-        return unicode(dn.get('givenName', ''), 'iso-8859-1').encode('utf-8')
-
-    def getLDAPUserEmail(self, dn):
-        return unicode(dn.get('mail', ''), 'iso-8859-1').encode('utf-8')
-
-    def getLDAPUserPhone(self, dn):
-        return unicode(dn.get('telephoneNumber', ''), 'iso-8859-1').encode('utf-8')
-
-    def getLDAPUserAddress(self, dn):
-        return unicode(dn.get('postalAddress', ''), 'iso-8859-1').encode('utf-8')
-
-    def getLDAPUserDescription(self, dn):
-        return unicode(dn.get('description', ''), 'iso-8859-1').encode('utf-8')
+        try:
+            user_info = self.get_user_info(p_username)
+        except LDAPUserNotFound:
+            return ''
+        else:
+            return user_info.full_name.encode(self.default_encoding)
 
     def decode_cn(self, value):
         if isinstance(value, str):
@@ -517,17 +476,36 @@ class plugLDAPUserFolder(PlugBase):
         ldap_user_folder = self.getUserFolder()
 
         def user_data(user_id):
-            user_ob = ldap_user_folder.getUser(user_id)
-            if user_ob is None:
-                name = "[not found]"
+            try:
+                user_info = self.get_user_info(user_id)
+            except LDAPUserNotFound:
+                name = u"[not found]"
             else:
-                name = user_ob.getProperty('cn').decode('latin-1')
+                name = user_info.full_name
+
             return {
                 'user_id': user_id,
                 'user_name': name,
             }
 
         return map(user_data, member_ids)
+
+    def _get_zope_user(self, user_id):
+        return self.getUserFolder().getUser(user_id)
+
+    def get_user_info(self, user_id):
+        zope_user = self.getUserFolder().getUser(uid)
+        if zope_user is None:
+            raise LDAPUserNotFound(user_id)
+        return user_info_from_zope_user(zope_user, self.default_encoding)
+
+    def has_user(self, user_id):
+        try:
+            self.get_user_info(user_id)
+        except LDAPUserNotFound:
+            return False
+        else:
+            return True
 
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
@@ -648,3 +626,57 @@ class LdapSatelliteProvider(Acquisition.Implicit):
         current_folder._p_changed = True
 
 NySite.acl_satellite = LdapSatelliteProvider()
+
+class UserInfo(object):
+    """
+    Encapsulate information about a user: name, email, organisation, etc.
+    While various functions in Naaya's authentication code return latin-1
+    or utf-8 encoded bytestrings, UserInfo has field values as unicode
+    strings.
+    """
+    mandatory_fields = set(['first_name', 'last_name', 'full_name', 'user_id',
+                            'email', 'organisation', '_get_zope_user'])
+
+    def __init__(self, **fields):
+        missing_fields = self.mandatory_fields - set(fields)
+        assert not missing_fields, "Missing fields: %r" % list(missing_fields)
+
+        # we may want to comment this out for speed reasons
+        for key, value in fields.iteritems():
+            if key == 'user_id':
+                assert isinstance(value, str), "user_id %r must be str" % value
+            else:
+                assert (isinstance(value, unicode),
+                        "value %r (for %r, user %r) not unicode" %
+                        (value, key, fields['user_id']))
+
+        self.__dict__.update(fields)
+
+    @property
+    def zope_user(self):
+        """
+        Fetch the corresponding Zope user that can be used in authorization.
+        """
+        # `_get_zope_user` was given to us by our factory. It's a callable, and
+        # not the actual user, because it may be costly to obtain (e.g. from
+        # an LDAP database).
+        return self._get_zope_user()
+
+def user_info_from_zope_user(zope_user, ldap_encoding):
+    def extract(name):
+        value = getattr(zope_user, name, '')
+        if value is None:
+            return ''
+        return value.decode(ldap_encoding)
+    fields = {
+        'user_id': str(zope_user.id),
+        'full_name': extract('cn'),
+        'email': extract('mail'),
+        'first_name': extract('givenName'),
+        'last_name': extract('sn'),
+        'organisation': extract('o'),
+        'postal_address': extract('postalAddress'),
+        'phone_number': extract('telephoneNumber'),
+        '_get_zope_user': lambda: zope_user,
+    }
+    return UserInfo(**fields)
