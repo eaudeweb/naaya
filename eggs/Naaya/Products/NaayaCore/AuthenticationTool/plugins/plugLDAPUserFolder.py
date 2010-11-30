@@ -165,8 +165,15 @@ class plugLDAPUserFolder(PlugBase):
     def getRootDN(self, acl_folder):
         return acl_folder.groups_base
 
-    def _user_dn(self, user_id):
+    def _user_dn_from_id(self, user_id):
         return "uid=%s,%s" % (user_id, self.getUserFolder().users_base)
+
+    def _user_id_from_dn(self, dn):
+        before = 'uid='
+        after = ',%s' % self.getUserFolder().users_base
+
+        assert dn.startswith(before) and dn.endswith(after)
+        return dn[len(before):-len(after)]
 
     def getGroupScope(self, acl_folder):
         return acl_folder.groups_scope
@@ -421,9 +428,10 @@ class plugLDAPUserFolder(PlugBase):
             result = self.delegate.search(dn, scope, filter_format('(cn=%s)', (group_id,)), ['uniqueMember', 'member'])
             for val in result['results']:
                 for dn in val['uniqueMember']:
-                    info = self.delegate.search(base=dn, scope=ldap.SCOPE_BASE)
-                    [ res_append(i) for i in info['results'] ]
-            return res
+                    p_username = self._user_id_from_dn(dn)
+                    info = self.get_user_info(p_username)
+                    res_append(info)
+        return res
 
     def findLDAPUsers(self, acl_folder, params='', term='', role='', dn=''):
         """ search for users in LDAP """
@@ -440,7 +448,7 @@ class plugLDAPUserFolder(PlugBase):
             try:
                 self.buffer = {}
                 users = self.getUsersByRole(acl_folder, [(role, dn)])
-                [ self.buffer.setdefault(u['uid'][0], self.decode_cn(u['cn'][0])) for u in users ]
+                [ self.buffer.setdefault(u.user_id, u.full_name) for u in users ]
                 return users
             except: return ()
         else:
@@ -500,7 +508,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def get_user_info(self, user_id):
         # first, try to use the cache
-        cached_record = ldap_cache.get(self._user_dn(user_id), None)
+        cached_record = ldap_cache.get(self._user_dn_from_id(user_id), None)
         if cached_record is not None:
             log.debug("loading user from cache: %r", user_id)
             return user_info_from_ldap_cache(user_id, cached_record, self)
@@ -512,7 +520,7 @@ class plugLDAPUserFolder(PlugBase):
         return user_info_from_zope_user(zope_user, self.default_encoding)
 
     def has_user(self, user_id):
-        if ldap_cache.has(self._user_dn(user_id)):
+        if ldap_cache.has(self._user_dn_from_id(user_id)):
             return True
         elif self._get_zope_user(user_id) is not None:
             return True
@@ -694,6 +702,7 @@ def user_info_from_zope_user(zope_user, ldap_encoding):
         'organisation': extract('o'),
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),
+        'dn': extract('dn'),
         '_get_zope_user': lambda: zope_user,
     }
     return LDAPUserInfo(**fields)
@@ -726,6 +735,7 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         'organisation': extract('o'),
         'postal_address': extract('postalAddress'),
         'phone_number': extract('telephoneNumber'),
+        'dn': extract('dn'),
         '_get_zope_user': get_zope_user,
     }
     return LDAPUserInfo(**fields)

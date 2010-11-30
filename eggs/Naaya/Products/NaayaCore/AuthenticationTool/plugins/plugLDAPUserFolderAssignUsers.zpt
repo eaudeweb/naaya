@@ -159,16 +159,16 @@
                                                      'row-odd', 'row-even')">
                 <td class="checkbox">
                     <input type="checkbox" name="name:list"
-                        tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/>
+                        tal:attributes="value item/user_id" CHECKED/>
                 </td>
-                <td tal:define="uid python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">
+                <td tal:define="uid item/user_id">
                     <tal:block replace="uid"></tal:block>
                     <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
                         <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
                     </span>
                 </td>
-                <td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
-                <td tal:content="python:item['dn']">dn</td>
+                <td tal:content="item/full_name">cn</td>
+                <td tal:content="item/dn">dn</td>
             </tr>
         </table>
         
