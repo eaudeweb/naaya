@@ -111,12 +111,6 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
         filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
         return roles
 
-    def can_be_seen(self):
-        """
-        Indicates if the current user has access to the current folder.
-        """
-        return self.checkPermission(view)
-
     def has_restrictions(self):
         """
         Indicates if this folder has restrictions for the current user.

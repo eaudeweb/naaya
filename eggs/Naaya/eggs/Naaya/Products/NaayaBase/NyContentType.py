@@ -264,6 +264,13 @@ class NyContentType(object):
         schema = self.getSite().portal_schemas.getSchemaForMetatype(self.meta_type)
         return schema.is_ratable
 
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current folder.
+        """
+        return self.checkPermission(view)
+
+
 InitializeClass(NyContentType)
 
 def _null_getattr(key):

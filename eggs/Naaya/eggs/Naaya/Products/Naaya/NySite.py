@@ -1871,11 +1871,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 try:
                     rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
                 except Exception, e:
-                    return (None, None, unicode(e))
+                    return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, unicode(e))
             r = self.utEliminateDuplicatesByURL(r)
             res = [k for k in r if k.can_be_seen()]
             if len(res) == 0:
-                return (None, None, None)
+                return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, None)
             batch_obj = batch_utils(self.numberresultsperpage, len(res), start)
             if skey in ['meta_type', 'title', 'bobobase_modification_time']:
                 if skey == 'bobobase_modification_time':
@@ -1888,7 +1888,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
             return (paging_informations, res[paging_informations[0]:paging_informations[1]], None)
         else:
-            return (None, None, None)
+            return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, None)
 
     #paging stuff
     def process_querystring(self, p_querystring):
