@@ -640,6 +640,7 @@ class LdapSatelliteProvider(Acquisition.Implicit):
 NySite.acl_satellite = LdapSatelliteProvider()
 
 class UserInfo(object):
+    # TODO: when other code will use this class, move it to AuthenticationTool
     """
     Encapsulate information about a user: name, email, organisation, etc.
     While various functions in Naaya's authentication code return latin-1
@@ -674,6 +675,10 @@ class UserInfo(object):
         # an LDAP database).
         return self._get_zope_user()
 
+class LDAPUserInfo(UserInfo):
+    """ a UserInfo with an extra property for LDAP (`dn`) """
+    mandatory_fields = UserInfo.mandatory_fields | set(['dn'])
+
 def user_info_from_zope_user(zope_user, ldap_encoding):
     def extract(name):
         value = getattr(zope_user, name, '')
@@ -691,7 +696,7 @@ def user_info_from_zope_user(zope_user, ldap_encoding):
         'phone_number': extract('telephoneNumber'),
         '_get_zope_user': lambda: zope_user,
     }
-    return UserInfo(**fields)
+    return LDAPUserInfo(**fields)
 
 def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
     def get_zope_user():
@@ -723,4 +728,4 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         'phone_number': extract('telephoneNumber'),
         '_get_zope_user': get_zope_user,
     }
-    return UserInfo(**fields)
+    return LDAPUserInfo(**fields)
