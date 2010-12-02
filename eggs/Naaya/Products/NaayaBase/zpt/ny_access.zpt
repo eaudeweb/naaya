@@ -42,14 +42,12 @@
 
         <table class="datatable">
             <tr>
-                <th i18n:translate="">Inherit from parent</th>
-                <th i18n:translate="">Permission</th>
+                <th rowspan="2" i18n:translate="">Inherit from parent</th>
+                <th rowspan="2" i18n:translate="">Permission</th>
                 <th tal:attributes="colspan python:len(roles)"
                     i18n:translate="">Roles</th>
             </tr>
             <tr>
-                <th> </th>
-                <th> </th>
                 <th tal:repeat="role roles">
                     <tal:block tal:replace="role"/>
                 </th>
