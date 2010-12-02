@@ -73,6 +73,7 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     _Naaya___Skip_Captcha_Permission = ['Administrator', 'Manager']
 
     edit_access = NyAccess('edit_access', {
+        view: "Access content",
         PERMISSION_MODIFY_FORUMTOPIC: "Modify topic",
         PERMISSION_ADD_FORUMMESSAGE: "Add message",
         PERMISSION_MODIFY_FORUMMESSAGE: "Modify message",
