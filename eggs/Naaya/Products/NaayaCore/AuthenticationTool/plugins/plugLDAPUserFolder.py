@@ -441,7 +441,7 @@ class plugLDAPUserFolder(PlugBase):
                     self.buffer = {}
                     users = acl_folder.findUser(search_param=params, search_term=term)
                     [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn'])) for u in users ]
-                    return users
+                    return [self.get_user_info(u['uid']) for u in users]
                 except: return ()
             else:   return ()
         elif self.REQUEST.has_key('search_role'):
