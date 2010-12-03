@@ -55,7 +55,7 @@ class NyAttributes:
         """
         # this is for performance reasons
         # it should be updated if/when adding new computed attributes
-        if name[0] not in 'oict':
+        if not(name and name[0] in 'oict'):
             raise AttributeError, name
 
         if name.startswith('objectkeywords_'):
