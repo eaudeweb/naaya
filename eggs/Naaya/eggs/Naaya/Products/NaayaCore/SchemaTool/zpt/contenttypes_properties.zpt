@@ -30,7 +30,7 @@
         <td />
 	</tr>
     </tal:block>
-<tr><td><input type="submit" value="save" /></td></tr>
+<tr><td><input type="submit" value="save" i18n:attributes="value" /></td></tr>
 </table>
 </form>
 	</metal:block>

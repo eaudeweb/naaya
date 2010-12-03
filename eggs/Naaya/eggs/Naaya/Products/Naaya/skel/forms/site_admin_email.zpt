@@ -33,7 +33,7 @@
 		<dd i18n:translate="">On errors</dd>
 		<dd><input type="checkbox" name="notify_on_errors" tal:attributes="checked python:here.notify_on_errors==1" /></dd>
 	</dl>
-	<p><input type="submit" value="Save changes" /></p>
+	<p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 </form>
 </tal:block>
 
