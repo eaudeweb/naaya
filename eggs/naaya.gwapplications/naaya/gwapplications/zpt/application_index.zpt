@@ -65,7 +65,7 @@
             just press the <em>Reject</em> button.</p>
             <p tal:condition="deleted">This application is approved but the created portal was deleted. You can choose to reapprove
             this application if you wish to recreate the initial portal.</p>
-            <p tal:condition="python:pending or deleted">Upon approval, a new IG will be created, with the details specified below, 
+            <p tal:condition="python:pending or deleted">Upon approval, a new IG will be created, with the details specified below,
             and the applicant will be granted <em>Administrator</em> rights on that IG.</p>
 
             <form action="." method="post" tal:condition="python:pending or deleted">
@@ -75,18 +75,23 @@
                 </div>
 
                 <div class="field">
-                    <label for="id">Interest group title</label>
+                    <label for="title">Interest group title</label>
                     <input type="text" size="50" name="title" tal:attributes="value data/site_title"/>
                 </div>
 
                 <div class="field">
-                    <label for="id">Interest group subtitle</label>
+                    <label for="subtitle">Interest group subtitle</label>
                     <input type="text" size="50" name="subtitle" tal:attributes="value data/subtitle"/>
                 </div>
 
                 <div class="field">
-                    <label for="id">Interest group description</label>
+                    <label for="description">Interest group description</label>
                     <textarea type="text" cols="50" rows="7" name="description" tal:content="data/description"></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="admin_comments">Administrator comments</label>
+                    <textarea type="text" cols="50" rows="7" name="admin_comments"></textarea>
                 </div>
 
                 <tal:block condition="python:not here.approved and not here.rejected">
