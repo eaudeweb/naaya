@@ -1,45 +1,47 @@
 <metal:block use-macro="here/gw_macro/macros/main">
     <div id="workarea" tal:define="portals here/groupedIGs" metal:fill-slot="div-workarea">
+        <h1>Eionet Forum</h1>
+        <p class="documentDescription">Welcome to the Forum. The purpose of this site is to cooperate on
+items of shared interest.
+In order to become a member (i.e. obtain a username and a password) you should read the information
+supplied for each interest group and then follow the subscription instructions. 
+        </p>
         <tal:block define="igs python:portals.get('admin', [])" condition="igs">
             <h2>Interest groups that you administer</h2>
-            <ul>
+            <ul class="ig_listing">
                 <li tal:repeat="ig igs">
-                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <span tal:replace="ig/site_subtitle"/>
-                    <div tal:content="structure ig/description"></div>
+                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
                 </li>
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('member', [])" condition="igs">
             <h2>Interest groups that you are a member of</h2>
-            <ul>
+            <ul class="ig_listing">
                 <li tal:repeat="ig igs">
-                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <span tal:replace="ig/site_subtitle"/>
-                    <div tal:content="structure ig/description"></div>
+                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
                 </li>
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
             <h2>Interest groups that you can access</h2>
-            <ul>
+            <ul class="ig_listing">
                 <li tal:repeat="ig igs">
-                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <span tal:replace="ig/site_subtitle"/>
+                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
                     [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
-                    <div tal:content="structure ig/description"></div>
+                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
                 </li>
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
             <h2>Interest groups that are restricted to you</h2>
             <p>You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
-            <ul>
+            <ul class="ig_listing">
                 <li tal:repeat="ig igs">
-                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    <span tal:replace="ig/site_subtitle"/>
+                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
                     [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
-                    <div tal:content="structure ig/description"></div>
+                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
                 </li>
             </ul>
         </tal:block>
