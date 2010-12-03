@@ -63,13 +63,13 @@ class GWApplication(SimpleItem):
         portal = self.create_portal(**kwargs)
         self.customize_portal(portal, **kwargs)
         self.created_path = portal.absolute_url(1)
-        self.send_approved_email()
+        self.send_approved_email(kwargs['admin_comments'])
 
-    def reject(self):
+    def reject(self, **kwargs):
         self.rejected = True
         self.approved = False
         self.rejected_on = datetime.utcnow()
-        self.send_rejected_email()
+        self.send_rejected_email(kwargs['admin_comments'])
 
     def created_url(self):
         portal = self.unrestrictedTraverse(self.created_path, None)
@@ -94,8 +94,8 @@ class GWApplication(SimpleItem):
         ac_tool.manageAddSource(acl_path, 'LDAP')
         ac_tool.getSources()[0].addUserRoles(name=self.userid, roles=['Administrator'], user_location='Users')
 
-    def send_approved_email(self):
-        data = {'igurl': self.created_url()}
+    def send_approved_email(self, admin_comments):
+        data = {'igurl': self.created_url(), 'admin_comments': admin_comments}
         mail_data = approved_mail.render_email(**data)
         mail_to = self.application_data.get('useremail', '')
         mail_from = self.mail_from
@@ -103,8 +103,9 @@ class GWApplication(SimpleItem):
         mail_body = mail_data['body_text']
         self.email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
 
-    def send_rejected_email(self):
-        mail_data = rejected_mail.render_email()
+    def send_rejected_email(self, admin_comments):
+        data = {'admin_comments': admin_comments}
+        mail_data = rejected_mail.render_email(**data)
         mail_to = self.application_data.get('useremail', '')
         mail_from = self.mail_from
         mail_subject = mail_data['subject']
@@ -157,7 +158,7 @@ class GWApplicationIndexView(BrowserView):
             self.context.approve(**kwargs)
 
         elif submitted == 'Reject':
-            self.context.reject()
+            self.context.reject(**kwargs)
 
         return self.request.response.redirect('../basket_html')
 
