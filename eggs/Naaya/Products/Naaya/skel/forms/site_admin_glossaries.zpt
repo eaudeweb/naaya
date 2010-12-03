@@ -47,7 +47,7 @@
     </div>
 
     <div class="field-inline">
-        <input type="submit" value="Save changes" />
+        <input type="submit" value="Save changes" i18n:attributes="value" />
     </div>
 </form>
 </tal:block>

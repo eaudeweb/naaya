@@ -11,7 +11,7 @@
 <br/>
 <form method="POST">
     <input name="title" tal:attributes="value here/title" />
-    <input type="submit" value="rename" name="saveProperties:method" />
+    <input type="submit" value="rename" i18n:attributes="value" name="saveProperties:method" />
 </form>
 <br/>
 

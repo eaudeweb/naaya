@@ -53,7 +53,7 @@
                 </table>
             </tal:block>
             <tal:block condition="not: objects">
-                <div i18n:translate>No rated objects were found in the database.</div>
+                <div i18n:translate="">No rated objects were found in the database.</div>
             </tal:block>
         </tal:block>
     </tal:block>
