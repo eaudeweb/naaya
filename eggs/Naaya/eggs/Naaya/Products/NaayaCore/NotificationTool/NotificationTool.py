@@ -56,7 +56,7 @@ from naaya.core.utils import relative_object_path
 from naaya.core.utils import force_to_unicode
 from naaya.core.utils import ofs_path
 from naaya.core.zope2util import folder_manage_main_plus
-from paginator import DiggPaginator, EmptyPage, InvalidPage
+from naaya.core.paginator import DiggPaginator, EmptyPage, InvalidPage
 from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
