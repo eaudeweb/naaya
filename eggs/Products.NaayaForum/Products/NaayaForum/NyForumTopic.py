@@ -1,3 +1,4 @@
+
 #Zope imports
 from OFS.Folder import Folder
 import Products
@@ -14,6 +15,7 @@ from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from interfaces import INyForumTopic
+from feeds import messages_feed
 
 try:
     from zope.event import notify as zope_notify
@@ -339,6 +341,9 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     #site pages
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'edit_html')
     edit_html = PageTemplateFile('zpt/topic_edit', globals())
+
+    security.declareProtected(view, 'messages_feed')
+    messages_feed = messages_feed
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'restrict_html')
     restrict_html = PageTemplateFile('zpt/topic_restrict', globals())

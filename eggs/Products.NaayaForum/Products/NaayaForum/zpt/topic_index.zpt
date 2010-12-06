@@ -1,7 +1,14 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
-<h1><img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" /></h1>
+<h1>
+	<img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" />
+	<span tal:replace="here/title_or_id" />
+	<a tal:attributes="href string:${here/absolute_url}/messages_feed"
+	   ><img src="misc_/NaayaCore/xml.png" /></a>
+	<a tal:attributes="href string:${here/absolute_url}/messages_feed?format=atom"
+	   ><img src="misc_/NaayaCore/xml-blue.jpg" /></a>
+</h1>
 
 <div class="forum_topic">
 	<div class="forum_message_top"
