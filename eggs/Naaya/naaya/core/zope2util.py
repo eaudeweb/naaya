@@ -119,6 +119,14 @@ class RestrictedToolkit(SimpleItem):
         """
         return DT2dt(DT)
 
+    def DT_strftime_rfc3339(self, date):
+        """
+        Convert a Zope DateTime value to rfc-3339 format, suitable for use
+        in an Atom feed.
+        """
+        d = DT2dt(date).strftime('%Y-%m-%dT%H:%M:%S%z')
+        return d[:-2] + ':' + d[-2:]
+
     def json_dumps(self, obj):
         """
         Convert a Python object to JSON
