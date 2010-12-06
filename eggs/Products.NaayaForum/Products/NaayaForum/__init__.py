@@ -87,7 +87,7 @@ def register_permissions():
     register_naaya_permission(PERMISSION_ADD_FORUM,
                               'Submit Forum objects')
     register_naaya_permission(PERMISSION_MODIFY_FORUMTOPIC,
-                              'Forum - configure topics')
+                              'Forum - add / edit / modify topics')
     register_naaya_permission(PERMISSION_ADD_FORUMMESSAGE,
                               'Forum - submit messages')
     register_naaya_permission(PERMISSION_MODIFY_FORUMMESSAGE,
