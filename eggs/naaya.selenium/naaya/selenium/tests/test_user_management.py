@@ -121,7 +121,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(username) is False
 
-    def test_search_local_users(self):
+    def test_aaaasearch_local_users(self):
         """Search users using jquery ui autocomplete and normal search using
         form
 
@@ -136,27 +136,31 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.open("/portal/admin_local_users_html", True)
         self.selenium.type('id=autocomplete-query', 'contributor')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition(self._selenium_page_timeout)
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
         check_result(u'contributor')
 
         #Empty string search
         self.selenium.type('id=autocomplete-query', '')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition(self._selenium_page_timeout)
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
         assert int(self.selenium.\
             get_xpath_count('//table[contains(@class, "datatable")]/tbody/tr')) > 2
 
         #Filtering by Manager role
         self.selenium.select("id=filter-roles", 'Manager')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition(self._selenium_page_timeout)
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
         check_result(u'test_user_1_')
 
         #Check filtering by role combined with text search
         self.selenium.type('id=autocomplete-query', 'contrib')
         self.selenium.select("id=filter-roles", 'Contributor')
         self.selenium.click('//input[@value="Search"]')
-        self.selenium.wait_for_condition(self._selenium_page_timeout)
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
         check_result(u'contributor')
 
     def test_add_role(self):
