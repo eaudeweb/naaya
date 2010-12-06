@@ -132,7 +132,7 @@ class ScriptChannel(PythonScript, utils):
         #sorted by the attribute attr
         objects = self._exec({'context': self, 'container': self}, {}, {})
         if attr is not None:
-            return utils.utSortObjsListByAttr(self, objects, attr, False)
+            return utils.utSortObjsListByAttr(self, objects, attr, reversed)
         return objects
 
     security.declareProtected(view, 'index_html')
