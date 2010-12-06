@@ -11,7 +11,9 @@ import naaya.sql
 from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils, make_id
-from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
+from NyForumTopic import (manage_addNyForumTopic_html, topic_add_html,
+                          addNyForumTopic)
+from feeds import messages_feed
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
@@ -366,6 +368,9 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/forum_index', globals())
+
+    security.declareProtected(view, 'messages_feed')
+    messages_feed = messages_feed
 
     security.declareProtected(PERMISSION_ADD_FORUM, 'edit_html')
     edit_html = PageTemplateFile('zpt/forum_edit', globals())
