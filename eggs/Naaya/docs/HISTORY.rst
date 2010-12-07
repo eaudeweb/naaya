@@ -1,7 +1,10 @@
 Changelog
 =========
 
-2.10.11 (unreleased)
+2.10.12 (unreleased)
+--------------------
+
+2.10.11 (2010-12-07)
 --------------------
  * Map info balloons no longer require a catalog search; they are requested
    based on visible markeres on the map.
