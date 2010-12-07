@@ -34,7 +34,7 @@ def parse_userid(s):
     return s
 
 def walk_backup(index_file, open_backup_file, actor):
-    known_folders = set()
+    known_folders = set([''])
 
     def handle_folder(line):
         title = line['TITLE']
