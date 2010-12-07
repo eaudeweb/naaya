@@ -39,10 +39,16 @@ def nydateformat(date):
     return date.strftime('%d/%m/%Y')
 
 def get_parent(context, parent_path):
-    if parent_path is None:
+    if parent_path in (None, ''):
         return context
     else:
         return context.restrictedTraverse(parent_path)
+
+def join_parent_path(parent_path, ob_id):
+    if parent_path:
+        return parent_path + '/' + ob_id
+    else:
+        return ob_id
 
 class ZopeActor(object):
     def __init__(self, context, report):
@@ -80,7 +86,7 @@ class ZopeActor(object):
                            timestamp=datetime(date.year, date.month, date.day))
 
         parent = get_parent(self.context, parent_path)
-        orig_path = parent_path + '/' + ob_id
+        orig_path = join_parent_path(parent_path, ob_id)
 
         if orig_path in self.rename:
             ob_path = self.rename.get(orig_path)
@@ -112,7 +118,7 @@ class ZopeActor(object):
     def url_entry(self, parent_path, ob_id, filename, url,
                   title, description, keywords, date, userid):
         parent = get_parent(self.context, parent_path)
-        orig_path = parent_path + '/' + ob_id
+        orig_path = join_parent_path(parent_path, ob_id)
 
         assert orig_path not in self.rename
 
