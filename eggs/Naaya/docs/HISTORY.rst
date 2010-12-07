@@ -5,6 +5,13 @@ Changelog
 --------------------
  * Map info balloons no longer require a catalog search; they are requested
    based on visible markeres on the map.
+ * Load information for LDAP users from a cache, if available. The cache is
+   created by the ``naaya.ldapdump`` package.
+ * Fix: Users with `View` privileges in a sub-folder but not at site level no
+   longer receive `Unauthorized` errors.
+ * Fix: many issues with site search.
+ * Selenium testing harness refactoring; can use CherryPy instead of wsgiref.
+ * Feature: customize template for each Schema Widget instance.
 
 2.10.10 (2010-11-04)
 --------------------
