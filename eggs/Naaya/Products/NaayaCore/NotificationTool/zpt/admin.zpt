@@ -73,6 +73,11 @@
           tal:attributes="value hour; selected python:hour==get_config('monthly_hour')" />
     </select>
 </div>
+<div class="field-inline">
+    <label for="enable_anonymous" i18n:translate="">Anonymous subscriptions</label>
+    <input type="checkbox" id="enable_anonymous" name="enable_anonymous:boolean"
+        tal:attributes="checked python:test(get_config('enable_anonymous'), 'checked', None)" />
+</div>
 <!--
 <div class="field">
     <label id="content_types" i18n:translate="">Content types</label>

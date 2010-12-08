@@ -1,3 +1,4 @@
+from persistent.list import PersistentList
 from Products.naayaUpdater.updates import UpdateScript
 from Products.NaayaCore.NotificationTool.NotificationTool import (
     ISubscriptionContainer, SubscriptionContainer, AccountSubscription)
@@ -30,4 +31,16 @@ class RemoveNotifUseridSpaces(UpdateScript):
                 fix_subscriptions(child_obj)
 
         fix_subscriptions(portal)
+        return True
+
+class AddPendingSubscriptionsContainer(UpdateScript):
+    title = 'Add pending subscriptions container'
+    authors = ['Alexandru Plugaru']
+    creation_date = 'Dec 8, 2010'
+
+    def _update(self, portal):
+        notif_tool = portal.getNotificationTool()
+        notif_tool.pending_anonymous_subscriptions = PersistentList()
+        self.log.info("Added `pending_anonymous_subscriptions` to "
+                      "notification tool")
         return True

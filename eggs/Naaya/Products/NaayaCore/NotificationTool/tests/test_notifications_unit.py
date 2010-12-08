@@ -1,22 +1,4 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-
+import re
 try: from collections import namedtuple
 except ImportError: from Products.NaayaCore.backport import namedtuple
 
@@ -34,6 +16,7 @@ from Products.NaayaCore.NotificationTool import NotificationTool as \
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.utils import replace, restore_all
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.EmailTool import EmailTool
 from naaya.content.document.document_item import addNyDocument
 from naaya.core.utils import path_in_site
 
@@ -133,6 +116,29 @@ class NotificationsUnitTest(BaseNotificationsTest):
         self.assertEqual(subs, set([
             ('gigel', '', 'instant', 'en'),
             ('contributor', '', 'instant', 'en'), ]))
+
+    def test_anonymous_account_subscription(self):
+        """ Add anonymous notification.
+        This sends an email with a confirmation key. Confirm with confirm method
+        and verify if subscription is in the container.
+
+        """
+        diverted_mail = EmailTool.divert_mail()
+        notif_tool = self.portal.getNotificationTool()
+        notif_tool.add_anonymous_subscription(email='some@email.com', lang='en',
+                                              location='', notif_type='instant')
+        assert diverted_mail[0][1] == ['some@email.com']
+        assert diverted_mail[0][2] == 'from.zope@example.com'
+        assert diverted_mail[0][0].find('confirm?key=') != -1
+        confirm_key = re.search('confirm\?key=(\w+)',
+                                    diverted_mail[0][0]).group(1)
+        notif_tool.confirm(key=confirm_key)
+        for obj, n, sub in walk_subscriptions(self.portal):
+            if sub.email == 'some@email.com':
+                break
+        else:
+            raise "No subscription found"
+        EmailTool.divert_mail(False)
 
     def test_weekly_notification_interval(self):
         notif_tool = self.portal.getNotificationTool()
@@ -439,10 +445,10 @@ class NotificationsUiApiTest(BaseNotificationsTest):
         notif_tool = self.portal.getNotificationTool()
 
         self.assertRaisesWithMessage(ValueError,
-                                     'Notifications of type "instant" not allowed',
+                                     'Subscribing to notifications in "" not allowed',
             self.add_account_subscription, 'user1', '', 'instant', 'en')
         self.assertRaisesWithMessage(ValueError,
-                                     'Notifications of type "weekly" not allowed',
+                                     'Subscribing to notifications in "fol1" not allowed',
             self.add_account_subscription, 'user2', 'fol1', 'weekly', 'en')
 
         notif_tool.config['enable_instant'] = True

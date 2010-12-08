@@ -111,7 +111,6 @@ from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
-from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, path_in_site, cooldown, is_ajax
@@ -3864,8 +3863,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
         return self.getLayoutTool().getNaayaContentStyles()
-
-    notifications_subscribe = Subscriber('notifications_subscribe')
 
     def heartbeat_work(self, REQUEST=None):
         """ does a heartbeat work on this site """

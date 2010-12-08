@@ -79,14 +79,10 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-        self.assertEqual(self._fetch_test_notifications(), [(
-            'from.zope@example.com',
-            'user1@example.com',
-            u'Change notification - Notifying document',
-            (u'This is an automatically generated message to inform you '
-             u'that the item "Notifying document" has been edited at '
-             u'http://localhost/portal/notifol/notidoc by "admin".'),
-            )])
+        test_notification = self._fetch_test_notifications()[0]
+        assert test_notification[0] == 'from.zope@example.com'
+        assert test_notification[1] == 'user1@example.com'
+        assert test_notification[2] == u'Change notification - Notifying document'
 
         remove_account_subscription = \
             self.portal.portal_notification.remove_account_subscription
@@ -195,14 +191,11 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
 
         change_title('some new title')
-        self.assertEqual(self._fetch_test_notifications(), [(
-            'from.zope@example.com',
-            'user1@example.com',
-            u'Change notification - Notifying document',
-            (u'This is an automatically generated message to inform you '
-             u'that the item "Notifying document" has been edited at '
-             u'http://localhost/portal/notifol/notidoc by "admin".'),
-            )])
+        test_notification = self._fetch_test_notifications()[0]
+
+        assert test_notification[0] == 'from.zope@example.com'
+        assert test_notification[1] == 'user1@example.com'
+        assert test_notification[2] == u'Change notification - Notifying document'
 
         notif.emailpt_instant._text = (
             '<subject>i can haz changez on <tal:block '
@@ -215,13 +208,10 @@ class NotificationsTest(NaayaFunctionalTestCase):
         transaction.commit()
 
         change_title('some other new title')
-        self.assertEqual(self._fetch_test_notifications(), [(
-            'from.zope@example.com',
-            'user1@example.com',
-            u'i can haz changez on Notifying document',
-            (u'thing changed, yo! "Notifying document", '
-             u'http://localhost/portal/notifol/notidoc, "admin".'),
-            )])
+        test_notification = self._fetch_test_notifications()[0]
+        assert test_notification[0] == 'from.zope@example.com'
+        assert test_notification[1] == 'user1@example.com'
+        assert test_notification[2] == u'i can haz changez on Notifying document'
 
         notif.manage_delObjects('emailpt_instant')
         self.portal.portal_notification.remove_account_subscription(

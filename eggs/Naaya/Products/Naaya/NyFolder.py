@@ -49,7 +49,6 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
-from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -1506,6 +1505,5 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     csv_import = CSVImportTool('csv_import')
-    notifications_subscribe = Subscriber('notifications_subscribe')
 
 InitializeClass(NyFolder)
