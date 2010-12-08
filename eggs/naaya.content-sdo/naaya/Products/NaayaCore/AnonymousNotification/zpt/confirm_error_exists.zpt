@@ -1,6 +1,0 @@
-<tal:block tal:replace="structure here/standard_html_header" />
-<h1 i18n:translate="">Subscription confirmation failed</h1>
-<p i18n:translate="">You are already subscribed to this portal.
-Click <a i18n:translate="" i18n:name="here" tal:attributes="href here/absolute_url">here</a> to return in the website.
-</p>
-<tal:block tal:replace="structure here/standard_html_footer"/>

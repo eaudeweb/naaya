@@ -1,4 +1,0 @@
-<tal:block tal:replace="structure here/standard_html_header" />
-<h1 i18n:translate="">Subscription not found</h1>
-<p i18n:translate="">Subscription was not found on this website.</p>
-<tal:block tal:replace="structure here/standard_html_footer"/>
