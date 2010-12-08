@@ -245,4 +245,16 @@
       component=".update_events_syndication.UpdateEventsSyndication"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="to_standard_template_macro.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_to_standard_template_macro.UpdateToStandardTemplateMacro"
+      permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="add_meta_tags_to_custom_indexes.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_add_meta_tags_to_custom_indexes.UpdateAddMetaTagsToCustomIndexes"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
