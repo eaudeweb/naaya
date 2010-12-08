@@ -43,6 +43,10 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.RemoveNotifUseridSpaces"
              permission="zope2.ViewManagementScreens" />
+    <utility name="add_pending_subscriptions_container.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.AddPendingSubscriptionsContainer"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>

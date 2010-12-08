@@ -71,12 +71,9 @@ class NotificationsTest(NaayaTestCase):
         self.notif.add_account_subscription('contributor', '', 'instant', 'en')
         self.notif.notify_instant(self.portal.info.contact, 'somebody')
 
-        self.assertEqual(self._notifications, [
-            ('from.zope@example.com', 'contrib@example.com',
-            u'Change notification - Contact us',
-            u'This is an automatically generated message to inform you '
-            u'that the item "Contact us" has been created at '
-            u'http://nohost/portal/info/contact by "somebody".')])
+        assert self._notifications[0][0] == 'from.zope@example.com'
+        assert self._notifications[0][1] == 'contrib@example.com'
+        assert self._notifications[0][2] == u'Change notification - Contact us'
 
         self.notif.remove_account_subscription('contributor',
                                                '', 'instant', 'en')
@@ -88,13 +85,9 @@ class NotificationsTest(NaayaTestCase):
         now = datetime.now()
         self.notif._send_newsletter('weekly',
             now-timedelta(days=6), now+timedelta(days=1))
-        self.assertEqual(self._notifications, [
-            ('from.zope@example.com', 'contrib@example.com',
-            u'Changed items - weekly digest',
-            u'This is an automatically generated weekly message '
-            u'listing modified items in the "portal" portal.\n\n'
-            u'notifol (at http://nohost/portal/notifol)\n'
-            u'Notifying document (at http://nohost/portal/notifol/notidoc)')])
+        assert self._notifications[0][0] == 'from.zope@example.com'
+        assert self._notifications[0][1] == 'contrib@example.com'
+        assert self._notifications[0][2] == u'Changed items - weekly digest'
 
         self.notif.remove_account_subscription('contributor',
                                                'notifol', 'weekly', 'en')

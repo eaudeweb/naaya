@@ -1,36 +1,12 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-
 from unittest import TestSuite, makeSuite
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.NaayaCore.NotificationTool.interfaces import ISubscriptionTarget
-from Products.NaayaCore.NotificationTool.interfaces import \
-    ISubscriptionContainer
-from Products.NaayaCore.NotificationTool.NotificationTool import \
-    fetch_subscriptions
-from Products.NaayaCore.NotificationTool.NotificationTool import \
-    walk_subscriptions
-from Products.NaayaCore.NotificationTool.NotificationTool import \
-    AccountSubscription
-from Products.Naaya.NyFolder import NyFolder
-from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.NotificationTool.interfaces import (
+    ISubscriptionTarget, ISubscriptionContainer)
+from Products.NaayaCore.NotificationTool.NotificationTool import (
+    fetch_subscriptions, walk_subscriptions, AccountSubscription,
+    AnonymousSubscription)
+from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from naaya.core.utils import path_in_site
 
 class SubscriptionTest(NaayaTestCase):
@@ -49,19 +25,25 @@ class SubscriptionTest(NaayaTestCase):
 
         sub1 = AccountSubscription('gigel', 'instant', 'en')
         sub2 = AccountSubscription('user2', 'instant', 'en')
+        sub3 = AnonymousSubscription(email='test@email.com',
+                                     location='', notif_type='instant',
+                                     lang='en')
         sc.add(sub1)
         sc.add(sub2)
+        sc.add(sub3)
 
         subs = list(sc)
-        self.assertEqual(len(subs), 2)
+        self.assertEqual(len(subs), 3)
         self.assertTrue(subs[0] is sub1)
         self.assertTrue(subs[1] is sub2)
+        self.assertTrue(subs[2] is sub3)
 
         enum = dict(sc.list_with_keys())
-        self.assertEqual(enum.keys(), [1, 2])
+        self.assertEqual(enum.keys(), [1, 2, 3])
         self.assertTrue(enum[1] is sub1)
         self.assertTrue(enum[2] is sub2)
-        self.assertEqual(sc._next_id, 3)
+        self.assertTrue(enum[3] is sub3)
+        self.assertEqual(sc._next_id, 4)
 
     def test_remove(self):
         sc = ISubscriptionContainer(self.root)
