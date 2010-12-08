@@ -25,8 +25,10 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
     def _update(self, portal):
         t = '%(info)s folder: <a href="%(url)s/manage_main">%(text)s</a>'
         pt_start = '<metal:block metal:define-macro="page" metal:extend-macro="here/standard_template_macro">'
+        old_meta_slot = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" ?/>'
         meta_slot_start = '<metal:block fill-slot="meta">'
-        meta_slot = '''<metal:block fill-slot="meta">
+        meta_slot = '''
+<metal:block fill-slot="meta">
     <meta tal:define="description here/description;
                       content python:here.html2text(description);"
           tal:condition="content"
@@ -39,7 +41,8 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
     <meta tal:attributes="content string:${here/title} | ${here/site_title}"
           name="title" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</metal:block>'''
+</metal:block>
+'''
 
         self.log.debug(physical_path(portal))
         for folder in list_folders_with_custom_index(portal):
@@ -50,8 +53,8 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
                                    'text': physical_path(folder)})
                 continue
 
-            if re.search('^' + pt_start, tal) is None:
-                self.log.info(t % {'info': 'not using standard template macro',
+            if re.search('^' + pt_start, tal) is None and re.search(old_meta_slot, tal) is None:
+                self.log.info(t % {'info': 'not using standard template macro and no old meta slot',
                                     'url': folder.absolute_url(),
                                     'text': physical_path(folder)})
                 continue
@@ -60,6 +63,9 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
                                'url': folder.absolute_url(),
                                'text': physical_path(folder)})
 
-            tal = re.sub(pt_start, '%s\n%s' % (pt_start, meta_slot), tal)
+            if re.search(old_meta_slot, tal) is not None:
+                tal = re.sub(old_meta_slot, meta_slot, tal)
+            elif re.search('^' + pt_start, tal) is None:
+                tal = re.sub(pt_start, '%s\n%s' % (pt_start, meta_slot), tal)
             folder.index.write(tal)
         return True
