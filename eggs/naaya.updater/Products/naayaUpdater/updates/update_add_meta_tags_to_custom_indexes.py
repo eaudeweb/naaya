@@ -65,7 +65,7 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
 
             if re.search(old_meta_slot, tal) is not None:
                 tal = re.sub(old_meta_slot, meta_slot, tal)
-            elif re.search('^' + pt_start, tal) is None:
+            elif re.search('^' + pt_start, tal) is not None:
                 tal = re.sub(pt_start, '%s\n%s' % (pt_start, meta_slot), tal)
             folder.index.write(tal)
         return True
