@@ -43,7 +43,7 @@ class AddPendingSubscriptionsContainer(UpdateScript):
         if not hasattr(notif_tool, 'pending_anonymous_subscriptions'):
             notif_tool.pending_anonymous_subscriptions = PersistentList()
         if 'enable_anonymous' not in notif_tool.config:
-            notif_tool['enable_anonymous'] = False
+            notif_tool.config['enable_anonymous'] = False
         self.log.info("Added `pending_anonymous_subscriptions` to "
                       "notification tool")
         return True
