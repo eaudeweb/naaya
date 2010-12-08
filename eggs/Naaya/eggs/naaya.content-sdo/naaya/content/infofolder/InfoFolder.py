@@ -627,9 +627,6 @@ NySite.search = search
 NySite._search = _search
 NySite.submit_site = submit_site
 
-from naaya.Products.NaayaCore.AnonymousNotification.AnonymousSubscriber import AnonymousSubscriber
-NySite.sdo_notifications_subscribe = AnonymousSubscriber('sdo_notifications_subscribe')
-
 config.update({
     'constructors': (infofolder_add_html, addNyInfoFolder),
     'folder_constructors': [
