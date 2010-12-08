@@ -407,7 +407,7 @@ class NotificationTool(Folder):
         transaction.get().note('notifications cron at %s' % ofs_path(self))
 
         #Clean temporary subscriptions after a week:
-        if self.config['enable_anonymous']:
+        if self.config.get('enable_anonymous', False):
             a_week_ago = when - timedelta(weeks=1)
             for tmp_subscription in self.pending_anonymous_subscriptions[:]:
                 if tmp_subscription.datetime <= a_week_ago:
@@ -545,7 +545,7 @@ class NotificationTool(Folder):
     def list_my_subscriptions(self, REQUEST):
         out = []
         user_id = REQUEST.AUTHENTICATED_USER.getId()
-        if user_id is None and not self.config['enable_anonymous']:
+        if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
 
         for obj, n, subscription in walk_subscriptions(self.getSite()):
@@ -565,7 +565,7 @@ class NotificationTool(Folder):
     def subscribe_me(self, REQUEST, location, notif_type, lang):
         """ add subscription for currently-logged-in user """
         user_id = REQUEST.AUTHENTICATED_USER.getId()
-        if user_id is None and not self.config['enable_anonymous']:
+        if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
         try:
             if user_id:
@@ -593,7 +593,7 @@ class NotificationTool(Folder):
                        email=''):
         """ remove subscription of currently-logged-in user """
         user_id = REQUEST.AUTHENTICATED_USER.getId()
-        if user_id is None and not self.config['enable_anonymous']:
+        if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
         try:
             if user_id is not None:
