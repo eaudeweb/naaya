@@ -8,7 +8,7 @@
     <tal:block condition="python:form_item['name'] != 'description'" replace="structure form_item/html" />
     <tal:block condition="python:form_item['name'] == 'description'">
 		<tal:block replace="structure python:here.inject_infotext_after_label(form_item['html']())"
-		           on-error="string:" />
+		           on-error="structure form_item/html" />
     </tal:block>
   </tal:block>
 </tal:block>
