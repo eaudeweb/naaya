@@ -32,7 +32,7 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('<h1>Submit Project</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'title:utf8:ustring', 'description:utf8:ustring', 'lang',
+            'title:utf8:ustring', 'details:utf8:ustring', 'lang',
             'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring',
             'main_topics:utf8:ustring:list',
         ])
