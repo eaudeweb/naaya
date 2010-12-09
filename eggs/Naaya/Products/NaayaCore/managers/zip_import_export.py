@@ -21,6 +21,7 @@
 from zipfile import ZipFile
 from StringIO import StringIO
 from copy import copy
+import tempfile
 
 # Zope imports
 from Acquisition import Implicit
@@ -219,7 +220,11 @@ class ZipExportTool(Implicit, Item):
 
     security.declareProtected("Naaya - Zip export", 'do_export')
     def do_export(self, REQUEST=None):
-        """ """
+        """
+        Export the contents of the current folder as a Zip file. Returns an
+        open file object. Caller should close the file to free temporary
+        disk space.
+        """
         if REQUEST and not self.getParentNode().checkPermissionView():
             raise Unauthorized
 
@@ -229,8 +234,8 @@ class ZipExportTool(Implicit, Item):
 
         objects_to_archive = self.gather_objects(my_container)
 
-        file_like_object = StringIO()
-        zip_file = ZipFile(file_like_object, 'w')
+        temp_file = tempfile.TemporaryFile()
+        zip_file = ZipFile(temp_file, 'w')
         archive_files = []
         try:
             for obj in objects_to_archive:
@@ -248,22 +253,25 @@ class ZipExportTool(Implicit, Item):
         except Exception, e:
             errors.append(e)
 
+        temp_file.seek(0)
+
         if REQUEST is not None:
             if errors:
                 transaction.abort()
                 self.setSessionErrorsTrans(errors)
+                return REQUEST.RESPONSE.redirect(my_container.absolute_url())
             else:
                 response = REQUEST.RESPONSE
                 response.setHeader('content-type', 'application/zip')
                 response.setHeader('content-disposition',
                                    'attachment; filename=%s.zip' %
                                    my_container.getId())
-                return file_like_object.getvalue()
-            return REQUEST.RESPONSE.redirect(my_container.absolute_url())
+                return stream_response(REQUEST.RESPONSE, temp_file)
         else:
-            if not errors:
-                return file_like_object
-            return errors
+            if errors:
+                return errors
+            else:
+                return temp_file
 
     security.declarePrivate('gather_objects')
     def gather_objects(self, container):
@@ -448,3 +456,38 @@ class NewsZipAdapter(NewsAndEventZipExport):
 
     def __call__(self):
         return self.export_data_for_zip()
+
+
+from ZPublisher.Iterators import IStreamIterator
+class FileIterator(object):
+    """
+    A file-like object that can be streamed by ZServer.
+    Copied from ``ZPublisher.Iterators.filestream_iterator`` and modified.
+    """
+
+    # Old Zope2-style interfaces. Hope this works.
+    __implements__ = (IStreamIterator,)
+
+    def __init__(self, data_file):
+        self._data_file = data_file
+
+    def next(self):
+        data = self._data_file.read(2**16)
+        if not data:
+            self._data_file.close()
+            raise StopIteration
+        return data
+
+    def __len__(self):
+        data_file = self._data_file
+        cur_pos = data_file.tell()
+        data_file.seek(0, 2)
+        size = data_file.tell()
+        data_file.seek(cur_pos, 0)
+        return size
+
+def stream_response(RESPONSE, data_file):
+    assert hasattr(RESPONSE, '_streaming')
+    fi = FileIterator(data_file)
+    RESPONSE.setHeader('Content-Length', str(len(fi)))
+    return fi
