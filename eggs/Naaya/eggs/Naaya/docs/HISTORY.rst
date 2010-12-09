@@ -3,6 +3,7 @@ Changelog
 
 2.10.12 (unreleased)
 --------------------
+ * Zip export uses temporary file instead of building archive in memory.
 
 2.10.11 (2010-12-07)
 --------------------
