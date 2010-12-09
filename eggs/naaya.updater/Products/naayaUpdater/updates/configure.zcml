@@ -274,4 +274,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_add_standard_head_links_to_standard_template.UpdateAddStandardHeadLinksMacro"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="add_onerror_for_standard_template_channels.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_add_onerror_for_standard_template_channels.UpdateAddOnerrorForStandardTemplateChannels"
+      permission="zope2.ViewManagementScreens" />
 </configure>
