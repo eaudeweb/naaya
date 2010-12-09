@@ -64,7 +64,9 @@ class UpdateAddMetaTagsToCustomIndexes(UpdateScript):
                                'text': physical_path(folder)})
 
             if re.search(old_meta_slot, tal) is not None:
-                tal = re.sub(old_meta_slot, meta_slot, tal)
+                # replace only first occurance, remove the others
+                tal = re.sub(old_meta_slot, meta_slot, tal, count=1)
+                tal = re.sub(old_meta_slot, '', tal)
             elif re.search('^' + pt_start, tal) is not None:
                 tal = re.sub(pt_start, '%s\n%s' % (pt_start, meta_slot), tal)
             folder.index.write(tal)
