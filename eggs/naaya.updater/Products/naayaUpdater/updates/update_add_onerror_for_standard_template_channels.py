@@ -8,6 +8,7 @@ from AccessControl import ClassSecurityInfo
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from update_list_custom_objects import physical_path
 from update_add_portlets_onerror_to_standard_template import get_standard_template
+from utils import pat
 
 class UpdateAddOnerrorForStandardTemplateChannels(UpdateScript):
     """ Add on error for standard template channels """
@@ -59,12 +60,4 @@ class UpdateAddOnerrorForStandardTemplateChannels(UpdateScript):
 
         standard_template.write(tal)
         return True
-
-def pat(s):
-    def escape(c, s):
-        return s.replace(c, '\\'+c)
-    tmp = s
-    for c in '(){}[]':
-        tmp = escape(c, tmp)
-    return tmp
 
