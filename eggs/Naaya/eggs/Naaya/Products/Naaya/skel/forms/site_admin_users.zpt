@@ -55,8 +55,7 @@
         </li>
 		<li tal:attributes="id python: (
 								('admin_roles_html' in path_info) or
-								('admin_editrole_html' in path_info) or
-								('admin_addrole_html' in path_info)
+								('admin_editrole_html' in path_info)
 							) and 'currenttab' or ''">
 			<a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a>
 		</li>

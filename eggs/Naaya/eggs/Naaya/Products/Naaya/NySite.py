@@ -3080,11 +3080,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_assignroles')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole_html')
-    def admin_addrole_html(self):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_addrole')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_roles_html')
     def admin_roles_html(self):
         """ """

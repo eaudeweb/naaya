@@ -39,7 +39,7 @@
 	If you need a new group of people to grant access to for this area, the following steps should be followed:
 </p>
 <ol>
-	<li i18n:translate=""><a href="admin_addrole_html">define a new role</a> without any permissions</li>
+	<li i18n:translate=""><a href="admin_roles_html">define a new role</a> without any permissions</li>
 	<li i18n:translate="">assign the desired users to this role using the <a href="admin_roles_html">Users and roles</a> form from the <a href="admin_users_html">Users' management</a> area</li>
 	<li i18n:translate="">return to this form and restrict the access for that role</li>
 <ol>
