@@ -46,6 +46,5 @@ Authentication Tool
    :members:
      admin_adduser,
      admin_edituser,
-     admin_addrole,
-     admin_revokeroles,
+     admin_roles,
      admin_addroles
