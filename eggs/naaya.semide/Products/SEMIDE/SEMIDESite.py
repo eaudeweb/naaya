@@ -274,7 +274,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
         #set default calendar css and images
         cal_ob = self._getOb(ID_CALENDAR)
-        
+
         cal_ob.cal_meta_types = cal_ob.setCalMetaTypes(METATYPE_NYSEMEVENT)
 
         #add the images for sorted columns
@@ -731,8 +731,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         gz = kwargs.get('gz', [])
         if not isinstance(gz, list):
             gz = [gz]
-        if skey not in ('news_date', ):
-            skey = 'news_date'
         try:    ps_start = int(ps_start)
         except: ps_start = 0
         catalog_tool = self.getCatalogTool()
