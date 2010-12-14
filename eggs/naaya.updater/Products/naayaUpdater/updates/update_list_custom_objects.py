@@ -38,6 +38,7 @@ from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
     get_template_content, normalize_template, html_diff, readFile)
+from utils import physical_path
 
 default_service_url = 'http://speaker.edw.ro/css_diff?format=json'
 service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)
@@ -66,6 +67,3 @@ def list_folders_with_custom_index(portal):
         folder = brain.getObject()
         if 'index' in folder.objectIds():
             yield folder
-
-def physical_path(ob):
-    return '/'.join(ob.getPhysicalPath())

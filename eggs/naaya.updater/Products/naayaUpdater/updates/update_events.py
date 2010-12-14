@@ -1,5 +1,5 @@
 from Products.naayaUpdater.updates import UpdateScript
-
+from utils import physical_path
 
 class UpdateBrokenEvents(UpdateScript):
     """ Update broken NaayaEvent objects """
@@ -45,8 +45,3 @@ def list_broken_events(portal):
                 yield event
         except AttributeError:
            yield event
-
-
-
-def physical_path(ob):
-    return '/'.join(ob.getPhysicalPath())
