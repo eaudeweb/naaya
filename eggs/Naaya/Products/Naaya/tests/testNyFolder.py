@@ -29,12 +29,14 @@ from Testing import ZopeTestCase
 from zope import component
 from AccessControl.Permissions import view
 from AccessControl.Permission import Permission
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 
 # Products
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.interfaces import IObjectView
 from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter, GenericViewAdapter
+from Products.NaayaCore.LayoutTool.Template import Template
 from naaya.content.base.interfaces import INyContentObject
 
 class FolderListingInfo:
@@ -437,15 +439,183 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.assertTrue(adapter is not None)
         self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
 
-    def test_public_interface(self):
+
+class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
+    def setUp(self):
+        super(TestNyFolderPublicInterface, self).setUp()
+
+        addNyFolder(self.portal.info,
+                    'testfolder',
+                    contributor='contributor',
+                    submission=1)
+        self.folder = self.portal.info.testfolder
+        transaction.commit()
+
+    def tearDown(self):
+        self.portal.info.manage_delObjects(['testfolder'])
+        transaction.commit()
+
+        super(TestNyFolderPublicInterface, self).tearDown()
+
+    def test_lookup_custom_index(self):
+        folder = self.folder
+
+        # initially, nothing is set
+        assert folder.get_custom_index_template() is None
+        assert folder.compute_custom_index_value() == ''
+
+        # test old-style `publicinterface` property
+        folder.publicinterface = 1
+        assert folder.compute_custom_index_value() == 'local:index'
+        assert folder.get_custom_index_template() is None
+        manage_addPageTemplate(folder, id='index', title='', text="hello1")
+        transaction.commit()
+        assert folder.get_custom_index_template() == folder.index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        assert self.browser.get_html().strip() == "hello1"
+
+        # new-style custom_index, locally in folder
+        manage_addPageTemplate(folder, id='something', title='', text="hello2")
+        folder.custom_index = 'local:something'
+        assert folder.compute_custom_index_value() == 'local:something'
+        transaction.commit()
+        assert folder.get_custom_index_template() == folder.something
+        self.browser.go('http://localhost/portal/info/testfolder')
+        assert self.browser.get_html().strip() == "hello2"
+
+        # new-style custom_index, in portal_forms
+        portal_forms = self.portal.portal_forms
+        portal_forms._setObject('something-else',
+                        Template(id='something-else', title="",
+                                 text="hello3", content_type='text/html'))
+        folder.custom_index = 'site:portal_forms/something-else'
+        assert (folder.compute_custom_index_value() ==
+                'site:portal_forms/something-else')
+        transaction.commit()
+        assert (folder.get_custom_index_template() ==
+                portal_forms['something-else'])
+        self.browser.go('http://localhost/portal/info/testfolder')
+        assert self.browser.get_html().strip() == "hello3"
+
+    def test_custom_index(self):
+        # index was not created
+        self.assertTrue('index' not in self.folder.objectIds())
+
+        # create public interface
         self.browser_do_login('admin', '')
-        folder_url = 'http://localhost/portal/info/testparentfolder/testfolder'
-        self.browser.go(folder_url + '/manage_edit_html')
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+
         form = self.browser.get_form('frmEdit')
-        form['publicinterface'] = ['on']
-        self.browser.clicked(form, self.browser.get_form_field(form, 'publicinterface'))
+        form['custom_index'] = 'local:index'
+        form_field = self.browser.get_form_field(form, 'custom_index')
+        self.browser.clicked(form, form_field)
         self.browser.submit()
+
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_create_custom_template')
+
         self.browser_do_logout()
 
+        # index gets created
         self.assertTrue('index' in self.folder.objectIds())
+        # index page is the same as folder_index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('testfolder' in html)
+
+        # change custom index
+        self.folder.index.write('')
+        transaction.commit()
+
+        # index page is the same as the custom index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('testfolder' not in html)
+
+        # remove public interface
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+
+        form = self.browser.get_form('frmEdit')
+        form['custom_index'] = ''
+        form_field = self.browser.get_form_field(form, 'custom_index')
+        self.browser.clicked(form, form_field)
+        self.browser.submit()
+
+        self.browser_do_logout()
+
+        # index still there
+        self.assertTrue('index' in self.folder.objectIds())
+        # index page back to folder_index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('testfolder' in html)
+
+    def test_portal_form(self):
+        # index was not created
+        self.assertTrue('index' not in self.folder.objectIds())
+        # index page is the same as folder_index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('restrictions' not in html)
+
+        # create public interface
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+
+        form = self.browser.get_form('frmEdit')
+        form['custom_index'] = 'site:portal_forms/folder_restrict'
+        form_field = self.browser.get_form_field(form, 'custom_index')
+        self.browser.clicked(form, form_field)
+        self.browser.submit()
+
+        self.browser_do_logout()
+
+        # index doesn't get created
+        self.assertTrue('index' not in self.folder.objectIds())
+        # index page is not the same as folder_index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('restrictions' in html)
+
+        # remove public interface
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+
+        form = self.browser.get_form('frmEdit')
+        form['custom_index'] = ''
+        form_field = self.browser.get_form_field(form, 'custom_index')
+        self.browser.clicked(form, form_field)
+        self.browser.submit()
+
+        self.browser_do_logout()
+
+        # index still not there
+        self.assertTrue('index' not in self.folder.objectIds())
+        # index page back to folder_index
+        self.browser.go('http://localhost/portal/info/testfolder')
+        html = self.browser.get_html()
+        self.assertTrue('restrictions' not in html)
+
+    def test_form_save(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['custom_index'] = 'site:portal_forms/folder_restrict'
+        form_field = self.browser.get_form_field(form, 'custom_index')
+        self.browser.clicked(form, form_field)
+        self.browser.submit()
+
+        self.browser.go('http://localhost/portal/info/testfolder'
+                        '/manage_edit_html')
+        form = self.browser.get_form('frmEdit')
+        self.assertEqual(form['custom_index'], 'site:portal_forms/folder_restrict')
+
+        self.browser_do_logout()
 
