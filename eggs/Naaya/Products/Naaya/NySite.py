@@ -342,9 +342,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             layout = skel_handler.root.layout
             if layout is not None:
                 def layout_diskpath_prefix():
-                    assert (layout.diskpath_prefix is not None,
-                            "Please set a `diskpath_prefix` attribute on "
-                            "the <layout> tag")
+                    assert layout.diskpath_prefix is not None, ("Please set a "
+                            "`diskpath_prefix` attribute on the <layout> tag")
                     return layout.diskpath_prefix
 
                 for skin in skel_handler.root.layout.skins:
