@@ -292,4 +292,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_portal_layout_and_dynamicproperties_public.UpdatePortalLayoutAndDynamicPropertiesPublic"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="publicinterface_to_custom_index.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_publicinterface_to_custom_index.UpdatePublicInterfaceToCustomIndex"
+      permission="zope2.ViewManagementScreens" />
 </configure>
