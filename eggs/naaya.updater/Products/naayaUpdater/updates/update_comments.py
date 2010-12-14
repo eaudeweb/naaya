@@ -1,5 +1,5 @@
 from Products.naayaUpdater.updates import UpdateScript
-
+from utils import physical_path
 
 class UpdateComments(UpdateScript):
     """ Migration script from Naaya Comments """
@@ -39,6 +39,3 @@ def delete_index(portal):
         catalog.getCatalogTool().manage_delIndex(['has_comments'])
     except:
         pass
-
-def physical_path(ob):
-    return '/'.join(ob.getPhysicalPath())
