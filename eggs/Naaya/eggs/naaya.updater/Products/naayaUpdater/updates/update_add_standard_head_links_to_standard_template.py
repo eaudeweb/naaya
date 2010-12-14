@@ -6,7 +6,7 @@ from AccessControl import ClassSecurityInfo
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from update_list_custom_objects import physical_path
+from utils import physical_path
 from update_add_portlets_onerror_to_standard_template import get_standard_template
 
 class UpdateAddStandardHeadLinksMacro(UpdateScript):

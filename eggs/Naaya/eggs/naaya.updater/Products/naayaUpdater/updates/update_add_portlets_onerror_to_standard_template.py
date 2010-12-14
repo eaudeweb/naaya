@@ -9,7 +9,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from update_list_custom_objects import physical_path
+from utils import physical_path
 from update_add_portlets_onerror_to_custom_indexes import add_onerror_to_portlets_in_tal
 
 class UpdateAddPortletsOnerrorToStandardTemplate(UpdateScript):
