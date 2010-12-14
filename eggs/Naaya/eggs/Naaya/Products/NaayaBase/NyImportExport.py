@@ -108,17 +108,15 @@ class NyImportExport:
             if x.id not in ['ptk', 'ptk-cd']:
                 ra(x.export_this_tag())
                 ra(x.export_this_body())
-                if x.publicinterface:
-                    l_index = x._getOb('index', None)
-                    if l_index is not None:
-                        ra('<![CDATA[%s]]>' % l_index.document_src())
+                tmpl = x.get_custom_index_template()
+                if tmpl is not None:
+                    ra('<![CDATA[%s]]' % tmpl.document_src())
                 for y in x.objectValues('Naaya Folder'):
                     ra(y.export_this_tag())
                     ra(y.export_this_body())
-                    if y.publicinterface:
-                        l_index = y._getOb('index', None)
-                        if l_index is not None:
-                            ra('<![CDATA[%s]]>' % l_index.document_src())
+                    tmpl = y.get_custom_index_template()
+                    if tmpl is not None:
+                        ra('<![CDATA[%s]]' % tmpl.document_src())
                     ra('</ob>')
                 ra('</ob>')
         ra('</export>')

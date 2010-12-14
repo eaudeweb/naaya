@@ -86,9 +86,6 @@ def _create_NyFolder_object(parent, id, contributor):
     return ob
 
 def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_NyFolder_object, **kwargs):
-#def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-#    publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
-#    releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Folder type of object.
     Parameters:
@@ -142,8 +139,9 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_Ny
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    ob.publicinterface = _publicinterface
-    ob.createPublicInterface()
+    if _publicinterface:
+        ob.custom_index = 'local:index'
+        ob.manage_create_custom_template()
 
     self.recatalogNyObject(ob)
     event.notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
@@ -247,6 +245,8 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
 
+    default_form_id = 'folder_index'
+
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
         if len(self.folder_meta_types) > 0:
@@ -269,6 +269,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         NyContainer.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
         self.contributor = contributor
+        self.custom_index = ''
 
     def hasVersion(self):
         return False
@@ -296,10 +297,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         ra = r.append
         ra(self.export_this_tag())
         ra(self.export_this_body())
-        if self.publicinterface:
-            l_index = self._getOb('index', None)
-            if l_index is not None:
-                ra('<![CDATA[%s]]>' % l_index.document_src())
         if not folderish:
             for x in self.getObjects():
                 ra(x.export_this())
@@ -315,18 +312,14 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         ra = r.append
         ra(self.export_this_tag())
         ra(self.export_this_body())
-        if self.publicinterface:
-            l_index = self._getOb('index', None)
-            if l_index is not None:
-                ra('<![CDATA[%s]]>' % l_index.document_src())
         return ''.join(r)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'publicinterface="%s" maintainer_email="%s" folder_meta_types="%s"' % \
-            (self.utXmlEncode(self.publicinterface),
-                self.utXmlEncode(self.maintainer_email),
-                self.utXmlEncode(','.join(self.folder_meta_types)))
+        return 'custom_index="%s" maintainer_email="%s" folder_meta_types="%s"' % \
+            (self.utXmlEncode(self.compute_custom_index_value()),
+             self.utXmlEncode(self.maintainer_email),
+             self.utXmlEncode(','.join(self.folder_meta_types)))
 
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
@@ -336,22 +329,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             ra('<img param="0" id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
-
-    security.declarePrivate('createPublicInterface')
-    def createPublicInterface(self):
-        pt_id = 'index'
-        if self.publicinterface and self._getOb(pt_id, None) is None:
-            pt_content = self.getFormsTool().getForm('folder_index').document_src()
-            manage_addPageTemplate(self, id=pt_id, title='Custom index for this folder', text='')
-            pt_obj = self._getOb(pt_id)
-            pt_obj.pt_edit(text=pt_content, content_type='text/html')
-
-    security.declarePrivate('modifyPublicInterface')
-    def modifyPublicInterface(self, pt_content):
-        pt_id = 'index'
-        if self.publicinterface and self._getOb(pt_id, None) is not None:
-            try: self._getOb(pt_id).pt_edit(text=pt_content, content_type='')
-            except: pass
 
     def import_data(self, object):
         #import an object
@@ -816,15 +793,13 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
-        keywords='', sortorder='', publicinterface='', maintainer_email='', approved='',
-        releasedate='', discussion='', REQUEST=None, **kwargs):
+        keywords='', sortorder='', custom_index='', maintainer_email='',
+        approved='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
-        if publicinterface: publicinterface = 1
-        else: publicinterface = 0
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
@@ -834,7 +809,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
         self.sortorder = sortorder
-        self.publicinterface = publicinterface
+        self.custom_index = custom_index
         self.maintainer_email = maintainer_email
         self.approved = approved
         self.releasedate = releasedate
@@ -846,7 +821,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             self.approveThis(approved, approved_by)
         self._p_changed = 1
         self.recatalogNyObject(self)
-        self.createPublicInterface()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageSubobjects')
@@ -1259,6 +1233,9 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/folder_manage_edit', globals())
 
+    security.declareProtected(view_management_screens, 'folder_manage_edit_html')
+    folder_manage_edit_html = manage_edit_html
+
     security.declareProtected(view_management_screens, 'manage_folder_subobjects_html')
     manage_folder_subobjects_html = PageTemplateFile('zpt/folder_manage_subobjects', globals())
 
@@ -1292,13 +1269,83 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             pt_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
             return pt.pt_render(extra_context=pt_context).split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
 
+    security.declareProtected(view, 'compute_custom_index_value')
+    def compute_custom_index_value(self):
+        # This folder may have an old `publicinterface` property, so we want
+        # to calculate the `custom_index` value by taking that into account.
+        # At some point we should make sure no folders use `publicinterface`
+        # any more and remove this helper function.
+        if getattr(self.aq_base, 'custom_index', ''):
+            # new-style `custom_index` property is set
+            return self.custom_index
+
+        elif getattr(self.aq_base, 'publicinterface', 0):
+            # old-style `publicinterface` property is set
+            return 'local:index'
+
+        else:
+            # No custom index was configured
+            return ''
+
+    security.declareProtected(view, 'get_custom_index_template')
+    def get_custom_index_template(self):
+        custom_index = self.compute_custom_index_value()
+
+        if custom_index == '':
+            return None
+
+        elif custom_index.startswith('local:'):
+            # Path relative to folder. Look for an object with the given ID.
+            ob_id = custom_index.split(':', 1)[1]
+            return self._getOb(ob_id, None)
+
+        elif custom_index.startswith('site:'):
+            # Path relative to site. Traverse and return what we find.
+            ob_path = custom_index.split(':', 1)[1]
+            ob = self.getSite().restrictedTraverse(ob_path, None)
+            if ob is None:
+                # It's missing, return nothing.
+                return None
+            return ob.aq_base.__of__(self)
+
+        else:
+            # `custom_index` is in a format we don't understand. Panic.
+            raise ValueError("Can't parse custom_index value: %r" %
+                             custom_index)
+
+    def manage_create_custom_template(self, REQUEST=None):
+        """ """
+        custom_index = self.compute_custom_index_value()
+
+        if custom_index.startswith('local:'):
+            parent = self
+            name = custom_index.split(':', 1)[1]
+        elif custom_index.startswith('site:'):
+            parent_path, name = custom_index.split(':', 1)[1].rsplit('/', 1)
+            parent = self.getSite().restrictedTraverse(parent_path)
+        else:
+            raise ValueError("Can't create custom template for %r" %
+                             custom_index)
+
+        from Products.NaayaCore.LayoutTool.Template import manage_addTemplate
+        manage_addTemplate(parent, name)
+        ob = parent[name]
+
+        default_template = self.getFormsTool()[self.default_form_id]
+        ob.pt_edit(default_template._text, 'text/html')
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
+
+
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        if self.publicinterface:
-            l_index = self._getOb('index', None)
-            if l_index is not None: return l_index()
-        return self.getFormsTool().getContent({'here': self}, 'folder_index')
+        tmpl = self.get_custom_index_template()
+        if tmpl is None:
+            # no custom_index was configured, or the template is missing
+            tmpl = self.getFormsTool()[self.default_form_id].aq_base.__of__(self)
+        return tmpl(REQUEST)
 
     security.declareProtected(view, 'index_rdf')
     def index_rdf(self, REQUEST=None, RESPONSE=None):
