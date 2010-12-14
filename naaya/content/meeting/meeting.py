@@ -275,6 +275,8 @@ class NyMeeting(NyContentData, NyFolder):
     minutes_icon = 'misc_/NaayaContent/Minutes.png'
     survey_icon = 'misc_/NaayaContent/survey.gif'
 
+    default_form_id = 'meeting_index'
+
     manage_options = NyFolder.manage_options
 
     security = ClassSecurityInfo()
@@ -426,8 +428,7 @@ class NyMeeting(NyContentData, NyFolder):
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-        self.publicinterface = schema_raw_data.pop('publicinterface', 0)
-        self.createPublicInterface()
+        self.custom_index = schema_raw_data.pop('custom_index', '')
 
         if _approved != self.approved:
             if _approved == 0: _approved_by = None
@@ -478,15 +479,6 @@ class NyMeeting(NyContentData, NyFolder):
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
-    security.declarePrivate('createPublicInterface')
-    def createPublicInterface(self):
-        pt_id = 'index'
-        if self.publicinterface and self._getOb(pt_id, None) is None:
-            pt_content = self.getFormsTool().getForm('meeting_index').document_src()
-            manage_addPageTemplate(self, id=pt_id, title='Custom index for this meeting', text='')
-            pt_obj = self._getOb(pt_id)
-            pt_obj.pt_edit(text=pt_content, content_type='text/html')
-
     def checkPermissionParticipateInMeeting(self):
         """ """
         return self.checkPermission(PERMISSION_PARTICIPATE_IN_MEETING)
@@ -523,10 +515,11 @@ class NyMeeting(NyContentData, NyFolder):
                 if current_user not in respondents:
                     REQUEST.RESPONSE.redirect('%s/%s' % (self.getSite().absolute_url(), self.survey_pointer))
 
-        if self.publicinterface:
-            l_index = self._getOb('index', None)
-            if l_index is not None: return l_index()
-        return self.getFormsTool().getContent({'here': self}, 'meeting_index')
+        tmpl = self.get_custom_index_template()
+        if tmpl is None:
+            # no custom_index was configured, or the template is missing
+            tmpl = self.getFormsTool()['meeting_index'].aq_base.__of__(self)
+        return tmpl(REQUEST)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
