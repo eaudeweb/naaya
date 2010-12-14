@@ -176,7 +176,10 @@ def addNySemThematicDir(self, id='', title='', description='', coverage='', keyw
         ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
-        ob.createPublicInterface()
+        if publicinterface:
+            ob.publicinterface = publicinterface
+            ob.convert_publicinterface_to_custom_index()
+            ob.manage_create_custom_template()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(ob.getSite(), ob)
@@ -285,8 +288,8 @@ class NySemThematicDir(NyFolder):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'publicinterface="%s" maintainer_email="%s" folder_meta_types="%s" themes="%s" criteria_date="%s"' % \
-            (self.utXmlEncode(self.publicinterface),
+        return 'custom_index="%s" maintainer_email="%s" folder_meta_types="%s" themes="%s" criteria_date="%s"' % \
+            (self.utXmlEncode(self.compute_custom_index_value()),
                 self.utXmlEncode(self.maintainer_email),
                 self.utXmlEncode(','.join(self.folder_meta_types)),
                 self.utXmlEncode(self.themes),

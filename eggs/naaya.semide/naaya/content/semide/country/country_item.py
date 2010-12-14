@@ -189,7 +189,6 @@ def addNyCountry(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
-    ob.createPublicInterface()
     ob.updatePropertiesFromGlossary(_lang)
 
     if 'discussion' in schema_raw_data and schema_raw_data['discussion']: ob.open_for_comments()
@@ -273,6 +272,8 @@ class NyCountry(NyFolder):
     icon = 'misc_/NaayaContent/NyCountry.gif'
     icon_marked = 'misc_/NaayaContent/NyCountry_marked.gif'
 
+    default_form_id = 'country_index'
+
     manage_options = (
         NyFolder.manage_options
     )
@@ -305,8 +306,8 @@ class NyCountry(NyFolder):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'publicinterface="%s" maintainer_email="%s" folder_meta_types="%s" smallflag="%s" legislation_feed_url="%s" project_feed_url="%s"' % \
-            (self.utXmlEncode(self.publicinterface),
+        return 'custom_index="%s" maintainer_email="%s" folder_meta_types="%s" smallflag="%s" legislation_feed_url="%s" project_feed_url="%s"' % \
+            (self.utXmlEncode(self.compute_custom_index_value()),
                 self.utXmlEncode(self.maintainer_email),
                 self.utXmlEncode(','.join(self.folder_meta_types)),
                 self.utBase64Encode(self.utNoneToEmpty(self.smallflag)),
@@ -507,10 +508,10 @@ class NyCountry(NyFolder):
         elif 'flag_url' in schema_raw_data and schema_raw_data['flag_url']:
             self.setSmallFlag(schema_raw_data['flag_url'])
 
-        self.publicinterface = schema_raw_data.get('publicinterface', 0)
+        self.custom_index = schema_raw_data.get('custom_index', '')
         self._p_changed = 1
         self.recatalogNyObject(self)
-        self.createPublicInterface()
+
         #update remote channels feeds
         self.get_rc_legislation().set_new_feed_url(schema_raw_data.get('legislation_feed_url', ''))
         self.get_rc_project().set_new_feed_url(schema_raw_data.get('project_feed_url', ''))
@@ -618,14 +619,6 @@ class NyCountry(NyFolder):
     manage_edit_html = PageTemplateFile('zpt/country_manage_edit', globals())
 
     #public pages
-    security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        if self.publicinterface:
-            l_index = self._getOb('index', None)
-            if l_index is not None: return l_index()
-        return self.getFormsTool().getContent({'here': self}, 'country_index')
-
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """

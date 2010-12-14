@@ -1,14 +1,10 @@
-<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+<tal:block metal:use-macro="here/folder_manage_edit_html/macros/page">
 
 <tal:block metal:fill-slot="description">
 	Change the properties in the form below and click <strong>Save changes</strong>.
 </tal:block>
 
-<tal:block metal:fill-slot="custom_properties">
-	<tr>
-		<td class="form-label">Use/create public interface</td>
-		<td><input type="checkbox" name="publicinterface" tal:attributes="checked python:here.publicinterface==1" /></td>
-	</tr>
+<tal:block metal:fill-slot="non_folder_custom_properties">
 	<tr>
 		<td class="form-label">Upload flag</td>
 		<td>
