@@ -44,14 +44,17 @@
 	<form action="downloadLocationsKml" method="post">
 		<p i18n:translate="">
 			Additionally you can display the points in
-			<a href="http://earth.google.com/downloads.html">Google Earth viewer</a>
+			<tal:block i18n:name="Google-Earth-viewer">
+				<a href="http://earth.google.com/downloads.html"
+					i18n:translate="">Google Earth viewer</a>
+			</tal:block>
 			(version 4.0 or higher)
-			<input type="hidden" name="geo_types:list" tal:attributes="value geo_type" tal:repeat="geo_type geo_types"/>
-			<input type="hidden" name="administrative_level:list" tal:attributes="value adm_level" tal:repeat="adm_level administrative_level"/>
-			<input type="hidden" name="landscape_type:list" tal:attributes="value land_type" tal:repeat="land_type landscape_type"/>
-			<input type="hidden" name="geo_query" tal:attributes="value geo_query"/>
-			<input type="submit" value="View in Google Earth" i18n:attributes="value" class="map-button" />
+			<input type="submit" value="View in Google Earth" i18n:attributes="value" i18n:name="submit-button" class="map-button" />
 		</p>
+		<input type="hidden" name="geo_types:list" tal:attributes="value geo_type" tal:repeat="geo_type geo_types"/>
+		<input type="hidden" name="administrative_level:list" tal:attributes="value adm_level" tal:repeat="adm_level administrative_level"/>
+		<input type="hidden" name="landscape_type:list" tal:attributes="value land_type" tal:repeat="land_type landscape_type"/>
+		<input type="hidden" name="geo_query" tal:attributes="value geo_query"/>
 	</form>
 </noscript>
 

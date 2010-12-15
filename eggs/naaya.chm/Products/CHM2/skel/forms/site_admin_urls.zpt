@@ -10,8 +10,11 @@
 </ul>
 </div>
 <p i18n:translate="">
-	This page displays the existing remote URLs published in this portal, 
-	properties of either <em>URL</em> items, <em>news</em> items or <em>events</em>,
+	This page displays the existing remote URLs published in this portal,
+	properties of either
+	<em i18n:name="url" i18n:translate="">URL</em> items,
+	<em i18n:name="news" i18n:translate="">news</em> items
+	or <em i18n:name="events" i18n:translate="">events</em>,
 	along with the locations where these appear.
 </p>
 <dl tal:repeat="url_struct python:here.getURLProperties().items()">
