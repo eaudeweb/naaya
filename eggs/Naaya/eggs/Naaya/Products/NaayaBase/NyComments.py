@@ -180,7 +180,7 @@ class NyCommentable:
     security = ClassSecurityInfo()
 
     def _get_comments_container(self):
-        return getattr(self, '.comments', None)
+        return getattr(self.aq_base, '.comments', None)
 
     def _add_comments_container(self):
         folder = Folder(id='.comments')
