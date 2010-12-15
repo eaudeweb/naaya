@@ -34,6 +34,7 @@
 
 <metal:block fill-slot="content"><metal:block define-macro="content">
 <tal:block define="users users|user_tool/user_names;
+                   users python:sequence.sort(users, (('','nocase', 'asc'),));
                    redirect redirect|nothing;
                    action action|string:${site_url}/admin_addroles">
     <form method="post" name="frmUsersRoles" tal:attributes="action action" class="assign-form" tal:condition="users">
