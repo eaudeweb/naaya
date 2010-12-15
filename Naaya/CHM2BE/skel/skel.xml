@@ -50,4 +50,7 @@
 			</scheme>
 		</skin>
 	</layout>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Story" action="0"/>
+	</pluggablecontenttypes>
 </skel>
