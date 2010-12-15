@@ -48,12 +48,12 @@
 
 .topic-box ul li a 
 {
- display: block;
  text-decoration: none;
  }
 
 .topic-box li
 {
+ display: block;
  list-style-type: none;
  margin: 0 0 0.5em 0;
  }
