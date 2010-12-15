@@ -472,6 +472,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             user.lastname.lower().find(self.utToUtf8(query).lower()) !=-1
             )
 
+        def sort_key(obj):
+            attr = getattr(obj, skey, None)
+            if isinstance(attr, basestring):
+                return force_to_unicode(attr).lower()
+            else:
+                return attr
+
         user_objects = self.getUsers()
         if all_users:
             dummy_users = []
@@ -494,8 +501,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                                 roles=role)
                         dummy_users.append(dummy)
             user_objects.extend(dummy_users)
-        users = filter(_filter, self.utSortObjsListByAttr(
-            user_objects, skey, rkey))
+
+        users = filter(_filter, user_objects)
+        users = sorted(users, key=sort_key, reverse=bool(rkey))
 
         if filter_role == 'noroles':
             users_dict = self.getUsersRoles()
