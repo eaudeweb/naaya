@@ -14,7 +14,7 @@
 <tal:block tal:condition="python:not request.has_key('run')">
 <h2 i18n:translate="">Check URLs now</h2>
 
-<p i18n:translate="">
+<p>
 	<a tal:attributes="href string:${site_url}/admin_linkchecker_html?run=ok" i18n:translate="">Run URL checker now</a>
 </p>
 <tal:block tal:define="lastlog here/getLinkCheckerLastLog" tal:condition="python:lastlog is not None">
