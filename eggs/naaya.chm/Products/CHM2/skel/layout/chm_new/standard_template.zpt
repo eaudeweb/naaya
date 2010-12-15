@@ -124,7 +124,7 @@
                         <ul tal:attributes="id string:${menu_id}_ul_${repeat/item_group/index}">
                             <tal:block repeat="l_item l_list">
                                 <li tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
-                                        tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}_${repeat/l_item/index}" i18n:translate="">
+                                        tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}_${repeat/l_item/index}">
                                     <a tal:attributes=" href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
                                                                 title l_item/description;
                                                                 id string:${menu_id}_a_${repeat/item_group/index}_${repeat/l_item/index}" i18n:attributes="title"><span  tal:content="l_item/title" i18n:translate="">Title</span></a>
