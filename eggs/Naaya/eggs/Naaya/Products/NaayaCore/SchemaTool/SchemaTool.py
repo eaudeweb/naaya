@@ -151,6 +151,9 @@ class SchemaTool(Folder):
         folder_schema = self._getOb('NyFolder', None)
         if folder_schema is not None:
             output['Naaya Folder'] = folder_schema
+        photo_schema = self._getOb('NyPhoto', None)
+        if photo_schema is not None:
+            output['Naaya Photo'] = photo_schema
         return output
 
     def index_html(self, REQUEST):
