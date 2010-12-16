@@ -81,7 +81,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 			<tal:block repeat="language languages">
 			<option tal:condition="python:language['code'] != curr_lang"
 				tal:attributes="value language/code"
-				tal:content="language/name" />
+				tal:content="language/name" i18n:translate="" />
 			</tal:block>
 		</select>
 		<input type="hidden" name="lang" tal:attributes="value curr_lang" />
@@ -163,7 +163,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 			<tal:block repeat="language languages">
 			<option tal:condition="python:language['code'] != curr_lang"
 				tal:attributes="value language/code"
-				tal:content="language/name" />
+				tal:content="language/name" i18n:translate="" />
 			</tal:block>
 		</select>
 		<input type="hidden" name="lang" tal:attributes="value curr_lang" />

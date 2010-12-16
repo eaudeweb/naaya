@@ -25,11 +25,11 @@
 	<span i18n:translate="">Translate in</span>
 	<tal:block tal:repeat="language languages">
 	<div class="current" tal:condition="python:language['code'] == lang">
-	<span tal:content="python:language['name']" />
+	<span tal:content="python:language['name']" i18n:translate="" />
 		</div>
 		<a tal:condition="python:language['code'] != lang"
 			tal:attributes="href string:edit_html?lang=${language/code}; title python:language['name']">
-		<span tal:content="python:language['name']" />
+		<span tal:content="python:language['name']" i18n:translate="" />
 		</a>
 	</tal:block>
 </div>
