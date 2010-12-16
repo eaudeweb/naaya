@@ -5,11 +5,11 @@
 
 <metal:block fill-slot="body">
 
-<h1 i18n:translate="">Notifications subscription</h1>
+<h1 i18n:translate="">Subscribe to notifications</h1>
 
 
 <tal:block define="can_subscribe_to python:list(here.available_notif_types())">
-<p tal:condition="not:can_subscribe_to">
+<p tal:condition="not:can_subscribe_to" i18n:translate="">
     Notifications are disabled.
 </p>
 
@@ -22,7 +22,7 @@
     <label for="subscribe_me-location" i18n:translate="">Location</label>
     <div id="subscribe_me-sitemap_tree" class="sitemap_tree"></div>
     <div style="clear: both"></div>
-    <input type="text" id="subscribe_me-location" name="location"
+    <input type="text" size="50" id="subscribe_me-location" name="location"
            tal:attributes="value request/form/location|string:"
            class="subscribe_me-sitemap_tree_target" />
 </div>
@@ -43,21 +43,25 @@
                 i18n:translate="">Monthly digest</option>
     </select>
 </div>
-<div class="field-inline">
-    <label for="subscribe_me-lang" i18n:translate="">Language</label>
-    <select name="lang" id="subscribe_me-lang"
-            tal:define="gettext python:here.getPortalTranslations().gettext">
-        <option tal:repeat="item here/gl_get_languages_map"
-                tal:attributes="value python:item['id'];
-                                selected python:item['selected']"
-                tal:content="python:gettext(item['title'], item['id'])" />
-    </select>
-</div>
+<!-- Show select if there many languages -->
+<tal:block condition="python:len(here.gl_get_languages_map()) > 1">
+    <div class="field-inline">
+        <label for="subscribe_me-lang" i18n:translate="">Language</label>
+        <select name="lang" id="subscribe_me-lang"
+                tal:define="gettext python:here.getPortalTranslations().gettext">
+            <option tal:repeat="item here/gl_get_languages_map"
+                    tal:attributes="value python:item['id'];
+                                    selected python:item['selected']"
+                    tal:content="python:gettext(item['title'], item['id'])" />
+        </select>
+    </div>
+</tal:block>
+
 <tal:block condition="context/config/enable_anonymous|nothing">
     <tal:block condition="not: python: request.AUTHENTICATED_USER.getId()">
         <div class="field-inline">
             <label for="subscribe_me-email" i18n:translate="">E-mail</label>
-            <input type="text" id="subscribe_me-email" name="email"
+            <input type="text" id="subscribe_me-email" size="50" name="email"
                    tal:attributes="value request/form/email|string:"/>
         </div>
     </tal:block>
@@ -66,7 +70,9 @@
 <input type="submit" value="Subscribe" i18n:attributes="value"/>
 </fieldset>
 </form>
-<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+<tal:block define="tree_get_url string:${here/absolute_url}/getNavigationSiteMap/?only_folders=1">
+    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+</tal:block>
 </tal:block>
 
 
@@ -77,20 +83,23 @@
 
 <table class="datatable">
 <thead>
-    <th>Location</th>
-    <th>Notification type</th>
-    <th>Language</th>
-    <th></th>
+    <th i18n:translate="">Location</th>
+    <th i18n:translate="">Notification type</th>
+    <th i18n:translate="">Language</th>
+    <th>&nbsp;</th>
 </thead>
 <tbody>
     <tr tal:repeat="subscription my_subscriptions">
-        <td tal:define="location subscription/location">
+        <td tal:define="location subscription/location;
+                        location_url python:here.get_location_link(location)">
             <a tal:condition="location"
-               tal:attributes="href python:here.get_location_link(location)"
+               tal:attributes="href location_url;
+                               title location_url"
                tal:content="location"></a>
             <a tal:condition="not:location"
-               tal:attributes="href python:here.get_location_link(location)"
-               >entire portal</a>
+               tal:attributes="href location_url;
+                               title location_url"
+               i18n:translate="">entire portal</a>
         </td>
         <td tal:content="subscription/notif_type"/>
         <td tal:define="lang subscription/lang"

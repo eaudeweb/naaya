@@ -562,8 +562,11 @@ class NotificationTool(Folder):
         return out
 
     security.declareProtected(view, 'subscribe_me')
-    def subscribe_me(self, REQUEST, location, notif_type, lang):
+    def subscribe_me(self, REQUEST, location, notif_type, lang=None):
         """ add subscription for currently-logged-in user """
+        if lang is None:
+            lang = self.gl_get_selected_language()
+            REQUEST.form['lang'] = lang
         user_id = REQUEST.AUTHENTICATED_USER.getId()
         if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
