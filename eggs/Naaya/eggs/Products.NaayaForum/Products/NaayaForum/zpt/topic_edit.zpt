@@ -20,6 +20,7 @@
 <div class="field">
 	<label for="category" i18n:translate="">Category</label>
 	<select name="category:utf8:ustring" id="category">
+		<option value="" i18n:translate="">--Select category--</option>
 		<option tal:repeat="item here/get_forum_categories"
 			tal:attributes="value item; selected python:here.category==item"
 			tal:content="item" />
