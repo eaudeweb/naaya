@@ -36,13 +36,13 @@
 		<tal:block tal:repeat="language languages">
 			<div class="current" tal:condition="python:language['code'] == curr_lang"
 								 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
-				<span tal:content="python:language['name']" />
+				<span tal:content="python:language['name']" i18n:translate="" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
 				tal:attributes="href string:?lang=${language/code}; 
 								title python:language['name']; 
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
-				<span tal:content="python:language['name']" />
+				<span tal:content="python:language['name']" i18n:translate="" />
 			</a>
 		</tal:block>
 		</tal:block>
@@ -146,13 +146,13 @@
 		<tal:block tal:repeat="language languages">
 			<div class="current" tal:condition="python:language['code'] == curr_lang"
 								 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
-				<span tal:content="python:language['name']" />
+				<span tal:content="python:language['name']" i18n:translate="" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
 				tal:attributes="href string:?lang=${language/code}; 
 								title python:language['name']; 
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
-				<span tal:content="python:language['name']" />
+				<span tal:content="python:language['name']" i18n:translate="" />
 			</a>
 		</tal:block>
 		</tal:block>

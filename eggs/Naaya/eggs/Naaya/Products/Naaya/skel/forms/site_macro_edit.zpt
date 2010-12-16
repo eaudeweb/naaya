@@ -1,11 +1,13 @@
 <!-- Macro for edit form -->
-<metal:block define-macro="page" tal:define="
+<metal:block define-macro="page" metal:extend-macro="here/standard_template_macro"
+tal:define="
 	languages here/get_languages_mapping;
 	site here/getSite;
 	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 	curr_lang_label python:here.get_language_name(curr_lang);
 ">
-<tal:block tal:replace="structure here/standard_html_header"/>
+
+<metal:block metal:fill-slot="body">
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
 
@@ -77,7 +79,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 			<tal:block repeat="language languages">
 			<option tal:condition="python:language['code'] != curr_lang"
 				tal:attributes="value language/code"
-				tal:content="language/name" />
+				tal:content="language/name" i18n:translate="" />
 			</tal:block>
 		</select>
 		<input type="hidden" name="lang" tal:attributes="value curr_lang" />
@@ -199,7 +201,8 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </metal:block>
 
 <span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+
 </metal:block>
 
 <!-- Macro for translation bar -->
@@ -212,13 +215,14 @@ color python:here.utHexColors(curr_lang);">
 <tal:block tal:repeat="language languages">
 	<div class="current" tal:condition="python:language['code'] == curr_lang"
 						 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
-		<span tal:content="python:language['name']" />
+		<span tal:content="python:language['name']" i18n:translate=""/>
 	</div>
 	<a tal:condition="python:language['code'] != curr_lang"
 		tal:attributes="href string:?lang=${language/code};
 						title python:language['name'];
-						style python:'background-color: %s' % here.utHexColors(language['code'])">
-		<span tal:content="python:language['name']" />
+                        style python:'background-color: %s' % here.utHexColors(language['code'])"
+        i18n:attributes="title">
+		<span tal:content="python:language['name']" i18n:translate="" />
 	</a>
 </tal:block>
 </metal:block>
