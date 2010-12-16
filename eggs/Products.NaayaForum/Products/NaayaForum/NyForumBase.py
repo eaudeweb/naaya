@@ -1,12 +1,10 @@
 """
 This module contains the base class of Naaya Forum.
 """
-#Zope imports
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass
 
-#Product imports
 from constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyDublinCore import NyDublinCore

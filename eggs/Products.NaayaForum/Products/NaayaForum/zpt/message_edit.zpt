@@ -9,7 +9,7 @@
 
 <tal:block tal:condition="here/is_topic_opened">
 <p i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>.
+	Fill the properties in the form below and click <strong i18n:name="submit">Submit</strong>.
 </p>
 
 <form name="frmEdit" tal:attributes="action string:${here/absolute_url}/saveProperties" method="post">

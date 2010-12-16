@@ -1,4 +1,3 @@
-#Zope imports
 from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -6,7 +5,6 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 
-#Product imports
 from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *

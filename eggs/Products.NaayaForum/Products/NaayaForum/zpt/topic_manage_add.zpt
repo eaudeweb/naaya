@@ -1,8 +1,8 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure python:here.manage_form_title(here, here, form_title='Add Naaya Forum Topic')" />
 
-<p class="form-help">
-	Please fill the form below and click <strong>Add</strong>.
+<p class="form-help" i18n:translate="">
+	Please fill the form below and click <strong i18n:name="add">Add</strong>.
 </p>
 
 <form action="addNyForumTopic" method="post" enctype="multipart/form-data">
