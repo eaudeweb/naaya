@@ -17,10 +17,17 @@ def handle_forum_deletion(ob, event):
     """The Forum will be moved/removed"""
     if not IObjectWillBeAddedEvent.providedBy(event):
         # Object will be removed:
-        ob._removeStatisticsContainer()
+
+        #Statistics db should  not be removed.
+        #If forum is undeleted then the statistics should still be there.
+        #ob._removeStatisticsContainer()
+        pass
 
 def handle_topic_deletion(ob, event):
     """The ForumTopic will be moved/removed"""
     if not IObjectWillBeAddedEvent.providedBy(event):
         # Object will be removed:
-        ob.aq_inner.aq_parent.removeTopicHits(ob.id)
+        # Same as above. If the topic is deleted by mistake the statistics
+        #should still be there in case of undo.
+        #ob.aq_inner.aq_parent.removeTopicHits(ob.id)
+        pass
