@@ -743,13 +743,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         if add_themes_from_folders:
                             self.addTheme(name=translation['context'], code=l_context_name)
                             self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
+                        folder.cu_recatalog_object(folder)
                     except Exception, error:
                         #print error
                         pass
                 else:
                     folder.set_translations_list(target_language, translation['context'])
                     if add_themes_from_folders:
-                	self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
+                        self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
                 if target_language in self.get_english_names():
                     obj.entry = translation['source']
                     obj.translations[target_language] = translation['target']
@@ -761,10 +762,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         elem_ob.cu_recatalog_object(elem_ob)
                     else:
                         try:
-                    	    elem_subjects = []
+                            elem_subjects = []
                             if add_themes_from_folders:
-                        	elem_subjects = [l_context_name]
-                    	    folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
+                                elem_subjects = [l_context_name]
+                                folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
                         except Exception, error:
                             #print error
                             pass
