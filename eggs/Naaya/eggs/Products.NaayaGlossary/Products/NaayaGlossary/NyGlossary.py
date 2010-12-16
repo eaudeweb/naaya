@@ -739,11 +739,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     try:
                         self.manage_addGlossaryFolder(folder_id, translation['context'], [], '', '', 1)
                         folder = self._getOb(folder_id)
+                        self.cu_recatalog_object(folder)
                         folder.set_translations_list(target_language, translation['context'])
                         if add_themes_from_folders:
                             self.addTheme(name=translation['context'], code=l_context_name)
                             self.manageDefinitionTranslations(l_context_name, target_language, translation['context'])
-                        folder.cu_recatalog_object(folder)
                     except Exception, error:
                         #print error
                         pass
@@ -765,7 +765,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                             elem_subjects = []
                             if add_themes_from_folders:
                                 elem_subjects = [l_context_name]
-                                folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
+                            folder.manage_addGlossaryElement(elem_id, obj.entry, '', elem_subjects, '', self.utConvertToInt(translation['approved'].encode('utf-8')))
                         except Exception, error:
                             #print error
                             pass
