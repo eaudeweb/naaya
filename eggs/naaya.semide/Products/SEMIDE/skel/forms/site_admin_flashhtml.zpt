@@ -59,11 +59,11 @@
 					<tal:block tal:define="language_name python:here.gl_get_language_name(language)">
 						<strong tal:condition="python:language==curr_lang">
 							<a class="current" tal:content="language_name"
-								tal:attributes="href string:?lang=${language}; title language_name" />
+								tal:attributes="href string:?lang=${language}; title language_name" i18n:translate="" />
 						</strong>
 						<a tal:condition="python:language!=curr_lang"
 							tal:attributes="href string:?lang=${language}; title language_name"
-							tal:content="language_name" />
+							tal:content="language_name" i18n:translate="" />
 					</tal:block>
 				</tal:block>
 			</div>
