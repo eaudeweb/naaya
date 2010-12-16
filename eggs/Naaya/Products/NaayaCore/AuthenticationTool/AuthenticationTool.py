@@ -549,6 +549,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         else:
             return 2, []
 
+    security.declareProtected(manage_users, 'get_local_usernames')
+    def get_local_usernames(self):
+        local_users = self.user_names()
+        ret = [{'name': self.getUserFullName(self.getUser(user_id)),
+                'uid': user_id}
+                    for user_id in local_users]
+        return sorted(ret, key=lambda user: user['name'].lower())
+
     security.declareProtected(manage_users, 'isNewUser')
     def isNewUser(self, user_obj, days=5):
         """
