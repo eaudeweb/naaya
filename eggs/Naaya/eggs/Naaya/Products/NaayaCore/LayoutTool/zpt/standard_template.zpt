@@ -15,7 +15,7 @@
         <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
 
-        <metal:block define-slot="title">
+        <metal:block define-slot="header-title">
             <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
         </metal:block>
 

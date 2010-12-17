@@ -1,6 +1,6 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
 	<title><tal:block i18n:translate="">Logout Form</tal:block> | <span tal:replace="here/site_title" /></title>
 </metal:block>
 

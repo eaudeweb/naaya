@@ -1,6 +1,6 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
 	<title tal:define="category request/category | here/getDefaultCategory;
 						category_name python:here.getCategoryList(category)[0];"
 			tal:content="string:${here/title} listing - ${category_name} | ${here/site_title}" />
