@@ -298,4 +298,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_publicinterface_to_custom_index.UpdatePublicInterfaceToCustomIndex"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="slot_title.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_title_duplicate_macro_slot.UpdateSlotTitle"
+      permission="zope2.ViewManagementScreens" />
 </configure>
