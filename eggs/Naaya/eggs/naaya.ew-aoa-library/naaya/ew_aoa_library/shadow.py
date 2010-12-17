@@ -76,7 +76,10 @@ def extract_geo_type(answer):
 def general_template_extract_geo_location(answer):
     ''' returns the geo_location of the corresponding answer from the virtual library '''
     library_answer = get_library_answer(answer)
-    return library_answer.get('w_location')
+    try:
+        return library_answer.get('w_location')
+    except:
+        pass
 
 restricted_widgets = {
     'bibliography-details-each-assessment': set([
@@ -144,7 +147,9 @@ def extract_survey_answer_data_library(answer):
         if answer_id.startswith(prefix):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
-
+    attrs['official_country_region'] = getattr(answer, 'w_official-country-region')
+    if not isinstance(attrs['official_country_region'], basestring):
+        attrs['official_country_region'] = ''
     return attrs
 
 def extract_survey_answer_data_general_template(answer):
@@ -283,6 +288,14 @@ class AssessmentShadow(SimpleItem):
         """ Removes all suggestions from a survey answer"""
         survey_answer = self.get_survey_answer(self.getId())
         survey_answer.suggestions = []
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'set_region')
+    def set_region(self, REQUEST):
+        """ Saves the official country/region"""
+        survey_answer = self.get_survey_answer(self.getId())
+        setattr(survey_answer, 'w_official-country-region', REQUEST.get('official_country_region'))
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
