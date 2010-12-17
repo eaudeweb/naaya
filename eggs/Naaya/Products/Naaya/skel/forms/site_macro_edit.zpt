@@ -1,15 +1,15 @@
 <!-- Macro for edit form -->
-<metal:block define-macro="page" metal:extend-macro="here/standard_template_macro"
-tal:define="
-	languages here/get_languages_mapping;
-	site here/getSite;
-	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
-	curr_lang_label python:here.get_language_name(curr_lang);
-">
+<metal:block define-macro="page" metal:extend-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="body">
 
-<tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
+<tal:block tal:define="
+	languages here/get_languages_mapping;
+	site here/getSite;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+	curr_lang_label python:here.get_language_name(curr_lang);"
+	tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())"
+>
 
 <!-- Scripts -->
 <metal:block define-slot="scripts">
