@@ -8,7 +8,7 @@
         name="description" />
 </metal:block>
 
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
     <title><tal:block i18n:translate="">Observatory Map</tal:block> |
     <span tal:replace="view/site/site_title" /></title>
 </metal:block>
