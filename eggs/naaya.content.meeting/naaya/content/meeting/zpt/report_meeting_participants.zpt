@@ -1,5 +1,5 @@
 <metal:block use-macro="here/standard_template_macro">
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
     <title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 <metal:block metal:fill-slot="body">
