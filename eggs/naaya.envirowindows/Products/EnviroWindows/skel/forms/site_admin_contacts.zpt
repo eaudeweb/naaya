@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-	<tal:block metal:fill-slot="title" />
+	<tal:block metal:fill-slot="header-title" />
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 	<!-- JSTree scripts -->
 	<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
