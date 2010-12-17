@@ -98,7 +98,8 @@ from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.NaayaCore.managers.utils import vcard_file
-from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool
+from Products.NaayaCore.managers.import_export import (CSVImportTool,
+                                                       ExportTool, UnicodeReader)
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
@@ -3826,10 +3827,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     macro_utils = PageTemplateFile('zpt/site_macro_utils', globals())
 
     csv_import = CSVImportTool('csv_import')
+    csv_reader = UnicodeReader
     csv_export = ExportTool('csv_export')
     zip_import = ZipImportTool('zip_import')
     zip_export = ZipExportTool('zip_export')
-
     jstree = StaticServeFromZip('source', 'www/js/jstree.zip', globals())
     jquery_tree_init = ImageFile('www/js/jquery.tree.init.js', globals())
 
