@@ -7,6 +7,9 @@
 
 <tal:block metal:fill-slot="custom_properties">
 
+<link rel="stylesheet" type="text/css" media="screen"
+    href="misc_/Naaya/jquery.autocomplete.css" />
+
 <script src="misc_/Naaya/jquery.min.js"></script>
 
 <style>
@@ -73,7 +76,18 @@
 <tal:block metal:define-slot="non_folder_custom_properties">
 </tal:block>
 
-</tal:block>
+<script src="misc_/Naaya/jquery.autocomplete.min.js"></script>
+<script tal:content="string:var form_ids=${here/portal_forms/registered_form_ids};">
+</script>
+<script>
+    $(document).ready(function(){
+        var data = form_ids.map(function(id){return'site:portal_forms/'+id;});
+        data.push('local:index');
+        $('input[name=\"custom_index\"]').autocomplete(data);
+    });
+</script>
 
+
+</tal:block>
 
 </tal:block>
