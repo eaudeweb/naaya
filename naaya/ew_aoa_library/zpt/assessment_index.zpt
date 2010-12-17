@@ -89,6 +89,17 @@
     </tal:block>
 </div>
 
+<div class="widgetViewMode" style="background-color:#FFF9D4"
+    tal:condition="python:not review_template and is_entitled">
+	<form id="set_region" name="set_region" method="post" action=".">
+		<strong><label for="official_country_region" i18n:translate="">Official country/region</label></strong><br/><br/>
+		<input id="official_country_region" name="official_country_region:utf8:ustring"
+			size="100" tal:attributes="value here/official_country_region|nothing"/>
+		<br/><br/>
+		<input type="submit" name="set_region:method" value="Save country/region" i18n:attributes="value"/>
+	</form>
+</div>
+
 <tal:block content="structure here/render_answer" />
 
 </metal:block>
