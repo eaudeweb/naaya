@@ -2,7 +2,7 @@
 
 <metal:block i18n:domain="portal_translations" metal:use-macro="here/standard_template_macro">
 
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
 		<title tal:condition="date" i18n:translate="">
 			Items for <span i18n:name="date" tal:replace="python:here.show_date(date)" /> | <span i18n:name="site_title" tal:replace="here/site_title" />
 		</title>

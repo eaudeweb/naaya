@@ -1,5 +1,5 @@
 <metal:block use-macro="here/standard_template_macro">
-<metal:block fill-slot="title"><title>Test map view</title></metal:block>
+<metal:block metal:fill-slot="header-title"><title>Test map view</title></metal:block>
 <tal:block metal:fill-slot="body"
            define="test_name request/form/name|string:portal_map">
 

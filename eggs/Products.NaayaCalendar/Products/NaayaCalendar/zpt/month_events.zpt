@@ -9,7 +9,7 @@
 
 <metal:block i18n:domain="portal_translations" metal:use-macro="here/standard_template_macro">
 
-<metal:block metal:fill-slot="title">
+<metal:block metal:fill-slot="header-title">
 		<title><span tal:replace="python:here.getMonthName(cmonth)+' '+str(cyear)" /> | <span tal:replace="here/site_title" /></title>
 </metal:block>
 
