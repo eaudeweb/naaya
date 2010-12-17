@@ -8,8 +8,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
-from update_list_custom_objects import list_folders_with_custom_index
-from utils import physical_path
+from utils import physical_path, list_folders_with_custom_index
 
 class UpdateFolderListingMacro(UpdateScript):
     """ Update folder listing macro """
