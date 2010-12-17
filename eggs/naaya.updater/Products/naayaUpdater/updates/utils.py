@@ -4,3 +4,11 @@ def pat(s):
 
 def physical_path(ob):
     return '/'.join(ob.getPhysicalPath())
+
+def list_folders_with_custom_index(portal):
+    catalog = portal.getCatalogTool()
+
+    for brain in catalog(meta_type='Naaya Folder'):
+        folder = brain.getObject()
+        if 'index' in folder.objectIds():
+            yield folder
