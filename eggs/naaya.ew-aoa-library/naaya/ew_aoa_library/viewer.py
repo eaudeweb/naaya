@@ -54,17 +54,19 @@ class AoALibraryViewer(SimpleItem):
         if Globals.DevelopmentMode:
             reload(shadow)
 
-        if not hasattr(self, '_v_shadow_cache') or Globals.DevelopmentMode:
-            self._v_shadow_cache = {}
+# disable the cache (-- moregale)
+#        if not hasattr(self, '_v_shadow_cache') or Globals.DevelopmentMode:
+#            self._v_shadow_cache = {}
+#
+#        # Survey answers are, in effect, immutable. So we cache them by path.
+#        key = '/'.join(answer.getPhysicalPath())
+#        try:
+#            obj = self._v_shadow_cache[key]
+#        except KeyError:
+#            obj = shadow.shadow_for_answer(answer)
+#            self._v_shadow_cache[key] = obj
 
-        # Survey answers are, in effect, immutable. So we cache them by path.
-        key = '/'.join(answer.getPhysicalPath())
-        try:
-            obj = self._v_shadow_cache[key]
-        except KeyError:
-            obj = shadow.shadow_for_answer(answer)
-            self._v_shadow_cache[key] = obj
-
+        obj = shadow.shadow_for_answer(answer)
         return obj.__of__(self)
 
     security.declareProtected(view, 'iter_assessments')
