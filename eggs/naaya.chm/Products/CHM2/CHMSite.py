@@ -353,11 +353,14 @@ class CHMSite(NySite):
 
     def getNonWorkgroupUsers(self, id):
         """ """
-        all_users = self.getAuthenticationTool().user_names()
-        wg_users = [x[0] for x in self.getWorkgroupUsers(id)]
-        l = self.utListDifference(all_users, wg_users)
-        l.sort()
-        return l
+        auth_tool = self.getAuthenticationTool()
+
+        all_uids = auth_tool.user_names()
+        wg_uids = [x[0] for x in self.getWorkgroupUsers(id)]
+        nonwg_uids = self.utListDifference(all_uids, wg_uids)
+
+        local_user_info = auth_tool.get_local_usernames()
+        return [info for info in local_user_info if info['uid'] in nonwg_uids]
 
     def add_userto_workgroup(self, loc, name, roles):
         """ """
