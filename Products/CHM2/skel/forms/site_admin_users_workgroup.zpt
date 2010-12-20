@@ -97,8 +97,8 @@
 <span i18n:translate="" tal:omit-tag="">Assign user</span>
 <select name="name" id="name">
 	<option tal:repeat="user users"
-		tal:attributes="value user"
-		tal:content="user" />
+		tal:attributes="value user/uid"
+		tal:content="string:${user/name} (${user/uid})" />
 </select>
 <span i18n:translate="" tal:omit-tag="">to this workgroup</span>
 <input type="hidden" name="id" id="id" tal:attributes="value current_w" />
