@@ -964,9 +964,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Given a user object, returns the concatenation of first+last names
         """
         try:
-            return '%s %s' % (user_obj.firstname, user_obj.lastname)
+            return u'%s %s' % (force_to_unicode(user_obj.firstname),
+                               force_to_unicode(user_obj.lastname))
         except AttributeError:
-            return ''
+            return u''
 
     def getUserFullNameByID(self, user_str):
         """
