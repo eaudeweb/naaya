@@ -84,6 +84,8 @@ def initialize(context):
         icon = 'www/NyPhotoFolder.gif'
         )
 
+    register_permissions()
+
 misc_ = {
     'NyPhotoGallery.gif':ImageFile('www/NyPhotoGallery.gif', globals()),
     'NyPhotoFolder.gif':ImageFile('www/NyPhotoFolder.gif', globals()),
@@ -108,3 +110,9 @@ misc_ = {
     'photo_archive.css': ImageFile('www/photo_archive.css', globals()),
     'slideshow.js': ImageFile('www/slideshow.js', globals()),
 }
+
+
+def register_permissions():
+    from Products.Naaya.NySite import register_naaya_permission
+    register_naaya_permission(PERMISSION_ADD_PHOTO,
+                              'Submit Photo objects')
