@@ -304,7 +304,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
                               removelist=[]),
                       lambda x: parent._getOb(x, None) is not None)
 
-        schema_raw_data['title'] = schema_raw_data['title'].replace(self.id, id)
+        schema_raw_data['title'] = schema_raw_data.get('title', '').replace(self.id, id)
         schema_raw_data['description'] = schema_raw_data['description'].replace(self.id, id)
         schema_raw_data['body'] = schema_raw_data['body'].replace(self.id, id)
 
