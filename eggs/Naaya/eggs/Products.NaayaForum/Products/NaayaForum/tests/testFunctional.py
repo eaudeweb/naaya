@@ -55,9 +55,9 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
     def beforeTearDown(self):
         # get sqlite db (if any) or create one
         db = self.portal.forum_id._getStatisticsContainer()
+        self.portal.forum_id._removeStatisticsContainer()
         self.portal.manage_delObjects(['forum_id'])
         transaction.commit()
-        # assert database is deleted
         self.assertRaises(sql.DbMissing, db.cursor)
 
     def test_edit_forum(self):
