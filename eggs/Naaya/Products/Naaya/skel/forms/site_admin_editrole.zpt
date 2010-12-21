@@ -1,7 +1,11 @@
 <metal:block use-macro="python:here.getFormsTool().getForm('site_admin_users').macros['page']">
-<metal:block fill-slot="second-title" i18n:translate="">Edit permissions for <i i18n:name="role_name" tal:content="options/role" /></metal:block>
+<metal:block fill-slot="second-title"></metal:block>
 
 <metal:block fill-slot="section-title">
+    <div class="cleaner">&nbsp;</div>
+	<h3 i18n:translate="">
+		Edit permissions for <i i18n:name="role_name" tal:content="options/role" />
+	</h3>
 </metal:block>
 
 <metal:block fill-slot="description-text">
@@ -31,7 +35,7 @@
                 tal:attributes="class python:test(path('repeat/pair/odd'),
                                          'row-odd', 'row-even')">
                 <td class="center checkbox">
-                     
+
                     <input type="checkbox" tal:attributes="
                         name string:zope_perm_list:list;
                         value zope_perm;
@@ -47,9 +51,9 @@
         </table>
         </div>
         </metal:block>
-        
+
         <br />
-        
+
         <input type="submit" value="Save changes" i18n:attributes="value" />
     </form>
 </metal:block>
