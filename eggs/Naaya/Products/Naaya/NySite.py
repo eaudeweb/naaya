@@ -3923,6 +3923,7 @@ naaya_known_permissions = {
     'Naaya - Zip export': "Export folder as Zip",
     'Naaya - Validate content': "Validate objects",
     'View': "Access content",
+    'Change permissions': "Change permissions",
 }
 
 def register_naaya_permission(zope_perm, label):
