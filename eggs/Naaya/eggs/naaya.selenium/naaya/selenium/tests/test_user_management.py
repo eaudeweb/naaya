@@ -121,7 +121,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
         assert self.selenium.is_text_present(username) is False
 
-    def test_aaaasearch_local_users(self):
+    def test_search_local_users(self):
         """Search users using jquery ui autocomplete and normal search using
         form
 
@@ -189,7 +189,7 @@ class NaayaUserManagementTest(SeleniumTestCase, LDAPBaseUnitTest):
         XXX: Do the jstree click
         """
         self.selenium.open("/portal/admin_assignroles_html", True)
-        self.selenium.add_selection("names", "label=user3")
+        self.selenium.add_selection("names", "label=User Three (user3)")
         self.selenium.add_selection("//select[@name='roles']", 'Manager')
         self.selenium.type('location', "info")
         self.selenium.click("send_mail")
