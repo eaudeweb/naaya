@@ -270,6 +270,7 @@
 			<permission name="Access contents information" />
 			<permission name="Access session data" />
 			<permission name="Add Naaya Forum" />
+			<permission name="Change permissions" />
 			<permission name="Manage users" />
 			<permission name="Naaya - Access administrative area" />
 			<permission name="Naaya - Add comments for content" />
