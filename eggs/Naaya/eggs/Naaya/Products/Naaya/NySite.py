@@ -3068,6 +3068,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_adduser')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_importusers_html')
+    def admin_importusers_html(self):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_importusers')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser_html')
     def admin_edituser_html(self, **kwargs):
         """ """

@@ -183,7 +183,9 @@ class CSVImportTool(Implicit, Item):
                     if extra_properties:
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
-                            adapter.handle_columns(extra_properties)
+                            extra_props_messages = adapter.handle_columns(extra_properties)
+                            if extra_props_messages:
+                                errors.append(extra_props_messages)
                     obj_ids.append(ob.getId())
                     ob.submitThis()
                     ob.approveThis()

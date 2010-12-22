@@ -35,7 +35,8 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent,\
                                         NyDelUserRoleEvent
 from Products.NaayaCore.managers.paginator import ObjectPaginator
-from Products.NaayaCore.managers.utils import is_valid_email
+from Products.NaayaCore.managers.utils import is_valid_email, UnicodeReader
+from Products.NaayaCore.managers.import_export import set_response_attachment
 
 from recover_password import RecoverPassword
 
@@ -1288,6 +1289,114 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_send_emails_log_html')
+
+    security.declareProtected(manage_users, 'manage_addUser')
+    def manage_importUsers(self, data=None, REQUEST=None):
+        """ """
+
+        import_errors = {}
+        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+            raise Unauthorized
+
+        errors = []
+
+        try:
+            reader = UnicodeReader(data)
+            try:
+                header = reader.next()
+            except StopIteration:
+                msg = 'Invalid CSV file'
+                if REQUEST is None:
+                    raise ValueError(msg)
+                else:
+                    errors.append(msg)
+                    reader = []
+
+            record_number = 0
+            successfully_imported = 0
+
+            for row in reader:
+                try:
+                    record_number += 1
+                    properties = {}
+                    record_errors = []
+                    for column, value in zip(header, row):
+                        properties[column] = value
+                    email = properties.get('email')
+                    name = properties.get('name')
+                    firstname = properties.get('firstname')
+                    lastname = properties.get('lastname')
+                    password = properties.get('password')
+                    roles = properties.get('roles')
+                    domains = properties.get('domains')
+
+                    email = email.strip()
+                    if not check_username(name):
+                        record_errors.append('Record %s: Username: only letters and numbers allowed' % record_number)
+                    if not firstname:
+                        record_errors.append('Record %s: The first name must be specified' % record_number)
+                    if not lastname:
+                        record_errors.append('Record %s: The last name must be specified' % record_number)
+                    if not email:
+                        record_errors.append('Record %s: The email must be specified' % record_number)
+                    if not is_valid_email(email):
+                        record_errors.append('Record %s: Invalid email address.' % record_number)
+                    if not name:
+                        record_errors.append('Record %s: A username must be specified' % record_number)
+                    if not password:
+                        record_errors.append('Record %s: Password must be specified' % record_number)
+
+                    name = str(name)
+                    if (self.get_user_with_userid(name) is not None or
+                        (self._emergency_user and
+                          name == self._emergency_user.getUserName())):
+                        record_errors.append('Record %s: Username %s already in use' % (record_number, name))
+                    if record_errors:
+                        errors += record_errors
+                        continue
+
+                    #convert data
+                    roles = self.utConvertToList(roles)
+                    domains = self.utConvertToList(domains)
+
+                    user = self._doAddUser(name, password, roles, domains,
+                                   firstname, lastname, email)
+                    successfully_imported += 1
+
+                except UnicodeDecodeError, e:
+                    raise
+                except Exception, e:
+                    self.log_current_error()
+                    msg = ('Error while importing from CSV, row ${record_number}: ${error}',
+                           {'record_number': record_number, 'error': str(e)})
+                    if REQUEST is None:
+                        raise ValueError(msg)
+                    else:
+                        errors.append(msg)
+
+        except UnicodeDecodeError, e:
+            if REQUEST is None:
+                raise
+            else:
+                errors.append('CSV file is not utf-8 encoded')
+        if errors:
+            self.setSessionErrorsTrans(errors)
+        if REQUEST is not None:
+            if successfully_imported > 0:
+                self.setSessionInfoTrans('%s user(s) successfully imported.' % successfully_imported)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(manage_users, 'template')
+    def template(self, as_attachment=True, REQUEST=None):
+        """ """
+        output = StringIO()
+        columns = ['firstname', 'lastname','email', 'name', 'password', 'roles', 'domains']
+        csv.writer(output).writerow(columns)
+        if as_attachment and REQUEST is not None:
+            filename = 'users import.csv'
+            set_response_attachment(REQUEST.RESPONSE, filename,
+                'text/csv; charset=utf-8', output.len)
+        return output.getvalue()
 
     manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
