@@ -513,6 +513,15 @@ class ExpertCSVImportAdapter(object):
         self.ob = ob
     def handle_columns(self, extra_properties):
         self.ob.add_EmploymentRecord(None, None, extra_properties['Organisation'], True)
+        ob_owner = extra_properties.get('_object_owner')
+        if ob_owner:
+            try:
+                acl_users = self.ob.getSite().getAuthenticationTool()
+                user = acl_users.getUserById(ob_owner).__of__(acl_users)
+                self.ob.changeOwnership(user=user)
+            except:
+                return "Requested owner %s is not in the portal users table" % str(ob_owner)
+
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
