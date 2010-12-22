@@ -35,8 +35,13 @@ from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.interface import implements
+from zope.component import adapts
 from zope.event import notify 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
+from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+
+from interfaces import INyOrganisation
 
 from naaya.content.bfile.NyBlobFile import make_blobfile
 #Product imports
@@ -199,6 +204,7 @@ class organisation_item(Implicit, NyContentData):
 class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
+    implements(INyOrganisation)
     meta_type = config['meta_type']
     meta_label = config['label']
 
@@ -429,6 +435,21 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
                 self.email = self.email.encode('UTF-8')
             ret = self.email.replace('@', ' at ')
         return ret
+
+class OrganisationCSVImportAdapter(object):
+    implements(ICSVImportExtraColumns)
+    adapts(INyOrganisation)
+    def __init__(self, ob):
+        self.ob = ob
+    def handle_columns(self, extra_properties):
+        ob_owner = extra_properties.get('_object_owner')
+        if ob_owner:
+            try:
+                acl_users = self.ob.getSite().getAuthenticationTool()
+                user = acl_users.getUserById(ob_owner).__of__(acl_users)
+                self.ob.changeOwnership(user=user)
+            except:
+                return "Requested owner %s is not in the portal users table" % str(ob_owner)
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
