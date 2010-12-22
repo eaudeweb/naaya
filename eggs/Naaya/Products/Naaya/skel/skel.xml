@@ -23,6 +23,7 @@
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
+		<form id="site_admin_importusers" title="Portal administration - import users"/>
 		<form id="site_admin_all_users" title="Portal administration - all users"/>
 		<form id="site_admin_assignroles" title="Portal administration - assign roles"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
