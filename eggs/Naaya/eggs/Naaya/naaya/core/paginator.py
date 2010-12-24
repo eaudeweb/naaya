@@ -410,3 +410,35 @@ class DiggPage(Page):
                             " ".join(map(str, self.leading_range)),
                             " ".join(map(str, self.main_range)),
                             " ".join(map(str, self.trailing_range))]))
+
+
+from Acquisition import Implicit
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view
+from Globals import InitializeClass
+
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+
+class NaayaPaginator(DiggPaginator, Implicit):
+    security = ClassSecurityInfo()
+
+    security.declareProtected(view, 'page')
+    def page(self, number, *args, **kwargs):
+        """ """
+        page = super(NaayaPaginator, self).page(number, *args, **kwargs)
+        page.__class__ = NaayaPage
+        return page.__of__(self)
+InitializeClass(NaayaPaginator)
+
+class NaayaPage(DiggPage, Implicit):
+    security = ClassSecurityInfo()
+
+    security.declareProtected(view, 'pagination')
+    pagination = NaayaPageTemplateFile('zpt/pagination', globals(),
+                                       'naaya.core.pagination')
+
+for name in ['paginator', 'leading_range', 'main_range', 'trailing_range',
+             'number', 'has_previous', 'has_next', 'previous_page_number',
+             'next_page_number', 'start_index', 'end_index']:
+    NaayaPage.security.declareProtected(view, name)
+InitializeClass(NaayaPage)

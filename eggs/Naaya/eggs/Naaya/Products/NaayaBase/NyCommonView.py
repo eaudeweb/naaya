@@ -12,6 +12,7 @@ from zope.deprecation import deprecate
 
 #Naaya imports
 from naaya.core.zope2util import RestrictedToolkit
+from naaya.core.paginator import NaayaPaginator
 
 from Products.NaayaCore.interfaces import ICaptcha
 from Products.NaayaCore.managers.captcha_tool import captcha_tool
@@ -97,5 +98,10 @@ class NyCommonView(object):
         log.warning('Page error: error type %r, error value %r,'
                     ' lineno %r, offset %r',
                     error.type, error.value, error.lineno, error.offset)
+
+    security.declareProtected(view, 'make_paginator')
+    def make_paginator(self, *args, **kwargs):
+        """ """
+        return NaayaPaginator(*args, **kwargs).__of__(self)
 
 InitializeClass(NyCommonView)

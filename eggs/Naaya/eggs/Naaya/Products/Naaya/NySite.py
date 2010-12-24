@@ -1854,40 +1854,46 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return (paging_informations, r[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'internalSearch')
-    def internalSearch(self, query='', langs=None, releasedate=None, releasedate_range=None, meta_types=[], skey='', rkey='', start='', path=''):
+    def internalSearch(self, query='', langs=None, releasedate=None,
+                        releasedate_range=None, meta_types=[], skey='', rkey='',
+                        path=''):
         """ """
-        r = []
-        rex = r.extend
-        if langs is None: langs = [self.gl_get_selected_language()]
-        try: start = int(start)
-        except: start = 0
+        object_list = []
+
+        if langs is None:
+            langs = [self.gl_get_selected_language()]
+
         releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate_range not in ['min', 'max']: releasedate_range = None
-        if releasedate is None: releasedate_range = None
-        if len(query.strip()):
-            #search in each language
-            for lang in langs:
-                try:
-                    rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
-                except Exception, e:
-                    return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, unicode(e))
-            r = self.utEliminateDuplicatesByURL(r)
-            res = [k for k in r if k.can_be_seen()]
-            if len(res) == 0:
-                return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, None)
-            batch_obj = batch_utils(self.numberresultsperpage, len(res), start)
-            if skey in ['meta_type', 'title', 'bobobase_modification_time']:
-                if skey == 'bobobase_modification_time':
-                    res = self.utSortObjsListByMethod(res, skey, rkey)
-                else:
-                    res = self.utSortObjsListByAttr(res, skey, rkey)
-            if len(r):
-                paging_informations = batch_obj.butGetPagingInformations()
+        if releasedate_range not in ['min', 'max']:
+            releasedate_range = None
+        if releasedate is None:
+            releasedate_range = None
+
+        if not len(query.strip()):
+            return {'object_list': None, 'error': None}
+
+        #search in each language
+        for lang in langs:
+            try:
+                lang_items = self.query_objects_ex(meta_types, query, lang,
+                                                   path,
+                                                   releasedate=releasedate,
+                                                   releasedate_range=releasedate_range)
+                object_list.extend(lang_items)
+            except Exception, e:
+                return {'object_list': None, 'error': unicode(e)}
+        object_list = self.utEliminateDuplicatesByURL(object_list)
+
+        # filter results
+        object_list = [k for k in object_list if k.can_be_seen()]
+
+        # sort results
+        if skey in ['meta_type', 'title', 'bobobase_modification_time']:
+            if skey == 'bobobase_modification_time':
+                object_list = self.utSortObjsListByMethod(object_list, skey, rkey)
             else:
-                paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-            return (paging_informations, res[paging_informations[0]:paging_informations[1]], None)
-        else:
-            return ((-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0]), None, None)
+                object_list = self.utSortObjsListByAttr(object_list, skey, rkey)
+        return {'object_list': object_list, 'error': None}
 
     #paging stuff
     def process_querystring(self, p_querystring):

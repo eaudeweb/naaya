@@ -1,0 +1,60 @@
+<tal:block define="make_url python:options['make_url'];
+                   paginator here/paginator;
+                   current_page here/number">
+<div class="pagination">
+    <tal:block condition="here/leading_range">
+    <span tal:repeat="page here/leading_range">
+    <tal:block define="this_page python:page == current_page">
+        <a class="bold" tal:condition="this_page" tal:content="page"></a>
+        <a tal:condition="not:this_page" tal:content="page"
+            tal:attributes="href python:make_url(page)"></a>
+    </tal:block>
+    </span>
+    ...
+    </tal:block>
+
+    <span tal:repeat="page here/main_range">
+    <tal:block define="this_page python:page == current_page">
+        <a class="bold" tal:condition="this_page" tal:content="page"></a>
+        <a tal:condition="not:this_page" tal:content="page"
+            tal:attributes="href python:make_url(page)"></a>
+    </tal:block>
+    </span>
+
+    <tal:block condition="here/trailing_range">
+    ...
+    <span tal:repeat="page here/trailing_range">
+    <tal:block define="this_page python:page == current_page">
+        <a class="bold" tal:condition="this_page" tal:content="page"></a>
+        <a tal:condition="not:this_page" tal:content="page"
+            tal:attributes="href python:make_url(page)"></a>
+    </tal:block>
+    </span>
+    </tal:block>
+
+    <span tal:define="has_previous here/has_previous;
+                      has_next here/has_next;">
+        <a class="prevpage" tal:condition="has_previous"
+            tal:attributes="href python:make_url(here.previous_page_number())">&lt; previous</a>
+        <tal:block condition="python:(has_previous and has_next)">|</tal:block>
+        <a class="nextpage" tal:condition="has_next"
+            tal:attributes="href python:make_url(here.next_page_number())">next &gt;</a>
+    </span>
+
+    <span>
+        <span i18n:translate="">Showing</span>
+        <span tal:replace="here/start_index"/>
+            -
+        <span tal:replace="here/end_index"/>
+        <span i18n:translate="">of</span>
+        <span tal:replace="paginator/count" />
+    </span>
+    &nbsp;/&nbsp;&nbsp;
+    <span>
+        <span i18n:translate="">Showing page</span>
+        <span tal:replace="python:current_page" />
+        <span i18n:translate="">of</span>
+        <span tal:replace="paginator/num_pages" />
+    </span>
+</div>
+</tal:block>
