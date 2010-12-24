@@ -331,6 +331,13 @@ class list_utils:
             dict[l_object.absolute_url()] = l_object
         return dict.values()
 
+    def utEliminateDuplicateBrains(self, p_brains):
+        """ eliminate duplicates from a list of brains """
+        dict = {}
+        for l_brain in p_brains:
+            dict[l_brain.getPath()] = l_brain
+        return dict.values()
+
 class file_utils:
     """ """
 
