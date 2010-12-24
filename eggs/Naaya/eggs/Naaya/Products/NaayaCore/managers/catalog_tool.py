@@ -41,21 +41,6 @@ class catalog_tool:
         """Search catalog"""
         return self.getCatalogTool()(p_criteria)
 
-    def __getObjects(self, p_brains):
-        """ """
-        output = []
-        for brain in p_brains:
-            try:
-                ob = self.portal_catalog.getobject(brain.data_record_id_)
-                if isinstance(ob, BrokenClass):
-                    raise ValueError("Broken object in catalog: %r" %
-                                     brain.getPath())
-            except:
-                self.log_current_error()
-            else:
-                output.append(ob)
-        return output
-
     def __getObjectsAndScore(self, p_brains):
         """ """
         output = []
@@ -78,6 +63,21 @@ class catalog_tool:
     #################################
     #      INTERFACE METHODS        #
     #################################
+    def safe_getobjects(self, p_brains):
+        """ getobject on each brain in list and filter&log getobject errors """
+        output = []
+        for brain in p_brains:
+            try:
+                ob = self.portal_catalog.getobject(brain.data_record_id_)
+                if isinstance(ob, BrokenClass):
+                    raise ValueError("Broken object in catalog: %r" %
+                                     brain.getPath())
+            except:
+                self.log_current_error()
+            else:
+                output.append(ob)
+        return output
+
     def catalogNyObject(self, p_ob):
         try: self.getCatalogTool().catalog_object(p_ob, self.__buildCatalogPath(p_ob))
         except: self.log_current_error()
@@ -112,9 +112,9 @@ class catalog_tool:
     def searchCatalog(self, p_query, p_path, lang):
         """ """
         if type(p_query) == type(''):
-            l_results = self.__getObjects(self.__eliminateDuplicates(self.findCatalogedObjects(p_query, p_path, lang)))
+            l_results = self.safe_getobjects(self.__eliminateDuplicates(self.findCatalogedObjects(p_query, p_path, lang)))
         else:
-            l_results = self.__getObjects(self.__eliminateDuplicates(self.findCatalogedObjectsByGenericQuery(p_query)))
+            l_results = self.safe_getobjects(self.__eliminateDuplicates(self.findCatalogedObjectsByGenericQuery(p_query)))
         return l_results
 
     def findCatalogedObjectsByGenericQuery(self, p_query):
@@ -141,7 +141,7 @@ class catalog_tool:
         l_results = self.__searchCatalog(l_filter)
         if howmany != -1:
             l_results = l_results[:howmany]
-        l_results = self.__getObjects(l_results)
+        l_results = self.safe_getobjects(l_results)
         return l_results
 
     # The function getCatalogedObjects did not allow searching for not-approved objects
@@ -166,7 +166,7 @@ class catalog_tool:
         l_results = self.__searchCatalog(l_filter)
         if howmany != -1:
             l_results = l_results[:howmany]
-        l_results = self.__getObjects(l_results)
+        l_results = self.safe_getobjects(l_results)
         return l_results
 
     # This function is similar to getCatalogedObjects, but also checks for view permission on objects
@@ -187,14 +187,14 @@ class catalog_tool:
         #perform the search
         l_results = self.__searchCatalog(l_filter)
         if howmany == -1:
-            l_objects = self.__getObjects(l_results)
+            l_objects = self.safe_getobjects(l_results)
             return [obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)]
         else:
             if howmany > len(l_results):
                 howmany = len(l_results)
             l_temp = l_results[:howmany]
             l_all = len(l_results)
-            l_objects = self.__getObjects(l_temp)
+            l_objects = self.safe_getobjects(l_temp)
             l_output = []
             l_counter = howmany
             while l_counter < l_all + howmany:
@@ -205,7 +205,7 @@ class catalog_tool:
                 else:
                     l_temp = l_results[l_counter:l_counter+howmany]
                     l_counter = l_counter + howmany
-                    l_objects = self.__getObjects(l_temp)
+                    l_objects = self.safe_getobjects(l_temp)
             return l_output
 
     #Monkey patch
@@ -232,14 +232,14 @@ class catalog_tool:
         l_results = self.__searchCatalog(l_filter)
 
         if howmany == -1:
-            l_objects = self.__getObjects(l_results)
+            l_objects = self.safe_getobjects(l_results)
             return [obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)]
         else:
             if howmany > len(l_results):
                 howmany = len(l_results)
             l_temp = l_results[:howmany]
             l_all = len(l_results)
-            l_objects = self.__getObjects(l_temp)
+            l_objects = self.safe_getobjects(l_temp)
             l_output = []
             l_counter = howmany
             while len(l_temp) >= 0:
@@ -249,7 +249,7 @@ class catalog_tool:
                 else:
                     l_temp = l_results[l_counter:l_counter+howmany]
                     l_counter = l_counter + howmany
-                    l_objects = self.__getObjects(l_temp)
+                    l_objects = self.safe_getobjects(l_temp)
         newSecurityManager(None, auth_user)
 
     def getCatalogedUnsubmittedObjects(self, meta_type=None):
@@ -259,7 +259,7 @@ class catalog_tool:
         l_filter = {'submitted': 0}
         if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
         else: l_filter['meta_type'] = self.searchable_content
-        return self.__getObjects(self.__searchCatalog(l_filter))
+        return self.safe_getobjects(self.__searchCatalog(l_filter))
 
     def getCatalogedBrains(self, meta_type=None):
         """
@@ -270,8 +270,7 @@ class catalog_tool:
         else: l_filter['meta_type'] = self.searchable_content
         return self.__searchCatalog(l_filter)
 
-
-    def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
+    def query_brains_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
         if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
@@ -287,7 +286,11 @@ class catalog_tool:
             l_filter['PrincipiaSearchSource'] = q
         l_results.extend(self.__searchCatalog(l_filter))
         if howmany != -1: l_results = l_results[:howmany]
-        return self.__getObjects(l_results)
+        return l_results
+
+    def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
+        l_results = self.query_brains_ex(meta_type, q, lang, path, howmany, **kwargs)
+        return self.safe_getobjects(l_results)
 
     def query_translated_objects(self, meta_type=None, lang=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', **kwargs):
         l_results = []
@@ -303,7 +306,7 @@ class catalog_tool:
             if value is not None: l_filter[key] = value
         l_results = self.__searchCatalog(l_filter)
         if howmany != -1: l_results = l_results[:howmany]
-        return self.__getObjects(l_results)
+        return self.safe_getobjects(l_results)
 
     def getCommentedObjects(self):
         paths = set()
@@ -322,16 +325,16 @@ class catalog_tool:
                                         'sort_order': 'reverse'})
         if limit:
             brains = brains[:limit]
-        return self.__getObjects(brains)
+        return self.safe_getobjects(brains)
 
     def getCatalogCheckedOutObjects(self):
-        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'checkout': 1}))
+        return self.safe_getobjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'checkout': 1}))
 
     def getNotCheckedObjects(self):
-        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 0}))
+        return self.safe_getobjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 0}))
 
     def getCheckedOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 1}))
+        return self.safe_getobjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 1}))
 
     def getCheckedNotOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': -1}))
+        return self.safe_getobjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': -1}))

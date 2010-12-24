@@ -1873,16 +1873,18 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return {'object_list': None, 'error': None}
 
         #search in each language
+        brains_list = []
         for lang in langs:
             try:
-                lang_items = self.query_objects_ex(meta_types, query, lang,
+                lang_brains = self.query_brains_ex(meta_types, query, lang,
                                                    path,
                                                    releasedate=releasedate,
                                                    releasedate_range=releasedate_range)
-                object_list.extend(lang_items)
+                brains_list.extend(lang_brains)
             except Exception, e:
                 return {'object_list': None, 'error': unicode(e)}
-        object_list = self.utEliminateDuplicatesByURL(object_list)
+        brains_list = self.utEliminateDuplicateBrains(brains_list)
+        object_list = self.safe_getobjects(brains_list)
 
         # filter results
         object_list = [k for k in object_list if k.can_be_seen()]
