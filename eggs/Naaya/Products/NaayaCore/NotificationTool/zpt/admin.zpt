@@ -102,10 +102,10 @@
 </form>
 
 <h2 i18n:translate="">Current subscriptions</h2>
-<tal:block tal:define="subscriptions_page
-                           python:here.itemsPaginator(request)">
+<tal:block tal:define="object_list python:list(here.admin_get_subscriptions());
+                       page python:int(request.get('page', 1));">
 <br />
-<p tal:condition="not:subscriptions_page/object_list"
+<p tal:condition="not:object_list"
    i18n:translate="">No users have yet subscribed to any notifications.</p>
 <br />
 <form action="admin_add_account_subscription" method="post"
@@ -158,88 +158,52 @@
         <input type="submit" value="Subscribe user" i18n:attributes="value"/>
     </fieldset>
 </form>
-<table class="datatable" tal:condition="subscriptions_page/object_list">
-	<thead>
-		<th>User</th>
-		<th>Location</th>
-		<th>Notification type</th>
-		<th>Language</th>
-		<th></th>
-	</thead>
-	<tbody>
-		<tr tal:repeat="sub_data subscriptions_page/object_list">
-			<td>
-				<span tal:content="sub_data/user"/>
-			</td>
-			<td tal:define="location sub_data/location">
-                <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
-                <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
-			</td>
-			<td>
-				<span tal:content="sub_data/notif_type"/>
-			</td>
-			<td tal:define="lang sub_data/lang">
-				<span tal:content="python:here.gl_get_language_name(lang)"/>
-			</td>
-			<td>
-				<form method="post"
-				      tal:attributes="action string:${here/absolute_url}/admin_remove_account_subscription">
-					<input type="hidden" name="location"
-					       tal:attributes="value sub_data/location"/>
-					<input type="hidden" name="sub_id:int"
-					       tal:attributes="value sub_data/sub_id"/>
-					<input type="submit" value="unsubscribe"
-					       i18n:attributes="value"/>
-				</form>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<div class="pagination" tal:define="current_page python:int(request.get('page', '1'))">
-
-	<tal:block condition="subscriptions_page/leading_range">
-	<span tal:repeat="page subscriptions_page/leading_range">
-	<tal:block define="this_page python:page == current_page">
-		<a class="bold" tal:condition="this_page" tal:content="page"/>
-		<a tal:condition="not:this_page" tal:content="page"
-		tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
-	</tal:block>
-	</span>
-	...
-	</tal:block>
-
-	<span tal:repeat="page subscriptions_page/main_range">
-	<tal:block define="this_page python:page == current_page">
-		<a class="bold" tal:condition="this_page" tal:content="page"/>
-		<a tal:condition="not:this_page"
-		tal:content="page" tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
-	</tal:block>
-	</span>
-
-	<tal:block condition="subscriptions_page/trailing_range">
-	...
-	<span tal:repeat="page subscriptions_page/trailing_range">
-	<tal:block define="this_page python:page == current_page">
-		<a class="bold" tal:condition="this_page" tal:content="page"/>
-		<a tal:condition="not:this_page"
-		tal:content="page" tal:attributes="href string:${here/absolute_url}/admin_html?page=${page}"/>
-	</tal:block>
-	</span>
-	</tal:block>
-
-	<span tal:define="has_previous subscriptions_page/has_previous;
-						has_next subscriptions_page/has_next;">
-		<a class="prevpage" tal:condition="has_previous"
-			tal:attributes="href string:${here/absolute_url}/admin_html?page=${subscriptions_page/previous_page_number}">&lt; previous</a>
-		<tal:block condition="python:(has_previous and has_next)">|</tal:block>
-		<a class="nextpage" tal:condition="has_next"
-			tal:attributes="href string:${here/absolute_url}/admin_html?page=${subscriptions_page/next_page_number}">next &gt;</a>
-	</span>
-
-	<span class="matchescount">
-		<span tal:replace="subscriptions_page/start_index"/>-<span tal:replace="subscriptions_page/end_index"/> of <span tal:replace="subscriptions_page/paginator/count"/> subscriptions_page
-	</span>
-</div>
+<tal:block condition="object_list">
+    <tal:block define="paginator python:here.make_paginator(object_list, 10, body=5, padding=2, orphans=2);
+                       page_obj python:paginator.page(page);
+                       records page_obj/object_list;
+                       make_url python:lambda page: '%s/admin_html?page=%s#notification_table' % (here.absolute_url(), page);">
+    <table id="notification_table" class="datatable">
+        <thead>
+            <th>User</th>
+            <th>Location</th>
+            <th>Notification type</th>
+            <th>Language</th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr tal:repeat="sub_data records">
+                <td>
+                    <span tal:content="sub_data/user"/>
+                </td>
+                <td tal:define="location sub_data/location">
+                    <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
+                    <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
+                </td>
+                <td>
+                    <span tal:content="sub_data/notif_type"/>
+                </td>
+                <td tal:define="lang sub_data/lang">
+                    <span tal:content="python:here.gl_get_language_name(lang)"/>
+                </td>
+                <td>
+                    <form method="post"
+                          tal:attributes="action string:${here/absolute_url}/admin_remove_account_subscription">
+                        <input type="hidden" name="location"
+                               tal:attributes="value sub_data/location"/>
+                        <input type="hidden" name="sub_id:int"
+                               tal:attributes="value sub_data/sub_id"/>
+                        <input type="submit" value="unsubscribe"
+                               i18n:attributes="value"/>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <tal:block replace="structure python:page_obj.pagination(make_url=make_url)">
+    </tal:block>
+    </tal:block>
+</tal:block>
 </tal:block>
 <!-- scripts -->
 <metal:block use-macro="here/macro_utils/macros/ajaxtree" />

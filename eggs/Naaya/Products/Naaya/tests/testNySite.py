@@ -98,6 +98,19 @@ class TestNySiteListing(NaayaFunctionalTestCase):
         self.assertTrue(site_info.has_edit_link)
 
 
+class SearchPageFunctionalTest(NaayaFunctionalTestCase):
+    def test_pagination(self):
+        self.browser.go('http://localhost/portal/search_html?'
+                        'query:utf8:ustring=accessibility&Naaya_Document=on')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        paginations = soup.findAll('div', attrs={'class': 'pagination'})
+        self.assertEqual(len(paginations), 1)
+
+        pagination = paginations[0]
+        self.assertTrue('Showing page' in str(pagination))
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestNySite))

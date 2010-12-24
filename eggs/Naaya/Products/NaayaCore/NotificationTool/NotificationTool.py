@@ -511,25 +511,6 @@ class NotificationTool(Folder):
         else:
             return ob_id
 
-    def itemsPaginator(self, REQUEST):
-        """ """
-        items_list = list(self.admin_get_subscriptions())
-        paginator = DiggPaginator(items_list, 20, body=5, padding=2, orphans=5)
-
-        # Make sure page request is an int. If not, deliver first page.
-        try:
-            page = int(REQUEST.get('page', '1'))
-        except ValueError:
-            page = 1
-
-        # If requested page is out of range, deliver first page.
-        try:
-            items = paginator.page(page)
-        except InvalidPage:
-            items = paginator.page(1)
-
-        return items
-
     security.declareProtected(view_management_screens, 'manage_main')
     manage_main = folder_manage_main_plus
 
