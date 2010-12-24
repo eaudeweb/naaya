@@ -48,6 +48,7 @@
 				items python:list(here.iter_assessments());">
 	<!-- If the "sort by" property has an attribute "lower",
 		convert the value to lower before sorting -->
+    <tal:block condition="items">
 	<tal:block condition="python:hasattr(getattr(items[0], skey), 'lower')">
 		<tal:block define="dummy python:items.sort(key=lambda x: getattr(x, skey).lower(), reverse=rkey);" />
 	</tal:block>
@@ -57,6 +58,7 @@
 	<tal:block condition="python:skey == 'approved_date'" >
 		<tal:block define="dummy python:items.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
 	</tal:block>
+    </tal:block>
 
 <thead tal:define="url here/absolute_url">
 	<!-- Name -->
