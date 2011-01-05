@@ -41,7 +41,7 @@
                                                        {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},));">
 <tal:block condition="not:error">
 <tal:block condition="object_list">
-    <tal:block define="paginator python:here.make_paginator(object_list, here.numberresultsperpage, body=5, padding=2, orphans=5);
+    <tal:block define="paginator python:here.make_paginator(object_list, int(here.numberresultsperpage), body=5, padding=2, orphans=5);
                        page_obj python:paginator.page(page);
                        nopage_url string:${here/absolute_url}/search_html?skey=${skey}&amp;rkey=${rkey}&amp;${querystring};
                        make_url python:lambda page: '%s&amp;page=%s' % (nopage_url, page);
