@@ -518,9 +518,16 @@ class ExpertCSVImportAdapter(object):
             try:
                 acl_users = self.ob.getSite().getAuthenticationTool()
                 user = acl_users.getUserById(ob_owner).__of__(acl_users)
-                self.ob.changeOwnership(user=user)
             except:
                 return "Requested owner %s is not in the portal users table" % str(ob_owner)
+            self.ob.changeOwnership(user=user)
+
+            #Send confirmation email to the owner
+            email_body = 'The expert %s was registered within the biodiversity portal biodiversiteit.nl.\n\n You can view or edit details of this expert by following this link:\n\n %s \n\n' % (self.ob.title, self.ob.absolute_url())
+            email_to = user.email
+            email_from = 'no-reply@biodiversiteit.nl'
+            email_subject = '%s expert was registered' % self.ob.title
+            self.ob.getEmailTool().sendEmail(email_body, email_to, email_from, email_subject)
 
 
 def json_encode(ob):
