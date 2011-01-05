@@ -72,9 +72,12 @@
 <div class="main-content" tal:define="
 				geo_location here/geo_location;
 				address geo_location/address|string:;
-				main_topics python:here.getTopics(here.main_topics);">
+				main_topics python:here.getTopics(here.main_topics);
+				portal_map python:here.getSite().portal_map">
 	<tal:block condition="here/description"
 		content="structure here/description" />
+	<tal:block condition="here/geo_type"
+		content="python:portal_map.getSymbol(here.geo_type).title" />
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
@@ -105,7 +108,7 @@
 				</tal:block>
 			</ul>
 		</tal:block>
-		<tal:block condition="emp_previous">	
+		<tal:block condition="emp_previous">
 			<h4 i18n:translate="">Previous employees</h4>
 			<ul>
 				<tal:block repeat="emp emp_previous">
