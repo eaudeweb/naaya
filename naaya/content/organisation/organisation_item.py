@@ -485,7 +485,7 @@ class OrganisationLister(Implicit, Item):
         return self._index_template(REQUEST)
 
     def items_in_topic(self, topic=None, filter_name=None, objects=False):
-        filters = {'meta_type' : METATYPE_OBJECT}
+        filters = {'meta_type' : METATYPE_OBJECT, 'approved': True}
         if topic is not None:
             filters['topics'] = topic
         if filter_name is not None:
@@ -494,7 +494,7 @@ class OrganisationLister(Implicit, Item):
         catalog = self.getCatalogTool()
         if objects:
             return [ catalog.getobject(ob.data_record_id_)
-                     for ob in catalog.search(filters) ]
+                     for ob in catalog.search(filters)]
         else:
             return catalog.search(filters)
 

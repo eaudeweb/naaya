@@ -552,7 +552,7 @@ class ExpertsLister(Implicit, Item):
         return self._index_template(REQUEST, experts=[1,2,3])
 
     def items_in_topic(self, topic=None, filter_name=None, objects=False):
-        filters = {'meta_type' : 'Naaya Expert'}
+        filters = {'meta_type' : 'Naaya Expert', 'approved': True}
         if topic is not None:
             filters['topics'] = topic
         if filter_name is not None:
@@ -561,7 +561,7 @@ class ExpertsLister(Implicit, Item):
         catalog = self.getCatalogTool()
         if objects:
             return [ catalog.getobject(ob.data_record_id_)
-                     for ob in catalog.search(filters) ]
+                     for ob in catalog.search(filters)]
         else:
             return catalog.search(filters)
 
