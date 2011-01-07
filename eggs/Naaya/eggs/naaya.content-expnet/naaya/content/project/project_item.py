@@ -362,7 +362,6 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
 
         """
         if organisation:
-            import pdb;pdb.set_trace()
             self.organisations.append(OrganisationRecord(organisation))
 
     def delete_organisation(self, REQUEST=None):
