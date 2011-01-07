@@ -560,8 +560,9 @@ class ExpertsLister(Implicit, Item):
 
         catalog = self.getCatalogTool()
         if objects:
-            return [ catalog.getobject(ob.data_record_id_)
+            items = [ catalog.getobject(ob.data_record_id_)
                      for ob in catalog.search(filters)]
+            return sorted(items, key=lambda ob: ob.surname.strip().lower())
         else:
             return catalog.search(filters)
 
