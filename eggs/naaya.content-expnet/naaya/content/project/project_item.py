@@ -31,6 +31,8 @@ from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.interface import implements
+from zope.component import adapts
 from zope.event import notify 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
@@ -47,7 +49,10 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+
+from interfaces import INyProject
 
 METATYPE_OBJECT = 'Naaya Project'
 
@@ -155,6 +160,9 @@ def addNyProject(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    #Organisation data (list of OrganisationRecord objects)
+    ob.organisations = []
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -293,6 +301,10 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
+        #Process organisations
+        organisation = schema_raw_data.pop('organisation', None)
+        self.add_organisation(organisation)
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
@@ -342,11 +354,67 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         json_simplepoints = json.dumps(simplepoints, default=json_encode)
         return self._minimap_template(points=json_simplepoints)
 
+    def add_organisation(self, organisation):
+        """
+        Add new organisationi record.
+        @warning: This do not commits Zope transaction!
+        @param organisation: Organisation name - str
+
+        """
+        if organisation:
+            import pdb;pdb.set_trace()
+            self.organisations.append(OrganisationRecord(organisation))
+
+    def delete_organisation(self, REQUEST=None):
+        """ Delete one record from employment history """
+        if REQUEST.REQUEST_METHOD == 'POST':
+            id = REQUEST.form['id']
+            ob = None
+            for x in self.organisations:
+                if x.id == id: ob = x
+            if ob:
+                del self.organisation[self.organisation.index(ob)]
+                self._p_changed = True
+            return 'success'
+
+    def find_OrganisationByName(self, name):
+        ctool = self.getCatalogTool()
+        ret = ctool.search({'meta_type' : 'Naaya Organisation', 'title_field' : name})
+        if ret:
+            return ctool.getobject(ret[0].data_record_id_)
+
+    def has_organisation_autocomplete(self):
+        #@WARNING: 'Naaya Organisation' is hard-coded name of the NyOrganisation meta_type
+        return 'Naaya Organisation' in self.getSite().get_pluggable_installed_meta_types()
+
     def has_coordinates(self):
         """ check if the current object has map coordinates"""
         if self.geo_location:
             return self.geo_location.lat and self.geo_location.lon
         return False
+
+class ProjectCSVImportAdapter(object):
+    implements(ICSVImportExtraColumns)
+    adapts(INyProject)
+    def __init__(self, ob):
+        self.ob = ob
+    def handle_columns(self, extra_properties):
+        self.ob.add_organisation(extra_properties['Organisation'])
+        ob_owner = extra_properties.get('_object_owner')
+        if ob_owner:
+            try:
+                acl_users = self.ob.getSite().getAuthenticationTool()
+                user = acl_users.getUserById(ob_owner).__of__(acl_users)
+            except:
+                return "Requested owner %s is not in the portal users table" % str(ob_owner)
+            self.ob.changeOwnership(user=user)
+
+            #Send confirmation email to the owner
+            email_body = 'The project %s was registered within the biodiversity portal biodiversiteit.nl.\n\n You can view or edit details of this project by following this link:\n\n %s \n\n' % (self.ob.title, self.ob.absolute_url())
+            email_to = user.email
+            email_from = 'no-reply@biodiversiteit.nl'
+            email_subject = '%s project was registered' % self.ob.title
+            self.ob.getEmailTool().sendEmail(email_body, email_to, email_from, email_subject)
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
@@ -370,7 +438,7 @@ class ProjectsLister(Implicit, Item):
         return self._index_template(REQUEST)
 
     def items_in_topic(self, topic=None, filter_name=None, objects=False):
-        filters = {'meta_type' : 'Naaya Project'}
+        filters = {'meta_type' : 'Naaya Project', 'approved': True}
         if topic is not None:
             filters['topics'] = topic
         if filter_name is not None:
@@ -379,13 +447,58 @@ class ProjectsLister(Implicit, Item):
         catalog = self.getCatalogTool()
         if objects:
             return [ catalog.getobject(ob.data_record_id_)
-                     for ob in catalog.search(filters) ]
+                     for ob in catalog.search(filters)
+                     if catalog.getobject(ob.data_record_id_).approved]
         else:
             return catalog.search(filters)
 
 
 from Products.Naaya.NySite import NySite
 NySite.projects_list = ProjectsLister('projects_list')
+
+try:
+    import naaya.content.organisation.organisation_item
+except:
+    HAS_META_TYPE_ORGANISATION = False
+else:
+    HAS_META_TYPE_ORGANISATION = True
+if HAS_META_TYPE_ORGANISATION:
+    class AutosuggestOrganisation(Implicit, Item):
+
+        def __init__(self, id):
+            self.id = id
+    
+        def index_html(self, REQUEST=None):
+            """
+            Index for autosuggest organisations.
+            @return: JSON formatted array with title of organisations
+            """
+            if REQUEST:
+                REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
+                q = None; limit = 10
+                if REQUEST.form.has_key('q'):
+                    q = REQUEST.form['q']
+                if REQUEST.form.has_key('limit'):
+                    limit = int(REQUEST.form['limit'])
+                if q:
+                    catalog = self.getCatalogTool()
+                    q = '%s*' % q
+                    lst = catalog.search({'meta_type' : 'Naaya Organisation', 'title' : q}) #@WARNING: Hard-coded meta_type
+                    if len(lst) > limit:
+                        lst = lst[0:limit]
+                    return '|'.join([ '%s' % brain.getObject().title for brain in lst])
+                return '[]'
+            return None
+
+    NySite.autosuggest_organisations = AutosuggestOrganisation('autosuggest_organisations')
+
+
+class OrganisationRecord(object):
+
+    def __init__(self, organisation):
+        ut = utils()
+        self.id = ut.utGenerateUID()
+        self.organisation = organisation
 
 config.update({
     'constructors': (project_add_html, addNyProject),
