@@ -76,8 +76,9 @@
 				portal_map python:here.getSite().portal_map">
 	<tal:block condition="here/description"
 		content="structure here/description" />
-	<tal:block condition="here/geo_type"
-		content="python:portal_map.getSymbol(here.geo_type).title" />
+	<tal:block condition="here/geo_type">
+		<tal:block i18n:translate="">Category</tal:block>: <tal:block i18n:translate="" content="python:portal_map.getSymbol(here.geo_type).title" />
+	</tal:block>
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
