@@ -445,9 +445,9 @@ class ProjectsLister(Implicit, Item):
 
         catalog = self.getCatalogTool()
         if objects:
-            return [ catalog.getobject(ob.data_record_id_)
-                     for ob in catalog.search(filters)
-                     if catalog.getobject(ob.data_record_id_).approved]
+            items = [ catalog.getobject(ob.data_record_id_)
+                     for ob in catalog.search(filters) ]
+            return sorted(items, key=lambda ob: ob.title.strip().lower())
         else:
             return catalog.search(filters)
 
