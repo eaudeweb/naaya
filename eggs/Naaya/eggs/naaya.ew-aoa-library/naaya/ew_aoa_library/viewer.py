@@ -129,6 +129,8 @@ def viewer_for_survey_answer(answer):
 
 @adapter(INySurveyAnswer, IObjectAddedEvent)
 def survey_answer_created(answer, event):
+    if answer.draft:
+        return
     try:
         for viewer in viewer_for_survey_answer(answer):
             catalog = viewer.getSite().getCatalogTool()
@@ -139,6 +141,8 @@ def survey_answer_created(answer, event):
 
 @adapter(INySurveyAnswer, IObjectRemovedEvent)
 def survey_answer_removed(answer, event):
+    if answer.draft:
+        return
     try:
         for viewer in viewer_for_survey_answer(answer):
             catalog = viewer.getSite().getCatalogTool()

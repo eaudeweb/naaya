@@ -138,6 +138,7 @@
 			<div class="surveySubmit">
 				<input tal:condition="python: not my_answer or here.allow_multiple_answers" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input tal:condition="python: my_answer and not here.allow_multiple_answers" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input tal:condition="here/canAddAnswerDraft" type="submit" value="Save draft" i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 		</form>
