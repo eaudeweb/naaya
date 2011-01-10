@@ -431,7 +431,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
            Filters out the draft ones.
         """
         return [answer for answer in self.objectValues(SurveyAnswer.meta_type)
-                            if answer.is_draft()==draft]
+                            if answer.is_draft()==bool(draft)]
 
     # this is method is used by the widget manage forms
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'getAnswerCountForQuestion')
@@ -461,7 +461,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # all answers, so we must do the filtering ourselves.
             if obj.respondent != respondent:
                 continue
-            if obj.is_draft() != draft:
+            if obj.is_draft() != bool(draft):
                 continue
             if not multiple:
                 return obj
