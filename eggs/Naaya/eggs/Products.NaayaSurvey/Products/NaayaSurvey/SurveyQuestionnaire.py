@@ -231,34 +231,27 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if REQUEST:
             kwargs.update(REQUEST.form)
 
-        try:
-            if self.expired():
-                raise SurveyQuestionnaireException("The survey has expired")
-        except SurveyQuestionnaireException, ex:
-            if REQUEST:
-                self.setSessionErrorsTrans(str(ex))
-                return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-            else:
-                raise
+        #check survey expiration
+        if self.expired():
+            error_msg = "The survey has expired"
+            if not REQUEST:
+                raise SurveyQuestionnaireException(error_msg)
+            self.setSessionErrorsTrans(error_msg)
+            return REQUEST.RESPONSE.redirect(self.absolute_url())
 
+        #check datamodel
         datamodel = {}
         errors = []
         for widget in self.getSurveyTemplate().getWidgets():
             try:
                 value = widget.getDatamodel(kwargs)
                 widget.validateDatamodel(value)
-                datamodel[widget.getWidgetId()] = value
             except WidgetError, ex:
                 if not REQUEST:
                     raise
-                datamodel[widget.getWidgetId()] = None
+                value = None
                 errors.append(str(ex))
-
-        #check Captcha/reCaptcha
-        if REQUEST and not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
-            captcha_errors = self.getSite().validateCaptcha('', REQUEST)
-            if captcha_errors:
-                errors.append(captcha_errors)
+            datamodel[widget.getWidgetId()] = value
 
         try:
             validation_onsubmit = self['validation_onsubmit']
@@ -267,9 +260,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         else:
             validation_onsubmit(datamodel, errors)
 
+        if not REQUEST and errors:
+            raise WidgetError(errors[0])
+
+        #check Captcha/reCaptcha
+        if REQUEST and not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
+            captcha_errors = self.getSite().validateCaptcha('', REQUEST)
+            if captcha_errors:
+                errors.append(captcha_errors)
+
         if errors:
-            if not REQUEST:
-                raise WidgetError(errors[0])
+            # assumed that REQUEST is not None
             self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
@@ -298,10 +299,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if answer_id or not self.allow_multiple_answers or add_new:
             answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
         answer = self._getOb(answer_id)
+
         if self.notify_owner:
             self.sendNotificationToOwner(answer)
-        if self.notify_respondents == 'ALWAYS' or \
-           self.notify_respondents.startswith('LET_THEM_CHOOSE') and notify_respondent:
+        if (self.notify_respondents == 'ALWAYS'
+            or (self.notify_respondents.startswith('LET_THEM_CHOOSE')
+                and notify_respondent)):
             self.sendNotificationToRespondent(answer)
 
         if REQUEST:
