@@ -138,7 +138,7 @@ table.widgetTypesTable td:first-child {
 
 .surveySubmit input {
 	white-space: nowrap;
-	font-size: 0.85em;
+	font-size: 1.2em;
 	font-weight: bold;
 	background: #fff;
 	border-left:1px solid #bbb;
