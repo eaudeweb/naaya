@@ -18,6 +18,7 @@ def dec_invalidation_onsubmit(func):
             func(*args, **kwargs)
         finally:
             validation_onsubmit.side_effect = None
+    new_func.__name__ = func.__name__
     return new_func
 validation_onsubmit = Mock()
 
@@ -83,7 +84,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         widget.validateDatamodel = Mock(side_effect=WidgetError('test_error'))
         survey.getWidgets = Mock(return_value=[widget])
 
-        #self.assertRaises(WidgetError, survey.addSurveyAnswer)
+        self.assertRaises(WidgetError, survey.addSurveyAnswer)
         self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
@@ -111,11 +112,11 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         getSite = survey.getSite
         getSite.return_value.validateCaptcha = Mock(return_value='test_error')
 
-        #survey.addSurveyAnswer()
+        survey.addSurveyAnswer()
 
-        #self.assertEqual(survey.getSite.return_value.validateCaptcha.call_count,
-        #                 0)
-        #manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None)
+        self.assertEqual(survey.getSite.return_value.validateCaptcha.call_count,
+                         0)
+        manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_invalid_captcha_with_request(self, manage_addSurveyAnswer):
@@ -133,16 +134,16 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         REQUEST.RESPONSE.redirect.assert_called_with("http://survey/index_html")
         self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
-    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     @dec_invalidation_onsubmit
+    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_invalidation_onsubmit_no_request(self, manage_addSurveyAnswer):
         survey = self.survey
 
-        #self.assertRaises(WidgetError, survey.addSurveyAnswer())
-        #self.assertEqual(manage_addSurveyAnswer.call_count, 0)
+        self.assertRaises(WidgetError, survey.addSurveyAnswer)
+        self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
-    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     @dec_invalidation_onsubmit
+    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_invalidation_onsubmit_with_request(self, manage_addSurveyAnswer):
         survey = self.survey
         REQUEST = Mock()
@@ -164,7 +165,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         survey.addSurveyAnswer(answer_id='12345')
 
-        #survey._delObject.assert_called_with('12345')
+        survey._delObject.assert_called_with('12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
@@ -218,7 +219,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         self.assertEqual(result, 'answer_12345')
         self.assertEqual(survey.setSession.call_count, 0)
-        #self.assertEqual(survey.delSessionKeys.call_count, 0)
+        self.assertEqual(survey.delSessionKeys.call_count, 0)
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
