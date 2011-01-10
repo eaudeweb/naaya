@@ -5,6 +5,9 @@ Changelog
 --------------------
  * Custom folder index page template can be selected from site.
  * New paginator for naaya: used in site_search and notification admin.
+ * (r15882) Added anonymous users notification subscribers, modified subscribe
+   UI to a more generic one (supporting anonymous users as well).
+   Anonymous notifications can be disabled or enabled from Naaya Admin
  * Zip export uses temporary file instead of building archive in memory.
 
 2.10.11 (2010-12-07)
