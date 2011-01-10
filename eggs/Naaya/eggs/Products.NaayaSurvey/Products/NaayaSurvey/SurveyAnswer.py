@@ -39,8 +39,8 @@ from interfaces import INySurveyAnswer
 
 gUtil = utils()
 
-def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None,
-        draft=False):
+def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
+                           REQUEST=None):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
@@ -158,4 +158,4 @@ class SurveyAnswer(Folder):
         return res
 
     def is_draft(self):
-        return getattr(self, 'draft', False)
+        return bool(getattr(self, 'draft', False))
