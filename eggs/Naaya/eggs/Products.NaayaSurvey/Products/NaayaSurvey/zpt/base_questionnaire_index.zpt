@@ -86,7 +86,7 @@
 			</ul>
 		</div>
 	</tal:block>
-	<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts">
+	<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts and here.allow_multiple_answers">
 		<div class="my-answers"><h5 i18n:translate="">Your drafts:</h5>
 			<ul id="my-answers-list">
 				<li  tal:repeat="draft my_drafts">
@@ -147,7 +147,7 @@
 			<div class="surveySubmit">
 				<input tal:condition="python: not my_answer or here.allow_multiple_answers" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input tal:condition="python: my_answer and not here.allow_multiple_answers" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
-				<input tal:condition="here/canAddAnswerDraft" type="submit" value="Save draft" i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+				<input tal:condition="here/canAddAnswerDraft" type="submit" value="Save as draft" i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 		</form>
