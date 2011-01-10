@@ -116,6 +116,16 @@ function fSet(ctrl, value)
 			<option value="1" i18n:translate="">Yes</option>
 		</select>
 	</div>
+	<!-- Allow drafts -->
+	<div class="field">
+		<label for="allow_drafts" i18n:translate="">
+			Allow users to save drafts of their answers?
+		</label>
+		<select id="allow_drafts" name="allow_drafts">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
 
 	<!-- Submit buttons-->
 	<div class="field">

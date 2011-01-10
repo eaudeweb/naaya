@@ -44,3 +44,4 @@ class questionnaire_item(Implicit, NyProperties):
         self.allow_overtime = int(kwargs.get('allow_overtime', '0'))
         self.allow_multiple_answers = int(kwargs.get('allow_multiple_answers',
                                                      '0'))
+        self.allow_drafts = int(kwargs.get('allow_drafts', '0'))

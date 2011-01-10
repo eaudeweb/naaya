@@ -83,6 +83,22 @@
 					</option>
 				</select>
 			</div>
+			<!-- Allow drafts -->
+			<div class="field">
+				<label for="allow_drafts" i18n:translate="">
+					Allow users to save drafts of their answers?
+				</label>
+				<select id="allow_drafts" name="allow_drafts">
+					<option value="1" i18n:translate=""
+						tal:attributes="selected here/allow_drafts">
+						Yes
+					</option>
+					<option value="0" i18n:translate=""
+						tal:attributes="selected not:here/allow_drafts">
+						No
+					</option>
+				</select>
+			</div>
 		</metal:block>
 	</tal:block>
 </tal:block>

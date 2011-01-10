@@ -1,5 +1,6 @@
 # Pythons imports
-from unittest import TestSuite, makeSuite
+import unittest
+from mock import Mock
 
 # Zope imports
 from Testing import ZopeTestCase
@@ -15,6 +16,9 @@ from Products.NaayaSurvey.SurveyQuestionnaire import SurveyQuestionnaire, Survey
 from Products.NaayaSurvey.SurveyReport import SurveyReport
 from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
+
+# stub imports
+import stubs
 
 ZopeTestCase.installProduct('NaayaWidgets')
 ZopeTestCase.installProduct('NaayaSurvey')
@@ -77,7 +81,19 @@ class MegaSurveyTestCase(NaayaTestCase):
         self.assertTrue(SurveyQuestionnaire.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
 
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(MegaSurveyTestCase))
-    return suite
+class SavePropertiesTestCase(unittest.TestCase):
+    def setUp(self):
+        survey = stubs.Survey()
+        survey.get_selected_language = Mock(return_value='en')
+        survey.process_releasedate = Mock(return_value=DateTime('1/1/2010'))
+        survey.updatePropertiesFromGlossary = Mock()
+        survey.recatalogNyObject = Mock()
+
+        self.survey = survey
+
+    def testAllowDrafts(self):
+        survey = self.survey
+
+        for value in [0, 1]:
+            survey.saveProperties(allow_drafts=value)
+            self.assertEqual(survey.__dict__['allow_drafts'], value)
