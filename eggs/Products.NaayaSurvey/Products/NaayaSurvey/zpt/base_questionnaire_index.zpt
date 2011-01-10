@@ -43,9 +43,9 @@
 </tal:block>
 
 <tal:block define="
-	my_answer python: here.getMyAnswer();
-	my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
-	my_answerdatamodel my_answer/getDatamodel|python:{};
+    my_answer here/getMyAnswer;
+    my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
+    my_answerdatamodel my_answer/getDatamodel|python:{};
     editing python: my_answer and not here.allow_multiple_answers;
     editing_draft python: editing and my_answer.is_draft();
     editing_answer python: editing and not my_answer.is_draft();
