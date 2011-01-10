@@ -93,7 +93,7 @@ class SurveyAnswer(Folder):
         Folder.__init__(self, id)
         self.add_properties(datamodel)
         self.respondent = respondent
-        self.draft = draft
+        self.draft = bool(draft)
         self.modification_time = DateTime()
 
     security.declarePrivate('add_properties')
@@ -158,4 +158,4 @@ class SurveyAnswer(Folder):
         return res
 
     def is_draft(self):
-        return bool(getattr(self, 'draft', False))
+        return getattr(self, 'draft', False)
