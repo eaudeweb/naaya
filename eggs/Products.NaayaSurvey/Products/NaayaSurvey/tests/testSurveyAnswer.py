@@ -103,7 +103,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey.setSessionErrorsTrans.assert_called_with(['test_error'])
         survey.setSessionAnswer.assert_called_with({'test_widget': None})
         survey.setSession.assert_called_with('notify_respondent', False)
-        REQUEST.RESPONSE.redirect.assert_called_with("http://survey/index_html")
+        REQUEST.RESPONSE.redirect.assert_called_with("http://survey")
         self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
@@ -131,7 +131,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey.setSessionErrorsTrans.assert_called_with(['test_error'])
         survey.setSessionAnswer.assert_called_with({})
         survey.setSession.assert_called_with('notify_respondent', False)
-        REQUEST.RESPONSE.redirect.assert_called_with("http://survey/index_html")
+        REQUEST.RESPONSE.redirect.assert_called_with("http://survey")
         self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
     @dec_invalidation_onsubmit
@@ -155,7 +155,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                                 ['validation_onsubmit_error'])
         survey.setSessionAnswer.assert_called_with({})
         survey.setSession.assert_called_with('notify_respondent', False)
-        REQUEST.RESPONSE.redirect.assert_called_with("http://survey/index_html")
+        REQUEST.RESPONSE.redirect.assert_called_with("http://survey")
         self.assertEqual(manage_addSurveyAnswer.call_count, 0)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
