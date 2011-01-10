@@ -129,7 +129,7 @@ def viewer_for_survey_answer(answer):
 
 @adapter(INySurveyAnswer, IObjectAddedEvent)
 def survey_answer_created(answer, event):
-    if answer.draft:
+    if answer.is_draft():
         return
     try:
         for viewer in viewer_for_survey_answer(answer):
@@ -141,7 +141,7 @@ def survey_answer_created(answer, event):
 
 @adapter(INySurveyAnswer, IObjectRemovedEvent)
 def survey_answer_removed(answer, event):
-    if answer.draft:
+    if answer.is_draft():
         return
     try:
         for viewer in viewer_for_survey_answer(answer):

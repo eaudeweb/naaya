@@ -156,3 +156,6 @@ class SurveyAnswer(Folder):
             res.append(widget.get_value(
                 datamodel=datamodel.get(widget.id, None), **kwargs))
         return res
+
+    def is_draft(self):
+        return getattr(self, 'draft', False)

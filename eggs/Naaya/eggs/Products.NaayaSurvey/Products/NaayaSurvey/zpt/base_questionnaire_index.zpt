@@ -86,6 +86,15 @@
 			</ul>
 		</div>
 	</tal:block>
+	<tal:block tal:define="my_drafts python: here.getMyAnswer(True, draft=True)" condition="python: my_drafts">
+		<div class="my-answers"><h5 i18n:translate="">Your drafts:</h5>
+			<ul id="my-answers-list">
+				<li  tal:repeat="draft my_drafts">
+					<a tal:attributes="href string:${draft/absolute_url}?edit=1" tal:content="python: here.utShowFullDateTime(draft.modification_time)"></a>
+				</li>
+			</ul>
+		</div>
+	</tal:block>
 </div>
 
 
