@@ -93,21 +93,7 @@ class SavePropertiesTestCase(unittest.TestCase):
 
     def test_allow_drafts(self):
         survey = self.survey
-        survey.REQUEST = Mock()
-        survey.REQUEST.AUTHENTICATED_USER.getUserName = Mock(return_value='x')
 
         for value in [0, 1]:
             survey.saveProperties(allow_drafts=value)
             self.assertEqual(survey.__dict__['allow_drafts'], value)
-            self.assertEqual(survey.canAddAnswerDraft(), value==1)
-
-    def test_not_allow_drafts_for_annonymous(self):
-        survey = self.survey
-        survey.REQUEST = Mock()
-        survey.REQUEST.AUTHENTICATED_USER.getUserName = Mock(
-                return_value='Anonymous User')
-
-        for value in [0, 1]:
-            survey.saveProperties(allow_drafts=value)
-            self.assertEqual(survey.__dict__['allow_drafts'], value)
-            self.assertFalse(survey.canAddAnswerDraft())
