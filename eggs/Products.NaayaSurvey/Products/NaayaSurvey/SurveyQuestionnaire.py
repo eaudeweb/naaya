@@ -426,9 +426,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     # Answer read methods
     #
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswers')
-    def getAnswers(self):
-        """Return a list of answers"""
-        return self.objectValues(SurveyAnswer.meta_type)
+    def getAnswers(self, draft=False):
+        """Return a list of answers.
+           Filters out the draft ones.
+        """
+        return [answer for answer in self.objectValues(SurveyAnswer.meta_type)
+                            if answer.is_draft()==draft]
 
     # this is method is used by the widget manage forms
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'getAnswerCountForQuestion')
@@ -440,10 +443,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return len(L)
 
     security.declarePublic('getMyAnswer')
-    def getMyAnswer(self, multiple=False):
+    def getMyAnswer(self, multiple=False, draft=False):
         """Return the answer of the current user or None if it doesn't exist.
-
-            If multiple answers exist, only the first one is returned.
+           If multiple answers exist, only the first one is returned.
+           Filters out the draft ones.
         """
         if self.isAnonymousUser():
             return None
@@ -457,6 +460,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             # if the "respondent" index is missing for some reason, we get
             # all answers, so we must do the filtering ourselves.
             if obj.respondent != respondent:
+                continue
+            if obj.is_draft() != draft:
                 continue
             if not multiple:
                 return obj
