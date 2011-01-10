@@ -222,3 +222,119 @@ td.bar-chart img {
 
 
 /* END STATISTICS */
+
+/* Bogdan */
+.clear {
+	clear: both;
+}
+
+.survey-box{
+	border: 1px solid #DDD;
+	width: 15%;
+	font-size: 12px;
+	font-family: "Lucida Grande",Verdana,Arial,"Bitstream Vera Sans",sans-serif;
+	float: right;
+	position: absolute;
+	right: 3%;
+}
+
+.survey-box-title {
+	padding: 5px;
+	margin-top: 0 !important;
+	background-color: #E7E7E7;
+	color: #464646;
+}
+
+.survey-button {
+	background-color: #F2F2F2 !important;
+	border: 1px solid #BBBBBB !important;
+	color: #464646 !important;
+	padding: 5px !important;
+	text-decoration: none !important;
+	display: inline !important;
+	background-color: #EEEEEE;
+	/* Mozilla: */
+	background: -moz-linear-gradient(top, #F7F7F7, #E4E5E5);
+	-moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+	/* Chrome, Safari:*/
+	background: -webkit-gradient(linear,
+		left top, left bottom, from(#F7F7F7), to(#E4E5E5));
+	-webkit-box-shadow: 0px 1px 0px #000;
+	/* MSIE */
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+		StartColorStr='#F7F7F7', EndColorStr='#E4E5E5', GradientType=0);
+	box-shadow: 0px 1px 0px #000;
+	font-weight: bold;
+}
+
+.survey-button:hover {
+	background: #EEEEEE;
+	/* Mozilla: */
+	background: -moz-linear-gradient(top, #E4E5E5, #F7F7F7);
+	/* Chrome, Safari:*/
+	background: -webkit-gradient(linear,
+		left top, left bottom, from(#E4E5E5), to(#F7F7F7));
+	/* MSIE */
+	filter: progid:DXImageTransform.Microsoft.Gradient(
+		StartColorStr='#E4E5E5', EndColorStr='#F7F7F7', GradientType=0);
+	color: #111111 !important;
+}
+
+.survey-detail {
+	border-bottom: 1px solid #E7E7E7;
+	padding: 6px;
+}
+
+.survey-detail h4 {
+	margin: 0 !important;
+}
+
+.survey-detail ul {
+	list-style: none;
+	padding: 5px 0px 5px 10px;
+	margin: 0;
+}
+
+.survey-important-detail {
+	font-weight: bold;
+	color: #21759B;
+}
+
+.survey-top-options .top-buttons {
+	padding: 5px;
+}
+
+.survey-bottom-options {
+	padding: 17px 0px 5px 5px;
+	border-top: 1px solid #E7E7E7;
+}
+
+.survey-tips {
+	background-color: #FFFCEA;
+	padding: 0 !important;
+}
+
+.survey-tips-title {
+	border-bottom: 2px solid #E7E7E7;
+	color: #363636;
+	padding: 5px 0px 5px 5px;
+	margin: 0 !important;
+}
+
+.survey-tips-content {
+	padding: 5px;
+}
+
+.survey-detail .survey-tips-content strong {
+	color: #008093;
+}
+
+.survey-content {
+	width: 80%;
+}
+
+.survey-box.fixed {
+	position: fixed;
+	top: 20px;
+}
+/* END Bogdan */
