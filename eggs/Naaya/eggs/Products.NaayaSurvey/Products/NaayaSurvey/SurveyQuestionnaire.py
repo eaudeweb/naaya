@@ -225,6 +225,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     #
     # Answer edit methods
     #
+
+    security.declareProtected(view, 'canAddAnswerDraft')
+    def canAddAnswerDraft(self):
+        """ Check if current user can add an answer draft """
+        respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        return self.allow_drafts and respondent != 'Anonymous User'
+
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
     def addSurveyAnswer(self, REQUEST=None, notify_respondent=False, **kwargs):
         """Add someone's answer"""
@@ -237,7 +244,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             if not REQUEST:
                 raise SurveyQuestionnaireException(error_msg)
             self.setSessionErrorsTrans(error_msg)
-            return REQUEST.RESPONSE.redirect(self.absolute_url())
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+            return
 
         #check datamodel
         datamodel = {}
@@ -274,7 +282,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect(self.absolute_url())
             return
         add_new = True
 
