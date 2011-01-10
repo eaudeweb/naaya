@@ -229,13 +229,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declareProtected(view, 'canAddAnswerDraft')
     def canAddAnswerDraft(self):
         """ Check if current user can add an answer draft """
-        respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        return self.allow_drafts and respondent != 'Anonymous User'
+        auth_tool = self.getAuthenticationTool()
+        return self.allow_drafts and not auth_tool.isAnonymousUser()
 
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswerDraft')
     def addSurveyAnswerDraft(self, REQUEST=None, notify_respondent=False,
             **kwargs):
-        """ """
+        """This is just to be able to specify submit method in zpt"""
         return self.addSurveyAnswer(REQUEST, notify_respondent, draft=True,
                                     **kwargs)
 
@@ -293,20 +293,22 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             if captcha_errors:
                 errors.append(captcha_errors)
 
+        answer_id = kwargs.pop('answer_id', None)
         if errors:
             # assumed that REQUEST is not None
             self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
-            REQUEST.RESPONSE.redirect(self.absolute_url())
+            if answer_id is not None:
+                answer = self._getOb(answer_id)
+                REQUEST.RESPONSE.redirect('%s?edit=1' % answer.absolute_url())
+            else:
+                REQUEST.RESPONSE.redirect(self.absolute_url())
             return
-        add_new = True
 
-        answer_id = kwargs.pop('answer_id', None)
         if answer_id is not None:
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
-            add_new = False
             self._delObject(answer_id)
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
                 'Deleted previous answer %s while editing' % answer_id)
@@ -319,10 +321,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
                     'Deleted previous answer %s' % old_answer.absolute_url())
 
-        # The answer is deleted above so we can add a new one
-        if answer_id or not self.allow_multiple_answers or add_new:
-            answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
-                                               draft=draft)
+        answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
+                                           draft=draft)
         answer = self._getOb(answer_id)
 
         if not draft:
