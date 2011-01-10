@@ -228,6 +228,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
     def addSurveyAnswer(self, REQUEST=None, notify_respondent=False, **kwargs):
         """Add someone's answer"""
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+
         try:
             if self.expired():
                 raise SurveyQuestionnaireException("The survey has expired")
@@ -242,7 +245,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         errors = []
         for widget in self.getSurveyTemplate().getWidgets():
             try:
-                value = widget.getDatamodel(REQUEST.form)
+                value = widget.getDatamodel(kwargs)
                 widget.validateDatamodel(value)
                 datamodel[widget.getWidgetId()] = value
             except WidgetError, ex:
@@ -252,7 +255,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 errors.append(str(ex))
 
         #check Captcha/reCaptcha
-        if not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
+        if REQUEST and not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
             captcha_errors = self.getSite().validateCaptcha('', REQUEST)
             if captcha_errors:
                 errors.append(captcha_errors)
@@ -265,6 +268,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             validation_onsubmit(datamodel, errors)
 
         if errors:
+            if not REQUEST:
+                raise WidgetError(errors[0])
             self.setSessionErrorsTrans(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
@@ -272,10 +277,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             return
         add_new = True
 
-        if REQUEST:
-            answer_id = REQUEST.form.pop('answer_id', None)
-        else:
-            answer_id = None
+        answer_id = kwargs.pop('answer_id', None)
         if answer_id is not None:
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
@@ -301,9 +303,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if self.notify_respondents == 'ALWAYS' or \
            self.notify_respondents.startswith('LET_THEM_CHOOSE') and notify_respondent:
             self.sendNotificationToRespondent(answer)
-        self.delSessionKeys(datamodel.keys())
 
         if REQUEST:
+            self.delSessionKeys(datamodel.keys())
             self.setSession('title', 'Thank you for taking the survey')
             self.setSession('body', '')
             self.setSession('referer', self.aq_parent.absolute_url())
