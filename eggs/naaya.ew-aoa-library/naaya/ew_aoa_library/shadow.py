@@ -88,6 +88,12 @@ restricted_widgets = {
         'w_submitter-email',
         'w_submitter-organisation',
         ]),
+    'bibliography-assessments-geo-5': set([
+        'w_information-about-data-uploader',
+        'w_submitter-name',
+        'w_submitter-email',
+        'w_submitter-organisation',
+        ]),
     'general-template': set([
             'w_part-10-information-about-data-uploader',
             'w_name',
@@ -98,6 +104,8 @@ restricted_widgets = {
 
 def extract_survey_answer_data(answer):
     mapping = {'bibliography-details-each-assessment':
+                    extract_survey_answer_data_library,
+               'bibliography-assessments-geo-5':
                     extract_survey_answer_data_library,
                'general-template':
                     extract_survey_answer_data_general_template}
