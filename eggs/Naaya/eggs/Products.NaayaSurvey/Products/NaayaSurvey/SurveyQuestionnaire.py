@@ -337,7 +337,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             self.delSessionKeys(datamodel.keys())
             self.setSession('title', 'Thank you for taking the survey')
             self.setSession('body', '')
-            self.setSession('referer', self.aq_parent.absolute_url())
+            self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
         return answer_id
 
