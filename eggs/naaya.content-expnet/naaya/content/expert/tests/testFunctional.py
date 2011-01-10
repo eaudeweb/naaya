@@ -63,8 +63,6 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         expert_id = (set(self.portal.myfolder.objectIds()) - set(['myexpert'])).pop()
-        self.portal.myfolder[expert_id].approveThis()
-
         self.browser.go('http://localhost/portal/myfolder/' + expert_id)
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*mister expert.*</h1>', html, re.DOTALL))
@@ -144,7 +142,21 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/experts_list')
 
-        #Find the expert added
+        #Fail to find a nonexistend string
+        form = self.browser.get_form('frmSearch')
+        form['q'] = 'No results'
+        self.browser.clicked(form, form.find_control('search'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.assertTrue('No experts found for this query.' in html)
+
+        #Find the expert after approval
+        myexpert = self.portal.myfolder.myexpert
+        myexpert.approveThis()
+        self.portal.recatalogNyObject(myexpert)
+        transaction.commit()
+
         form = self.browser.get_form('frmSearch')
         form['q'] = 'Knowitall'
         self.browser.clicked(form, form.find_control('search'))
@@ -153,14 +165,14 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.failUnless('My expert Knowitall</a></h4>' in html)
 
-        #Fail to find a nonexistend string
+        #Find the expert added
         form = self.browser.get_form('frmSearch')
-        form['q'] = 'No results'
+        form['q'] = 'Knowitall'
         self.browser.clicked(form, form.find_control('search'))
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('No experts found for this query.' in html)
+        self.failUnless('My expert Knowitall</a></h4>' in html)
 
         self.browser_do_logout()
 

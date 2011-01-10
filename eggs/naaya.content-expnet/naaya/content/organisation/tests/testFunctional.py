@@ -53,8 +53,6 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('Item added' in html)
 
         organisation_id = (set(self.portal.myfolder.objectIds()) - set(['myorganisation'])).pop()
-        self.portal.myfolder[organisation_id].approveThis()
-
         self.browser.go('http://localhost/portal/myfolder/' + organisation_id)
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*My New Organisation.*</h1>', html, re.DOTALL))
@@ -112,7 +110,21 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/organisations_list')
 
-        #Find the organisation added
+        #Fail to find the unapproved organisation added
+        form = self.browser.get_form('frmSearch')
+        form['q'] = 'My Organisation'
+        self.browser.clicked(form, form.find_control('search'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.assertTrue('My Organisation</a></h4>' not in html)
+
+        #Find the organisation after approval
+        myorganisation = self.portal.myfolder.myorganisation
+        myorganisation.approveThis()
+        self.portal.recatalogNyObject(myorganisation)
+        transaction.commit()
+
         form = self.browser.get_form('frmSearch')
         form['q'] = 'My Organisation'
         self.browser.clicked(form, form.find_control('search'))
