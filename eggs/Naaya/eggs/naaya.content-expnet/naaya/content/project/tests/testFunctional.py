@@ -50,8 +50,6 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         project_id = (set(self.portal.myfolder.objectIds()) - set(['myproject'])).pop()
-        self.portal.myfolder[project_id].approveThis()
-
         self.browser.go('http://localhost/portal/myfolder/' + project_id)
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*sample project.*</h1>', html, re.DOTALL))
@@ -109,7 +107,21 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/projects_list')
 
-        #Find the expert added
+        #Fail to find the unapproved project added
+        form = self.browser.get_form('frmSearch')
+        form['q'] = 'My project'
+        self.browser.clicked(form, form.find_control('search'))
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.assertTrue('My project</a></h4>' not in html)
+
+        #Find the project after approval
+        myproject = self.portal.myfolder.myproject
+        myproject.approveThis()
+        self.portal.recatalogNyObject(myproject)
+        transaction.commit()
+
         form = self.browser.get_form('frmSearch')
         form['q'] = 'My project'
         self.browser.clicked(form, form.find_control('search'))
