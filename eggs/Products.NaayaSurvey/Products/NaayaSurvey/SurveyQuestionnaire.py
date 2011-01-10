@@ -232,8 +232,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
         return self.allow_drafts and respondent != 'Anonymous User'
 
+    security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswerDraft')
+    def addSurveyAnswerDraft(self, REQUEST=None, notify_respondent=False,
+            **kwargs):
+        """ """
+        return self.addSurveyAnswer(REQUEST, notify_respondent, draft=True,
+                                    **kwargs)
+
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
-    def addSurveyAnswer(self, REQUEST=None, notify_respondent=False, **kwargs):
+    def addSurveyAnswer(self, REQUEST=None, notify_respondent=False,
+            draft=False, **kwargs):
         """Add someone's answer"""
         if REQUEST:
             kwargs.update(REQUEST.form)
@@ -253,7 +261,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         for widget in self.getSurveyTemplate().getWidgets():
             try:
                 value = widget.getDatamodel(kwargs)
-                widget.validateDatamodel(value)
+                if not draft:
+                    widget.validateDatamodel(value)
             except WidgetError, ex:
                 if not REQUEST:
                     raise
@@ -261,12 +270,19 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 errors.append(str(ex))
             datamodel[widget.getWidgetId()] = value
 
-        try:
-            validation_onsubmit = self['validation_onsubmit']
-        except KeyError:
-            pass
+        if draft:
+            if not self.canAddAnswerDraft():
+                error_msg = "Can't add draft (not logged in or not allowed)"
+                if not REQUEST:
+                    raise SurveyQuestionnaireException(error_msg)
+                errors.append(error_msg)
         else:
-            validation_onsubmit(datamodel, errors)
+            try:
+                validation_onsubmit = self['validation_onsubmit']
+            except KeyError:
+                pass
+            else:
+                validation_onsubmit(datamodel, errors)
 
         if not REQUEST and errors:
             raise WidgetError(errors[0])
@@ -305,15 +321,17 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         # The answer is deleted above so we can add a new one
         if answer_id or not self.allow_multiple_answers or add_new:
-            answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
+            answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
+                                               draft=draft)
         answer = self._getOb(answer_id)
 
-        if self.notify_owner:
-            self.sendNotificationToOwner(answer)
-        if (self.notify_respondents == 'ALWAYS'
-            or (self.notify_respondents.startswith('LET_THEM_CHOOSE')
-                and notify_respondent)):
-            self.sendNotificationToRespondent(answer)
+        if not draft:
+            if self.notify_owner:
+                self.sendNotificationToOwner(answer)
+            if (self.notify_respondents == 'ALWAYS'
+                or (self.notify_respondents.startswith('LET_THEM_CHOOSE')
+                    and notify_respondent)):
+                self.sendNotificationToRespondent(answer)
 
         if REQUEST:
             self.delSessionKeys(datamodel.keys())

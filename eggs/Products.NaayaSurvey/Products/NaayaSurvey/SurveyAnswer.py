@@ -39,7 +39,8 @@ from interfaces import INySurveyAnswer
 
 gUtil = utils()
 
-def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
+def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None,
+        draft=False):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
@@ -53,7 +54,7 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
         if id not in context.objectIds():
             break
 
-    ob = SurveyAnswer(id, datamodel, respondent)
+    ob = SurveyAnswer(id, datamodel, respondent, draft)
     context._setObject(id, ob)
     ob = context._getOb(id)
 
@@ -88,10 +89,11 @@ class SurveyAnswer(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, datamodel, respondent):
+    def __init__(self, id, datamodel, respondent, draft):
         Folder.__init__(self, id)
         self.add_properties(datamodel)
         self.respondent = respondent
+        self.draft = draft
         self.modification_time = DateTime()
 
     security.declarePrivate('add_properties')

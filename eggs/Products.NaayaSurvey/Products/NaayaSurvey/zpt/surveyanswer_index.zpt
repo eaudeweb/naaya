@@ -35,8 +35,11 @@
 			</tal:block>
 			<tal:block condition="not:here/checkPermissionSkipCaptcha"
 					   content="structure here/showCaptcha" />
-			<div class="surveySubmit" tal:condition="here/allow_multiple_answers">
-				<input type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
+			<div class="surveySubmit">
+				<input type="submit" tal:condition="here/allow_multiple_answers"
+					value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="submit" tal:condition="here/canAddAnswerDraft"
+					value="Save as draft" i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 			</tal:block>
