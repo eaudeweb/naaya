@@ -80,7 +80,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
     def test_invalid_widget_no_request(self, manage_addSurveyAnswer):
         survey = self.survey
         widget = Mock()
-        widget.getDataModel = Mock(return_value='')
+        widget.getDatamodel = Mock(return_value='')
         widget.validateDatamodel = Mock(side_effect=WidgetError('test_error'))
         survey.getWidgets = Mock(return_value=[widget])
 
@@ -92,7 +92,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey = self.survey
         widget = Mock()
         widget.getWidgetId = Mock(return_value='test_widget')
-        widget.getDataModel = Mock(return_value='')
+        widget.getDatamodel = Mock(return_value='')
         widget.validateDatamodel = Mock(side_effect=WidgetError('test_error'))
         survey.getWidgets = Mock(return_value=[widget])
         REQUEST = Mock()
@@ -292,13 +292,23 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey._getOb.assert_called_with('answer_12345')
         survey.sendNotificationToRespondent.assert_called_with(answer_12345)
 
+    @dec_invalidation_onsubmit
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_add_draft(self, manage_addSurveyAnswer):
         manage_addSurveyAnswer.return_value = 'answer_12345'
         survey = self.survey
         survey.canAddAnswerDraft = Mock(return_value=True)
+        widget = Mock()
+        widget.getWidgetId = Mock(return_value='test_widget')
+        widget.getDatamodel = Mock(return_value='')
+        widget.validateDatamodel = Mock(side_effect=WidgetError('test_error'))
+        survey.getWidgets = Mock(return_value=[widget])
 
         survey.addSurveyAnswer(draft=True)
 
-        manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
+        self.assertEqual(widget.validateDatamodel.call_count, 0)
+        self.assertEqual(validation_onsubmit.call_count, 0)
+        manage_addSurveyAnswer.assert_called_with(survey,
+                                                  {'test_widget': ''},
+                                                  REQUEST=None,
                                                   draft=True)
