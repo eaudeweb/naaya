@@ -104,9 +104,14 @@
 
 <tal:block condition="python: not here.expired() or here.checkPermissionPublishObjects()"
 		define="stype here/getSurveyTemplate">
-	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
+    <tal:block define="
+        my_answer python: here.getMyAnswer();
+        my_answer python: test(my_answer, my_answer, here.getMyAnswer(draft=True));
+        my_answerdatamodel my_answer/getDatamodel|python:{};
+    ">
 		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
 		<p class="message-information" i18n:translate="" tal:condition="python: my_answer and not here.allow_multiple_answers">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
+		<p class="message-information" i18n:translate="" tal:condition="python: my_answer and not my_answer.is_draft() and not here.allow_multiple_answers">If you decide to save as draft you will overwrite the previous answers!</p>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 		      tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
 
@@ -130,7 +135,7 @@
 				<metal:block use-macro="tmpl/macros/validate" />
 			</tal:block>
 
-			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answer, {})), 'Error')" />
+			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=test(not here.allow_multiple_answers, my_answerdatamodel, {})), 'Error')" />
 
 			<tal:block condition="not:here/checkPermissionSkipCaptcha"
 			           content="structure here/showCaptcha" />
@@ -145,9 +150,12 @@
 			</tal:block>
 
 			<div class="surveySubmit">
-				<input tal:condition="python: not my_answer or here.allow_multiple_answers" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
-				<input tal:condition="python: my_answer and not here.allow_multiple_answers" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
-				<input tal:condition="here/canAddAnswerDraft" type="submit" value="Save as draft" i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+				<input type="submit"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Change answers', 'Submit')"
+					i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="submit" tal:condition="here/canAddAnswerDraft"
+					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Overwrite as draft', 'Save as draft')"
+					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 		</form>

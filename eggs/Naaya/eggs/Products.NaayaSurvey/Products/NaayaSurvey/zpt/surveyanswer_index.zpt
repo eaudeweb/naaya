@@ -18,6 +18,7 @@
 </h1>
 
 <p tal:condition="here/description" tal:content="structure here/description" />
+<p class="message-information" i18n:translate="" tal:condition="python: not here.is_draft()">If you decide to save as draft you will overwrite the previous answers!</p>
 <tal:block define="try_to_edit python: request.form.get('edit', 0)">
 	<tal:block condition="try_to_edit">
 		<tal:block define="tmpl nocall:here/aq_parent/validation_html|nothing"
@@ -41,11 +42,12 @@
 					content="structure here/showCaptcha">
 			</tal:block>
 			<div class="surveySubmit">
-				<input type="submit" tal:attributes="value python:test(here.is_draft(), 'Submit', 'Change answers')"
+				<input type="submit"
+					tal:attributes="value python: test(not here.is_draft(), 'Change answers', 'Submit')"
 					i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input type="submit" tal:condition="here/canAddAnswerDraft"
-					tal:attributes="title python:test(here.is_draft(), '', 'The previous answer will be removed')"
-					value="Save as draft" i18n:attributes="value; title" name="addSurveyAnswerDraft:method"/>
+					tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
+					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 			</tal:block>
