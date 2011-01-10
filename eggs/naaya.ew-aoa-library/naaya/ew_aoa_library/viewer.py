@@ -73,17 +73,23 @@ class AoALibraryViewer(SimpleItem):
     def iter_assessments(self):
         survey = self.target_survey()
         for answer in survey.objectValues(survey_answer_metatype):
+            if answer.is_draft():
+                continue
             yield self.wrap_answer(answer)
 
     def __getitem__(self, key):
         survey = self.target_survey()
         if key not in survey.objectIds(survey_answer_metatype):
             raise KeyError
+        if survey[key].is_draft():
+            raise KeyError
         return self.wrap_answer(survey[key])
 
     def get_survey_answer(self, key):
         survey = self.target_survey()
         if key not in survey.objectIds(survey_answer_metatype):
+            raise KeyError
+        if survey[key].is_draft():
             raise KeyError
         return survey[key]
 
