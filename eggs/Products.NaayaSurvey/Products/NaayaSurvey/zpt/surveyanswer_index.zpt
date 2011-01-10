@@ -29,26 +29,6 @@
                    editing_draft python: editing and here.is_draft();
                    editing_answer python: editing and not here.is_draft();">
 
-    <div class="survey_right_box">
-        <h2 i18n:translate="">Tips:</h2>
-        <p tal:condition="python: editing_draft">
-            <strong i18n:translate="">You are working on a draft version of the answer</strong>
-        </p>
-
-        <p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
-            Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end.
-        </p>
-        <p tal:condition="python: editing_draft and here.allow_drafts" i18n:translate="">
-            Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft">Save as draft</strong> button.
-            When you have completed the answer, click the <strong i18n:name="submit">Submit</strong> button and your answer finalised.
-        </p>
-        <p tal:condition="python: editing_answer and here.allow_drafts" i18n:translate="">
-            Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft">Overwrite as draft</strong> button if you wish to save an interim version.
-            Upon saving an interim version, your answer will not be considered a final answer anymore.
-        </p>
-
-    </div>
-
 	<tal:block condition="try_to_edit">
 		<tal:block define="tmpl nocall:here/aq_parent/validation_html|nothing"
 				condition="tmpl">
@@ -56,6 +36,50 @@
 		</tal:block>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 				tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
+
+		<div class="survey-box">
+			<div class="survey-box-content">
+				<div class="survey-top-options">
+					<div class="survey-misc-details">
+						<div class="survey-detail survey-tips">	
+							<h3 class="survey-tips-title">Tips:</h3>
+
+							<div class="survey-tips-content">
+								<p tal:condition="python: editing_draft">
+									<strong i18n:translate="">You are working on a draft version of the answer</strong>
+								</p>
+
+								<p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
+									Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end.
+								</p>
+								<p tal:condition="python: editing_draft and here.allow_drafts" i18n:translate="">
+									Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft">Save as draft</strong> button.
+									When you have completed the answer, click the <strong i18n:name="submit">Submit</strong> button and your answer finalised.
+								</p>
+								<p tal:condition="python: editing_answer and here.allow_drafts" i18n:translate="">
+									Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft">Overwrite as draft</strong> button if you wish to save an interim version.
+									Upon saving an interim version, your answer will not be considered a final answer anymore.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+                        <div class="survey-bottom-options">
+			<div class="surveySubmit">
+				<input type="submit"
+					tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
+					i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="submit" tal:condition="here/canAddAnswerDraft"
+					tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
+					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+			</div>
+				</div>
+			</div>
+                        <div class="clear">
+				&nbsp;
+			</div>
+		</div>
+
 			<tal:block tal:condition="can_edit">
 			<input type="hidden" name="answer_id" tal:attributes="value here/id" />
 			<tal:block define="stype here/getSurveyTemplate;
