@@ -208,8 +208,9 @@ td.bar-chart img {
 	float: right;
 	position: absolute;
 	right: 3%;
-        margin-top: 0px;
-background-color: #FFFFFF;
+        top: 0;
+        margin-top: 250px;
+        background-color: #FFFFFF;
 }
 
 .survey-box-title {
@@ -308,7 +309,9 @@ background-color: #FFFFFF;
 }
 
 .survey-box.fixed {
+margin-top: 0 !important;
 	position: fixed;
+
 	top: 20px;
 }
 /* END Bogdan */
