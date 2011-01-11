@@ -1,30 +1,3 @@
-<dtml-let last_modified="_.DateTime()-14" expires="_.DateTime()+1" >
-<dtml-call "REQUEST.RESPONSE.setHeader( 'Content-Type', 'text/css' )">
-<dtml-call "REQUEST.RESPONSE.setHeader( 'Last-Modified', last_modified.toZone('GMT').rfc822() )">
-<dtml-call "REQUEST.RESPONSE.setHeader( 'Cache-Control', 'max-age=36000, must-revalidate' )">
-<dtml-call "REQUEST.RESPONSE.setHeader( 'Expires', expires.toZone('GMT').rfc822() )" >
-</dtml-let>
-
-
-div.survey_right_box {
-	float: right;
-	width: 15%;
-	border: 1px solid black;
-	padding: 0.5em;
-	background-color:#FAFAFA;
-}
-
-a.survey-button {
-	display: block;
-	border: 1px outset black;
-	padding: 0.3em;
-	background-color: #EDE9E3;
-	text-decoration: none;
-	text-align: center;
-	margin-top: 0.1em;
-	color: #042D5D;
-}
-
 a.survey-special-button {
 	display: block;
 	border: 1px outset black;
@@ -36,13 +9,7 @@ a.survey-special-button {
 	color: #042D5D;
 }
 
-div.survey_right_box a, div.consultation_right_box a:visited { color: #042D5D; }
-
-span.survey_day_counter {
-	color: blue;
-	font-weight: bold;
-}
-
+.survey-box a, div.consultation_right_box a:visited { color: #042D5D; }
 
 div.widgetViewMode {
 	border: 1px solid #EFEFEF;
@@ -65,7 +32,7 @@ div.widgetViewMode {
 }
 
 .widgetViewMode li {
-	background: url(<dtml-var absolute_url>/fancy_checkmark) no-repeat 0 50%;
+	background: url(http://aoa.ew.eea.europa.eu/portal_survey/fancy_checkmark) no-repeat 0 50%;
 	padding-left: 11px;
 }
 
@@ -100,8 +67,6 @@ div.widgetViewMode {
 .required {
 	color: red;
 }
-
-
 
 .surveySubmit {
 	margin: 1em 0 1em 0;
@@ -236,6 +201,8 @@ td.bar-chart img {
 	float: right;
 	position: absolute;
 	right: 3%;
+        margin-top: 0px;
+background-color: #FFFFFF;
 }
 
 .survey-box-title {
