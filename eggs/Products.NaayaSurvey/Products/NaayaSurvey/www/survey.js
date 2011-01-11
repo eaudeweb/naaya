@@ -18,17 +18,6 @@ $(document).ready(function(){
     $('.stringWidget span').each(function(){
         $(this).html(Linkify($(this).html()));
     });
-
-    // survey floating box
-    var top = $('.survey-box').offset().top - parseFloat($('.survey-box').css('marginTop').replace(/auto/, 0));
-    $(window).scroll(function (event) {
-    var y = $(this).scrollTop();
-    if (y >= top) {
-      $('.survey-box').addClass('fixed');
-    } else {
-      $('.survey-box').removeClass('fixed');
-    }
-    });
 })
 
 $(function () {
