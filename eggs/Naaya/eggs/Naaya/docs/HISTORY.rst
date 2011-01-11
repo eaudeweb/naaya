@@ -1,7 +1,10 @@
 Changelog
 =========
 
-2.10.12 (unreleased)
+2011.01 (unreleased)
+--------------------
+
+2.10.12 (2011-01-11)
 --------------------
  * Zip export uses temporary file instead of building archive in memory.
  * Feature: anonymous subscriptions to notifications. Improvements to
