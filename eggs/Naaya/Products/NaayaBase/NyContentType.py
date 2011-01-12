@@ -30,6 +30,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 from zope.annotation.interfaces import IAttributeAnnotatable
 from DateTime import DateTime
+from DateTime.interfaces import DateError
 
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
@@ -81,8 +82,9 @@ class SchemaFormHelper(object):
             else:
                 try:
                     return prop_type(val)
-                except ValueError:
+                except (ValueError, DateError):
                     # in case the string is malformed
+                    # added DateError for DateTime errors
                     return prop_type()
 
         def get_renderer(prop_name, widget):
