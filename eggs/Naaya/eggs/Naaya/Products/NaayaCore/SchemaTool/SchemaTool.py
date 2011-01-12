@@ -163,14 +163,15 @@ class SchemaTool(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     admin_html = PageTemplateFile('zpt/admin_contenttypes', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'contenttypes_properties_html')
-    contenttypes_properties_html = PageTemplateFile('zpt/contenttypes_properties', globals())
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties_html')
+    admin_properties_html = PageTemplateFile('zpt/admin_properties', globals())
 
     admin_pt = PageTemplateFile('zpt/admin_template', globals())
 
     admin_tabs = [
         {'url': 'admin_html', 'title': 'Manage content types'},
-        {'url': 'contenttypes_properties_html', 'title': 'Content types properties'}
+        {'url': 'admin_properties_html', 'title': 'Content types properties'},
+        {'url': 'admin_ratings_overview_html', 'title': 'Ratings overview'}
     ]
 
     def list_geotaggable_types(self):
@@ -225,7 +226,7 @@ class SchemaTool(Folder):
                 schema.is_ratable = False
 
         if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(self.absolute_url() + '/contenttypes_properties_html')
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_properties_html')
 
     def get_ratings(self):
         """ """
@@ -246,8 +247,8 @@ class SchemaTool(Folder):
         results = objects[0:max_range]
         return results
 
-    _ratings_overview = PageTemplateFile('zpt/ratings_overview', globals())
-    def ratings_overview_html(self, REQUEST):
+    _admin_ratings_overview = PageTemplateFile('zpt/admin_ratings_overview', globals())
+    def admin_ratings_overview_html(self, REQUEST):
         """ """
         skey = 1
         rkey = 1
@@ -259,6 +260,6 @@ class SchemaTool(Folder):
         if skey == 1 and rkey == 1:
                 REQUEST.set('show_highest_rated', True)
         objects = self.sort_objects_by_ratings(skey, rkey, max_range)
-        return self._ratings_overview(REQUEST, objects=objects)
+        return self._admin_ratings_overview(REQUEST, objects=objects)
 
 InitializeClass(SchemaTool)
