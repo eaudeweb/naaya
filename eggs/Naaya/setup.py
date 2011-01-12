@@ -2,7 +2,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
-      version='2011.01', # Janyary 2011
+      version='2.11.01', # Janyary 2011
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
