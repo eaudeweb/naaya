@@ -2041,3 +2041,18 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	float: left;
 	width: 15em;
 }
+
+/**
+ *
+ * Added on 12th Jan 2011
+ * Bogdan Tanase
+ * 
+*/
+
+.right-position {
+	float: right;
+}
+
+.left-position {
+	float: left;
+}
