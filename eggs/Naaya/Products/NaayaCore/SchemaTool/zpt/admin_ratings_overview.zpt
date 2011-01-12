@@ -1,10 +1,8 @@
-<tal:block metal:define-macro="page">
-    <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
-
-        <h1 metal:fill-slot="title" i18n:translate="">Overview of rated objects</h1>
-
-        <tal:block metal:fill-slot="section" 
-                define="objects options/objects">
+<tal:block define="global current_tab_url string:admin_ratings_overview_html" />
+<metal:block use-macro="here/admin_pt/macros/page">
+	<metal:block fill-slot="tab_contents">
+	<p i18n:translate="">Overview of rated objects</p>
+        <tal:block define="objects options/objects">
             <tal:block define="site_url here/getSitePath" condition="objects">
                 <form method="get" action="">
                     <input type="submit" i18n:translate="" name="show_highest_rated"
@@ -56,5 +54,5 @@
                 <div i18n:translate="">No rated objects were found in the database.</div>
             </tal:block>
         </tal:block>
-    </tal:block>
-</tal:block>
+	</metal:block>
+</metal:block>
