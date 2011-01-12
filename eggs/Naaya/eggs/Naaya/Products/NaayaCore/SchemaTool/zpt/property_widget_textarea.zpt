@@ -1,4 +1,4 @@
-<div class="field" tal:define="
+<div class="field cleaner" tal:define="
     value options/value|nothing;
     errors options/errors;
     prop_id here/prop_name;
