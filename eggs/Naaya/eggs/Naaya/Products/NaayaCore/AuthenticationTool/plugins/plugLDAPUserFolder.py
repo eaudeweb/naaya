@@ -348,8 +348,10 @@ class plugLDAPUserFolder(PlugBase):
         if roles == []:
             return on_error('No roles selected')
 
-        if location == '/':
-            location = ''
+        if location == '/' or location == '':
+            loc, location = 'all', ''
+        else:
+            loc = 'other'
         try:
             ob = self.getSite().unrestrictedTraverse(location)
         except KeyError:
