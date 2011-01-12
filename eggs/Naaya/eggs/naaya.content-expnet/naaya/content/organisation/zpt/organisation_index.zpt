@@ -26,11 +26,13 @@
 	</div>
 </tal:block>
 
-<h1>
+<h1 tal:define="is_ratable here/is_ratable">
 	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
 		title here/get_meta_label;
 		alt here/get_meta_label" />
 		<span tal:replace="here/title" />
+		<tal:block condition="is_ratable"
+						replace="structure here/user_rating_view|nothing"/>
 		<span class="available_langs"
 			tal:condition="python:here.check_item_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>
@@ -118,6 +120,7 @@
 			</ul>
 		</tal:block>
 	</tal:block>
+	<tal:block content="structure here/set_content_rating" />
 	<div class="footer_link">
 		&#171;
 		<a tal:define="site here/getSite"
