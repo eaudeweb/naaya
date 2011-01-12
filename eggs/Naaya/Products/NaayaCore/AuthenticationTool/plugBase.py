@@ -121,8 +121,9 @@ class PlugBase(SimpleItem):
         auth_tool = site.getAuthenticationTool()
         #process form values
         if location == "/" or location == '':
-            location = site
-        else: location = self.utGetObject(location)
+            loc, location = 'all', site
+        else:
+            loc, location = 'other', self.utGetObject(location)
         if location is None:
             return on_error('Invalid location path')
         #assing roles
