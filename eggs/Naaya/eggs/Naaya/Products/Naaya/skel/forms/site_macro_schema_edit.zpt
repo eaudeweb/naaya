@@ -100,6 +100,11 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 <!-- Edit form -->
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data">
 
+<!-- Submit buttons-->
+<div class="field" metal:define-slot="submit_buttons">
+	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
+</div>
+
 <!-- Custom boxes -->
 <metal:block define-slot="custom_boxes" />
 
