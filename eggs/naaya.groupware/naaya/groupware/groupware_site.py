@@ -228,10 +228,15 @@ class GroupwareSite(NySite):
         url = '%s/request_ig_access_html' % self.absolute_url()
         REQUEST.RESPONSE.redirect(url)
 
-    security.declarePublic('unauthorized_html')
-    def unauthorized_html(self, REQUEST):
+    security.declarePublic('login_html')
+    def login_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login_html?came_from=' + REQUEST.get('came_from', ''))
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/login_form?came_from=' + REQUEST.get('came_from', ''))
+
+    security.declarePublic('logout_html')
+    def logout_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/logout')
 
     request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(), 'naaya.groupware.relinquish_membership')
