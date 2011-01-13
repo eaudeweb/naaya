@@ -19,6 +19,7 @@ Contents:
    site
    stylesheets
    testing
+   translations
 
 Indices and tables
 ==================

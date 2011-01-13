@@ -139,8 +139,9 @@ class TranslationsTool(MessageCatalog):
         try: regex = re.compile(query.strip().lower())
         except: regex = re.compile('')
         for m, t in self._messages.items():
-            if regex.search(m.lower()):
-                e = [self.utToUtf8(m)]
+            default = t.get('en', m)
+            if regex.search(default.lower()):
+                e=[self.utToUtf8(m)]
                 i = 1
                 for lang in langs:
                     if skey == lang['code']: skey = i
