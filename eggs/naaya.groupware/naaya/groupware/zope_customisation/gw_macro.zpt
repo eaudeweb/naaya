@@ -15,6 +15,16 @@
     <link rel="search" title="Search Eionet" href="http://search.eionet.europa.eu/" />
     <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
     <style type="text/css">
+        .right-floated-tip {
+            width: 20%;
+            float: right;
+            position: relative;
+            background: #FFFFDD none repeat scroll 0 0;
+            border: 1px outset #999966;
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            font-size: 95%;
+        }
         .field {
             margin:1em;
         }
