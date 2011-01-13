@@ -232,6 +232,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         if add and not self._messages.has_key(message) and message:
             self._messages[message] = PersistentMapping()
 
+        if message and not self._messages[message].has_key('en'):
+            self._messages[message]['en'] = default
+
         # Get the string
         if self._messages.has_key(message):
             m = self._messages[message]
@@ -267,7 +270,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     def translate(self, domain, msgid, *args, **kw):
         """This method is required to get the i18n namespace from ZPT working.
         """
-        msgstr = self.gettext(msgid)
+
+        default = kw.get('default')
+        if not default.strip():
+            default = None
+        msgstr = self.gettext(msgid, default=default)
         mapping = kw.get('mapping')
         return interpolate(msgstr, mapping)
 
