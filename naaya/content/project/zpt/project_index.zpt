@@ -69,7 +69,7 @@
 		</ul>
 	</div>
 	<a name="Organisations"></a>
-	<div tal:define="Organisations here/organisations"
+	<div tal:define="Organisations here/organisations|nothing"
 		tal:condition="Organisations">
 		<h4 i18n:translate="">Active organisations</h4>
 		<span />
