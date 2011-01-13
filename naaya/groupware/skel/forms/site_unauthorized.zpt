@@ -1,0 +1,21 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+    <div id="workarea" metal:fill-slot="div-workarea">
+        <tal:block define="came_from python:request.get('came_from', here.getSite().absolute_url(1));
+                           action_url python:came_from or 'logged_in';
+                           username python:request.AUTHENTICATED_USER.getUserName()">
+
+            <h1 i18n:translate="">Restricted access</h1>
+            <p i18n:translate="">
+                You may request access to this section by contacting
+                your group leader or by filling out the
+                <a href="./request_ig_access_html" title="Request IG access">access request</a> form.
+            </p>
+
+            <tal:block condition="python:username != 'Anonymous User'">
+                <div id="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="username" /></em>.</div>
+                <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout_html" i18n:translate="">Logout</a></div>
+            </tal:block>
+
+        </tal:block>
+    </div>
+</metal:block>
