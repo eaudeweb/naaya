@@ -272,7 +272,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         """
 
         default = kw.get('default')
-        if not default.strip():
+        if default is not None and not default.strip():
             default = None
         msgstr = self.gettext(msgid, default=default)
         mapping = kw.get('mapping')
