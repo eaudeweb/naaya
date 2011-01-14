@@ -259,7 +259,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        schema_raw_data['title'] = self.title
+        schema_raw_data['title'] = schema_raw_data['name'] + ' ' + schema_raw_data['surname']
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
@@ -319,7 +319,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        schema_raw_data['title'] = obj.title
+        schema_raw_data['title'] = schema_raw_data['name'] + ' ' + schema_raw_data['surname']
 
         #Process uploaded file
         self.save_file(schema_raw_data, 'picture', 'expert_picture')
