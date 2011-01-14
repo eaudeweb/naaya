@@ -52,6 +52,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.use_catalog = 0
         self.catalog_name = ''
         self.ip_address = ''
+        self.last_update = ''
         UtilsManager.__dict__['__init__'](self)
 
     def __setstate__(self,state):
@@ -264,7 +265,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             verify them and return the results for the broken links found
         """
         urlsinfo, total = self.processObjects()
-        return self.checkLinks(urlsinfo, total)
+        log_entries, all_urls = self.checkLinks(urlsinfo, total)
+        now = time.localtime()
+        self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(),
+                                now, log_entries)
+        self.last_update = now
+        return log_entries, all_urls
 
     security.declareProtected('Run Manual Check', 'manualCheck')
     def objectCheck(self, properties=[], context=''):
@@ -330,6 +336,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             if buf:
                 log.append((ob.getId(), ob.meta_type, ob.absolute_url(1), ob.icon, buf))
         return log, all_urls
+
+    security.declareProtected(view_management_screens, 'getProperties')
+    def getLastUpdate(self):
+        """ Get the latest time.localtime
+        Usecase:
+            Can be used in ajax requests to check if an update has been
+            finished
+        """
+        return getattr(self, 'last_update', '')
 
     security.declareProtected(view_management_screens, 'getProperties')
     def getProperties(self, metatype):
