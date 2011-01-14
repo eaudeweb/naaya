@@ -11,7 +11,7 @@
 </div>
 
 <p i18n:translate="">
-	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. You can consult the last broken links log and manually run the checker now. Manually running the URL checker will not produce a log, just display the results in this page.
+	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. You can consult the last broken links log and manually run the checker now.
 </p>
 
 <tal:block tal:condition="python:request.has_key('run')">
@@ -20,9 +20,45 @@
 </tal:block>
 <tal:block tal:condition="python:not request.has_key('run')">
 <h2 i18n:translate="">Check URLs now</h2>
+<script type="application/x-javascript">
+	var interval_id, last_update_url, last_update;
+	function check_last_update(){
+		$.get(last_update_url, function(data){
+			if (last_update != data){
+				$('#ajax-loader').hide(); //hide spinner
+				clearInterval(interval_id); //stop the checking
+				window.location.reload();//refresh page
+			}
+		});
+	}
 
+	$(document).ready(function(){
+		/**
+		 * This runs an update as an ajax request (based on the current href),
+		 *
+		 * First it shows up a spinner, then gets the last update time and
+		 * stores it, then runs the update and rechecks the last update every
+		 * 5s refreshing the page if it was modified.
+		*/
+		$('#run-urlchecker').click(function(e){
+			e.preventDefault();
+			var self = $(this);
+			var update_url = self.attr('href');
+			last_update_url = self.attr('rel');
+
+			$('#ajax-loader').show(); //show spinner
+			$.get(last_update_url, function(data){
+				last_update = data;
+				$.get(update_url); // Run the update
+			});
+			//recheck every 5s if the update is finished
+			interval_id = setInterval('check_last_update()', 5000);
+		});
+	});
+</script>
 <p>
-	<a tal:attributes="href string:${site_url}/admin_linkchecker_html?run=ok" i18n:translate="">Run URL checker now</a>
+	<a id="run-urlchecker" tal:attributes="href string:${site_url}/admin_linkchecker_html?run=ok; rel python:here.getLinkChecker().absolute_url() + '/getLastUpdate'" i18n:translate="">Run URL checker now</a>
+	<img id="ajax-loader" style="display: none" src="misc_/Naaya/ajax-loader.gif"/>
 </p>
 <tal:block tal:define="lastlog here/getLinkCheckerLastLog" tal:condition="python:lastlog is not None">
 	<span tal:replace="structure lastlog/index_html" />
