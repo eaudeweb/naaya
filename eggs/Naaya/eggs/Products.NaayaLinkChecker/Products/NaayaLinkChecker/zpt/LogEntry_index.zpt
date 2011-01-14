@@ -1,4 +1,4 @@
-<h2 i18n:translate="">Log of broken links found by the automatic checking</h2>
+<h2 i18n:translate="">Last log of broken links</h2>
 
 <span tal:replace="structure here/style_html" tal:omit-tag="" />
 
@@ -8,7 +8,7 @@
     </span>
     <strong tal:content="python:here.umFormatDateTimeToString(here.date_create)" />
     <span i18n:translate="" tal:omit-tag="">
-        by the automatic URLs checker. The links below appear in <em>URL</em>, <em>news</em> and <em>events</em> items from this portal.
+        by URL checker. The links below appear in <em>URL</em>, <em>news</em> and <em>events</em> items from this portal.
     </span>
 </p>
 
