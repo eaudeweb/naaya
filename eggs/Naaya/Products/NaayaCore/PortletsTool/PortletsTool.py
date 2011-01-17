@@ -43,6 +43,7 @@ from HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
 from LinksList import manage_addLinksListForm, manage_addLinksList
 from RefList import manage_addRefListForm, manage_addRefList
 from RefTree import manage_addRefTreeForm, manage_addRefTree
+from naaya.core.zope2util import folder_manage_main_plus
 
 from interfaces import INyPortlet
 
@@ -566,6 +567,11 @@ class PortletsTool(Folder, utils):
             location, id = pair.split('||')
             ob.delete_right_portlets_locations(location, id)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_right_portlets_html')
+
+    manage_main = folder_manage_main_plus
+
+    security.declareProtected(view_management_screens, 'ny_after_listing')
+    ny_after_listing = PageTemplateFile('zpt/manage_portlets_from_code', globals())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_left_portlets_html')
