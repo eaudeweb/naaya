@@ -451,8 +451,11 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
 
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
+    security.declarePublic('getPublishedFolders')
     def getPublishedFolders(self):
         folders = []
+        if not self.checkPermissionView():
+            return folders
         for obj in self.objectValues(self.get_naaya_containers_metatypes()):
             if not getattr(obj, 'approved', False):
                 continue
