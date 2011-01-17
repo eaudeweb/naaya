@@ -102,7 +102,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['name:utf8:ustring'], 'My expert')
         form['name:utf8:ustring'] = 'new_expert_name'
         form['surname:utf8:ustring'] = 'his_surname'
-        self.browser.clicked(form, form.find_control('saveProperties:method'))
+        self.browser.clicked(form, form.find_control('name:utf8:ustring'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myexpert.name, 'new_expert_name')
@@ -119,7 +119,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         #The object properties should not be saved if the mandatory fields are not all filled
         form = self.browser.get_form('frmEdit')
         form['name:utf8:ustring'] = ''
-        self.browser.clicked(form, form.find_control('saveProperties:method'))
+        self.browser.clicked(form, form.find_control('name:utf8:ustring'))
         self.browser.submit()
 
         html = self.browser.get_html()
@@ -129,7 +129,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         form['name:utf8:ustring'] = 'new_expert_name'
         form['surname:utf8:ustring'] = ''
-        self.browser.clicked(form, form.find_control('saveProperties:method'))
+        self.browser.clicked(form, form.find_control('name:utf8:ustring'))
         self.browser.submit()
 
         html = self.browser.get_html()
