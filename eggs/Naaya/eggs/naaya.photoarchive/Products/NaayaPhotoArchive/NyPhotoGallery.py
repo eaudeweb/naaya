@@ -178,7 +178,10 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
     def getPublishedObjects(self):
         return []
 
+    security.declarePublic('getPublishedFolders')
     def getPublishedFolders(self):
+        if not self.checkPermissionView():
+            return []
         return self.getObjects()
 
     def getSortedObjects(self):
