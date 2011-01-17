@@ -26,6 +26,7 @@ from Globals import InitializeClass
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, INFO
 from zope import interface
+from zope.event import notify
 
 # Products import
 from Products.ExtFile.ExtFile import manage_addExtFile
@@ -36,7 +37,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyProperties import NyProperties
 
 from permissions import PERMISSION_VIEW_ANSWERS
-from interfaces import INySurveyAnswer
+from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
 gUtil = utils()
 
@@ -64,6 +65,8 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
     for key, value in datamodel.items():
         if isinstance(value, FileUpload):
             ob.handle_upload(key, value)
+
+    notify(NySurveyAnswerAddEvent(ob))
 
     return id
 
@@ -133,6 +136,7 @@ class SurveyAnswer(Folder, NyProperties):
 
     def get(self, widget_id, default=None, lang=None):
         """Returns the value for widget_id, else default
+
         For localized widgets it returns a dict unless a lang is specified
         """
         widget = self.getSurveyTemplate().getWidget(widget_id)
@@ -191,3 +195,10 @@ class SurveyAnswer(Folder, NyProperties):
 
     def is_draft(self):
         return getattr(self, 'draft', False)
+
+class NySurveyAnswerAddEvent(object):
+    """ """
+    interface.implements(INySurveyAnswerAddEvent)
+
+    def __init__(self, context):
+        self.context = context
