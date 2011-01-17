@@ -93,7 +93,7 @@ class TextAnswerListing(BaseStatistic):
             ws.write(current_row, 2,
                 self.utShowDateTime(answer['modification_time']), normal_style)
             ws.write(current_row, 3,
-                self.utLinkifyURLs(answer.get(question.id, '')) or 'No response.', normal_style)
+                self.utLinkifyURLs(answer.get(question.id, '', lang=self.gl_get_selected_language())) or 'No response.', normal_style)
             current_row += 1
 
         state['current_row'] = current_row + 1

@@ -129,19 +129,22 @@ class SurveyAnswer(Folder, NyProperties):
         return dict([(widget.id, self.get(widget.id))
                      for widget in self.getSurveyTemplate().getSortedWidgets()])
 
-    def get(self, widget_id, default=None):
+    def get(self, widget_id, default=None, lang=None):
         """Returns the value for widget_id, else default"""
         widget = self.getSurveyTemplate().getWidget(widget_id)
 
         if widget.localized:
-            ret = {}
-            for lang in self.gl_get_languages_mapping():
-                try:
-                    ret[lang['code']] = self.getLocalProperty(widget_id,
-                                                              lang['code'])
-                except:
-                    ret[lang['code']] = default
-            return ret
+            if lang is None:
+                ret = {}
+                for lang in self.gl_get_languages_mapping():
+                    try:
+                        ret[lang['code']] = self.getLocalProperty(widget_id,
+                                                                  lang['code'])
+                    except:
+                        ret[lang['code']] = default
+                return ret
+            else:
+                return self.getLocalProperty(widget_id, lang)
         else:
             return getattr(self.aq_explicit, widget_id, default)
 
