@@ -306,7 +306,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 REQUEST.RESPONSE.redirect(self.absolute_url())
             return
 
+        respondent = None
         if answer_id is not None:
+            old_answer = self._getOb(answer_id)
+            respondent = old_answer.respondent
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
             self._delObject(answer_id)
@@ -315,14 +318,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         if not self.allow_multiple_answers:
             # look for an old answer and remove it
-            old_answer = self.getMyAnswer()
+            old_answer = self.getAnswerForRespondent(respondent=respondent)
             if old_answer is not None:
                 self._delObject(old_answer.id)
                 LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
                     'Deleted previous answer %s' % old_answer.absolute_url())
 
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
-                                           draft=draft)
+                                           draft=draft, respondent=respondent)
         answer = self._getOb(answer_id)
 
         if not draft:
@@ -448,9 +451,20 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
            If multiple answers exist, only the first one is returned.
            Filters out the draft ones.
         """
-        if self.isAnonymousUser():
+        return self.getAnswerForRespondent(multiple, draft)
+
+    security.declarePublic('getAnswerForRespondent')
+    def getAnswerForRespondent(self, multiple=False, draft=False, respondent=None):
+        """Return the answer of the respondent (or current user if None)
+           Returns None if the answer doesn't exist.
+           If multiple answers exist, only the first one is returned.
+           Filters out the draft ones.
+        """
+        if respondent is None:
+            respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if respondent == 'Anonymous User':
             return None
-        respondent = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
         catalog = self.getCatalogTool()
         objects = []
         for brain in catalog({'path': path2url(self.getPhysicalPath()),
