@@ -16,6 +16,7 @@ from NyForumTopic import (manage_addNyForumTopic_html, topic_add_html,
 from feeds import messages_feed
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
@@ -44,7 +45,7 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
         return self.manage_main(self, REQUEST, update_menu=1)
     REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-class NyForum(NyRoleManager, NyForumBase, Folder, utils):
+class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     """ """
     interface.implements(INyForum)
 
@@ -183,8 +184,10 @@ class NyForum(NyRoleManager, NyForumBase, Folder, utils):
                 ra(x['name'])
         return r
 
-    security.declareProtected(view, 'getPublishedFolders')
+    security.declarePublic('getPublishedFolders')
     def getPublishedFolders(self):
+        if not self.checkPermissionView():
+            return []
         return self.objectValues(METATYPE_NYFORUMTOPIC)
 
     def getPublishedObjects(self): return []
