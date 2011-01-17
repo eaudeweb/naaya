@@ -65,3 +65,19 @@ def migrate_radio_to_checkboxes(context, widget_id):
         value = getattr(answer, widget_id, None)
         if value is not None:
             setattr(answer, widget_id, [value])
+
+@register_migration('Naaya String Widget', 'Naaya Localized String Widget')
+def migrate_string_to_localized_string(context, widget_id):
+    from Products.NaayaWidgets.widgets.LocalizedStringWidget import \
+            addLocalizedStringWidget
+
+    old_widget = context[widget_id]
+    assert old_widget.localized is False
+
+    new_widget = basic_replace(context, widget_id, addLocalizedStringWidget)
+
+    for answer in context.objectValues(['Naaya Survey Answer']):
+        value = getattr(answer.aq_explicit, widget_id, None)
+        if value is not None:
+            lang = context.gl_get_default_language()
+            answer.set_property(widget_id, {lang: value})

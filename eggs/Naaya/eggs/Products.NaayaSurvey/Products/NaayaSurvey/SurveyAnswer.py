@@ -33,6 +33,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
 from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaBase.NyProperties import NyProperties
 
 from permissions import PERMISSION_VIEW_ANSWERS
 from interfaces import INySurveyAnswer
@@ -50,24 +51,24 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
     # calculate an available id
     while True:
         idSuffix = gUtil.utGenRandomId()
-        id = datamodel['id'] = 'answer_%s' % (idSuffix, )
+        id = 'answer_%s' % (idSuffix, )
         if id not in context.objectIds():
             break
 
-    ob = SurveyAnswer(id, datamodel, respondent, draft)
+    ob = SurveyAnswer(id, respondent, draft)
     context._setObject(id, ob)
     ob = context._getOb(id)
 
+    ob.set_datamodel(datamodel)
     # handle files
     for key, value in datamodel.items():
         if isinstance(value, FileUpload):
             ob.handle_upload(key, value)
 
-
     return id
 
 
-class SurveyAnswer(Folder):
+class SurveyAnswer(Folder, NyProperties):
     """ Class used to store survey answers"""
 
     interface.implements(INySurveyAnswer)
@@ -89,22 +90,31 @@ class SurveyAnswer(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, datamodel, respondent, draft):
+    def __init__(self, id, respondent, draft):
         Folder.__init__(self, id)
-        self.add_properties(datamodel)
+        NyProperties.__init__(self)
         self.respondent = respondent
         self.draft = bool(draft)
         self.modification_time = DateTime()
 
-    security.declarePrivate('add_properties')
-    def add_properties(self, datamodel):
+    security.declarePrivate('set_datamodel')
+    def set_datamodel(self, datamodel):
         for key, value in datamodel.items():
-            self.edit_property(key, value)
+            self.set_property(key, value)
 
-    def edit_property(self, key, value):
+    def set_property(self, key, value):
         if isinstance(value, FileUpload):
             return # Handle somewhere else
-        setattr(self, key, value)
+
+        widget = self.getSurveyTemplate().getWidget(key)
+        if widget.localized:
+            for lang in self.gl_get_languages_mapping():
+                lang_code = lang['code']
+                lang_value = value.get(lang_code, None)
+                if lang_value:
+                    self._setLocalPropValue(key, lang_code, lang_value)
+        else:
+            setattr(self, key, value)
 
     security.declarePrivate('handle_upload')
     def handle_upload(self, id, attached_file):
@@ -121,7 +131,19 @@ class SurveyAnswer(Folder):
 
     def get(self, widget_id, default=None):
         """Returns the value for widget_id, else default"""
-        return getattr(self.aq_explicit, widget_id, default)
+        widget = self.getSurveyTemplate().getWidget(widget_id)
+
+        if widget.localized:
+            ret = {}
+            for lang in self.gl_get_languages_mapping():
+                try:
+                    ret[lang['code']] = self.getLocalProperty(widget_id,
+                                                              lang['code'])
+                except:
+                    ret[lang['code']] = default
+            return ret
+        else:
+            return getattr(self.aq_explicit, widget_id, default)
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
@@ -147,7 +169,7 @@ class SurveyAnswer(Folder):
         """ Return values as list.
         """
         datamodel=self.getDatamodel()
-        widgets = self.getSortedWidgets()
+        widgets = self.getSurveyTemplate().getSortedWidgets()
         atool = self.getSite().getAuthenticationTool()
         ut = utils()
         respondent = atool.getUserFullNameByID(self.respondent)
