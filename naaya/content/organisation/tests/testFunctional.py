@@ -80,7 +80,7 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmEdit')
         self.failUnlessEqual(form['title:utf8:ustring'], 'My Organisation')
         form['title:utf8:ustring'] = 'New Organisation Name'
-        self.browser.clicked(form, form.find_control('saveProperties:method'))
+        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myorganisation.title, 'New Organisation Name')
@@ -97,7 +97,7 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         #The object properties should not be saved if the mandatory fields are not all filled
         form = self.browser.get_form('frmEdit')
         form['title:utf8:ustring'] = ''
-        self.browser.clicked(form, form.find_control('saveProperties:method'))
+        self.browser.clicked(form, form.find_control('title:utf8:ustring'))
         self.browser.submit()
 
         html = self.browser.get_html()
