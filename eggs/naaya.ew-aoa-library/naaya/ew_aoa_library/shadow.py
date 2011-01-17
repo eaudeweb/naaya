@@ -256,7 +256,7 @@ class AssessmentShadow(SimpleItem):
         for widget in survey_template.getSortedWidgets():
             if widget.id in restricted_widgets[survey_id]:
                 continue
-            widget_data = datamodel.get(widget.id, lang=self.gl_get_selected_language())
+            widget_data = datamodel.get(widget.id)
             views.append(widget.render(mode='view', datamodel=widget_data))
 
         return '\n'.join(views)
