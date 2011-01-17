@@ -146,7 +146,7 @@ def extract_survey_answer_data_library(answer):
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
         'topics': sorted(all_topics),
-        'modification_time': answer.get('modification_time'),
+        'modification_time': answer.modification_time,
     }
 
     if not attrs['title']:
@@ -188,7 +188,7 @@ def extract_survey_answer_data_general_template(answer):
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(get_library_answer(answer), 'w_theme'),
         'topics': sorted(all_topics),
-        'modification_time': answer.get('modification_time'),
+        'modification_time': answer.modification_time,
     }
 
     if not attrs['title']:
