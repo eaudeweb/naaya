@@ -9,7 +9,7 @@ from zope import interface
 from zope.component import adapter
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaSurvey.interfaces import INySurveyAnswer
+from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 
 import shadow
@@ -133,7 +133,7 @@ def viewer_for_survey_answer(answer):
             # so our answer is part of the survey targeted by `viewery
             yield viewer
 
-@adapter(INySurveyAnswer, IObjectAddedEvent)
+@adapter(INySurveyAnswer, INySurveyAnswerAddEvent)
 def survey_answer_created(answer, event):
     if answer.is_draft():
         return
