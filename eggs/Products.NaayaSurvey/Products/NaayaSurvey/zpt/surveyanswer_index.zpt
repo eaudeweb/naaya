@@ -27,7 +27,8 @@
                    can_edit python: has_edit_permission or (not user_anonymous and user_is_respondent);
                    editing python: try_to_edit and can_edit;
                    editing_draft python: editing and here.is_draft();
-                   editing_answer python: editing and not here.is_draft();">
+                   editing_answer python: editing and not here.is_draft();
+                   ">
 
 	<tal:block condition="try_to_edit">
 		<tal:block define="tmpl nocall:here/aq_parent/validation_html|nothing"
@@ -36,12 +37,11 @@
 		</tal:block>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 				tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
-
 		<div class="survey-box">
 			<div class="survey-box-content">
 				<div class="survey-top-options">
 					<div class="survey-misc-details">
-						<div class="survey-detail survey-tips">	
+						<div class="survey-detail survey-tips">
 							<h3 class="survey-tips-title">Tips:</h3>
 
 							<div class="survey-tips-content">
@@ -64,18 +64,18 @@
 						</div>
 					</div>
 				</div>
-                        <div class="survey-bottom-options">
-			<div class="surveySubmit">
-				<input type="submit"
-					tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
-					i18n:attributes="value" name="addSurveyAnswer:method"/>
-				<input type="submit" tal:condition="here/canAddAnswerDraft"
-					tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
-					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
-			</div>
+				<div class="survey-bottom-options">
+					<div class="surveySubmit">
+						<input type="submit"
+							tal:attributes="value python: test(not here.is_draft(), 'Change answer', 'Submit')"
+							i18n:attributes="value" name="addSurveyAnswer:method"/>
+						<input type="submit" tal:condition="here/canAddAnswerDraft"
+							tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
+							i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+					</div>
 				</div>
 			</div>
-                        <div class="clear">
+            <div class="clear">
 				&nbsp;
 			</div>
 		</div>
@@ -109,7 +109,10 @@
 				content="structure rendered">
 		</tal:block>
 	</tal:block>
+
+
 </tal:block>
 
 </metal:block>
 </metal:block>
+

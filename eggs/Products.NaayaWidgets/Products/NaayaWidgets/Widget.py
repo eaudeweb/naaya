@@ -91,6 +91,7 @@ class Widget(Folder, LocalPropertyManager):
 
     sortorder = 100
     required = False
+    localized = False
 
     # Local properties
     title = LocalProperty('title')
