@@ -111,6 +111,8 @@ class SurveyAnswer(Folder, NyProperties):
             for lang in self.gl_get_languages_mapping():
                 lang_code = lang['code']
                 lang_value = value.get(lang_code, None)
+                # don't add a value if lang_value is empty
+                # easier to test if localized value is empty
                 if lang_value:
                     self._setLocalPropValue(key, lang_code, lang_value)
         else:
@@ -130,7 +132,9 @@ class SurveyAnswer(Folder, NyProperties):
                      for widget in self.getSurveyTemplate().getSortedWidgets()])
 
     def get(self, widget_id, default=None, lang=None):
-        """Returns the value for widget_id, else default"""
+        """Returns the value for widget_id, else default
+        For localized widgets it returns a dict unless a lang is specified
+        """
         widget = self.getSurveyTemplate().getWidget(widget_id)
 
         if widget.localized:
@@ -144,7 +148,10 @@ class SurveyAnswer(Folder, NyProperties):
                         ret[lang['code']] = default
                 return ret
             else:
-                return self.getLocalProperty(widget_id, lang)
+                try:
+                    return self.getLocalProperty(widget_id, lang)
+                except:
+                    return default
         else:
             return getattr(self.aq_explicit, widget_id, default)
 
