@@ -126,22 +126,22 @@ def extract_survey_answer_data_library(answer):
                         ]
     for name in multiple_selects:
         all_topics.update(extract_multipleselect(answer, name))
-
+    lang = answer.gl_get_selected_language()
     attrs = {
         'id': answer.getId(),
-        'title': answer.get('w_assessment-name'),
-        'geo_location': answer.get('w_location'),
-        'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
-                                  answer.get('w_submitter-organisation'), ),
-        'country': answer.get('w_country-or-international-organisation'),
+        'title': answer.get('w_assessment-name', lang=lang),
+        'geo_location': answer.get('w_location', lang=lang),
+        'uploader': ('%s, %s') % (answer.get('w_submitter-name', lang=lang),
+                                  answer.get('w_submitter-organisation', lang=lang), ),
+        'country': answer.get('w_country-or-international-organisation', lang=lang),
         'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
                         '<a href="%s">%s</a><br />') % (
-                            answer.get('w_submitter-organisation'),
+                            answer.get('w_submitter-organisation', lang=lang),
                             answer.get('w_assessment-year'),
-                            answer.get('w_assessment-url'),
-                            answer.get('w_assessment-url'),
+                            answer.get('w_assessment-url', lang=lang),
+                            answer.get('w_assessment-url', lang=lang),
                        ),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
@@ -256,7 +256,7 @@ class AssessmentShadow(SimpleItem):
         for widget in survey_template.getSortedWidgets():
             if widget.id in restricted_widgets[survey_id]:
                 continue
-            widget_data = datamodel.get(widget.id)
+            widget_data = datamodel.get(widget.id, lang=self.gl_get_selected_language())
             views.append(widget.render(mode='view', datamodel=widget_data))
 
         return '\n'.join(views)
