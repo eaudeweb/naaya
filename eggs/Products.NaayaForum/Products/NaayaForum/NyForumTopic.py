@@ -127,8 +127,10 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     def is_topic_opened(self): return self.status==0
     def is_topic_closed(self): return self.status==1
 
-    security.declareProtected(view, 'getPublishedFolders')
+    security.declarePublic('getPublishedFolders')
     def getPublishedFolders(self):
+        if not self.checkPermissionView():
+            return []
         return self.objectValues(METATYPE_NYFORUMMESSAGE)
 
     security.declarePrivate('get_message_parent')
