@@ -111,3 +111,46 @@ def migrate_textarea_to_localized_textarea(context, widget_id):
         if value is not None:
             lang = context.gl_get_default_language()
             answer.set_property(widget_id, {lang: value})
+
+@register_migration('Naaya Localized String Widget', 'Naaya String Widget')
+def migrate_localized_string_to_string(context, widget_id):
+    from Products.NaayaWidgets.widgets.StringWidget import \
+            addStringWidget
+
+    old_widget = context[widget_id]
+    assert old_widget.localized is True
+
+    new_widget = basic_replace(context, widget_id, addStringWidget)
+
+    for answer in context.objectValues(['Naaya Survey Answer']):
+        value = answer.getLocalProperty(widget_id, lang=context.gl_get_default_language())
+        if value is not None:
+            answer.set_property(widget_id, value)
+
+@register_migration('Naaya Localized Text Area Widget',
+                    'Naaya Text Area Widget')
+def migrate_localized_textarea_to_textarea(context, widget_id):
+    from Products.NaayaWidgets.widgets.TextAreaWidget import \
+            addTextAreaWidget
+
+    old_widget = context[widget_id]
+    rows = old_widget.rows
+    columns = old_widget.columns
+    assert old_widget.localized is True
+
+    new_widget = basic_replace(context, widget_id, addTextAreaWidget)
+    new_widget.rows = rows
+    new_widget.columns = columns
+
+    for answer in context.objectValues(['Naaya Survey Answer']):
+        value = answer.getLocalProperty(widget_id, lang=context.gl_get_default_language())
+        if value is not None:
+            answer.set_property(widget_id, value)
+
+@register_migration('Naaya Localized Text Area Widget',
+                    'Naaya Localized String Widget')
+def migrate_localized_textarea_to_localized_string(context, widget_id):
+    from Products.NaayaWidgets.widgets.LocalizedStringWidget import \
+            addLocalizedStringWidget
+
+    new_widget = basic_replace(context, widget_id, addLocalizedStringWidget)
