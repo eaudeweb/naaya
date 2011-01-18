@@ -133,8 +133,9 @@ def viewer_for_survey_answer(answer):
             # so our answer is part of the survey targeted by `viewery
             yield viewer
 
-@adapter(INySurveyAnswer, INySurveyAnswerAddEvent)
-def survey_answer_created(answer, event):
+@adapter(INySurveyAnswerAddEvent)
+def survey_answer_created(event):
+    answer = event.context
     if answer.is_draft():
         return
     try:
