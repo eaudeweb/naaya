@@ -171,6 +171,9 @@ class Widget(Folder, LocalPropertyManager):
         """ Return a string with the data in this widget """
         if datamodel is None:
             return ''
+        if isinstance(datamodel, dict):
+            lang = self.gl_get_selected_language()
+            return datamodel[lang]
         return datamodel
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
