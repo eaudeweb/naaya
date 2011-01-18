@@ -337,11 +337,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 self.sendNotificationToRespondent(answer)
 
         if REQUEST:
-            self.delSessionKeys(datamodel.keys())
-            self.setSession('title', 'Thank you for taking the survey')
-            self.setSession('body', '')
-            self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            if not draft:
+                self.delSessionKeys(datamodel.keys())
+                self.setSession('title', 'Thank you for taking the survey')
+                self.setSession('body', '')
+                self.setSession('referer', self.absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            else:
+                REQUEST.RESPONSE.redirect('%s?edit=1' % answer.absolute_url())
         return answer_id
 
     #
