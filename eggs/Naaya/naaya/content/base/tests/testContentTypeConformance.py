@@ -145,10 +145,13 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             form = self.browser.get_form('frmEdit')
             self.failUnless('xzzx:utf8:ustring' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when editing' % type_name)
-            self.browser.clicked(form, form.find_control('saveProperties:method'))
+            self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
+            self.browser.submit()
+            form = self.browser.get_form('frmEdit')
             self.failUnlessEqual(form['xzzx:utf8:ustring'], 'the XzZx one true value',
                 'bad "xzzx" value in edit form for %s' % type_name)
             form['xzzx:utf8:ustring'] = 'the XzZx other true value'
+            self.browser.clicked(form, form.find_control('xzzx:utf8:ustring'))
             self.browser.submit()
 
             # make sure the value was changed
@@ -230,10 +233,14 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             form = self.browser.get_form('frmEdit')
             self.failUnless('yvvy:utf8:ustring' in (c.name for c in form.controls),
                 'missing "yvvy" control for %s when editing' % type_name)
-            self.browser.clicked(form, form.find_control('saveProperties:method'))
+            self.browser.clicked(form, form.find_control('yvvy:utf8:ustring'))
+            self.browser.submit()
+            #self.browser.clicked(form, form.find_control('saveProperties:method'))
+            form = self.browser.get_form('frmEdit')
             self.failUnlessEqual(form['yvvy:utf8:ustring'], 'the yvvy value',
                 'bad "yvvy" value in edit form for %s' % type_name)
             form['yvvy:utf8:ustring'] = 'the yvvy other value'
+            self.browser.clicked(form, form.find_control('yvvy:utf8:ustring'))
             self.browser.submit()
 
             # make sure the value was changed
@@ -291,7 +298,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.failUnlessEqual(form['title:utf8:ustring'], 'test form title')
             form['title:utf8:ustring'] = ''
             form['keywords:utf8:ustring'] = 'no save me'
-            self.browser.clicked(form, form.find_control('saveProperties:method'))
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
 
             # see if the form contains errors, and the data we just entered.
@@ -336,7 +343,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
                 'Unexpected value in form: "%s" (should be "") (%s)'
                     % (form['title:utf8:ustring'], type_name))
             form['title:utf8:ustring'] = 'le title'
-            self.browser.clicked(form, form.find_control('saveProperties:method'))
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
             self.failIf('The form contains errors' in self.browser.get_html())
 
