@@ -1,11 +1,7 @@
 <metal:block define-macro="page">
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
-<h1 metal:fill-slot="title" i18n:translate="">
-    Manage content types -
-    <tal:block content="here/aq_parent/title" /> -
-    <tal:block content="here/prop_name" />
-</h1>
+<h1 metal:fill-slot="title" i18n:translate="">Manage content types - <tal:block content="here/aq_parent/title" /> - <tal:block content="here/prop_name" /></h1>
 
 <tal:block metal:fill-slot="section">
 
