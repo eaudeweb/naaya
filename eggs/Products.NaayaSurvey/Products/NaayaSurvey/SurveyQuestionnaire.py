@@ -337,8 +337,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 self.sendNotificationToRespondent(answer)
 
         if REQUEST:
+            self.delSessionKeys(datamodel.keys())
             if not draft:
-                self.delSessionKeys(datamodel.keys())
                 self.setSession('title', 'Thank you for taking the survey')
                 self.setSession('body', '')
                 self.setSession('referer', self.absolute_url())

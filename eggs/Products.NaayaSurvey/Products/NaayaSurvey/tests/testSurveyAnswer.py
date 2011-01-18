@@ -316,3 +316,40 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                                   {'test_widget': ''},
                                                   REQUEST=None,
                                                   draft=True, respondent=None)
+
+    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
+    def test_change_other_respondent_answer(self, manage_addSurveyAnswer):
+        manage_addSurveyAnswer.return_value = 'answer_12345'
+        survey = self.survey
+        answer = Mock()
+        answer.respondent = 'usr'
+        survey._getOb = Mock(return_value=answer)
+        survey._delObject = Mock(return_value=None)
+
+        result = survey.addSurveyAnswer(answer_id='answer_12345')
+
+        survey._delObject.assert_called_with('answer_12345')
+        survey._getOb.assert_called_with('answer_12345')
+        manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
+                                                  draft=False, respondent='usr')
+
+    @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
+    def test_add_draft_with_request(self, manage_addSurveyAnswer):
+        manage_addSurveyAnswer.return_value = 'answer_12345'
+        survey = self.survey
+        answer = Mock()
+        answer.absolute_url = Mock(return_value="http://survey/answer_12345")
+        survey._getOb = Mock(return_value = answer)
+        survey.canAddAnswerDraft = Mock(return_value=True)
+        REQUEST = Mock()
+        REQUEST.form = {}
+
+        result = survey.addSurveyAnswer(REQUEST=REQUEST, draft=True)
+
+        self.assertEqual(result, 'answer_12345')
+        self.assertEqual(survey.setSession.call_count, 0)
+        survey.delSessionKeys.assert_called_with([])
+        REQUEST.RESPONSE.redirect.assert_called_with(
+                                            "http://survey/answer_12345?edit=1")
+        manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,
+                                                  draft=True, respondent=None)
