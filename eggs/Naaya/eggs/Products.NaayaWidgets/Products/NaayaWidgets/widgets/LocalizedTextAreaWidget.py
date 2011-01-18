@@ -3,25 +3,26 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
-from Products.NaayaWidgets.widgets.StringWidget import StringWidget
+from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
 
-def addLocalizedStringWidget(container, id="", title="Localized String Widget",
+def addLocalizedTextAreaWidget(container, id="", title="Localized Lines Widget",
                              REQUEST=None, **kwargs):
     """ """
-    return manage_addWidget(LocalizedStringWidget, container, id, title,
+    return manage_addWidget(LocalizedTextAreaWidget, container, id, title,
                             REQUEST, **kwargs)
 
-class LocalizedStringWidget(StringWidget):
+class LocalizedTextAreaWidget(TextAreaWidget):
     """ """
-    meta_type = "Naaya Localized String Widget"
-    meta_label = "Single line text (localized)"
-    meta_description = "Free text input box that can be translated"
+    meta_type = "Naaya Localized Text Area Widget"
+    meta_label = "Paragraph text (localized)"
+    meta_description = "Multiple line answer that can be translated, used for longer responses"
 
     localized = True
 
     # Constructor
-    _constructors = (addLocalizedStringWidget,)
-    render_meth = PageTemplateFile('zpt/widget_localized_string.zpt', globals())
+    _constructors = (addLocalizedTextAreaWidget,)
+    render_meth = PageTemplateFile('zpt/widget_localized_textarea.zpt',
+                                   globals())
 
     def isEmptyDatamodel(self, value):
         return not bool(value)
@@ -41,7 +42,7 @@ class LocalizedStringWidget(StringWidget):
 
         return ret
 
-InitializeClass(LocalizedStringWidget)
+InitializeClass(LocalizedTextAreaWidget)
 
 def register():
-    return LocalizedStringWidget
+    return LocalizedTextAreaWidget
