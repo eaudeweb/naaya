@@ -549,6 +549,8 @@ class NotificationTool(Folder):
             lang = self.gl_get_selected_language()
             REQUEST.form['lang'] = lang
         user_id = REQUEST.AUTHENTICATED_USER.getId()
+        if location == '/':
+            location = ''
         if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
         try:
