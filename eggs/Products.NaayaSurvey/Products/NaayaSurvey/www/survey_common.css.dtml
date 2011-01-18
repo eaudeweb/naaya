@@ -16,7 +16,10 @@ a.survey-special-button {
 	color: #042D5D;
 }
 
-.survey-box a, div.consultation_right_box a:visited { color: #042D5D; }
+.survey-box a, div.consultation_right_box a:visited {
+	color: #042D5D;
+	display: inline-block !important;
+}
 
 div.widgetViewMode {
 	border: 1px solid #EFEFEF;
