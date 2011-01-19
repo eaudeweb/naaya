@@ -5,6 +5,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.core.utils import path_in_site
 
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
@@ -126,22 +127,22 @@ def extract_survey_answer_data_library(answer):
                         ]
     for name in multiple_selects:
         all_topics.update(extract_multipleselect(answer, name))
-    lang = answer.gl_get_selected_language()
+
     attrs = {
         'id': answer.getId(),
-        'title': answer.get('w_assessment-name', lang=lang),
-        'geo_location': answer.get('w_location', lang=lang),
-        'uploader': ('%s, %s') % (answer.get('w_submitter-name', lang=lang),
-                                  answer.get('w_submitter-organisation', lang=lang), ),
-        'country': answer.get('w_country-or-international-organisation', lang=lang),
+        'title': answer.get('w_assessment-name'),
+        'geo_location': answer.get('w_location'),
+        'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
+                                  answer.get('w_submitter-organisation'), ),
+        'country': answer.get('w_country-or-international-organisation'),
         'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
                         '<a href="%s">%s</a><br />') % (
-                            answer.get('w_submitter-organisation', lang=lang),
+                            answer.get('w_submitter-organisation'),
                             answer.get('w_assessment-year'),
-                            answer.get('w_assessment-url', lang=lang),
-                            answer.get('w_assessment-url', lang=lang),
+                            answer.get('w_assessment-url'),
+                            answer.get('w_assessment-url'),
                        ),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
@@ -200,7 +201,7 @@ def extract_survey_answer_data_general_template(answer):
 
     return attrs
 
-class AssessmentShadow(SimpleItem):
+class AssessmentShadow(SimpleItem, LocalPropertyManager):
     """ Non-persistent shadow object that describes an AoA assessment """
 
     manage_options = (
@@ -217,7 +218,28 @@ class AssessmentShadow(SimpleItem):
 
     def __init__(self, id, **attrs):
         self._setId(id)
-        self.__dict__.update(attrs)
+        for key, value in attrs.items():
+            if isinstance(value, dict):
+                self._setLocalProperty(key, 'string')
+                for lang, lang_value in value.items():
+                    self._setLocalPropValue(key, lang, lang_value)
+            else:
+                setattr(self, key, value)
+
+    def get(self, key):
+        if self.hasLocalProperty(key):
+            lang = self.gl_get_selected_language()
+            value = self.getLocalProperty(key, lang=lang)
+            if value:
+                return value
+
+            # try other languages for non-empty value
+            for lang in self.gl_get_languages():
+                value = self.getLocalProperty(key, lang=lang)
+                if value:
+                    return '%s: %s' % (lang, value)
+
+        return getattr(self, key)
 
     def geo_latitude(self):
         if self.geo_location is None:
@@ -287,7 +309,7 @@ class AssessmentShadow(SimpleItem):
             email_ending = '\n\n You may edit your Review Template by following this link:\n\n %s?edit=1 \n\n Thank you again for your cooperation!' % survey_answer.absolute_url()
             email_to = str(survey_answer.w_email)
             email_from = 'no-reply@aoa.eea.europa.eu'
-            email_subject = 'Suggestion for review of report %s' % getattr(survey_answer, 'w_q1-name-assessment-report')
+            email_subject = 'Suggestion for review of report %s' % self.get('title')
             self.getEmailTool().sendEmail(email_introduction+email_body+email_ending, email_to, email_from, email_subject)
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 

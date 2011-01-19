@@ -49,11 +49,11 @@
 	<!-- If the "sort by" property has an attribute "lower",
 		convert the value to lower before sorting -->
     <tal:block condition="items">
-	<tal:block condition="python:hasattr(getattr(items[0], skey), 'lower')">
-		<tal:block define="dummy python:items.sort(key=lambda x: getattr(x, skey).lower(), reverse=rkey);" />
+	<tal:block condition="python:hasattr(items[0].get(skey), 'lower')">
+		<tal:block define="dummy python:items.sort(key=lambda x: x.get(skey).lower(), reverse=rkey);" />
 	</tal:block>
-	<tal:block condition="python:not hasattr(getattr(items[0], skey), 'lower')">
-		<tal:block define="dummy python:items.sort(key=lambda x: getattr(x, skey), reverse=rkey);" />
+	<tal:block condition="python:not hasattr(items[0].get(skey), 'lower')">
+		<tal:block define="dummy python:items.sort(key=lambda x: x.get(skey), reverse=rkey);" />
 	</tal:block>
 	<tal:block condition="python:skey == 'approved_date'" >
 		<tal:block define="dummy python:items.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
@@ -138,7 +138,7 @@
 <tr tal:repeat="i items">
 	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td>
-			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="i/title_or_id"></a>
+			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="python: i.get('title')"></a>
 	</td>
 	<td tal:condition="not:review_template">
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
