@@ -24,6 +24,13 @@
       tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
 
 <h1 tal:content="here/title_or_id"></h1>
+<div class="floated-buttons">
+    <span class="buttons">
+        <a tal:define="answer here/target_answer;
+                       answer_url answer/absolute_url"
+           tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
+    </span>
+</div>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
     tal:condition="python:review_template and is_entitled">
