@@ -276,8 +276,9 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
 
         views = []
         for widget in survey_template.getSortedWidgets():
-            if widget.id in restricted_widgets[survey_id]:
-                continue
+            if not self.checkPermission(PERMISSION_PUBLISH_OBJECTS):
+                if widget.id in restricted_widgets[survey_id]:
+                    continue
             widget_data = datamodel.get(widget.id)
             views.append(widget.render(mode='view', datamodel=widget_data))
 
