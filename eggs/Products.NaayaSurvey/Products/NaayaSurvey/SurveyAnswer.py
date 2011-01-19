@@ -111,13 +111,12 @@ class SurveyAnswer(Folder, NyProperties):
 
         widget = self.getSurveyTemplate().getWidget(key)
         if widget.localized:
-            for lang in self.gl_get_languages_mapping():
-                lang_code = lang['code']
-                lang_value = value.get(lang_code, None)
+            for lang in self.gl_get_languages():
+                lang_value = value.get(lang, None)
                 # don't add a value if lang_value is empty
                 # easier to test if localized value is empty
                 if lang_value:
-                    self._setLocalPropValue(key, lang_code, lang_value)
+                    self._setLocalPropValue(key, lang, lang_value)
         else:
             setattr(self, key, value)
 
@@ -139,17 +138,14 @@ class SurveyAnswer(Folder, NyProperties):
 
         For localized widgets it returns a dict unless a lang is specified
         """
-        widget = self.getSurveyTemplate().getWidget(widget_id)
-
-        if widget.localized:
+        if widget_id in self._local_properties:
             if lang is None:
                 ret = {}
-                for lang in self.gl_get_languages_mapping():
+                for lang in self.gl_get_languages():
                     try:
-                        ret[lang['code']] = self.getLocalProperty(widget_id,
-                                                                  lang['code'])
+                        ret[lang] = self.getLocalProperty(widget_id, lang)
                     except:
-                        ret[lang['code']] = default
+                        ret[lang] = default
                 return ret
             else:
                 try:
@@ -158,6 +154,7 @@ class SurveyAnswer(Folder, NyProperties):
                     return default
         else:
             return getattr(self.aq_explicit, widget_id, default)
+
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
