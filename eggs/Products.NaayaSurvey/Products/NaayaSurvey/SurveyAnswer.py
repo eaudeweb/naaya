@@ -133,27 +133,27 @@ class SurveyAnswer(Folder, NyProperties):
         return dict([(widget.id, self.get(widget.id))
                      for widget in self.getSurveyTemplate().getSortedWidgets()])
 
-    def get(self, widget_id, default=None, lang=None):
-        """Returns the value for widget_id, else default
+    def get(self, key, default=None, lang=None):
+        """Returns the value for key, else default
 
         For localized widgets it returns a dict unless a lang is specified
         """
-        if widget_id in self._local_properties:
+        if key in self._local_properties:
             if lang is None:
                 ret = {}
                 for lang in self.gl_get_languages():
                     try:
-                        ret[lang] = self.getLocalProperty(widget_id, lang)
+                        ret[lang] = self.getLocalProperty(key, lang)
                     except:
                         ret[lang] = default
                 return ret
             else:
                 try:
-                    return self.getLocalProperty(widget_id, lang)
+                    return self.getLocalProperty(key, lang)
                 except:
                     return default
         else:
-            return getattr(self.aq_explicit, widget_id, default)
+            return getattr(self.aq_explicit, key, default)
 
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
