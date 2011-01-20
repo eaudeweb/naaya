@@ -41,10 +41,26 @@ def extract_singleselect(answer, widget_name):
         return widget.choices[datamodel]
 
 def get_library_answer(answer):
+    answer_value = answer.get('w_q1-name-assessment-report')
+    if isinstance(answer_value, dict):
+        answer_values = answer_value.values()
+    else:
+        answer_values = [answer_value]
+
     the_survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
     for x in the_survey.objectValues('Naaya Survey Answer'):
-        if x.get('w_assessment-name') == answer.get('w_q1-name-assessment-report'):
-            return x
+        x_value = x.get('w_assessment-name')
+
+        if isinstance(x_value, dict):
+            x_values = x_value.values()
+        else:
+            x_values = [x_value]
+
+        for xv in x_values:
+            for av in answer_values:
+                if xv == av:
+                    return x
+
     return None
 
 geo_type = {
