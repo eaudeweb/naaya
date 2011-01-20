@@ -26,8 +26,7 @@
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
     <span class="buttons">
-        <a tal:define="answer here/target_answer;
-                       answer_url answer/absolute_url"
+        <a tal:define="answer_url here/target_path"
            tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
     </span>
 </div>
