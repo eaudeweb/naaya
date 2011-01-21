@@ -834,7 +834,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         return None
 
-    security.declarePrivate('name_from_userid')
+    security.declareProtected(view, 'name_from_userid')
     def name_from_userid(self, userid):
         """
         Given a userid, try to get its full name. If userid is None then we
