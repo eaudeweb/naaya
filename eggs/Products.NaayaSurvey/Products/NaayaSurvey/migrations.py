@@ -126,6 +126,8 @@ def migrate_localized_string_to_string(context, widget_id):
         value = answer.getLocalProperty(widget_id, lang=context.gl_get_default_language())
         if value is not None:
             answer.set_property(widget_id, value)
+            if answer._local_properties.has_key(widget_id):
+                del answer._local_properties[widget_id]
 
 @register_migration('Naaya Localized Text Area Widget',
                     'Naaya Text Area Widget')
@@ -146,6 +148,8 @@ def migrate_localized_textarea_to_textarea(context, widget_id):
         value = answer.getLocalProperty(widget_id, lang=context.gl_get_default_language())
         if value is not None:
             answer.set_property(widget_id, value)
+            if answer._local_properties.has_key(widget_id):
+                del answer._local_properties[widget_id]
 
 @register_migration('Naaya Localized Text Area Widget',
                     'Naaya Localized String Widget')
