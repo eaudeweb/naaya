@@ -44,6 +44,8 @@
 				{
 					/*If in edit mode, just size the input at 135 chars*/
 					$('#w_q1-name-assessment-report').attr('size', '135')
+					$('#w_q1-name-assessment-report-en').attr('size', '135')
+					$('#w_q1-name-assessment-report-ru').attr('size', '135')
 				}
 				show_hide(edit, curr_lang);
 				$('#w_confirmation').siblings('.tooltips').attr('class', 'red_tooltips');
