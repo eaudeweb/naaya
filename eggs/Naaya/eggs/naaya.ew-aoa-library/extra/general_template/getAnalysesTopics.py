@@ -3,13 +3,20 @@ the_survey = container.aq_parent.aq_parent['virtual_library']['bibliography-deta
 
 topics = []
 for x in the_survey.objectValues('Naaya Survey Answer'):
-  if getattr(x, 'w_assessment-name') == unicode(assessment, 'utf8'):
-    topics = {
-            'w_green-economy-topics': getattr(x, 'w_green-economy-topics'),
-            'w_water-resources-topics': getattr(x, 'w_water-resources-topics'),
-            'w_water-resource-management-topics': getattr(x, 'w_water-resource-management-topics'),
-            'w_resource-efficiency-topics': getattr(x, 'w_resource-efficiency-topics')
-            }
+    value = x.get('w_assessment-name')
+    if isinstance(value, basestring):
+        values = [value]
+    else:
+        values = value.values()
+
+    unicode_assessment = unicode(assessment, 'utf8')
+    if unicode_assessment in values:
+        topics = {
+                'w_green-economy-topics': getattr(x, 'w_green-economy-topics'),
+                'w_water-resources-topics': getattr(x, 'w_water-resources-topics'),
+                'w_water-resource-management-topics': getattr(x, 'w_water-resource-management-topics'),
+                'w_resource-efficiency-topics': getattr(x, 'w_resource-efficiency-topics')
+                }
 topics_json = container.rstk.json_dumps(topics)
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
 return topics_json
