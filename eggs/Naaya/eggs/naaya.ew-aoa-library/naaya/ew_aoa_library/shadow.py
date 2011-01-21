@@ -178,6 +178,8 @@ def extract_survey_answer_data_library(answer):
     return attrs
 
 def extract_survey_answer_data_general_template(answer):
+    library_answer = get_library_answer(answer)
+
     all_topics = set()
     multiple_selects = [
                         'w_green-economy-topics',
@@ -186,7 +188,7 @@ def extract_survey_answer_data_general_template(answer):
                         'w_water-resource-management-topics'
                         ]
     for name in multiple_selects:
-        all_topics.update(extract_multipleselect(get_library_answer(answer), name))
+        all_topics.update(extract_multipleselect(library_answer, name))
 
     attrs = {
         'id': answer.getId(),
@@ -196,14 +198,14 @@ def extract_survey_answer_data_general_template(answer):
                                   answer.get('w_organisation'), ),
         'country': answer.get('w_country'),
         #This is commented because (now) we don't want to show review template answers on the map
-        #'geo_type': extract_geo_type(get_library_answer(answer)),
+        #'geo_type': extract_geo_type(library_answer),
         'description': ('<strong>%s</strong><br />%s<br />') %
                         (
                             answer.get('w_organisation'),
                             answer.get('w_q3-publishing-year-assessment'),
                         ),
         'target_path': path_in_site(answer),
-        'theme': extract_multipleselect(get_library_answer(answer), 'w_theme'),
+        'theme': extract_multipleselect(library_answer, 'w_theme'),
         'topics': sorted(all_topics),
         'modification_time': answer.modification_time,
     }
