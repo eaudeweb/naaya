@@ -142,6 +142,8 @@
 			{
 				$('#w_confirmation').parent().hide();
 				$('#w_q1-name-assessment-report').attr('readonly', 'readonly');
+				$('#w_q1-name-assessment-report-en').attr('readonly', 'readonly');
+				$('#w_q1-name-assessment-report-ru').attr('readonly', 'readonly');
 			}
 		}
 		function reset_select(select_id, curr_lang){
