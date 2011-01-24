@@ -200,7 +200,7 @@
 						size="10" maxlength="10" size="10"
 						tal:attributes="value request/end_date|here/end_date" />
 				</div>
-				<div i18n:translate="" class="field">
+				<div class="field">
 					<label for="important_dates">
 						<span i18n:translate="">Important dates in the project and possible phasing</span>
 					</label>
@@ -515,7 +515,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2" class="label new_row" i18n:translate="">	
+							<td colspan="2" class="label new_row" i18n:translate="">
 								Total amount requested for labour costs
 							</td>
 							<td class="label new_row">
@@ -817,7 +817,7 @@
 					<input type="text" name="financial_contact_name:utf8:ustring" size="87"
 						tal:attributes="value request/financial_contact_name|here/financial_contact_name" />
 				</div>
-				<div i18n:translate="" class="field">
+				<div class="field">
 					<label for="financial_contact_address" i18n:translate="">Address</label>
 					<textarea class="mceNoEditor" name="financial_contact_address:utf8:ustring" cols="66" rows="5"
 						tal:content="request/financial_contact_address|here/financial_contact_address">
