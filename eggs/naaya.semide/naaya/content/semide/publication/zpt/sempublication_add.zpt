@@ -3,7 +3,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Submit Publication</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
 </p>
 
 <tal:block metal:fill-slot="custom_properties">

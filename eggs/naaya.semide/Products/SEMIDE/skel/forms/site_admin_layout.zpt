@@ -13,7 +13,7 @@
 
 <p i18n:translate="">
 	Choose the layout you prefer for your website, then choose one of the
-	available color schemes and click <em>Save changes</em>. Every time you
+	available color schemes and click <em i18n:name="Save changes" i18n:translate="">Save changes</em>. Every time you
 	select a layout or a color scheme, you'll see a small preview of the website
 	with those settings.
 </p>

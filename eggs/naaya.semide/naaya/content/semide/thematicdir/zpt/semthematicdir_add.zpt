@@ -3,7 +3,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Submit Thematic Folder</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>.
+	Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>.
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
@@ -37,7 +37,7 @@
 		<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
 			<label for="criteria_keywords"><span i18n:translate="" tal:omit-tag="">Additional keywords</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'criteria_keywords')" class="mandatory_field"> *</span></label>
 				<tal:block tal:condition="python:keywords_glossary is not None">
-				<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list</p>
+				<p i18n:translate=""><strong i18n:name="Tip" i18n:translate="">Tip:</strong> you can type free text in the field below or pick words from the list</p>
 				</tal:block>
 			<input type="text" name="criteria_keywords:utf8:ustring" id="criteria_keywords" size="50" tal:attributes="value python:here.getSession('criteria_keywords', '')" />
 				<tal:block tal:condition="python:keywords_glossary is not None">
