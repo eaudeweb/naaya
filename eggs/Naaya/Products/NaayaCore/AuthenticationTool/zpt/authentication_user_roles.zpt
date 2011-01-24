@@ -30,7 +30,7 @@ function createKey(key)
 
 <h2>User Roles</h2>
 <p class="page-description">
-	This page displays the local users that have role(s) assigned to them, either on the entire 
+	This page displays the local users that have role(s) assigned to them, either on the entire
 	portal or just in specific folders. You can revoke a role prior assigned to a user by ticking
 	in the appropiate check box and clicking on the <em>Revoke roles</em> selected roles button.
 </p>
@@ -49,7 +49,7 @@ function createKey(key)
 		<th width="*">Location</th>
 	</tr>
 	<tal:block condition="python:users_roles.keys()">
-	<tr tal:repeat="user python:users_roles.keys()" 
+	<tr tal:repeat="user python:users_roles.keys()"
 		tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
 		<td style="vertical-align: top" tal:content="user">user</td>
 		<td colspan="2" style="vertical-align: top">
@@ -142,7 +142,10 @@ function createKey(key)
 		</td>
 	</tr>
 	<tr>
-		<td style="vertical-align: top" width="20%" i18n:translate="">Location:(folder)<br />e.g. /folderURL</td>
+		<td style="vertical-align: top" width="20%">
+			<tal:block i18n:translate="">Location:(folder)</tal:block><br />
+			<tal:block i18n:translate="">e.g. /folderURL</tal:block>
+		</td>
 		<td style="vertical-align: top" width="*">
 			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
 			<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
