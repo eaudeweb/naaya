@@ -13,7 +13,7 @@
 	</head>
 	<body>
 		<p i18n:translate="">
-			Insert an image by uploading it from your computer (<em>Computer</em>), taking it from a remote page (<em>URL</em>) or selecting it from the ones already available in the portal (<em>Browse</em>):
+			Insert an image by uploading it from your computer (<em i18n:name="Computer" i18n:translate="">Computer</em>), taking it from a remote page (<em i18n:name="URL" i18n:translate="">URL</em>) or selecting it from the ones already available in the portal (<em i18n:name="Browse" i18n:translate="">Browse</em>):
 		</p>
 		<div class="tabs">
 			<ul>

@@ -154,20 +154,20 @@
         <strong i18n:translate="">Search tips</strong>
         <table>
             <tr>
-                <td valign="top" class="tip_item" i18n:translate="">fish <strong>AND</strong> water</td>
+                <td valign="top" class="tip_item" i18n:translate="">fish <strong i18n:name="AND">AND</strong> biodiversity</td>
                 <td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
             </tr>
             <tr>
-                <td valign="top" class="tip_item" i18n:translate="">fish <strong>OR</strong> water</td>
+                <td valign="top" class="tip_item" i18n:translate="">fish <strong i18n:name="OR">OR</strong> biodiversity</td>
                 <td valign="top" i18n:translate="">either of the words occur in the document</td>
             </tr>
             <tr>
-                <td valign="top" class="tip_item" i18n:translate="">fish and <strong>NOT</strong> water</td>
-                <td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+                <td valign="top" class="tip_item" i18n:translate="">fish and <strong i18n:name="NOT">NOT</strong> biodiversity</td>
+                <td valign="top" i18n:translate="">the word fish and not the word biodiversity occur</td>
             </tr>
             <tr>
-                <td valign="top" class="tip_item" i18n:translate="">wate<strong>*</strong></td>
-                <td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+                <td valign="top" class="tip_item"><tal:block i18n:translate="">bio</tal:block><strong>*</strong></td>
+                <td valign="top" i18n:translate="">everything starting with <em i18n:name="bio" i18n:translate="">bio</em></td>
             </tr>
         </table>
         <span i18n:translate="">
