@@ -19,7 +19,7 @@
 </h1>
 
 <p i18n:translate="">
-	Change the properties in the form below and click <strong>Change cover.</strong>
+	Change the properties in the form below and click <strong i18n:name="Change cover" i18n:translate="">Change cover</strong>.
 </p>
 
 <div id="admin_this_folder">
