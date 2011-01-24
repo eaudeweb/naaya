@@ -240,7 +240,9 @@ class GroupwareSite(NySite):
 
     request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(), 'naaya.groupware.relinquish_membership')
+    folder_listing = nptf('zpt/folder_listing', globals(), 'gw_folder_listing')
 
     directory = Directory(id='directory')
 
 InitializeClass(GroupwareSite)
+
