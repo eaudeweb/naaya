@@ -14,7 +14,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit Expert</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Change the properties in the form below and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
 </p>
 
 <!-- Remove unused fields -->
@@ -81,8 +81,8 @@
 	<li><span tal:content="maintopic/title" tal:attributes="style python:test(maintopic.id in here.getSession('maintopics', here.maintopics), 'font-weight: bold', '')" i18n:translate="" />
 		<ul tal:define="subtopics python:here.getExpFocusesTypesList(maintopic.id)">
 			<tal:block repeat="subtopic subtopics">
-			<li><input type="checkbox" name="subtopics:list" 
-					tal:attributes="value string:${maintopic/id}|@|${subtopic/id}; 
+			<li><input type="checkbox" name="subtopics:list"
+					tal:attributes="value string:${maintopic/id}|@|${subtopic/id};
 					checked python:test(here.checkSessionSubTopics(maintopic.id, subtopic.id, here.getSession('subtopics', here.subtopics)), 'checked', '')" />
 					<span tal:content="subtopic/title" i18n:translate="" /></li>
 			</tal:block>
