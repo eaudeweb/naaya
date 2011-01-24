@@ -28,7 +28,7 @@
     </h1>
     <p tal:condition="python:here.description!=''"
         tal:content="structure here/description" />
-	<tal:block  tal:define="listing_info python: here.folder_listing_info('start_date');
+	<tal:block  tal:define="listing_info python: here.folder_listing_info(sort_on='start_date');
 	objects_list python:listing_info['objects'];
 	all_events python:[x for x in objects_list if x['self'].meta_type=='Naaya Event'];
 	upcoming_events python:[x for x in all_events if getattr(x['self'], 'start_date', here.utGetTodayDate()) >= here.utGetTodayDate()];

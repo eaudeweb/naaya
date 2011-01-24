@@ -80,9 +80,11 @@ class NyFolderBase(Folder, NyPermissions):
                 if getattr(f, 'submitted', 0) == 1]
 
 
-    def listed_folders_info(self, sort_on='title', sort_order=0):
-        sorted_folders = self.utSortObjsListByAttr(self.contained_folders(), sort_on, sort_order)
-        sorted_folders = self.utSortObjsListByAttr(sorted_folders, 'sortorder', 0)
+    def listed_folders_info(self, skey='sortorder', rkey=0,
+                            sort_on='title', sort_order=0):
+        sorted_folders = self.utSortObjsListByAttr(self.contained_folders(),
+                                                   sort_on, sort_order)
+        sorted_folders = self.utSortObjsListByAttr(sorted_folders, skey, rkey)
 
         ret = []
         for f in sorted_folders:
@@ -103,9 +105,11 @@ class NyFolderBase(Folder, NyPermissions):
 
         return ret
 
-    def listed_objects_info(self, sort_on='title', sort_order=0):
-        sorted_objects = self.utSortObjsListByAttr(self.contained_objects(), sort_on, sort_order)
-        sorted_objects = self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0)
+    def listed_objects_info(self, skey='sortorder', rkey=0,
+                            sort_on='title', sort_order=0):
+        sorted_objects = self.utSortObjsListByAttr(self.contained_objects(),
+                                                   sort_on, sort_order)
+        sorted_objects = self.utSortObjsListByAttr(sorted_objects, skey, rkey)
 
         ret = []
         for o in sorted_objects:
@@ -128,12 +132,13 @@ class NyFolderBase(Folder, NyPermissions):
 
 
     security.declareProtected(view, 'folder_listing_info')
-    def folder_listing_info(self, sort_on='title', sort_order=0):
+    def folder_listing_info(self, skey='sortorder', rkey=0,
+                            sort_on='title', sort_order=0):
         """ This function is called on the folder listing and it checkes whether or not
             to display the various buttons on that form
         """
-        folders_info = self.listed_folders_info(sort_on, sort_order)
-        objects_info = self.listed_objects_info(sort_on, sort_order)
+        folders_info = self.listed_folders_info(skey, rkey, sort_on, sort_order)
+        objects_info = self.listed_objects_info(skey, rkey, sort_on, sort_order)
 
         infos = []
         infos.extend(folders_info)
