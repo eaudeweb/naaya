@@ -42,20 +42,25 @@ $(document).ready(function(){
 	<strong i18n:translate="">Search tips</strong>
 	<table>
 		<tr>
-			<td valign="top" class="tip_item" i18n:translate="">fish <strong>AND</strong> water</td>
+			<td valign="top" class="tip_item" i18n:translate="">fish
+				<strong i18n:name="AND">AND</strong> biodiversity</td>
 			<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
 		</tr>
 		<tr>
-			<td valign="top" class="tip_item" i18n:translate="">fish <strong>OR</strong> water</td>
+			<td valign="top" class="tip_item" i18n:translate="">fish
+				<strong i18n:name="OR">OR</strong> biodiversity</td>
 			<td valign="top" i18n:translate="">either of the words occur in the document</td>
 		</tr>
 		<tr>
-			<td valign="top" class="tip_item" i18n:translate="">fish and <strong>NOT</strong> water</td>
-			<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+			<td valign="top" class="tip_item" i18n:translate="">fish and
+				<strong i18n:name="NOT">NOT</strong> biodiversity</td>
+			<td valign="top" i18n:translate="">the word fish and not the word biodiversity occur</td>
 		</tr>
 		<tr>
-			<td valign="top" class="tip_item" i18n:translate="">wate<strong>*</strong></td>
-			<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+			<td valign="top" class="tip_item" i18n:translate="">bio
+				<strong i18n:name="*">*</strong></td>
+			<td valign="top" i18n:translate="">everything starting with
+				<em i18n:name="bio" i18n:translate="">bio</em></td>
 		</tr>
 	</table>
 	<span i18n:translate="">
@@ -71,7 +76,7 @@ $(document).ready(function(){
     </div>
     <div class="field">
 		<label for="keywords" class="widget-title" i18n:translate="">Keywords</label>
-		<p i18n:translate=""><strong i18n:translate="">Tip:</strong> you can type free text in the field below or pick words from the list</p>
+		<p i18n:translate=""><strong i18n:name="Tip" i18n:translate="">Tip:</strong> you can type free text in the field below or pick words from the list</p>
 		<input type="text" size="50" name="keywords" id="keywords" tal:attributes="value python: getattr(request,'keywords', '')" />
 
         <label for="pick-&lt;NyThesaurus at portal_thesaurus&gt;" class="invisible" i18n:translate="">Pick keywords</label>
@@ -194,7 +199,7 @@ $(document).ready(function(){
 		<strong i18n:translate="">Results:</strong>
 		<strong tal:content="python: results_paginator.first_on_page(int(getattr(request, 'page', 0)))"></strong> -
 		<strong tal:content="python: results_paginator.last_on_page(int(getattr(request, 'page', 0)))"></strong> <span i18n:translate="" tal:omit-tag="">of</span> <strong tal:content="results_paginator/_get_hits"></strong>
-		<div class="pagination" i18n:translate="">Page:
+		<div class="pagination"><tal:block i18n:translate="">Page</tal:block>:
 			<tal:block condition="python: int(getattr(request, 'page', 0)) != 0">
 				<a tal:attributes="href python: here.search_page_link(request.form, 0)">&laquo;</a>
 				<a tal:attributes="href python: here.search_page_link(request.form, int(getattr(request, 'page', 0)) - 1)">&lsaquo;</a>
