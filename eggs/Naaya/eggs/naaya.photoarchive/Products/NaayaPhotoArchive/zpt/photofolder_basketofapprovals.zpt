@@ -7,8 +7,8 @@
 
 <p i18n:translate="">
 	This page lists all the pending (not yet approved) and published (approved) photos from this folder.
-	For the pending onces, you can review them, select <strong>Approve</strong> or <strong>Delete</strong>
-	for any subset and click <strong>Save changes</strong>.
+	For the pending ones, you can review them, select <strong i18n:name="Approve" i18n:translate="">Approve</strong> or <strong i18n:name="Delete" i18n:translate="">Delete</strong>
+	for any subset and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
 	For the already approved ones, you can un-approve some of them and therefore make them not available for the public anymore.
 </p>
 
