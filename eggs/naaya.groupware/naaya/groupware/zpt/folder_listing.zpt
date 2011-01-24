@@ -13,7 +13,8 @@
 	btn_paste python:listing_info['btn_paste'];
 	can_operate python:listing_info['can_operate'];
 	ratings here/folder_listing_ratings;
-	iframe python: bool(request.get('iframe', 0))">
+    iframe python: bool(request.get('iframe', 0));
+    auth_tool here/getAuthenticationTool">
 
 <metal:block define-slot="folder-listing">
 <tal:block tal:condition="iframe" on-error="string:RESTRICTED">
@@ -188,7 +189,7 @@ $(document).ready(function(){
 							title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" />
 					</td>
 					<td class="title-column">
-						<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
+                        <a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id"></a>
 						<tal:block condition="folder/can_be_seen">
 							<em tal:condition="here/display_subobject_count" tal:define="
 									lenfol python:len(folder.listed_folders_info());
@@ -217,7 +218,7 @@ $(document).ready(function(){
 							<span tal:repeat="lang here/gl_get_languages_map">
 								<a tal:content="python:' %s' % lang['title']"
 									tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])"
-									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                                    tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])"></a>
 							</span>
 						</span>
 						<tal:block tal:condition="folder/can_be_seen">
@@ -236,9 +237,9 @@ $(document).ready(function(){
 						</tal:block>
 					</td>
 
-					<td tal:content="folder/contributor">
+					<td tal:content="python: folder.contributor + ' (' + auth_tool.name_from_userid(folder.contributor) + ')'">
 					</td>
-					<td tal:content="folder/releasedate">
+                    <td tal:content="python: here.utShowDateTime(folder.releasedate)">
 					</td>
 					<td class="edit" tal:condition="edit_permission">
 						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
