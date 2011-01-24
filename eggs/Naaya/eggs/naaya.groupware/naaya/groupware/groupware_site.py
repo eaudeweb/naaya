@@ -50,6 +50,12 @@ class GroupwareSite(NySite):
 
     product_paths = NySite.product_paths + [Globals.package_home(globals())]
     security = ClassSecurityInfo()
+    display_subobject_count = "on"
+
+    def __init__(self, id, portal_uid, title, lang):
+        """ """
+        NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
+        self.display_subobject_count = "on"
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
