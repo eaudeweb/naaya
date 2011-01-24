@@ -144,7 +144,7 @@ class Widget(Folder, LocalPropertyManager):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     def _get_default_value(self, **kwargs):
-        return 'No response'
+        return '-'
     #
     # To be implemented or ovewritten (if needed) by widget concrete classes.
     #

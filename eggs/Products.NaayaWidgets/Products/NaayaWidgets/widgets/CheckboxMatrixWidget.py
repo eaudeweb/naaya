@@ -74,7 +74,7 @@ class CheckboxMatrixWidget(MatrixWidget):
             title = self.rows[index]
             value = []
             if not row_answers:
-                res.append('%s: No response' % title)
+                res.append('%s: -' % title)
                 continue
             for answer in row_answers:
                 value.append(self.choices[answer])

@@ -17,7 +17,7 @@
 			<span tal:condition="not: choice" i18n:translate="">Other</span>
 		</tal:block>
 		<span tal:condition="python: choice is None" i18n:translate="" class="no-response">
-			No response
+			-
 		</span>
 	</tal:block>
 </div>

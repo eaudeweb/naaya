@@ -73,7 +73,7 @@ class RadioMatrixWidget(MatrixWidget):
         res = []
         for index, answer in enumerate(datamodel):
             if answer is None:
-                data = '%s: No response' % self.rows[index]
+                data = '%s: -' % self.rows[index]
             else:
                 data = '%s: %s' % (self.rows[index], self.choices[answer])
             res.append(data)

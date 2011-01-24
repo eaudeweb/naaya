@@ -14,7 +14,7 @@
 	<span tal:condition="python: datamodel is not None"
 		  tal:content="python: here.getChoices()[datamodel]" />
 	<span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
-		No response
+		-
 	</span>
 </div>
 
