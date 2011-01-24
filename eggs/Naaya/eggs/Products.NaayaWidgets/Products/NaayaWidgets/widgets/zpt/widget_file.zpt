@@ -20,7 +20,7 @@
 		</a>
 	</tal:block>
 	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
-		No response
+		-
 	</span>
 </div>
 

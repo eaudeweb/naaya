@@ -30,7 +30,7 @@
         </tal:block>
     </tal:block>
     <span tal:condition="not: value" i18n:translate="" class="no-response">
-        No response
+        -
     </span>
 </div>
 
