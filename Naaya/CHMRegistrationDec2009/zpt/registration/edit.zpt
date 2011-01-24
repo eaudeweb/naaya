@@ -21,7 +21,7 @@
 
 <p i18n:translate="">
 	Change the properties in the form below and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
-	Fields marked with <span i18n:name="*" class="mandatory_field">*</span> are mandatory.
+	Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
 </p>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
