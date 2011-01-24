@@ -58,7 +58,7 @@ $(document).ready(function(){
 		</tr>
 		<tr>
 			<td valign="top" class="tip_item" i18n:translate="">bio
-				<strong i18n:name="*">*</strong></td>
+				<strong i18n:name="wildcard">*</strong></td>
 			<td valign="top" i18n:translate="">everything starting with
 				<em i18n:name="bio" i18n:translate="">bio</em></td>
 		</tr>
