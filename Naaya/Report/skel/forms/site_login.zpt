@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header"/>
 
-<tal:block define="came_from python:request.get('came_from', ''); 
+<tal:block define="came_from python:request.get('came_from', '');
                 action_url python:came_from or 'logged_in';
 				find_button_pressed python:request.get('find_button_pressed', 0);
 				query python:request.get('query', '')">
@@ -54,8 +54,10 @@
 
 <p i18n:translate="">
 	Log in using your EIONET CIRCA account. If you don't have one,
-	<a href="requestrole_html">create an account</a> on this website 
-	and ask the administrator for review permissions.
+	<a i18n:name="create an account" i18n:translate="" href="requestrole_html">
+		create an account
+	</a>
+	on this website and ask the administrator for review permissions.
 </p>
 
 <form tal:attributes="action action_url" method="POST">
@@ -63,8 +65,8 @@
 <tal:block define="retry python:request.get('retry', '')">
 <div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
 	The username or password you provided are incorrect. Please try again.
-	If you forgot your username and/or password please contact the 
-	<a href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a>
+	If you forgot your username and/or password please contact the
+	<a i18n:name="EIONET Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a>
 </div>
 
 <span tal:condition="python:came_from!=''">
@@ -73,7 +75,7 @@
 
 <div class="field">
 	<label for="__ac_name" i18n:translate="">Username</label>
-	<input type="text" name="__ac_name" id="__ac_name" size="20" 
+	<input type="text" name="__ac_name" id="__ac_name" size="20"
 		tal:attributes="value python:request.get('__ac_name', '')" />
 </div>
 
@@ -85,14 +87,14 @@
 <div class="field">
 	<input type="submit" name="submit" value=" Login " i18n:attributes="value" />
 </div>
-<p i18n:translate="" tal:condition="python:retry !='1'">If you forgot your username and/or password please contact the <a href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a></p>
+<p i18n:translate="" tal:condition="python:retry !='1'">If you forgot your username and/or password please contact the <a i18n:name="EIONET Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a></p>
 </tal:block>
 
 </form>
 
 
 
-<p i18n:translate=""><strong>Tip:</strong> Do you want to check if you have an account in the EIONET CIRCA? Type your name in the form below and find out your username if you have one:</p>
+<p i18n:translate=""><strong i18n:name="Tip" i18n:translate="">Tip:</strong> Do you want to check if you have an account in the EIONET CIRCA? Type your name in the form below and find out your username if you have one:</p>
 <form action="login_html" method="get">
 	<input type="text" name="query" size="30" />
 	<input type="submit" name="find_button_pressed" value="Search" i18n:attributes="value" />
