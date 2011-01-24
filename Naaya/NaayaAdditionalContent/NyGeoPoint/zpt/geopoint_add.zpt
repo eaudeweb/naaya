@@ -2,9 +2,7 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Add Geo Point</h1>
 
-<p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
-</p>
+<p metal:fill-slot="description" i18n:translate="">Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.</p>
 
 <tal:block metal:fill-slot="custom_properties" tal:define="portal_map here/portal_map;">
 <div class="field" tal:define="lon_cardinal python:request.get('lon_cardinal', '')">

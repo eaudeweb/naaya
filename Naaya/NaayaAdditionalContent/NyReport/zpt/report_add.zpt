@@ -2,9 +2,7 @@
 
 <h1 i18n:translate="">Submit Report</h1>
 
-<p i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
-</p>
+<p i18n:translate="">Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.</p>
 
 <form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
 
@@ -22,7 +20,7 @@
 </div>
 
 <div class="field">
-    <label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'releasedate')" class="mandatory_field"> *</span></label>
+    <label for="releasedate" i18n:translate="">Release date (<em i18n:name="dd/mm/yyyy" i18n:translate="">dd/mm/yyyy</em>)<span i18n:name="wildcard" tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'releasedate')" class="mandatory_field"> *</span></label>
     <input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 </div>
 <div class="field">
