@@ -45,6 +45,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Funding'
@@ -82,7 +83,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-        'product': 'NaayaContent', 
+        'product': 'NaayaContent',
         'module': 'NySemFunding',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': METATYPE_OBJECT,
@@ -108,7 +109,7 @@ manage_addNySemFunding_html.action = 'addNySemFunding'
 
 def semfunding_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype    
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemFunding', 'form_helper': form_helper}, 'semfunding_add')
 
@@ -127,23 +128,21 @@ def addNySemFunding(self, id='', contributor=None, REQUEST=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
-    ob = _create_NySemFunding_object(self, id, contributor)    
+
+    ob = _create_NySemFunding_object(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
-    
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -151,13 +150,13 @@ def addNySemFunding(self, id='', contributor=None, REQUEST=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semfunding_add_html' % self.absolute_url())
-    
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -177,7 +176,7 @@ def addNySemFunding(self, id='', contributor=None, REQUEST=None, **kwargs):
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/semfunding_add_html' % self.absolute_url())
     return ob.getId()
-    
+
 def importNySemFunding(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -199,7 +198,7 @@ def importNySemFunding(self, param, id, attrs, content, properties, discussion, 
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-                
+
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
@@ -215,7 +214,7 @@ def importNySemFunding(self, param, id, attrs, content, properties, discussion, 
 class semfunding_item(Implicit, NyContentData):
     """ """
     meta_type = METATYPE_OBJECT
-    
+
 class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
     """ """
 
@@ -269,22 +268,22 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -292,17 +291,17 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-        
-        self.recatalogNyObject(self)        
+
+        self.recatalogNyObject(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-        
+
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -311,16 +310,16 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
@@ -335,7 +334,7 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -354,7 +353,7 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -362,7 +361,7 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
@@ -373,9 +372,9 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))

@@ -89,7 +89,7 @@ PROPERTIES_OBJECT = {
 DEFAULT_SCHEMA = {}
 
 config = {
-    'product': 'NaayaContent', 
+    'product': 'NaayaContent',
     'module': 'NySemThematicDir',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': METATYPE_OBJECT,
@@ -313,7 +313,7 @@ class NySemThematicDir(NyFolder):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -323,7 +323,7 @@ class NySemThematicDir(NyFolder):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'semthematicdir_index') 
+        return self.getFormsTool().getContent({'here': self}, 'semthematicdir_index')
 
     def hasVersion(self):
         """

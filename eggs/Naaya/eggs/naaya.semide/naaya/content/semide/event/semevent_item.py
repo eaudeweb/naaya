@@ -50,6 +50,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Event'
@@ -206,11 +207,9 @@ def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob = _create_NySemEvent_object(month_folder, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
 
     if form_errors:
         if REQUEST is None:

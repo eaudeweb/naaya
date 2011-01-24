@@ -35,7 +35,7 @@ import zope.event
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
 from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
@@ -48,6 +48,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Text of Laws'
@@ -99,7 +100,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-    'product': 'NaayaContent', 
+    'product': 'NaayaContent',
     'module': 'NySemTextLaws',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': METATYPE_OBJECT,
@@ -151,16 +152,14 @@ def addNySemTextLaws(self, id='', contributor=None, REQUEST=None, **kwargs):
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
+
     ob = _create_NySemTextLaws_object(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
-    
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -168,7 +167,7 @@ def addNySemTextLaws(self, id='', contributor=None, REQUEST=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semtextlaws_add_html' % self.absolute_url())
-    
+
     if 'file' in schema_raw_data:
         ob.handleUpload(schema_raw_data['file'])
 
@@ -177,7 +176,7 @@ def addNySemTextLaws(self, id='', contributor=None, REQUEST=None, **kwargs):
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -198,7 +197,7 @@ def addNySemTextLaws(self, id='', contributor=None, REQUEST=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/semtextlaws_add_html' % self.absolute_url())
     return ob.getId()
 
- 
+
 def importNySemTextLaws(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     try: param = abs(int(param))
@@ -214,14 +213,14 @@ def importNySemTextLaws(self, param, id, attrs, content, properties, discussion,
                 #delete the object if exists
                 try: self.manage_delObjects([id])
                 except: pass
-            
+
             #Creating object and setting all object properties (taken from Schema)
             ob = _create_NySemProject_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
             for prop in ob._get_schema().listPropNames():
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-                
+
             if objects:
                 obj = objects[0]
                 data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
@@ -347,22 +346,22 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -370,19 +369,19 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-         
+
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
-            
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-            
+
         self.recatalogNyObject(self)
-        
+
         if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
@@ -393,16 +392,16 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
@@ -417,7 +416,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-        
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -433,15 +432,15 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-             
+
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-        
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         self.start_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('start_date', None))
         self.end_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('end_date', None))
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -449,7 +448,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if 'file' in schema_raw_data: # Upload file
             self.handleUpload(schema_raw_data['file'])
 
@@ -459,14 +458,14 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         # Create log
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
@@ -496,7 +495,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
@@ -520,7 +519,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """
@@ -531,7 +530,7 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-        
+
     def handleUpload(self, file):
         """
         Upload a file from disk.
