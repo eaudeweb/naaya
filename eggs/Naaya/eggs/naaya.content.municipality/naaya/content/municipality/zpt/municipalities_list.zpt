@@ -1,5 +1,5 @@
 <span tal:replace="structure here/standard_html_header" />
-<tal:block define="global req_topic python: request.get('topic', '')" /> 
+<tal:block define="global req_topic python: request.get('topic', '')" />
 <tal:block define="global req_filter python: request.get('q', '')" />
 <h1>List of experts</h1>
 
@@ -21,14 +21,13 @@
 					tal:attributes="href string:${here/absolute_url}">
 						<span i18n:translate="" tal:condition="req_topic">All</span>
 						<strong i18n:translate="" tal:condition="not:req_topic">All</strong>
-						<span class="gray" tal:content="cnt" />
+						<span i18n:translate="" class="gray" tal:content="cnt" />
 					</a>
 					<a tal:condition="tp"
-					tal:attributes="href string:${here/absolute_url}?topic=${tp/id}"
-					i18n:translate="">
-					<span tal:replace="tp/title" tal:condition="python:req_topic != tp.id"/>
-					<strong tal:content="tp/title" tal:condition="python:req_topic == tp.id"/>
-					<span class="gray" tal:content="cnt" /></a>
+					tal:attributes="href string:${here/absolute_url}?topic=${tp/id}">
+					<span i18n:translate="" tal:replace="tp/title" tal:condition="python:req_topic != tp.id"/>
+					<strong i18n:translate="" tal:content="tp/title" tal:condition="python:req_topic == tp.id"/>
+					<span i18n:translate="" class="gray" tal:content="cnt" /></a>
 				</li>
 			</tal:block>
 		</ul>

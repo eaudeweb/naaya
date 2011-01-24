@@ -142,10 +142,10 @@
 		<legend tal:condition="species_index" class="widget-title">
 			<a name="species_edit" i18n:translate="">Edit ambassador species</a>
 		</legend>
-		<div tal:condition="not:species_index" class="textarea_message" i18n:translate="">
-			<br/>You can enter one species at a time.
-			If you want to add more species, first complete and submit this form.<br/>
-			Later you can click "edit" and add another species<br/>
+		<div tal:condition="not:species_index" class="textarea_message">
+			<p i18n:translate="">You can enter one species at a time.
+			If you want to add more species, first complete and submit this form.</p>
+			<p i18n:translate="">Later you can click "edit" and add another species</p>
 		</div>
 		<div class="field">
 			<label class="widget-title" for="ambassador_species" i18n:translate="">
