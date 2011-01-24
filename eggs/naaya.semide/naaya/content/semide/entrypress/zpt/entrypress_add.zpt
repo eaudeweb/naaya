@@ -2,14 +2,14 @@
 
 <h1 i18n:translate="">Euro-Mediterranean Ministerial Conference on Water Dead Sea,<br>Jordan, 29th of October 2008</h1>
 <p i18n:translate="">
-	Please fill the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory. 
+	Please fill the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
 </p>
 <p i18n:translate="">
-	Date format: dd/mm/yyyy or dd/mm/yy. 
+	Date format: dd/mm/yyyy or dd/mm/yy.
 </p>
   <form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
         <table align="center">
-          
+
           <tr>
 	<th> <label for="title"><span i18n:translate="" tal:omit-tag=""> <b>Surname</b> </span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'title')" class="mandatory_field"> *</span></label> </th>
 	<td colspan="2"> <input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" /> </td>
@@ -39,7 +39,7 @@
         <td> <input type="text" id="pass_nb" name="pass_nb:utf8:ustring" size="15" tal:attributes="value python:here.getSession('pass_nb', '')" /></td>
          <th> <b><label i18n:translate="" for="pass_end">Expiry date of the passport</label></b></th>
         <td> <input type="text" id="pass_end" name="pass_end:utf8:ustring" size="10" tal:attributes="value python:here.getSession('pass_end', '')" /></td>
-        
+
        </tr>
         <tr>
         <th> <label i18n:translate="" for="phone"> <b>Phone</b> </label></th>
@@ -49,7 +49,7 @@
         <th> <label i18n:translate="" for="Fax"><b>Fax</b></label></th>
         <td> <input type="text" id="fax" name="fax:utf8:ustring" size="30" tal:attributes="value python:here.getSession('fax', '')" /></td>
         </tr>
-        
+
         <tr>
         <th> <label i18n:translate="" for="datearri"> <b>Date of arrival</b> </label></th>
         <td> <input type="text" id="datearri" name="datearri:utf8:ustring" size="20" tal:attributes="value python:here.getSession('datearri', '')" /></td>
@@ -60,7 +60,7 @@
         <th> <label i18n:translate="" for="flight"><b> Time of arrival</b></label></th>
         <td> <input type="text" id="timearri" name="timearri:utf8:ustring" size="15" tal:attributes="value python:here.getSession('timearri', '')" /></td>
         </tr>
-    
+
         <tr>
         <th> <label i18n:translate="" for="datedepar"> <b>Date of departure</b> </label></th>
         <td> <input type="text" id="datedepar" name="datedepar:utf8:ustring" size="20" tal:attributes="value python:here.getSession('datedepar', '')" /></td>
@@ -70,17 +70,17 @@
         <td> <input type="text" id="timepar" name="timepar:utf8:ustring" size="15" tal:attributes="value python:here.getSession('timepar', '')" /></td>
         </tr>
        </table>
-      
+
 
      <i><h3 i18n:translate="">HOTEL RESERVATION</h3></i>
 
     <p i18n:translate=""> Please book your hotel room, <a href="http://www.medaquaministerial2008.net/venue/hotels">click here to get hotels contacts and special rates</a></p>
 
- <br />  
+ <br />
 
 <p i18n:translate="">Please note that due the October tourism high season in Jordan.</p>
 
-<br /> 
+<br />
 
 
 
@@ -92,7 +92,7 @@
 
 <p i18n:translate="">For further information, please contact Ms Laurence Ledger, from the French Embassy in Amman phone +962 6 4604 747 or <a href="mailto:laurence.ledger@diplomatie.gouv.fr">laurence.ledger@diplomatie.gouv.fr</a></p>
 
-<br /> 
+<br />
 
 
 

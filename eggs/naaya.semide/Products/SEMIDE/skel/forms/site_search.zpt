@@ -6,24 +6,21 @@
 <div class="fieldset_div">
 	<table cellpadding="2">
 	<tr>
-		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>and</strong> water</td>
+		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="and">and</strong> biodiversity</td>
 		<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
 	</tr>
 	<tr>
-		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>or</strong> water</td>
+		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="or">or</strong> biodiversity</td>
 		<td valign="top" i18n:translate="">either of the words occur in the document</td>
 	</tr>
 	<tr>
-		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong>not</strong> water</td>
-		<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+		<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong i18n:name="not">not</strong> biodiversity</td>
+		<td valign="top" i18n:translate="">the word fish and not the word biodiversity occur</td>
 	</tr>
-	<!-- tr>
-		<td valign="top" style="border: 1px dashed black;" i18n:translate=""><strong>"</strong>water fish<strong>"</strong></td>
-		<td valign="top" i18n:translate="">the exact expression <em>water fish</em> occurs</td>
-	</tr -->
 	<tr>
-		<td valign="top" style="border: 1px dashed black;" i18n:translate="">wate<strong>*</strong></td>
-		<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+		<td valign="top" style="border: 1px dashed black;"><tal:block i18n:translate="">bio</tal:block><strong>*</strong></td>
+		<td valign="top" i18n:translate="">everything starting with
+			<em i18n:name="bio" i18n:translate="">bio</em></td>
 	</tr>
 	</table>
 </div>
@@ -36,10 +33,6 @@
 						query python:request.get('query', request.get('query_string', ''));
 						search_languages python:request.get('search_languages', [sel_lang])">
 
-<!-- p i18n:translate="">
-	For more results you can search <a tal:attributes="href string:${here/getSitePath}/external_search_html"><strong>all 
-	SEMIDE network</strong></a>.
-</p -->
 <p i18n:translate="">
 	This search is performed in local content from this website (titles, descriptive texts and also in uploaded files).
 </p>
@@ -74,7 +67,7 @@ function fSet(ctrl, value)
 	<div>
 	<h2 i18n:translate="" style="margin-top:0px;">Refine your search</h2>
 		<p i18n:translate="">
-			You can further refine your search using the <a href="search_advanced_html">advanced form</a>.
+			You can further refine your search using the <a i18n:name="advanced form" i18n:translate="" href="search_advanced_html">advanced form</a>.
 		</p>
 		<div class="field-inline">
 			<label for="query_string" i18n:translate="">Query</label>

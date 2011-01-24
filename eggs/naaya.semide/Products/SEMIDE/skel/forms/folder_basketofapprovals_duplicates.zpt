@@ -16,7 +16,7 @@
 <p i18n:translate="">
 	This page lists all the possible duplicate items from this folder (pending or published) for current language.
 	This means that for news items the title and the coverage are identical and for event items the start date and coverage are identical.
-	You can review them, select <strong>Delete</strong> for any subset and click <strong>Save changes</strong>.
+	You can review them, select <strong i18n:name="Delete" i18n:translate="">Delete</strong> for any subset and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
 </p>
 
 <tal:block tal:define="skey python:request.get('skey', 'releasedate');
@@ -39,7 +39,7 @@
 		</span>
 		<span tal:repeat="page python:paginator.page_range[:-1]">
 			<span tal:condition="python:page==curr_page" tal:content="page" />
-			<a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;skey=${skey}&amp;rkey=${rkey}" 
+			<a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;skey=${skey}&amp;rkey=${rkey}"
 				tal:condition="python:page!=curr_page" tal:content="page" />
 		</span>
 		<span tal:condition="python:paginator.has_next_page(curr_page)">
