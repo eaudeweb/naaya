@@ -19,7 +19,7 @@
 	<td valign="top" i18n:translate="">the word fish and not the word biodiversity occur</td>
 </tr>
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">bio<strong i18n:name="*">*</strong></td>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">bio<strong i18n:name="wildcard">*</strong></td>
 	<td valign="top" i18n:translate="">everything starting with <em i18n:name="bio" i18n:translate="">bio</em></td>
 </tr>
 </table>
