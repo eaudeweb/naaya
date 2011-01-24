@@ -32,8 +32,8 @@ import zope.event
 
 #Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
-from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED, 
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, 
+from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
+EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
 from Products.NaayaCore.managers.utils import utils, make_id
@@ -46,6 +46,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Field Site'
@@ -78,7 +79,7 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
-    'product': 'NaayaContent', 
+    'product': 'NaayaContent',
     'module': 'NySemFieldSite',
     'package_path': os.path.abspath(os.path.dirname(__file__)),
     'meta_type': METATYPE_OBJECT,
@@ -104,8 +105,8 @@ manage_addNySemFieldSite_html.action = 'addNySemFieldSite'
 
 def semfieldsite_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype    
-    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])    
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySemFieldSite', 'form_helper': form_helper}, 'semfieldsite_add')
 
 def _create_NySemFieldSite_object(parent, id, contributor):
@@ -123,23 +124,21 @@ def addNySemFieldSite(self, id='', contributor=None, REQUEST=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
-    
+
     #process parameters
     id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_OBJECT)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    
-    ob = _create_NySemFieldSite_object(self, id, contributor)    
+
+    ob = _create_NySemFieldSite_object(self, id, contributor)
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
-    
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
+
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -147,13 +146,13 @@ def addNySemFieldSite(self, id='', contributor=None, REQUEST=None, **kwargs):
             import transaction; transaction.abort() # because we already called _crete_NyZzz_object
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             return REQUEST.RESPONSE.redirect('%s/semdevent_add_html' % self.absolute_url())
-    
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
-    ob.submitThis()    
+    ob.submitThis()
     ob.updatePropertiesFromGlossary(_lang)
 
     if ob.discussion: ob.open_for_comments()
@@ -196,7 +195,7 @@ def importNySemFieldSite(self, param, id, attrs, content, properties, discussion
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
                 setattr(ob, k, v.encode('utf-8'))
-            
+
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang].encode('utf-8')) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
@@ -212,7 +211,7 @@ def importNySemFieldSite(self, param, id, attrs, content, properties, discussion
 class semfieldsite_item(Implicit, NyContentData):
     """ """
     meta_type = METATYPE_OBJECT
-    
+
 class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
     """ """
 
@@ -265,23 +264,23 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
         else:
             schema_raw_data = kwargs
-            
+
         _lang = self.gl_get_selected_language()
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-            
+
         self.updatePropertiesFromGlossary(_lang)
         if 'fieldsite_rb' in schema_raw_data and schema_raw_data['fieldsite_rb']: self.updateRBFromGlossary(self, _lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-        
+
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:
             if approved == 0:
@@ -289,16 +288,16 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
             else:
                 approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
-        
+
         self._p_changed = 1
-        
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
             self.close_for_comments()
-        
-        self.recatalogNyObject(self)        
-        if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')        
+
+        self.recatalogNyObject(self)
+        if REQUEST: return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -307,14 +306,14 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        
+
         self.copy_naaya_properties_from(self.version)
         self.checkout = 0
         self.checkout_user = None
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        
+
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
@@ -350,7 +349,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-        
+
         if form_errors:
             if REQUEST is None:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -358,7 +357,7 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
                 import transaction; transaction.abort() # because we already called _crete_NyZzz_object
                 self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-       
+
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
@@ -370,9 +369,9 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
-        
+
         zope.event.notify(NyContentObjectEditEvent(self, contributor))
-        
+
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))

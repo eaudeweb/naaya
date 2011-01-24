@@ -30,6 +30,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.core import submitter
 
 #Module constants
 METATYPE_OBJECT = 'Naaya Semide News'
@@ -175,11 +176,9 @@ def addNySemNews(self, id='', contributor=None, REQUEST=None, **kwargs):
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
     ob.news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
 
     if form_errors:
         if REQUEST is None:

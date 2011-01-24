@@ -54,6 +54,7 @@ from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CO
 from Products.NaayaBase.NyValidation import NyValidation
 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
+from naaya.core import submitter
 
 # Module constants
 METATYPE_OBJECT = 'Naaya Semide Document'
@@ -159,11 +160,9 @@ def addNySemDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
-    #check Captcha/reCaptcha
-    if not self.checkPermissionSkipCaptcha():
-        captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-        if captcha_validator:
-            form_errors['captcha'] = captcha_validator
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
 
     if form_errors:
         if REQUEST is None:
