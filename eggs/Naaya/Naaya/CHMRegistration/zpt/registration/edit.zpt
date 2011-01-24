@@ -19,8 +19,8 @@
 </div>
 
 <p i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>.
-	Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Change the properties in the form below and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
+	Fields marked with <span i18n:name="*" class="mandatory_field">*</span> are mandatory.
 </p>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
@@ -41,8 +41,8 @@
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?lang=${language/code}; 
-								title python:language['name']; 
+				tal:attributes="href string:?lang=${language/code};
+								title python:language['name'];
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
 				<span tal:content="python:language['name']" />
 			</a>
@@ -144,8 +144,8 @@
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?lang=${language/code}; 
-								title python:language['name']; 
+				tal:attributes="href string:?lang=${language/code};
+								title python:language['name'];
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
 				<span tal:content="python:language['name']" />
 			</a>

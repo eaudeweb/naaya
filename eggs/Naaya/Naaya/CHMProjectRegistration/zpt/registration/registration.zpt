@@ -178,11 +178,9 @@
 							size="10" maxlength="10" size="10"
 							tal:attributes="value python:request.get('end_date', '')" />
 					</div>
-					<div i18n:translate="" class="field">
-						<label for="important_dates">
-							<span i18n:translate="">
-								Important dates in the project and possible phasing
-							</span>
+					<div class="field">
+						<label for="important_dates" i18n:translate="">
+							Important dates in the project and possible phasing
 						</label>
 						<textarea class="mceNoEditor" name="important_dates:utf8:ustring" cols="66"
 							rows="5" tal:content="python:request.get('important_dates', '')">
@@ -505,7 +503,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2" class="label new_row" i18n:translate="">	
+								<td colspan="2" class="label new_row" i18n:translate="">
 									Total amount requested for labour costs
 								</td>
 								<td class="label new_row">
@@ -809,7 +807,7 @@
 						<input type="text" name="financial_contact_name:utf8:ustring" size="87"
 							tal:attributes="value python:request.get('financial_contact_name')" />
 					</div>
-					<div i18n:translate="" class="field">
+					<div class="field">
 						<label for="financial_contact_address" i18n:translate="">Address</label>
 						<textarea class="mceNoEditor" name="financial_contact_address:utf8:ustring" cols="66" rows="5"
 							tal:content="python:request.get('financial_contact_address', '')">
@@ -843,7 +841,7 @@
 		<h3>
 			<span i18n:translate="">Registration did not start yet</span><br/>
 			<span i18n:translate="">Registration period: </span>
-			<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
+			<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> -
 			<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 		</h3>
 		</tal:block>
@@ -851,7 +849,7 @@
 		<h3>
 			<span i18n:translate="">Registration is closed</span><br/>
 			<span i18n:translate="">Registration period: </span>
-			<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
+			<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> -
 			<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 		</h3>
 		</tal:block>

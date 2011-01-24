@@ -20,8 +20,8 @@
 </div>
 
 <p i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>.
-	Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Change the properties in the form below and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
+	Fields marked with <span i18n:name="*" class="mandatory_field">*</span> are mandatory.
 </p>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
@@ -38,8 +38,8 @@
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?lang=${language/code}; 
-								title python:language['name']; 
+				tal:attributes="href string:?lang=${language/code};
+								title python:language['name'];
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
 				<span tal:content="python:language['name']" />
 			</a>
@@ -102,7 +102,7 @@
 		<div class="tiny_text" i18n:translate="">
 			When pasting from word documents, please use the "Paste from Word" button.
 		</div>
-		<textarea type="text" name="conference_description" rows="15" cols="70" 
+		<textarea type="text" name="conference_description" rows="15" cols="70"
 			tal:content="python:request.get('conference_description', here.getPropertyValue('conference_description', curr_lang))" />
 	</div>
 
@@ -117,7 +117,7 @@
 		The administrative email address is mandatory. Please enter a valid email address.</div>
 		<div class="message-error" tal:condition="python:request.get('administrative_email_notvalid')" i18:translate="">
 		Please enter a valid email address.</div>
-		<textarea  class="mceNoEditor" rows="5" cols="70" name="administrative_email:lines" 
+		<textarea  class="mceNoEditor" rows="5" cols="70" name="administrative_email:lines"
 		tal:content="python:'\n'.join(request.get('administrative_email', here.administrative_email))" />
 	</div>
 
@@ -160,8 +160,8 @@
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?lang=${language/code}; 
-								title python:language['name']; 
+				tal:attributes="href string:?lang=${language/code};
+								title python:language['name'];
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
 				<span tal:content="python:language['name']" />
 			</a>
