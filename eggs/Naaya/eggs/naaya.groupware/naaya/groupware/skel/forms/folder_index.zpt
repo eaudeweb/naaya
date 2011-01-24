@@ -53,7 +53,7 @@
 		tal:content="structure here/description" />
 
     <br />
-    <a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">Go to parent</a>
+    <a tal:attributes="href here/aq_inner/aq_parent/absolute_url" i18n:translate="">Go to parent</a>
 
 	<metal:block use-macro="python:here.getFormsTool().getForm('gw_folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
