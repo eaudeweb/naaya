@@ -51,12 +51,13 @@ def join_parent_path(parent_path, ob_id):
         return ob_id
 
 class ZopeActor(object):
-    def __init__(self, context, report):
+    def __init__(self, context, report, default_userid=''):
         assert with_naaya
         self.context = context
         self.report = report
         self.count = {'files': 0, 'folders': 0, 'urls': 0}
         self.rename = {}
+        self.default_userid = default_userid
 
     def folder_entry(self, parent_path, folder_id,
                      title, description, date, userid):
@@ -64,7 +65,7 @@ class ZopeActor(object):
         parent = get_parent(self.context, parent_path)
         kwargs = {
             'id': folder_id,
-            'contributor': userid,
+            'contributor': userid or self.default_userid,
             'releasedate': nydateformat(date),
             'title': title,
             'description': description,
@@ -99,7 +100,7 @@ class ZopeActor(object):
         else:
             kwargs = {
                 'id': ob_id,
-                'contributor': userid,
+                'contributor': userid or self.default_userid,
                 'releasedate': nydateformat(date),
                 'title': title,
                 'description': description,
@@ -123,7 +124,7 @@ class ZopeActor(object):
         assert orig_path not in self.rename
 
         kwargs = {
-            'contributor': userid,
+            'contributor': userid or self.default_userid,
             'releasedate': nydateformat(date),
             'title': title,
             'description': description,

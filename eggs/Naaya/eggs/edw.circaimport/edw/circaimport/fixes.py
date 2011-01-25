@@ -14,12 +14,12 @@ def fix_exceptions(names, line, warn):
         del line[idx('ISSUEDATE')]
         for name in ('ISSUEDATE', 'UPLOADDATE'):
             line[idx(name)] = ''
-        line[idx('OWNER')] = 'moregale'
+        line[idx('OWNER')] = ''
         line[idx('RANKING')] = 'Public'
 
     elif (line[idx('OWNER')] == '' and line[idx('UPLOADDATE')] == ''):
         if line[idx('FILENAME')].endswith('/'):
-            line[idx('OWNER')] = 'moregale'
+            line[idx('OWNER')] = ''
             #warn('WEIRD LINE: %r' % line)
         else:
             warn('WEIRD LINE: %r' % line)
