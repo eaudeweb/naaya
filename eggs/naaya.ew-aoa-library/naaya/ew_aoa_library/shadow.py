@@ -323,13 +323,13 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
             else:
                 survey_answer.suggestions = [suggestion]
             survey_answer._p_changed = True
-            email_introduction = 'Thank you for submitting the Review Template related to the "%s" report. Our system is providing below some suggestions to improve the record:\n\n' % getattr(survey_answer, 'w_q1-name-assessment-report')
-            email_body = suggestion
-            email_ending = '\n\n You may edit your Review Template by following this link:\n\n %s?edit=1 \n\n Thank you again for your cooperation!' % survey_answer.absolute_url()
+            #email_introduction = 'Thank you for submitting the Review Template related to the "%s" report. Our system is providing below some suggestions to improve the record:\n\n' % getattr(survey_answer, 'w_q1-name-assessment-report')
+            email_body = '%s \n\n %s?edit=1' % (suggestion, survey_answer.absolute_url())
+            #email_ending = '\n\n You may edit your Review Template by following this link:\n\n %s?edit=1 \n\n Thank you again for your cooperation!' % survey_answer.absolute_url()
             email_to = str(survey_answer.w_email)
             email_from = 'no-reply@aoa.eea.europa.eu'
             email_subject = 'Suggestion for review of report %s' % self.get('title')
-            self.getEmailTool().sendEmail(email_introduction+email_body+email_ending, email_to, email_from, email_subject)
+            self.getEmailTool().sendEmail(email_body, email_to, email_from, email_subject)
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'remove_suggestions')
