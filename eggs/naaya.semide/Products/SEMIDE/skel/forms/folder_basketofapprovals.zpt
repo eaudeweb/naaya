@@ -15,7 +15,7 @@
 
 <p i18n:translate="">
 	This page lists all the pending (not yet approved) items from this folder.
-	You can review them, select <strong i18n:name="Approve" i18n:translate="">Approve</strong> or <strong i18n:name="Delete" i18n:translate="">Delete</strong> for any subset and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
+	You can review them, select <strong i18n:name="Approve" i18n:translate="">Approve</strong> or <strong i18n:name="Delete" i18n:translate="">Delete</strong> for any subset and click <strong i18n:name="Save_changes" i18n:translate="">Save changes</strong>.
 </p>
 
 
