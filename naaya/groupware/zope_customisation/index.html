@@ -45,5 +45,15 @@ supplied for each interest group and then follow the subscription instructions.
                 </li>
             </ul>
         </tal:block>
+        <tal:block define="igs python:portals.get('archived', [])" condition="igs">
+            <h2>Archived Interest groups</h2>
+            <p>Users can't request access to these Interest Groups anymore.</p>
+            <ul class="ig_listing">
+                <li tal:repeat="ig igs">
+                    <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
+                </li>
+            </ul>
+        </tal:block>
     </div>
 </metal:block>

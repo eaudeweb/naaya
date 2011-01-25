@@ -8,45 +8,52 @@
                                    needs_permission python:logged_in and (not can_view or not can_add)" metal:fill-slot="div-workarea">
         <h1 i18n:translate="">Request access to Interest Group</h1>
 
-        <form action="request_ig_access" method="post" tal:condition="python:needs_permission and not mail_sent">
-            <div class="field-inline" tal:condition="not:can_view">
-                <input type="radio" name="role" id="view_role" value="Viewer" tal:attributes="checked not:can_view"/>
-                <label for="view_role" i18n:translate="">View access</label>
-            </div>
-            <div class="field-inline" tal:condition="not:can_add">
-                <input type="radio" name="role" id="contributor_role" value="Contributor" tal:attributes="checked python:can_view and not can_add"/>
-                <label for="contributor_role" i18n:translate="">Membership access</label>
-            </div>
-            <!--div class="field-inline" tal:condition="python:can_view and not can_add">
-                <label for="location" i18n:translate="">Location</label>
-                <input name="location" class="extjs_target" id="location" type="text" tal:attributes="value location"/>
-                <small><em>(choose a location from the tree below)</em></small>
-
-                <div id="pointer_tree" class="extjs_tree custom-tree"></div>
-                <div style="clear: both"></div>
-                <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
-            </div-->
-            <input type="submit" value="Request access" i18n:attributes="value"/>
-        </form>
-        <tal:block tal:condition="python:logged_in and not needs_permission">
-            <p i18n:translate="">
-                You are already a member of this interest group. Please
-                <a tal:attributes="href string:mailto:${here/administrator_email}"
-                   i18n:name="contact_link"
-                   i18n:translate="">contact the administrator</a>
-                if you need extra permissions.
-            </p>
-            <a href="./" i18n:translate="">Go to IG home page.</a>
-        </tal:block>
-        <p tal:condition="not:logged_in" i18n:translate="">
-            You need to <a href="login/login_form">login</a> with your EIONET account before you can use this form.
+        <tal:block condition="here/portal_is_archived">
+        <p i18n:translate="">
+            This Interest Group is archived. You can't become a member of an Interest Group after the Interest Group was archived.
         </p>
-        <tal:block condition="mail_sent">
-            <p i18n:translate="">
-                The Group Leader has been notified of your access request.
-                You will receive a notification email if it is granted.
+        </tal:block>
+        <tal:block condition="not: here/portal_is_archived">
+            <form action="request_ig_access" method="post" tal:condition="python:needs_permission and not mail_sent">
+                <div class="field-inline" tal:condition="not:can_view">
+                    <input type="radio" name="role" id="view_role" value="Viewer" tal:attributes="checked not:can_view"/>
+                    <label for="view_role" i18n:translate="">View access</label>
+                </div>
+                <div class="field-inline" tal:condition="not:can_add">
+                    <input type="radio" name="role" id="contributor_role" value="Contributor" tal:attributes="checked python:can_view and not can_add"/>
+                    <label for="contributor_role" i18n:translate="">Membership access</label>
+                </div>
+                <!--div class="field-inline" tal:condition="python:can_view and not can_add">
+                    <label for="location" i18n:translate="">Location</label>
+                    <input name="location" class="extjs_target" id="location" type="text" tal:attributes="value location"/>
+                    <small><em>(choose a location from the tree below)</em></small>
+
+                    <div id="pointer_tree" class="extjs_tree custom-tree"></div>
+                    <div style="clear: both"></div>
+                    <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+                </div-->
+                <input type="submit" value="Request access" i18n:attributes="value"/>
+            </form>
+            <tal:block tal:condition="python:logged_in and not needs_permission">
+                <p i18n:translate="">
+                    You are already a member of this interest group. Please
+                    <a tal:attributes="href string:mailto:${here/administrator_email}"
+                       i18n:name="contact_link"
+                       i18n:translate="">contact the administrator</a>
+                    if you need extra permissions.
+                </p>
+                <a href="./" i18n:translate="">Go to IG home page.</a>
+            </tal:block>
+            <p tal:condition="not:logged_in" i18n:translate="">
+                You need to <a href="login/login_form">login</a> with your EIONET account before you can use this form.
             </p>
-            <a href="../" i18n:translate="">Return to IG listing</a>
+            <tal:block condition="mail_sent">
+                <p i18n:translate="">
+                    The Group Leader has been notified of your access request.
+                    You will receive a notification email if it is granted.
+                </p>
+                <a href="../" i18n:translate="">Return to IG listing</a>
+            </tal:block>
         </tal:block>
     </div>
 </metal:block>

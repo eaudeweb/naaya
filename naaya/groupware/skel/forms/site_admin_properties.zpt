@@ -43,8 +43,11 @@
 	<dd i18n:translate="">If this option is enabled, the folder index will show how many objects (sub-folders, sub-objects) are in each listed folder.</dd>
 	<dd><input type="checkbox" name="display_subobject_count" id="display_subobject_count" tal:attributes="checked here/display_subobject_count"/></dd>
 	<dt><label for="portal_is_restricted" i18n:translate="">Restrict portal</label></dt>
-	<dd i18n:translate="">Denies unauthenticated users access to this portal</dd>
+	<dd i18n:translate="">Denies unauthenticated users access to this portal.</dd>
 	<dd><input type="checkbox" name="portal_is_restricted" id="portal_is_restricted" tal:attributes="checked here/portal_is_restricted"/></dd>
+	<dt><label for="portal_is_archived" i18n:translate="">Is this portal archived?</label></dt>
+	<dd i18n:translate="">Users are not able to request access to archived portals.</dd>
+	<dd><input type="checkbox" name="portal_is_archived" id="portal_is_archived" tal:attributes="checked here/portal_is_archived|nothing"/></dd>
 </dl>
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 </form>
