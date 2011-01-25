@@ -8,7 +8,9 @@
 
 <fieldset style="float: right; width: 30%"><legend i18n:translate="">Tip</legend>
 <p i18n:translate="">
-	If a group of people need to collaborate in uploading/editing/translating data inside this folder, <a href="admin_addworkgroup_html">create the workgroup</a> and assign those users to it.
+	If a group of people need to collaborate in uploading/editing/translating data inside this folder,
+	<a i18n:name="create the workgroup" i18n:translate="" href="admin_addworkgroup_html">create the workgroup</a>
+	and assign those users to it.
 </p>
 </fieldset>
 <div class="floated-buttons" style="clear: right"><br />
