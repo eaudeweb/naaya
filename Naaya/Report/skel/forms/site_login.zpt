@@ -54,7 +54,7 @@
 
 <p i18n:translate="">
 	Log in using your EIONET CIRCA account. If you don't have one,
-	<a i18n:name="create an account" i18n:translate="" href="requestrole_html">
+	<a i18n:name="create_an_account" i18n:translate="" href="requestrole_html">
 		create an account
 	</a>
 	on this website and ask the administrator for review permissions.
@@ -66,7 +66,7 @@
 <div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
 	The username or password you provided are incorrect. Please try again.
 	If you forgot your username and/or password please contact the
-	<a i18n:name="EIONET Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a>
+	<a i18n:name="EIONET_Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a>
 </div>
 
 <span tal:condition="python:came_from!=''">
@@ -87,7 +87,7 @@
 <div class="field">
 	<input type="submit" name="submit" value=" Login " i18n:attributes="value" />
 </div>
-<p i18n:translate="" tal:condition="python:retry !='1'">If you forgot your username and/or password please contact the <a i18n:name="EIONET Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a></p>
+<p i18n:translate="" tal:condition="python:retry !='1'">If you forgot your username and/or password please contact the <a i18n:name="EIONET_Helpdesk" i18n:translate="" href="mailto:helpdesk@eionet.europa.eu">EIONET Helpdesk</a></p>
 </tal:block>
 
 </form>
