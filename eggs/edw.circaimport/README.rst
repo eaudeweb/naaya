@@ -19,7 +19,7 @@ Add a ZCML configuration entry to specify where CIRCA Zip files will be found
     edw.circaimport
     edw.circaimport-meta
   zcml-additional =
-    <configure xmlns:circaimport="http://xmlns.eaudeweb.ro/edw.circaimport">
+    <configure xmlns:circaimport="http://ns.eaudeweb.ro/edw.circaimport">
         <circaimport:root path="${buildout:directory}/var/circaimport"/>
     </configure>
 
