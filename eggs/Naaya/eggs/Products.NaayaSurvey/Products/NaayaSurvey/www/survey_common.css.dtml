@@ -78,7 +78,7 @@ div.widgetViewMode {
 	color: red;
 }
 
-.surveySubmit {
+.surveySubmit, .surveyPreview {
 	margin: 1em 0 1em 0;
 }
 
@@ -111,7 +111,7 @@ table.widgetTypesTable td:first-child {
 	color: #4e7cb0;
 }
 
-.surveySubmit input {
+.surveySubmit input, .surveyPreview input {
 	white-space: nowrap;
 	font-size: 1.2em;
 	font-weight: bold;
@@ -124,7 +124,7 @@ table.widgetTypesTable td:first-child {
 	color: #333333;
 }
 
-.surveySubmit input:hover {
+.surveySubmit input:hover, .surveyPreview input {
 	border-left:1px solid #6791c3;
 	border-top:1px solid #6791c3;
 	border-bottom:1px solid #34649b;
