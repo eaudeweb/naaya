@@ -67,7 +67,7 @@ function fSet(ctrl, value)
 	<div>
 	<h2 i18n:translate="" style="margin-top:0px;">Refine your search</h2>
 		<p i18n:translate="">
-			You can further refine your search using the <a i18n:name="advanced form" i18n:translate="" href="search_advanced_html">advanced form</a>.
+			You can further refine your search using the <a i18n:name="advanced_form" i18n:translate="" href="search_advanced_html">advanced form</a>.
 		</p>
 		<div class="field-inline">
 			<label for="query_string" i18n:translate="">Query</label>

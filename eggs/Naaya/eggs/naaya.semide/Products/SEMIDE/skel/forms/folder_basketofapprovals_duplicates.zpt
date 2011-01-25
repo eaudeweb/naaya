@@ -16,7 +16,7 @@
 <p i18n:translate="">
 	This page lists all the possible duplicate items from this folder (pending or published) for current language.
 	This means that for news items the title and the coverage are identical and for event items the start date and coverage are identical.
-	You can review them, select <strong i18n:name="Delete" i18n:translate="">Delete</strong> for any subset and click <strong i18n:name="Save changes" i18n:translate="">Save changes</strong>.
+	You can review them, select <strong i18n:name="Delete" i18n:translate="">Delete</strong> for any subset and click <strong i18n:name="Save_changes" i18n:translate="">Save changes</strong>.
 </p>
 
 <tal:block tal:define="skey python:request.get('skey', 'releasedate');

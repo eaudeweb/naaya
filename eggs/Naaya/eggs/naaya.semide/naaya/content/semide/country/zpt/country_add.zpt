@@ -10,7 +10,7 @@
 
 <tal:block metal:fill-slot="custom_properties">
 	<div class="field">
-		<label i18n:translate="">Upload flag from <small i18n:name="small picture" i18n:translate="">(small picture)</small></label>
+		<label i18n:translate="">Upload flag from <small i18n:name="small_picture" i18n:translate="">(small picture)</small></label>
 	</div>
 	<div class="field-inline">
 		<input type="radio" name="source" id="source-file" value="file" checked="checked" />
