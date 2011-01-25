@@ -8,6 +8,7 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from App.ImageFile import ImageFile
+from zExceptions import BadRequest
 
 # Product imports
 from Products.Naaya.NySite import NySite
@@ -51,11 +52,13 @@ class GroupwareSite(NySite):
     product_paths = NySite.product_paths + [Globals.package_home(globals())]
     security = ClassSecurityInfo()
     display_subobject_count = "on"
+    portal_is_archived = False
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
         self.display_subobject_count = "on"
+        self.portal_is_archived = False # The semantics of this flag is that you can't request membership of the IG any longer.
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
@@ -138,6 +141,7 @@ class GroupwareSite(NySite):
         """ """
         if REQUEST is not None:
             kwargs.update(REQUEST.form)
+        self.portal_is_archived = kwargs.get('portal_is_archived', False)
         self.toggle_portal_restricted(kwargs.get('portal_is_restricted', None))
         super(GroupwareSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
 
@@ -146,6 +150,9 @@ class GroupwareSite(NySite):
             Sends a mail to the portal administrator informing
             that the current user has requested elevated access.
         """
+        if not self.portal_is_archived:
+            raise BadRequest, "You can't request access to archived IGs"
+
         role = REQUEST.form.get('role', '')
         location = REQUEST.form.get('location', '')
         sources = self.getAuthenticationTool().getSources()
