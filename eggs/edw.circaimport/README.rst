@@ -26,14 +26,13 @@ Add a ZCML configuration entry to specify where CIRCA Zip files will be found
 
 Usage
 -----
-You manually export folders from CIRCA using the "save" option. This
-produces files named ``download.zip``. Give them more appropriate names
-and move them to a folder (referred to as `CIRCA data folder` above) on
-the same machine as the Naaya site.
+You manually export folders from CIRCA using the "save" button. The "download"
+button, next to it, does not save enough information. This produces a file
+named ``download.zip``. Give it a more appropriate name and move it to the
+folder you specified above in ZCML.
 
 When the Zip files are ready, open the Naaya website, navigate to a
 folder where you want to import the files (say ``my/import/folder``) and
-run the external method *in the context of that folder*. It takes a
-`name` parameter, the name of the Zip file to import::
+access the url ``/import_from_circa_html`` in that folder::
 
-    http://my.naaya.portal/my/import/folder/.circaimport?name=thedocs.zip
+    http://forum.eionet.europa.eu/my/import/folder/import_from_circa_html
