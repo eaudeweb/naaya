@@ -29,9 +29,9 @@ def parse_date(s):
 
 def parse_userid(s):
     if s.endswith('@circa'):
-        s = str(s[:-len('@circa')])
-    assert s
-    return s
+        return str(s[:-len('@circa')])
+    else:
+        return str(s)
 
 def walk_backup(index_file, open_backup_file, actor):
     known_folders = set([''])
