@@ -1,6 +1,6 @@
 <configure xmlns:meta="http://namespaces.zope.org/meta">
 
-  <meta:directives namespace="http://xmlns.eaudeweb.ro/edw.circaimport">
+  <meta:directives namespace="http://ns.eaudeweb.ro/edw.circaimport">
 
     <meta:directive
         name="root"
