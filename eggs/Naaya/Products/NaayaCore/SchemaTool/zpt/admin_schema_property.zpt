@@ -6,8 +6,8 @@
 <tal:block metal:fill-slot="section">
 
 <p i18n:translate="">Configure the
-	<strong i18n:name="property title" i18n:translate="" tal:content="here/title" /> property of
-	<strong i18n:name="parent title" i18n:translate=""
+	<strong i18n:name="property_title" i18n:translate="" tal:content="here/title" /> property of
+	<strong i18n:name="parent_title" i18n:translate=""
 		tal:content="here/aq_parent/title" /> objects.</p>
 
 <div class="floated-buttons">

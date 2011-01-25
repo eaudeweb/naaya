@@ -92,12 +92,12 @@
 <h2 i18n:translate="">New user</h2>
 
 <p i18n:translate="">First
-	<a i18n:name="create an account" i18n:translate="" href="requestrole_html">
+	<a i18n:name="create_an_account" i18n:translate="" href="requestrole_html">
 		create an account
 	</a>
 	on this server and then return to this page to log in.
 	The newly created user will have no role on this portal,
-	<a i18n:name="contact the Webmaster" i18n:translate="" href="feedback_html">
+	<a i18n:name="contact_the_Webmaster" i18n:translate="" href="feedback_html">
 		contact the Webmaster
 	</a>
 	if you need one.</p>
