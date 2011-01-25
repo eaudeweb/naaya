@@ -132,7 +132,7 @@
 				</a><br />
         </p>
         <p i18n:translate="">
-            The text is searched in local <strong i18n:name="Folders, News, etc." i18n:translate="">Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
+            The text is searched in local <strong i18n:name="Folders_News_etc" i18n:translate="">Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
         </p>
         <form method="get" name="frmSearch" action="search_html">
             <strong i18n:translate="">Query</strong>
