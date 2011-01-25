@@ -327,7 +327,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
             email_body = '%s \n\n %s?edit=1' % (suggestion, survey_answer.absolute_url())
             #email_ending = '\n\n You may edit your Review Template by following this link:\n\n %s?edit=1 \n\n Thank you again for your cooperation!' % survey_answer.absolute_url()
             email_to = str(survey_answer.w_email)
-            email_from = 'no-reply@aoa.eea.europa.eu'
+            email_from = self.getSite().mail_address_from
             email_subject = 'Suggestion for review of report %s' % self.get('title')
             self.getEmailTool().sendEmail(email_body, email_to, email_from, email_subject)
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
