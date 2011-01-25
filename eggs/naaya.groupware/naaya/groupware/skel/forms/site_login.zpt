@@ -32,8 +32,13 @@
                         <li i18n:translate="">Letting your browser remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
                     </ul>
                 </div>
+
+                <tal:block condition="not: here/portal_is_archived">
                 <h1 i18n:translate="">Restricted access</h1>
-                <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the <a href="./request_ig_access_html" title="Request IG access">access request</a> form.</p>
+                <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the
+                    <a href="./request_ig_access_html" title="Request IG access" i18n:attributes="title" i18n:name="access_request">access request</a> form.
+                </p>
+                </tal:block>
 
                 <h2 i18n:translate="">Existing user</h2>
                 <form tal:attributes="action action_url" method="POST" tal:define="retry python:request.get('retry', '')">
