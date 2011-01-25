@@ -8,22 +8,20 @@ Installation
 ------------
 For `buildout`, make sure ``edw.circaimport`` is listed in the Zope
 instance's ``eggs`` section. You need to check out the source code and
-use it in development mode since no pre-built package is provided.
+use it in development mode since no pre-built package is provided. Make
+sure to include the ``edw.circaimport`` and ``edw.circaimport-meta`` ZCML
+files.
 
-Create a file named ``circaimport.py`` in the Zope instance's
-``Extensions`` folder with the following content, replacing
-``/path/to/zip/files`` with the path to a local `CIRCA data folder` (see
-below)::
+Add a ZCML configuration entry to specify where CIRCA Zip files will be found
+(see "Usage" below). Example::
 
-    from edw.circaimport import work_in_zope
-    def do_import(self, REQUEST):
-        name = REQUEST.get('name')
-        prefix = '/path/to/zip/files'
-        return work_in_zope(self, name, prefix)
-
-From the ZMI create an `external method` object. Use ``.circaimport``
-for the id, ``circaimport`` for the module name and ``do_import`` for
-the function name.
+  zcml =
+    edw.circaimport
+    edw.circaimport-meta
+  zcml-additional =
+    <configure xmlns:circaimport="http://xmlns.eaudeweb.ro/edw.circaimport">
+        <circaimport:root path="${buildout:directory}/var/circaimport"/>
+    </configure>
 
 
 Usage
