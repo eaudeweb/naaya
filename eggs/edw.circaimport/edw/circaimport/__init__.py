@@ -46,7 +46,8 @@ def work_in_zope(context, name, root_path):
 
     zf = ZipFile(zip_fs_file)
     index_file = StringIO(zf.read('index.txt'))
-    actor = ZopeActor(context, report)
+    current_user = context.REQUEST.AUTHENTICATED_USER.getId()
+    actor = ZopeActor(context, report, current_user)
     def open_backup_file(name):
         return StringIO(zf.read(name))
 
