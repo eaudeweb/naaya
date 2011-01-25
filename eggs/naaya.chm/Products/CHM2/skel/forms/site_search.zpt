@@ -5,20 +5,21 @@
 	<legend i18n:translate="">Search tips:</legend>
 	<table cellpadding="2">
 		<tr>
-			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>and</strong> water</td>
+			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="and">and</strong> biodiversity</td>
 			<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
 		</tr>
 		<tr>
-			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>or</strong> water</td>
+			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="or">or</strong> biodiversity</td>
 			<td valign="top" i18n:translate="">either of the words occur in the document</td>
 		</tr>
 		<tr>
-			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong>not</strong> water</td>
-			<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+			<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong i18n:name="not">not</strong> biodiversity</td>
+			<td valign="top" i18n:translate="">the word fish and not the word biodiversity occur</td>
 		</tr>
 		<tr>
-			<td valign="top" style="border: 1px dashed black;" i18n:translate="">wate<strong>*</strong></td>
-			<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+			<td valign="top" style="border: 1px dashed black;">
+				<tal:block i18n:translate="">bio</tal:block><strong>*</strong></td>
+			<td valign="top" i18n:translate="">everything starting with <em i18n:name="bio" i18n:translate="">bio</em></td>
 		</tr>
 	</table>
 </fieldset>
@@ -124,12 +125,14 @@
     </tal:block>
     <div class="searchQueryFilters">
         <h2 i18n:translate="">Search filters</h2>
-        <p i18n:translate="">
-            You can search <a tal:attributes="href string:${here/getSitePath}/external_search_html"><strong>all
-            CHM network</strong></a><br />
+        <p>
+            <tal:block i18n:translate="">You can search</tal:block>
+				<a tal:attributes="href string:${here/getSitePath}/external_search_html">
+					<strong i18n:translate="">all CHM network</strong>
+				</a><br />
         </p>
         <p i18n:translate="">
-            The text is searched in local <strong>Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
+            The text is searched in local <strong i18n:name="Folders, News, etc." i18n:translate="">Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
         </p>
         <form method="get" name="frmSearch" action="search_html">
             <strong i18n:translate="">Query</strong>
