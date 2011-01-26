@@ -17,6 +17,7 @@ from Products.NaayaBase.constants import *
 from Products.NaayaContent import *
 from Products.Naaya.constants import *
 from Products.NaayaCore.constants import *
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
@@ -1038,5 +1039,6 @@ class CHMSite(NySite):
                 return False
 
     chm_common_css = ImageFile('www/chm_common.css', globals())
+    folder_listing = nptf('zpt/folder_listing', globals(), 'chm_folder_listing')
 
 InitializeClass(CHMSite)
