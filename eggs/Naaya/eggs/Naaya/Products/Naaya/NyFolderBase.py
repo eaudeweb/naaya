@@ -38,6 +38,11 @@ from Products.Naaya.interfaces import INySite, IObjectView
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
+try:
+    from naaya.content.bfile.bfile_item import pretty_size
+except ImportError:
+    pass
+
 class NyContentTypeViewAdapter(object):
     adapts(INyContentObject)
     implements(IObjectView)
@@ -112,6 +117,7 @@ class NyFolderBase(Folder, NyPermissions):
         sorted_objects = self.utSortObjsListByAttr(sorted_objects, skey, rkey)
 
         ret = []
+        site_url = self.getSite().absolute_url()
         for o in sorted_objects:
             o_view = IObjectView(o)
             versionable, editable = o_view.version_status()
@@ -124,6 +130,31 @@ class NyFolderBase(Folder, NyPermissions):
                     'editable': editable,
                     'self': o,
                     }
+
+            if o.meta_type == 'Naaya Blob File':
+                version = o.current_version
+                info['content_type'] = self.getContentTypeTitle(version.content_type)
+                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
+                                        (site_url,
+                                         version.content_type))
+                info['pretty_size'] = pretty_size(version.size)
+                info['is_file'] = True
+            elif o.meta_type == 'Naaya Extended File':
+                info['content_type'] = self.getContentTypeTitle(o.content_type())
+                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
+                                        (site_url,
+                                         o.content_type()))
+                info['pretty_size'] = o.utShowSizeKb(o.size())
+                info['is_file'] = True
+            elif o.meta_type == 'Naaya File':
+                info['content_type'] = self.getContentTypeTitle(o.getContentType())
+                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
+                                        (site_url,
+                                         o.getContentType()))
+                info['pretty_size'] = o.utShowSizeKb(o.size)
+                info['is_file'] = True
+            else:
+                info['is_file'] = False
 
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
                 ret.append(info)
