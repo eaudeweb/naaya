@@ -236,10 +236,16 @@ $(document).ready(function(){
 							type="checkbox" name="id" tal:attributes="value object/id" />
 					</td>
 					<td class="type" style="width: 4%;">
-						<img tal:attributes="
-							src python:test(object.approved, object.icon, object.icon_marked);
-							alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
-							title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+                        <tal:block condition="object_info/is_file">
+                        <img tal:attributes="src object_info/icon_url;
+                                             title object_info/content_type"/>
+                        </tal:block>
+                        <tal:block condition="not: object_info/is_file">
+                        <img tal:attributes="
+                            src python:test(object.approved, object.icon, object.icon_marked);
+                            alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
+                            title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+                        </tal:block>
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
