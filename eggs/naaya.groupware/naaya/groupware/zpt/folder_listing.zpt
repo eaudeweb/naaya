@@ -154,6 +154,7 @@ $(document).ready(function(){
                     <img tal:condition="python: skey == 'releasedate' and rkey"
                          src="misc_/Naaya/sort_desc.gif" />
                 </th>
+				<th i18n:translate="">File size</th>
 				<th class="edit" i18n:translate="">Edit</th>
 
 			</metal:block>
@@ -241,6 +242,7 @@ $(document).ready(function(){
 					</td>
                     <td tal:content="python: here.utShowDateTime(folder.releasedate)">
 					</td>
+                    <td></td>
 					<td class="edit" tal:condition="edit_permission">
 						<a tal:condition="editable" tal:attributes="href string:${folder/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
@@ -275,10 +277,16 @@ $(document).ready(function(){
 							type="checkbox" name="id" tal:attributes="value object/id" />
 					</td>
 					<td class="type" style="width: 4%;">
-						<img tal:attributes="
-							src python:test(object.approved, object.icon, object.icon_marked);
-							alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
-							title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+                        <tal:block condition="object_info/is_file">
+                        <img tal:attributes="src object_info/icon_url;
+                                             title object_info/content_type"/>
+                        </tal:block>
+                        <tal:block condition="not: object_info/is_file">
+                        <img tal:attributes="
+                            src python:test(object.approved, object.icon, object.icon_marked);
+                            alt python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type);
+                            title python:test(hasattr(object, 'get_meta_label'), object.get_meta_label(), object.meta_type)" />
+                        </tal:block>
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
@@ -287,7 +295,7 @@ $(document).ready(function(){
 							<span tal:repeat="lang here/gl_get_languages_map">
 								<a tal:content="python:' %s' % lang['title']"
 									tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])"
-									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+                                    tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])"></a>
 							</span>
 						</span>
 						<tal:block condition="object/discussion">
@@ -302,6 +310,11 @@ $(document).ready(function(){
 					</td>
                     <td tal:content="python: here.utShowDateTime(object.releasedate)">
 					</td>
+                    <td>
+                        <tal:block condition="object_info/is_file"
+                                   content="object_info/pretty_size">
+                        </tal:block>
+                    </td>
 					<td class="edit" tal:condition="edit_permission">
 						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
 							<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
