@@ -6,8 +6,10 @@ for x in the_survey.objectValues('Naaya Survey Answer'):
     value = x.get('w_assessment-name')
     if isinstance(value, basestring):
         values = [value]
-    else:
+    elif value is not None:
         values = value.values()
+    else:
+        values = []
 
     unicode_assessment = unicode(assessment, 'utf8')
     if unicode_assessment in values:
