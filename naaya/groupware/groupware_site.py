@@ -150,7 +150,7 @@ class GroupwareSite(NySite):
             Sends a mail to the portal administrator informing
             that the current user has requested elevated access.
         """
-        if not self.portal_is_archived:
+        if self.portal_is_archived:
             raise BadRequest, "You can't request access to archived IGs"
 
         role = REQUEST.form.get('role', '')
