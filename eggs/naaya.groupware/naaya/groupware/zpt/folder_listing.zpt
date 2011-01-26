@@ -298,9 +298,9 @@ $(document).ready(function(){
 						</tal:block>
 					</td>
 
-					<td tal:content="object/contributor">
+					<td tal:content="python: object.contributor + ' (' + auth_tool.name_from_userid(object.contributor) + ')'">
 					</td>
-					<td tal:content="object/releasedate">
+                    <td tal:content="python: here.utShowDateTime(object.releasedate)">
 					</td>
 					<td class="edit" tal:condition="edit_permission">
 						<a tal:condition="editable" tal:attributes="href string:${object/absolute_url}/edit_html">
