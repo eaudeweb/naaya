@@ -238,8 +238,10 @@ $(document).ready(function(){
 						</tal:block>
 					</td>
 
-					<td tal:content="python: folder.contributor + ' (' + auth_tool.name_from_userid(folder.contributor) + ')'">
-					</td>
+                    <td tal:define="contributor folder/contributor;
+                                    username python: auth_tool.name_from_userid(contributor);"
+                        tal:content="string: ${contributor} (${username})">
+                    </td>
                     <td tal:content="python: here.utShowDateTime(folder.releasedate)">
 					</td>
                     <td></td>
@@ -306,8 +308,10 @@ $(document).ready(function(){
 						</tal:block>
 					</td>
 
-					<td tal:content="python: object.contributor + ' (' + auth_tool.name_from_userid(object.contributor) + ')'">
-					</td>
+                    <td tal:define="contributor object/contributor;
+                                    username python: auth_tool.name_from_userid(contributor);"
+                        tal:content="string: ${contributor} (${username})">
+                    </td>
                     <td tal:content="python: here.utShowDateTime(object.releasedate)">
 					</td>
                     <td>
