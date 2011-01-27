@@ -3,7 +3,7 @@
 <p metal:fill-slot="description" i18n:translate="">
 	Fill the properties in the form below and click <strong i18n:name="Submit" i18n:translate="">Submit</strong>Submit</strong>. Fields marked with <span i18n:name="wildcard" class="mandatory_field">*</span> are mandatory.
 </p>
-<tal:block metal:fill-slot="schema_properties" repeat="form_item form_helper/form_items">
+<tal:block metal:fill-slot="schema_properties" repeat="form_item form_helper/form_items_add">
 	<tal:block condition="python: form_item['name'] not in ['subject',]" replace="structure form_item/html" />
 	<div tal:condition="python: form_item['name'] == 'subject'" class="field">
 		<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subject')" class="mandatory_field"> *</span></label>

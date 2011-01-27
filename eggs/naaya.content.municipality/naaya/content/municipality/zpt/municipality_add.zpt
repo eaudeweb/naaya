@@ -7,7 +7,7 @@
 		are mandatory.
 	</p>
 	<tal:block metal:fill-slot="schema_properties"
-				define="form_items form_helper/form_items;
+				define="form_items form_helper/form_items_add;
 						form_items python:list(form_items)">
 
 	<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
