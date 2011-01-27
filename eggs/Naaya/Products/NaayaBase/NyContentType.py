@@ -371,12 +371,15 @@ class NyContentData(NyProperties):
             authTool = self.getAuthenticationTool()
             value = authTool.getUserFullNameByID(self.contributor)
             label = 'Contributor'
-            visible = self.display_contributor
+            visible = self.display_contributor or self.checkPermissionEditObject()
         else:
             schema = self._get_schema()
             widget = schema.getWidget(prop_name)
             label = widget.title
-            visible = widget.visible
+            if prop_name == 'releasedate':
+                visible = widget.visible or self.checkPermissionEditObject()
+            else:
+                visible = widget.visible
             if widget.localized:
                 value = self.getLocalProperty(prop_name, lang)
             else:

@@ -1,5 +1,5 @@
 <metal:block define-macro="contributor_tr">
-<tr>
+<tr tal:condition="python: here.display_contributor or here.checkPermissionEditObjects()">
     <th i18n:translate="">Contributor</th>
     <td tal:define="submitter_info here/submitter_info|nothing">
         <tal:block condition="not:submitter_info"
