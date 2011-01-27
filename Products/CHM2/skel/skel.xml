@@ -6,6 +6,7 @@
 		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
+		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_urls" title="Portal administration - urls"/>
 		<form id="site_admin_userroles" title="View the roles of a user"/>
 		<form id="site_admin_users" title="All users view"/>
