@@ -62,8 +62,15 @@ class SchemaFormHelper(object):
         self.context = context
         self.value_callback = value_callback
 
-    def form_items(self):
+    def form_items_add(self):
+        return self.form_items(add=True)
+
+    def form_items(self, add=False):
         def get_value(prop_name):
+            if add and prop_name == 'coverage':
+                value = getattr(self.context, 'default_geographical_coverage', '')
+                if value:
+                    return value
             if self.value_callback:
                 value = self.value_callback(prop_name)
                 if value is not None:

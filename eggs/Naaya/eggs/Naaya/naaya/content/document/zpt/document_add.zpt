@@ -49,7 +49,7 @@ function fSet(ctrl, value)
 </div>
 
 <!-- Schema properties -->
-<tal:block repeat="form_item form_helper/form_items">
+<tal:block repeat="form_item form_helper/form_items_add">
     <tal:block replace="structure form_item/html" />
 </tal:block>
 

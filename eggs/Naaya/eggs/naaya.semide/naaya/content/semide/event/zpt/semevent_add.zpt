@@ -6,7 +6,7 @@
 	<tal:block i18n:translate="">An event entry must be created first in order to be translated. To do so please submit this form and return to the edit form of this event.</tal:block>
 </p>
 <!-- Schema properties -->
-<tal:block metal:fill-slot="schema_properties" repeat="form_item form_helper/form_items">
+<tal:block metal:fill-slot="schema_properties" repeat="form_item form_helper/form_items_add">
     <tal:block condition="python: form_item['name'] not in ['relation', 'subject', 'working_langs']" replace="structure form_item/html" />
 	<div tal:condition="python: form_item['name'] == 'relation'" class="field">
 		<label for="relation"><span i18n:translate="" tal:omit-tag="">Relation</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'relation')" class="mandatory_field"> *</span></label>
