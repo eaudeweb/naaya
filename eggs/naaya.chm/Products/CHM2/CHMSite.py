@@ -66,6 +66,7 @@ class CHMSite(NySite):
     product_paths = NySite.product_paths + [CHM2_PRODUCT_PATH]
 
     security = ClassSecurityInfo()
+    default_geographical_coverage = ''
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
@@ -1036,6 +1037,14 @@ class CHMSite(NySite):
                 return True
             except:
                 return False
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+    def admin_properties(self, REQUEST=None, **kwargs):
+        """ """
+        if REQUEST is not None:
+            kwargs.update(REQUEST.form)
+        self.default_geographical_coverage = kwargs.get('default_geographical_coverage', False)
+        super(CHMSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
 
     chm_common_css = ImageFile('www/chm_common.css', globals())
 
