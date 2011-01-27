@@ -399,8 +399,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         for log in logs:
             for entry in log.url_list:
                 for url in entry[4]:
-                    if url[0] == link:
-                        failed += 1
+                    try:
+                        if url[0].decode() == link:
+                            failed += 1
+                            continue
+                    except UnicodeDecodeError:
                         continue
         rate = int(((failed * 1.0) / len(logs)) * 100)
         if rate > 100:
