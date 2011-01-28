@@ -2399,8 +2399,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     try:
                         email = auth_tool.getUsersEmails([name])[0]
                         fullname = auth_tool.getUsersFullNames([name])[0]
+                        if location == "/" or location == '':
+                            loc, location = 'all', self.getSite()
+                        else:
+                            loc, location = 'other', self.unrestrictedTraverse(location, None)
                         self.sendAccountModifiedEmail(email, roles,
-                           location, self.unrestrictedTraverse(location, None))
+                                                      loc, location)
                     except:
                         err = 'Could not send confirmation mail.'
 
