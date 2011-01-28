@@ -65,48 +65,48 @@ class SchemaFormHelper(object):
     def form_items_add(self):
         return self.form_items(add=True)
 
-    def form_items(self, add=False):
-        def get_value(prop_name):
-            if add and prop_name == 'coverage':
-                value = getattr(self.context, 'default_geographical_coverage', '')
-                if value:
-                    return value
-            if self.value_callback:
-                value = self.value_callback(prop_name)
-                if value is not None:
-                    return value
-            widget = self.schema.getWidget(prop_name)
-            prop_type = widget.getDataType()
-            val = self.context.getSession(prop_name, '')
-            if val in ('', None):
-                if widget.default not in (None, ''):
-                    return prop_type(widget.default)
-                else:
-                    if prop_type is DateTime:
-                        return ''
-                    else:
-                        return prop_type()
+    def _get_value(self, prop_name, add):
+        if add and prop_name == 'coverage':
+            value = getattr(self.context, 'default_geographical_coverage', '')
+            if value:
+                return value
+        if self.value_callback:
+            value = self.value_callback(prop_name)
+            if value is not None:
+                return value
+        widget = self.schema.getWidget(prop_name)
+        prop_type = widget.getDataType()
+        val = self.context.getSession(prop_name, '')
+        if val in ('', None):
+            if widget.default not in (None, ''):
+                return prop_type(widget.default)
             else:
-                try:
-                    return prop_type(val)
-                except (ValueError, DateError):
-                    # in case the string is malformed
-                    # added DateError for DateTime errors
+                if prop_type is DateTime:
+                    return ''
+                else:
                     return prop_type()
+        else:
+            try:
+                return prop_type(val)
+            except (ValueError, DateError):
+                # in case the string is malformed
+                # added DateError for DateTime errors
+                return prop_type()
 
-        def get_renderer(prop_name, widget):
-            value = get_value(prop_name)
-            context = self.context
-            errors = self.context.getSession('%s-errors' % prop_name, None)
-            def render():
-                return widget.render_html(value=value,
-                                          context=context,
-                                          errors=errors)
-            return render
+    def _get_renderer(self, prop_name, widget, add):
+        value = self._get_value(prop_name, add)
+        context = self.context
+        errors = self.context.getSession('%s-errors' % prop_name, None)
+        def render():
+            return widget.render_html(value=value,
+                                      context=context,
+                                      errors=errors)
+        return render
 
+    def form_items(self, add=False):
         for widget in self.schema.listWidgets():
             prop_name = widget.prop_name()
-            yield {'name': prop_name, 'html': get_renderer(prop_name, widget)}
+            yield {'name': prop_name, 'html': self._get_renderer(prop_name, widget, add=add)}
 
     def del_schema_session_values(self):
         for key in self.schema.listPropNames():
