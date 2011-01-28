@@ -3,7 +3,8 @@ Changelog
 
 2.11.01 (unreleased)
 --------------------
- * The translation tool was changed to first search in the english version of a message and if this doesn't exist - in the message id. Together with a change in the edw-localizer, this enables translating the same english message by several second language messages (see documentation).
+ * Support for i18n messages with different values for ID and English
+   translation, useful for handling homonyms.
 
 
 2.10.12 (2011-01-11)
