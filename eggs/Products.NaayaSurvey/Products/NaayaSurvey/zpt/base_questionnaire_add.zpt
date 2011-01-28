@@ -54,7 +54,8 @@ function fSet(ctrl, value)
 		<tal:block tal:condition="python:coverage_glossary is not None">
 			<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</p>
 		</tal:block>
-		<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:attributes="value python:here.getSession('coverage', '')" />
+		<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:define="default_geographical_coverage python: getattr(here, 'default_geographical_coverage', '')"
+			tal:attributes="value python:test(default_geographical_coverage, default_geographical_coverage, here.getSession('coverage', ''))" />
 		<tal:block tal:condition="python:coverage_glossary is not None">
 			<label for="pick-coverage" class="invisible" i18n:translate="">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');" />
 		</tal:block>
