@@ -39,7 +39,8 @@ class Extra_for_DateRangeIndex:
             setattr(self, key, kw[key])
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
-def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
+def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
+                      REQUEST=None):
     """ """
     if REQUEST is not None:
         # we'll need the SESSION later on; grab it early so we don't
@@ -50,7 +51,13 @@ def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, CHMSite(id, portal_uid, title, lang))
-    self._getOb(id).loadDefaultData()
+    chm_site = self._getOb(id)
+    chm_site.loadDefaultData()
+
+    if google_api_keys:
+        engine = chm_site.getGeoMapTool()['engine_google']
+        engine.api_keys = google_api_keys
+
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
