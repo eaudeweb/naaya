@@ -133,12 +133,15 @@ class NyFolderBase(Folder, NyPermissions):
 
             if o.meta_type == 'Naaya Blob File':
                 version = o.current_version
-                info['content_type'] = self.getContentTypeTitle(version.content_type)
-                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
-                                        (site_url,
-                                         version.content_type))
-                info['pretty_size'] = pretty_size(version.size)
-                info['is_file'] = True
+                if version is not None:
+                    info['content_type'] = self.getContentTypeTitle(version.content_type)
+                    info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
+                                            (site_url,
+                                             version.content_type))
+                    info['pretty_size'] = pretty_size(version.size)
+                    info['is_file'] = True
+                else:
+                    info['is_file'] = False
             elif o.meta_type == 'Naaya Extended File':
                 info['content_type'] = self.getContentTypeTitle(o.content_type())
                 info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
