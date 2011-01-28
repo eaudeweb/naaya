@@ -5,4 +5,8 @@ for portal in portals:
         sorted.setdefault('archived', []).append(portal)
     else:
         sorted.setdefault(portal.get_user_access(), []).append(portal)
+
+for portal_list in sorted.values():
+    portal_list.sort(key=lambda p: p.title_or_id())
+
 return sorted
