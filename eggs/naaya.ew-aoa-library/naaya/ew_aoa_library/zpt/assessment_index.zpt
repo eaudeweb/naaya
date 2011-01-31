@@ -18,7 +18,8 @@
 
 <metal:block fill-slot="body"
     tal:define="review_template python:'tools/general_template/general-template' in here.target_path;
-                is_entitled here/glCheckPermissionPublishObjects">
+                is_entitled here/glCheckPermissionPublishObjects;
+                site here/getSite">
 <link rel="stylesheet" type="text/css" media="all"
       tal:define="stool here/portal_survey;"
       tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
@@ -26,8 +27,8 @@
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
     <span class="buttons">
-        <a tal:define="answer_url here/target_path"
-           tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
+        <a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
+            tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
     </span>
 </div>
 
