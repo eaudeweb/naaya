@@ -1,7 +1,10 @@
 Changelog
 =========
 
-2.11.01 (unreleased)
+2.11.02 (unreleased)
+--------------------
+
+2.11.01 (2011-02-02)
 --------------------
  * Support for i18n messages with different values for ID and English
    translation, useful for handling homonyms.
