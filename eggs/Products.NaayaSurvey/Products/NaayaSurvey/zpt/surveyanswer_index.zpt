@@ -104,7 +104,7 @@
 			</p>
 		</form>
 	</tal:block>
-	<tal:block condition="not: can_edit">
+	<tal:block condition="python: not try_to_edit or not can_edit">
 		<tal:block define="stype here/getSurveyTemplate;
 						   rendered python:test(stype, stype.render(mode='view', datamodel=here.getDatamodel()), 'Error');"
 				content="structure rendered">
