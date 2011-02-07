@@ -172,9 +172,7 @@ def extract_survey_answer_data_library(answer):
         if answer_id.startswith(prefix):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
-    attrs['official_country_region'] = getattr(answer, 'w_official-country-region')
-    if not isinstance(attrs['official_country_region'], basestring):
-        attrs['official_country_region'] = ''
+
     return attrs
 
 def extract_survey_answer_data_general_template(answer):
@@ -216,6 +214,10 @@ def extract_survey_answer_data_general_template(answer):
         if answer_id.startswith(prefix):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
+
+    attrs['official_country_region'] = getattr(answer, 'w_official-country-region')
+    if not isinstance(attrs['official_country_region'], basestring):
+        attrs['official_country_region'] = ''
 
     return attrs
 
