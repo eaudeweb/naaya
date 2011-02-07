@@ -86,7 +86,36 @@
 							<'+'th colspan="5" style="text-align:center"><'+'strong>DPSIR analysis<'+'/strong><'+'/th>\
 							<'+'th colspan="3" style="text-align:center"><'+'strong>Other analyses<'+'/strong><'+'/th>\
 							');
-				}
+				};
+				$( "#report_preview" )
+				.html('<img src="../Preview.png" alt="" />')
+				.dialog({
+					autoOpen: false,
+					width: 820,
+					height: 500,
+					modal: true,
+					title: 'Example of a filled in report',
+					buttons: { "Close": function() { $(this).dialog("close"); } }
+				});
+				$( "#empty_report_preview" )
+				.html('<img src="../Preview_empty.png" alt="" />')
+				.dialog({
+					autoOpen: false,
+					width: 820,
+					height: 500,
+					modal: true,
+					title: 'Example of an empty in report',
+					buttons: { "Close": function() { $(this).dialog("close"); } }
+				});
+
+				$('#empty_opener').click(function() {
+					$('#empty_report_preview').dialog('open');
+					return false;
+				});
+				$('#opener').click(function() {
+					$('#report_preview').dialog('open');
+					return false;
+				});
 			});
 		}
 		function enable_question_5_2(){
@@ -143,6 +172,7 @@
 				$('#w_confirmation').parent().hide();
 				$('#w_q1-name-assessment-report').attr('readonly', 'readonly');
 			}
+			$('#w_official-country-region').parent().hide();
 		}
 		function reset_select(select_id, curr_lang){
 			if(curr_lang == 'ru'){
@@ -213,4 +243,37 @@
 			edit_json python:here.rstk.json_dumps(edit)"
 			tal:content="structure string:process_form(${acronym_map_json}, ${labels_json}, ${curr_lang_json}, ${edit_json})">
 	</script>
+	<link rel="stylesheet" type="text/css" media="screen" href="/misc_/Naaya/jquery-ui.css" />
+	<style>
+		.surveyPreview {
+			margin: 1em 0 1em 0;
+		}
+		.surveyPreview input {
+			white-space: nowrap;
+			font-size: 1.2em;
+			font-weight: bold;
+			background: #fff;
+			border-left:1px solid #bbb;
+			border-top:1px solid #bbb;
+			border-bottom:1px solid #666;
+			border-right:1px solid #666;
+			padding: 0.2em;
+			color: #0061A2;
+		}
+		.surveyPreview input:hover {
+			border-left:1px solid #6791c3;
+			border-top:1px solid #6791c3;
+			border-bottom:1px solid #34649b;
+			border-right:1px solid #34649b;
+			color: #4e7cb0;
+		}
+	</style>
+	<span class="surveyPreview" tal:condition="not:request/edit|nothing">
+		<input type="submit" id="empty_opener" value="Preview the full Review Template" />
+		<div id="empty_report_preview"></div>
+	</span>
+	<span class="surveyPreview" tal:condition="not:request/edit|nothing">
+		<input type="submit" id="opener" value="Preview a model Review Template" />
+		<div id="report_preview"></div>
+	</span>
 </metal:block>
