@@ -94,10 +94,6 @@
             <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
         </tal:block>
     </tal:block>
-</div>
-
-<div class="widgetViewMode" style="background-color:#FFF9D4"
-    tal:condition="python:not review_template and is_entitled">
 	<form id="set_region" name="set_region" method="post" action=".">
 		<strong><label for="official_country_region" i18n:translate="">Official country/region</label></strong><br/><br/>
 		<input id="official_country_region" name="official_country_region:utf8:ustring"

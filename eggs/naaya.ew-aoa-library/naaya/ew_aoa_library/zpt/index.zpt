@@ -105,11 +105,11 @@
 	</th>
 
 	<!-- Official country/region -->
-	<th tal:condition="python:rkey and not review_template">
+	<th tal:condition="python:rkey and review_template">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=official_country_region">Official country/region</a>
 		<img tal:condition="python:skey=='official_country_region'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:not rkey and not review_template">
+	<th tal:condition="python:not rkey and review_template">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=official_country_region&rkey=True">Official country/region</a>
 		<img tal:condition="python:skey=='official_country_region'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
@@ -146,7 +146,7 @@
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="i/uploader"/>
 	<td tal:content="i/country"/>
-	<td tal:condition="not:review_template"
+	<td tal:condition="review_template"
 		tal:content="i/official_country_region|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >
         <span tal:condition="python:here.approved_date(i)">Approved</span>
