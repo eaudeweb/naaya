@@ -310,6 +310,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
             respondent = old_answer.respondent
+            suggestions = getattr(old_answer, 'suggestions', [])
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
             self._delObject(answer_id)
@@ -327,6 +328,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
                                            draft=draft, respondent=respondent)
         answer = self._getOb(answer_id)
+        if suggestions:
+            answer.suggestions = suggestions
 
         if not draft:
             if self.notify_owner:
