@@ -194,8 +194,12 @@ class Participants(SimpleItem):
             phone = getUserPhoneNumber(site, uid)
         attendees = self._get_attendees()
         role = attendees[uid]
-        return {'uid': uid, 'name': name, 'email': email,
+        ret = {'uid': uid, 'name': name, 'email': email,
                  'organization': organization, 'phone': phone, 'role': role}
+        for k, v in ret.items():
+            if not isinstance(v, basestring):
+                ret[k] = u''
+        return ret
 
     security.declareProtected(PERMISSION_ADMIN_MEETING, 'onAttendees')
     def getParticipantRole(self):
