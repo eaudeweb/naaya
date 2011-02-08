@@ -306,6 +306,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 REQUEST.RESPONSE.redirect(self.absolute_url())
             return
 
+        suggestions = []
         respondent = None
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
