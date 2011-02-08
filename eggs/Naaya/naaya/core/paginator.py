@@ -440,5 +440,5 @@ class NaayaPage(DiggPage, Implicit):
 for name in ['paginator', 'leading_range', 'main_range', 'trailing_range',
              'number', 'has_previous', 'has_next', 'previous_page_number',
              'next_page_number', 'start_index', 'end_index']:
-    NaayaPage.security.declareProtected(view, name)
+    NaayaPage.security.declarePublic(name)
 InitializeClass(NaayaPage)
