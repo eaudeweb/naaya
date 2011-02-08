@@ -192,9 +192,11 @@ def extract_survey_answer_data_general_template(answer):
         'id': answer.getId(),
         'title': answer.get('w_q1-name-assessment-report'),
         'geo_location': general_template_extract_geo_location(answer),
-        'uploader': ('%s, %s') % (answer.get('w_name'),
-                                  answer.get('w_organisation'), ),
-        'country': answer.get('w_country'),
+        'uploader': ('%s, %s') % (answer.get(key='w_name',
+                                    lang=answer.gl_get_selected_language()),
+                                  answer.get(key='w_organisation',
+                                    lang=answer.gl_get_selected_language()), ),
+        'country': answer.get(key='w_country', lang=answer.gl_get_selected_language()),
         #This is commented because (now) we don't want to show review template answers on the map
         #'geo_type': extract_geo_type(library_answer),
         'description': ('<strong>%s</strong><br />%s<br />') %
