@@ -15,7 +15,7 @@
     <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
     <ul style="list-style-type: none; padding: 0.5em; margin: 0">
         <li style="margin-bottom: 0.5em">
-			<strong">&raquo;</strong>
+			<strong>&raquo;</strong>
 			<tal:block i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</tal:block>
 		</li>
         <li style="margin-bottom: 0.5em">
