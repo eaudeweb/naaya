@@ -103,13 +103,14 @@
 
 <h2 i18n:translate="">Current subscriptions</h2>
 <tal:block tal:define="object_list python:list(here.admin_get_subscriptions());
-                       page python:int(request.get('page', 1));">
+                       page python:int(request.get('page', 1));
+                       available_subscriptions python:list(here.available_notif_types())">
 <br />
 <p tal:condition="not:object_list"
    i18n:translate="">No users have yet subscribed to any notifications.</p>
 <br />
 <form action="admin_add_account_subscription" method="post"
-      tal:define="available_subscriptions python:list(here.available_notif_types())">
+      tal:condition="available_subscriptions">
     <fieldset>
         <legend i18n:translate="">Add user subscripion</legend>
         <div class="field">
@@ -158,6 +159,11 @@
         <input type="submit" value="Subscribe user" i18n:attributes="value"/>
     </fieldset>
 </form>
+
+<p i18n:translate="" tal:condition="not: available_subscriptions">
+    Can not add subscriptions because no notification types are enabled.
+</p>
+
 <tal:block condition="object_list">
     <tal:block define="paginator python:here.make_paginator(object_list, 10, body=5, padding=2, orphans=2);
                        page_obj python:paginator.page(page);
