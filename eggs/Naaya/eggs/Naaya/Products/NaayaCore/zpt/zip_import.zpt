@@ -7,10 +7,9 @@
 </div>
 
 <p i18n:translate="">
-	<tal:block>Select a Zip file to upload in </tal:block>
-	<em tal:content="python:here.aq_parent.absolute_url(1)" i18n:name="folder_path"/>.
-	A folder will be created from the archive name and the contents of the archive will be
-	represented as File and Folder objects in the newly created folder.
+	Upload a Zip file. Its contents will be imported as File and Folder objects at
+	<em tal:content="python:here.aq_parent.absolute_url(1)"
+	    i18n:name="folder_path"/>.
 </p>
 
 <form name="csv_import" action="" method="post" enctype="multipart/form-data">
