@@ -24,7 +24,7 @@
                    has_edit_permission here/checkPermissionEditAnswers;
                    user_anonymous python: request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
                    user_is_respondent python: request.AUTHENTICATED_USER.getUserName() == here.respondent;
-				   answer_is_approved here/approved_date|nothing;
+				   answer_is_approved python:here.get('approved_date');
                    can_edit python: has_edit_permission or (not user_anonymous and user_is_respondent and not answer_is_approved);
                    editing python: try_to_edit and can_edit;
                    editing_draft python: editing and here.is_draft();
