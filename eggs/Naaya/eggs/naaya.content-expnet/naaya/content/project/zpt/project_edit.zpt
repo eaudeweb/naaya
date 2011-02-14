@@ -59,7 +59,7 @@
 		<input id="id_organisation" type="text" name="organisation" autocomplete="off" />
 	</div>
 	<a name="Organisations"></a>
-	<ul tal:define="Organisations here/organisations"
+	<ul tal:define="Organisations here/organisations|nothing"
 		tal:condition="Organisations">
 		<tal:block repeat="ob Organisations">
 			<li tal:attributes="id string:organisation_${ob/id}">
