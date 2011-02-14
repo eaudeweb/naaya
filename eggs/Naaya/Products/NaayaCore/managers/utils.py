@@ -731,7 +731,7 @@ class utils:
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
-        if isinstance(p_string, unicode): l_tmp = p_string.encode('utf-8')
+        if isinstance(p_string, unicode): l_tmp = force_to_unicode(p_string)
         else: l_tmp = str(p_string)
         l_tmp = l_tmp.replace('&', '&amp;')
         l_tmp = l_tmp.replace('<', '&lt;')
