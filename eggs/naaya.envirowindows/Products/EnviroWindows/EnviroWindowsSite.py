@@ -523,12 +523,15 @@ class EnviroWindowsSite(NySite):
         checks that the field exists and has a value.
         """
         kwargs.update(REQUEST.form)
+        allowed_fields = ['username', 'name', 'firstname', 'lastname', 'email',
+                          'password', 'confirm', 'organisation',
+                          'comments', 'location']
+        kwargs = dict((k, v) for k, v in kwargs.iteritems()
+                                        if k in allowed_fields)
         if not kwargs.get('comments', ''):
             # setRequestRoleSession expects 'name' instead of 'username'
             # also, it does not expect 'confirm'
-            kwargs['name'] = kwargs['username']
-            del kwargs['username']
-            del kwargs['confirm']
+            kwargs['name'] = kwargs.pop('username', '')
             self.setRequestRoleSession(**kwargs)
             self.setSessionErrorsTrans('Required field: Comments')
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
