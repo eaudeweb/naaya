@@ -1,0 +1,59 @@
+<tal:block content="structure here/manage_page_header" />
+<tal:block content="structure here/manage_tabs" />
+
+<tal:block content="structure here/messages_box" />
+
+<h3>Update review template titles from virtual library answers</h3>
+
+<form action="">
+	<input type="hidden" name="submit" value="True" />
+	<input type="submit" value="Update review template titles" />
+</form>
+
+<tal:block define="updated_answers options/updated_answers|nothing;
+					errors options/errors|nothing;
+					orphan_answers options/orphan_answers|nothing;"
+					condition="python:updated_answers or errors or orphan_answers">
+
+	<tal:block condition="errors">
+		<p style="color:red" tal:define="count python:len(errors)"
+			tal:content="string:${count} errors were encountered:"></p>
+		<ul>
+			<li tal:repeat="error errors">
+				<tal:block define="key python:error[0]; value python:error[1]">
+					<a tal:condition="python:value=='AttributeError'"
+						tal:attributes="href key" i18n:translate="">
+						Library answer assessment name is empty or not localized
+					</a>
+					<a tal:condition="python:value!='AttributeError'"
+						tal:attributes="href key" i18n:translate="">
+						Unspecified error (invalid library answer)
+					</a>
+				</tal:block>
+			</li>
+		</ul>
+	</tal:block>
+
+	<tal:block condition="orphan_answers">
+		<p style="color:red" tal:define="count python:len(orphan_answers)"
+			tal:content="string:${count} answers don't have a correspondent in the virtual library:"></p>
+		<ul>
+			<li tal:repeat="answer orphan_answers">
+				<a tal:content="answer" tal:attributes="href answer"/>
+			</li>
+		</ul>
+	</tal:block>
+
+	<tal:block condition="updated_answers">
+		<p tal:define="count python:len(updated_answers)"
+			tal:content="string:Successfully updated ${count} answers:"></p>
+		<ul>
+			<li tal:repeat="answer updated_answers">
+				<a tal:content="answer" tal:attributes="href answer"/>
+			</li>
+		</ul>
+	</tal:block>
+
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer" />
