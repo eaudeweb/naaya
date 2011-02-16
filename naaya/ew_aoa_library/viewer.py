@@ -36,6 +36,7 @@ class AoALibraryViewer(SimpleItem):
     manage_options = (
         {'label': 'Summary', 'action': 'manage_main'},
         {'label': 'View', 'action': ''},
+        {'label':'Updates', 'action':'manage_update_html'},
     ) + SimpleItem.manage_options
 
     security = ClassSecurityInfo()
@@ -121,6 +122,38 @@ class AoALibraryViewer(SimpleItem):
     def approved_date(self, answer):
         survey_answer = self.get_survey_answer(answer.getId())
         return getattr(survey_answer, 'approved_date', False)
+
+    security.declareProtected('View management screens', 'manage_update_html')
+    def manage_update_html(self, REQUEST=None):
+        """ """
+        if not REQUEST.form.has_key('submit'):
+            return self._manage_update_html()
+        updated_answers = []
+        errors = {}
+        orphan_answers = []
+        review_template = self.aq_parent['tools']['general_template']['general-template']
+        library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        for answer in review_template.objectValues('Naaya Survey Answer'):
+            temp_title = answer.get('w_q1-name-assessment-report')['en']
+            if not temp_title:
+                temp_title = answer.get('w_q1-name-assessment-report')['ru']
+            for vl_answer in library.objectValues('Naaya Survey Answer'):
+                try:
+                    if temp_title in vl_answer.get('w_assessment-name').values():
+                        new_title = vl_answer.get('w_assessment-name')
+                        answer.set_property('w_q1-name-assessment-report', {'en': new_title['en'], 'ru': new_title['ru']})
+                        updated_answers.append(answer.absolute_url())
+                        break
+                except AttributeError:
+                    errors[vl_answer.absolute_url()] = "AttributeError"
+                except:
+                    errors[vl_answer.absolute_url()] = "Unhandled"
+            else:
+                orphan_answers.append(answer.absolute_url())
+        return self._manage_update_html(updated_answers=updated_answers,
+            errors=errors.items(), orphan_answers=orphan_answers)
+
+    _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
