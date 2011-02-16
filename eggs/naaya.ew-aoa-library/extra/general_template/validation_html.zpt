@@ -15,7 +15,7 @@
 				var assessment_ru = $('#w_q1-name-assessment-report-ru').val();
 				if (edit != 1)
 				{
-					//$('#w_q1-name-assessment-report').hide();
+					$('#w_q1-name-assessment-report').hide();
 					/*If not in edit mode,
 					create a single select with options from virtual library*/
 					$('#w_q1-name-assessment-report').after('<'+'select\
