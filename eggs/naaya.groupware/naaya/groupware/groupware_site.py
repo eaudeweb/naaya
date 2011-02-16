@@ -244,7 +244,7 @@ class GroupwareSite(NySite):
     security.declarePublic('login_html')
     def login_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/login_form?came_from=' + REQUEST.get('came_from', ''))
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/login_form?%s' % REQUEST.environ.get('QUERY_STRING'))
 
     security.declarePublic('logout_html')
     def logout_html(self, REQUEST=None, RESPONSE=None):
@@ -258,4 +258,3 @@ class GroupwareSite(NySite):
     directory = Directory(id='directory')
 
 InitializeClass(GroupwareSite)
-
