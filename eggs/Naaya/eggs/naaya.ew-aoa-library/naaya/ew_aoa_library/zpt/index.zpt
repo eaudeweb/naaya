@@ -144,8 +144,8 @@
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
-	<td tal:content="i/uploader"/>
-	<td tal:content="i/country"/>
+	<td tal:content="python:i.get('uploader')"/>
+	<td tal:content="python:i.get('country')"/>
 	<td tal:condition="review_template"
 		tal:content="i/official_country_region|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >
