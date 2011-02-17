@@ -13,7 +13,7 @@
 
 				var assessment_en = $('#w_q1-name-assessment-report-en').val();
 				var assessment_ru = $('#w_q1-name-assessment-report-ru').val();
-				if (edit != 1)
+				if (edit.length == 0)
 				{
 					$('#w_q1-name-assessment-report').hide();
 					/*If not in edit mode,
@@ -164,7 +164,7 @@
 					$('.surveySubmit').hide();
 				}
 			}
-			if (edit == 1)
+			if (edit.length>0)
 			{
 				$('#w_confirmation').parent().hide();
 				$('#w_q1-name-assessment-report-en').attr('readonly', 'readonly');
@@ -368,4 +368,51 @@
 		<input type="submit" id="opener" value="Preview a model Review Template" />
 		<div id="report_preview"></div>
 	</span>
+<script type="text/javascript">
+            $(function(){
+                        var allRadios = $('input[type=radio]')
+                        var radioChecked;
+                        
+                        var setCurrent = 
+                                        function(e) {
+                                            var obj = e.target;
+                             
+                                            radioChecked = $(obj).attr('checked');
+                                     }
+                                                
+                        var setCheck = 
+                                    function(e) {
+                                        
+                                        if (e.type == 'keypress' && e.charCode != 32) {
+                                            return false;
+                                        }
+                                        
+                                        var obj = e.target;
+                                        
+                             if (radioChecked) {
+                             $(obj).attr('checked', false);
+                             } else {
+                             $(obj).attr('checked', true);
+                             }
+                                 }    
+                                                 
+                        $.each(allRadios, function(i, val){        
+                             var label = $('label[for=' + $(this).attr("id") + ']');
+                             
+                         $(this).bind('mousedown keydown', function(e){
+                                setCurrent(e);
+                            });
+                            
+                            label.bind('mousedown keydown', function(e){
+                                e.target = $('#' + $(this).attr("for"));
+                                setCurrent(e);
+                            });
+                         
+                         $(this).bind('click', function(e){
+                                setCheck(e);    
+                            });
+                         
+                        });
+            });
+</script>
 </metal:block>
