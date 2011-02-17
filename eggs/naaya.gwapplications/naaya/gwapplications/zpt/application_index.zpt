@@ -71,27 +71,27 @@
             <form action="." method="post" tal:condition="python:pending or deleted">
                 <div class="field">
                     <label for="id">Interest group id</label>
-                    <input type="text" size="40" name="id" tal:attributes="value here/gen_id"/>
+                    <input type="text" size="40" name="id:utf8:ustring" tal:attributes="value here/gen_id"/>
                 </div>
 
                 <div class="field">
                     <label for="title">Interest group title</label>
-                    <input type="text" size="50" name="title" tal:attributes="value data/site_title"/>
+                    <input type="text" size="50" name="title:utf8:ustring" tal:attributes="value data/site_title"/>
                 </div>
 
                 <div class="field">
                     <label for="subtitle">Interest group subtitle</label>
-                    <input type="text" size="50" name="subtitle" tal:attributes="value data/subtitle"/>
+                    <input type="text" size="50" name="subtitle:utf8:ustring" tal:attributes="value data/subtitle"/>
                 </div>
 
                 <div class="field">
                     <label for="description">Interest group description</label>
-                    <textarea type="text" cols="50" rows="7" name="description" tal:content="data/description"></textarea>
+                    <textarea type="text" cols="50" rows="7" name="description:utf8:ustring" tal:content="data/description"></textarea>
                 </div>
 
                 <div class="field">
                     <label for="admin_comments">Administrator comments</label>
-                    <textarea type="text" cols="50" rows="7" name="admin_comments"></textarea>
+                    <textarea type="text" cols="50" rows="7" name="admin_comments:utf8:ustring"></textarea>
                 </div>
 
                 <tal:block condition="python:not here.approved and not here.rejected">
