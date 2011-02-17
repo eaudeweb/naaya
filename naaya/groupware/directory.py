@@ -190,16 +190,10 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_user_access_level')
     def get_user_access_level(self, roles):
-        access_level = 'N/A'
-        if 'Contributor' in roles:
-            access_level = 'Contributor'
-        if 'Administrator' in roles:
-            access_level = 'Administrator'
-        if 'Manager' in roles:
-            access_level = 'Manager'
-        if 'Viewer' in roles:
-            access_level = 'Viewer'
-        return access_level
+        if len(roles) == 0:
+            return u'N/A'
+        else:
+            return u', '.join(roles)
 
     security.declareProtected(view, 'is_member')
     def is_member(self):
@@ -210,4 +204,3 @@ class Directory(Implicit, Item):
     user_list_html = PageTemplateFile('zpt/directory_user_list', globals())
 
 InitializeClass(Directory)
-
