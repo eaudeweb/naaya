@@ -16,6 +16,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
+from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from directory import Directory
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
@@ -183,27 +184,33 @@ class GroupwareSite(NySite):
                    'source_id': source_obj.getId(),
                    'location': location}
 
+        directory_search_link = (
+            "%(ig_url)s/directory?search_string=%(userid)s" % {
+                'ig_url': self.absolute_url(),
+                'userid': user.name
+            }
+        )
+
         mail_tool = self.getEmailTool()
         mail_to = self.administrator_email
         mail_from = mail_tool._get_from_address()
-        mail_subject = "IG access request"
-        mail_body = \
-            ("This is an automated mail to inform you that "
-             "user `%(userid)s` has requested %(role)s rights on "
-             "%(location_title)s (%(location_url)s).\n\n"
-             "You can choose to grant the request by following these steps:\n"
-             " - Open the user administration page at %(user_admin_link)s\n"
-             " - Verify the form contents for the requesting user\n"
-             " - Click on the `Assign role` button\n")  % \
-                {'role': role,
-                 'userid': user.name,
-                 'location_title': location_title,
-                 'user_admin_link': user_admin_link,
-                 'location_url': location_url}
+        mail_data = self.request_ig_access_emailpt.render_email(**{
+            'here': self,
+            'role': role,
+            'user': user,
+            'firstname': getattr(user, 'firstname', ''),
+            'lastname': getattr(user, 'lastname', ''),
+            'email': getattr(user, 'email', ''),
+            'location_title': location_title,
+            'user_admin_link': user_admin_link,
+            'directory_search_link': directory_search_link,
+            'location_url': location_url
+        })
+        mail_tool.sendEmail(mail_data['body_text'], mail_to,
+                            mail_from, mail_data['subject'])
 
-        mail_tool.sendEmail(mail_body, mail_to, mail_from, mail_subject)
-
-        return REQUEST.RESPONSE.redirect('%s/request_ig_access_html?mail_sent=True' % self.absolute_url())
+        return REQUEST.RESPONSE.redirect(
+            '%s/request_ig_access_html?mail_sent=True' % self.absolute_url())
 
     def relinquish_membership(self, REQUEST):
         """
@@ -251,8 +258,12 @@ class GroupwareSite(NySite):
         """ """
         return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login/logout')
 
-    request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
-    relinquish_membership_html = nptf('zpt/relinquish_membership', globals(), 'naaya.groupware.relinquish_membership')
+    request_ig_access_emailpt = EmailPageTemplateFile(
+        'zpt/emailpt/request_ig_access.zpt', globals())
+    request_ig_access_html = nptf('zpt/request_ig_access', globals(),
+                                  'naaya.groupware.request_ig_access')
+    relinquish_membership_html = nptf('zpt/relinquish_membership', globals(),
+                                      'naaya.groupware.relinquish_membership')
     folder_listing = nptf('zpt/folder_listing', globals(), 'gw_folder_listing')
 
     directory = Directory(id='directory')
