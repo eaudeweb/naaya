@@ -3939,6 +3939,7 @@ naaya_known_permissions = {
     'Naaya - Translate pages': "Translate messages",
     'Naaya - Zip export': "Export folder as Zip",
     'Naaya - Validate content': "Validate objects",
+    PERMISSION_ADD_FOLDER: "Submit Folder objects",
     'View': "Access content",
     'Change permissions': "Change permissions",
 }
