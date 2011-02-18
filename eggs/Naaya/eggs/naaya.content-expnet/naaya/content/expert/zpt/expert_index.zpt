@@ -96,7 +96,7 @@
 		<span tal:content="address"/>
 	</div>
 	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main areas of expertise</h4>
+		<h3 i18n:translate="">Main areas of expertise</h3>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li i18n:translate=""><tal:block content="topic/title" /></li>
@@ -111,7 +111,7 @@
 	<a name="Employment"></a>
 	<div tal:define="EmploymentHistory here/getEmploymentHistory"
 		tal:condition="EmploymentHistory">
-		<h4 i18n:translate="">Employment History</h4>
+		<h3 i18n:translate="">Employment History</h3>
 		<span />
 		<ul>
 			<tal:block repeat="ob EmploymentHistory">

@@ -91,11 +91,11 @@
 		<span tal:content="address"/>
 	</div>
 	<div tal:condition="here/contact_details">
-		<h4 i18n:translate="">Contact details</h4>
+		<h3 i18n:translate="">Contact details</h3>
 		<span tal:replace=" structure here/contact_details"/>
 	</div>
 	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main topics covered</h4>
+		<h3 i18n:translate="">Main topics covered</h3>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li i18n:translate=""><tal:block content="topic/title" /></li>
@@ -104,7 +104,7 @@
 	</div>
 	<tal:block define="emp_lists here/list_employees; emp_current python: emp_lists[0]; emp_previous python: emp_lists[1]">
 		<tal:block condition="emp_current">
-			<h4 i18n:translate="">Current employees</h4>
+			<h3 i18n:translate="">Current employees</h3>
 			<ul>
 				<tal:block repeat="emp emp_current">
 					<li tal:condition="python:emp.approved"><a tal:attributes="href emp/absolute_url" tal:content="emp/title" style="text-decoration: underline;"/></li>
@@ -112,7 +112,7 @@
 			</ul>
 		</tal:block>
 		<tal:block condition="emp_previous">
-			<h4 i18n:translate="">Previous employees</h4>
+			<h3 i18n:translate="">Previous employees</h3>
 			<ul>
 				<tal:block repeat="emp emp_previous">
 					<li tal:condition="python:emp.approved"><a tal:attributes="href emp/absolute_url" tal:content="emp/title" style="text-decoration: underline;"/></li>
