@@ -61,7 +61,7 @@
 	<tal:block condition="here/details"
 		content="structure here/details" />
 	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main topics covered</h4>
+		<h3 i18n:translate="">Main topics covered</h3>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li i18n:translate=""><tal:block content="topic/title" /></li>
@@ -71,7 +71,7 @@
 	<a name="Organisations"></a>
 	<div tal:define="Organisations here/organisations|nothing"
 		tal:condition="Organisations">
-		<h4 i18n:translate="">Active organisations</h4>
+		<h3 i18n:translate="">Active organisations</h3>
 		<span />
 		<ul>
 			<tal:block repeat="ob Organisations">
