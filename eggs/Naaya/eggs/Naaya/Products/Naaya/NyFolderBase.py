@@ -389,8 +389,6 @@ class NyFolderBase(Folder, NyPermissions):
 
         return r
 
-NaayaPageTemplateFile('zpt/folder_listing', globals(), 'folder_listing')
-
 class ObjectListingPortlet(object):
 
     title = 'List contained objects'
