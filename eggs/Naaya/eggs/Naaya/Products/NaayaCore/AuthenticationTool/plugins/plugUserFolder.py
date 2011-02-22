@@ -49,4 +49,7 @@ class plugUserFolder(PlugBase):
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugUserFolder', globals())
 
+    def getUserFullName(self, user_id, acl_folder):
+        return user_id
+
 InitializeClass(plugUserFolder)
