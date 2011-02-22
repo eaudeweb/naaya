@@ -14,3 +14,29 @@
     </td>
 </tr>
 </metal:block>
+
+<metal:block define-macro="action_buttons">
+  <tal:block tal:condition="python:here.checkPermissionEditObject()">
+  <div id="admin_this_folder"
+     tal:define="versioning_available python:here.isVersionable()">
+    <tal:block tal:condition="python:not here.hasVersion()">
+      <a tal:condition="versioning_available"
+         tal:attributes="href string:${here/absolute_url}/startVersion"
+         ><span i18n:translate="">Checkout</span></a>
+      <a tal:attributes="href string:${here/absolute_url}/edit_html"
+         ><span i18n:translate="">Edit</span></a>
+    </tal:block>
+    <tal:block condition="versioning_available">
+      <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()"
+         tal:attributes="href string:${here/absolute_url}/edit_html"
+         ><span i18n:translate="">Version control</span></a>
+      <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"
+         i18n:translate="">This item has been checked out by another user</strong>
+    </tal:block>
+    <a tal:condition="here/checkPermissionDeleteObject"
+       tal:attributes="href string:${here/absolute_url}/deleteThis"
+       onclick="return confirm(gettext('Are you sure?'))"
+       ><span i18n:translate="">Delete</span></a>
+  </div>
+  </tal:block>
+</metal:block>
