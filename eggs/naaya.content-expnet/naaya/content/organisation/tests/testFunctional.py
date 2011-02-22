@@ -117,7 +117,7 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.assertTrue('My Organisation</a></h4>' not in html)
+        self.assertTrue('My Organisation</a></h3>' not in html)
 
         #Find the organisation after approval
         myorganisation = self.portal.myfolder.myorganisation
@@ -131,7 +131,7 @@ class NyOrganisationFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('My Organisation</a></h4>' in html)
+        self.failUnless('My Organisation</a></h3>' in html)
 
         #Fail to find a nonexistend string
         form = self.browser.get_form('frmSearch')
