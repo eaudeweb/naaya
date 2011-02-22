@@ -49,7 +49,7 @@ class CountryProfile(SimpleItem):
                   self.mysql_connection['user'], self.mysql_connection['pass'])
         return conn
 
-    _index = PageTemplateFile('zpt/index', globals())
+    index_html = PageTemplateFile('zpt/index', globals())
 
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/manage_edit', globals())
@@ -74,17 +74,29 @@ class CountryProfile(SimpleItem):
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
-    security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST):
-        """ """
-        dbconn = self.open_dbconnection()
-        records = self.get_population(dbconn)
-        dbconn.close()
-        return self._index(REQUEST, records=records)
-
     #--------QUERIES---------------#
-    def get_population(self, dbconn):
-        return dbconn.query(u"""SELECT * FROM COUNTRY""")
+    def get_table_data(self, variable, source, country, dbconn):
+        """ Returns a variable's value for the latest year for a given source and country """
+        sql = u"""SELECT VARIABLE.VAR_LABEL, VALUE.VAL, VARIABLE.VAR_UNIT, SOURCE.SRC_LABEL, VALUE.VAL_YEAR FROM VALUE
+                INNER JOIN VARIABLE ON (VALUE.VAR_CODE = VARIABLE.VAR_CODE)
+                INNER JOIN SOURCE ON (VARIABLE.VAR_SRC_CODE = SOURCE.SRC_CODE)
+                INNER JOIN COUNTRY ON (VALUE.VAL_CNT_CODE = COUNTRY.CNT_CODE)
+                WHERE VARIABLE.VAR_CODE = '%s' AND COUNTRY.CNT_CODE = '%s' AND SOURCE.SRC_CODE = '%s'
+                ORDER BY VALUE.VAL_YEAR DESC LIMIT 1""" % (variable, country, source)
+        records = dbconn.query(sql)
+        if records:
+            records = records[0]
+        return records
+
+    def get_chart_data(self, variable, source, country, dbconn):
+        """ Returns the evolution overtime for a given variable, source and country """
+        sql = u"""SELECT VARIABLE.VAR_LABEL, VALUE.VAL, VARIABLE.VAR_UNIT, SOURCE.SRC_CODE, VALUE.VAL_YEAR FROM VALUE
+                INNER JOIN VARIABLE ON (VALUE.VAR_CODE = VARIABLE.VAR_CODE)
+                INNER JOIN SOURCE ON (VARIABLE.VAR_SRC_CODE = SOURCE.SRC_CODE)
+                INNER JOIN COUNTRY ON (VALUE.VAL_CNT_CODE = COUNTRY.CNT_CODE)
+                WHERE VARIABLE.VAR_CODE = '%s' AND COUNTRY.CNT_CODE = '%s' AND SOURCE.SRC_CODE = '%s'
+                ORDER BY VALUE.VAL_YEAR""" % (variable, country, source)
+        return dbconn.query(sql)
 
 
 InitializeClass(CountryProfile)

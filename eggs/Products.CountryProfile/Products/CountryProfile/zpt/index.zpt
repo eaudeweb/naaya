@@ -1,9 +1,84 @@
-<html>
-	<head>
-		<title>Index</title>
-	</head>
-	<body>
-		<h1>Index</h1>
-		<span tal:replace="options/records" />
-	</body>
-</html>
+<metal:block i18n:domain="portal_translations" metal:use-macro="here/standard_template_macro">
+
+<metal:block metal:fill-slot="title">
+		<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+</metal:block>
+
+<metal:block fill-slot="body">
+	<div id="center_content" tal:define="dbconn here/open_dbconnection">
+		<h1 i18n:translate="">Search</h1>
+		<p i18n:translate="">Please enter your search criteria.</p>
+		<table class="datatable">
+			<thead>
+				<tr>
+					<td i18n:translate="">Indicator</td>
+					<td i18n:translate="">Value</td>
+					<td i18n:translate="">Unit</td>
+					<td i18n:translate="">Source</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr tal:define="record python:here.get_table_data('SOC1', 'JMP', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Population</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+				<tr tal:define="record python:here.get_table_data('PHY1', 'medstat', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Land area</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+				<tr tal:define="record python:here.get_table_data('U24', 'aquastat', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Water withdrawal for agriculture</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+				<tr tal:define="record python:here.get_table_data('R10', 'aquastat', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Water per capita</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+				<tr tal:define="record python:here.get_table_data('SUP1', 'JMP', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Access to improved water source</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+				<tr tal:define="record python:here.get_table_data('SAN1', 'JMP', 'TN', dbconn)" tal:condition="record">
+					<td i18n:translate="">Access to sanitation</td>
+					<td tal:content="record/VAL" />
+					<td tal:content="record/VAR_UNIT" />
+					<td>
+						<span tal:replace="record/SRC_LABEL" />&nbsp;
+						(<span tal:replace="record/VAL_YEAR" />)
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<tal:block define="dummy dbconn/close" />
+	</div>
+</metal:block>
+
+</metal:block>
