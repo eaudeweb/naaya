@@ -33,11 +33,8 @@
 		</span>
 	</span>
 </h1>
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
-<div id="admin_this_folder">
-    <a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit</a>
-</div>
-</tal:block>
+
+<metal:block use-macro="here/portal_forms/site_object_index/macros/action_buttons"/>
 
 <!-- Map widget -->
 <tal:block condition="python:here.prop_details('geo_location')['show']"
