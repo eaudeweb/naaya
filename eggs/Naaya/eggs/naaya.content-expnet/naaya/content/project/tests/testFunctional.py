@@ -114,7 +114,7 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.assertTrue('My project</a></h4>' not in html)
+        self.assertTrue('My project</a></h3>' not in html)
 
         #Find the project after approval
         myproject = self.portal.myfolder.myproject
@@ -128,7 +128,7 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('My project</a></h4>' in html)
+        self.failUnless('My project</a></h3>' in html)
 
         #Fail to find a nonexistend string
         form = self.browser.get_form('frmSearch')
