@@ -185,6 +185,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     display_contributor = "on"
     display_subobject_count = ""
     default_logo = ''
+    content_versioning_enabled = True
 
     _Delete_objects_Permission = ['Administrator']
 
