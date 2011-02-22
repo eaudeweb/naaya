@@ -35,12 +35,12 @@ supplied for each interest group and then follow the subscription instructions.
             </ul>
         </tal:block>
         <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-            <h2>Interest groups that are restricted to you</h2>
+            <h2>Interest groups that you can not access</h2>
             <p>You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
             <ul class="ig_listing">
                 <li tal:repeat="ig igs">
                     <a class="ig_title" tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                    [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
+                    [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
                     <div class="ig_subtitle" tal:content="ig/site_subtitle"/>
                 </li>
             </ul>
