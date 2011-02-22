@@ -14,6 +14,7 @@
 		<form id="folder_edit" title="NyFolder edit"/>
 		<form id="folder_editlogo" title="NyFolder edit logo"/>
 		<form id="folder_index" title="NyFolder default view"/>
+		<form id="folder_listing" title="NyFolder contents"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_renameid" title="NyFolder rename subitems ids"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
