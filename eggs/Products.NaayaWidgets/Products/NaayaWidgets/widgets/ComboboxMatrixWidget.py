@@ -87,7 +87,7 @@ class ComboboxMatrixWidget(MatrixWidget):
                 res.append('%s: -' % title)
                 continue
             for answer in row_answers:
-                value.append(self.choices[answer])
+                value.append(self.values[answer])
             value = ', '.join(value)
             res.append('%s: %s' % (title, value))
         return '\n'.join(res)

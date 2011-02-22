@@ -124,12 +124,19 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(view, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
+        def stringify(value):
+            if not isinstance(value, basestring):
+                return unicode(value)
+            return value
+        def all_stringify(row):
+            return [stringify(value) for value in row]
 
         answers = self.getAnswers()
         widgets = self.getSortedWidgets()
         header = ['Respondent']
         header += [widget.title_or_id() for widget in widgets]
         rows = [answer.answer_values() for answer in answers]
+        rows = [all_stringify(item) for item in rows]
 
         file_type = REQUEST.get('file_type', 'CSV')
         exporter = self.getSite().csv_export
