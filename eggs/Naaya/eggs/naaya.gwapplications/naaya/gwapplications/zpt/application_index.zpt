@@ -1,33 +1,39 @@
 <metal:block use-macro="here/gw_macro/macros/main">
     <div class="breadcrumbtrail" metal:fill-slot="div-breadcrumbtrail">
         <div class="breadcrumbhead" i18n:translate="">You are here: </div>
-		<div class="breadcrumbitem"><a href="http://www.eionet.europa.eu">Eionet</a></div>
         <div class="breadcrumbitem">
-            <a tal:attributes="href gw_root_url" title="Groupware home" i18n:translate="">Forum</a>
+            <a href="http://www.eionet.europa.eu">Eionet</a>
+        </div>
+        <div class="breadcrumbitem">
+            <a tal:attributes="href gw_root_url" title="Groupware home"
+               i18n:translate="">Forum</a>
         </div>
         <div class="breadcrumbitemlast">
-            <a tal:attributes="href here/absolute_url; title here/title_or_id" tal:content="here/title_or_id">here/title_or_id</a>
+            <a tal:attributes="href here/absolute_url; title here/title_or_id"
+               tal:content="here/title_or_id">here/title_or_id</a>
         </div>
     </div>
-    <div id="workarea" tal:define="username python:request.AUTHENTICATED_USER.getUserName()" metal:fill-slot="div-workarea">
-        <tal:block tal:define="data here/get_application_data;
-                               created_url here/created_url;
-                               pending python:not here.approved and not here.rejected;
-                               deleted python:here.approved and not created_url">
+    <div id="workarea"
+         tal:define="username python:request.AUTHENTICATED_USER.getUserName()"
+         metal:fill-slot="div-workarea">
+        <tal:block define="data here/get_application_data;
+                           created_url here/created_url;
+                           pending python:not here.approved and not here.rejected;
+                           deleted python:here.approved and not created_url">
             <h1>Interest group application</h1>
             <table class="datatable">
-				<col style="width:12em"/>
-				<col style="min-width: 20em"/>
+                <col style="width:12em"/>
+                <col style="min-width: 20em"/>
                 <tr>
-                    <th scope="row">Portal title</th>
+                    <th scope="row">Title</th>
                     <td><span tal:content="data/site_title"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Portal subtitle</th>
+                    <th scope="row">Subtitle</th>
                     <td><span tal:content="data/subtitle"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Portal description</th>
+                    <th scope="row">Description</th>
                     <td><span tal:content="data/description"/></td>
                 </tr>
                 <tr>
@@ -44,10 +50,12 @@
                 </tr>
                 <tal:block tal:condition="here/approved">
                     <tr>
-                        <th scope="row">Portal url</th>
+                        <th scope="row">IG url</th>
                         <td>
-                            <a tal:attributes="href created_url" tal:content="created_url" tal:condition="not:deleted">created_url</a>
-                            <span tal:condition="deleted">Portal deleted</span>
+                            <a tal:attributes="href created_url"
+                               tal:content="created_url"
+                               tal:condition="not:deleted">created_url</a>
+                            <span tal:condition="deleted">IG deleted</span>
                         </td>
                     </tr>
                     <tr>
@@ -60,38 +68,53 @@
                 </tr>
             </table>
 
-            <p tal:condition="pending">If you wish to approve this application please review and if necessary, change the fields below,
-            then press the <em>Approve</em> button. If you wish to reject the application
-            just press the <em>Reject</em> button.</p>
-            <p tal:condition="deleted">This application is approved but the created portal was deleted. You can choose to reapprove
-            this application if you wish to recreate the initial portal.</p>
-            <p tal:condition="python:pending or deleted">Upon approval, a new IG will be created, with the details specified below,
-            and the applicant will be granted <em>Administrator</em> rights on that IG.</p>
+            <p tal:condition="pending">
+                If you wish to approve this application please review and
+                if necessary, change the fields below, then press the
+                <em>Approve</em> button. If you wish to reject the
+                application just press the <em>Reject</em> button.
+            </p>
+            <p tal:condition="deleted">
+                This application is approved but the created portal was
+                deleted. You can choose to reapprove this application if
+                you wish to recreate the initial portal.
+            </p>
+            <p tal:condition="python:pending or deleted">
+                Upon approval, a new IG will be created, with the details
+                specified below, and the applicant will be granted
+                <em>Administrator</em> rights on that IG.
+            </p>
 
             <form action="." method="post" tal:condition="python:pending or deleted">
                 <div class="field">
                     <label for="id">Interest group id</label>
-                    <input type="text" size="40" name="id:utf8:ustring" tal:attributes="value here/gen_id"/>
+                    <input type="text" size="40" name="id:utf8:ustring"
+                           tal:attributes="value here/gen_id"/>
                 </div>
 
                 <div class="field">
                     <label for="title">Interest group title</label>
-                    <input type="text" size="50" name="title:utf8:ustring" tal:attributes="value data/site_title"/>
+                    <input type="text" size="50" name="title:utf8:ustring"
+                           tal:attributes="value data/site_title"/>
                 </div>
 
                 <div class="field">
                     <label for="subtitle">Interest group subtitle</label>
-                    <input type="text" size="50" name="subtitle:utf8:ustring" tal:attributes="value data/subtitle"/>
+                    <input type="text" size="50" name="subtitle:utf8:ustring"
+                           tal:attributes="value data/subtitle"/>
                 </div>
 
                 <div class="field">
                     <label for="description">Interest group description</label>
-                    <textarea type="text" cols="50" rows="7" name="description:utf8:ustring" tal:content="data/description"></textarea>
+                    <textarea type="text" cols="50" rows="7"
+                              name="description:utf8:ustring"
+                              tal:content="data/description"></textarea>
                 </div>
 
                 <div class="field">
                     <label for="admin_comments">Administrator comments</label>
-                    <textarea type="text" cols="50" rows="7" name="admin_comments:utf8:ustring"></textarea>
+                    <textarea type="text" cols="50" rows="7"
+                              name="admin_comments:utf8:ustring"></textarea>
                 </div>
 
                 <tal:block condition="python:not here.approved and not here.rejected">
