@@ -163,7 +163,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('My expert Knowitall</a></h4>' in html)
+        self.failUnless('My expert Knowitall</a></h3>' in html)
 
         #Find the expert added
         form = self.browser.get_form('frmSearch')
@@ -172,7 +172,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         html = self.browser.get_html()
-        self.failUnless('My expert Knowitall</a></h4>' in html)
+        self.failUnless('My expert Knowitall</a></h3>' in html)
 
         self.browser_do_logout()
 
