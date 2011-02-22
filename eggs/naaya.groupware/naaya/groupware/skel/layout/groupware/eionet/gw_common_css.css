@@ -206,8 +206,8 @@ a.b_download {
 	font-size: normal;
 	text-decoration: none;
 	padding-right: 0.3em;
-	display: none;
 }
+
 a.b_download:hover {
 	text-decoration: underline;
 }
@@ -661,8 +661,8 @@ tr.not-duplicate {
 .pick_pop_up h1 {
 	margin-top: 0.8em;
 	position: relative;
-	color:#8da559;/*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/	
-	color: #666666;	
+	color:#8da559;/*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/
+	color: #666666;
 	font-family: arial, sans-serif;
 	font-size: 1.9em;
 	font-weight: bold;
@@ -692,7 +692,7 @@ tr.not-duplicate {
 /* Thesaurus style */
 .h2term {
 	font-family: Arial, Verdana;
-	margin-bottom: 20px; 
+	margin-bottom: 20px;
 }
 .bar {
 	background-color: #EFF6FA;
@@ -753,7 +753,7 @@ div.xmlExportButtons a.xml {
 	background-repeat: no-repeat;
 }
 
-/* calendars & clocks */ 
+/* calendars & clocks */
 .calendarbox, .clockbox {
 	margin:5px auto;
 	font-size:11px;
@@ -1608,7 +1608,7 @@ label:hover {
 
 .paginator-head {
 		float: right;
-		
+
 }
 
 .paginator-footer {
