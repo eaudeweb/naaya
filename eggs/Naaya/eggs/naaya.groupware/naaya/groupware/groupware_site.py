@@ -54,6 +54,7 @@ class GroupwareSite(NySite):
     security = ClassSecurityInfo()
     display_subobject_count = "on"
     portal_is_archived = False
+    content_versioning_enabled = False
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
