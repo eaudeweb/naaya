@@ -18,7 +18,7 @@
 
 <metal:block fill-slot="body"
     tal:define="review_template python:'tools/general_template/general-template' in here.target_path;
-                is_entitled here/glCheckPermissionPublishObjects;
+                is_entitled here/checkPermissionPublishObjects;
                 site here/getSite">
 <link rel="stylesheet" type="text/css" media="all"
       tal:define="stool here/portal_survey;"
