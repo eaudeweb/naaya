@@ -1,51 +1,30 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# David Batranu, Eau de Web
-
-# Python imports
-from zipfile import ZipFile
 from StringIO import StringIO
 from copy import copy
+from zipfile import ZipFile, ZipInfo
 import tempfile
 
-# Zope imports
-from Acquisition import Implicit
-from OFS.SimpleItem import Item
-from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import transaction
-from zope.event import notify
-from Products.NaayaCore.events import ZipImportEvent
-from zope.component import adapts
-from zope.interface import implements
-from zope.interface import Interface
+from Acquisition import Implicit
 from DateTime import DateTime
+from Globals import InitializeClass
+from OFS.SimpleItem import Item
+from Products.NaayaCore.events import ZipImportEvent
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from ZPublisher.Iterators import IStreamIterator
+from zope.component import adapts
+from zope.event import notify
+from zope.interface import Interface
+from zope.interface import implements
+import transaction
 
-# Naaya imports
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.NyFolder import NyFolder
-from naaya.content.file.interfaces import INyFile
-from naaya.content.document.interfaces import INyDocument
+from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from naaya.content.contact.interfaces import INyContact
+from naaya.content.document.interfaces import INyDocument
 from naaya.content.event.interfaces import INyEvent
+from naaya.content.file.interfaces import INyFile
 from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
 from naaya.core.utils import force_to_unicode, relative_object_path
@@ -127,7 +106,7 @@ def create_folders(container, folder_tree, report_path):
 
     folder_map = {}
     for kid_name, kid_tree in folder_tree:
-        kid_id = addNyFolder(container, id=kid_name, title='',
+        kid_id = addNyFolder(container, title=kid_name,
                              _send_notifications=False)
         kid_folder = container[kid_id]
         folder_map[kid_name] = kid_folder
@@ -299,7 +278,24 @@ class ZipExportTool(Implicit, Item):
         if object_zip_data:
             if isinstance(object_zip_data, unicode):
                 object_zip_data = object_zip_data.encode('utf-8')
-            zip_file.writestr(zip_path, object_zip_data)
+
+            #Add modification datetime
+            if hasattr(obj, 'releasedate'):
+                date = obj.releasedate
+                zipinfo = ZipInfo(filename=zip_path,
+                                  date_time=(date.year(), date.month(),
+                                             date.day(), date.hour(),
+                                             date.minute(),
+                                             int(date.second()), ))
+            else:
+                zipinfo = ZipInfo(filename=zip_path)
+
+            #Set external_attr to 16, otherwise empty folders will not be
+            #preserved
+            if object_zip_data == 'Naaya Folder':
+                zipinfo.external_attr = 16
+
+            zip_file.writestr(zipinfo, object_zip_data)
             return zip_path
 
     security.declarePrivate('add_index')
@@ -457,8 +453,6 @@ class NewsZipAdapter(NewsAndEventZipExport):
     def __call__(self):
         return self.export_data_for_zip()
 
-
-from ZPublisher.Iterators import IStreamIterator
 class FileIterator(object):
     """
     A file-like object that can be streamed by ZServer.

@@ -84,6 +84,32 @@ class NyZipExport(NaayaTestCase):
 
         self.assertEqual(set(zip.namelist()), set(expected_namelist))
 
+    def test_export_empty_folder(self):
+        """An empty folder should also be exported"""
+        folder_id = addNyFolder(self.test_folder, title="Some title")
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+        expected_namelist = [
+            'index.txt',
+            'zip_export_folder/%s/' % folder_id,
+        ]
+        self.assertEqual(set(zip.namelist()), set(expected_namelist))
+
+    def test_export_datetime(self):
+        """The files and folders in the zipfile should have the datetime set"""
+        folder_id = addNyFolder(self.test_folder, title="Some title")
+        export_value = self.test_folder.zip_export.do_export()
+        zip = ZipFile(export_value, 'r')
+
+        folder_datetime = self.test_folder._getOb(folder_id).releasedate
+        for zipinfo in zip.filelist:
+            if folder_id in zipinfo.filename:
+                self.assertEqual(folder_datetime.year(), zipinfo.date_time[0])
+                self.assertEqual(folder_datetime.month(), zipinfo.date_time[1])
+                self.assertEqual(folder_datetime.day(), zipinfo.date_time[2])
+                self.assertEqual(folder_datetime.hour(), zipinfo.date_time[3])
+                self.assertEqual(folder_datetime.minute(), zipinfo.date_time[4])
+
     def test_export_html_document(self):
         addNyDocument(self.test_folder, id='html_document')
         self.test_folder['html_document'].body = '<p>Html document</p>'
