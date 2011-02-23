@@ -301,6 +301,7 @@
 			<permission name="Naaya - Translate pages" />
 			<permission name="Naaya - Validate content" />
 			<permission name="Naaya - Skip Captcha" />
+			<permission name="Naaya - Skip approval" />
 			<permission name="Manage Naaya Glossary" />
 			<permission name="Query Vocabulary" />
 			<permission name="Search ZCatalog" />

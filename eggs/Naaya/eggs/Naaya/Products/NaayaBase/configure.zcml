@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'
-	  xmlns:five="http://namespaces.zope.org/five">
+           xmlns:five="http://namespaces.zope.org/five"
+           xmlns:zcml="http://namespaces.zope.org/zcml">
   <include package=".adapter" />
 
   <class class=".NyContentType.NyContentType">
@@ -61,5 +62,12 @@
   </class>
 
   <subscriber handler=".NyComments.handleComentedObject" />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility name="skip_approval_permission.update"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.SkipApprovalPermission"
+             permission="zope2.ViewManagementScreens" />
+  </configure>
 
 </configure>

@@ -73,6 +73,8 @@ def portal_fixture(app):
 
     acl_users = portal.acl_users
     acl_users._doAddUser('test_user_1_', 'secret', ['Manager'], '', '', '', '')
+    acl_users._doAddUser('site_admin', 'site_admin', ['Administrator'], '',
+                         'Site', 'Admin', 'site_admin@example.com')
     acl_users._doAddUser('contributor', 'contributor', ['Contributor'], '',
                          'Contributor', 'Test', 'contrib@example.com')
     acl_users._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
