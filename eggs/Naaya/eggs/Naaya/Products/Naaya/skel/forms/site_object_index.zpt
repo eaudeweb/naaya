@@ -34,6 +34,10 @@
       <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"
          i18n:translate="">This item has been checked out by another user</strong>
     </tal:block>
+    <a tal:condition="here/checkPermissionDeleteObject"
+       tal:attributes="href string:${here/absolute_url}/deleteThis"
+       onclick="return confirm(gettext('Are you sure?'))"
+       ><span i18n:translate="">Delete</span></a>
   </div>
   </tal:block>
 </metal:block>
