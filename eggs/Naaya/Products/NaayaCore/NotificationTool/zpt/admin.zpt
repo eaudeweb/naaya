@@ -8,6 +8,11 @@
 
 <tal:block define="global days_of_week python:['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']" />
 
+<p i18n:translate="">
+  Notifications are sent to subscribed users when content is added or modified
+  in the portal.
+</p>
+
 <form method="post" tal:attributes="action string:${here/absolute_url}/admin_settings">
 
 <!--
@@ -27,26 +32,32 @@
 
 -->
 
-<fieldset><legend i18n:translate="">Users may subscribe to notifications</legend>
+<fieldset><legend i18n:translate="">Users may subscribe to notifications:</legend>
 <div class="field-inline">
-    <label for="enable_instant" i18n:translate="">Instant notification</label>
     <input type="checkbox" id="enable_instant" name="enable_instant:boolean"
         tal:attributes="checked python:test(get_config('enable_instant'), 'checked', None)" />
+    <label for="enable_instant"
+           i18n:translate="">Allow instant notification</label>
 </div>
 <div class="field-inline">
-    <label for="enable_daily" i18n:translate="">Daily digest</label>
     <input type="checkbox" id="enable_daily" name="enable_daily:boolean"
         tal:attributes="checked python:test(get_config('enable_daily'), 'checked', None)" />
+    <label for="enable_daily"
+           i18n:translate="">Allow daily digest</label>
+    <!--
     <label for="daily_hour" i18n:translate="">hour:</label>
     <select id="daily_hour" name="daily_hour:int">
         <option tal:repeat="hour python:range(24)" tal:content="python:'%02d' % hour"
           tal:attributes="value hour; selected python:hour==get_config('daily_hour')" />
     </select>
+    -->
 </div>
 <div class="field-inline">
-    <label for="enable_weekly" i18n:translate="">Weekly digest</label>
     <input type="checkbox" id="enable_weekly" name="enable_weekly:boolean"
         tal:attributes="checked python:test(get_config('enable_weekly'), 'checked', None)" />
+    <label for="enable_weekly"
+           i18n:translate="">Allow weekly digest</label>
+    <!--
     <label for="weekly_day" i18n:translate="">day:</label>
     <select id="weekly_day" name="weekly_day:int">
         <option tal:repeat="day python:range(7)" tal:content="python:days_of_week[day-1]"
@@ -57,11 +68,14 @@
         <option tal:repeat="hour python:range(24)" tal:content="python:'%02d' % hour"
           tal:attributes="value hour; selected python:hour==get_config('weekly_hour')" />
     </select>
+    -->
 </div>
 <div class="field-inline">
-    <label for="enable_monthly" i18n:translate="">Monthly digest</label>
     <input type="checkbox" id="enable_monthly" name="enable_monthly:boolean"
         tal:attributes="checked python:test(get_config('enable_monthly'), 'checked', None)" />
+    <label for="enable_monthly"
+           i18n:translate="">Allow monthly digest</label>
+    <!--
     <label for="monthly_day" i18n:translate="">day:</label>
     <select id="monthly_day" name="monthly_day:int">
         <option tal:repeat="day python:range(1, 32)" tal:content="python:'%d' % day"
@@ -72,11 +86,13 @@
         <option tal:repeat="hour python:range(24)" tal:content="python:'%02d' % hour"
           tal:attributes="value hour; selected python:hour==get_config('monthly_hour')" />
     </select>
+    -->
 </div>
 <div class="field-inline">
-    <label for="enable_anonymous" i18n:translate="">Anonymous subscriptions</label>
     <input type="checkbox" id="enable_anonymous" name="enable_anonymous:boolean"
         tal:attributes="checked python:test(get_config('enable_anonymous'), 'checked', None)" />
+    <label for="enable_anonymous"
+           i18n:translate="">Allow subscriptions with any e-mail address</label>
 </div>
 <!--
 <div class="field">
@@ -105,10 +121,6 @@
 <tal:block tal:define="object_list python:list(here.admin_get_subscriptions());
                        page python:int(request.get('page', 1));
                        available_subscriptions python:list(here.available_notif_types())">
-<br />
-<p tal:condition="not:object_list"
-   i18n:translate="">No users have yet subscribed to any notifications.</p>
-<br />
 <form action="admin_add_account_subscription" method="post"
       tal:condition="available_subscriptions">
     <fieldset>
@@ -164,6 +176,8 @@
     Can not add subscriptions because no notification types are enabled.
 </p>
 
+<p tal:condition="not:object_list"
+   i18n:translate="">No users have yet subscribed to any notifications.</p>
 <tal:block condition="object_list">
     <tal:block define="paginator python:here.make_paginator(object_list, 10, body=5, padding=2, orphans=2);
                        page_obj python:paginator.page(page);
