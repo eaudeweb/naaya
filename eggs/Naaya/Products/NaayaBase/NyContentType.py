@@ -22,6 +22,7 @@
 
 
 from copy import deepcopy
+import logging
 
 from AccessControl import ClassSecurityInfo, SpecialUsers
 from AccessControl.Permissions import view
@@ -34,11 +35,14 @@ from DateTime.interfaces import DateError
 
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
 from contentratings.interfaces import IUserRating
+
+log = logging.getLogger(__name__)
 
 NY_CONTENT_BASE_SCHEMA = {
     'title':        dict(sortorder=10, widget_type='String', label='Title', required=True, localized=True),
@@ -278,6 +282,21 @@ class NyContentType(object):
         Indicates if the current user has access to the current folder.
         """
         return self.checkPermission(view)
+
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteThis')
+    def deleteThis(self, REQUEST=None):
+        """ Delete the current object """
+
+        user = getattr(REQUEST, 'AUTHENTICATED_USER', None)
+        log.info("Deleting object %r (authenticated user: %r)", self, user)
+
+        parent = self.aq_inner.aq_parent
+        parent.manage_delObjects([self.getId()])
+
+        if REQUEST is not None:
+            title = self.title_or_id()
+            self.setSessionInfoTrans('Item "${title}" deleted.', title=title)
+            REQUEST.RESPONSE.redirect('%s/' % parent.absolute_url())
 
 
 InitializeClass(NyContentType)
