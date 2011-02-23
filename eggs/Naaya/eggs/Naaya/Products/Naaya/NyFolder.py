@@ -77,7 +77,6 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder', 'form_helper': form_helper}, 'folder_add')
 
 def _create_NyFolder_object(parent, id, contributor):
-    make_id(parent, id=id, prefix=PREFIX_FOLDER)
     ob = NyFolder(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -85,7 +84,8 @@ def _create_NyFolder_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
-def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_NyFolder_object, **kwargs):
+def addNyFolder(self, id='', REQUEST=None, contributor=None,
+                callback=_create_NyFolder_object, **kwargs):
     """
     Create a Folder type of object.
     Parameters:
@@ -104,7 +104,9 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None, callback=_create_Ny
     site = self.getSite()
 
     #process parameters
-    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_FOLDER)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''),
+                 prefix=PREFIX_FOLDER)
+
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
