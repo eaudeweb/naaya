@@ -44,6 +44,7 @@ PERMISSION_COMMENTS_MANAGE = 'Naaya - Manage comments for content'
 PERMISSION_PUBLISH_DIRECT = 'Naaya - Publish direct'
 PERMISSION_SKIP_CAPTCHA = 'Naaya - Skip Captcha'
 PERMISSION_BULK_DOWNLOAD = 'Naaya - Bulk download'
+PERMISSION_SKIP_APPROVAL = 'Naaya - Skip approval'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'
