@@ -4,7 +4,7 @@
 		<a tal:attributes="href string:${here/absolute_url}/comment_add_html"
 			i18n:translate="" class="addcomment">Add comment</a>
 	</div>
-	<div class="commentbox_add" tal:condition="not: here/checkPermissionAddComments">
+	<div class="commentbox_add" tal:condition="python: request['AUTHENTICATED_USER'].getUserName() == 'Anonymous User' and not here.checkPermissionAddComments()">
 		<a class="logincomment"
 		   tal:define="site_url python:here.getSite().absolute_url();
 		               login_url string:${site_url}/login_html;
