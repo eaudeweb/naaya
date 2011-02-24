@@ -77,7 +77,8 @@ class Participants(SimpleItem):
     def _set_attendee(self, uid, role):
         def can_set_role():
             participants_count = self.participantsCount()
-            if meeting.max_participants > participants_count:
+            if (meeting.max_participants > participants_count
+                    or meeting.max_participants == 0):
                 return True
             # can also change rights even if meeting is full
             if meeting.max_participants == participants_count:
