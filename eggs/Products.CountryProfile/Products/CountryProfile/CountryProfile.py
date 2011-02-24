@@ -18,8 +18,8 @@ allow_path('Products.PyDigirSearch:www/css/')
 
 manage_add_html = PageTemplateFile('zpt/manage_add', globals())
 def manage_add_object(self, id, REQUEST=None):
-    """ Create new CountryProfile object from ZMI.
-    """
+    """ Create new CountryProfile object from ZMI"""
+
     ob = CountryProfile(id)
     self._setObject(id, ob)
     if REQUEST is not None:
@@ -38,7 +38,7 @@ class CountryProfile(SimpleItem):
             {'label' : 'Properties', 'action' :'manage_edit_html'},
         )
     )
-
+    _v_conn = None
     index_html = PageTemplateFile('zpt/index', globals())
 
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -55,14 +55,26 @@ class CountryProfile(SimpleItem):
     @property
     def dbconn(self):
         """Create and return a MySQL connection object"""
-        conn = MySQLConnector()
-        conn.open(self.mysql_connection['host'], self.mysql_connection['name'],
-                  self.mysql_connection['user'], self.mysql_connection['pass'])
-        return conn
+
+        if self._v_conn is not None:
+            return self._v_conn
+        else:
+            self._v_conn = MySQLConnector()
+            self._v_conn.open(self.mysql_connection['host'],
+                              self.mysql_connection['name'],
+                              self.mysql_connection['user'],
+                              self.mysql_connection['pass'])
+            return self._v_conn
+
+    def __del__(self):
+        """Close db connection"""
+        if self._v_conn is not None:
+            self._v_conn.close()
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
         """Save mysql connection data"""
+
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
@@ -70,14 +82,20 @@ class CountryProfile(SimpleItem):
             params = dict(REQUEST.form)
         else:
             params = kwargs
+
         self.mysql_connection = {}
         self.mysql_connection['host'] = params.pop('mysql_host')
         self.mysql_connection['name'] = params.pop('mysql_name')
         self.mysql_connection['user'] = params.pop('mysql_user')
         self.mysql_connection['pass'] = params.pop('mysql_pass')
-
         self._p_changed = True
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+    def query(self, name, **kw):
+        """Execute some query and return the data"""
+        if hasattr(queries, name):
+            result = getattr(queries, name)(self.dbconn, **kw)
 
 InitializeClass(CountryProfile)
