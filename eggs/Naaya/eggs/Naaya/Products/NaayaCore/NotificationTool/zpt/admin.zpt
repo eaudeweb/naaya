@@ -118,7 +118,11 @@
 </form>
 
 <h2 i18n:translate="">Current subscriptions</h2>
-<tal:block tal:define="object_list python:list(here.admin_get_subscriptions());
+<tal:block tal:define="
+                       skey python:request.get('skey', 'location');
+                       rkey python:request.get('rkey', '');
+                       object_list python:list(here.admin_get_subscriptions());
+                       object_list python:here.utSortDictsListByKey(object_list, skey, rkey);
                        page python:int(request.get('page', 1));
                        available_subscriptions python:list(here.available_notif_types())">
 <form action="admin_add_account_subscription" method="post"
@@ -182,13 +186,57 @@
     <tal:block define="paginator python:here.make_paginator(object_list, 10, body=5, padding=2, orphans=2);
                        page_obj python:paginator.page(page);
                        records page_obj/object_list;
-                       make_url python:lambda page: '%s/admin_html?page=%s#notification_table' % (here.absolute_url(), page);">
+                       make_url python:lambda page: '%s/admin_html?skey=%s&amp;rkey=%s&amp;page=%s#notification_table' % (here.absolute_url(), skey, rkey, page);">
     <table id="notification_table" class="datatable">
         <thead>
-            <th>User</th>
-            <th>Location</th>
-            <th>Notification type</th>
-            <th>Language</th>
+            <tal:block tal:condition="python:skey=='user'">
+            <th tal:condition="python:rkey==''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=user&amp;rkey=1"><span i18n:translate="">User</span><img src="misc_/Naaya/sort_asc.gif" width="12" height="12" /></a>
+            </th>
+            <th tal:condition="python:rkey!=''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=user"><span i18n:translate="">User</span><img src="misc_/Naaya/sort_desc.gif" width="12" height="12" /></a>
+            </th>
+            </tal:block>
+            <th tal:condition="python:skey!='user'" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=user"><span i18n:translate="">User</span><img src="misc_/Naaya/sort_not.gif" width="12" height="12" /></a>
+            </th>
+
+            <tal:block tal:condition="python:skey=='location'">
+            <th tal:condition="python:rkey==''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=location&amp;rkey=1"><span i18n:translate="">Location</span><img src="misc_/Naaya/sort_asc.gif" width="12" height="12" /></a>
+            </th>
+            <th tal:condition="python:rkey!=''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=location"><span i18n:translate="">Location</span><img src="misc_/Naaya/sort_desc.gif" width="12" height="12" /></a>
+            </th>
+            </tal:block>
+            <th tal:condition="python:skey!='location'" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=location"><span i18n:translate="">Location</span><img src="misc_/Naaya/sort_not.gif" width="12" height="12" /></a>
+            </th>
+
+            <tal:block tal:condition="python:skey=='notif_type'">
+            <th tal:condition="python:rkey==''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=notif_type&amp;rkey=1"><span i18n:translate="">Notification type</span><img src="misc_/Naaya/sort_asc.gif" width="12" height="12" /></a>
+            </th>
+            <th tal:condition="python:rkey!=''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=notif_type"><span i18n:translate="">Notification type</span><img src="misc_/Naaya/sort_desc.gif" width="12" height="12" /></a>
+            </th>
+            </tal:block>
+            <th tal:condition="python:skey!='notif_type'" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=notif_type"><span i18n:translate="">Notification type</span><img src="misc_/Naaya/sort_not.gif" width="12" height="12" /></a>
+            </th>
+
+            <tal:block tal:condition="python:skey=='lang'">
+            <th tal:condition="python:rkey==''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=lang&amp;rkey=1"><span i18n:translate="">Language</span><img src="misc_/Naaya/sort_asc.gif" width="12" height="12" /></a>
+            </th>
+            <th tal:condition="python:rkey!=''" class="sorted" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=lang"><span i18n:translate="">Language</span><img src="misc_/Naaya/sort_desc.gif" width="12" height="12" /></a>
+            </th>
+            </tal:block>
+            <th tal:condition="python:skey!='lang'" scope="col">
+                <a rel="nofollow" tal:attributes="href string:${here/absolute_url}/admin_html?skey=lang"><span i18n:translate="">Language</span><img src="misc_/Naaya/sort_not.gif" width="12" height="12" /></a>
+            </th>
+
             <th></th>
         </thead>
         <tbody>
