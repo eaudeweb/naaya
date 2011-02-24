@@ -231,6 +231,13 @@
                      here.rstk.json_dumps(here.absolute_url()))"></script>
 <script>
 $(function() {
+    // fix for IE
+    if(typeof String.prototype.trim !== 'function') {
+      String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g, '');
+      }
+    }
+
     var pick_ui = $('span#pick-user-ui');
     var pick_button = $('button', pick_ui);
     var search_ui = $('div.search', pick_ui);
