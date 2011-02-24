@@ -717,7 +717,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         #test that the location is under the current folder
         if location.startswith(self.absolute_url(1)):
             try:
-                self.getAuthenticationTool().manage_addUsersRoles(name, roles, 'other', location)
+                self.getAuthenticationTool().manage_addUsersRoles(name, roles, location)
             except Exception, error:
                 err = str(error)
             else:
