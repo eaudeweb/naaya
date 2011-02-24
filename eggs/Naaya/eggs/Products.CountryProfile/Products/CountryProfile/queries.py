@@ -17,9 +17,9 @@ def get_table_data(dbconn, **kw):
     INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
     INNER JOIN country ON (VALUE.val_cnt_code = country.cnt_code)
-    WHERE VARIABLE.var_code = '%(variable)s'
-      AND country.cnt_code = '%(country)s'
-      AND SOURCE.src_code = '%(source)s'
+    WHERE VARIABLE.var_code = '%(var)s'
+      AND country.cnt_code = '%(cnt)s'
+      AND SOURCE.src_code = '%(src)s'
     ORDER BY VALUE.val_year DESC LIMIT 1
     """ % kw
     records = dbconn.query(sql)
@@ -39,9 +39,9 @@ def get_chart_data(dbconn, **kw):
     INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
     INNER JOIN country ON (VALUE.val_cnt_code = country.cnt_code)
-    WHERE VARIABLE.var_code = '%(variable)s'
-        AND country.cnt_code = '%(country)s'
-        AND SOURCE.src_code = '%(source)s'
+    WHERE VARIABLE.var_code = '%(var)s'
+        AND country.cnt_code = '%(cnt)s'
+        AND SOURCE.src_code = '%(src)s'
     ORDER BY VALUE.val_year
     """ % kw
     return dbconn.query(sql)
