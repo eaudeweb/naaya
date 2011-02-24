@@ -1,11 +1,20 @@
+# -*- coding: utf-8 -*-
+"""Using an existing MySQL database display some graphs and statistics. Also
+perform searchs on the data
+"""
+
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from MySQLConnector import MySQLConnector
+from Products.NaayaCore.LayoutTool.DiskFile import allow_path
 
+from MySQLConnector import MySQLConnector
+import queries
+
+allow_path('Products.PyDigirSearch:www/css/')
 
 manage_add_html = PageTemplateFile('zpt/manage_add', globals())
 def manage_add_object(self, id, REQUEST=None):
@@ -17,13 +26,9 @@ def manage_add_object(self, id, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
     return ob
 
-from Products.NaayaCore.LayoutTool.DiskFile import allow_path
-allow_path('Products.PyDigirSearch:www/css/')
-
 class CountryProfile(SimpleItem):
-    """
-        CountryProfile object
-    """
+    """CountryProfile"""
+
     meta_type = 'MedwisCountryProfile'
     icon = 'meta_type.gif'
     security = ClassSecurityInfo()
@@ -34,6 +39,11 @@ class CountryProfile(SimpleItem):
         )
     )
 
+    index_html = PageTemplateFile('zpt/index', globals())
+
+    security.declareProtected(view_management_screens, 'manage_edit_html')
+    manage_edit_html = PageTemplateFile('zpt/manage_edit', globals())
+
     def __init__(self, id):
         self.id = id
         self.mysql_connection = {}
@@ -42,21 +52,17 @@ class CountryProfile(SimpleItem):
         self.mysql_connection['user'] = 'cornel'
         self.mysql_connection['pass'] = 'cornel'
 
-    def open_dbconnection(self):
-        """ Create and return a MySQL connection object """
+    @property
+    def dbconn(self):
+        """Create and return a MySQL connection object"""
         conn = MySQLConnector()
         conn.open(self.mysql_connection['host'], self.mysql_connection['name'],
                   self.mysql_connection['user'], self.mysql_connection['pass'])
         return conn
 
-    index_html = PageTemplateFile('zpt/index', globals())
-
-    security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/manage_edit', globals())
-
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
-        """ """
+        """Save mysql connection data"""
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
@@ -73,30 +79,5 @@ class CountryProfile(SimpleItem):
         self._p_changed = True
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    #--------QUERIES---------------#
-    def get_table_data(self, variable, source, country, dbconn):
-        """ Returns a variable's value for the latest year for a given source and country """
-        sql = u"""SELECT VARIABLE.VAR_LABEL, VALUE.VAL, VARIABLE.VAR_UNIT, SOURCE.SRC_LABEL, VALUE.VAL_YEAR FROM VALUE
-                INNER JOIN VARIABLE ON (VALUE.VAR_CODE = VARIABLE.VAR_CODE)
-                INNER JOIN SOURCE ON (VARIABLE.VAR_SRC_CODE = SOURCE.SRC_CODE)
-                INNER JOIN COUNTRY ON (VALUE.VAL_CNT_CODE = COUNTRY.CNT_CODE)
-                WHERE VARIABLE.VAR_CODE = '%s' AND COUNTRY.CNT_CODE = '%s' AND SOURCE.SRC_CODE = '%s'
-                ORDER BY VALUE.VAL_YEAR DESC LIMIT 1""" % (variable, country, source)
-        records = dbconn.query(sql)
-        if records:
-            records = records[0]
-        return records
-
-    def get_chart_data(self, variable, source, country, dbconn):
-        """ Returns the evolution overtime for a given variable, source and country """
-        sql = u"""SELECT VARIABLE.VAR_LABEL, VALUE.VAL, VARIABLE.VAR_UNIT, SOURCE.SRC_CODE, VALUE.VAL_YEAR FROM VALUE
-                INNER JOIN VARIABLE ON (VALUE.VAR_CODE = VARIABLE.VAR_CODE)
-                INNER JOIN SOURCE ON (VARIABLE.VAR_SRC_CODE = SOURCE.SRC_CODE)
-                INNER JOIN COUNTRY ON (VALUE.VAL_CNT_CODE = COUNTRY.CNT_CODE)
-                WHERE VARIABLE.VAR_CODE = '%s' AND COUNTRY.CNT_CODE = '%s' AND SOURCE.SRC_CODE = '%s'
-                ORDER BY VALUE.VAL_YEAR""" % (variable, country, source)
-        return dbconn.query(sql)
-
 
 InitializeClass(CountryProfile)
