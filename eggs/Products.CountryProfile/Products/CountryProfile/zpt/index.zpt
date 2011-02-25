@@ -1,13 +1,9 @@
-<metal:block i18n:domain="portal_translations" metal:use-macro="here/standard_template_macro">
-
-<metal:block metal:fill-slot="title">
+<metal:block i18n:domain="portal_translations" metal:use-macro="options/macro">
+<metal:block metal:fill-slot="portlet_title">
 		<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
-
-<metal:block metal:fill-slot="head">
-</metal:block>
-
-<metal:block fill-slot="body">
+<metal:block fill-slot="portlet_content">
+	<tal:block define="cprofile options/cprofile; ccode options/ccode">
 	<script>
 		$(document).ready(function(){
 			$("#change-chart").change(function(){
@@ -30,7 +26,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr tal:define="record python:here.query('get_table_data', var='SOC1', src='JMP', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='SOC1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Population</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -39,7 +35,7 @@
 						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
-				<tr tal:define="record python:here.query('get_table_data', var='PHY1', src='medstat', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='PHY1', src='medstat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Land area</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -48,7 +44,7 @@
 						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
-				<tr tal:define="record python:here.query('get_table_data', var='U24', src='aquastat', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='U24', src='aquastat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Water withdrawal for agriculture</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -57,7 +53,7 @@
 						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
-				<tr tal:define="record python:here.query('get_table_data', var='R10', src='aquastat', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='R10', src='aquastat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Water per capita</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -66,7 +62,7 @@
 						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
-				<tr tal:define="record python:here.query('get_table_data', var='SUP1', src='JMP', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='SUP1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Access to improved water source</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -75,7 +71,7 @@
 						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
-				<tr tal:define="record python:here.query('get_table_data', var='SAN1', src='JMP', cnt='TN')" tal:condition="record">
+				<tr tal:define="record python:cprofile.query('get_table_data', var='SAN1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Access to sanitation</td>
 					<td tal:content="record/val" />
 					<td tal:content="record/var_unit" />
@@ -90,11 +86,12 @@
 	<div id="select-charts" i18n:translate="">
 		Graphs showing the evolution overtime for the following variables
 		<select id="change-chart">
-			<option tal:attributes="value string:${here/absolute_url}/get_chart?var=SOC1&src=JMP&cnt=TN&width=600&height=250">Population</option>
-			<option tal:attributes="value string:${here/absolute_url}/get_chart?var=U24&src=aquastat&cnt=TN&width=600&height=250">Water withdrawal for agriculture</option>
+			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=SOC1&src=JMP&cnt=${ccode}&width=600&height=250">Population</option>
+			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=U24&src=aquastat&cnt=${ccode}&width=600&height=250">Water withdrawal for agriculture</option>
 		</select>
 		<div id="display-chart"></div>
 	</div>
+	</tal:block>
 </metal:block>
 
 </metal:block>

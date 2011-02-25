@@ -4,6 +4,14 @@
 Please format SQL queries. For example use http://sqlformat.appspot.com/
 """
 
+def get_country_code(dbconn, **kw):
+    """ Get country code based on label_en """
+    sql = u"SELECT CNT_CODE FROM COUNTRY WHERE CNT_LABEL_EN='%(label_en)s'" % kw
+    records = dbconn.query(sql)
+    if records:
+        records = records[0]
+    return records
+
 def get_table_data(dbconn, **kw):
     """ Returns a variable's value for the latest year for a given source and
     country
