@@ -121,7 +121,8 @@ class CountryProfile(SimpleItem):
             max_y = max(data['y'])
             min_y = min(data['y'])
         except:
-            import pdb; pdb.set_trace()
+            min_y = 0
+            max_y = 100
 
         # Chart size of widthxheight pixels and specifying the range for the Y axis
         chart = SimpleLineChart(int(kw.get('width', 600)),
