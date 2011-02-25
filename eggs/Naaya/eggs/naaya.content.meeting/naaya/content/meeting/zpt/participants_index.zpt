@@ -127,13 +127,13 @@
             <label for="search_role" i18n:translate="Search users with role"></label>
             <input type="text" id="search_role" name="search_role:utf8:ustring"
                 tal:attributes="value search_role"/>
-            <input type="button" name="pickroles" value="Pick Role"
+            <input type="button" name="pickroles" value="Pick Group"
                 tal:attributes="onclick string:javascript:pickRole('${here/absolute_url}/pickrole_html')"/>
             <input type="submit" name="search_user_with_role" value="Search" />
         </form>
 
         <tal:block condition="do_search">
-        <tal:block define="users python:here.findUsersWithRole(search_role)">
+        <tal:block define="users python:here.listUsersInGroup(search_role)">
         <form method="post" action="setAttendees" name="formAddUsers2"
                 tal:condition="python:len(users) > 0">
             <table class="datatable" width="95%">

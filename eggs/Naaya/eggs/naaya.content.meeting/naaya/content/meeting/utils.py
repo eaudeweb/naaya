@@ -99,7 +99,7 @@ def findUsers(site, search_param, search_term):
 
     return ret
 
-def findUsersWithRole(site, search_role):
+def listUsersInGroup(site, search_role):
     auth_tool = site.getAuthenticationTool()
     ret = []
 
@@ -107,19 +107,12 @@ def findUsersWithRole(site, search_role):
         acl_folder = source.getUserFolder()
         users = source.getUsersByRole(acl_folder, [(search_role, None)])
         for user in users:
-            uid = user.get('uid', '')
-            if isinstance(uid, list):
-                uid = uid[0]
-            cn = user.get('cn', '')
-            if isinstance(cn, list):
-                cn = cn[0]
-            cn = _encode(cn)
-            organization = user.get('o', '')
-            if isinstance(organization, list):
-                organization = organization[0]
-            organization = _encode(organization)
-            info = user.get('dn', '')
-            ret.append({'uid': uid, 'cn': cn, 'organization': organization, 'info': info})
+            ret.append({
+                'uid': user.user_id,
+                'cn': _encode(user.full_name),
+                'organization': _encode(user.organisation),
+                'info': user.dn,
+            })
 
     return ret
 

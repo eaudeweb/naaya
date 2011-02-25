@@ -15,13 +15,13 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.meeting import WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE
 from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING, PERMISSION_ADMIN_MEETING
 from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPhoneNumber
-from utils import findUsers, findUsersWithRole
+from utils import findUsers, listUsersInGroup
 from subscriptions import Subscriptions
 
 class Participants(SimpleItem):
     security = ClassSecurityInfo()
 
-    title = "Meeting participants"
+    title = "Participants"
 
     def __init__(self, id):
         """ """
@@ -43,12 +43,12 @@ class Participants(SimpleItem):
             return []
         return findUsers(self.getSite(), search_param, search_term)
 
-    security.declareProtected(PERMISSION_ADMIN_MEETING, 'findUsersWithRole')
-    def findUsersWithRole(self, search_role):
+    security.declareProtected(PERMISSION_ADMIN_MEETING, 'listUsersInGroup')
+    def listUsersInGroup(self, search_role):
         """ """
         if len(search_role) == 0:
             return []
-        return findUsersWithRole(self.getSite(), search_role)
+        return listUsersInGroup(self.getSite(), search_role)
 
     security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'isParticipant')
     def isParticipant(self, userid=None):
