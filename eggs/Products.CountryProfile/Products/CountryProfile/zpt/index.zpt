@@ -23,60 +23,65 @@
 			<tbody>
 				<tr tal:define="record python:here.query('get_table_data', var='SOC1', src='JMP', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Population</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 				<tr tal:define="record python:here.query('get_table_data', var='PHY1', src='medstat', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Land area</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 				<tr tal:define="record python:here.query('get_table_data', var='U24', src='aquastat', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Water withdrawal for agriculture</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 				<tr tal:define="record python:here.query('get_table_data', var='R10', src='aquastat', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Water per capita</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 				<tr tal:define="record python:here.query('get_table_data', var='SUP1', src='JMP', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Access to improved water source</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 				<tr tal:define="record python:here.query('get_table_data', var='SAN1', src='JMP', cnt='TN')" tal:condition="record">
 					<td i18n:translate="">Access to sanitation</td>
-					<td tal:content="record/VAL" />
-					<td tal:content="record/VAR_UNIT" />
+					<td tal:content="record/val" />
+					<td tal:content="record/var_unit" />
 					<td>
-						<span tal:replace="record/SRC_LABEL" />&nbsp;
-						(<span tal:replace="record/VAL_YEAR" />)
+						<span tal:replace="record/src_label" />&nbsp;
+						(<span tal:replace="record/val_year" />)
 					</td>
 				</tr>
 			</tbody>
 		</table>
+	</div>
+	<div id="charts">
+		<div id="pupulation-chart">
+			<img tal:attributes="src string:${here/absolute_url}/get_chart?type=population" alt="population chart" i18n:attributes="alt" />
+		</div>
 	</div>
 </metal:block>
 
