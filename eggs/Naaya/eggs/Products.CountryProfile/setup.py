@@ -21,5 +21,5 @@ setup(name=NAME,
       namespace_packages=['Products'],
       include_package_data=True,
       zip_safe=False,
-      install_requires=['MySQL-python', 'pygooglechart==0.2.1']
+      install_requires=['MySQL-python', 'pygooglechart']
 )

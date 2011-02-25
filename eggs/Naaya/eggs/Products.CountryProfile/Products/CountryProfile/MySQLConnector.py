@@ -1,6 +1,6 @@
 import MySQLdb
 
-class MySQLConnector:
+class MySQLConnector(object):
     """ Provides basic operations for MySQL Database. """
 
     _db = None
@@ -15,15 +15,18 @@ class MySQLConnector:
         """
         Closes database connection. In case of errors exceptions are thrown.
         """
+
         if not self._db:
             raise Exception, self._Exception['db']
         self._db.close()
 
-    def query(self, q):
-        """
-        Query database; results are returned as a list of dictionaries.
+    def query(self, q, debug=False):
+        """Query database; results are returned as a list of dictionaries.
         In case of errors exceptions are throw.
+
         """
+        if debug:
+            print q
         if not self._db:
             raise Exception, self._Exception['db']
         cursor = self._db.cursor(MySQLdb.cursors.DictCursor)
