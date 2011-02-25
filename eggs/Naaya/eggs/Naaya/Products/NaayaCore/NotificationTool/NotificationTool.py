@@ -148,7 +148,7 @@ class NotificationTool(Folder):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_get_subscriptions')
-    def admin_get_subscriptions(self, user_query):
+    def admin_get_subscriptions(self, user_query=''):
         user_query = user_query.strip()
         for obj, sub_id, subscription in walk_subscriptions(self.getSite()):
             user = subscription.to_string(obj)
@@ -643,6 +643,34 @@ class NotificationTool(Folder):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/my_subscriptions_html')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'download')
+    def download(self, REQUEST=None, RESPONSE=None):
+        """returns all the subscriptions in a csv file"""
+        header = ['User', 'Location', 'Notification type', 'Language']
+        rows = []
+        for s in self.admin_get_subscriptions():
+            row = []
+            row.append(s['user'])
+            if (s['location']):
+                row.append(s['location'])
+            else:
+                row.append('entire portal')
+            row.append(s['notif_type'])
+            row.append(s['lang'])
+            rows.append(row)
+
+        file_type = REQUEST.get('file_type', 'CSV')
+        exporter = self.getSite().csv_export
+        if file_type == 'CSV':
+            RESPONSE.setHeader('Content-Type', 'text/csv')
+            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=subscriptions.csv')
+            return exporter.generate_csv(header, rows)
+        if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=subscriptions.xls')
+            return exporter.generate_excel(header, rows)
+        else: raise ValueError('unknown file format %r' % file_type)
 
 InitializeClass(NotificationTool)
 
