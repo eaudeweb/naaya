@@ -105,7 +105,7 @@ class CountryProfile(SimpleItem):
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declarePublic('get_chart')
-    def get_chart_image(self, data):
+    def get_chart_image(self, data, **kw):
         """Return a image file
 
         Arguments::
@@ -117,11 +117,16 @@ class CountryProfile(SimpleItem):
         from pygooglechart import Axis
 
         # Set the vertical range from 0 to 100
-        max_y = int(max(data['y']))
-        min_y = int(min(data['y']))
+        try:
+            max_y = max(data['y'])
+            min_y = min(data['y'])
+        except:
+            import pdb; pdb.set_trace()
 
-        # Chart size of 200x125 pixels and specifying the range for the Y axis
-        chart = SimpleLineChart(600, 200, y_range=[min_y, max_y])
+        # Chart size of widthxheight pixels and specifying the range for the Y axis
+        chart = SimpleLineChart(int(kw.get('width', 600)),
+                                int(kw.get('height', 250)),
+                                y_range=[min_y, max_y])
 
         # Add the chart data
         chart.add_data(data['y'])
@@ -135,10 +140,10 @@ class CountryProfile(SimpleItem):
         ## Set the horizontal dotted lines
         #chart.set_grid(0, 25, 5, 5)
 
-        # The Y axis labels contains 0 to 100 skipping every 25, but remove the
-        # first number because it's obvious and gets in the way of the first X
-        # label.
-        left_axis = range(min_y, max_y + 1, 100000)
+        # The Y axis labels contains min_y to max_y spling it into 10 equal parts,
+        #but remove the first number because it's obvious and gets in the way
+        #of the first X label.
+        left_axis = range(min_y, max_y + 1, (max_y - min_y)/10)
         left_axis[0] = ''
         chart.set_axis_labels(Axis.LEFT, left_axis)
 
@@ -149,7 +154,7 @@ class CountryProfile(SimpleItem):
         url_hash = sha1(chart_url).hexdigest()
         image_path = os.path.join(TARGET_DIR, "%s.png" % url_hash)
 
-        if url_hash not in self.charts:
+        if bool(kw.get('refresh', False)) or url_hash not in self.charts:
             #Get image from google chart api
             chart.download(image_path)
             self.charts.append(url_hash)
@@ -157,25 +162,34 @@ class CountryProfile(SimpleItem):
 
         return image_path
 
-    def get_chart(self, type, REQUEST=None):
+    def get_chart(self, REQUEST=None, **kw):
         """This will return x and y axis data"""
         data = {}
         data['x'] = []
         data['y'] = []
 
-        if type == "population":
-            population = self.query('get_chart_data', var='SOC1', src='JMP',
-                                    cnt='TN')
-            for row in population:
-                data['x'].extend([str(row['val_year'])])
-                data['y'].append(int(row['val']))
-        image_path = self.get_chart_image(data)
+        if REQUEST is not None:
+            kw.update(REQUEST.form)
+
+        chart_query = {
+            'src': kw.pop("src"),
+            'var': kw.pop("var"),
+            'cnt': kw.pop("cnt"),
+        }
+
+        rows = self.query('get_chart_data', **chart_query)
+        for row in rows:
+            data['x'].extend([str(row['val_year'])])
+            data['y'].append(int(row['val']))
+
+        image_path = self.get_chart_image(data, **kw)
         image_fd = open(image_path, 'rb')
         image = image_fd.read()
         image_fd.close()
 
-        REQUEST.RESPONSE.setHeader('Content-Length', len(image))
-        REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-Length', len(image))
+            REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
         return image
 
     def query(self, name, **kw):
