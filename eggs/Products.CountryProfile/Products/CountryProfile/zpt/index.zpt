@@ -79,8 +79,13 @@
 		</table>
 	</div>
 	<div id="charts">
-		<div id="pupulation-chart">
-			<img tal:attributes="src string:${here/absolute_url}/get_chart?type=population" alt="population chart" i18n:attributes="alt" />
+		<div id="population-chart">
+			<h2 i18n:translate="">Population</h2>
+			<img tal:attributes="src string:${here/absolute_url}/get_chart?var=SOC1&src=JMP&cnt=TN&width=600&height=250&refresh=1" alt="population chart" i18n:attributes="alt" />
+		</div>
+		<div id="agriculture-chart">
+			<h2 i18n:translate="">Water withdrawal for agriculture</h2>
+			<img tal:attributes="src string:${here/absolute_url}/get_chart?var=U24&src=aquastat&cnt=TN&width=600&height=250&refresh=1" alt="agriculture chart" i18n:attributes="alt" />
 		</div>
 	</div>
 </metal:block>
