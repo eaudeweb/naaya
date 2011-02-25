@@ -2,6 +2,11 @@
 """Using an existing MySQL database display some graphs and statistics. Also
 perform searchs on the data
 """
+import os
+try:
+    from hashlib import sha1
+except ImportError:
+    from sha import sha as sha1
 
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
@@ -13,6 +18,12 @@ from Products.NaayaCore.LayoutTool.DiskFile import allow_path
 
 from MySQLConnector import MySQLConnector
 import queries
+
+TARGET_DIR = os.path.join(CLIENT_HOME, '..', 'country_profile')
+try:
+    os.mkdir(TARGET_DIR)
+except OSError: #Directory exists
+    pass
 
 allow_path('Products.PyDigirSearch:www/css/')
 
@@ -51,11 +62,11 @@ class CountryProfile(SimpleItem):
         self.mysql_connection['name'] = 'medwis'
         self.mysql_connection['user'] = 'cornel'
         self.mysql_connection['pass'] = 'cornel'
+        self.charts = []
 
     @property
     def dbconn(self):
         """Create and return a MySQL connection object"""
-
         if self._v_conn is not None:
             return self._v_conn
         else:
@@ -93,9 +104,83 @@ class CountryProfile(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
+    security.declarePublic('get_chart')
+    def get_chart_image(self, data):
+        """Return a image file
+
+        Arguments::
+
+            data -- a list containing the Y data representation
+        """
+        from pygooglechart import Chart
+        from pygooglechart import SimpleLineChart
+        from pygooglechart import Axis
+
+        # Set the vertical range from 0 to 100
+        max_y = int(max(data['y']))
+        min_y = int(min(data['y']))
+
+        # Chart size of 200x125 pixels and specifying the range for the Y axis
+        chart = SimpleLineChart(600, 200, y_range=[min_y, max_y])
+
+        # Add the chart data
+        chart.add_data(data['y'])
+
+        # Set the line colour to blue
+        chart.set_colours(['0000FF'])
+
+        # Set the vertical stripes
+        chart.fill_linear_stripes(Chart.CHART, 0, 'CCCCCC', 0.2, 'FFFFFF', 0.2)
+
+        ## Set the horizontal dotted lines
+        #chart.set_grid(0, 25, 5, 5)
+
+        # The Y axis labels contains 0 to 100 skipping every 25, but remove the
+        # first number because it's obvious and gets in the way of the first X
+        # label.
+        left_axis = range(min_y, max_y + 1, 100000)
+        left_axis[0] = ''
+        chart.set_axis_labels(Axis.LEFT, left_axis)
+
+        # X axis labels
+        chart.set_axis_labels(Axis.BOTTOM, data['x'])
+
+        chart_url = chart.get_url()
+        url_hash = sha1(chart_url).hexdigest()
+        image_path = os.path.join(TARGET_DIR, "%s.png" % url_hash)
+
+        if url_hash not in self.charts:
+            #Get image from google chart api
+            chart.download(image_path)
+            self.charts.append(url_hash)
+            self._p_changed = True
+
+        return image_path
+
+    def get_chart(self, type, REQUEST=None):
+        """This will return x and y axis data"""
+        data = {}
+        data['x'] = []
+        data['y'] = []
+
+        if type == "population":
+            population = self.query('get_chart_data', var='SOC1', src='JMP',
+                                    cnt='TN')
+            for row in population:
+                data['x'].extend([str(row['val_year'])])
+                data['y'].append(int(row['val']))
+        image_path = self.get_chart_image(data)
+        image_fd = open(image_path, 'rb')
+        image = image_fd.read()
+        image_fd.close()
+
+        REQUEST.RESPONSE.setHeader('Content-Length', len(image))
+        REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
+        return image
+
     def query(self, name, **kw):
         """Execute some query and return the data"""
         if hasattr(queries, name):
-            result = getattr(queries, name)(self.dbconn, **kw)
+            return getattr(queries, name)(self.dbconn, **kw)
 
 InitializeClass(CountryProfile)
