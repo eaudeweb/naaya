@@ -17,7 +17,10 @@
     </div>
 
     <p i18n:translate="">
-        You have successfully subscribed to participate to this meeting. You will be notified when the administrator approves your request. If the administrator accepts your request you will be listed as attendee to the meeting.
+        You have successfully registered to participate in this meeting. You
+        will be notified when the administrator approves your request. If the
+        administrator accepts your request you will be listed as attendee to
+        the meeting.
     </p>
 
     </tal:block>

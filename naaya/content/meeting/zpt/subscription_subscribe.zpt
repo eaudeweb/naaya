@@ -7,7 +7,7 @@
     <tal:block tal:define="meeting here/getMeeting">
     <h1>
         <img tal:attributes="src python:test(meeting.approved, meeting.icon, meeting.icon_marked); title here/get_meta_label; alt here/get_meta_label" />
-        <tal:block tal:replace="meeting/title" /> - Subscribe
+        <tal:block tal:replace="meeting/title" /> - Register
     </h1>
 
     <div class="floated-buttons">
@@ -27,8 +27,9 @@
     </p>
     <p tal:condition="python:username != 'Anonymous User'"
         i18n:translate="">
-        <a tal:attributes="href string:${here/absolute_url}/subscribe_account">Subscribe</a>
-        to this meeting using the current logged in account.
+        <a tal:attributes="href string:${here/absolute_url}/subscribe_account">Register</a>
+        for this meeting as
+        <em i18n:name="name" tal:content="username"/>.
     </p>
 
     <p tal:condition="python:username == 'Anonymous User'"
