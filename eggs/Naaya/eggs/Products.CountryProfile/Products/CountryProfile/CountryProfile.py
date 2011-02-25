@@ -3,10 +3,6 @@
 perform searchs on the data
 """
 import os
-try:
-    from hashlib import sha1
-except ImportError:
-    from sha import sha as sha1
 
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
@@ -150,14 +146,18 @@ class CountryProfile(SimpleItem):
         # X axis labels
         chart.set_axis_labels(Axis.BOTTOM, data['x'])
 
-        chart_url = chart.get_url()
-        url_hash = sha1(chart_url).hexdigest()
-        image_path = os.path.join(TARGET_DIR, "%s.png" % url_hash)
+        #Generate an hash from arguments
+        kw_hash = hash(tuple(sorted(kw.items())))
+        data_hash = hash(tuple(sorted([(k, tuple(v))
+            for k, v in data.iteritems()])))
+        args_hash = str(kw_hash) + str(data_hash)
 
-        if bool(kw.get('refresh', False)) or url_hash not in self.charts:
+        image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
+
+        if bool(kw.get('refresh', False)) or args_hash not in self.charts:
             #Get image from google chart api
             chart.download(image_path)
-            self.charts.append(url_hash)
+            self.charts.append(args_hash)
             self._p_changed = True
 
         return image_path
