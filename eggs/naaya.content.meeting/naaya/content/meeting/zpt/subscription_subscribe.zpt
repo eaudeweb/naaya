@@ -18,7 +18,8 @@
 
     <tal:block define="
         username python:request.AUTHENTICATED_USER.getUserName();
-        site here/getSite;">
+        site here/getSite;
+        auth_tool here/getAuthenticationTool">
     <p tal:condition="python:username == 'Anonymous User'"
         i18n:translate="">
         If you already have a local or EIONET LDAP account you can
@@ -29,18 +30,20 @@
         i18n:translate="">
         <a tal:attributes="href string:${here/absolute_url}/subscribe_account">Register</a>
         for this meeting as
-        <em i18n:name="name" tal:content="username"/>.
+        <em i18n:name="name"
+            tal:content="python:auth_tool.name_from_userid(username)"/>.
     </p>
 
     <p tal:condition="python:username == 'Anonymous User'"
         i18n:translate="">
         <a tal:attributes="href string:${here/absolute_url}/signup">Here</a>
-        you can signup for a new account to participate to this meeting.
+        you can sign up for a new account to participate in this meeting.
     </p>
     <p tal:condition="python:username != 'Anonymous User'"
         i18n:translate="">
         <a tal:attributes="href string:${here/absolute_url}/signup">Here</a>
-        you can signup for a new account for someone else to participate to this meeting.
+        you can sign up for a new account for someone else to participate in
+        this meeting.
     </p>
     </tal:block>
 
