@@ -10,8 +10,8 @@ class CountryPortlet(object):
     interface.implements(INyPortlet)
     component.adapts(INySite)
 
-    title = 'Country statistics'
-    template = PageTemplateFile('zpt/index', globals())
+    title = 'Country profile'
+    template = PageTemplateFile('zpt/portlet', globals())
 
     def __init__(self, site):
         self.site = site

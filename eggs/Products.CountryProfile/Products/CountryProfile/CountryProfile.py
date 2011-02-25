@@ -123,11 +123,10 @@ class CountryProfile(SimpleItem):
         except:
             min_y = 0
             max_y = 100
-
+        width = int(kw.get('width', 600))
+        height = int(kw.get('height', 250))
         # Chart size of widthxheight pixels and specifying the range for the Y axis
-        chart = SimpleLineChart(int(kw.get('width', 600)),
-                                int(kw.get('height', 250)),
-                                y_range=[min_y, max_y])
+        chart = SimpleLineChart(width, height, y_range=[min_y, max_y])
 
         # Add the chart data
         chart.add_data(data['y'])
@@ -135,11 +134,11 @@ class CountryProfile(SimpleItem):
         # Set the line colour to blue
         chart.set_colours(['0000FF'])
 
-        # Set the vertical stripes
-        chart.fill_linear_stripes(Chart.CHART, 0, 'CCCCCC', 0.2, 'FFFFFF', 0.2)
-
-        ## Set the horizontal dotted lines
-        #chart.set_grid(0, 25, 5, 5)
+        try:
+            step_x = int(100/(len(data['x'])-1))
+        except:
+            step_x = 0
+        chart.set_grid(step_x, 10, 5, 5)
 
         # The Y axis labels contains min_y to max_y spling it into 10 equal parts,
         #but remove the first number because it's obvious and gets in the way
@@ -180,7 +179,9 @@ class CountryProfile(SimpleItem):
 
         rows = self.query('get_chart_data', **chart_query)
         for row in rows:
-            data['x'].extend([str(row['val_year'])])
+            year = str(row['val_year'])
+            if year not in data['x']:
+                data['x'].append(year)
             data['y'].append(int(row['val']))
 
         image_path = self.get_chart_image(data, **kw)
