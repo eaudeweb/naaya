@@ -134,9 +134,13 @@ class AoALibraryViewer(SimpleItem):
         review_template = self.aq_parent['tools']['general_template']['general-template']
         library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
         for answer in review_template.objectValues('Naaya Survey Answer'):
-            temp_title = answer.get('w_q1-name-assessment-report')['en']
+            title_dict = answer.get('w_q1-name-assessment-report')
+            if not title_dict:
+                orphan_answers.append(answer.absolute_url())
+                continue
+            temp_title = title_dict['en']
             if not temp_title:
-                temp_title = answer.get('w_q1-name-assessment-report')['ru']
+                temp_title = title_dict['ru']
             for vl_answer in library.objectValues('Naaya Survey Answer'):
                 try:
                     if temp_title in vl_answer.get('w_assessment-name').values():
