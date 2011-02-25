@@ -183,7 +183,7 @@
             <tal:block condition="here/allow_register">
             <p tal:define="site here/getSite">
                 <span class="buttons">
-                    <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="Click here to participate"></a>
+                    <a tal:attributes="href string:${here/absolute_url}/participants/subscriptions/subscribe" i18n:translate="Click here to register"></a>
                 </span>
             </p>
             </tal:block>
