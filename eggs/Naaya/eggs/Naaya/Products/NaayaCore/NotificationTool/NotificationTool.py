@@ -18,6 +18,7 @@
 # Alex Morega, Eau de Web
 
 #Python imports
+import re
 try: from collections import namedtuple
 except ImportError: from Products.NaayaCore.backport import namedtuple
 from operator import attrgetter
@@ -147,15 +148,18 @@ class NotificationTool(Folder):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_get_subscriptions')
-    def admin_get_subscriptions(self):
+    def admin_get_subscriptions(self, user_query):
+        user_query = user_query.strip()
         for obj, sub_id, subscription in walk_subscriptions(self.getSite()):
-            yield {
-                'user': subscription.to_string(obj),
-                'location': path_in_site(obj),
-                'sub_id': sub_id,
-                'lang': subscription.lang,
-                'notif_type': subscription.notif_type,
-            }
+            user = subscription.to_string(obj)
+            if not user_query or re.match('.*%s.*' % user_query, user, re.IGNORECASE):
+                yield {
+                    'user': user,
+                    'location': path_in_site(obj),
+                    'sub_id': sub_id,
+                    'lang': subscription.lang,
+                    'notif_type': subscription.notif_type,
+                }
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_add_account_subscription')
