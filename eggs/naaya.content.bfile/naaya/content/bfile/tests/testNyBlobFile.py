@@ -87,6 +87,12 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(bf.filename, 'my.txt')
         self.assertEqual(bf.somerandomkw, 'thevalue')
 
+    def test_guess_mimetype(self):
+        f = StringIO('some test image')
+        f.filename = 'photo.jpg'
+        bf = make_blobfile(f)
+        self.assertEqual(bf.content_type, 'image/jpeg')
+
     def test_factory_ie6_filename(self):
         data = 'some test data'
         f = StringIO(data)
