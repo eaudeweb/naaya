@@ -4,7 +4,29 @@
 
   <naaya:content factory=".bfile_item.get_config" />
 
-  <adapter factory=".adapters.BFileZipAdapter" />
+  <adapter factory=".adapters.BFileZipAdapter"
+		   for=".interfaces.INyBlobFile"
+		   provides="Products.NaayaCore.managers.zip_import_export.IZipExportObject" />
+
+  <adapter factory=".adapters.ZipViewer"
+		   for=".interfaces.INyBlobFile"
+		   provides=".interfaces.IBFileContentViewer"
+		   name="application/zip"/>
+
+  <adapter factory=".adapters.GenericViewer"
+		   for=".interfaces.INyBlobFile"
+		   provides=".interfaces.IBFileContentViewer"
+		   name="image/*"/>
+
+  <adapter factory=".adapters.GenericViewer"
+		   for=".interfaces.INyBlobFile"
+		   provides=".interfaces.IBFileContentViewer"
+		   name="text/*"/>
+
+  <adapter factory=".adapters.GenericViewer"
+		   for=".interfaces.INyBlobFile"
+		   provides=".interfaces.IBFileContentViewer"
+		   name="application/pdf"/>
 
   <include package=".updates" />
 
