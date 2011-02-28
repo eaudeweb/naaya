@@ -23,6 +23,7 @@ from zope.event import notify
 from persistent.list import PersistentList
 
 from naaya.core.utils import is_ajax, render_macro, force_to_unicode
+from naaya.core.zope2util import path_in_site
 from naaya.core.exceptions import ValidationError, i18n_exception
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import \
@@ -669,7 +670,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for roles_tuple in folder.get_local_roles():
                 local_roles = self.getLocalRoles(roles_tuple[1])
                 if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
-                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+                    roles_list = users_roles[str(roles_tuple[0])]
+                    roles_list.append((local_roles, path_in_site(folder)))
         return users_roles
 
     security.declareProtected(manage_users, 'getUsersWithRoles')
