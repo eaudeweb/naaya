@@ -35,6 +35,7 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 from datetime import datetime, timedelta
 import simplejson as json
+from urlparse import urlparse
 
 #Zope imports
 import zLOG
@@ -186,6 +187,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     display_subobject_count = ""
     default_logo = ''
     content_versioning_enabled = True
+    notify_on_errors_email = ''
 
     _Delete_objects_Permission = ['Administrator']
 
@@ -205,7 +207,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.search_age = 12
         self.searchable_content = []
         self.numberresultsperpage = 10
-        self.notify_on_errors = 1
+        self.notify_on_errors_email = ''
         self.http_proxy = ''
         self.repository_url = ''
         self.mail_server_name = DEFAULT_MAILSERVERNAME
@@ -1702,12 +1704,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
         """ """
         ignored_exceptions = self.error_log.getProperties()['ignored_exceptions']
-        if error_type not in ignored_exceptions and self.notify_on_errors:
+        if error_type not in ignored_exceptions and self.notify_on_errors_email:
             if self.portal_url != '':
                 domain_name = self.portal_url.replace('http://', '').replace('https://','')
                 mail_from = 'error@%s' % domain_name
-            else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
-            self.notifyOnErrorsEmail(p_to = self.administrator_email,
+            else: mail_from = 'error@%s' % urlparse(REQUEST.SERVER_URL).netloc
+            self.notifyOnErrorsEmail(p_to = self.notify_on_errors_email,
                                     p_from = mail_from,
                                     p_error_url = REQUEST.get('URL', ''),
                                     p_error_ip = self.utGetRefererIp(REQUEST),
@@ -2151,9 +2153,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
-    def admin_email(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', REQUEST=None):
+    def admin_email(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
         """ """
-        self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors)
+        self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors_email)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_email_html' % self.absolute_url())

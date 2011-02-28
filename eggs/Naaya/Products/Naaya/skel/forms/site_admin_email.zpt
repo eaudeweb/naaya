@@ -27,11 +27,10 @@
 		<dd><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></dd>
 		<dt i18n:translate="">Default from address</dt>
 		<dd><input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" /></dd>
-		<dt i18n:translate="">Administrator email</dt>
+		<dt i18n:translate="">Administrators' emails (comma separated)</dt>
 		<dd><input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /></dd>
-		<dt i18n:translate="">Send email notifications to the administrator</dt>
-		<dd i18n:translate="">On errors</dd>
-		<dd><input type="checkbox" name="notify_on_errors" tal:attributes="checked python:here.notify_on_errors==1" /></dd>
+		<dt i18n:translate="">Email address for notifications on errors (comma separated, leave empty to prevent error notifications)</dt>
+		<dd><input type="text" name="notify_on_errors_email" size="50" tal:attributes="value here/notify_on_errors_email" /></dd>
 	</dl>
 	<p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 </form>

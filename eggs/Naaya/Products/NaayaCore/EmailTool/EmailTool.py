@@ -155,18 +155,16 @@ class EmailTool(Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
-    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', REQUEST=None):
+    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors_email='', REQUEST=None):
         """ """
         site = self.getSite()
         try: mail_server_port = int(mail_server_port)
         except: mail_server_port = site.mail_server_port
-        if notify_on_errors: notify_on_errors = 1
-        else: notify_on_errors = 0
         site.mail_server_name = mail_server_name
         site.mail_server_port = mail_server_port
         site.mail_address_from = mail_address_from
         site.administrator_email = administrator_email
-        site.notify_on_errors = notify_on_errors
+        site.notify_on_errors_email = notify_on_errors_email
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
