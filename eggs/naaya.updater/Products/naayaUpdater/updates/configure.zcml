@@ -310,4 +310,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_newscontributor.UpdateNewsContributor"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="notify_on_errors_email.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_notify_on_errors_email.UpdateNotifyOnErrorsEmail"
+      permission="zope2.ViewManagementScreens" />
 </configure>
