@@ -34,6 +34,7 @@ from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
+from zExceptions import NotFound
 
 #Product imports
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA, get_schema_helper_for_metatype
@@ -408,7 +409,12 @@ class NyInfoFolder(NyFolder):
 
     subobjects_html = NyFolder.subobjects_html
     folder_menusubmissions = PageTemplateFile('zpt/folder_menusubmissions', globals())
-    infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
+    _infofolder_info_filter_html = PageTemplateFile('zpt/infofolder_info_filter', globals())
+    def infofolder_info_filter_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        if self.info_type == 'events':
+            raise NotFound
+        return self._infofolder_info_filter_html(REQUEST=REQUEST, RESPONSE=RESPONSE)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'import_items')
     def import_items(self):
