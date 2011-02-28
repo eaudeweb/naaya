@@ -1,22 +1,4 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-
+import os
 import re
 from unittest import TestSuite, makeSuite
 from StringIO import StringIO
@@ -26,7 +8,7 @@ import urllib
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-
+from naaya.content.bfile.bfile_item import addNyBFile
 
 class BrowserFileTestingMixin(object):
     def make_file(self, filename, content_type, data):
@@ -256,6 +238,48 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.failUnlessEqual(html, 'simple contents')
 
         self.browser_do_logout()
+
+    def test_view(self):
+        """Same as download, but without the attachment header"""
+
+        file_contents = 'simple contents'
+        uploaded_file = StringIO(file_contents)
+        uploaded_file.filename = 'test.txt'
+        uploaded_file.headers = {'content-type': 'text/plain; charset=utf-8'}
+
+        addNyBFile(self.portal.myfolder, submitted=1,
+                   contributor='contributor', id='test', title="test",
+                   uploaded_file=uploaded_file)
+        transaction.commit()
+        #View the file
+        self.browser.go('http://localhost/portal/myfolder/test/download/1/test.txt?action=view')
+        self.assertEqual(file_contents, self.browser.get_html())
+
+    def test_view_zip(self):
+        """ Custom view of zipfile """
+        from zipfile import ZipFile
+        zfile = open(os.path.join(os.path.dirname(__file__), 'fixtures',
+                              'one_file_zip.zip'), 'rb')
+
+        upload_file = StringIO(zfile.read())
+        upload_file.filename = 'test.zip'
+        upload_file.headers = {'content-type': 'application/zip'}
+
+        namelist = ZipFile(zfile).namelist()
+        zfile.close()
+        addNyBFile(self.portal.myfolder, submitted=1,
+                   contributor='contributor', id='test', title="test",
+                   uploaded_file=upload_file)
+        transaction.commit()
+
+        #The result is a simple html with the contents of the zipfile (filepaths)
+        self.browser.go('http://localhost/portal/myfolder/test/download/1/test.zip?action=view')
+        html_content = self.browser.get_html()
+
+        for filepath in namelist:
+            self.assertTrue(filepath in html_content)
+        zfile.close()
+
 
 class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
