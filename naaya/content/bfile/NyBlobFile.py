@@ -24,7 +24,10 @@ from ZODB.blob import Blob
 from Persistence import Persistent
 from ZPublisher.Iterators import filestream_iterator
 
+from naaya.core.utils import mimetype_from_filename
+
 COPY_BLOCK_SIZE = 65536 # 64KB
+DEFAULT_MIMETYPE = 'application/octet-stream'
 
 class NyBlobFile(Persistent):
     """
@@ -90,11 +93,14 @@ class NyBlobFile(Persistent):
         }
 
 def make_blobfile(the_file, **kwargs):
-    content_type = getattr(the_file, 'headers', {}).get(
-        'content-type', 'application/octet-stream')
+    filename = trim_filename(the_file.filename)
+
+    content_type = getattr(the_file, 'headers', {}).get('content-type', None)
+    if content_type is None:
+        content_type = mimetype_from_filename(filename, DEFAULT_MIMETYPE)
 
     meta = {
-        'filename': trim_filename(the_file.filename),
+        'filename': filename,
         'content_type': content_type,
     }
     meta.update(kwargs)
