@@ -1,55 +1,34 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Morega, Eau de Web
-# David Batranu, Eau de Web
-
-#Python imports
+"""Naaya Blob File"""
+from datetime import datetime
 import os
 import sys
-from datetime import datetime
 import urllib
 
-#Zope imports
-from Globals import InitializeClass
-from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
+from App.ImageFile import ImageFile
+from Globals import InitializeClass
 from OFS.Image import cookId
 from persistent.list import PersistentList
 from zExceptions import NotFound
 from zope.event import notify
+from zope.interface import implements
+import zope.component
+
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.zope2util import CaptureTraverse
-from zope.interface import implements
-from interfaces import INyBFile
+from interfaces import INyBFile, IBFileContentViewer
 
-#Product imports
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.NyContentType import (
     NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA)
 from naaya.content.base.constants import *
-from Products.NaayaBase.constants import *
-from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
+from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
@@ -72,7 +51,8 @@ config = {
         'meta_type': 'Naaya Blob File',
         'label': 'File',
         'permission': 'Naaya - Add Naaya Blob File objects',
-        'forms': ['bfile_add', 'bfile_edit', 'bfile_index'],
+        'forms': ['bfile_add', 'bfile_edit', 'bfile_index',
+                  'bfile_quickview_zipfile'],
         'add_form': 'bfile_add_html',
         'description': 'File objects that store data using ZODB BLOBs',
         'default_schema': DEFAULT_SCHEMA,
@@ -175,6 +155,16 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
+def get_view_adapter(version):
+    """Find an file content viewer adapter based on content type"""
+
+    name = version.content_type
+    try:
+        return zope.component.getAdapter(version, IBFileContentViewer, name)
+    except zope.component.interfaces.ComponentLookupError:
+        name = name.split('/')[0] + '/*'
+        return zope.component.queryAdapter(version, IBFileContentViewer, name)
+
 def bfile_download(context, path, REQUEST):
     """
     Perform a download of `context` (must be instance of NyBFile).
@@ -201,6 +191,9 @@ def bfile_download(context, path, REQUEST):
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
     if action == 'view':
+        view_adapter = get_view_adapter(ver)
+        if view_adapter is not None:
+            return view_adapter(context)
         return ver.send_data(RESPONSE, as_attachment=False, REQUEST=REQUEST)
     elif action == 'download':
         return ver.send_data(RESPONSE, set_filename=False, REQUEST=REQUEST)
@@ -340,10 +333,10 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        
+
         for ver_id in versions_to_remove:
             self.remove_version(int(ver_id) - 1, user)
-        
+
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
         self._p_changed = 1
@@ -355,25 +348,30 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
+        def tmpl_version(version, ver_id):
+            """ """
+            #Try to get the adapter for this version and set viewable
+            viewable = False
+            if get_view_adapter(version) is not None:
+                viewable = True
 
-        tmpl_version = lambda version, ver_id: {
-            'filename': version.filename,
-            'content_type': version.content_type,
-            'pretty_size': pretty_size(version.size),
-            'removed': version.removed,
-            'url':  ('%s/download/%s/%s' %
-                     (self.absolute_url(),
-                      ver_id,
-                      urllib.quote(version.filename, safe=''))),
-            'icon_url': ('%s/getContentTypePicture?id=%s' %
-                         (self.getSite().absolute_url(),
-                          version.content_type)),
-            'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
-            'id': ver_id,
-            'is_current': False,
-            'viewable': (version.content_type.startswith('text/')
-                         or version.content_type.startswith('image/')),
-        }
+            return {
+                'filename': version.filename,
+                'content_type': version.content_type,
+                'pretty_size': pretty_size(version.size),
+                'removed': version.removed,
+                'url':  ('%s/download/%s/%s' %
+                         (self.absolute_url(),
+                          ver_id,
+                          urllib.quote(version.filename, safe=''))),
+                'icon_url': ('%s/getContentTypePicture?id=%s' %
+                             (self.getSite().absolute_url(),
+                              version.content_type)),
+                'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
+                'id': ver_id,
+                'is_current': False,
+                'viewable': viewable,
+            }
 
         versions = [tmpl_version(ver, str(n+1))
                     for n, ver in enumerate(self._versions)
