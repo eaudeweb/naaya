@@ -5,7 +5,7 @@
   <naaya:content factory=".bfile_item.get_config" />
 
   <adapter factory=".adapters.BFileZipAdapter"
-		   for=".interfaces.INyBlobFile"
+		   for=".interfaces.INyBFile"
 		   provides="Products.NaayaCore.managers.zip_import_export.IZipExportObject" />
 
   <adapter factory=".adapters.ZipViewer"
