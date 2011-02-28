@@ -532,6 +532,7 @@ class EnviroWindowsSite(NySite):
             # setRequestRoleSession expects 'name' instead of 'username'
             # also, it does not expect 'confirm'
             kwargs['name'] = kwargs.pop('username', '')
+            kwargs.pop('confirm', '')
             self.setRequestRoleSession(**kwargs)
             self.setSessionErrorsTrans('Required field: Comments')
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
