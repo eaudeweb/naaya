@@ -146,8 +146,8 @@ misc_ = {
     'jquery.form.js':ImageFile('www/js/jquery.form.js', globals()),
 
     #CSS files
-    'jquery-ui.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
-    'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui-1.8.1.custom.css', globals()),
+    'jquery-ui.css':ImageFile('www/js/css/jquery-ui.css', globals()),
+    'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui.css', globals()),
     'jquery.autocomplete.css':ImageFile('www/js/css/jquery.autocomplete.css', globals()),
 
     #Event index

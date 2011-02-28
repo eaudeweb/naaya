@@ -123,7 +123,7 @@ from Products.NaayaCore.interfaces import ICaptcha
 from naaya.core.utils import ofs_path
 from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
-from naaya.core.StaticServe import StaticServeFromZip
+from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 
 MAINTOPICS_SETTINGS = {
     'expanded': True,
@@ -190,6 +190,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     notify_on_errors_email = ''
 
     _Delete_objects_Permission = ['Administrator']
+
+    www = StaticServeFromFolder("www", globals())
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
