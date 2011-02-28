@@ -315,3 +315,11 @@ def permission_add_role(context, permission, role):
 
 def physical_path(ob):
     return '/'.join(ob.getPhysicalPath())
+
+def ofs_walk(ob):
+    yield ob
+    if not hasattr(ob.aq_base, 'objectValues'):
+        return
+    for sub_ob in ob.objectValues():
+        for item in ofs_walk(sub_ob):
+            yield item
