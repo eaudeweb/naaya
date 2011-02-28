@@ -4,19 +4,19 @@
         tal:define="site_url here/getSitePath;">
         <head tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
                         layout_path python:here.getSite().getLayoutTool().absolute_url();">
-            
+
             <metal:block define-slot="title">
                 <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
             </metal:block>
-            
+
             <metal:block define-slot="meta">
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             </metal:block>
-            
+
             <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
             <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
             <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
-            
+
             <metal:block define-slot="standard-head-links">
                 <metal:block define-macro="standard-head-links">
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/style_css" />
@@ -24,7 +24,7 @@
             <link rel="stylesheet" type="text/css" media="print"  tal:attributes="href string:${layout_path}/print_css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/scheme_style" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
-            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/misc_/Naaya/jquery-ui.css" />
+            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/www/js/css/jquery-ui.css" />
                 </metal:block>
             </metal:block>
 
@@ -38,7 +38,7 @@
             <tal:block replace="structure here/portal_statistics/gw_verify" />
             <tal:block replace="structure here/portal_statistics/ga_verify" />
         </head>
-        
+
         <metal:block define-slot="standard-body">
         <body>
             <tal:block tal:define="site_url here/getSitePath;
