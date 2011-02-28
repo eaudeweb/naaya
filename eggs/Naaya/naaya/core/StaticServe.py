@@ -26,23 +26,23 @@ from utils import mimetype_from_filename
 
 class StaticServeFromZip(object):
     """ Serves static files from the filesystem """
-    
+
     def __init__(self, path, zipfile, _globals=None):
         if _globals:
             import os
             zipfile = os.path.join(package_home(_globals), zipfile)
-        
+
         self._path = path
         self._zipfile = zipfile
-    
+
     def __bobo_traverse__(self, REQUEST, name):
         return StaticServeFromZip(self._path + '/' + name, self._zipfile)
-    
+
     def __call__(self, REQUEST):
         """ serve a static file """
         # print "the path is [%s]; the zipfile is [%s]" % (self._path, self._zipfile)
         zf = ZipFile(self._zipfile)
-        
+
         try:
             data = zf.read(self._path)
             content_type = mimetype_from_filename(self._path)
@@ -52,7 +52,7 @@ class StaticServeFromZip(object):
         except KeyError:
             data = "Not Found"
             REQUEST.RESPONSE.setStatus(404)
-        
+
         zf.close()
         return data
 
@@ -67,7 +67,7 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
     def callback(context, path, REQUEST):
         filepath = os.path.join(_path, *path)
         try:
-            fd = open(filepath)
+            fd = open(filepath, 'rb')
         except IOError:
             REQUEST.RESPONSE.setStatus(404)
             return "Not Found"
@@ -89,4 +89,3 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
         return data
 
     return CaptureTraverse(callback)
-
