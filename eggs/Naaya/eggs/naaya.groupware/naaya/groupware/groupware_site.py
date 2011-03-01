@@ -102,13 +102,19 @@ class GroupwareSite(NySite):
 
     def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER']
-        user_roles = self.getAuthenticationTool().get_all_user_roles(user)
 
-        if 'Manager' in user_roles or 'Administrator' in user_roles:
+        def check_role(role_name):
+            ldap_user_folder = self.aq_parent.acl_users
+            result = ldap_user_folder.authorize(user, self, self,
+                                       'index_html', self.index_html,
+                                       (role_name,))
+            return result
+
+        if self.checkPermissionPublishObjects():
             return 'admin'
-        if 'Contributor' in user_roles and 'Administrator' not in user_roles and 'Manager' not in user_roles:
+        elif check_role('Contributor'):
             return 'member'
-        if self.checkPermissionView():
+        elif self.checkPermissionView():
             return 'viewer'
         else:
             return 'restricted'
