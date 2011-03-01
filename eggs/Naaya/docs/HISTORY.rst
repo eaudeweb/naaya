@@ -10,6 +10,7 @@ Changelog
  * Improvements to Zip import and export: title/id mapping, preservation of
    timestamps, keeping empty folders.
  * Usability improvements to notifications administration page.
+ * Separate email addresses for admin notifications and error reports.
 
 
 2.11.01 (2011-02-02)
