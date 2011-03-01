@@ -22,8 +22,9 @@ naaya.core.zope2util - utilities to make Zope 2 a friendlier place
 """
 
 import datetime
+import sys
 
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
 from Acquisition import Implicit
 from OFS.SimpleItem import SimpleItem
@@ -156,6 +157,18 @@ class RestrictedToolkit(SimpleItem):
             except ImportError:
                 pass
         return False
+
+    def catch_unauthorized(self):
+        """
+        useful in try..except handlers, like `tal:on-error`::
+
+            <p tal:content="here/read_value"
+               on-error="here/rstk/catch_unauthorized"/>
+        """
+        if sys.exc_info()[0] is Unauthorized:
+            return None
+        else:
+            raise
 
 InitializeClass(RestrictedToolkit)
 
