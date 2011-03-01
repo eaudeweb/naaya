@@ -14,7 +14,7 @@
 	iframe python: bool(request.get('iframe', 0))">
 
 <metal:block define-slot="folder-listing">
-<tal:block tal:condition="iframe" on-error="string:RESTRICTED">
+<tal:block condition="iframe" on-error="here/rstk/catch_unauthorized">
 	<!DOCTYPE html>
 	<tal:block replace="structure python:'<' +'html>'"></tal:block>
 	<tal:block tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
@@ -132,7 +132,7 @@ $(document).ready(function(){
 					versionable python:folder_info['versionable'];
 					editable python:folder_info['editable'];
 					folder python:folder_info['self'];
-					" on-error="string:RESTRICTED">
+					" on-error="here/rstk/catch_unauthorized">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
@@ -229,7 +229,7 @@ $(document).ready(function(){
 					versionable python:object_info['versionable'];
 					editable python:object_info['editable'];
 					object python:object_info['self'];
-					" on-error="string:RESTRICTED">
+					" on-error="here/rstk/catch_unauthorized">
 					<td class="checkbox" tal:condition="btn_select"
 						style="width: 4%; vertical-align: top;">
 						<input tal:condition="python:del_permission or copy_permission"
