@@ -23,7 +23,6 @@ class MultipleChoiceWidget(Widget):
         self.set_localproperty('choices', 'lines', lang)
         Widget.__init__(self, id, lang, **kwargs)
 
-    security.declareProtected(view, 'getChoices')
     def getChoices(self):
         """ """
         return self.choices
