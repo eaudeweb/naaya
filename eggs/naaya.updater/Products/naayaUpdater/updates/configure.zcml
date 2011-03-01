@@ -316,4 +316,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_notify_on_errors_email.UpdateNotifyOnErrorsEmail"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="add_submit_comments_to_authenticated.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_add_submit_comments_to_authenticated.UpdateAddSubmitCommentsToAuthenticated"
+      permission="zope2.ViewManagementScreens" />
 </configure>
