@@ -1710,7 +1710,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if self.portal_url != '':
                 domain_name = self.portal_url.replace('http://', '').replace('https://','')
                 mail_from = 'error@%s' % domain_name
-            else: mail_from = 'error@%s' % urlparse(REQUEST.SERVER_URL).netloc
+            else: mail_from = 'error@%s' % urlparse(REQUEST.SERVER_URL)[1]
             self.notifyOnErrorsEmail(p_to = self.notify_on_errors_email,
                                     p_from = mail_from,
                                     p_error_url = REQUEST.get('URL', ''),
