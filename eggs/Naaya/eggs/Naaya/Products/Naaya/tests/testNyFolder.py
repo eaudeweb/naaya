@@ -35,7 +35,7 @@ from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.interfaces import IObjectView
-from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter, GenericViewAdapter
+from Products.Naaya.adapters import NyContentTypeViewAdapter, GenericViewAdapter
 from Products.NaayaCore.LayoutTool.Template import Template
 from naaya.content.base.interfaces import INyContentObject
 
