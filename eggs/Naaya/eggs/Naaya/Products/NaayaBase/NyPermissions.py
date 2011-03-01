@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from zope.interface import implements
+from zope.deprecation import deprecate
 
 #Product imports
 from constants import *
