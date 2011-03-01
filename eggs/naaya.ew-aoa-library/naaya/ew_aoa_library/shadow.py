@@ -375,7 +375,7 @@ def shadow_for_answer(answer):
     shadow = AssessmentShadow(**attrs)
     # the security is hardcoded to match the one of the target object
     try:
-        view_perm_roles = answer.aq_parent._View_Permission 
+        view_perm_roles = ('Anonymous', 'Authenticated',)
     except AttributeError:
         pass
     else:
