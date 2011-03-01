@@ -32,38 +32,10 @@ import zLOG
 #Product imports
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from naaya.content.base.interfaces import INyContentObject
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
 from Products.Naaya.interfaces import INySite, IObjectView
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-
-try:
-    from naaya.content.bfile.bfile_item import pretty_size
-except ImportError:
-    pass
-
-class NyContentTypeViewAdapter(object):
-    adapts(INyContentObject)
-    implements(IObjectView)
-
-    def __init__(self, ob):
-        self.ob = ob
-
-    def version_status(self):
-        return self.ob.version_status()
-provideAdapter(NyContentTypeViewAdapter)
-
-class GenericViewAdapter(object):
-    adapts(IItem)
-    implements(IObjectView)
-
-    def __init__(self, ob):
-        self.ob = ob
-
-    def version_status(self):
-        return False, False
-provideAdapter(GenericViewAdapter)
 
 
 class NyFolderBase(Folder, NyPermissions):
@@ -96,14 +68,15 @@ class NyFolderBase(Folder, NyPermissions):
             f_view = IObjectView(f)
             versionable, editable = f_view.version_status()
             info = {
-                    'del_permission': f.checkPermissionDeleteObject(),
-                    'copy_permission': f.checkPermissionCopyObject(),
-                    'edit_permission': f.checkPermissionEditObject(),
-                    'approved': f.approved,
-                    'versionable': versionable,
-                    'editable': editable,
-                    'self': f,
-                    }
+                'del_permission': f.checkPermissionDeleteObject(),
+                'copy_permission': f.checkPermissionCopyObject(),
+                'edit_permission': f.checkPermissionEditObject(),
+                'approved': f.approved,
+                'versionable': versionable,
+                'editable': editable,
+                'self': f,
+                'view': f_view,
+            }
 
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
                 ret.append(info)
@@ -122,42 +95,15 @@ class NyFolderBase(Folder, NyPermissions):
             o_view = IObjectView(o)
             versionable, editable = o_view.version_status()
             info = {
-                    'del_permission': o.checkPermissionDeleteObject(),
-                    'copy_permission': o.checkPermissionCopyObject(),
-                    'edit_permission': o.checkPermissionEditObject(),
-                    'approved': o.approved,
-                    'versionable': versionable,
-                    'editable': editable,
-                    'self': o,
-                    }
-
-            if o.meta_type == 'Naaya Blob File':
-                version = o.current_version
-                if version is not None:
-                    info['content_type'] = self.getContentTypeTitle(version.content_type)
-                    info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
-                                            (site_url,
-                                             version.content_type))
-                    info['pretty_size'] = pretty_size(version.size)
-                    info['is_file'] = True
-                else:
-                    info['is_file'] = False
-            elif o.meta_type == 'Naaya Extended File':
-                info['content_type'] = self.getContentTypeTitle(o.content_type())
-                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
-                                        (site_url,
-                                         o.content_type()))
-                info['pretty_size'] = o.utShowSizeKb(o.size())
-                info['is_file'] = True
-            elif o.meta_type == 'Naaya File':
-                info['content_type'] = self.getContentTypeTitle(o.getContentType())
-                info['icon_url'] = ('%s/getContentTypePicture?id=%s' %
-                                        (site_url,
-                                         o.getContentType()))
-                info['pretty_size'] = o.utShowSizeKb(o.size)
-                info['is_file'] = True
-            else:
-                info['is_file'] = False
+                'del_permission': o.checkPermissionDeleteObject(),
+                'copy_permission': o.checkPermissionCopyObject(),
+                'edit_permission': o.checkPermissionEditObject(),
+                'approved': o.approved,
+                'versionable': versionable,
+                'editable': editable,
+                'self': o,
+                'view': o_view,
+            }
 
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
                 ret.append(info)
@@ -173,6 +119,12 @@ class NyFolderBase(Folder, NyPermissions):
         """
         folders_info = self.listed_folders_info(skey, rkey, sort_on, sort_order)
         objects_info = self.listed_objects_info(skey, rkey, sort_on, sort_order)
+
+        if skey == 'modif_date':
+            def modif_date_getter(info):
+                return IObjectView(info['self']).get_modification_date()
+            folders_info.sort(key=modif_date_getter, reverse=bool(rkey))
+            objects_info.sort(key=modif_date_getter, reverse=bool(rkey))
 
         infos = []
         infos.extend(folders_info)

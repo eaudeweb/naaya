@@ -455,5 +455,11 @@ class TranslationsTool(MessageCatalog):
                 self.setSessionErrorsTrans('File format does not match selected format.')
         return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
 
+    def trans(self, msg, **kwargs):
+        msg = self.gettext(msg)
+        for name, value in kwargs.iteritems():
+            msg = msg.replace('${%s}' % name, value)
+        return msg
+
 
 InitializeClass(TranslationsTool)

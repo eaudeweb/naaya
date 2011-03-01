@@ -2,10 +2,40 @@
   <include package=".adapter" />
 
   <adapter
-    factory="Products.Naaya.NyFolderBase.ObjectListingPortlet"
+    factory=".NyFolderBase.ObjectListingPortlet"
     name="portlet_objects_listing"
     provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
     for="Products.Naaya.interfaces.INySite"
+    />
+
+  <adapter
+    for="OFS.interfaces.IItem"
+    provides=".interfaces.IObjectView"
+    factory=".adapters.GenericViewAdapter"
+    />
+
+  <adapter
+    for="naaya.content.base.interfaces.INyContentObject"
+    provides=".interfaces.IObjectView"
+    factory=".adapters.NyContentTypeViewAdapter"
+    />
+
+  <adapter
+    for="naaya.content.file.interfaces.INyFile"
+    provides=".interfaces.IObjectView"
+    factory=".adapters.NyFileViewAdapter"
+    />
+
+  <adapter
+    for="naaya.content.exfile.interfaces.INyExFile"
+    provides=".interfaces.IObjectView"
+    factory=".adapters.NyExFileViewAdapter"
+    />
+
+  <adapter
+    for=".interfaces.INyFolder"
+    provides=".interfaces.IObjectView"
+    factory=".adapters.NyFolderViewAdapter"
     />
 
   <class class=".NyFolder.NyFolder">

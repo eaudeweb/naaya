@@ -28,6 +28,12 @@
 		   provides=".interfaces.IBFileContentViewer"
 		   name="application/pdf"/>
 
+  <adapter
+    for=".interfaces.INyBFile"
+    provides="Products.Naaya.interfaces.IObjectView"
+    factory=".adapters.BFileViewAdapter"
+    />
+
   <include package=".updates" />
 
 </configure>

@@ -32,6 +32,7 @@ from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.core.utils import pretty_size
 
 from NyBlobFile import make_blobfile, trim_filename
 
@@ -244,6 +245,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             return None
 
     def _save_file(self, the_file):
+        # TODO set tzinfo on timestamp
         bf = make_blobfile(the_file,
                            removed=False,
                            timestamp=datetime.utcnow())
@@ -418,16 +420,6 @@ config.update({
 
 def get_config():
     return config
-
-def pretty_size(size):
-    if size < 1024:
-        return '%d bytes' % size
-    elif size < 1024**2:
-        return '%d KB' % (size/1024)
-    elif size < 1024**3:
-        return '%d MB' % (size/1024**2)
-    else:
-        return '%d GB' % (size/1024**3)
 
 def file_has_content(file_ob):
     if file_ob is None:
