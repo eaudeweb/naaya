@@ -945,9 +945,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             except AttributeError:
                 pass # probably not an LDAP plugin
 
-        if self.REQUEST is not None:
-            auth_user = self.REQUEST['AUTHENTICATED_USER']
-            roles.extend(auth_user.getRoles())
+        roles.extend(user.getRoles())
         return roles
 
     def getUserFirstName(self, user_obj):
