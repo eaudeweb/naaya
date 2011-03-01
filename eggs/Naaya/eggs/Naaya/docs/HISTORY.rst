@@ -1,7 +1,11 @@
 Changelog
 =========
 
-2.11.02 (unreleased)
+2.11.03 (unreleased)
+--------------------
+
+
+2.11.02 (2011-03-01)
 --------------------
  * New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
    `checkPermissionSkipApproval` replaces `glCheckPermissionPublishObjects`.
