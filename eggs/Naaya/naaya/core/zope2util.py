@@ -266,6 +266,12 @@ def DT2dt(date):
     args.append(UnnamedTimeZone(int(date.tzoffset()/60)))
     return datetime.datetime(*args)
 
+def ensure_tzinfo(dt, default_tz=UnnamedTimeZone(0)):
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=default_tz)
+    else:
+        return dt
+
 folder_manage_main_plus = DTMLFile('zpt/folder_main_plus', globals())
 """
 The OFS.ObjectManager `manage_main` template, modified to render two
@@ -336,3 +342,11 @@ def ofs_walk(ob):
     for sub_ob in ob.objectValues():
         for item in ofs_walk(sub_ob):
             yield item
+
+def icon_for_content_type(context, mime_type):
+    site = context.getSite()
+    site_url = site.absolute_url()
+    return {
+        'url': '%s/getContentTypePicture?id=%s' % (site_url, mime_type),
+        'title': site.getContentTypeTitle(mime_type),
+    }

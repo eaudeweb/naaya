@@ -1,5 +1,11 @@
 """Adapters for content view and zip import/export"""
 
+from Products.Naaya.adapters import NyContentTypeViewAdapter
+from naaya.core.zope2util import DT2dt, ensure_tzinfo, icon_for_content_type
+from naaya.core.utils import pretty_size
+
+from interfaces import INyBFile
+
 class BFileZipAdapter(object):
     def __init__(self, context):
         self.context = context
@@ -31,3 +37,34 @@ class ZipViewer(object):
         zfile = ZipFile(self.bfile.open())
         return context.getFormsTool()['bfile_quickview_zipfile'](
             namelist=zfile.namelist())
+
+class BFileViewAdapter(NyContentTypeViewAdapter):
+    def get_modification_date(self):
+        version = self.ob.current_version
+        if version is None:
+            return DT2dt(self.ob.releasedate)
+        else:
+            return ensure_tzinfo(version.timestamp)
+
+    def get_info_text(self):
+        trans = self.ob.getPortalTranslations().trans
+        version_count = len(self.ob._versions)
+        if version_count > 1:
+            msg = trans("${number} versions", number=str(version_count))
+            return "(%s)" % msg
+        else:
+            return ""
+
+    def get_icon(self):
+        version = self.ob.current_version
+        if version is not None:
+            return icon_for_content_type(self.ob, version.content_type)
+        else:
+            return super(BFileViewAdapter, self).get_icon()
+
+    def get_size(self):
+        version = self.ob.current_version
+        if version is not None:
+            return pretty_size(version.size)
+        else:
+            return ""

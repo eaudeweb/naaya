@@ -33,6 +33,7 @@ import urllib
 import time
 import codecs
 from zipfile import *
+from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 
 import csv
@@ -802,7 +803,10 @@ class utils:
         except: return None
 
     def utShowDateTime(self, p_date):
-        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
+        """date is a DateTime or datetime object. This function returns a string 'dd month_name yyyy'"""
+        if isinstance(p_date, datetime):
+            from naaya.core.zope2util import dt2DT
+            p_date = dt2DT(p_date)
         try: return p_date.strftime('%d/%m/%Y')
         except: return ''
 

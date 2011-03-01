@@ -40,6 +40,8 @@ from OFS.Folder import Folder
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from zope.interface import implements
+from interfaces import INyExFile
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -281,6 +283,8 @@ class file_item(NyFSFile, NyFolderishVersioning):
 
 class exfile_item(NyContentData, Folder):
     """ """
+    implements(INyExFile)
+
     meta_type = config['meta_type']
 
     __files = {}

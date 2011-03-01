@@ -149,3 +149,13 @@ def render_macro(context, template_name, macro, **kw):
         />" % (template_name, macro))
     kw.update({'here': context, 'context': context})
     return template.pt_render(extra_context=kw)
+
+def pretty_size(n_bytes):
+    if n_bytes < 1024:
+        return '%d bytes' % n_bytes
+    elif n_bytes < 1024**2:
+        return '%d KB' % (n_bytes/1024)
+    elif n_bytes < 1024**3:
+        return '%d MB' % (n_bytes/1024**2)
+    else:
+        return '%d GB' % (n_bytes/1024**3)
