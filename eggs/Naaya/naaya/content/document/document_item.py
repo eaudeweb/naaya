@@ -320,7 +320,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             #replace the old id with the new one (for absolute URLs or pictures)
 
             parent.manage_renameObjects([self.id], [id])
-            if self.glCheckPermissionPublishObjects():
+            if self.checkPermissionSkipApproval():
                 approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
                 approved, approved_by = 0, None

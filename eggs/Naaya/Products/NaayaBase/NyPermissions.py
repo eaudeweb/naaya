@@ -25,6 +25,7 @@ This module contains the class that implements permissions and rights checking.
 """
 
 #Python imports
+from warnings import warn
 
 #Zope imports
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -107,6 +108,8 @@ class NyPermissions:
         """
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
+    @deprecate('`glCheckPermissionPublishObjects` is deprecated. Use '
+               '`checkPermissionSkipApproval` instead.')
     def glCheckPermissionPublishObjects(self):
         """
         B{Verifies the publishing policy: normally all users having the permission
@@ -118,16 +121,7 @@ class NyPermissions:
         I{submit_unapproved} property of each portal the
         I{Naaya - Publish content} permission does not get auto-approval.
         """
-
-        # TODO deprecate and remove the `submit_unapproved` flag since the
-        # "Skip approval" permission does the job
-
-        if not self.submit_unapproved and self.checkPermissionPublishObjects():
-            return 1
-        elif self.checkPermissionSkipApproval():
-            return 1
-        else:
-            return 0
+        return self.checkPermissionSkipApproval()
 
     def checkPermissionPublishDirect(self):
         """
@@ -205,7 +199,10 @@ class NyPermissions:
         """
         Check the permission to skip Captcha testing
         """
-        return self.checkPermission(PERMISSION_SKIP_APPROVAL)
+        if not self.submit_unapproved and self.checkPermissionPublishObjects():
+            return 1
+        else:
+            return self.checkPermission(PERMISSION_SKIP_APPROVAL)
 
     security.declareProtected(PERMISSION_SKIP_CAPTCHA, 'skip_captcha')
     def skip_captcha(self):

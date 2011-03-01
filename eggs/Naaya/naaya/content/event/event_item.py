@@ -158,7 +158,7 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/event_add_html' % self.absolute_url())
             return
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
