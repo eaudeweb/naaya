@@ -168,7 +168,7 @@ def addNyExFile(self, id='', REQUEST=None, contributor=None, **kwargs):
             return
 
     #process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None

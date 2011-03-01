@@ -4,6 +4,7 @@ Changelog
 2.11.02 (unreleased)
 --------------------
  * New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
+   `checkPermissionSkipApproval` replaces `glCheckPermissionPublishObjects`.
  * Content objects have new `deleteThis` method with permission
    `Naaya - Delete objects`.
  * Improvements to Zip import and export: title/id mapping, preservation of

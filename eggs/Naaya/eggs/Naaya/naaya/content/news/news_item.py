@@ -170,7 +170,7 @@ def addNyNews(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.setSmallPicture(_smallpicture)
     ob.setBigPicture(_bigpicture)
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None

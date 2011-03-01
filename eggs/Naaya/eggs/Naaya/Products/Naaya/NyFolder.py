@@ -134,7 +134,7 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
     else:
         ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
