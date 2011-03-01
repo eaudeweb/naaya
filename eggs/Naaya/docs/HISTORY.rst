@@ -3,6 +3,13 @@ Changelog
 
 2.11.02 (unreleased)
 --------------------
+ * New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
+ * Content objects have new `deleteThis` method with permission
+   `Naaya - Delete objects`.
+ * Improvements to Zip import and export: title/id mapping, preservation of
+   timestamps, keeping empty folders.
+ * Usability improvements to notifications administration page.
+
 
 2.11.01 (2011-02-02)
 --------------------
