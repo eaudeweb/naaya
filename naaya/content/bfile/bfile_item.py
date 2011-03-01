@@ -131,7 +131,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         ob._save_file(_uploaded_file)
 
     #process parameters
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
