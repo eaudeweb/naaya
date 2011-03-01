@@ -60,7 +60,7 @@ class TestNySite(NaayaTestCase):
         self.assertNotEqual(aDate, now, "The two dates were equal!")
 
     def test_notify_on_errors(self):
-        self.portal.notify_on_errors = True
+        self.portal.notify_on_errors_email = 'errors@pivo.edw.ro'
         self.portal.error_log.setProperties(keep_entries=20, ignored_exceptions=('Unauthorized',))
         request = self.fake_request
         request['URL'] = 'http://localhost:8080/portal/test'
