@@ -25,7 +25,9 @@ from AccessControl.Role import RoleManager
 from zope import event
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
-from AccessControl import getSecurityManager
+from Globals import InitializeClass
+from AccessControl import getSecurityManager, ClassSecurityInfo
+from AccessControl.Permissions import change_permissions
 from zope.annotation.interfaces import IAnnotations
 from zope.event import notify
 
@@ -34,19 +36,32 @@ from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 class NyRoleManager(RoleManager):
     """ notifies on local role modifications """
+    security = ClassSecurityInfo()
 
     # manage_add/set/delLocalRoles wrappers
-    def manage_addLocalRoles(self, userid, roles, *args):
+    security.declareProtected(change_permissions, 'manage_delLocalRoles')
+    def manage_addLocalRoles(self, userid, roles, REQUEST=None):
+        """ override Role.manage_addLocalRoles """
         notify(NyAddLocalRoleEvent(self, userid, roles))
-        return super(NyRoleManager, self).manage_addLocalRoles(userid, roles, *args)
+        return super(NyRoleManager, self).manage_addLocalRoles(userid, roles, REQUEST)
 
-    def manage_setLocalRoles(self, userid, roles, *args):
+    security.declareProtected(change_permissions, 'manage_delLocalRoles')
+    def manage_setLocalRoles(self, userid, roles, REQUEST=None):
+        """ override Role.manage_setLocalRoles """
         notify(NySetLocalRoleEvent(self, userid, roles))
-        return super(NyRoleManager, self).manage_setLocalRoles(userid, roles, *args)
+        return super(NyRoleManager, self).manage_setLocalRoles(userid, roles, REQUEST)
 
-    def manage_delLocalRoles(self, userids, *args):
+    security.declareProtected(change_permissions, 'manage_delLocalRoles')
+    def manage_delLocalRoles(self, userids, REQUEST=None):
+        """ override Role.manage_delLocalRoles """
         notify(NyDelLocalRoleEvent(self, userids))
-        return super(NyRoleManager, self).manage_delLocalRoles(userids, *args)
+        return super(NyRoleManager, self).manage_delLocalRoles(userids, REQUEST)
+
+InitializeClass(NyRoleManager)
+
+class RoleLogger(object):
+    def __init__(self, context):
+        self.context = context
 
     # utility functions
     def _getAuthenticatedUserUID(self):
@@ -60,24 +75,24 @@ class NyRoleManager(RoleManager):
 
     def _removeOldAttributes(self):
         old_attr = '__Naaya_additional_ac_local_roles_info__'
-        if hasattr(self, old_attr):
-            delattr(self, old_attr)
+        if hasattr(self.context, old_attr):
+            delattr(self.context, old_attr)
         old_log_attr = '__Naaya_ac_local_roles_log__'
-        if hasattr(self, old_log_attr):
-            delattr(self, old_log_attr)
+        if hasattr(self.context, old_log_attr):
+            delattr(self.context, old_log_attr)
         old_state_attr = '__Naaya_ac_local_roles_state__'
-        if hasattr(self, old_state_attr):
-            delattr(self, old_state_attr)
+        if hasattr(self.context, old_state_attr):
+            delattr(self.context, old_state_attr)
         old_attr2 = '__Naaya_ac_local_roles__'
-        if hasattr(self, old_attr2):
-            delattr(self, old_attr2)
+        if hasattr(self.context, old_attr2):
+            delattr(self.context, old_attr2)
 
     # manage_add/set/delLocalRoles additionalInfo
     def _getStorage4LocalRolesInfo(self):
         self._removeOldAttributes()
 
         attr = '__Naaya_ac_local_roles__'
-        annotations = IAnnotations(self)
+        annotations = IAnnotations(self.context)
         if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
@@ -126,7 +141,7 @@ class NyRoleManager(RoleManager):
         state = self._getStorage4LocalRolesInfo()
 
         # add RoleManager info
-        for userid, roles in self.get_local_roles():
+        for userid, roles in self.context.get_local_roles():
             if userid not in state:
                 state[userid] = PersistentList()
 
@@ -144,13 +159,12 @@ class NyRoleManager(RoleManager):
 
         return state
 
-
     # user.roles additionalInfo
     def _getStorage4UserRolesInfo(self):
         self._removeOldAttributes()
 
         attr = '__Naaya_ac_user_roles__'
-        annotations = IAnnotations(self)
+        annotations = IAnnotations(self.context)
         if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
@@ -199,7 +213,7 @@ class NyRoleManager(RoleManager):
 
     def getAllUserRolesInfo(self):
         state = self._getStorage4UserRolesInfo()
-        auth_tool = self.getAuthenticationTool()
+        auth_tool = self.context.getAuthenticationTool()
 
         # add user.roles info
         for user in auth_tool.getUsers():
@@ -228,7 +242,7 @@ class NyRoleManager(RoleManager):
         self._removeOldAttributes()
 
         attr = '__Naaya_ac_ldap_group_roles__'
-        annotations = IAnnotations(self)
+        annotations = IAnnotations(self.context)
         if attr not in annotations:
             annotations[attr] = PersistentDict()
         return annotations[attr]
@@ -270,12 +284,12 @@ class NyRoleManager(RoleManager):
 
     def getAllLDAPGroupRolesInfo(self):
         state = self._getStorage4LDAPGroupRolesInfo()
-        auth_tool = self.getAuthenticationTool()
+        auth_tool = self.context.getAuthenticationTool()
 
-        if not hasattr(self, 'acl_satellite'):
+        if not hasattr(self.context, 'acl_satellite'):
             return state
 
-        mapped_roles = self.acl_satellite.getAllLocalRoles()
+        mapped_roles = self.context.acl_satellite.getAllLocalRoles()
         for group in mapped_roles:
             roles = mapped_roles[group]
             if group not in state:
@@ -295,4 +309,3 @@ class NyRoleManager(RoleManager):
                 state[group].append(PersistentDict({'roles': unsaved_roles}))
 
         return state
-

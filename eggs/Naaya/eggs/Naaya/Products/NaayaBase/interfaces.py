@@ -74,3 +74,6 @@ class INyRemoveGroupRoleEvent(Interface):
     context = Attribute("Site or folder the roles are removed for")
     group = Attribute("Group the roles are removed for")
     roles = Attribute("The list of roles")
+
+class IRoleLogger(Interface):
+    """ Log local role assignments and revocations """

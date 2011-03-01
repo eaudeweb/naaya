@@ -17,6 +17,12 @@
     factory="zope.annotation.attribute.AttributeAnnotations"
     />
 
+  <adapter
+    for="AccessControl.interfaces.IRoleManager"
+    provides=".interfaces.IRoleLogger"
+    factory=".NyRoleManager.RoleLogger"
+    />
+
   <subscriber
     handler=".subscribers.handle_add_local_role"
     for=".interfaces.INyAddLocalRoleEvent"
