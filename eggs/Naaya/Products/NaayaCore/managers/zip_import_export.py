@@ -2,6 +2,7 @@ from StringIO import StringIO
 from copy import copy
 from zipfile import ZipFile, ZipInfo
 import tempfile
+import os.path
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view
@@ -263,8 +264,6 @@ class ZipExportTool(Implicit, Item):
 
     security.declarePrivate('add_object_to_zip')
     def add_object_to_zip(self, obj, zip_file):
-        def file_has_no_extension(path):
-            return not len(path.split('/')[-1].split('.')) > 1
         zip_path = self.get_zip_path(obj)
         if isinstance(zip_path, unicode):
             zip_path = zip_path.encode('utf-8')
@@ -272,9 +271,10 @@ class ZipExportTool(Implicit, Item):
         if isinstance(obj, NyFolder):
             object_zip_data = 'Naaya Folder'
         else:
-            if file_has_no_extension(zip_path):
-                zip_path = '%s.%s' % (zip_path,
-                                      object_zip_filename.split('.')[-1])
+            zip_path_ext = os.path.splitext(zip_path)[1]
+            original_ext = os.path.splitext(object_zip_filename)[1]
+            if zip_path_ext != original_ext:
+                zip_path += original_ext
         if object_zip_data:
             if isinstance(object_zip_data, unicode):
                 object_zip_data = object_zip_data.encode('utf-8')
