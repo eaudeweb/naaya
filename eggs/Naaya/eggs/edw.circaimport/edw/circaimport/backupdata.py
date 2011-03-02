@@ -25,7 +25,10 @@ def parse_date(s):
     if not s:
         return datetime.date.today()
     else:
-        return datetime.date(*map(int, reversed(s.split('/'))))
+        if '/' in s:
+            return datetime.date(*map(int, reversed(s.split('/'))))
+        elif '-' in s:
+            return datetime.date(*map(int, s.split('-')))
 
 def parse_userid(s):
     if s.endswith('@circa'):
@@ -34,7 +37,15 @@ def parse_userid(s):
         return str(s)
 
 def walk_backup(index_file, open_backup_file, actor):
-    known_folders = set([''])
+    folders_info = {'root_path': '',
+                    'known_folders': {'': None}}
+
+    def remove_root_path(path):
+        assert path.startswith(folders_info['root_path'])
+        result = path[len(folders_info['root_path']):]
+        if result.startswith('/'):
+            result = result[1:]
+        return result
 
     def handle_folder(line):
         title = line['TITLE']
@@ -42,15 +53,30 @@ def walk_backup(index_file, open_backup_file, actor):
         date = parse_date(line['CREATED'])
         userid = parse_userid(line['OWNER'])
         folder_path =  line['FILENAME'][:-1].encode('utf-8')
-        assert line['LANGUAGE'] == 'EN'
 
         if '/' in folder_path:
             parent_path, folder_id = folder_path.rsplit('/', 1)
-            assert parent_path in known_folders
         else:
-            parent_path = None
+            parent_path = ''
             folder_id = folder_path
-        known_folders.add(folder_path)
+
+        if len(folders_info['known_folders']) == 1:
+            assert folders_info['root_path'] == ''
+            if parent_path:
+                folders_info['root_path'] = parent_path
+            else:
+                folders_info['root_path'] = ''
+
+        parent_path = remove_root_path(parent_path)
+        folder_path = remove_root_path(folder_path)
+
+        assert parent_path in folders_info['known_folders']
+
+        if folder_path in folders_info['known_folders']:
+            assert line['CREATED'] == folders_info['known_folders'][folder_path]['CREATED']
+            assert line['OWNER'] == folders_info['known_folders'][folder_path]['OWNER']
+            return
+        folders_info['known_folders'][folder_path] = line
 
         actor.folder_entry(parent_path, folder_id,
                            title, description, date, userid)
@@ -68,10 +94,15 @@ def walk_backup(index_file, open_backup_file, actor):
         doc_filename = doc_split_path[-1].encode('utf-8')
         doc_langver = doc_split_path[-2]
         doc_dpl_name = str(doc_split_path[-3])
+
         parent_path = '/'.join(doc_split_path[:-3]).encode('utf-8')
+        parent_path = remove_root_path(parent_path)
+        assert parent_path in folders_info['known_folders']
+
         doc_id = doc_dpl_name[:-len('.dpl')]
         if doc_id.startswith('_'):
             doc_id = 'file' + doc_id
+
 
         full_path = parent_path+'/'+doc_id
         if not doc_langver.startswith('EN_'):
@@ -96,8 +127,6 @@ def walk_backup(index_file, open_backup_file, actor):
         if reference:
             description = ( ("<p>Reference: %s</p>\n" % reference)
                             + description)
-
-        assert parent_path in known_folders
 
         doc_data_file = open_backup_file(doc_zip_path.encode('latin-1'))
 
