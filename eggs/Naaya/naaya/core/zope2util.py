@@ -330,7 +330,7 @@ def permission_add_role(context, permission, role):
     p = Permission(permission, (), context)
     crt_roles = p.getRoles()
     ty = type(crt_roles)
-    p.setRoles(ty(set(crt_roles) ^ set([role])))
+    p.setRoles(ty(set(crt_roles) | set([role])))
 
 def physical_path(ob):
     return '/'.join(ob.getPhysicalPath())
