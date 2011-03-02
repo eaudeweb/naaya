@@ -53,7 +53,8 @@
 			tal:attributes="id python: ('admin_sources_html' in path_info and request.get('id', '') == item.id) and 'currenttab' or ''">
             <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
         </li>
-		<li tal:attributes="id python: (
+		<li tal:condition="python: here.checkPermission('Change permissions')"
+		    tal:attributes="id python: (
 								('admin_roles_html' in path_info) or
 								('admin_editrole_html' in path_info)
 							) and 'currenttab' or ''">
