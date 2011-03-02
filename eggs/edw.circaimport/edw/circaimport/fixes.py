@@ -29,5 +29,10 @@ def fix_exceptions(names, line, warn):
         del line[idx('TITLE')]
         return True
 
+    elif (line[idx('TITLE')].strip() == ''
+          and line[idx('ABSTRACT')] == 'Public'):
+        del line[idx('TITLE')]
+        return True
+
     else:
         assert len(line) == len(names), 'busted line: %r' % line
