@@ -49,6 +49,7 @@ from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
 from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import change_permissions
 from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from Globals import DTMLFile
@@ -2287,7 +2288,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect(redirect_url)
 
     #Admin User Roles
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
+    security.declareProtected(change_permissions, 'admin_addrole')
     def admin_addrole(self, role='', REQUEST=None):
         """ Create a role, redirect to edit permissions page """
         err = ''
@@ -2309,8 +2310,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 return REQUEST.RESPONSE.redirect('%s/admin_roles_html' %
                                                  self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_editrole_html')
+    security.declareProtected(change_permissions, 'admin_editrole_html')
     def admin_editrole_html(self, role, REQUEST):
         """ """
         permission_names = self.get_naaya_permissions_in_site()
@@ -2329,36 +2329,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         }
         return tmpl(REQUEST, **options)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editrole')
+    security.declareProtected(change_permissions, 'admin_editrole')
     def admin_editrole(self, role, zope_perm_list, REQUEST=None):
         """ Change the permissions of a role """
 
-        def iter_permissions():
-            for zope_perm in self.get_naaya_permissions_in_site():
-                yield zope_perm, Permission(zope_perm, (), self)
-
-        # first pass: check if the user *has* each permission they're granting
-        for zope_perm, p in iter_permissions():
-            if zope_perm in zope_perm_list:
-                if not self.checkPermission(zope_perm):
-                    # ha! we need to block the action.
-                    if REQUEST is None:
-                        raise ValueError("You are not allowed to grant %r "
-                                         "to %r" % (zope_perm, role))
-                    else:
-                        msg = ("You may not grant the ${permission} "
-                               "permission to ${role} because you don't have "
-                               "this permission yourself.")
-                        data = {'permission': repr(zope_perm),
-                                'role': repr(role)}
-                        self.setSessionInfoTrans(msg, **data)
-
-                        url = ('%s/admin_editrole_html?role=%s' %
-                               (self.absolute_url(), role))
-                        return REQUEST.RESPONSE.redirect(url)
-
-        # second pass: all ok; actually set the permissions
-        for zope_perm, p in iter_permissions():
+        for zope_perm in self.get_naaya_permissions_in_site():
+            p = Permission(zope_perm, (), self)
             perm_roles = set(p.getRoles())
 
             if zope_perm in zope_perm_list:
@@ -3102,7 +3078,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'site_admin_assignroles')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_roles_html')
+    security.declareProtected(change_permissions, 'admin_roles_html')
     def admin_roles_html(self):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_roles')
