@@ -50,7 +50,7 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
             'server_port': 995,
             'adrress_from': 'gigi@example.com',
             'administrator_email': 'admin@example.com',
-            'notify_errors': True,
+            'notify_on_errors_email': 'error@example.com',
         }
         self.selenium_set_email(user_email_data)
         self.assertFalse(selen.is_text_present('Error page'),
@@ -64,10 +64,7 @@ class NaayaPortalPropertiesTest(SeleniumTestCase):
         selen.type("mail_server_port", user_email_data['server_port'])
         selen.type("mail_address_from", user_email_data['adrress_from'])
         selen.type("administrator_email", user_email_data['administrator_email'])
-        if user_email_data['notify_errors']:
-            selen.check("notify_on_errors")
-        else:
-            selen.uncheck("notify_on_errors")
+        selen.type("notify_on_errors_email", user_email_data['notify_on_errors_email'])
         selen.click("//input[@value='Save changes']")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
