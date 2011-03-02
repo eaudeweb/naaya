@@ -1,11 +1,7 @@
-
-#Python imports
 from unittest import TestSuite, makeSuite
 
-#Zope imports
 from zope import component
 
-#Product imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.interfaces import INySite
 from naaya.core.interfaces import IHeartbeat

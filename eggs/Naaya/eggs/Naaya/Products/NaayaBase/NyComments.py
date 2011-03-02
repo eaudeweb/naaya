@@ -23,7 +23,6 @@ from AccessControl.Permissions import view
 from OFS.SimpleItem import SimpleItem
 from OFS.Folder import Folder
 
-#Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from constants import *
 from Products.NaayaCore.managers.utils import utils

@@ -1,31 +1,8 @@
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Eau de Web
-# Dragos Chirila, Finsiel Romania
-# Miruna Badescu, Eau de Web
-#
-#$Id: catalog_tool.py 3641 2005-05-17 09:16:10Z chiridra $
 
-#Python imports
-
-#Zope imports
 from AccessControl import getSecurityManager
 from AccessControl.Permissions import view
 from OFS.Uninstalled import BrokenClass
 
-#Product imports
 class catalog_tool:
     """ This class is responsable with API for ZCatalog object """
 

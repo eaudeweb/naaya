@@ -1,26 +1,5 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Andrei Laza, Eau de Web
-
-#Python imports
 from datetime import datetime
 
-#Zope imports
 from AccessControl.Role import RoleManager
 from zope import event
 from persistent.dict import PersistentDict
@@ -31,7 +10,6 @@ from AccessControl.Permissions import change_permissions
 from zope.annotation.interfaces import IAnnotations
 from zope.event import notify
 
-#Products imports
 from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 class NyRoleManager(RoleManager):
