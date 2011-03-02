@@ -59,7 +59,20 @@ class GenericViewAdapter(object):
         return ""
 
     def get_icon(self):
-        return None
+        if self.ob.icon:
+            if hasattr(self.ob.aq_base, 'get_meta_label'):
+                title = self.ob.get_meta_label()
+            else:
+                title = self.ob.meta_type
+            return {
+                'url': self.ob.icon,
+                'title': title,
+            }
+        else:
+            return None
+
+    def get_size(self):
+        return ""
 
 
 class NyFolderViewAdapter(NyContentTypeViewAdapter):
