@@ -143,7 +143,8 @@ class AoALibraryViewer(SimpleItem):
                 temp_title = title_dict['ru']
             for vl_answer in library.objectValues('Naaya Survey Answer'):
                 try:
-                    if temp_title in vl_answer.get('w_assessment-name').values():
+                    vl_answers = [vl_title.strip() for vl_title in vl_answer.get('w_assessment-name').values()]
+                    if  temp_title.strip() in vl_answers:
                         new_title = vl_answer.get('w_assessment-name')
                         answer.set_property('w_q1-name-assessment-report', {'en': new_title['en'], 'ru': new_title['ru']})
                         updated_answers.append(answer.absolute_url())
