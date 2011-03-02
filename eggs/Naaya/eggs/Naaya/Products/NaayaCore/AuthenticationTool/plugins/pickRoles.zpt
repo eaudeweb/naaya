@@ -1,10 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>Pick NRC/NFPs involved</title>
+	<title i18n:translate="">LDAP Groups</title>
 </head>
 <body>
-<h1>NRC/NFPs involved</h1>
+<h1 i18n:translate="">LDAP Groups</h1>
 <p class="info_text">Click on an item to insert it in the corresponding field.</p>
 
 <form name="frm">
@@ -44,6 +44,13 @@
                         tal:content="role_cn" 
                         href="" tal:attributes="title role_description;onclick string:window.opener.fSetRoles('${role_id}');;
                         window.close();;"></a>&nbsp;<em tal:content="python:role_description[:60]" />
+					<small><a target="_blank"
+					   tal:define="n_members python:len(here.group_member_ids(role_id));
+                                   site here/getSite;
+                                   url_base string:${site/absolute_url}/admin_sources_html?id=${here/getId}"
+					   tal:attributes="href string:${url_base}&s=group_members&group_id=${role_id}"
+					   tal:condition="python:role_id != 'ROOT'"
+					   tal:content="string:(${n_members} members)"></a></small>
         			</td>
         		</tr>
     		</table>
