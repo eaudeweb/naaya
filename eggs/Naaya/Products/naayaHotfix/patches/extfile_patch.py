@@ -1,7 +1,6 @@
 #Pyhton imports
 import os
 
-#Zope imports
 from zLOG import LOG, ERROR, INFO, PROBLEM, DEBUG, WARNING
 
 

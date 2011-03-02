@@ -1,16 +1,13 @@
 # Andrei Laza, Eau de Web
 
-#Python imports
 import logging
 from cStringIO import StringIO
 
-#Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from zope.deprecation import deprecate
 
-#Naaya imports
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator
 

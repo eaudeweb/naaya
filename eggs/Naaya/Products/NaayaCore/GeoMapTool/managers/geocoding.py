@@ -1,23 +1,3 @@
-#The contents of this file are subject to the Mozilla Public
-#License Version 1.1 (the "License"); you may not use this file
-#except in compliance with the License. You may obtain a copy of
-#the License at http://www.mozilla.org/MPL/
-#
-#Software distributed under the License is distributed on an "AS
-#IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-#implied. See the License for the specific language governing
-#rights and limitations under the License.
-#
-#The Original Code is "Atlas"
-#
-#The Initial Owner of the Original Code is European Environment
-#Agency (EEA). Portions created by Eau de Web are Copyright (C) 
-#2007 by European Environment Agency. All Rights Reserved.
-#
-#Contributor(s):
-#  Original Code: 
-#        Cornel Nitu (Eau de Web)
-
 GOOGLE_KEY = "ABQIAAAAQCK1IGdQs-eHPQQcsyl1VRS9VkEdG8mA4sC2td9bhXvB5ADSOBR2LUE_eY13ZeERnAJGWadztaooDA"
 YAHOO_KEY = "YwGAZ8bV34Ed1qyqJwrfxoI7pjyilV8oeXCmYOGDScw3Lg2ixQ81UrWgP69KXQ--"
 

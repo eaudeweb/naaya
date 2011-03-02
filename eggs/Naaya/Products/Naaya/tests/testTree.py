@@ -1,7 +1,5 @@
-#Python imports
 from unittest import TestSuite, makeSuite
 
-#Product imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.url.url_item import addNyURL

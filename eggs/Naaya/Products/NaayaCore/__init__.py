@@ -2,7 +2,6 @@ __import__('pkg_resources').declare_namespace(__name__)
 
 from App.ImageFile import ImageFile
 
-#Product imports
 import Products.Naaya
 from constants import *
 
