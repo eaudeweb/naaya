@@ -1,3 +1,8 @@
+"""This tool is used to customize the main templates, styles and layouts of a
+Naaya Site
+
+"""
+
 from os.path import join
 
 from Globals import InitializeClass
@@ -40,6 +45,7 @@ class LayoutTool(Folder, combosync_tool):
     meta_types = (
         {'name': METATYPE_SKIN, 'action': 'manage_addSkinForm', 'permission': PERMISSION_ADD_NAAYACORE_TOOL },
     )
+
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
@@ -151,7 +157,6 @@ class LayoutTool(Folder, combosync_tool):
                 ret.append(item)
 
         return ret
-
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_layout_html')

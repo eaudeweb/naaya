@@ -1,3 +1,4 @@
+"""Use Google analytics in Naaya"""
 import cgi
 import gdata.auth
 import gdata.analytics.service
@@ -180,10 +181,10 @@ class AnalyticsTool(SimpleItem, utils):
         sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
+                        ids=self.account,
+                        start_date=sd.strftime('%Y-%m-%d'),
                         end_date=ed.strftime('%Y-%m-%d'),
-                        dimensions='ga:date', 
+                        dimensions='ga:date',
                         metrics='ga:visits',
                         sort='ga:date')
         except gdata.service.RequestError:
@@ -211,8 +212,8 @@ class AnalyticsTool(SimpleItem, utils):
             sd, ed = self.get_date_interval()
             try:
                 data = self.gd_service.GetData(
-                            ids=self.account, 
-                            start_date=sd.strftime('%Y-%m-%d'), 
+                            ids=self.account,
+                            start_date=sd.strftime('%Y-%m-%d'),
                             end_date=ed.strftime('%Y-%m-%d'),
                             metrics='ga:visits,ga:visitors,ga:pageviews,ga:timeOnSite')
             except gdata.service.RequestError:
@@ -236,8 +237,8 @@ class AnalyticsTool(SimpleItem, utils):
         sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
+                        ids=self.account,
+                        start_date=sd.strftime('%Y-%m-%d'),
                         end_date=ed.strftime('%Y-%m-%d'),
                         metrics='ga:visits,ga:bounces,ga:pageviews,ga:timeOnSite,ga:newVisits,ga:entrances')
         except gdata.service.RequestError:
@@ -262,12 +263,12 @@ class AnalyticsTool(SimpleItem, utils):
         sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
+                        ids=self.account,
+                        start_date=sd.strftime('%Y-%m-%d'),
                         end_date=ed.strftime('%Y-%m-%d'),
-                        dimensions='ga:pagePath', 
+                        dimensions='ga:pagePath',
                         metrics='ga:pageviews',
-                        sort='-ga:pageviews', 
+                        sort='-ga:pageviews',
                         max_results='10')
         except gdata.service.RequestError:
             return None
@@ -294,13 +295,13 @@ class AnalyticsTool(SimpleItem, utils):
         sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
+                        ids=self.account,
+                        start_date=sd.strftime('%Y-%m-%d'),
                         end_date=ed.strftime('%Y-%m-%d'),
-                        dimensions='ga:source', 
+                        dimensions='ga:source',
                         metrics='ga:visits',
                         filters='ga:medium==referral',
-                        sort='-ga:visits', 
+                        sort='-ga:visits',
                         max_results='10')
         except gdata.service.RequestError:
             return None
@@ -318,13 +319,13 @@ class AnalyticsTool(SimpleItem, utils):
         sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
+                        ids=self.account,
+                        start_date=sd.strftime('%Y-%m-%d'),
                         end_date=ed.strftime('%Y-%m-%d'),
-                        dimensions='ga:keyword', 
+                        dimensions='ga:keyword',
                         metrics='ga:visits',
                         filters='ga:keyword!=(not set)',
-                        sort='-ga:visits', 
+                        sort='-ga:visits',
                         max_results='10')
         except gdata.service.RequestError:
             return None

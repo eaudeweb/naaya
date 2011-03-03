@@ -1,3 +1,4 @@
+""" This tool is deprecated. Use SchemaTool instead"""
 
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -27,8 +28,8 @@ class DynamicPropertiesTool(Folder, utils):
     )
 
     meta_types = (
-        {'name': METATYPE_DYNAMICPROPERTIESITEM, 
-         'action': 'manage_addDynamicPropertiesItemForm', 
+        {'name': METATYPE_DYNAMICPROPERTIESITEM,
+         'action': 'manage_addDynamicPropertiesItemForm',
          'permission': view_management_screens},
     )
     all_meta_types = meta_types

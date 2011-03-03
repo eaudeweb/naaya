@@ -1,3 +1,8 @@
+"""
+This is the container for portlets (sections in a page), Ref trees,
+lists of links (used for menus) and others.
+
+"""
 from md5 import new as new_md5
 import simplejson as json
 from copy import copy

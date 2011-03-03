@@ -1,3 +1,10 @@
+"""
+This tool is used to manage users in Naaya Site. Users can come from
+remote (LDAP) or local sources. This tool also provides utilities for managing
+user roles, role permissions and searching.
+
+"""
+
 import re
 import time
 import string

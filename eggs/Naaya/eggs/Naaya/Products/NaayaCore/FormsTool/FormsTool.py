@@ -1,9 +1,11 @@
 """
-This module contains the class that implements a container
-for Naaya CMF common forms (page templates).
+This tool is used as a way to customize PageTemplates directly in ZMI. The
+templates are usually registered from skel or as NaayaPageTemplates.
+This is useful when some templates must be customized in different Naaya Sites.
 
-This is a core tool of the Naaya CMF.
-Every portal B{must} have an object of this type inside.
+It also provides a way to keep track of the changes made and their differences
+using diff tools.
+
 """
 
 from os.path import join
@@ -63,11 +65,7 @@ class FormsTool(Folder):
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-        """
-        Creates default stuff.
-        I{(Nothing for the moment.)}
-        """
-        pass
+        """ """
 
     security.declareProtected(view_management_screens, 'listDefaultForms')
     def listDefaultForms(self):
