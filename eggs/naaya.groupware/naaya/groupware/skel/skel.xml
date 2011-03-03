@@ -61,8 +61,11 @@
 		</linkslist>
 	</portlets>
 	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Meeting" action="1"/>
+		<pluggablecontenttype meta_type="Naaya TalkBack Consultation" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Blob File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya File" action="0"/>
+		<pluggablecontenttype meta_type="Naaya Story" action="0"/>
 	</pluggablecontenttypes>
 
 	<security>
