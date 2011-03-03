@@ -9,7 +9,7 @@
                     search_string request/form/search_string|nothing;
                     reverse_sort python:request.get('reverse_sort', 'False');
                     sort_by python:request.get('sort_by', '');">
-    <h1 i18n:translate="">Interest Group Directory search</h1>
+    <h1 i18n:translate="">Interest Group member search</h1>
     <p i18n:translate="">
     Search for members of this Interest Group. Leave name blank to show all.
     </p>
@@ -23,9 +23,9 @@
 
     <div id="search_results">
         <tal:block condition="python:search_string is not None"
-            tal:content="structure python:here.search_directory(search_string,
-                                                                sort_by,
-                                                                reverse_sort)"/>
+            tal:content="structure python:here.search_users(search_string,
+                                                            sort_by,
+                                                            reverse_sort)"/>
     </div>
     <div id="search_waiting_response" style="display:none">
         <img src="misc_/Naaya/ajax-loader.gif" align="left"/>
@@ -42,7 +42,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search_form').ajaxForm({
-                url: 'search_directory',
+                url: 'search_users',
                 beforeSubmit: beforeSubmit,
                 success: processResponse,
                 error: searchError
@@ -93,7 +93,7 @@
                     url_params = url_params+'&'+reverse_param;
                 }
                 $.ajax({
-                    url: 'search_directory' + url_params,
+                    url: 'search_users' + url_params,
                     success: processResponse,
                     error: searchError
                 });
