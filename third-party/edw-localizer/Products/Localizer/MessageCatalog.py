@@ -230,6 +230,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
         # Add it if it's not in the dictionary
         if add and not self._messages.has_key(message) and message:
+            update_transaction_note()
             self._messages[message] = PersistentMapping()
 
         if message and not self._messages[message].has_key('en'):
@@ -922,3 +923,17 @@ class POFile(SimpleItem):
 
 InitializeClass(MessageCatalog)
 InitializeClass(POFile)
+
+def update_transaction_note():
+    import transaction, re
+
+    def label_with_count(count):
+        return "(Saving %d new localizer messages)" % count
+    def increment_count(match):
+        return label_with_count(int(match.group('count')) + 1)
+    p = re.compile(r'\(Saving (?P<count>\d+) new localizer messages\)')
+
+    t = transaction.get()
+    if p.search(t.description) is None:
+        t.note(label_with_count(0))
+    t.description = p.sub(increment_count, t.description)
