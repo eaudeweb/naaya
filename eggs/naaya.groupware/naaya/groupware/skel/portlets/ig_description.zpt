@@ -3,6 +3,6 @@
 	<ul>
 		<li>the <a tal:attributes="href string:${here/getSitePath}/library">Library</a> containing the uploaded documents</li>
 		<li>the <a tal:attributes="href string:${here/getSitePath}/about">About</a>, which contains general information about the Interest Group</li>
-		<li>the <a tal:attributes="href string:${here/getSitePath}/directory">Directory</a> where you can find other members of the Interest Group</li>
+		<li>the <a tal:attributes="href string:${here/getSitePath}/member_search">Member search</a> where you can find other members of the Interest Group</li>
 	</ul>
 </div>
