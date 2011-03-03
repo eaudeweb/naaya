@@ -3,6 +3,8 @@ Changelog
 
 2.11.03 (unreleased)
 --------------------
+ * Removed all license headers and a lot of uneeded files such as empty readme
+   files.
 
 
 2.11.02 (2011-03-01)
