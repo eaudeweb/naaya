@@ -12,7 +12,7 @@ More information about the requesting user:
  First name: <tal:block replace="options/firstname" />
  Last name: <tal:block replace="options/lastname" />
  E-mail: <tal:block replace="options/email" />
- LDAP Roles: <tal:block replace="options/directory_search_link" />
+ LDAP Roles: <tal:block replace="options/member_search_link" />
 
 You can choose to grant the request by following these steps:
  - Open the user administration page at <tal:block replace="options/user_admin_link" />s
@@ -35,7 +35,7 @@ More information about the requesting user:<br /><br />
  First name: <tal:block replace="options/firstname" /><br />
  Last name: <tal:block replace="options/lastname" /><br />
  E-mail: <tal:block replace="options/email" /><br />
- LDAP Roles: <a tal:attributes="href options/directory_search_link" /><br />
+ LDAP Roles: <a tal:attributes="href options/member_search_link" /><br />
 
 You can choose to grant the request by following these steps:<br />
  - Open the user administration page at <tal:block replace="options/user_admin_link" />s<br />
