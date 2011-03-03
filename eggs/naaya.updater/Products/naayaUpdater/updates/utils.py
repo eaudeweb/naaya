@@ -12,3 +12,7 @@ def list_folders_with_custom_index(portal):
         folder = brain.getObject()
         if 'index' in folder.objectIds():
             yield folder
+
+def get_standard_template(portal):
+    return portal.getLayoutTool().getCurrentSkin().standard_template
+
