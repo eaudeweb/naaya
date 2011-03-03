@@ -12,6 +12,7 @@ from zipfile import ZipFile
 from datetime import datetime, timedelta
 import simplejson as json
 from urlparse import urlparse
+import logging
 
 import zLOG
 from OFS.Folder import Folder, manage_addFolder
@@ -99,6 +100,8 @@ from naaya.core.utils import ofs_path
 from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
+
+log = logging.getLogger(__name__)
 
 MAINTOPICS_SETTINGS = {
     'expanded': True,
@@ -307,10 +310,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
                     try: action = abs(int(pluggablecontenttype.action))
                     except: action = 1
+                    meta_type = pluggablecontenttype.meta_type
+                    if self.get_pluggable_item(meta_type) is None:
+                        log.info("Skipping pluggable content type %r "
+                                 "because it's not available", meta_type)
+                        continue
                     if action == 0:
-                        self.manage_uninstall_pluggableitem(meta_type=pluggablecontenttype.meta_type)
+                        self.manage_uninstall_pluggableitem(meta_type=meta_type)
                     else:
-                        self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
+                        self.manage_install_pluggableitem(meta_type=meta_type)
             #load properties
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
