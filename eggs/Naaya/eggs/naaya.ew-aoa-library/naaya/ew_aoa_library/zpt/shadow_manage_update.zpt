@@ -1,0 +1,37 @@
+<tal:block content="structure here/manage_page_header" />
+<tal:block content="structure here/manage_tabs" />
+
+<tal:block content="structure here/messages_box" />
+
+<h3>Update survey answer title</h3>
+
+<tal:block define="errors options/errors|nothing"
+			condition="python:errors">
+	Following errors were encountered:
+	<ul>
+		<li tal:repeat="error errors" tal:content="error"/>
+	</ul>
+</tal:block>
+
+<tal:block define="success options/success|nothing"
+			condition="python:success">
+	New title successfully saved.
+</tal:block>
+
+<form action="">
+	<label for="new_title">Target language code</label><br/>
+	<input type="text" name="language:utf8:ustring" size="2"/><br/>
+	<label for="new_title">New title</label><br/>
+	<input type="text" name="new_title:utf8:ustring"/><br/>
+	<br/>
+	<input type="submit" value="Update title" />
+</form>
+
+<tal:block define="updated_answers options/updated_answers|nothing;
+					errors options/errors|nothing;
+					orphan_answers options/orphan_answers|nothing;"
+					condition="python:updated_answers or errors or orphan_answers">
+
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer" />

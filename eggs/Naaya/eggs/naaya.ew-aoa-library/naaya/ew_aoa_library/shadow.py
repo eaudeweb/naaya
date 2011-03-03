@@ -228,6 +228,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     manage_options = (
         {'label': 'Summary', 'action': 'manage_main'},
         {'label': 'View', 'action': ''},
+        {'label': 'Updates', 'action':'manage_update_target_title_html'},
     ) + SimpleItem.manage_options[1:]
 
     meta_type = "Naaya EW_AOA Shadow Object"
@@ -366,6 +367,40 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         survey_answer.approved_date = None
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(view_management_screens, 'manage_update_target_title_html')
+    def manage_update_target_title_html(self, REQUEST=None):
+        """ Update answer report title"""
+
+        if not REQUEST.form.has_key('new_title'):
+            return self._manage_update_target_title_html()
+        new_title = REQUEST.get('new_title')
+        language = REQUEST.get('language')
+        languages = ['en', 'ru']
+        errors = []
+
+        if not new_title:
+            errors.append('No new title provided')
+        if not language:
+            errors.append('No language provided')
+        elif language not in languages:
+            errors.append('Invalid language code')
+
+        if not errors:
+            the_answer = self.target_answer()
+            languages.remove(language)
+            try:
+                the_answer.set_property('w_q1-name-assessment-report', {language: new_title, languages[0]:''})
+            except AttributeError:
+                try:
+                    the_answer.set_property('w_assessment-name', {language: new_title, languages[0]:''})
+                except AttributeError:
+                    errors.append('Requested field not present in the target answer')
+        if errors:
+            return self._manage_update_target_title_html(errors=errors)
+        return self._manage_update_target_title_html(success=True)
+
+    _manage_update_target_title_html = PageTemplateFile('zpt/shadow_manage_update', globals())
 
 def get_survey_id(answer):
     return answer.aq_parent.id

@@ -123,9 +123,10 @@ class AoALibraryViewer(SimpleItem):
         survey_answer = self.get_survey_answer(answer.getId())
         return getattr(survey_answer, 'approved_date', False)
 
-    security.declareProtected('View management screens', 'manage_update_html')
+    security.declareProtected(view_management_screens, 'manage_update_html')
     def manage_update_html(self, REQUEST=None):
-        """ """
+        """ Update RT answer report title
+        based on the available report titles from the VL"""
         if not REQUEST.form.has_key('submit'):
             return self._manage_update_html()
         updated_answers = []
