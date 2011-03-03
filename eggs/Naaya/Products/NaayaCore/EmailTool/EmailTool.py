@@ -1,3 +1,9 @@
+"""
+This tool provides e-mail management in a Naaya Site. Configurable e-mail
+templates, e-mail sending and logging of all e-mail traffic.
+
+"""
+
 import time
 import smtplib
 import cStringIO

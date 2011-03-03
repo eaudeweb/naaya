@@ -1,12 +1,8 @@
 """
-This module contains the class that implements a message catalog
+This tool contains the class that implements a message catalog
 for Naaya CMF messages (labels).
-
-This is a core tool of the Naaya CMF.
-Every portal B{must} have an object of this type inside.
 """
 
-#Python import
 import base64
 import re
 from urllib import quote
@@ -436,6 +432,5 @@ class TranslationsTool(MessageCatalog):
         for name, value in kwargs.iteritems():
             msg = msg.replace('${%s}' % name, value)
         return msg
-
 
 InitializeClass(TranslationsTool)

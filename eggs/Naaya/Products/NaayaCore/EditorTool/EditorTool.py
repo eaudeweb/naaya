@@ -1,12 +1,15 @@
 """
-This is a core tool of the Naaya CMF.
-Every portal B{must} have an object of this type inside.
+This tool provides an WYSIWYG api for rich content editing with text
+formatting, image, multimedia etc. It's used in almost all Naaya content
+types.
+
 """
+
 import re
 import copy
 from ConfigParser import ConfigParser
 from os.path import join, dirname
-import simplejson as json 
+import simplejson as json
 
 from AccessControl import ClassSecurityInfo
 from App.ImageFile import ImageFile
@@ -58,7 +61,7 @@ configuration = loadConfig() #Global configuration loaded from *config.ini*
 
 
 class EditorTool(Folder):
-    """ **EditorTool** installs itself into the portal and provides rich text 
+    """ **EditorTool** installs itself into the portal and provides rich text
     editing capabilities attachable via to HTML input elements such as textarea.
     It uses *TinyMCE* (http://tinymce.moxiecode.com/) editor.
     Please see README.txt located into this module for notes
@@ -85,7 +88,7 @@ class EditorTool(Folder):
         """ Returns HTML code that includes required JavaScript libraries.
         Parameters:
 
-            `lang` 
+            `lang`
                 **Not used**
         """
         return '<script type="text/javascript" language="javascript" src="%(parent_url)s/tinymce/jscripts/tiny_mce/jquery.tinymce.js"></script>' % {'parent_url': self.absolute_url()}
@@ -154,19 +157,19 @@ class EditorTool(Folder):
         """Return the HTML necessary to run the TinyMCE.
         Parameters:
 
-            `element` 
+            `element`
                 `id` of HTML element that editor will is attached to.
-            `lang` 
-                **Not used** 
-            `image_support` 
-                **No longer used** In order to disable images. 
-                Use extra_options, see below. 
-            `extra_options` 
-                Extra options you can pass to tinyMCE editor. See `config.ini` 
+            `lang`
+                **Not used**
+            `image_support`
+                **No longer used** In order to disable images.
+                Use extra_options, see below.
+            `extra_options`
+                Extra options you can pass to tinyMCE editor. See `config.ini`
                 for further reference. You can pass any option from there
-                to override default one. 
-                `extra_options['config_template']` Loads one of the defined 
-                templates from `config.ini`. Default is 'tinymce'. 
+                to override default one.
+                `extra_options['config_template']` Loads one of the defined
+                templates from `config.ini`. Default is 'tinymce'.
                 Also you can use 'tinymce_noimage' to disable image insertion.
         """
         if not lang:
@@ -191,7 +194,7 @@ class EditorTool(Folder):
         })
         cfg.update(extra_options)
         # romancri 20100420:
-        # When using dialects, clobber the dialect. Otherwise, TinyMCE fails 
+        # When using dialects, clobber the dialect. Otherwise, TinyMCE fails
         # because it doesn't have these translation files.
         if 'language' in cfg.keys() and cfg['language']:
             cfg['language'] = cfg['language'].split('-')[0]
@@ -280,10 +283,10 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
 
     def getEnclosingDocument(self, REQUEST):
         """
-        Return the enclosing document where this editor tool 
+        Return the enclosing document where this editor tool
         instance is located.
 
-            `REQUEST` 
+            `REQUEST`
                 Http request that **must** contain the 'document' parameter
 
         Return enclosing document object
@@ -343,7 +346,7 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
                 Default value to return if parameter not found. If not specified
                 is empty string.
 
-        Return the parameter or default if none found. 
+        Return the parameter or default if none found.
         """
         if self.REQUEST.has_key(name):
             return self.REQUEST.form[name]
@@ -351,11 +354,11 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
 
 
     def isImageContainer(self, document):
-        """ Verifies document if is image container or inherits the 
+        """ Verifies document if is image container or inherits the
         imageContainer of NySite.
         Parameters:
 
-            `document` 
+            `document`
                 Document to be checked.
 
         Return ``true`` if document has its own instance of `imageContainer`

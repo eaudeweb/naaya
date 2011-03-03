@@ -1,11 +1,8 @@
 """
-This module contains the class that implements a catalog
-for Naaya CMF objects.
+This tool is a wrapper around Products.ZCatalog. On initialization it creates
+the required indexes and metadata an offers a few management utilities.
 
-This is a core tool of the Naaya CMF.
-Every portal B{must} have an object of this type inside.
 """
-
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo

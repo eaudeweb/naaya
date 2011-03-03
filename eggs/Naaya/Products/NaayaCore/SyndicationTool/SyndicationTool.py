@@ -1,3 +1,6 @@
+"""
+This tool is an aggregator for different channels (RDF, local).
+"""
 import urlparse
 import urllib
 from datetime import timedelta
@@ -21,7 +24,6 @@ import RemoteChannel
 import ScriptChannel
 import RemoteChannelFacade
 import ChannelAggregator
-
 
 def manage_addSyndicationTool(self, REQUEST=None):
     """ """

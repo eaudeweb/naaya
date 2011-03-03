@@ -1,11 +1,14 @@
-# Zope imports
+"""
+This tool provides is a container for Schema's of content types. It allows to
+customize the way different fields behave.
+
+"""
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-# Naaya imports
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.SchemaTool.Schema import Schema

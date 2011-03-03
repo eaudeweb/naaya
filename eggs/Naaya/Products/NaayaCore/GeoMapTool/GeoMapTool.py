@@ -1,3 +1,10 @@
+"""This tool is used to manage map engines (google, yahoo, bing, etc.)
+in a Naaya Site. This tool is related to naaya.content.geopoint and SchemaTool's
+GeoWidget that can be used to display points on a map for different content
+types. Other features include map clustering, kml exports, and searching.
+
+"""
+
 import os.path
 from decimal import Decimal
 from datetime import datetime

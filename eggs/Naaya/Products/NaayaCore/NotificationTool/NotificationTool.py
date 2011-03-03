@@ -1,3 +1,9 @@
+"""
+This tool is used to notify subscribed users of changes in Naaya objects using
+emails. Subscribers can be registered or anonymous users and they can be
+notified daily, weekly or monthly.
+
+"""
 import re
 try: from collections import namedtuple
 except ImportError: from Products.NaayaCore.backport import namedtuple

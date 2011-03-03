@@ -1,11 +1,7 @@
 """
-This module contains the class that implements a tool for
-configuring a portal.
+This tool provides a tool for configuring the portal.
 
-This is a core tool of the Naaya CMF.
-Every portal B{must} have an object of this type inside.
 """
-
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
