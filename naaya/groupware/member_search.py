@@ -12,8 +12,8 @@ from Products.NaayaCore.AuthenticationTool.plugins.plugLDAPUserFolder \
 from naaya.core.utils import force_to_unicode
 
 
-class Directory(Implicit, Item):
-    title = "Interest Group Directory"
+class MemberSearch(Implicit, Item):
+    title = "Interest Group member search"
 
     security = ClassSecurityInfo()
 
@@ -36,8 +36,8 @@ class Directory(Implicit, Item):
             }
         return ret
 
-    security.declareProtected(view, 'search_directory')
-    def search_directory(self, search_string=u'', sort_by='',
+    security.declareProtected(view, 'search_users')
+    def search_users(self, search_string=u'', sort_by='',
             reverse_sort='False'):
         """ """
         search_string = search_string.lower()
@@ -135,7 +135,7 @@ class Directory(Implicit, Item):
 
     security.declarePrivate('get_external_user_info')
     def get_external_user_info(self, source, user, user_roles=None):
-        # user_roles are precalculated for the search directory (perfomance)
+        # user_roles are precalculated for the member search (perfomance)
         if user_roles is None:
             user_roles = self.get_external_user_roles(source, user['uid'])
         return {
@@ -160,7 +160,7 @@ class Directory(Implicit, Item):
     security.declarePrivate('get_external_user_roles')
     def get_external_user_roles(self, source, userid, sources_info,
                                 group_userids_map=None):
-        # group_userids_map is precalculated for search directory (performance)
+        # group_userids_map is precalculated for member search (performance)
         if group_userids_map is None:
             group_userids_map = self.get_group_userids_map(source.id,
                                                            sources_info)
@@ -200,7 +200,7 @@ class Directory(Implicit, Item):
         """ """
         return self.get_user_access() in ['member', 'admin']
 
-    index_html = PageTemplateFile('zpt/directory_index', globals())
-    user_list_html = PageTemplateFile('zpt/directory_user_list', globals())
+    index_html = PageTemplateFile('zpt/member_search_index', globals())
+    user_list_html = PageTemplateFile('zpt/member_search_list', globals())
 
-InitializeClass(Directory)
+InitializeClass(MemberSearch)

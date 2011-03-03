@@ -17,7 +17,7 @@ from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
-from directory import Directory
+from member_search import MemberSearch
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -191,8 +191,8 @@ class GroupwareSite(NySite):
                    'source_id': source_obj.getId(),
                    'location': location}
 
-        directory_search_link = (
-            "%(ig_url)s/directory?search_string=%(userid)s" % {
+        member_search_link = (
+            "%(ig_url)s/member_search?search_string=%(userid)s" % {
                 'ig_url': self.absolute_url(),
                 'userid': user.name
             }
@@ -210,7 +210,7 @@ class GroupwareSite(NySite):
             'email': getattr(user, 'email', ''),
             'location_title': location_title,
             'user_admin_link': user_admin_link,
-            'directory_search_link': directory_search_link,
+            'member_search_link': member_search_link,
             'location_url': location_url
         })
         mail_tool.sendEmail(mail_data['body_text'], mail_to,
@@ -272,6 +272,6 @@ class GroupwareSite(NySite):
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(),
                                       'naaya.groupware.relinquish_membership')
 
-    directory = Directory(id='directory')
+    member_search = MemberSearch(id='member_search')
 
 InitializeClass(GroupwareSite)
