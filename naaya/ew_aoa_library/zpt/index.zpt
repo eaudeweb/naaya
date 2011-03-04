@@ -43,8 +43,8 @@
 </div>
 <table class="datatable" style="width:100%"
 	tal:define="review_template python:here.target_path == 'tools/general_template/general-template';
-				skey request/skey|string:title;
-				rkey python:bool(request.get('rkey'));
+				skey request/skey|string:modification_time;
+				rkey python:bool(request.get('rkey')) or not request.get('skey');
 				items python:list(here.iter_assessments());">
 	<!-- If the "sort by" property has an attribute "lower",
 		convert the value to lower before sorting -->
