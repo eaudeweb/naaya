@@ -24,7 +24,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
-from Products.NaayaWidgets.Widget import manage_addWidget
+from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MatrixWidget import MatrixWidget
 
