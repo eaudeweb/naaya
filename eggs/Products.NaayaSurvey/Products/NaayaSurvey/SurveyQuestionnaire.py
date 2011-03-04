@@ -130,6 +130,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
          'help':('OFSP','Properties.stx')},
         {'label':'View', 'action':'index_html'},
         {'label':'Migrations', 'action':'manage_migrate_html'},
+        {'label': 'Updates', 'action':'manage_update_combo_answers_html'},
         {'label':'Security', 'action':'manage_access',
          'help':('OFSP', 'Security.stx')},
       )
@@ -704,5 +705,45 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     manage_migrate_html = PageTemplateFile('zpt/questionnaire_manage_migrate',
                                            globals())
     manage_migrate_html.available_migrations = available_migrations
+
+    security.declareProtected('View management screens', 'manage_update_combo_answers_html')
+    def manage_update_combo_answers_html(self, REQUEST=None):
+        """ Update answer to questions based on combos
+            for the case when the first option was not initially entered as
+            'Please select'"""
+
+        if not REQUEST.form.has_key('question_id'):
+            return self._manage_update_combo_answers_html()
+        question_id = REQUEST.get('question_id')
+        errors = []
+        question_ids = [question.id for question in self.objectValues('Naaya Combobox Widget')] + [question.id for question in self.objectValues('Naaya Combobox Matrix Widget')]
+
+        if not question_id:
+            errors.append('No question ID provided')
+        elif question_id not in question_ids:
+            errors.append('Invalid question ID')
+        if errors:
+            return self._manage_update_combo_answers_html(errors=errors)
+
+        question = self._getOb(question_id)
+        if question.meta_type == 'Naaya Combobox Widget':
+            question.choices.insert(0, 'Please select')
+            question._p_changed = True
+            for answer in self.objectValues('Naaya Survey Answer'):
+                the_choice = getattr(answer, question_id)
+                setattr(answer, question_id, the_choice + 1)
+        else:
+            question.values.insert(0, 'Please select')
+            question._p_changed = True
+            for answer in self.objectValues('Naaya Survey Answer'):
+                new_choices = []
+                old_choices = getattr(answer, question_id)
+                for choices_list in old_choices:
+                    new_choices.append([value+1 for value in choices_list])
+                setattr(answer, question_id, new_choices)
+
+        return self._manage_update_combo_answers_html(success=True)
+
+    _manage_update_combo_answers_html = PageTemplateFile('zpt/questionnaire_manage_update', globals())
 
 InitializeClass(SurveyQuestionnaire)
