@@ -4,7 +4,7 @@ from unittest import TestSuite, makeSuite
 import transaction
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.NaayaCore.NotificationTool.NotificationTool import \
+from Products.NaayaCore.NotificationTool.utils import \
     divert_notifications
 from Products.NaayaForum.NyForum import addNyForum
 from Products.NaayaForum.NyForumTopic import addNyForumTopic
