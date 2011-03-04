@@ -7,12 +7,14 @@ from datetime import date, time, datetime, timedelta
 from operator import attrgetter
 import transaction
 
-from Products.NaayaCore.NotificationTool.NotificationTool \
-    import divert_notifications
-from Products.NaayaCore.NotificationTool.NotificationTool import (
-    NotificationTool, walk_subscriptions)
+from Products.NaayaCore.NotificationTool.NotificationTool import \
+                                                            NotificationTool
+from Products.NaayaCore.NotificationTool.utils import (
+    walk_subscriptions, divert_notifications)
 from Products.NaayaCore.NotificationTool import NotificationTool as \
     NotificationTool_module
+from Products.NaayaCore.NotificationTool import utils as \
+    NotificationTool_utils
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.utils import replace, restore_all
 from Products.Naaya.NyFolder import addNyFolder
@@ -36,7 +38,7 @@ class BaseNotificationsTest(NaayaTestCase):
                 if when_start < modif_datetime < when_end:
                     yield site.unrestrictedTraverse(ob_path)
 
-        replace(NotificationTool_module,
+        replace(NotificationTool_utils,
                 'list_modified_objects',
                 testing_list_modified_objects)
 

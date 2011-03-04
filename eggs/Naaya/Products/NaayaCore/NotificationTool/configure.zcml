@@ -22,17 +22,25 @@
     />
 
   <adapter
-    factory=".NotificationTool.NotificationsPortlet"
-    name="portlet_notifications"
+    factory=".subscribers.heartbeat_notification"
+    for="Products.Naaya.interfaces.INySite"
+    provides="Products.Naaya.interfaces.IHeartbeat"
+    name="heartbeat_notification"
     />
 
   <adapter
-    factory=".NotificationTool.subscription_container_factory"
+    factory=".portlets.NotificationsPortlet"
+    for="Products.Naaya.interfaces.INySite"
+    provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
+    name="portlet_notifications"
     />
 
   <class class="Products.Naaya.NySite.NySite">
     <implements interface=".interfaces.ISubscriptionTarget" />
   </class>
+
+  <adapter
+    factory=".containers.subscription_container_factory" />
 
   <class class="Products.NaayaBase.NyContentType.NyContentType">
     <implements interface=".interfaces.ISubscriptionTarget" />

@@ -2,7 +2,7 @@ from unittest import TestSuite, makeSuite
 from datetime import datetime, timedelta
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.NaayaCore.NotificationTool.NotificationTool import (
+from Products.NaayaCore.NotificationTool.utils import (
     divert_notifications, list_modified_objects)
 from Products.NaayaCore.NotificationTool.interfaces import \
     ISubscriptionContainer
