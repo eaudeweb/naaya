@@ -3,9 +3,10 @@ from unittest import TestSuite, makeSuite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaCore.NotificationTool.interfaces import (
     ISubscriptionTarget, ISubscriptionContainer)
-from Products.NaayaCore.NotificationTool.NotificationTool import (
-    fetch_subscriptions, walk_subscriptions, AccountSubscription,
-    AnonymousSubscription)
+from Products.NaayaCore.NotificationTool.utils import (
+    fetch_subscriptions, walk_subscriptions)
+from Products.NaayaCore.NotificationTool.containers import (
+    AccountSubscription, AnonymousSubscription)
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from naaya.core.utils import path_in_site
 

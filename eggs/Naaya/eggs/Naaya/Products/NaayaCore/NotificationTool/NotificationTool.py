@@ -5,56 +5,41 @@ notified daily, weekly or monthly.
 
 """
 import re
-try: from collections import namedtuple
-except ImportError: from Products.NaayaCore.backport import namedtuple
-from operator import attrgetter
-import random
-try:
-    from hashlib.sha1 import new as sha
-except:
-    from sha import sha
-
 from datetime import time, datetime, timedelta
-from itertools import ifilter
 import logging
-
 import simplejson as json
+try:
+    from collections import namedtuple
+except ImportError:
+    from Products.NaayaCore.backport import namedtuple
 
-from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from persistent import Persistent
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
-from zope import interface
-from zope import component
-from zope import annotation
 import transaction
 
-from Products.NaayaCore.constants import *
+from Products.NaayaCore import constants as core_constants
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.EmailTool.EmailPageTemplate import (
     manage_addEmailPageTemplate, EmailPageTemplateFile)
-from Products.NaayaCore.EmailTool.EmailTool import build_email
-from Products.Naaya.interfaces import INySite, IHeartbeat
-from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
-from naaya.content.base.interfaces import INyContentObject
-from naaya.core.utils import path_in_site
-from naaya.core.utils import relative_object_path
-from naaya.core.utils import force_to_unicode
-from naaya.core.utils import ofs_path
-from naaya.core.zope2util import folder_manage_main_plus
-from naaya.core.paginator import DiggPaginator, EmptyPage, InvalidPage
-from naaya.core.exceptions import i18n_exception
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import is_valid_email
 
+from naaya.core.utils import path_in_site
+from naaya.core.utils import relative_object_path
+
+from naaya.core.utils import ofs_path
+from naaya.core.zope2util import folder_manage_main_plus
+from naaya.core.exceptions import i18n_exception
+
 from interfaces import ISubscriptionContainer
-from interfaces import ISubscription
-from interfaces import ISubscriptionTarget
+from containers import (SubscriptionContainer, AccountSubscription,
+                        AnonymousSubscription)
+import utils
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
@@ -67,8 +52,9 @@ email_templates = {
 
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
-    ob = NotificationTool(ID_NOTIFICATIONTOOL, TITLE_NOTIFICATIONTOOL)
-    self._setObject(ID_NOTIFICATIONTOOL, ob)
+    ob = NotificationTool(core_constants.ID_NOTIFICATIONTOOL,
+                          core_constants.TITLE_NOTIFICATIONTOOL)
+    self._setObject(core_constants.ID_NOTIFICATIONTOOL, ob)
 
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
@@ -76,27 +62,16 @@ def manage_addNotificationTool(self, REQUEST=None):
 # TODO: remove `Subscription` after all sites have been updated
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
-def match_account_subscription(subs, user_id, notif_type, lang):
-    for n, subscription in subs.list_with_keys():
-        if not isinstance(subscription, AccountSubscription):
-            continue
-        if (subscription.user_id == user_id and
-            subscription.notif_type == notif_type and
-            subscription.lang == lang):
-            return n
-
 class NotificationTool(Folder):
     """ """
 
-    meta_type = METATYPE_NOTIFICATIONTOOL
+    meta_type = core_constants.METATYPE_NOTIFICATIONTOOL
     icon = 'misc_/NaayaCore/NotificationTool.gif'
 
     meta_types = ()
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
-
-
 
     def __init__(self, id, title):
         """ """
@@ -126,7 +101,8 @@ class NotificationTool(Folder):
 
     def get_location_link(self, location):
         if location:
-            return self.restrictedTraverse(location, self.getSite()).absolute_url()
+            return self.restrictedTraverse(location,
+                                           self.getSite()).absolute_url()
         else:
             return self.getSite().absolute_url()
 
@@ -134,9 +110,11 @@ class NotificationTool(Folder):
                               'admin_get_subscriptions')
     def admin_get_subscriptions(self, user_query=''):
         user_query = user_query.strip()
-        for obj, sub_id, subscription in walk_subscriptions(self.getSite()):
+        for obj, sub_id, subscription in utils.walk_subscriptions(
+                                            self.getSite()):
             user = subscription.to_string(obj)
-            if not user_query or re.match('.*%s.*' % user_query, user, re.IGNORECASE):
+            if not user_query or re.match('.*%s.*' % user_query, user,
+                                          re.IGNORECASE):
                 yield {
                     'user': user,
                     'location': path_in_site(obj),
@@ -188,7 +166,7 @@ class NotificationTool(Folder):
             raise i18n_exception(ValueError, 'Cannot subscribe to this folder')
 
         if not kw.get('anonymous', False):
-            n = match_account_subscription(subscription_container,
+            n = utils.match_account_subscription(subscription_container,
                                            kw['user_id'], kw['notif_type'],
                                            kw['lang'])
             if n is not None:
@@ -203,7 +181,7 @@ class NotificationTool(Folder):
                     if (subscription.email == kw['email'] and
                         subscription.notif_type == kw['notif_type'] and
                         subscription.lang == kw['lang']):
-                            raise i18n_exception(ValueError,
+                        raise i18n_exception(ValueError,
                                                  'Subscription already exists')
 
     security.declarePrivate('add_account_subscription')
@@ -240,7 +218,7 @@ class NotificationTool(Folder):
     def remove_account_subscription(self, user_id, location, notif_type, lang):
         obj = self.getSite().restrictedTraverse(location)
         subscription_container = ISubscriptionContainer(obj)
-        n = match_account_subscription(subscription_container,
+        n = utils.match_account_subscription(subscription_container,
                                        user_id, notif_type, lang)
         if n is None:
             raise ValueError('Subscription not found')
@@ -293,7 +271,7 @@ class NotificationTool(Folder):
         if not self.config['enable_instant']:
             return
         messages_by_email = {}
-        for subscription in fetch_subscriptions(ob, inherit=True):
+        for subscription in utils.fetch_subscriptions(ob, inherit=True):
             if not subscription.check_permission(ob):
                 continue
             if subscription.notif_type != 'instant':
@@ -343,7 +321,7 @@ class NotificationTool(Folder):
             translate = self.getSite().getPortalTranslations()
             kwargs.update({'portal': portal, '_translate': translate})
             mail_data = template(**kwargs)
-            send_notification(email_tool, addr_from, addr_to,
+            utils.send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])
 
     def _send_newsletter(self, notif_type, when_start, when_end):
@@ -359,9 +337,10 @@ class NotificationTool(Folder):
         langs_by_email = {}
         subscriptions_by_email = {}
         anonymous_users = {}
-        for ob in list_modified_objects(self.getSite(), when_start, when_end):
+        for ob in utils.list_modified_objects(self.getSite(), when_start,
+                                              when_end):
             notif_logger.info('.. modified object: %r', ofs_path(ob))
-            for subscription in fetch_subscriptions(ob, inherit=True):
+            for subscription in utils.fetch_subscriptions(ob, inherit=True):
                 if subscription.notif_type != notif_type:
                     continue
                 if not subscription.check_permission(ob):
@@ -427,7 +406,8 @@ class NotificationTool(Folder):
                 latest_weekly -= timedelta(weeks=1)
 
             # check if we should send a weekly newsletter
-            prev_weekly = self.timestamps.get('weekly', when - timedelta(weeks=1))
+            prev_weekly = self.timestamps.get('weekly',
+                                              when - timedelta(weeks=1))
             if prev_weekly < latest_weekly < when:
                 self._send_newsletter('weekly', prev_weekly, when)
                 self.timestamps['weekly'] = when
@@ -436,13 +416,15 @@ class NotificationTool(Folder):
         if self.config['enable_monthly']:
             # calculate the most recent monthly newsletter time
             monthly_time = time(hour=self.config['monthly_hour'])
-            the_day = set_day_of_month(when.date(), self.config['monthly_day'])
+            the_day = utils.set_day_of_month(when.date(),
+                                             self.config['monthly_day'])
             latest_monthly = datetime.combine(the_day, monthly_time)
             if latest_monthly > when:
-                latest_monthly = minus_one_month(latest_monthly)
+                latest_monthly = utils.minus_one_month(latest_monthly)
 
             # check if we should send a monthly newsletter
-            prev_monthly = self.timestamps.get('monthly', minus_one_month(when))
+            prev_monthly = self.timestamps.get('monthly',
+                                               utils.minus_one_month(when))
             if prev_monthly < latest_monthly < when:
                 self._send_newsletter('monthly', prev_monthly, when)
                 self.timestamps['monthly'] = when
@@ -482,8 +464,10 @@ class NotificationTool(Folder):
         self.config['enable_monthly'] = form.get('enable_monthly', False)
         self.config['monthly_day'] = form.get('monthly_day')
         self.config['monthly_hour'] = form.get('monthly_hour')
-        self.config['notif_content_types'] = form.get('notif_content_types', [])
+        self.config['notif_content_types'] = form.get('notif_content_types',
+                                                      [])
         self.config['enable_anonymous'] = form.get('enable_anonymous', False)
+
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(view_management_screens,
@@ -517,7 +501,7 @@ class NotificationTool(Folder):
         if user_id is None and not self.config.get('enable_anonymous', False):
             raise Unauthorized # to force login
 
-        for obj, n, subscription in walk_subscriptions(self.getSite()):
+        for obj, n, subscription in utils.walk_subscriptions(self.getSite()):
             if not isinstance(subscription, AccountSubscription):
                 continue
             if subscription.user_id != user_id:
@@ -550,13 +534,13 @@ class NotificationTool(Folder):
                     ' for any changes in "${location}".',
                     notif_type=notif_type, location=location)
             else:
-                    self.add_anonymous_subscription(**dict(REQUEST.form))
-                    self.setSessionInfoTrans(
-                    'An activation e-mail has been sent to ${email}. '
-                    'Follow the instructions to subscribe to ${notif_type} '
-                    'notifications for any changes in "${location}".',
-                    notif_type=notif_type, location=location,
-                    email=REQUEST.form.get('email'))
+                self.add_anonymous_subscription(**dict(REQUEST.form))
+                self.setSessionInfoTrans(
+                'An activation e-mail has been sent to ${email}. '
+                'Follow the instructions to subscribe to ${notif_type} '
+                'notifications for any changes in "${location}".',
+                notif_type=notif_type, location=location,
+                email=REQUEST.form.get('email'))
         except ValueError, msg:
             self.setSessionErrors([unicode(msg)])
         return REQUEST.RESPONSE.redirect(self.absolute_url() +
@@ -604,8 +588,7 @@ class NotificationTool(Folder):
                                 subscription.location))
                     container.add(subscription) # Add to subscribed list
                     # Remove from temporary list
-                    del self.pending_anonymous_subscriptions[
-                        self.pending_anonymous_subscriptions.index(subscription)]
+                    self.pending_anonymous_subscriptions.remove(subscription)
                     if REQUEST is not None:
                         self.setSessionInfoTrans(
                             'You succesfully subscribed to ${notif_type} '
@@ -631,6 +614,7 @@ class NotificationTool(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the subscriptions in a csv file"""
+
         header = ['User', 'Location', 'Notification type', 'Language']
         rows = []
         for s in self.admin_get_subscriptions():
@@ -648,249 +632,15 @@ class NotificationTool(Folder):
         exporter = self.getSite().csv_export
         if file_type == 'CSV':
             RESPONSE.setHeader('Content-Type', 'text/csv')
-            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=subscriptions.csv')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=subscriptions.csv')
             return exporter.generate_csv(header, rows)
         if file_type == 'Excel' and self.rstk.we_provide('Excel export'):
             RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
-            RESPONSE.setHeader('Content-Disposition', 'attachment; filename=subscriptions.xls')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=subscriptions.xls')
             return exporter.generate_excel(header, rows)
         else: raise ValueError('unknown file format %r' % file_type)
 
 InitializeClass(NotificationTool)
-
-def list_modified_objects(site, when_start, when_end):
-    DT_when_start = DateTime_from_datetime(when_start)
-    DT_when_end = DateTime_from_datetime(when_end)
-    catalog = site.getCatalogTool()
-    brains = catalog(bobobase_modification_time={
-        'query': (DT_when_start, DT_when_end), 'range': 'min:max'})
-    for brain in brains:
-        try:
-            yield brain.getObject()
-        except:
-            notif_logger.error('Found broken brain: %r', brain.getPath())
-
-def _send_notification(email_tool, addr_from, addr_to, subject, body):
-    mail = build_email(addr_from, addr_to, subject, body)
-    #TODO: send using the EmailSender
-    email_tool.sendEmail(body, addr_to, addr_from, subject)
-
-def _mock_send_notification(email_tool, addr_from, addr_to, subject, body):
-    mock_saved.append( (addr_from, addr_to, subject, body) )
-
-def divert_notifications(testing, save_to=[]):
-    """
-    Place the NotificationTool module in testing mode: all notifications will
-    be appended to `save_to` instead of being sent via e-mail.
-    """
-    global send_notification
-    global mock_saved
-
-    if testing:
-        send_notification = _mock_send_notification
-        mock_saved = save_to
-
-    else:
-        send_notification = _send_notification
-
-divert_notifications(False)
-
-def DateTime_from_datetime(dt):
-    DT = DateTime(dt.isoformat())
-    zone = DT.localZone(dt.timetuple())
-    local_DT = DT.toZone(zone)
-    return local_DT
-
-def set_day_of_month(the_date, day):
-    while True:
-        try:
-            return the_date.replace(day=day)
-        except ValueError:
-            day -= 1
-        if not 26 < day < 31:
-            raise ValueError(day)
-
-def minus_one_month(the_date):
-    return set_day_of_month(the_date.replace(day=1) - timedelta(days=1), the_date.day)
-
-
-class SubscriptionContainer(Persistent):
-    interface.implements(ISubscriptionContainer)
-    component.adapts(ISubscriptionTarget)
-
-    def __init__(self):
-        self.subscriptions = PersistentDict()
-        self._next_id = 1
-
-    def add(self, subscription):
-        self.subscriptions[self._next_id] = subscription
-        self._next_id += 1
-
-    def remove(self, n):
-        del self.subscriptions[n]
-
-    def list_with_keys(self):
-        for n, subscription in self.subscriptions.iteritems():
-            yield n, subscription
-
-    def __iter__(self):
-        for subscription in self.subscriptions.itervalues():
-            yield subscription
-
-subscription_container_factory = annotation.factory(SubscriptionContainer)
-
-class AccountSubscription(object):
-    interface.implements(ISubscription)
-
-    def __init__(self, user_id, notif_type, lang):
-        self.user_id = user_id
-        self.lang = lang
-        self.notif_type = notif_type
-
-    def check_permission(self, obj):
-        acl_users = obj.getSite().getAuthenticationTool()
-        user = acl_users.get_user_with_userid(self.user_id)
-
-        if user is None:
-            return False
-        elif user.has_permission(view, obj):
-            return True
-        else:
-            return False
-
-    def _name_and_email(self, obj):
-        # First look for the user in Nayaa's acl_users
-        site = obj.getSite()
-        auth_tool = site.getAuthenticationTool()
-        user_obj = auth_tool.getUser(self.user_id)
-        if user_obj is not None:
-            full_name = u'%s %s' % (
-                    auth_tool.getUserFirstName(user_obj),
-                    auth_tool.getUserLastName(user_obj))
-            email = auth_tool.getUserEmail(user_obj)
-            return (full_name, email)
-
-        # The user is not in Naaya's acl_users, so let's look deeper
-        parent_acl_users = site.restrictedTraverse('/').acl_users
-        if parent_acl_users.meta_type == 'LDAPUserFolder':
-            # TODO: what if parent_acl_users is not an LDAPUserFolder?
-            # Note: EIONET LDAP data is encoded with latin-1
-            ldap_user_data = parent_acl_users.getUserById(self.user_id)
-            if ldap_user_data:
-                full_name = ldap_user_data.cn
-                email = ldap_user_data.mail
-                return (force_to_unicode(full_name), email)
-
-        # Didn't find the user anywhere; return a placeholder
-        notif_logger.warn('Could not find email for user %r (context: %r)',
-                          self.user_id, obj)
-        return (u'[not found]', None)
-
-    def get_email(self, obj):
-        return self._name_and_email(obj)[1]
-
-    def to_string(self, obj):
-        name, email = self._name_and_email(obj)
-        if name:
-            return u'%s (%s)' % (name, email)
-        else:
-            return u'%s' % email
-
-class AnonymousSubscription(object):
-    """
-    Non authentificated user subscriptions
-    """
-    interface.implements(ISubscription)
-
-    def __init__(self, **kw):
-        """
-        @todo: Make a heartbeat to clean-up temporary subscribtions
-        """
-        self.email = kw.pop('email')
-        self.notif_type = kw.pop('notif_type')
-        self.lang = kw.pop('lang')
-        self.location = kw.pop('location')
-        self.key = sha("%s%s" % (time(),
-                                     random.randrange(1, 10000))).hexdigest()
-        self.__dict__.update(kw)
-        self.datetime = datetime.now()
-
-    def check_permission(self, obj):
-        user = obj.unrestrictedTraverse('/acl_users')._nobody
-        return bool(user.has_permission(view, obj))
-
-    def get_email(self, obj):
-        return self.email
-
-    def to_string(self, obj):
-        if getattr(self, 'organisation', ''):
-            return u'%s (%s)' % (self.organisation, self.email)
-        else:
-            return u'%s' % self.email
-
-def fetch_subscriptions(obj, inherit):
-    """
-    Get subscriptions on `obj`. If `inherit` is True then recurse
-    into parents, up to site level.
-    """
-    try:
-        sc = ISubscriptionContainer(obj)
-    except TypeError:
-        # we probably went below site level; bail out.
-        return
-
-    for subscription in sc:
-        yield subscription
-
-    if inherit:
-        for subscription in fetch_subscriptions(obj.aq_parent, inherit=True):
-            yield subscription
-
-def walk_subscriptions(obj):
-    """
-    Get subscriptions on `obj` and all of its children. Returns a
-    generator that yields tuples in the form `(obj, n, subscription)`.
-    """
-    try:
-        sc = ISubscriptionContainer(obj)
-    except TypeError:
-        # we reached an object that does not support subscription
-        return
-
-    for n, subscription in sc.list_with_keys():
-        yield (obj, n, subscription)
-
-    for child_obj in obj.objectValues():
-        for item in walk_subscriptions(child_obj):
-            yield item
-
-
-@component.adapter(INySite, IHeartbeat)
-def notifSubscriber(site, hb):
-    # notifications are delayed by 1 minute to allow for non-committed
-    # transactions (otherwise there's a remote chance that objects added
-    # or changed when heartbeat runs would be missed)
-    when = hb.when - timedelta(minutes=1)
-    site.getNotificationTool()._cron_heartbeat(when)
-component.provideHandler(notifSubscriber)
-
-class NotificationsPortlet(object):
-    interface.implements(INyPortlet)
-    component.adapts(INySite)
-
-    title = 'Subscribe to notifications'
-
-    def __init__(self, site):
-        self.site = site
-
-    def __call__(self, context, position):
-        notif_tool = self.site.getNotificationTool()
-        if not list(notif_tool.available_notif_types()):
-            return ''
-
-        macro = self.site.getPortletsTool()._get_macro(position)
-        tmpl = self.template.__of__(context)
-        return tmpl(macro=macro, notif_tool=notif_tool,
-                    location=path_in_site(context))
-
-    template = PageTemplateFile('zpt/portlet', globals())
+utils.divert_notifications(False)

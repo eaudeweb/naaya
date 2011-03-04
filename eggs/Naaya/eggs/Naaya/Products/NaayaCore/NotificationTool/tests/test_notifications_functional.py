@@ -3,7 +3,7 @@ from unittest import TestSuite, makeSuite
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.NotificationTool.NotificationTool import (
+from Products.NaayaCore.NotificationTool.utils import (
     divert_notifications, walk_subscriptions)
 
 from Products.Naaya.NyFolder import addNyFolder

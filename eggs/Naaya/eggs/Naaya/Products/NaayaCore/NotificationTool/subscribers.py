@@ -23,11 +23,12 @@ def handle_csv_import(event):
     portal = folder.getSite()
     obj_titles = [folder[oid].title_or_id() for oid in event.ids]
 
-    mail_args = {'ob': folder,
-                 'obj_titles': obj_titles,
-                 'item_count': len(obj_titles),
-                 'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
-                 'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
+    mail_args = {
+        'ob': folder,
+        'obj_titles': obj_titles,
+        'item_count': len(obj_titles),
+        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
+        'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
     }
 
     mail_data = csv_email_template.render_email(**mail_args)
@@ -36,17 +37,19 @@ def handle_csv_import(event):
     mail_subject = mail_data['subject']
     mail_body = mail_data['body_text']
 
-    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from, mail_subject)
+    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from,
+                                    mail_subject)
 
 def handle_zip_import(event):
     folder = event.context
     portal = folder.getSite()
     zip_contents = event.zip_contents
 
-    mail_args = {'ob': folder,
-                 'zip_contents': zip_contents,
-                 'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
-                 'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
+    mail_args = {
+        'ob': folder,
+        'zip_contents': zip_contents,
+        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
+        'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
     }
 
     mail_data = zip_email_template.render_email(**mail_args)
@@ -55,4 +58,12 @@ def handle_zip_import(event):
     mail_subject = mail_data['subject']
     mail_body = mail_data['body_text']
 
-    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from, mail_subject)
+    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from,
+                                    mail_subject)
+
+def heartbeat_notification(site, hearthbeat):
+    """notifications are delayed by 1 minute to allow for non-committed
+    transactions (otherwise there's a remote chance that objects added
+    or changed when heartbeat runs would be missed)"""
+    when = hearthbeat.when - timedelta(minutes=1)
+    site.getNotificationTool()._cron_heartbeat(when)

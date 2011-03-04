@@ -1,7 +1,8 @@
 from persistent.list import PersistentList
 from Products.naayaUpdater.updates import UpdateScript
-from Products.NaayaCore.NotificationTool.NotificationTool import (
-    ISubscriptionContainer, SubscriptionContainer, AccountSubscription)
+
+from interfaces import ISubscriptionContainer
+from containers import SubscriptionContainer, AccountSubscription
 
 class RemoveNotifUseridSpaces(UpdateScript):
     title = 'Remove spaces from notification subscription user_ids'
