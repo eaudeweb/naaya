@@ -9,8 +9,9 @@ from Globals import InitializeClass
 
 from constants import *
 from NyCheckControl import NyCheckControl
+from NyDublinCore import NyDublinCore
 
-class NyBase:
+class NyBase(NyDublinCore):
     """
     The base class of Naaya architecture. It implements basic functionality
     common to all classes.
