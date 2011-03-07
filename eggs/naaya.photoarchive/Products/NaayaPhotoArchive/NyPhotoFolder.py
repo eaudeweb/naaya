@@ -480,6 +480,10 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
             schema_raw_data = kwargs
 
         err = ''
+        title = None
+        if 'title' in schema_raw_data.keys():
+            title = schema_raw_data.get('title')
+            del schema_raw_data['title']
         try:
             if type(file) is not type('') and hasattr(file,'filename'):
                 # According to the zipfile.py ZipFile just needs a file-like object
@@ -489,7 +493,11 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
                     content = zf.read()
                     if self.isValidImage(content):
                         id = name[max(rfind(name,'/'), rfind(name,'\\'), rfind(name,':'))+1:]
-                        self._add_photo(id=id, title=name, file=content,
+                        if title:
+                            photo_title = title
+                        else:
+                            photo_title = name
+                        self._add_photo(id=id, title=photo_title, file=content,
                             lang=self.gl_get_selected_language(), **schema_raw_data)
             else:
                 err = 'Invalid zip file.'
