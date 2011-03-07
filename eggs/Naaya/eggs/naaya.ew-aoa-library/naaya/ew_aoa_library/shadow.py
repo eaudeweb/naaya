@@ -232,9 +232,9 @@ def extract_survey_answer_data_general_template(answer):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
 
-    attrs['official_country_region'] = getattr(answer, 'w_official-country-region')
-    if not isinstance(attrs['official_country_region'], basestring):
-        attrs['official_country_region'] = ''
+    attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', '')
+
+    attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
     return attrs
 
@@ -364,7 +364,8 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     def set_region(self, REQUEST):
         """ Saves the official country/region"""
         survey_answer = self.get_survey_answer(self.getId())
-        setattr(survey_answer, 'w_official-country-region', REQUEST.get('official_country_region'))
+        setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country'))
+        setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
