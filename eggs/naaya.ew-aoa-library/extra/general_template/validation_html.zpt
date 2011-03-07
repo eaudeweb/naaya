@@ -171,6 +171,7 @@
 				$('#w_q1-name-assessment-report-ru').attr('readonly', 'readonly');
 			}
 			$('#w_official-country-region').parent().hide();
+			$('#w_geo-coverage-region').parent().hide();
 		}
 		function reset_select(select_id, curr_lang){
 			if(curr_lang == 'ru'){
