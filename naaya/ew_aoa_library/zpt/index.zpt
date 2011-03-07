@@ -61,82 +61,97 @@
     </tal:block>
 
 <thead tal:define="url here/absolute_url">
+<tr>
 	<!-- Name -->
-	<th tal:condition="python:rkey and skey=='title' or skey!='title'">
+	<th rowspan="2" tal:condition="python:rkey and skey=='title' or skey!='title'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=title">Name</a>
 		<img tal:condition="python:skey=='title'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:not rkey and skey=='title'">
+	<th rowspan="2" tal:condition="python:not rkey and skey=='title'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=title&rkey=True">Name</a>
 		<img tal:condition="python:skey=='title'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<!-- Cannot sort by themes -->
-	<th tal:condition="not:review_template" i18n:translate="">Themes</th>
+	<th rowspan="2" tal:condition="not:review_template" i18n:translate="">Themes</th>
 
 	<!-- Last modified -->
-	<th tal:condition="python:rkey and skey=='modification_time' or skey!='modification_time'">
+	<th rowspan="2" tal:condition="python:rkey and skey=='modification_time' or skey!='modification_time'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=modification_time">Last modified</a>
 		<img tal:condition="python:skey=='modification_time'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:not rkey and skey=='modification_time'">
+	<th rowspan="2" tal:condition="python:not rkey and skey=='modification_time'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=modification_time&rkey=True">Last modified</a>
 		<img tal:condition="python:skey=='modification_time'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<!-- Reported by -->
-	<th tal:condition="python:rkey and skey=='uploader' or skey!='uploader'">
+	<th rowspan="2" tal:condition="python:rkey and skey=='uploader' or skey!='uploader'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader">Reported by</a>
 		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:not rkey and skey=='uploader'">
+	<th rowspan="2" tal:condition="python:not rkey and skey=='uploader'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader&rkey=True">Reported by</a>
 		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<!-- Country -->
-	<th tal:condition="python:rkey and skey=='country' or skey!='country'">
+	<th rowspan="2" tal:condition="python:rkey and skey=='country' or skey!='country'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=country">Country</a>
 		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:not rkey and skey=='country'">
+	<th rowspan="2" tal:condition="python:not rkey and skey=='country'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=country&rkey=True">Country</a>
 		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
-	<!-- Official country/region -->
-	<th tal:condition="python:review_template and (rkey and skey=='official_country_region' or skey!='official_country_region')">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=official_country_region">Official country/region</a>
-		<img tal:condition="python:skey=='official_country_region'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
-	</th>
-	<th tal:condition="python:review_template and not rkey and skey=='official_country_region'">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=official_country_region&rkey=True">Official country/region</a>
-		<img tal:condition="python:skey=='official_country_region'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
-	</th>
+	<th tal:condition="review_template" colspan="2" i18n:translate="">Geo coverage:</th>
 
 	<!-- Approval status -->
-	<th tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
+	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval status</a>
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:review_template and not rkey and skey=='approved_date'">
+	<th rowspan="2" tal:condition="python:review_template and not rkey and skey=='approved_date'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date&rkey=True">Approval status</a>
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<!-- Approval status -->
-	<th tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
+	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval date</a>
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:review_template and not rkey and skey=='approved_date'">
+	<th rowspan="2" tal:condition="python:review_template and not rkey and skey=='approved_date'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date&rkey=True">Approval date</a>
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
+</tr>
+<tr>
+	<!-- Geo coverage: country -->
+	<th tal:condition="python:review_template and (rkey and skey=='geo_coverage_country' or skey!='geo_coverage_country')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_country">Country</a>
+		<img tal:condition="python:skey=='geo_coverage_country'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="python:review_template and not rkey and skey=='geo_coverage_country'">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_country&rkey=True">Country</a>
+		<img tal:condition="python:skey=='geo_coverage_country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<!-- Geo coverage: region -->
+	<th tal:condition="python:review_template and (rkey and skey=='geo_coverage_region' or skey!='geo_coverage_region')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region">Region</a>
+		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th tal:condition="python:review_template and not rkey and skey=='geo_coverage_region'">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region&rkey=True">Region</a>
+		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+</tr>
 </thead>
 <tbody>
 <tr tal:repeat="i items">
-	<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
+<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td>
 			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="python: i.get('title')"></a>
 	</td>
@@ -147,7 +162,9 @@
 	<td tal:content="python:i.get('uploader')"/>
 	<td tal:content="python:i.get('country')"/>
 	<td tal:condition="review_template"
-		tal:content="i/official_country_region|nothing"/>
+		tal:content="i/geo_coverage_country|nothing"/>
+	<td tal:condition="review_template"
+		tal:content="i/geo_coverage_region|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >
         <span tal:condition="python:here.approved_date(i)">Approved</span>
         <span tal:condition="python:not here.approved_date(i)">Pending</span>
