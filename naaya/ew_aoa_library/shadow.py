@@ -40,6 +40,27 @@ def extract_singleselect(answer, widget_name):
     else:
         return widget.choices[datamodel]
 
+def get_library_survey_info(site):
+    if hasattr(get_library_survey_info, 'cache'):
+        return get_library_survey_info.cache
+
+    survey = getattr(site.tools.virtual_library, 'bibliography-details-each-assessment')
+    answers = survey.objectValues('Naaya Survey Answer')
+
+    answer_values = {}
+    for a in answers:
+        a_value = a.get('w_assessment-name')
+        if isinstance(a_value, dict):
+            answer_values[a.id] = a_value.values()
+        else:
+            answer_values[a.id] = [a_value]
+
+    get_library_survey_info.cache = {'survey': survey,
+                                     'answers': answers,
+                                     'answer_values': answer_values}
+
+    return get_library_survey_info.cache
+
 def get_library_answer(answer):
     answer_value = answer.get('w_q1-name-assessment-report')
     if isinstance(answer_value, dict):
@@ -47,14 +68,9 @@ def get_library_answer(answer):
     else:
         answer_values = [answer_value]
 
-    the_survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
-    for x in the_survey.objectValues('Naaya Survey Answer'):
-        x_value = x.get('w_assessment-name')
-
-        if isinstance(x_value, dict):
-            x_values = x_value.values()
-        else:
-            x_values = [x_value]
+    survey_info = get_library_survey_info(answer.getSite())
+    for x in survey_info['answers']:
+        x_values = survey_info['answer_values'][x.id]
 
         for xv in x_values:
             for av in answer_values:
