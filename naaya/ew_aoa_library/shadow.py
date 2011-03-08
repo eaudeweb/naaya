@@ -66,7 +66,7 @@ def get_library_answer(answer):
     else:
         answer_values = [answer_value]
 
-    survey = getattr(site.tools.virtual_library, 'bibliography-details-each-assessment')
+    survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
     survey_info = get_library_survey_info(answer.getSite())
     for x in survey.objectValues('Naaya Survey Answer'):
         x_values = survey_info[x.id]
