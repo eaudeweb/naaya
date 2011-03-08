@@ -92,7 +92,7 @@ class GWApplication(SimpleItem):
 
         acl_path = self.acl_users.absolute_url(1)
         ac_tool = portal.getAuthenticationTool()
-        ac_tool.manageAddSource(acl_path, 'LDAP')
+        ac_tool.manageAddSource(acl_path, 'Eionet')
         ac_tool.getSources()[0].addUserRoles(name=self.userid, roles=['Administrator'], user_location='Users')
 
     def send_approved_email(self, admin_comments):

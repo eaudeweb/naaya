@@ -1,5 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:zope="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five">
 
@@ -69,5 +71,12 @@
       icon="application.gif"
       permission="zope2.ViewManagementScreens"
       />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="change_ldap_source_title.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.ChangeLDAPSourceTitle"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
 
 </configure>
