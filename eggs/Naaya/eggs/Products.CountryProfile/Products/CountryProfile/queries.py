@@ -14,7 +14,7 @@ def get_country_code(dbconn, **kw):
 
 def get_sources(dbconn):
     """ Get source values and codes """
-    sql = u"SELECT src_code, src_label FROM source"
+    sql = u"SELECT src_code, src_label FROM SOURCE"
     return dbconn.query(sql)
     
 def get_table_data(dbconn, **kw):
