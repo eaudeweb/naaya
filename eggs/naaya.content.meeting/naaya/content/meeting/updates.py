@@ -13,6 +13,37 @@ from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
 from meeting import add_observer_role
 
+
+class AddAutoRegister(UpdateScript):
+    title = 'Add auto register attribute for the meetings'
+    authors = ['Andrei Laza']
+    creation_date = 'Mar 08, 2011'
+
+    def _update(self, portal):
+        self.log.debug('Changing meeting schema')
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
+
+        try:
+            schema.getWidget('auto_register')
+        except KeyError:
+            pass
+        else:
+            schema.manage_delObjects([widgetid_from_propname('auto_register')])
+
+        property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['auto_register']
+        schema.addWidget('auto_register', **property_schema)
+
+        meetings = portal.getCatalogedObjects(meta_type='Naaya Meeting')
+        for meeting in meetings:
+            self.log.debug('Found meeting object at %s' % meeting.absolute_url(1))
+            if not hasattr(meeting, 'auto_register'):
+                meeting.auto_register = False
+                self.log.debug('Added auto_register attribute for meeting at %s' %
+                        meeting.absolute_url(1))
+        return True
+
+
 class AddAllowRegister(UpdateScript):
     title = 'Add allow register attribute for the meetings'
     authors = ['Andrei Laza']
