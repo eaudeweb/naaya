@@ -56,6 +56,7 @@ class Subscriptions(SimpleItem):
 
     def _add_signup(self, formdata):
         """ """
+        meeting = self.getMeeting()
         key = random_key()
         name = formdata['first_name'] + ' ' + formdata['last_name']
         email = formdata['email']
@@ -65,6 +66,9 @@ class Subscriptions(SimpleItem):
         signup = SignUp(key, name, email, organization, phone)
 
         self._signups.insert(key, signup)
+
+        if meeting.auto_register:
+            self._accept_signup(key)
 
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_signup_email(signup)
@@ -207,6 +211,7 @@ class Subscriptions(SimpleItem):
     def _add_account_subscription(self, uid):
         """ """
         site = self.getSite()
+        meeting = self.getMeeting()
         name = getUserFullName(site, uid)
         email = getUserEmail(site, uid)
         organization = getUserOrganization(site, uid)
@@ -215,6 +220,9 @@ class Subscriptions(SimpleItem):
         account_subscription = AccountSubscription(uid, name, email, organization, phone)
 
         self._account_subscriptions.insert(uid, account_subscription)
+
+        if meeting.auto_register:
+            self._accept_account_subscription(uid)
 
         email_sender = self.getMeeting().getEmailSender()
         email_sender.send_account_subscription_email(account_subscription)
@@ -374,4 +382,3 @@ NaayaPageTemplateFile('zpt/subscription_not_allowed', globals(),
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """
     return urlsafe_b64encode(''.join(chr(randrange(256)) for i in xrange(15)))
-

@@ -40,5 +40,12 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="add_auto_register_feature.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.AddAutoRegister"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
 </configure>
 
