@@ -5,7 +5,8 @@ Changelog
 --------------------
  * Removed all license headers and a lot of uneeded files such as empty readme
    files.
-
+ * Cleaned up NotificationTool. Notification subscribers now receive
+   emails on zip/csv import events.
 
 2.11.02 (2011-03-01)
 --------------------
