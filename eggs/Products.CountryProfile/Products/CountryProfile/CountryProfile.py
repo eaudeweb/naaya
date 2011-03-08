@@ -3,6 +3,7 @@
 perform searchs on the data
 """
 import os
+import re
 
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
@@ -11,6 +12,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.LayoutTool.DiskFile import allow_path
+from naaya.core.zope2util import force_to_unicode
 
 from MySQLConnector import MySQLConnector
 import queries
@@ -198,5 +200,22 @@ class CountryProfile(SimpleItem):
         """Execute some query and return the data"""
         if hasattr(queries, name):
             return getattr(queries, name)(self.dbconn, **kw)
+
+    def intcomma(self, value, decimals=False):
+        """
+        Converts an integer to a string containing commas every three digits.
+        For example, 3000 becomes '3,000' and 45000 becomes '45,000'.
+        Thanks to Django contributors for the original code. (http://docs.djangoproject.com/en/dev/ref/contrib/humanize/)
+        """
+        if not isinstance(value, str):
+            if decimals:
+                value = str(value)
+            else:
+                value = str("%.0f" % value)
+        new = re.sub("^(-?\d+)(\d{3})", '\g<1>,\g<2>', value)
+        if value == new:
+            return new
+        else:
+            return self.intcomma(new)
 
 InitializeClass(CountryProfile)

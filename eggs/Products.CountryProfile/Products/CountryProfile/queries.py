@@ -12,6 +12,11 @@ def get_country_code(dbconn, **kw):
         records = records[0]
     return records
 
+def get_sources(dbconn):
+    """ Get source values and codes """
+    sql = u"SELECT src_code, src_label FROM source"
+    return dbconn.query(sql)
+    
 def get_table_data(dbconn, **kw):
     """ Returns a variable's value for the latest year for a given source and
     country
@@ -19,10 +24,10 @@ def get_table_data(dbconn, **kw):
     """
 
     sql = u"""
-    SELECT VARIABLE.var_label, VALUE.val, VARIABLE.var_unit, SOURCE.src_label,
+    SELECT VARIABLE.var_label, VALUE.val, VARIABLE.var_unit, SOURCE.src_code,
                                                                 VALUE.val_year
     FROM VALUE
-    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code)
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
     INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
@@ -44,7 +49,7 @@ def get_chart_data(dbconn, **kw):
     SELECT VARIABLE.var_label, VALUE.val, VARIABLE.var_unit, SOURCE.src_code,
                                                             VALUE.val_year
     FROM VALUE
-    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code)
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
     INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
