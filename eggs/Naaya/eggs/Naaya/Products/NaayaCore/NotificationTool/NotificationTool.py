@@ -468,6 +468,10 @@ class NotificationTool(Folder):
                                                       [])
         self.config['enable_anonymous'] = form.get('enable_anonymous', False)
 
+        #If this is True then all the modifications of the current user
+        #will be ignored by instant notifications
+        REQUEST.SESSION['skip_notifications'] = form.get("skip_notifications",
+                                                         False)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(view_management_screens,

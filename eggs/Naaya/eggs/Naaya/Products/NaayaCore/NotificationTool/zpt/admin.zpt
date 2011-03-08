@@ -110,6 +110,13 @@
         tal:attributes="checked python:test(get_config('enable_top_folders'), 'checked', None)" />
 </div>
 -->
+<div class="field-inline">
+    <input type="checkbox" id="skip_notifications" name="skip_notifications:boolean"
+        tal:attributes="checked python:test(request.SESSION.get('skip_notifications', False), 'checked', None)" />
+    <label for="skip_notifications"
+           i18n:translate="">Create/change/move objects without notifications being sent to subscribers (this applies just for the current user)</label>
+</div>
+
 </fieldset>
 
 <div class="field">
