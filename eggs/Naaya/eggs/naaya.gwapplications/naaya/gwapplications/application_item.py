@@ -105,7 +105,7 @@ class GWApplication(SimpleItem):
         self.email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
 
     def send_rejected_email(self, admin_comments):
-        data = {'admin_comments': admin_comments}
+        data = {'igtitle': self.title, 'admin_comments': admin_comments}
         mail_data = rejected_mail.render_email(**data)
         mail_to = self.application_data.get('useremail', '')
         mail_from = self.mail_from
