@@ -28,6 +28,11 @@
 				<input type="submit" value="Add" i18n:attributes="value" />
 			</div>
 		</form>
+		<div class="description-text">
+			<p class="cleaner">
+				Do not create a role unless you really need it.
+			</p>
+		</div>
 	</div>
 	
 	<div class="separator"></div>
