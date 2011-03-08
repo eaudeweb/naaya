@@ -270,29 +270,14 @@ class NotificationTool(Folder):
         notif_logger.info('Instant notifications on %r', ofs_path(ob))
         if not self.config['enable_instant']:
             return
-        messages_by_email = {}
-        for subscription in utils.fetch_subscriptions(ob, inherit=True):
-            if not subscription.check_permission(ob):
-                continue
-            if subscription.notif_type != 'instant':
-                continue
-            email = subscription.get_email(ob)
-            if email is None:
-                continue
 
-            notif_logger.info('.. sending notification to %r', email)
-            messages_by_email[email] = {
-                'ob': ob,
-                'here': self,
-                'ob_edited': ob_edited,
-                'person': user_id,
-                '_lang': subscription.lang,
-                'subscription': subscription,
-                'anonymous': isinstance(subscription, AnonymousSubscription)
-            }
+        subscribers_data = utils.get_subscribers_data(self, ob, **{
+            'person': user_id,
+            'ob_edited': ob_edited,
+        })
 
         template = self._get_template('instant')
-        self._send_notifications(messages_by_email, template)
+        self._send_notifications(subscribers_data, template)
 
     def _get_template(self, name):
         template = self._getOb('emailpt_%s' % name, None)
@@ -321,6 +306,7 @@ class NotificationTool(Folder):
             translate = self.getSite().getPortalTranslations()
             kwargs.update({'portal': portal, '_translate': translate})
             mail_data = template(**kwargs)
+            notif_logger.info('.. sending notification to %r', addr_to)
             utils.send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])
 

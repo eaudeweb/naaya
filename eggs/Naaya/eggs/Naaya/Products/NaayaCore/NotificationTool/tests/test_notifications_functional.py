@@ -199,6 +199,36 @@ class NotificationsTest(NaayaFunctionalTestCase):
             'user1', '', 'instant', 'en')
         transaction.commit()
 
+    def test_skip_notifications(self):
+        """User has session value `skip_notification` = True thus skiping
+        notifications to users """
+
+        notif = self.portal.portal_notification
+        notif.add_account_subscription('user1', '', 'instant', 'en')
+        notif.add_account_subscription('user2', '', 'weekly', 'en')
+        transaction.commit()
+
+        #Login with admin and set skip_notifications in administration
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/portal_notification/admin_html')
+        form = self.browser.get_form('settingsForm')
+        form['skip_notifications:boolean'] = ['on']
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'skip_notifications:boolean'))
+        self.browser.submit()
+
+        #Modify title of notidoc
+        self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
+        form = self.browser.get_form('frmEdit')
+
+        form['description:utf8:ustring'] = u'test_skip'
+        self.browser.clicked(form,
+            self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+
+        #No notifications should be sent
+        self.assertEqual(self._fetch_test_notifications(), [])
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NotificationsTest))

@@ -144,11 +144,16 @@ class NyCSVImportTest(NaayaTestCase):
 
     def test_import_mails(self):
         diverted_mail = EmailTool.divert_mail()
+
+        #Enable instant notifications
+        notification_tool = self.portal.getNotificationTool()
+        notification_tool.config['enable_instant'] = True
+        self.portal.getNotificationTool().add_account_subscription(
+            'contributor', '', 'instant', 'en')
         self.portal.imported.maintainer_email = 'someone@somehost'
         do_import_object(self, 'Naaya URL', csv_data, 'imported')
 
-        # only the bulk csv import mail should have been sent
-        self.assertEqual(len(diverted_mail), 1)
+        self.assertEqual(len(diverted_mail), 3)
 
         expected_subject = u'CSV Import - imported'
         expected_body = (u'This is automatically generated message'
@@ -157,13 +162,16 @@ class NyCSVImportTest(NaayaTestCase):
                           ' (http://nohost/portal/imported):\n'
                           ' - My URL 1\n - Eau de Web\n\n'
                           'Uploaded by Anonymous User on')
-        expected_recipients = ['someone@somehost', # folder_maintainer
-                               'site.admin@example.com'] # administrator_email
+        expected_recipients = ['site.admin@example.com',# administrator_email
+                               'someone@somehost', # folder_maintainer
+                               'contrib@example.com'] # subscriber
         expected_sender = 'from.zope@example.com'
 
         mail = diverted_mail[0]
         self.assertTrue(expected_body in mail[0])
-        self.assertEqual(expected_recipients, mail[1])
+        self.assertEqual(expected_recipients[0], diverted_mail[0][1][0])
+        self.assertEqual(expected_recipients[1], diverted_mail[1][1][0])
+        self.assertEqual(expected_recipients[2], diverted_mail[2][1][0])
         self.assertEqual(expected_sender, mail[2])
         self.assertEqual(expected_subject, mail[3])
         EmailTool.divert_mail(False)

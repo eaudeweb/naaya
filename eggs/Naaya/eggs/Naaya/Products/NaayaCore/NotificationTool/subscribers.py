@@ -1,22 +1,27 @@
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
+import utils
+
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
 
-def skip_notifications(context):
+def check_skip_notifications(subscriber):
     """This session key will be set for admins that don't want to notify
     users with their bulk modifications updates
 
     """
-    if hasattr(context, 'REQUEST'):
-        return context.REQUEST.SESSION.get('skip_notifications', False)
-    return False
+    def wrapper(event):
+        if (hasattr(event.context, 'REQUEST') and
+            hasattr(event.context.REQUEST, 'SESSION') and
+            event.context.REQUEST.SESSION.get('skip_notifications', False) is
+            True):
+            return
+        return subscriber(event)
+    return wrapper
 
+@check_skip_notifications
 def handle_object_add(event):
     if not event.schema.get('_send_notifications', True):
-        return
-
-    if skip_notifications(event.context) is True:
         return
 
     ob = event.context
@@ -25,61 +30,76 @@ def handle_object_add(event):
     notification_tool = ob.getSite().getNotificationTool()
     notification_tool.notify_instant(ob, contributor)
 
+@check_skip_notifications
 def handle_object_edit(event):
-    if skip_notifications(event.context) is True:
-        return
-
     ob = event.context
     contributor = event.contributor
     notification_tool = ob.getSite().getNotificationTool()
     notification_tool.notify_instant(ob, contributor, ob_edited=True)
 
+@check_skip_notifications
 def handle_csv_import(event):
-    folder = event.context
-    portal = folder.getSite()
-    obj_titles = [folder[oid].title_or_id() for oid in event.ids]
+    """ Send instant notification when a csv is imported to a folder"""
 
-    mail_args = {
-        'ob': folder,
+    portal = event.context.getSite()
+    obj_titles = [event.context[oid].title_or_id() for oid in event.ids]
+
+    subscriber_data_default = {
+        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
         'obj_titles': obj_titles,
         'item_count': len(obj_titles),
-        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
         'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
     }
 
-    mail_data = csv_email_template.render_email(**mail_args)
-    mail_from = portal.getEmailTool()._get_from_address()
-    mail_to = portal.getMaintainersEmails(folder)
-    mail_subject = mail_data['subject']
-    mail_body = mail_data['body_text']
+    import_subscriber(event, subscriber_data_default, csv_email_template)
 
-    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from,
-                                    mail_subject)
-
+@check_skip_notifications
 def handle_zip_import(event):
+    """Send instant notification when an zip is imported to a folder"""
+
+    portal = event.context.getSite()
+    subscriber_data_default = {
+        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
+        'zip_contents': event.zip_contents,
+        'datetime': portal.utShowFullDateTime(portal.utGetTodayDate())
+    }
+
+    import_subscriber(event, subscriber_data_default, zip_email_template)
+
+
+def send_notifications_for_event(event, subscriber_data_default, template):
+    """Send notifications to site maintainers and subscribers"""
+
     folder = event.context
     portal = folder.getSite()
-    zip_contents = event.zip_contents
+    notification_tool = portal.getNotificationTool()
 
-    mail_args = {
-        'ob': folder,
-        'zip_contents': zip_contents,
-        'username': portal.REQUEST.AUTHENTICATED_USER.getUserName(),
-        'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
-    }
+    subscribers_data = {}
+    maintainers_data = {}
 
-    mail_data = zip_email_template.render_email(**mail_args)
-    mail_from = portal.getEmailTool()._get_from_address()
-    mail_to = portal.getMaintainersEmails(folder)
-    mail_subject = mail_data['subject']
-    mail_body = mail_data['body_text']
+    #Get maintainers
+    maintainers = portal.getMaintainersEmails(folder)
+    for email in maintainers:
+        data = dict(subscriber_data_default)
+        data.update({
+            'ob': folder,
+            'here': notification_tool,
+        })
+        maintainers_data[email] = data
 
-    portal.getEmailTool().sendEmail(mail_body, mail_to, mail_from,
-                                    mail_subject)
+    #Get subscribers
+    if notification_tool.config['enable_instant'] is True:
+        subscribers_data = utils.get_subscribers_data(notification_tool,
+            folder, **subscriber_data_default)
+
+    subscribers_data.update(maintainers_data)
+    notification_tool._send_notifications(subscribers_data,
+                                          template.render_email)
 
 def heartbeat_notification(site, hearthbeat):
     """notifications are delayed by 1 minute to allow for non-committed
     transactions (otherwise there's a remote chance that objects added
     or changed when heartbeat runs would be missed)"""
+
     when = hearthbeat.when - timedelta(minutes=1)
     site.getNotificationTool()._cron_heartbeat(when)

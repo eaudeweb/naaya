@@ -4,7 +4,7 @@ from interfaces import ISubscriptionContainer
 from DateTime import DateTime
 
 from Products.NaayaCore.EmailTool.EmailTool import build_email
-from containers import AccountSubscription
+from containers import AccountSubscription, AnonymousSubscription
 
 def DateTime_from_datetime(dt):
     DT = DateTime(dt.isoformat())
@@ -104,3 +104,28 @@ def match_account_subscription(subs, user_id, notif_type, lang):
             subscription.notif_type == notif_type and
             subscription.lang == lang):
             return n
+
+def get_subscribers_data(self, ob, notif_type='instant', **kw):
+    """ Return a dict that contains the data of the messages that can be passed
+    to the e-mail template """
+
+    data = {}
+    for subscription in fetch_subscriptions(ob, inherit=True):
+        if not subscription.check_permission(ob):
+            continue
+        if subscription.notif_type != notif_type:
+            continue
+        email = subscription.get_email(ob)
+        if email is None:
+            continue
+
+        data[email] = {
+            'ob': ob,
+            'here': self,
+            '_lang': subscription.lang,
+            'subscription': subscription,
+            'anonymous': isinstance(subscription, AnonymousSubscription)
+        }
+        data[email].update(kw)
+
+    return data
