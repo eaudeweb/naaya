@@ -51,7 +51,7 @@ def handle_csv_import(event):
         'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
     }
 
-    import_subscriber(event, subscriber_data_default, csv_email_template)
+    send_notifications_for_event(event, subscriber_data_default, csv_email_template)
 
 @check_skip_notifications
 def handle_zip_import(event):
@@ -64,7 +64,7 @@ def handle_zip_import(event):
         'datetime': portal.utShowFullDateTime(portal.utGetTodayDate())
     }
 
-    import_subscriber(event, subscriber_data_default, zip_email_template)
+    send_notifications_for_event(event, subscriber_data_default, zip_email_template)
 
 
 def send_notifications_for_event(event, subscriber_data_default, template):
