@@ -55,9 +55,7 @@ def get_library_survey_info(site):
         else:
             answer_values[a.id] = [a_value]
 
-    get_library_survey_info.cache = {'survey': survey,
-                                     'answers': answers,
-                                     'answer_values': answer_values}
+    get_library_survey_info.cache = answer_values
 
     return get_library_survey_info.cache
 
@@ -68,9 +66,10 @@ def get_library_answer(answer):
     else:
         answer_values = [answer_value]
 
+    survey = getattr(site.tools.virtual_library, 'bibliography-details-each-assessment')
     survey_info = get_library_survey_info(answer.getSite())
-    for x in survey_info['answers']:
-        x_values = survey_info['answer_values'][x.id]
+    for x in survey.objectValues('Naaya Survey Answer'):
+        x_values = survey_info[x.id]
 
         for xv in x_values:
             for av in answer_values:
