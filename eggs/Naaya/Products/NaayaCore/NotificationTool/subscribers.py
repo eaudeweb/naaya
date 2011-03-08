@@ -3,9 +3,22 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
 
+def skip_notifications(context):
+    """This session key will be set for admins that don't want to notify
+    users with their bulk modifications updates
+
+    """
+    if hasattr(context, 'REQUEST'):
+        return context.REQUEST.SESSION.get('skip_notifications', False)
+    return False
+
 def handle_object_add(event):
     if not event.schema.get('_send_notifications', True):
         return
+
+    if skip_notifications(event.context) is True:
+        return
+
     ob = event.context
     ob.getSite().notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
@@ -13,6 +26,9 @@ def handle_object_add(event):
     notification_tool.notify_instant(ob, contributor)
 
 def handle_object_edit(event):
+    if skip_notifications(event.context) is True:
+        return
+
     ob = event.context
     contributor = event.contributor
     notification_tool = ob.getSite().getNotificationTool()
