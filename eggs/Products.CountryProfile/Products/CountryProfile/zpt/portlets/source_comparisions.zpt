@@ -7,28 +7,33 @@
 	        margin-left: 0px;
 	    }
 	</style>
-	<tal:block define="cprofile options/cprofile; records options/records">
+	<tal:block define="cprofile options/cprofile;
+	                   records options/records;
+					   var python: request.get('var', 'U24');
+					   cnt_code python: request.get('cnt_code', 'AL');">
+	<script tal:attributes="src string: ${options/cprofile/absolute_url}/www/js/themes.js"></script>
 	<div id="center_content">
 
 		<form action="" method="get">
-			<label for="source-indicator" i18n:translate="">Indicators</label>
-			<select name="source-var" id="source-indicator" class="select-combo" target="#source-source">
+			<label for="indicator" i18n:translate="">Indicators</label>
+			<select name="var" id="indicator" class="select-combo" target="#country">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
-				<option tal:attributes="value row/var_code; selected python: test(request.get('source-var') == row['var_code'], 'selected', None)" tal:content="row/var_label" />
+				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
 				</tal:block>
 			</select>
 			<br />
 			<label for="country" i18n:translate="">Countries</label>
 			<select id="country" name="cnt_code">
-				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=request.get('source-var', 'U24'))">
-				<option tal:attributes="value row/cnt_code;" tal:content="row/cnt_label" />
+				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=var)">
+				<option tal:attributes="value row/cnt_code; selected python: test(cnt_code == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
 				</tal:block>
 			</select>
 			<br />
 			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 
-		<table class="datatable">
+		<table class="datatable"
+				tal:condition="records">
 			<tr>
 				<tal:block repeat="record records">
 				<td tal:content="record/val_year" />
@@ -40,6 +45,7 @@
 				</tal:block>
 			</tr>
 		</table>
+
 	</div>
 	</tal:block>
 </metal:block>
