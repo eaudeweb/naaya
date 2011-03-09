@@ -1,7 +1,46 @@
 <metal:block i18n:domain="portal_translations" metal:use-macro="options/macro">
-<metal:block metal:fill-slot="portlet_title">Data sources comparision</metal:block>
+<metal:block metal:fill-slot="portlet_title">Data source comparisions</metal:block>
 <metal:block fill-slot="portlet_content">
+	<style type="text/css">
+	    .center-portlet{
+	        width: 100% !important;
+	        margin-left: 0px;
+	    }
+	</style>
+	<tal:block define="cprofile options/cprofile; records options/records">
 	<div id="center_content">
+
+		<form action="" method="get">
+			<label for="source-indicator" i18n:translate="">Indicators</label>
+			<select name="source-var" id="source-indicator" class="select-combo" target="#source-source">
+				<tal:block repeat="row python:cprofile.query('get_indicators')">
+				<option tal:attributes="value row/var_code; selected python: test(request.get('source-var') == row['var_code'], 'selected', None)" tal:content="row/var_label" />
+				</tal:block>
+			</select>
+			<br />
+			<label for="country" i18n:translate="">Countries</label>
+			<select id="country" name="cnt_code">
+				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=request.get('source-var', 'U24'))">
+				<option tal:attributes="value row/cnt_code;" tal:content="row/cnt_label" />
+				</tal:block>
+			</select>
+			<br />
+			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+		</form>
+
+		<table class="datatable">
+			<tr>
+				<tal:block repeat="record records">
+				<td tal:content="record/val_year" />
+				</tal:block>
+			</tr>
+			<tr>
+				<tal:block repeat="record records">
+				<td tal:content="record/val" />
+				</tal:block>
+			</tr>
+		</table>
 	</div>
+	</tal:block>
 </metal:block>
 </metal:block>
