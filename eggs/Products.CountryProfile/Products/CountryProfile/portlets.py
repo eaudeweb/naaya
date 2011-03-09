@@ -49,11 +49,11 @@ class CountryComparisions(object):
             country_profile = self.site.objectValues("MedwisCountryProfile")[0]
         except:
             return ""
-
+        form = context.REQUEST.form
         records = country_profile.query('get_country_comparision',
-                                    var='U24',
-                                    src='aquastat',
-                                    year='2000')
+                                    var=form.get('country-var', 'U24'),
+                                    src=form.get('country-src', 'aquastat'),
+                                    year=form.get('year', '2000'))
 
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
@@ -76,11 +76,11 @@ class YearComparisions(object):
             country_profile = self.site.objectValues("MedwisCountryProfile")[0]
         except:
             return ""
-
+        form = context.REQUEST.form
         records = country_profile.query('get_year_comparision',
-                                    var='U24',
-                                    src='aquastat',
-                                    cnt='AL')
+                                    var=form.get('year-var', 'U24'),
+                                    src=form.get('year-src', 'aquastat'),
+                                    cnt=form.get('cnt_code', 'AL'))
 
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
