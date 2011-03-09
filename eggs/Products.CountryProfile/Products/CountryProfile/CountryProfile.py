@@ -222,6 +222,9 @@ class CountryProfile(SimpleItem):
     def get_bar_chart_image(self, data, **kw):
         """ Return image path of downloaded image from google charts api"""
 
+        if len(data['y']) == 0:
+            return ''
+
         from pygooglechart import StackedVerticalBarChart, Axis
 
         width = int(kw.get('width', 600))
@@ -229,7 +232,6 @@ class CountryProfile(SimpleItem):
 
         chart = StackedVerticalBarChart(width, height,
                                         x_range=[0, len(data['x'])])
-
         min_y = min(data['y'])
         max_y = max(data['y'])
 
@@ -265,24 +267,42 @@ class CountryProfile(SimpleItem):
         if REQUEST is not None:
             kw.update(REQUEST.form)
 
-        chart_query = {
-            'var': kw.pop("var"),
-            'src': kw.pop("src"),
-            'year': kw.pop("year"),
-        }
+        if 'year' in kw:
+            chart_query = {
+                'var': kw.pop("var"),
+                'src': kw.pop("src"),
+                'year': kw.pop("year"),
+            }
 
-        rows = self.query('get_country_comparision', **chart_query)
+            rows = self.query('get_country_comparision', **chart_query)
+        else:
+            chart_query = {
+                'var': kw.pop("var"),
+                'src': kw.pop("src"),
+                'cnt': kw.pop("cnt_code"),
+            }
+
+            rows = self.query('get_year_comparision', **chart_query)
 
         for row in rows:
-            ccode = str(row['val_cnt_code'])
+            try:
+                ccode = str(row['val_cnt_code'])
+            except KeyError:
+                ccode = str(row['val_year'])
+
             if ccode not in data['x']:
                 data['x'].append(ccode)
             data['y'].append(int(row['val']))
 
         image_path = self.get_bar_chart_image(data, **kw)
-        image_fd = open(image_path, 'rb')
-        image = image_fd.read()
-        image_fd.close()
+        try:
+            image_fd = open(image_path, 'rb')
+            image = image_fd.read()
+            image_fd.close()
+        except IOError:
+            if REQUEST is not None:
+                REQUEST.RESPONSE.setStatus(404)
+            return 'Not found'
 
         if REQUEST is not None:
             REQUEST.RESPONSE.setHeader('Content-Length', len(image))
