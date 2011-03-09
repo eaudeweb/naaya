@@ -85,3 +85,30 @@ class YearComparisions(object):
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
         return tmpl(macro=macro, cprofile=country_profile, records=records)
+
+
+class SourceComparisions(object):
+    """Display this portlet under themes folder"""
+    interface.implements(INyPortlet)
+    component.adapts(INySite)
+
+    title = 'Data source comparisions'
+    template = PageTemplateFile('zpt/portlets/source_comparisions', globals())
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        try:
+            country_profile = self.site.objectValues("MedwisCountryProfile")[0]
+        except:
+            return ""
+
+        form = context.REQUEST.form
+        records = country_profile.query('get_source_comparision',
+                                    var=form.get('var', 'U24'),
+                                    cnt=form.get('cnt_code', 'AL'))
+
+        macro = self.site.getPortletsTool()._get_macro(position)
+        tmpl = self.template.__of__(context)
+        return tmpl(macro=macro, cprofile=country_profile, records=records)

@@ -18,7 +18,7 @@
 			<label for="year-indicator" i18n:translate="">Indicators</label>
 			<select name="year-var" id="year-indicator" class="select-combo" target="#year-source">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
-				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />-->
+				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
 				</tal:block>
 			</select>
 			<br />
