@@ -4,9 +4,4 @@
 		factory=".portlets.CountryPortlet"
 		name="portlet_country_stats" />
 
-	<utility
-		component=".utils.intcomma"
-		provides=".interfaces.ICountryProfileUtility"
-		name="intcomma" />
-
 </configure>
