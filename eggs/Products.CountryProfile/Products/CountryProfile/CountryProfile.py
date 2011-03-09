@@ -267,6 +267,7 @@ class CountryProfile(SimpleItem):
         if REQUEST is not None:
             kw.update(REQUEST.form)
 
+        rows = []
         if 'year' in kw:
             chart_query = {
                 'var': kw.pop("var"),
@@ -275,7 +276,7 @@ class CountryProfile(SimpleItem):
             }
 
             rows = self.query('get_country_comparision', **chart_query)
-        else:
+        elif 'cnt_code' in kw and 'src' in kw:
             chart_query = {
                 'var': kw.pop("var"),
                 'src': kw.pop("src"),
@@ -283,6 +284,13 @@ class CountryProfile(SimpleItem):
             }
 
             rows = self.query('get_year_comparision', **chart_query)
+        elif 'cnt_code' in kw and 'var' in kw:
+            chart_query = {
+                'var': kw.pop("var"),
+                'cnt': kw.pop("cnt_code"),
+            }
+
+            rows = self.query('get_source_comparision', **chart_query)
 
         for row in rows:
             try:
