@@ -12,4 +12,7 @@
 		factory=".portlets.YearComparisions"
 		name="portlet_year_comparisions" />
 
+	<adapter
+		factory=".portlets.SourceComparisions"
+		name="portlet_source_comparisions" />
 </configure>

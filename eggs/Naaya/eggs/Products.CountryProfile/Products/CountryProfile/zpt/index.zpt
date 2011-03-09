@@ -42,7 +42,6 @@
 			</tal:block>
 		</tr>
 	</table>
-
 </div>
 </tal:block>
 </metal:block>

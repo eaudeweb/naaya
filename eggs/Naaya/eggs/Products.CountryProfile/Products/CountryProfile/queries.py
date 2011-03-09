@@ -107,6 +107,19 @@ def get_available_countries(dbconn, **kw):
     """ % kw
     return dbconn.query(sql)
 
+def get_countries_by_sources(dbconn, **kw):
+    """ Returns the available countries for a given indicator"""
+    sql = u"""
+    SELECT DISTINCT COUNTRY.cnt_code, COUNTRY.cnt_label
+    FROM COUNTRY
+    INNER JOIN VALUE ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    ORDER BY COUNTRY.cnt_code
+    """ % kw
+    return dbconn.query(sql)
+
 def get_country_comparision(dbconn, **kw):
     """ Returns the country's indicator value for a given indicator, source and year"""
     sql = u"""
@@ -131,6 +144,20 @@ def get_year_comparision(dbconn, **kw):
     INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
     AND SOURCE.src_code = '%(src)s'
+    AND COUNTRY.cnt_code = '%(cnt)s'
+    ORDER BY VALUE.val_year
+    """ % kw
+    return dbconn.query(sql)
+
+def get_source_comparision(dbconn, **kw):
+    """ Returns the source's indicator value for a given indicator and country"""
+    sql = u"""
+    SELECT VALUE.val, VALUE.val_year, SOURCE.src_code 
+    FROM VALUE
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    WHERE VARIABLE.var_code = '%(var)s'
     AND COUNTRY.cnt_code = '%(cnt)s'
     ORDER BY VALUE.val_year
     """ % kw
