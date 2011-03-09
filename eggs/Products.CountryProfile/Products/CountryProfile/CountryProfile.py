@@ -111,7 +111,12 @@ class CountryProfile(SimpleItem):
         else:
             return ""
 
-        return self.index(cprofile=self, ccode=country_code)
+        indicator = REQUEST.get('indicator', 'U24')
+        source = REQUEST.get('source', 'aquastat')
+        year = REQUEST.get('year', '2000')
+        result = self.query('get_country_comparision', var=indicator, src=source, year=year)
+
+        return self.index(cprofile=self, ccode=country_code, records=result)
 
     security.declarePublic('get_chart')
     def get_chart_image(self, data, **kw):
