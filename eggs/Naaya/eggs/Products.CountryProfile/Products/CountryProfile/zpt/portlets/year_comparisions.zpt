@@ -7,14 +7,18 @@
 	        margin-left: 0px;
 	    }
 	</style>
-	<tal:block define="cprofile options/cprofile; records options/records">
+	<tal:block define="cprofile options/cprofile;
+					   records options/records;
+					   var python: request.get('year-var', 'U24');
+					   src python: request.get('year-src', 'aquastat');
+					   cnt_code python: request.get('cnt_code', 'AL')">
 	<div id="center_content">
 
 		<form action="" method="get">
 			<label for="year-indicator" i18n:translate="">Indicators</label>
 			<select name="year-var" id="year-indicator" class="select-combo" target="#year-source">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
-				<option tal:attributes="value row/var_code; selected python: test(request.get('year-var') == row['var_code'], 'selected', None)" tal:content="row/var_label" />-->
+				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />-->
 				</tal:block>
 			</select>
 			<br />
@@ -22,22 +26,26 @@
 			<select id="year-source" name="year-src" class="select-combo"
 					target="#country" from="#year-indicator"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_sources&fval=src_code&flabel=src_label">
-				<tal:block repeat="row python:cprofile.query('get_available_sources', var=request.get('year-var', 'U24'))">
-				<option tal:attributes="value row/src_code; selected python: test(request.get('year-src') == row['src_code'], 'selected', None)" tal:content="row/src_label" />
+				<tal:block repeat="row python:cprofile.query('get_available_sources', var=var)">
+				<option tal:attributes="value row/src_code; selected python: test(src == row['src_code'], 'selected', None)" tal:content="row/src_label" />
 				</tal:block>
 			</select>
 			<br />
 			<label for="country" i18n:translate="">Countries</label>
 			<select id="country" name="cnt_code" from="#year-source"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_countries&fval=cnt_code&flabel=cnt_label">
-				<tal:block repeat="row python:cprofile.query('get_available_countries', var=request.get('year-var', 'U24'), src=request.get('year-src', 'aquastat'))">
-				<option tal:attributes="value row/cnt_code; selected python: test(request.get('cnt_code') == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
+				<tal:block repeat="row python:cprofile.query('get_available_countries', var=var, src=src)">
+				<option tal:attributes="value row/cnt_code; selected python: test(cnt_code == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
 				</tal:block>
 			</select>
 			<br />
 			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
-
+		<h2>
+			<span tal:content="var"></span>&nbsp;
+			<span tal:content="src"></span>&nbsp;
+			<span tal:content="cnt_code"></span>
+		</h2>
 		<table class="datatable"
 			   tal:condition="records">
 			<tr>
@@ -52,10 +60,7 @@
 			</tr>
 		</table>
 		<div id="chart-container"
-			 tal:condition="records"
-			 tal:define="var python: request.get('year-var', 'U24');
-						 src python: request.get('year-src', 'aquastat');
-						 cnt_code python: request.get('cnt_code', 'AL')">
+			 tal:condition="records">
 			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}&width=600&height=250" />
 		</div>
 	</div>
