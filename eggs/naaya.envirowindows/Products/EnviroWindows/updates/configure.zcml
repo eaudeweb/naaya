@@ -4,6 +4,10 @@
   i18n_domain="naaya">
 
   <configure zcml:condition="installed Products.naayaUpdater">
+      <utility name="clean_ldap_source_title.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".update_clean_ldap_source_title.CleanLDAPSourceTitle"
+          permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
