@@ -7,28 +7,31 @@
 	        margin-left: 0px;
 	    }
 	</style>
+	<script tal:attributes="src string: ${options/cprofile/absolute_url}/www/js/themes.js"></script>
+
 	<tal:block define="cprofile options/cprofile; records options/records">
 	<div id="center_content">
-		
 		<form action="" method="get">
-			<label for="indicator" i18n:translate="">Indicators</label>
-			<select id="indicator">
-				<tal:block repeat="indicator python:cprofile.query('get_indicators')">
-				<option tal:attributes="value indicator/var_code" tal:content="indicator/var_label" />
+			<label for="country-indicator" i18n:translate="">Indicators</label>
+			<select name="country-var" id="country-indicator" class="select-combo" target="#country-source">
+				<tal:block repeat="row python:cprofile.query('get_indicators')">
+				<option tal:attributes="value row/var_code; selected python: test(request.get('country-var') == row['var_code'], 'selected', None)" tal:content="row/var_label" />-->
 				</tal:block>
 			</select>
 			<br />
-			<label for="source" i18n:translate="">Sources</label>
-			<select id="source">
-				<tal:block repeat="source python:cprofile.query('get_available_sources', var='U24')">
-				<option tal:attributes="value source/src_code" tal:content="source/src_label" />
+			<label for="country-source" i18n:translate="">Sources</label>
+			<select id="country-source" name="country-src" class="select-combo" target="#year" from="#country-indicator"
+					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_sources&fval=src_code&flabel=src_label">
+				<tal:block repeat="row python:cprofile.query('get_available_sources', var=request.get('country-var', 'U24'))">
+				<option tal:attributes="value row/src_code; selected python: test(request.get('country-src') == row['src_code'], 'selected', None)" tal:content="row/src_label" />
 				</tal:block>
 			</select>
 			<br />
 			<label for="year" i18n:translate="">Year</label>
-			<select id="year">
-				<tal:block repeat="year python:cprofile.query('get_available_years', var='U24', src='aquastat')">
-				<option tal:attributes="value year/val_year" tal:content="year/val_year" />
+			<select id="year" name="year" from="#country-source"
+					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_years&fval=val_year&flabel=val_year">
+				<tal:block repeat="row python:cprofile.query('get_available_years', var=request.get('country-var', 'U24'), src=request.get('country-src', 'aquastat'))">
+				<option tal:attributes="value row/val_year; selected python: test(request.get('year') == row['val_year'], 'selected', None)" tal:content="row/val_year" />
 				</tal:block>
 			</select>
 			<br />
