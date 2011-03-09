@@ -56,7 +56,7 @@
 			 tal:define="var python: request.get('year-var', 'U24');
 						 src python: request.get('year-src', 'aquastat');
 						 cnt_code python: request.get('cnt_code', 'AL')">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}&width=600&height=250&refresh=1" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}&width=600&height=250" />
 		</div>
 	</div>
 	</tal:block>
