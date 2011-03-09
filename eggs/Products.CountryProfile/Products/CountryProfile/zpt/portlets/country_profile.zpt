@@ -16,6 +16,7 @@
 			$("#display-chart").html($("<img"+">").attr("src", $($("#change-chart").children()[0]).val()));
 		});
 	</script>
+
 	<div id="center_content">
 		<table class="datatable">
 			<thead>
