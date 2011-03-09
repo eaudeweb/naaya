@@ -4,4 +4,12 @@
 		factory=".portlets.CountryPortlet"
 		name="portlet_country_stats" />
 
+	<adapter
+		factory=".portlets.CountryComparisions"
+		name="portlet_country_comparisions" />
+
+	<adapter
+		factory=".portlets.YearComparisions"
+		name="portlet_year_comparisions" />
+
 </configure>

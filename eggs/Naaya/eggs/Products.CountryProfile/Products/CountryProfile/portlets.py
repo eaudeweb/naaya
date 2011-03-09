@@ -11,7 +11,7 @@ class CountryPortlet(object):
     component.adapts(INySite)
 
     title = 'Country profile'
-    template = PageTemplateFile('zpt/portlet', globals())
+    template = PageTemplateFile('zpt/portlets/country_profile', globals())
 
     def __init__(self, site):
         self.site = site
@@ -33,3 +33,55 @@ class CountryPortlet(object):
         return tmpl(macro=macro, cprofile=country_profile, ccode=country_code)
 
 
+class CountryComparisions(object):
+    """Display this portlet under themes folder"""
+    interface.implements(INyPortlet)
+    component.adapts(INySite)
+
+    title = 'Country comparisions'
+    template = PageTemplateFile('zpt/portlets/country_comparisions', globals())
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        try:
+            country_profile = self.site.objectValues("MedwisCountryProfile")[0]
+        except:
+            return ""
+
+        records = country_profile.query('get_country_comparision', 
+                                    var='U24', 
+                                    src='aquastat', 
+                                    year='2000')
+            
+        macro = self.site.getPortletsTool()._get_macro(position)
+        tmpl = self.template.__of__(context)
+        return tmpl(macro=macro, cprofile=country_profile, records=records)
+
+
+class YearComparisions(object):
+    """Display this portlet under themes folder"""
+    interface.implements(INyPortlet)
+    component.adapts(INySite)
+
+    title = 'Year comparisions'
+    template = PageTemplateFile('zpt/portlets/year_comparisions', globals())
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        try:
+            country_profile = self.site.objectValues("MedwisCountryProfile")[0]
+        except:
+            return ""
+
+        records = country_profile.query('get_year_comparision', 
+                                    var='U24', 
+                                    src='aquastat', 
+                                    cnt='AL')
+
+        macro = self.site.getPortletsTool()._get_macro(position)
+        tmpl = self.template.__of__(context)
+        return tmpl(macro=macro, cprofile=country_profile, records=records)
