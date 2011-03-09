@@ -3,6 +3,10 @@
 perform searchs on the data
 """
 import os
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
@@ -13,6 +17,7 @@ from zope.component import getUtility
 
 from Products.NaayaCore.LayoutTool.DiskFile import allow_path
 from naaya.core.zope2util import force_to_unicode
+from naaya.core.StaticServe import StaticServeFromFolder
 
 from MySQLConnector import MySQLConnector
 import queries
@@ -49,6 +54,9 @@ class CountryProfile(SimpleItem):
         )
     )
     _v_conn = None
+
+    www = StaticServeFromFolder("www/", globals())
+
     index = PageTemplateFile('zpt/index', globals())
 
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -290,5 +298,38 @@ class CountryProfile(SimpleItem):
         """Execute some query and return the data"""
         if hasattr(queries, name):
             return getattr(queries, name)(self.dbconn, **kw)
+
+    security.declarePublic('query_select_json')
+    def query_select_json(self, name, fval, flabel, REQUEST):
+        """ Return a jsoned list of dicts with keys made of `fields` based on
+        `query`
+
+        """
+
+        data = []
+        if hasattr(queries, name):
+
+            query_args = {} #variable namespacing
+            for k, v in REQUEST.form.iteritems():
+                if '-' in k:
+                    k = k.split('-')[1]
+                query_args[k] = v
+
+            rows = getattr(queries, name)(self.dbconn, **query_args)
+            if len(rows):
+                i = 0
+                for row in rows:
+                    data.append({})
+                    for field, value in row.iteritems():
+                        if field == fval:
+                            data[i]['val'] = value
+                        if field == flabel:
+                            data[i]['label'] = value
+                    i += 1
+
+        json_data = json.dumps(data)
+        REQUEST.RESPONSE.setHeader('Content-Length', len(json_data))
+        REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
+        return json_data
 
 InitializeClass(CountryProfile)
