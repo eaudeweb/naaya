@@ -23,7 +23,8 @@
 			</select>
 			<br />
 			<label for="country" i18n:translate="">Countries</label>
-			<select id="country" name="cnt_code">
+			<select id="country" name="cnt_code" from="#indicator"
+					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_countries_by_sources&fval=cnt_code&flabel=cnt_label">
 				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=var)">
 				<option tal:attributes="value row/cnt_code; selected python: test(cnt_code == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
 				</tal:block>
