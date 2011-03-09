@@ -42,9 +42,7 @@
 			</tal:block>
 		</tr>
 	</table>
-	<div id="chart-container">
-		<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=U24&src=aquastat&year=2000&width=600&height=250&refresh=1" />
-	</div>
+
 </div>
 </tal:block>
 </metal:block>
