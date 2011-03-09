@@ -1,0 +1,7 @@
+<metal:block i18n:domain="portal_translations" metal:use-macro="options/macro">
+<metal:block metal:fill-slot="portlet_title">Data sources comparision</metal:block>
+<metal:block fill-slot="portlet_content">
+	<div id="center_content">
+	</div>
+</metal:block>
+</metal:block>
