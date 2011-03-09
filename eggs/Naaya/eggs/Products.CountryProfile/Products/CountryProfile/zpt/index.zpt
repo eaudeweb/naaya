@@ -3,8 +3,8 @@
 		<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 <metal:block fill-slot="body">
-<tal:block define="cprofile options/cprofile; ccode options/ccode">
-<form action="" method="post">
+<tal:block define="cprofile options/cprofile; ccode options/ccode; records options/records">
+<form action="" method="get">
 	<label for="indicator" i18n:translate="">Indicators</label>
 	<select id="indicator">
 		<tal:block repeat="indicator python:cprofile.query('get_indicators', cnt=ccode)">
@@ -25,28 +25,22 @@
 		<option tal:attributes="value year/val_year" tal:content="year/val_year" />
 		</tal:block>
 	</select>
+	<br />
+	<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 </form>
 
 <div id="center_content">
 	<table class="datatable">
-		<thead>
-			<tr>
-				<td i18n:translate="">Indicator</td>
-				<td i18n:translate="">Value</td>
-				<td i18n:translate="">Unit</td>
-				<td i18n:translate="">Source</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr tal:define="record python:cprofile.query('get_table_data', var='SOC1', src='JMP', cnt=ccode)" tal:condition="record">
-				<td i18n:translate="">Population</td>
-				<td tal:content="python:cprofile.intcomma(record['val'])" />
-				<td tal:content="record/var_unit" />
-				<td>
-					<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
-				</td>
-			</tr>
-		</tbody>
+		<tr>
+			<tal:block repeat="record records">
+			<td tal:content="record/val_cnt_code" />
+			</tal:block>
+		</tr>
+		<tr>
+			<tal:block repeat="record records">
+			<td tal:content="record/val" />
+			</tal:block>
+		</tr>
 	</table>
 </div>
 </tal:block>
