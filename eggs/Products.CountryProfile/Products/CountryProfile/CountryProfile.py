@@ -48,7 +48,7 @@ class CountryProfile(SimpleItem):
         )
     )
     _v_conn = None
-    index_html = PageTemplateFile('zpt/index', globals())
+    index = PageTemplateFile('zpt/index', globals())
 
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/manage_edit', globals())
@@ -101,6 +101,17 @@ class CountryProfile(SimpleItem):
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+    def index_html(self, REQUEST):
+        """ temporary function. only for testing purposes."""
+        result = self.query("get_country_code",
+                                     label_en='Tunisia')
+        if result:
+            country_code = result['CNT_CODE']
+        else:
+            return ""
+
+        return self.index(cprofile=self, ccode=country_code)
 
     security.declarePublic('get_chart')
     def get_chart_image(self, data, **kw):

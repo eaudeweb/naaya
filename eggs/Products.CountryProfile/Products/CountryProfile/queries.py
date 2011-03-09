@@ -58,3 +58,41 @@ def get_chart_data(dbconn, **kw):
     ORDER BY VALUE.val_year
     """ % kw
     return dbconn.query(sql)
+
+def get_indicators(dbconn, **kw):
+    """ Returns the list of indicators that have content in the the VALUE table"""
+    sql = u"""
+    SELECT DISTINCT VARIABLE.var_code, VARIABLE.var_label
+    FROM VARIABLE
+    INNER JOIN VALUE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    WHERE COUNTRY.cnt_code = '%(cnt)s'
+    ORDER BY VARIABLE.var_label
+    """ % kw
+    return dbconn.query(sql)
+
+def get_available_sources(dbconn, **kw):
+    """ Returns the list of sources for a given indicator """
+    sql = u"""
+    SELECT SOURCE.src_code, SOURCE.src_label
+    FROM SOURCE
+    INNER JOIN VARIABLE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    ORDER BY SOURCE.src_code
+    """ % kw
+    return dbconn.query(sql)
+
+def get_available_years(dbconn, **kw):
+    """ Returns the available years for a given indicator and source """
+    sql = u"""
+    SELECT DISTINCT VALUE.val_year
+    FROM VALUE
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    AND COUNTRY.cnt_code = '%(cnt)s'
+    AND SOURCE.src_code = '%(src)s'
+    ORDER BY VALUE.val_year
+    """ % kw
+    return dbconn.query(sql)

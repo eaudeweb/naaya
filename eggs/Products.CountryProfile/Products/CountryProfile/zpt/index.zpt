@@ -3,6 +3,52 @@
 		<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block>
 <metal:block fill-slot="body">
-	
+<tal:block define="cprofile options/cprofile; ccode options/ccode">
+<form action="" method="post">
+	<label for="indicator" i18n:translate="">Indicators</label>
+	<select id="indicator">
+		<tal:block repeat="indicator python:cprofile.query('get_indicators', cnt=ccode)">
+		<option tal:attributes="value indicator/var_code" tal:content="indicator/var_label" />
+		</tal:block>
+	</select>
+	<br />
+	<label for="source" i18n:translate="">Sources</label>
+	<select id="source">
+		<tal:block repeat="source python:cprofile.query('get_available_sources', var='U24')">
+		<option tal:attributes="value source/src_code" tal:content="source/src_label" />
+		</tal:block>
+	</select>
+	<br />
+	<label for="year" i18n:translate="">Year</label>
+	<select id="year">
+		<tal:block repeat="year python:cprofile.query('get_available_years', var='U24', src='aquastat', cnt=ccode)">
+		<option tal:attributes="value year/val_year" tal:content="year/val_year" />
+		</tal:block>
+	</select>
+</form>
+
+<div id="center_content">
+	<table class="datatable">
+		<thead>
+			<tr>
+				<td i18n:translate="">Indicator</td>
+				<td i18n:translate="">Value</td>
+				<td i18n:translate="">Unit</td>
+				<td i18n:translate="">Source</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:define="record python:cprofile.query('get_table_data', var='SOC1', src='JMP', cnt=ccode)" tal:condition="record">
+				<td i18n:translate="">Population</td>
+				<td tal:content="python:cprofile.intcomma(record['val'])" />
+				<td tal:content="record/var_unit" />
+				<td>
+					<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</tal:block>
 </metal:block>
 </metal:block>
