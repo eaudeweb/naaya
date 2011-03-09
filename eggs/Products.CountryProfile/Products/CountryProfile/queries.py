@@ -96,3 +96,17 @@ def get_available_years(dbconn, **kw):
     ORDER BY VALUE.val_year
     """ % kw
     return dbconn.query(sql)
+
+def get_country_comparision(dbconn, **kw):
+    """ Returns the country's indicator value for a given indicator, source and year"""
+    sql = u"""
+    SELECT VALUE.val, VALUE.val_cnt_code
+    FROM VALUE
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    AND VALUE.val_year = '%(year)s'
+    AND SOURCE.src_code = '%(src)s'
+    ORDER BY VALUE.val_cnt_code
+    """ % kw
+    return dbconn.query(sql)   
