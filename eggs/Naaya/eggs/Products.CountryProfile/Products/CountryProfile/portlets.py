@@ -50,11 +50,11 @@ class CountryComparisions(object):
         except:
             return ""
 
-        records = country_profile.query('get_country_comparision', 
-                                    var='U24', 
-                                    src='aquastat', 
+        records = country_profile.query('get_country_comparision',
+                                    var='U24',
+                                    src='aquastat',
                                     year='2000')
-            
+
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
         return tmpl(macro=macro, cprofile=country_profile, records=records)
@@ -77,9 +77,9 @@ class YearComparisions(object):
         except:
             return ""
 
-        records = country_profile.query('get_year_comparision', 
-                                    var='U24', 
-                                    src='aquastat', 
+        records = country_profile.query('get_year_comparision',
+                                    var='U24',
+                                    src='aquastat',
                                     cnt='AL')
 
         macro = self.site.getPortletsTool()._get_macro(position)
