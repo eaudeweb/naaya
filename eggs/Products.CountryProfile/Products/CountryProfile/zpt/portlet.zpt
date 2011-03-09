@@ -16,7 +16,6 @@
 			$("#display-chart").html($("<img"+">").attr("src", $($("#change-chart").children()[0]).val()));
 		});
 	</script>
-
 	<div id="center_content">
 		<table class="datatable">
 			<thead>
@@ -30,7 +29,7 @@
 			<tbody>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='SOC1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Population</td>
-					<td tal:content="python:cprofile.intcomma(record['val'])" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'])" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
@@ -38,7 +37,7 @@
 				</tr>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='PHY1', src='aquastat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Land area</td>
-					<td tal:content="python:cprofile.intcomma(record['val'])" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'])" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
@@ -46,7 +45,7 @@
 				</tr>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='U24', src='aquastat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Water withdrawal for agriculture</td>
-					<td tal:content="python:cprofile.intcomma(record['val'], decimals=True)" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'], decimals=True)" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
@@ -54,7 +53,7 @@
 				</tr>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='R10', src='aquastat', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Water per capita</td>
-					<td tal:content="python:cprofile.intcomma(record['val'], decimals=True)" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'], decimals=True)" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
@@ -62,7 +61,7 @@
 				</tr>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='SUP1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Access to improved water source</td>
-					<td tal:content="python:cprofile.intcomma(record['val'])" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'])" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
@@ -70,7 +69,7 @@
 				</tr>
 				<tr tal:define="record python:cprofile.query('get_table_data', var='SAN1', src='JMP', cnt=ccode)" tal:condition="record">
 					<td i18n:translate="">Access to sanitation</td>
-					<td tal:content="python:cprofile.intcomma(record['val'])" />
+					<td tal:content="python:cprofile.getUtility('intcomma')(record['val'])" />
 					<td tal:content="record/var_unit" />
 					<td>
 						<span tal:replace="record/src_code" />&nbsp;(<span tal:replace="record/val_year" />)
