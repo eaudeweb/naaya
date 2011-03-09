@@ -16,7 +16,7 @@ from naaya.core.zope2util import force_to_unicode
 
 from MySQLConnector import MySQLConnector
 import queries
-import interfaces
+import utils
 
 TARGET_DIR = os.path.join(CLIENT_HOME, '..', 'country_profile')
 try:
@@ -121,15 +121,13 @@ class CountryProfile(SimpleItem):
 
     security.declarePublic('get_chart')
     def get_chart_image(self, data, **kw):
-        """Return a image file
+        """Return a image file path
 
         Arguments::
 
-            data -- a list containing the Y data representation
+            data -- a list containing the X,Y data representation
         """
-        from pygooglechart import Chart
-        from pygooglechart import SimpleLineChart
-        from pygooglechart import Axis
+        from pygooglechart import SimpleLineChart, Axis
 
         # Set the vertical range from 0 to 100
         try:
@@ -182,7 +180,7 @@ class CountryProfile(SimpleItem):
         return image_path
 
     def get_chart(self, REQUEST=None, **kw):
-        """This will return x and y axis data"""
+        """Respond with an image of the simple line chart"""
         data = {}
         data['x'] = []
         data['y'] = []
@@ -213,9 +211,80 @@ class CountryProfile(SimpleItem):
             REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
         return image
 
+    def get_bar_chart_image(self, data, **kw):
+        """ Return image path of downloaded image from google charts api"""
+
+        from pygooglechart import StackedVerticalBarChart, Axis
+
+        width = int(kw.get('width', 600))
+        height = int(kw.get('height', 250))
+
+        chart = StackedVerticalBarChart(width, height,
+                                        x_range=[0, len(data['x'])])
+
+        min_y = min(data['y'])
+        max_y = max(data['y'])
+
+        chart.add_data(data['y'])
+        chart.set_colours(['76A4FB'])
+        chart.set_axis_labels(Axis.BOTTOM, data['x'])
+        chart.set_axis_labels(Axis.LEFT, range(min_y, max_y + 1,
+                                               (max_y - min_y)/10))
+
+        #Generate an hash from arguments
+        kw_hash = hash(tuple(sorted(kw.items())))
+        data_hash = hash(tuple(sorted([(k, tuple(v))
+            for k, v in data.iteritems()])))
+        args_hash = str(kw_hash) + str(data_hash)
+
+        image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
+
+        if bool(kw.get('refresh', False)) or args_hash not in self.charts:
+            #Get image from google chart api
+            chart.download(image_path)
+            self.charts.append(args_hash)
+            self._p_changed = True
+
+        return image_path
+
+    def get_bar_chart(self, REQUEST=None, **kw):
+        """Respond with an image of the vertical stacked line chart"""
+
+        data = {}
+        data['x'] = []
+        data['y'] = []
+
+        if REQUEST is not None:
+            kw.update(REQUEST.form)
+
+        chart_query = {
+            'var': kw.pop("var"),
+            'src': kw.pop("src"),
+            'year': kw.pop("year"),
+        }
+
+        rows = self.query('get_country_comparision', **chart_query)
+
+        for row in rows:
+            ccode = str(row['val_cnt_code'])
+            if ccode not in data['x']:
+                data['x'].append(ccode)
+            data['y'].append(int(row['val']))
+
+        image_path = self.get_bar_chart_image(data, **kw)
+        image_fd = open(image_path, 'rb')
+        image = image_fd.read()
+        image_fd.close()
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-Length', len(image))
+            REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
+        return image
+
     security.declarePublic('getUtility')
     def getUtility(self, name):
-        return getUtility(interfaces.ICountryProfileUtility, name)
+        if hasattr(utils, name):
+            return getattr(utils, name)
 
     def query(self, name, **kw):
         """Execute some query and return the data"""
