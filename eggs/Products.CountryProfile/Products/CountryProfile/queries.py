@@ -65,8 +65,6 @@ def get_indicators(dbconn, **kw):
     SELECT DISTINCT VARIABLE.var_code, VARIABLE.var_label
     FROM VARIABLE
     INNER JOIN VALUE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
-    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
-    WHERE COUNTRY.cnt_code = '%(cnt)s'
     ORDER BY VARIABLE.var_label
     """ % kw
     return dbconn.query(sql)
@@ -89,11 +87,23 @@ def get_available_years(dbconn, **kw):
     FROM VALUE
     INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
-    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
-    AND COUNTRY.cnt_code = '%(cnt)s'
     AND SOURCE.src_code = '%(src)s'
     ORDER BY VALUE.val_year
+    """ % kw
+    return dbconn.query(sql)
+
+def get_available_countries(dbconn, **kw):
+    """ Returns the available countries for a given indicator and source """
+    sql = u"""
+    SELECT DISTINCT COUNTRY.cnt_code, COUNTRY.cnt_label
+    FROM COUNTRY
+    INNER JOIN VALUE ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    AND SOURCE.src_code = '%(src)s'
+    ORDER BY COUNTRY.cnt_code
     """ % kw
     return dbconn.query(sql)
 
@@ -109,4 +119,19 @@ def get_country_comparision(dbconn, **kw):
     AND SOURCE.src_code = '%(src)s'
     ORDER BY VALUE.val_cnt_code
     """ % kw
-    return dbconn.query(sql)   
+    return dbconn.query(sql)
+
+def get_year_comparision(dbconn, **kw):
+    """ Returns the year's indicator value for a given indicator, source and country"""
+    sql = u"""
+    SELECT VALUE.val, VALUE.val_year
+    FROM VALUE
+    INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
+    INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
+    WHERE VARIABLE.var_code = '%(var)s'
+    AND SOURCE.src_code = '%(src)s'
+    AND COUNTRY.cnt_code = '%(cnt)s'
+    ORDER BY VALUE.val_year
+    """ % kw
+    return dbconn.query(sql)
