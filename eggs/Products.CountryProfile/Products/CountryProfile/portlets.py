@@ -105,10 +105,10 @@ class SourceComparisions(object):
             return ""
 
         form = context.REQUEST.form
-        records = country_profile.query('get_source_comparision',
-                                    var=form.get('var', 'U24'),
+        records, sources, years = country_profile.query('get_source_comparision_grouped',
+                                    var=form.get('var', 'SOC1'),
                                     cnt=form.get('cnt_code', 'AL'))
 
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)
-        return tmpl(macro=macro, cprofile=country_profile, records=records)
+        return tmpl(macro=macro, cprofile=country_profile, records=records, sources=sources, years=years)

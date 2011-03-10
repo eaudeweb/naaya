@@ -47,18 +47,19 @@
 			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 		<h2>
-			<span tal:content="var"></span>&nbsp;
-			<span tal:content="src"></span>&nbsp;
-			<span tal:content="year"></span>
+			<span tal:content="python:cprofile.query('get_indicator_value', var=var)" />&nbsp;
+			(<span tal:content="python:cprofile.query('get_source_value', src=src)" /> ,<span tal:content="year" />)
 		</h2>
 		<table class="datatable"
 			   tal:condition="records">
 			<tr>
+				<th i18n:translate="">Country</th>
 				<tal:block repeat="record records">
 				<td tal:content="record/val_cnt_code" />
 				</tal:block>
 			</tr>
 			<tr>
+				<th i18n:translate="">Value</th>
 				<tal:block repeat="record records">
 				<td tal:content="record/val" />
 				</tal:block>
