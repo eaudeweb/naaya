@@ -16,33 +16,53 @@
 	<div id="center_content">
 
 		<form action="" method="get" class="comparison-form">
-			<label for="indicator" i18n:translate="">Indicators</label>
-      <br />
-			<select name="var" id="indicator" class="select-combo" target="#country">
-				<tal:block repeat="row python:cprofile.query('get_indicators')">
-				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
-				</tal:block>
-			</select>
-			<br />
-			<label for="country" i18n:translate="">Countries</label>
-      <br />
-			<select id="country" name="cnt_code" from="#indicator"
-					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_countries_by_sources&fval=cnt_code&flabel=cnt_label">
-				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=var)">
-				<option tal:attributes="value row/cnt_code; selected python: test(cnt_code == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
-				</tal:block>
-			</select>
-			<br />
-			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+      <table class="comparison-table">
+        <tr>
+          <td class="td-label">
+            <label for="indicator" i18n:translate="">Indicators</label>
+          </td>
+          
+          <td>
+            <select name="var" id="indicator" class="select-combo" target="#country">
+              <tal:block repeat="row python:cprofile.query('get_indicators')">
+              <option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
+              </tal:block>
+            </select>
+          </td>
+        </tr>
+        
+        <tr>
+          <td class="td-label">
+            <label for="country" i18n:translate="">Countries</label>
+          </td>
+          
+          <td>
+            <select id="country" name="cnt_code" from="#indicator"
+                tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_countries_by_sources&fval=cnt_code&flabel=cnt_label">
+              <tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=var)">
+              <option tal:attributes="value row/cnt_code; selected python: test(cnt_code == row['cnt_code'], 'selected', None)" tal:content="row/cnt_label" />
+              </tal:block>
+            </select>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+          </td>
+        </tr>
+      </table>
 		</form>
 
 		<table class="datatable" tal:condition="records">
-			<tr>
-				<td i18n:translate="">Years/Sources</td>
-				<tal:block repeat="source options/sources">
-				<td tal:content="source" />
-				</tal:block>
-			</tr>
+			<thead>
+        <tr>
+          <td i18n:translate="">Years/Sources</td>
+          <tal:block repeat="source options/sources">
+          <td tal:content="source" />
+          </tal:block>
+        </tr>
+			</thead>
 			<tal:block repeat="year options/years">
 			<tr>
 				<td tal:content="year" />
