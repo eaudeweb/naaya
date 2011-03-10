@@ -16,7 +16,40 @@ def get_sources(dbconn):
     """ Get source values and codes """
     sql = u"SELECT src_code, src_label FROM SOURCE"
     return dbconn.query(sql)
-    
+
+def get_country_name(dbconn, **kw):
+    """ Get the country name for a given code """
+    sql = u"""
+    SELECT cnt_label_en
+    FROM COUNTRY
+    WHERE cnt_code = '%(cnt)s'
+    """ % kw
+    records = dbconn.query(sql)
+    if records:
+        return records[0].get('cnt_label_en')
+
+def get_source_value(dbconn, **kw):
+    """ Get the source value for a given code """
+    sql = u"""
+    SELECT src_label 
+    FROM SOURCE
+    WHERE src_code = '%(src)s'
+    """ % kw
+    records = dbconn.query(sql)
+    if records:
+        return records[0].get('src_label')
+
+def get_indicator_value(dbconn, **kw):
+    """ Get the indicator value for a given code """
+    sql = u"""
+    SELECT var_label 
+    FROM VARIABLE
+    WHERE var_code = '%(var)s'
+    """ % kw
+    records = dbconn.query(sql)
+    if records:
+        return records[0].get('var_label')
+
 def get_table_data(dbconn, **kw):
     """ Returns a variable's value for the latest year for a given source and
     country
@@ -159,6 +192,23 @@ def get_source_comparision(dbconn, **kw):
     INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
     AND COUNTRY.cnt_code = '%(cnt)s'
-    ORDER BY VALUE.val_year
+    ORDER BY VALUE.val_year, SOURCE.src_code
     """ % kw
     return dbconn.query(sql)
+
+def get_source_comparision_grouped(dbconn, **kw):
+    """ Returns the source's indicator value for a given indicator and country groupped by year"""
+    result = {}
+    sources = []
+    years = []
+
+    for record in get_source_comparision(dbconn, **kw):
+        result[(record['val_year'], record['src_code'])] = record['val']
+        if record['src_code'] not in sources:
+            sources.append(record['src_code'])
+        if record['val_year'] not in years:
+            years.append(record['val_year'])
+
+    years.sort()
+    sources.sort()
+    return result, sources, years
