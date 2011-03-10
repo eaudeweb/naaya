@@ -54,7 +54,8 @@
       </table>
 		</form>
 
-		<table class="datatable" tal:condition="records">
+		<table class="datatable chart-table" style="width: 200px !important;"
+           tal:condition="records">
 			<thead>
         <tr>
           <td i18n:translate="">Years/Sources</td>
@@ -76,6 +77,8 @@
 			 tal:condition="records">
 			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&cnt_code=${cnt_code}&refresh=True" />
 		</div>
+    
+    <div class="clear">&nbsp;</div>
 	</div>
 	</tal:block>
 </metal:block>

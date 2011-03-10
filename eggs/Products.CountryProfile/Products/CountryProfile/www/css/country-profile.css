@@ -22,6 +22,10 @@ p.compare-source {
 	width: 100%;
 }
 
+.center-portlet {
+	margin-bottom: 30px;
+}
+
 .datatable {
 	border-spacing: 0px;
 }
