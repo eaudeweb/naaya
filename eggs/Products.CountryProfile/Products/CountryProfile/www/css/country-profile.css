@@ -49,6 +49,11 @@ dt {
 	margin-left: 12px;
 }
 
+.legend-title {
+	color: #35A7BD;
+	font-weight: bold;
+}
+
 .margin-separator {
 	margin-left: 2px;
 }
@@ -79,4 +84,18 @@ form.comparison-form select {
 
 form.comparison-form .form-button {
 	margin-top: 10px;
+}
+
+.comparison-table {
+	border-bottom: 1px solid #DFDFDF;
+	width: 100%;
+	padding-bottom: 15px;
+}
+
+.comparison-table:hover {
+	background-color: #E9F7FA;
+}
+
+.comparison-table .td-label {
+	width: 80px;
 }
