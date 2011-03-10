@@ -306,6 +306,7 @@ class CountryProfile(SimpleItem):
             data['y'].append(int(row['val']))
 
         data['x'].reverse()
+        kw['height'] = 27 * (len(data['x']) + 1)
         image_path = self.get_bar_chart_image(data, **kw)
         try:
             image_fd = open(image_path, 'rb')
