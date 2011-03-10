@@ -241,7 +241,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     manage_options = (
         {'label': 'Summary', 'action': 'manage_main'},
         {'label': 'View', 'action': ''},
-        {'label': 'Updates', 'action':'manage_update_target_title_html'},
+        {'label': 'Updates', 'action':'manage_updates_html'},
     ) + SimpleItem.manage_options[1:]
 
     meta_type = "Naaya EW_AOA Shadow Object"
@@ -382,39 +382,49 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(view_management_screens, 'manage_update_target_title_html')
-    def manage_update_target_title_html(self, REQUEST=None):
+    security.declareProtected(view_management_screens, 'manage_updates_html')
+    def manage_updates_html(self, REQUEST=None):
         """ Update answer report title"""
 
-        if not REQUEST.form.has_key('new_title'):
-            return self._manage_update_target_title_html()
-        new_title = REQUEST.get('new_title')
-        language = REQUEST.get('language')
-        languages = ['en', 'ru']
         errors = []
+        the_answer = self.target_answer()
+        if REQUEST.form.has_key('new_title'):
+            new_title = REQUEST.get('new_title')
+            language = REQUEST.get('language')
+            languages = ['en', 'ru']
 
-        if not new_title:
-            errors.append('No new title provided')
-        if not language:
-            errors.append('No language provided')
-        elif language not in languages:
-            errors.append('Invalid language code')
+            if not new_title:
+                errors.append('No new title provided')
+            if not language:
+                errors.append('No language provided')
+            elif language not in languages:
+                errors.append('Invalid language code')
 
-        if not errors:
-            the_answer = self.target_answer()
-            languages.remove(language)
-            try:
-                the_answer.set_property('w_q1-name-assessment-report', {language: new_title, languages[0]:''})
-            except AttributeError:
+            if not errors:
+                languages.remove(language)
                 try:
-                    the_answer.set_property('w_assessment-name', {language: new_title, languages[0]:''})
+                    the_answer.set_property('w_q1-name-assessment-report', {language: new_title, languages[0]:''})
                 except AttributeError:
-                    errors.append('Requested field not present in the target answer')
-        if errors:
-            return self._manage_update_target_title_html(errors=errors)
-        return self._manage_update_target_title_html(success=True)
+                    try:
+                        the_answer.set_property('w_assessment-name', {language: new_title, languages[0]:''})
+                    except AttributeError:
+                        errors.append('Requested field not present in the target answer')
+            if errors:
+                return self._manage_updates_html(errors=errors)
+            return self._manage_updates_html(title_success=True)
 
-    _manage_update_target_title_html = PageTemplateFile('zpt/shadow_manage_update', globals())
+        elif REQUEST.form.has_key('new_respondent'):
+            new_respondent =  REQUEST.get('new_respondent')
+            if not new_respondent:
+                errors.append('No new respondent provided')
+                return self._manage_updates_html(errors=errors)
+            if not errors:
+                setattr(the_answer, 'respondent', new_respondent)
+                return self._manage_updates_html(respondent_success=True)
+        else:
+            return self._manage_updates_html()
+
+    _manage_updates_html = PageTemplateFile('zpt/shadow_manage_update', globals())
 
 def get_survey_id(answer):
     return answer.aq_parent.id
