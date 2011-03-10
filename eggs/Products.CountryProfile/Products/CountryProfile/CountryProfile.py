@@ -106,6 +106,9 @@ class CountryProfile(SimpleItem):
         self.mysql_connection['name'] = params.pop('mysql_name')
         self.mysql_connection['user'] = params.pop('mysql_user')
         self.mysql_connection['pass'] = params.pop('mysql_pass')
+        refresh = params.pop('refresh_charts')
+        if refresh:
+            self.charts = []
         self._p_changed = True
 
         if REQUEST is not None:
@@ -225,20 +228,20 @@ class CountryProfile(SimpleItem):
         if len(data['y']) == 0:
             return ''
 
-        from pygooglechart import StackedVerticalBarChart, Axis
+        from pygooglechart import StackedHorizontalBarChart, Axis
 
-        width = int(kw.get('width', 600))
+        width = int(kw.get('width', 400))
         height = int(kw.get('height', 250))
 
-        chart = StackedVerticalBarChart(width, height,
-                                        x_range=[0, len(data['x'])])
+        chart = StackedHorizontalBarChart(width, height,
+                                        y_range=[0, len(data['x'])])
         min_y = min(data['y'])
         max_y = max(data['y'])
 
         chart.add_data(data['y'])
         chart.set_colours(['76A4FB'])
-        chart.set_axis_labels(Axis.BOTTOM, data['x'])
-        chart.set_axis_labels(Axis.LEFT, range(min_y, max_y + 1,
+        chart.set_axis_labels(Axis.LEFT, data['x'])
+        chart.set_axis_labels(Axis.BOTTOM, range(min_y, max_y + 1,
                                                (max_y - min_y)/10))
 
         #Generate an hash from arguments
@@ -246,7 +249,7 @@ class CountryProfile(SimpleItem):
         data_hash = hash(tuple(sorted([(k, tuple(v))
             for k, v in data.iteritems()])))
         args_hash = str(kw_hash) + str(data_hash)
-
+        
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
 
         if bool(kw.get('refresh', False)) or args_hash not in self.charts:
@@ -254,7 +257,7 @@ class CountryProfile(SimpleItem):
             chart.download(image_path)
             self.charts.append(args_hash)
             self._p_changed = True
-
+        
         return image_path
 
     def get_bar_chart(self, REQUEST=None, **kw):
@@ -302,6 +305,7 @@ class CountryProfile(SimpleItem):
                 data['x'].append(ccode)
             data['y'].append(int(row['val']))
 
+        data['x'].reverse()
         image_path = self.get_bar_chart_image(data, **kw)
         try:
             image_fd = open(image_path, 'rb')

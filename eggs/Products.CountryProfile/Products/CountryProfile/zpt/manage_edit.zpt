@@ -14,6 +14,8 @@
 	<div class="form-label">MySQL password</div>
 	<input type="text" name="mysql_pass" size="100" tal:attributes="value here/mysql_connection/pass|nothing" />
 	<br/>
+	<div class="form-label">Refresh charts cache</div>
+	<input type="checkbox" name="refresh_charts" />
 	<br/>
 	<div><input type="submit" value="Save properties" /></div>
 </form>
