@@ -52,6 +52,10 @@
 			</tr>
 			</tal:block>
 		</table>
+		<div id="chart-container"
+			 tal:condition="records">
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&cnt_code=${cnt_code}&refresh=True" />
+		</div>
 	</div>
 	</tal:block>
 </metal:block>
