@@ -36,23 +36,22 @@
 			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 
-		<table class="datatable"
-				tal:condition="records">
+		<table class="datatable" tal:condition="records">
 			<tr>
-				<tal:block repeat="record records">
-				<td tal:content="record/val_year" />
+				<td i18n:translate="">Years/Sources</td>
+				<tal:block repeat="source options/sources">
+				<td tal:content="source" />
 				</tal:block>
 			</tr>
+			<tal:block repeat="year options/years">
 			<tr>
-				<tal:block repeat="record records">
-				<td tal:content="record/val" />
+				<td tal:content="year" />
+				<tal:block repeat="source options/sources">
+				<td tal:content="python:records.get((year, source), '-')" />
 				</tal:block>
 			</tr>
+			</tal:block>
 		</table>
-		<div id="chart-container"
-			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&cnt_code=${cnt_code}&width=600&height=250&refresh=1" />
-		</div>
 	</div>
 	</tal:block>
 </metal:block>
