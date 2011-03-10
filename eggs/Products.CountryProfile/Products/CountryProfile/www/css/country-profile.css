@@ -64,3 +64,19 @@ dt {
 #display-chart {
 	margin-top: 15px;
 }
+
+form.comparison-form label {
+	font-size: 14px;
+}
+
+form.comparison-form {
+	margin : 15px 0;
+}
+
+form.comparison-form select {
+	width: 200px;
+}
+
+form.comparison-form .form-button {
+	margin-top: 10px;
+}
