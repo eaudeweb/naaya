@@ -231,7 +231,7 @@ class CountryProfile(SimpleItem):
         from pygooglechart import StackedHorizontalBarChart, Axis
 
         width = int(kw.get('width', 400))
-        height = int(kw.get('height', 250))
+        height = int(kw.get('height', 400))
 
         chart = StackedHorizontalBarChart(width, height,
                                         y_range=[0, len(data['x'])])
