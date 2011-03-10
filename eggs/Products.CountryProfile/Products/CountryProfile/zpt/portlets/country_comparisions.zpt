@@ -7,6 +7,8 @@
 	        margin-left: 0px;
 	    }
 	</style>
+  
+  <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:/misc_/CountryProfile/country-profile.css" />
 	<script tal:attributes="src string: ${options/cprofile/absolute_url}/www/js/themes.js"></script>
 
 	<tal:block define="cprofile options/cprofile;
@@ -15,8 +17,9 @@
 					   src python: request.get('country-src', 'aquastat');
 					   year python: request.get('year', '1990')">
 	<div id="center_content">
-		<form action="" method="get">
+		<form action="" method="get" class="comparison-form">
 			<label for="country-indicator" i18n:translate="">Indicators</label>
+      <br />
 			<select name="country-var" id="country-indicator" class="select-combo" target="#country-source">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
 				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />-->
@@ -24,6 +27,7 @@
 			</select>
 			<br />
 			<label for="country-source" i18n:translate="">Sources</label>
+      <br />
 			<select id="country-source" name="country-src" class="select-combo" target="#year" from="#country-indicator"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_sources&fval=src_code&flabel=src_label">
 				<tal:block repeat="row python:cprofile.query('get_available_sources', var=var)">
@@ -32,6 +36,7 @@
 			</select>
 			<br />
 			<label for="year" i18n:translate="">Year</label>
+      <br />
 			<select id="year" name="year" from="#country-source"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_years&fval=val_year&flabel=val_year">
 				<tal:block repeat="row python:cprofile.query('get_available_years', var=var, src=src)">
@@ -39,7 +44,7 @@
 				</tal:block>
 			</select>
 			<br />
-			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 		<h2>
 			<span tal:content="var"></span>&nbsp;

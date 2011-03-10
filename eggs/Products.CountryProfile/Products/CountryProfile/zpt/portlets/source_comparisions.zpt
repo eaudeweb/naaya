@@ -11,11 +11,13 @@
 	                   records options/records;
 					   var python: request.get('var', 'U24');
 					   cnt_code python: request.get('cnt_code', 'AL');">
+  <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:/misc_/CountryProfile/country-profile.css" />
 	<script tal:attributes="src string: ${options/cprofile/absolute_url}/www/js/themes.js"></script>
 	<div id="center_content">
 
-		<form action="" method="get">
+		<form action="" method="get" class="comparison-form">
 			<label for="indicator" i18n:translate="">Indicators</label>
+      <br />
 			<select name="var" id="indicator" class="select-combo" target="#country">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
 				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
@@ -23,6 +25,7 @@
 			</select>
 			<br />
 			<label for="country" i18n:translate="">Countries</label>
+      <br />
 			<select id="country" name="cnt_code" from="#indicator"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_countries_by_sources&fval=cnt_code&flabel=cnt_label">
 				<tal:block repeat="row python:cprofile.query('get_countries_by_sources', var=var)">
@@ -30,7 +33,7 @@
 				</tal:block>
 			</select>
 			<br />
-			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 
 		<table class="datatable"

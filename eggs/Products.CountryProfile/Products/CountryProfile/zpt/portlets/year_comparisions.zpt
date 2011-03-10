@@ -14,8 +14,9 @@
 					   cnt_code python: request.get('cnt_code', 'AL')">
 	<div id="center_content">
 
-		<form action="" method="get">
+		<form action="" method="get" class="comparison-form">
 			<label for="year-indicator" i18n:translate="">Indicators</label>
+      <br />
 			<select name="year-var" id="year-indicator" class="select-combo" target="#year-source">
 				<tal:block repeat="row python:cprofile.query('get_indicators')">
 				<option tal:attributes="value row/var_code; selected python: test(var == row['var_code'], 'selected', None)" tal:content="row/var_label" />
@@ -23,6 +24,7 @@
 			</select>
 			<br />
 			<label for="year-source" i18n:translate="">Sources</label>
+      <br />
 			<select id="year-source" name="year-src" class="select-combo"
 					target="#country" from="#year-indicator"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_sources&fval=src_code&flabel=src_label">
@@ -32,6 +34,7 @@
 			</select>
 			<br />
 			<label for="country" i18n:translate="">Countries</label>
+      <br />
 			<select id="country" name="cnt_code" from="#year-source"
 					tal:attributes="src string:${cprofile/absolute_url}/query_select_json?name=get_available_countries&fval=cnt_code&flabel=cnt_label">
 				<tal:block repeat="row python:cprofile.query('get_available_countries', var=var, src=src)">
@@ -39,7 +42,7 @@
 				</tal:block>
 			</select>
 			<br />
-			<input type="submit" name="Compare" value="Compare" i18n:attributes="value" />
+			<input class="form-button" type="submit" name="Compare" value="Compare" i18n:attributes="value" />
 		</form>
 		<h2>
 			<span tal:content="var"></span>&nbsp;
