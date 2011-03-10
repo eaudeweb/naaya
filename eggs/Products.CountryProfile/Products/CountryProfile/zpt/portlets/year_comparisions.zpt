@@ -77,15 +77,11 @@
 			   tal:condition="records">
 			<tr>
 				<th i18n:translate="">Year</th>
-				<tal:block repeat="record records">
-				<td tal:content="record/val_year" />
-				</tal:block>
-			</tr>
-			<tr>
 				<th i18n:translate="">Value</th>
-				<tal:block repeat="record records">
+			</tr>
+			<tr tal:repeat="record records">
+				<td tal:content="record/val_year" />
 				<td tal:content="record/val" />
-				</tal:block>
 			</tr>
 		</table>
 		<div id="chart-container"
