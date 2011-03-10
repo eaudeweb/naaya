@@ -68,12 +68,14 @@
         </tr>
       </table>
 		</form>
-		<h2>
-			<span tal:content="python:cprofile.query('get_indicator_value', var=var)" /> - 
-			<span tal:content="python:cprofile.query('get_country_name', cnt=cnt_code)" />&nbsp;
-			(<span tal:content="python:cprofile.query('get_source_value', src=src)" />)
-		</h2>
-		<table class="datatable"
+    
+      <p tal:content="python:cprofile.query('get_indicator_value', var=var)" class="compare-indicator" />
+      <p class="compare-source">
+        (<tal:block content="python:cprofile.query('get_country_name', cnt=cnt_code)"></tal:block>
+        <tal:block content="python:cprofile.query('get_source_value', src=src)"></tal:block>)
+      </p>
+      
+		<table class="datatable chart-table" style="width: 200px !important;"
 			   tal:condition="records">
 			<tr>
 				<th i18n:translate="">Year</th>
@@ -88,6 +90,8 @@
 			 tal:condition="records">
 			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}" />
 		</div>
+    
+    <div class="clear">&nbsp;</div>
 	</div>
 	</tal:block>
 </metal:block>
