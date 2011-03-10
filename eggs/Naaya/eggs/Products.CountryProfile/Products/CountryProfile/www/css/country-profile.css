@@ -1,3 +1,23 @@
+h2 {
+	line-height: 22px;
+}
+
+p.compare-indicator, p.compare-source {
+	margin: 0;
+}
+
+p.compare-indicator {
+	font-size: 16px;
+	font-weight: bold;
+	color: #00A8C7;
+}
+
+p.compare-source {
+	font-size: 13px;
+	color: #555555;
+	font-weight: bold;
+}
+
 #center_content {
 	width: 100%;
 }
@@ -98,4 +118,21 @@ form.comparison-form .form-button {
 
 .comparison-table .td-label {
 	width: 80px;
+}
+
+.chart-table {
+	float: left;
+	width: 200px !important;
+}
+
+#chart-container {
+	float: left;
+	margin-left: 25px;
+	margin-top: 9px;
+}
+
+.clear {
+	display: block;
+	clear: both;
+	height: 1px;
 }
