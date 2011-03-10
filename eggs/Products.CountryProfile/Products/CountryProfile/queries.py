@@ -156,10 +156,11 @@ def get_countries_by_sources(dbconn, **kw):
 def get_country_comparision(dbconn, **kw):
     """ Returns the country's indicator value for a given indicator, source and year"""
     sql = u"""
-    SELECT VALUE.val, VALUE.val_cnt_code
+    SELECT VALUE.val, VALUE.val_cnt_code, COUNTRY.cnt_label
     FROM VALUE
     INNER JOIN VARIABLE ON (VALUE.var_code = VARIABLE.var_code AND VALUE.val_src = VARIABLE.var_src_code)
     INNER JOIN SOURCE ON (VARIABLE.var_src_code = SOURCE.src_code)
+    INNER JOIN COUNTRY ON (VALUE.val_cnt_code = COUNTRY.cnt_code)
     WHERE VARIABLE.var_code = '%(var)s'
     AND VALUE.val_year = '%(year)s'
     AND SOURCE.src_code = '%(src)s'
