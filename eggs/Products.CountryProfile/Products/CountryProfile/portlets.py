@@ -53,7 +53,7 @@ class CountryComparisions(object):
         records = country_profile.query('get_country_comparision',
                                     var=form.get('country-var', 'U24'),
                                     src=form.get('country-src', 'aquastat'),
-                                    year=form.get('year', '2000'))
+                                    year=form.get('year', '1990'))
 
         macro = self.site.getPortletsTool()._get_macro(position)
         tmpl = self.template.__of__(context)

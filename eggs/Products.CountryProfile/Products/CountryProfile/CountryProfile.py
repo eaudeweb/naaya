@@ -231,18 +231,17 @@ class CountryProfile(SimpleItem):
         from pygooglechart import StackedHorizontalBarChart, Axis
 
         width = int(kw.get('width', 400))
-        height = int(kw.get('height', 400))
+        height = int(kw.get('height', 250))
 
         chart = StackedHorizontalBarChart(width, height,
                                         y_range=[0, len(data['x'])])
-        min_y = min(data['y'])
         max_y = max(data['y'])
 
         chart.add_data(data['y'])
         chart.set_colours(['76A4FB'])
         chart.set_axis_labels(Axis.LEFT, data['x'])
-        chart.set_axis_labels(Axis.BOTTOM, range(min_y, max_y + 1,
-                                               (max_y - min_y)/10))
+        chart.set_axis_labels(Axis.BOTTOM, range(0, max_y + 1,
+                                               (max_y)/5))
 
         #Generate an hash from arguments
         kw_hash = hash(tuple(sorted(kw.items())))
@@ -261,7 +260,7 @@ class CountryProfile(SimpleItem):
         return image_path
 
     def get_bar_chart(self, REQUEST=None, **kw):
-        """Respond with an image of the vertical stacked line chart"""
+        """Respond with an image of the horizontal stacked line chart"""
 
         data = {}
         data['x'] = []

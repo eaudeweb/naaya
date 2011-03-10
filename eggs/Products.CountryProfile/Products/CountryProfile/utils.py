@@ -1,4 +1,5 @@
 import re
+import math
 
 def intcomma(value, decimals=False):
     """
@@ -16,3 +17,10 @@ def intcomma(value, decimals=False):
         return new
     else:
         return intcomma(new)
+
+def millify(n):
+    millnames=['','K','M', 'B','T']
+    millidx=max(0,min(len(millnames)-1,
+                      int(math.floor(math.log10(abs(n))/3.0))))
+    return '%.0f%s'%(n/10**(3*millidx),millnames[millidx])
+
