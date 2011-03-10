@@ -88,7 +88,7 @@
 		</table>
 		<div id="chart-container"
 			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}&refresh=True" />
 		</div>
     
     <div class="clear">&nbsp;</div>
