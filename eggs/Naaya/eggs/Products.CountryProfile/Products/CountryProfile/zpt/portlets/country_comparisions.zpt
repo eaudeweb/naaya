@@ -75,20 +75,16 @@
 			   tal:condition="records">
 			<tr>
 				<th i18n:translate="">Country</th>
-				<tal:block repeat="record records">
-				<td tal:content="record/val_cnt_code" />
-				</tal:block>
-			</tr>
-			<tr>
 				<th i18n:translate="">Value</th>
-				<tal:block repeat="record records">
+			</tr>
+			<tr tal:repeat="record records">
+				<td tal:content="record/cnt_label" />
 				<td tal:content="record/val" />
-				</tal:block>
 			</tr>
 		</table>
 		<div id="chart-container"
 			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&year=${year}&width=600&height=250" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&year=${year}" />
 		</div>
 	</div>
 	</tal:block>
