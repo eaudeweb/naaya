@@ -12,5 +12,6 @@ def initialize(context):
     )
 
 misc_ = {
-#    'meta_type.gif':ImageFile('www/meta_type.gif', globals()),
+	'country-profile.css':ImageFile('www/css/country-profile.css', globals()),
+# 'meta_type.gif':ImageFile('www/meta_type.gif', globals()),
 }
