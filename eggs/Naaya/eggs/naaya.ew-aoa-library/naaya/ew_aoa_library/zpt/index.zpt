@@ -14,7 +14,8 @@
 
 <metal:block fill-slot="body"
 	tal:define="review_template python:here.target_path == 'tools/general_template/general-template';
-		shadows options/shadows;">
+		shadows options/shadows;
+		no_answers options/no_answers|nothing">
 
 <h1 tal:content="here/title_or_id"></h1>
 <script type="text/javascript">
@@ -66,14 +67,35 @@
 			show_filters();
 		});
 		function select_checkboxes(){
-			$('[name="answer_ids"]').attr('checked', 'checked');
+			$('[name="answer_ids"]').each(function(){
+				if ($(this).parent().parent().css('display') != 'none')
+				{
+					$(this).attr('checked', 'checked');
+				}
+			});
 			$('#reset_checkboxes').attr('checked', 'checked');
 		}
 		function reset_checkboxes(){
 			$('[name="answer_ids"]').removeAttr('checked');
 			$('#reset_checkboxes').removeAttr('checked');
 		}
-})
+	})
+	function check_answers(){
+		var submit_ok = false;
+		$('[name="answer_ids"]').each(function(){
+			if ($(this).attr('checked') == true){
+				submit_ok = true;
+			}
+		});
+		if (submit_ok == true)
+		{
+			return true;
+		}
+		else{
+			alert(gettext('Please select at least one report to generate statistics'));
+			return false;
+		}
+	}
 </script>
 <div class="field" id="javascript_label">
 	<label i18n:translate="" >The filter function requires javascript</label>
@@ -102,8 +124,8 @@
 		<div class="field" style="float:left" tal:define="themes options/themes|python:[]">
 			<label for="themes" i18n:translate="">Report themes</label>
 			<select name="themes" multiple="True">
-				<option i18n:translate="" value="w_water-ressources-topics"
-					tal:attributes="selected python:'w_water-ressources-topics' in themes">Water resources topics</option>
+				<option i18n:translate="" value="w_water-resources-topics"
+					tal:attributes="selected python:'w_water-resources-topics' in themes">Water resources topics</option>
 				<option i18n:translate="" value="w_water-resource-management-topics"
 				tal:attributes="selected python:'w_water-resource-management-topics' in themes">Water resource management topics</option>
 				<option i18n:translate="" value="w_green-economy-topics"
@@ -119,13 +141,16 @@
 		</div>
 	</form>
 </fieldset>
-<form name="select_for_report" method="post" action=".">
+<form name="select_for_report" method="post" action="." onSubmit="return check_answers()">
 <div class="create-stats" tal:condition="python: review_template and shadows">
 	<input type="submit" value="Create statistics with selected answers"
 		name="viewer_view_report_html:method" i18n:attributes="value"/>
 </div>
 <div class="message-error field" tal:condition="not:shadows">
 	<label i18n:translate="">No answers were found for this query.</label>
+</div>
+<div class="message-error field" tal:condition="no_answers">
+	<label i18n:translate="">No answers were selected for the statistic.</label>
 </div>
 <table class="datatable" style="width:100%" tal:condition="shadows"
 	tal:define="skey request/skey|string:modification_time;
