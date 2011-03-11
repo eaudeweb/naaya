@@ -189,7 +189,7 @@ class AoALibraryViewer(SimpleItem):
                 answers = [getattr(report, answer) for answer in answers_list]
                 return report.questionnaire_export(report_id='viewer', REQUEST=REQUEST, answers=answers)
         else:
-            return report.questionnaire_export(REQUEST=REQUEST, report_id='viewer')
+            return report.questionnaire_export(REQUEST=REQUEST, report_id='viewer', answers=[])
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'filter_answers')
@@ -216,10 +216,22 @@ class AoALibraryViewer(SimpleItem):
             if themes:
                 for theme in themes:
                     if not hasattr(survey_answer.aq_base, theme):
+                        #If the answer doesn't have the searched attribute
+                        #break the first for and go to next shadow
+                        break
+                    for topic in getattr(survey_answer.aq_base, theme):
+                        if len(topic) > 0:
+                            #If the current topic is not an empty list
+                            #break the second for and go to next theme in themes
+                            break
+                    else:
+                        #If the attribute is a list of empty lists
+                        #break the first for and go to next shadow
                         break
                 else:
                     shadows.append(shadow)
             else:
+                #If no themes are selected, just append the shadow to the list
                 shadows.append(shadow)
         return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes)
 
