@@ -12,13 +12,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </metal:block>
 
-<metal:block fill-slot="body">
+<metal:block fill-slot="body"
+	tal:define="review_template python:here.target_path == 'tools/general_template/general-template';
+		shadows options/shadows;">
 
 <h1 tal:content="here/title_or_id"></h1>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#javascript_label').hide();
 		$('#search_label').show();
+		$('#filter_answers').show();
+		/*Search in page*/
 		$.expr[':'].icontains = function(obj, index, meta, stack){
 			return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
 		};
@@ -27,41 +31,129 @@
 			var searchString = $(this).val();
 
 			if (searchString.length > 0){
-			  $('.datatable tbody tr').hide();
-			  $('.datatable tr:icontains('+searchString+')').show();
+				reset_checkboxes();
+				$('.datatable tbody tr').hide();
+				$('.datatable tr:icontains('+searchString+')').show();
 			}
 			else {
 			  $('.datatable tr').show();
 			}
 		})
-	})
+		if ($('#answers_filter').val() == 'False'){
+			select_toggle = 'Off'
+		}
+		else{
+			select_toggle = 'On'
+		};
+		if (select_toggle == 'On'){
+			select_checkboxes();
+			show_filters();
+		}
+		$('#reset_checkboxes').click(function(){
+			if (select_toggle == 'Off'){
+				select_toggle = 'On';
+				select_checkboxes();
+			}
+			else{
+				select_toggle = 'Off';
+				reset_checkboxes();
+			}
+		});
+		function show_filters(){
+			$('#filter_box').show();
+			$('#show_filters').hide();
+		}
+		$('#show_filters').click(function(){
+			show_filters();
+		});
+		function select_checkboxes(){
+			$('[name="answer_ids"]').attr('checked', 'checked');
+			$('#reset_checkboxes').attr('checked', 'checked');
+		}
+		function reset_checkboxes(){
+			$('[name="answer_ids"]').removeAttr('checked');
+			$('#reset_checkboxes').removeAttr('checked');
+		}
+})
 </script>
-<div>
+<fieldset id="filter_box" style="display:none" tal:condition="review_template">
+	<legend i18n:translate="">Filter answers</legend>
+	<form method="post" action=".">
+		<div style="float:left">
+			<div class="field">
+				<label for="official_country_region" i18n:translate="">Official country or region</label>
+				<input type="text" name="official_country_region:utf8:ustring" size="50"
+					tal:attributes="value options/official_country_region|nothing"/>
+			</div>
+			<div class="field" tal:condition="here/checkPermissionPublishObjects">
+				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
+				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
+			</div>
+		</div>
+		<div class="field" style="float:left" tal:define="themes options/themes|python:[]">
+			<label for="themes" i18n:translate="">Report themes</label>
+			<select name="themes" multiple="True">
+				<option i18n:translate="" value="w_water-ressources-topics"
+					tal:attributes="selected python:'w_water-ressources-topics' in themes">Water resources topics</option>
+				<option i18n:translate="" value="w_water-resource-management-topics"
+				tal:attributes="selected python:'w_water-resource-management-topics' in themes">Water resource management topics</option>
+				<option i18n:translate="" value="w_green-economy-topics"
+				tal:attributes="selected python:'w_green-economy-topics' in themes">Green economy topics</option>
+				<option i18n:translate="" value="w_resource-efficiency-topics"
+				tal:attributes="selected python:'w_resource-efficiency-topics' in themes">Resource efficiency topics</option>
+			</select>
+		</div>
+		<div class="clearer" ></div>
+		<div class="field">
+			<input type="submit" value="Apply filter" i18n:attributes="value"
+				name="filter_answers:method"/>
+		</div>
+	</form>
+</fieldset>
+<br/>
+<form name="select_for_report" method="post" action=".">
+<div class="create-stats" tal:condition="python: review_template and shadows">
+	<input type="submit" value="Create statistics with selected answers"
+		class="create-stats" name="viewer_view_report_html:method" i18n:attributes="value"/>
+</div>
+<br/>
+<div id="filter_answers" class="filter_answers"
+	tal:condition="review_template" style="display:none">
+	<a class="filter_answers" id="show_filters" href="javascript:void();" i18n:translate="">Filter answers for statistics</a>
+</div>
+<div class="field" tal:condition="shadows">
 	<label id="javascript_label" i18n:translate="" >The filter function requires javascript</label>
-	<label id="search_label" i18n:translate="" >Type to filter reports</label>
+	<label id="search_label" i18n:translate="" style="display:none">Show reports containing text</label>
 	<label id="searchbox"></label>
 </div>
-<table class="datatable" style="width:100%"
-	tal:define="review_template python:here.target_path == 'tools/general_template/general-template';
-				skey request/skey|string:modification_time;
+<div class="clearer"></div>
+<div class="message-error field" tal:condition="not:shadows">
+	<label i18n:translate="">No answers were found for this query.</label>
+</div>
+<table class="datatable" style="width:100%" tal:condition="shadows"
+	tal:define="skey request/skey|string:modification_time;
 				rkey python:bool(request.get('rkey')) or not request.get('skey');
-				items python:list(here.iter_assessments());">
+				filter options/filter">
+	<input type="hidden" id="answers_filter" tal:attributes="value filter"/>
 	<!-- If the "sort by" property has an attribute "lower",
 		convert the value to lower before sorting -->
-    <tal:block condition="items">
-	<tal:block condition="python:hasattr(items[0].get(skey), 'lower')">
-		<tal:block define="dummy python:items.sort(key=lambda x: x.get(skey).lower(), reverse=rkey);" />
+    <tal:block condition="shadows">
+	<tal:block condition="python:hasattr(shadows[0].get(skey), 'lower')">
+		<tal:block define="dummy python:shadows.sort(key=lambda x: x.get(skey).lower(), reverse=rkey);" />
 	</tal:block>
-	<tal:block condition="python:not hasattr(items[0].get(skey), 'lower')">
-		<tal:block define="dummy python:items.sort(key=lambda x: x.get(skey), reverse=rkey);" />
+	<tal:block condition="python:not hasattr(shadows[0].get(skey), 'lower')">
+		<tal:block define="dummy python:shadows.sort(key=lambda x: x.get(skey), reverse=rkey);" />
 	</tal:block>
 	<tal:block condition="python:skey == 'approved_date'" >
-		<tal:block define="dummy python:items.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
+		<tal:block define="dummy python:shadows.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
 	</tal:block>
     </tal:block>
 
 <thead tal:define="url here/absolute_url">
 <tr>
+	<th rowspan="2" tal:condition="review_template">
+		<input type="checkbox" id="reset_checkboxes"/>
+	</th>
 	<!-- Name -->
 	<th rowspan="2" tal:condition="python:rkey and skey=='title' or skey!='title'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=title">Name</a>
@@ -150,8 +242,9 @@
 </tr>
 </thead>
 <tbody>
-<tr tal:repeat="i items">
+<tr tal:repeat="i shadows">
 <tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
+	<td tal:condition="review_template"><input type="checkbox" name="answer_ids" tal:attributes="value i/id" /></td>
 	<td>
 			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="python: i.get('title')"></a>
 	</td>
@@ -174,6 +267,7 @@
 </tr>
 </tbody>
 </table>
+</form>
 </metal:block>
 
 </metal:block>
