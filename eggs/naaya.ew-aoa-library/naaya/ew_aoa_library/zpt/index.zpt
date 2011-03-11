@@ -20,13 +20,12 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#javascript_label').hide();
-		$('#search_label').show();
+		$('#searchbox').parent().show();
 		$('#filter_answers').show();
 		/*Search in page*/
 		$.expr[':'].icontains = function(obj, index, meta, stack){
 			return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
 		};
-		$('#searchbox').replaceWith('<'+'input type="text" id="searchbox"/>');
 		$('#searchbox').keyup(function(){
 			var searchString = $(this).val();
 
@@ -76,16 +75,26 @@
 		}
 })
 </script>
-<fieldset id="filter_box" style="display:none" tal:condition="review_template">
-	<legend i18n:translate="">Filter answers</legend>
+<div class="field" id="javascript_label">
+	<label i18n:translate="" >The filter function requires javascript</label>
+</div>
+<div class="field-inline" tal:condition="shadows">
+	<label id="search_label" i18n:translate="" >Show reports containing text</label>
+	<input type="text" id="searchbox" size="50"/>
+	<a class="filter_answers" id="show_filters" href="javascript:void();"
+	i18n:translate="" tal:condition="review_template">Advanced filtering</a>
+</div>
+<br/>
+<fieldset id="filter_box" tal:condition="review_template" style="display:none">
+	<legend i18n:translate="">Advanced filtering</legend>
 	<form method="post" action=".">
 		<div style="float:left">
 			<div class="field">
-				<label for="official_country_region" i18n:translate="">Official country or region</label>
+				<label for="official_country_region" i18n:translate="">Geo coverage (country or region)</label>
 				<input type="text" name="official_country_region:utf8:ustring" size="50"
 					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
-			<div class="field" tal:condition="here/checkPermissionPublishObjects">
+			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
 				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
 				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
 			</div>
@@ -110,23 +119,11 @@
 		</div>
 	</form>
 </fieldset>
-<br/>
 <form name="select_for_report" method="post" action=".">
 <div class="create-stats" tal:condition="python: review_template and shadows">
 	<input type="submit" value="Create statistics with selected answers"
-		class="create-stats" name="viewer_view_report_html:method" i18n:attributes="value"/>
+		name="viewer_view_report_html:method" i18n:attributes="value"/>
 </div>
-<br/>
-<div id="filter_answers" class="filter_answers"
-	tal:condition="review_template" style="display:none">
-	<a class="filter_answers" id="show_filters" href="javascript:void();" i18n:translate="">Filter answers for statistics</a>
-</div>
-<div class="field" tal:condition="shadows">
-	<label id="javascript_label" i18n:translate="" >The filter function requires javascript</label>
-	<label id="search_label" i18n:translate="" style="display:none">Show reports containing text</label>
-	<label id="searchbox"></label>
-</div>
-<div class="clearer"></div>
 <div class="message-error field" tal:condition="not:shadows">
 	<label i18n:translate="">No answers were found for this query.</label>
 </div>
