@@ -7,6 +7,7 @@ from zope.app.container.interfaces import (IObjectAddedEvent,
                                            IObjectRemovedEvent)
 from zope import interface
 from zope.component import adapter
+from ZPublisher import NotFound
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
@@ -71,10 +72,12 @@ class AoALibraryViewer(SimpleItem):
         return obj.__of__(self)
 
     security.declareProtected(view, 'iter_assessments')
-    def iter_assessments(self):
+    def iter_assessments(self, show_unapproved=True):
         survey = self.target_survey()
         for answer in survey.objectValues(survey_answer_metatype):
             if answer.is_draft():
+                continue
+            if not hasattr(answer, 'approved_date') and not show_unapproved:
                 continue
             yield self.wrap_answer(answer)
 
@@ -112,9 +115,19 @@ class AoALibraryViewer(SimpleItem):
             url = '%s/manage_workspace' % self.absolute_url()
             REQUEST.RESPONSE.redirect(url)
 
-    security.declareProtected(view, 'index_html')
-    index_html = NaayaPageTemplateFile('zpt/index', globals(),
+    _index_html = NaayaPageTemplateFile('zpt/index', globals(),
                             'naaya.ew_aoa_library.viewer.index_html')
+
+    security.declareProtected(view, 'index_html')
+    def index_html(self, **kwargs):
+        """ """
+        filter = True
+        if not kwargs:
+            shadows = list(self.iter_assessments())
+            filter = False
+            kwargs['shadows'] = shadows
+        kwargs['filter'] = filter
+        return self._index_html(**kwargs)
 
     manage_main = PageTemplateFile('zpt/manage_main', globals())
 
@@ -134,7 +147,7 @@ class AoALibraryViewer(SimpleItem):
         orphan_answers = []
         review_template = self.aq_parent['tools']['general_template']['general-template']
         library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
-        for answer in review_template.objectValues('Naaya Survey Answer'):
+        for answer in review_template.objectValues(survey_answer_metatype):
             title_dict = answer.get('w_q1-name-assessment-report')
             if not title_dict:
                 orphan_answers.append(answer.absolute_url())
@@ -142,7 +155,7 @@ class AoALibraryViewer(SimpleItem):
             temp_title = title_dict['en']
             if not temp_title:
                 temp_title = title_dict['ru']
-            for vl_answer in library.objectValues('Naaya Survey Answer'):
+            for vl_answer in library.objectValues(survey_answer_metatype):
                 try:
                     vl_answers = [vl_title.strip() for vl_title in vl_answer.get('w_assessment-name').values()]
                     if  temp_title.strip() in vl_answers:
@@ -160,6 +173,55 @@ class AoALibraryViewer(SimpleItem):
             errors=errors.items(), orphan_answers=orphan_answers)
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    security.declareProtected(view, 'viewer_view_report_html')
+    def viewer_view_report_html(self, REQUEST):
+        """View the report for the viewer"""
+        review_template = self.aq_parent['tools']['general_template']['general-template']
+        report = review_template.getSurveyTemplate().getReport('viewer')
+        if not report:
+            raise NotFound('Report %s' % ('viewer',))
+        if REQUEST.has_key('answer_ids'):
+            answers_list = REQUEST.get('answer_ids', [])
+            if isinstance(answers_list, basestring):
+                answers_list = [answers_list]
+            if answers_list:
+                answers = [getattr(report, answer) for answer in answers_list]
+                return report.questionnaire_export(report_id='viewer', REQUEST=REQUEST, answers=answers)
+        else:
+            return report.questionnaire_export(REQUEST=REQUEST, report_id='viewer')
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(view, 'filter_answers')
+    def filter_answers(self, REQUEST):
+        """Filter answers and feed them to the index page"""
+        official_country_region = REQUEST.get('official_country_region', None)
+        show_unapproved = REQUEST.get('show_unapproved', None)
+        if not self.checkPermissionPublishObjects():
+            show_unapproved = None
+        themes = REQUEST.get('themes', [])
+        if isinstance(themes, basestring):
+            themes = [themes]
+        if not (official_country_region or themes or show_unapproved):
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+        shadows = []
+        for shadow in list(self.iter_assessments(show_unapproved=show_unapproved)):
+            survey_answer = self.get_survey_answer(shadow.getId())
+            if official_country_region and not (official_country_region in
+                    getattr(survey_answer.aq_base, 'w_official-country-region', '')
+                    or official_country_region in
+                    getattr(survey_answer.aq_base, 'w_geo-coverage-region', '')):
+                continue
+            if themes:
+                for theme in themes:
+                    if not hasattr(survey_answer.aq_base, theme):
+                        break
+                else:
+                    shadows.append(shadow)
+            else:
+                shadows.append(shadow)
+        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
