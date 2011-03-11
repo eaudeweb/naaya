@@ -208,10 +208,10 @@ class AoALibraryViewer(SimpleItem):
         shadows = []
         for shadow in list(self.iter_assessments(show_unapproved=show_unapproved)):
             survey_answer = self.get_survey_answer(shadow.getId())
-            if official_country_region and not (official_country_region in
-                    getattr(survey_answer.aq_base, 'w_official-country-region', '')
-                    or official_country_region in
-                    getattr(survey_answer.aq_base, 'w_geo-coverage-region', '')):
+            if official_country_region and not (official_country_region.lower() in
+                    getattr(survey_answer.aq_base, 'w_official-country-region', '').lower()
+                    or official_country_region.lower() in
+                    getattr(survey_answer.aq_base, 'w_geo-coverage-region', '').lower()):
                 continue
             if themes:
                 for theme in themes:
