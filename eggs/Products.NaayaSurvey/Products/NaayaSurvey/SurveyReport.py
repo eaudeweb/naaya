@@ -135,7 +135,8 @@ class SurveyReport(Folder, LocalPropertyManager):
         """Return the statistics"""
         return self.objectValues()
 
-    security.declareProtected(view, 'getSortedStatistics')
+    #security.declareProtected(view, 'getSortedStatistics')
+    security.declarePublic('getSortedStatistics')
     def getSortedStatistics(self, sort_by='sortorder'):
         """Return the statistics in sorted order"""
         return sort(self.getStatistics(), ((sort_by, 'cmp', 'asc'), ))
