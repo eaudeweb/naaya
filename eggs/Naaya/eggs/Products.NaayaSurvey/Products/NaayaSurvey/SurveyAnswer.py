@@ -153,7 +153,7 @@ class SurveyAnswer(Folder, NyProperties):
                 except:
                     return default
         else:
-            return getattr(self.aq_explicit, key, default)
+            return getattr(self.aq_base, key, default)
 
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the

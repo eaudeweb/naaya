@@ -521,12 +521,12 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return report.view_report_html(answers=self.getAnswers())
 
     security.declarePrivate('generate_excel')
-    def generate_excel(self, report):
+    def generate_excel(self, report, answers):
         state = {}
         wb = xlwt.Workbook(encoding='utf-8')
         state['ws'] = wb.add_sheet('Report')
         state['temp_folder'] = tempfile.mkdtemp()
-        state['answers'] = self.getAnswers()
+        state['answers'] = answers
         separator_style = xlwt.easyxf('borders: top thin')
         # alternatives for formatting
         #filled_cell_style = xlwt.easyxf(pattern: pattern solid, fore_colour 0x16')
@@ -553,13 +553,15 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return output.read()
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
-    def questionnaire_export(self, report_id, REQUEST):
+    def questionnaire_export(self, report_id, REQUEST, answers=None):
         """ Exports the report in excel format """
         report = self.getSurveyTemplate().getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
         assert excel_export_available
-        ret = self.generate_excel(report)
+        if answers is None:
+            answers = self.getAnswers()
+        ret = self.generate_excel(report, answers=answers)
         content_type = 'application/vnd.ms-excel'
         filename = '%s Export.xls' % report.id
 
