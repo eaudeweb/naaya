@@ -42,19 +42,20 @@ from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 gUtil = utils()
 
 def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
-                           REQUEST=None):
+                           REQUEST=None, id=None):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
     if respondent is None and REQUEST is not None:
             respondent = REQUEST.AUTHENTICATED_USER.getUserName()
 
-    # calculate an available id
-    while True:
-        idSuffix = gUtil.utGenRandomId()
-        id = 'answer_%s' % (idSuffix, )
-        if id not in context.objectIds():
-            break
+    if not id or id in context.objectIds():
+        # calculate an available id
+        while True:
+            idSuffix = gUtil.utGenRandomId()
+            id = 'answer_%s' % (idSuffix, )
+            if id not in context.objectIds():
+                break
 
     ob = SurveyAnswer(id, respondent, draft)
     context._setObject(id, ob)
