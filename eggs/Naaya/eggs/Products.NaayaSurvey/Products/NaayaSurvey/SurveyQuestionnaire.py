@@ -327,8 +327,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
                     'Deleted previous answer %s' % old_answer.absolute_url())
 
+        #If we are in edit mode, keep the answer_id from the "old answer"
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
-                                           draft=draft, respondent=respondent)
+                                           draft=draft, respondent=respondent, id=answer_id)
         answer = self._getOb(answer_id)
         if suggestions:
             answer.suggestions = suggestions
