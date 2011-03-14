@@ -315,7 +315,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
                 if widget.id in restricted_widgets[survey_id]:
                     continue
             widget_data = datamodel.get(widget.id)
-            views.append(widget.render(mode='view', datamodel=widget_data))
+            views.append(widget.render(mode='view', datamodel=widget_data, parent=answer))
 
         return '\n'.join(views)
 
