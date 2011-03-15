@@ -7,6 +7,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+from math import floor
 
 from OFS.SimpleItem import SimpleItem
 from App.class_init import InitializeClass
@@ -168,7 +169,8 @@ class CountryProfile(SimpleItem):
         if bool(kw.get('refresh', False)) or args_hash not in self.charts:
             #Get image from google chart api
             chart.download(image_path)
-            self.charts.append(args_hash)
+            if args_hash not in self.charts:
+                self.charts.append(args_hash)
             self._p_changed = True
 
         return image_path
@@ -294,6 +296,126 @@ class CountryProfile(SimpleItem):
         data['x'].reverse()
         kw['height'] = 27 * (len(data['x']) + 1)
         image_path = self.get_bar_chart_image(data, **kw)
+        try:
+            image_fd = open(image_path, 'rb')
+            image = image_fd.read()
+            image_fd.close()
+        except IOError:
+            if REQUEST is not None:
+                REQUEST.RESPONSE.setStatus(404)
+            return 'Not found'
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.setHeader('Content-Length', len(image))
+            REQUEST.RESPONSE.setHeader('Content-Type', 'image/png')
+        return image
+
+    def get_grouped_bar_chart_image(self, data, **kw):
+        """ Return image path of downloaded image from google charts api"""
+
+        if len(data['y']) == 0:
+            return ''
+
+        from pygooglechart import GroupedHorizontalBarChart, Axis
+
+        width = int(kw.get('width', 400))
+        height = int(kw.get('height', 250))
+
+        # How many members do we have in a group?
+        members_cnt = len(data['y'])
+        max_y = max(max(data['y'])) # since data['y'] is 2D
+
+        chart = GroupedHorizontalBarChart(width, height,
+                                        x_range=[0, max_y],
+                                        y_range=[0, len(data['x'])])
+
+        # currently only 2 max members supported in a group
+        colours = ['4D89D9', 'C6D9FD']
+        for member in data['y']:
+            chart.add_data(member)
+        chart.set_colours(colours[:members_cnt])
+        chart.set_axis_labels(Axis.LEFT, data['x'])
+        chart.set_axis_labels(Axis.BOTTOM, range(0, max_y + 1,
+                                               (max_y)/5))
+        
+        
+
+        if kw.has_key('bar_spacing'):
+            chart.set_bar_spacing(kw['bar_spacing'])
+        if kw.has_key('group_spacing'):
+            chart.set_group_spacing(kw['group_spacing'])
+        if kw.has_key('bar_width'):
+            chart.set_bar_width(kw['bar_width'])
+
+        #Generate an hash from arguments
+        kw_hash = hash(tuple(sorted(kw.items())))
+        for i in range(members_cnt):
+            data['y'][i] = tuple(data['y'][i])
+        data_hash = hash(tuple(sorted([(k, tuple(v))
+            for k, v in data.iteritems()])))
+        args_hash = str(kw_hash) + str(data_hash)
+        
+        image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
+
+        if bool(kw.get('refresh', False)) or args_hash not in self.charts:
+            #Get image from google chart api
+            chart.download(image_path)
+            if args_hash not in self.charts:
+                self.charts.append(args_hash)
+            self._p_changed = True
+        
+        return image_path
+
+    def get_grouped_bar_chart(self, REQUEST=None, **kw):
+        """Respond with an image of the horizontal stacked grouped line chart"""
+
+        data = {}
+        data['x'] = []
+        data['y'] = {}
+
+        if REQUEST is not None:
+            kw.update(REQUEST.form)
+
+        rows = []
+       
+        chart_query = {
+            'var': kw.pop("var"),
+            'cnt': kw.pop("cnt_code"),
+        }
+
+        rows = self.query('get_source_comparision', **chart_query)
+        
+        sources = []
+        # We will need to fill with 0-s unfilled values foreach (year, source)
+        data_map = {}
+        for row in rows:
+            ccode = str(row['val_year'])
+            if row['src_code'] not in sources:
+                sources.append(row['src_code'])
+            if ccode not in data['x']:
+                data['x'].append(ccode)
+            data_map[(ccode, row['src_code'])] = int(row['val'])
+        
+        sources.sort()
+        data['y'] = [[] for s in sources]
+        for year in data['x']:
+            i = 0
+            for source in sources:
+                if not data_map.has_key((year, source)):
+                    data['y'][i].append(0)
+                else:
+                    data['y'][i].append(data_map[(year, source)])
+                i += 1
+
+        data['x'].reverse()
+        kw.update({'bar_spacing': 1,
+                   'group_spacing': 12,
+                   'bar_width': 12})
+        kw['height'] = (kw['group_spacing'] + (kw['bar_width'] +
+                                               kw['bar_spacing']) * \
+                        len(data['y'])) * (len(data['x']) + 1)
+        
+        image_path = self.get_grouped_bar_chart_image(data, **kw)
         try:
             image_fd = open(image_path, 'rb')
             image = image_fd.read()
