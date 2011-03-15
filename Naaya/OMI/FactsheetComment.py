@@ -31,6 +31,21 @@ from utilities import *
 
 manage_addComment_html = PageTemplateFile('zpt/comment', globals())
 
+import scrubber
+if 'any' not in dir(__builtins__):
+    from Products.NaayaCore.backport import any
+    scrubber.any = any
+sanitize = scrubber.Scrubber().scrub
+
+def trim(message):
+    """ Remove leading and trailing empty paragraphs """
+    message = re.sub(r'^\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*', '', message)
+    message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
+    return message
+
+def cleanup_message(message):
+    return sanitize(trim(message)).strip()
+
 def manage_addComment(self, parent_name, data):
     """ Method for adding a commentary"""
     id = get_available_id(self)
@@ -38,8 +53,8 @@ def manage_addComment(self, parent_name, data):
     self._setObject(id, newComment)
     comment = self._getOb(id)
     comment.edit(data)
-    self.model_add_comment_notification(self.contact_email, 4, comment.id, comment.author)
-    self.model_add_comment_notification(self.administrator_email, 4, comment.id, comment.author) #4 is page where the comment resides
+    #self.model_add_comment_notification(self.contact_email, 4, comment.id, comment.author)
+    #self.model_add_comment_notification(self.administrator_email, 4, comment.id, comment.author) #4 is page where the comment resides
 
 class FactsheetComment(CatalogAware, SimpleItem):
     """Class that implements a blog commentary."""
@@ -56,7 +71,10 @@ class FactsheetComment(CatalogAware, SimpleItem):
     def edit(self, data):
         for key in data.keys():
             if key in comment_names:
-                setattr(self, key, data.get(key, u''))
+                if key == 'body':
+                    setattr(self, key, cleanup_message(data.get(key, u'')))
+                else:
+                    setattr(self, key, data.get(key, u''))
         self.reindex_object()
 
 InitializeClass(FactsheetComment)
