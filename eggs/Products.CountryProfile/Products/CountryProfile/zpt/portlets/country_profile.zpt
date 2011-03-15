@@ -99,9 +99,9 @@
 	<div id="select-charts">
         <label for="change-chart" i18n:translate="">Graphs showing the evolution overtime for the following variables</label>
 		<select id="change-chart">
-			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=SOC1&src=JMP&cnt=${ccode}&width=600&height=250" i18n:translate="">Population (Inhabitants)</option>
-			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=R10&src=aquastat&cnt=${ccode}&width=600&height=250" i18n:translate="">Water per capita (m<sup>3</sup>/Inhabitants/year)</option>
-			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=U24&src=aquastat&cnt=${ccode}&width=600&height=250" i18n:translate="">Water withdrawal for agriculture (Million m<sup>3</sup> / year)</option>
+			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=SOC1&src=JMP&cnt=${ccode}&width=600&height=250&refresh=True" i18n:translate="">Population (Inhabitants)</option>
+			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=R10&src=aquastat&cnt=${ccode}&width=600&height=250&refresh=True" i18n:translate="">Water per capita (m<sup>3</sup>/Inhabitants/year)</option>
+			<option tal:attributes="value string:${cprofile/absolute_url}/get_chart?var=U24&src=aquastat&cnt=${ccode}&width=600&height=250&refresh=True" i18n:translate="">Water withdrawal for agriculture (Million m<sup>3</sup> / year)</option>
 		</select>
 	</div>
     <div id="display-chart"></div>
