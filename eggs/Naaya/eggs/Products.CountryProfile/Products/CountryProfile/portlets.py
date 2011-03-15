@@ -38,7 +38,7 @@ class CountryComparisions(object):
     interface.implements(INyPortlet)
     component.adapts(INySite)
 
-    title = 'Country comparisions'
+    title = 'Country comparisons'
     template = PageTemplateFile('zpt/portlets/country_comparisions', globals())
 
     def __init__(self, site):
@@ -65,7 +65,7 @@ class YearComparisions(object):
     interface.implements(INyPortlet)
     component.adapts(INySite)
 
-    title = 'Year comparisions'
+    title = 'Year comparisons'
     template = PageTemplateFile('zpt/portlets/year_comparisions', globals())
 
     def __init__(self, site):
@@ -92,7 +92,7 @@ class SourceComparisions(object):
     interface.implements(INyPortlet)
     component.adapts(INySite)
 
-    title = 'Data source comparisions'
+    title = 'Data source comparisons'
     template = PageTemplateFile('zpt/portlets/source_comparisions', globals())
 
     def __init__(self, site):
