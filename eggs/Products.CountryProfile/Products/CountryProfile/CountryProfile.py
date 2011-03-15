@@ -150,7 +150,7 @@ class CountryProfile(SimpleItem):
         width = int(kw.get('width', 600))
         height = int(kw.get('height', 250))
         # Chart size of widthxheight pixels and specifying the range for the Y axis
-        chart = SimpleLineChart(width, height, y_range=[min_y, max_y])
+        chart = SimpleLineChart(width, height, y_range=[0, max_y])
 
         # Add the chart data
         chart.add_data(data['y'])
@@ -167,7 +167,7 @@ class CountryProfile(SimpleItem):
         # The Y axis labels contains min_y to max_y spling it into 10 equal parts,
         #but remove the first number because it's obvious and gets in the way
         #of the first X label.
-        left_axis = range(min_y, max_y + 1, (max_y - min_y)/10)
+        left_axis = range(0, max_y + 1, (max_y)/10)
         left_axis[0] = ''
         chart.set_axis_labels(Axis.LEFT, left_axis)
 
@@ -233,9 +233,12 @@ class CountryProfile(SimpleItem):
         width = int(kw.get('width', 400))
         height = int(kw.get('height', 250))
 
-        chart = StackedHorizontalBarChart(width, height,
-                                        y_range=[0, len(data['x'])])
         max_y = max(data['y'])
+        
+        chart = StackedHorizontalBarChart(width, height,
+                                        x_range=[0, max_y],
+                                        y_range=[0, len(data['x'])])
+
 
         chart.add_data(data['y'])
         chart.set_colours(['76A4FB'])
@@ -254,7 +257,8 @@ class CountryProfile(SimpleItem):
         if bool(kw.get('refresh', False)) or args_hash not in self.charts:
             #Get image from google chart api
             chart.download(image_path)
-            self.charts.append(args_hash)
+            if args_hash not in self.charts:
+                self.charts.append(args_hash)
             self._p_changed = True
         
         return image_path
