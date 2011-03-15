@@ -335,8 +335,8 @@ class CountryProfile(SimpleItem):
             chart.add_data(member)
         chart.set_colours(colours[:members_cnt])
         chart.set_axis_labels(Axis.LEFT, data['x'])
-        chart.set_axis_labels(Axis.BOTTOM, range(0, max_y + 1,
-                                               (max_y)/5))
+        bottom_labels = [utils.intcomma(x) for x in range(0, max_y + 1, (max_y)/5)]
+        chart.set_axis_labels(Axis.BOTTOM, bottom_labels)
         
         
 
