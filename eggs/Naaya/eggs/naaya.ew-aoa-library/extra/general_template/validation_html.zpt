@@ -123,8 +123,11 @@
 		}
 		function disable_question_5_2(){
 			$('#w_if-no-specify-if-commissioned_0').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_0').removeAttr('checked');
 			$('#w_if-no-specify-if-commissioned_1').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_1').removeAttr('checked');
 			$('#w_if-no-specify-if-commissioned_2').attr('disabled', 'disabled');
+			$('#w_if-no-specify-if-commissioned_2').removeAttr('checked');
 			$('#w_if-no-specify-if-commissioned_0').parent().hide();
 		}
 		function show_hide(edit, curr_lang){
@@ -166,6 +169,9 @@
 			}
 			if (edit && edit.length>0)
 			{
+				$('.widgetEditMode').show();
+				$('#recaptcha_widget_div').show();
+				$('.surveySubmit').show();
 				$('#w_confirmation').parent().hide();
 				$('#w_q1-name-assessment-report-en').attr('readonly', 'readonly');
 				$('#w_q1-name-assessment-report-ru').attr('readonly', 'readonly');
