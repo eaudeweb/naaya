@@ -68,7 +68,7 @@
 	tal:attributes="action string:${here/absolute_url}/deleteObject"
 	tal:define="delete python:request.get('delete','')">
 	<div class="comment_box">
-		<span style="font-size: 95%;" tal:content="structure python:here.newlineToBr(comment.body)"/>
+		<span style="font-size: 95%;" tal:content="comment/body"/>
 		<hr class="hr_inside_comment"/>
 		<a tal:attributes="href string:${here/absolute_url}?page=4&delete=${comment/id}#Comment-${comment/id}"
 			tal:condition="python:delete!=comment.id and here.canManageFactsheet()"
