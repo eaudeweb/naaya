@@ -1,5 +1,5 @@
 <metal:block i18n:domain="portal_translations" metal:use-macro="options/macro">
-<metal:block metal:fill-slot="portlet_title">Country comparisions</metal:block>
+<metal:block metal:fill-slot="portlet_title">Country comparisons</metal:block>
 <metal:block fill-slot="portlet_content">
 	<style type="text/css">
 	    .center-portlet{
