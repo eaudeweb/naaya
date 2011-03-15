@@ -15,8 +15,8 @@
 	<script tal:attributes="src string: ${options/cprofile/absolute_url}/www/js/themes.js"></script>
 	<div id="center_content">
 
-		<form action="" method="get" class="comparison-form">
-      <table class="comparison-table">
+		<form tal:attributes="action string:${here/absolute_url}#source_comparisions" method="get" class="comparison-form">
+      <table class="comparison-table" id="source_comparisions">
         <tr>
           <td class="td-label">
             <label for="indicator" i18n:translate="">Indicators</label>
@@ -73,10 +73,25 @@
 			</tr>
 			</tal:block>
 		</table>
+
 		<div id="chart-container"
 			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&cnt_code=${cnt_code}&refresh=True" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&cnt_code=${cnt_code}" />
 		</div>
+
+		<div class="clear">&nbsp;</div>
+		<dl>
+			<dd class="legend-title" i18n:translate="">Source legend</dd>
+			<tal:block repeat="source options/sources">
+			<dd class="clear" />
+			<dd>
+				<span tal:content="source" />
+				<span class="margin-separator">&nbsp;</span>
+				&middot;
+        	</dd>
+			<dt tal:content="python:cprofile.query('get_source_value', src=source)" />
+			</tal:block>
+		</dl>
     
     <div class="clear">&nbsp;</div>
 	</div>

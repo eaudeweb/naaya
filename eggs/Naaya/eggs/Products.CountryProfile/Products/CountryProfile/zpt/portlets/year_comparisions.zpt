@@ -14,8 +14,8 @@
 					   cnt_code python: request.get('cnt_code', 'AL')">
 	<div id="center_content">
 
-		<form action="" method="get" class="comparison-form">
-      <table class="comparison-table">
+		<form tal:attributes="action string:${here/absolute_url}#year_comparisions" method="get" class="comparison-form">
+      <table class="comparison-table" id="year_comparisions">
         <tr>
           <td class="td-label">
             <label for="year-indicator" i18n:translate="">Indicators</label>
@@ -71,8 +71,8 @@
     
       <p tal:content="python:cprofile.query('get_indicator_value', var=var)" class="compare-indicator" />
       <p class="compare-source">
-        (<tal:block content="python:cprofile.query('get_country_name', cnt=cnt_code)"></tal:block>
-        <tal:block content="python:cprofile.query('get_source_value', src=src)"></tal:block>)
+        (<tal:block content="python:cprofile.query('get_country_name', cnt=cnt_code)" /> - 
+        <tal:block content="python:cprofile.query('get_source_value', src=src)" />)
       </p>
       
 		<table class="datatable chart-table" style="width: 200px !important;"
@@ -88,7 +88,7 @@
 		</table>
 		<div id="chart-container"
 			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}&refresh=True" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&cnt_code=${cnt_code}" />
 		</div>
     
     <div class="clear">&nbsp;</div>

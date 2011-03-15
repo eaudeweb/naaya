@@ -12,26 +12,21 @@ def get_country_code(dbconn, **kw):
         records = records[0]
     return records
 
-def get_sources(dbconn):
-    """ Get source values and codes """
-    sql = u"SELECT src_code, src_label FROM SOURCE"
-    return dbconn.query(sql)
-
 def get_country_name(dbconn, **kw):
     """ Get the country name for a given code """
     sql = u"""
-    SELECT cnt_label_en
+    SELECT cnt_label
     FROM COUNTRY
     WHERE cnt_code = '%(cnt)s'
     """ % kw
     records = dbconn.query(sql)
     if records:
-        return records[0].get('cnt_label_en')
+        return records[0].get('cnt_label')
 
 def get_source_value(dbconn, **kw):
     """ Get the source value for a given code """
     sql = u"""
-    SELECT src_label 
+    SELECT src_label
     FROM SOURCE
     WHERE src_code = '%(src)s'
     """ % kw
