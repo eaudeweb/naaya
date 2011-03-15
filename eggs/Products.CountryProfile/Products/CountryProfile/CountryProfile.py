@@ -57,8 +57,6 @@ class CountryProfile(SimpleItem):
 
     www = StaticServeFromFolder("www/", globals())
 
-    index = PageTemplateFile('zpt/index', globals())
-
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/manage_edit', globals())
 
@@ -106,29 +104,14 @@ class CountryProfile(SimpleItem):
         self.mysql_connection['name'] = params.pop('mysql_name')
         self.mysql_connection['user'] = params.pop('mysql_user')
         self.mysql_connection['pass'] = params.pop('mysql_pass')
-        refresh = params.pop('refresh_charts')
-        if refresh:
-            self.charts = []
+        if 'refresh_charts' in params:
+            refresh = params.pop('refresh_charts')
+            if refresh:
+                self.charts = []
         self._p_changed = True
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    def index_html(self, REQUEST):
-        """ temporary function. only for testing purposes."""
-        result = self.query("get_country_code",
-                                     label_en='Tunisia')
-        if result:
-            country_code = result['CNT_CODE']
-        else:
-            return ""
-
-        indicator = REQUEST.get('indicator', 'U24')
-        source = REQUEST.get('source', 'aquastat')
-        year = REQUEST.get('year', '2000')
-        result = self.query('get_country_comparision', var=indicator, src=source, year=year)
-
-        return self.index(cprofile=self, ccode=country_code, records=result)
 
     security.declarePublic('get_chart')
     def get_chart_image(self, data, **kw):
@@ -167,7 +150,7 @@ class CountryProfile(SimpleItem):
         # The Y axis labels contains min_y to max_y spling it into 10 equal parts,
         #but remove the first number because it's obvious and gets in the way
         #of the first X label.
-        left_axis = range(0, max_y + 1, (max_y)/10)
+        left_axis = [utils.intcomma(x) for x in range(0, max_y + 1, (max_y)/10)]
         left_axis[0] = ''
         chart.set_axis_labels(Axis.LEFT, left_axis)
 
@@ -243,8 +226,8 @@ class CountryProfile(SimpleItem):
         chart.add_data(data['y'])
         chart.set_colours(['76A4FB'])
         chart.set_axis_labels(Axis.LEFT, data['x'])
-        chart.set_axis_labels(Axis.BOTTOM, range(0, max_y + 1,
-                                               (max_y)/5))
+        bottom_labels = [utils.intcomma(x) for x in range(0, max_y + 1, (max_y)/5)]
+        chart.set_axis_labels(Axis.BOTTOM, bottom_labels)
 
         #Generate an hash from arguments
         kw_hash = hash(tuple(sorted(kw.items())))

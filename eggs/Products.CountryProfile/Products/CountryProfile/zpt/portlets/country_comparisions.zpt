@@ -17,8 +17,8 @@
 					   src python: request.get('country-src', 'aquastat');
 					   year python: request.get('year', '1990')">
 	<div id="center_content">
-		<form action="" method="get" class="comparison-form">
-      <table class="comparison-table">
+		<form tal:attributes="action string:${here/absolute_url}#country_comparisions" method="get" class="comparison-form">
+      <table class="comparison-table" id="country_comparisions">
         <tr>
           <td class="td-label">
             <label for="country-indicator" i18n:translate="">Indicators</label>
@@ -86,7 +86,7 @@
 		</table>
 		<div id="chart-container"
 			 tal:condition="records">
-			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&year=${year}&refresh=True" />
+			<img id="chart-img" tal:attributes="src string:${cprofile/absolute_url}/get_bar_chart?var=${var}&src=${src}&year=${year}" />
 		</div>
     
     <div class="clear">&nbsp;</div>
