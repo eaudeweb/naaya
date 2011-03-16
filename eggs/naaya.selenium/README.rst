@@ -43,8 +43,9 @@ How to use:
    and will serve all request coming from the selenium browser as if it was a
    Naaya site called ``portal``.
 
-6. This plugin adds three options to ``nynose``:
+6. This plugin adds four options to ``nynose``:
 
+   * ``--ny-selenium`` will enable selenium tests discovery and running. By default they are disabled.
    * ``--ny-instance-port`` will change wsgi listener's port
    * ``--selenium-grid-port`` will change selenium remote control port
    * ``--ny-selenium-browsers`` will change the browser used in testing
@@ -54,13 +55,13 @@ Example:
 
 Simply run the following command if defaults are ok::
 
-	bin/nynose naaya.selenium
+	bin/nynose --ny-selenium naaya.selenium
 
 To test with other Naaya modules (Products.Naaya for example) and change the
 defaults (the instance port in this example) run::
 
-	bin/nynose --ny-instance-port=12345 naaya.selenium Products.Naaya
+	bin/nynose --ny-selenium --ny-instance-port=12345 naaya.selenium Products.Naaya
 
 If you wish, you can run the selenium tests with ``naaya``::
 
-	bin/nynose naaya
+	bin/nynose --ny-selenium naaya
