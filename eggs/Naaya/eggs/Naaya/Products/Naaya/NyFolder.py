@@ -611,6 +611,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             REQUEST.RESPONSE.redirect('%s/administration_feedback_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_revokeroles')
+    @deprecate('admin_folder_revokeroles is deprecated and will be removed. manage_revokeUsersRoles has been deleted.')
     def admin_folder_revokeroles(self, roles=[], REQUEST=None):
         """ """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)

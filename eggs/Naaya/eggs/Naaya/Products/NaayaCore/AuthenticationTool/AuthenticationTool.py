@@ -1026,14 +1026,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if self in ufs: ufs.remove(self)
         return ufs
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSources')
+    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSources')
     def getSources(self):
         """
         returns a list with all registered external sources
         """
         return map(self._getOb, map(lambda x: x['id'], self._objects))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSourceObj')
+    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSourceObj')
     def getSourceObj(self, p_source_id):
         """
         returns a source object
