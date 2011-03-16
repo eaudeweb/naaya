@@ -2,8 +2,9 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
-<tal:block metal:fill-slot="section" 
-		tal:define="mode python:request.get('mode', '');
+<tal:block metal:fill-slot="section"
+		tal:define="site_url here/getSitePath;
+					mode python:request.get('mode', '');
 					user_tool here/getAuthenticationTool">
 
 <tal:block tal:condition="python:mode==''">
@@ -37,62 +38,73 @@
 	</script>
 	<p class="page-description" i18n:translate="">
 		This page displays the existing users in the folder and their corresponding roles.
-		You can revoke a role prior assigned to a user by ticking in the appropiate check box 
+		You can revoke a role prior assigned to a user by ticking in the appropiate check box
 		and clicking on the Revoke selected roles button.
 	</p>
-	<form name="frmRevokeEmail" method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_revokeroles">
 
-	<table border="0" cellspacing="0" cellpadding="2" class="datatable">
-		<col style="width: 14em;" />
-		<col style="width: 7em;" />
+	<div class="form-buttons cleaner">
+		<span class="buttons">
+				<a tal:attributes="href string: ${site_url}/admin_adduser_html" title="Add new local user" i18n:attributes="title" i18n:translate="">Add user</a>
+		</span>
+	</div>
+
+	<table class="datatable">
 		<thead>
 			<tr>
-				<th class="scope-col" scope="col" i18n:translate="">User</th>
-				<th class="scope-col" scope="col" i18n:translate="">Roles/Location</th>
+				<th width="10%" align="left" i18n:translate="">Username</th>
+				<th width="30%" align="left" i18n:translate="">Name/Email</th>
+				<th width="50%" align="left" i18n:translate="">Roles/Location</th>
+				<th width="10%" i18n:translate="">Revoke roles</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr tal:define="users_roles here/getUsersRoles"
-				tal:repeat="user users_roles/keys" 
-				tal:attributes="class python:test(path('repeat/user/odd'), 'zebraodd', 'zebraeven')">
-				<td valign="top">
-					<a tal:attributes="href string:${here/absolute_url}/administration_users_html?mode=edit&name=${user}" 
-						tal:content="user" title="Click on the user to edit his/hers credentials">user</a>
+				tal:repeat="username users_roles/keys"
+				tal:attributes="class python:test(path('repeat/username/odd'), 'zebraodd', 'zebraeven')">
+				<tal:block define="user python:user_tool.getUser(username)">
+				<td>
+					<strong>
+						<a tal:define="user_quoted python:here.utUrlEncode(username)"
+              tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}&from=local"
+							tal:content="username">username</a>
+					</strong>
 				</td>
-				<td  valign="top">
-					<table width="100%" tal:define="roles python:users_roles[user]">
-						<tr tal:repeat="role roles">
-							<td valign="top" width="2%" tal:condition="python:role[0] != []">
-								<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])" />
-								<input type="hidden" name="roles_to_email" tal:attributes="value python:'%s||%s||%s' % (user,str(role[0]),role[1])">
-							</td>
-							<td width="40%" tal:condition="python:role[0] != []">
-								<span tal:repeat="r python:user_tool.utConvertToList(role[0])">
-								<strong tal:content="r">role name</strong>
-								</span>
-							</td>
-							<td width="*" tal:condition="python:role[0] != []">
-								<span tal:define="obj python:here.utGetObject(role[1])">
-									<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
-								</span>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<!-- <td align="right"><a tal:attributes="href string:${here/getSitePath}/emailRolesToUser?username=${user}">Email roles</a></td> -->
+				<td>
+					<div class="datatable-username">
+						<tal:block replace="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)"></tal:block>
+					</div>
+					<div class="datatable-email" tal:define="email python:user_tool.getUserEmail(user)">
+						<a tal:attributes="href string:mailto:${email}; title string:Click to open email client" i18n:attributes="title" tal:content="email" />
+					</div>
+        </td>
+        <td tal:define="roles python:users_roles[username]">
+            <div class="user-role" tal:repeat="role roles">
+                <tal:block condition="python: role[0]">
+                <span class="roles-title" tal:content="python: ', '.join(role[0])"></span> in
+                <a class="roles-location" tal:define="obj python: here.utGetObject(role[1])" tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"></a>
+                </tal:block>
+            </div>
+            <tal:block condition="python: roles == [([], '')] ">-</tal:block>
+        </td>
+        <td tal:define="roles python: users_roles[username]">
+            <div class="user-role-revoke" tal:repeat="role roles">
+                <a class="revoke-role" i18n:attributes="title" title="Revoke role"
+									  tal:condition="python: role[0]"
+                    tal:define="location python: role[1]"
+                    tal:attributes="href string:${site_url}/admin_revokerole?user=${username}&location=${location}">
+                    <img src="/misc_/Naaya/revoke_permission.png" alt="Revoke role" i18n:attributes="alt" />
+                </a>
+            </div>
+        </td>
+				</tal:block>
 			</tr>
 		</tbody>
 	</table>
 	<br />
 
-	<input type="button" name="add" value="Add user" onclick="document.location.href='administration_users_html?mode=add';" />&nbsp;
-	<input type="submit" name="del" value="Revoke selected roles" i18n:attributes="value" />
-	</form>
-	<br />
-
 	<form method="post" name="frmUsersRoles" tal:attributes="action string:${here/absolute_url}/admin_folder_addroles">
 	<fieldset><legend i18n:translate="">Assign role to existing user</legend>
-	<p i18n:translate="">Select the username from the drop-down list, select the intended role(s) and choose the specific 
+	<p i18n:translate="">Select the username from the drop-down list, select the intended role(s) and choose the specific
 	location from the folder you want to grant this permissions.</p>
 	<table width="100%" border="0" cellspacing="2" cellpadding="6"
 		tal:define="name python:request.get('name', '');
@@ -150,13 +162,13 @@
 								<tal:block
 									tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
 									tal:condition="python:tree_node[1]==0">
-									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" 
+									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"
 									src="misc_/Naaya/minus.gif" alt="Collapse node" />
 								</tal:block>
 								<tal:block
 									tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
 									tal:condition="python:tree_node[1]==1">
-									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" 
+									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"
 									src="misc_/Naaya/plus.gif" alt="Expand node" />
 								</tal:block>
 							</td>
@@ -208,7 +220,7 @@
 		</table>
 		</fieldset>
 		<br />
-	
+
 		<fieldset><legend><b i18n:translate="">User&nbsp;Settings</b></legend>
 		<table border="0" cellspacing="0" cellpadding="3">
 		<tr>
@@ -228,7 +240,7 @@
 		</table>
 		</fieldset>
 		<br />
-	
+
 		<input type="submit" name="ActionButton" value="Save" class="button" />
 		<input type="button" name="CancelButton" value="Cancel" class="button"
 			   tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/administration_users_html';" />
@@ -236,22 +248,22 @@
 	<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
 	<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
 	</tal:block>
-	
+
 	<tal:block condition="python:mode=='edit'">
 		<tal:block define="user_info python:here.admin_getuser(request.get('name', ''));
-							user_firstname python:user_info[0]; 
+							user_firstname python:user_info[0];
 							user_lastname python:user_info[1];
-							user_email python:user_info[2]; 
+							user_email python:user_info[2];
 							user_account python:user_info[3];
-							user_password python:user_info[4]; 
-							user_roles python:user_info[5]; 
-							user_created python:user_info[6]; 
+							user_password python:user_info[4];
+							user_roles python:user_info[5];
+							user_created python:user_info[6];
 							user_lastupdated python:user_info[7];">
-	
+
 		<div class="system-msg" tal:condition="python:request.has_key('save')">
 			<tal:block i18n:translate="">Saved changes</tal:block>. (<span tal:replace="here/ZopeTime"/>)<br />
 		</div>
-	
+
 		<form name="frmEditUser" method="post" tal:attributes="action string:${here/absolute_url}/admin_saveuser_credentials">
 		<p i18n:translate="">Change the form below with user's credentials and account and click on <em i18n:name="save-button" i18n:translate="">Save</em>:</p>
 		<fieldset><legend i18n:translate="">Personal settings</legend>
@@ -276,7 +288,7 @@
 		</table>
 		</fieldset>
 		<br />
-	
+
 		<fieldset><legend i18n:translate="">User settings</legend>
 		<table border="0" cellspacing="0" cellpadding="3">
 			<tr>
@@ -296,19 +308,19 @@
 		</table>
 		</fieldset>
 		<br />
-	
+
 		<input type="hidden" name="name" maxLength="255" tal:attributes="value user_account" />
 		<input type="submit" name="ActionButton" value="Save" class="button" />
 		<input type="button" name="CancelButton" value="Cancel" class="button"
 		   tal:attributes="onclick string:javascript:document.location.href='${here/absolute_url}/administration_users_html';" />
 		<br /><br />
-	
+
 		<fieldset><legend i18n:translate="">Record information</legend>
 		<p>Created: <tal:block tal:content="python:test(user_created=='', ' - ', user_created)" /><br />
 		   Last updated: <tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)" /></p>
 		</fieldset>
 		</form>
-	
+
 		<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
 		<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
 		</tal:block>
