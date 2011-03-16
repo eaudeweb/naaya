@@ -39,7 +39,7 @@ default_remove_words = [
     "than", "the", "this", "that", "to", "up", "via", "with",
 ]
 
-VALID_EMAIL_PATTERN = re.compile("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$")
+VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",re.IGNORECASE)
 
 def is_valid_email(email):
     """
