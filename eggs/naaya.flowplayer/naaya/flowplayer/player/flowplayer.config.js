@@ -5,7 +5,7 @@
  * @param subtitle URL to subtitle file.
  * @return nothing.
  */
-var flowplayer_config = function(site, container, movie, subtitle){
+var flowplayer_config = function(site, container, movie, subtitle, image){
   if(!window.flowplayer){
     // flowplayer js not loaded
     return;
@@ -15,20 +15,45 @@ var flowplayer_config = function(site, container, movie, subtitle){
   container = container || 'player';
 
   // Config
-  var config = {
-    clip: {
-      autoPlay: false,
-      autoBuffering: false,
-      url: movie
-    },
-    plugins: {}
-  };
+  if (image){
+	var config = {
+		playlist: [
+			{
+				url: image, 
+				scaling: 'orig'
+			},
+			{
+				url: movie, 
+				autoPlay: false, 
+				autoBuffering: false 
+			}
+		],
+		plugins: {}
+	};
+  }
+  else{
+	var config = {
+		playlist: [
+			{
+				url: movie, 
+				autoPlay: false, 
+				autoBuffering: true 
+			}
+		],
+		plugins: {}
+	};
+  }
 
   // Subtitle
   if(subtitle){
     jQuery.get(subtitle, {}, function(data){
       if(data){
-        config.clip.captionUrl = subtitle;
+		if (image){
+			config.playlist[1].captionUrl = subtitle;
+		}
+		else{
+			config.playlist[0].captionUrl = subtitle;
+		}
         var captions_url = site + '/flowplayer.captions.swf';
         var content_url = site + '/flowplayer.content.swf';
         if(captions_url && content_url){
