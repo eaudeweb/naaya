@@ -42,6 +42,7 @@ from Role import Role
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent,\
                                         NyDelUserRoleEvent
+from Products.NaayaBase.interfaces import IRoleLogger
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils import is_valid_email, UnicodeReader
 from Products.NaayaCore.managers.import_export import set_response_attachment
@@ -1123,10 +1124,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         locations = self.getCatalogedObjects(meta_type=meta_types, has_local_role=1)
         locations.append(self.getSite())
         for l in locations:
-            local_roles_by_location[l.absolute_url(1)] = l.getAllLocalRolesInfo()
+            local_roles_by_location[l.absolute_url(1)] = IRoleLogger(l).getAllLocalRolesInfo()
 
         # get user_roles[user] = list of {roles, date, user_granting_roles}
-        user_roles = self.getSite().getAllUserRolesInfo()
+        user_roles = IRoleLogger(self.getSite()).getAllUserRolesInfo()
 
         # local_roles_by_location[location][user] -> roles_by_user[user][location]
         roles_by_user = {}
@@ -1148,7 +1149,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         locations = self.getCatalogedObjects(meta_type=meta_types)
         locations.append(self.getSite())
         for l in locations:
-            group_roles_by_location[l.absolute_url(1)] = l.getAllLDAPGroupRolesInfo()
+            group_roles_by_location[l.absolute_url(1)] = IRoleLogger(l).getAllLDAPGroupRolesInfo()
 
         # group_roles_by_location[location][group] -> group_roles_by_group[group][location]
         group_roles_by_group = {}
