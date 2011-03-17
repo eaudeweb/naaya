@@ -19,7 +19,7 @@ from zope.component import getUtility
 from Products.NaayaCore.LayoutTool.DiskFile import allow_path
 from naaya.core.zope2util import force_to_unicode
 from naaya.core.StaticServe import StaticServeFromFolder
-
+from _mysql_exceptions import OperationalError
 from MySQLConnector import MySQLConnector
 import queries
 import utils
@@ -73,20 +73,23 @@ class CountryProfile(SimpleItem):
     @property
     def dbconn(self):
         """Create and return a MySQL connection object"""
-        if self._v_conn is not None:
-            return self._v_conn
-        else:
-            self._v_conn = MySQLConnector()
-            self._v_conn.open(self.mysql_connection['host'],
-                              self.mysql_connection['name'],
-                              self.mysql_connection['user'],
-                              self.mysql_connection['pass'])
-            return self._v_conn
+        def connect_to_mysql():
+            conn = MySQLConnector()
+            conn.open(self.mysql_connection['host'],
+                      self.mysql_connection['name'],
+                      self.mysql_connection['user'],
+                      self.mysql_connection['pass'])
+            return conn
 
-    def __del__(self):
-        """Close db connection"""
-        if self._v_conn is not None:
-            self._v_conn.close()
+        if self._v_conn is None:
+            self._v_conn = connect_to_mysql()
+        else:
+            try:
+                self._v_conn.query('select 1+1')
+            except OperationalError:
+                self._v_conn = connect_to_mysql()
+
+        return self._v_conn
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
@@ -219,7 +222,7 @@ class CountryProfile(SimpleItem):
         height = int(kw.get('height', 250))
 
         max_y = max(data['y'])
-        
+
         chart = StackedHorizontalBarChart(width, height,
                                         x_range=[0, max_y],
                                         y_range=[0, len(data['x'])])
@@ -236,7 +239,7 @@ class CountryProfile(SimpleItem):
         data_hash = hash(tuple(sorted([(k, tuple(v))
             for k, v in data.iteritems()])))
         args_hash = str(kw_hash) + str(data_hash)
-        
+
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
 
         if bool(kw.get('refresh', False)) or args_hash not in self.charts:
@@ -245,7 +248,7 @@ class CountryProfile(SimpleItem):
             if args_hash not in self.charts:
                 self.charts.append(args_hash)
             self._p_changed = True
-        
+
         return image_path
 
     def get_bar_chart(self, REQUEST=None, **kw):
@@ -337,8 +340,8 @@ class CountryProfile(SimpleItem):
         chart.set_axis_labels(Axis.LEFT, data['x'])
         bottom_labels = [utils.intcomma(x) for x in range(0, max_y + 1, (max_y)/5)]
         chart.set_axis_labels(Axis.BOTTOM, bottom_labels)
-        
-        
+
+
 
         if kw.has_key('bar_spacing'):
             chart.set_bar_spacing(kw['bar_spacing'])
@@ -354,7 +357,7 @@ class CountryProfile(SimpleItem):
         data_hash = hash(tuple(sorted([(k, tuple(v))
             for k, v in data.iteritems()])))
         args_hash = str(kw_hash) + str(data_hash)
-        
+
         image_path = os.path.join(TARGET_DIR, "%s.png" % args_hash)
 
         if bool(kw.get('refresh', False)) or args_hash not in self.charts:
@@ -363,7 +366,7 @@ class CountryProfile(SimpleItem):
             if args_hash not in self.charts:
                 self.charts.append(args_hash)
             self._p_changed = True
-        
+
         return image_path
 
     def get_grouped_bar_chart(self, REQUEST=None, **kw):
@@ -377,14 +380,14 @@ class CountryProfile(SimpleItem):
             kw.update(REQUEST.form)
 
         rows = []
-       
+
         chart_query = {
             'var': kw.pop("var"),
             'cnt': kw.pop("cnt_code"),
         }
 
         rows = self.query('get_source_comparision', **chart_query)
-        
+
         sources = []
         # We will need to fill with 0-s unfilled values foreach (year, source)
         data_map = {}
@@ -395,7 +398,7 @@ class CountryProfile(SimpleItem):
             if ccode not in data['x']:
                 data['x'].append(ccode)
             data_map[(ccode, row['src_code'])] = int(row['val'])
-        
+
         sources.sort()
         data['y'] = [[] for s in sources]
         for year in data['x']:
@@ -414,7 +417,7 @@ class CountryProfile(SimpleItem):
         kw['height'] = (kw['group_spacing'] + (kw['bar_width'] +
                                                kw['bar_spacing']) * \
                         len(data['y'])) * (len(data['x']) + 1)
-        
+
         image_path = self.get_grouped_bar_chart_image(data, **kw)
         try:
             image_fd = open(image_path, 'rb')
