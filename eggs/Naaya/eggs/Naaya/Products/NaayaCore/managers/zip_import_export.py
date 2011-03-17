@@ -28,6 +28,7 @@ from naaya.content.event.interfaces import INyEvent
 from naaya.content.file.interfaces import INyFile
 from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
+from naaya.content.url.interfaces import INyURL
 from naaya.core.utils import force_to_unicode, relative_object_path
 
 try:
@@ -342,6 +343,41 @@ class IZipExportObject(Interface):
     def __call__():
         """Return data (as `str`) and filename, as a tuple
         """
+
+class URLZipAdapter(object):
+    implements(IZipExportObject)
+    adapts(INyURL)
+
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self):
+        obj = self.context
+        portal = obj.getSite()
+        schema_tool = portal.getSchemaTool()
+
+        schema = schema_tool.getSchemaForMetatype(obj.meta_type)
+
+        obj_data = []
+        obj_data.append('<html><body>')
+        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
+
+        for widget in schema.listWidgets():
+            if widget.prop_name() in ['description', 'locator']:
+                obj_widget_value = getattr(obj, widget.prop_name(), '')
+                widget_data = widget._convert_to_form_string(obj_widget_value)
+
+                if not widget_data:
+                    continue
+
+                obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
+                                                                     widget_data))
+
+        obj_data.append('</body></html>')
+        zip_data = '\n'.join(obj_data)
+        zip_filename = '%s.html' % self.context.getId()
+        return zip_data, zip_filename
+
 
 class DocumentZipAdapter(object):
     implements(IZipExportObject)

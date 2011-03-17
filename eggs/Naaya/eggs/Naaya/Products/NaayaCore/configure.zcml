@@ -13,6 +13,7 @@
   <adapter factory="Products.NaayaCore.managers.zip_import_export.EventZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.NewsZipAdapter" />
   <adapter factory="Products.NaayaCore.managers.zip_import_export.StoryZipAdapter" />
+  <adapter factory="Products.NaayaCore.managers.zip_import_export.URLZipAdapter" />
 
   <adapter factory="Products.NaayaCore.managers.recaptcha_utils.CaptchaProvider" />
 
