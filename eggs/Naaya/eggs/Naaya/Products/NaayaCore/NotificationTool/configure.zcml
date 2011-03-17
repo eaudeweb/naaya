@@ -21,12 +21,10 @@
     for="naaya.content.base.interfaces.INyContentObjectEditEvent"
     />
 
-  <adapter
-    factory=".subscribers.heartbeat_notification"
-    for="Products.Naaya.interfaces.INySite"
-    provides="Products.Naaya.interfaces.IHeartbeat"
-    name="heartbeat_notification"
-    />
+  <subscriber for="Products.Naaya.interfaces.INySite
+                   Products.Naaya.interfaces.IHeartbeat"
+              handler=".subscribers.heartbeat_notification" />
+
 
   <adapter
     factory=".portlets.NotificationsPortlet"
