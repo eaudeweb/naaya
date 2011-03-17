@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
 import utils
