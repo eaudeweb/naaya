@@ -219,6 +219,7 @@ def extract_survey_answer_data_general_template(answer):
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(library_answer, 'w_theme'),
         'topics': sorted(all_topics),
+        'publication_year': 'Year: %s' % library_answer.get('w_assessment-year'),
         'modification_time': answer.modification_time,
     }
 

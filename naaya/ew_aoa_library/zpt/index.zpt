@@ -59,27 +59,45 @@
 				reset_checkboxes();
 			}
 		});
-		function show_filters(){
-			$('#filter_box').show();
-			$('#show_filters').hide();
-		}
 		$('#show_filters').click(function(){
 			show_filters();
 		});
-		function select_checkboxes(){
-			$('[name="answer_ids"]').each(function(){
-				if ($(this).parent().parent().css('display') != 'none')
-				{
-					$(this).attr('checked', 'checked');
-				}
-			});
-			$('#reset_checkboxes').attr('checked', 'checked');
-		}
-		function reset_checkboxes(){
-			$('[name="answer_ids"]').removeAttr('checked');
-			$('#reset_checkboxes').removeAttr('checked');
-		}
+		display_topics($('[name="theme"]').val());
+		$('[name="theme"]').change(function(){
+			display_topics($('[name="theme"]').val());
+			$('[name="topics"] option').removeAttr('selected');
+		});
 	})
+	function select_checkboxes(){
+		$('[name="answer_ids"]').each(function(){
+			if ($(this).parent().parent().css('display') != 'none')
+			{
+				$(this).attr('checked', 'checked');
+			}
+		});
+		$('#reset_checkboxes').attr('checked', 'checked');
+	}
+	function reset_checkboxes(){
+		$('[name="answer_ids"]').removeAttr('checked');
+		$('#reset_checkboxes').removeAttr('checked');
+	}
+	function show_filters(){
+		$('#filter_box').show();
+		$('#show_filters').hide();
+	}
+	function display_topics(selected_value){
+		if (selected_value == 'any')
+		{
+			$('label[for="topics"]').hide();
+			$('[name="topics"]').hide();
+		}
+		else{
+			$('label[for="topics"]').css('display', 'block');
+			$('[name="topics"]').show();
+			$('[name="topics"] option').hide();
+			$('.'+selected_value).show();
+		}
+	}
 	function check_answers(){
 		var submit_ok = false;
 		$('[name="answer_ids"]').each(function(){
@@ -116,22 +134,163 @@
 				<input type="text" name="official_country_region:utf8:ustring" size="50"
 					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
+			<div class="field" tal:define="theme options/theme|string:any">
+				<label for="theme" i18n:translate="">Report themes</label>
+				<select name="theme">
+					<option i18n:translate="" value="any"
+						tal:attributes="selected python:theme == 'any'">
+						Any</option>
+					<option i18n:translate="" value="w_water-resources-topics"
+						tal:attributes="selected python:theme == 'w_water-resources-topics' ">
+						Water resources topics</option>
+					<option i18n:translate=""
+						value="w_water-resource-management-topics"
+						tal:attributes="selected python:theme == 'w_water-resource-management-topics'">
+						Water resource management topics</option>
+					<option i18n:translate="" value="w_green-economy-topics"
+						tal:attributes="selected python:theme == 'w_green-economy-topics'">
+						Green economy topics</option>
+					<option i18n:translate="" value="w_resource-efficiency-topics"
+						tal:attributes="selected python:theme == 'w_resource-efficiency-topics'">
+						Resource efficiency topics</option>
+				</select>
+			</div>
 			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
 				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
 				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
 			</div>
 		</div>
-		<div class="field" style="float:left" tal:define="themes options/themes|python:[]">
-			<label for="themes" i18n:translate="">Report themes</label>
-			<select name="themes" multiple="True">
-				<option i18n:translate="" value="w_water-resources-topics"
-					tal:attributes="selected python:'w_water-resources-topics' in themes">Water resources topics</option>
-				<option i18n:translate="" value="w_water-resource-management-topics"
-				tal:attributes="selected python:'w_water-resource-management-topics' in themes">Water resource management topics</option>
-				<option i18n:translate="" value="w_green-economy-topics"
-				tal:attributes="selected python:'w_green-economy-topics' in themes">Green economy topics</option>
-				<option i18n:translate="" value="w_resource-efficiency-topics"
-				tal:attributes="selected python:'w_resource-efficiency-topics' in themes">Resource efficiency topics</option>
+		<div class="field" style="float:left" tal:define="topics options/topics|python:[]">
+			<label style="display:none" for="topics"
+				i18n:translate="">Topics</label>
+			<select style="display:none" name="topics" multiple="True" size="9">
+				<option i18n:translate="" value="a0"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a0' in topics">
+					Water quantity and vulnerability</option>
+				<option i18n:translate="" value="a1"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a1' in topics">Desertification</option>
+				<option i18n:translate="" value="a2"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a2' in topics">
+					Living resources</option>
+				<option i18n:translate="" value="a3"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a3' in topics">
+					Habitat characterization</option>
+				<option i18n:translate="" value="a4"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a4' in topics">
+					Ecosystems and biodiversity</option>
+				<option i18n:translate="" value="a5"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a5' in topics">
+					Protected and migratory species and protected areas</option>
+				<option i18n:translate="" value="a6"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a6' in topics">
+					Invasive species</option>
+				<option i18n:translate="" value="a7"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a7' in topics">
+					Water-borne diseases</option>
+				<option i18n:translate="" value="a8"
+					class="w_water-resources-topics"
+					tal:attributes="selected python:'a8' in topics">
+					Water quality and vulnerability</option>
+				<option i18n:translate="" value="b0"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b0' in topics">
+					Water quantity (including glaciers and extreme events)</option>
+				<option i18n:translate="" value="b1"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b1' in topics">
+					Water management</option>
+				<option i18n:translate="" value="b2"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b2' in topics">
+					Infrastructure</option>
+				<option i18n:translate="" value="b3"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b3' in topics">
+					Water consumption</option>
+				<option i18n:translate="" value="b4"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b4' in topics">
+					Governance (including transboundary issues)</option>
+				<option i18n:translate="" value="b5"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b5' in topics">
+					Ecosystem services and restoration</option>
+				<option i18n:translate="" value="b6"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b6' in topics">
+					Water pollution control</option>
+				<option i18n:translate="" value="b7"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b7' in topics">
+					Socio-economic aspects (e.g. access to drinking water)</option>
+				<option i18n:translate="" value="b8"
+					class="w_water-resource-management-topics"
+					tal:attributes="selected python:'b8' in topics">
+					Vulnerability</option>
+				<option i18n:translate="" value="c0"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c0' in topics">
+					Renewable energy (e.g. hydropower, biofuels and biomass)</option>
+				<option i18n:translate="" value="c1"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c1' in topics">
+					Energy efficiency</option>
+				<option i18n:translate="" value="c2"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c2' in topics">
+					Mobility (air quality, emissions and noise)</option>
+				<option i18n:translate="" value="c3"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c3' in topics">
+					Industry (emissions and waste)</option>
+				<option i18n:translate="" value="c4"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c4' in topics">
+					EIA and SIA</option>
+				<option i18n:translate="" value="c5"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c5' in topics">
+					Governance and environmental performance reviews</option>
+				<option i18n:translate="" value="c6"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c6' in topics">
+					Corporate social responsibility and environmental reporting</option>
+				<option i18n:translate="" value="c7"
+					class="w_green-economy-topics"
+					tal:attributes="selected python:'c7' in topics">
+					Futures and scenarios</option>
+				<option i18n:translate="" value="d0"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d0' in topics">
+					Use of natural capital</option>
+				<option i18n:translate="" value="d1"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d1' in topics">
+					Water efficiency in industrial, rural and urban areas</option>
+				<option i18n:translate="" value="d2"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d2' in topics">
+					Life-cycle analysis</option>
+				<option i18n:translate="" value="d3"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d3' in topics">
+					Environmental accounting</option>
+				<option i18n:translate="" value="d4"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d4' in topics">
+					Consumption and production patterns</option>
+				<option i18n:translate="" value="d5"
+					class="w_resource-efficiency-topics"
+					tal:attributes="selected python:'d5' in topics">
+					Tourism</option>
 			</select>
 		</div>
 		<div class="clearer" ></div>
@@ -221,6 +380,16 @@
 
 	<th tal:condition="review_template" colspan="2" i18n:translate="">Geo coverage:</th>
 
+	<!-- Year of publication -->
+	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='publication_year' or skey!='publication_year')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=publication_year">Publication date</a>
+		<img tal:condition="python:skey=='publication_year'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th rowspan="2" tal:condition="python:review_template and not rkey and skey=='publication_year'">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=publication_year&rkey=True">Publication date</a>
+		<img tal:condition="python:skey=='publication_year'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
 	<!-- Approval status -->
 	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval status</a>
@@ -231,7 +400,7 @@
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
-	<!-- Approval status -->
+	<!-- Approval date -->
 	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='approved_date' or skey!='approved_date')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=approved_date">Approval date</a>
 		<img tal:condition="python:skey=='approved_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
@@ -280,6 +449,8 @@
 		tal:content="i/geo_coverage_country|nothing"/>
 	<td tal:condition="review_template"
 		tal:content="i/geo_coverage_region|nothing"/>
+	<td tal:condition="review_template"
+		tal:content="i/publication_year|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >
         <span tal:condition="python:here.approved_date(i)">Approved</span>
         <span tal:condition="python:not here.approved_date(i)">Pending</span>
