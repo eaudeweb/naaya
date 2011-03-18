@@ -6,6 +6,8 @@ from DateTime import DateTime
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from containers import AccountSubscription, AnonymousSubscription
 
+notif_logger = logging.getLogger('naaya.core.notif')
+
 def DateTime_from_datetime(dt):
     DT = DateTime(dt.isoformat())
     zone = DT.localZone(dt.timetuple())
