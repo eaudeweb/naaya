@@ -121,9 +121,3 @@ class SubscriptionListingTest(NaayaTestCase):
 
         subs3 = list(walk_subscriptions(self.portal['f1']['a']))
         self.assertEqual(len(subs3), 0)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(SubscriptionTest))
-    suite.addTest(makeSuite(SubscriptionListingTest))
-    return suite

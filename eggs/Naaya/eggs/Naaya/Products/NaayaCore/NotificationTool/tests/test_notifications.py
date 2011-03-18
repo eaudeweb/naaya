@@ -72,8 +72,3 @@ class NotificationsTest(NaayaTestCase):
 
         self.notif.remove_account_subscription('contributor',
                                                'notifol', 'weekly', 'en')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NotificationsTest))
-    return suite

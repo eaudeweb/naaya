@@ -8,11 +8,13 @@ csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 zip_email_template = EmailPageTemplateFile('emailpt/zip_import.zpt', globals())
 
 def check_skip_notifications(subscriber):
-    """This session key will be set for admins that don't want to notify
-    users with their bulk modifications updates
-
-    """
     def wrapper(event):
+        """This session key will be set for admins that don't want to notify
+        users with their bulk modifications updates.
+        Also check if the object is approved.
+
+        """
+
         if (hasattr(event.context, 'REQUEST') and
             hasattr(event.context.REQUEST, 'SESSION') and
             event.context.REQUEST.SESSION.get('skip_notifications', False) is
@@ -53,7 +55,8 @@ def handle_csv_import(event):
         'datetime': portal.utShowFullDateTime(portal.utGetTodayDate()),
     }
 
-    send_notifications_for_event(event, subscriber_data_default, csv_email_template)
+    send_notifications_for_event(event, subscriber_data_default,
+                                 csv_email_template)
 
 @check_skip_notifications
 def handle_zip_import(event):
@@ -66,7 +69,8 @@ def handle_zip_import(event):
         'datetime': portal.utShowFullDateTime(portal.utGetTodayDate())
     }
 
-    send_notifications_for_event(event, subscriber_data_default, zip_email_template)
+    send_notifications_for_event(event, subscriber_data_default,
+                                 zip_email_template)
 
 
 def send_notifications_for_event(event, subscriber_data_default, template):
