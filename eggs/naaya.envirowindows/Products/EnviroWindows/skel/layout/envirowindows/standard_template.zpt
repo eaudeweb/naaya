@@ -111,7 +111,7 @@
                             <input type="submit" value="GO" class="search_btn" /></div>
                         </form>
                     </div>
-                    <div id="breadcrumbtrail" on-error="here/rstk/catch_unauthorized" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
+                    <div id="breadcrumbtrail" on-error="python:here.log_page_error(error)" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
                         <a href="http://ew.eea.europa.eu" title="EnviroWindows">EW</a> &raquo; 
                         <a tal:attributes="href string:${site_url}/" title="Home" i18n:attributes="title" i18n:translate="">Home</a>
                         <tal:block condition="crumbs">&raquo;</tal:block>
