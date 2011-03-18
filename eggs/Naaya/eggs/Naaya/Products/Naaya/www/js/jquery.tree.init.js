@@ -41,7 +41,7 @@ function load_js_tree(){
                 // If the tree_container has xxx_tree id the target input should have xxx_tree_target class
                 var target = $('.' + TREE_OBJ.container.attr('id') + '_target');
                 if (target.length){
-                    target.val($(NODE).attr('title'));
+                    target.val(TREE_URL_PREFIX + $(NODE).attr('title'));
                 } else {
                     alert('Error: Please set up the target input class');
                 }
