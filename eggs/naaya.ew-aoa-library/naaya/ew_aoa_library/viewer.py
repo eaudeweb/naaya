@@ -262,7 +262,7 @@ class AoALibraryViewer(SimpleItem):
         theme = REQUEST.get('theme', None)
         if theme == 'any':
             theme = None
-        topics = REQUEST.get('topics', None)
+        topics = REQUEST.get('topics', [])
         if not (official_country_region or theme or show_unapproved):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
@@ -287,8 +287,8 @@ class AoALibraryViewer(SimpleItem):
             elif theme:
                 if not hasattr(survey_answer.aq_base, theme):
                     continue
-                for topics in getattr(survey_answer.aq_base, theme):
-                    if len(topics) > 0:
+                for topics_list in getattr(survey_answer.aq_base, theme):
+                    if len(topics_list) > 0:
                         #If the topic is not an empty list, add the shadow
                         #to the results list and continue to the next shadow
                         shadows.append(shadow)
