@@ -61,7 +61,7 @@ function insert_link() {
 function setAllAttribs(link) {
 	var inst = tinyMCEPopup.editor;
 	var dom = tinyMCEPopup.editor.dom;
-	var val = inst.settings.site_url + '/' + getCtrlValue('url');
+	var val = getCtrlValue('url');
 	dom.setAttrib(link, 'href', val);
 	var title = getCtrlValue('title');
 	if(title != '') {
