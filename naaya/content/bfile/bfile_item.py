@@ -244,6 +244,14 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         else:
             return None
 
+    security.declareProtected(view, 'current_version_download_url')
+    def current_version_download_url(self):
+        versions = self._versions_for_tmpl()
+        if versions:
+            return versions[-1]['url']
+        else:
+            return None
+
     def _save_file(self, the_file):
         # TODO set tzinfo on timestamp
         bf = make_blobfile(the_file,
