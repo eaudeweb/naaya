@@ -259,10 +259,11 @@ class AoALibraryViewer(SimpleItem):
         show_unapproved = REQUEST.get('show_unapproved', None)
         if not self.checkPermissionPublishObjects():
             show_unapproved = None
-        themes = REQUEST.get('themes', [])
-        if isinstance(themes, basestring):
-            themes = [themes]
-        if not (official_country_region or themes or show_unapproved):
+        theme = REQUEST.get('theme', None)
+        if theme == 'any':
+            theme = None
+        topics = REQUEST.get('topics', None)
+        if not (official_country_region or theme or show_unapproved):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         shadows = []
@@ -273,27 +274,29 @@ class AoALibraryViewer(SimpleItem):
                     or official_country_region.lower() in
                     getattr(survey_answer.aq_base, 'w_geo-coverage-region', '').lower()):
                 continue
-            if themes:
-                for theme in themes:
+            if topics:
+                for topic in topics:
+                    #If we have topics, then we should also have a theme
                     if not hasattr(survey_answer.aq_base, theme):
-                        #If the answer doesn't have the searched attribute
-                        #break the first for and go to next shadow
                         break
-                    for topic in getattr(survey_answer.aq_base, theme):
-                        if len(topic) > 0:
-                            #If the current topic is not an empty list
-                            #break the second for and go to next theme in themes
-                            break
-                    else:
-                        #If the attribute is a list of empty lists
-                        #break the first for and go to next shadow
+                    if len(getattr(survey_answer.aq_base, theme)[int(topic[1])]) == 0:
                         break
                 else:
                     shadows.append(shadow)
+                continue
+            elif theme:
+                if not hasattr(survey_answer.aq_base, theme):
+                    continue
+                for topics in getattr(survey_answer.aq_base, theme):
+                    if len(topics) > 0:
+                        #If the topic is not an empty list, add the shadow
+                        #to the results list and continue to the next shadow
+                        shadows.append(shadow)
+                        break
             else:
                 #If no themes are selected, just append the shadow to the list
                 shadows.append(shadow)
-        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes)
+        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, theme=theme, topics=topics)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
