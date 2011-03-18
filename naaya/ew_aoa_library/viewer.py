@@ -263,6 +263,8 @@ class AoALibraryViewer(SimpleItem):
         if theme == 'any':
             theme = None
         topics = REQUEST.get('topics', [])
+        if not isinstance(topics, list):
+            topics = [topics]
         if not (official_country_region or theme or show_unapproved):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
