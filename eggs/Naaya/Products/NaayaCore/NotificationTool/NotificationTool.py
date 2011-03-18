@@ -271,6 +271,10 @@ class NotificationTool(Folder):
         if not self.config['enable_instant']:
             return
 
+        #Don't send notifications if the object is not approved
+        if not ob.approved:
+            return
+
         subscribers_data = utils.get_subscribers_data(self, ob, **{
             'person': user_id,
             'ob_edited': ob_edited,

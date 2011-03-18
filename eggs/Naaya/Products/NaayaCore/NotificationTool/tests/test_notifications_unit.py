@@ -234,6 +234,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
         self.add_account_subscription('user3', '', 'instant', 'en')
 
         addNyDocument(self.portal['fol1'], id='doc_a')
+        self.portal.fol1.doc_a.approved = True
         self.object_timestamps = [
             ('fol1/doc_a', datetime(2009, 8, 3)),
         ]
@@ -265,14 +266,16 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
         self.add_account_subscription('user2', 'fol1', 'instant', 'en')
 
         addNyDocument(self.portal['fol1'], id='doc_a', contributor='admin')
+        self.portal.fol1.doc_a.approved = True
         addNyDocument(self.portal['fol1'], id='doc_b', contributor='admin')
+        self.portal.fol1.doc_b.approved = True
         self.portal['fol1']['doc_a']._View_Permission = ('Reviewer',)
         self.portal['fol1']['doc_b']._View_Permission = ('Contributor',)
 
         notif_tool.notify_instant(self.portal['fol1']['doc_a'], 'somebody')
         notif_tool.notify_instant(self.portal['fol1']['doc_b'], 'somebody')
-
-        self.assertEqual(set(self._fetch_test_notifications()), set([
+        notifications = self._fetch_test_notifications()
+        self.assertEqual(set(notifications), set([
             ('from.zope@example.com', 'reviewer@example.com',
                 'notifications', 'instant [fol1/doc_a] portal'),
             ('from.zope@example.com', 'user2@example.com',
@@ -303,6 +306,63 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
             ('from.zope@example.com', 'user2@example.com', 'notifications',
                 'weekly [fol1/doc_b] portal'),
         ]))
+
+class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
+    """ When an object is created e.g. by a Contributor, and it's not
+    approved yet, notifications should not be sent. Rather they should be
+    sent when the object becomes approved.
+
+    Tests: #525
+
+    """
+
+    def afterSetUp(self):
+        super(NotificationsUnapprovedUnitTest, self).afterSetUp()
+        self.portal.getNotificationTool().config.update({
+            'enable_instant': True,
+            'enable_daily': True,
+            'enable_weekly': True,
+            'enable_monthly': True,
+        })
+        transaction.commit()
+
+    def test_instant(self):
+        """ Instant notifications for unapproved objects
+        When an object is added it calls the
+        ``NotificationTool.handle_object_add`` subscriber that sends the
+        notifications to the folder maintainers and the notification subribers
+        Since we do not call directly that subscriber no notifications will
+        be sent. See the tests from ``test_noitifications_functional`` for the
+        above case.
+
+        """
+        self.add_account_subscription('contributor', 'fol1', 'instant', 'en')
+
+        addNyDocument(self.portal['fol1'], id='doc_a', approved=0,
+                      contributor='admin')
+
+        notif_tool = self.portal.getNotificationTool()
+        notif_tool.notify_instant(self.portal['fol1']['doc_a'], 'somebody')
+
+        #No notifications should be sent at this point
+        self.assertEqual(self._fetch_test_notifications(), [])
+
+
+    def test_periodic(self):
+        notif_tool = self.portal.getNotificationTool()
+
+        self.add_account_subscription('contributor', 'fol1', 'instant', 'en')
+
+        addNyDocument(self.portal['fol1'], id='doc_a', approved=0,
+                      contributor='admin')
+        self.object_timestamps = [
+            ('fol1/doc_a', datetime(2009, 8, 3)),
+        ]
+
+        notif_tool._send_newsletter('weekly',
+            datetime(2009, 7, 30), datetime(2009, 8, 5))
+
+        self.assertEqual(self._fetch_test_notifications(), [])
 
 class NotificationsCronUnitTest(BaseNotificationsTest):
     """ unit test for notifications """
@@ -506,11 +566,3 @@ class NotificationsUiApiTest(BaseNotificationsTest):
         notif_tool.config['enable_weekly'] = False
         self.assertEqual(list(notif_tool.available_notif_types(location='fol1')),
             ['instant', 'daily', 'monthly'])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NotificationsUnitTest))
-    suite.addTest(makeSuite(NotificationsRestrictedUnitTest))
-    suite.addTest(makeSuite(NotificationsCronUnitTest))
-    suite.addTest(makeSuite(NotificationsUiApiTest))
-    return suite

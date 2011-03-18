@@ -19,6 +19,8 @@ class NotificationsTest(NaayaFunctionalTestCase):
         addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
         addNyDocument(self.portal.notifol, id='notidoc',
             title='Notifying document', submitted=1, contributor='contributor')
+        self.portal.notifol.notidoc.approved = True # Approve this document
+
         _notif = self.portal.portal_notification
         self._original_config = dict(_notif.config)
         _notif.config['enable_instant'] = True
@@ -228,8 +230,3 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
         #No notifications should be sent
         self.assertEqual(self._fetch_test_notifications(), [])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NotificationsTest))
-    return suite
