@@ -142,15 +142,79 @@ class AoALibraryViewer(SimpleItem):
         based on the available report titles from the VL"""
         if not REQUEST.form.has_key('submit'):
             return self._manage_update_html()
-        updated_answers = []
-        errors = {}
-        orphan_answers = []
+        state = {}
+        state['updated_answers'] = {}
+        state['errors'] = {}
+        state['orphan_answers'] = []
         review_template = self.aq_parent['tools']['general_template']['general-template']
-        library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        if REQUEST.form.has_key('update_rt_titles'):
+            library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+            self._update_rt_titles(state, review_template, library)
+        if REQUEST.form.has_key('update_remove_acronyms'):
+            self._update_remove_acronyms(state, review_template)
+        return self._manage_update_html(updated_answers=state['updated_answers'],
+            errors=state['errors'].items(),
+            orphan_answers=state['orphan_answers'])
+
+    _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_remove_acronyms(self, state, review_template):
+        localized_strings = ['w_country',
+            'w_if-networked-provide-details-nature-network',
+            'w_if-others-specify1353', 'w_if-others-specify1421',
+            'w_if-others-specify8707', 'w_if-regional-specify-region',
+            'w_if-yes-how', 'w_if-yes-list-and-provide-details',
+            'w_if-yes-list-main-ones', 'w_if-yes-list-mains-ones6917',
+            'w_if-yes-provide-details-how-quality-was-controlled',
+            'w_if-yes-provide-details1833', 'w_if-yes-provide-details6433',
+            'w_if-yes-provide-details7707', 'w_if-yes-provide-details7874',
+            'w_if-yes-provide-details8215', 'w_if-yes-provide-details9388',
+            'w_if-yes-specify', 'w_if-yes-specify-frequency-years',
+            'w_if-yes-specify-major-priority-concerns',
+            'w_if-yes-specify-names-bodyies-involved',
+            'w_if-yes-specify-which-languages-it-available',
+            'w_if-yes-specify2297', 'w_if-yes-specify2554',
+            'w_if-yes-specify2610', 'w_if-yes-specify3390',
+            'w_if-yes-specify9255', 'w_name', 'w_organisation',
+            'w_q1-name-assessment-report',
+            'w_q18-which-languages-main-report-assessment',
+            'w_q2-name-body-conducting-assessment']
+        st_strings = ['w_geo-coverage-region', 'w_hardcopy',
+            'w_official-country-region', 'w_q3-publishing-year-assessment']
+        strings_to_remove = [u'<acronym title="Formal efforts to assemble selected knowledge with a view toward making it publicly available in a form intended to be useful for decision-making (Mitchell and others 2006). By \u2018formal\u2019 the definition requires that the assessment should be sufficiently organised to identify components such as products, participants and issuing authority. \u2018Selected knowledge\u2019 indicates that the content has a defined scope or purpose and that not all information compiled and contributed is necessarily included in the report. The sources of knowledge may vary. While results from research and scientific knowledge predominate, assessments can supplement this with local, traditional or indigenous knowledge. Further, assessments can evaluate both existing information and research conducted expressly for the purpose. The definition also notes the importance of ensuring that assessments are in the public domain, as they may influence public debate and different types of decision-makers.">', u'</acronym>']
+        for answer in review_template.objectValues('Naaya Survey Answer'):
+            affected_strings = []
+            for localized_string in localized_strings:
+                text_values = answer.get(localized_string)
+                if not isinstance(text_values, dict):
+                    continue
+                for k,v in text_values.items():
+                    found = False
+                    for st in strings_to_remove:
+                        if st in v:
+                            v = ''.join(v.split(st))
+                            affected_strings.append(localized_string)
+                            found = True
+                    if found:
+                        answer.set_property(localized_string, {k: v})
+            for st_string in st_strings:
+                text_value = answer.get(st_string)
+                found = False
+                for st in strings_to_remove:
+                    if text_value and st in text_value:
+                        text_value = ''.join(text_value.split(st))
+                        affected_strings.append(st_string)
+                        found = True
+                if found:
+                    answer.set_property(st_string, text_value)
+            if affected_strings:
+                state['updated_answers'][answer.absolute_url()] = self.utRemoveDuplicates(affected_strings)
+
+    def _update_rt_titles(self, state, review_template, library):
         for answer in review_template.objectValues(survey_answer_metatype):
             title_dict = answer.get('w_q1-name-assessment-report')
             if not title_dict:
-                orphan_answers.append(answer.absolute_url())
+                state['orphan_answers'].append(answer.absolute_url())
                 continue
             temp_title = title_dict['en']
             if not temp_title:
@@ -161,18 +225,14 @@ class AoALibraryViewer(SimpleItem):
                     if  temp_title.strip() in vl_answers:
                         new_title = vl_answer.get('w_assessment-name')
                         answer.set_property('w_q1-name-assessment-report', {'en': new_title['en'], 'ru': new_title['ru']})
-                        updated_answers.append(answer.absolute_url())
+                        state['updated_answers'][answer.absolute_url()] = []
                         break
                 except AttributeError:
-                    errors[vl_answer.absolute_url()] = "AttributeError"
+                    state['errors'][vl_answer.absolute_url()] = "AttributeError"
                 except:
-                    errors[vl_answer.absolute_url()] = "Unhandled"
+                    state['errors'][vl_answer.absolute_url()] = "Unhandled"
             else:
-                orphan_answers.append(answer.absolute_url())
-        return self._manage_update_html(updated_answers=updated_answers,
-            errors=errors.items(), orphan_answers=orphan_answers)
-
-    _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+                state['orphan_answers'].append(answer.absolute_url())
 
     security.declareProtected(view, 'viewer_view_report_html')
     def viewer_view_report_html(self, REQUEST):

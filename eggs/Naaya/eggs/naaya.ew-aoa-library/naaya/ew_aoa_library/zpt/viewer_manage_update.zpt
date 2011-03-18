@@ -7,7 +7,9 @@
 
 <form action="">
 	<input type="hidden" name="submit" value="True" />
-	<input type="submit" value="Update review template titles" />
+	<input type="checkbox" name="update_rt_titles" value="True" /><label>Update review template titles</label><br/>
+	<input type="checkbox" name="update_remove_acronyms" value="True" /><label>Correct answers containing acronym code</label><br/>
+	<input type="submit" value="Submit" />
 </form>
 
 <tal:block define="updated_answers options/updated_answers|nothing;
@@ -48,8 +50,11 @@
 		<p tal:define="count python:len(updated_answers)"
 			tal:content="string:Successfully updated ${count} answers:"></p>
 		<ul>
-			<li tal:repeat="answer updated_answers">
-				<a tal:content="answer" tal:attributes="href answer"/>
+			<li tal:repeat="answer updated_answers/items">
+				<a tal:content="python:answer[0]" tal:attributes="href python:answer[0]"/>
+				<ul>
+					<li tal:repeat="property python:answer[1]" tal:content="property"/>
+				</ul>
 			</li>
 		</ul>
 	</tal:block>
