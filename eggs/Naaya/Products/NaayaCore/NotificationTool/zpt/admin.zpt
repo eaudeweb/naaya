@@ -189,11 +189,11 @@
 
 <fieldset>
     <legend i18n:translate="">Subscribtions</legend>
-<tal:block tal:condition="not:object_list"
+<tal:block tal:condition="python: (not object_list) and (not query)"
     i18n:translate="">No users have yet subscribed to any notifications.
 </tal:block>
 
-<tal:block condition="object_list">
+<tal:block condition="python: object_list or query">
     <div class="floated-buttons">
         <span class="buttons">
             <a tal:attributes="href python:'%s/download?file_type=CSV' % here.absolute_url()" i18n:translate="">Download as CSV</a>
@@ -207,6 +207,10 @@
         <input id="user_search" type="text" name="query" tal:attributes="value query"/>
         <input type="submit" value="Search" i18n:attributes="value" />
     </form>
+    <tal:block condition="not:object_list" i18n:translate="">
+        No subscribed users matched the selected query.
+    </tal:block>
+    <tal:block condition="object_list">
     <tal:block define="paginator python:here.make_paginator(object_list, 10, body=5, padding=2, orphans=2);
                        page_obj python:paginator.page(page);
                        records page_obj/object_list;
@@ -293,6 +297,7 @@
         </tbody>
     </table>
     <tal:block replace="structure python:page_obj.pagination(make_url=make_url)">
+    </tal:block>
     </tal:block>
     </tal:block>
 </tal:block>
