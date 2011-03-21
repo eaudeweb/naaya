@@ -30,22 +30,32 @@ from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
 from naaya.content.url.interfaces import INyURL
 from naaya.core.utils import force_to_unicode, relative_object_path
+from naaya.content.file.file_item import addNyFile
 
 try:
     from naaya.content.bfile.bfile_item import addNyBFile
-    def add_file(location_obj, name, data):
+    def add_blob_file(location_obj, name, data):
         f = StringIO(data)
         f.filename = name
         if '.' in name:
             name = name.rsplit('.', 1)[0]
         return addNyBFile(location_obj, uploaded_file=f,
                           _send_notifications=False)
-
 except ImportError:
-    from naaya.content.file.file_item import addNyFile
-    def add_file(location_obj, name, data):
+    def add_blob_file(location_obj, name, data):
+        raise NotImplementedError
+
+
+def add_file(location_obj, name, data):
+    site = location_obj.getSite()
+    installed_meta_types = site.get_pluggable_installed_meta_types()
+    if 'Naaya Blob File' in installed_meta_types:
+        return add_blob_file(location_obj, name, data)
+    elif 'Naaya File' in installed_meta_types:
         return addNyFile(location_obj, id=name, title=name,
                          file=data, _send_notifications=False)
+    else:
+        raise NotImplementedError
 
 def read_zipfile_contents(data):
     """
