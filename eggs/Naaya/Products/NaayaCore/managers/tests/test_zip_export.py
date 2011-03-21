@@ -29,6 +29,7 @@ class NyZipExport(NaayaTestCase):
         addNyFolder(self.portal, 'zip_export_folder',
                     contributor='contributor', submitted=1)
         self.test_folder = self.portal['zip_export_folder']
+        self.portal.manage_install_pluggableitem('Naaya Blob File')
         self.login()
 
     def beforeTearDown(self):
