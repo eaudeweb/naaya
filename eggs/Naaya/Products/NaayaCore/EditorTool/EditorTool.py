@@ -225,8 +225,9 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
             if mode == 'upload':
                 url = self._upload_image(REQUEST)
 
-        if not url.startswith('http'):
+        if not url.startswith('http') and not url.startswith('/'):
             url = '%s/%s' % (self.getEnclosingDocument(REQUEST).absolute_url(), url)
+
         return url
 
 

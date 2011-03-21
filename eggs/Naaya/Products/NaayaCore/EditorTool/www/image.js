@@ -76,7 +76,7 @@ function ImagePreparer() {
 	};
 
 
-	this.updateTitle = function() { 
+	this.updateTitle = function() {
 		this.ctrls['img_preview'].title = this.getCtrlValue('title');
 	};
 
@@ -147,10 +147,10 @@ function ImagePreparer() {
 		// Fixes crash in Safari
 		if (tinymce.isWebKit) { ed.getWin().focus(); }
 		tinyMCEPopup.restoreSelection();
-		
+
 		args = {'src' : this.url, 'style' : ''};
 		var title = this.getCtrlValue('title');
-		if(title != '') { args['title'] = title; } 
+		if(title != '') { args['title'] = title; }
 
 		var border = this.getCtrlValue('img_border');
 		if(border != '') {
