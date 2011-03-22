@@ -10,6 +10,7 @@ setup(name='Naaya',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+          'zope.site',
           'naaya.flowplayer',
           'naaya.content-compat',
           'contentratings',
