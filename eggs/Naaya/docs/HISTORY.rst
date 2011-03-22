@@ -3,10 +3,16 @@ Changelog
 
 2.11.03 (unreleased)
 --------------------
- * Removed all license headers and a lot of uneeded files such as empty readme
-   files.
- * Cleaned up NotificationTool. Notification subscribers now receive
-   emails on zip/csv import events.
+ * Folder listing fetches all information about listed objects using adapters.
+ * Fix: ``naaya.core.zope2util.permission_add_role`` used to incorrectly toggle
+   the permission.
+ * Fix: Zip export used to leave out extensions if filename already contained
+   a dot.
+ * Remove all license headers and a lot of uneeded files (e.g. empty readmes).
+ * Roles editing is protected with the permission `Change permissons`.
+ * Fix: "Exception while rendering an error message".
+ * Clean up NotificationTool. Subscribers now receive emails on zip/csv import.
+ * Zip download now includes URLs as well.
 
 2.11.02 (2011-03-01)
 --------------------
