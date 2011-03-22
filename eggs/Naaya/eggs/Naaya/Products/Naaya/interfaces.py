@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope.schema import Datetime
 
 # import for compatibility
 from naaya.core.interfaces import IHeartbeat
@@ -41,3 +42,14 @@ class IObjectView(Interface):
         """
         Returns a description of size. Can be file size, number of items, etc.
         """
+
+class IActionLogger(Interface):
+    """ Action logging utility for Naaya """
+
+    def append():
+        """ Add an ``IActionLogger`` """
+
+class IActionLogItem(Interface):
+    """ Where actual log data resides """
+
+    created_datetime = Datetime(title=u"Created datetime")

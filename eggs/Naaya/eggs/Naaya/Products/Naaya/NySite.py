@@ -1,4 +1,3 @@
-
 import urllib
 try:
     import json
@@ -35,8 +34,11 @@ from App.ImageFile import ImageFile
 from zope import component, interface
 import transaction
 from zope.deprecation import deprecate
+from zope.site import LocalSiteManager
+import zope.app.component.site
 
-from interfaces import INySite
+from interfaces import INySite, IActionLogger
+from action_logger import ActionLogger
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
@@ -254,6 +256,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #set default main topics
         self.getPropertiesTool().manageMainTopics(['info'])
         self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
+
+        #Set local site manager
+        sm = LocalSiteManager(self)
+        #This was done because Zope2 setSiteManager does not set the ISite
+        #interface which is needed to do component lookup in site managers.
+        zope.app.component.site.SiteManagerContainer\
+            .setSiteManager.im_func(self, sm)
+        self.setSiteManager(sm)
+
+        #Register Action Logger utility
+        sm.registerUtility(ActionLogger(), IActionLogger)
 
     skel_handler_cache = {}
 
@@ -603,6 +616,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         p_objects = p_archive.getObjects()
         p_objects = self.utSortObjsListByAttr(p_objects, p_attr, p_desc)
         return self.get_archive_listing(p_objects)
+
+    security.declareProtected(view, 'getActionLogger')
+    def getActionLogger(self):
+        return component.getUtility(IActionLogger, context=self)
 
     security.declarePrivate('setSearchableContent')
     def setSearchableContent(self, p_meta_types):
