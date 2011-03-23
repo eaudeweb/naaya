@@ -1,7 +1,8 @@
 from unittest import TestCase
-import transaction
+import random
 
 from zope import interface
+import transaction
 
 from NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.action_logger import ActionLogger, ActionLogItem
@@ -29,6 +30,17 @@ class ActionLoggerTest(TestCase):
     def test_add_log_error_type(self):
         self.assertRaises(AssertionError, self.action_logger.append,
                           'Bad type')
+
+    def test_items(self):
+        types = ['a', 'b', 'c']
+        for i in range(1, 10):
+            self.action_logger.create(type=random.choice(types),
+                                      message="type")
+        for log_id, log in self.action_logger.items(type='a'):
+            self.assertEqual(log.type, 'a')
+
+        self.assertEqual(len(self.action_logger.items()),
+                         len(self.action_logger))
 
     def test_remove_log(self):
         log_id = self.action_logger.create(type="Some type")
