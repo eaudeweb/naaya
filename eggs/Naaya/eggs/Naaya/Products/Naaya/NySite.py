@@ -34,8 +34,7 @@ from App.ImageFile import ImageFile
 from zope import component, interface
 import transaction
 from zope.deprecation import deprecate
-from zope.site import LocalSiteManager
-import zope.app.component.site
+from zope.app.component.site import LocalSiteManager, SiteManagerContainer
 
 from interfaces import INySite, IActionLogger
 from action_logger import ActionLogger
@@ -261,8 +260,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         sm = LocalSiteManager(self)
         #This was done because Zope2 setSiteManager does not set the ISite
         #interface which is needed to do component lookup in site managers.
-        zope.app.component.site.SiteManagerContainer\
-            .setSiteManager.im_func(self, sm)
+        SiteManagerContainer.setSiteManager.im_func(self, sm)
         self.setSiteManager(sm)
 
         #Register Action Logger utility
