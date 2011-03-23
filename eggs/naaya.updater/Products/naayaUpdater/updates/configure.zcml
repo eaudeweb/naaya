@@ -13,7 +13,11 @@
 	  provides="..interfaces.IUpdateScript"
 	  component=".update_add_forum.UpdateAddForum"
 	  permission="zope2.ViewManagementScreens" />
-
+	<utility
+	  name="add_sitemanager.update"
+	  provides="..interfaces.IUpdateScript"
+	  component=".update_add_localsitemanager.UpdateAddLocalSiteManager"
+	  permission="zope2.ViewManagementScreens" />
 	<utility
 	  name="analytics.update"
 	  provides="..interfaces.IUpdateScript"
