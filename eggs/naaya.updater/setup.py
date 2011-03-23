@@ -8,6 +8,7 @@ setup(name='naaya.updater',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'setuptools',
         'Naaya',
     ]
 )
