@@ -1,5 +1,4 @@
-from zope.interface import Interface
-from zope.schema import Datetime
+from zope.interface import Interface, Attribute
 
 # import for compatibility
 from naaya.core.interfaces import IHeartbeat
@@ -52,4 +51,5 @@ class IActionLogger(Interface):
 class IActionLogItem(Interface):
     """ Where actual log data resides """
 
-    created_datetime = Datetime(title=u"Created datetime")
+    type = Attribute('type', u'Type of log item')
+    created_datetime = Attribute('created_datetime', u"Created datetime")

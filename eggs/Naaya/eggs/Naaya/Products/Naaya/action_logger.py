@@ -53,6 +53,13 @@ class ActionLogger(Persistent):
         log = ActionLogItem(**kw)
         return self.append(log)
 
+    def items(self, type=None):
+        """ Return container items filtered by type"""
+        if type is None:
+            return self.container.items()
+        return filter(lambda (log_id, log): log.type == type,
+                            self.container.items())
+
     def __iter__(self):
         return self.container.iteritems()
 
@@ -66,21 +73,19 @@ class ActionLogger(Persistent):
         return len(self.container)
 
 class ActionLogItem(Persistent):
-    """ Action log base class. Do not use this directly instead extend it
-    with your own log item classes.
-
-    """
+    """ Action log base class"""
 
     interface.implements(IActionLogItem)
 
-    def __init__(self, created_datetime=None, **kw):
-        """ """
+    def __init__(self, type=None, created_datetime=None, **kw):
+        """ Type attribute is used to filter types of logs. """
         if created_datetime is None:
             created_datetime = DateTime()
         assert isinstance(created_datetime, DateTime)
 
         self.__dict__.update(kw)
+        self.type = type
         self.created_datetime = created_datetime
-
+        
     def __repr__(self):
         return u"<%s %r>" % (self.__class__.__name__, self.__dict__)
