@@ -31,3 +31,11 @@ to live outside of any Groupware (Naaya) portal.
 Zope site customisations
 ========================
      * define a Zope root string property with the id 'root_site_title'
+
+
+TODO
+====
+
+Register all templates from this folder as browser views. Python scripts as
+views or utilities. And create a bootstrap script that adds GW Applications.
+This would be more maintainable and can be used in test environments.
