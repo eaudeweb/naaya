@@ -55,11 +55,13 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
     """
     Functional test case for Naaya - use Twill (http://twill.idyll.org/) for client-side tests
     """
-    
+
     _naaya_plugin = 'NaayaPortalTestPlugin'
 
     def setUp(self):
         self.install_twill()
+        #This is needed for absolute_url
+        self.portal.REQUEST.setServerURL('http', 'localhost')
         super(NaayaFunctionalTestCase, self).setUp()
 
     def tearDown(self):
@@ -67,7 +69,7 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
         self.remove_twill()
 
     def browser_do_login(self, username, password):
-        self.browser.go('http://localhost/portal/login_html')
+        self.browser.go(self.portal.absolute_url() + '/login_html')
         form = self.browser.get_form(2)
         field = self.browser.get_form_field(form, '__ac_name')
         self.browser.clicked(form, field)
@@ -77,12 +79,12 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
         self.failUnless('You are logged in as: <em>%s</em>' % username in self.browser.get_html())
 
     def browser_do_logout(self):
-        self.browser.go('http://localhost/portal/logout')
+        self.browser.go(self.portal.absolute_url() + '/logout')
         self.failUnless('<h1>Log in</h1>' in self.browser.get_html())
 
     def assertRedirectLoginPage(self, logic=True):
         url = self.browser.get_url()
-        login_prefix = 'http://localhost/portal/login_html?came_from='
+        login_prefix = self.portal.absolute_url() + '/login_html?came_from='
         if logic is True:
             self.failUnless(url.startswith(login_prefix))
         else:
@@ -90,7 +92,8 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
 
     def assertRedirectUnauthorizedPage(self, logic=True):
         url = self.browser.get_url()
-        login_prefix = 'http://localhost/portal/unauthorized_html?came_from='
+        login_prefix = self.portal.absolute_url() + \
+                                                '/unauthorized_html?came_from='
         if logic is True:
             self.failUnless(url.startswith(login_prefix))
         else:
@@ -98,8 +101,9 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
 
     def assertAccessDenied(self, logic=True, msg=None):
         url = self.browser.get_url()
-        login_prefix = 'http://localhost/portal/login_html?came_from='
-        unauthorized_prefix = 'http://localhost/portal/unauthorized_html?came_from='
+        login_prefix = self.portal.absolute_url() +  '/login_html?came_from='
+        unauthorized_prefix = self.portal.absolute_url() + \
+                                            '/unauthorized_html?came_from='
         access_denied = (url.startswith(login_prefix) or
                          url.startswith(unauthorized_prefix) or
                          self.browser.result.http_code == 401)
