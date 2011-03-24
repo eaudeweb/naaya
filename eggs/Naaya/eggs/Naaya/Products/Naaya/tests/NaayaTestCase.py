@@ -62,32 +62,10 @@ def wrap_with_request(app):
 
     return fake_root
 
-def portal_fixture(app):
-    from Products.Naaya.NySite import manage_addNySite
-    manage_addNySite(app, 'portal', 'Naaya Test Site')
-    portal = app.portal
-    alsoProvides(portal, ITestSite)
-
-    portal.mail_address_from = 'from.zope@example.com'
-    portal.administrator_email = 'site.admin@example.com'
-
-    acl_users = portal.acl_users
-    acl_users._doAddUser('test_user_1_', 'secret', ['Manager'], '', '', '', '')
-    acl_users._doAddUser('site_admin', 'site_admin', ['Administrator'], '',
-                         'Site', 'Admin', 'site_admin@example.com')
-    acl_users._doAddUser('contributor', 'contributor', ['Contributor'], '',
-                         'Contributor', 'Test', 'contrib@example.com')
-    acl_users._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
-                         'Reviewer', 'Test', 'reviewer@example.com')
-    acl_users._doAddUser('user1', 'user1', ['Contributor'], '',
-                         'User', 'One', 'user1@example.com')
-    acl_users._doAddUser('user2', 'user2', ['Contributor'], '',
-                         'User', 'Two', 'user2@example.com')
-    acl_users._doAddUser('user3', 'user3', ['Contributor'], '',
-                         'User', 'Three', 'user3@example.com')
-
-
 class NaayaTestCase(unittest.TestCase):
+
+    _naaya_plugin = 'NaayaPortalTestPlugin'
+
     def setUp(self):
         self.afterSetUp()
 
@@ -161,6 +139,37 @@ class NaayaPortalTestPlugin(Plugin):
     def configure(self, options, config):
         self.enabled = True
 
+    def portal_fixture(self, app):
+        """ Create and return a portal"""
+        from Products.Naaya.NySite import manage_addNySite
+        portal_id = 'portal'
+        manage_addNySite(app, portal_id, 'Naaya Test Site')
+        return portal_id
+
+    def portal_setup(self, app):
+        """ Do some setup for this portal """
+        portal = getattr(app, self.portal_id)
+        alsoProvides(portal, ITestSite)
+
+        portal.mail_address_from = 'from.zope@example.com'
+        portal.administrator_email = 'site.admin@example.com'
+
+        acl_users = portal.acl_users
+        acl_users._doAddUser('test_user_1_', 'secret', ['Manager'],
+                             '', '', '', '')
+        acl_users._doAddUser('site_admin', 'site_admin', ['Administrator'], '',
+                             'Site', 'Admin', 'site_admin@example.com')
+        acl_users._doAddUser('contributor', 'contributor', ['Contributor'], '',
+                             'Contributor', 'Test', 'contrib@example.com')
+        acl_users._doAddUser('reviewer', 'reviewer', ['Reviewer'], '',
+                             'Reviewer', 'Test', 'reviewer@example.com')
+        acl_users._doAddUser('user1', 'user1', ['Contributor'], '',
+                             'User', 'One', 'user1@example.com')
+        acl_users._doAddUser('user2', 'user2', ['Contributor'], '',
+                             'User', 'Two', 'user2@example.com')
+        acl_users._doAddUser('user3', 'user3', ['Contributor'], '',
+                             'User', 'Three', 'user3@example.com')
+
     def begin(self):
         from Products.ExtFile import ExtFile
         ExtFile.REPOSITORY_PATH = ['var', 'testing']
@@ -175,7 +184,9 @@ class NaayaPortalTestPlugin(Plugin):
         wrapped_app = fake_root.app
         admin_user = wrapped_app.acl_users.getUserById('admin')
         fake_root.REQUEST.AUTHENTICATED_USER = admin_user
-        portal_fixture(wrapped_app)
+
+        self.portal_id = self.portal_fixture(wrapped_app)
+        self.portal_setup(wrapped_app)
 
         transaction.commit()
         self.cleanup_portal_layer = cleanup
@@ -202,7 +213,7 @@ class NaayaPortalTestPlugin(Plugin):
         assert self.cleanup_test_layer is None
         the_test = testCase.test
 
-        if isinstance(the_test, NaayaTestCase):
+        if getattr(the_test, '_naaya_plugin', None) == self.__class__.__name__:
             the_test.mail_log, self.restore_mail = divert_mail()
             cleanup, test_db_layer = self.tzope.db_layer()
 
@@ -213,14 +224,13 @@ class NaayaPortalTestPlugin(Plugin):
 
             the_test.wsgi_request = self.tzope.wsgi_app
             the_test.app = wrapped_app
-            the_test.portal = wrapped_app['portal']
+            the_test.portal = wrapped_app[self.portal_id]
             the_test.fake_request = fake_root.REQUEST
 
             self.cleanup_test_layer = cleanup
 
-
     def afterTest(self, test):
-        if isinstance(test.test, NaayaTestCase):
+        if getattr(test.test, '_naaya_plugin', None) == self.__class__.__name__:
             self.restore_mail()
             del self.restore_mail
         if self.cleanup_test_layer is not None:
