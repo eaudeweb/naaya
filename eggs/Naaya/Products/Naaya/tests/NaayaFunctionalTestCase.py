@@ -55,6 +55,8 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase, TwillMixin):
     """
     Functional test case for Naaya - use Twill (http://twill.idyll.org/) for client-side tests
     """
+    
+    _naaya_plugin = 'NaayaPortalTestPlugin'
 
     def setUp(self):
         self.install_twill()
