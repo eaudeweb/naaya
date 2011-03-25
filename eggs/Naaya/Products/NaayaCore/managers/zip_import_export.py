@@ -29,7 +29,8 @@ from naaya.content.file.interfaces import INyFile
 from naaya.content.news.interfaces import INyNews
 from naaya.content.story.interfaces import INyStory
 from naaya.content.url.interfaces import INyURL
-from naaya.core.utils import force_to_unicode, relative_object_path
+from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import relative_object_path
 from naaya.content.file.file_item import addNyFile
 
 try:

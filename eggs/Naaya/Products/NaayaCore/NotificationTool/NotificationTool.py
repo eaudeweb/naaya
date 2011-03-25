@@ -29,10 +29,9 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import (
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.managers.utils import is_valid_email
 
-from naaya.core.utils import path_in_site
-from naaya.core.utils import relative_object_path
-
-from naaya.core.utils import ofs_path
+from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import relative_object_path
+from naaya.core.zope2util import ofs_path
 from naaya.core.zope2util import folder_manage_main_plus
 from naaya.core.exceptions import i18n_exception
 

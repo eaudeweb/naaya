@@ -21,7 +21,8 @@ from Products.Naaya.NySite import NySite
 from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
-from naaya.core.utils import relative_object_path, is_ajax
+from naaya.core.utils import is_ajax
+from naaya.core.zope2util import relative_object_path
 
 from send_group_emails_thread import start_sending_emails
 

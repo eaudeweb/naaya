@@ -1,4 +1,4 @@
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 class NotificationsPortlet(object):

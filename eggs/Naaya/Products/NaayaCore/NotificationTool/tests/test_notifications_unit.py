@@ -20,7 +20,7 @@ from Products.Naaya.tests.utils import replace, restore_all
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.EmailTool import EmailTool
 from naaya.content.document.document_item import addNyDocument
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 class BaseNotificationsTest(NaayaTestCase):
     def afterSetUp(self):

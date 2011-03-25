@@ -12,7 +12,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.search_tool import search_tool
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 def manage_addPropertiesTool(self, REQUEST=None):
     """

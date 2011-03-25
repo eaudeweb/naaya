@@ -17,7 +17,8 @@ from Products.NaayaCore.managers.utils import utils
 from managers.namespaces_tool import namespaces_tool
 from managers.channeltypes_manager import channeltypes_manager
 from Products.Naaya.interfaces import INySite, IHeartbeat
-from naaya.core.utils import cooldown, ofs_path
+from naaya.core.utils import cooldown
+from naaya.core.zope2util import ofs_path
 
 import LocalChannel
 import RemoteChannel
