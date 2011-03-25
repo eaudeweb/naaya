@@ -3,6 +3,7 @@ from os import path
 import re
 import htmlentitydefs
 import logging
+import warnings
 
 mimetype_map = {
     '.css'  : 'text/css',
@@ -35,26 +36,6 @@ def mimetype_from_filename(filename, default=None):
     ext = path.splitext(filename)[1]
     return mimetype_map.get(ext, default)
 
-def relative_object_path(obj, ancestor):
-    """
-    Compute the relative path from `ancestor` to `obj` (`obj` must be
-    somewhere inside `ancestor`)
-    """
-
-    ancestor_path = '/'.join(ancestor.getPhysicalPath())
-    obj_path = '/'.join(obj.getPhysicalPath())
-
-    if not obj_path.startswith(ancestor_path):
-        raise ValueError('My path is not in the site. Panicking.')
-    return obj_path[len(ancestor_path)+1:]
-
-def path_in_site(obj):
-    """
-    Compute the relative path of `obj` in reference to its
-    containing site
-    """
-    return relative_object_path(obj, obj.getSite())
-
 def get_noaq_attr(obj, attr, default):
     """
     Return the wanted attribute without
@@ -82,13 +63,6 @@ def force_to_unicode(s):
             return s.decode('latin-1')
     else:
         raise ValueError('expected `str` or `unicode`')
-
-def ofs_path(obj):
-    """
-    Return a string representation of an object's path, e.g.
-    ``/mysite/about/info``
-    """
-    return '/'.join(obj.getPhysicalPath())
 
 _cooldown_map = {}
 def cooldown(name, interval):
@@ -159,3 +133,39 @@ def pretty_size(n_bytes):
         return '%d MB' % (n_bytes/1024**2)
     else:
         return '%d GB' % (n_bytes/1024**3)
+
+VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@"
+                                 "(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",
+                                 re.IGNORECASE)
+def is_valid_email(email):
+    """
+    Validate e-mail address against regular expression
+    """
+    if VALID_EMAIL_PATTERN.match(str(email)):
+        return True
+    return False
+
+
+# these functions were initially defined here, but they are zope2-specific,
+# and belong to zope2util, so we moved them over there.
+
+def relative_object_path(obj, ancestor):
+    warnings.warn("naaya.core.utils.relative_object_path moved "
+                  "to naaya.core.zope2util",
+                  DeprecationWarning, stacklevel=2)
+    import zope2util
+    return zope2util.relative_object_path(obj, ancestor)
+
+def path_in_site(obj):
+    warnings.warn("naaya.core.utils.path_in_site moved "
+                  "to naaya.core.zope2util",
+                  DeprecationWarning, stacklevel=2)
+    import zope2util
+    return zope2util.path_in_site(obj)
+
+def ofs_path(obj):
+    warnings.warn("naaya.core.utils.ofs_path moved "
+                  "to naaya.core.zope2util",
+                  DeprecationWarning, stacklevel=2)
+    import zope2util
+    return zope2util.ofs_path(obj)

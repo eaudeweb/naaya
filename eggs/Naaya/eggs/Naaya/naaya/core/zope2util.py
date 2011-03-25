@@ -16,10 +16,9 @@ from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
 from decimal import Decimal
-
-from Products.NaayaCore.managers.utils import is_valid_email
-from naaya.core.utils import path_in_site
-from naaya.core.utils import force_to_unicode
+from dateutil.parser import parse
+from utils import force_to_unicode
+from utils import is_valid_email
 
 def redirect_to(tmpl):
     """
@@ -84,7 +83,6 @@ class RestrictedToolkit(SimpleItem):
         Parse a date/time string to a Python ``datetime.datetime``
         object.
         """
-        from dateutil.parser import parse
         return parse(date_string)
 
     def convert_datetime_to_DateTime(self, dt):
@@ -314,7 +312,35 @@ def permission_add_role(context, permission, role):
     p.setRoles(ty(set(crt_roles) | set([role])))
 
 def physical_path(ob):
+    # TODO deprecate and replace with ofs_path
     return '/'.join(ob.getPhysicalPath())
+
+def relative_object_path(obj, ancestor):
+    """
+    Compute the relative path from `ancestor` to `obj` (`obj` must be
+    somewhere inside `ancestor`)
+    """
+
+    ancestor_path = '/'.join(ancestor.getPhysicalPath())
+    obj_path = '/'.join(obj.getPhysicalPath())
+
+    if not obj_path.startswith(ancestor_path):
+        raise ValueError('My path is not in the site. Panicking.')
+    return obj_path[len(ancestor_path)+1:]
+
+def ofs_path(obj):
+    """
+    Return a string representation of an object's path, e.g.
+    ``/mysite/about/info``
+    """
+    return '/'.join(obj.getPhysicalPath())
+
+def path_in_site(obj):
+    """
+    Compute the relative path of `obj` in reference to its
+    containing site
+    """
+    return relative_object_path(obj, obj.getSite())
 
 def ofs_walk(ob):
     yield ob
