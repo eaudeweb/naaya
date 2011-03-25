@@ -167,11 +167,7 @@ class utils:
             p_list.sort(lambda x, y, param=p_key: cmp(y[param], x[param]))
 
     def utf8_to_latin1(self, s):
-        return self.encodeLatin1(self.decodeUTF8(s)[0])[0]
-
-    encodeLatin1, decodeLatin1 = codecs.lookup('latin1')[:2]
-    encodeUTF8, decodeUTF8 = codecs.lookup('UTF8')[:2]
-    encodeISO88592, decodeISO88592 = codecs.lookup('iso-8859-2')[:2]
+        return s.decode('utf-8').encode('latin-1')
 
     def debug(self, error):
         """ """
@@ -265,7 +261,8 @@ class catalog_utils:
         try:
             catalog = self.getGlossaryCatalog()
             ob_path = self.__build_catalog_path(ob)
-            catalog.uncatalog_object(ob_path)
+            if catalog.getrid(ob_path) is not None:
+                catalog.uncatalog_object(ob_path)
             self.cu_catalog_object(ob)
         except Exception, error:
             print self.debug(error)

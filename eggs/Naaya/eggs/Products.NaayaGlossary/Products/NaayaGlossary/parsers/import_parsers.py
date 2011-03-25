@@ -28,6 +28,7 @@ from Globals import MessageDialog
 #product imports
 from Products.NaayaGlossary.utils import utils
 from Products.NaayaGlossary.parsers.tmx_parser import tmx_parser
+from naaya.core.zope2util import physical_path
 
 
 class glossary_export:
@@ -36,9 +37,16 @@ class glossary_export:
     def __init__(self):
         """ constructor """
 
+    def xliff_http_header(self, RESPONSE):
+        """ set the HTTP headers for xliff export """
+        RESPONSE.setHeader('Content-Type', 'application/data; charset=UTF-8')
+        filename = '"%s_%s_%s.xliff"' % (self.id, folders, language)
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment; filename=' + filename)
+
     def xliff_header(self, folders, language):
         """ return the xliff header """
-        
+
         results = []
         r_append = results.append   #alias for append function. For optimization purposes
         # Generate the XLIFF file header
@@ -46,14 +54,12 @@ class glossary_export:
             folders='all'
         else:
             folders = string.split(folders, '/')[-1]
-        self.REQUEST.RESPONSE.setHeader('Content-Type', 'application/data; charset=UTF-8')
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment; filename="%s_%s_%s.xliff"' % (self.id, folders, language))
         r_append('<?xml version="1.0" encoding="UTF-8"?>')
         r_append('<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">')
         r_append(u'<!-- XLIFF Format Copyright \xa9 OASIS Open 2001-2003 -->')
         r_append('<xliff version="1.0">')
         r_append('<file')
-        r_append(' original="%s"' % self.absolute_url(1))
+        r_append(' original="%s"' % physical_path(self))
         r_append(' product-name="NaayaGlossary"')
         r_append(' product-version="1.1.x"')
         r_append(' datatype="plaintext"')
@@ -81,7 +87,7 @@ class glossary_export:
         r_append = results_list.append   #alias for append function. For optimization purposes
 
         if not folder:
-            folder = self.absolute_url(1)
+            folder = physical_path(self)
 
         if not published:
             terms.extend(self.get_published('/%s' % folder))
@@ -99,7 +105,9 @@ class glossary_export:
             r_append('<source>%s</source>' % term.get_translation_by_language('English'))
             r_append('<target>%s</target>' % translation)
 
-            l_folder = self.unrestrictedTraverse(term.absolute_url(1).split('/')[2:][0], None)
+            l_folder = term.aq_parent
+            while l_folder.aq_parent != self:
+                l_folder = l_folder.aq_parent
             r_append('<context-group name="%s">%s</context-group>' % (l_folder.id, l_folder.get_translation_by_language(language)))
             r_append('<note>%s</note>' % term.get_def_trans_by_language(language))
             r_append('</trans-unit>')
@@ -108,6 +116,10 @@ class glossary_export:
         for x in results_list:
             if type(x) is UnicodeType: results.append(x.encode('utf-8'))
             else:                      results.append(x)
+
+        if REQUEST is not None:
+            self.xliff_http_header(REQUEST.RESPONSE)
+
         return '\r\n'.join(results)
 
     def tmx_export(self, folder='/', published=0, REQUEST=None):
