@@ -2,7 +2,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, manage_addWidget
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 def addPointerWidget(container, id="", title="Pointer Widget", REQUEST=None, **kwargs):
     """ Contructor for Pointer widget"""

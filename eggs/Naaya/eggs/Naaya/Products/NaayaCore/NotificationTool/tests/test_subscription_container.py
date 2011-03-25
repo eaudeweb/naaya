@@ -8,7 +8,7 @@ from Products.NaayaCore.NotificationTool.utils import (
 from Products.NaayaCore.NotificationTool.containers import (
     AccountSubscription, AnonymousSubscription)
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 class SubscriptionTest(NaayaTestCase):
     # this is not a real NaayaTestCase, just a unit test, but we need

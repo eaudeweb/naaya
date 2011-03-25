@@ -92,14 +92,14 @@ from NyVersions import NyVersions
 from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
-from naaya.core.utils import call_method, path_in_site, cooldown, is_ajax
+from naaya.core.utils import call_method, cooldown, is_ajax
+from naaya.core.zope2util import path_in_site, ofs_path
+from naaya.core.zope2util import permission_add_role
+from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaCore.interfaces import ICaptcha
 
-from naaya.core.utils import ofs_path
-from naaya.core.zope2util import permission_add_role
-from naaya.core.zope2util import redirect_to
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 
 log = logging.getLogger(__name__)

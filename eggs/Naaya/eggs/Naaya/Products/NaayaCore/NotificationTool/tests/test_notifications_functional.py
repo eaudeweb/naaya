@@ -8,7 +8,7 @@ from Products.NaayaCore.NotificationTool.utils import (
 
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 class NotificationsTest(NaayaFunctionalTestCase):
     """ functional test for notifications """

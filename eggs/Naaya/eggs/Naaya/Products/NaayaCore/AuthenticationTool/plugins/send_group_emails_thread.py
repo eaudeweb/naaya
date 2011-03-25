@@ -11,7 +11,7 @@ from ZODB.POSException import POSError
 import transaction
 
 # naaya imports
-from naaya.core.utils import ofs_path
+from naaya.core.zope2util import ofs_path
 
 auth_logger = logging.getLogger('naaya.core.auth')
 

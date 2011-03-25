@@ -36,7 +36,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
 from Products.NaayaCore.GeoMapTool import clusters
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from naaya.core.utils import path_in_site
+from naaya.core.zope2util import path_in_site
 
 from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
