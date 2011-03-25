@@ -30,6 +30,7 @@ from OFS.ObjectManager import checkValidId
 
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
+from naaya.core.utils import is_valid_email
 
 #constants
 
@@ -38,16 +39,6 @@ default_remove_words = [
     "in", "into", "like", "of", "off", "on", "onto", "per", "since",
     "than", "the", "this", "that", "to", "up", "via", "with",
 ]
-
-VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",re.IGNORECASE)
-
-def is_valid_email(email):
-    """
-    Validate e-mail address against regular expression
-    """
-    if VALID_EMAIL_PATTERN.match(str(email)):
-        return True
-    return False
 
 def genObjectId(s, num_chars=80, removelist=None):
     '''
