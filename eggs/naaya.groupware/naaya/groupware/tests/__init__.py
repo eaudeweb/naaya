@@ -8,6 +8,17 @@ class GWFunctionalTestCase(NaayaFunctionalTestCase):
 
     _naaya_plugin = 'GWPortalTestPlugin'
 
+    def browser_do_login(self, username, password):
+        """ GW login process is somewhat different """
+        self.browser.go(self.portal.absolute_url() + '/login_html')
+        form = self.browser.get_form(2)
+        field = self.browser.get_form_field(form, '__ac_name')
+        self.browser.clicked(form, field)
+        form['__ac_name'] = username
+        form['__ac_password'] = password
+        self.browser.submit()
+        self.assertTrue('Logout (%s)' % username in self.browser.get_html())
+
 class GWTestCase(NaayaTestCase):
     """ Generic class for Groupware tests """
 
@@ -31,6 +42,7 @@ class GWPortalTestPlugin(NaayaPortalTestPlugin):
         from Products.PythonScripts.PythonScript import manage_addPythonScript
         from naaya.groupware.groupware_site import manage_addGroupwareSite
         from naaya.gwapplications.applications import GWApplications
+        from Products.CookieCrumbler.CookieCrumbler import manage_addCC
 
         portal_id = 'gw_portal'
         #Adding groupware site
@@ -61,6 +73,25 @@ class GWPortalTestPlugin(NaayaPortalTestPlugin):
         #groupedIGs
         manage_addPythonScript(app, 'groupedIGs')
         app.groupedIGs.write(get_content('groupedIGs.py'))
+
+        #CookieCrumbler
+        manage_addCC(app, 'login')
+        #login_form
+        manage_addPageTemplate(app.login, 'login_form', '')
+        app.login.login_form.write(
+            get_content('cookie_crumbler/login_form.zpt'))
+
+        manage_addPythonScript(app.login, 'index_html')
+        app.login.index_html.write(
+            get_content('cookie_crumbler/index_html.py'))
+
+        manage_addPythonScript(app.login, 'logged_in')
+        app.login.logged_in.write(
+            get_content('cookie_crumbler/logged_in.py'))
+
+        manage_addPythonScript(app.login, 'logged_out')
+        app.login.logged_out.write(
+            get_content('cookie_crumbler/logged_out.py'))
 
         """
         Not required:
