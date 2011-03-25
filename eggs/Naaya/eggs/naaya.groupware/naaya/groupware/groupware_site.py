@@ -1,8 +1,8 @@
-# Python imports
 import os
+from copy import copy
 
-# Zope imports
 import Globals
+from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -10,7 +10,6 @@ from Products.PythonScripts.PythonScript import manage_addPythonScript
 from App.ImageFile import ImageFile
 from zExceptions import BadRequest
 
-# Product imports
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.Naaya.NyFolder import addNyFolder
@@ -39,6 +38,10 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
     return ob
 
+ACTION_LOG_TYPES={
+    'role_request': 'IG role request',
+    'role_request_review': 'IG role request review'
+}
 
 class GroupwareSite(NySite):
     """ """
@@ -153,11 +156,101 @@ class GroupwareSite(NySite):
         self.toggle_portal_restricted(kwargs.get('portal_is_restricted', None))
         super(GroupwareSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
 
+    def review_ig_request(self, REQUEST=None, **kw):
+        """ Administrator reviews user access request and decides to grant or
+        reject the user access with some message. Here we check if the user
+        has the right key that allows to review the user's request.
+
+        XXX: Works only with a single source (no local users)
+
+        """
+        #Store found keys in session, optimising the search
+        action_logger = self.getActionLogger()
+        source_obj = self.getAuthenticationTool().getSources()[0]
+        session_data = self.getSession('log_entry', {})
+
+        if REQUEST is not None:
+            kw.update(REQUEST.form)
+
+        key = kw['key']
+        log_entry = None
+        if key in session_data:
+            log_entry_id = session_data[key]
+            log_entry = action_logger[log_entry_id]
+        else:
+            count = 0
+            action_logs = [(i, l) for i, l in action_logger.items()
+                                if l.type in ACTION_LOG_TYPES.values()]
+            for log_id, log in action_logs:
+                if getattr(log, 'key', None) == key:
+                    count += 1
+                    log_entry = log
+                    log_entry_id = log_id
+                if count == 2: #Raise an error because this key is old
+                    raise BadRequest("Key %s has already been used" % key)
+            if log_entry == None:
+                raise KeyError("Key %s not found" % key)
+
+            session_data.update({key: log_entry_id})
+            self.setSession('log_entry', session_data)
+
+        if REQUEST.REQUEST_METHOD == 'GET':
+            return self.review_ig_request_html(log_entry=log_entry)
+        else:
+            result = {}
+            send_mail = bool(kw.get('send_mail', False))
+            #Create a new action log with the result of the review request
+            #based on the current action log
+            new_log_entry = copy(log_entry)
+            new_log_entry.type = ACTION_LOG_TYPES['role_request_review']
+            new_log_entry.created_datetime = DateTime()
+
+            if 'grant' in kw:
+                result['granted'] = True
+                source_obj.addUserRoles(name=log_entry.user,
+                                        location=log_entry.location,
+                                        roles=log_entry.role,
+                                        send_mail=send_mail)
+
+                new_log_entry.action = 'Granted'
+                action_logger.append(new_log_entry)
+
+            elif 'reject' in kw:
+                result['granted'] = False
+                reason = kw.get('reason', '')
+                if send_mail is True:
+                    user_info = source_obj.get_user_info(log_entry.user)
+                    mail_tool = self.getEmailTool()
+                    mail_to = user_info.email
+                    mail_from = mail_tool._get_from_address()
+                    mail_data = self.request_rejected_emailpt.render_email(**{
+                        'here': self,
+                        'role': log_entry.role,
+                        'reason': reason,
+                        'firstname': getattr(user_info, 'first_name', ''),
+                        'lastname': getattr(user_info, 'last_name', ''),
+                        'location_title': log_entry.location_title,
+                        'location_url': log_entry.location_url,
+                    })
+                    mail_tool.sendEmail(mail_data['body_text'], mail_to,
+                                        mail_from, mail_data['subject'])
+
+                new_log_entry.action = 'Rejected'
+                new_log_entry.reason = reason
+                action_logger.append(new_log_entry)
+
+            return self.review_ig_request_html(log_entry=log_entry,
+                                               result=result)
+
     def request_ig_access(self, REQUEST):
         """ Called when `request_ig_access_html` submits.
             Sends a mail to the portal administrator informing
             that the current user has requested elevated access.
+
+        XXX: Works only with a single source (no local users)
+
         """
+
         if self.portal_is_archived:
             raise BadRequest, "You can't request access to archived IGs"
 
@@ -198,6 +291,22 @@ class GroupwareSite(NySite):
             }
         )
 
+        #Create an action  for the current request and include a link in the
+        #e-mail so that the log can be viewed or passed to another administrator
+        key = self.utGenerateUID()
+        self.getActionLogger().create(
+            type=ACTION_LOG_TYPES['role_request'], key=key,
+            user=user.getUserName(), role=role, location=location,
+            location_url=location_url, location_title=location_title
+        )
+
+        review_link = (
+            "%(ig_url)s/review_ig_request?key=%(key)s" % {
+                'ig_url': self.absolute_url(),
+                'key': key
+            }
+        )
+
         mail_tool = self.getEmailTool()
         mail_to = self.administrator_email
         mail_from = mail_tool._get_from_address()
@@ -211,7 +320,8 @@ class GroupwareSite(NySite):
             'location_title': location_title,
             'user_admin_link': user_admin_link,
             'member_search_link': member_search_link,
-            'location_url': location_url
+            'location_url': location_url,
+            'review_link': review_link
         })
         mail_tool.sendEmail(mail_data['body_text'], mail_to,
                             mail_from, mail_data['subject'])
@@ -267,6 +377,11 @@ class GroupwareSite(NySite):
 
     request_ig_access_emailpt = EmailPageTemplateFile(
         'zpt/emailpt/request_ig_access.zpt', globals())
+    request_rejected_emailpt = EmailPageTemplateFile(
+        'zpt/emailpt/request_rejected.zpt', globals())
+
+    review_ig_request_html = nptf('zpt/review_ig_request', globals(),
+                                  'naaya.groupware.review_ig_request')
     request_ig_access_html = nptf('zpt/request_ig_access', globals(),
                                   'naaya.groupware.request_ig_access')
     relinquish_membership_html = nptf('zpt/relinquish_membership', globals(),
