@@ -533,6 +533,18 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     setattr(l_element, language, '')
         return 'done'
 
+    def _add_language(self, lang, english_name):
+        self._p_changed = 1
+
+        self.set_languages_list(lang, english_name)
+        self.updateObjectsByLang(english_name)
+
+        catalog_obj = self.getGlossaryCatalog()
+        index_extra = record()
+        index_extra.default_encoding = 'utf-8'
+        catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name),
+                                    'TextIndexNG3',index_extra)
+
     def manageLanguagesProperties(self, ids='', lang='', english_name='', old_english_name='', REQUEST=None):
         """ manage languages for NyGlossary """
         if self.utAddObjectAction(REQUEST):
@@ -541,18 +553,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     return REQUEST.RESPONSE.redirect('languages_html')
             else:
                 if self.check_language_exists(english_name):
-                    self.set_languages_list(lang, english_name)
-                    self.updateObjectsByLang(english_name)
-
                     try:
-                        catalog_obj = self.getGlossaryCatalog()
-                        index_extra = record()
-                        index_extra.default_encoding = 'utf-8'
-                        try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG3',index_extra)
-                        except: pass
-                    except: pass
-
-                    self._p_changed = 1
+                        self._add_language(lang, english_name)
+                    except:
+                        self.getSite().log_current_error()
                 else:
                     if REQUEST:
                         return REQUEST.RESPONSE.redirect('languages_html')
