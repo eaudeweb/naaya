@@ -4,6 +4,8 @@ import re
 import htmlentitydefs
 import logging
 import warnings
+import tempfile
+import urllib
 
 mimetype_map = {
     '.css'  : 'text/css',
@@ -169,3 +171,22 @@ def ofs_path(obj):
                   DeprecationWarning, stacklevel=2)
     import zope2util
     return zope2util.ofs_path(obj)
+
+def download_to_temp_file(url):
+    """
+    Download contents of URL to a temporary file created with
+    `tempfile.TemporaryFile`. Returns an open file containing the response
+    body.  When the file is closed it will be automatically removed.
+    """
+    temp_file = tempfile.TemporaryFile()
+    url_file = urllib.urlopen(url)
+    try:
+        while True:
+            buf = url_file.read(2**16)
+            if not buf:
+                break
+            temp_file.write(buf)
+    finally:
+        url_file.close()
+    temp_file.seek(0)
+    return temp_file
