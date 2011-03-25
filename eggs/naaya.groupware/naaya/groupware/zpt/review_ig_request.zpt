@@ -1,0 +1,38 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+    <div id="workarea" metal:fill-slot="div-workarea">
+        <h1 i18n:translate="">Review IG access request</h1>
+        <p i18n:translate="">
+            User <strong i18n:name="username" tal:content="options/log_entry/user" />
+            has requested "<strong i18n:name="role" tal:content="options/log_entry/role" />" rights on
+            <a tal:attributes="href options/log_entry/location_url" tal:content="string:${options/log_entry/location_title} (${options/log_entry/location_url})" />
+        </p>
+        <tal:block condition="python: options.get('result')">
+            <tal:block condition="options/result/granted" i18n:translate="">
+                Role has been granted
+            </tal:block>
+            <tal:block condition="not: options/result/granted" i18n:translate="">
+                Request has been rejected
+            </tal:block>
+        </tal:block>
+        <tal:block condition="not: python: options.get('result')">
+            <p i18n:translate="">
+                You can choose to grant the requested role by clicking <strong>Grant role</strong>
+                button or <strong>Reject request</strong> optionally filling up the <strong>Rejection reason</strong>.
+            </p>
+            <form method="post" action="">
+                <input type="hidden" name="key" tal:attributes="value request/key" />
+                <div class="field">
+                    <label for="reason" i18n:translate="">Rejection reason (optional)</label>
+                    <textarea id="reason" name="reason" cols="40" rows="5"></textarea>
+                </div>
+                <div class="field">
+                    <label for="send_mail" i18n:translate="">Notify user by e-mail</label>
+                    <input type="checkbox" id="send_mail" name="send_mail" value="1" />
+                </div>
+
+                <input type="submit" value="Grant role" name="grant" i18n:attributes="value" />
+                <input type="submit" value="Reject request" name="reject" i18n:attributes="value" />
+            </form>
+        </tal:block>
+    </div>
+</metal:block>
