@@ -34,20 +34,6 @@ class TwillMixin(object):
         self.restore_twill_output()
         twill.remove_wsgi_intercept('localhost', 80)
 
-    def serve_http(self, host='', port=8081):
-        from webob.dec import wsgify
-        @wsgify.middleware
-        def no_hop_by_hop(request, app):
-            """ remove the Connection hop-by-hop header """
-            response = request.get_response(app)
-            del response.headers['Connection']
-            return response
-
-        from wsgiref.simple_server import make_server
-        server = make_server(host, port, no_hop_by_hop(self.wsgi_request))
-        print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
-        server.serve_forever()
-
     def browser_get_header(self, header_name):
         return self.browser._browser._response._headers.get(header_name, None)
 
