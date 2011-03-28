@@ -53,8 +53,8 @@ class AoALibraryViewer(SimpleItem):
 
     security.declarePrivate('wrap_answer')
     def wrap_answer(self, answer):
-        if Globals.DevelopmentMode:
-            reload(shadow)
+        #if Globals.DevelopmentMode:
+        #    reload(shadow)
 
 # disable the cache (-- moregale)
 #        if not hasattr(self, '_v_shadow_cache') or Globals.DevelopmentMode:
@@ -237,8 +237,13 @@ class AoALibraryViewer(SimpleItem):
     security.declareProtected(view, 'viewer_view_report_html')
     def viewer_view_report_html(self, REQUEST):
         """View the report for the viewer"""
-        review_template = self.aq_parent['tools']['general_template']['general-template']
-        report = review_template.getSurveyTemplate().getReport('viewer')
+        if REQUEST.form.has_key('review_template'):
+            review_template = self.aq_parent['tools']['general_template']['general-template']
+            report = review_template.getSurveyTemplate().getReport('viewer')
+        elif REQUEST.form.has_key('library'):
+            library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+            report = library.getSurveyTemplate().getReport('viewer')
+
         if not report:
             raise NotFound('Report %s' % ('viewer',))
         if REQUEST.has_key('answer_ids'):
@@ -252,8 +257,8 @@ class AoALibraryViewer(SimpleItem):
             return report.questionnaire_export(REQUEST=REQUEST, report_id='viewer', answers=[])
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(view, 'filter_answers')
-    def filter_answers(self, REQUEST):
+    security.declareProtected(view, 'filter_answers_review_template')
+    def filter_answers_review_template(self, REQUEST):
         """Filter answers and feed them to the index page"""
         official_country_region = REQUEST.get('official_country_region', None)
         show_unapproved = REQUEST.get('show_unapproved', None)
@@ -299,6 +304,65 @@ class AoALibraryViewer(SimpleItem):
                 #If no themes are selected, just append the shadow to the list
                 shadows.append(shadow)
         return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, theme=theme, topics=topics)
+
+    security.declareProtected(view, 'filter_answers_library')
+    def filter_answers_library(self, REQUEST):
+        """Filter answers and feed them to the index page"""
+        organization = REQUEST.get('w_body-conducting-assessment', None)
+        year = REQUEST.get('w_assessment-year', None)
+        try:
+            year = int(year)
+        except ValueError:
+            year = None
+        country = REQUEST.get('country', None)
+        region = REQUEST.get('region', None)
+        theme = REQUEST.get('theme', None)
+        if theme == 'any':
+            theme = None
+        topics = REQUEST.get('topics', [])
+        if not isinstance(topics, list):
+            topics = [topics]
+
+        if not (organization or year or country or region or theme):
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+        shadows = []
+        for shadow in self.iter_assessments():
+            survey_answer = self.get_survey_answer(shadow.getId())
+
+            if organization:
+                answer_organization = survey_answer.get('w_body-conducting-assessment')
+                if isinstance(answer_organization, dict):
+                    answer_organization_matched = [ao for ao in answer_organization.values() if organization.lower() in ao.lower()]
+                    if len(answer_organization_matched) == 0:
+                        continue
+                else:
+                    if organization.lower() not in answer_organization.lower():
+                        continue
+
+            if year:
+                answer_year = survey_answer.get('w_assessment-year', '')
+                if str(year) not in answer_year:
+                    continue
+
+            if country or region:
+                answer_country = survey_answer.get('w_country-or-international-organisation', '').lower()
+                if country and answer_country not in country.lower():
+                    continue
+
+            if theme:
+                answer_theme = survey_answer.get(theme)
+                if not answer_theme:
+                    continue
+
+                #If we have topics, then we should also have a theme
+                answer_topics_matched = [topic for topic in topics if int(topic[1]) in answer_theme]
+                if len(topics) != len(answer_topics_matched):
+                    continue
+
+            shadows.append(shadow)
+
+        return self.index_html(shadows=shadows, organization=organization, year=year, country=country, region=region, theme=theme, topics=topics)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
