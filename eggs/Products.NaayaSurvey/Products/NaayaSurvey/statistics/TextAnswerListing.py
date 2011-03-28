@@ -92,8 +92,18 @@ class TextAnswerListing(BaseStatistic):
                     % (answer_url, respondent)), hyper_style)
             ws.write(current_row, 2,
                 self.utShowDateTime(answer['modification_time']), normal_style)
+
+            response = answer.get(question.id, '', lang=self.gl_get_selected_language())
+            # try to get any response if multilingual
+            if not response:
+                all_responses = answer.get(question.id, '')
+                if isinstance(all_responses, dict):
+                    all_responses = filter(None, all_responses.values())
+                    if len(all_responses) > 0:
+                        response = all_responses[0]
+
             ws.write(current_row, 3,
-                self.utLinkifyURLs(answer.get(question.id, '', lang=self.gl_get_selected_language())) or 'No response.', normal_style)
+                self.utLinkifyURLs(response) or 'No response.', normal_style)
             current_row += 1
 
         state['current_row'] = current_row + 1

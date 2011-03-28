@@ -347,7 +347,7 @@ class AoALibraryViewer(SimpleItem):
 
             if country or region:
                 answer_country = survey_answer.get('w_country-or-international-organisation', '').lower()
-                if country and answer_country not in country.lower():
+                if country and country.lower() not in answer_country:
                     continue
 
             if theme:
