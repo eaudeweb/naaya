@@ -179,6 +179,11 @@ class AoALibraryViewer(SimpleItem):
             setattr(vl_answer, 'w_geo-coverage-region', getattr(rt_answer.aq_base, 'w_geo-coverage-region', ''))
             vl_answer._p_changed = True
 
+        def empty_country_and_region(vl_answer):
+            setattr(vl_answer, 'w_official-country-region', '')
+            setattr(vl_answer, 'w_geo-coverage-region', '')
+            vl_answer._p_changed = True
+
         for vl_answer in library.objectValues(survey_answer_metatype):
             for rt_answer in review_template.objectValues(survey_answer_metatype):
                 if match_answers(vl_answer, rt_answer):
@@ -187,6 +192,7 @@ class AoALibraryViewer(SimpleItem):
                     break
             else:
                 state['orphan_answers'].append(vl_answer.absolute_url())
+                empty_country_and_region(vl_answer)
 
 
     def _update_remove_acronyms(self, state, review_template):
