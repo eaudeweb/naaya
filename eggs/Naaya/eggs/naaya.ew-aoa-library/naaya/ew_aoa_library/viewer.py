@@ -170,7 +170,7 @@ class AoALibraryViewer(SimpleItem):
 
             for vl_title in vl_title_dict.values():
                 for rt_title in rt_title_dict.values():
-                    if vl_title.strip() == rt_title.strip():
+                    if vl_title.strip() and vl_title.strip() == rt_title.strip():
                         return True
             return False
 
