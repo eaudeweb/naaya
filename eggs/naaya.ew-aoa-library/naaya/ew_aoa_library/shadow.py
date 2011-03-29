@@ -186,6 +186,10 @@ def extract_survey_answer_data_library(answer):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
 
+    attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', '')
+
+    attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
+
     return attrs
 
 def extract_survey_answer_data_general_template(answer):
