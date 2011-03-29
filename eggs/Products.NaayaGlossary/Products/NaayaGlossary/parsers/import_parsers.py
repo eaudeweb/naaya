@@ -28,7 +28,7 @@ from Globals import MessageDialog
 #product imports
 from Products.NaayaGlossary.utils import utils
 from Products.NaayaGlossary.parsers.tmx_parser import tmx_parser
-from naaya.core.zope2util import physical_path
+from naaya.core.zope2util import ofs_path
 
 
 class glossary_export:
@@ -59,7 +59,7 @@ class glossary_export:
         r_append(u'<!-- XLIFF Format Copyright \xa9 OASIS Open 2001-2003 -->')
         r_append('<xliff version="1.0">')
         r_append('<file')
-        r_append(' original="%s"' % physical_path(self))
+        r_append(' original="%s"' % ofs_path(self))
         r_append(' product-name="NaayaGlossary"')
         r_append(' product-version="1.1.x"')
         r_append(' datatype="plaintext"')
@@ -87,7 +87,7 @@ class glossary_export:
         r_append = results_list.append   #alias for append function. For optimization purposes
 
         if not folder:
-            folder = physical_path(self)
+            folder = ofs_path(self)
 
         if not published:
             terms.extend(self.get_published('/%s' % folder))
