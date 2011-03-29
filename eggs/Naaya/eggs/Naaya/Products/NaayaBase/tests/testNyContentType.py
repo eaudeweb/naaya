@@ -30,6 +30,9 @@ class dummy_item(Implicit, NyContentData, NyProperties):
     def gl_get_selected_language(self): return self._default_language
     _schema = _create_test_schema()
     def _get_schema(self): return self._schema
+    @property
+    def aq_base(self):
+        return self
 
 class NyDummy(dummy_item, Item, NyContentType):
     # we inherit from Item, because all Naaya content types do so, and this

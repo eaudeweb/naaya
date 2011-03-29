@@ -13,11 +13,7 @@ from AccessControl.Permissions import view_management_screens, view
 from constants import PERMISSION_EDIT_OBJECTS
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
-try:
-    from Products.NaayaGlossary.constants import NAAYAGLOSSARY_CENTRE_METATYPE
-    module_glossary_metatype = NAAYAGLOSSARY_CENTRE_METATYPE
-except:
-    module_glossary_metatype = None
+module_glossary_metatype = "Naaya Glossary"
 
 try:
     from Products.NaayaThesaurus.constants import NAAYATHESAURUS_METATYPE
@@ -125,96 +121,105 @@ class NyProperties(LocalPropertyManager):
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
-    def __updatePropertyFromGlossary(self, provider, prop, lang_code, lang_name):
-        """
-        Updates the given property for all languages.
-        @param provider: provider object (can be a glossary or a thesaurus)
-        @type provider: instance
-        @param prop: property name
-        @type prop: string
-        @param lang_code: current language code
-        @type lang_code: string
-        @param lang_name: current language name
-        @type lang_name: string
-        """
-        utStrip = self.utStripString
-        langs = self.gl_get_languages_mapping()
-        res = {}
-
-        #creates the results dictionary
-        for l in langs:
-            if l['name'] != lang_name:
-                res[l['code']] = ''
-
-        #search associated translations from glossary
-        if provider.meta_type == module_glossary_metatype:
-            for v in self.splitToList(self.getLocalProperty(prop, lang_code)):
-                gloss_elems = provider.searchGlossary(query=v, language=lang_name, definition='')
-
-                #search for the exact match
-                exact_elem = None
-                for l_elem in gloss_elems[2]:
-                    l_trans = l_elem.get_translation_by_language(lang_name)
-                    if utStrip(l_trans) == utStrip(v):
-                        exact_elem = l_elem
-                        break
-
-                #get the translations of the exact match
-                if exact_elem:
-                    for l in langs:
-                        l_code = l['code']
-                        l_name = l['name']
-                        if l_name != lang_name:
-                            trans = exact_elem.get_translation_by_language(l_name)
-                            if res[l_code] and trans:        res[l_code] = '%s, %s' % (res[l_code], trans)
-                            elif not res[l_code] and trans:  res[l_code] = trans
-
-        #search associated translations from thesaurus
-        elif provider.meta_type == module_thesaurus_metatype:
-            for v in self.splitToList(self.getLocalProperty(prop, lang_code)):
-                th_term = provider.searchThesaurusNames(query=v, lang=lang_code)
-
-                #search for the exact match
-                exact_term = None
-                for k in th_term:
-                    l_term = provider.getTermByID(k.concept_id, lang_code)
-                    if utStrip(l_term.concept_name) == utStrip(v):
-                        exact_term = l_term
-                        break
-
-                #get the translations of the exact match
-                if exact_term:
-                    for l in langs:
-                        l_code = l['code']
-                        l_name = l['name']
-                        if l_name != lang_name:
-                            exact_term = provider.getTermByID(exact_term.concept_id, l_code)
-                            if exact_term:
-                                trans = exact_term.concept_name
-                                if res[l_code] and trans:       res[l_code] = '%s, %s' % (res[l_code], trans)
-                                elif not res[l_code] and trans: res[l_code] = trans
-
-        #set values
-        for k in res.keys():
-            trans = self.utToUnicode(res[k])
-            if trans: self._setLocalPropValue(prop, k, trans)
-
     security.declarePrivate('updatePropertiesFromGlossary')
     def updatePropertiesFromGlossary(self, lang):
         """
         Update the B{keywords} and B{coverage} properties from the associated
         glossary for each language other than the current one.
         """
-        lang_name = self.gl_get_language_name(lang)
         provider_keywords = self.get_keywords_glossary()
         if provider_keywords:
-            self.__updatePropertyFromGlossary(provider_keywords, 'keywords', lang, lang_name)
+            update_translation(self, 'keywords', provider_keywords, lang, '')
         provider_coverage = self.get_coverage_glossary()
         if provider_coverage:
-            self.__updatePropertyFromGlossary(provider_coverage, 'coverage', lang, lang_name)
+            update_translation(self, 'coverage', provider_coverage, lang, '')
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_dynamicproperties_html')
     manage_dynamicproperties_html = PageTemplateFile('zpt/manage_dynamicproperties', globals())
 
 InitializeClass(NyProperties)
+
+def languages_map(ctx):
+    lang_names = {}
+    for lang_info in ctx.gl_get_languages_mapping():
+        lang_names[lang_info['code']] = lang_info['name']
+    return lang_names
+
+def _translate_to_langs(source_values, translator, lang, lang_names):
+    res = dict((target_lang, [])
+               for target_lang in lang_names
+               if target_lang != lang)
+
+    #search associated translations from glossary
+    if translator.meta_type == module_glossary_metatype:
+        for v in source_values:
+            gloss_elems = translator.searchGlossary(query=v, language=lang_names[lang], definition='')
+
+            #search for the exact match
+            exact_elem = None
+            for l_elem in gloss_elems[2]:
+                l_trans = l_elem.get_translation_by_language(lang_names[lang])
+                if l_trans.strip() == v.strip():
+                    exact_elem = l_elem
+                    break
+
+            #get the translations of the exact match
+            if exact_elem:
+                for target_lang in res:
+                    trans = exact_elem.get_translation_by_language(lang_names[target_lang])
+                    if trans:
+                        res[target_lang].append(trans)
+
+    #search associated translations from thesaurus
+    elif translator.meta_type == module_thesaurus_metatype:
+        for v in source_values:
+            th_term = translator.searchThesaurusNames(query=v, lang=lang)
+
+            #search for the exact match
+            exact_term = None
+            for k in th_term:
+                l_term = translator.getTermByID(k.concept_id, lang)
+                if l_term.concept_name.strip() == v.strip():
+                    exact_term = l_term
+                    break
+
+            #get the translations of the exact match
+            if exact_term:
+                for target_lang in res:
+                    exact_term = translator.getTermByID(exact_term.concept_id, target_lang)
+                    if exact_term:
+                        trans = exact_term.concept_name
+                        if trans:
+                            res[target_lang].append(trans)
+
+    return res
+
+def update_translation(ob, name, translator, lang, old_value):
+    """ Updates the given property for all languages. """
+    lang_names = languages_map(ob)
+
+    prev_translated = _translate_to_langs(ob.splitToList(old_value),
+                                          translator, lang, lang_names)
+
+    new_value = ob.getLocalProperty(name, lang)
+    new_translated = _translate_to_langs(ob.splitToList(new_value),
+                                         translator, lang, lang_names)
+
+    #set values
+    for target_lang in new_translated:
+        prev_items = prev_translated[target_lang]
+
+        prev_target_value = ob.getLocalProperty(name, target_lang)
+        new_items = [s.strip() for s in ob.splitToList(prev_target_value)]
+
+        for item in list(new_items):
+            if item in prev_items:
+                new_items.remove(item)
+
+        for item in new_translated[target_lang]:
+            if item not in new_items:
+                new_items.append(item)
+
+        if new_items:
+            ob._setLocalPropValue(name, target_lang, ', '.join(new_items))
