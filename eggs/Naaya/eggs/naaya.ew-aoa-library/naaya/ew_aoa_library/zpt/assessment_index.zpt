@@ -33,9 +33,9 @@
 </div>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
-    tal:condition="python:review_template and is_entitled">
+    tal:condition="is_entitled">
     <tal:block define="approved_date python:here.approved_date(here);
-                suggestions here/suggestions">
+                suggestions here/suggestions" tal:condition="review_template">
         <tal:block condition="approved_date">
             <div>
                 <strong i18n:translate="" class="widget-title">

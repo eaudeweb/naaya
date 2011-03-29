@@ -9,6 +9,7 @@
 	<input type="hidden" name="submit" value="True" />
 	<input type="checkbox" name="update_rt_titles" value="True" /><label>Update review template titles</label><br/>
 	<input type="checkbox" name="update_remove_acronyms" value="True" /><label>Correct answers containing acronym code</label><br/>
+	<input type="checkbox" name="update_vl_countries_and_region" value="True" /><label>Update library country and region values</label><br/>
 	<input type="submit" value="Submit" />
 </form>
 
@@ -38,7 +39,7 @@
 
 	<tal:block condition="orphan_answers">
 		<p style="color:red" tal:define="count python:len(orphan_answers)"
-			tal:content="string:${count} answers don't have a correspondent in the virtual library:"></p>
+			tal:content="string:${count} answers don't have a correspondent:"></p>
 		<ul>
 			<li tal:repeat="answer orphan_answers">
 				<a tal:content="answer" tal:attributes="href answer"/>
