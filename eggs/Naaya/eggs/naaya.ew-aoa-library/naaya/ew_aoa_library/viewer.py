@@ -183,6 +183,7 @@ class AoALibraryViewer(SimpleItem):
             for rt_answer in review_template.objectValues(survey_answer_metatype):
                 if match_answers(vl_answer, rt_answer):
                     copy_country_and_region(vl_answer, rt_answer)
+                    state['updated_answers'][vl_answer.absolute_url()] = [rt_answer.absolute_url()]
                     break
             else:
                 state['orphan_answers'].append(vl_answer.absolute_url())
