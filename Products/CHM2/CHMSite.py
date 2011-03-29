@@ -127,6 +127,7 @@ class CHMSite(NySite):
         manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS) 
         self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml'))) 
         self.add_glossary_coverage()
+        self.add_chm_terms_glossary()
 
         #set glossary for pick lists
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
@@ -171,9 +172,9 @@ class CHMSite(NySite):
         for file in [file for file in import_files if file.endswith('.xml')]:
             glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations', file)))
 
-    def add_glossary_keywords(self):
-        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
-        glossary = self._getOb(ID_GLOSSARY_KEYWORDS)
+    def add_chm_terms_glossary(self, set_up_sync=True):
+        manage_addGlossaryCentre(self, ID_CHM_TERMS, TITLE_CHM_TERMS)
+        glossary = self._getOb(ID_CHM_TERMS)
         glossary_languages = [
                 ('Arabic', 'ar'), ('Bulgarian', 'bg'), ('Catalan', 'ca'),
                 ('Czech', 'cs'), ('Danish', 'da'), ('German', 'de'),
@@ -191,10 +192,13 @@ class CHMSite(NySite):
             ]
         for name, code in glossary_languages:
             glossary.addLanguage(name, code)
-        import_files = os.listdir(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'keywords_glossary_translations'))
+        import_files = os.listdir(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'chm_terms_translations'))
         import_files.sort()
-        for file in [file for file in import_files if file.endswith('.xml')]:
-            glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'keywords_glossary_translations', file)), add_themes_from_folders=1)
+        for file in [file for file in import_files if file.endswith('.xliff')]:
+            glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'chm_terms_translations', file)))
+
+        if set_up_sync:
+            glossary.sync_remote_url = CHM_TERMS_MASTER_URL
 
 
     #objects getters
