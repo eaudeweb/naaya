@@ -15,4 +15,9 @@
          zope.app.container.interfaces.IObjectRemovedEvent"
     handler=".subscribers.remove_item_from_glossary_catalog" />
 
+  <subscriber
+    for="Products.Naaya.interfaces.INySite
+         Products.Naaya.interfaces.IHeartbeat"
+    handler=".subscribers.sync_on_heartbeat" />
+
 </configure>

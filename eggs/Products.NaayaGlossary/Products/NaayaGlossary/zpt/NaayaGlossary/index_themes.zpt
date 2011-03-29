@@ -25,6 +25,9 @@
 <div class="cleaner"/>
 <h1>Glossary themes</h1>
 
+<tal:block condition="here/sync_remote_url" content="structure here/sync_info_text"/>
+<tal:block condition="not:here/sync_remote_url">
+
 <p>You can click a theme code to edit its properties and translations.</p>
 <tal:block define=" record_code python:request.get('code', ''); subjects here/get_subjects_list">
     <form name="frmSubjectsDelete" action="deleteThemes" method="post">
@@ -101,6 +104,7 @@
                 </form>
             </fieldset>
         </tal:block>
+</tal:block>
 </tal:block>
 
 </metal:block>

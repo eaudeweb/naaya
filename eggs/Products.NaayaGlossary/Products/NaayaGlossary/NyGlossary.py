@@ -113,6 +113,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 {'label':'Export',              'action':'export_html'},
                 {'label':'Import',              'action':'import_html'},
                 {'label':'Management',          'action':'management_page_html'},
+                {'label':'Synchronize',         'action':'manage_sync_html'},
                 {'label':'Undo',                'action':'manage_UndoForm'},)
                 )
 #Info:
@@ -123,6 +124,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
 
     security = ClassSecurityInfo()
+
+    sync_remote_url = None
 
     def __init__(self, id, title, parent_anchors):
         """ constructor """
@@ -901,6 +904,63 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/import_html')
 
+    security.declareProtected(view_management_screens, 'manage_perform_sync')
+    def manage_perform_sync(self, log_to_session=False, REQUEST=None):
+        """ """
+        if self.sync_remote_url is None:
+            return # synchronization is disabled
+
+        log.info("Starting synchronization of %r with remote glossary %r",
+                 ofs_path(self), self.sync_remote_url)
+
+        temp_file = download_to_temp_file(self.sync_remote_url+'/dump_export')
+
+        if log_to_session:
+            log_file = StringIO()
+            handler = logging.StreamHandler(log_file)
+            handler.setLevel(logging.INFO)
+            log.addHandler(handler)
+
+        try:
+            try:
+                self.dump_import(temp_file, remove_items=True)
+            except:
+                log.exception("Error while synchronizing with %r",
+                              self.sync_remote_url)
+        finally:
+            if log_to_session:
+                log.removeHandler(handler)
+            temp_file.close()
+
+        if REQUEST is not None:
+            if log_to_session:
+                self.setSession("naaya-glossary-import-log",
+                                log_file.getvalue())
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_sync_html')
+
+    def sync_with_remote_enabled(self):
+        return (self.sync_remote_url is not None)
+
+    security.declareProtected(view_management_screens, 'manage_configure_sync')
+    def manage_configure_sync(self, remote_url=None, REQUEST=None):
+        """ """
+        if not remote_url:
+            remote_url = None
+
+        self.sync_remote_url = remote_url
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_sync_html')
+
+    security.declareProtected(view_management_screens, 'manage_tabs')
+    def manage_tabs(self):
+        # we override manage_tabs to insert warning about synchronized glossary
+        if self.sync_remote_url:
+            extra_html = self.sync_info_text(zmi=True)
+        else:
+            extra_html = ''
+        return super(NyGlossary, self).manage_tabs() + extra_html
+
 
     #####################
     #   SKOS Functions  #
@@ -1108,6 +1168,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     security.declareProtected(view_management_screens, 'all_terms_html')
     all_terms_html =        PageTemplateFile('zpt/NaayaGlossary/all_terms', globals())
 
+    security.declareProtected(view_management_screens, 'manage_sync_html')
+    manage_sync_html =      PageTemplateFile('zpt/NaayaGlossary/sync', globals())
+
     contexts_view_html =    PageTemplateFile('zpt/NaayaGlossary/contexts_view', globals())
     style_console_css =     PageTemplateFile('zpt/NaayaGlossary/style_console', globals())
 
@@ -1128,6 +1191,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     index_approvals_html =  PageTemplateFile('zpt/NaayaGlossary/index_approvals', globals())
     index_impexp_html =     PageTemplateFile('zpt/NaayaGlossary/index_import_export', globals())
     index_properties_html = PageTemplateFile('zpt/NaayaGlossary/index_properties', globals())
+
+    sync_info_text =        PageTemplateFile('zpt/NaayaGlossary/sync_info', globals())
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_themes_html')
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_approvals_html')
