@@ -344,8 +344,7 @@ class AoALibraryViewer(SimpleItem):
             year = int(year)
         except ValueError:
             year = None
-        country = REQUEST.get('country', None)
-        region = REQUEST.get('region', None)
+        official_country_region = REQUEST.get('official_country_region', None)
         theme = REQUEST.get('theme', None)
         if theme == 'any':
             theme = None
@@ -353,7 +352,7 @@ class AoALibraryViewer(SimpleItem):
         if not isinstance(topics, list):
             topics = [topics]
 
-        if not (organization or year or country or region or theme):
+        if not (organization or year or official_country_region or theme):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         shadows = []
@@ -375,9 +374,10 @@ class AoALibraryViewer(SimpleItem):
                 if str(year) not in answer_year:
                     continue
 
-            if country or region:
-                answer_country = survey_answer.get('w_country-or-international-organisation', '').lower()
-                if country and country.lower() not in answer_country:
+            if official_country_region:
+                answer_country = survey_answer.get('w_official-country-region', '').lower()
+                answer_region = survey_answer.get('w_geo-coverage-region', '').lower()
+                if official_country_region.lower() not in answer_country and official_country_region.lower() not in answer_region:
                     continue
 
             if theme:
@@ -392,7 +392,7 @@ class AoALibraryViewer(SimpleItem):
 
             shadows.append(shadow)
 
-        return self.index_html(shadows=shadows, organization=organization, year=year, country=country, region=region, theme=theme, topics=topics)
+        return self.index_html(shadows=shadows, organization=organization, year=year, official_country_region=official_country_region, theme=theme, topics=topics)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
