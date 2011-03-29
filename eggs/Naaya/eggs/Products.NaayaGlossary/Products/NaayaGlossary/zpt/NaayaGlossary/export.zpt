@@ -61,6 +61,20 @@
 			</fieldset>
 		</td>
 	</tr>
+	<tr>
+		<td><fieldset><legend><strong>Export glossary dump as Zip file</strong></legend>
+			<p class="form-help">Download a Zip file with XLIFF translations for
+			terms in this glossary, in all languages. Does not export themes.</p>
+			<table border=0 cellpadding=2 cellspacing=0 width="100%">
+			<form action="dump_export" method="post" name="frmTMXExport">
+				<tr>
+					<td><input type="submit" value="Export"></td>
+				</tr>
+			</form>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
 </table>
 
 <span tal:replace="structure here/manage_page_footer"/>
