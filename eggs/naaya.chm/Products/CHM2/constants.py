@@ -45,3 +45,6 @@ ID_GLOSSARY_KEYWORDS = 'glossary_keywords'
 TITLE_GLOSSARY_KEYWORDS = 'Keywords glossary'
 ID_GLOSSARY_COVERAGE = 'glossary_coverage'
 TITLE_GLOSSARY_COVERAGE = 'Coverage glossary'
+ID_CHM_TERMS = 'chm_terms'
+TITLE_CHM_TERMS = 'CHM terms glossary'
+CHM_TERMS_MASTER_URL = "http://biodiversity-chm.eea.europa.eu/chm_terms"
