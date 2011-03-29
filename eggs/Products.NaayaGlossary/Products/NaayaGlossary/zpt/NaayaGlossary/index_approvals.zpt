@@ -47,6 +47,9 @@
 <div class="cleaner"/>
 <h1>Glossary basket of approvals</h1>
 
+<tal:block condition="here/sync_remote_url" content="structure here/sync_info_text"/>
+<tal:block condition="not:here/sync_remote_url">
+
 <table class="datatable" tal:define="not_approved_list here/get_not_approved;
                          selected_lang here/getSelectedLang;
                          lang python:here.get_language_by_code(selected_lang)">
@@ -80,5 +83,8 @@
         </tr>
     </tbody>
 </table>
+
+</tal:block>
+
 </metal:block>
 </metal:block>
