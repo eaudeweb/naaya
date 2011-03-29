@@ -571,7 +571,7 @@
 		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
-	<th tal:condition="review_template" colspan="2" i18n:translate="">Geo coverage:</th>
+	<th colspan="2" i18n:translate="">Geo coverage:</th>
 
 	<!-- Year of publication -->
 	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='publication_year' or skey!='publication_year')">
@@ -605,21 +605,21 @@
 </tr>
 <tr>
 	<!-- Geo coverage: country -->
-	<th tal:condition="python:review_template and (rkey and skey=='geo_coverage_country' or skey!='geo_coverage_country')">
+	<th tal:condition="python: (rkey and skey=='geo_coverage_country' or skey!='geo_coverage_country')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_country">Country</a>
 		<img tal:condition="python:skey=='geo_coverage_country'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:review_template and not rkey and skey=='geo_coverage_country'">
+	<th tal:condition="python: not rkey and skey=='geo_coverage_country'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_country&rkey=True">Country</a>
 		<img tal:condition="python:skey=='geo_coverage_country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<!-- Geo coverage: region -->
-	<th tal:condition="python:review_template and (rkey and skey=='geo_coverage_region' or skey!='geo_coverage_region')">
+	<th tal:condition="python: (rkey and skey=='geo_coverage_region' or skey!='geo_coverage_region')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region">Region</a>
 		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
-	<th tal:condition="python:review_template and not rkey and skey=='geo_coverage_region'">
+	<th tal:condition="python: not rkey and skey=='geo_coverage_region'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region&rkey=True">Region</a>
 		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
@@ -638,10 +638,8 @@
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
 	<td tal:content="python:i.get('country')"/>
-	<td tal:condition="review_template"
-		tal:content="i/geo_coverage_country|nothing"/>
-	<td tal:condition="review_template"
-		tal:content="i/geo_coverage_region|nothing"/>
+	<td tal:content="i/geo_coverage_country|nothing"/>
+	<td tal:content="i/geo_coverage_region|nothing"/>
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >

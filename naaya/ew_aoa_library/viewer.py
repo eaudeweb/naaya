@@ -152,11 +152,38 @@ class AoALibraryViewer(SimpleItem):
             self._update_rt_titles(state, review_template, library)
         if REQUEST.form.has_key('update_remove_acronyms'):
             self._update_remove_acronyms(state, review_template)
+        if REQUEST.form.has_key('update_vl_countries_and_region'):
+            library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+            self._update_vl_countries_and_region(state, review_template, library)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_vl_countries_and_region(self, state, review_template, library):
+        def match_answers(vl_answer, rt_answer):
+            vl_title_dict = vl_answer.get('w_assessment-name')
+            rt_title_dict = rt_answer.get('w_q1-name-assessment-report')
+            for vl_title in vl_title_dict.values():
+                for rt_title in rt_title_dict.values():
+                    if vl_title.strip() == rt_title.strip():
+                        return True
+            return False
+
+        def copy_country_and_region(vl_answer, rt_answer):
+            setattr(vl_answer, 'w_official-country-region', getattr(rt_answer.aq_base, 'w_official-country-region', ''))
+            setattr(vl_answer, 'w_geo-coverage-region', getattr(rt_answer.aq_base, 'w_geo-coverage-region', ''))
+            vl_answer._p_changed = True
+
+        for vl_answer in library.objectValues(survey_answer_metatype):
+            for rt_answer in review_template.objectValues(survey_answer_metatype):
+                if match_answers(vl_answer, rt_answer):
+                    copy_country_and_region(vl_answer, rt_answer)
+                    break
+            else:
+                state['orphan_answers'].append(vl_answer.absolute_url())
+
 
     def _update_remove_acronyms(self, state, review_template):
         localized_strings = ['w_country',
