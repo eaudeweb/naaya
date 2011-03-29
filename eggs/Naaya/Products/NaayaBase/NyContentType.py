@@ -15,6 +15,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyProperties import update_translation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
@@ -443,12 +444,20 @@ class NyContentData(NyProperties):
             prop_type = widget.getDataType()
             if not isinstance(prop_value, prop_type) and prop_value is not None:
                 prop_value = prop_type(prop_value)
+
             if widget.localized:
+                prev_prop_value = self.getLocalProperty(prop_name, _lang)
                 self._setLocalPropValue(prop_name, _lang, prop_value)
             else:
+                prev_prop_value = getattr(self.aq_base, prop_name, prop_type())
                 setattr(self, prop_name, prop_value)
 
-        self.updatePropertiesFromGlossary(_lang)
+            if widget.meta_type == 'Naaya Schema Glossary Widget':
+                glossary = widget.get_glossary()
+                if glossary is not None:
+                    update_translation(self, prop_name,
+                                       glossary, _lang, prev_prop_value)
+
         self._p_changed = 1
         self.recatalogNyObject(self)
 
