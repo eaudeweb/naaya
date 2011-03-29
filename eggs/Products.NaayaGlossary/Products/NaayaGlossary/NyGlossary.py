@@ -26,6 +26,7 @@ import string
 from copy       import copy
 from os.path    import join
 import simplejson as json
+import logging
 
 #Zope imports
 import Products
@@ -51,6 +52,8 @@ from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 
 #Naaya imports
 from Products.NaayaCore.managers.utils import genObjectId
+
+log = logging.getLogger('Products.NaayaGlossary')
 
 #constants
 LABEL_OBJECT = 'Glossary'
@@ -743,7 +746,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     try:
                         self.manage_addGlossaryFolder(folder_id, translation['context'], [], '', '', 1)
                         folder = self._getOb(folder_id)
-                        self.cu_recatalog_object(folder)
                         folder.set_translations_list(target_language, translation['context'])
                         if add_themes_from_folders:
                             self.addTheme(name=translation['context'], code=l_context_name)
@@ -763,7 +765,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     if elem_ob is not None:
                         for k,v in obj.translations.items():
                             elem_ob.set_translations_list(k, v)
-                        elem_ob.cu_recatalog_object(elem_ob)
                     else:
                         try:
                             elem_subjects = []
@@ -782,7 +783,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
                             #definition translation
                             elem_ob.set_def_trans_list(target_language, translation['note'])
-                            elem_ob.cu_recatalog_object(elem_ob)
             obj.emptyObject()
         if REQUEST: return REQUEST.RESPONSE.redirect('import_html')
 

@@ -27,10 +27,14 @@ from AccessControl                              import ClassSecurityInfo
 from OFS.SimpleItem                             import SimpleItem
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl.Permissions                  import view_management_screens, view
+from zope import interface
+from zope import event
 
 # product imports
 from constants  import *
 from utils      import utils, catalog_utils
+from interfaces import INyGlossaryElement
+from events import ItemTranslationChanged
 
 # constants
 LABEL_OBJECT = 'Glossary element'
@@ -62,6 +66,7 @@ def manage_addGlossaryElement(self, id='', title='', source='', subjects=[], con
 class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     """ NyGlossaryElement """
 
+    interface.implements(INyGlossaryElement)
     meta_type = NAAYAGLOSSARY_ELEMENT_METATYPE
     meta_label = LABEL_OBJECT
     product_name = NAAYAGLOSSARY_PRODUCT_NAME
@@ -162,17 +167,17 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     def set_translations_list(self, language, translation):
         """ set the languages """
         setattr(self, language, translation)
+        event.notify(ItemTranslationChanged(self, language, translation))
 
     def load_translations_list (self):
         """ load languages """
         for lang in self.get_english_names():
-            setattr(self, lang, '')
+            self.set_translations_list(lang, '')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageNameTranslations')
     def manageNameTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """
         self.set_translations_list(lang_code, translation)
-        self.cu_recatalog_object(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('translations_html?tab=0')
 
     #######################################
@@ -196,18 +201,17 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_def_trans_list')
     def set_def_trans_list(self, language, translation):
         """ set the languages """
-        setattr(self, self.definition_lang(language), translation)
+        self.set_translations_list(self.definition_lang(language), translation)
 
     def load_def_trans_list (self):
         """ load languages """
         for lang in self.get_english_names():
-            setattr(self, self.definition_lang(lang), '')
+            self.set_translations_list(self.definition_lang(lang), '')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageDefinitionTranslations')
     def manageDefinitionTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """
         self.set_def_trans_list(lang_code, translation)
-        self.cu_recatalog_object(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('translations_html?tab=1')
 
     #####################
