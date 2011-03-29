@@ -27,12 +27,16 @@ from AccessControl                              import ClassSecurityInfo
 from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl.Permissions                  import view_management_screens, view
+from zope import interface
+from zope import event
 
 # product imports
 import NyGlossaryElement
 from constants                                          import *
 from utils                                              import utils, catalog_utils
 from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
+from interfaces import INyGlossaryFolder
+from events import ItemTranslationChanged
 
 #constants
 LABEL_OBJECT = 'Glossary folder'
@@ -57,6 +61,7 @@ def manage_addGlossaryFolder(self, id, title='', subjects=[], source='', contrib
 class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     """ NyGlossaryFolder """
 
+    interface.implements(INyGlossaryFolder)
     meta_type =     NAAYAGLOSSARY_FOLDER_METATYPE
     meta_label = LABEL_OBJECT
     product_name =  NAAYAGLOSSARY_PRODUCT_NAME
@@ -182,17 +187,17 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     def set_translations_list(self, language, translation):
         """ set the languages """
         setattr(self, language, translation)
+        event.notify(ItemTranslationChanged(self, language, translation))
 
     def load_translations_list(self):
         """ load languages """
         for lang in self.get_english_names():
-            setattr(self, lang, '')
+            self.set_translations_list(lang, '')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageFolderTranslations')
     def manageFolderTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """
         self.set_translations_list(lang_code, translation)
-        self.cu_recatalog_object(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('translations_html')
 
     #########################

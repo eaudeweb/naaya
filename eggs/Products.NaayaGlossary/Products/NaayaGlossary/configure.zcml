@@ -1,11 +1,18 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
-  <class class=".NyGlossaryFolder.NyGlossaryFolder">
-    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
-  </class>
+  <subscriber
+    for=".interfaces.INyGlossaryItem
+         zope.app.container.interfaces.IObjectAddedEvent"
+    handler=".subscribers.add_item_to_glossary_catalog" />
 
-  <class class=".NyGlossaryElement.NyGlossaryElement">
-    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
-  </class>
+  <subscriber
+    for=".interfaces.INyGlossaryItem
+         .interfaces.IItemTranslationChanged"
+    handler=".subscribers.add_item_to_glossary_catalog" />
+
+  <subscriber
+    for=".interfaces.INyGlossaryItem
+         zope.app.container.interfaces.IObjectRemovedEvent"
+    handler=".subscribers.remove_item_from_glossary_catalog" />
 
 </configure>
