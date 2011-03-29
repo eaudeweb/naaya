@@ -251,4 +251,13 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         """ """
         return len(self.getGlossElems())
 
+    security.declareProtected(view_management_screens, 'manage_tabs')
+    def manage_tabs(self):
+        # we override manage_tabs to insert warning about synchronized glossary
+        if self.sync_remote_url:
+            extra_html = self.sync_info_text(zmi=True)
+        else:
+            extra_html = ''
+        return super(NyGlossaryFolder, self).manage_tabs() + extra_html
+
 InitializeClass(NyGlossaryFolder)

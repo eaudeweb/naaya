@@ -54,7 +54,11 @@
     }
 </style>
 
-<div id="tabbedmenu" tal:condition="here/checkPermissionManageGlossary">
+<tal:block define="has_permission here/checkPermissionManageGlossary;
+                   has_sync python:bool(here.sync_remote_url);
+                   can_edit python:has_permission and not has_sync">
+
+<div id="tabbedmenu" tal:condition="has_permission">
 <ul>
     <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_html" i18n:translate="">View</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html" i18n:translate="">Properties</a></li>
@@ -66,14 +70,16 @@
 <div class="cleaner"/>
 <h1 tal:content="here/title_or_id"/>
 
+<tal:block condition="python:has_permission and has_sync"
+           content="structure here/sync_info_text"/>
+
 <tal:block define="	selected_lang python:request.get('lang', here.getSelectedLang());
 					isArabic here/isArabicLanguage;
 					noArabic not:isArabic;
 					skin_path python:here.getLayoutTool().getSkinFilesPath();
 					ctrl python:request.get('ctrl', '');
 					selected_item python:here.getGlossaryChild(request.get('item', ''));
-					insert_after  python:here.getGlossaryChild(request.get('insert', ''));
-					is_manager here/checkPermissionManageGlossary">
+					insert_after  python:here.getGlossaryChild(request.get('insert', ''))">
 	<p>
 		<a class="button" href="javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
 		<a class="button" href="javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
@@ -92,7 +98,7 @@
 								translation python:item.get_translation_by_language(lang);
 								translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
 					<table>
-						<tr tal:condition="python:item.approved or is_manager">
+						<tr tal:condition="python:item.approved or has_permission">
 							<td>
 								<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
 								<tal:block tal:condition="python:tree_node[1]==-1">
@@ -123,7 +129,7 @@
 								<a tal:attributes="href item/absolute_url">
 									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
-								<tal:block condition="is_manager">
+								<tal:block condition="can_edit">
 									<a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">edit</a>
 									<tal:block condition="python:item.meta_type=='Naaya Glossary Folder'">
 										<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">add</a>
@@ -135,7 +141,7 @@
 				</td>
 			</tr>
 		</table>
-		<tal:block condition="is_manager">
+		<tal:block condition="can_edit">
 			<br />
 			<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))">Add Glossary Folder</a>
 		</tal:block>
@@ -147,8 +153,8 @@
 
 	</tal:block>
 
-    <tal:block tal:condition="is_manager">
-    <div class="management_div" tal:condition="python:selected_item and is_manager">
+    <tal:block tal:condition="can_edit">
+    <div class="management_div" tal:condition="selected_item">
         <form action="updateGlossaryItem" method="post">
             <h2><span tal:replace="selected_item/title_or_id"/> <span i18n:translate="">properties</span></h2>
 
@@ -252,6 +258,7 @@
         </form>
     </div>
 
+</tal:block>
 </tal:block>
 </tal:block>
 

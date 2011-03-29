@@ -46,6 +46,9 @@
 
 <br />
 
+<tal:block condition="here/sync_remote_url" content="structure here/sync_info_text"/>
+<tal:block condition="not:here/sync_remote_url">
+
 <h2>Glossary languages</h2>
 
 <br />
@@ -88,6 +91,8 @@
             <input type="submit" name="add" value="Add"/>
     </fieldset>
 </form>
+
+</tal:block>
 
 </metal:block>
 </metal:block>

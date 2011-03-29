@@ -25,6 +25,9 @@
 <div class="cleaner"/>
 <h1>Glossary import/export</h1>
 
+<tal:block condition="here/sync_remote_url" content="structure here/sync_info_text"/>
+<tal:block condition="not:here/sync_remote_url">
+
 <script language="JavaScript">
     function toggle_lang(elem) {
         var lang_select = document.getElementById('lang_select');
@@ -98,6 +101,7 @@
             and all you have to do is to load a TMX file to get the translations.
         </dd>
     </dl>
+</tal:block>
 
 </metal:block>
 </metal:block>
