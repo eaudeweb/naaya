@@ -52,6 +52,35 @@
 			</fieldset>
 		</td>
 	</tr>
+	<tr>
+		<td><fieldset><legend><strong>Import terms and translations from Zip dump</strong></legend>
+			<p class="form-help">Import a Zip file exported from another Glossary.
+			Performs intelligent merging of new and existing terms.
+			Enter the filename and click the <strong>Import</strong>&nbsp;button.</p>
+			<table border=0 cellpadding=2 cellspacing=0 width="100%">
+			<form action="dump_import" method="post" name="frmTMXImport" enctype="multipart/form-data">
+				<tr>
+					<td>Choose the Zip file</td>
+				</tr>
+				<tr>
+					<td><input type="file" name="dump_file"></td>
+				</tr>
+				<tr>
+					<td>
+						<label>
+							<input type="checkbox" name="remove_items:boolean"/>
+							Remove glossary items that are not found in the zip dump
+						</label>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Import"></td>
+				</tr>
+			</form>
+			</table>
+			</fieldset>
+		</td>
+	</tr>
 </table>
 
 <span tal:replace="structure here/manage_page_footer"/>
