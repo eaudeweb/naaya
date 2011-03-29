@@ -2,6 +2,7 @@
 
 from cStringIO import StringIO
 import lxml.etree
+import transaction
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
 import helpers
@@ -175,3 +176,14 @@ class DumpExportImportTest(NaayaTestCase):
         self.assertEqual(glossary['1'].Russian, u"Стекло")
         self.assertEqual(glossary['1']['2'].Russian, u"Водка")
         self.assertEqual(glossary['1']['3'].Russian, u"Лёд")
+
+    def test_no_change(self):
+        dump_file = self._export_for_test()
+        glossary = helpers.make_glossary(self.portal)
+        glossary.dump_import(StringIO(dump_file), remove_items=True)
+        transaction.commit()
+
+        glossary.dump_import(StringIO(dump_file), remove_items=True)
+
+        connection = glossary._p_jar
+        self.assertEqual(connection._registered_objects, [])
