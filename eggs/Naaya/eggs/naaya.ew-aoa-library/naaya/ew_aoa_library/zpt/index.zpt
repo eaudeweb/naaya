@@ -320,14 +320,9 @@
 					tal:attributes="value options/year|nothing"/>
 			</div>
 			<div class="field">
-				<label for="country" i18n:translate="">Country</label>
-				<input type="text" name="country:utf8:ustring" size="50"
-					tal:attributes="value options/country|nothing"/>
-			</div>
-			<div class="field" style="display: none">
-				<label for="region" i18n:translate="">Region</label>
-				<input type="text" name="region:utf8:ustring" size="50"
-					tal:attributes="value options/region|nothing"/>
+				<label for="official_country_region" i18n:translate="">Geo coverage (country or region)</label>
+				<input type="text" name="official_country_region:utf8:ustring" size="50"
+					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
 			<div class="field" tal:define="theme options/theme|string:any">
 				<label for="theme" i18n:translate="">Themes</label>
