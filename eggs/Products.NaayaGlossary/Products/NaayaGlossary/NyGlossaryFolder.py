@@ -186,6 +186,9 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_translations_list')
     def set_translations_list(self, language, translation):
         """ set the languages """
+        if getattr(self, language, u"") == translation:
+            # no need to do anything, so let's avoid generating a transaction
+            return
         setattr(self, language, translation)
         event.notify(ItemTranslationChanged(self, language, translation))
 
