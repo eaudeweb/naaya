@@ -165,6 +165,9 @@ class AoALibraryViewer(SimpleItem):
         def match_answers(vl_answer, rt_answer):
             vl_title_dict = vl_answer.get('w_assessment-name')
             rt_title_dict = rt_answer.get('w_q1-name-assessment-report')
+            if not isinstance(vl_title_dict, dict) or not isinstance(rt_title_dict, dict):
+                return False
+
             for vl_title in vl_title_dict.values():
                 for rt_title in rt_title_dict.values():
                     if vl_title.strip() == rt_title.strip():
