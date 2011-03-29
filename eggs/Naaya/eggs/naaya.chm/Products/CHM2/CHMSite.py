@@ -124,8 +124,9 @@ class CHMSite(NySite):
         extra=Extra_for_DateRangeIndex(since_field='start_date', until_field='end_date')
         self.getCatalogTool().manage_addIndex("resource_interval", 'DateRangeIndex', extra=extra)
         #create and fill glossaries
+        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS) 
+        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml'))) 
         self.add_glossary_coverage()
-        self.add_glossary_keywords()
 
         #set glossary for pick lists
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
