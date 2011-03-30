@@ -1,9 +1,10 @@
 """
 This tool is used to notify subscribed users of changes in Naaya objects using
 emails. Subscribers can be registered or anonymous users and they can be
-notified daily, weekly or monthly.
+notified instantly, daily, weekly or monthly.
 
 """
+
 import re
 from datetime import time, datetime, timedelta
 import logging
@@ -72,25 +73,28 @@ class NotificationTool(Folder):
 
     security = ClassSecurityInfo()
 
+    #default configuration settings
+    default_config = {
+        'admin_on_error': True,
+        'admin_on_edit': True,
+        'enable_instant': False,
+        'enable_daily': False,
+        'enable_anonymous': False, #Enable anonymous notifications
+        'daily_hour': 0,
+        'enable_weekly': False,
+        'weekly_day': 1, # 1 = monday, 7 = sunday
+        'weekly_hour': 0,
+        'enable_monthly': False,
+        'monthly_day': 1, # 1 = first day of the month
+        'monthly_hour': 0,
+        'notif_content_types': [],
+    }
+
     def __init__(self, id, title):
         """ """
         self.id = id
         self.title = title
-        self.config = PersistentDict({
-            'admin_on_error': True,
-            'admin_on_edit': True,
-            'enable_instant': False,
-            'enable_daily': False,
-            'enable_anonymous': False, #Enable anonymous notifications
-            'daily_hour': 0,
-            'enable_weekly': False,
-            'weekly_day': 1, # 1 = monday, 7 = sunday
-            'weekly_hour': 0,
-            'enable_monthly': False,
-            'monthly_day': 1, # 1 = first day of the month
-            'monthly_hour': 0,
-            'notif_content_types': [],
-        })
+        self.config = PersistentDict(self.default_config)
         self.timestamps = PersistentDict()
         #Confirmations list
         self.pending_anonymous_subscriptions = PersistentList()
@@ -270,7 +274,8 @@ class NotificationTool(Folder):
         if not self.config['enable_instant']:
             return
 
-        #Don't send notifications if the object is not approved
+        #Don't send notifications if the object is unapproved, but store them
+        #into a queue to send them later when it becomes approved
         if not ob.approved:
             return
 
@@ -315,18 +320,21 @@ class NotificationTool(Folder):
 
     def _send_newsletter(self, notif_type, when_start, when_end):
         """
-        Send notifications for the period between `when_start` and `when_end`
-        using the `notif_type` template
+        We'll look in the ``Products.Naaya.NySite.getActionLogger`` for object
+        creation/modification log entries. Then we'll send notifications for
+        the period between `when_start` and `when_end` using the
+        `notif_type` template.
+
         """
         notif_logger.info('Notifications newsletter on site %r, type %r, '
-                          'from %r to %r',
+                          'from %s to %s',
                           ofs_path(self.getSite()), notif_type,
                           when_start, when_end)
         objects_by_email = {}
         langs_by_email = {}
         subscriptions_by_email = {}
         anonymous_users = {}
-        for ob in utils.list_modified_objects(self.getSite(), when_start,
+        for ob in utils.get_modified_objects(self.getSite(), when_start,
                                               when_end):
             notif_logger.info('.. modified object: %r', ofs_path(ob))
             for subscription in utils.fetch_subscriptions(ob, inherit=True):
@@ -441,24 +449,11 @@ class NotificationTool(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     def admin_settings(self, REQUEST):
         """ save settings from the admin page """
-        form = REQUEST.form
-        self.config['admin_on_error'] = form.get('admin_on_error', False)
-        self.config['admin_on_edit'] = form.get('admin_on_edit', False)
-        self.config['enable_instant'] = form.get('enable_instant', False)
-        self.config['enable_daily'] = form.get('enable_daily', False)
-        self.config['daily_hour'] = form.get('daily_hour')
-        self.config['enable_weekly'] = form.get('enable_weekly', False)
-        self.config['weekly_day'] = form.get('weekly_day')
-        self.config['weekly_hour'] = form.get('weekly_hour')
-        self.config['enable_monthly'] = form.get('enable_monthly', False)
-        self.config['monthly_day'] = form.get('monthly_day')
-        self.config['monthly_hour'] = form.get('monthly_hour')
-        self.config['notif_content_types'] = form.get('notif_content_types',
-                                                      [])
-        self.config['enable_anonymous'] = form.get('enable_anonymous', False)
 
-        #If this is True then all the modifications of the current user
-        #will be ignored by instant notifications
+        form = REQUEST.form
+        for field, value in self.config.items():
+            self.config[field] = form.get(field, self.default_config[field])
+
         REQUEST.SESSION['skip_notifications'] = form.get("skip_notifications",
                                                          False)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')

@@ -1,23 +1,14 @@
 import re
-try: from collections import namedtuple
-except ImportError: from Products.NaayaCore.backport import namedtuple
+import mock
+from datetime import time, date, datetime, timedelta
 
-from unittest import TestSuite, makeSuite
-from datetime import date, time, datetime, timedelta
-from operator import attrgetter
 import transaction
 
-from Products.NaayaCore.NotificationTool.NotificationTool import \
-                                                            NotificationTool
-from Products.NaayaCore.NotificationTool.utils import (
-    walk_subscriptions, divert_notifications)
-from Products.NaayaCore.NotificationTool import NotificationTool as \
-    NotificationTool_module
-from Products.NaayaCore.NotificationTool import utils as \
-    NotificationTool_utils
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.Naaya.tests.utils import replace, restore_all
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.NotificationTool.utils import (
+    walk_subscriptions, divert_notifications, get_modified_objects)
+from Products.NaayaCore.NotificationTool import constants
 from Products.NaayaCore.EmailTool import EmailTool
 from naaya.content.document.document_item import addNyDocument
 from naaya.core.zope2util import path_in_site
@@ -28,21 +19,15 @@ class BaseNotificationsTest(NaayaTestCase):
         self._notif_config = dict(notif_tool.config)
         self._notifications = []
         self._subscriptions_to_remove = []
+        self.patches = []
+        self.object_timestamps = []
+
         divert_notifications(True, save_to=self._notifications)
         addNyFolder(self.portal, 'fol1', contributor='contributor')
         addNyFolder(self.portal, 'fol2', contributor='contributor')
 
-        self.object_timestamps = []
-        def testing_list_modified_objects(site, when_start, when_end):
-            for ob_path, modif_datetime in self.object_timestamps:
-                if when_start < modif_datetime < when_end:
-                    yield site.unrestrictedTraverse(ob_path)
-
-        replace(NotificationTool_utils,
-                'list_modified_objects',
-                testing_list_modified_objects)
-
-        def testing_get_template(self, template_name):
+        def _get_template(self, template_name):
+            """ Replacement for _get_template """
             def single_tmpl(ob, person, portal, **kwargs):
                 return {'subject': 'notifications',
                         'body_text': 'instant [%s] %s' %
@@ -62,18 +47,36 @@ class BaseNotificationsTest(NaayaTestCase):
             else:
                 return group_tmpl
 
-        replace(NotificationTool, '_get_template', testing_get_template)
+        self.patches.append(mock.patch(
+            'Products.NaayaCore.NotificationTool.NotificationTool.'
+            'NotificationTool._get_template', _get_template))
+
+
+        def get_modified_objects(site, when_start, when_end):
+            for ob_path, modif_datetime in self.object_timestamps:
+                if when_start < modif_datetime < when_end:
+                    yield site.unrestrictedTraverse(ob_path)
+
+        self.patches.append(mock.patch(
+            'Products.NaayaCore.NotificationTool.utils.get_modified_objects',
+            get_modified_objects))
+
         transaction.commit()
 
+        for patch in self.patches: #Apply patches
+            patch.start()
 
     def beforeTearDown(self):
         notif_tool = self.portal.getNotificationTool()
-        restore_all()
         for args in self._subscriptions_to_remove:
             notif_tool.remove_account_subscription(*args)
         self.portal.manage_delObjects(['fol1', 'fol2'])
         notif_tool.config.update(self._notif_config)
         divert_notifications(False)
+
+        for patch in self.patches: #Remove patches
+            patch.stop()
+
         transaction.commit()
 
     def _fetch_test_notifications(self):
@@ -283,6 +286,7 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
         ]))
 
     def test_restricted_periodic(self):
+
         notif_tool = self.portal.getNotificationTool()
 
         self.add_account_subscription('reviewer', 'fol1', 'weekly', 'en')
@@ -292,6 +296,7 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
         addNyDocument(self.portal['fol1'], id='doc_b', contributor='admin')
         self.portal['fol1']['doc_a']._View_Permission = ('Reviewer',)
         self.portal['fol1']['doc_b']._View_Permission = ('Contributor',)
+
         self.object_timestamps = [
             ('fol1/doc_a', datetime(2009, 8, 3)),
             ('fol1/doc_b', datetime(2009, 8, 3)),
@@ -379,8 +384,11 @@ class NotificationsCronUnitTest(BaseNotificationsTest):
         self._newsletters = []
         def testing_send_newsletter(self2, notif_type, when_start, when_end):
             self._newsletters.append( (notif_type, when_start, when_end) )
-
-        replace(NotificationTool, '_send_newsletter', testing_send_newsletter)
+        p = mock.patch(
+            'Products.NaayaCore.NotificationTool.NotificationTool'
+            '.NotificationTool._send_newsletter', testing_send_newsletter)
+        self.patches.append(p) #This needs to be exited
+        p.__enter__()
         transaction.commit()
 
     def fetch_test_newsletters(self):
@@ -566,3 +574,30 @@ class NotificationsUiApiTest(BaseNotificationsTest):
         notif_tool.config['enable_weekly'] = False
         self.assertEqual(list(notif_tool.available_notif_types(location='fol1')),
             ['instant', 'daily', 'monthly'])
+
+class NotificationsUtilsTest(BaseNotificationsTest):
+    """ Testing utility functions of NotificationTool """
+
+    def test_get_modified_objects(self):
+        notif_tool = self.portal.getNotificationTool()
+        action_logger = self.portal.getActionLogger()
+        items = dict(action_logger.items())
+        for entry_id, log_entry in items.items(): #clean action logger
+            del action_logger[entry_id]
+
+        #Create a few log entries
+        action_logger.create(type=constants.LOG_TYPES['approved'],
+                             path='info')
+        action_logger.create(type=constants.LOG_TYPES['created'],
+                             path='fol1')
+        action_logger.create(type=constants.LOG_TYPES['modified'],
+                             path='fol2')
+        #Same as above. `get_modified_objects` should return 3 object
+        action_logger.create(type=constants.LOG_TYPES['modified'],
+                             path='fol2')
+
+        modified_obj_list = list(get_modified_objects(self.portal,
+            (datetime.utcnow() - timedelta(minutes=1)),
+            (datetime.utcnow() + timedelta(minutes=1))))
+
+        self.assertEqual(len(modified_obj_list), 3)

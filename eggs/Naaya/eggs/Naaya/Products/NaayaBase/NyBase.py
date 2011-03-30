@@ -56,8 +56,13 @@ class NyBase(NyDublinCore):
         @param approved: the state flag
         @type approved: integer - 0 or 1
         """
+        #If approved attribute is not changed - do nothing
+        if hasattr(self, 'approved') and self.approved == approved:
+            return
+
         if approved_by is None:
             approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
         self.approved = approved
         self.approved_by = approved_by
         self._p_changed = 1

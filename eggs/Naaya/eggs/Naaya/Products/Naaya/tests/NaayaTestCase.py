@@ -67,6 +67,13 @@ class NaayaTestCase(unittest.TestCase):
     _naaya_plugin = 'NaayaPortalTestPlugin'
 
     def setUp(self):
+        #Cleanup all action logs before starting
+        action_logger = self.portal.getActionLogger()
+        items = dict(action_logger.items())
+        for entry_id, log_entry in items.items(): #clean action logger
+            del action_logger[entry_id]
+        transaction.commit()
+
         self.afterSetUp()
 
     def tearDown(self):

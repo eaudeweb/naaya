@@ -7,6 +7,16 @@
     />
 
   <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_edit"
+    for="naaya.content.base.interfaces.INyContentObjectEditEvent"
+    />
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_approved"
+    for="naaya.content.base.interfaces.INyContentObjectApproveEvent"
+    />
+
+  <subscriber
     handler="Products.NaayaCore.NotificationTool.subscribers.handle_csv_import"
     for="Products.NaayaCore.interfaces.ICSVImportEvent"
     />
@@ -16,15 +26,9 @@
     for="Products.NaayaCore.interfaces.IZipImportEvent"
     />
 
-  <subscriber
-    handler="Products.NaayaCore.NotificationTool.subscribers.handle_object_edit"
-    for="naaya.content.base.interfaces.INyContentObjectEditEvent"
-    />
-
   <subscriber for="Products.Naaya.interfaces.INySite
                    Products.Naaya.interfaces.IHeartbeat"
               handler=".subscribers.heartbeat_notification" />
-
 
   <adapter
     factory=".portlets.NotificationsPortlet"

@@ -1,7 +1,9 @@
 from datetime import timedelta
 
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from naaya.core.zope2util import path_in_site
 
+import constants
 import utils
 
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
@@ -24,22 +26,63 @@ def check_skip_notifications(subscriber):
     return wrapper
 
 @check_skip_notifications
+def handle_object_approved(event):
+    """ Called when an object has been approved """
+
+    ob = event.context
+    portal = ob.getSite()
+
+    portal.notifyFolderMaintainer(ob.aq_parent, ob)
+    contributor = event.contributor
+    notification_tool = portal.getNotificationTool()
+    notification_tool.notify_instant(ob, contributor)
+
+    action_logger = portal.getActionLogger()
+    action_logger.create(type=constants.LOG_TYPES['approved'],
+                         contributor=contributor, path=path_in_site(ob))
+
+@check_skip_notifications
 def handle_object_add(event):
+    """An object has been created. Send instant notifications and create a log
+    entry
+
+    """
+
     if not event.schema.get('_send_notifications', True):
         return
 
     ob = event.context
-    ob.getSite().notifyFolderMaintainer(ob.aq_parent, ob)
+    portal = ob.getSite()
+
+    portal.notifyFolderMaintainer(ob.aq_parent, ob)
     contributor = event.contributor
-    notification_tool = ob.getSite().getNotificationTool()
+    notification_tool = portal.getNotificationTool()
     notification_tool.notify_instant(ob, contributor)
+
+    if ob.approved:
+        #Create log entry
+        action_logger = portal.getActionLogger()
+        action_logger.create(type=constants.LOG_TYPES['created'],
+                             contributor=contributor, path=path_in_site(ob))
 
 @check_skip_notifications
 def handle_object_edit(event):
+    """An object has been modified. Send instant notifications and create a log
+    entry if the object is approved
+
+    """
+
     ob = event.context
+    portal = ob.getSite()
+
     contributor = event.contributor
-    notification_tool = ob.getSite().getNotificationTool()
+    notification_tool = portal.getNotificationTool()
     notification_tool.notify_instant(ob, contributor, ob_edited=True)
+
+    if ob.approved: #Create log entry
+        action_logger = portal.getActionLogger()
+        action_logger.create(type=constants.LOG_TYPES['modified'],
+                             contributor=contributor, path=path_in_site(ob))
 
 @check_skip_notifications
 def handle_csv_import(event):
@@ -74,11 +117,15 @@ def handle_zip_import(event):
 
 
 def send_notifications_for_event(event, subscriber_data_default, template):
-    """Send notifications to site maintainers and subscribers"""
+    """Send notifications to site maintainers and subscribers. Create event
+    handler must be supressed when this action is run.
+
+    """
 
     folder = event.context
     portal = folder.getSite()
     notification_tool = portal.getNotificationTool()
+    action_logger = portal.getActionLogger()
 
     subscribers_data = {}
     maintainers_data = {}
@@ -101,6 +148,9 @@ def send_notifications_for_event(event, subscriber_data_default, template):
     subscribers_data.update(maintainers_data)
     notification_tool._send_notifications(subscribers_data,
                                           template.render_email)
+    #Create log entry
+    action_logger.create(type=constants.LOG_TYPES['bulk_import'],
+                         path=path_in_site(folder))
 
 def heartbeat_notification(site, hearthbeat):
     """notifications are delayed by 1 minute to allow for non-committed
