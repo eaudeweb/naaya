@@ -2,12 +2,14 @@
 This module contains the base class of Naaya architecture.
 """
 
-
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from Globals import InitializeClass
+from zope.event import notify
 
-from constants import *
+from naaya.content.base.events import (NyContentObjectApproveEvent,
+                                       NyContentObjectUnapproveEvent)
+
 from NyCheckControl import NyCheckControl
 from NyDublinCore import NyDublinCore
 
@@ -54,15 +56,17 @@ class NyBase(NyDublinCore):
         @param approved: the state flag
         @type approved: integer - 0 or 1
         """
-        if approved_by is None: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if approved_by is None:
+            approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.approved = approved
         self.approved_by = approved_by
         self._p_changed = 1
-        #call hooks for (un)approve operations
+
+        #Trigger approval events
         if self.approved:
-            self.hook_after_approve(self)
+            notify(NyContentObjectApproveEvent(self, approved_by))
         else:
-            self.hook_after_unapprove(self)
+            notify(NyContentObjectUnapproveEvent(self, approved_by))
 
     security.declarePrivate('setReleaseDate')
     def setReleaseDate(self, releasedate):

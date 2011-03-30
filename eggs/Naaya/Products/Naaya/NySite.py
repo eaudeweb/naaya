@@ -578,23 +578,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         nc = BeforeTraverse.NameCaller(self.getId())
         BeforeTraverse.registerBeforeTraverse(self, nc, handle)
 
-    #hooks
-    def hook_after_approve(self, ob):
-        """
-        This method is called after an object is approved. Can be overwritten.
-        @param ob: the object
-        @type ob: naaya object instance
-        """
-        pass
-
-    def hook_after_unapprove(self, ob):
-        """
-        This method is called after an object is unapproved. Can be overwritte.
-        @param ob: the object
-        @type ob: naaya object instance
-        """
-        pass
-
     def get_archive_listing(self, p_objects):
         """ """
         results = []
