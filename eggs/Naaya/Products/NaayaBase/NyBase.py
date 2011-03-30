@@ -147,11 +147,11 @@ class NyBase(NyDublinCore):
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
         ra('<title>%s</title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
-        ra(u'<description><![CDATA[%s]]></description>' % self.getLocalProperty('description', lang))
+        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
         ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
-        ra(u'<dc:description><![CDATA[%s]]></dc:description>' % self.getLocalProperty('description', lang))
+        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
         ra('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
         ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
         for k in self.getLocalProperty('coverage', lang).split(','):
