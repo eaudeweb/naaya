@@ -1,5 +1,3 @@
-#Python imports
-from unittest import TestSuite, makeSuite
 
 #Zope imports
 from Testing import ZopeTestCase
@@ -45,19 +43,22 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmAdd')
         expected_controls = set(['title:utf8:ustring', 'geo_location.address:utf8:ustring',
-            'releasedate', 'start_date', 'end_date',
-            'agenda_pointer:utf8:ustring', 'minutes_pointer:utf8:ustring', 'survey_pointer:utf8:ustring',
+            'releasedate', 'interval.start_date', 'interval.end_date',
+            'interval.start_time', 'interval.end_time',
+            'interval.all_day:boolean', 'agenda_pointer:utf8:ustring',
+            'minutes_pointer:utf8:ustring', 'survey_pointer:utf8:ustring',
             'contact_person:utf8:ustring', 'contact_email:utf8:ustring'])
         found_controls = set(c.name for c in form.controls)
-        self.assertTrue(expected_controls <= found_controls, 
+        self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         form['title:utf8:ustring'] = 'MyMeeting'
         form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '16/06/2010'
-        form['start_date'] = '20/06/2010'
-        form['end_date'] = '25/06/2010'
+        form['interval.start_date'] = '20/06/2010'
+        form['interval.end_date'] = '25/06/2010'
+        form['interval.all_day:boolean'] = ['on']
         form['contact_person:utf8:ustring'] = 'My Name'
         form['contact_email:utf8:ustring'] = 'my.email@my.domain'
         self.browser.submit()
@@ -67,7 +68,7 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mymeeting')
         html = self.browser.get_html()
         self.assertTrue('MyMeeting' in html)
-        self.assertTrue('[20/06/2010 - 25/06/2010]' in html)
+        self.assertTrue('20 - 25 Jun 2010' in html)
         self.assertTrue('My Name' in html)
         self.assertTrue('mailto:my.email@my.domain' in html)
         self.assertTrue('http://localhost/portal/myfolder/mymeeting/get_ics' in html)
@@ -96,19 +97,22 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
 
         form = self.browser.get_form('frmAdd')
         expected_controls = set(['title:utf8:ustring', 'geo_location.address:utf8:ustring',
-            'releasedate', 'start_date', 'end_date',
+            'releasedate', 'interval.start_date', 'interval.end_date',
+            'interval.start_time', 'interval.end_time', 'interval.all_day:boolean',
             'agenda_pointer:utf8:ustring', 'minutes_pointer:utf8:ustring', 'survey_pointer:utf8:ustring',
             'contact_person:utf8:ustring', 'contact_email:utf8:ustring'])
         found_controls = set(c.name for c in form.controls)
-        self.assertTrue(expected_controls <= found_controls, 
+        self.assertTrue(expected_controls <= found_controls,
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         form['title:utf8:ustring'] = 'MyMeeting2'
         form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '16/06/2010'
-        form['start_date'] = '20/06/2010'
-        form['end_date'] = '25/06/2010'
+        form['interval.start_date'] = '20/06/2010'
+        form['interval.end_date'] = '25/06/2010'
+        form['interval.start_time'] = '10:30'
+        form['interval.end_time'] = '20:00'
         form['contact_person:utf8:ustring'] = 'My Name'
         form['contact_email:utf8:ustring'] = 'my.email@my.domain'
         self.browser.submit()
@@ -117,7 +121,7 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/mymeeting2')
         html = self.browser.get_html()
         self.assertTrue('MyMeeting2' in html)
-        self.assertTrue('[20/06/2010 - 25/06/2010]' in html)
+        self.assertTrue('20/06/2010, 10:30 - 25/06/2010, 20:00' in html)
         self.assertTrue('My Name' in html)
         self.assertTrue('mailto:my.email@my.domain' in html)
         self.assertTrue('http://localhost/portal/myfolder/mymeeting2/get_ics' in html)
@@ -134,17 +138,24 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
-        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
-        addNyMeeting(self.portal.info, 'mymeeting2', contributor='contributor', submitted=1,
-            title='MyMeeting',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
-            contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
+        addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor',
+                     submitted=1, title='MyMeeting', releasedate='16/06/2010',
+                     contact_person='My Name', contact_email='my.email@my.domain',
+                     allow_register=True, restrict_items=True, **extra_args)
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.start_time': '10:30',
+                      'interval.end_date': '25/06/2010',
+                      'interval.end_time': '20:00',
+                      'interval.all_day': False}
+        addNyMeeting(self.portal.info, 'mymeeting2', contributor='contributor',
+                     submitted=1, title='MyMeeting', contact_person='My Name',
+                     contact_email='my.email@my.domain', releasedate='16/06/2010',
+                     allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.info.mymeeting2.approveThis()
         import transaction; transaction.commit()
@@ -156,7 +167,7 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
 
     def test_edit(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        
+
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         self.assertTrue('<h1>Edit Meeting</h1>' in self.browser.get_html())
@@ -165,8 +176,8 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         self.assertEqual(form['title:utf8:ustring'], 'MyMeeting')
         self.assertEqual(form['geo_location.address:utf8:ustring'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
         self.assertEqual(form['releasedate'], '16/06/2010')
-        self.assertEqual(form['start_date'], '20/06/2010')
-        self.assertEqual(form['end_date'], '25/06/2010')
+        self.assertEqual(form['interval.start_date'], '20/06/2010')
+        self.assertEqual(form['interval.end_date'], '25/06/2010')
         self.assertEqual(form['contact_person:utf8:ustring'], 'My Name')
         self.assertEqual(form['contact_email:utf8:ustring'], 'my.email@my.domain')
 
@@ -174,15 +185,18 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'MyEditedMeeting'
         form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '17/06/2010'
-        form['start_date'] = '21/06/2010'
-        form['end_date'] = '26/06/2010'
+        form['interval.start_date'] = '21/06/2010'
+        form['interval.end_date'] = '26/06/2010'
+        form['interval.all_day:boolean'] = []
+        form['interval.start_time'] = '10:30'
+        form['interval.end_time'] = '20:00'
         form['contact_person:utf8:ustring'] = 'My Edited Name'
         form['contact_email:utf8:ustring'] = 'my.edited.email@my.domain'
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting')
         html = self.browser.get_html()
         self.assertTrue('MyEditedMeeting' in html)
-        self.assertTrue('[21/06/2010 - 26/06/2010]' in html)
+        self.assertTrue('21/06/2010, 10:30 - 26/06/2010, 20:00' in html)
         self.assertTrue('My Edited Name' in html)
         self.assertTrue('mailto:my.edited.email@my.domain' in html)
         self.assertTrue('http://localhost/portal/info/mymeeting/get_ics' in html)
@@ -194,7 +208,7 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
 
     def test_edit_error(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
-        
+
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting/edit_html')
         form = self.browser.get_form('frmEdit')
@@ -209,7 +223,7 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
 
     def test_manage_edit(self):
         self.assertTrue(hasattr(self.portal.info, 'mymeeting2'))
-        
+
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/info/mymeeting2/manage_edit_html')
         self.assertTrue('Naaya Meeting' in self.browser.get_html())
@@ -218,8 +232,10 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         self.assertEqual(form['title:utf8:ustring'], 'MyMeeting')
         self.assertEqual(form['geo_location.address:utf8:ustring'], 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark')
         self.assertEqual(form['releasedate'], '16/06/2010')
-        self.assertEqual(form['start_date'], '20/06/2010')
-        self.assertEqual(form['end_date'], '25/06/2010')
+        self.assertEqual(form['interval.start_date'], '20/06/2010')
+        self.assertEqual(form['interval.end_date'], '25/06/2010')
+        self.assertEqual(form['interval.start_time'], '10:30')
+        self.assertEqual(form['interval.end_time'], '20:00')
         self.assertEqual(form['contact_person:utf8:ustring'], 'My Name')
         self.assertEqual(form['contact_email:utf8:ustring'], 'my.email@my.domain')
 
@@ -227,15 +243,17 @@ class NyMeetingEditingTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'MyEditedMeeting'
         form['geo_location.address:utf8:ustring'] = 'Kogens Nytorv 8, 1050 Copenhagen K, Denmark'
         form['releasedate'] = '17/06/2010'
-        form['start_date'] = '21/06/2010'
-        form['end_date'] = '26/06/2010'
+        form['interval.start_date'] = '21/06/2010'
+        form['interval.end_date'] = '26/06/2010'
+        form['interval.start_time'] = '11:00'
+        form['interval.end_time'] = '21:00'
         form['contact_person:utf8:ustring'] = 'My Edited Name'
         form['contact_email:utf8:ustring'] = 'my.edited.email@my.domain'
         self.browser.submit()
         self.browser.go('http://localhost/portal/info/mymeeting2')
         html = self.browser.get_html()
         self.assertTrue('MyEditedMeeting' in html)
-        self.assertTrue('[21/06/2010 - 26/06/2010]' in html)
+        self.assertTrue('21/06/2010, 11:00 - 26/06/2010, 21:00' in html)
         self.assertTrue('My Edited Name' in html)
         self.assertTrue('mailto:my.edited.email@my.domain' in html)
         self.assertTrue('http://localhost/portal/info/mymeeting2/get_ics' in html)
@@ -252,12 +270,16 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.start_time': '10:00',
+                      'interval.end_date': '25/06/2010',
+                      'interval.end_time': '20:00',
+                      'interval.all_day': False}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='10',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='10', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         addPortalMeetingUsers(self.portal)
@@ -279,7 +301,7 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/info/mymeeting')
         html = self.browser.get_html()
         self.assertTrue('MyMeeting' in html)
-        self.assertTrue('[20/06/2010 - 25/06/2010]' in html)
+        self.assertTrue('20/06/2010, 10:00 - 25/06/2010, 20:00' in html)
         self.assertTrue('My Name' in html)
         self.assertTrue('mailto:my.email@my.domain' in html)
         self.assertTrue('http://localhost/portal/info/mymeeting/get_ics' in html)
@@ -459,12 +481,14 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='1',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='1', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -572,12 +596,14 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='1',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='1', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
 
@@ -624,12 +650,14 @@ class NyMeetingSignupTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='1',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='1', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -823,12 +851,14 @@ class NyMeetingAccountSubscriptionTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='1',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='1', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -929,12 +959,14 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='2',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=True, restrict_items=True, **location)
+            allow_register=True, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         self.diverted_mail = divert_mail(True)
@@ -1171,12 +1203,14 @@ class NyMeetingRegisterNotAllowed(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='2',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=False, restrict_items=True, **location)
+            allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         meeting = self.portal.info.mymeeting
@@ -1202,12 +1236,14 @@ class NyMeetingItemsRestrictedButAgenda(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='2',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=False, restrict_items=True, **location)
+            allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         meeting = self.portal.info.mymeeting
@@ -1259,12 +1295,14 @@ class NyMeetingRestrictUnrestrict(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Meeting')
         from naaya.content.meeting.meeting import addNyMeeting
-        location = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark'}
+        extra_args = {'geo_location.address': 'Kogens Nytorv 6, 1050 Copenhagen K, Denmark',
+                      'interval.start_date': '20/06/2010',
+                      'interval.end_date': '25/06/2010',
+                      'interval.all_day': True}
         addNyMeeting(self.portal.info, 'mymeeting', contributor='contributor', submitted=1,
-            title='MyMeeting', max_participants='2',
-            releasedate='16/06/2010', start_date='20/06/2010', end_date='25/06/2010',
+            title='MyMeeting', max_participants='2', releasedate='16/06/2010',
             contact_person='My Name', contact_email='my.email@my.domain',
-            allow_register=False, restrict_items=True, **location)
+            allow_register=False, restrict_items=True, **extra_args)
         self.portal.info.mymeeting.approveThis()
         self.portal.recatalogNyObject(self.portal.info.mymeeting)
         meeting = self.portal.info.mymeeting

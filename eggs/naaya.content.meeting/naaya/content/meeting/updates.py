@@ -1,7 +1,10 @@
+import re
+
 from AccessControl.Permission import Permission
 
 from Products.naayaUpdater.updates import UpdateScript
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
+from naaya.core.custom_types import Interval
 try:
     from naaya.content.base.discover import get_pluggable_content
 except ImportError:
@@ -122,3 +125,70 @@ class AddObserversInMeetings(UpdateScript):
             permission.setRoles([OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE, ADMINISTRATOR_ROLE])
         return True
 
+class ConvertMeetingDates(UpdateScript):
+    title = 'NyMeeting: Convert the start_date, end_date, "time" string to Interval'
+    authors = ('Mihnea Simian', )
+    creation_date = 'Mar 29, 2011'
+
+    def _update(self, portal):
+        meta_type = 'Naaya Meeting'
+        if not portal.is_pluggable_item_installed(meta_type):
+            self.log.debug('Meeting not installed')
+            return True
+
+        self.log.debug('Changing meeting schema')
+        schema_tool = portal.getSchemaTool()
+        schema = schema_tool.getSchemaForMetatype(NyMeeting.meta_type)
+        crt_widgets = schema.objectIds()
+        if widgetid_from_propname('interval') not in crt_widgets:
+            schema.manage_delObjects([widgetid_from_propname('start_date'),
+                                      widgetid_from_propname('end_date'),
+                                      widgetid_from_propname('time')])
+            property_schema = get_pluggable_content()[NyMeeting.meta_type]['default_schema']['interval']
+            schema.addWidget('interval', **property_schema)
+            self.log.debug(('Naaya Meeting schema changes: '
+                            '-start_date -end_date -time +interval'))
+        else:
+            self.log.debug('Meeting schema already contained interval-property')
+
+        self.log.debug('Patching meeting objects')
+        meetings = portal.getCatalogedObjects(meta_type)
+        for meeting in meetings:
+            if getattr(meeting, 'interval', None) is None:
+                self.log.debug('Patching meeting object at %s' %
+                               meeting.absolute_url(1))
+                time = getattr(meeting, 'time', '')
+                try:
+                    start_date = meeting.start_date.strftime("%d/%m/%Y")
+                    end_date = meeting.end_date.strftime("%d/%m/%Y")
+                except Exception:
+                    self.log.debug('Can not get start/end dates, patch aborted')
+                    continue
+                self.log.debug('(Start, end date, time) is: (%s, %s, \'%s\')'
+                               % (start_date, end_date, time))
+                all_day = True
+                start_time = ''
+                end_time = ''
+
+                timepat = re.compile(r'[0-2]?\d[:\.]\d\d?')
+                time_pieces = re.findall(timepat, time)
+                if len(time_pieces) == 1:
+                    self.log.debug('Only found start_time: \'%s\', drop it'
+                                   % time_pieces[0])
+                elif len(time_pieces) > 1:
+                    # set start time to time_pieces[0]
+                    # set end time to time_pieces[-1]
+                    start_time = time_pieces[0].replace('.', ':')
+                    end_time = time_pieces[-1].replace('.', ':')
+                    all_day = False
+
+                i = Interval(start_date, start_time, end_date, end_time, all_day)
+                self.log.debug('Setting meeting.interval: %s' % repr(i))
+                meeting.interval = i
+                delattr(meeting, 'start_date')
+                delattr(meeting, 'end_date')
+                delattr(meeting, 'time')
+            else:
+                self.log.debug('Skipping new-version/patched meeting object at %s' %
+                               meeting.absolute_url(1))
+        return True

@@ -10,12 +10,24 @@
 	<td><input type="text" name="geo_location.address:utf8:ustring" value="" size="50" /></td>
 </tr>
 <tr>
+	<td class="form-label">All day event</td>
+	<td><input type="checkbox" name="interval.all_day:boolean" /></td>
+</tr>
+<tr>
 	<td class="form-label">Start date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="start_date" size="10" value="" /></td>
+	<td><input type="text" name="interval.start_date" size="10" value="" /></td>
+</tr>
+<tr>
+	<td class="form-label">Start time (<em>hh:m</em>)</td>
+	<td><input type="text" name="interval.start_time" size="5" value="" /></td>
 </tr>
 <tr>
 	<td class="form-label">End date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="end_date" size="10" value="" /></td>
+	<td><input type="text" name="interval.end_date" size="10" value="" /></td>
+</tr>
+<tr>
+	<td class="form-label">End time (<em>hh:mm</em>)</td>
+	<td><input type="text" name="interval.end_time" size="5" value="" /></td>
 </tr>
 <tr>
 	<td class="form-label">Agenda Pointer</td>
