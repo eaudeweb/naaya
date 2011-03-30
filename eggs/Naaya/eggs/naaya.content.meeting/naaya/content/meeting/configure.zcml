@@ -47,5 +47,12 @@
           permission="zope2.ViewManagementScreens" />
   </configure>
 
+  <configure zcml:condition="installed Products.naayaUpdater">
+      <zope:utility name="convert_event_times.update"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.ConvertMeetingDates"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
 </configure>
 

@@ -75,15 +75,15 @@
                 tal:content="structure here/description" />
 
             <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
-            <tr tal:condition="here/start_date">
+            <tr tal:condition="here/interval">
                 <th i18n:translate="Period"></th>
                 <td>
-                <tal:block condition="python:here.start_date != here.end_date">
-                    [<span tal:replace="python:here.utShowDateTime(here.start_date)"/> - <span tal:replace="python:here.utShowDateTime(here.end_date)"/>]
-                </tal:block>
-                <tal:block condition="python:here.start_date == here.end_date">
-                    <span tal:replace="python:here.utShowDateTime(here.start_date)"/>
-                </tal:block>
+
+                    <span tal:define="all_day here/interval/all_day;
+                                     start_date here/interval/start_date;
+                                     end_date here/interval/end_date;"
+                          tal:replace="python:here.utShowInterval(start_date, end_date, all_day)" />
+
                 </td>
             </tr>
            <tal:block condition="python:here.prop_details('geo_location')['show']">
@@ -95,7 +95,6 @@
             </tr>
             </tal:block>
             <tal:block content="structure python: here.prop_display_tr('location')" />
-            <tal:block content="structure python: here.prop_display_tr('time')" />
             <tr tal:define="
                     contact_person python:here.prop_details('contact_person')"
                 tal:condition="python:contact_person['show']">
@@ -132,14 +131,12 @@
             </tal:block>
 
             <p tal:define="site here/getSite">
-            <tal:block condition="here/checkPermissionParticipateInMeeting">
                 <a style="float: left; text-align: center; padding: 10px" title="Download meeting to your calendar"
                       tal:attributes="href string:${here/absolute_url}/get_ics">
                     <img alt="" tal:attributes="src here/icalendar_icon" />
                     <br />
                     iCalendar
                 </a>
-            </tal:block>
                 <a tal:condition="here/agenda_pointer" style="float: left; text-align: center; padding: 10px" title="View the meeting agenda"
                      tal:attributes="href string:${site/absolute_url}/${here/agenda_pointer}">
                     <img alt="" tal:attributes="src here/agenda_icon" />
