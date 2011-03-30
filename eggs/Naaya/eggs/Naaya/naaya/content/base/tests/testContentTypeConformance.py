@@ -6,11 +6,15 @@ from random import random
 from Testing import ZopeTestCase
 import transaction
 
+from zope.component import adapter, getGlobalSiteManager
+
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from naaya.content.base.discover import get_pluggable_content
 from Products.NaayaBase.NyContentType import NyContentData
-
+from naaya.content.base.discover import get_pluggable_content
+from naaya.content.base.interfaces import (INyContentObjectAddEvent,
+        INyContentObjectEditEvent, INyContentObjectApproveEvent,
+        INyContentObjectUnapproveEvent, INyContentObjectMovedEvent)
 
 SCHEMA_TESTABLES = ['contact_item', 'document_item', 'event_item',
                     'exfile_item', 'file_item', 'geopoint_item',
@@ -40,6 +44,18 @@ def _list_content_types():
             continue
         yield content_type
 content_types = list(_list_content_types())
+
+def _fill_specific_form_fields(form, type_name):
+        if type_name == 'NyURL':
+            form['redirect:boolean'] = []
+        elif type_name == 'NyGeoPoint':
+            form['geo_location.lon:utf8:ustring'] = '12.587142'
+            form['geo_location.lat:utf8:ustring'] = '55.681004'
+        elif type_name == 'NyMediaFile':
+            form.find_control('file').add_file(StringIO('the_FLV_data'),
+                filename='testvid.flv', content_type='video/x-flv')
+        elif type_name == 'event_item':
+            form['start_date'] = '10/10/2000'
 
 class ContentTypeConformanceTestCase(ZopeTestCase.TestCase):
     """
@@ -113,7 +129,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             form['title:utf8:ustring'] = 'some title %d' % n
             form['xzzx:utf8:ustring'] = 'the XzZx one true value'
-            self._fill_specific_form_fields(form, type_name)
+            _fill_specific_form_fields(form, type_name)
             self.browser.submit()
 
             # make sure the value was set
@@ -146,18 +162,6 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             schema.manage_delObjects(['xzzx-property'])
             transaction.commit()
             n += 1
-
-    def _fill_specific_form_fields(self, form, type_name):
-        if type_name == 'NyURL':
-            form['redirect:boolean'] = []
-        elif type_name == 'NyGeoPoint':
-            form['geo_location.lon:utf8:ustring'] = '12.587142'
-            form['geo_location.lat:utf8:ustring'] = '55.681004'
-        elif type_name == 'NyMediaFile':
-            form.find_control('file').add_file(StringIO('the_FLV_data'),
-                filename='testvid.flv', content_type='video/x-flv')
-        elif type_name == 'event_item':
-            form['start_date'] = '10/10/2000'
 
     def test_dynamic_properties(self):
         """
@@ -201,7 +205,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             form['title:utf8:ustring'] = 'some title %d' % n
             form['yvvy:utf8:ustring'] = 'the yvvy value'
-            self._fill_specific_form_fields(form, type_name)
+            _fill_specific_form_fields(form, type_name)
             self.browser.submit()
 
             # make sure the value was set
@@ -265,7 +269,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             form = self.browser.get_form('frmAdd')
             form['title:utf8:ustring'] = 'test form title'
             form['keywords:utf8:ustring'] = ''
-            self._fill_specific_form_fields(form, type_name)
+            _fill_specific_form_fields(form, type_name)
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
 
@@ -309,7 +313,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             form['title:utf8:ustring'] = 'ze title'
-            self._fill_specific_form_fields(form, type_name)
+            _fill_specific_form_fields(form, type_name)
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
 
@@ -361,7 +365,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             form['title:utf8:ustring'] = rnd_title
-            self._fill_specific_form_fields(form, type_name)
+            _fill_specific_form_fields(form, type_name)
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
             self.browser.submit()
 
@@ -372,8 +376,210 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             self.portal.xz_folder.manage_delObjects([rnd_title])
             transaction.commit()
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(ContentTypeConformanceTestCase))
-    suite.addTest(makeSuite(ConformanceFunctionalTestCase))
-    return suite
+class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
+    """ Test if events are triggered correctly."""
+
+    handlers = []
+
+    def afterSetUp(self):
+        from naaya.content.document.document_item import addNyDocument
+        addNyDocument(self.portal.info, id="document", title="Document",
+                      contributor='contributor', submitted=1)
+        from Products.Naaya.NyFolder import addNyFolder
+        addNyFolder(self.portal, 'folder', contributor='contributor',
+                    submitted=1)
+        transaction.commit()
+
+    def beforeTearDown(self):
+        """ Remove all handlers """
+        gsm = getGlobalSiteManager()
+        for handler in self.handlers:
+            gsm.unregisterHandler(handler)
+
+    def _register_handler(self, handler):
+        self.handlers.append(handler)
+        gsm = getGlobalSiteManager()
+        gsm.registerHandler(handler)
+
+    def test_create(self):
+        """ Creating an object should trigger the `INyContentObjectAddEvent`
+        event. """
+
+        self.browser_do_login('admin', '')
+
+        received_content_types = []
+
+        @adapter(INyContentObjectAddEvent)
+        def event_handler(event):
+            received_content_types.append(event.context.meta_type)
+
+        self._register_handler(event_handler)
+
+        visited_content_types = []
+        for content_type in content_types:
+            type_name = content_type['module']
+            if type_name not in SCHEMA_TESTABLES:
+                continue
+
+            visited_content_types.append(content_type['meta_type'])
+            rnd_title = 'title' + str(random())[2:8]
+            self.browser.go(self.portal.info.absolute_url() + '/%s' %
+                            content_type['add_form'])
+            form = self.browser.get_form('frmAdd')
+            form['title:utf8:ustring'] = rnd_title
+            _fill_specific_form_fields(form, type_name)
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.submit()
+            transaction.commit()
+
+        self.assertEqual(set(visited_content_types),
+                         set(received_content_types))
+    def test_modify(self):
+        """ Modifying an object should trigger the `INyContentObjectEditEvent`
+        event. """
+
+        self.browser_do_login('admin', '')
+
+        received_content_types = []
+
+        @adapter(INyContentObjectEditEvent)
+        def event_handler(event):
+            received_content_types.append(event.context.meta_type)
+
+        self._register_handler(event_handler)
+
+        visited_content_types = []
+
+        for content_type in content_types:
+            type_name = content_type['module']
+            if type_name not in SCHEMA_TESTABLES:
+                continue
+            #Count visited content types
+            visited_content_types.append(content_type['meta_type'])
+
+            rnd_title = 'title' + str(random())[2:8]
+            self.browser.go(self.portal.info.absolute_url() + '/%s' %
+                            content_type['add_form'])
+            form = self.browser.get_form('frmAdd')
+            form['title:utf8:ustring'] = rnd_title
+            _fill_specific_form_fields(form, type_name)
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.submit()
+
+            #Go to objects edit page
+            self.browser.go(self.portal.info[rnd_title].absolute_url() +
+                            '/edit_html')
+            form = self.browser.get_form('frmEdit')
+            form['title:utf8:ustring'] = "Modified object"
+            _fill_specific_form_fields(form, type_name)
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.submit()
+
+
+        self.assertEqual(set(visited_content_types),
+                         set(received_content_types))
+
+    def test_approve(self):
+        """ Create an unapproved object and approve it - this should trigger an
+        ``INyContentObjectApproveEvent`` event.
+
+        """
+
+        self.visited = False
+
+        @adapter(INyContentObjectApproveEvent)
+        def event_handler(event):
+            self.visited = True
+        self._register_handler(event_handler)
+
+        document = self.portal.info['document']
+        document.approveThis(approved=1)
+        self.assertTrue(self.visited)
+
+    def test_unapprove(self):
+        """ Create an approved object and unapprove it - this should trigger an
+        ``INyContentObjectUnapproveEvent`` event.
+
+        """
+        self.visited = False
+
+        @adapter(INyContentObjectUnapproveEvent)
+        def event_handler(event):
+            self.visited = True
+        self._register_handler(event_handler)
+
+        document = self.portal.info['document']
+        document.approveThis(approved=0)
+        self.assertTrue(self.visited)
+
+    def test_move(self):
+        """ If an object is moved it should throw an
+        `INyContentObjectMovedEvent` event.
+
+        """
+
+        self.visited = False
+        @adapter(INyContentObjectMovedEvent)
+        def event_handler(event):
+            self.visited = True
+            self.assertEqual(event.old_site_path, 'info/document')
+            self.assertEqual(event.new_site_path, 'folder/document')
+        self._register_handler(event_handler)
+
+        #Move `document` from `info` to `folder`
+        self.login() #We need this to perform the stuff bellow (Zope2)
+        document_data = self.portal.info.manage_cutObjects('document')
+        self.portal.folder.manage_pasteObjects(document_data)
+        self.logout()
+
+        self.assertTrue(self.visited)
+
+    def test_move_delete(self):
+        """ If an object is moved it should throw an
+        `INyContentObjectMovedEvent` event. However this event will not be
+        triggered when an object has been deleted
+
+        """
+
+        self.visited = False
+        @adapter(INyContentObjectMovedEvent)
+        def event_handler(event):
+            self.visited = True
+        self._register_handler(event_handler)
+
+        #Move `document` from `info` to `folder`
+        self.login() #We need this to perform the stuff bellow (Zope2)
+        self.portal.info.manage_delObjects(['document'])
+        self.logout()
+        self.assertFalse(self.visited)
+
+    def test_move_create(self):
+        """ If an object is moved it should throw an
+        `INyContentObjectMovedEvent` event. However this event will not be
+        triggered when an object has been `created`
+
+        """
+        events = []
+        self.browser_do_login('admin', '')
+
+        @adapter(INyContentObjectMovedEvent)
+        def event_handler(event):
+            events.append(event)
+        self._register_handler(event_handler)
+
+        for content_type in content_types:
+            type_name = content_type['module']
+            if type_name not in SCHEMA_TESTABLES:
+                continue
+
+            rnd_title = 'title' + str(random())[2:8]
+            self.browser.go(self.portal.info.absolute_url() + '/%s' %
+                            content_type['add_form'])
+            form = self.browser.get_form('frmAdd')
+            form['title:utf8:ustring'] = rnd_title
+            _fill_specific_form_fields(form, type_name)
+            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
+            self.browser.submit()
+            transaction.commit()
+
+        self.assertEqual(events, [])

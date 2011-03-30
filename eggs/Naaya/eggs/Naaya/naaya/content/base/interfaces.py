@@ -13,13 +13,23 @@ class INyContentObjectAddEvent(Interface):
     contributor = Attribute("user_id of user who made the changes")
     schema_raw_data = Attribute("Schema arguments used to create the object")
 
-
 class INyContentObjectEditEvent(Interface):
     """ Naaya content object has been edited """
 
     context = Attribute("INyContentObject instance")
     contributor = Attribute("user_id of user who made the changes")
 
+class INyContentObjectApproveEvent(Interface):
+    """ Naaya content object has been approved """
+
+    context = Attribute("INyContentObject instance")
+    contributor = Attribute("user_id of user who made the changes")
+
+class INyContentObjectUnapproveEvent(Interface):
+    """ Naaya content object has been unapproved """
+
+    context = Attribute("INyContentObject instance")
+    contributor = Attribute("user_id of user who made the changes")
 
 class INyContentObjectMovedEvent(Interface):
     """

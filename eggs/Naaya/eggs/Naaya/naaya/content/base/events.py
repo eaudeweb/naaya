@@ -6,6 +6,8 @@ from zope.app.container.interfaces import IObjectMovedEvent
 from interfaces import INyContentObject
 from interfaces import INyContentObjectAddEvent
 from interfaces import INyContentObjectEditEvent
+from interfaces import INyContentObjectApproveEvent
+from interfaces import INyContentObjectUnapproveEvent
 from interfaces import INyContentObjectMovedEvent
 
 class NyContentObjectAddEvent(object):
@@ -17,10 +19,25 @@ class NyContentObjectAddEvent(object):
         self.contributor = contributor
         self.schema = schema_data
 
-
 class NyContentObjectEditEvent(object):
     """ Naaya content object has been edited """
     implements(INyContentObjectEditEvent)
+
+    def __init__(self, context, contributor):
+        self.context = context
+        self.contributor = contributor
+
+class NyContentObjectApproveEvent(object):
+    """ Naaya content object has been approved """
+    implements(INyContentObjectApproveEvent)
+
+    def __init__(self, context, contributor):
+        self.context = context
+        self.contributor = contributor
+
+class NyContentObjectUnapproveEvent(object):
+    """ Naaya content object has been unapproved """
+    implements(INyContentObjectUnapproveEvent)
 
     def __init__(self, context, contributor):
         self.context = context
@@ -41,6 +58,8 @@ def notify_content_object_moved(obj, event):
     if event.oldParent is None or event.newParent is None:
         return # this is actually an added/removed event; skip it...
 
+    if hasattr(obj, 'submitted') and obj.submitted == 0: #Not submited, skip
+        return
 
     new_pp = obj.getPhysicalPath()
     new_parent_pp = event.newParent.getPhysicalPath()
