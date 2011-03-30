@@ -51,6 +51,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     security = ClassSecurityInfo()
 
     filter_by_language = ''
+    harvester_name = None
 
     def __init__(self, id, title, url, numbershownitems, filter_by_language):
         """ """
@@ -145,7 +146,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     def updateChannel(self, uid):
         """ """
         if uid==self.get_site_uid():
-            self.harvest_feed(self.http_proxy)
+            self.harvest_feed(self.http_proxy, self.harvester_name)
             if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
             else: error = ''
             return str(error)
