@@ -13,6 +13,7 @@ from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers.utils import utils
 
 from geo import Geo
+from naaya.core.custom_types import Interval
 
 WIDGET_ID_SUFFIX = '-property'
 
@@ -24,6 +25,7 @@ DATA_TYPES = {
     'date': DateTime,
     'geo': Geo,
     'list': list,
+    'interval': Interval
 }
 
 

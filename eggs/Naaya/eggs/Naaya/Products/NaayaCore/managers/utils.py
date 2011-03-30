@@ -30,7 +30,7 @@ from OFS.ObjectManager import checkValidId
 
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
-from naaya.core.utils import is_valid_email
+from naaya.core.zope2util import dt2DT, is_valid_email
 
 #constants
 
@@ -771,9 +771,6 @@ class utils:
 
     def utShowDateTime(self, p_date):
         """date is a DateTime or datetime object. This function returns a string 'dd month_name yyyy'"""
-        if isinstance(p_date, datetime):
-            from naaya.core.zope2util import dt2DT
-            p_date = dt2DT(p_date)
         try: return p_date.strftime('%d/%m/%Y')
         except: return ''
 
@@ -816,8 +813,12 @@ class utils:
         elif p_start == p_end:
             return self.utShowDateTime(p_start)
         else:
-            sd, sm, sy = p_start.day(), p_start.month(), p_start.year()
-            ed, em, ey = p_end.day(), p_end.month(), p_end.year()
+            if isinstance(p_start, DateTime):
+                p_start = DT2dt(p_start)
+            if isinstance(p_end, DateTime):
+                p_end = DT2dt(p_end)
+            sd, sm, sy = p_start.day, p_start.month, p_start.year
+            ed, em, ey = p_end.day, p_end.month, p_end.year
             if sy == ey:    #same year
                 if sm == em:    #same month
                     return '%s - %s %s' % (sd, p_end.strftime('%d %b'), sy)
@@ -825,6 +826,32 @@ class utils:
                     return '%s - %s %s' % (p_start.strftime('%d %b'), p_end.strftime('%d %b'), sy)
             else:
                 return '%s %s - %s %s' % (p_start.strftime('%d %b'), sy, p_end.strftime('%d %b'), ey)
+
+    def utShowInterval(self, start_date, end_date, all_day):
+        """Pretty print Products.NaayaCore.SchemaTool.widgets.interval.Interval
+        """
+        if isinstance(start_date, DateTime):
+            start_date = DT2dt(start_date)
+        if isinstance(end_date, DateTime):
+            end_date = D2dt(end_date)
+        if all_day:
+            if start_date == end_date:
+                return self.utShowDateTime(start_date)
+            else:
+                return self.utShowDateTimePeriod(start_date, end_date)
+        else:
+             return ('%s, %s - %s, %s' %
+                     (self.utShowDateTime(start_date),
+                      start_date.strftime('%H:%M'),
+                      self.utShowDateTime(end_date),
+                      end_date.strftime('%H:%M'))
+                    )
+
+    def utShowTime(self, date):
+        if date:
+            return date.strftime('%H:%M')
+        else:
+            return ''
 
     def utConvertStringToDateTimeObj(self, p_datestring, p_separator='/'):
         """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
@@ -839,16 +866,9 @@ class utils:
             return None
 
     def utConvertDateTimeObjToString(self, p_date, p_separator='/'):
-        """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
+        """ Formats datetime/DateTime like 'dd/mm/yyyy' """
         if p_date:
-            l_year = str(p_date.year())
-            l_month = str(p_date.month())
-            l_day = str(p_date.day())
-            if len(l_month)==1:
-                l_month = '0' + l_month
-            if len(l_day)==1:
-                l_day = '0' + l_day
-            return l_day + p_separator + l_month + p_separator + l_year
+            return p_date.strftime(p_separator.join(("%d", "%m", "%Y")))
         else:
             return ''
 

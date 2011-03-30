@@ -9,7 +9,7 @@ from Products.NaayaCore.constants import *
 from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
-    'String', 'TextArea', 'Date', 'Checkbox',
+    'String', 'TextArea', 'Date', 'Interval', 'Checkbox',
     'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer',
 ]
 

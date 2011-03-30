@@ -1,15 +1,13 @@
 # encoding: utf-8
-from unittest import TestSuite, makeSuite
+import unittest
 from decimal import Decimal
-
-from Testing import ZopeTestCase
 
 from Products.NaayaCore.SchemaTool.Schema import Schema
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import (
     Geo, GeoWidget, addGeoWidget, WidgetError)
 from Products.Naaya.tests import NaayaTestCase
 
-class GeoTestCase(ZopeTestCase.TestCase):
+class GeoTestCase(unittest.TestCase):
     """ TestCase for Geo data type """
 
     def test_create_blank(self):
@@ -102,10 +100,3 @@ class GeoWidgetSchemaTestCase(NaayaTestCase.NaayaTestCase):
             'thegeo.lat': '13', 'thegeo.lon': '14'})
         self.failUnlessEqual(form_errors, {})
         self.failUnlessEqual(form_data, {'thegeo': Geo(13, 14)})
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(GeoTestCase))
-    suite.addTest(makeSuite(GeoWidgetTestCase))
-    suite.addTest(makeSuite(GeoWidgetSchemaTestCase))
-    return suite
