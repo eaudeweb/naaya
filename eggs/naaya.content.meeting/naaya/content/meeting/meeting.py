@@ -4,6 +4,8 @@ import os
 import sys
 import datetime
 import vobject
+import logging
+from html2text import html2text
 
 #Zope imports
 from Globals import InitializeClass
@@ -44,10 +46,8 @@ from subscriptions import SignupUsersTool
 
 #module constants
 DEFAULT_SCHEMA = {
-    'start_date':           dict(sortorder=130, widget_type='Date',     label='Start date', data_type='date', required=True),
-    'end_date':             dict(sortorder=140, widget_type='Date',     label='End date', data_type='date'),
+    'interval':             dict(sortorder=140, widget_type='Interval', label='Event Interval', data_type='interval', required=True),
     'location':             dict(sortorder=143, widget_type='String',   label='Organization/Building/Room'),
-    'time':                 dict(sortorder=146, widget_type='String',   label='Time'),
     'auto_register':        dict(sortorder=147, widget_type='Checkbox', label='Automatically approve participants when they register', data_type='bool'),
     'allow_register':       dict(sortorder=148, widget_type='Checkbox', label='Allow people to register to participate', data_type='bool'),
     'restrict_items':       dict(sortorder=149, widget_type='Checkbox', label='Restrict user access to the contents in the meeting', default=True, data_type='bool'),
@@ -97,6 +97,9 @@ config = {
 
 #add meeting reports to NySite
 NySite.meeting_reports = MeetingReports('meeting_reports')
+
+# Meeting Logger
+log = logging.getLogger('naaya.content.meeting')
 
 def add_observer_role(site):
     """
@@ -311,8 +314,8 @@ class NyMeeting(NyContentData, NyFolder):
         return 'location="%s" start_date="%s" end_date="%s" max_participants="%s" agenda_pointer="%s" minutes_pointer="%s" survey_pointer="%s" contact_person="%s" contact_email="%s"' % \
             (
                 self.utXmlEncode(self.geo_address()),
-                self.utXmlEncode(self.utNoneToEmpty(self.start_date)),
-                self.utXmlEncode(self.utNoneToEmpty(self.end_date)),
+                self.utXmlEncode(self.utNoneToEmpty(self.interval.start_date)),
+                self.utXmlEncode(self.utNoneToEmpty(self.interval.end_date)),
                 self.utXmlEncode(self.max_participants),
                 self.utXmlEncode(self.agenda_pointer),
                 self.utXmlEncode(self.minutes_pointer),
@@ -339,8 +342,8 @@ class NyMeeting(NyContentData, NyFolder):
         ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
         ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
-        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
+        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.interval.start_date))
+        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.interval.end_date))
         ra('<ev:location>%s</ev:location>' % self.utXmlEncode(self.geo_address()))
         ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.contact_person))
         ra('<ev:type>Meeting</ev:type>')
@@ -348,14 +351,14 @@ class NyMeeting(NyContentData, NyFolder):
         return ''.join(r)
 
     def _check_meeting_dates(self, form_errors):
-        _startdate = getattr(self, 'start_date', '')
-        _enddate = getattr(self, 'end_date', '')
+        _startdate = getattr(self, 'interval.start_date', '')
+        _enddate = getattr(self, 'interval.end_date', '')
         if _startdate and _enddate:
             if _startdate > _enddate:
-                form_errors.setdefault('start_date', [])
-                form_errors['start_date'].append('The start date should be before the end date')
-                form_errors.setdefault('end_date', [])
-                form_errors['end_date'].append('The start date should be before the end date')
+                form_errors.setdefault('interval.start_date', [])
+                form_errors['interval.start_date'].append('The start date should be before the end date')
+                form_errors.setdefault('interval.end_date', [])
+                form_errors['interval.end_date'].append('The start date should be before the end date')
 
     def _check_meeting_pointers(self, form_errors):
         if getattr(self, 'agenda_pointer', ''):
@@ -533,7 +536,7 @@ class NyMeeting(NyContentData, NyFolder):
         return self.getFormsTool().getContent({'here': self},
                             'naaya.content.meeting.meeting_menusubmissions')
 
-    security.declareProtected(PERMISSION_PARTICIPATE_IN_MEETING, 'get_ics')
+    security.declareProtected(view, 'get_ics')
     def get_ics(self, REQUEST):
         """ Export this meeting as 'ics' """
 
@@ -545,16 +548,38 @@ class NyMeeting(NyContentData, NyFolder):
         cal.vevent.add('uid').value = self.absolute_url() + '/get_ics'
         cal.vevent.add('url').value = self.absolute_url()
         cal.vevent.add('summary').value = self.title_or_id()
+        cal.vevent.add('description').value = html2text(self.description)
+        header = ('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">\n<HTML>\n'
+                  '<HEAD>\n<TITLE>' + self.title_or_id() +
+                  '</TITLE>\n</HEAD>\n<BODY>\n')
+        footer = '\n</BODY>\n</HTML>'
+        cal.vevent.add('X-ALT-DESC;FMTTYPE=text/html').value = \
+                                            header + self.description + footer
         cal.vevent.add('transp').value = 'OPAQUE'
 
         modif_time = DT2dt(self.bobobase_modification_time())
         cal.vevent.add('dtstamp').value = modif_time
 
-        cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
-        cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
-                                         datetime.timedelta(days=1))
+        interval = getattr(self, 'interval', None)
+        if interval is None:
+            # old object, backwards compatibility code
+            # should run updates.ConvertMeetingDates
+            log.warning("%s needs patch to use Interval", self.absolute_url(1))
+            cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
+            cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
+                                             datetime.timedelta(days=1))
+        else:
+            if interval.all_day:
+                cal.vevent.add('dtstart').value = interval.start_date.date()
+                cal.vevent.add('dtend').value = (interval.end_date.date() +
+                                                 datetime.timedelta(days=1))
+            else:
+                cal.vevent.add('dtstart').value = interval.start_date
+                cal.vevent.add('dtend').value = interval.end_date
 
         loc = []
+        if getattr(self, 'location', False):
+            loc.append(self.location)
         if self.geo_address():
             loc.append(self.geo_address())
 
