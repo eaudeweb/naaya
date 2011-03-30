@@ -485,7 +485,7 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
 
         """
 
-        self.visited = False
+        visited = False
 
         @adapter(INyContentObjectApproveEvent)
         def event_handler(event):
@@ -493,7 +493,8 @@ class ContentTypesEventsTestCase(NaayaFunctionalTestCase):
         self._register_handler(event_handler)
 
         document = self.portal.info['document']
-        document.approveThis(approved=1)
+        document.approved = 0
+        document.approveThis()
         self.assertTrue(self.visited)
 
     def test_unapprove(self):

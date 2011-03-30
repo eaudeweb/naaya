@@ -254,14 +254,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
-        #load default skeleton
-        self.loadSkeleton(NAAYA_PRODUCT_PATH)
-        #set default main topics
-        self.getPropertiesTool().manageMainTopics(['info'])
-        self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
-
         #Set local site manager
         sm = LocalSiteManager(self)
+
         #This was done because Zope2 setSiteManager does not set the ISite
         #interface which is needed to do component lookup in site managers.
         SiteManagerContainer.setSiteManager.im_func(self, sm)
@@ -269,6 +264,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
         #Register Action Logger utility
         sm.registerUtility(ActionLogger(), IActionLogger)
+
+        #load default skeleton
+        self.loadSkeleton(NAAYA_PRODUCT_PATH)
+        #set default main topics
+        self.getPropertiesTool().manageMainTopics(['info'])
+        self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
 
     skel_handler_cache = {}
 
@@ -3882,11 +3883,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def heartbeat(self):
         """ if cooldown has passed does a heartbeat """
-
         if cooldown('site heartbeat %r' % '/'.join(self.getPhysicalPath()),
                     timedelta(minutes=9)):
             return
-
         self.heartbeat_work()
 
     def manage_check_heartbeat(self):

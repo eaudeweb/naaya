@@ -1,11 +1,15 @@
 from datetime import timedelta
 import logging
+import warnings
 
 from interfaces import ISubscriptionContainer
 from DateTime import DateTime
 
 from Products.NaayaCore.EmailTool.EmailTool import build_email
+from naaya.core.zope2util import DT2dt
 from containers import AccountSubscription, AnonymousSubscription
+
+import constants
 
 notif_logger = logging.getLogger('naaya.core.notif')
 
@@ -65,6 +69,7 @@ def walk_subscriptions(obj):
             yield item
 
 def list_modified_objects(site, when_start, when_end):
+    warnings.warn("Use `get_modified_objects` instead", DeprecationWarning)
     DT_when_start = DateTime_from_datetime(when_start)
     DT_when_end = DateTime_from_datetime(when_end)
     catalog = site.getCatalogTool()
@@ -75,6 +80,37 @@ def list_modified_objects(site, when_start, when_end):
             yield brain.getObject()
         except:
             notif_logger.error('Found broken brain: %r', brain.getPath())
+
+def get_modified_objects(site, when_start, when_end, log_type=None):
+    """ Search through action log entries given ``when_start``, ``when_end``
+    and ``log_type``. Yield objects based on paths from action log entries.
+    Also make sure each object is returned one time.
+
+    """
+
+    action_logger = site.getActionLogger()
+    if log_type is not None:
+        log_types = [log_type]
+    else:
+        log_types = constants.LOG_TYPES.values()
+
+    DT_when_start = DateTime_from_datetime(when_start)
+    DT_when_end = DateTime_from_datetime(when_end)
+
+    visited_paths = []
+    for entry_id, log_entry in action_logger.items():
+        if (log_entry.type in log_types):
+            if log_entry.path in visited_paths: #Return objects just once
+                continue
+            visited_paths.append(log_entry.path)
+
+            if (DT_when_start.lessThanEqualTo(log_entry.created_datetime) and
+                DT_when_end.greaterThanEqualTo(log_entry.created_datetime)):
+                    try:
+                        yield site.unrestrictedTraverse(log_entry.path)
+                    except KeyError:
+                        notif_logger.error('Found nonexistent path: %r',
+                                           log_entry.path)
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
     mail = build_email(addr_from, addr_to, subject, body)

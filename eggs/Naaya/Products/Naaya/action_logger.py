@@ -86,6 +86,6 @@ class ActionLogItem(Persistent):
         self.__dict__.update(kw)
         self.type = type
         self.created_datetime = created_datetime
-        
+
     def __repr__(self):
         return u"<%s %r>" % (self.__class__.__name__, self.__dict__)
