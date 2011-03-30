@@ -4,6 +4,7 @@ naaya.core.zope2util - utilities to make Zope 2 a friendlier place
 
 import datetime
 import sys
+import re
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -19,6 +20,20 @@ from decimal import Decimal
 from dateutil.parser import parse
 from utils import force_to_unicode
 from utils import is_valid_email
+
+from naaya.core.utils import path_in_site
+from naaya.core.utils import force_to_unicode
+
+
+VALID_EMAIL_PATTERN = re.compile("(?:^|\s)[-a-z0-9_.]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)",re.IGNORECASE)
+
+def is_valid_email(email):
+    """
+    Validate e-mail address against regular expression
+    """
+    if VALID_EMAIL_PATTERN.match(str(email)):
+        return True
+    return False
 
 def redirect_to(tmpl):
     """

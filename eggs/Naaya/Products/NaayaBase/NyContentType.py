@@ -92,13 +92,16 @@ class SchemaFormHelper(object):
             yield {'name': prop_name, 'html': self._get_renderer(prop_name, widget, add=add)}
 
     def del_schema_session_values(self):
-        for key in self.schema.listPropNames():
-            self.context.delSession(key)
+        schema_prop_names = self.schema.listPropNames()
         for key in self.context.REQUEST.SESSION.keys():
             # We remove anything that ends in '-errors', not just schema
             # errors. This is not ideal, but content types sometimes expect
             # their own non-schema errors to be removed by us.
             if key.endswith('-errors'):
+                self.context.delSession(key)
+            # we must delete "propname" keys and keys starting with "propname."
+            # SchemaProps can have properties of their own (eg Geo, Interval)
+            if key.split('.', 1)[0] in schema_prop_names:
                 self.context.delSession(key)
 
     def get_meta_label(self):

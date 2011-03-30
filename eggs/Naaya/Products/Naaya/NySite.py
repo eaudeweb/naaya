@@ -12,6 +12,8 @@ from datetime import datetime, timedelta
 import simplejson as json
 from urlparse import urlparse
 import logging
+import time
+import os
 
 import zLOG
 from OFS.Folder import Folder, manage_addFolder
@@ -35,6 +37,8 @@ from zope import component, interface
 import transaction
 from zope.deprecation import deprecate
 from zope.app.component.site import LocalSiteManager, SiteManagerContainer
+from App.config import getConfiguration
+import pytz
 
 from interfaces import INySite, IActionLogger
 from action_logger import ActionLogger
@@ -709,6 +713,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         this method.
         """
         return NAAYA_PRODUCT_PATH
+
+    security.declarePublic('get_timezone')
+    def get_timezone(self):
+        """ Returns a string representing portal timezone
+            E.g.: 'Europe/Copenhagen', 'CET'
+            Try, in order: zope-conf-additional in buildout,
+                           os.environ, time.tzname
+        """
+        conf = getConfiguration()
+        if conf.environment.has_key('TZ') and conf.environment['TZ']:
+            return conf.environment['TZ']
+        elif os.environ.has_key('TZ') and os.environ['TZ']:
+                return os.environ['TZ']
+        elif len(time.tzname):
+            return time.tzname[0]
+        else:
+            # Fallback
+            return 'Europe/Copenhagen'
+
+    security.declarePublic('get_tzinfo')
+    def get_tzinfo(self):
+        return pytz.timezone(self.get_timezone())
 
     #not used anymore
     security.declarePublic('isArabicLanguage')
