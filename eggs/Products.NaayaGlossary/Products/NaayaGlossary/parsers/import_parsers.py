@@ -27,6 +27,8 @@ from Globals import MessageDialog
 
 #product imports
 from Products.NaayaGlossary.utils import utils
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
+from Products.NaayaGlossary.constants import NAAYAGLOSSARY_ELEMENT_METATYPE
 from Products.NaayaGlossary.parsers.tmx_parser import tmx_parser
 from naaya.core.zope2util import ofs_path
 
@@ -78,13 +80,23 @@ class glossary_export:
         r_append('</xliff>')
         return results
 
-    def xliff_export(self, folder='', language='', published=0, REQUEST=None):
+    def xliff_export(self, folder='', language='',
+                     published=0, empty_folders=False, REQUEST=None):
         """ Exports the content to an XLIFF file """
         from types import UnicodeType
         results_list = []
         results = []
         terms = []
         r_append = results_list.append   #alias for append function. For optimization purposes
+
+        trans_unit_template = '\r\n'.join([
+            '<trans-unit id="%(term_id)s" approved="%(approved)s">',
+            '<source>%(source_trans)s</source>',
+            '<target>%(target_trans)s</target>',
+            '<context-group name="%(folder_id)s">%(folder_trans)s</context-group>',
+            '<note>%(def_trans)s</note>',
+            '</trans-unit>',
+        ])
 
         if not folder:
             folder = ofs_path(self)
@@ -101,16 +113,35 @@ class glossary_export:
                 translation = self.convertWinCodesToHTMLCodes(term.get_translation_by_language(language))
             else:
                 translation = term.get_translation_by_language(language)
-            r_append('<trans-unit id="%s" approved="%s">' % (term.id, term.approved))
-            r_append('<source>%s</source>' % term.get_translation_by_language('English'))
-            r_append('<target>%s</target>' % translation)
 
             l_folder = term.aq_parent
             while l_folder.aq_parent != self:
                 l_folder = l_folder.aq_parent
-            r_append('<context-group name="%s">%s</context-group>' % (l_folder.id, l_folder.get_translation_by_language(language)))
-            r_append('<note>%s</note>' % term.get_def_trans_by_language(language))
-            r_append('</trans-unit>')
+
+            r_append(trans_unit_template % {
+                'term_id': term.id,
+                'approved': term.approved,
+                'source_trans': term.get_translation_by_language('English'),
+                'target_trans': translation,
+                'def_trans': term.get_def_trans_by_language(language),
+                'folder_id': l_folder.id,
+                'folder_trans': l_folder.get_translation_by_language(language),
+            })
+
+        if empty_folders:
+            for l_folder in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
+                if l_folder.objectIds([NAAYAGLOSSARY_ELEMENT_METATYPE]):
+                    continue # it's not empty
+                r_append(trans_unit_template % {
+                    'term_id': '%s_dummy' % l_folder.id,
+                    'approved': '1',
+                    'source_trans': "",
+                    'target_trans': "",
+                    'def_trans': "",
+                    'folder_id': l_folder.id,
+                    'folder_trans': l_folder.get_translation_by_language(language),
+                })
+
         results_list.extend(self.xliff_footer())
 
         for x in results_list:
