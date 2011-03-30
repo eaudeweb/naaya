@@ -77,3 +77,15 @@ class INyRemoveGroupRoleEvent(Interface):
 
 class IRoleLogger(Interface):
     """ Log local role assignments and revocations """
+
+class INyFeedHarvester(Interface):
+    """ Utility that can fetch a remote feed and parse it """
+
+    def harvest_feed(self, feed):
+        """
+        Perform harvesting operation. `feed` is a NyFeed object, useful e.g.
+        to find out the URL.
+
+        See what the default parser in `NyFeed.harvest_feed` does and try to
+        emulate its behaviour :)
+        """

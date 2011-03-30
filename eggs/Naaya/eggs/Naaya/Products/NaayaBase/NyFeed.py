@@ -10,6 +10,10 @@ import feedparser
 from copy import deepcopy
 import urllib2
 
+from zope.component import getUtility
+
+from interfaces import INyFeedHarvester
+
 
 
 class NyFeed:
@@ -161,10 +165,27 @@ class NyFeed:
         if type(value) == type(u''): value = value
         return value
 
-    def harvest_feed(self, http_proxy=None):
+    def harvest_feed(self, http_proxy=None, harvester_name=None):
         """
         Handles the feed grabbing and parsing.
         """
+
+        if harvester_name is not None:
+            # Don't use the default parser; we are configured to use a custom
+            # one. Let's see if we can grab it.
+            try:
+                harvester = getUtility(INyFeedHarvester, context=self,
+                                       name=harvester_name)
+            except:
+                self.log_current_error()
+                return
+
+            # OK, custom parser found, run it.
+            result = harvester.harvest_feed(self)
+            self.__set_feed(**result)
+            return
+
+        # Default parser
         if http_proxy:
             proxy = urllib2.ProxyHandler({"http":http_proxy})
             p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified, handlers = [proxy])
