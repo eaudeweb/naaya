@@ -832,7 +832,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         dump_zip = ZipFile(dump_file, 'w')
 
         for language in self.get_english_names():
-            xliff_data = self.xliff_export(language=language)
+            xliff_data = self.xliff_export(language=language,
+                                           empty_folders=True)
             dump_zip.writestr('glossary/%s.xliff' % language, xliff_data)
 
         metadata = {
