@@ -58,6 +58,24 @@ class ExportTest(NaayaTestCase):
         self.assertEqual(unit.xpath('./target')[0].text, u"Водка")
         self.assertEqual(unit.xpath('./context-group')[0].text, u"Стекло")
 
+    def test_export_blank_folders(self):
+        glossary = helpers.make_glossary(self.portal)
+        bucket = helpers.add_folder(glossary, '1', "Bucket")
+
+        xliff_src = glossary.xliff_export(language="English",
+                                          empty_folders=True)
+        xliff = lxml.etree.parse(StringIO(xliff_src))
+        body = xliff.xpath('/xliff/file/body')[0]
+
+        self.assertEqual(len(body.xpath('./trans-unit')), 1)
+        unit = body.xpath('./trans-unit')[0]
+        self.assertEqual(unit.attrib['id'], "1_dummy")
+        self.assertEqual(unit.xpath('./source')[0].text, None)
+        self.assertEqual(unit.xpath('./target')[0].text, None)
+        context_group = unit.xpath('./context-group')[0]
+        self.assertEqual(context_group.attrib['name'], "1")
+        self.assertEqual(context_group.text, "Bucket")
+
 class DumpExportImportTest(NaayaTestCase):
     def _export_for_test(self):
         glossary = helpers.make_glossary(self.portal, 'server_glossary')
@@ -187,3 +205,16 @@ class DumpExportImportTest(NaayaTestCase):
 
         connection = glossary._p_jar
         self.assertEqual(connection._registered_objects, [])
+
+    def test_empty_folders(self):
+        src_glossary = helpers.make_glossary(self.portal, 'server_glossary')
+        glass = helpers.add_folder(src_glossary, '1', "Bucket")
+        dump_file = src_glossary.dump_export()
+
+        glossary = helpers.make_glossary(self.portal)
+        glossary.dump_import(StringIO(dump_file), remove_items=True)
+
+        self.assertEqual(glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE]),
+                         ['1'])
+        self.assertEqual(glossary['1'].title, "Bucket")
+        self.assertEqual(glossary['1'].English, "Bucket")
