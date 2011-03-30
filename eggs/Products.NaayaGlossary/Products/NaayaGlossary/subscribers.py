@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from zope import component
 from naaya.core.utils import cooldown
 from naaya.core.zope2util import ofs_path
 from constants import NAAYAGLOSSARY_CENTRE_METATYPE
@@ -28,3 +29,24 @@ def remove_item_from_glossary_catalog(item, event):
             catalog.uncatalog_object(item_path)
     except:
         log.exception("Failed to remove %r from glossary catalog", item)
+
+class EventCounter(object):
+    def __init__(self, required, path_filter):
+        self._required = required
+        self.path_filter = path_filter
+        self.count = 0
+
+    def start(self):
+        gsm = component.getGlobalSiteManager()
+        gsm.registerHandler(self, self._required)
+
+    def end(self):
+        gsm = component.getGlobalSiteManager()
+        assert gsm.unregisterHandler(self, self._required)
+
+    def __call__(self, item, event):
+        if (ofs_path(item)+'/').startswith(self.path_filter+'/'):
+            self.count += 1
+
+    def reset(self):
+        self.count = 0

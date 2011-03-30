@@ -43,6 +43,7 @@ from Globals                                    import MessageDialog, Initialize
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
 from AccessControl.Permissions                  import view_management_screens, view
+from zope.app.container.interfaces import IObjectAddedEvent
 
 #Product imports
 import NyGlossaryFolder
@@ -58,6 +59,7 @@ from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 from Products.NaayaCore.managers.utils import genObjectId
 from naaya.core.zope2util import relative_object_path, ofs_walk, ofs_path
 from naaya.core.utils import download_to_temp_file
+from interfaces import INyGlossaryItem, IItemTranslationChanged
 
 log = logging.getLogger('Products.NaayaGlossary')
 
@@ -882,10 +884,30 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         languages_to_import.remove('English')
         languages_to_import = ['English'] + languages_to_import
 
-        for language in languages_to_import:
-            log.info(log_prefix + 'Language: %s' % language)
-            data = dump_zip.read('glossary/%s.xliff' % language)
-            self.xliff_import(data)
+        from subscribers import EventCounter
+        new_items = EventCounter((INyGlossaryItem, IObjectAddedEvent),
+                                 ofs_path(self))
+        new_trans = EventCounter((INyGlossaryItem, IItemTranslationChanged),
+                                 ofs_path(self))
+        new_items.start()
+        new_trans.start()
+        try:
+            trans_by_lang = {}
+            for language in languages_to_import:
+                data = dump_zip.read('glossary/%s.xliff' % language)
+                self.xliff_import(data)
+                if new_trans.count > 0:
+                    trans_by_lang[language] = new_trans.count
+                new_trans.reset()
+
+            if new_items.count > 0:
+                log.info(log_prefix+'%d new items', new_items.count)
+
+            log.info(log_prefix+'new translations %r', trans_by_lang)
+
+        finally:
+            new_items.end()
+            new_trans.end()
 
         if remove_items:
             path_in_glossary = lambda ob: relative_object_path(ob, self)
