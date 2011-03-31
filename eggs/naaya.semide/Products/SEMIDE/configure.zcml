@@ -1,5 +1,17 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
   i18n_domain="naaya">
+
+  <subscriber
+    handler=".subscribers.handler_approved"
+    for="naaya.content.base.interfaces.INyContentObjectApproveEvent"
+    />
+
+  <subscriber
+    handler=".subscribers.handler_unapproved"
+    for="naaya.content.base.interfaces.INyContentObjectUnapproveEvent"
+    />
+
   <include package=".updates" />
+
 </configure>

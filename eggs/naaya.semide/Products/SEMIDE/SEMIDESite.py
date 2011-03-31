@@ -418,27 +418,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     security.declarePublic('get_constant')
     def get_constant(self, c): return eval(c)
 
-    #hooks
-    def hook_after_approve(self, ob):
-        """
-        This method is called after an object is approved. Can be overwritten.
-        @param ob: the object
-        @type ob: naaya object instance
-        """
-        flashtool_ob = self.getFlashTool()
-        if flashtool_ob:
-            flashtool_ob.addfornotif_object(ob)
-
-    def hook_after_unapprove(self, ob):
-        """
-        This method is called after an object is unapproved. Can be overwritte.
-        @param ob: the object
-        @type ob: naaya object instance
-        """
-        flashtool_ob = self.getFlashTool()
-        if flashtool_ob:
-            flashtool_ob.delfornotif_object(ob)
-
     #objects getters
     def getHelpDeskAgent(self):             return self._getOb(ID_HELPDESKAGENT, None)
     def getPhotoArchive(self):              return self._getOb(ID_PHOTOARCHIVE, None)
