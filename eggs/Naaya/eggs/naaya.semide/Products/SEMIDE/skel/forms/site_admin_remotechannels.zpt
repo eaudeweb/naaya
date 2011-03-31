@@ -154,7 +154,10 @@ function createKey(key)
 		</tr>
 		<tr>
 			<td></td>
-			<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+			<td>
+				<input type="hidden" name="harvester_name" tal:attributes="value python:ob_data[7]" />
+				<input type="submit" value="Save changes" i18n:attributes="value" />
+			</td>
 		</tr>
 	</table>
 	</form>
