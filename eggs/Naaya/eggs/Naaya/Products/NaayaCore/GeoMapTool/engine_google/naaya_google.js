@@ -224,7 +224,7 @@
                 map_zoom = config.portal_map_zoom;
             }
             if ('lat_center' in config && 'lon_center' in config) {
-                var point = new GLatLng(lat, lon);
+                var point = new GLatLng(config.lat_center, config.lon_center);
                 the_map.setCenter(point, map_zoom);
             } else {
                 go_to_address_with_zoom(config.initial_address,
