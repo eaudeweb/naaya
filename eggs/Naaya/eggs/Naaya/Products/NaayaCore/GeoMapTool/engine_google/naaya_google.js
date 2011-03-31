@@ -203,7 +203,7 @@
     function get_center_and_zoom() {
         var center = the_map.getCenter();
         return {lat_center: center.lat(),
-                lon_center: center.lon(),
+                lon_center: center.lng(),
                 map_zoom: the_map.getZoom()};
     }
 
@@ -219,7 +219,7 @@
             GEvent.addListener(the_map, 'moveend', refresh_points);
 
             if ('map_zoom' in config) {
-                map_zoom = config.map_zoom;
+                map_zoom = parseInt(config.map_zoom);
             } else {
                 map_zoom = config.portal_map_zoom;
             }
