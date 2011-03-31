@@ -27,7 +27,7 @@ from OFS.ObjectManager import checkValidId
 
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
-from naaya.core.zope2util import DT2dt
+from naaya.core.zope2util import DT2dt, is_valid_email
 
 #constants
 
