@@ -28,9 +28,10 @@ class BingMapEngine(SimpleItem):
     _html_setup = PageTemplateFile('setup', globals())
     security.declarePrivate('html_setup')
     def html_setup(self, request, global_config):
-        js_config = dict(global_config, **{
+        js_config = {
             'base_layer': self.base_layer,
-        })
+        }
+        js_config.update(global_config)
         options = {
             'js_config': json.dumps(js_config),
         }

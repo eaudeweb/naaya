@@ -104,7 +104,19 @@
 <script type="text/javascript">
 // not using document.ready because then IE6 won't load yahoo maps :(
 showPageElements();
-window.map_engine = naaya_map_engine.portal_map('map');
+if (naaya_map_engine.name == 'bing') {
+    // bing has problems sometimes on FF, need to wait to init
+    var interval = setInterval(function(){
+        if ((eval("typeof VEMap") != "undefined")
+        && (document.getElementById("map").attachEvent != undefined))
+        {
+            clearInterval(interval);
+            window.map_engine = naaya_map_engine.portal_map('map');
+        }
+    }, 10);
+} else {
+    window.map_engine = naaya_map_engine.portal_map('map');
+}
 </script>
 </tal:block>
 

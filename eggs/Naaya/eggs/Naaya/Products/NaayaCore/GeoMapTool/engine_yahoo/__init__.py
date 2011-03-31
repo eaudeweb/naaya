@@ -28,9 +28,10 @@ class YahooMapEngine(SimpleItem):
     _html_setup = PageTemplateFile('setup', globals())
     security.declarePrivate('html_setup')
     def html_setup(self, request, global_config):
-        js_config = dict(global_config, **{
+        js_config = {
             'base_layer': self.base_layer,
-        })
+        }
+        js_config.update(global_config)
         options = {
             'apikey': pick_api_key(self.api_keys, request),
             'js_config': json.dumps(js_config),

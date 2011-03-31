@@ -22,6 +22,17 @@
         'satellite': G_SATELLITE_MAP
     };
 
+    function get_map_layer() {
+        var current_type = the_map.getCurrentMapType();
+        if (current_type === G_NORMAL_MAP) {
+            return 'map';
+        } else if (current_type == G_HYBRID_MAP) {
+            return 'hybrid';
+        } else if (current_type == G_SATELLITE_MAP) {
+            return 'satellite';
+        }
+    }
+
     function setup_map(map_div_id) {
         the_map = new GMap2(document.getElementById(map_div_id), {
             mapTypes: [G_HYBRID_MAP, G_NORMAL_MAP, G_SATELLITE_MAP]
@@ -128,6 +139,10 @@
 
     function go_to_address(address) {
         geocode_address(address, function(point, zoom) {
+            if(! point) {
+                if(console) { console.log('Could not geocode:', address); }
+                return;
+            }
             the_map.setCenter(point, zoom);
         });
     }
@@ -185,23 +200,46 @@
         return current_places;
     }
 
+    function get_center_and_zoom() {
+        var center = the_map.getCenter();
+        return {lat_center: center.lat(),
+                lon_center: center.lon(),
+                map_zoom: the_map.getZoom()};
+    }
+
     window.naaya_map_engine = {
+        name: 'google',
         map_with_points: function(map_div_id, points) {
             setup_map(map_div_id);
             draw_points_on_map(points);
         },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
-            go_to_address_with_zoom(config.initial_address,
-                                    config.portal_map_zoom);
+
             GEvent.addListener(the_map, 'moveend', refresh_points);
+
+            if ('map_zoom' in config) {
+                map_zoom = config.map_zoom;
+            } else {
+                map_zoom = config.portal_map_zoom;
+            }
+            if ('lat_center' in config && 'lon_center' in config) {
+                var point = new GLatLng(lat, lon);
+                the_map.setCenter(point, map_zoom);
+            } else {
+                go_to_address_with_zoom(config.initial_address,
+                                        map_zoom);
+            }
+
             return {
                 go_to_address: go_to_address,
                 refresh_points: refresh_points,
                 page_position: page_position,
                 map_coords: map_coords,
                 set_center_and_zoom_in: set_center_and_zoom_in,
-                get_current_places: get_current_places
+                get_current_places: get_current_places,
+                get_center_and_zoom: get_center_and_zoom,
+                get_map_layer: get_map_layer
             };
         },
         object_index_map: function(map_div_id, coord) {
