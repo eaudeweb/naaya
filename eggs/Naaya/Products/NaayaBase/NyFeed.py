@@ -169,7 +169,6 @@ class NyFeed:
         """
         Handles the feed grabbing and parsing.
         """
-
         if harvester_name is not None:
             # Don't use the default parser; we are configured to use a custom
             # one. Let's see if we can grab it.
@@ -191,6 +190,7 @@ class NyFeed:
             p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified, handlers = [proxy])
         else:
             p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified)
+
         if p.get('bozo', 0) == 1:
             #some error occurred
             if p.has_key('status'):

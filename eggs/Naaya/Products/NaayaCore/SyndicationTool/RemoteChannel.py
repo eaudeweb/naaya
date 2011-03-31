@@ -153,7 +153,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', url='', numbershownitems='', filter_by_language='', REQUEST=None):
+    def manageProperties(self, title='', url='', numbershownitems='', filter_by_language='', harvester_name='', REQUEST=None):
         """ """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
@@ -161,6 +161,10 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         self.url = url
         self.numbershownitems = numbershownitems
         self.filter_by_language = filter_by_language
+        if harvester_name == '':
+            self.harvester_name = None
+        else:
+            self.harvester_name = harvester_name
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
