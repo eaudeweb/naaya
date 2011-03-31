@@ -16,7 +16,7 @@ class WiseHarvester(object):
                 entry = {}
                 entry['author'] = ''
                 entry['id'] = item.xpath('id')[0].text
-                entry['updated'] = item.xpath('date')[0].text
+                entry['modified'] = item.xpath('date')[0].text
 
                 for content in item.xpath('language'):
                     if content.xpath('code')[0].text == 'EN':
