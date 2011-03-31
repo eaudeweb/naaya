@@ -289,11 +289,3 @@ class SecurityTestCase(NaayaFunctionalTestCase):
         self.assertTrue(self.browser.get_html().startswith('{'))
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyCSVImportTest))
-    suite.addTest(makeSuite(GeopointImportTest))
-    suite.addTest(makeSuite(SecurityTestCase))
-    suite.addTest(makeSuite(CSVImportFunctionalTests))
-    return suite

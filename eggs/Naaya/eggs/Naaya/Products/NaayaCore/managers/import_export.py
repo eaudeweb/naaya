@@ -166,7 +166,7 @@ class CSVImportTool(Implicit, Item):
                                 errors.append(extra_props_messages)
                     obj_ids.append(ob.getId())
                     ob.submitThis()
-                    ob.approveThis()
+                    ob.approveThis(_send_notifications=False)
                 except UnicodeDecodeError, e:
                     raise
                 except Exception, e:
