@@ -1,5 +1,8 @@
 import os
 import re
+import logging
+from lxml import etree
+from lxml.builder import E
 
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
@@ -26,8 +29,26 @@ ID_FLASHTOOL, FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION,
 VACANCIES, CALLFORPROPOSALS, TENDERS, PAPERS, TRAINING)
 
 from FlashTemplate import manage_addFlashTemplateForm, manage_addFlashTemplate
-from converters.xslt import Converter
 from mdh.MDH import MDH
+
+logger = logging.getLogger('SEMIDE FlashTool')
+
+# illegal XML 1.0 character ranges
+# See http://www.w3.org/TR/REC-xml/#charsets
+XML_ILLEGALS = u'|'.join(u'[%s-%s]' % (s, e) for s, e in [
+    (u'\u0000', u'\u0008'),             # null and C0 controls
+    (u'\u000B', u'\u000C'),             # vertical tab and form feed
+    (u'\u000E', u'\u001F'),             # shift out / shift in
+    (u'\u007F', u'\u009F'),             # C1 controls
+    (u'\uD800', u'\uDFFF'),             # High and Low surrogate areas
+    (u'\uFDD0', u'\uFDDF'),             # not permitted for interchange
+    (u'\uFFFE', u'\uFFFF'),             # byte order marks
+])
+RE_SANITIZE_XML = re.compile(XML_ILLEGALS, re.M | re.U)
+
+def sanitize_xml_data(data):
+    return RE_SANITIZE_XML.sub('', data).encode('utf-8',
+                                'xmlcharrefreplace').decode('utf-8')
 
 def manage_addFlashTool(self, REQUEST=None):
     """ add a flash tool """
@@ -355,150 +376,111 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declarePrivate('render_xml')
     def render_xml(self, xml, xslt):
         """ """
-        conv = Converter()
-        return unicode(conv(xml, xslt), 'utf-8').replace('<?xml version="1.0"?>', '')
+        transform = etree.XSLT(etree.XML(xslt.encode('utf-8')))
+        result = transform(xml)
+        if transform.error_log:
+            for entry in transform.error_log:
+                logger.error("XSLT transformation error: %s" % entry)
+            return ''
+        return etree.tostring(result, pretty_print=True)
 
     security.declarePrivate('generate_xml')
-    def generate_xml(self, inbrief, nomination, publication, tender, papers, training, events, langs, mesg_type='html'):
-        """ """
+    def generate_xml(self, inbrief, nomination, publication, tender, papers,
+                     training, events, langs, mesg_type='html'):
+        """ Output an xml string using lxml E-builder
+        See: http://lxml.de/tutorial.html#the-e-factory
+
+        """
         results = {}
+        def generate_news(obj_list):
+            news = []
+            for obj in obj_list:
+                if obj.istranslated(lang):
+                    #Description tag
+                    if mesg_type == 'html':
+                        desc_elem = E.description(sanitize_xml_data(
+                                obj.getLocalProperty('description', lang))
+                        )
+                    else:
+                        desc_elem = E.description(sanitize_xml_data(
+                                self.utStripAllHtmlTags(
+                                   obj.getLocalProperty('description', lang)
+                                )
+                            ))
+                    #News tag
+                    news.append(E.news(desc_elem, {
+                        'title': sanitize_xml_data(
+                            obj.getLocalProperty('title', lang)),
+                        'source': obj.getLocalProperty('source', lang),
+                        'source_link': obj.source_link,
+                        'file_link': obj.file_link,
+                        'url': obj.absolute_url(0),
+                        'lang': lang,
+                        'isrtl': str(self.is_arabic(lang))
+                     }))
+            return tuple(news)
+
+        def generate_events(obj_list):
+            events = []
+            for obj in obj_list:
+                if obj.istranslated(lang):
+                    #Description tag
+                    addr_elem = E.address(sanitize_xml_data(
+                        obj.getLocalProperty('address', lang)))
+                    #Events tag
+                    events.append(E.events(addr_elem, {
+                        'title': sanitize_xml_data(
+                            obj.getLocalProperty('title', lang)),
+                        'start_date': str(obj.start_date),
+                        'end_date': str(obj.end_date),
+                        'source': obj.getLocalProperty('source', lang),
+                        'source_link': obj.source_link,
+                        'file_link': obj.file_link,
+                        'url': obj.absolute_url(0),
+                        'lang': lang,
+                        'isrtl': str(self.is_arabic(lang))
+                     }))
+            return tuple(events)
+
         for lang in langs:
-            xml = []
-            xml_append = xml.append
-            xml_append('<?xml version="1.0" encoding="UTF-8"?>')
-            xml_append('<eflash>')
-            xml_append('<title>%s</title>' % self.utXmlEncode(self.title))
-            xml_append('<lang>%s</lang>' % lang)
-            xml_append('<isrtl>%s</isrtl>' % self.is_arabic(lang))
-            xml_append('<description>%s</description>' % self.utXmlEncode(self.title))
-            xml_append('<portal_url>%s</portal_url>' % self.utXmlEncode(self.getSitePath()))
-            xml_append('<sections>')
-
-            #headline section
-            xml_append('<section id="headline">')
-            xml_append('</section>')
-
+            sections = []
             #in brief section
             if inbrief:
-                xml_append('<section id="inbrief">')
-                for obj in inbrief:
-                    if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</news>')
-                xml_append('</section>')
-
+                sections.append(E.section(*generate_news(inbrief),
+                                          **{'id': 'inbrief'}))
             #nominations & vacancies section
             if nomination:
-                xml_append('<section id="nominations">')
-                for obj in nomination:
-                    if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</news>')
-                xml_append('</section>')
-
+                 sections.append(E.section(*generate_news(nomination),
+                                          **{'id': 'nominations'}))
             #publications section
             if publication:
-                xml_append('<section id="publications">')
-                for obj in publication:
-                    if obj.istranslated(lang):
-                        xml_append('<document title="%s" source="%s" source_link="%s" file_link="%s" publisher="%s" url="%s" lang="%s" isrtl="%s">' %
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.publisher), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</document>')
-                xml_append('</section>')
-
+                sections.append(E.section(*generate_news(publication),
+                                          **{'id': 'publications'}))
             #call for tenders and proposal section
             if tender:
-                xml_append('<section id="proposal">')
-                for obj in tender:
-                    if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</news>')
-                xml_append('</section>')
-
+                sections.append(E.section(*generate_news(tender),
+                                          **{'id': 'proposal'}))
             #call for papers section
             if papers:
-                xml_append('<section id="papers">')
-                for obj in papers:
-                    if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</news>')
-                xml_append('</section>')
-
+                sections.append(E.section(*generate_news(papers),
+                                          **{'id': 'papers'}))
             #training section
-            if events:
-                xml_append('<section id="training">')
-                for obj in training:
-                    if obj.istranslated(lang):
-                        xml_append('<event title="%s" start_date="%s" end_date="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                            (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.start_date), self.utXmlEncode(obj.end_date), \
-                            self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
-                            self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
-                        xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
-#                        if mesg_type == 'html':
-#                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-#                        else:
-#                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</event>')
-                xml_append('</section>')
-
+            if training:
+                sections.append(E.section(*generate_events(training),
+                                          **{'id': 'training'}))
             #events section
             if events:
-                xml_append('<section id="events">')
-                for obj in events:
-                    if obj.istranslated(lang):
-                        xml_append('<event title="%s" start_date="%s" end_date="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' %
-                            (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.start_date), self.utXmlEncode(obj.end_date), \
-                            self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
-                            self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
-                        xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
-#                        if mesg_type == 'html':
-#                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-#                        else:
-#                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</event>')
-                xml_append('</section>')
-
-            #footer section
-            #xml_append('<section id="footer">')
-            #xml_append('</section')
-
-            xml_append('</sections>')
-            xml_append('</eflash>')
-            results[lang] = ''.join(xml)
+                sections.append(E.section(*generate_events(events),
+                                          **{'id': 'events'}))
+            xml = E.eflash (
+                E.title(sanitize_xml_data(self.title)),
+                E.lang(lang),
+                E.isrtl(str(self.is_arabic(lang))),
+                E.description(sanitize_xml_data(self.title)),
+                E.portal_url(self.getSitePath()),
+                E.sections(*sections)
+            )
+            results[lang] = xml
         return results
 
     security.declareProtected(Products.NaayaBase.constants.PERMISSION_PUBLISH_OBJECTS, 'runTrigger')
