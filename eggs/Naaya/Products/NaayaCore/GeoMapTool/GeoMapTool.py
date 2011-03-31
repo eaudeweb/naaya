@@ -165,8 +165,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self._create_map_engine_if_needed()
 
     security.declarePrivate('get_map_engine')
-    def get_map_engine(self):
-        return self['engine_%s' % self.current_engine]
+    def get_map_engine(self, engine_name=None):
+        if engine_name is None:
+            engine_name = self.current_engine
+        return self['engine_%s' % engine_name]
 
     def can_filter_by_first_letter(self):
         catalog_tool = self.getCatalogTool()
@@ -1074,13 +1076,17 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'setup_map_engine_html')
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the current map engine """
+        kwargs.update(request.form)
+
         global_config = {
             'initial_address': self.initial_address,
             'icons': list(self.get_geotype_icons()),
             'objmap_zoom': self.get_object_map_zoom_level(),
         }
         global_config.update(kwargs)
-        return self.get_map_engine().html_setup(request, global_config)
+
+        engine = self.get_map_engine(kwargs.get('map_engine', None))
+        return engine.html_setup(request, global_config)
 
     def get_object_map_zoom_level(self):
         if self.current_engine == 'yahoo':

@@ -10,6 +10,16 @@
         icon_url["mk_" + this.id] = this.url;
     });
 
+    function get_map_layer() {
+        var current_style = the_map.GetMapStyle();
+        var styles = ['Road', 'Hybrid', 'Aerial'];
+        for (var i = 0; i < 3; i++) {
+            if (current_style === VEMapStyle[styles[i]]) {
+                return styles[i];
+            }
+        }
+    }
+
     function setup_map(map_div_id) {
         $('div#'+map_div_id).css('position', 'relative');
         the_map = new VEMap(map_div_id);
@@ -157,22 +167,45 @@
         return current_places;
     }
 
+    function get_center_and_zoom() {
+        var center = the_map.GetCenter();
+        return {lat_center: center.Latitude,
+                lon_center: center.Longitude,
+                map_zoom: the_map.GetZoomLevel()};
+    }
+
     window.naaya_map_engine = {
+        name: 'bing',
         map_with_points: function(map_div_id, points) {
             $('div#'+map_div_id).text(
                 'map_with_points not implemented for bing maps');
         },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
-            load_map_find_address(config.initial_address);
+
             the_map.AttachEvent('onchangeview', refresh_points);
+
+            if ('lat_center' in config && 'lon_center' in config) {
+                var point = new VELatLong(config.lat_center, config.lon_center);
+                if ('map_zoom' in config) {
+                    the_map.LoadMap(point, config.map_zoom, map_base_layer);
+                } else {
+                    the_map.LoadMap(point, null, map_base_layer);
+                }
+                after_load_map();
+            } else {
+                load_map_find_address(config.initial_address);
+            }
+
             return {
                 go_to_address: go_to_address,
                 refresh_points: refresh_points,
                 page_position: page_position,
                 map_coords: map_coords,
                 set_center_and_zoom_in: set_center_and_zoom_in,
-                get_current_places: get_current_places
+                get_current_places: get_current_places,
+                get_center_and_zoom: get_center_and_zoom,
+                get_map_layer: get_map_layer
             };
         },
         object_index_map: function(map_div_id, coord) {
