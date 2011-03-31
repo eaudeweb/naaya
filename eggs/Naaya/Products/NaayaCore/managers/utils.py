@@ -1,9 +1,7 @@
 import operator
 import string
-import calendar
 from random import choice
 import re
-import unicodedata
 from copy import deepcopy
 import md5
 import base64
@@ -11,7 +9,6 @@ import urllib
 import time
 import codecs
 from zipfile import *
-from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 
 import csv
@@ -30,7 +27,7 @@ from OFS.ObjectManager import checkValidId
 
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
-from naaya.core.zope2util import dt2DT, is_valid_email
+from naaya.core.zope2util import DT2dt
 
 #constants
 
