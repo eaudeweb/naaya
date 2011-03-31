@@ -1,2 +1,0 @@
-Naaya
-lxml
