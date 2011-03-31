@@ -29,6 +29,9 @@ def check_skip_notifications(subscriber):
 def handle_object_approved(event):
     """ Called when an object has been approved """
 
+    if not event._send_notifications:
+        return
+
     ob = event.context
     portal = ob.getSite()
 

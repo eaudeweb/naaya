@@ -31,7 +31,8 @@ class NyContentObjectApproveEvent(object):
     """ Naaya content object has been approved """
     implements(INyContentObjectApproveEvent)
 
-    def __init__(self, context, contributor):
+    def __init__(self, context, contributor, **kw):
+        self.__dict__.update(kw)
         self.context = context
         self.contributor = contributor
 
@@ -39,7 +40,8 @@ class NyContentObjectUnapproveEvent(object):
     """ Naaya content object has been unapproved """
     implements(INyContentObjectUnapproveEvent)
 
-    def __init__(self, context, contributor):
+    def __init__(self, context, contributor, **kw):
+        self.__dict__.update(kw)
         self.context = context
         self.contributor = contributor
 

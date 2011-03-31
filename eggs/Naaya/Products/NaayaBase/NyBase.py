@@ -50,7 +50,8 @@ class NyBase(NyDublinCore):
         self._p_changed = 1
 
     security.declarePrivate('approveThis')
-    def approveThis(self, approved=1, approved_by=None):
+    def approveThis(self, approved=1, approved_by=None,
+                    _send_notifications=True):
         """
         Set the state of the current object.
         @param approved: the state flag
@@ -69,9 +70,11 @@ class NyBase(NyDublinCore):
 
         #Trigger approval events
         if self.approved:
-            notify(NyContentObjectApproveEvent(self, approved_by))
+            notify(NyContentObjectApproveEvent(self, approved_by,
+                                    _send_notifications=_send_notifications))
         else:
-            notify(NyContentObjectUnapproveEvent(self, approved_by))
+            notify(NyContentObjectUnapproveEvent(self, approved_by,
+                                    _send_notifications=_send_notifications))
 
     security.declarePrivate('setReleaseDate')
     def setReleaseDate(self, releasedate):
