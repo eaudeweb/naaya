@@ -841,6 +841,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                               for l in self.languages_list),
             'items': [relative_object_path(item, self)
                       for item in self._walk_glossary_items()],
+            'properties': {
+                'parent_anchors': bool(self.parent_anchors),
+            },
         }
         dump_zip.writestr('glossary/metadata.json', json.dumps(metadata))
 
@@ -871,6 +874,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         dump_zip = ZipFile(dump_file, 'r')
 
         metadata = json.loads(dump_zip.read('glossary/metadata.json'))
+
+        properties = metadata['properties']
+        new_parent_anchors = properties.get('parent_anchors', False)
+        if new_parent_anchors != self.parent_anchors: # avoid a transaction
+            self.parent_anchors = new_parent_anchors
 
         for lang_code, language in metadata['languages'].iteritems():
             if language not in self.get_english_names():

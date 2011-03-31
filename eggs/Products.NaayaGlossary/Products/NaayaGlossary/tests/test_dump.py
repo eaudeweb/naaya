@@ -77,17 +77,17 @@ class ExportTest(NaayaTestCase):
         self.assertEqual(context_group.text, "Bucket")
 
 class DumpExportImportTest(NaayaTestCase):
-    def _export_for_test(self):
+    def _make_server_glossary(self):
         glossary = helpers.make_glossary(self.portal, 'server_glossary')
         helpers.add_language(glossary, 'de', "German")
         bucket = helpers.add_folder(glossary, '1', "Bucket",
                                     {'German': "Eimer"})
         water = helpers.add_element(bucket, '2', "Water", {'German': "Wasser"})
         ice = helpers.add_element(bucket, '3', "Ice", {'German': "Eis"})
-        return glossary.dump_export()
+        return glossary
 
     def _perform_test_import(self, glossary):
-        dump_file = StringIO(self._export_for_test())
+        dump_file = StringIO(self._make_server_glossary().dump_export())
         glossary.dump_import(dump_file, remove_items=True)
 
     def test_new_folder(self):
@@ -196,7 +196,7 @@ class DumpExportImportTest(NaayaTestCase):
         self.assertEqual(glossary['1']['3'].Russian, u"Лёд")
 
     def test_no_change(self):
-        dump_file = self._export_for_test()
+        dump_file = self._make_server_glossary().dump_export()
         glossary = helpers.make_glossary(self.portal)
         glossary.dump_import(StringIO(dump_file), remove_items=True)
         transaction.commit()
@@ -218,3 +218,13 @@ class DumpExportImportTest(NaayaTestCase):
                          ['1'])
         self.assertEqual(glossary['1'].title, "Bucket")
         self.assertEqual(glossary['1'].English, "Bucket")
+
+    def test_configuration(self):
+        server_glossary = self._make_server_glossary()
+        server_glossary.parent_anchors = True
+        glossary = helpers.make_glossary(self.portal)
+        self.assertFalse(glossary.parent_anchors)
+
+        glossary.dump_import(StringIO(server_glossary.dump_export()))
+
+        self.assertTrue(glossary.parent_anchors)
