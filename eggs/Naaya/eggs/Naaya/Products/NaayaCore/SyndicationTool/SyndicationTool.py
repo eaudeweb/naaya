@@ -111,12 +111,12 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         ob = self._getOb(id, None)
         if ob:
             if ob.meta_type == METATYPE_REMOTECHANNEL:
-                return ['edit', ob.id, ob.title, ob.url, ob.numbershownitems, METATYPE_REMOTECHANNEL, ob.filter_by_language]
+                return ['edit', ob.id, ob.title, ob.url, ob.numbershownitems, METATYPE_REMOTECHANNEL, ob.filter_by_language, ob.harvester_name]
             elif ob.meta_type == METATYPE_REMOTECHANNELFACADE:
                 return ['edit', ob.id, ob.title, ob.url, ob.numbershownitems,
                     METATYPE_REMOTECHANNELFACADE, ob.providername, ob.location, ob.obtype]
         else:
-            return ['add', '', '', '', '', '', '']
+            return ['add', '', '', '', '', '', '', '']
 
     security.declareProtected(view, 'getImage')
     def getImage(self):

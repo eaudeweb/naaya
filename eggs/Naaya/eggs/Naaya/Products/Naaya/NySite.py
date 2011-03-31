@@ -2784,9 +2784,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannel')
-    def admin_editremotechannel(self, id='', title='', url='', numbershownitems='', filter_by_language='', REQUEST=None):
+    def admin_editremotechannel(self, id='', title='', url='', numbershownitems='', filter_by_language='', harvester_name='', REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems, filter_by_language)
+        self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems, filter_by_language, harvester_name)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())

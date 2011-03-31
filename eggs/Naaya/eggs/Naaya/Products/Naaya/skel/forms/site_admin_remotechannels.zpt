@@ -40,7 +40,10 @@
 		<dt i18n:translate="">Create a portlet</dt>
 		<dd><input type="checkbox" name="portlet" checked="checked" /></dd>
 	</dl>
-	<p><input type="submit" tal:attributes="value python:test(ob_data[0]=='add', 'Add', 'Save changes')" i18n:attributes="value" /></p>
+	<p>
+		<input type="hidden" name="harvester_name" tal:attributes="value python:ob_data[7]" />
+		<input type="submit" tal:attributes="value python:test(ob_data[0]=='add', 'Add', 'Save changes')" i18n:attributes="value" />
+	</p>
 	</form>
 </fieldset>
 <br />

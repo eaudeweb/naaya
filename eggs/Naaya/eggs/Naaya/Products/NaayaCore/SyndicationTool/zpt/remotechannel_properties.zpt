@@ -20,6 +20,11 @@
 		<td><input type="text" name="numbershownitems" size="3" tal:attributes="value here/numbershownitems" /> (0 for all items)</td>
 	</tr>
 	<tr>
+		<td class="form-label">Harvester name</td>
+		<td><input type="text" name="harvester_name" size="50" tal:attributes="value here/harvester_name" /></td>
+	</tr>
+	<tr>
+	<tr>
 		<td></td>
 		<td><input type="submit" name="submit" value="Save changes" /></td>
 	</tr>
