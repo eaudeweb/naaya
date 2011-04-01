@@ -208,8 +208,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
         emails = set()
         for m in msg.get_message_parents(msg):
             if m.notify:
-                user = authenticationtool_ob.getUser(m.author)
-                if user: emails.add(user.email)
+                user = authenticationtool_ob.get_user_with_userid(m.author)
+                if user: emails.add(authenticationtool_ob.getUserEmail(user))
 
         #build message body
         msg_body = {
