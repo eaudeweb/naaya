@@ -219,10 +219,14 @@ class list_utils:
 
     def splitToList(self, s, separator=','):
         """Gets a comma separated string and returns a list"""
-        res = []
-        if s!='':
-            res = [x for x in s.split(separator) if x.strip() != '']
-        return res
+        if s is None:
+            return []
+        if not isinstance(s, (list, tuple, basestring)):
+            raise ValueError("Invalid list %r" % s)
+        if isinstance(s, basestring):
+            s = s.split(separator)
+        s = [x.strip() for x in s]
+        return [x for x in s if x]
 
     def joinToList(self, l):
         """Gets a list and returns a comma separated string"""
