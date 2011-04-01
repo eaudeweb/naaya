@@ -454,8 +454,19 @@ class NotificationTool(Folder):
         for field, value in self.config.items():
             self.config[field] = form.get(field, self.default_config[field])
 
-        REQUEST.SESSION['skip_notifications'] = form.get("skip_notifications",
-                                                         False)
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'skip_notifications')
+    def skip_notifications(self, REQUEST):
+        """ If session key `skip_notifications` is set to `True`
+        there be will no notifications sent for all operations in the current
+        session. See `subscribers`.
+
+        """
+
+        form = REQUEST.form
+        REQUEST.SESSION['skip_notifications'] = bool(
+            form.get("skip_notifications", False))
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(view_management_screens,

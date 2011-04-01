@@ -19,4 +19,14 @@
 		</div>
 	</fieldset>
 </div>
+
 <span tal:content="python:here.delSessionInfo()" tal:omit-tag="" />
+
+<tal:block condition="python: request.SESSION.get('skip_notifications', False)">
+<div class="message-skip-notifications">
+	<span i18n:translate="">Notifications are temporally disabled for the actions
+	performed by your user. If you create, edit, delete or move objects,
+	no notifications will be sent. To re-enable notifications, go <a i18n:name="link" tal:attributes="href python:here.getSite().getNotificationTool().absolute_url() + '/admin_html'">here</a>.</span>
+</div>
+<div class="cleaner">&nbsp;</div>
+</tal:block>
