@@ -6,6 +6,7 @@ import shutil
 import transaction
 from Testing.ZopeTestCase import Functional
 from zope.interface import alsoProvides
+from zope.component import getGlobalSiteManager
 from Products.Naaya.interfaces import INySite
 
 class ITestSite(INySite):
@@ -61,6 +62,31 @@ def wrap_with_request(app):
     fake_root.REQUEST = request
 
     return fake_root
+
+def capture_events(*required):
+    """
+    Register an event handler for `required` and collect events in a list.
+    Usage::
+
+        class MyTest(unittest.TestCase):
+            @capture_events(IZipImportEvent)
+            def test_zip_events(self, events):
+                # do something that generates events
+                self.assertEqual(len(events), 1)
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            events = []
+            args += (events,)
+            gsm = getGlobalSiteManager()
+            gsm.registerHandler(events.append, required)
+            try:
+                return func(*args, **kwargs)
+            finally:
+                gsm.unregisterHandler(events.append, required)
+        wrapper.func_name = func.func_name
+        return wrapper
+    return decorator
 
 class NaayaTestCase(unittest.TestCase):
 
