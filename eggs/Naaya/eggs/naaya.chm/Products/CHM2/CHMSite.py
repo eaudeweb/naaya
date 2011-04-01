@@ -1064,6 +1064,13 @@ InitializeClass(CHMSite)
 
 
 def add_terms_property_to_schema(schema):
+    try:
+        schema.getWidget('chm_terms')
+    except KeyError:
+        pass # it's missing, we add it.
+    else:
+        return # it's already there.
+
     prop_spec = {
         'sortorder': 43,
         'widget_type': 'Glossary',
@@ -1072,12 +1079,21 @@ def add_terms_property_to_schema(schema):
         'glossary_id': ID_CHM_TERMS,
         'localized': True,
     }
+
+    if schema.getId() == 'NyMunicipality':
+        return
+    elif schema.getId() == 'NyExpert':
+        prop_spec['sortorder'] = 215
+
     schema.addWidget('chm_terms', **prop_spec),
 
 def add_terms_property_to_all_schemas(site):
     schema_tool = site.getSchemaTool()
-    for schema in schema_tool.listSchemas().values():
-        try:
-            schema.getWidget('chm_terms')
-        except KeyError:
-            add_terms_property_to_schema(schema)
+    for schema in schema_tool.objectValues(['Naaya Schema']):
+        add_terms_property_to_schema(schema)
+
+def handle_content_type_installed(evt):
+    schema_tool = evt.context.getSchemaTool()
+    schema = schema_tool.getSchemaForMetatype(evt.meta_type)
+    if schema is not None:
+        add_terms_property_to_schema(schema)
