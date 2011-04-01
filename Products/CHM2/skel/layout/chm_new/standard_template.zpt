@@ -9,6 +9,7 @@
             <link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_files_path}/style_common" />
             <link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_url}/style_print" />
             <link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${skin_url}/style_handheld" />
+            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/www/js/css/jquery-ui.css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
             <tal:block content="structure string:<!--[if IE 6]>" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_url}/style_ie6" />
