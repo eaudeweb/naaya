@@ -71,6 +71,11 @@ class GlossaryWidget(StringWidget):
 
         return value
 
+    def convert_to_session(self, value):
+        if isinstance(value, (list, tuple)):
+            value = self.separator.join(v for v in value if v.strip())
+        return value
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ Update glossary widget properties"""

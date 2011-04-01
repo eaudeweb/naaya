@@ -284,6 +284,9 @@ class Widget(Folder):
     def convert_formvalue_to_pythonvalue(self, value):
         return value
 
+    def convert_to_session(self, value):
+        return value
+
     hidden_template = PageTemplateFile('../zpt/property_widget_hidden',
                                        globals())
 
