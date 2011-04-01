@@ -213,10 +213,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
         #Login with admin and set skip_notifications in administration
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/portal_notification/admin_html')
-        form = self.browser.get_form('settingsForm')
-        form['skip_notifications:boolean'] = ['on']
+        form = self.browser.get_form('skip_notifications')
         self.browser.clicked(form,
-            self.browser.get_form_field(form, 'skip_notifications:boolean'))
+            self.browser.get_form_field(form, 'submit-button'))
         self.browser.submit()
 
         #Modify title of notidoc

@@ -125,7 +125,7 @@
       <label
              i18n:translate="">Create/change/move objects without sending notifications to subscribers. This will affect only the actions made by the user: <tal:block replace="request/AUTHENTICATED_USER/getUserName" /></label>
       <br />
-      <input type="submit" i18n:attributes="value"
+      <input name="submit-button" type="submit" i18n:attributes="value"
             tal:attributes="value python:test(request.SESSION.get('skip_notifications', False), 'Enable notifications', 'Disable notifications')"/>
     </div>
   </fieldset>
