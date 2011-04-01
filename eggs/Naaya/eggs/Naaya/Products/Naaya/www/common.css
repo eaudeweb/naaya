@@ -1904,3 +1904,28 @@ form.user-form .field-inline, form.user-form .field {
 form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inline input[type="password"]:focus {
 	background-color: #FFFFDD;
 }
+
+.glossary-widget-dialog-content {
+	font-size: 13px;
+}
+
+.glossary-widget-dialog span.ui-button-text {
+	font-size: 14px;
+	padding: 0;
+}
+
+.glossary-widget-values {
+	margin: 0 0 20px 10px;
+	padding-left: 5px;
+	list-style: none;
+	border-left: 2px solid #bbb;
+}
+
+.glossary-widget-tree span.glossary-translation-missing {
+	background: none;
+	border: none;
+	padding: 0;
+	font-size: 90%;
+	color: #555;
+	font-style: italic;
+}

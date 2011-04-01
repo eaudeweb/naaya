@@ -195,7 +195,7 @@ def _translate_to_langs(source_values, translator, lang, lang_names):
 
     return res
 
-def update_translation(ob, name, translator, lang, old_value):
+def update_translation(ob, name, translator, lang, old_value, separator=','):
     """ Updates the given property for all languages. """
     lang_names = languages_map(ob)
 
@@ -211,7 +211,9 @@ def update_translation(ob, name, translator, lang, old_value):
         prev_items = prev_translated[target_lang]
 
         prev_target_value = ob.getLocalProperty(name, target_lang)
-        new_items = [s.strip() for s in ob.splitToList(prev_target_value)]
+        new_items = [s.strip()
+                     for s in ob.splitToList(prev_target_value, separator)
+                     if s.strip()]
 
         for item in list(new_items):
             if item in prev_items:
@@ -221,5 +223,7 @@ def update_translation(ob, name, translator, lang, old_value):
             if item not in new_items:
                 new_items.append(item)
 
-        if new_items:
-            ob._setLocalPropValue(name, target_lang, ', '.join(new_items))
+        if not separator.endswith(' '):
+            separator += ' '
+        new_value = separator.join(new_items)
+        ob._setLocalPropValue(name, target_lang, new_value)
