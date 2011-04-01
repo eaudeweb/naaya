@@ -1,4 +1,5 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <script type="text/javascript">
   function displayElement(elm){
@@ -28,8 +29,15 @@
   <div>
     <input id="load_default"
       onchange = "displayElement('pluggable_meta_types')"
-      type="checkbox" name="default" value="Load default" />
+      type="checkbox" name="default" value="Load default"
+      i18n:attributes="value" />
     <label for="load_default" i18n:translate="">Load default</label>
+  </div>
+  <div>
+    <input id="subfolders"
+      type="checkbox" name="subfolders" value="Recursively for subfolders"
+      i18n:attributes="value"  />
+    <label for="load_default" i18n:translate="">Recursively for subfolders</label>
   </div>
   <div id="pluggable_meta_types"
        tal:define="meta_types python:here.get_meta_types(1)">
@@ -50,4 +58,5 @@
   </div>
 </form>
 
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>

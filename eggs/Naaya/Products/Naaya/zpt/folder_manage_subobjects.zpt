@@ -20,6 +20,9 @@
 		<td colspan="2" valign="top"><input type="checkbox" name="default" value="Load default">Load default</td>
 	</tr>
 	<tr>
+		<td colspan="2" valign="top"><input type="checkbox" name="subfolders" value="Recursively for subfolders">Recursively for subfolders</td>
+	</tr>
+	<tr>
 		<td align="center"><strong>Zope objects</strong></td>
 		<td align="center"><strong>Naaya objects</strong></td>
 	</tr>
