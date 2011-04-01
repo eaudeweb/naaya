@@ -39,6 +39,7 @@ from zope.deprecation import deprecate
 from zope.app.component.site import LocalSiteManager, SiteManagerContainer
 from App.config import getConfiguration
 import pytz
+from zope.event import notify
 
 from interfaces import INySite, IActionLogger
 from action_logger import ActionLogger
@@ -105,6 +106,8 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaCore.interfaces import ICaptcha
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
+
+from events import NyPluggableItemInstalled
 
 log = logging.getLogger(__name__)
 
@@ -3537,6 +3540,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             #run `on_install` function if defined in content's `config`
             if 'on_install' in pitem:
                 pitem['on_install'](self)
+
+            #send the requisite event
+            notify(NyPluggableItemInstalled(self, meta_type))
 
             #remember that this meta_type was installed
             self.__pluggable_installed_content[meta_type] = 1
