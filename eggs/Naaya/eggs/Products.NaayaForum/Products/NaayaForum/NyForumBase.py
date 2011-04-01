@@ -1,15 +1,14 @@
 """
 This module contains the base class of Naaya Forum.
 """
-from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass
 
 from constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyDublinCore import NyDublinCore
+from Products.NaayaBase.NyBase import NyBase
 
-class NyForumBase(NyAttributes, NyDublinCore):
+class NyForumBase(NyAttributes, NyBase):
     """
     The base class of Naaya Forum. It implements basic functionality
     common to all classes.
