@@ -187,10 +187,13 @@ class NyContentType(object):
         for key, value in form_errors.iteritems():
             if value:
                 self.setSession('%s-errors' % key, '; '.join(value))
-        for name in self._get_schema().listPropNames():
+        schema = self._get_schema()
+        for prop_name in schema.listPropNames():
             for key in REQUEST_form:
-                if key == name or key.startswith(name+'.'):
-                    self.setSession(key, REQUEST_form[key])
+                if key == prop_name or key.startswith(prop_name+'.'):
+                    widget = schema.getWidget(prop_name)
+                    value = widget.convert_to_session(REQUEST_form[key])
+                    self.setSession(key, value)
 
     security.declarePrivate('switch_content_to_language')
     def switch_content_to_language(self, old_lang, new_lang):
