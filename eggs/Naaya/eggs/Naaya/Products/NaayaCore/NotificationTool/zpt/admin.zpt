@@ -32,7 +32,7 @@
 
 -->
 
-<fieldset><legend i18n:translate="">Users may subscribe to notifications:</legend>
+<fieldset><legend i18n:translate="">Users may subscribe to notifications</legend>
 <div class="field-inline">
     <input type="checkbox" id="enable_instant" name="enable_instant:boolean"
         tal:attributes="checked python:test(get_config('enable_instant'), 'checked', None)" />
@@ -110,18 +110,25 @@
         tal:attributes="checked python:test(get_config('enable_top_folders'), 'checked', None)" />
 </div>
 -->
-<div class="field-inline" style="display: none">
-    <input type="checkbox" id="skip_notifications" name="skip_notifications:boolean"
-        tal:attributes="checked python:test(request.SESSION.get('skip_notifications', False), 'checked', None)" />
-    <label for="skip_notifications"
-           i18n:translate="">Create/change/move objects without notifications being sent to subscribers (this applies just for the current user)</label>
-</div>
-
-</fieldset>
-
 <div class="field">
     <input type="submit" value="Save changes" />
 </div>
+</fieldset>
+</form>
+
+<form id="skip_notifications" method="post" tal:attributes="action string:${here/absolute_url}/skip_notifications">
+  <fieldset>
+    <legend i18n:translate="">Administration actions</legend>
+    <div class="field-inline">
+      <input type="hidden" id="skip_notifications" name="skip_notifications:boolean"
+          tal:attributes="value python:test(request.SESSION.get('skip_notifications', False), None, 1)" />
+      <label
+             i18n:translate="">Create/change/move objects without sending notifications to subscribers. This will affect only the actions made by the user: <tal:block replace="request/AUTHENTICATED_USER/getUserName" /></label>
+      <br />
+      <input type="submit" i18n:attributes="value"
+            tal:attributes="value python:test(request.SESSION.get('skip_notifications', False), 'Enable notifications', 'Disable notifications')"/>
+    </div>
+  </fieldset>
 </form>
 
 <h2 i18n:translate="">Current subscriptions</h2>

@@ -888,6 +888,16 @@ tr.not-duplicate {
 	text-align: center;
 }
 
+.message-skip-notifications{
+	width: 100%;
+	border: 1px solid #DFDFDf;
+	background: #FEB;
+	padding: 7px;
+}
+
+.message-skip-notifications span{
+}
+
 /* pagination items */
 .pagination {
 	padding: 1em 0;
@@ -1648,7 +1658,7 @@ label:hover {
 
 .paginator-head {
 		float: right;
-		
+
 }
 
 .paginator-footer {
