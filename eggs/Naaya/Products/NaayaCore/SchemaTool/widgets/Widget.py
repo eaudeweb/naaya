@@ -95,12 +95,48 @@ class Widget(Folder):
 
     # Properties
     _properties=(
-        {'id':'sortorder', 'type': 'int', 'mode':'w', 'label': 'Sort order'},
-        {'id':'required', 'type': 'boolean', 'mode':'w', 'label': 'Required widget'},
-        {'id':'localized', 'mode':'w', 'type': 'boolean'},
-        {'id':'data_type', 'mode':'w', 'type': 'string'},
-        {'id':'visible', 'mode':'w', 'type': 'boolean'},
-        {'id':'custom_template', 'mode':'w', 'type':'string', 'label':'Custom template'},
+        {
+            'id': 'title',
+            'label': 'Label',
+            'type': 'string',
+            'mode': 'w',
+        },
+        {
+            'id': 'sortorder',
+            'label': 'Sort order',
+            'type': 'int',
+            'mode': 'w',
+        },
+        {
+            'id': 'required',
+            'label': 'Required',
+            'type': 'boolean',
+            'mode': 'w',
+        },
+        {
+            'id': 'localized',
+            'label': 'Localized',
+            'type': 'boolean',
+            'mode': 'w',
+        },
+        {
+            'id': 'data_type',
+            'label': 'Data type',
+            'type': 'string',
+            'mode': 'w',
+        },
+        {
+            'id': 'visible',
+            'label': 'Visible',
+            'type': 'boolean',
+            'mode': 'w',
+        },
+        {
+            'id': 'custom_template',
+            'label': 'Custom template',
+            'type': 'string',
+            'mode': 'w',
+        },
     )
 
     multiple_form_values = False

@@ -17,11 +17,19 @@ class StringWidget(Widget):
     meta_sortorder = 150
 
     _properties = Widget._properties + (
-        {'id': 'width', 'type': 'int', 'mode': 'w',
-         'label': 'Display width'},
-        {'id': 'size_max', 'type': 'int', 'mode': 'w',
-         'label': 'Maximum input width'},
-        )
+        {
+            'id': 'width',
+            'label': 'Display width',
+            'type': 'int',
+            'mode': 'w',
+        },
+        {
+            'id': 'size_max',
+            'label': 'Maximum input width',
+            'type': 'int',
+            'mode': 'w',
+        },
+    )
 
     # Constructor
     _constructors = (addStringWidget,)
