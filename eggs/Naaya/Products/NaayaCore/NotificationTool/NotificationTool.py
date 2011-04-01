@@ -109,48 +109,6 @@ class NotificationTool(Folder):
         else:
             return self.getSite().absolute_url()
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_get_subscriptions')
-    def admin_get_subscriptions(self, user_query=''):
-        user_query = user_query.strip()
-        for obj, sub_id, subscription in utils.walk_subscriptions(
-                                            self.getSite()):
-            user = subscription.to_string(obj)
-            if not user_query or re.match('.*%s.*' % user_query, user,
-                                          re.IGNORECASE):
-                yield {
-                    'user': user,
-                    'location': path_in_site(obj),
-                    'sub_id': sub_id,
-                    'lang': subscription.lang,
-                    'notif_type': subscription.notif_type,
-                }
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_add_account_subscription')
-    def admin_add_account_subscription(self, REQUEST, user_id,
-                                       location, notif_type, lang):
-        """ """
-        if location == '/': location = ''
-        ob = self.getSite().unrestrictedTraverse(location)
-        location = relative_object_path(ob, self.getSite())
-        try:
-            self.add_account_subscription(user_id.strip(), location,
-                                          notif_type, lang)
-        except ValueError, msg:
-            self.setSessionErrorsTrans(msg)
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
-
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_remove_account_subscription')
-    def admin_remove_account_subscription(self, REQUEST, location, sub_id):
-        """ """
-        obj = self.getSite().restrictedTraverse(location)
-        subscription_container = ISubscriptionContainer(obj)
-        subscription_container.remove(sub_id)
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
-
     def _validate_subscription(self, **kw):
         """ Validate add/edit subscription for authorized and anonymous users
 
@@ -428,66 +386,10 @@ class NotificationTool(Folder):
 
         transaction.commit() # make sure our timestamp updates are saved
 
+
     def index_html(self, RESPONSE):
         """ redirect to admin page """
         RESPONSE.redirect(self.absolute_url() + '/my_subscriptions_html')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
-    admin_html = PageTemplateFile('zpt/admin', globals())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_search_user')
-    def admin_search_user(self, REQUEST):
-        """ search for user by name (ajax function) """
-        query = REQUEST.form['query']
-        acl_users = self.getSite().getAuthenticationTool()
-        users = acl_users.search_users(query, all_users=True)
-        REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
-        return json.dumps([ {'user_id': user.name,
-                             'full_name': user.firstname + " " + user.lastname,
-                             'email': user.email} for user in users ])
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
-    def admin_settings(self, REQUEST):
-        """ save settings from the admin page """
-
-        form = REQUEST.form
-        for field, value in self.config.items():
-            self.config[field] = form.get(field, self.default_config[field])
-
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'skip_notifications')
-    def skip_notifications(self, REQUEST):
-        """ If session key `skip_notifications` is set to `True`
-        there be will no notifications sent for all operations in the current
-        session. See `subscribers`.
-
-        """
-
-        form = REQUEST.form
-        REQUEST.SESSION['skip_notifications'] = bool(
-            form.get("skip_notifications", False))
-        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
-
-    security.declareProtected(view_management_screens,
-                              'manage_customizeTemplate')
-    def manage_customizeTemplate(self, name, REQUEST=None):
-        """ customize the email template called `name` """
-        ob_id = 'emailpt_%s' % name
-        manage_addEmailPageTemplate(self, ob_id, email_templates[name]._text)
-        ob = self._getOb(ob_id)
-
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
-        else:
-            return ob_id
-
-    security.declareProtected(view_management_screens, 'manage_main')
-    manage_main = folder_manage_main_plus
-
-    security.declareProtected(view_management_screens, 'ny_after_listing')
-    ny_after_listing = PageTemplateFile('zpt/customize_emailpt', globals())
-    ny_after_listing.email_templates = email_templates
 
     security.declareProtected(view, 'my_subscriptions_html')
     my_subscriptions_html = NaayaPageTemplateFile('zpt/index', globals(),
@@ -609,6 +511,107 @@ class NotificationTool(Folder):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(self.absolute_url() +
                                          '/my_subscriptions_html')
+
+    #Administration
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
+    admin_html = PageTemplateFile('zpt/admin', globals())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_get_subscriptions')
+    def admin_get_subscriptions(self, user_query=''):
+        user_query = user_query.strip()
+        for obj, sub_id, subscription in utils.walk_subscriptions(
+                                            self.getSite()):
+            user = subscription.to_string(obj)
+            if not user_query or re.match('.*%s.*' % user_query, user,
+                                          re.IGNORECASE):
+                yield {
+                    'user': user,
+                    'location': path_in_site(obj),
+                    'sub_id': sub_id,
+                    'lang': subscription.lang,
+                    'notif_type': subscription.notif_type,
+                }
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_add_account_subscription')
+    def admin_add_account_subscription(self, REQUEST, user_id,
+                                       location, notif_type, lang):
+        """ """
+        if location == '/': location = ''
+        ob = self.getSite().unrestrictedTraverse(location)
+        location = relative_object_path(ob, self.getSite())
+        try:
+            self.add_account_subscription(user_id.strip(), location,
+                                          notif_type, lang)
+        except ValueError, msg:
+            self.setSessionErrorsTrans(msg)
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
+                              'admin_remove_account_subscription')
+    def admin_remove_account_subscription(self, REQUEST, location, sub_id):
+        """ """
+        obj = self.getSite().restrictedTraverse(location)
+        subscription_container = ISubscriptionContainer(obj)
+        subscription_container.remove(sub_id)
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_search_user')
+    def admin_search_user(self, REQUEST):
+        """ search for user by name (ajax function) """
+        query = REQUEST.form['query']
+        acl_users = self.getSite().getAuthenticationTool()
+        users = acl_users.search_users(query, all_users=True)
+        REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
+        return json.dumps([ {'user_id': user.name,
+                             'full_name': user.firstname + " " + user.lastname,
+                             'email': user.email} for user in users ])
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
+    def admin_settings(self, REQUEST):
+        """ save settings from the admin page """
+
+        form = REQUEST.form
+        for field, value in self.config.items():
+            self.config[field] = form.get(field, self.default_config[field])
+
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'skip_notifications')
+    def skip_notifications(self, REQUEST):
+        """ If session key `skip_notifications` is set to `True`
+        there be will no notifications sent for all operations in the current
+        session. See `subscribers`.
+
+        """
+
+        form = REQUEST.form
+        REQUEST.SESSION['skip_notifications'] = bool(
+            form.get("skip_notifications", False))
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+    security.declareProtected(view_management_screens,
+                              'manage_customizeTemplate')
+    def manage_customizeTemplate(self, name, REQUEST=None):
+        """ customize the email template called `name` """
+        ob_id = 'emailpt_%s' % name
+        manage_addEmailPageTemplate(self, ob_id, email_templates[name]._text)
+        ob = self._getOb(ob_id)
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
+        else:
+            return ob_id
+
+    security.declareProtected(view_management_screens, 'manage_main')
+    manage_main = folder_manage_main_plus
+
+    security.declareProtected(view_management_screens, 'ny_after_listing')
+    ny_after_listing = PageTemplateFile('zpt/customize_emailpt', globals())
+    ny_after_listing.email_templates = email_templates
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
