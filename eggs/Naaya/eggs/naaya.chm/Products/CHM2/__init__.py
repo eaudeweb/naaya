@@ -44,6 +44,9 @@ def initialize(context):
         icon = 'www/Site.gif'
         )
 
+    from Products.NaayaCore.LayoutTool.DiskFile import allow_path
+    allow_path('Products.CHM2:skel/layout/')
+
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
 }
