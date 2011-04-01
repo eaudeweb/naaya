@@ -1061,3 +1061,23 @@ class CHMSite(NySite):
     chm_common_css = ImageFile('www/chm_common.css', globals())
 
 InitializeClass(CHMSite)
+
+
+def add_terms_property_to_schema(schema):
+    prop_spec = {
+        'sortorder': 43,
+        'widget_type': 'Glossary',
+        'display_mode': 'values-list',
+        'label': 'CHM terms',
+        'glossary_id': ID_CHM_TERMS,
+        'localized': True,
+    }
+    schema.addWidget('chm_terms', **prop_spec),
+
+def add_terms_property_to_all_schemas(site):
+    schema_tool = site.getSchemaTool()
+    for schema in schema_tool.listSchemas().values():
+        try:
+            schema.getWidget('chm_terms')
+        except KeyError:
+            add_terms_property_to_schema(schema)
