@@ -817,6 +817,11 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             self.folder_meta_types = self.utConvertToList(kwargs.get('subobjects', []))
             self.folder_meta_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
         self._p_changed = 1
+
+        if kwargs.get('subfolders', False):
+            for f in self.objectValues(METATYPE_FOLDER):
+                f.manageSubobjects(**kwargs)
+
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             redirect = REQUEST.get('redirect_url', 'manage_folder_subobjects_html')
