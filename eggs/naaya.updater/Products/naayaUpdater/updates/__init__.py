@@ -79,24 +79,21 @@ class UpdateScript(Item, Acquisition.Implicit):
         self.log.addHandler(handler)
 
     security.declarePrivate('_save_log')
-    def _save_log(self, data, portal):
+    def _save_log(self, data):
         logs_folder = getattr(self, LOGS_FOLDERNAME)
-        portal_path = '_'.join(portal.getPhysicalPath())
 
-        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, portal_path)
+        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.title)
 
         begin_transaction()
         transaction = get_transaction()
         logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
         ob = logs_folder._getOb(log_filename)
-        ob.manage_upload(data, 'text/plain')
-        transaction.note('Saved log file for update "%s" on portal "%s"' % (self.id, portal_path))
+        ob.manage_upload(data, 'text/html;charset=utf-8')
+        transaction.note('Saved log file for update "%s"' % self.title)
         transaction.commit()
 
     security.declareProtected(view_management_screens, 'update')
     def update(self, portal, do_dry_run):
-        self._setup_logger()
-
         begin_transaction()
         transaction = get_transaction()
         try:
@@ -117,7 +114,6 @@ class UpdateScript(Item, Acquisition.Implicit):
             success = False
 
         log_data = self.log_output.getvalue()
-        self._save_log(log_data, portal)
         return success, log_data
 
     security.declareProtected(view_management_screens, 'manage_update')
@@ -125,7 +121,7 @@ class UpdateScript(Item, Acquisition.Implicit):
         """ perform this update """
         report = ''
         if REQUEST.REQUEST_METHOD == 'POST':
-            report_file = StringIO()
+            self._setup_logger()
 
             do_dry_run = (REQUEST.form.get('action') != 'Run update')
             for portal_path in REQUEST.form.get("portal_paths", []):
@@ -139,6 +135,9 @@ class UpdateScript(Item, Acquisition.Implicit):
                 else:
                     report += '<h4>FAILED</h4>'
                 report += html_quote(log_data)
+
+            if not do_dry_run:
+                self._save_log('<pre>%s</pre>' % report)
 
         return self.update_template(REQUEST, report=report, form=REQUEST.form)
 
