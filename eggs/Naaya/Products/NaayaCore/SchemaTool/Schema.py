@@ -109,17 +109,12 @@ class Schema(Folder):
         widget_id = widget_constructors[kwargs['widget_type']](self, id=propdef_id, title=title)
         widget = self._getOb(widget_id)
 
-        # TODO: if there are other names in kwargs, raise a KeyError
-        for name in ['sortorder', 'required', 'localized',
-                'tinymce', 'data_type', 'visible', 'glossary_id',
-                'list_id', 'default', 'relative']:
-            if name in kwargs:
-                value = kwargs[name]
-                if name == 'data_type' and value not in DATA_TYPES:
-                    raise ValueError('Unknown data format "%s"' % value)
-                if name == 'default':
-                    widget.default = value
-                    continue
+        for name, value in kwargs.iteritems():
+            if name == 'data_type' and value not in DATA_TYPES:
+                raise ValueError('Unknown data format "%s"' % value)
+            elif name == 'default':
+                widget.default = value
+            else:
                 widget.manage_changeProperties(**{name: value})
 
         return widget

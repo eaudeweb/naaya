@@ -13,6 +13,7 @@ Changelog
  * Fix: "Exception while rendering an error message".
  * Clean up NotificationTool. Subscribers now receive emails on zip/csv import.
  * Zip download now includes URLs as well.
+ * New Glossary widget with fancy JavaScript UI.
 
 2.11.02 (2011-03-01)
 --------------------

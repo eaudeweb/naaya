@@ -459,7 +459,8 @@ class NyContentData(NyProperties):
                 glossary = widget.get_glossary()
                 if glossary is not None:
                     update_translation(self, prop_name,
-                                       glossary, _lang, prev_prop_value)
+                                       glossary, _lang, prev_prop_value,
+                                       widget.separator)
 
         self._p_changed = 1
         self.recatalogNyObject(self)

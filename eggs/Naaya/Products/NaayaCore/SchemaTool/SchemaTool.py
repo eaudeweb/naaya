@@ -15,6 +15,7 @@ from Products.NaayaCore.SchemaTool.Schema import Schema
 from Products.NaayaCore.GeoMapTool.GeoMapTool import GeoMapTool
 from contentratings.interfaces import IUserRating
 from naaya.content.base.interfaces import INyContentObject
+from naaya.core.StaticServe import StaticServeFromFolder
 
 _other_schema_products = {}
 def register_schema_product(name, label, meta_type, default_schema):
@@ -52,6 +53,8 @@ class SchemaTool(Folder):
         },
     )
     all_meta_types = meta_types
+
+    www = StaticServeFromFolder('www', globals())
 
     def __init__(self, id, title):
         super(SchemaTool, self).__init__(id=id)
