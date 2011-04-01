@@ -1,0 +1,6 @@
+<configure xmlns='http://namespaces.zope.org/zope'>
+  <subscriber
+    handler=".CHMSite.handle_content_type_installed"
+    for="Products.Naaya.interfaces.INyPluggableItemInstalled"
+    />
+</configure>
