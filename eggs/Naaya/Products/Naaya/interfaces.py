@@ -53,3 +53,9 @@ class IActionLogItem(Interface):
 
     type = Attribute('type', u'Type of log item')
     created_datetime = Attribute('created_datetime', u"Created datetime")
+
+class INyPluggableItemInstalled(Interface):
+    """ A pluggable item was installed """
+
+    context = Attribute('context', "Portal where pluggable item was installed")
+    meta_type = Attribute('meta_type', "meta_type of pluggable item")
