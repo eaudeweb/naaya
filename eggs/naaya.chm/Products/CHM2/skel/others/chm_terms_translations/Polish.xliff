@@ -9,7 +9,7 @@
  datatype="plaintext"
  source-language="English"
  target-language="Polish"
- date="2011-03-29T15:46:46Z"
+ date="2011-04-04T08:29:46Z"
 >
 <body>
 <trans-unit id="01_01" approved="1">
@@ -139,7 +139,7 @@
 <note></note>
 </trans-unit>
 <trans-unit id="03_05" approved="1">
-<source>Impact assesment</source>
+<source>Impact assessment</source>
 <target></target>
 <context-group name="03"></context-group>
 <note></note>
@@ -238,6 +238,18 @@
 <source>Liability and Redress</source>
 <target></target>
 <context-group name="07"></context-group>
+<note></note>
+</trans-unit>
+<trans-unit id="06_dummy" approved="1">
+<source></source>
+<target></target>
+<context-group name="06"></context-group>
+<note></note>
+</trans-unit>
+<trans-unit id="08_dummy" approved="1">
+<source></source>
+<target></target>
+<context-group name="08"></context-group>
 <note></note>
 </trans-unit>
 </body>
