@@ -22,7 +22,7 @@ from utils import getUserFullName, getUserEmail, getUserOrganization, getUserPho
 class Subscriptions(SimpleItem):
     security = ClassSecurityInfo()
 
-    title = "Meeting subscriptions"
+    title = "Meeting registrations"
 
     def __init__(self, id):
         """ """
