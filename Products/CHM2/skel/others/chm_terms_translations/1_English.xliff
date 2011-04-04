@@ -9,7 +9,7 @@
  datatype="plaintext"
  source-language="English"
  target-language="English"
- date="2011-03-29T15:46:46Z"
+ date="2011-04-04T08:29:46Z"
 >
 <body>
 <trans-unit id="01_01" approved="1">
@@ -139,8 +139,8 @@
 <note></note>
 </trans-unit>
 <trans-unit id="03_05" approved="1">
-<source>Impact assesment</source>
-<target>Impact assesment</target>
+<source>Impact assessment</source>
+<target>Impact assessment</target>
 <context-group name="03">Threats to biodiversity</context-group>
 <note></note>
 </trans-unit>
@@ -222,12 +222,6 @@
 <context-group name="05">Knowledge of biodiversity</context-group>
 <note></note>
 </trans-unit>
-<trans-unit id="06_dummy" approved="1">
-<source></source>
-<target></target>
-<context-group name="06">Access to genetic resources and benefit-sharing</context-group>
-<note></note>
-</trans-unit>
 <trans-unit id="07_01" approved="1">
 <source>Financing biodiversity management</source>
 <target>Financing biodiversity management</target>
@@ -244,6 +238,12 @@
 <source>Liability and Redress</source>
 <target>Liability and Redress</target>
 <context-group name="07">Resources for biodiversity</context-group>
+<note></note>
+</trans-unit>
+<trans-unit id="06_dummy" approved="1">
+<source></source>
+<target></target>
+<context-group name="06">Access to genetic resources and benefit-sharing</context-group>
 <note></note>
 </trans-unit>
 <trans-unit id="08_dummy" approved="1">
