@@ -169,10 +169,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
         #create indexes
         for lang in self.get_english_names():
-            index_extra = record()
-            index_extra.default_encoding = 'utf-8'
-            try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(lang), 'TextIndexNG3',index_extra)
-            except:    pass
+            index_id = self.cookCatalogIndex(lang)
+            _add_catalog_language_index(catalog_obj, index_id)
 
         try: catalog_obj.addIndex('approved', 'FieldIndex')
         except: pass
@@ -547,6 +545,16 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     setattr(l_element, language, '')
         return 'done'
 
+    def _rebuild_translations_indexes(self):
+        catalog = self.getGlossaryCatalog()
+        index_ids = [self.cookCatalogIndex(language)
+                     for language in self.get_english_names()]
+
+        for index_id in index_ids:
+            _add_catalog_language_index(catalog, index_id)
+
+        catalog.reindexIndex(index_ids, REQUEST=None)
+
     def _add_language(self, lang, english_name):
         self._p_changed = 1
 
@@ -554,10 +562,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         self.updateObjectsByLang(english_name)
 
         catalog_obj = self.getGlossaryCatalog()
-        index_extra = record()
-        index_extra.default_encoding = 'utf-8'
-        catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name),
-                                    'TextIndexNG3',index_extra)
+        index_id = self.cookCatalogIndex(english_name)
+        _add_catalog_language_index(catalog_obj, index_id)
 
     def manageLanguagesProperties(self, ids='', lang='', english_name='', old_english_name='', REQUEST=None):
         """ manage languages for NyGlossary """
@@ -596,10 +602,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
                 try:
                     catalog_obj = self.getGlossaryCatalog()
-                    index_extra = record()
-                    index_extra.default_encoding = 'utf-8'
-                    try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG3',index_extra)
-                    except: pass
+                    index_id = self.cookCatalogIndex(english_name)
+                    _add_catalog_language_index(catalog_obj, index_id)
                 except: pass
 
                 self._p_changed = 1
@@ -1251,3 +1255,11 @@ class mapTiny:
         self.context = ''
         self.context_name = ''
         self.note = ''
+
+def _add_catalog_language_index(catalog, index_id):
+    if index_id in catalog.indexes():
+        catalog.delIndex(index_id)
+    index_extra = record()
+    index_extra.default_encoding = 'utf-8'
+    index_extra.splitter_casefolding = 1
+    catalog.manage_addIndex(index_id, 'TextIndexNG3', index_extra)
