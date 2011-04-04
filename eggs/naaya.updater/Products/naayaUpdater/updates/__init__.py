@@ -82,7 +82,7 @@ class UpdateScript(Item, Acquisition.Implicit):
     def _save_log(self, data):
         logs_folder = getattr(self, LOGS_FOLDERNAME)
 
-        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.title)
+        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id)
 
         begin_transaction()
         transaction = get_transaction()
