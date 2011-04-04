@@ -65,6 +65,8 @@ DEFAULT_SCHEMA['geo_type'].update(visible=True)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=True)
 
+ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
+
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent',
@@ -79,7 +81,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyMeeting',
         '_module': sys.modules[__name__],
-        'additional_style': None,
+        'additional_style': ADDITIONAL_STYLE,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'meeting.gif'),
         '_misc': {
                 'NyMeeting.gif': ImageFile('www/meeting.gif', globals()),
@@ -92,6 +94,8 @@ config = {
                 'Agenda.png': ImageFile('www/Agenda.png', globals()),
                 'Minutes.png': ImageFile('www/Minutes.png', globals()),
                 'survey.gif': ImageFile('www/survey.gif', globals()),
+                'RegisterExistingUser.jpg': ImageFile('www/RegisterExistingUser.jpg', globals()),
+                'RegisterNewAccount.jpg': ImageFile('www/RegisterNewAccount.jpg', globals()),
             },
     }
 
