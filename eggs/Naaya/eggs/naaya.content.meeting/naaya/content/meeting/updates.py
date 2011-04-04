@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from AccessControl.Permission import Permission
 
@@ -15,6 +16,63 @@ from naaya.content.meeting import PERMISSION_PARTICIPATE_IN_MEETING
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
         ADMINISTRATOR_ROLE, MANAGER_ROLE)
 from meeting import add_observer_role
+
+
+def interval_from_raw_time(start_date, end_date, raw_time):
+    """
+    Input: `raw_time` - any string user input that references a time interval
+    `start_date`, `end_date` - date string as '%d/%m/%Y'
+    Output: Interval object
+    """
+    all_day = True
+    start_time = ''
+    end_time = ''
+
+    timepat = re.compile(r'([0-2]?\d([:\.]\d\d?)?)')
+    time_pieces = [first for (first, last) in re.findall(timepat, raw_time)]
+    ampat = re.compile(r'[^a-z]?(am|pm)[^a-z]?', re.IGNORECASE)
+    ampm_pieces = re.findall(ampat, raw_time)
+    if len(time_pieces) == 1:
+        # Only found start time
+        # Creating Interval will raise an Exception that will be handled
+        start_time = time_pieces[0].replace('.', ':')
+        (end_time, all_day) = ('', False)
+    elif len(time_pieces) > 1:
+        # set start time to time_pieces[0]
+        # set end time to time_pieces[-1]
+        start_time = time_pieces[0].replace('.', ':')
+        end_time = time_pieces[-1].replace('.', ':')
+
+        # normalize
+        if start_time.find(':') == -1:
+            start_time += ':00'
+        if end_time.find(':') == -1:
+            end_time += ':00'
+
+        # PM adjustment
+        if len(ampm_pieces):
+            (st_h, st_m) = start_time.split(':', 1)
+            (en_h, en_m) = end_time.split(':', 1)
+
+            if len(ampm_pieces) == 1:
+                # one am/pm specification in the whole string
+                # adjust both
+                st_ampm = en_ampm = ampm_pieces[0].lower()
+
+            elif len(ampm_pieces) > 1:
+                # am/pm for both (or all specified hours)
+                st_ampm = ampm_pieces[0].lower()
+                en_ampm = ampm_pieces[-1].lower()
+            # actual adjustment
+            if int(st_h) < 12 and st_ampm == 'pm':
+                st_h = str(int(st_h) + 12)
+            if int(en_h) < 12 and en_ampm == 'pm':
+                en_h = str(int(en_h) + 12)
+            # recompose hh:mm
+            start_time = st_h + ':' + st_m
+            end_time = en_h + ':' + en_m
+        all_day = False
+    return Interval(start_date, start_time, end_date, end_time, all_day)
 
 
 class AddAutoRegister(UpdateScript):
@@ -158,32 +216,34 @@ class ConvertMeetingDates(UpdateScript):
                 self.log.debug('Patching meeting object at %s' %
                                meeting.absolute_url(1))
                 time = getattr(meeting, 'time', '')
+                start_date = meeting.start_date
+                end_date = getattr(meeting, 'end_date', '')
+                # old NyMeeting accepted only start_date, interval obj reqs both
+                if not end_date:
+                    end_date = start_date
+                (start_date, end_date) = (start_date.strftime('%d/%m/%Y'),
+                                          end_date.strftime('%d/%m/%Y'))
+
                 try:
-                    start_date = meeting.start_date.strftime("%d/%m/%Y")
-                    end_date = meeting.end_date.strftime("%d/%m/%Y")
-                except Exception:
-                    self.log.debug('Can not get start/end dates, patch aborted')
-                    continue
-                self.log.debug('(Start, end date, time) is: (%s, %s, \'%s\')'
-                               % (start_date, end_date, time))
-                all_day = True
-                start_time = ''
-                end_time = ''
+                    i = interval_from_raw_time(start_date, end_date, time)
+                except Exception, e:
+                    self.log.error('Can not create Interval: %s' % str(e))
+                    try:
+                        i = Interval(start_date, '', end_date, '', True)
+                    except Exception, e_inner:
+                        today = datetime.now().strftime('%d/%m/%Y')
+                        i = Interval(today, '', today, '', True)
+                        self.log.error('Using TODAY as start/end dates, reason: %s'
+                                       % str(e_inner))
+                    self.log.error('IMPORTANT: Please manually edit meeting, ' +
+                                   ('interval currently set as %s; ' % repr(i))
+                                   + ('Old Values: (%s, %s, \'%s\')'
+                                    % (start_date, end_date, time)))
+                else:
+                    self.log.debug(('Successfully converted (%s, %s, \'%s\'), '
+                                    % (start_date, end_date, time)) +
+                                    'setting meeting.interval: %s' % repr(i))
 
-                timepat = re.compile(r'[0-2]?\d[:\.]\d\d?')
-                time_pieces = re.findall(timepat, time)
-                if len(time_pieces) == 1:
-                    self.log.debug('Only found start_time: \'%s\', drop it'
-                                   % time_pieces[0])
-                elif len(time_pieces) > 1:
-                    # set start time to time_pieces[0]
-                    # set end time to time_pieces[-1]
-                    start_time = time_pieces[0].replace('.', ':')
-                    end_time = time_pieces[-1].replace('.', ':')
-                    all_day = False
-
-                i = Interval(start_date, start_time, end_date, end_time, all_day)
-                self.log.debug('Setting meeting.interval: %s' % repr(i))
                 meeting.interval = i
                 delattr(meeting, 'start_date')
                 delattr(meeting, 'end_date')
