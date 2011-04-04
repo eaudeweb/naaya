@@ -76,21 +76,21 @@
 				address geo_location/address|string:;
 				main_topics python:here.getTopics(here.main_topics);
 				portal_map python:here.getSite().portal_map">
-	<tal:block condition="here/description"
+	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
-	<tal:block condition="here/geo_type">
+	<tal:block condition="here/geo_type|nothing">
 		<tal:block i18n:translate="">Category</tal:block>: <tal:block i18n:translate="" content="python:portal_map.getSymbol(here.geo_type).title" />
 	</tal:block>
-	<div tal:condition="here/webpage">
+	<div tal:condition="here/webpage|nothing">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
-	<div tal:condition="here/email" tal:content="here/obfuscated_email" />
-	<div tal:condition="here/phone" tal:content="here/phone" />
-	<div tal:condition="here/fax"><span tal:content="here/fax"/> (fax)</div>
+	<div tal:condition="here/email|nothing" tal:content="here/obfuscated_email" />
+	<div tal:condition="here/phone|nothing" tal:content="here/phone" />
+	<div tal:condition="here/fax|nothing"><span tal:content="here/fax"/> (fax)</div>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
 	</div>
-	<div tal:condition="here/contact_details">
+	<div tal:condition="here/contact_details|nothing">
 		<h3 i18n:translate="">Contact details</h3>
 		<span tal:replace=" structure here/contact_details"/>
 	</div>
