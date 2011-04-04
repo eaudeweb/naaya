@@ -78,19 +78,19 @@
 				geo_location here/geo_location;
 				address geo_location/address|string:;
 				main_topics python:here.getExpertTopics(here.main_topics);">
-	<tal:block condition="here/description"
+	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
-	<tal:block condition="here/details"
+	<tal:block condition="here/details|nothing"
 		content="structure here/details" />
-	<div tal:condition="here/obfuscated_email">
+	<div tal:condition="here/obfuscated_email|nothing">
 		<span tal:replace="here/obfuscated_email" />
 	</div>
-	<div tal:condition="here/webpage">
+	<div tal:condition="here/webpage|nothing">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
-	<div tal:condition="here/phone" tal:content="here/phone"/>
+	<div tal:condition="here/phone|nothing" tal:content="here/phone"/>
 	<div tal:condition="here/mobile" tal:content="string:${here/mobile} (mobile)"/>
-	<div tal:condition="here/instant_messaging"
+	<div tal:condition="here/instant_messaging|nothing"
 		tal:content="string:${here/instant_messaging} (instant messaging)"/>
 	<div tal:condition="address">
 		<span tal:content="address"/>
@@ -103,7 +103,7 @@
 			</tal:block>
 		</ul>
 	</div>
-	<div tal:condition="here/ref_lang">
+	<div tal:condition="here/ref_lang|nothing">
 		<h3 i18n:translate="">Working languages:</h3>
 		<span tal:replace="here/ref_lang"/>
 	</div>
