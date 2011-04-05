@@ -840,11 +840,16 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                            empty_folders=True)
             dump_zip.writestr('glossary/%s.xliff' % language, xliff_data)
 
+        metadata_items = {}
+        for item in self._walk_glossary_items():
+            metadata_items[relative_object_path(item, self)] = {
+                'title': item.title,
+            }
+
         metadata = {
             'languages': dict((l['lang'], l['english_name'])
                               for l in self.languages_list),
-            'items': [relative_object_path(item, self)
-                      for item in self._walk_glossary_items()],
+            'items': metadata_items,
             'properties': {
                 'parent_anchors': bool(self.parent_anchors),
             },
@@ -925,6 +930,16 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         finally:
             new_items.end()
             new_trans.end()
+
+        for item_path, item_data in metadata['items'].iteritems():
+            item = self.restrictedTraverse(item_path)
+            check_path = relative_object_path(item, self)
+            if check_path != item_path:
+                log.warn(log_prefix + "Paths different: %r, %r",
+                         item_path, check_path)
+                continue
+            if item.title != item_data['title']:
+                item.title = item_data['title']
 
         if remove_items:
             path_in_glossary = lambda ob: relative_object_path(ob, self)
