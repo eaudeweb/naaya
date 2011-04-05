@@ -49,4 +49,9 @@ class NyAttributes:
             parts = name.split('_')
             func, lang = parts[0], parts[1]
             return self.tags(lang)
+        elif name.startswith('interval_'):
+            if name == 'interval_start_date':
+                return self.interval.start_date
+            elif name == 'interval_end_date':
+                return self.interval.end_date
         raise AttributeError, name
