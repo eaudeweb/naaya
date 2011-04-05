@@ -6,6 +6,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.constants import *
+from naaya.core.zope2util import folder_manage_main_plus
+
 from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
@@ -218,15 +220,14 @@ class Schema(Folder):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_html')
     admin_html = PageTemplateFile('zpt/admin_schema', globals())
 
+    manage_main = folder_manage_main_plus
     _manage_extra_footer = PageTemplateFile('zpt/manage_extra_footer', globals())
-
-    def manage_page_footer(self):
-        kwargs = {
+    security.declareProtected(view_management_screens, 'ny_after_listing')
+    def ny_after_listing(self):
+        options = {
             'widget_types': widget_constructors.keys(),
             'data_types': DATA_TYPES,
         }
-        our_footer = self._manage_extra_footer(**kwargs)
-        orig_footer = super(Schema, self).manage_page_footer()
-        return our_footer + orig_footer
+        return self._manage_extra_footer(**options)
 
 InitializeClass(Schema)

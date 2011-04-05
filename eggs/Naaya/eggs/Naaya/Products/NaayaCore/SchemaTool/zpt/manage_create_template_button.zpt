@@ -59,7 +59,7 @@
         var button = $('<a class="buttonish" href="#">').text("?");
         button.click(function(evt) {
             evt.preventDefault();
-            var help_div = $('<div class="help">').html("<br>" +
+            var help_div = $('<div class="help" id="template-help-container">').html("<br>" +
                 "Enter the path to a custom template that will be used to " +
                 "render this widget in add/edit pages. " +
                 "You can try this one: <tt>" + example_path + "<" + "/tt>.");
@@ -67,7 +67,7 @@
                 evt.preventDefault();
                 help_div.remove();
             }).prependTo(help_div);
-            button.replaceWith(help_div);
+            button.after(help_div);
         });
         $('label[for="cb-custom_template"]').append(button);
     });</script>
