@@ -16,6 +16,11 @@ Example usage::
     >>> logger[1].message
     'Some log'
 
+
+Database size: creating many records uses about 600 bytes for each record,
+plus whatever is taken up by custom data added to the record. This is
+counted after a pack; before packing, expect 3 or 4 times that size, because
+of btree reshuffling overhead.
 """
 
 from BTrees.IOBTree import IOBTree
