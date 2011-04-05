@@ -10,6 +10,7 @@ It is used to provide values for two catalog indexes:
 
 
 from Products.NaayaBase.NyContentType import NyContentType
+from DateTime import DateTime
 
 class NyAttributes:
     """ """
@@ -51,7 +52,8 @@ class NyAttributes:
             return self.tags(lang)
         elif name.startswith('interval_'):
             if name == 'interval_start_date':
-                return self.interval.start_date
+                d = self.interval.start_date
             elif name == 'interval_end_date':
-                return self.interval.end_date
+                d = self.interval.end_date
+            return DateTime(d.year, d.month, d.day)
         raise AttributeError, name
