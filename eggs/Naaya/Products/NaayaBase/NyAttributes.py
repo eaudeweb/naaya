@@ -53,7 +53,8 @@ class NyAttributes:
         elif name.startswith('interval_'):
             if name == 'interval_start_date':
                 d = self.interval.start_date
+                return DateTime(d.year, d.month, d.day)
             elif name == 'interval_end_date':
                 d = self.interval.end_date
-            return DateTime(d.year, d.month, d.day)
+                return DateTime(d.year, d.month, d.day)
         raise AttributeError, name
