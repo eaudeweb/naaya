@@ -849,7 +849,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 'parent_anchors': bool(self.parent_anchors),
             },
         }
-        dump_zip.writestr('glossary/metadata.json', json.dumps(metadata))
+        metadata_json = json.dumps(metadata, indent=2) + '\n'
+        dump_zip.writestr('glossary/metadata.json', metadata_json)
 
         dump_zip.close()
 
@@ -907,7 +908,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         try:
             trans_by_lang = {}
             for language in languages_to_import:
-                data = dump_zip.read('glossary/%s.xliff' % language)
+                try:
+                    data = dump_zip.read('glossary/%s.xliff' % language)
+                except KeyError:
+                    continue # translation is missing
                 self.xliff_import(data)
                 if new_trans.count > 0:
                     trans_by_lang[language] = new_trans.count
