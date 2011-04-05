@@ -3,6 +3,7 @@ from os.path import join, isfile
 from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
+from zipfile import ZipFile
 
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -175,27 +176,11 @@ class CHMSite(NySite):
     def add_chm_terms_glossary(self, set_up_sync=True):
         manage_addGlossaryCentre(self, ID_CHM_TERMS, TITLE_CHM_TERMS)
         glossary = self._getOb(ID_CHM_TERMS)
-        glossary_languages = [
-                ('Arabic', 'ar'), ('Bulgarian', 'bg'), ('Catalan', 'ca'),
-                ('Czech', 'cs'), ('Danish', 'da'), ('German', 'de'),
-                ('Greek', 'el'), ('English', 'en'), ('Esperanto', 'eo'),
-                ('Spanish', 'es'), ('Estonian', 'et'), ('Basque', 'eu'),
-                ('Finnish', 'fi'), ('Faeroese', 'fo'), ('French', 'fr'),
-                ('Irish', 'ga'), ('Croatian', 'hr'), ('Hungarian', 'hu'),
-                ('Armenian', 'hy'), ('Islandic', 'is'), ('Italian', 'it'),
-                ('Lithuanian', 'lt'), ('Latvian', 'lv'), ('Macedonian', 'mk'),
-                ('Maltese', 'mt'), ('Dutch', 'nl'), ('Polish', 'pl'),
-                ('Portuguese', 'pt'), ('Romanian', 'ro'), ('Russian', 'ru'),
-                ('Slovak', 'sk'), ('Slovenian', 'sl'), ('Albanian', 'sq'),
-                ('Serbian', 'sr'), ('Swedish', 'sv'), ('Turkish', 'tr'),
-                ('Ukrainian', 'uk'),
-            ]
-        for name, code in glossary_languages:
-            glossary.addLanguage(name, code)
-        import_files = os.listdir(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'chm_terms_translations'))
-        import_files.sort()
-        for file in [file for file in import_files if file.endswith('.xliff')]:
-            glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'chm_terms_translations', file)))
+
+        skel_dump_path = os.path.join(CHM2_PRODUCT_PATH, 'skel', 'others',
+                                      'chm_terms_translations')
+        dump_data = glossary_dump_from_skel(skel_dump_path)
+        glossary.dump_import(dump_data)
 
         if set_up_sync:
             glossary.sync_remote_url = CHM_TERMS_MASTER_URL
@@ -1097,3 +1082,26 @@ def handle_content_type_installed(evt):
     schema = schema_tool.getSchemaForMetatype(evt.meta_type)
     if schema is not None:
         add_terms_property_to_schema(schema)
+
+def glossary_dump_from_skel(files_path):
+    """
+    Generate a Zip dump from the given folder. Returns a StringIO
+    containing the Zip data.
+    """
+
+    dump_file = StringIO()
+    dump_zip = ZipFile(dump_file, 'w')
+
+    for xliff_name in os.listdir(files_path):
+        if not xliff_name.endswith('.xliff'):
+            continue
+        xliff_path = os.path.join(files_path, xliff_name)
+        dump_zip.write(xliff_path, 'glossary/%s' % xliff_name)
+
+    metadata_path = os.path.join(files_path, 'metadata.json')
+
+    dump_zip.write(metadata_path, 'glossary/metadata.json')
+    dump_zip.close()
+    dump_file.seek(0)
+
+    return dump_file
