@@ -28,6 +28,8 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
+from Products.naayaUpdater.utils import get_portals
+
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 try:
@@ -59,7 +61,7 @@ class UpdatePortalSchemas(UpdateScript):
         from their definition in their content code
         """
         content_types = get_pluggable_content().values()
-        portals = self.getPortals()
+        portals = get_portals(self)
         missing_properties = {}
         modified_properties = {}
         for portal in portals:

@@ -28,7 +28,8 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
-from Products.naayaUpdater.utils import get_portals
+from Products.naayaUpdater.utils import (get_portals, get_portal,
+                                         get_portal_path)
 
 class UpdateLayout(UpdateScript):
     """ Update Portal layout script  """
@@ -55,8 +56,7 @@ class UpdateLayout(UpdateScript):
             portals_custom.append(portal_id.strip())
 
         if all:
-            root = self.getPhysicalRoot()
-            portals_list = get_portals(self, root, self.pmeta_types)
+            portals_list = get_portals(self, self.pmeta_types)
             for portal in portals_list:
                 do_update = False
                 if p_action == 'ep':
@@ -66,7 +66,7 @@ class UpdateLayout(UpdateScript):
                 if do_update:
                     report[portal.id] = self.updateLayoutForms(portal, locator, sel_skin, f_action, file_id)
         else:
-            portal = self.getPortal(ppath)
+            portal = get_portal(self, ppath)
             if not portal.id in portals_custom:
                 report[portal.id] = self.updateLayoutForms(portal, locator, sel_skin, f_action, file_id)
 
@@ -180,7 +180,7 @@ class UpdateLayout(UpdateScript):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             for skin in skel_handler.root.layout.skins:
@@ -196,7 +196,7 @@ class UpdateLayout(UpdateScript):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             for skin in skel_handler.root.layout.skins:
@@ -213,7 +213,7 @@ class UpdateLayout(UpdateScript):
         """
             return the content of the filesystem layout file
         """
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             if scheme_id:

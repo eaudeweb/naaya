@@ -20,9 +20,9 @@
 
 				<label for="ppath">Select a portal</label><br />
 				<select name="ppath" id="ppath">
-					<option tal:repeat="portal here/getPortals"
-							tal:attributes="selected python:test(ppath==portal.absolute_url(1), 'selected', ''); 
-											value python:portal.absolute_url(1)" 
+					<option tal:repeat="portal python: here.utils('get_portals')(here)"
+							tal:attributes="selected python:test(ppath==portal.absolute_url(1), 'selected', '');
+											value python:portal.absolute_url(1)"
 							tal:content="python:'%s (%s)' % (portal.title_or_id(),portal.absolute_url(1))" />
 				</select><br />
 

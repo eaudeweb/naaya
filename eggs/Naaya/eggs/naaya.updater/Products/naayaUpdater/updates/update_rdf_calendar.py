@@ -4,6 +4,7 @@ import sys
 from AccessControl import ClassSecurityInfo
 
 from Products.naayaUpdater.updates import UpdateScript
+from Products.naayaUpdater.utils import get_portal_path
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 
 try:
@@ -38,7 +39,7 @@ class UpdateRDFCalendar(UpdateScript):
             portal.getCatalogTool().addIndex('end_date', 'DateIndex')
             self.log.debug('Added end_date (DateIndex) to portal_catalog')
 
-            portal_path = self.get_portal_path(portal)
+            portal_path = get_portal_path(self, portal)
             script_content = open(portal_path +
                     '/skel/others/local_events.py', 'r').read()
             for rdfcalendar_ob in rdf_calendars:

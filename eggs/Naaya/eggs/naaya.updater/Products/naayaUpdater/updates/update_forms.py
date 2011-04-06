@@ -34,7 +34,8 @@ from Products.naayaUpdater.updates import UpdateScript
 from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
-    get_template_content, normalize_template, html_diff, readFile, get_portals)
+    get_template_content, normalize_template, html_diff, readFile, get_portals,
+    get_portal, get_portal_path, get_contenttype_content)
 
 class UpdateForms(UpdateScript):
     """ Update forms in portal_forms """
@@ -112,7 +113,7 @@ class UpdateForms(UpdateScript):
         fdel = convertToList(fdel)
         forms_list = convertLinesToList(forms)
         for form_path in fmod:
-            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
+            portal = get_portal(self, form_path[:form_path.find('portal_forms')])
             form_id = form_path[form_path.find('portal_forms')+13:]
             form_ob = self.get_zmi_template(form_path)
             fs_content = self.get_fs_template(form_id, portal)
@@ -126,7 +127,7 @@ class UpdateForms(UpdateScript):
             except Exception, error:
                 print error
         for form_path in fdel:
-            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
+            portal = get_portal(self, form_path[:form_path.find('portal_forms')])
             form_id = form_path[form_path.find('portal_forms')+13:]
             form_ob = self.get_zmi_template(form_path)
             form_ob.aq_parent.manage_delObjects([form_id])
@@ -147,13 +148,13 @@ class UpdateForms(UpdateScript):
             return self.get_fs_template_content(id, portal)
         elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
             return self.get_fs_template_content(id, NySite_module)
-        return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
+        return get_contenttype_content(self, id, portal) #fall back to Naaya pluggable content types
 
     def get_fs_template_content(self, id, portal):
         """
             return the content of the filesystem template
         """
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return readFile(join(portal_path, 'skel', 'forms', '%s.zpt' % id), 'r')
@@ -162,7 +163,7 @@ class UpdateForms(UpdateScript):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return [f.id for f in skel_handler.root.forms.forms]
