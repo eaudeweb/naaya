@@ -28,6 +28,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
+from Products.naayaUpdater.utils import get_portals
 
 class UpdateLayout(UpdateScript):
     """ Update Portal layout script  """
@@ -55,7 +56,7 @@ class UpdateLayout(UpdateScript):
 
         if all:
             root = self.getPhysicalRoot()
-            portals_list = self.getPortals(root, self.pmeta_types)
+            portals_list = get_portals(self, root, self.pmeta_types)
             for portal in portals_list:
                 do_update = False
                 if p_action == 'ep':
