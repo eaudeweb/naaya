@@ -26,7 +26,7 @@
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 #from Products.MailHost.MailHost import MailHost, manage_addMailHost
@@ -200,15 +200,15 @@ class FactsheetFolder(Folder):
     security.declarePrivate('send_mail')
     def send_mail(self, msg_to, msg_subject, msg_body, msg_body_text):
 #        mailhost = self.get_mailhost()
-#        
+#
 #        from email.MIMEText import MIMEText
 #        from email.MIMEMessage import MIMEMessage
-#        
+#
 #        msg = MIMEMessage(MIMEText(msg_body.encode('utf-8'), _charset='utf-8'))
 #        msg['Subject'] = msg_subject
 #        msg['From'] = self.administrator_email
 #        msg['To'] = msg_to
-#        
+#
 #        mailhost.send(msg.as_string())
         import smtplib
 
@@ -276,7 +276,6 @@ class FactsheetFolder(Folder):
                         )
 
     def generate_password(self, email, passwordLength = 8):
-        import sys
         from random import Random
 
         # if the email is found in another model, the same password will be set

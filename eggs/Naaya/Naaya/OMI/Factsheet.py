@@ -24,7 +24,7 @@ from Globals import InitializeClass
 import Acquisition
 from AccessControl import ClassSecurityInfo
 from datetime import datetime
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.CatalogAwareness import CatalogAware
 
@@ -219,7 +219,7 @@ class Factsheet(CatalogAware, Folder):
 
     manage_addComment = manage_addComment
 
-    security.declareProtected(view, 'add_comment_html')
+    security.declareProtected('Naaya - Add comments for content', 'add_comment_html')
     def add_comment_html(self):
         """ """
         return self.manage_addComment(self.REQUEST)
@@ -276,7 +276,10 @@ class Factsheet(CatalogAware, Folder):
             REQUEST.set('captcha_error', True)
         return self._index_html(REQUEST)
 
+    security.declareProtected('Naaya - Add comments for content', 'comment_form')
     comment_form = PageTemplateFile('zpt/comment', globals())
+    security.declarePublic('comment_view')
+    comment_view = PageTemplateFile('zpt/comment_view', globals())
     _edit_html = PageTemplateFile('zpt/factsheet', globals())
 
     security.declareProtected(MANAGE_FACTSHEET, 'edit_html')
@@ -320,13 +323,13 @@ class Factsheet(CatalogAware, Folder):
                         temp_folder.manage_pasteObjects(clipboard)
                         temp_object = temp_folder._getOb(id)
                         temp_object.manage_delObjects(temp_object.objectIds(['OMI Factsheet Comment']))
-                            
+
                     temp_object.edit(REQUEST.form)
                     context = temp_object
                     REQUEST.set('page', 2)
                 else:
                     REQUEST.set('page', 1)
-            
+
             elif page == 2:
                 temp_object.edit(REQUEST.form)
                 context = temp_object
