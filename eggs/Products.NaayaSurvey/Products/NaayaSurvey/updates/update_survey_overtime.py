@@ -17,6 +17,7 @@
 #
 # David Batranu, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
+from Products.naayaUpdater.utils import get_portals
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
@@ -37,7 +38,7 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _list_updates(self):
         """ Return all objects that need update"""
         utool = self.aq_inner.aq_parent
-        portals = utool.getPortals()
+        portals = get_portals(self)
         for portal in portals:
             for survey in portal.getCatalogedObjects(meta_type='Naaya Mega Survey'):
                 if not self._verify_doc(survey):

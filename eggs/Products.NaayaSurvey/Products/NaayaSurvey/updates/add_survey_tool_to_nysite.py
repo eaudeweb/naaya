@@ -17,6 +17,8 @@
 #
 # Cristian Ciupitu, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
+from Products.naayaUpdater.utils import get_portals
+
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 
@@ -31,12 +33,12 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _verify_doc(self, doc):
         """See super"""
         if not doc.__dict__.get(SurveyTool.portal_id, None):
-    	    return doc
+            return doc
 
     def _list_updates(self):
         """ Return all portals that need update """
         utool = self.aq_inner.aq_parent
-        portals = utool.getPortals()
+        portals = get_portals(self)
         for portal in portals:
             if not self._verify_doc(portal):
                 continue
