@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.5 (2011-04-06)
+--------------------
+ * Adapter to allow catalogObject to access interval's start_date and end_date
+
 1.2.4 (2011-03-30)
 --------------------
  * Removed start_date, end_date, time properties
