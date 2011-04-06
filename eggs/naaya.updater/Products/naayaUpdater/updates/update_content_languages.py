@@ -28,6 +28,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
+from Products.naayaUpdater.utils import get_portals
 
 class UpdateContentLanguages(UpdateScript):
     """ Update content languages script  """
@@ -85,7 +86,7 @@ class UpdateContentLanguages(UpdateScript):
             return overview
 
         def get_portal_output():
-            for portal in self.getPortals():
+            for portal in get_portals(self):
                 if portal_ids and portal.id not in portal_ids:
                     continue
                 yield (portal.absolute_url(1), list_portal_objects(portal))
@@ -145,4 +146,3 @@ def maxlen(s, l):
         return s
     else:
         return s[:l-3] + '...'
-

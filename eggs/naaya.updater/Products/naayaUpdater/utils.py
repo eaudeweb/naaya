@@ -91,3 +91,21 @@ def html_diff(source, target):
         output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
     output.write('</div>')
     return output.getvalue()
+
+def get_portals(container, context=None, meta_types=None):
+    """ Given a `container` or a `context` recusivly search all portals with
+    `meta_types`.
+
+    """
+
+    if context is None:
+        context = container.getPhysicalRoot()
+    res = []
+    for ob in context.objectValues():
+        if not INySite.providedBy(ob):
+            continue
+        if meta_types is not None and ob.meta_type not in meta_types:
+            continue
+        res.append(ob)
+        res.extend(get_portals(ob, meta_types))
+    return res
