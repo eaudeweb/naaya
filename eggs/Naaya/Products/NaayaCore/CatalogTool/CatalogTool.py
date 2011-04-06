@@ -8,7 +8,9 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.ZCatalog.ZCatalog import ZCatalog
+from Products.ZCatalog.Catalog import Catalog
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.component import queryAdapter
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
@@ -18,9 +20,45 @@ try:
 except ImportError:
     txng_version = 0
 
-from interfaces import INyCatalogAware
+from interfaces import INyCatalogAware, INyCatalogIndexing
 from naaya.core.interfaces import INyObjectContainer
 from Products.NaayaBase.interfaces import INyContainer, INyCommentable
+
+
+# Patch for Products.ZCatalog.Catalog, recordify method must
+# receive an adapted object in order to properly index properties
+def patch_zope_catalog_indexing():
+    """ This is applied by zca, through naaya:call in configure.zcml """
+
+    # Patch for meta data
+    def patch_object(object):
+        adapted_object = queryAdapter(object, INyCatalogIndexing)
+        if adapted_object is None:
+            # no adapter found
+            return object
+        else:
+            return adapted_object
+
+    if not getattr(Catalog.recordify, 'patched_by_Naaya', False):
+        orig_recordify = Catalog.recordify
+
+        def patched_recordify(self, object):
+            return orig_recordify(self, patch_object(object))
+        setattr(patched_recordify, 'patched_by_Naaya', True)
+
+        Catalog.recordify = patched_recordify
+
+    # Patch for index data
+    if not getattr(Catalog.catalogObject, 'patched_by_Naaya', False):
+        orig_catalogObject = Catalog.catalogObject
+
+        def patched_catalogObject(self, object, uid, threshold=None, idxs=None,
+                                  update_metadata=1):
+            return orig_catalogObject(self, patch_object(object), uid,
+                                      threshold, idxs, update_metadata)
+        setattr(patched_catalogObject, 'patched_by_Naaya', True)
+
+        Catalog.catalogObject = patched_catalogObject
 
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
