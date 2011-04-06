@@ -1,5 +1,10 @@
+import os
 import sys
 import sha
+import types
+
+from Products.Naaya.interfaces import INySite
+from Products.Naaya import NySite as NySite_module
 
 def convertToList(data):
     """ convert to list """
@@ -107,5 +112,41 @@ def get_portals(container, context=None, meta_types=None):
         if meta_types is not None and ob.meta_type not in meta_types:
             continue
         res.append(ob)
-        res.extend(get_portals(ob, meta_types))
+        res.extend(get_portals(container, ob, meta_types))
     return res
+
+def get_portal(container, ppath):
+    return container.getPhysicalRoot().unrestrictedTraverse(ppath)
+
+def get_portal_path(container, portal_metatype):
+    """ return the portal path given the metatype """
+
+    if isinstance(portal, types.ModuleType):
+        m = portal
+    else:
+        if isinstance(portal, NySite_module.NySite):
+            portal = portal.__class__
+        m = sys.modules[portal.__module__]
+    return os.path.dirname(m.__file__)
+
+def get_contenttype_content(container, id, portal):
+    """ return the content of the filesystem content-type template """
+
+    portal_path = get_portal_path(container, portal)
+    data_path = os.path.join(portal_path, 'skel', 'forms')
+
+    for meta_type in portal.get_pluggable_metatypes():
+        pitem = portal.get_pluggable_item(meta_type)
+        #load pluggable item's data
+        for frm in pitem['forms']:
+            if id == frm:
+                frm_name = '%s.zpt' % frm
+                if os.path.isfile(os.path.join(data_path, frm_name)):
+                    #load form from the 'forms' directory because it is
+                    #customized
+                    return readFile(os.path.join(data_path, frm_name), 'r')
+                else:
+                    #load form from the pluggable meta type folder
+                    return readFile(os.path.join(pitem['package_path'], 'zpt',
+                                                 frm_name), 'r')
+                break

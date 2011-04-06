@@ -29,7 +29,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
-from Products.naayaUpdater.utils import get_portals
+from Products.naayaUpdater.utils import get_portals, get_portal
 
 class UpdateReinstallContenttypes(UpdateScript):
     """ Update reinstall content types script  """
@@ -72,8 +72,7 @@ class UpdateReinstallContenttypes(UpdateScript):
             portals_custom.append(portal_id.strip())
 
         if all:
-            root = self.getPhysicalRoot()
-            portals_list = get_portals(self, root, self.pmeta_types)
+            portals_list = get_portals(self, self.pmeta_types)
             for portal in portals_list:
                 do_update = False
                 if p_action == 'ep':
@@ -83,7 +82,7 @@ class UpdateReinstallContenttypes(UpdateScript):
                 if do_update:
                     report[portal.id] = self.reloadMetaTypesForms(portal, contenttypes, ct_action)
         else:
-            portal = self.getPortal(ppath)
+            portal = get_portal(ppath)
             if not portal.id in portals_custom:
                 report[portal.id] = self.reloadMetaTypesForms(portal, contenttypes, ct_action)
 

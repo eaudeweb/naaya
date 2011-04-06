@@ -54,7 +54,7 @@
 <span class="buttons"></span>
 <tal:block repeat="portal_report python:report.items()">
 <div tal:define="portal_path python:portal_report[0];
-                 portal python:here.getPortal(portal_path);
+                 portal python:here.utils('get_portal')(here, portal_path);
                  deltas python:portal_report[1]">
 
 <h3>

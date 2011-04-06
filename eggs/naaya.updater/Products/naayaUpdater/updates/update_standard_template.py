@@ -29,6 +29,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.naayaUpdater.utils import get_portal_path
 from Products.NaayaCore.LayoutTool import Template
 from Products.Naaya.managers.skel_parser import skel_parser
 
@@ -77,7 +78,7 @@ class UpdateExample(UpdateScript):
         return skel_handler.root.layout.default_skin_id
 
     def get_fs_template(self, portal):
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skin_id = self.get_skin_id(portal_path)
         fs_layout = join(portal_path, 'skel', 'layout')
         fs_template = join(fs_layout, skin_id, 'standard_template.zpt')

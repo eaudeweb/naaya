@@ -1,9 +1,9 @@
 <metal:block use-macro="here/update_template/macros/page">
 <h2 metal:fill-slot="title">Update schema widgets</h2>
 <metal:block fill-slot="body"
-             tal:define="portals here/getPortals;
+             tal:define="portals python: here.utils('get_portals')(here);
              selected_portal python: request.get('portal_id', None);
-             portal_schemas python: selected_portal and here.getPortal(selected_portal).getSchemaTool() or None;">
+             portal_schemas python: selected_portal and here.utils('get_portal')(here, selected_portal).getSchemaTool() or None;">
     <br/>
     <style type="text/css">
     .selected{

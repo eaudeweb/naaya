@@ -30,6 +30,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.naayaUpdater.utils import get_portal_path
 from Products.Naaya.managers.skel_parser import skel_parser
 
 updated_line = '<tal:block replace="structure here/languages_box"/>'
@@ -179,7 +180,7 @@ class UpdateLanguagesBox(UpdateScript):
         return skin, scheme
 
     def get_image_file(self, portal, image_id):
-        portal_path = self.get_portal_path(portal)
+        portal_path = get_portal_path(self, portal)
         skin_id, scheme_id = self.get_skin_and_scheme_id(portal_path)
         fs_layout = join(portal_path, 'skel', 'layout')
         fs_image = join(fs_layout, skin_id, scheme_id, image_id)
