@@ -18,8 +18,10 @@ from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from zope.interface import implements
+from zope.component import adapts
 import zLOG
 from AccessControl.Permission import Permission
+from DateTime import DateTime
 
 #Naaya imports
 from Products.Naaya.NyFolder import NyFolder
@@ -34,6 +36,7 @@ from naaya.core.zope2util import DT2dt
 from naaya.core.utils import relative_object_path
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
+from Products.NaayaCore.CatalogTool.interfaces import INyCatalogIndexing
 
 #Meeting imports
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
@@ -620,6 +623,18 @@ config.update({
     'validation': issubclass(NyMeeting, NyValidation),
     '_class': NyMeeting,
 })
+
+class NyMeetingIndexing(object):
+
+    def __init__(self, context):
+        self.context = context
+
+    def __getattr__(self, name):
+        if name in ('start_date', 'end_date'):
+            d = getattr(self.context.interval, name)
+            return DateTime(d.year, d.month, d.day)
+        else:
+            return getattr(self.context, name)
 
 def get_config():
     return config
