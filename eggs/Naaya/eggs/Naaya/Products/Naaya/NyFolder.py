@@ -1539,5 +1539,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     csv_import = CSVImportTool('csv_import')
+    csv_export = ExportTool('csv_export')
 
 InitializeClass(NyFolder)
