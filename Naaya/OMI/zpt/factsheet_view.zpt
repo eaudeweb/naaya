@@ -333,7 +333,7 @@
 									<metal:block use-macro="here/comment_form/macros/form"/>
 								</tal:block>
 								<tal:block repeat="comment python:here.getComments('accessibility')">
-									<metal:block use-macro="here/comment_form/macros/comment_view"/>
+									<metal:block use-macro="here/comment_view/macros/comment_view"/>
 								</tal:block>
 							</td>
 						</tr>
@@ -353,7 +353,7 @@
 									<metal:block use-macro="here/comment_form/macros/form"/>
 								</tal:block>
 								<tal:block repeat="comment python:here.getComments('restrictions')">
-									<metal:block use-macro="here/comment_form/macros/comment_view"/>
+									<metal:block use-macro="here/comment_view/macros/comment_view"/>
 								</tal:block>
 							</td>
 						</tr>
@@ -373,7 +373,7 @@
 									<metal:block use-macro="here/comment_form/macros/form"/>
 								</tal:block>
 								<tal:block repeat="comment python:here.getComments('links')">
-									<metal:block use-macro="here/comment_form/macros/comment_view"/>
+									<metal:block use-macro="here/comment_view/macros/comment_view"/>
 								</tal:block>
 							</td>
 						</tr>
@@ -393,7 +393,7 @@
 									<metal:block use-macro="here/comment_form/macros/form"/>
 								</tal:block>
 								<tal:block repeat="comment python:here.getComments('participative_processes')">
-									<metal:block use-macro="here/comment_form/macros/comment_view"/>
+									<metal:block use-macro="here/comment_view/macros/comment_view"/>
 								</tal:block>
 							</td>
 						</tr>
@@ -413,7 +413,7 @@
 									<metal:block use-macro="here/comment_form/macros/form"/>
 								</tal:block>
 								<tal:block repeat="comment python:here.getComments('other_comments')">
-									<metal:block use-macro="here/comment_form/macros/comment_view"/>
+									<metal:block use-macro="here/comment_view/macros/comment_view"/>
 								</tal:block>
 							</td>
 						</tr>
