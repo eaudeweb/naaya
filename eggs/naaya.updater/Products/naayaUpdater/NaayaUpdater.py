@@ -43,6 +43,10 @@ class NaayaUpdater(Folder):
         )
 
     def __bobo_traverse__(self, REQUEST, key):
+        """ Overriding zope's traversal in order to display only the registered
+        update scripts
+
+        """
         if hasattr(self, key):
             return getattr(self, key)
 
@@ -95,15 +99,4 @@ class NaayaUpdater(Folder):
         root = self.getPhysicalRoot()
         return root.unrestrictedTraverse(ppath)
 
-    def getPortals(self, context=None, meta_types=None):
-        if context is None:
-            context = self.getPhysicalRoot()
-        res = []
-        for ob in context.objectValues():
-            if not INySite.providedBy(ob):
-                continue
-            if meta_types is not None and ob.meta_type not in meta_types:
-                continue
-            res.append(ob)
-            res.extend(self.getPortals(ob, meta_types))
-        return res
+
