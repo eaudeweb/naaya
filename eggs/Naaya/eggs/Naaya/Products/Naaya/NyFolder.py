@@ -1220,8 +1220,15 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/folder_manage_edit', globals())
 
-    security.declareProtected(view_management_screens, 'folder_manage_edit_html')
-    folder_manage_edit_html = manage_edit_html
+    security.declareProtected(view_management_screens,
+                              'folder_manage_edit_html')
+    def folder_manage_edit_html(self):
+        """ There are objects that subclass `NyFolder` which override
+        `manage_edit_html` but at the same time require slots of macros from
+        `folder_manage_edit.zpt` so this keeps a copy of the original template
+
+        """
+        return self.manage_edit_html
 
     security.declareProtected(view_management_screens, 'manage_folder_subobjects_html')
     manage_folder_subobjects_html = PageTemplateFile('zpt/folder_manage_subobjects', globals())
