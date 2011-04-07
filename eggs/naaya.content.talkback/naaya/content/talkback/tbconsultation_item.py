@@ -171,7 +171,7 @@ def addNyTalkBackConsultation(self,
         #process parameters
         if contributor is None:
             contributor = auth_user
-        if self.glCheckPermissionPublishObjects():
+        if self.checkPermissionSkipApproval():
             approved, approved_by = 1, auth_user
         else:
             approved, approved_by = 0, None
@@ -640,14 +640,18 @@ class NyTalkBackConsultation(NyRoleManager,
     index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
                                        'tbconsultation_index')
 
-    # header and footer templates are proxied since invited reviewers
-    # have "View" permission only in this folder; if the consultation
-    # is restricted, they would not be able to see consultation pages.
+    # standard_template_macro, header and footer templates are proxied
+    # since invited reviewers have "View" permission only in this folder;
+    # if the consultation is restricted, they would not be able to see
+    # consultation pages.
     def standard_html_header(self, *args, **kwargs):
         return self.aq_parent.standard_html_header(*args, **kwargs)
 
     def standard_html_footer(self, *args, **kwargs):
         return self.aq_parent.standard_html_footer(*args, **kwargs)
+
+    def standard_template_macro(self, *args, **kwargs):
+        return self.aq_parent.standard_template_macro(*args, **kwargs)
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
