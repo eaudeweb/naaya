@@ -21,14 +21,17 @@ $(document).ready(function(){
 })
 
 $(function () {
-    var top = parseFloat($('.survey-box').css('margin-top').replace(/auto/, 0));
-    $(window).scroll(function (event) {
-      var y = $(this).scrollTop();
+	if( $('.survey-box').is(':visible') == true ){
+		var top = parseFloat($('.survey-box').css('margin-top').replace(/auto/, 0));
+		$(window).scroll(function (event) {
+		  var y = $(this).scrollTop();
 
-      if (y >= (top - 20)) {
-        $('.survey-box').addClass('fixed');
-      } else {
-        $('.survey-box').removeClass('fixed');
-      }
-    }); 
+		  if (y >= (top - 20)) {
+			$('.survey-box').addClass('fixed');
+		  } else {
+			$('.survey-box').removeClass('fixed');
+		  }
+		}); 
+	}
+    
 });

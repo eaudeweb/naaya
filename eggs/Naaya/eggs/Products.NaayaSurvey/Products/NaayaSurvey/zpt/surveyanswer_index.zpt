@@ -25,7 +25,7 @@
                    user_anonymous python: request.AUTHENTICATED_USER.getUserName() == 'Anonymous User';
                    user_is_respondent python: request.AUTHENTICATED_USER.getUserName() == here.respondent;
 				   answer_is_approved python:here.get('approved_date');
-                   can_edit python: has_edit_permission or (not user_anonymous and user_is_respondent and not answer_is_approved);
+                   can_edit python: (has_edit_permission or (not user_anonymous and user_is_respondent and not answer_is_approved)) and not here.expired();
                    editing python: try_to_edit and can_edit;
                    editing_draft python: editing and here.is_draft();
                    editing_answer python: editing and not here.is_draft();
@@ -37,7 +37,7 @@
 			<metal:block use-macro="tmpl/macros/validate" />
 		</tal:block>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
-				tal:condition="python:here.checkPermissionAddAnswer() and not here.expired()">
+				tal:condition="here/checkPermissionAddAnswer">
 		<div class="survey-box">
 			<div class="survey-box-content">
 				<div class="survey-top-options">
@@ -101,6 +101,9 @@
 			</tal:block>
 			<p class="message-error" tal:condition="not: can_edit" i18n:translate="">
 				You don't have enough permissions to edit this survey answer!
+			</p>
+			<p class="message-error" tal:condition="here/expired" i18n:translate="">
+				The survey has expired!
 			</p>
 		</form>
 	</tal:block>
