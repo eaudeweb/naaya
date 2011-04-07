@@ -1,7 +1,7 @@
+<tal:block metal:define-macro="page">
+
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
-
-<span tal:replace="structure here/standard_html_header"/>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 <tr>
