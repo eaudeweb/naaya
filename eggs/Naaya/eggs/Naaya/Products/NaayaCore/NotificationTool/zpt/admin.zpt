@@ -312,7 +312,9 @@
 
 </tal:block>
 <!-- scripts -->
-<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+<tal:block define="tree_get_url string:${here/absolute_url}/sitemap">
+  <metal:block use-macro="here/macro_utils/macros/ajaxtree" />
+</tal:block>
 <script tal:content="python:('var notif_tool_url = %s' %
                      here.rstk.json_dumps(here.absolute_url()))"></script>
 <script>

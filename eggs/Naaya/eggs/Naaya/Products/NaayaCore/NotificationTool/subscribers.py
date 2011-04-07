@@ -74,7 +74,6 @@ def handle_object_edit(event):
     entry if the object is approved
 
     """
-
     ob = event.context
     portal = ob.getSite()
 

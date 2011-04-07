@@ -249,6 +249,19 @@ class NotificationsUnitTest(BaseNotificationsTest):
                 'instant [fol1/doc_a] portal'),
         ]))
 
+    def test_sitemap(self):
+        """ make sure sitemap returns the right stuff """
+
+        notif_tool = self.portal.getNotificationTool()
+        expected = [{'attributes': {'title': ''},
+         'children': [{'attributes': {'title': 'info'},
+                       'children': [],
+                       'data': {'icon': 'misc_/Naaya/NyFolder.gif',
+                                'title': 'Information'}}],
+         'data': {'title': 'portal', 'icon': 'misc_/Naaya/Site.gif'}}]
+        self.assertEqual(notif_tool._sitemap_dict({'node': ''}), expected)
+        self.assertEqual(notif_tool._sitemap_dict({'node': 'info'}), [])
+
 class NotificationsRestrictedUnitTest(BaseNotificationsTest):
     """ unit test for notifications on restricted objects """
 

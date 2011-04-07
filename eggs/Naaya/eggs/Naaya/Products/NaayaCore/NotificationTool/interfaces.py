@@ -60,6 +60,8 @@ class ISubscription(interface.Interface):
         """
 
 class ISubscriptionTarget(interface.Interface):
-    """
-    Marker interface - the object accepts subscriptions
+    """ Marker interface - a user can subscribe to this object.
+
+    Usually folders, message forums and portals
+
     """

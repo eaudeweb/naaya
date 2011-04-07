@@ -63,15 +63,15 @@ class SubscriptionTest(NaayaTestCase):
 
     def test_marker_interface(self):
         """
-        make sure the marker interface ISubscriptionTarget is
-        properly set on various classes
+        make sure the marker interface `ISubscriptionTarget`
+        is properly set on various classes
         """
 
         from Products.Naaya.NySite import NySite
         from naaya.content.document.document_item import NyDocument
         from naaya.content.url.url_item import NyURL
 
-        for cls in (NySite, NyFolder, NyDocument, NyURL):
+        for cls in (NySite, NyFolder):
             self.assertTrue(ISubscriptionTarget.implementedBy(cls),
                             "class %r does not accept subscriptions" % cls)
 
