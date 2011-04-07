@@ -1,5 +1,6 @@
 <tal:block define="global name_from_userid python:options['name_from_userid']" />
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <div class="floated-buttons">
     <span class="buttons">
@@ -81,4 +82,5 @@
 </tal:block>
 </dl>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>

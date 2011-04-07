@@ -57,7 +57,6 @@ class CommentsAdmin(SimpleItem):
                                       key=lambda c: c.comment_date):
                     yield comment
 
-    _comment_template = Paragraph.comments_html
     _admin_template = PageTemplateFile('zpt/comments_admin', globals())
 
     security.declarePublic('index_html')
@@ -96,7 +95,7 @@ class CommentsAdmin(SimpleItem):
             'anonymous_count': anonymous_count,
             'unapproved_count': len(unapproved),
             'unapproved_comments': grouped_unapproved,
-            'comment_macros': self._comment_template.macros,
+            'comment_macros': Paragraph.comments_html.macros,
         }
         return self._admin_template(REQUEST, **options)
 
