@@ -9,13 +9,12 @@ class SkipApprovalPermission(UpdateScript):
     creation_date = 'Feb 21, 2011'
 
     def _update(self, portal):
-        if portal.submit_unapproved:
-            # note: we leave the `submit_unapproved` flag in place, instead
-            # of cleaning it up, in case the update script is run several
-            # times.
-            self.log.info("Administrator submissions will remain unapproved.")
-        else:
-            permission_add_role(portal, PERMISSION_SKIP_APPROVAL,
-                                'Administrator')
-            self.log.info("Administrator will skip approval workflow.")
+        if not hasattr(portal.aq_base, 'submit_unapproved'):
+            self.log.info("submit_unapproved flag already updated.")
+            return True
+
+        value = portal.submit_unapproved
+        portal._set_submit_unapproved(value)
+        self.log.info("submit_unapproved flag set to %r" % value)
+        del portal.submit_unapproved
         return True

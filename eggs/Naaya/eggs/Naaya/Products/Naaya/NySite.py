@@ -215,7 +215,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
         self.show_releasedate = 1
-        self.submit_unapproved = 0
         self.rename_id = 0
         self.nyexp_schema = NYEXP_SCHEMA_LOCATION
         # Allow users to move current language content to another language.
@@ -315,6 +314,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
             notificationtool_ob = self.getNotificationTool()
+
+            # initially, nobody can skip approval process
+            self._set_submit_unapproved(True)
 
             #load security permissions and roles
             if skel_handler.root.security is not None:
@@ -564,8 +566,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     self.nyexp_schema = skel_handler.root.others.nyexp_schema.url
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
-                if skel_handler.root.others.submit_unapproved is not None:
-                    self.submit_unapproved = 1
                     self._p_changed = 1
         self.setDefaultSearchableContent()
         #load site skeleton - default content
@@ -2127,6 +2127,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_glossaries_html' % self.absolute_url())
 
 
+    def _set_submit_unapproved(self, submit_unapproved):
+        if submit_unapproved:
+            # permission will not be acquired and is granted to nobody
+            Permission(PERMISSION_SKIP_APPROVAL, (), self).setRoles(())
+        else:
+            permission_add_role(self, PERMISSION_SKIP_APPROVAL, 'Administrator')
+            permission_add_role(self, PERMISSION_SKIP_APPROVAL, 'Manager')
+
+    def get_submit_unapproved(self):
+        """ do administrators have the "skip approval" permission? """
+        roles = Permission(PERMISSION_SKIP_APPROVAL, (), self).getRoles()
+        return bool('Administrator' not in roles)
+
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, REQUEST=None, **kwargs):
@@ -2151,7 +2164,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.rdf_max_items          = kwargs.get('rdf_max_items', 10)
         self.show_releasedate       = kwargs.get('show_releasedate', 0) and 1 or 0
         self.rename_id              = kwargs.get('rename_id', 0) and 1 or 0
-        self.submit_unapproved      = kwargs.get('submit_unapproved', '') and 1 or 0
+        self._set_submit_unapproved(kwargs.get('submit_unapproved', ''))
         self.repository_url         = kwargs.get('repository_url', '')
         self.portal_url             = kwargs.get('portal_url', '')
         self.http_proxy             = kwargs.get('http_proxy', '')
