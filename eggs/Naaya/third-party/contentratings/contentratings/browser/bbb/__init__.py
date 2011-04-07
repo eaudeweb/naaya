@@ -13,7 +13,10 @@ except ImportError:
 from contentratings.interfaces import IEditorialRating
 from contentratings.interfaces import IUserRating
 from contentratings.interfaces import _
-from contentratings.browser.interfaces import IEditorialRatingView
+
+#from contentratings.browser.interfaces import IEditorialRatingView
+# TODO warning disabled, it's not likely to be fixed anytime soon
+from interfaces import IEditorialRatingView
 
 
 try:
