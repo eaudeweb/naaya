@@ -36,9 +36,11 @@
 
 <!-- normal page -->
 <metal:block define-macro="page"
-><tal:block content="structure here/standard_html_header" />
-<metal:block define-slot="page-content" />
-<tal:block content="structure here/standard_html_footer" />
+><metal:block use-macro="here/standard_template_macro">
+  <metal:block fill-slot="body">
+    <metal:block define-slot="page-content" />
+  </metal:block>
+</metal:block>
 </metal:block>
 
 
