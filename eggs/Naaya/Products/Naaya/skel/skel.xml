@@ -314,6 +314,10 @@
 			<permission name="WebDAV access" />
 		</role>
 
+		<role name="Manager">
+			<permission name="Naaya - Skip approval" />
+		</role>
+
 	</security>
 	<notification>
 		<newsmetatype meta_type="Naaya News" action="1"/>

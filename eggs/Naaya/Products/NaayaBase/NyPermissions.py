@@ -86,16 +86,7 @@ class NyPermissions:
     @deprecate('`glCheckPermissionPublishObjects` is deprecated. Use '
                '`checkPermissionSkipApproval` instead.')
     def glCheckPermissionPublishObjects(self):
-        """
-        B{Verifies the publishing policy: normally all users having the permission
-        I{Naaya - Publish content} or I{Naaya - Skip approval} have their
-        submissions published immediately while the rest of the users have to
-        wait for administrator's review.
-
-        In special cases this policy can be overwritten: based on the
-        I{submit_unapproved} property of each portal the
-        I{Naaya - Publish content} permission does not get auto-approval.
-        """
+        """ """
         return self.checkPermissionSkipApproval()
 
     def checkPermissionPublishDirect(self):
@@ -174,10 +165,7 @@ class NyPermissions:
         """
         Check the permission to skip Captcha testing
         """
-        if not self.submit_unapproved and self.checkPermissionPublishObjects():
-            return 1
-        else:
-            return self.checkPermission(PERMISSION_SKIP_APPROVAL)
+        return self.checkPermission(PERMISSION_SKIP_APPROVAL)
 
     security.declareProtected(PERMISSION_SKIP_CAPTCHA, 'skip_captcha')
     def skip_captcha(self):
