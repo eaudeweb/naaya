@@ -17,7 +17,7 @@ manage_addRemoteChannelForm = PageTemplateFile('zpt/remotechannel_manage_add', g
 def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='',
         automatic_translation_portlet='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNEL % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
     except: numbershownitems = 0

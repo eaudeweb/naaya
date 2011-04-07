@@ -14,7 +14,7 @@ from managers.links_manager import links_manager
 manage_addLinksListForm = PageTemplateFile('zpt/linkslist_add', globals())
 def manage_addLinksList(self, id='', title='', portlet='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_LINKSLIST % self.utGenRandomId(6)
     ob = LinksList(id, title)
     self._setObject(id, ob)

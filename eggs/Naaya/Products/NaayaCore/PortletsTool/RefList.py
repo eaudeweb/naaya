@@ -12,7 +12,7 @@ from managers.ref_manager import ref_manager
 manage_addRefListForm = PageTemplateFile('zpt/reflist_add', globals())
 def manage_addRefList(self, id='', title='', description='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REFLIST % self.utGenRandomId(6)
     ob = RefList(id, title, description)
     self._setObject(id, ob)
@@ -55,7 +55,7 @@ class RefList(SimpleItem, ref_manager):
     security.declareProtected(view_management_screens, 'manage_add_item')
     def manage_add_item(self, id='', title='', REQUEST=None):
         """ """
-        id = self.utCleanupId(id)
+        id = self.utSlugify(id)
         if not id: id = PREFIX_SUFIX_REFLISTITEM % self.utGenRandomId(6)
         self.add_item(id, title)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_items_html?save=ok')
