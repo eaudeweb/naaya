@@ -33,7 +33,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
-from naaya.core.utils import relative_object_path
+from naaya.core.zope2util import relative_object_path
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogIndexing
@@ -212,7 +212,7 @@ def addNyMeeting(self, id='', REQUEST=None, contributor=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/meeting_add_html' % self.absolute_url())
             return
 
-    if self.glCheckPermissionPublishObjects():
+    if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
@@ -447,8 +447,6 @@ class NyMeeting(NyContentData, NyFolder):
             self.approveThis(_approved, _approved_by)
 
         self._p_changed = 1
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -471,8 +469,6 @@ class NyMeeting(NyContentData, NyFolder):
         form_errors = self.meeting_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
-            if self.discussion: self.open_for_comments()
-            else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
             #log date
