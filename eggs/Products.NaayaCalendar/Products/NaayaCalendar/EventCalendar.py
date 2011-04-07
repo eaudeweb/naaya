@@ -31,6 +31,7 @@ import OFS
 from Globals import InitializeClass, package_home
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 import Products
 from DateTime import DateTime
@@ -61,8 +62,6 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     manage_options =((Folder.manage_options[0],) +
                      ({'label':'Properties',     'action':'manage_properties'},
                       {'label':'View',            'action':'index_html'},
-                      {'label':'Calendar style',  'action':'manage_style_calendar'},
-                      {'label':'Events style',    'action':'manage_style_events'},
                       {'label':'Calendar',        'action':'show_calendar'},
                       {'label':'Undo',            'action':'manage_UndoForm'},) +
                      (Folder.manage_options[3],))
@@ -289,6 +288,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     show_calendar = PageTemplateFile('zpt/index', globals())
 
     security.declarePublic('calendar_style')
-    calendar_style = PageTemplateFile('zpt/style_css', globals())
+    calendar_style = NaayaPageTemplateFile('zpt/style_css',
+                                globals(), 'calendar_style')
 
 InitializeClass(EventCalendar)
