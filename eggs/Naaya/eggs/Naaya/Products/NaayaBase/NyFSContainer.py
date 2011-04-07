@@ -1,6 +1,6 @@
-""" 
-This module contains the class that implements the Naaya file system 
-folder type of object. All types of objects that are file system containers 
+"""
+This module contains the class that implements the Naaya file system
+folder type of object. All types of objects that are file system containers
 must extend this class.
 """
 import zLOG
@@ -12,7 +12,7 @@ EXTFILE_INSTALLED = True
 try:
     from Products.ExtFile.ExtFile import manage_addExtFile
 except ImportError:
-    zLOG.LOG("NyFSContainer", zLOG.WARNING, 
+    zLOG.LOG("NyFSContainer", zLOG.WARNING,
              "ExtFile is not installed => all files will be stored in ZODB")
     EXTFILE_INSTALLED = False
 
@@ -31,7 +31,7 @@ class NyFSContainer(NyContainer):
     def update_data(self, data, content_type=None, size=None, filename=''):
         self.manage_delObjects(self.objectIds())
         filename = filename or 'attached-file'
-        id = self.utCleanupId(filename)
+        id = self.utSlugify(filename)
         child_id = self.manage_addFile(id)
         child = self._getOb(child_id)
         if getattr(data, 'index_html', None):
@@ -57,7 +57,7 @@ class NyFSContainer(NyContainer):
         return getattr(self, sid, None)
 
     def get_size(self, sid=None):
-        # Return size of file with provided id. If no id provided, 
+        # Return size of file with provided id. If no id provided,
         # returns size of the first object in container.
         attached_file = self._get_attached_file(sid)
         if not attached_file:

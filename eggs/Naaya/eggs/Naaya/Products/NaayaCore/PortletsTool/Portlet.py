@@ -15,7 +15,7 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 manage_addPortlet_html = PageTemplateFile('zpt/portlet_manage_add', globals())
 def addPortlet(self, id='', title='', portlettype='0', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_PORTLET + self.utGenRandomId(6)
     content_type = 'text/html'
     try: portlettype = abs(int(portlettype))

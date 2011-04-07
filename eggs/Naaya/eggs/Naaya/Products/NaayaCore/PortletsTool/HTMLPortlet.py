@@ -14,7 +14,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 manage_addHTMLPortlet_html = PageTemplateFile('zpt/htmlportlet_manage_add', globals())
 def addHTMLPortlet(self, id='', title='', body='', portlettype='0', lang=None, REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_PORTLET + self.utGenRandomId(6)
     content_type = 'text/html'
     try: portlettype = abs(int(portlettype))

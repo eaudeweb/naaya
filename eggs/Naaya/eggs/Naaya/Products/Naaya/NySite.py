@@ -123,7 +123,7 @@ manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
     """ """
     ut = utils()
-    id = ut.utCleanupId(id)
+    id = ut.utSlugify(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, NySite(id, portal_uid, title, lang))

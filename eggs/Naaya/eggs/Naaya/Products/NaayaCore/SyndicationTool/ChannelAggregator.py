@@ -10,10 +10,10 @@ from Products.NaayaCore.constants import *
 manage_addChannelAggregatorForm = PageTemplateFile('zpt/aggregator_manage_add', globals())
 def manage_addChannelAggregator(self, id='', title='', channels=[], portlet='', description='', REQUEST=None):
     """ """
-    
+
     channels = [ch for ch in channels if self.getSyndicationTool()._getOb(ch, None)]
-    
-    id = self.utCleanupId(id)
+
+    id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_CHANNELAGGREGATOR % self.utGenRandomId(6)
     ob = ChannelAggregator(id, title, channels, description)
     self._setObject(id, ob)
@@ -62,7 +62,7 @@ class ChannelAggregator(SimpleItem):
         self.title = title
         self.description = description
         self.channels = [ch for ch in channels if self.getSyndicationTool()._getOb(ch, None)]
-        
+
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html?save=ok')

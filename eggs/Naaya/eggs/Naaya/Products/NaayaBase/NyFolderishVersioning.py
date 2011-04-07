@@ -17,7 +17,7 @@ class NyFolderishVersioning:
         """ Add version by id (vid) if not exists or update existing one with
         given (v)data and keywords
         """
-        vid = self.utCleanupId(vdata.getId())
+        vid = self.utSlugify(vdata.getId())
         vdata.id = vid
         versions = self._get_versions_container()
         if vid not in versions.objectIds():

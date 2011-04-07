@@ -13,7 +13,7 @@ manage_addRemoteChannelFacadeForm = PageTemplateFile('zpt/remotechannelfacade_ma
 def manage_addRemoteChannelFacade(self, id='', title='', url='', providername='',
     location='', obtype='news', numbershownitems='', portlet='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNELFACADE % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
     except: numbershownitems = 0

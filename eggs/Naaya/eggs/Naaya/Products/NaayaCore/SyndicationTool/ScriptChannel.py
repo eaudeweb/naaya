@@ -14,7 +14,7 @@ manage_addScriptChannelForm = PageTemplateFile('zpt/scriptchannel_manage_add', g
 def manage_addScriptChannel(self, id='', title='', description='', language=None, type='',
     body='', numberofitems='', portlet='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if language is None: language = self.gl_get_selected_language()
     if not id: id = PREFIX_SUFIX_SCRIPTCHANNEL % (self.utGenRandomId(6), language)
     try: numberofitems = abs(int(numberofitems))
@@ -115,10 +115,10 @@ class ScriptChannel(PythonScript, utils):
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
         """ """
-        
+
         if feed == 'atom':
             return self.syndicateAtom(self, self.get_objects_for_rdf(), self.language)
-        
+
         s = self.getSite()
         lang = self.language
         if lang == 'auto':

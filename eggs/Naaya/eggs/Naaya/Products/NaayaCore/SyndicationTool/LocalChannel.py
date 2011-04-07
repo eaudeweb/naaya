@@ -14,7 +14,7 @@ manage_addLocalChannelForm = PageTemplateFile('zpt/localchannel_manage_add', glo
 def manage_addLocalChannel(self, id='', title='', description='', language=None, type='',
     objmetatype=[], numberofitems='', portlet='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
+    id = self.utSlugify(id)
     if language is None: language = self.gl_get_selected_language()
     if not id: id = PREFIX_SUFIX_LOCALCHANNEL % (self.utGenRandomId(6), language)
     objmetatype = self.utConvertToList(objmetatype)
@@ -109,10 +109,10 @@ class LocalChannel(SimpleItem, utils):
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
         """ """
-        
+
         if feed == 'atom':
             return self.syndicateAtom(self, self.get_objects_for_rdf(), self.language)
-        
+
         s = self.getSite()
         lang = self.language
         if lang == 'auto':
