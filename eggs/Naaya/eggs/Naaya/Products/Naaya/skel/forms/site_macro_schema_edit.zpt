@@ -5,7 +5,9 @@
 	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 	curr_lang_label python:here.get_language_name(curr_lang);
 ">
-<tal:block tal:replace="structure here/standard_html_header"/>
+
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
 
@@ -156,7 +158,10 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </metal:block>
 
 <tal:block define="schema_helper python:here.get_schema_helper()" content="schema_helper/del_schema_session_values" />
-<tal:block tal:replace="structure here/standard_html_footer"/>
+
+</metal:block>
+</metal:block>
+
 </metal:block>
 
 <!-- Macro for update from other version box -->

@@ -1,4 +1,5 @@
-<tal:block metal:define-macro="page">
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <span tal:replace="structure here/standard_html_header"/>
 
@@ -14,6 +15,7 @@
 </tr>
 </table>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
 
 </tal:block>

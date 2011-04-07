@@ -1,6 +1,7 @@
 <tal:block metal:define-macro="page">
 
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <tal:block tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
 
@@ -38,6 +39,7 @@
 
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
 
 </tal:block>

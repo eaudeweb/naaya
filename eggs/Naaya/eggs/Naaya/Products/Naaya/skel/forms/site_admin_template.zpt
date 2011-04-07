@@ -1,6 +1,8 @@
 <tal:block metal:define-macro="page">
 
-<span tal:replace="structure here/standard_html_header" />
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
 <script type="text/javascript"
 		tal:attributes="src string:${here/getSitePath}/misc_/Naaya/admin.js"></script>
 <div id="center_content" style="width: 78%; overflow-x: auto;">
@@ -24,6 +26,7 @@
 
 </div>
 
-<span tal:replace="structure here/standard_html_footer" />
+</metal:block>
+</metal:block>
 
 </tal:block>
