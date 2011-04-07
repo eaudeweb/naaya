@@ -13,7 +13,12 @@ Changelog
  * Fix: "Exception while rendering an error message".
  * Clean up NotificationTool. Subscribers now receive emails on zip/csv import.
  * Zip download now includes URLs as well.
- * New Glossary widget with fancy JavaScript UI.
+ * Naaya sites have a `LocalSiteManager`.
+ * `ActionLogger` remembers events in ZODB. Each site has one.
+ * New widget type, `IntervalWidget`.
+ * `NotificationTool` saves edit events in the action logger.
+ * Notifications can be disabled temporarily by admins for their own edits.
+ * New `GlossaryWidget` with jquery-ui.
 
 2.11.02 (2011-03-01)
 --------------------
