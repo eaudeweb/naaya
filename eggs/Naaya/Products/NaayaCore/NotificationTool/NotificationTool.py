@@ -37,6 +37,7 @@ from naaya.core.zope2util import folder_manage_main_plus
 from naaya.core.exceptions import i18n_exception
 
 from interfaces import ISubscriptionContainer
+from interfaces import ISubscriptionTarget
 from containers import (SubscriptionContainer, AccountSubscription,
                         AnonymousSubscription)
 import utils
@@ -144,6 +145,85 @@ class NotificationTool(Folder):
                         subscription.lang == kw['lang']):
                         raise i18n_exception(ValueError,
                                                  'Subscription already exists')
+
+    def _sitemap_dict(self, form):
+        """ Compose a sitemap dict """
+
+        node = form.get('node', '')
+        if not node or node == '/':
+            node = ''
+
+        def traverse(objects, level=0, stop_level=2, exclude_root=False):
+            """ Create a dict with node properties and children.
+            This is a fixed level recursion. On some sites there are a lot of
+            objects so we don't need to get the whole tree.
+
+            """
+
+            res = []
+            for ob in objects:
+                if ISubscriptionTarget.providedBy(ob) is False:
+                    continue
+                children_objects = []
+                if level != stop_level: #Stop if the level is reached
+                    #Create a list of object's children
+                    if hasattr(ob, 'objectValues'):
+                        #Get only naaya container objects
+                        for child in ob.objectValues(
+                            self.get_naaya_containers_metatypes()):
+                            #Skip unsubmited/unapproved
+                            if not getattr(child, 'approved', False):
+                                continue
+                            elif not getattr(child, 'submitted', False):
+                                continue
+                            else:
+                                children_objects.append(child)
+
+                if hasattr(ob, 'approved'):
+                    icon = ob.approved and ob.icon or ob.icon_marked
+                else:
+                    icon = ob.icon
+
+                children = traverse(children_objects, level+1, stop_level)
+
+                if exclude_root: #Return only the children if this is set
+                    return children
+
+                res.append({
+                    'data': {
+                        'title': self.utStrEscapeHTMLTags(
+                            self.utToUtf8(ob.title_or_id())),
+                        'icon': icon
+                    },
+                    'attributes': {
+                        'title': path_in_site(ob)
+                    },
+                    'children': children
+                })
+            return res
+
+        if node == '':
+            tree_dict = traverse([self.getSite()])
+        else:
+            tree_dict = traverse([self.restrictedTraverse(node)],
+                exclude_root=True)
+        return tree_dict
+
+    security.declarePublic('sitemap')
+    def sitemap(self, REQUEST=None, **kw):
+        """ Return a json (for Ajax tree) representation of published objects
+        marked with `ISubscriptionTarget` including the portal organized in a
+        tree (sitemap)
+
+        """
+        
+        form = {}
+        if REQUEST is not None:
+            form = REQUEST.form
+            REQUEST.RESPONSE.setHeader('content-type', 'application/json')
+        else:
+            form.update(kw)
+        return json.dumps(self._sitemap_dict(form))
 
     security.declarePrivate('add_account_subscription')
     def add_account_subscription(self, user_id, location, notif_type, lang):

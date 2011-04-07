@@ -37,14 +37,14 @@
     name="portlet_notifications"
     />
 
+  <adapter
+    factory=".containers.subscription_container_factory" />
+
   <class class="Products.Naaya.NySite.NySite">
     <implements interface=".interfaces.ISubscriptionTarget" />
   </class>
 
-  <adapter
-    factory=".containers.subscription_container_factory" />
-
-  <class class="Products.NaayaBase.NyContentType.NyContentType">
+  <class class="Products.Naaya.NyFolder.NyFolder">
     <implements interface=".interfaces.ISubscriptionTarget" />
   </class>
 

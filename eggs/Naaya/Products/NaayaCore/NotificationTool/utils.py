@@ -37,18 +37,19 @@ def fetch_subscriptions(obj, inherit):
     Get subscriptions on `obj`. If `inherit` is True then recurse
     into parents, up to site level.
     """
+
     try:
         sc = ISubscriptionContainer(obj)
+        for subscription in sc:
+            yield subscription
     except TypeError:
-        # we probably went below site level; bail out.
-        return
-
-    for subscription in sc:
-        yield subscription
+        pass
 
     if inherit:
-        for subscription in fetch_subscriptions(obj.aq_parent, inherit=True):
-            yield subscription
+        if hasattr(obj, 'aq_parent'):
+            for subscription in fetch_subscriptions(obj.aq_parent,
+                                                    inherit=True):
+                yield subscription
 
 def walk_subscriptions(obj):
     """

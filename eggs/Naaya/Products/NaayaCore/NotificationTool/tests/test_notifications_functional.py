@@ -21,7 +21,7 @@ class NotificationsTest(NaayaFunctionalTestCase):
             title='Notifying document', submitted=1, contributor='contributor')
         self.portal.notifol.notidoc.approved = True # Approve this document
 
-        _notif = self.portal.portal_notification
+        _notif = self.portal.getNotificationTool()
         self._original_config = dict(_notif.config)
         _notif.config['enable_instant'] = True
         _notif.config['enable_daily'] = True
@@ -62,7 +62,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
-        test_notification = self._fetch_test_notifications()[0]
+        notifications = self._fetch_test_notifications()
+        self.assertEqual(len(notifications), 1)
+        test_notification = notifications[0]
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
         assert test_notification[2] == u'Change notification - Notifying document'
@@ -108,16 +110,12 @@ class NotificationsTest(NaayaFunctionalTestCase):
         # has "rename" permissions
         notif = self.portal.portal_notification
         notif.add_account_subscription('user1', 'notifol', 'instant', 'en')
-        notif.add_account_subscription('user2',
-                                       'notifol/notidoc', 'weekly', 'en')
 
         def subscr():
             return set((path_in_site(obj), sub.notif_type, sub.user_id) for
                         obj, n, sub in walk_subscriptions(self.portal))
 
-        self.assertEqual(subscr(),
-                         set([ ('notifol', 'instant', 'user1'),
-                               ('notifol/notidoc', 'weekly', 'user2') ]))
+        self.assertEqual(subscr(), set([('notifol', 'instant', 'user1')]))
         transaction.commit()
 
         # rename the folder using ZMI
@@ -136,17 +134,14 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
         # done renaming the folder using ZMI
 
-        self.assertEqual(subscr(),
-                         set([ ('newname', 'instant', 'user1'),
-                               ('newname/notidoc', 'weekly', 'user2') ]))
+        self.assertEqual(subscr(),set([('newname', 'instant', 'user1')]))
 
         notif.remove_account_subscription('user1', 'newname', 'instant', 'en')
-        notif.remove_account_subscription('user2',
-                                          'newname/notidoc', 'weekly', 'en')
 
         # do our own cleanup, since we renamed the folder
         self.portal.manage_delObjects(['newname'])
-        addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
+        addNyFolder(self.portal, 'notifol', contributor='contributor',
+                    submitted=1)
         transaction.commit()
 
     def test_custom_mail_template(self):
@@ -172,9 +167,10 @@ class NotificationsTest(NaayaFunctionalTestCase):
 
             self.browser_do_logout()
 
-
         change_title('some new title')
-        test_notification = self._fetch_test_notifications()[0]
+        notifications = self._fetch_test_notifications()
+        self.assertTrue(len(notifications) > 0)
+        test_notification = notifications[0]
 
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
@@ -191,7 +187,9 @@ class NotificationsTest(NaayaFunctionalTestCase):
         transaction.commit()
 
         change_title('some other new title')
-        test_notification = self._fetch_test_notifications()[0]
+        notifications = self._fetch_test_notifications()
+        self.assertTrue(len(notifications) > 0)
+        test_notification = notifications[0]
         assert test_notification[0] == 'from.zope@example.com'
         assert test_notification[1] == 'user1@example.com'
         assert test_notification[2] == u'i can haz changez on Notifying document'
