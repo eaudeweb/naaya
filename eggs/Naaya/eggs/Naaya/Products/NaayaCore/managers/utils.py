@@ -51,7 +51,8 @@ def genObjectId(s, num_chars=80, removelist=None):
     NOTE: this implementation corresponds to the Python implementation
           of the same algorithm in django/contrib/admin/media/js/urlify.js
     '''
-    warn('genObjectId is deprecated. Use slugify(s) instead')
+    warn('genObjectId is deprecated. Use slugify(s) instead',
+         DeprecationWarning, stacklevel=2)
     return slugify(s,num_chars,removelist)
 
 def toAscii(s):
@@ -115,7 +116,8 @@ def cleanupId(p_id=''):
     DEPRECATED! Use  Use slugify(s)
     Slugifies/cleanups an id considered correctly formed in the begining
     """
-    warn('cleanupId is deprecated. Use slugify(s) instead')
+    warn('cleanupId is deprecated. Use slugify(s) instead',
+         DeprecationWarning, stacklevel=2)
     return slugify(p_id,1000,[])
 
 def uniqueId(id,exists):
@@ -424,11 +426,11 @@ class utils:
             orphans = num_per_page * 20 / 100 # 20 %
         return ObjectPaginator(objects_list, num_per_page, orphans)
 
-    def utGenObjectId(self, *args, **kw):
-        """DEPRECATED! Use utSlugify(s)
-        See the genObjectId function"""
-        warn('utGenObjectId is deprecated. Use utSlugify(s) instead')
-        return genObjectId(*args, **kw)
+    def utGenObjectId(self, s, num_chars=80, removelist=None):
+        """ deprecated, use utSlugify instead """
+        warn('utGenObjectId is deprecated. Use utSlugify(s) instead',
+             DeprecationWarning, stacklevel=2)
+        return slugify(s,num_chars,removelist)
 
     def toAscii(self, *args, **kw):
         """ toAscii job now done by unidecode module"""
@@ -458,11 +460,12 @@ class utils:
         if p_string == '': p_string = '%s%s' % (time.time(), self.utGenRandomId())
         return md5.new(p_string).hexdigest()
 
-    def utCleanupId(self, *args, **kw):
+    def utCleanupId(self, p_id=''):
         """DEPRECATED! Use utSlugify(s)
         See the cleanupId function"""
-        warn('utCleanupId is deprecated. Use utSlugify(s) instead')
-        return cleanupId(*args, **kw)
+        warn('utCleanupId is deprecated. Use utSlugify(s) instead',
+             DeprecationWarning, stacklevel=2)
+        return slugify(p_id,1000,[])
 
     def utSlugify(self, *args, **kw):
         """See slugify function"""
