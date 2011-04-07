@@ -139,7 +139,6 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
@@ -302,8 +301,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         for ver_id in versions_to_remove:
             self.remove_version(int(ver_id) - 1, contributor)
 
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         #log date
@@ -347,8 +344,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         for ver_id in versions_to_remove:
             self.remove_version(int(ver_id) - 1, user)
 
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
