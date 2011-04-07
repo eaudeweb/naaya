@@ -210,7 +210,8 @@ class NyCommentable:
     def is_open_for_comments(self):
         return self.discussion
         warn('Function `is_open_for_comments` is deprecated. NyCommentable reads '
-             'the `discussion` property directly')
+             'the `discussion` property directly',
+             DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('open_for_comments')
     def open_for_comments(self):
@@ -218,7 +219,8 @@ class NyCommentable:
         Enable(open) comments.
         """
         warn('Function `open_for_comments` is deprecated. NyCommentable reads '
-             'the `discussion` property directly')
+             'the `discussion` property directly',
+             DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('close_for_comments')
     def close_for_comments(self):
@@ -226,7 +228,8 @@ class NyCommentable:
         Disable(close) comments.
         """
         warn('Function `close_for_comments` is deprecated. NyCommentable reads '
-             'the `discussion` property directly')
+             'the `discussion` property directly',
+             DeprecationWarning, stacklevel=2)
 
     security.declarePrivate('export_comments')
     def export_comments(self):
