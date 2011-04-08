@@ -10,28 +10,35 @@ setup(name='Naaya',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'naaya.flowplayer',
-          'naaya.content-compat',
-          'contentratings',
-          'Products.TextIndexNG3 >= 3.2.11',
+          #Python 3rd party
+          'feedparser >= 4.1',
+          'gdata >= 2.0.5',
           'itools == 0.20.6',
               # for Windows, download and install DLLs from
               # http://naaya.eaudeweb.ro/eggshop/glib-dlls.zip
-          'feedparser >= 4.1',
-          'BeautifulSoup >= 3.0.7a',
           'lxml',
+          'BeautifulSoup',
+          'mimeparse >= 0.1.2',
           'simplejson >= 2.0.9',
           'vobject >= 0.8.1c',
-          'gdata >= 2.0.5',
-          'mimeparse >= 0.1.2',
-          'python-dateutil',
+          'Unidecode',
+
+          #Zope
+          'contentratings',
+          'Products.TextIndexNG3 >= 3.2.11',
+
+          #Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
           'edw-localizer >= 1.2.3.3',
           'edw-extfile >= 2.0.2-edw1',
-          'Unidecode',
 
-          # only used for testing:
-          'twill >= 0.9',
-          'WebOb',
+          #Naaya specific
+          'naaya.content-compat',
+          'naaya.flowplayer',
+
+          #Testing
+          
+          # 'twill',
+          # 'WebOb',
       ]
 )
