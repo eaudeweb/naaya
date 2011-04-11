@@ -117,10 +117,9 @@ function add_value(term, skip_animation) {
             var x_link = $('<a>').attr('href', 'javascript:;');
             x_link.append($("<img>").attr({
                 src: WWW_URL + "cross.gif",
-                class: 'tick-image icon-image',
                 title:'Remove',
                 alt: '[x]'
-            }));
+            })).addClass('tick-image icon-image');
             x_link.click(function(){
                 var item = $(this).parent();
                 text_content.css('backgroundColor', '#f88');
@@ -184,17 +183,9 @@ function load_tree(tree_container, tree_buttons_div) {
                 our_tree_obj = tree_obj; // easiest way to get tree object
             },
             onselect: function(node, tree_obj) {
-                var node_type = $(node).attr('type');
                 var node_value = $(node).attr('glossary-translation');
                 if(! node_value) return;
-
-                if(node_type == 'element') {
-                    add_value(node_value);
-                }
-
-                if(node_type == 'folder' && options['select_folders']) {
-                    add_value(node_value);
-                }
+                add_value(node_value);
             }
         },
         types : {
