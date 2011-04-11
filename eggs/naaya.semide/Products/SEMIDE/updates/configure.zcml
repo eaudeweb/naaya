@@ -5,9 +5,9 @@
 
   <configure zcml:condition="installed Products.naayaUpdater">
 	<utility
-		name="working_langs.update"
+		name="update_glossaries.update"
 		provides="Products.naayaUpdater.interfaces.IUpdateScript"
-		component=".update_workinglangs.UpdateWorkingLangs"
+		component=".update_glossaries.UpdateGlossaries"
 		permission="zope2.ViewManagementScreens" />
   </configure>
 
