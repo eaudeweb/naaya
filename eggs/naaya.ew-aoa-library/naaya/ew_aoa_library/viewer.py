@@ -280,6 +280,8 @@ class AoALibraryViewer(SimpleItem):
         elif REQUEST.form.has_key('library'):
             library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
             report = library.getSurveyTemplate().getReport('viewer')
+        else:
+            report = None
 
         if not report:
             raise NotFound('Report %s' % ('viewer',))
