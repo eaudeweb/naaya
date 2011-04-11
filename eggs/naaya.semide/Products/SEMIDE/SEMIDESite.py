@@ -86,7 +86,7 @@ manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
     """ """
     ut = utils()
-    id = ut.utCleanupId(id)
+    id = ut.utSlugify(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, SEMIDESite(id, portal_uid, title, lang))
