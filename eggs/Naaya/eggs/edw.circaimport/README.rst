@@ -36,3 +36,22 @@ folder where you want to import the files (say ``my/import/folder``) and
 access the url ``/import_from_circa_html`` in that folder::
 
     http://forum.eionet.europa.eu/my/import/folder/import_from_circa_html
+
+You manually export roles from CIRCA using the "IG save" method. This generates
+an archive (e.g. ``eea-eval.tgz`` or ``cca.tgz``). Move the file to the folder
+you specified above in ZCML.
+
+When the archives are ready, open the forum website and navigate to the IG
+where you want to import the roles and access the URL
+``/import_roles_from_circa`` in that IG::
+
+    http://forum.eionet.europa.eu/my/import/IG/import_roles_from_circa
+
+You can also manually extract the ``.ldif`` file in the same folder (the one
+specified above in the ZCML) and import it the same way.
+
+When importing the roles you need to specify the LDAP source title. This is the
+source where the import script will search the users. The has to be available
+in that IG (in ``Users management`` page from the administration). The title
+of every source is shown in the ``Users management`` page (e.g. the tab name
+for each source is ``%%source_title%% USERS``)
