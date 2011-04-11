@@ -15,4 +15,11 @@
       permission="zope2.ViewManagementScreens"
       />
 
+  <browser:page
+      for="Products.Naaya.interfaces.INySite"
+      name="import_roles_from_circa"
+      class=".ui.ImportRolesFromCirca"
+      permission="zope2.ViewManagementScreens"
+      />
+
 </configure>
