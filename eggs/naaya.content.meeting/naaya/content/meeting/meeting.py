@@ -628,7 +628,8 @@ class NyMeetingIndexing(object):
     def __getattr__(self, name):
         if name in ('start_date', 'end_date'):
             d = getattr(self.context.interval, name)
-            return DateTime(d.year, d.month, d.day)
+            return DateTime(d.year, d.month, d.day,
+                            d.hour, d.minute, d.second)
         else:
             return getattr(self.context, name)
 
