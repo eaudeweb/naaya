@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.6 (2011-04-12)
+1.2.7 (2011-04-12)
 --------------------
  * h:m:s doesn't match date index lookup for calendar, strip it
 
