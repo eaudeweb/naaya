@@ -3,6 +3,10 @@ Changelog
 
 1.2.6 (2011-04-12)
 --------------------
+ * h:m:s doesn't match date index lookup for calendar, strip it
+
+1.2.6 (2011-04-12)
+--------------------
  * Indexing Adapter does not strip h:m:s (safer this way)
 
 1.2.5 (2011-04-06)
