@@ -21,6 +21,8 @@ __version__='$Revision: 1.38 $'[11:-2]
 # python imports
 from os.path import join
 import calendar
+from datetime import datetime
+import time
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -125,8 +127,6 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         items = {}
         for date in dates:
             for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
-                start_date_attr = catalog.Indexes[interval_idx].getSinceField()
-                end_date_attr = catalog.Indexes[interval_idx].getUntilField()
                 for brain in catalog({'meta_type': meta_type,
                                       interval_idx: date}):
                     path = brain.getPath()
@@ -135,14 +135,15 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                     items[path] = None
                     event = brain.getObject()
                     if evalPredicate(predicate, event):
-                        # TODO: refactor this callable thing with some code from TAL (PageTemplates)
-                        start_date = getattr(event, start_date_attr)
-                        if callable(start_date):
-                            start_date = start_date()
-                        end_date = getattr(event, end_date_attr)
-                        if callable(end_date):
-                            end_date = end_date()
-                        events.append((event, self.getDate(start_date), self.getDate(end_date)))
+                        # get start_date/end_date from cat. index, not from obj
+                        rid = brain.getRID()
+                        # dates are stored in index as minutes since 1st jan 70
+                        (start_minutes, end_minutes) = \
+                          catalog._catalog.getIndexDataForRID(rid)[interval_idx]
+                        start_date = datetime.fromtimestamp(start_minutes * 60)
+                        end_date = datetime.fromtimestamp(end_minutes * 60)
+                        events.append((event, self.getDate(start_date),
+                                       self.getDate(end_date)))
 
         return events
 
@@ -156,8 +157,6 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             date = DateTime(year, month, day)
             brains_by_day[day] = []
             for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
-                start_date_attr = catalog.Indexes[interval_idx].getSinceField()
-                end_date_attr = catalog.Indexes[interval_idx].getUntilField()
                 brains_by_day[day].extend(catalog({'meta_type': meta_type,
                                                    interval_idx: date}))
 
