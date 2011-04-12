@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.6 (2011-04-12)
+--------------------
+ * Indexing Adapter does not strip h:m:s (safer this way)
+
 1.2.5 (2011-04-06)
 --------------------
  * Adapter to allow catalogObject to access interval's start_date and end_date
