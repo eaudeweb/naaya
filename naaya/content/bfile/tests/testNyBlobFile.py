@@ -115,7 +115,7 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         ret = bf.send_data(response, REQUEST=request)
         self.assertEqual(ret, "[body should be replaced by front-end server]")
         self.assertEqual(response.headers.get('X-Sendfile'),
-                         bf._blob._current_filename())
+                         bf._current_filename())
 
 
 

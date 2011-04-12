@@ -2,6 +2,7 @@
 import urllib
 
 from ZODB.blob import Blob
+from ZODB.interfaces import BlobError
 from Persistence import Persistent
 from ZPublisher.Iterators import filestream_iterator
 from zope.interface import implements
@@ -59,14 +60,20 @@ class NyBlobFile(Persistent):
         if REQUEST is not None:
             ny_xsendfile = REQUEST.get_header("X-NaayaEnableSendfile")
             if ny_xsendfile is not None and ny_xsendfile=="on":
-                RESPONSE.setHeader("X-Sendfile",
-                                   self._blob._current_filename())
+                RESPONSE.setHeader("X-Sendfile", self._current_filename())
                 return "[body should be replaced by front-end server]"
 
         if hasattr(RESPONSE, '_streaming'):
             return self.open_iterator()
         else:
             return self.open().read()
+
+    def _current_filename(self):
+        """ Convenience function that returns blob's filename """
+        try:
+            return self._blob.committed()
+        except BlobError:
+            return self._blob._p_blob_uncommitted
 
     def __repr__(self):
         return '<%(cls)s %(fname)r (%(mime)s, %(size)r bytes)>' % {
