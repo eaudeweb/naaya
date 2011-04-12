@@ -288,7 +288,7 @@ class ExportTool(Implicit, Item):
 
         return self.generate_csv(dump_header, dump_items)
 
-    security.declarePrivate('generate_csv_output')
+    security.declarePrivate('generate_csv')
     def generate_csv(self, header, rows):
 
         output = StringIO()
