@@ -73,7 +73,7 @@ class EmailTool(Folder):
         if self.portal_url != '':
             return 'notifications@%s' % urlparse(self.getSite().get_portal_domain())[1]
         else:
-            return 'notifications@%s' % self.REQUEST.SERVER_NAME
+            return 'notifications@%s' % urlparse(self.REQUEST.SERVER_URL)[1]
 
     def _get_from_address(self):
         addr_from = self.getSite().mail_address_from
