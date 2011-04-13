@@ -1,9 +1,13 @@
 # Python imports
 from datetime import datetime
+from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass
 
 
 class Interval(tuple):
     """ Immutable type representing two datetime intervals and all_day option"""
+
+    security = ClassSecurityInfo()
 
     def __new__(cls, start_date=None, start_time = None, end_date=None,
                 end_time = None, all_day=False):
@@ -37,14 +41,17 @@ class Interval(tuple):
         return tuple.__new__(cls, (start_date, end_date, all_day))
 
 
+    security.declarePublic('start_date')
     @property
     def start_date(self):
         return self[0]
 
+    security.declarePublic('end_date')
     @property
     def end_date(self):
         return self[1]
 
+    security.declarePublic('all_day')
     @property
     def all_day(self):
         return self[2]
@@ -60,3 +67,5 @@ class Interval(tuple):
         return ("Interval:[%(start_date)s, %(start_time)s - "
                 "%(end_date)s, %(end_time)s; All day: %(all_day)s]"
                 % data)
+
+InitializeClass(Interval)
