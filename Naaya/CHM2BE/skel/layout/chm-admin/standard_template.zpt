@@ -9,6 +9,7 @@
 
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style_common" />
             <style type="text/css" media="screen">@import "http://www.biodiv.be/php/dev/reset.css";</style>
+            <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${site_url}/www/js/css/jquery-ui.css" />
             <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/administration" />
             <script tal:condition="is_admin" type="text/javascript" src="http://www.biodiv.be/php/biodiv/admin.js"></script>
 
