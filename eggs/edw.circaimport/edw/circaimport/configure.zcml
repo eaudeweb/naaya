@@ -22,4 +22,11 @@
       permission="zope2.ViewManagementScreens"
       />
 
+  <browser:page
+      for="Products.Naaya.interfaces.INySite"
+      name="import_notifications_from_circa"
+      class=".ui.ImportNotificationsFromCirca"
+      permission="zope2.ViewManagementScreens"
+      />
+
 </configure>

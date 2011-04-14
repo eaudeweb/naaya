@@ -24,8 +24,8 @@ Add a ZCML configuration entry to specify where CIRCA Zip files will be found
     </configure>
 
 
-Usage
------
+Folders export & import
+-----------------------
 You manually export folders from CIRCA using the "save" button. The "download"
 button, next to it, does not save enough information. This produces a file
 named ``download.zip``. Give it a more appropriate name and move it to the
@@ -37,6 +37,8 @@ access the url ``/import_from_circa_html`` in that folder::
 
     http://forum.eionet.europa.eu/my/import/folder/import_from_circa_html
 
+Roles export & import
+---------------------
 You manually export roles from CIRCA using the "IG save" method. This generates
 an archive (e.g. ``eea-eval.tgz`` or ``cca.tgz``). Move the file to the folder
 you specified above in ZCML.
@@ -55,3 +57,28 @@ source where the import script will search the users. The has to be available
 in that IG (in ``Users management`` page from the administration). The title
 of every source is shown in the ``Users management`` page (e.g. the tab name
 for each source is ``%%source_title%% USERS``)
+
+Notifications export & import
+-----------------------------
+You need to be able to login to dodo as circa21 to be able to export the
+notification information. The Berkley DB files (version 3.x - internally called
+version 5) are kept per interest group, e.g. for the ``scp`` IG::
+
+    /opt/circa21/www/data/eionet-circle/scp/library/
+
+Both ``usernotification.db`` and ``itemnotification.db`` contain the information,
+but we use the 'usernotification.db'. You need to copy it to a workarea.
+
+Logged in as circa21 you need to run the ``/opt/circa21/bin/db2gdbm.pl`` script
+on the ``usernotification.db``. It will convert it to GDBM. Then you need to
+run the ``gdbm_extract.py`` script on the ``usernotification.gdbm`` file.
+You can find the script in the home directory of circa21 or in the
+``edw.circaimport`` in svn (not all python versions/installations support GDBM).
+
+Move the ``.csv`` file to the folder you specified above in ZCML.
+
+When the archives are ready, open the forum website and navigate to the IG
+where you want to import the roles and access the URL
+``/import_roles_from_circa`` in that IG::
+
+    http://forum.eionet.europa.eu/my/import/IG/import_notifications_from_circa
