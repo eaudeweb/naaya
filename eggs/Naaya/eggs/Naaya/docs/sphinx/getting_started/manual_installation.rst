@@ -1,23 +1,13 @@
-Installing Naaya
-================
-
-.. toctree::
-
-    buildout
-    buildout_windows
-
-The recommended way to install Naaya is via `buildout`, see the README_ for a
-quick guide. For Windows, see :doc:`buildout_windows`. If you prefer manual
-installation, read on.
-
-.. _README: https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/README.rst
-
 Manual installation
--------------------
+====================
+
+.. deprecated:: 2.11.03
+    This document is outdated and will most likely not work.
 
 So you don't like `buildout` and want to install Naaya manually. Here's a
 step-by-step guide, using `virtualenv`_. It assumes you already have a
-working Python and Zope 2.10, with `PIL` and `virtualenv` installed.
+working python (=>2.4 or <=2.6) and Zope (=>2.10.9 or =<2.12.17),
+with `PIL` and `virtualenv` installed.
 
 Create a virtualenv and activate it, then set up a new Zope instance using
 the python binary from the virtualenv::
@@ -35,6 +25,8 @@ Install some dependencies from our package server::
     svn checkout http://svn.eionet.europa.eu/repositories/Naaya/trunk/Naaya/Third-Party%20Products/Captcha
     cd ../../..
 
+Development mode
+----------------
 Check out and install the Naaya package in development mode::
 
     mkdir src

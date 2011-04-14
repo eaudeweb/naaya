@@ -67,10 +67,11 @@ def slugify(s, maxlen=80, removelist=None):
     You can use the returned value as a param for uniqueId(id,exists)
     to get an available valid id in context.
 
-     * `s`: unicode string. However, if a `str` is provided,
-     it's decoded to `unicode` using the "ascii" encoding.
-     * `maxlen`: maximum length of string
-     * `removelist`: list of words to be removed from id.
+      * `s`: unicode string. However, if a `str` is provided,
+        it's decoded to `unicode` using the "ascii" encoding.
+      * `maxlen`: maximum length of string
+      * `removelist`: list of words to be removed from id.
+
     If None, a common En. wordlist will be used (default_remove_words)
 
     Uses unidecode, converts group of spaces/unacceptable chars
