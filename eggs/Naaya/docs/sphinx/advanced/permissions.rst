@@ -1,4 +1,4 @@
-naaya.core.permissions
+Core Permissions
 ======================
 
 .. automodule:: naaya.core.permissions

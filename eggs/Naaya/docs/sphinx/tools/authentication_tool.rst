@@ -1,4 +1,4 @@
-Authentication Tool
+Authentication tool
 ===================
 
 .. automodule:: Products.NaayaCore.AuthenticationTool.AuthenticationTool
@@ -46,5 +46,4 @@ Authentication Tool
    :members:
      admin_adduser,
      admin_edituser,
-     admin_roles,
      admin_addroles

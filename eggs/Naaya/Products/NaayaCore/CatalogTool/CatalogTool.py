@@ -1,6 +1,8 @@
 """
 This tool is a wrapper around Products.ZCatalog. On initialization it creates
-the required indexes and metadata an offers a few management utilities.
+the required indexes and metadata and offers a few convenience and
+maintenance functionalities such as catalog rebuilding and missing objects
+reporting.
 
 """
 

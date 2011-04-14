@@ -1,7 +1,6 @@
 Naaya site
 ==========
 
-
 Layout of a Naaya site
 ----------------------
 

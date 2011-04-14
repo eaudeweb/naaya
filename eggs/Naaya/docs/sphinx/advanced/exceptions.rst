@@ -1,4 +1,4 @@
-naaya.core.permissions
+Core exceptions
 ======================
 
 .. automodule:: naaya.core.exceptions

@@ -1,4 +1,3 @@
-import os
 from setuptools import setup, find_packages
 
 setup(name='Naaya',
@@ -6,6 +5,22 @@ setup(name='Naaya',
       author='Eau de Web',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
+      description = "Naaya is a content management system based on Zope2",
+      keywords = "example documentation tutorial",
+      platforms=['OS Independent'],
+      classifiers = [
+            'Development Status :: 5 - Production/Stable'
+            'Environment :: Web Environment',
+            'Framework :: Zope2',
+            'Intended Audience :: Developers',
+            'License :: OSI Approved :: Mozilla Public License 1.1 (MPL 1.1)',
+            'Operating System :: OS Independent',
+            'Programming Language :: Python',
+            'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+            'Topic :: Software Development',
+            'Topic :: Software Development :: Libraries :: Application Frameworks',
+      ],
+
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
@@ -13,7 +28,7 @@ setup(name='Naaya',
           #Python 3rd party
           'feedparser >= 4.1',
           'gdata >= 2.0.5',
-          'itools == 0.20.6',
+          'itools',
               # for Windows, download and install DLLs from
               # http://naaya.eaudeweb.ro/eggshop/glib-dlls.zip
           'lxml',
@@ -26,6 +41,9 @@ setup(name='Naaya',
           #Zope
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
+          'zope.app.i18n',
+          'zope.app.zapi',
+          'zope.app.container',
 
           #Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
@@ -37,7 +55,6 @@ setup(name='Naaya',
           'naaya.flowplayer',
 
           #Testing
-          
           # 'twill',
           # 'WebOb',
       ]

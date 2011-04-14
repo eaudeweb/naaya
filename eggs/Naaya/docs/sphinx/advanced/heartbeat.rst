@@ -1,4 +1,4 @@
-naaya.core.heartbeat
+Heartbeat (cron)
 ====================
 
 .. automodule:: naaya.core.heartbeat
