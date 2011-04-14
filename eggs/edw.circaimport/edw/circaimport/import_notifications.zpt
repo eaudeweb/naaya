@@ -1,0 +1,44 @@
+<metal:block use-macro="here/standard_template_macro">
+  <metal:block fill-slot="body">
+    <h1>Import notifications from CIRCA</h1>
+    <form tal:attributes="action string:${here/absolute_url}/import_notifications_from_circa"
+          method="post">
+      <label>Filename <input name="filename"/></label><br/>
+      <input type="submit" value="Import" />
+    </form>
+    <tal:block condition="options/errors|nothing">
+    <h2>Import from CIRCA - errors</h2>
+    <ul>
+        <tal:block repeat="error options/errors">
+        <li tal:content="error"/>
+        </tal:block>
+    </ul>
+    </tal:block>
+    <tal:block condition="options/not_matched|nothing">
+    <h2>Import from CIRCA - users not matched</h2>
+    <table tal:define="not_matched options/not_matched">
+        <tr><th>User</th><th>Paths</th></tr>
+        <tal:block repeat="user not_matched/keys">
+        <tr>
+            <td tal:content="user"/>
+            <td tal:content="python: not_matched[user]"/>
+        </tr>
+        </tal:block>
+    </table>
+    </tal:block>
+    <tal:block condition="options/subscriptions|nothing">
+    <h2>Notifications imported from CIRCA</h2>
+    <table tal:define="subscriptions options/subscriptions">
+        <tr><th>User</th><th>Path</th></tr>
+        <tal:block repeat="subscription subscriptions">
+        <tr>
+            <td tal:content="subscription/user_id"/>
+            <td tal:content="python: test(subscription['path'],
+                                        subscription['path'],
+                                        '/')"/>
+        </tr>
+        </tal:block>
+    </table>
+    </tal:block>
+  </metal:block>
+</metal:block>
