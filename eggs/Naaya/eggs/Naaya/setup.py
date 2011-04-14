@@ -6,7 +6,7 @@ setup(name='Naaya',
       author_email='office@eaudeweb.ro',
       url='http://naaya.eaudeweb.ro',
       description = "Naaya is a content management system based on Zope2",
-      keywords = "example documentation tutorial",
+      keywords = "cms zope",
       platforms=['OS Independent'],
       classifiers = [
             'Development Status :: 5 - Production/Stable'
