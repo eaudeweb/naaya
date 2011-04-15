@@ -23,14 +23,17 @@ Getting Started
     getting_started/demo
     getting_started/installation
 
-Components and Tools
---------------------
+Using Naaya
+-----------
+
+Learn how to create a new `site`, add `content`, use `portlets`,
+customize `templates` and `forms`, change `stylesheets` and many more.
 
 .. toctree::
     :maxdepth: 2
     :glob:
 
-    tools/*
+    usage/*
 
 Advanced topics
 ---------------
@@ -40,6 +43,15 @@ Advanced topics
     :glob:
 
     advanced/*
+
+API documentation
+-----------------
+
+.. toctree::
+    :maxdepth: 3
+    :glob:
+
+    api/index
 
 Other
 -----

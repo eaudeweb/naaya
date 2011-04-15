@@ -3,7 +3,7 @@ General-Purpose utility functions
 
 The :class:`utils <Products.NaayaCore.managers.utils>` module contains
 several general-purpose utility functions. Some are called by methods of the
-utils class described below. Note that the depracted functions regarding
+utils class described below. Note that the deprecated functions regarding
 generation of slugified unique ids in a given context (folder) are no longer
 documented.
 
@@ -16,13 +16,12 @@ You can now generate a slugified text like this:
 
 And a unique available id in a "self" context:
 
-   >>> id = uniqueId(string, lambda x: return self._getOb(x, None) is not None)
+   >>> id = uniqueId(string, lambda x: return self._getOb(x, None) is not None)`
 
-where string is already slugified in the latter example.
+where string is already slugified in the above example.
 
-Also see the make_id function which combines both functionalities but,
-however, lacks the functionality of defining your own "id existence test"
-function.
+Also see the :func:`make_id` function which combines both functionalities,
+but lacks the functionality of defining your own ``id existence test`` function.
 
 The :class:`utils <Products.NaayaCore.managers.utils.utils>` class contains a
 few more general-purpose utility functions. They are accessible in ``rstk`` via

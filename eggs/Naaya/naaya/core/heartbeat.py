@@ -1,5 +1,9 @@
 """
-Heartbeat - an event that fires every ~15 minutes, called by a cron script.
+Heartbeat - an event that fires every few minutes, called by a cron script.
+
+This is used to trigger cleanup events, sending e-mails and many other
+*periodic tasks*. To use the `heartbeat` you need to create a `heartbeat`
+subscriber registered using :term:`ZCA`
 
 Example use::
 
@@ -12,6 +16,23 @@ Example use::
         site.cleanupUnsubmittedObjects(site.get_site_uid())
 
     component.provideHandler(cleanupUnsubmittedObjects)
+
+or you can simply register a subscriber via zcml.
+
+In `configure.zml`::
+
+      <subscriber for="Products.Naaya.interfaces.INySite
+                       Products.Naaya.interfaces.IHeartbeat"
+                  handler=".my_subscriber" />
+
+In `subscribers.py`::
+
+      def my_subscriber(site, hearthbeat):
+        #do stuff
+
+This module also contains a few default subscribers for generic periodic tasks
+in *Naaya*.
+
 """
 
 from datetime import datetime, timedelta
@@ -47,7 +68,7 @@ def physical_path(ob):
 @adapter(INySite, IHeartbeat)
 def rdfcalendar_cron(site, hb):
     """
-    Update any RDFCalendar objects in the site's root
+    Update any `RDFCalendar` objects in the site's root
     """
     import transaction
 

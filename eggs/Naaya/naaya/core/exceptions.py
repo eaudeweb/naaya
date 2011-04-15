@@ -1,3 +1,5 @@
+""" Naaya core exceptions """
+
 def i18n_exception(cls, msg, **params):
     """
     Construct an exception with i18n data attached::
@@ -11,7 +13,7 @@ def i18n_exception(cls, msg, **params):
       ...
       ValueError: "it broke badly"
 
-    The exception can be localized with ``localize_exc``.
+    The exception can be localized with :func:`localize_exc`.
     """
     formatted_msg = msg
     for name, value in params.iteritems():

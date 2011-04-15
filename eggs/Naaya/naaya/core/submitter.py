@@ -1,8 +1,3 @@
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.AuthenticationTool.AuthenticationTool \
-        import is_anonymous
-from Products.NaayaCore.managers.utils import is_valid_email
-
 """
 Check captcha and/or user name and email.
 
@@ -11,7 +6,13 @@ users. Sometimes we want to accept contributions from a wider public,
 but then we need to require a captcha, and/or require people to
 submit name and email, so the site admins can trace who contributed
 the content.
+
 """
+
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool \
+        import is_anonymous
+from Products.NaayaCore.managers.utils import is_valid_email
 
 def info_required(parent, request):
     """ What information do we require from this submitter?  """
