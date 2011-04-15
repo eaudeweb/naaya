@@ -1,3 +1,23 @@
+"""This is a convenient method to serve static resources using Zope.
+Used for serving javascript libraries, stylesheets and others.
+The usage is quite simple. Say you have a :term:`OFS` class named
+`MyNewProduct` and you have a few javascripts a stylesheets located in a `www`
+directory where you class is::
+
+    class MyNewProduct(SimpleItem):
+
+        www = StaticServeFromFolder('path_to_my_folder', globals())
+
+Now if you have an object instance say /folder/MyNewProduct all your resources
+will be accessible like this::
+
+    http://....//folder/MyNewProduct/www/some_javascript.js
+    http://....//folder/MyNewProduct/www/deeper/css.js
+    ...
+
+..note:: The use of this method to server static content is discouraged.
+The zope server shouldn't server static content directly. Until another method
+"""
 import os
 from Globals import package_home
 from zipfile import ZipFile
@@ -6,7 +26,7 @@ from zope2util import CaptureTraverse
 from utils import mimetype_from_filename
 
 class StaticServeFromZip(object):
-    """ Serves static files from the filesystem """
+    """ Serves static files from a zip file"""
 
     def __init__(self, path, zipfile, _globals=None):
         if _globals:
@@ -17,6 +37,7 @@ class StaticServeFromZip(object):
         self._zipfile = zipfile
 
     def __bobo_traverse__(self, REQUEST, name):
+        """ """
         return StaticServeFromZip(self._path + '/' + name, self._zipfile)
 
     def __call__(self, REQUEST):

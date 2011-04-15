@@ -1,11 +1,11 @@
-# Python imports
 from datetime import datetime
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-
 class Interval(tuple):
-    """ Immutable type representing two datetime intervals and all_day option"""
+    """ Immutable type representing two datetime intervals and all_day option
+
+    """
 
     security = ClassSecurityInfo()
 

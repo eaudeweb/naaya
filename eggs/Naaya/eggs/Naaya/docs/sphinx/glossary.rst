@@ -49,6 +49,19 @@ Some terms used in the documentation are described here.
 
         Read the `ZODB book`_ to find out more.
 
+    ZCA
+        Zope Component Architecture (ZCA) is a Python framework for supporting
+        component based design and programming. It is very well suited to
+        developing large Python software systems. The ZCA is not specific to
+        the Zope web application server: it can be used for developing any
+        Python application. Maybe it should be called as Python Component
+        Architecture. Learn more about it at: http://www.muthukadan.net/docs/zca.html
+
+    ZCML
+        The Zope Configuration Markup Language (ZCML) is an XML based
+        configuration system for registration of components.
+        So, instead of using Python API for registration, you can use ZCML.
+
 .. [1] Some recipes, e.g. `plone.recipe.bundlecheckout`_, update their `part`
        on each run of `buildout`.
 .. `ZODB book` http://readthedocs.org/docs/zodb-documentation/latest/index.html

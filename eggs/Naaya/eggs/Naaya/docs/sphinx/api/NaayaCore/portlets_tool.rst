@@ -1,11 +1,6 @@
 Portlets tool
 =============
 
-Portlets represent pieces of content that help make up the pages in a Naaya
-site. They show up at the left or right side of the main content, or just below
-it. Portlets can be assigned to any folder or content item, and may or may not
-be inherited by subobjects.
-
 Portlet content is provided by `portlet objects`, and each of them has a unique
 ID. These objects are either instantiated in ``portal_portlets`` (old-style
 portlets), or obtained by adapting the current site to the ``INyPortlet``

@@ -1,5 +1,6 @@
 """
-naaya.core.zope2util - utilities to make Zope 2 a friendlier place
+Utilities to make Zope2 a friendlier place.
+
 """
 
 import datetime
