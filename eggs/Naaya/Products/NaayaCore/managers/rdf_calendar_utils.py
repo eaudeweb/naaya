@@ -12,16 +12,18 @@ def rdf_cataloged_items(self, meta_type, relations=None, year=None, month=None,
     """Returns a list of dicts that is handled in RDFCalendar.
     This function is usually called via a Script (Python) in RDFCalendar
     Has similar functionality with RDFSummary product, but for Catalogued
-    Products
+    Products.
 
     Arguments:
-    meta_type -- Usualy 'Naaya Event'
-    relations -- The relation between the fields of the object and the fields
+
+      * meta_type -- Usualy 'Naaya Event'
+      * relations -- The relation between the fields of the object and the fields
                  of the dictionary that is to be returned
-    lang -- Default language
-    year, month, day -- filtering used to search
+      * lang -- Default language
+      * year, month, day -- filtering used to search
 
     """
+    
     if relations is None: #Default relations for Naaya Event content type
         relations = {
             'author': 'contributor', 'subtitle': 'title',

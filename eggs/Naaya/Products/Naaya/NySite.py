@@ -676,11 +676,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('get_label_for_meta_type')
     def get_label_for_meta_type(self, meta_type):
-        """
-        returns the label associated with the given meta_type
+        """Returns the label associated with the given meta_type
         it can be a Naaya Folder or a pluggable content type
-        WARNING: This function should not be used in new code.
-                Please use get_meta_type_label from NyFolderBase instead.
+
+        .. warning::
+            This function should not be used in new code.
+            Please use Products.Naaya.NyFolderBase.get_meta_type_label
+            instead.
+
         """
         if meta_type == METATYPE_FOLDER:
             return LABEL_NYFOLDER
@@ -690,7 +693,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
-        #returns a list with all meta types
+        """returns a list with all meta types"""
+
         return [x['name'] for x in self.filtered_meta_types()]
 
     def get_data_path(self):
@@ -703,10 +707,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('get_timezone')
     def get_timezone(self):
-        """ Returns a string representing portal timezone
-            E.g.: 'Europe/Copenhagen', 'CET'
-            Try, in order: zope-conf-additional in buildout,
-                           os.environ, time.tzname
+        """
+        Returns a string representing portal timezone. For example::
+
+            'Europe/Copenhagen', 'CET'
+
+        Try, in order:
+            1. zope-conf-additional in buildout
+            2. os.environ
+            3. time.tzname
+
         """
         conf = getConfiguration()
         if conf.environment.has_key('TZ') and conf.environment['TZ']:
@@ -876,25 +886,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('getObjectById')
     def getObjectById(self, p_id):
-        """
-        Returns an object inside this one with the given id.
-        @param p_id: object id
-        @type p_id: string
-        @return:
-            - the object is exists
-            - None otherwise
-        """
-        try: return self._getOb(p_id)
-        except: return None
+        """ Get an object with a given `p_id` from `self` container"""
+        return self._getOb(p_id, None)
 
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
-        #this method is used to display local roles, called from getUserRoles methods
+        """ Get meta_type's which are containers """
         return [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
     security.declarePublic('get_naaya_containers_metatypes')
     def get_naaya_containers_metatypes(self):
-        """ this method is used to display local roles, called from getUserRoles methods """
+        """ Get meta_type's which are containers (Naaya content types only).
+
+        """
         return [METATYPE_FOLDER, 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
     #layer over selection lists

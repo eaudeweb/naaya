@@ -1,6 +1,3 @@
-# Python imports
-
-# Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import Permission
@@ -9,8 +6,6 @@ from AccessControl.Permissions import change_permissions
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import transaction
-
-# Product imports
 
 class NyAccess(SimpleItem):
     security = ClassSecurityInfo()
@@ -126,4 +121,3 @@ class NyAccess(SimpleItem):
 
     security.declareProtected(change_permissions, 'index_html')
     index_html = PageTemplateFile('zpt/ny_access', globals())
-
