@@ -41,9 +41,6 @@ setup(name='Naaya',
           #Zope
           'contentratings',
           'Products.TextIndexNG3 >= 3.2.11',
-          'zope.app.i18n',
-          'zope.app.zapi',
-          'zope.app.container',
 
           #Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
