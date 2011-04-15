@@ -64,9 +64,12 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
                 callback=_create_NyFolder_object, **kwargs):
     """
     Create a Folder type of object.
-    Parameters:
-        `callback`
+
+    Parameters::
+
+        callback
             A function that returns an new instance of the NyFolder object-type
+
     """
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)

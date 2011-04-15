@@ -41,9 +41,3 @@ Authentication tool
      getUserLastPost,
      getSourceObj,
      emailConfirmationEnabled
-
-.. autoclass:: Products.Naaya.NySite.NySite
-   :members:
-     admin_adduser,
-     admin_edituser,
-     admin_addroles

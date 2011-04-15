@@ -16,7 +16,7 @@ Contains the NySite, NyFolder products and the skel generation.
 NaayaBase
 ---------
 
-This product provides base classes and behavior for Naaya CMF.
+This product provides base classes and behavior for Naaya :term:`CMF`.
 
 .. toctree::
     :maxdepth: 2

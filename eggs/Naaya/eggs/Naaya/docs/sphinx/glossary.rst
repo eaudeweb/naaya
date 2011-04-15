@@ -62,6 +62,9 @@ Some terms used in the documentation are described here.
         configuration system for registration of components.
         So, instead of using Python API for registration, you can use ZCML.
 
+    CMF
+        Content Management Framework
+
 .. [1] Some recipes, e.g. `plone.recipe.bundlecheckout`_, update their `part`
        on each run of `buildout`.
 .. `ZODB book` http://readthedocs.org/docs/zodb-documentation/latest/index.html
