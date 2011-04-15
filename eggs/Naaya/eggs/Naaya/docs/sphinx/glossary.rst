@@ -8,15 +8,15 @@ Some terms used in the documentation are described here.
     Zope2
         Zope is a Python-based application server for building secure and highly scalable web applications.
 
-    zope3
-        The next version on Zope. However it is mostly used with Zope2 combined through :term:`Five` or standalone
+    Zope3
+        The next version on Zope. However, it is mostly used with Zope2 combined through :term:`Five` or standalone
 
     Five
-        The glue between Zope2 and zope3 applications
+        The glue between Zope2 and Zope3 applications
 
     ZMI
         Zope Management Interface. Specific to Zope2, an interface which allows
-        advanced usage of Zope. Things such as adding new instantaces of products.
+        advanced usage of Zope. Things such as adding new instantaces of products,
         database indexes and connections, template customizations and
         many others.
 
@@ -31,8 +31,8 @@ Some terms used in the documentation are described here.
         instances, non-Python applications (an Apache or MySQL instance), startup
         scripts, etc.
 
-        When run for the first time `buildout` will create the setup "from scratch",
-        downloading any required packages. On subsequent runs it only re-installs parts
+        When run for the first time, `buildout` will create the setup "from scratch",
+        downloading any required packages. On subsequent runs, it only re-installs parts
         whose configuration has changed [1]_.
 
         The configuration file is formatted as ``.cfg`` (the format understood by

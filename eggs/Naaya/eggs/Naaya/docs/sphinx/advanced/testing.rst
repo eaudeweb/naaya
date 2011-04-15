@@ -26,6 +26,6 @@ folder.
 
 Running tests
 -------------
-Simpy run ``bin/nynose`` with the names of packages to test::
+Simply run ``bin/nynose`` with the names of packages to test::
 
     bin/nynose naaya Products.Naaya Products.NaayaCore Products.NaayaBase
