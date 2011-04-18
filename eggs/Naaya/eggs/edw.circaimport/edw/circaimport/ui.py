@@ -73,8 +73,10 @@ class ImportNotificationsFromCirca(BrowserPage):
 
         from csv_extract import get_notifications_mapping
         name = self.request.form['filename']
-        notifications, not_matched = get_notifications_mapping(
-                                                upload_prefix + '/' + name)
+
+        dbfile = open(upload_prefix + '/' + name, 'rb')
+        notifications, not_matched = get_notifications_mapping(dbfile)
+        dbfile.close()
 
         subscriptions = []
         errors = []

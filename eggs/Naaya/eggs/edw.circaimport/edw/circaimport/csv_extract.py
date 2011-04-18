@@ -6,11 +6,10 @@ import csv
 from pprint import pprint
 
 
-def get_notifications_mapping(filepath):
+def get_notifications_mapping(dbfile):
     notifications, not_matched = {}, {}
     user_re = re.compile('([a-zA-Z0-9_]+)@circa')
 
-    dbfile = open(filepath, 'rb')
     dbreader = csv.reader(dbfile)
     for row in dbreader:
         user_match = user_re.match(row[0])
@@ -21,7 +20,6 @@ def get_notifications_mapping(filepath):
         else:
             user = user_match.group(1)
             notifications[user] = values
-    dbfile.close()
     return notifications, not_matched
 
 
@@ -31,7 +29,9 @@ if __name__ == '__main__':
         sys.exit(1)
 
     try:
-        notifications, not_matched = get_notifications_mapping(sys.argv[1])
+        dbfile = open(sys.argv[1], 'rb')
+        notifications, not_matched = get_notifications_mapping(dbfile)
+        dbfile.close()
     except ValueError:
         print 'Usage: python %s <path-to-file.csv>' % sys.argv[0]
         sys.exit(1)
