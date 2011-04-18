@@ -24,8 +24,8 @@ Add a ZCML configuration entry to specify where CIRCA Zip files will be found
     </configure>
 
 
-Folders export & import
------------------------
+Folders migration
+-----------------
 You manually export folders from CIRCA using the "save" button. The "download"
 button, next to it, does not save enough information. This produces a file
 named ``download.zip``. Give it a more appropriate name and move it to the
@@ -37,8 +37,8 @@ access the url ``/import_from_circa_html`` in that folder::
 
     http://forum.eionet.europa.eu/my/import/folder/import_from_circa_html
 
-Roles export & import
----------------------
+Roles migration
+---------------
 You manually export roles from CIRCA using the "IG save" method. This generates
 an archive (e.g. ``eea-eval.tgz`` or ``cca.tgz``). Move the file to the folder
 you specified above in ZCML.
@@ -58,8 +58,8 @@ in that IG (in ``Users management`` page from the administration). The title
 of every source is shown in the ``Users management`` page (e.g. the tab name
 for each source is ``%%source_title%% USERS``)
 
-Notifications export & import
------------------------------
+Notifications migration
+-----------------------
 You need to be able to login to dodo as circa21 to be able to export the
 notification information. The Berkley DB files (version 3.x - internally called
 version 5) are kept per interest group, e.g. for the ``scp`` IG::
@@ -82,3 +82,26 @@ where you want to import the roles and access the URL
 ``/import_roles_from_circa`` in that IG::
 
     http://forum.eionet.europa.eu/my/import/IG/import_notifications_from_circa
+
+ACLs migration
+--------------
+You need to be able to login to dodo as circa21 to be able to export the ACL
+information. The Berkley DB files are kept per interest group, e.g. for the
+``nfp-eionet`` IG::
+
+    /opt/circa21/www/data/eionet-circle/nfp-eionet/library/
+
+Both ``useracls.db`` and ``itemsacls.db`` countain the information, but we use
+only the ``itemsacls.db``. Copy it to a workarea.
+
+Logged in as circa21 you need to run the ``/usr/local/bin/circadbprint`` script
+on the ``itemsacls.db`` and redirect the output to a file
+(e.g. ``itemsacls.txt``).
+
+Move this file to the folder you specified above in ZCML.
+
+When the files are ready, open the forum website and navigate to the IG where
+you want to import the ACLs and access the URL
+``/import_acls_from_circa`` in that IG::
+
+    http://forum.eionet.europa.eu/my/import/IG/import_acls_from_circa
