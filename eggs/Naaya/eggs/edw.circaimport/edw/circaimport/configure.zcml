@@ -29,4 +29,11 @@
       permission="zope2.ViewManagementScreens"
       />
 
+  <browser:page
+      for="Products.Naaya.interfaces.INySite"
+      name="import_acls_from_circa"
+      class=".ui.ImportACLsFromCirca"
+      permission="zope2.ViewManagementScreens"
+      />
+
 </configure>
