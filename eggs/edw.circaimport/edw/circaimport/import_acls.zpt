@@ -1,0 +1,50 @@
+<metal:block use-macro="here/standard_template_macro">
+  <metal:block fill-slot="body">
+    <h1>Import ACLs from CIRCA</h1>
+    <form tal:attributes="action string:${here/absolute_url}/import_acls_from_circa"
+          method="post">
+      <label>Filename <input name="filename"/></label><br/>
+      <input type="submit" value="Import" />
+    </form>
+    <tal:block condition="options/errors|nothing">
+    <h2>Import from CIRCA - errors</h2>
+    <ul>
+        <tal:block repeat="error options/errors">
+        <li tal:content="error"/>
+        </tal:block>
+    </ul>
+    </tal:block>
+    <tal:block condition="options/not_matched|nothing">
+    <h2>Import from CIRCA - rows not matched (from the input file)</h2>
+    <ul>
+        <tal:block repeat="not_matched options/not_matched">
+        <li tal:content="not_matched"/>
+        </tal:block>
+    </ul>
+    </tal:block>
+    <tal:block condition="options/users_map|nothing">
+    <h2>Import from CIRCA - users granted view</h2>
+    <table tal:define="users_map options/users_map">
+        <tr><th>Path</th><th>Users</th></tr>
+        <tal:block repeat="path users_map/keys">
+        <tr>
+            <td tal:content="path"/>
+            <td tal:content="python: users_map[path]"/>
+        </tr>
+        </tal:block>
+    </table>
+    </tal:block>
+    <tal:block condition="options/roles_map|nothing">
+    <h2>Import from CIRCA - roles granted view</h2>
+    <table tal:define="roles_map options/roles_map">
+        <tr><th>Path</th><th>Roles</th></tr>
+        <tal:block repeat="path roles_map/keys">
+        <tr>
+            <td tal:content="path"/>
+            <td tal:content="python: roles_map[path]"/>
+        </tr>
+        </tal:block>
+    </table>
+    </tal:block>
+  </metal:block>
+</metal:block>
