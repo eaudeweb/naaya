@@ -11,9 +11,13 @@ from warnings import warn
 
 from zope.interface import implements
 from zope.component import adapter
-from zope.app.container.interfaces import (IObjectAddedEvent,
-                                           IObjectMovedEvent,
-                                           IObjectEvent)
+try:
+    from zope.lifecycleevent.interfaces import (IObjectAddedEvent,
+                                                IObjectMovedEvent)
+except ImportError: #<2.12
+    from zope.app.container.interfaces import (IObjectAddedEvent,
+                                               IObjectMovedEvent)
+from zope.component.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
 
 
