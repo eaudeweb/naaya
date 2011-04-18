@@ -31,9 +31,12 @@ import os.path
 # Import from Zope
 from App.ImageFile import ImageFile
 from DocumentTemplate.DT_String import String
-import ZClasses
-from Products.PageTemplates.GlobalTranslationService import \
-     setGlobalTranslationService
+try:
+    from Products.PageTemplates.GlobalTranslationService import \
+         setGlobalTranslationService
+    setGlobalTranslationService_present = True
+except ImportError:
+    setGlobalTranslationService_present = False
 
 # Import from Localizer
 from patches import get_request
@@ -148,11 +151,14 @@ def initialize(context):
         constructors = (LocalFolder.manage_addLocalFolderForm,
                         LocalFolder.manage_addLocalFolder),
         icon='img/local_folder.gif')
-
-    # Register LocalPropertyManager as base class for ZClasses
-    ZClasses.createZClassForBase(LocalPropertyManager, globals(),
-                                 'LocalPropertyManager',
-                                 'LocalPropertyManager')
+    try:
+        import ZClasses
+        # Register LocalPropertyManager as base class for ZClasses
+        ZClasses.createZClassForBase(LocalPropertyManager, globals(),
+                                     'LocalPropertyManager',
+                                     'LocalPropertyManager')
+    except ImportError: # >= no more ZClasses in Zope2.12
+        pass
 
 
     context.registerHelp()
@@ -161,5 +167,6 @@ def initialize(context):
     String.commands['gettext'] = GettextTag
 
     # Register the global translation service for the i18n namespace (ZPT)
-    if PTSWrapper is None and TranslationService is None:
+    if (PTSWrapper is None and TranslationService is None and
+        setGlobalTranslationService_present is True):
         setGlobalTranslationService(GlobalTranslationService())
