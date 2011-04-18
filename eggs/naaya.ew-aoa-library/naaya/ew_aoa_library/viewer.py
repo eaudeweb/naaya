@@ -2,7 +2,6 @@ from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
-import Globals
 from zope.app.container.interfaces import (IObjectAddedEvent,
                                            IObjectRemovedEvent)
 from zope import interface
@@ -28,6 +27,13 @@ def manage_addViewer(parent, id, title, target_path, REQUEST=None):
     if REQUEST is not None:
         url = '%s/manage_workspace' % parent.absolute_url()
         REQUEST.RESPONSE.redirect(url)
+
+topics_to_themes = {
+                    'a':'w_water-resources-topics',
+                    'b':'w_water-resource-management-topics',
+                    'c':'w_green-economy-topics',
+                    'd':'w_resource-efficiency-topics'
+                    }
 
 class AoALibraryViewer(SimpleItem):
     interface.implements(INyCatalogAware)
@@ -281,7 +287,8 @@ class AoALibraryViewer(SimpleItem):
             library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
             report = library.getSurveyTemplate().getReport('viewer')
         else:
-            report = None
+            #the function was called directly, without parameters
+            return None
 
         if not report:
             raise NotFound('Report %s' % ('viewer',))
@@ -303,46 +310,40 @@ class AoALibraryViewer(SimpleItem):
         show_unapproved = REQUEST.get('show_unapproved', None)
         if not self.checkPermissionPublishObjects():
             show_unapproved = None
-        theme = REQUEST.get('theme', None)
-        if theme == 'any':
-            theme = None
+        themes = REQUEST.get('themes', [])
+        if not isinstance(themes, list):
+            themes = [themes]
         topics = REQUEST.get('topics', [])
         if not isinstance(topics, list):
             topics = [topics]
-        if not (official_country_region or theme or show_unapproved):
+        if not (official_country_region or themes or show_unapproved):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-        shadows = []
-        for shadow in list(self.iter_assessments(show_unapproved=show_unapproved)):
+        def respects_filter(shadow):
             survey_answer = self.get_survey_answer(shadow.getId())
-            if official_country_region and not (official_country_region.lower() in
-                    getattr(survey_answer.aq_base, 'w_official-country-region', '').lower()
-                    or official_country_region.lower() in
-                    getattr(survey_answer.aq_base, 'w_geo-coverage-region', '').lower()):
-                continue
+            if official_country_region and not (official_country_region.lower()\
+                    in survey_answer.get('w_official-country-region', '').lower()\
+                    or official_country_region.lower() in\
+                    survey_answer.get('w_geo-coverage-region', '').lower()):
+                return False
+            if themes:
+                for theme in themes:
+                    for topics_list in survey_answer.get(theme):
+                        if len(topics_list) > 0:
+                            break
+                    else:
+                        return False
             if topics:
                 for topic in topics:
-                    #If we have topics, then we should also have a theme
-                    if not hasattr(survey_answer.aq_base, theme):
-                        break
-                    if len(getattr(survey_answer.aq_base, theme)[int(topic[1])]) == 0:
-                        break
-                else:
-                    shadows.append(shadow)
-                continue
-            elif theme:
-                if not hasattr(survey_answer.aq_base, theme):
-                    continue
-                for topics_list in getattr(survey_answer.aq_base, theme):
-                    if len(topics_list) > 0:
-                        #If the topic is not an empty list, add the shadow
-                        #to the results list and continue to the next shadow
-                        shadows.append(shadow)
-                        break
-            else:
-                #If no themes are selected, just append the shadow to the list
-                shadows.append(shadow)
-        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, theme=theme, topics=topics)
+                    theme  = topics_to_themes[topic[0]]
+                    if len(survey_answer.get(theme)[int(topic[1])]) == 0:
+                        return False
+            return True
+
+        shadows = filter(respects_filter,
+                self.iter_assessments(show_unapproved=show_unapproved))
+        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes, topics=topics)
+
 
     security.declareProtected(view, 'filter_answers_library')
     def filter_answers_library(self, REQUEST):
@@ -354,54 +355,55 @@ class AoALibraryViewer(SimpleItem):
         except ValueError:
             year = None
         official_country_region = REQUEST.get('official_country_region', None)
-        theme = REQUEST.get('theme', None)
-        if theme == 'any':
-            theme = None
+        themes = REQUEST.get('themes', [])
+        if not isinstance(themes, list):
+            themes = [themes]
         topics = REQUEST.get('topics', [])
         if not isinstance(topics, list):
             topics = [topics]
 
-        if not (organization or year or official_country_region or theme):
+        if not (organization or year or official_country_region or themes):
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-        shadows = []
-        for shadow in self.iter_assessments():
+        def respects_filter(shadow):
             survey_answer = self.get_survey_answer(shadow.getId())
-
             if organization:
                 answer_organization = survey_answer.get('w_body-conducting-assessment')
                 if isinstance(answer_organization, dict):
-                    answer_organization_matched = [ao for ao in answer_organization.values() if organization.lower() in ao.lower()]
-                    if len(answer_organization_matched) == 0:
-                        continue
+                    for ao in answer_organization.values():
+                        if organization.lower() in ao.lower():
+                            break
+                    else:
+                        return False
                 else:
                     if organization.lower() not in answer_organization.lower():
-                        continue
-
+                        return False
             if year:
                 answer_year = survey_answer.get('w_assessment-year', '')
                 if str(year) not in answer_year:
-                    continue
-
+                    return False
             if official_country_region:
                 answer_country = survey_answer.get('w_official-country-region', '').lower()
                 answer_region = survey_answer.get('w_geo-coverage-region', '').lower()
-                if official_country_region.lower() not in answer_country and official_country_region.lower() not in answer_region:
-                    continue
+                if official_country_region.lower() not in answer_country and \
+                        official_country_region.lower() not in answer_region:
+                    return False
+            if themes:
+                for theme in themes:
+                    answer_theme = survey_answer.get(theme)
+                    if not answer_theme:
+                        return False
+                    theme_topics = [int(topic[1]) for topic in topics
+                            if topics_to_themes[topic[0]] == theme]
+                    for topic in theme_topics:
+                        if topic not in answer_theme:
+                            return False
+            return True
 
-            if theme:
-                answer_theme = survey_answer.get(theme)
-                if not answer_theme:
-                    continue
-
-                #If we have topics, then we should also have a theme
-                answer_topics_matched = [topic for topic in topics if int(topic[1]) in answer_theme]
-                if len(topics) != len(answer_topics_matched):
-                    continue
-
-            shadows.append(shadow)
-
-        return self.index_html(shadows=shadows, organization=organization, year=year, official_country_region=official_country_region, theme=theme, topics=topics)
+        shadows = filter(respects_filter, self.iter_assessments())
+        return self.index_html(shadows=shadows, organization=organization,
+                year=year, official_country_region=official_country_region,
+                themes=themes, topics=topics)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
@@ -438,3 +440,5 @@ def survey_answer_removed(answer, event):
             catalog.uncatalog_object(physical_path(shadow))
     except Exception, e:
         answer.getSite().log_current_error()
+
+
