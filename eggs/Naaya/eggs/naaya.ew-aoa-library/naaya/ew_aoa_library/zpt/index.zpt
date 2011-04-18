@@ -63,9 +63,9 @@
 		$('#show_filters').click(function(){
 			show_filters();
 		});
-		display_topics($('[name="theme"]').val());
-		$('[name="theme"]').change(function(){
-			display_topics($('[name="theme"]').val());
+		display_topics($('[name="themes"]').val());
+		$('[name="themes"]').change(function(){
+			display_topics($('[name="themes"]').val());
 			$('[name="topics"] option').removeAttr('selected');
 		});
 	})
@@ -87,7 +87,7 @@
 		$('#show_filters').hide();
 	}
 	function display_topics(selected_value){
-		if (selected_value == 'any')
+        if (selected_value == null)
 		{
 			$('label[for="topics"]').hide();
 			$('[name="topics"]').hide();
@@ -96,7 +96,9 @@
 			$('label[for="topics"]').css('display', 'block');
 			$('[name="topics"]').show();
 			$('[name="topics"] option').hide();
-			$('.'+selected_value).show();
+            for (i=0; i<selected_value.length; i++){
+			    $('.'+selected_value[i]).show();
+            }
 		}
 	}
 	function check_answers(){
@@ -122,7 +124,7 @@
 <div class="field-inline" tal:condition="shadows" style="display:none">
 	<label id="search_label" i18n:translate="" >Show reports containing text</label>
 	<input type="text" id="searchbox" size="50"/>
-	<a id="show_filters" href="javascript:void();"
+	<a id="show_filters" href="javascript:void(0);"
 		tal:condition="python: review_template or library" i18n:translate="">Advanced filtering</a>
 </div>
 <br/>
@@ -130,35 +132,37 @@
 	<legend i18n:translate="">Advanced filtering</legend>
 	<form method="post" action=".">
 		<div style="float:left">
+			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
+				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
+				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
+			</div>
 			<div class="field">
 				<label for="official_country_region" i18n:translate="">Geo coverage (country or region)</label>
 				<input type="text" name="official_country_region:utf8:ustring" size="50"
 					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
-			<div class="field" tal:define="theme options/theme|string:any">
-				<label for="theme" i18n:translate="">Report themes</label>
-				<select name="theme">
-					<option i18n:translate="" value="any"
-						tal:attributes="selected python:theme == 'any'">
-						Any</option>
+			<div class="field" tal:define="themes options/themes|string:">
+				<label for="themes" i18n:translate="">Report themes</label>
+				<select name="themes" multiple="True" size="4">
 					<option i18n:translate="" value="w_water-resources-topics"
-						tal:attributes="selected python:theme == 'w_water-resources-topics' ">
+						tal:attributes="selected
+                        python:'w_water-resources-topics' in themes ">
 						Water resources topics</option>
 					<option i18n:translate=""
 						value="w_water-resource-management-topics"
-						tal:attributes="selected python:theme == 'w_water-resource-management-topics'">
+						tal:attributes="selected
+                        python:'w_water-resource-management-topics' in
+                        themes">
 						Water resource management topics</option>
 					<option i18n:translate="" value="w_green-economy-topics"
-						tal:attributes="selected python:theme == 'w_green-economy-topics'">
+						tal:attributes="selected
+                        python:'w_green-economy-topics' in themes">
 						Green economy topics</option>
 					<option i18n:translate="" value="w_resource-efficiency-topics"
-						tal:attributes="selected python:theme == 'w_resource-efficiency-topics'">
+						tal:attributes="selected
+                        python:'w_resource-efficiency-topics' in themes">
 						Resource efficiency topics</option>
 				</select>
-			</div>
-			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
-				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
-				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
 			</div>
 		</div>
 		<div class="field" style="float:left" tal:define="topics options/topics|python:[]">
@@ -324,24 +328,26 @@
 				<input type="text" name="official_country_region:utf8:ustring" size="50"
 					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
-			<div class="field" tal:define="theme options/theme|string:any">
-				<label for="theme" i18n:translate="">Themes</label>
-				<select name="theme">
-					<option i18n:translate="" value="any"
-						tal:attributes="selected python:theme == 'any'">
-						Any</option>
+			<div class="field" tal:define="themes
+            options/themes|python:[]">
+				<label for="themes" i18n:translate="">Themes</label>
+				<select name="themes" multiple="True" size="4">
 					<option i18n:translate="" value="w_water-resources-topics"
-						tal:attributes="selected python:theme == 'w_water-resources-topics' ">
+						tal:attributes="selected
+                        python:'w_water-resources-topics' in themes ">
 						Water resources topics</option>
 					<option i18n:translate=""
 						value="w_water-resource-management-topics"
-						tal:attributes="selected python:theme == 'w_water-resource-management-topics'">
+						tal:attributes="selected
+                        python:'w_water-resource-management-topics' in themes">
 						Water resource management topics</option>
 					<option i18n:translate="" value="w_green-economy-topics"
-						tal:attributes="selected python:theme == 'w_green-economy-topics'">
+						tal:attributes="selected
+                        python:'w_green-economy-topics' in themes">
 						Green economy topics</option>
 					<option i18n:translate="" value="w_resource-efficiency-topics"
-						tal:attributes="selected python:theme == 'w_resource-efficiency-topics'">
+						tal:attributes="selected
+                        python:'w_resource-efficiency-topics' in themes">
 						Resource efficiency topics</option>
 				</select>
 			</div>

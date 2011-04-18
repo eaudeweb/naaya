@@ -5,8 +5,8 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from naaya.core.utils import path_in_site
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager
+from naaya.core.zope2util import path_in_site
 
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
 
