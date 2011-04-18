@@ -6,6 +6,23 @@ import os.path
 
 
 class LDIFClassesParser(LDIFParser):
+    """
+    Parses entries that look like this::
+
+    dn: cn=4, ...
+    description: Class=4 ...
+    cn: 4
+    cn: 4-...
+    classname: DE:Sekretaer
+    classname: FR:Secretaire
+    classname: EN:Secretary
+    overwrites: 000 000 000 000 000 000
+    grouprole: 000 000 007 FFF 000 000
+    objectclass: top
+    objectclass: groupOfUniqueNames
+    objectclass: igclass
+
+    """
     def __init__(self, descriptor):
         self.classes = {}
         LDIFParser.__init__(self, descriptor)
@@ -28,6 +45,17 @@ class LDIFClassesParser(LDIFParser):
 
 
 class LDIFUsersParser(LDIFParser):
+    """
+    Parses entries that look like this::
+
+    dn: iguid=userid@circa, ...
+    userclass: 0
+    overwrites: 000 000 000 000 000 000
+    iguid: userid@circa
+    grouprole: FFF FFF FFF FFF FFF FFF
+    objectclass: top
+    objectclass: iguser
+    """
     def __init__(self, descriptor):
         self.users = {}
         LDIFParser.__init__(self, descriptor)
@@ -54,6 +82,17 @@ class LDIFUsersParser(LDIFParser):
 
 
 class LDIFRolesParser(LDIFParser):
+    """
+    Parses entries that look like this::
+
+    dn: igrid=staff, ...
+    igrid: staff
+    roleclass: 1
+    overwrites: 000 000 000 000 000 000
+    grouprole: 001 001 001 001 001 001
+    objectclass: top
+    objectclass: igrole
+    """
     def __init__(self, descriptor):
         self.roles = {}
         LDIFParser.__init__(self, descriptor)
