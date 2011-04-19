@@ -10,7 +10,7 @@ from StringIO import StringIO
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.NaayaCore.backport import namedtuple
+from naaya.core.backport import namedtuple
 
 ImageSize = namedtuple('ImageSize', 'w h')
 
