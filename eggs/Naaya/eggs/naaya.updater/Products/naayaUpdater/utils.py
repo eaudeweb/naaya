@@ -77,26 +77,6 @@ def normalize_template(src):
         src = src.encode('utf-8')
     return src
 
-def html_diff(source, target):
-    import difflib
-    from cStringIO import StringIO
-    lines = lambda s: StringIO(normalize_template(s)).readlines()
-    htmlquote = lambda s: s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    output = StringIO()
-    output.write('<div style="font-family: monospace;">')
-    for line in difflib.unified_diff(lines(source), lines(target)):
-        if line.startswith('+'):
-            cls = 'line_added'
-        elif line.startswith('-'):
-            cls = 'line_removed'
-        elif line.startswith('@@'):
-            cls = 'line_heading'
-        else:
-            cls = 'line_normal'
-        output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
-    output.write('</div>')
-    return output.getvalue()
-
 def get_portals(container, context=None, meta_types=None):
     """ Given a `container` or a `context` recusivly search all portals with
     `meta_types`.
