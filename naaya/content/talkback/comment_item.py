@@ -22,7 +22,7 @@ import re
 
 import scrubber
 if 'any' not in dir(__builtins__):
-    from Products.NaayaCore.backport import any
+    from naaya.core.backport import any
     scrubber.any = any
 sanitize = scrubber.Scrubber().scrub
 
