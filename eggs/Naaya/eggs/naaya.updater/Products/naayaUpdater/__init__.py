@@ -1,10 +1,8 @@
 import logging
 import transaction
 from App.ImageFile import ImageFile
-from OFS import Folder
 
 import NaayaUpdater
-from updates import LOGS_FOLDERNAME
 import NaayaPatches
 
 UpdaterID = NaayaUpdater.UPDATERID
@@ -28,9 +26,6 @@ def initialize(context):
             pass
         updater = getattr(app, UpdaterID)
     assert updater is not None
-
-    if not hasattr(app, LOGS_FOLDERNAME):
-        Folder.manage_addFolder(app, LOGS_FOLDERNAME)
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),

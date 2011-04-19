@@ -6,8 +6,15 @@
   <!-- Tool -->
   <browser:page name="view.html"
     for="Products.naayaUpdater.interfaces.IUpdater"
-    class=".tool.View"
-    template="tool.pt"
+    class=".views.UpdateScriptsView"
+    template="zpt/tool.zpt"
+    permission="zope2.ViewManagementScreens"
+    />
+  <!-- Log entries -->
+  <browser:page name="logs.html"
+    for="Products.naayaUpdater.interfaces.IUpdater"
+    class=".views.LogsView"
+    template="zpt/logs.zpt"
     permission="zope2.ViewManagementScreens"
     />
 
