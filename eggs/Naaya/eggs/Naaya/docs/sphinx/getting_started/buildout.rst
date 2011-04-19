@@ -1,6 +1,10 @@
 Install Naaya using zc.buildout
 ===============================
 
+.. note::
+
+    This is the recommended way to install *Naaya*
+
 :term:`Buildout` installs Naaya code and configuration in these locations:
 
   * ``src`` - location of Naaya packages. This location needs to be created manually.

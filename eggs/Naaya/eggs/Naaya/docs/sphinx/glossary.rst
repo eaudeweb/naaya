@@ -65,6 +65,23 @@ Some terms used in the documentation are described here.
     CMF
         Content Management Framework
 
+    Role
+        User role or user access level. A role is usually used to give specific
+        permissions to a group of users. For example `administrators` role
+        will have full-control over the site and `normal` role users can just
+        add content.
+
+    Content type
+        Content types (at least in the context of Naaya) denote types of
+        documents or files that can be added in a folder or portal. For example:
+        HTML Document, File, Folder, etc.
+
+    WYSIWYG
+        What You See Is What You Get.
+
+    Portal
+        A portal is synonymous to a site.
+
 .. [1] Some recipes, e.g. `plone.recipe.bundlecheckout`_, update their `part`
        on each run of `buildout`.
 .. `ZODB book` http://readthedocs.org/docs/zodb-documentation/latest/index.html
