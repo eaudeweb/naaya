@@ -8,10 +8,7 @@ be registered with
 
 """
 
-try:
-    from collections import namedtuple
-except ImportError:
-    from Products.NaayaCore.backport import namedtuple
+from naaya.core.backport import namedtuple
 
 from os.path import join, isfile
 from datetime import datetime
