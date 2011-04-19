@@ -130,12 +130,9 @@ class ExtFile(CatalogAware, SimpleItem, PropertyManager, Cacheable):
         the uploaded file externally in a repository-directory. """
 
     if IDAVAware is not None:
-        interface.implements(IExtFile, IDAVAware)
+        interface.implements(IExtFile, IWriteLock, IDAVAware)
     else:
-        interface.implements(IExtFile)
-
-    # BBB
-    __implements__ = (IWriteLock,)
+        interface.implements(IExtFile, IWriteLock)
 
     # what properties have we?
     _properties = (
