@@ -94,9 +94,9 @@ class NyCommonView(object):
     def log_page_error(self, error):
         log = logging.getLogger('naaya.commonview.page_error')
         log.warning('Page error: error type %r, error value %r,'
-                    ' lineno %r, offset %r\n%s',
+                    ' lineno %r, offset %r, ACTUAL_URL: %s\n%s',
                     error.type, error.value, error.lineno, error.offset,
-                    traceback.format_exc())
+                    self.REQUEST['ACTUAL_URL'], traceback.format_exc())
 
     security.declareProtected(view, 'make_paginator')
     def make_paginator(self, *args, **kwargs):
