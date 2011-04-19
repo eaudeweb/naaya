@@ -17,7 +17,9 @@ from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.LayoutTool.Template import manage_addTemplateForm, manage_addTemplate, Template
+from Products.NaayaCore.LayoutTool.Template import (
+    manage_addTemplateForm, manage_addTemplate, Template)
+from Products.NaayaCore.managers.utils import html_diff
 
 template_cache = {}
 
@@ -164,7 +166,7 @@ class FormsTool(Folder):
     security.declareProtected(view_management_screens, 'show_diff')
     def show_diff(self, REQUEST):
         """ show the differences between the default and customized form """
-        from Products.naayaUpdater.utils import html_diff
+
         form_id = REQUEST.get('form_id', '')
         form_customized = self._getOb(form_id)
         form_default = self._default_form(form_id)
