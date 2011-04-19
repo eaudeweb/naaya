@@ -9,10 +9,7 @@ import re
 from datetime import time, datetime, timedelta
 import logging
 import simplejson as json
-try:
-    from collections import namedtuple
-except ImportError:
-    from Products.NaayaCore.backport import namedtuple
+from naaya.core.backport import namedtuple
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
