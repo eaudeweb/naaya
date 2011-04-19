@@ -33,9 +33,9 @@ from Products.naayaUpdater.updates import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
-from Products.NaayaCore.managers.utils import html_diff
+from Products.NaayaCore.managers.utils import html_diff, normalize_template
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
-    get_template_content, normalize_template, readFile, get_portals,
+    get_template_content, readFile, get_portals,
     get_portal, get_portal_path, get_contenttype_content)
 
 class UpdateForms(UpdateScript):
