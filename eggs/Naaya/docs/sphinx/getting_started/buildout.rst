@@ -5,10 +5,74 @@ Install Naaya using zc.buildout
 
     This is the recommended way to install *Naaya*
 
+The ``recommended`` way to install *Naaya*  is to have a custom python
+installation for Naaya projects. The reason for this is to provide a clean and
+light-weight python that does not overlap with the system python. If you do not
+want to compile the python yourself you can use `virtualenv`_
+
+
+Building python
+----------------
+
+.. note::
+
+    You can skip this section if you use `virtualenv`_
+
+.. note::
+
+    The `recommended` python version is *2.6.6*.
+
+Before we download and install python we need to have the following
+dependencies first:
+
+* build-essential (Required to compile python)
+* zlib1g-dev (Used for zip support)
+* libglib2.0-dev (Required by Itools)
+* libreadline-dev (Optional: usefull for debugging purposes)
+* libxslt-dev (Required by `lxml`_)
+
+If you have Ubuntu or Debian you can install the above deps like this::
+
+    apt-get install build-essential zlib1g-dev libglib2.0-dev libreadline-dev libxslt-dev
+
+Now after the python is downloaded an unarchived::
+
+    ./configure --prefix=/absolute/path/to/python && make && make install
+
+
+Installing Naaya
+--------------------
+
+To install *Naaya* using :term:`buildout` we will need a buildout skel::
+
+    svn co https://svn.eionet.europa.eu/repositories/Naaya/buildout/Naaya/trunk/
+
+Read the downloaded `README.rst` to learn what each file is used for.
+
+Bootstraping and running :term:`buildout`::
+
+    /path/to/bin/python/ bootstrap.py -c naaya.cfg
+    bin/buildout -c naaya.cfg
+
+Top run *Naaya* now simply::
+
+    bin/zope-instance start
+
+    or
+
+    bin/zope-instance fg
+
+More info on buildout
+-----------------------
+
 :term:`Buildout` installs Naaya code and configuration in these locations:
 
-  * ``src`` - location of Naaya packages. This location needs to be created manually.
-  * ``products`` - a Products folder, additional Zope2 products can be placed here
+  * ``src`` - location of Naaya packages (developement eggs). This location
+    needs to be created manually.
+
+  * ``products`` - a Products folder, additional Zope2 products can be placed
+    here.  This location needs to be created manually.
+
   * ``parts`` - contains Products folders for each of the products defined
     in the ``[zope-instance]`` section of ``naaya.cfg``. This folder is
     volatile, and may be partly or entirely rebuilt when running bin/buildout.
@@ -32,3 +96,5 @@ project-specific `buildout` configuration files.
 .. _EnviroWindows: https://svn.eionet.europa.eu/repositories/Naaya/buildout/envirowindows/
 .. _DestiNet: https://svn.eionet.europa.eu/repositories/Naaya/buildout/destinet/
 .. _SEMIDE: https://svn.eionet.europa.eu/repositories/Naaya/buildout/semide/
+.. _virtualenv: http://pypi.python.org/pypi/virtualenv
+.. _lxml: http://lxml.de/
