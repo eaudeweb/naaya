@@ -71,12 +71,6 @@ def get_template_content(form):
     except:
         return str(form.data)
 
-def normalize_template(src):
-    src = (src.strip().replace('\r', '')+'\n')
-    if isinstance(src, unicode):
-        src = src.encode('utf-8')
-    return src
-
 def get_portals(container, context=None, meta_types=None):
     """ Given a `container` or a `context` recusivly search all portals with
     `meta_types`.
