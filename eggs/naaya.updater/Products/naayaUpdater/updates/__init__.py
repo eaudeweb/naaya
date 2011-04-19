@@ -4,6 +4,8 @@ import logging
 from cStringIO import StringIO
 import traceback
 
+from zope.interface import implements
+
 #Zope imports
 from DateTime import DateTime
 import Acquisition
@@ -19,10 +21,6 @@ try:
 except:
     begin_transaction = get_transaction().begin
 
-#Naaya imports
-from Products.ExtFile.ExtFile import ExtFile
-
-from zope.interface import implements
 from Products.naayaUpdater.interfaces import IUpdateScript
 
 _PRIORITIES = ['CRITICAL', 'HIGH', 'LOW']
@@ -78,20 +76,6 @@ class UpdateScript(Item, Acquisition.Implicit):
         self.log.setLevel(logging.DEBUG)
         self.log.addHandler(handler)
 
-    security.declarePrivate('_save_log')
-    def _save_log(self, data):
-        logs_folder = getattr(self, LOGS_FOLDERNAME)
-
-        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id)
-
-        begin_transaction()
-        transaction = get_transaction()
-        logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
-        ob = logs_folder._getOb(log_filename)
-        ob.manage_upload(data, 'text/html;charset=utf-8')
-        transaction.note('Saved log file for update "%s"' % self.title)
-        transaction.commit()
-
     security.declareProtected(view_management_screens, 'update')
     def update(self, portal, do_dry_run):
         begin_transaction()
@@ -119,7 +103,8 @@ class UpdateScript(Item, Acquisition.Implicit):
     security.declareProtected(view_management_screens, 'manage_update')
     def manage_update(self, REQUEST):
         """ perform this update """
-        report = ''
+        report_html = ''
+        portals = {}
         if REQUEST.REQUEST_METHOD == 'POST':
             self._setup_logger()
 
@@ -128,18 +113,22 @@ class UpdateScript(Item, Acquisition.Implicit):
                 portal = self.unrestrictedTraverse(portal_path)
                 success, log_data = self.update(portal, do_dry_run)
 
-                report += '<br/><br/>'
-                report += '<h4>'+portal_path+'</h4>'
+                report_html += '<br/><br/>'
+                report_html += '<h4>'+portal_path+'</h4>'
                 if success:
-                    report += '<h4>SUCCESS</h4>'
+                    report_html += '<h4>SUCCESS</h4>'
                 else:
-                    report += '<h4>FAILED</h4>'
-                report += html_quote(log_data)
+                    report_html += '<h4>FAILED</h4>'
+                report_html += html_quote(log_data)
+
+                portals[portal_path] = success
 
             if not do_dry_run:
-                self._save_log('<pre>%s</pre>' % report)
+                self.add_log(self.id, portals,
+                             self.REQUEST.AUTHENTICATED_USER.getUserName())
 
-        return self.update_template(REQUEST, report=report, form=REQUEST.form)
+        return self.update_template(REQUEST, report=report_html,
+                                    form=REQUEST.form)
 
     security.declareProtected(view_management_screens, 'update_template')
     update_template = PageTemplateFile('zpt/update_template', globals())

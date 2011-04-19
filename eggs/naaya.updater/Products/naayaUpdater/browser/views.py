@@ -7,7 +7,7 @@ from Products.Five.browser import BrowserView
 
 from Products.naayaUpdater.interfaces import IUpdateScript
 
-class View(BrowserView):
+class UpdateScriptsView(BrowserView):
     """ Tool view
     """
     _categories = {}
@@ -40,3 +40,12 @@ class View(BrowserView):
             scripts.sort(key=sort_date, reverse=True)
             scripts.sort(key=operator.attrgetter('priority'))
             yield category, scripts
+
+class LogsView(BrowserView):
+    """ Display logs """
+
+    @property
+    def logs(self):
+        return sorted(self.context._logs,
+                      key=operator.itemgetter(1),
+                      reverse=True)
