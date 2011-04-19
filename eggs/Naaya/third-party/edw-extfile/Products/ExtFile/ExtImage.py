@@ -120,12 +120,9 @@ class ExtImage(ExtFile):
         preview of the image (requires PIL)."""
 
     if IDAVAware is not None:
-        interface.implements(IExtImage, IDAVAware)
+        interface.implements(IExtImage, IWriteLock, IDAVAware)
     else:
-        interface.implements(IExtImage)
-
-    # BBB
-    __implements__ = (IWriteLock,)
+        interface.implements(IExtImage, IWriteLock)
 
     security = ClassSecurityInfo()
 
