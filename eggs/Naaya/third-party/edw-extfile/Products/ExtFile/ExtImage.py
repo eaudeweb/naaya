@@ -58,7 +58,10 @@ from OFS.Image import Pdata
 from Acquisition import aq_base
 from DocumentTemplate.html_quote import html_quote
 
-from webdav.WriteLockInterface import WriteLockInterface
+try:
+    from webdav.interfaces import IWriteLock
+except ImportError: #< zope2.12
+    from webdav.WriteLockInterface import WriteLockInterface as IWriteLock
 from zope import interface
 from interfaces import IExtImage
 from zope import event
@@ -122,7 +125,7 @@ class ExtImage(ExtFile):
         interface.implements(IExtImage)
 
     # BBB
-    __implements__ = (WriteLockInterface,)
+    __implements__ = (IWriteLock,)
 
     security = ClassSecurityInfo()
 
@@ -724,4 +727,3 @@ def beforeDelete(self, event):
     # Delete the preview file, i.e. rename it to .undo
     if self.has_preview and self.filename != self.prev_filename:
         self._delete(self.prev_filename)
-
