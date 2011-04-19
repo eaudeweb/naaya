@@ -206,6 +206,12 @@ def html2text(html, trim_length=512):
         text = text[:trim_length]
     return text
 
+def normalize_template(src):
+    src = (src.strip().replace('\r', '')+'\n')
+    if isinstance(src, unicode):
+        src = src.encode('utf-8')
+    return src
+
 def html_diff(source, target):
     import difflib
     from cStringIO import StringIO
