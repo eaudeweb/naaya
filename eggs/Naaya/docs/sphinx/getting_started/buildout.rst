@@ -40,6 +40,20 @@ Now after the python is downloaded an unarchived::
     ./configure --prefix=/absolute/path/to/python && make && make install
 
 
+Installing PIL
+-------------------
+
+Naaya also requires PIL to be installed. You can install the latest PIL using pip::
+
+    pip install PIL
+
+Or if you don't have pip you can manually install PIL:
+
+    wget http://effbot.org/downloads/Imaging-1.1.7.tar.gz
+    tar -xzf Imaging-1.1.7.tar.gz
+    cd Imaging-1.1.7
+    /absolute/path/to/python setup.py install
+
 Installing Naaya
 --------------------
 
