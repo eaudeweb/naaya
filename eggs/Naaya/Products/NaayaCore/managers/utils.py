@@ -206,6 +206,26 @@ def html2text(html, trim_length=512):
         text = text[:trim_length]
     return text
 
+def html_diff(source, target):
+    import difflib
+    from cStringIO import StringIO
+    lines = lambda s: StringIO(normalize_template(s)).readlines()
+    htmlquote = lambda s: s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    output = StringIO()
+    output.write('<div style="font-family: monospace;">')
+    for line in difflib.unified_diff(lines(source), lines(target)):
+        if line.startswith('+'):
+            cls = 'line_added'
+        elif line.startswith('-'):
+            cls = 'line_removed'
+        elif line.startswith('@@'):
+            cls = 'line_heading'
+        else:
+            cls = 'line_normal'
+        output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
+    output.write('</div>')
+    return output.getvalue()
+
 class list_utils:
     """Provides some interface to handle a list of ids: add/remove id from list"""
 
