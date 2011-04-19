@@ -35,9 +35,11 @@ from App.ImageFile import ImageFile
 from Products.naayaUpdater.updates import UpdateScript
 
 from Products.Naaya import NySite as NySite_module
+from Products.NaayaCore.managers.utils import html_diff
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
-    get_template_content, normalize_template, html_diff, readFile)
+    get_template_content, normalize_template, readFile)
+
 
 default_service_url = 'http://speaker.edw.ro/css_diff?format=json'
 service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)
