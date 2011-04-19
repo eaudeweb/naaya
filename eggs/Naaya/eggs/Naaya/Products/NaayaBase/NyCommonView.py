@@ -1,6 +1,7 @@
 # Andrei Laza, Eau de Web
 
 import logging
+import traceback
 from cStringIO import StringIO
 
 from AccessControl import ClassSecurityInfo
@@ -93,8 +94,9 @@ class NyCommonView(object):
     def log_page_error(self, error):
         log = logging.getLogger('naaya.commonview.page_error')
         log.warning('Page error: error type %r, error value %r,'
-                    ' lineno %r, offset %r',
-                    error.type, error.value, error.lineno, error.offset)
+                    ' lineno %r, offset %r\n%s',
+                    error.type, error.value, error.lineno, error.offset,
+                    traceback.format_exc())
 
     security.declareProtected(view, 'make_paginator')
     def make_paginator(self, *args, **kwargs):
