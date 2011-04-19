@@ -67,7 +67,11 @@ from zExceptions import Redirect
 from ZPublisher.Iterators import IStreamIterator
 from DocumentTemplate.html_quote import html_quote
 
-from webdav.WriteLockInterface import WriteLockInterface
+try:
+    from webdav.interfaces import IWriteLock
+except ImportError: #< zope2.12
+    from webdav.WriteLockInterface import WriteLockInterface as IWriteLock
+
 from zope import interface
 from interfaces import IExtFile
 from zope import event
@@ -131,7 +135,7 @@ class ExtFile(CatalogAware, SimpleItem, PropertyManager, Cacheable):
         interface.implements(IExtFile)
 
     # BBB
-    __implements__ = (WriteLockInterface,)
+    __implements__ = (IWriteLock,)
 
     # what properties have we?
     _properties = (
@@ -1244,4 +1248,3 @@ class stream_iterator:
     def __del__(self):
         if self._stream is not None:
             self._stream.close()
-
