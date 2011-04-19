@@ -8,8 +8,15 @@ be registered with
 
 """
 
-from os.path import join, isfile
+try:
+    from collections import namedtuple
+except ImportError:
+    from Products.NaayaCore.backport import namedtuple
 
+from os.path import join, isfile
+from datetime import datetime
+
+from persistent.list import PersistentList
 from zope.interface import implements
 from zope.component import queryUtility
 
@@ -22,6 +29,8 @@ import utils
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
 NAAYAUPDATER_PRODUCT_PATH = Globals.package_home(globals())
+
+LogEntry = namedtuple("LogEntry", ('update_id, datetime, user, portals'))
 
 class NaayaUpdater(Folder):
     """ NaayaUpdater class """
@@ -37,13 +46,19 @@ class NaayaUpdater(Folder):
                    'CHM Site',
                    'EnviroWindows Site',
                    'SEMIDE Site',
-                   'SMAP Site'
-                   )
+                   'SMAP Site', )
+
+    def __init__(self, *args, **kw):
+        """ Add logs container """
+
+        super(NaayaUpdater, self).__init__(*args, **kw)
+        self._logs = PersistentList()
 
     def manage_options(self):
         """ """
         return (
             {'label': 'Updates', 'action': '@@view.html'},
+            {'label': 'Logs', 'action': '@@logs.html'},
             {'label':'Contents', 'action':'manage_main',
              'help':('OFSP','ObjectManager_Contents.stx')},
         )
@@ -71,3 +86,17 @@ class NaayaUpdater(Folder):
         """
 
         return getattr(utils, utility)
+
+    def add_log(self, update_id, portals, user):
+        """Given an `update_id` and a `portal_path` add log entry with the
+        `datetime` of the event and other optional data.
+
+        """
+        if not hasattr(self, '_logs'):
+            self._logs = PersistentList()
+        log_entry = LogEntry(update_id=update_id,
+                             datetime=datetime.now(),
+                             portals=portals,
+                             user=user)
+        self._logs.append(log_entry)
+        self._logs._p_changed = True
