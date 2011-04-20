@@ -24,6 +24,10 @@ class SelectMultipleWidget(Widget):
     list_id = ''
     data_type = 'list'
 
+    def convert_from_user_string(self, value):
+        """ Convert a user-readable string to a value that can be saved """
+        return [val.strip() for val in value.split(',')]
+
     def get_selection_list(self):
         listing = self.get_list_nodes(self.list_id)
         if listing == []:
