@@ -31,8 +31,10 @@ from cStringIO import StringIO
 import logging
 import tempfile
 import urllib
+import lxml.etree
 
 #Zope imports
+import transaction
 import Products
 import AccessControl.User
 from OFS.Folder                                 import Folder
@@ -43,7 +45,7 @@ from Globals                                    import MessageDialog, Initialize
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
 from AccessControl.Permissions                  import view_management_screens, view
-from zope.app.container.interfaces import IObjectAddedEvent
+from zope.app.container.interfaces import IObjectAddedEvent, IObjectRemovedEvent
 
 #Product imports
 import NyGlossaryFolder
@@ -827,6 +829,109 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                   NAAYAGLOSSARY_ELEMENT_METATYPE):
                 yield item
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'xml_dump_export')
+    def xml_dump_export(self):
+        """ Export an XML dump of translations """
+
+        from lxml.builder import E
+
+        langs = [(l['lang'], l['english_name']) for l in self.languages_list]
+        langs.sort()
+
+        def translations_xml(ob):
+            name_xml = E.name()
+            def_xml = E.definition()
+
+            for lang_code, lang_name in langs:
+                name_trans = ob.get_translation_by_language(lang_name)
+                if name_trans:
+                    name_xml.append(E.translation(name_trans, lang=lang_code))
+
+                def_trans = ob.get_def_trans_by_language(lang_name)
+                if def_trans:
+                    def_xml.append(E.translation(def_trans, lang=lang_code))
+
+            return (name_xml, def_xml)
+
+        xml_dump = E.glossary()
+        for folder in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
+            folder_node = E.folder(id=folder.getId(),
+                                   title=folder.title_or_id())
+            folder_node.extend(translations_xml(folder))
+
+            for element in folder.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
+                element_node = E.element(id=element.getId(),
+                                         title=element.title_or_id())
+                element_node.extend(translations_xml(element))
+
+                folder_node.append(element_node)
+
+            xml_dump.append(folder_node)
+
+        return lxml.etree.tostring(xml_dump, pretty_print=True)
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'xml_dump_import')
+    def xml_dump_import(self, dump_file, remove_items=True):
+        """ Import an XML dump of translations """
+
+        def translate(ob, translations, method_name='set_translations_list'):
+            set_translation = getattr(ob, method_name)
+            for lang_info in self.get_languages_list():
+                lang_code = lang_info['lang']
+                lang_name = lang_info['english_name']
+                set_translation(lang_name, translations.get(lang_code, u""))
+
+        def translations(node):
+            out = {}
+            for e in node.xpath('./translation'):
+                out[e.attrib['lang']] = e.text
+            return out
+
+        xml_dump = lxml.etree.parse(dump_file)
+
+        old_folder_ids = set(self.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE]))
+        for folder_node in xml_dump.xpath('/glossary/folder'):
+            folder_id = folder_node.attrib['id']
+            folder_title = folder_node.attrib['title']
+            name_trans = translations(folder_node.xpath('./name')[0])
+            def_trans = translations(folder_node.xpath('./definition')[0])
+
+            if folder_id in old_folder_ids:
+                old_folder_ids.remove(folder_id)
+            else:
+                self.manage_addGlossaryFolder(folder_id, folder_title)
+
+            folder = self[folder_id]
+            translate(folder, name_trans)
+            translate(folder, def_trans, 'set_def_trans_list')
+            if folder.title_or_id() != folder_title:
+                folder.title = folder_title
+
+            old_element_ids = set(folder.objectIds([
+                                    NAAYAGLOSSARY_ELEMENT_METATYPE]))
+            for element_node in folder_node.xpath('./element'):
+                element_id = element_node.attrib['id']
+                element_title = element_node.attrib['title']
+                name_trans = translations(element_node.xpath('./name')[0])
+                def_trans = translations(element_node.xpath('./definition')[0])
+
+                if element_id in old_element_ids:
+                    old_element_ids.remove(element_id)
+                else:
+                    folder.manage_addGlossaryElement(element_id, element_title)
+
+                element = folder[element_id]
+                translate(element, name_trans)
+                translate(element, def_trans, 'set_def_trans_list')
+                if element.title_or_id() != element_title:
+                    element.title = element_title
+
+            if remove_items and old_element_ids:
+                folder.manage_delObjects(list(old_element_ids))
+
+        if remove_items and old_folder_ids:
+            self.manage_delObjects(list(old_folder_ids))
+
     security.declareProtected(view, 'dump_export')
     def dump_export(self, REQUEST=None):
         """
@@ -839,21 +944,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         dump_file = StringIO()
         dump_zip = ZipFile(dump_file, 'w')
 
-        for language in self.get_english_names():
-            xliff_data = self.xliff_export(language=language,
-                                           empty_folders=True)
-            dump_zip.writestr('glossary/%s.xliff' % language, xliff_data)
-
-        metadata_items = {}
-        for item in self._walk_glossary_items():
-            metadata_items[relative_object_path(item, self)] = {
-                'title': item.title,
-            }
+        dump_zip.writestr('glossary/translations.xml', self.xml_dump_export())
 
         metadata = {
             'languages': dict((l['lang'], l['english_name'])
                               for l in self.languages_list),
-            'items': metadata_items,
             'properties': {
                 'parent_anchors': bool(self.parent_anchors),
             },
@@ -900,62 +995,26 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                          language, lang_code)
                 self._add_language(lang_code, language)
 
-        # English first, otherwise new folders get wrong titles
-        languages_to_import = list(metadata['languages'].values())
-        if 'English' not in languages_to_import:
-            raise ValueError("Missing english translation")
-        languages_to_import.remove('English')
-        languages_to_import = ['English'] + languages_to_import
-
         from subscribers import EventCounter
-        new_items = EventCounter((INyGlossaryItem, IObjectAddedEvent),
-                                 ofs_path(self))
-        new_trans = EventCounter((INyGlossaryItem, IItemTranslationChanged),
-                                 ofs_path(self))
+        p = ofs_path(self)
+        new_items = EventCounter((INyGlossaryItem, IObjectAddedEvent), p)
+        new_trans = EventCounter((INyGlossaryItem, IItemTranslationChanged), p)
+        del_items = EventCounter((INyGlossaryItem, IObjectRemovedEvent), p)
         new_items.start()
         new_trans.start()
+        del_items.start()
         try:
-            trans_by_lang = {}
-            for language in languages_to_import:
-                try:
-                    data = dump_zip.read('glossary/%s.xliff' % language)
-                except KeyError:
-                    continue # translation is missing
-                self.xliff_import(data)
-                if new_trans.count > 0:
-                    trans_by_lang[language] = new_trans.count
-                new_trans.reset()
+            translations_xml = dump_zip.read('glossary/translations.xml')
+            self.xml_dump_import(StringIO(translations_xml),
+                                 remove_items=remove_items)
 
-            if new_items.count > 0:
-                log.info(log_prefix+'%d new items', new_items.count)
-
-            log.info(log_prefix+'new translations %r', trans_by_lang)
+            log.info(log_prefix+'%d new, %d removed; %d new translations',
+                     new_items.count, del_items.count, new_trans.count)
 
         finally:
             new_items.end()
             new_trans.end()
-
-        for item_path, item_data in metadata['items'].iteritems():
-            item = self.restrictedTraverse(item_path)
-            check_path = relative_object_path(item, self)
-            if check_path != item_path:
-                log.warn(log_prefix + "Paths different: %r, %r",
-                         item_path, check_path)
-                continue
-            if item.title != item_data['title']:
-                item.title = item_data['title']
-
-        if remove_items:
-            path_in_glossary = lambda ob: relative_object_path(ob, self)
-            to_remove = set()
-            zip_item_paths = set(metadata['items'])
-            for item in self._walk_glossary_items():
-                if path_in_glossary(item) not in zip_item_paths:
-                    to_remove.add(item)
-
-            for item in sorted(to_remove, key=path_in_glossary, reverse=True):
-                log.info(log_prefix + 'Removing %s', path_in_glossary(item))
-                item.aq_parent.manage_delObjects([item.getId()])
+            del_items.end()
 
         log.info(log_prefix + 'Finished')
 
@@ -980,9 +1039,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             log.addHandler(handler)
 
         try:
+            savepoint = transaction.savepoint()
             try:
                 self.dump_import(temp_file, remove_items=True)
             except:
+                savepoint.rollback()
                 log.exception("Error while synchronizing with %r",
                               self.sync_remote_url)
         finally:

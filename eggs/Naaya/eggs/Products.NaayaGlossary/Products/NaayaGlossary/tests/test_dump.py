@@ -7,6 +7,88 @@ from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.NaayaGlossary.constants import NAAYAGLOSSARY_FOLDER_METATYPE
 import helpers
 
+def read_file(name):
+    from os import path
+    f = open(path.join(path.dirname(__file__), name))
+    data = f.read()
+    f.close()
+    return data
+
+class XmlImportTest(NaayaTestCase):
+    def _import_xml(self, glossary, xml_data):
+        glossary.xml_dump_import(StringIO(read_file(xml_data)))
+
+    def test_import_folders(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        self._import_xml(glossary, 'dump1.xml')
+        folder_ids = glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE])
+        self.assertEqual(folder_ids, ['bucket', 'glass'])
+
+    def _check_folder_translations(self, glossary):
+        bucket = glossary['bucket']
+        self.assertEqual(bucket.English, "Bucket")
+        self.assertEqual(bucket.German, "Eimer")
+        self.assertEqual(bucket.get_def_trans_by_language('English'),
+                         u"A container that holds stuff")
+        self.assertEqual(bucket.get_def_trans_by_language('German'),
+                         u"Ein Container, das etwas hält")
+
+    def test_new_folder(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        self._import_xml(glossary, 'dump1.xml')
+        self._check_folder_translations(glossary)
+
+    def test_update_existing_folders(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        helpers.add_folder(glossary, 'bucket', "Bucket",
+                           {'English': u"Bucket 0", 'German': u"Eimer 0"})
+        self._import_xml(glossary, 'dump1.xml')
+        self._check_folder_translations(glossary)
+
+    def test_delete_missing_folders(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        helpers.add_folder(glossary, 'tree', "Tree")
+        self._import_xml(glossary, 'dump1.xml')
+        folder_ids = glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE])
+        self.assertEqual(folder_ids, ['bucket', 'glass'])
+
+    def test_import_elements(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        self._import_xml(glossary, 'dump1.xml')
+        bucket = glossary['bucket']
+        self.assertEqual(bucket.objectIds(), ['water', 'ice'])
+
+    def _check_element_translations(self, glossary):
+        bucket = glossary['bucket']
+        water = bucket['water']
+        self.assertEqual(water.English, "Water")
+        self.assertEqual(water.German, "Wasser")
+        self.assertEqual(water.get_def_trans_by_language('English'),
+                         u"Something to drink")
+        self.assertEqual(water.get_def_trans_by_language('German'),
+                         u"Etwas zum trinken")
+
+    def test_new_element(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        self._import_xml(glossary, 'dump1.xml')
+        self._check_element_translations(glossary)
+
+    def test_update_existing_elements(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        bucket = helpers.add_folder(glossary, 'bucket', "Bucket")
+        helpers.add_element(bucket, 'water', "Water",
+                            {'English': u"Water 0", 'German': "Wasser 0"})
+        self._import_xml(glossary, 'dump1.xml')
+        self._check_element_translations(glossary)
+
+    def test_delete_missing_elements(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        bucket = helpers.add_folder(glossary, 'bucket', "Bucket")
+        boat = helpers.add_element(bucket, 'boat', "Boat")
+        self._import_xml(glossary, 'dump1.xml')
+        self.assertEqual(bucket.objectIds(), ['water', 'ice'])
+
+
 class ExportTest(NaayaTestCase):
     def test_export_empty(self):
         glossary = helpers.make_glossary(self.portal)
