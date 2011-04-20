@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from nose.plugins.skip import SkipTest
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 from itertools import count
