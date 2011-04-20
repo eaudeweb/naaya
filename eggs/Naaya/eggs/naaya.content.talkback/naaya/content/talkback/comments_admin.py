@@ -33,7 +33,6 @@ except ImportError:
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Paragraph import Paragraph
 from constants import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
@@ -57,7 +56,8 @@ class CommentsAdmin(SimpleItem):
                                       key=lambda c: c.comment_date):
                     yield comment
 
-    _admin_template = PageTemplateFile('zpt/comments_admin', globals())
+    _admin_template = NaayaPageTemplateFile('zpt/comments_admin', globals(),
+                                            'tbconsultation_comments_admin')
 
     security.declarePublic('index_html')
     def index_html(self, REQUEST):
