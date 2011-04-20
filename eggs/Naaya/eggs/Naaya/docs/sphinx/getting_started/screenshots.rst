@@ -1,7 +1,7 @@
 Screenshots
 ===========
 
-A few screenshots from the front-end, admninistrations section and the :term:`ZMI`.
+A few screenshots from the front-end, administration section and the :term:`ZMI`.
 
 ---------
 Front-end
@@ -51,7 +51,7 @@ Forms tool
 Customizing a form
 ++++++++++++++++++
 
-If a form is customized and differs from the one on the disc then it is saved in the
+If a form is customized and differs from the one on the disk, then it is saved in the
 :term:`ZODB`.
 
 .. image:: ../_static/images/screenshots/forms-customize.png
