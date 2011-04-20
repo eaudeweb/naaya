@@ -157,6 +157,8 @@ class GlossaryWidget(StringWidget):
             if ob is glossary:
                 translation = None
                 title = ob.title_or_id()
+                definition = ofs_path(ob)
+
             else:
                 translation = ob.get_translation_by_language(language_name)
                 if translation:
@@ -169,6 +171,7 @@ class GlossaryWidget(StringWidget):
 
                     title += (' <span class="glossary-translation-missing">(' +
                               language_name + ' translation missing)</span>')
+                definition = ob.get_def_trans_by_language(language_name)
 
             if ob.meta_type == NAAYAGLOSSARY_FOLDER_METATYPE:
                 if not glossary.parent_anchors:
@@ -176,7 +179,7 @@ class GlossaryWidget(StringWidget):
 
             tree_item = {
                 'attributes': {
-                    'title': ofs_path(ob),
+                    'title': definition,
                     'type': icons_map.get(ob.meta_type),
                 },
                 'data': {
