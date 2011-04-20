@@ -26,7 +26,7 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'lxml',
       ],
       entry_points="""
       # -*- Entry points: -*-
