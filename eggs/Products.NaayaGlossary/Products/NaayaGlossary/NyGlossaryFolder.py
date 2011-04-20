@@ -154,12 +154,19 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     security.declareProtected(view_management_screens, 'export_html')
     export_html =               PageTemplateFile("zpt/NaayaGlossaryFolder/export", globals())
 
+    # stealing templates from NyGlossaryElement
     security.declareProtected(view_management_screens, 'translations_html')
-    translations_html =     PageTemplateFile("zpt/NaayaGlossaryFolder/translations", globals())
+    translations_html =     PageTemplateFile("zpt/NaayaGlossaryElement/translations", globals())
 
-    ############################
-    #  TRANSLATIONS FUNCTIONS  #
-    ############################
+    security.declareProtected(view_management_screens, 'name_trans_html')
+    name_trans_html =     PageTemplateFile("zpt/NaayaGlossaryElement/name_trans", globals())
+
+    security.declareProtected(view_management_screens, 'definition_trans_html')
+    definition_trans_html =     PageTemplateFile("zpt/NaayaGlossaryElement/definition_trans", globals())
+
+    #################################
+    #  NAME TRANSLATIONS FUNCTIONS  #
+    #################################
     def is_published(self): return self.approved
 
     def get_translation_by_language(self, language):
@@ -186,10 +193,15 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_translations_list')
     def set_translations_list(self, language, translation):
         """ set the languages """
-        if getattr(self, language, u"") == translation:
+        real_self = self.aq_base
+        if getattr(real_self, language, u"") == translation:
             # no need to do anything, so let's avoid generating a transaction
             return
-        setattr(self, language, translation)
+        if translation == "":
+            if hasattr(real_self, language):
+                delattr(real_self, language)
+        else:
+            setattr(real_self, language, translation)
         event.notify(ItemTranslationChanged(self, language, translation))
 
     def load_translations_list(self):
@@ -197,11 +209,34 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         for lang in self.get_english_names():
             self.set_translations_list(lang, '')
 
-    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageFolderTranslations')
-    def manageFolderTranslations(self, lang_code='', translation='', REQUEST=None):
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageNameTranslations')
+    def manageNameTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """
         self.set_translations_list(lang_code, translation)
         if REQUEST: return REQUEST.RESPONSE.redirect('translations_html')
+
+    #######################################
+    #  DEFINITION TRANSLATIONS FUNCTIONS  #
+    #######################################
+    def get_def_trans_by_language(self, language):
+        """ get translation by language """
+        return getattr(self.aq_self, self.definition_lang(language), '')
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_def_trans_list')
+    def set_def_trans_list(self, language, translation):
+        """ set the languages """
+        self.set_translations_list(self.definition_lang(language), translation)
+
+    def load_def_trans_list(self):
+        """ load languages """
+        for lang in self.get_english_names():
+            self.set_translations_list(self.definition_lang(lang), '')
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageDefinitionTranslations')
+    def manageDefinitionTranslations(self, lang_code='', translation='', REQUEST=None):
+        """ save translation for a language """
+        self.set_def_trans_list(lang_code, translation)
+        if REQUEST: return REQUEST.RESPONSE.redirect('translations_html?tab=1')
 
     #########################
     #     THEME FUNCTIONS   #
