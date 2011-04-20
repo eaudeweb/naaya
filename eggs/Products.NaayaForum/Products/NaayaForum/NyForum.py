@@ -157,7 +157,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
                     else:
                         id = file.filename
                     #check file size
-                    id = self.utCleanupId(id)
+                    id = self.utSlugify(id)
                     if len(file.read()) <= self.file_max_size or self.file_max_size == 0:
                         ob.manage_addFile(id=id, file=file)
 

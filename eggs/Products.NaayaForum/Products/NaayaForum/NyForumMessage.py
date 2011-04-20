@@ -27,7 +27,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
             if len(attachment.read()) > self.file_max_size:
                 REQUEST.set('file_max_size', self.file_max_size)
                 return message_add_html.__of__(self)(REQUEST)
-        id = self.utCleanupId(id)
+        id = self.utSlugify(id)
         if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
         if inreplyto == '': inreplyto = None
         if notify: notify = 1
