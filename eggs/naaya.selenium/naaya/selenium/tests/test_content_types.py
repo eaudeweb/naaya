@@ -350,8 +350,13 @@ class _CommonContentTests(SeleniumTestCase):
         xliff_file.close()
 
     @login_with('contributor', 'contributor')
-    def test_pick_keywords(self):
-        """ Check the button "pick" (from glossary) for keywords """
+    def test_aaaaaakeywords(self):
+        """ Check autocomplete functionality and the button "pick"
+        (from glossary) for keywords
+
+        XXX: Test multiple_select render as well
+
+        """
         self._add_glossary('test_glossary_kwds', 'glossary.xliff')
         schema_tool = self.portal['portal_schemas']
         schema = schema_tool.getSchemaForMetatype(self.meta_type)
@@ -365,20 +370,19 @@ class _CommonContentTests(SeleniumTestCase):
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
         self._fill_add_form()
-        self.selenium.type('keywords', u"")
+        self.selenium.type('keywords', u"") #Clear field
+        self.selenium.type_keys('keywords', u"Hol")
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
+        #Should be displayed and an autocomplete option
+        self.selenium.is_text_present(u'Holy hand grenade')
 
         self.selenium.click("//input[@type='button'][@value='Pick']")
-        self.selenium.wait_for_pop_up('pickkeyword',
-                                      self._selenium_page_timeout)
-        self.selenium.select_window('pickkeyword')
-        self.selenium.click("//img[@alt='Expand']")
-        self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
-        self.selenium.click("link=Shrubbery")
-        self.selenium.click("link=Ni")
-        self.selenium.close()
-        self.selenium.select_window('')
-        assert self.selenium.get_value("keywords") == 'Shrubbery, Ni'
-
+        self.selenium.wait_for_condition('window.selenium_ready == true',
+                                         self._selenium_page_timeout)
+        self.selenium.click("//li[@type='element'][2]/a")
+        time.sleep(1)
+        assert self.selenium.get_value("keywords") == u'Ni,'
         self.selenium.click("//input[@value='Submit']")
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
 
