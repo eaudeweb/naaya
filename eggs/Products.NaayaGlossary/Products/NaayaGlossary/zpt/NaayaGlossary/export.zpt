@@ -63,7 +63,7 @@
 	</tr>
 	<tr>
 		<td><fieldset><legend><strong>Export glossary dump as Zip file</strong></legend>
-			<p class="form-help">Download a Zip file with XLIFF translations for
+			<p class="form-help">Download a Zip file with translations for
 			terms in this glossary, in all languages. Does not export themes.</p>
 			<table border=0 cellpadding=2 cellspacing=0 width="100%">
 			<form action="dump_export" method="post" name="frmTMXExport">

@@ -1,8 +1,17 @@
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 
-def make_glossary(ctx, id='my_glossary'):
+known_languages = {
+    'en': "English",
+    'de': "German",
+    'ru': "Russian",
+}
+
+def make_glossary(ctx, id='my_glossary', langs=[]):
     manage_addGlossaryCentre(ctx, id)
-    return ctx[id]
+    glossary = ctx[id]
+    for lang_code in langs:
+        add_language(glossary, lang_code, known_languages[lang_code])
+    return glossary
 
 def add_folder(parent, id, title, translations={}):
     parent.manage_addGlossaryFolder(id, title)
