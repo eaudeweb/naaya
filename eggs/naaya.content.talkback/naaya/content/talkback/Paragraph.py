@@ -23,7 +23,6 @@ from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from DateTime import DateTime
 
@@ -102,7 +101,9 @@ class Paragraph(Folder):
     def comment_count(self):
         return sum(1 for c in self.get_comments() if c.approved)
 
-    _delete_comment_confirmation = PageTemplateFile('zpt/paragraph_delete_comment', globals())
+    _delete_comment_confirmation = NaayaPageTemplateFile(
+            'zpt/paragraph_delete_comment', globals(),
+            'tbconsultation_paragraph_delete_comment')
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
     def delete_comment(self, comment_id, REQUEST=None):
         """ """
@@ -119,7 +120,8 @@ class Paragraph(Folder):
                                         self.get_section().absolute_url())
             REQUEST.RESPONSE.redirect(back_url)
 
-    _split_content_html = PageTemplateFile('zpt/paragraph_split', globals())
+    _split_content_html = NaayaPageTemplateFile('zpt/paragraph_split', globals(),
+                                                'tbconsultation_paragraph_split')
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'split_body')
     def split_body(self, body_0=None, body_1=None, REQUEST=None):
         """ """
@@ -291,17 +293,19 @@ class Paragraph(Folder):
 
     #forms
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/paragraph_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/paragraph_index', globals(),
+                                       'tbconsultation_paragraph_index')
 
-    security.declareProtected(
-        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
-    edit_html = PageTemplateFile('zpt/paragraph_edit', globals())
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
+    edit_html = NaayaPageTemplateFile('zpt/paragraph_edit', globals(),
+                                      'tbconsultation_paragraph_edit')
 
     security.declareProtected(view, 'comments_html')
     comments_html = NaayaPageTemplateFile('zpt/paragraph_comments', globals(),
                                           'tbconsultation_paragraph_comments')
 
     security.declareProtected(view, 'embedded_html')
-    embedded_html = PageTemplateFile('zpt/paragraph_embedded', globals())
+    embedded_html = NaayaPageTemplateFile('zpt/paragraph_embedded', globals(),
+                                          'tbconsultation_paragraph_edit_embedded')
 
 InitializeClass(Paragraph)

@@ -27,7 +27,6 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.User import BasicUserFolder, SimpleUser
 from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
@@ -48,7 +47,8 @@ class InvitationsContainer(SimpleItem):
         self.id = id
         self._invites = OOBTree()
 
-    _create_html = PageTemplateFile('zpt/invitations_create', globals())
+    _create_html = NaayaPageTemplateFile('zpt/invitations_create', globals(),
+                                         'tbconsultation_invitations_create')
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'create')
     def create(self, REQUEST):
         """ Create an invitation, send e-mail """
@@ -147,7 +147,8 @@ class InvitationsContainer(SimpleItem):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'admin_html')
-    _admin_html = PageTemplateFile('zpt/invitations_admin', globals())
+    _admin_html = NaayaPageTemplateFile('zpt/invitations_admin', globals(),
+                                        'tbconsultation_invitations_admin')
     def admin_html(self, REQUEST):
         """ the admin view """
 

@@ -123,9 +123,8 @@ config = {
             },
     }
 
-talkbackconsultation_add_html = PageTemplateFile(
-    'zpt/talkbackconsultation_add', globals()
-)
+talkbackconsultation_add_html = NaayaPageTemplateFile(
+    'zpt/talkbackconsultation_add', globals(), 'tbconsultation_add')
 
 def addNyTalkBackConsultation(self,
                               id='',
@@ -654,7 +653,8 @@ class NyTalkBackConsultation(NyRoleManager,
         return self.aq_parent.standard_template_macro(*args, **kwargs)
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
-    edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
+    edit_html = NaayaPageTemplateFile('zpt/talkbackconsultation_edit', globals(),
+                                      'tbconsultation_edit')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'section_add_html')
     section_add_html = addSection_html
@@ -668,8 +668,7 @@ class NyTalkBackConsultation(NyRoleManager,
 
 InitializeClass(NyTalkBackConsultation)
 manage_addNyTalkBackConsultation_html = PageTemplateFile(
-    'zpt/talkbackconsultation_manage_add', globals()
-)
+    'zpt/talkbackconsultation_manage_add', globals())
 manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
 manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
 config.update({
