@@ -1218,6 +1218,11 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
                 if object.getLocalProperty('title', lang):
                     return 1
 
+    security.declareProtected(view, 'HEAD')
+    def HEAD(self, REQUEST=None):
+        """ """
+        modified = self.bobobase_modification_time()
+        return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
