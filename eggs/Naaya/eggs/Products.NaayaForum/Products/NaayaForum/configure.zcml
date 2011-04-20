@@ -45,14 +45,6 @@
   </class>
 
   <configure zcml:condition="installed Products.naayaUpdater">
-    <utility name="add_forum_releasedate.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.AddForumReleaseDate"
-      permission="zope2.ViewManagementScreens" />
-
-    <utility name="zgadfly_migration.update"
-      provides="Products.naayaUpdater.interfaces.IUpdateScript"
-      component=".updates.ZGadFlyMigration"
-      permission="zope2.ViewManagementScreens" />
+    <!-- Update scripts -->
   </configure>
 </configure>
