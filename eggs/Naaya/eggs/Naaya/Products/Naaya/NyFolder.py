@@ -68,7 +68,7 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
     Parameters::
 
         callback
-            A function that returns an new instance of the NyFolder object-type
+            A function that returns an instance of a folder
 
     """
     if REQUEST is not None:

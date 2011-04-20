@@ -18,8 +18,9 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 class NyFolderBase(Folder, NyPermissions):
     """
-    The base class for a folder-ish content type.
+    The base class for a `folderish` content type.
     Implements the functionality to display the listing for the folder.
+
     """
 
     security = ClassSecurityInfo()
@@ -92,9 +93,11 @@ class NyFolderBase(Folder, NyPermissions):
     security.declareProtected(view, 'folder_listing_info')
     def folder_listing_info(self, skey='sortorder', rkey=0,
                             sort_on='title', sort_order=0):
-        """ This function is called on the folder listing and it checkes whether or not
-            to display the various buttons on that form
+        """ This function is called on the folder listing and checks whether to
+        display various buttons in the form it is called.
+
         """
+
         folders_info = self.listed_folders_info(skey, rkey, sort_on, sort_order)
         objects_info = self.listed_objects_info(skey, rkey, sort_on, sort_order)
 
@@ -129,9 +132,11 @@ class NyFolderBase(Folder, NyPermissions):
 
     security.declareProtected(view, 'folder_listing_ratings')
     def folder_listing_ratings(self):
-        """ This function is called on the folder listing and it checkes whether or not
-            there is at least an object that provides ratings
+        """ This function is called on the folder listing and it checks
+        whether there is at least one object that provides ratings
+
         """
+
         folders_info = self.listed_folders_info()
         objects_info = self.listed_objects_info()
 
@@ -272,10 +277,13 @@ class NyFolderBase(Folder, NyPermissions):
         return meta_item[1]
 
     def process_submissions(self):
-        """
-        returns info regarding the meta_types that ce be added inside the folder
+        """Returns info meta_types and their constructors views that can be 
+        added inside a folder.
+
         [(FUNC_NAME, LABEL), (...), ...]
+
         """
+
         if hasattr(self, 'folder_meta_types'):
             folder_meta_types = self.folder_meta_types
         else:
@@ -283,7 +291,6 @@ class NyFolderBase(Folder, NyPermissions):
                                  'Naaya Forum', 'Naaya Mega Survey',
                                  'Naaya Photo Gallery', 'Naaya Photo Folder',
                                  'Naaya TalkBack Consultation']
-
         r = []
         ra = r.append
 
