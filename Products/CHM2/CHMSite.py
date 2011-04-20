@@ -1092,15 +1092,11 @@ def glossary_dump_from_skel(files_path):
     dump_file = StringIO()
     dump_zip = ZipFile(dump_file, 'w')
 
-    for xliff_name in os.listdir(files_path):
-        if not xliff_name.endswith('.xliff'):
-            continue
-        xliff_path = os.path.join(files_path, xliff_name)
-        dump_zip.write(xliff_path, 'glossary/%s' % xliff_name)
+    dump_zip.write(os.path.join(files_path, 'metadata.json'),
+                   'glossary/metadata.json')
+    dump_zip.write(os.path.join(files_path, 'translations.xml'),
+                   'glossary/translations.xml')
 
-    metadata_path = os.path.join(files_path, 'metadata.json')
-
-    dump_zip.write(metadata_path, 'glossary/metadata.json')
     dump_zip.close()
     dump_file.seek(0)
 
