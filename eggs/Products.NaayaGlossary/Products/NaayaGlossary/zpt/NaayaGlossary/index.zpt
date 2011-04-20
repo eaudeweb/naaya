@@ -70,6 +70,8 @@
 <div class="cleaner"/>
 <h1 tal:content="here/title_or_id"/>
 
+<p tal:content="here/get_description"/>
+
 <tal:block condition="python:has_permission and has_sync"
            content="structure here/sync_info_text"/>
 
