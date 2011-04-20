@@ -60,10 +60,10 @@ def addSection(self, id='', title='', body='', REQUEST=None):
     while self._getOb(id, None) is not None:
         i += 1
         id = '%s-%d' % (base_id, i)
-    ob = Section(id, title, body)
+    ob = Section(id, title)
     self._setObject(id, ob)
     ob = self._getOb(id)
-    ob.parseBody()
+    ob.parseBody(body)
     if REQUEST is not None:
         self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
@@ -77,10 +77,9 @@ class Section(Folder):
             'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
     ]
 
-    def __init__(self, id, title, body):
+    def __init__(self, id, title):
         self.id =  id
         self.title = title
-        self.body = body
         self.next_available_id = 0 # some legacy Section instances might not have this attribute
         self.paragraph_ids = [] # some legacy Section instances might not have this attribute
 
@@ -144,8 +143,8 @@ class Section(Folder):
         return sum(p.comment_count() for p in self.get_paragraphs())
 
     security.declarePrivate('parseBody')
-    def parseBody(self):
-        output = parse(self.body)
+    def parseBody(self, body):
+        output = parse(body)
         for paragraph in output:
             addParagraph(self, body=paragraph)
 
