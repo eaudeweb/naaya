@@ -19,7 +19,7 @@ portlet. **Add a how-to screenshot here**
 Administration sections
 --------------------------
 
-The administration area is split into different sections each used to perform
+The administration area is split into different sections, each used to perform
 a set of similar tasks.
 
 -------------------
@@ -29,8 +29,8 @@ General settings
 
 Portal properties
 +++++++++++++++++++++++
-    This section is used to manage general administrative tasks concerning
-    the term:`portal`. This section is split into a few parts:
+This section is used to manage general administrative tasks concerning
+the :term:`portal`. This section is split into a few parts:
 
 * metadata: site title and subtitle, description (which appears on the
   front page of the portal), publisher, contributor, creator, rights
@@ -47,12 +47,12 @@ Portal properties
   containing geographical regions and countries, used to fill in the
   ``geographical coverage`` property of each item
 
-* various other properties relevant for the entire portal
+* various other properties relevant for the entire portal, such as: show the release date of items, rename objects' ids, show the number of objects in a folder. 
 
 Portal statistics
 +++++++++++++++++++
 
-In order to access the statistics provided by Google Analytics for your portal;
+Here you have access to the statistics provided by Google Analytics for your portal;
 visits on a certain range of time, top pages visited, top searches in the
 portal, top referrers; the interval between which the portal statistics
 should be shown is set here, as well as the default account.
@@ -60,47 +60,47 @@ should be shown is set here, as well as the default account.
 Portal layout
 +++++++++++++++++
 
-Allows choosing from a set of predefined layouts and colour schemes.
+You can choose the layout you prefer for your portal from a set of predefined layouts and colour schemes.
 
 Users' management
 +++++++++++++++++++
 
-Which allows managing users and their roles
+In this section you can manage your portal users and their roles. See also :doc:`roles`
 
 
 Translate messages
 ++++++++++++++++++++
 
-Is the translation centre for the messages across the portal, with the
+It's the translation centre for the messages across the portal, with the
 possibility to individually translate items or import/export all the
-translation in CSV, XLIFF and PO formats;
+translation in CSV, XLIFF and PO formats. See also :doc:`translations`
 
 
 Lists of links
 ++++++++++++++++++
 
 Managing the *lists of links* that appear in the header and footer of each page,
-and in list of links portlets
+and in list of links portlets.
 
 Selection lists
 ++++++++++++++++++++++
 
-Which appear when adding/editing content types (e.g. when adding an event,
-there is a choice asking for the type of event; these choices can be set in
-the corresponding selection list)
+Selection lists appear when adding/editing content types (e.g. when adding an event,
+there is a choice asking for the type of event); these choices can be set in
+the corresponding selection list.
 
 Notifications
 ++++++++++++++++++++++++++
 
-Which are sent to subscribed users whent content iss added or modified in the
-portal
+Notifications are sent to subscribed users when content iss added or modified in the
+portal. There are two types of notifications: notifications for users and notifications for administrators.
 
 Map management
 +++++++++++++++++++++++++++
 
-Which allows managing the settings of the portal map and of the geo-tagged
-content, such as map height, choice of map engine; managing the types of
-locations which can be added for geo-taggable objects; managing locations.
+In this section you can manage the settings of the portal map and of the geo-tagged
+content, such as map height, choice of map engine, the types of
+locations which can be added for geo-taggable objects, as well as the locations.
 
 -----------------------
 Content management
@@ -111,7 +111,7 @@ Perform administrative tasks concerning various content types.
 Manage content types
 +++++++++++++++++++++++++
 
-Exposes all content types available in the portal, allows the
+This section exposes all content types available in the portal, allows the
 configuration of the content type's properties, and
 also allows portals administrators decide whether content types available in
 the portal are geo-tagged and ratable.
@@ -119,38 +119,38 @@ the portal are geo-tagged and ratable.
 Basket of approvals
 +++++++++++++++++++++++++
 
-Lists pending (not yet approved) items from the portal
+This section lists pending (not yet approved) items from the portal.
 
 Basket of translations
 +++++++++++++++++++++++++++++
 
-Lists the portal folders that contain items not yet translated into the
-specified language
+This section lists the portal folders that contain items not yet translated into the
+specified language.
 
 Version control
 ++++++++++++++++++++++++++
 
-Displays a list of all objects checked out for editing by various users
+It displays a list of all objects checked out for editing by various users
 
 
 Main sections
 ++++++++++++++++++++
 
-Contains the *navigation properties* that allows administrators to set the
+In this section you can manage the *main sections* that are listed in the left-side portlet. 
+The *navigation properties* allows administrators to set the
 default style of navigation in the portal; in this respect, they can choose
 whether to have an expanded menu (main sections) or not,
 as well as to keep it like that, even after a user has clicked on a main
 section and has seen its folders and sub-folders and then went to another
 main section; the expand levels option allows administrators to specify
 the depth of the expanded navigation tree, and the maximum levels option
-allows administrators to specify the maximum depth of the navigation tree
+allows administrators to specify the maximum depth of the navigation tree.
 
 ------------------
 Syndication
 ------------------
 
-Allows defining and managing local and remote channels
-  in Atom and RDF formats
+Allows defining and managing local and remote channels in Atom and RDF formats.
 
 Local channels
 +++++++++++++++++++++
@@ -166,7 +166,7 @@ manually updated, by pushing the *Update now* button
 Remote channels aggregators
 ++++++++++++++++++++++++++++++++
 
-Can be defined by the portal administrator and are collections of remote
+They can be defined by the portal administrator and are collections of remote
 channels that contain all the data from the channels defined in the
 *Remote channels* section
 
@@ -174,4 +174,4 @@ channels that contain all the data from the channels defined in the
 Portlets
 ------------
 
-Define, edit or delete them and arrange existing portlets around the pages
+Define, edit or delete them and arrange existing portlets around the pages. See also :doc:`portlets`

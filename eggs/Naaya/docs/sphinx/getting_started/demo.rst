@@ -1,7 +1,7 @@
 See Naaya in action (demo)
 ==========================
 
-To see *Naaya* in action click the link bellow:
+To see *Naaya* in action click the link below:
 
     http://naaya.demo.eaudeweb.ro/
 

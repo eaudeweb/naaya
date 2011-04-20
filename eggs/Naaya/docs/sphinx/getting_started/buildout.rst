@@ -28,14 +28,14 @@ dependencies first:
 * build-essential (Required to compile python)
 * zlib1g-dev (Used for zip support)
 * libglib2.0-dev (Required by Itools)
-* libreadline-dev (Optional: usefull for debugging purposes)
+* libreadline-dev (Optional: useful for debugging purposes)
 * libxslt-dev (Required by `lxml`_)
 
-If you have Ubuntu or Debian you can install the above deps like this::
+If you have Ubuntu or Debian, you can install the above deps like this::
 
     apt-get install build-essential zlib1g-dev libglib2.0-dev libreadline-dev libxslt-dev
 
-Now after the python is downloaded an unarchived::
+Now, after the python is downloaded and unarchived::
 
     ./configure --prefix=/absolute/path/to/python && make && make install
 
@@ -47,7 +47,7 @@ Naaya also requires PIL to be installed. You can install the latest PIL using pi
 
     pip install PIL
 
-Or if you don't have pip you can manually install PIL:
+Or, if you don't have pip, you can manually install PIL:
 
     wget http://effbot.org/downloads/Imaging-1.1.7.tar.gz
     tar -xzf Imaging-1.1.7.tar.gz

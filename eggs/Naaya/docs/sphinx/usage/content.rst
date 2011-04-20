@@ -12,19 +12,17 @@ What is a :term:`content type`?
 
 All types of content have a common set of attributes that generically describe
 resources. They are called metadata. Since fully defining a resource implies
-generically describing it and also describing its custom characteristics.
+generically describing it and also describing its custom characteristics, all **Naaya** content types have:
 
-All **Naaya** content types have:
 * a common set of properties (e.g. title, description, release date, contributor)
 * a custom set of properties (e.g. *location* for *events*, *expiration date* for *news*)
 
 Administrators can view and configure all these attributes, or properties, in
-the :doc:`admin` *Manage content types*. It is also here that they can d
-ecide whether the content types available in the portal can be geo-tagged or
+the :doc:`admin` *Manage content types*. It is also here that they can decide whether the content types available in the portal can be geo-tagged or
 ratable. Depending on the setup chosen by administrators in terms of
-geo-taggable content types such content types can be geotagged by users.
+geo-taggable content types, such content types can be geotagged by users.
 
-When creating or editing a content type, users can feel in a description of
+When adding or editing a content type, users can feel in a description of
 the content type by means of an easy to use, :term:`WYSIWYG` web editor.
 
 What content types are available?
@@ -84,20 +82,20 @@ Pointer
   Pointers are links to internal portal pages. When adding a pointer, a
   sitemap is displayed to pick from.
 
-How to create document of a specific content types?
+How to add an object?
 -----------------------------------------------------
 
-After having chosen the location where you want to create a document of a
-specific content type and after having chosen the content type you want to
-create, there is a sequence of steps you need to follow:
+After having chosen the location where you want to create an instance of a 
+content type / an object, and after having chosen the content type you want to
+add, there is a sequence of steps you need to follow:
 
-    go to a folder -> choose on the right of *Submit* the content type you want
-    to create -> fill in the form that opens with: Title, Description,
+    go to a folder -> choose on the right of *Submit* the type of content you want
+    to add -> fill in the form that opens with: Title, Description,
     geographical coverage, keywords, sort order, release date, choose whether
     the object is *open for comments* or not, maintainer email, etc.
 
     When you've filled in the requested information, you can push the
-    *Submit* button, to save the information. Once the document was created,
+    *Submit* button, to save the information. Once the object was added,
     you can go back to the folder to edit it.
 
 How to search for content types?
