@@ -1,4 +1,10 @@
-""" This tool is deprecated. Use SchemaTool instead"""
+""" This tool allows creation of dynamic properties for content types.
+
+.. deprecated:: 2.11.03
+    Use :mod:`Products.NaayaCore.SchemaTool` instead. Also note
+    that this tool will be removed in the next versions.
+
+"""
 
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile

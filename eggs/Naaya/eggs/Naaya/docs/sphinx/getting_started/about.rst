@@ -18,6 +18,7 @@ custom designed to fit the profile of public administration portals.
 
 Moreover, Naaya is used not only in stand alone websites, but more often in networks of portals. 
 Some such communities are:
+
  * European Community Clearing House Mechanism portal, national portal and portal toolkit, `European CHM`_ - currently over 40 national portals worldwide
  * EnviroWindows network of portals, `EnviroWindows`_, an EEA platform for knowledge sharing and development - currently over 40 national portals worldwide
  * Euro-Mediterranean Information System on Know-How in the Water Sector portal, toolkit and national portals, `Semide`_ - currently 4 portals from the Mediterranean area 
