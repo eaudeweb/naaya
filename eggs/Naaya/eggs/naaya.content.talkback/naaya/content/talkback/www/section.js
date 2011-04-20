@@ -50,7 +50,7 @@ function comment_add(evt) {
             left: '130px'
         });
 
-    var close_button_1 = $('<a href="javascript:;">[close]</a>');
+    var close_button_1 = $('<a href="javascript:;">['+gettext("close")+']</a>');
     var close_button_2 = close_button_1.clone();
     close_button_1.addClass('tb-iframe-close-top').appendTo(comment_box);
     close_button_2.addClass('tb-iframe-close-bottom');
