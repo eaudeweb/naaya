@@ -110,8 +110,8 @@
     <tr>
         <th tal:condition="manage_perm"
             class="talkback-section_list-edit_column"></th>
-        <th i8n:translate="">Section</th>
-        <th i8n:translate="">Comments</th>
+        <th i18n:translate="">Section</th>
+        <th i18n:translate="">Comments</th>
         <th tal:condition="manage_perm"
             class="talkback-section_list-edit_column"></th>
     </tr>
