@@ -23,7 +23,6 @@ from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.ImageFile import ImageFile
 from Acquisition import Implicit
 
@@ -35,7 +34,8 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from constants import *
 
 
-addSection_html = PageTemplateFile('zpt/section_add', globals())
+addSection_html = NaayaPageTemplateFile('zpt/section_add', globals(),
+                                        'tbconsultation_section_add')
 def addSection(self, id='', title='', body='', REQUEST=None):
     """ """
 
@@ -159,7 +159,8 @@ class Section(Folder):
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
-    edit_html = PageTemplateFile('zpt/section_edit', globals())
+    edit_html = NaayaPageTemplateFile('zpt/section_edit', globals(),
+                                      'tbconsultation_section_edit')
 
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/section_index', globals(),
