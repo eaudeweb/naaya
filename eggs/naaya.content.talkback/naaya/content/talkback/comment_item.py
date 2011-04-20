@@ -43,6 +43,7 @@ from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 
 #Product imports
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
 
@@ -235,7 +236,8 @@ class TalkBackConsultationComment(NyFSFile):
     security.declareProtected(view_management_screens, 'manage_workspace')
     manage_workspace = PageTemplateFile('zpt/comment_manage', globals())
 
-    _edit_html = PageTemplateFile('zpt/comment_edit', globals())
+    _edit_html = NaayaPageTemplateFile('zpt/comment_edit', globals(),
+                                       'tbconsultation_comment_edit')
     security.declarePublic('edit_html')
     def edit_html(self, REQUEST):
         """ edit this comment """
