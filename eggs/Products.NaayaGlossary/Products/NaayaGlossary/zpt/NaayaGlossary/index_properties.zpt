@@ -41,6 +41,13 @@
             <input type="checkbox" name="parent_anchors" id="selectable" tal:attributes="checked here/parent_anchors" />
         </div>
 
+        <div class="field">
+            <label for="description">Description
+            (<tal:block content="here/gl_get_selected_language"/>)</label>
+            <textarea name="description:utf8:ustring" rows="4" cols="80"
+                      tal:content="here/get_description"></textarea>
+        </div>
+
         <input type="submit" name="save" value="Save Changes">
 </form>
 

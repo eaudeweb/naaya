@@ -321,3 +321,14 @@ class DumpExportImportTest(NaayaTestCase):
         glossary.dump_import(StringIO(server_glossary.dump_export()))
         self.assertEqual(glossary['1'].title, "New bucket")
         self.assertEqual(glossary['1']['2'].title, "New water")
+
+    def test_update_description(self):
+        server_glossary = self._make_server_glossary()
+        server_glossary.set_description(u"Hello world!")
+        server_glossary.set_description(u"Hallo Welt!", lang='de')
+        glossary = helpers.make_glossary(self.portal)
+
+        glossary.dump_import(StringIO(server_glossary.dump_export()))
+
+        self.assertEqual(glossary.get_description(), u"Hello world!")
+        self.assertEqual(glossary.get_description(lang='de'), u"Hallo Welt!")

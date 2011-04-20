@@ -35,6 +35,7 @@ import lxml.etree
 
 #Zope imports
 import transaction
+from persistent.mapping import PersistentMapping
 import Products
 import AccessControl.User
 from OFS.Folder                                 import Folder
@@ -249,13 +250,29 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return the glossary catalog object """
         return self._getOb(NAAYAGLOSSARY_CATALOG_NAME)
 
+    security.declareProtected(view, 'get_description')
+    def get_description(self, lang=None):
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        return getattr(self.aq_base, '_description', {}).get(lang, u"")
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_description')
+    def set_description(self, new_value, lang=None):
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        if not hasattr(self.aq_base, '_description'):
+            self._description = PersistentMapping()
+        self._description[lang] = new_value
+
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageBasicProperties')
-    def manageBasicProperties(self, title='', approved=0, parent_anchors=0, REQUEST=None):
+    def manageBasicProperties(self, title='', approved=0, parent_anchors=0,
+                                    description=None, REQUEST=None):
         """ manage basic properties for NyGlossary """
         self.title =        title
         self.approved =     approved
         self.parent_anchors = parent_anchors
-        self._p_changed =   1
+        if description is not None:
+            self.set_description(description)
         if REQUEST: return REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
     def definition_lang(self, language):
@@ -634,9 +651,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             return REQUEST.RESPONSE.redirect('index_properties_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryProperties')
-    def updateGlossaryProperties(self, title='', approved='', parent_anchors='', REQUEST=None):
+    def updateGlossaryProperties(self, title='', approved='', parent_anchors='',
+                                       description=None, REQUEST=None):
         """ """
-        self.manageBasicProperties(title, approved, parent_anchors)
+        self.manageBasicProperties(title, approved, parent_anchors, description)
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_properties_html')
 
@@ -951,6 +969,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                               for l in self.languages_list),
             'properties': {
                 'parent_anchors': bool(self.parent_anchors),
+                'description': dict(getattr(self, '_description', {})),
             },
         }
         metadata_json = json.dumps(metadata, indent=2) + '\n'
@@ -994,6 +1013,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 log.info(log_prefix + 'Adding language %s (%s)',
                          language, lang_code)
                 self._add_language(lang_code, language)
+
+            new_description = properties['description'].get(lang_code, u"")
+            if self.get_description(lang_code) != new_description:
+                self.set_description(new_description, lang_code)
 
         from subscribers import EventCounter
         p = ofs_path(self)
