@@ -256,6 +256,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         self._p_changed =   1
         if REQUEST: return REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
+    def definition_lang(self, language):
+        """ return definition translation property name """
+        return 'def_%s' % language
+
     #######################
     #   THEME FUNCTIONS   #
     #######################
@@ -410,7 +414,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 i = 0
                 for translation in item_translation:
                     lang_code = item_lang_code[i]
-                    folder.manageFolderTranslations(lang_code, translation)
+                    folder.manageNameTranslations(lang_code, translation)
                     i+=1
 
         elif item_meta_type == "Naaya Glossary Element":
