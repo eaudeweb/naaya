@@ -41,7 +41,7 @@ class Extra_for_DateRangeIndex:
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
-                      REQUEST=None):
+                      load_glossaries=[], REQUEST=None):
     """ """
     if REQUEST is not None:
         # we'll need the SESSION later on; grab it early so we don't
@@ -53,7 +53,7 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, CHMSite(id, portal_uid, title, lang))
     chm_site = self._getOb(id)
-    chm_site.loadDefaultData()
+    chm_site.loadDefaultData(load_glossaries)
 
     if google_api_keys:
         engine = chm_site.getGeoMapTool()['engine_google']
@@ -84,7 +84,7 @@ class CHMSite(NySite):
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
     security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
+    def loadDefaultData(self, load_glossaries=[]):
         """ """
         #set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
@@ -124,21 +124,17 @@ class CHMSite(NySite):
         #create index for Naaya Calendar
         extra=Extra_for_DateRangeIndex(since_field='start_date', until_field='end_date')
         self.getCatalogTool().manage_addIndex("resource_interval", 'DateRangeIndex', extra=extra)
+
         #create and fill glossaries
-        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS) 
-        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml'))) 
-        self.add_glossary_coverage()
-        self.add_chm_terms_glossary()
+        if 'coverage' in load_glossaries:
+            self.add_glossary_coverage()
+        if 'keywords' in load_glossaries:
+            self.add_glossary_keywords()
+        if 'chm_terms' in load_glossaries:
+            self.add_chm_terms_glossary()
 
         #set glossary for pick lists
-        self.keywords_glossary = ID_GLOSSARY_KEYWORDS
-        self.coverage_glossary = ID_GLOSSARY_COVERAGE
         self._p_changed = 1
-        schema_tool = self.portal_schemas
-        coverage = schema_tool.NyDocument['coverage-property']
-        keywords = schema_tool.NyDocument['keywords-property']
-        coverage.saveProperties(glossary_id=self.coverage_glossary, all_content_types=True, sortorder=coverage.sortorder, title=coverage.title, visible=coverage.visible)
-        keywords.saveProperties(glossary_id=self.keywords_glossary, all_content_types=True, sortorder=keywords.sortorder, title=keywords.title, visible=keywords.visible)
         #add Forum instance
         addNyForum(self, id='portal_forum', title='CHM Forum', description='', categories=['CHM', 'Biodiversity', 'Other'], file_max_size=0, REQUEST=None)
         #add EC CHM to network portals list
@@ -148,6 +144,7 @@ class CHMSite(NySite):
         """ """
         return CHM2_PRODUCT_PATH
 
+    security.declareProtected(view_management_screens, 'add_glossary_coverage')
     def add_glossary_coverage(self):
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
         glossary = self._getOb(ID_GLOSSARY_COVERAGE)
@@ -173,6 +170,21 @@ class CHMSite(NySite):
         for file in [file for file in import_files if file.endswith('.xml')]:
             glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations', file)))
 
+        self.coverage_glossary = ID_GLOSSARY_COVERAGE
+        schema_tool = self.portal_schemas
+        coverage = schema_tool.NyDocument['coverage-property']
+        coverage.saveProperties(glossary_id=self.coverage_glossary, all_content_types=True, sortorder=coverage.sortorder, title=coverage.title, visible=coverage.visible)
+
+    security.declareProtected(view_management_screens, 'add_glossary_keywords')
+    def add_glossary_keywords(self):
+        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS) 
+        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml'))) 
+        self.keywords_glossary = ID_GLOSSARY_KEYWORDS
+        schema_tool = self.portal_schemas
+        keywords = schema_tool.NyDocument['keywords-property']
+        keywords.saveProperties(glossary_id=self.keywords_glossary, all_content_types=True, sortorder=keywords.sortorder, title=keywords.title, visible=keywords.visible)
+
+    security.declareProtected(view_management_screens, 'add_chm_terms_glossary')
     def add_chm_terms_glossary(self, set_up_sync=True):
         manage_addGlossaryCentre(self, ID_CHM_TERMS, TITLE_CHM_TERMS)
         glossary = self._getOb(ID_CHM_TERMS)
