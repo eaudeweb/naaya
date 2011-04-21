@@ -3741,6 +3741,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        layout_tool = self.getLayoutTool()
+        current_skin = layout_tool.get_current_skin()
+        if current_skin._getOb('site_index', None):
+            return layout_tool.getContent({'here': self}, 'site_index')
         return self.getFormsTool().getContent({'here': self}, 'site_index')
 
     security.declareProtected(view, 'menusubmissions')
