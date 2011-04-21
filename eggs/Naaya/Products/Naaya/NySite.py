@@ -2384,7 +2384,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         XXX: Should be assign_roles
 
         Assign a list of roles to a list of users at the specified location
-        optionaly sending a noitification e-mail
+        optionally sending a notification e-mail
 
         """
         err = ''

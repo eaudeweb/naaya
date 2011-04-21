@@ -160,8 +160,8 @@ class NyVersioning(utils):
 
     def objectDataForVersionCompare(self):
         """
-        Rreturns the object property that is reprezentative for that object.
-        It will support a crc32 comparation againts an older version
+        Returns the object property that is representative for that object.
+        It will support a crc32 comparison against `an older version`
         in order to determine if is the same value.
 
         B{This method must be implemented.}
@@ -170,8 +170,8 @@ class NyVersioning(utils):
 
     def objectVersionDataForVersionCompare(self, p_version_data):
         """
-        Returns the version piece that is reprezentative for a that version.
-        It will support a crc32 comparation againts the object data
+        Returns the version piece that is representative for a that version.
+        It will support a crc32 comparison against `the object data`
         in order to determine if is the same value.
 
         B{This method must be implemented.}

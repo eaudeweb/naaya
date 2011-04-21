@@ -76,19 +76,19 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
     def setSearchedItems(self, items):
         """
-        Set the searcheble items list.
+        Set the searchable items list.
         """
         self.searched_items.append(items)
 
     def getSearchedItems(self):
         """
-        Get the searcheble items list.
+        Get the searchable items list.
         """
         return self.searched_items
 
     def delSearchedItems(self, item):
         """
-        Delete a searcheble item from the list.
+        Delete a searchable item from the list.
         """
         try: self.searched_items.remove(item)
         except ValueError: pass

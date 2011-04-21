@@ -226,7 +226,7 @@ class NyBase(NyDublinCore):
           1. try to create the object, but if the object exists the old
              object must be deleted first
           2. the object already exists (do nothing)
-          3. try to delete the object and implicit all its content
+          3. try to delete the object and all its content
 
         """
 

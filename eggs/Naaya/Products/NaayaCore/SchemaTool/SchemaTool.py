@@ -1,6 +1,6 @@
 """
-This tool provides is a container for Schema's of content types. It allows to
-customize the way different fields behave.
+This tool provides a container for Schema's of content types.
+It allows to customize the way different fields behave.
 
 """
 from AccessControl import ClassSecurityInfo

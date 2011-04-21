@@ -116,7 +116,7 @@ def _create_NyContact_object(parent, id, contributor):
 
 def addNyContact(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
-    Create an Contact type of object.
+    Create a `NyContact` type of object.
     """
     #process parameters
     if REQUEST is not None:
