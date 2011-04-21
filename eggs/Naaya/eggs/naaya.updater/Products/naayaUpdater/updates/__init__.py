@@ -78,6 +78,7 @@ class UpdateScript(Item, Acquisition.Implicit):
 
     security.declareProtected(view_management_screens, 'update')
     def update(self, portal, do_dry_run):
+        self._setup_logger()
         begin_transaction()
         transaction = get_transaction()
         try:
@@ -106,8 +107,6 @@ class UpdateScript(Item, Acquisition.Implicit):
         report_html = ''
         portals = {}
         if REQUEST.REQUEST_METHOD == 'POST':
-            self._setup_logger()
-
             do_dry_run = (REQUEST.form.get('action') != 'Run update')
             for portal_path in REQUEST.form.get("portal_paths", []):
                 portal = self.unrestrictedTraverse(portal_path)

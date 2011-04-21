@@ -5,6 +5,7 @@
 
 <tal:block metal:fill-slot="head">
   <title>Naaya updater log entries</title>
+  <link rel="stylesheet" href="/misc_/naayaUpdater/updater.css" type="text/css" media="screen" charset="utf-8">  
 </tal:block>
 
 <tal:block metal:fill-slot="body">
