@@ -1,6 +1,9 @@
 <metal:block define-macro="page">
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
+<metal:block define-slot="head">
+    <link rel="stylesheet" href="/misc_/naayaUpdater/updater.css" type="text/css" media="screen" charset="utf-8">
+</metal:block>
 <h2 metal:define-slot="title" tal:content="string:${here/title_or_id} " />
 <!--<h3 metal:define-slot="priority">Priority: <span tal:replace="here/get_priority_string"/></h3>-->
 <div metal:define-slot="description"><span tal:replace="here/description"/></div>
@@ -23,12 +26,15 @@
         </li>
         </tal:block>
     </ul>
-
-    <input type="submit" name="action" value="Run update" />
-    <input type="submit" name="action" value="Show report" />
+    <p class="help-text"><strong>Dry run</strong> runs the update, but <em>doesn't commit anything</em>. <strong>Run update</strong> performs the update and <em>commits the changes.</em></p>
+    <input type="submit" name="action" class="clean-gray" value="Run update" title="Runs update and commits" />
+    <input type="submit" name="action" class="cupid-green" value="Dry run" title="Run update, but don't commit anything." />
 </form>
 
-<pre tal:content="structure options/report|nothing" />
+<tal:block condition="options/report">
+    <h3>Results (<tal:block replace="python: request.form.get('action', '')"/>):</h3>
+    <pre tal:content="structure options/report" />
+</tal:block>
 </metal:block>
 
 <tal:block metal:define-slot="scripts">
