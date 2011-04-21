@@ -29,5 +29,6 @@ def initialize(context):
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),
+    "updater.css":  ImageFile("www/updater.css", globals()),
     "updater.js":  ImageFile("www/updater.js", globals()),
 }

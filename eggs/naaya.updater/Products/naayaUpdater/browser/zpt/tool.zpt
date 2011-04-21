@@ -5,74 +5,10 @@
 
 <tal:block metal:fill-slot="head">
   <title>Naaya updater</title>
+  <link rel="stylesheet" href="/misc_/naayaUpdater/updater.css" type="text/css" media="screen" charset="utf-8">
 </tal:block>
 
 <tal:block metal:fill-slot="body">
-<style type="text/css">
-
-table.listing {
-  width: 100%;
-}
-
-table.listing td, table.listing th {
-  padding-left: 0.5em;
-}
-
-table.listing a {
-  color: #b00;
-}
-
-.priority0-even {
-  background: #fdc;
-}
-.priority0-even td {
-  border: 1px dotted #e88;
-}
-.priority0-odd {
-  background: #fed;
-}
-.priority0-odd td{
-  border: 1px dotted #e88;
-}
-
-.priority1-even {
-  background: #ffb;
-}
-.priority1-even td {
-  border: 1px dotted #eea;
-}
-.priority1-odd {
-  background: #ffd;
-}
-.priority1-odd td {
-  border: 1px dotted #eea;
-}
-
-.priority2-even {
-  background: #F6F6F6;
-}
-.priority2-even td {
-  border: 1px dotted #ccc;
-}
-
-.priority2-odd {
-  background: #fbfbfb;
-}
-
-.priority2-odd td {
-  border: 1px dotted #ddd;
-}
-
-td.details {
-  font-size: 85%;
-  color: #76797c;
-}
-
-.list-header th {
-  text-align: left;
-}
-</style>
-
 <div tal:repeat="table python:view.table">
   <tal:scripts define="
     category python:table[0];
