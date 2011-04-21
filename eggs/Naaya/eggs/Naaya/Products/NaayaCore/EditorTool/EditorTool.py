@@ -37,7 +37,7 @@ def loadConfig(section='tinymce'):
     The configuration is loaded from the *config.ini* file.
     `section` Section to load from config.ini. You can use config.ini
     to create multiple templates for the editor and name them differently.
-    Returns an dictionary with tinymce configuration options
+    Returns a dictionary with tinymce configuration options
     """
     boolean_settings = ['button_tile_map',
                 'apply_source_formatting',
@@ -304,7 +304,7 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         """ Parse `REQUEST` and retrieve image attributes to set them into
         preview. This method is called when user selects the image into editor
         and then presses image button to adjust its settings.
-        Return an dictionary with found attributes such as border, margin etc.
+        Return a dictionary with found attributes such as border, margin etc.
         """
         ret = {
                'title' : self.get_request_param(REQUEST, 'title'),
@@ -338,7 +338,7 @@ $().ready(function() {$('textarea#%s').tinymce(%s);})\
         return ret
 
     def get_request_param(self, REQUEST, name, default=''):
-        """ Safely retrieve an parameter from request
+        """ Safely retrieve a parameter from request
         Parameters:
 
             `REQUEST`

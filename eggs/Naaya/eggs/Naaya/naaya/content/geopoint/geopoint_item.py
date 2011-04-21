@@ -97,7 +97,7 @@ def _create_NyGeoPoint_object(parent, id, contributor):
 
 def addNyGeoPoint(self, id='', REQUEST=None, contributor=None, **kwargs):
     """
-    Create an Contact type of object.
+    Create an `NyGeoPoint` type of object.
     """
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)

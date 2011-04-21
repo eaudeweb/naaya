@@ -57,10 +57,10 @@ class NyImportExport:
     security.declareProtected(view_management_screens, 'exportdata')
     def exportdata(self, all_levels=1):
         """
-        Generetes an XML with the object content.
-        @return: a downloadable Naaya XML file
-        """
+        Generates an XML with the object content.
+        @return a downloadable Naaya XML file
         r = []
+        """
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
@@ -74,7 +74,7 @@ class NyImportExport:
     def exportnyexp(self):
         """
         !!ONLY used to generate the nyexp for SMAP
-        Generetes an XML with the object content.
+        Generates an XML with the object content.
         @return: a downloadable Naaya XML file
         """
         r = []

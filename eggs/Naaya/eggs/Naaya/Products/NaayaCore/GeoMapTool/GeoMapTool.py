@@ -626,7 +626,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def getDuplicateLocations(self, criteria, sort_on="", sort_order=""):
         """Returns a list of duplicate locations.
 
-            It accepts the same the parameters as getLocations.
+            It accepts the same parameters as :meth:`getLocations`.
         """
         all_items = {}
         objects = self.search_geo_objects(sort_on=sort_on, sort_order=sort_order)
