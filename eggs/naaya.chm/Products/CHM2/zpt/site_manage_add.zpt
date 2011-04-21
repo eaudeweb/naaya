@@ -42,6 +42,26 @@
         </td>
     </tr>
     <tr>
+        <td class="form-label">Glossaries</td>
+        <td>
+            <label>
+                <input type="checkbox" checked="checked"
+                       name="load_glossaries:list" value="coverage"/>
+                Coverage
+            </label><br/>
+            <label>
+                <input type="checkbox" checked="checked"
+                       name="load_glossaries:list" value="keywords"/>
+                Keywords
+            </label><br/>
+            <label>
+                <input type="checkbox" checked="checked"
+                       name="load_glossaries:list" value="chm_terms"/>
+                CHM terms
+            </label><br/>
+        </td>
+    </tr>
+    <tr>
         <td></td>
         <td><input type="submit" value="Add" /></td>
     </tr>
