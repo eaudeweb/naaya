@@ -3743,8 +3743,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         layout_tool = self.getLayoutTool()
         current_skin = layout_tool.get_current_skin()
-        if current_skin._getOb('site_index', None):
-            return layout_tool.getContent({'here': self}, 'site_index')
+        layout_site_index = current_skin._getOb('site_index', None)
+        if layout_site_index is not None:
+            return layout_site_index.aq_base.__of__(self)()
         return self.getFormsTool().getContent({'here': self}, 'site_index')
 
     security.declareProtected(view, 'menusubmissions')
