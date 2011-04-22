@@ -12,6 +12,7 @@
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_importexport_html" i18n:translate="">Import/Export</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <p class="cleaner">
 	<strong i18n:translate="">Note:</strong> <span tal:omit-tag="" i18n:translate="">the source of the messages in this portal is <em i18n:name="english" i18n:translate="">English</em>. This page allows you to import/export translations of messages in other languages.</span>

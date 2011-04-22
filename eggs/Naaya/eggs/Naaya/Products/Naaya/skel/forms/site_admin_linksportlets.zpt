@@ -15,6 +15,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 <p i18n:translate="" class="cleaner">
 	This form allows you to create new portlets from a <em i18n:name="list-of-links" i18n:translate="">list of links</em>,
 	which displays the a certain number of items from that list.

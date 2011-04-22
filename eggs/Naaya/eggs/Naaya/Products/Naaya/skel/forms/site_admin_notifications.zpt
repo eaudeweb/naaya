@@ -13,6 +13,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_notif_sitemap_html" i18n:translate="">Monitorised folders</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
 Change the settings for the notification services offered by this portal in the form below, and click <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.

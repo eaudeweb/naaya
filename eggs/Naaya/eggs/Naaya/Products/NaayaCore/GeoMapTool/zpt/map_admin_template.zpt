@@ -23,7 +23,7 @@
 		</li>
 	</ul>
 </div>
-
+<div id="tabbedmenuend"></div>
 <metal:block define-slot="tab_contents" />
 
 </tal:block>

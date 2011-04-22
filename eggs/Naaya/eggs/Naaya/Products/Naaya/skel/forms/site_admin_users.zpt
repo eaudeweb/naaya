@@ -62,6 +62,7 @@
 		</li>
     </ul>
 </div>
+<div id="tabbedmenuend"></div>
 </metal:block></metal:block>
 <metal:block define-slot='second-tabs'>
 	<tal:block tal:condition="python: 'admin_users_html' in path_info and len(user_sources) == 0">

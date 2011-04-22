@@ -19,6 +19,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
 	This page displays the list of available portlets that contains static HTML. The content of

@@ -37,6 +37,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
 	This form lists logos for each language defined for this site. Logos defined for one language will appear only when browsing the portal in that language.

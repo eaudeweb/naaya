@@ -321,7 +321,6 @@ class PortletsTool(Folder, utils):
         Returns a list with all portlets that should be displayed on the index
         page of `obj` in the specified position (left, center, right).
         """
-
         here_location = obj.getPhysicalPath()
         site_location = self.getSite().getPhysicalPath()
         folder_path = '/'.join(here_location[len(site_location):])
