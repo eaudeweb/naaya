@@ -104,7 +104,7 @@ class LayoutTool(Folder, combosync_tool):
 
     def getContent(self, p_context={}, p_page=None):
         p_context['skin_files_path'] = self.get_skin_files_path()
-        return self.get_current_skin()._getOb(p_page)(p_context)
+        return self.get_current_skin()._getOb(p_page).pt_render(extra_context=p_context)
 
     def getNaayaContentStyles(self):
         ny_content = self.get_pluggable_content()
