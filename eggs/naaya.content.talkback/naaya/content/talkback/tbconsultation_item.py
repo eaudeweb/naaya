@@ -207,11 +207,10 @@ def addNyTalkBackConsultation(self,
             if l_referer == 'talkbackconsultation_manage_add' or \
                l_referer.find('talkbackconsultation_manage_add') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
-            elif l_referer == 'talkbackconsultation_add_html':
-                self.setSession('referer', self.absolute_url())
-                REQUEST.RESPONSE.redirect(
-                    '%s/messages_html' % self.absolute_url()
-                )
+            else:
+                self.setSessionInfoTrans("TalkBack Consultation object created")
+                return REQUEST.RESPONSE.redirect(ob.absolute_url())
+
         else:
             return id
     else:
