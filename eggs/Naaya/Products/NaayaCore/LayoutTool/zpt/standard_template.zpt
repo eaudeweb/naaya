@@ -3,10 +3,10 @@
     /><metal:block define-slot="doctype"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"></metal:block>
     <html xmlns="http://www.w3.org/1999/xhtml"
         tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
-        tal:define="site_url here/getSitePath;">
-    <head tal:define="skin_files_path python:here.getLayoutTool().get_skin_files_path();
-    layout_path python:here.getSite().getLayoutTool().absolute_url();">
-
+        tal:define="site_url here/getSitePath;
+                    skin_files_path python:here.getLayoutTool().get_skin_files_path();
+                    layout_path python:here.getSite().getLayoutTool().absolute_url();">
+    <head>
         <metal:block define-slot="meta">
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         </metal:block>
