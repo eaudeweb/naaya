@@ -10,7 +10,7 @@
 			<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Verfication codes</a></li>
 		</ul>
 	</div>
-
+	<div id="tabbedmenuend"></div>
 	<form method="post" action="" name="frmVerify" id="frmVerify">
 		<p i18n:translate="">Copy the javascript code from Google Analytics' page and paste it in the text area, in order to allow Google access your website traffic data.</p>
 		<label for="ga_verify" i18n:translate="">Google Analytics verification code:</label><br />

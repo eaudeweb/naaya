@@ -16,6 +16,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 <p i18n:translate="" class="cleaner">

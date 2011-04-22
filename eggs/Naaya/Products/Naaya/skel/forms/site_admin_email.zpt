@@ -13,6 +13,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
+<div id="tabbedmenuend"></div>
 
 <p i18n:translate="" class="cleaner">
 	Change the settings for the email services offered by this portal in the form below and click Save changes.

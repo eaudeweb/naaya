@@ -11,6 +11,7 @@
 		<li><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Verfication codes</a></li>
 	</ul>
 </div>
+<div id="tabbedmenuend"></div>
 <br clear="all" />
 <tal:block define="authorized here/checkAuthorization">
 
