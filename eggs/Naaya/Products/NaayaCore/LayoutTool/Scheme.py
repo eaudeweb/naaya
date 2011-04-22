@@ -38,7 +38,7 @@ class Scheme(Folder):
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['Image']
+        additional_meta_types = ['Image', 'File']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
                 y.append(x)
