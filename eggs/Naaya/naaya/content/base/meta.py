@@ -93,5 +93,5 @@ def register_naaya_content(_context, factory, **kwargs):
 
     InitializeClass(NyFolderBase)
     # log success
-    zLOG.LOG('naaya.content', zLOG.INFO, 'Pluggable module "%s" registered' % factory['meta_type'])
+    zLOG.LOG('naaya.content', zLOG.DEBUG, 'Pluggable module "%s" registered' % factory['meta_type'])
 
