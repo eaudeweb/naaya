@@ -6,6 +6,7 @@ Utilities to make Zope2 a friendlier place.
 import datetime
 import sys
 import re
+import urllib
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -161,6 +162,10 @@ class RestrictedToolkit(SimpleItem):
             return None
         else:
             raise
+
+    def url_quote(self, value):
+        """ URL-quote the given value. """
+        return urllib.quote(value)
 
 InitializeClass(RestrictedToolkit)
 
