@@ -5,10 +5,15 @@
  * @param subtitle URL to subtitle file.
  * @return nothing.
  */
-var flowplayer_config = function(site, container, movie, subtitle, image){
+var flowplayer_config = function(site, container, movie, subtitle, image,
+        autoPlay){
   if(!window.flowplayer){
     // flowplayer js not loaded
     return;
+  }
+
+  if (!autoPlay) { // default value for autoPlay
+      var autoPlay = false;
   }
 
   var player_url = site + '/flowplayer.swf';
@@ -19,13 +24,13 @@ var flowplayer_config = function(site, container, movie, subtitle, image){
 	var config = {
 		playlist: [
 			{
-				url: image, 
+				url: image,
 				scaling: 'orig'
 			},
 			{
-				url: movie, 
-				autoPlay: false, 
-				autoBuffering: false 
+				url: movie,
+				autoPlay: autoPlay,
+				autoBuffering: false
 			}
 		],
 		plugins: {}
@@ -35,9 +40,9 @@ var flowplayer_config = function(site, container, movie, subtitle, image){
 	var config = {
 		playlist: [
 			{
-				url: movie, 
-				autoPlay: false, 
-				autoBuffering: true 
+				url: movie,
+				autoPlay: autoPlay,
+				autoBuffering: true
 			}
 		],
 		plugins: {}
