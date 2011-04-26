@@ -80,7 +80,8 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'org_coord':            dict(sortorder=100, widget_type="Checkbox", label="Project coordinator"),
     'org_type':             dict(sortorder=110, widget_type="Select", label="Organism type", list_id="organism_types"),
     'address':              dict(sortorder=120, widget_type="String", label="Address"),
@@ -92,9 +93,7 @@ DEFAULT_SCHEMA = {
     'contact_email':        dict(sortorder=180, widget_type="String", label="Contant e-mail"),
     'contact_phone':        dict(sortorder=190, widget_type="String", label="Contact phone"),
     'contact_fax':          dict(sortorder=200, widget_type="String", label="Contact fax")
-}
-
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {

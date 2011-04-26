@@ -68,7 +68,8 @@ PROPERTIES_OBJECT = {
     'file':             (0, '', ''),
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'news_date':        dict(sortorder=100, widget_type="Date", data_type="date", label="News date"),
     'source':           dict(sortorder=110, widget_type="String", label="Source", localized=True),
     'source_link':      dict(sortorder=120, widget_type="String", label="Source link", default="http://"),
@@ -83,8 +84,7 @@ DEFAULT_SCHEMA = {
     'relation':         dict(sortorder=220, widget_type="String", label="Relation"),
     'file_link':        dict(sortorder=240, widget_type="String", label="Full description link", localized=True, default="http://"),
 
-}
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 

@@ -73,14 +73,13 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'funding_source':     dict(sortorder=100, widget_type="String", label="Source", localized=True, required=True),
     'funding_programme':  dict(sortorder=110, widget_type="String", label="Programme", localized=True),
     'funding_type':       dict(sortorder=120, widget_type="Select", label="Type", list_id='funding_types', localized=True),
     'funding_rate':       dict(sortorder=130, widget_type="String", label="Rate", localized=True),
-}
-
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
