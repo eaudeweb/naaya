@@ -24,7 +24,7 @@ from datetime import date
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.User import BasicUserFolder, SimpleUser
 from OFS.SimpleItem import SimpleItem
 
@@ -167,11 +167,11 @@ class InvitationsContainer(SimpleItem):
                 active.append(invite)
             else:
                 revoked.append(invite)
-
+        name_from_userid = lambda user_id: auth_tool.name_from_userid(user_id)
         options = {
             'invites_active': active,
             'invites_revoked': revoked,
-            'name_from_userid': auth_tool.name_from_userid,
+            'name_from_userid': name_from_userid,
         }
         return self._admin_html(**options)
 

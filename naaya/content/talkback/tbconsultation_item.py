@@ -22,6 +22,7 @@
 import os
 import sys
 import operator
+from copy import deepcopy
 
 #Zope imports
 from Globals import InitializeClass
@@ -30,26 +31,29 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from App.ImageFile import ImageFile
-from OFS.Image import cookId
-from AccessControl.Permissions import change_permissions
 from DateTime import DateTime
+from zope.event import notify
 
 #Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, slugify, uniqueId
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from Products.NaayaBase.NyContentType import (NyContentType, NyContentData,
+                                              NY_CONTENT_BASE_SCHEMA)
 from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyAccess import NyAccess
+from naaya.core import submitter
 from naaya.core.zope2util import DT2dt
+from naaya.core.zope2util import abort_transaction_keep_session
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 #local imports
 from Section import addSection
@@ -98,20 +102,71 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
+    'start_date': {
+        "sortorder": 100,
+        "widget_type": "Date",
+        "data_type": 'date',
+        "label": "First day",
+    },
+    'end_date': {
+        "sortorder": 110,
+        "widget_type": "Date",
+        "data_type": 'date',
+        "label": "Last day",
+    },
+    'public_registration': {
+        "sortorder": 120,
+        "widget_type": "Checkbox",
+        "label": "Allow visitors to register as reviewers for this consultation",
+        "data_type": "bool",
+        "default": False,
+    },
+    'allow_file': {
+        "sortorder": 130,
+        "widget_type": "Checkbox",
+        "label": "Allow reviewers to upload files when posting a comment",
+        "data_type": "bool",
+        "default": False,
+    },
+    'allow_reviewer_invites': {
+        "sortorder": 140,
+        "widget_type": "Checkbox",
+        "label": "Allow reviewers to invite other people to review",
+        "data_type": "bool",
+        "default": False,
+    },
+    'show_contributor_request_role': {
+        "sortorder": 150,
+        "widget_type": "Checkbox",
+        "label": "Allow reviewers to invite other people to review",
+        "data_type": "bool",
+        "default": False,
+        "visible": False,
+    },
+})
+DEFAULT_SCHEMA['coverage']['visible'] = False
+DEFAULT_SCHEMA['keywords']['visible'] = False
+DEFAULT_SCHEMA['sortorder']['visible'] = False
+DEFAULT_SCHEMA['sortorder']['sortorder'] = 115
+DEFAULT_SCHEMA['releasedate']['visible'] = False
+DEFAULT_SCHEMA['discussion']['visible'] = False
+
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent',
         'module': 'tbconsultation_item',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': 'Naaya TalkBack Consultation',
+        'meta_type': METATYPE_TALKBACKCONSULTATION,
         'label': 'TalkBack Consultation',
         'permission': 'Naaya - Add Naaya TalkBack Consultation objects',
         'forms': [],
         'add_form': 'talkbackconsultation_add_html',
         'description': 'This is Naaya TalkBack Consultation type.',
         'properties': PROPERTIES_OBJECT,
-        'default_schema': None,
-        'schema_name': '',
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': METATYPE_TALKBACKCONSULTATION,
         'import_string': '',
         '_module': sys.modules[__name__],
         'additional_style': ADDITIONAL_STYLE,
@@ -123,126 +178,100 @@ config = {
             },
     }
 
-talkbackconsultation_add_html = NaayaPageTemplateFile(
+talkbackconsultation_add = NaayaPageTemplateFile(
     'zpt/talkbackconsultation_add', globals(), 'tbconsultation_add')
 
-def addNyTalkBackConsultation(self,
-                              id='',
-                              title='',
-                              description='',
-                              sortorder='',
-                              start_date='',
-                              end_date='',
-                              public_registration='',
-                              allow_file='',
-                              allow_reviewer_invites=False,
-                              contributor=None,
-                              releasedate='',
-                              lang=None,
-                              REQUEST=None,
+def talkbackconsultation_add_html(self, REQUEST=None, RESPONSE=None):
+    """ """
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({
+            'here': self,
+            'kind': config['meta_type'],
+            'action': 'addNyTalkBackConsultation',
+            'form_helper': form_helper,
+            'submitter_info_html': submitter.info_html(self, REQUEST),
+        },
+        'tbconsultation_add')
+
+def _create_NyTalkBackConsultation_object(parent, id, contributor):
+    """ Creates a consultation object and returns it """
+    ob = NyTalkBackConsultation(id, contributor)
+    parent.gl_add_languages(ob)
+    parent._setObject(id, ob)
+    ob = parent._getOb(id)
+    ob.after_setObject()
+    return ob
+
+def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
                               **kwargs):
     """
     Create a Naaya TalkBack Consultation type of object.
     """
+    if REQUEST is not None:
+        schema_raw_data = dict(REQUEST.form)
+    else:
+        schema_raw_data = kwargs
+    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+    _releasedate = self.process_releasedate(
+                                    schema_raw_data.pop('releasedate', ''))
+
+    id = uniqueId(slugify(id or schema_raw_data.get('title', ''),
+                          removelist=[]),
+                  lambda x: self._getOb(x, None) is not None)
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    ob = _create_NyTalkBackConsultation_object(self, id, contributor)
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang,
+                    _override_releasedate=_releasedate)
+    if REQUEST is not None:
+        submitter_errors = submitter.info_check(self, REQUEST, ob)
+        form_errors.update(submitter_errors)
+
+    if form_errors:
+        if REQUEST is None:
+            raise ValueError(form_errors.popitem()[1]) # pick a random error
+        else:
+            abort_transaction_keep_session(REQUEST)
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            self.setSessionInfoTrans("TalkBack Consultation object created")
+            return REQUEST.RESPONSE.redirect(ob.absolute_url())
+
     #process parameters
-    id = self.utSlugify(id or title)
-    try: sortorder = abs(int(sortorder))
-    except: sortorder = DEFAULT_SORTORDER
-
-    #check mandatory fiels
-    l_referer = ''
-    if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if not(l_referer == 'talkbackconsultation_manage_add' or \
-           l_referer.find('talkbackconsultation_manage_add') != -1) and REQUEST:
-        r = self.getSite().\
-          check_pluggable_item_properties(
-              METATYPE_TALKBACKCONSULTATION,
-              id=id,
-              title=title,
-              sortorder=sortorder,
-              start_date=start_date,
-              end_date=end_date,
-              public_registration=public_registration)
+    if self.checkPermissionSkipApproval():
+        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
-        r = []
-    if not len(r):
-        auth_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        #process parameters
-        if contributor is None:
-            contributor = auth_user
-        if self.checkPermissionSkipApproval():
-            approved, approved_by = 1, auth_user
-        else:
-            approved, approved_by = 0, None
-        releasedate = self.process_releasedate(releasedate)
-        if lang is None: lang = self.gl_get_selected_language()
-        #check if the id is invalid (it is already in use)
-        i = 0
-        while self._getOb(id, None) is not None:
-            i += 1
-            id = '%s-%u' % (id, i)
-        #create object
-        ob = NyTalkBackConsultation(id, title, description, sortorder,
-                                    start_date, end_date, public_registration,
-                                    allow_file, allow_reviewer_invites,
-                                    contributor, releasedate, lang)
-        self.gl_add_languages(ob)
-        ob.createDynamicProperties(
-            self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, REQUEST, kwargs),
-            lang)
-        self._setObject(id, ob)
-        #extra settings
-        ob = self._getOb(id)
-        ob.submitThis()
-        ob.approveThis(approved, approved_by)
-        ob.addDynProp()
-        ob.updateRequestRoleStatus(public_registration, lang)
-        self.recatalogNyObject(ob)
-        self.notifyFolderMaintainer(self, ob)
-        #log post date
-        auth_tool = self.getAuthenticationTool()
-        auth_tool.changeLastPost(contributor)
-        #redirect if case
-        if REQUEST is not None:
-            if l_referer == 'talkbackconsultation_manage_add' or \
-               l_referer.find('talkbackconsultation_manage_add') != -1:
-                return self.manage_main(self, REQUEST, update_menu=1)
-            else:
-                self.setSessionInfoTrans("TalkBack Consultation object created")
-                return REQUEST.RESPONSE.redirect(ob.absolute_url())
+        approved, approved_by = 0, None
 
-        else:
-            return id
-    else:
-        if REQUEST is not None:
-            self.setSessionErrors(r)
-            self.set_pluggable_item_session(
-                METATYPE_TALKBACKCONSULTATION,
-                id=id,
-                title=title,
-                description=description,
-                sortorder=sortorder,
-                releasedate=releasedate,
-                start_date=start_date,
-                end_date=end_date,
-                allow_file=allow_file,
-                allow_reviewer_invites=allow_reviewer_invites,
-                public_registration=public_registration,
-                lang=lang
-            )
-            REQUEST.RESPONSE.redirect(
-                '%s/talkbackconsultation_add_html' % self.absolute_url()
-            )
-        else:
-            raise Exception, '%s' % ', '.join(r)
+    ob.approveThis(approved, approved_by)
+    ob.submitThis()
 
-class NyTalkBackConsultation(NyRoleManager,
-                             NyAttributes,
-                             Implicit,
-                             NyProperties,
-                             NyContainer,
-                             NyNonCheckControl,
-                             utils):
+    ob.show_contributor_request_role = ob.public_registration
+    self.recatalogNyObject(ob)
+
+    self.notifyFolderMaintainer(self, ob)
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
+
+    #log post date
+    auth_tool = self.getAuthenticationTool()
+    auth_tool.changeLastPost(contributor)
+    #redirect if case
+    if REQUEST is not None:
+        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+        if (l_referer == 'talkbackconsultation_add' or
+            l_referer.find('talkbackconsultation_manage_add') != -1):
+            return self.manage_main(self, REQUEST, update_menu=1)
+        elif l_referer == 'talkbackconsultation_add_html':
+            self.setSession('referer', self.absolute_url())
+            return ob.object_submitted_message(REQUEST)
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+
+    return ob.getId()
+
+class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
+                             NyAttributes, NyProperties, NyRoleManager,
+                             NyContainer, NyNonCheckControl, utils):
     """ """
 
     meta_type = METATYPE_TALKBACKCONSULTATION
@@ -257,9 +286,6 @@ class NyTalkBackConsultation(NyRoleManager,
     icon = 'misc_/NaayaContent/NyTalkBackConsultation.gif'
     icon_marked = 'misc_/NaayaContent/NyTalkBackConsultation_marked.gif'
 
-    title = LocalProperty('title')
-    description = LocalProperty('description')
-
     security = ClassSecurityInfo()
 
     edit_access = NyAccess('edit_access', {
@@ -270,36 +296,11 @@ class NyTalkBackConsultation(NyRoleManager,
 
     section_sort_order = tuple()
 
-    def __init__(self,
-                 id,
-                 title,
-                 description,
-                 sortorder,
-                 start_date,
-                 end_date,
-                 public_registration,
-                 allow_file,
-                 allow_reviewer_invites,
-                 contributor,
-                 releasedate,
-                 lang):
+    def __init__(self, id, contributor):
         """ """
-
-
         self.id = id
         self.contributor = contributor
         NyContainer.__dict__['__init__'](self)
-        self.save_properties(title,
-                             description,
-                             sortorder,
-                             start_date,
-                             end_date,
-                             public_registration,
-                             allow_file,
-                             allow_reviewer_invites,
-                             releasedate,
-                             lang)
-
         NyProperties.__dict__['__init__'](self)
         self.invitations = InvitationsContainer('invitations')
         self.submitted = 1
@@ -327,93 +328,41 @@ class NyTalkBackConsultation(NyRoleManager,
     allow_reviewer_invites = property(get_allow_reviewer_invites,
                                       set_allow_reviewer_invites)
 
-    security.declarePrivate('save_properties')
-    def save_properties(self,
-                        title,
-                        description,
-                        sortorder,
-                        start_date,
-                        end_date,
-                        public_registration,
-                        allow_file,
-                        allow_reviewer_invites,
-                        releasedate,
-                        lang):
-
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('description', lang, description)
-
-        if not hasattr(self, 'imageContainer'):
-            self.imageContainer = NyImageContainer(self, True)
-
-        if start_date:
-            self.start_date = self.utConvertStringToDateTimeObj(start_date)
-        else:
-            self.start_date = self.utGetTodayDate()
-
-        if end_date:
-            self.end_date = self.utConvertStringToDateTimeObj(end_date)
-        else:
-            self.end_date = self.utGetTodayDate()
-
-        try: self.sortorder = abs(int(sortorder))
-        except: self.sortorder = DEFAULT_SORTORDER
-
-        self.releasedate = releasedate
-        self.public_registration = public_registration
-        self.allow_file = allow_file
-        self.allow_reviewer_invites = allow_reviewer_invites
-
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'saveProperties')
-    def saveProperties(self,
-                       title='',
-                       description='',
-                       sortorder='',
-                       start_date='',
-                       end_date='',
-                       public_registration='',
-                       allow_file='',
-                       allow_reviewer_invites=False,
-                       lang='',
-                       REQUEST=None):
+    def saveProperties(self, REQUEST=None, **kwargs):
         """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+        _releasedate = self.process_releasedate(
+                    schema_raw_data.pop('releasedate', ''), self.releasedate)
 
-        if not title:
-            self.setSession('title', title)
-            self.setSession('description', description)
-            self.setSessionErrorsTrans('The Title field must have a value.')
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+                                            _override_releasedate=_releasedate)
+
+        if not form_errors:
+            self._p_changed = True
+            self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
+            notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' %
-                                                 (self.absolute_url(), lang))
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+        else:
+            if REQUEST is not None:
+                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
             else:
-                raise ValueError('The title field must have a value.')
-
-        releasedate = self.releasedate
-        self.updateRequestRoleStatus(public_registration, lang)
-        self.save_properties(title, description, sortorder, start_date, end_date,
-                             public_registration, allow_file, allow_reviewer_invites,
-                             releasedate, lang)
-
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-
-    security.declarePrivate('addDynProp')
-    def addDynProp(self):
-        """ """
-        dynprop_tool = self.getDynamicPropertiesTool()
-        if not hasattr(dynprop_tool, METATYPE_OBJECT):
-            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_OBJECT, title=METATYPE_OBJECT)
-            dynprop_tool._getOb(METATYPE_OBJECT).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
-
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'updateRequestRoleStatus')
-    def updateRequestRoleStatus(self, public_registration, lang):
-        """ Allow public registration for this consultation """
-        if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': 'on'}), lang)
-        if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': ''}), lang)
+                raise ValueError(form_errors.popitem()[1]) # pick a random error
 
     security.declareProtected(view, 'get_consultation')
     def get_consultation(self):
@@ -499,7 +448,6 @@ class NyTalkBackConsultation(NyRoleManager,
     security.declareProtected(view, 'get_days_left')
     def get_days_left(self):
         """ Returns the remaining days for the consultation or the number of days before it starts """
-
         today = self.utGetTodayDate().earliestTime()
         if not self.start_date or not self.end_date:
             return (1, 0)
@@ -670,6 +618,7 @@ manage_addNyTalkBackConsultation_html = PageTemplateFile(
     'zpt/talkbackconsultation_manage_add', globals())
 manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
 manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
+
 config.update({
     'constructors': (manage_addNyTalkBackConsultation_html, addNyTalkBackConsultation),
     'folder_constructors': [
