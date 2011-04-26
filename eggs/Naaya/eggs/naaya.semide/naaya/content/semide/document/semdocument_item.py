@@ -102,7 +102,7 @@ DEFAULT_SCHEMA = {
     'file_link':        dict(sortorder=240, widget_type="String", label="Full description link", localized=True, default="http://"),
 }
 
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 

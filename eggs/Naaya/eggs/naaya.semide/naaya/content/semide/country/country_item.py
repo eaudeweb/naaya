@@ -20,6 +20,7 @@
 # Python
 import os
 import sys
+from copy import deepcopy
 
 # Zope
 import Globals
@@ -107,7 +108,7 @@ DEFAULT_SCHEMA = {
     'legislation_feed_url': dict(sortorder=170, widget_type='String', label='Legislation on Water RSS feed URL', default='http://'),
     'project_feed_url':     dict(sortorder=180, widget_type='String', label='Project Water RSS feed URL', default='http://'),
 }
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=True)
 
 config = {
