@@ -140,10 +140,20 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                         # dates are stored in index as minutes since 1st jan 70
                         (start_minutes, end_minutes) = \
                           catalog._catalog.getIndexDataForRID(rid)[interval_idx]
-                        start_date = datetime.fromtimestamp(start_minutes * 60)
-                        end_date = datetime.fromtimestamp(end_minutes * 60)
-                        events.append((event, self.getDate(start_date),
-                                       self.getDate(end_date)))
+
+                        if start_minutes is None:
+                            start_date = None
+                        else:
+                            start_date = datetime.fromtimestamp(start_minutes * 60)
+                            start_date = self.getDate(start_date)
+
+                        if end_minutes is None:
+                            end_date = None
+                        else:
+                            end_date = datetime.fromtimestamp(end_minutes * 60)
+                            end_date = self.getDate(end_date)
+
+                        events.append((event, start_date, end_date))
 
         return events
 
