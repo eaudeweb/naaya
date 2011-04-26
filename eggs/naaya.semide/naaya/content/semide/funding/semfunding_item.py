@@ -20,6 +20,7 @@
 #Python
 import os
 import sys
+from copy import deepcopy
 
 #Zope
 from Acquisition import Implicit
@@ -79,7 +80,7 @@ DEFAULT_SCHEMA = {
     'funding_rate':       dict(sortorder=130, widget_type="String", label="Rate", localized=True),
 }
 
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {

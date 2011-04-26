@@ -20,6 +20,7 @@
 #Python
 import os
 import sys
+from copy import deepcopy
 
 #Zope
 from Acquisition import Implicit
@@ -93,7 +94,7 @@ DEFAULT_SCHEMA = {
     'contact_fax':          dict(sortorder=200, widget_type="String", label="Contact fax")
 }
 
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
