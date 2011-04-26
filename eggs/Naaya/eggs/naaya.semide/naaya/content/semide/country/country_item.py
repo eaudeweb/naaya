@@ -97,7 +97,8 @@ PROPERTIES_OBJECT = {
     'lang':                 (0, '', '')
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'nfp_label':            dict(sortorder=100, widget_type='String', label='NFP short label', localized=True),
     'nfp_url':              dict(sortorder=110, widget_type='String', label='NFP URL', default='http://', localized=True),
     'link_ins':             dict(sortorder=120, widget_type='String', label='Institutions URL', default='http://', localized=True),
@@ -107,8 +108,7 @@ DEFAULT_SCHEMA = {
     'link_data':            dict(sortorder=160, widget_type='String', label='Data management URL', default='http://', localized=True),
     'legislation_feed_url': dict(sortorder=170, widget_type='String', label='Legislation on Water RSS feed URL', default='http://'),
     'project_feed_url':     dict(sortorder=180, widget_type='String', label='Project Water RSS feed URL', default='http://'),
-}
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=True)
 
 config = {

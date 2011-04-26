@@ -72,11 +72,11 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'fieldsite_loc': dict(sortorder=100, widget_type="String", label="Location", localized=True),
     'fieldsite_rb':  dict(sortorder=110, widget_type="Glossary", label="River basin", glossary_id='glossary_river_basin', localized=True),
-}
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {

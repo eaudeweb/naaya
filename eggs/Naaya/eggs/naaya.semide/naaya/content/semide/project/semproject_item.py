@@ -78,7 +78,8 @@ PROPERTIES_OBJECT = {
 
 
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'pr_number':    dict(sortorder=100, widget_type='String', label="Project Number"),
     'subject':      dict(sortorder=110, widget_type='SelectMultiple', label="Subject"),
     'acronym':      dict(sortorder=120, widget_type='String', label="Acronym", localized=True),
@@ -89,9 +90,7 @@ DEFAULT_SCHEMA = {
     'results':      dict(sortorder=170, widget_type='TextArea', label="Results", localized=True, tinymce=True),
     'start_date':   dict(sortorder=180, widget_type='Date', label="Start date", required=True),
     'end_date':     dict(sortorder=190, widget_type='Date', label="End date"),
-}
-
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 

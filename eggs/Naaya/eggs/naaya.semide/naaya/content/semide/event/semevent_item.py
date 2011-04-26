@@ -95,7 +95,8 @@ PROPERTIES_OBJECT = {
     'file':             (0, '', ''),
 }
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'start_date':       dict(sortorder=100, widget_type="Date", data_type="date", label="Start date", required = True),
     'end_date':         dict(sortorder=110, widget_type="Date", data_type="date", label="End Date"),
     'duration':         dict(sortorder=120, widget_type="String", localized = True, label="Duration"),
@@ -116,8 +117,7 @@ DEFAULT_SCHEMA = {
     'working_langs':    dict(sortorder=260, widget_type="SelectMultiple", label="Working langs"),
     'event_status':     dict(sortorder=270, widget_type="Select", label="Status", list_id='event_status'),
     'file_link':        dict(sortorder=280, widget_type="String", localized = True, label="File link", default='http://'),
-}
-DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 

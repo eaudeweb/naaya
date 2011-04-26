@@ -21,6 +21,7 @@
 #Python
 import os
 import sys
+from copy import deepcopy
 
 #Zope
 from Acquisition import Implicit
@@ -82,8 +83,8 @@ PROPERTIES_OBJECT = {
     'lang':                 (0, '', ''),
     'file':                 (0, '', ''),
 }
-
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'type_law':             dict(sortorder=110, widget_type="Select", label="Type", list_id='text_laws'),
     'official_journal_ref': dict(sortorder=120, widget_type="String", label="Official journal reference", localized=True),
     'source':               dict(sortorder=130, widget_type="String", label="Source", localized=True),
@@ -94,9 +95,7 @@ DEFAULT_SCHEMA = {
     'relation':             dict(sortorder=180, widget_type="String", label="Relation"),
     'subject':              dict(sortorder=190, widget_type="SelectMultiple", label="Subject"),
     'file_link':            dict(sortorder=200, widget_type="String", label="File link", default='http://'),
-}
-
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+})
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 config = {
@@ -215,7 +214,7 @@ def importNySemTextLaws(self, param, id, attrs, content, properties, discussion,
                 except: pass
 
             #Creating object and setting all object properties (taken from Schema)
-            ob = _create_NySemProject_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
+            ob = _create_NySemTextLaws_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
             for prop in ob._get_schema().listPropNames():
                 setattr(ob, prop, '')
             for k, v  in attrs.items():
@@ -244,6 +243,7 @@ def importNySemTextLaws(self, param, id, attrs, content, properties, discussion,
 class semtextlaws_item(Implicit, NyContentData, NyFSContainer):
     """ """
     meta_type = METATYPE_OBJECT
+
 class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyContentType, NyValidation):
     """ """
 
