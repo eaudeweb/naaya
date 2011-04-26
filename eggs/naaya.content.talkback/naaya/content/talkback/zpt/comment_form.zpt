@@ -18,7 +18,7 @@
     <form name="frmAdd" method="post" action="addComment" enctype="multipart/form-data">
         <tal:block condition="reply_to">
             <input type="hidden" name="reply_to" tal:attributes="value reply_to" />
-            <p i18n:translate="" tal:define="comment python:here[reply_to]">
+            <p i18n:translate="" tal:define="comment python:here.get_comment(reply_to)">
                 Replying to comment
                 by <em tal:content="comment/get_contributor_name" i18n:name="name"></em>
                 at <em tal:content="python:here.utShowFullDateTime(comment.comment_date)"

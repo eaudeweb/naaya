@@ -22,9 +22,8 @@
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view
 from App.ImageFile import ImageFile
-from Acquisition import Implicit
 
 #Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
