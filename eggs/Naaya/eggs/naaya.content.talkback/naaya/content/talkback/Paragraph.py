@@ -22,8 +22,7 @@
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view_management_screens, view
-from Acquisition import Implicit
+from AccessControl.Permissions import view
 from DateTime import DateTime
 
 #Product imports
@@ -85,6 +84,10 @@ class Paragraph(Folder):
     def get_comments(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT])
 
+    security.declareProtected(view, 'get_comment')
+    def get_comment(self, comment_id):
+        return self._getOb(comment_id)
+
     security.declareProtected(view, 'get_comment_tree')
     def get_comment_tree(self):
         comment_tree = {}
@@ -109,11 +112,11 @@ class Paragraph(Folder):
         """ """
         if not isinstance(self._getOb(comment_id), TalkBackConsultationComment):
             raise ValueError('Member object with id="%s" is not a TalkBackConsultationComment instance' % comment_id)
-        
+
         if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
             # the client should POST to delete the comment
             return self._delete_comment_confirmation(self, REQUEST, comment=self._getOb(comment_id))
-        
+
         self.manage_delObjects([comment_id])
         if REQUEST:
             back_url = REQUEST.form.get('back_url',
