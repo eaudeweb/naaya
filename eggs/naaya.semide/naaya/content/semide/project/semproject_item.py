@@ -1,5 +1,6 @@
 import os
 import sys
+from copy import deepcopy
 
 from Acquisition import Implicit
 from Globals import InitializeClass
@@ -90,7 +91,7 @@ DEFAULT_SCHEMA = {
     'end_date':     dict(sortorder=190, widget_type='Date', label="End date"),
 }
 
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 
