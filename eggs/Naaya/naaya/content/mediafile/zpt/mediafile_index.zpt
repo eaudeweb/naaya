@@ -80,8 +80,10 @@
           has_subtitle here/subtitle|nothing;
           has_subtitle python:not not has_subtitle;
           subtitle string:${here/absolute_url}/flowplayer.srt;
-          subtitle python:has_subtitle and subtitle or ''
-        ">
+          subtitle python:has_subtitle and subtitle or '';
+          has_startup_image here/startup_image;
+          startup_image string:${here/absolute_url}/startupimage;
+          startup_image python:has_startup_image and startup_image or ''">
           <!-- Player -->
           <div>
             <script type="text/javascript" tal:attributes="src flowplayer_js"></script>
@@ -89,7 +91,7 @@
             <div id="player" style="width:500px; height:330px;"> </div>
             <script type="text/javascript" tal:content='string:
               jQuery(document).ready(function(){
-                flowplayer_config("$site_url", "player", "$flvpath", "$subtitle");
+                flowplayer_config("$site_url", "player", "$flvpath", "$subtitle", "$startup_image");
               });
             '></script>
           </div>
@@ -101,7 +103,9 @@
               <script type="text/javascript" src="$flowplayer_js"></script>
               <script type="text/javascript" src="$flowconfig_js"></script>
               <div id="miniplayer" style="width:280px;;height:210px"></div>
-              <script type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url", "miniplayer", "$flvpath", "$subtitle")})</script>'/>
+              <script
+              type="text/javascript">jQuery(document).ready(function(){flowplayer_config("$site_url",
+              "miniplayer", "$flvpath", "$subtitle", "$startup_image")})</script>'/>
           <!-- Download -->
           <div>
             <a tal:attributes="href flvpath">
