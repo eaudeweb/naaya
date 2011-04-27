@@ -55,6 +55,45 @@
 			</tr>
 		</table>
 
+	<tal:block condition="here/check_if_no_translations">
+		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Name translations</span></div>
+		<div class="category_content">
+			<table border="0" cellpadding="0" cellspacing="3">
+				<tr>
+					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th i18n:translate="">Translations</th>
+				</tr>
+
+				<tal:block repeat="lang here/get_english_names">
+					<tr	tal:define="trans python:here.get_translation_by_language(lang)"
+						tal:condition="trans">
+						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="translation" tal:content="trans" />
+					</tr>
+				</tal:block>
+			</table>
+		</div>
+	</tal:block>
+
+	<tal:block condition="here/check_if_no_def_trans">
+		<div class="category_subtitle"><span tal:omit-tag="" i18n:translate="">Definition translations</span></div>
+		<div class="category_content">
+			<table border="0" cellpadding="0" cellspacing="3">
+				<tr>
+					<th valign="top" class="language" i18n:translate="">Language</th>
+					<th i18n:translate="">Translations</th>
+				</tr>
+
+				<tal:block repeat="lang here/get_english_names">
+					<tr	tal:define="trans python:here.get_def_trans_by_language(lang)"
+						tal:condition="trans">
+						<td height="15" valign="top" nowrap class="language"><span tal:replace="lang" />:</td>
+						<td class="translation" tal:content="trans" />
+					</tr>
+				</tal:block>
+			</table>
+		</div>
+	</tal:block>
 		<p><br clear="all" style="display: block; margin-bottom: 30px;"></p>
 		<div style="height:2px;" />
 		</td>
