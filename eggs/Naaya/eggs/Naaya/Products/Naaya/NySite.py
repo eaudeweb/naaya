@@ -1691,17 +1691,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #if given role differs from 'contributor'
         #proceed with customised behaviour
         elif apply_role != 'contributor':
-            #get data from user object
-            user = acl_tool.getUser(username)
-            firstname = acl_tool.getUserFirstName(user)
-            lastname = acl_tool.getUserLastName(user)
-            email = acl_tool.getUserEmail(user)
+            user_info = acl_tool.get_user_info(username)
 
             #send administrator email
             self.sendCreateAccountEmail(
                 p_to=location_maintainer_email,
-                p_name=firstname + ' ' + lastname,
-                p_email=email,
+                p_name=user_info.full_name,
+                p_email=user_info.email,
                 p_organisation=organisation,
                 p_username=username,
                 p_location_path=location_path,

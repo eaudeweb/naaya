@@ -150,7 +150,7 @@ class LDAPPluginTest(NaayaTestCase):
 
     def test_without_cache(self):
         ldap_plugin = self.portal.acl_users.getSources()[0]
-        gigel_info = ldap_plugin.get_user_info('gigel')
+        gigel_info = ldap_plugin.get_source_user_info('gigel')
         assert gigel_info.first_name == "Gigel"
         assert gigel_info.last_name == "Test"
         assert gigel_info.full_name == "Gigel's Full Name"
@@ -171,7 +171,7 @@ class LDAPPluginTest(NaayaTestCase):
             }),
         ])
         ldap_plugin = self.portal.acl_users.getSources()[0]
-        gigel_info = ldap_plugin.get_user_info('gigel')
+        gigel_info = ldap_plugin.get_source_user_info('gigel')
         assert gigel_info.first_name == "Gigel C"
         assert gigel_info.last_name == "Test C"
         assert gigel_info.full_name == "Gigel's Full Name C"

@@ -104,6 +104,53 @@ class DummyUser(SimpleUser):
     def getUserCreatedDate(self):
         return self.created
 
+
+class UserInfo(object):
+    """
+    Encapsulate information about a user: name, email, etc.  While various
+    functions in Naaya's authentication code return latin-1 or utf-8 encoded
+    bytestrings, UserInfo has field values as unicode strings.
+
+    Common fields: `first_name`, `last_name`, `full_name`, `user_id`,
+    `email`, `organisation`.
+
+    Other fields: `_get_zope_user` (callable that returns the Zope user
+    object), `_source` (the user source where this user was found).
+    """
+    mandatory_fields = set(['user_id', 'first_name', 'last_name', 'full_name',
+                            'email', '_get_zope_user', '_source'])
+
+    def __init__(self, **fields):
+        missing_fields = self.mandatory_fields - set(fields)
+        assert not missing_fields, "Missing fields: %r" % list(missing_fields)
+
+        # we may want to comment this out for speed reasons
+        assert isinstance(fields.get('user_id', None), str),\
+               "user_id %r must be str" % fields['user_id']
+        for key, value in fields.iteritems():
+            if key in ['user_id', '_get_zope_user', '_source']:
+                continue
+            assert isinstance(value, unicode), \
+                   ("value %r (for %r, user %r) not unicode" %
+                   (value, key, fields['user_id']))
+
+        self.__dict__.update(fields)
+
+    @property
+    def zope_user(self):
+        """
+        Fetch the corresponding Zope user that can be used in authorization.
+        """
+        # `_get_zope_user` was given to us by our factory. It's a callable, and
+        # not the actual user, because it may be costly to obtain (e.g. from
+        # an LDAP database).
+        return self._get_zope_user()
+
+
+class LocalUserInfo(UserInfo):
+    """ UserInfo subclass for local users """
+
+
 class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                          file_utils, plugins_tool, PropertyManager):
 
@@ -750,7 +797,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     continue
                 userids = source.group_member_ids(group)
                 for userid in userids:
-                    user_info = source.get_user_info(userid)
+                    user_info = source.get_source_user_info(userid)
                     group_users[userid] = {
                         'name': handle_unicode(user_info.full_name),
                         'email': handle_unicode(user_info.email),
@@ -794,6 +841,38 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     return source.title
             else:
                 return 'n/a'
+
+    security.declarePrivate('get_local_user_info')
+    def get_local_user_info(self, user_id):
+        zope_user = self.getUser(user_id)
+
+        fields = {
+            'user_id': str(zope_user.getId()),
+            'email': force_to_unicode(zope_user.email),
+            'first_name': force_to_unicode(zope_user.firstname),
+            'last_name': force_to_unicode(zope_user.lastname),
+            '_get_zope_user': lambda: zope_user,
+            '_source': self,
+        }
+        fields['full_name'] = u'%s %s' % (fields['first_name'],
+                                          fields['last_name'])
+        return LocalUserInfo(**fields)
+
+    security.declarePrivate('get_user_info')
+    def get_user_info(self, user_id):
+        """
+        Given a `user_id`, search for the user locally and in all sources
+        (plugins). If the user is found, `get_user_info` returns a
+        UserInfo object, otherwise it raises `KeyError`.
+        """
+        if self.getUser(user_id):
+            return self.get_local_user_info(user_id)
+        else:
+            for source in self.getSources():
+                if source.has_user(user_id):
+                    return source.get_source_user_info(user_id)
+            else:
+                raise KeyError("User not found: %r" % (user_id,))
 
     security.declareProtected(manage_users, 'getUsersFullNames')
     def getUsersFullNames(self, users):
@@ -1185,43 +1264,28 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         all_users.extend(groups_for_user.keys())
         all_users = list(set(all_users))
 
-        # get user_data[userid] = {user_object, source?}
-        user_source = {}
         for userid in all_users:
-            user_ob = self.getUser(userid)
-            if user_ob is not None:
-                user_source[userid] = None # means "local"
-                continue
-
-            for source in self.getSources():
-                # We actually get the user object. Not very bright of us.
-                if source.has_user(userid):
-                    user_source[userid] = source
-                    break
-
-        for userid, source in user_source.iteritems():
             groups = groups_for_user.get(userid, [])
 
             roles_for_user = roles_by_user.get(userid, {})
 
-            if source is None:
+            try:
+                user_info = self.get_user_info(userid)
+            except KeyError:
+                # user not found. skip it.
+                continue
+            name = user_info.full_name
+            organisation = getattr(user_info, 'organisation', u"")
+            postal_address = getattr(user_info, 'postal_address', u"")
+            email = user_info.email
+            source = user_info._source
+
+            if source == self:
                 user_type = 'Local'
-                user = self.getUser(userid)
-                first_name = self.getUserFirstName(user)
-                last_name = self.getUserLastName(user)
-                name = first_name + ' ' + last_name
-                organisation = ''
-                postal_address = ''
-                email = self.getUserEmail(user)
                 groups_str = ''
 
             else:
                 user_type = 'LDAP (source_id=%s)' % source.id
-                user_info = source.get_user_info(userid)
-                name = user_info.full_name
-                organisation = user_info.organisation
-                postal_address = user_info.postal_address
-                email = user_info.email
                 if groups == []:
                     groups_str = source.getUserLocation(userid)
                 else:
