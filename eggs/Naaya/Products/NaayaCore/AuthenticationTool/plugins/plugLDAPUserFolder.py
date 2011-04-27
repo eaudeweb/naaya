@@ -17,6 +17,7 @@ except:
     pass
 
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
+from Products.NaayaCore.AuthenticationTool.AuthenticationTool import UserInfo
 from Products.Naaya.NySite import NySite
 from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
@@ -96,7 +97,7 @@ class plugLDAPUserFolder(PlugBase):
         value = self.canonical_name.get(user, '-')
         if value == '-':
             try:
-                user_info = self.get_user_info(user)
+                user_info = self.get_source_user_info(user)
                 value = user_info.full_name
                 self.setUserCanonicalName(user, value)
             except Exception, e:
@@ -407,7 +408,7 @@ class plugLDAPUserFolder(PlugBase):
             for val in result['results']:
                 for dn in val['uniqueMember']:
                     p_username = self._user_id_from_dn(dn)
-                    info = self.get_user_info(p_username)
+                    info = self.get_source_user_info(p_username)
                     res_append(info)
         return res
 
@@ -419,7 +420,7 @@ class plugLDAPUserFolder(PlugBase):
                     self.buffer = {}
                     users = acl_folder.findUser(search_param=params, search_term=term)
                     [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn'])) for u in users ]
-                    return [self.get_user_info(u['uid']) for u in users]
+                    return [self.get_source_user_info(u['uid']) for u in users]
                 except: return ()
             else:   return ()
         elif self.REQUEST.has_key('search_role'):
@@ -435,7 +436,7 @@ class plugLDAPUserFolder(PlugBase):
     def getUserEmail(self, p_username, acl_folder):
         #return the email of the given user id
         try:
-            user_info = self.get_user_info(p_username)
+            user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
             return ''
         else:
@@ -444,7 +445,7 @@ class plugLDAPUserFolder(PlugBase):
     def getUserFullName(self, p_username, acl_folder):
         #return the full name of the given user id
         try:
-            user_info = self.get_user_info(p_username)
+            user_info = self.get_source_user_info(p_username)
         except LDAPUserNotFound:
             return ''
         else:
@@ -468,7 +469,7 @@ class plugLDAPUserFolder(PlugBase):
 
         def user_data(user_id):
             try:
-                user_info = self.get_user_info(user_id)
+                user_info = self.get_source_user_info(user_id)
             except LDAPUserNotFound:
                 name = u"[not found]"
             else:
@@ -484,7 +485,7 @@ class plugLDAPUserFolder(PlugBase):
     def _get_zope_user(self, user_id):
         return self.getUserFolder().getUser(user_id)
 
-    def get_user_info(self, user_id):
+    def get_source_user_info(self, user_id):
         # first, try to use the cache
         cached_record = ldap_cache.get(self._user_dn_from_id(user_id), None)
         if cached_record is not None:
@@ -495,7 +496,7 @@ class plugLDAPUserFolder(PlugBase):
         zope_user = self._get_zope_user(user_id)
         if zope_user is None:
             raise LDAPUserNotFound(user_id)
-        return user_info_from_zope_user(zope_user, self.default_encoding)
+        return user_info_from_zope_user(self, zope_user, self.default_encoding)
 
     def has_user(self, user_id):
         if ldap_cache.has(self._user_dn_from_id(user_id)):
@@ -625,47 +626,12 @@ class LdapSatelliteProvider(Acquisition.Implicit):
 
 NySite.acl_satellite = LdapSatelliteProvider()
 
-class UserInfo(object):
-    # TODO: when other code will use this class, move it to AuthenticationTool
-    """
-    Encapsulate information about a user: name, email, organisation, etc.
-    While various functions in Naaya's authentication code return latin-1
-    or utf-8 encoded bytestrings, UserInfo has field values as unicode
-    strings.
-    """
-    mandatory_fields = set(['first_name', 'last_name', 'full_name', 'user_id',
-                            'email', 'organisation', '_get_zope_user'])
-
-    def __init__(self, **fields):
-        missing_fields = self.mandatory_fields - set(fields)
-        assert not missing_fields, "Missing fields: %r" % list(missing_fields)
-
-        # we may want to comment this out for speed reasons
-        for key, value in fields.iteritems():
-            if key == 'user_id':
-                assert isinstance(value, str), "user_id %r must be str" % value
-            else:
-                assert (isinstance(value, unicode),
-                        "value %r (for %r, user %r) not unicode" %
-                        (value, key, fields['user_id']))
-
-        self.__dict__.update(fields)
-
-    @property
-    def zope_user(self):
-        """
-        Fetch the corresponding Zope user that can be used in authorization.
-        """
-        # `_get_zope_user` was given to us by our factory. It's a callable, and
-        # not the actual user, because it may be costly to obtain (e.g. from
-        # an LDAP database).
-        return self._get_zope_user()
-
 class LDAPUserInfo(UserInfo):
     """ a UserInfo with an extra property for LDAP (`dn`) """
-    mandatory_fields = UserInfo.mandatory_fields | set(['dn'])
+    mandatory_fields = UserInfo.mandatory_fields | set(['dn', 'organisation',
+            'postal_address', 'phone_number'])
 
-def user_info_from_zope_user(zope_user, ldap_encoding):
+def user_info_from_zope_user(ldap_plugin, zope_user, ldap_encoding):
     def extract(name):
         value = getattr(zope_user, name, '')
         if value is None:
@@ -682,6 +648,7 @@ def user_info_from_zope_user(zope_user, ldap_encoding):
         'phone_number': extract('telephoneNumber'),
         'dn': extract('dn'),
         '_get_zope_user': lambda: zope_user,
+        '_source': ldap_plugin,
     }
     return LDAPUserInfo(**fields)
 
@@ -715,5 +682,6 @@ def user_info_from_ldap_cache(user_id, cached_record, ldap_plugin):
         'phone_number': extract('telephoneNumber'),
         'dn': extract('dn'),
         '_get_zope_user': get_zope_user,
+        '_source': ldap_plugin,
     }
     return LDAPUserInfo(**fields)
