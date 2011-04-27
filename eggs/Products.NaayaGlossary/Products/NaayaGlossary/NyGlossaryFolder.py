@@ -187,7 +187,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     def check_if_no_translations(self):
         """ check if translations['translation'] != '': """
         for lang in self.get_english_names():
-            if getattr(self, lang) != '': return 1
+            if self.get_translation_by_language(lang) != '': return 1
         return 0
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_translations_list')
@@ -221,6 +221,13 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     def get_def_trans_by_language(self, language):
         """ get translation by language """
         return getattr(self.aq_self, self.definition_lang(language), '')
+
+    def check_if_no_def_trans(self):
+        """ check if translation """
+        for lang in self.get_english_names():
+            if self.get_def_trans_by_language(lang) != '':
+                return 1
+        return 0
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_def_trans_list')
     def set_def_trans_list(self, language, translation):
