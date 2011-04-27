@@ -1057,6 +1057,18 @@ class CHMSite(NySite):
 
     chm_common_css = ImageFile('www/chm_common.css', globals())
 
+
+    security.declareProtected(view, 'get_related_items')
+    def get_related_items(self, item):
+        """ """
+        lang = self.gl_get_selected_language()
+        keywords = item.keywords.split(' ')
+        search_args = {'objectkeywords_' + lang: keywords, 'approved': 1}
+        results = self.getCatalogedObjectsCheckView(**search_args)
+        if item in results:
+            results.remove(item)
+        return results
+
 InitializeClass(CHMSite)
 
 
