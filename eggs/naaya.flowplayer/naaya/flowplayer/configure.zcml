@@ -67,4 +67,11 @@
     permission="zope.Public"
     />
 
+  <browser:page
+    for="*"
+    name="startupimage"
+    class=".resources.StartupImage"
+    permission="zope.Public"
+    />
+
 </configure>
