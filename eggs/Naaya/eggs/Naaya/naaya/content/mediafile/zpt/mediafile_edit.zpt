@@ -51,6 +51,25 @@ Example:
 	<label for="subtitle_file"><span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span></label>
 	<input type="file" onchange="javascript:check_srt(this);" size="50" name="subtitle_file" id="subtitle_file" value=""/>
 </div>
+<div class="field">
+	<label for="startup_image" i18n:translate="">Startup image</label>
+    <tal:block condition="here/startup_image">
+        <img tal:attributes="src string:${here/absolute_url}/get_startup_image"
+        width="400px"/>
+    </tal:block>
+</div>
+<div class="field-inline">
+    <tal:block condition="here/startup_image">
+        <label class="widget-title" for="startup_image" i18n:translate="">
+            Delete image</label>
+        <input id="delete_image" type="checkbox" name="delete_image">
+    </tal:block>
+</div>
+<div class="field">
+	<label for="startup_image"><span i18n:translate=""
+    tal:omit-tag="">Upload startup image (preferable in jpeg format)</span></label>
+	<input type="file" size="50" name="startup_image" id="startup_image" value=""/>
+</div>
 
 <fieldset style="background-color: #F9FCFE"
 	tal:define="ready here/mediaReady;

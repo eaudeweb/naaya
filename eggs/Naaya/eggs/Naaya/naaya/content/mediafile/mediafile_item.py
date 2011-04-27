@@ -1,9 +1,7 @@
-from copy import deepcopy
 import os
 import sys
 
 import zLOG
-from OFS.Image import File, cookId
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
@@ -14,6 +12,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from naaya.content.bfile.NyBlobFile import make_blobfile
 
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from naaya.content.base.constants import *
@@ -239,6 +238,7 @@ class mediafile_item(Implicit, NyContentData):
     """ """
 
     subtitle = LocalProperty('subtitle')
+    startup_image = None
 
 class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckControl, NyValidation, NyContentType):
     """ """
@@ -508,6 +508,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
         _subtitle = schema_raw_data.pop('subtitle', '')
         _subtitle_file = schema_raw_data.pop('subtitle_file', None)
+        _startup_image = schema_raw_data.pop('startup_image', '')
+        _delete_image = schema_raw_data.pop('delete_image', '')
         _source = schema_raw_data.pop('source', None)
         _file = schema_raw_data.pop('file', '')
 
@@ -526,6 +528,10 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if _subtitle_file:
             _subtitle = _subtitle_file.read()
         self._setLocalPropValue('subtitle', _lang, _subtitle)
+        if _delete_image:
+            self.startup_image = None
+        if _startup_image:
+            self.startup_image = make_blobfile(_startup_image)
         if _source:
             self.saveUpload(file=_file, lang=_lang)
 
@@ -597,6 +603,14 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
             return 0
         return video.get_size()
 
+    security.declareProtected(view, 'get_startup_image')
+    def get_startup_image(self, RESPONSE):
+        """ Render picture """
+        if hasattr(self, 'startup_image'):
+            return self.startup_image.send_data(RESPONSE, as_attachment=False)
+        else:
+            return None
+
 InitializeClass(NyMediaFile_extfile)
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
@@ -618,3 +632,4 @@ config.update({
 
 def get_config():
     return config
+
