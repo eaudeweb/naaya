@@ -171,13 +171,13 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
 
     def get_translation_by_language(self, language):
         """ get translation by language """
-        try:    return getattr(self, language)
+        try:    return getattr(self.aq_base, language)
         except: return ''
 
     def get_translation_by_language_for_js(self, language):
         """ get translation by language for the javascript code"""
         try:
-            translation = getattr(self, language)
+            translation = getattr(self.aq_base, language)
             if not translation:
                 translation = self.title_or_id()
         except AttributeError:
@@ -220,7 +220,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     #######################################
     def get_def_trans_by_language(self, language):
         """ get translation by language """
-        return getattr(self.aq_self, self.definition_lang(language), '')
+        return getattr(self.aq_base, self.definition_lang(language), '')
 
     def check_if_no_def_trans(self):
         """ check if translation """
