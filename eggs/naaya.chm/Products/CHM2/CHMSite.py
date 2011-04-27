@@ -1061,13 +1061,12 @@ class CHMSite(NySite):
     security.declareProtected(view, 'get_related_items')
     def get_related_items(self, item):
         """ """
-        if not hasattr(item.aq_base, 'keywords'):
-            return []
-        if not item.keywords:
-            return []
-        keywords = item.keywords.split(' ')
         lang = self.gl_get_selected_language()
-        search_args = {'objectkeywords_' + lang: keywords, 'approved': 1}
+        attr_name = 'objectkeywords_' + lang
+        if not hasattr(item.aq_base, attr_name):
+            return []
+        keywords = getattr(item, attr_name).split(' ')
+        search_args = {attr_name: keywords, 'approved': 1}
         results = self.getCatalogedObjectsCheckView(**search_args)
         if item in results:
             results.remove(item)
