@@ -57,3 +57,9 @@ class SubRip(BrowserView):
     def __call__(self, **kwargs):
         self.request.response.setHeader('content-type', 'application/octet-stream')
         return getattr(self.context, 'subtitle', '')
+
+class StartupImage(BrowserView):
+    """ Get startup image """
+    def __call__(self, **kwargs):
+        self.request.response.setHeader('content-type', 'image/jpeg')
+        return self.context.startup_image.send_data(self.request.response, as_attachment=False)
