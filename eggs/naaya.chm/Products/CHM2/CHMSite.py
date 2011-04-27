@@ -1061,6 +1061,8 @@ class CHMSite(NySite):
     security.declareProtected(view, 'get_related_items')
     def get_related_items(self, item):
         """ """
+        if not hasattr(item.aq_base, 'keywords'):
+            return []
         lang = self.gl_get_selected_language()
         keywords = item.keywords.split(' ')
         search_args = {'objectkeywords_' + lang: keywords, 'approved': 1}
