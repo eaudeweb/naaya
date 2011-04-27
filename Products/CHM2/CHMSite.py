@@ -1063,8 +1063,10 @@ class CHMSite(NySite):
         """ """
         if not hasattr(item.aq_base, 'keywords'):
             return []
-        lang = self.gl_get_selected_language()
         keywords = item.keywords.split(' ')
+        if not keywords:
+            return []
+        lang = self.gl_get_selected_language()
         search_args = {'objectkeywords_' + lang: keywords, 'approved': 1}
         results = self.getCatalogedObjectsCheckView(**search_args)
         if item in results:
