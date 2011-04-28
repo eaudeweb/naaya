@@ -1,0 +1,9 @@
+1.2.3 (unreleased)
+==================
+ * Merge Products.NaayaSurvey and Products.NaayaWidgets into a single package
+   named "naaya-survey"
+
+1.2.2 (2011-04-28)
+==================
+ * Last version where Products.NaayaSurvey and Products.NaayaWidgets were
+   separate packages
