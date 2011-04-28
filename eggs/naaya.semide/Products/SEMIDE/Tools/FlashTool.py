@@ -6,14 +6,13 @@ from lxml.builder import E
 
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view, manage_users
+from AccessControl.Permissions import view_management_screens, view
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 import Products.NaayaBase.constants
 import Products.Naaya.constants
 from Products.NaayaCore.managers.utils import utils, tmpfile
-from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
 from Products.NaayaProfilesTool.ProfileMeta import ProfileMeta
 from Products.NaayaCore.managers.paginator import ObjectPaginator
@@ -28,7 +27,7 @@ from Products.SEMIDE.constants import (SEMIDE_PRODUCT_PATH, TITLE_FLASHTOOL,
 ID_FLASHTOOL, FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION,
 VACANCIES, CALLFORPROPOSALS, TENDERS, PAPERS, TRAINING)
 
-from FlashTemplate import manage_addFlashTemplateForm, manage_addFlashTemplate
+from FlashTemplate import manage_addFlashTemplate
 from mdh.MDH import MDH
 
 logger = logging.getLogger('SEMIDE FlashTool')
@@ -425,10 +424,22 @@ class FlashTool(Folder, ProfileMeta, utils):
             for obj in obj_list:
                 if obj.istranslated(lang):
                     #Description tag
+                    if mesg_type == 'html':
+                        desc_elem = E.description(sanitize_xml_data(
+                                obj.getLocalProperty('description', lang))
+                        )
+                    else:
+                        desc_elem = E.description(sanitize_xml_data(
+                                self.utStripAllHtmlTags(
+                                   obj.getLocalProperty('description', lang)
+                                )
+                        ))
+
+                    #Address tag
                     addr_elem = E.address(sanitize_xml_data(
-                        obj.getLocalProperty('address', lang)))
+                        obj.getLocalProperty('', lang)))
                     #Events tag
-                    events.append(E.events(addr_elem, {
+                    events.append(E.events(desc_elem, addr_elem, {
                         'title': sanitize_xml_data(
                             obj.getLocalProperty('title', lang)),
                         'start_date': str(obj.start_date),
