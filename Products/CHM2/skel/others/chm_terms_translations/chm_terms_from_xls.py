@@ -124,6 +124,8 @@ class DescriptionParser(object):
         for fragment_en, fragment_trans in self.fragments:
             lang_codes &= set(fragment_trans.keys())
 
+        self.fragments.sort(reverse=True, key=lambda f: len(f[0]))
+
         _warn_if_replacements_incomplete(self.value_en, self.fragments)
 
         out = {'en': self.value_en}
@@ -143,7 +145,7 @@ def extract_data_from_xls(xls_path):
     wb = xlrd.open_workbook(xls_path)
     sh = wb.sheet_by_index(0)
 
-    HEADING_ROW = 8
+    HEADING_ROW = 9
     assert sh.cell(HEADING_ROW, 2).value == "Description"
 
     get_translations = TranslationsExtractor(sh.row(HEADING_ROW), 4, 24)
@@ -209,7 +211,7 @@ def id_generator(pattern='%d'):
 
 def term_to_xml(term, tag='name'):
     name_xml = getattr(E, tag)({})
-    for lang, value in term.values.iteritems():
+    for lang, value in sorted(term.values.iteritems()):
         name_xml.append(E.translation(value, {'lang': lang}))
     return name_xml
 
