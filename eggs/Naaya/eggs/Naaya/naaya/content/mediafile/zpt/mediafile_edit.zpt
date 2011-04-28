@@ -62,7 +62,7 @@ Example:
     <tal:block condition="here/startup_image">
         <label class="widget-title" for="startup_image" i18n:translate="">
             Delete image</label>
-        <input id="delete_image" type="checkbox" name="delete_image">
+        <input id="delete_startup_image" type="checkbox" name="delete_startup_image">
     </tal:block>
 </div>
 <div class="field">

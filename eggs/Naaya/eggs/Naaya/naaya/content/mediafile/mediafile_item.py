@@ -509,7 +509,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         _subtitle = schema_raw_data.pop('subtitle', '')
         _subtitle_file = schema_raw_data.pop('subtitle_file', None)
         _startup_image = schema_raw_data.pop('startup_image', '')
-        _delete_image = schema_raw_data.pop('delete_image', '')
+        _delete_startup_image = schema_raw_data.pop('delete_startup_image', '')
         _source = schema_raw_data.pop('source', None)
         _file = schema_raw_data.pop('file', '')
 
@@ -528,7 +528,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if _subtitle_file:
             _subtitle = _subtitle_file.read()
         self._setLocalPropValue('subtitle', _lang, _subtitle)
-        if _delete_image:
+        if _delete_startup_image:
             self.startup_image = None
         if _startup_image:
             self.startup_image = make_blobfile(_startup_image)
@@ -603,14 +603,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
             return 0
         return video.get_size()
 
-    security.declareProtected(view, 'get_startup_image')
-    def get_startup_image(self, RESPONSE):
-        """ Render picture """
-        if hasattr(self, 'startup_image'):
-            return self.startup_image.send_data(RESPONSE, as_attachment=False)
-        else:
-            return None
-
 InitializeClass(NyMediaFile_extfile)
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
@@ -632,4 +624,3 @@ config.update({
 
 def get_config():
     return config
-

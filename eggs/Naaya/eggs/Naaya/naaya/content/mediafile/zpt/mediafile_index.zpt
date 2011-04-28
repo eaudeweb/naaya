@@ -82,7 +82,7 @@
           subtitle string:${here/absolute_url}/flowplayer.srt;
           subtitle python:has_subtitle and subtitle or '';
           has_startup_image here/startup_image;
-          startup_image string:${here/absolute_url}/startupimage;
+          startup_image string:${here/absolute_url}/get_startup_image;
           startup_image python:has_startup_image and startup_image or ''">
           <!-- Player -->
           <div>
