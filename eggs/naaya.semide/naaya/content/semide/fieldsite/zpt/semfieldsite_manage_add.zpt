@@ -58,11 +58,6 @@
 	</tr>
 
 	<tr><td></td></tr>
-	<tr><td class="form-label" colspan="2">Extended properties</td></tr>
-	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(template.kind)">
-		<td class="form-label"><span tal:replace="record/name"/></td>
-		<td tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</td>
-	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
 </table>
 </form>

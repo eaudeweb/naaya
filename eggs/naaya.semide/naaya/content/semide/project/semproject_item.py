@@ -17,8 +17,7 @@ PERMISSION_DELETE_OBJECTS, EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG,
 EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, EXCEPTION_STARTEDVERSION_MSG,
 MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import utils, make_id
-from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImportExport import NyImportExport
@@ -33,16 +32,15 @@ from naaya.core import submitter
 
 from naaya.content.semide.organisation.semorganisation_item import (
     addNySemOrganisation, semorganisation_add_html,
-    manage_addNySemOrganisation_html, importNySemOrganisation,
-    METATYPE_OBJECT as METATYPE_NYSEMORGANISATION)
+    importNySemOrganisation, METATYPE_OBJECT as METATYPE_NYSEMORGANISATION)
 from naaya.content.semide.funding.semfunding_item import (
-    addNySemFunding, semfunding_add_html, manage_addNySemFunding_html,
+    addNySemFunding, semfunding_add_html,
     importNySemFunding, METATYPE_OBJECT as METATYPE_NYSEMFUNDING)
 from naaya.content.semide.fieldsite.semfieldsite_item import (
-    addNySemFieldSite, semfieldsite_add_html, manage_addNySemFieldSite_html,
+    addNySemFieldSite, semfieldsite_add_html,
     importNySemFieldSite, METATYPE_OBJECT as METATYPE_NYSEMFIELDSITE)
 from naaya.content.semide.document.semdocument_item import (
-    addNySemDocument, semdocument_add_html, manage_addNySemDocument_html,
+    addNySemDocument, semdocument_add_html,
     importNySemDocument, METATYPE_OBJECT as METATYPE_NYSEMDOCUMENT)
 
 #module constants
@@ -474,7 +472,6 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:

@@ -28,7 +28,6 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from App.ImageFile import ImageFile
 
 #Product imports
@@ -37,10 +36,7 @@ from Products.Naaya.constants import *
 from Products.NaayaContent.constants import *
 from Products.NaayaCore.constants import *
 
-from Products.NaayaBase.managers.import_parser import import_parser
-from Products.Naaya.NyFolder import NyFolder, addNyFolder
-from naaya.content.url.url_item import addNyURL
-from naaya.content.file.file_item import addNyFile
+from Products.Naaya.NyFolder import NyFolder
 from Products.NaayaCore.managers.utils import batch_utils
 
 #This is wrong
@@ -56,8 +52,6 @@ from naaya.content.semide.multimedia.semmultimedia_item  import METATYPE_OBJECT 
 from naaya.content.semide.textlaws.semtextlaws_item   import METATYPE_OBJECT as METATYPE_NYSEMTEXTLAWS
 
 from Products.Localizer.LocalPropertyManager import LocalProperty
-from Products.NaayaCore.PortletsTool.HTMLPortlet import addHTMLPortlet
-from Products.NaayaCore.SyndicationTool.RemoteChannel import manage_addRemoteChannel
 from Products.NaayaBase.NyValidation import NyValidation
 
 
@@ -169,7 +163,6 @@ def addNySemThematicDir(self, id='', title='', description='', coverage='', keyw
                     keywords, criteria_keywords, sortorder, publicinterface, maintainer_email, contributor,
                     folder_meta_types, releasedate, criteria_date, themes, lang)
         self.gl_add_languages(ob)
-        ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
