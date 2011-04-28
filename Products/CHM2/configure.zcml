@@ -1,6 +1,13 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+           xmlns:naaya="http://namespaces.zope.org/naaya">
+
   <subscriber
     handler=".CHMSite.handle_content_type_installed"
     for="Products.Naaya.interfaces.INyPluggableItemInstalled"
     />
+
+  <naaya:call
+    factory=".glossary_widget_bold_words.patch_glossary_widget"
+    />
+
 </configure>
