@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import sys
 
@@ -204,7 +203,6 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += url_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

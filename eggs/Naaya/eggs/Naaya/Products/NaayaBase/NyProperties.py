@@ -1,17 +1,17 @@
 """
-This module contains the class that handles dynamic properties for a single.
-The I{dynamic properties} are the object properties that can be added and
-managed at runtime.
-"""
+Handle dynamic properties for a specific object
 
+..deprecated:: 2.11.03
+    DynamicPropertiesTool is no longer supported.
+    This module will be removed in the future version.
+
+"""
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl.Permissions import view_management_screens, view
 
-from constants import PERMISSION_EDIT_OBJECTS
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.Localizer.LocalPropertyManager import (
+                                    LocalPropertyManager, LocalProperty)
 
 module_glossary_metatype = "Naaya Glossary"
 
@@ -22,15 +22,10 @@ except:
     module_thesaurus_metatype = None
 
 class NyProperties(LocalPropertyManager):
-    """
-    Class that handles dynamic properties for a single.
-    """
+    """ This class is exteded by most content types and it is used to manage
+    dynamic properties for a specific object.
 
-    manage_options = (
-        (
-            {'label': 'Dynamic properties', 'action': 'manage_dynamicproperties_html'},
-        )
-    )
+    """
 
     def __init__(self):
         """ """
@@ -40,15 +35,8 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('createProperty')
     def createProperty(self, p_id, p_value, lang):
-        """
-        Add a new property.
-        @param p_id: property id
-        @type p_id: string
-        @param p_value: property value
-        @type p_value: unicode
-        @param lang: language code
-        @type lang: string
-        """
+        """Add a new property"""
+
         self.__dynamic_properties[p_id] = ''
         setattr(self, p_id, LocalProperty(p_id))
         self._setLocalPropValue(p_id, lang, p_value)
@@ -56,11 +44,8 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('deleteProperty')
     def deleteProperty(self, p_id):
-        """
-        Delete a property.
-        @param p_id: property id
-        @type p_id: string
-        """
+        """Delete a property"""
+
         try:
             del(self.__dynamic_properties[p_id])
             delattr(self, p_id)
@@ -69,53 +54,33 @@ class NyProperties(LocalPropertyManager):
             pass
 
     def getPropertyValue(self, p_id, lang=None):
-        """
-        Returns a property value in the specified language.
-        @param p_id: property id
-        @type p_id: string
-        @param lang: language code
-        @type lang: string
-        """
+        """Returns a property value in the specified language"""
+
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(p_id, lang)
 
     def setProperties(self, dict):
+        """A set of properties is stored as a dictionary. this function adds
+        properties to the current object
+
         """
-        A set of properties is stored as a dictionary. this function adds
-        properties to the current object.
-        @param dict: structure that holds properties
-        @type dict: dictionary
-        """
+
         self.__dynamic_properties = dict
         self._p_changed = 1
 
     def getProperties(self):
-        """
-        Returns all the properties.
-        """
+        """Returns all the properties """
         return self.__dynamic_properties
 
     security.declarePrivate('createDynamicProperties')
     def createDynamicProperties(self, p_dp_dict, lang):
-        """
-        Create properties with values from a given dictionary.
-        @param p_dp_dict: structure that holds the properties values
-        @type p_dp_dict: dictionary
-        @param lang: language code
-        @type lang: string
-        """
+        """Create properties with values from a `dict`"""
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
     security.declarePrivate('updateDynamicProperties')
     def updateDynamicProperties(self, p_dp_dict, lang):
-        """
-        Update properties with values from a given dictionary.
-        @param p_dp_dict: structure that holds the properties values
-        @type p_dp_dict: dictionary
-        @param lang: language code
-        @type lang: string
-        """
+        """Update properties with values from a `dict`"""
         if lang is None:
             lang = self.gl_get_selected_language()
         for l_dp in p_dp_dict.keys():
@@ -123,20 +88,17 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('updatePropertiesFromGlossary')
     def updatePropertiesFromGlossary(self, lang):
+        """Update the `keywords` and `coverage` properties from the associated
+        glossary for each language other than the current one
+
         """
-        Update the B{keywords} and B{coverage} properties from the associated
-        glossary for each language other than the current one.
-        """
+
         provider_keywords = self.get_keywords_glossary()
         if provider_keywords:
             update_translation(self, 'keywords', provider_keywords, lang, '')
         provider_coverage = self.get_coverage_glossary()
         if provider_coverage:
             update_translation(self, 'coverage', provider_coverage, lang, '')
-
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_dynamicproperties_html')
-    manage_dynamicproperties_html = PageTemplateFile('zpt/manage_dynamicproperties', globals())
 
 InitializeClass(NyProperties)
 
@@ -197,6 +159,7 @@ def _translate_to_langs(source_values, translator, lang, lang_names):
 
 def update_translation(ob, name, translator, lang, old_value, separator=','):
     """ Updates the given property for all languages. """
+
     lang_names = languages_map(ob)
 
     prev_translated = _translate_to_langs(ob.splitToList(old_value),

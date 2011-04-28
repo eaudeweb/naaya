@@ -56,10 +56,6 @@ function fSet(ctrl, value)
 </tal:block>
 
 <tal:block metal:define-slot="custom_properties" />
-<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
-    <label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
-    <tal:block tal:content="structure python:record.render(record.defaultvalue, context)">dynamic html control</tal:block>
-</div>
 
 <tal:block content="structure submitter_info_html|nothing" />
 

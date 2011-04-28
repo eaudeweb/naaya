@@ -1,11 +1,9 @@
 from copy import copy, deepcopy
 import operator
 
-from DateTime import DateTime
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view, manage_users
 import Products
 from zope.interface import implements
@@ -100,8 +98,6 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/folder_add_html' % self.absolute_url())
             return
-
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), _lang)
 
     #extra settings
     if _folder_meta_types == '':
@@ -205,8 +201,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             {'label': 'Properties', 'action': 'manage_edit_html'},
             {'label': 'Subobjects', 'action': 'manage_folder_subobjects_html'},
         )
-        +
-        NyProperties.manage_options
         +
         NyImportExport.manage_options
         +
@@ -804,7 +798,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         self.approved = approved
         self.releasedate = releasedate
         self.updatePropertiesFromGlossary(lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
             else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()

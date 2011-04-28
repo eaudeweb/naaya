@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import sys
 
@@ -213,7 +212,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
     def manage_options(self):
         """ """
-        l_options = (NyContainer.manage_options[0],) + story_item.manage_options
+        l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
@@ -454,9 +453,14 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+        form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
         parent = self.aq_parent
         return self.getFormsTool().getContent({
             'here': self,
+            'kind': config['meta_type'],
+            'action': 'process_add',
+            'form_helper': form_helper,
             'submitter_info_html': submitter.info_html(parent, REQUEST),
         }, 'story_add')
 

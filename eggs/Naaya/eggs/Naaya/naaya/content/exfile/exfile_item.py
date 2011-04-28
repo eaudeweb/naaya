@@ -1,11 +1,9 @@
-from copy import deepcopy
 import os
 import sys
 
-import warnings
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
-from OFS.Image import File, cookId
+from OFS.Image import cookId
 from zope.contenttype import guess_content_type
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
@@ -370,7 +368,6 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'}, Folder.manage_options[0])
-        l_options += exfile_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
 
         return l_options

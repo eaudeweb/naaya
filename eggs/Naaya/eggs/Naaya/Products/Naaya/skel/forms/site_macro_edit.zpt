@@ -163,14 +163,6 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 <!-- Custom properties -->
 <tal:block metal:define-slot="custom_properties" />
 
-<!-- Dynamic properties -->
-<metal:block define-slot="dynamic_properties">
-	<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-		<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
-		<tal:block tal:content="structure python:record.render(here.getVersionLocalProperty(record.id, curr_lang), here)">dynamic html control</tal:block>
-	</div>
-</metal:block>
-
 <!-- Hidden inputs  -->
 <metal:block define-slot="hidden_inputs">
 	<input type="hidden" name="lang" tal:attributes="value curr_lang" />

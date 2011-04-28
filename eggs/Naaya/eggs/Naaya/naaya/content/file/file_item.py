@@ -1,10 +1,9 @@
-from copy import deepcopy
 import os
 import sys
 
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
-from OFS.Image import File, cookId
+from OFS.Image import cookId
 from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
@@ -279,7 +278,6 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},
                         {'label': 'Edit', 'action': 'manage_main'},)
-        l_options += file_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

@@ -1,11 +1,10 @@
 """ Bulk upload contacts, urls, experts """
 
 #Python import
-import csv, codecs, cStringIO
+import csv, codecs
 from StringIO import StringIO
 import urllib
 import simplejson as json
-import operator
 try:
     import xlwt
     excel_export_available = True
@@ -54,9 +53,6 @@ class CSVImportTool(Implicit, Item):
                     columns.append(widget.title + ' - ' + subname)
             else:
                 columns.append(widget.title)
-        dynprop_tool = self.getSite().getDynamicPropertiesTool()
-        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
-            columns.append(dyn_prop.name)
         csv.writer(output).writerow(columns)
         if as_attachment and REQUEST is not None:
             filename = schema.title_or_id() + ' bulk upload.csv'
@@ -116,14 +112,6 @@ class CSVImportTool(Implicit, Item):
                     'column': prop_name,
                     'convert': widget.convert_from_user_string,
                 }
-
-        # and now for dynamic properties
-        dynprop_tool = self.getSite().getDynamicPropertiesTool()
-        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
-            prop_map[dyn_prop.name] = {
-                'column': dyn_prop.id,
-                'convert': lambda x: x,
-            }
 
         try:
             reader = UnicodeReader(data)
@@ -264,14 +252,6 @@ class ExportTool(Implicit, Item):
                 convert = widget.convert_to_user_string
                 getter = getter_factory(prop_name, None, convert)
                 prop_getters.append(getter)
-
-        # create columns for dynamic properties
-        dynprop_tool = self.getSite().getDynamicPropertiesTool()
-        for dyn_prop in dynprop_tool.getDynamicProperties(meta_type):
-            dump_header.append(dyn_prop.name)
-            getter = getter_factory(dyn_prop.id, None, simple_convert)
-            prop_getters.append(getter)
-
 
         def generate_dump_items():
             for ob in objects:

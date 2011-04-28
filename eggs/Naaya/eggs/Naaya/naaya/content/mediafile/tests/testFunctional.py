@@ -156,10 +156,11 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/manage_edit_html')
+
         form = self.browser.get_form('frmEdit')
         # TODO: title control should be 'title:utf8:ustring'
-        self.failUnlessEqual(form['title'], 'My media file')
-        form['title'] = 'new_mediafile_title'
+        self.failUnlessEqual(form['title:utf8:ustring'], 'My media file')
+        form['title:utf8:ustring'] = 'new_mediafile_title'
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         self.browser.submit()
 

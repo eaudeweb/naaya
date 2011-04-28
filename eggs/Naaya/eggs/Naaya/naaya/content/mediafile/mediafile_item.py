@@ -254,7 +254,6 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         l_options = (NyFSContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += mediafile_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyFSContainer.manage_options[3:8]
         return l_options
 

@@ -1,10 +1,7 @@
 import re
-from unittest import TestSuite, makeSuite
-from copy import deepcopy
 from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-
 
 class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
@@ -140,6 +137,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
 
 class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
+
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Contact')
         from naaya.content.contact.contact_item import addNyContact
@@ -188,9 +186,3 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'ver_contact_version')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyContactFunctionalTestCase))
-    suite.addTest(makeSuite(NyContactVersioningFunctionalTestCase))
-    return suite
