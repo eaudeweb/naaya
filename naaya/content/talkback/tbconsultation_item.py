@@ -75,32 +75,6 @@ DESCRIPTION_OBJECT = 'This is Naaya TalkBack Consultation type.'
 PREFIX_OBJECT = 'tbcns'
 ADDITIONAL_STYLE = open(ImageFile(
     'www/talkbackconsultation_style.css', globals()).path).read()
-PROPERTIES_OBJECT = {
-    'id':                  (0, '', ''),
-    'title':               (1,
-                            MUST_BE_NONEMPTY,
-                            'The Title field must have a value.'),
-
-    'description':         (0, '', ''),
-    'start_date':          (0,
-                            MUST_BE_DATETIME,
-                            'The Start Date field must contain a valid date.'),
-
-    'end_date':            (0,
-                            MUST_BE_DATETIME,
-                            'The End Date field must contain a valid date.'),
-
-    'sortorder':           (0,
-                            MUST_BE_POSITIV_INT,
-                            'The Sort order field must contain a positive integer.'),
-
-    'releasedate':         (0,
-                            MUST_BE_DATETIME,
-                            'The Release date field must contain a valid date.'),
-    'allow_file':          (0, '', ''),
-    'public_registration': (0, '', ''),
-    'lang':                (0, '', '')
-}
 
 DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA.update({
@@ -119,7 +93,7 @@ DEFAULT_SCHEMA.update({
     'public_registration': {
         "sortorder": 120,
         "widget_type": "Checkbox",
-        "label": "Allow visitors to register as reviewers for this consultation",
+        "label": "Allow users to register as reviewers for this consultation",
         "data_type": "bool",
         "default": False,
     },
@@ -149,7 +123,7 @@ DEFAULT_SCHEMA.update({
 DEFAULT_SCHEMA['coverage']['visible'] = False
 DEFAULT_SCHEMA['keywords']['visible'] = False
 DEFAULT_SCHEMA['sortorder']['visible'] = False
-DEFAULT_SCHEMA['sortorder']['sortorder'] = 115
+DEFAULT_SCHEMA['sortorder']['sortorder'] = 115 #Show sortorder in edit form
 DEFAULT_SCHEMA['releasedate']['visible'] = False
 DEFAULT_SCHEMA['discussion']['visible'] = False
 
@@ -164,7 +138,6 @@ config = {
         'forms': [],
         'add_form': 'talkbackconsultation_add_html',
         'description': 'This is Naaya TalkBack Consultation type.',
-        'properties': PROPERTIES_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': METATYPE_TALKBACKCONSULTATION,
         'import_string': '',
@@ -208,7 +181,9 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
     """
     Create a Naaya TalkBack Consultation type of object.
     """
+    l_referer = '/'
     if REQUEST is not None:
+        l_referer = REQUEST.get('HTTP_REFERER', '/').split('/')[-1]
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
@@ -235,9 +210,9 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
         else:
             abort_transaction_keep_session(REQUEST)
             ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-            self.setSessionInfoTrans("TalkBack Consultation object created")
-            return REQUEST.RESPONSE.redirect(ob.absolute_url())
+            return REQUEST.RESPONSE.redirect(l_referer)
 
+    self.setSessionInfoTrans("TalkBack Consultation object created")
     #process parameters
     if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -258,7 +233,6 @@ def addNyTalkBackConsultation(self, id='', REQUEST=None, contributor=None,
     auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if (l_referer == 'talkbackconsultation_add' or
             l_referer.find('talkbackconsultation_manage_add') != -1):
             return self.manage_main(self, REQUEST, update_menu=1)
