@@ -13,9 +13,9 @@ import zope.event
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
 from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
+EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import make_id
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 from Products.Naaya.NyFolder import addNyFolder
@@ -23,7 +23,6 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -248,7 +247,7 @@ def importNySemNews(self, param, id, attrs, content, properties, discussion, obj
                 ctype = obj.attrs['content_type'].encode('utf-8')
                 try:
                     size = int(obj.attrs['size'])
-                except TypeError, ValueError:
+                except (TypeError, ValueError):
                     size = 0
                 name = obj.attrs['name'].encode('utf-8')
                 ob.update_data(data, ctype, size, name)
@@ -382,62 +381,6 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def manage_FTPget(self):
         """ Return body for ftp """
         return self.description
-
-
-    #security.declareProtected(view_management_screens, 'manageProperties')
-    #def manageProperties(self, REQUEST=None, **kwargs):
-    #    """ """
-    #    if not self.checkPermissionEditObject():
-    #        raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-    #
-    #    if REQUEST is not None:
-    #        schema_raw_data = dict(REQUEST.form)
-    #    else:
-    #        schema_raw_data = kwargs
-    #
-    #    _lang = self.gl_get_selected_language()
-    #    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
-    #    form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-    #
-    #    if form_errors:
-    #        raise ValueError(form_errors.popitem()[1]) # pick a random error
-    #
-    #    new_news_date = self.utConvertStringToDateTimeObj(schema_raw_data.get('news_date', None))
-    #    if self.news_date != new_news_date: #Date changed.. the directory also changes
-    #        self.uncatalogNyObject() #removing from catalog
-    #        self.news_date = new_news_date
-    #
-    #        month_folder = create_month_folder(self.aq_parent.aq_parent.aq_parent, self.contributor, schema_raw_data)
-    #        cut_data = self.aq_parent.manage_cutObjects([self.id, ])
-    #        month_folder.manage_pasteObjects(cut_data)
-    #
-    #        moved = True
-    #    self.updatePropertiesFromGlossary(_lang)
-    #    self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
-    #
-    #    approved = schema_raw_data.get('approved', None)
-    #    if  approved != self.approved:
-    #        if approved == 0:
-    #            approved_by = None
-    #        else:
-    #            approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    #        self.approveThis(approved, approved_by)
-    #
-    #    self._p_changed = 1
-    #
-    #    if schema_raw_data.get('discussion', None):
-    #        self.open_for_comments()
-    #    else:
-    #        self.close_for_comments()
-    #
-    #    self.recatalogNyObject(self)
-    #
-    #    if REQUEST:
-    #        if moved:
-    #            return REQUEST.RESPONSE.redirect('%s/manage_edit_html?save=ok' %
-    #                month_folder._getOb(self.id).absolute_url())
-    #        else:
-    #            return REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
