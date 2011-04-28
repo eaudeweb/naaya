@@ -795,6 +795,11 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         self._setLocalPropValue('keywords', lang, keywords)
         self.sortorder = sortorder
         self.custom_index = custom_index
+        try:
+            self.get_custom_index_template()
+        except ValueError:
+            # reset custom index if it doesn' work
+            self.custom_index = ''
         self.maintainer_email = maintainer_email
         self.approved = approved
         self.releasedate = releasedate
@@ -1339,10 +1344,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        try:
-            tmpl = self.get_custom_index_template()
-        except:
-            tmpl = None
+        tmpl = self.get_custom_index_template()
         if tmpl is None:
             # no custom_index was configured, or the template is missing
             tmpl = self.getFormsTool()[self.default_form_id].aq_base.__of__(self)

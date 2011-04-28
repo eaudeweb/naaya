@@ -37,7 +37,15 @@
 </tr>
 <tr tal:define="global custom_index here/compute_custom_index_value;
                 global custom_index_tmpl here/get_custom_index_template">
-    <td class="form-label">Custom index</td>
+    <td>
+        <label class="form-label">Custom index</label>
+        <br />
+        Examples:
+            <ul>
+                <li>custom index in this folder: 'local:index'
+                <li>custom index from portal forms: 'site:portal_forms/folder_index'
+            </ul>
+    </td>
     <td>
         <input type="text" name="custom_index" size="70"
                tal:attributes="value custom_index" />
