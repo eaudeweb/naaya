@@ -50,6 +50,7 @@ setup(name='Naaya',
           #Naaya specific
           'naaya.content-compat',
           'naaya.flowplayer',
+          'naaya.content.bfile',
 
           #Testing
           # 'twill',
