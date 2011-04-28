@@ -1339,10 +1339,14 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        tmpl = self.get_custom_index_template()
+        try:
+            tmpl = self.get_custom_index_template()
+        except:
+            tmpl = None
         if tmpl is None:
             # no custom_index was configured, or the template is missing
             tmpl = self.getFormsTool()[self.default_form_id].aq_base.__of__(self)
+
         return tmpl(REQUEST)
 
     security.declareProtected(view, 'index_rdf')
