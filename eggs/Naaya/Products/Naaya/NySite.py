@@ -778,7 +778,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getAuthenticationTool(self): return self._getOb(ID_AUTHENTICATIONTOOL)
 
     security.declarePublic('getDynamicPropertiesTool')
-    def getDynamicPropertiesTool(self): return self._getOb(ID_DYNAMICPROPERTIESTOOL)
+    @deprecate('DynamicPropertiesTool is deprecated. Use SchemaTool instead.')
+    def getDynamicPropertiesTool(self):
+        return self._getOb(ID_DYNAMICPROPERTIESTOOL)
 
     security.declarePublic('getCatalogTool')
     def getCatalogTool(self): return self._getOb(ID_CATALOGTOOL)
@@ -830,8 +832,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getPortalTranslationsPath(self, p=0): return self._getOb(ID_TRANSLATIONSTOOL).absolute_url(p)
     security.declarePublic('getAuthenticationToolPath')
     def getAuthenticationToolPath(self, p=0): return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
-    security.declarePublic('getDynamicPropertiesToolPath')
-    def getDynamicPropertiesToolPath(self, p=0): return self._getOb(ID_DYNAMICPROPERTIESTOOL).absolute_url(p)
     security.declarePublic('getCatalogToolPath')
     def getCatalogToolPath(self, p=0): return self._getOb(ID_CATALOGTOOL).absolute_url(p)
     security.declarePublic('getLayoutToolPath')

@@ -1,14 +1,11 @@
-import re
 from urllib import quote
 from StringIO import StringIO
-from unittest import TestSuite, makeSuite
 from random import random
 from Testing import ZopeTestCase
 import transaction
 
 from zope.component import adapter, getGlobalSiteManager
 
-from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaBase.NyContentType import NyContentData
 from naaya.content.base.discover import get_pluggable_content
@@ -163,81 +160,6 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
             transaction.commit()
             n += 1
 
-    def test_dynamic_properties(self):
-        """
-        Check that we can configure and set (old-style) dynamic properties
-        """
-        n = 1
-
-        for content_type in content_types:
-            if content_type['module'] not in DYNAMIC_PROPERTIES_TESTABLES:
-                continue
-            if not self.portal.is_pluggable_item_installed(content_type['meta_type']):
-                continue
-
-            type_name = content_type['module']
-
-            # create a dynamic property for this content type
-            self.browser.go('http://localhost/portal/portal_dynamicproperties/'
-                    '?%3Amethod=manage_addDynamicPropertiesItemForm'
-                    '&submit=Add+Naaya+Dynamic+Properties+Item')
-
-            form = self.browser.get_form(1)
-            form['id'] = [ content_type['meta_type'] ]
-            self.browser.clicked(form, self.browser.get_form_field(form, 'id'))
-            self.browser.submit()
-
-            self.browser.go( 'http://localhost/portal/portal_dynamicproperties/'
-                '%s/manage_properties_html' % quote(content_type['meta_type']) )
-
-            form = self.browser.get_form(1)
-            form['id'] = 'yvvy'
-            form['name'] = 'Yv Vy'
-            form['type'] = ['string']
-            self.browser.clicked(form, self.browser.get_form_field(form, 'id'))
-            self.browser.submit()
-
-            # create a new object
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
-            form = self.browser.get_form('frmAdd')
-            self.failUnless('yvvy:utf8:ustring' in (c.name for c in form.controls),
-                'missing "yvvy" control for %s when adding' % type_name)
-            self.browser.clicked(form, form.find_control('title:utf8:ustring'))
-            form['title:utf8:ustring'] = 'some title %d' % n
-            form['yvvy:utf8:ustring'] = 'the yvvy value'
-            _fill_specific_form_fields(form, type_name)
-            self.browser.submit()
-
-            # make sure the value was set
-            obj = self.portal.xz_folder['some-title-%d' % n]
-            self.failUnlessEqual(getattr(obj, 'yvvy', None), 'the yvvy value',
-                'bad/missing "yvvy" value for %s' % type_name)
-
-            # edit the object
-            self.browser.go('http://localhost/portal/xz_folder/some-title-%d/edit_html' % n)
-            form = self.browser.get_form('frmEdit')
-            self.failUnless('yvvy:utf8:ustring' in (c.name for c in form.controls),
-                'missing "yvvy" control for %s when editing' % type_name)
-            self.browser.clicked(form, form.find_control('yvvy:utf8:ustring'))
-            self.browser.submit()
-            #self.browser.clicked(form, form.find_control('saveProperties:method'))
-            form = self.browser.get_form('frmEdit')
-            self.failUnlessEqual(form['yvvy:utf8:ustring'], 'the yvvy value',
-                'bad "yvvy" value in edit form for %s' % type_name)
-            form['yvvy:utf8:ustring'] = 'the yvvy other value'
-            self.browser.clicked(form, form.find_control('yvvy:utf8:ustring'))
-            self.browser.submit()
-
-            # make sure the value was changed
-            obj = self.portal.xz_folder['some-title-%d' % n]
-            self.failUnlessEqual(getattr(obj, 'yvvy', None), 'the yvvy other value',
-                'bad/missing "yvvy" 2nd value for %s' % type_name)
-
-            # delete the object, so we can create another one with the same ID later on
-            self.portal.xz_folder.manage_delObjects(['some-title-%d' % n])
-            transaction.commit()
-            n += 1
-
     def test_form_remember_data(self):
         """ Make sure forms don't lose their data when they have an error """
         for content_type in content_types:
@@ -364,6 +286,8 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
+            self.assertTrue(form is not None, "%s form cannot be rendered" %
+                                        content_type['add_form'])
             form['title:utf8:ustring'] = rnd_title
             _fill_specific_form_fields(form, type_name)
             self.browser.clicked(form, form.find_control('title:utf8:ustring'))
@@ -371,7 +295,11 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
 
             self.browser.go('http://localhost/portal/search_html?query=' + rnd_title)
             html = self.browser.get_html()
-            self.failUnless('xz_folder/%s' % rnd_title in html) # we look for a hyperlink to our object
+
+            # we look for a hyperlink to our object
+            self.assertTrue('xz_folder/%s' % rnd_title in html,
+                            "Title '%s' not found for '%s' in search results" %
+                            (rnd_title, content_type['meta_type']))
 
             self.portal.xz_folder.manage_delObjects([rnd_title])
             transaction.commit()

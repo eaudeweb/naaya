@@ -100,16 +100,13 @@ class NyBase(NyDublinCore):
         self._p_changed = 1
 
     def _objectkeywords(self, lang):
-        """
-        Builds the object keywords from common multilingual properties.
-        @param lang: the index language
-        @type lang: string
-        """
-        v = [self.getLocalProperty('title', lang), self.getLocalProperty('description', lang),
-             self.getLocalProperty('coverage', lang), self.getLocalProperty('keywords', lang)]
-        #for l_dp in self.getDynamicPropertiesTool().getDynamicSearchableProperties(self.meta_type):
-        #    v.append(self.getPropertyValue(l_dp.id, lang))
-        return u' '.join(v)
+        """Builds the object keywords from common multilingual properties"""
+        return u' '.join([
+            self.getLocalProperty('title', lang),
+            self.getLocalProperty('description', lang),
+            self.getLocalProperty('coverage', lang),
+            self.getLocalProperty('keywords', lang)
+        ])
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):

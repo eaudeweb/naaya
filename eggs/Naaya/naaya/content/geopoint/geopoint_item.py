@@ -209,7 +209,6 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += geopoint_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

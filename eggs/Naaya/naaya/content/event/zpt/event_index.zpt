@@ -25,7 +25,7 @@
 
     <metal:block tal:define="is_ratable here/is_ratable;
                               site_object_index python:(here.getFormsTool()
-                                                .getForm('site_object_index'))" 
+                                                .getForm('site_object_index'))"
                  fill-slot="body">
         <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
             title here/get_meta_label; alt here/get_meta_label" />
@@ -120,13 +120,6 @@
 
         <p tal:define="details python:here.prop_value_or_none('details')"
             tal:condition="details" tal:content="structure details" />
-
-		<table border="0" cellspacing="2" cellpadding="2">
-			<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-				<th i18n:translate="" tal:content="record/name" />
-				<td tal:content="python:here.getPropertyValue(record.id)"/>
-			</tr>
-		</table>
 
         <tal:block content="structure here/set_content_rating" />
 

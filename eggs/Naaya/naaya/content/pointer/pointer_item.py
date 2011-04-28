@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import sys
 
@@ -203,7 +202,6 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += pointer_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

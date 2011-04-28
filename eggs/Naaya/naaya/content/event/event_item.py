@@ -1,4 +1,3 @@
-from copy import deepcopy
 import os
 import sys
 import datetime
@@ -215,7 +214,6 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += event_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

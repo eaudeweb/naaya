@@ -1,8 +1,7 @@
-
 from copy import deepcopy
 import logging
 
-from AccessControl import ClassSecurityInfo, SpecialUsers
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -11,7 +10,6 @@ from zope.annotation.interfaces import IAttributeAnnotatable
 from DateTime import DateTime
 from DateTime.interfaces import DateError
 
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
@@ -19,7 +17,6 @@ from Products.NaayaBase.NyProperties import update_translation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
-from contentratings.interfaces import IUserRating
 
 log = logging.getLogger(__name__)
 
@@ -175,9 +172,6 @@ class NyContentType(object):
                 target = self
 
             target._change_schema_properties(_lang=_lang, **form_data)
-
-            target.updateDynamicProperties(self.processDynamicProperties(
-                self.meta_type, REQUEST_form), _lang)
 
         return form_errors
 

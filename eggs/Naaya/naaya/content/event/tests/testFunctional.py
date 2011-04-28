@@ -134,7 +134,8 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.failUnlessEqual(self.portal.myfolder.myevent.title, 'new_event_title')
+        self.failUnlessEqual(self.portal.myfolder.myevent.title,
+                             'new_event_title')
 
         self.browser_do_logout()
 
