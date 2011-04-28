@@ -360,7 +360,6 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:

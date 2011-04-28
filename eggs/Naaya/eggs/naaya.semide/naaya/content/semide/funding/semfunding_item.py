@@ -37,7 +37,7 @@ from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOT
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
@@ -282,7 +282,6 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:

@@ -86,13 +86,4 @@
 	</tal:block>
 </div>
 </tal:block>
-
-<!-- Dynamic properties -->
-<metal:block fill-slot="dynamic_properties">
-<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
-	<tal:block tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang))">dynamic html control</tal:block>
-</div>
-</metal:block>
-
 </tal:block>

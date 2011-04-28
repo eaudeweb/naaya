@@ -35,12 +35,11 @@ import zope.event
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
 from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
+EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
@@ -280,7 +279,6 @@ class NySemFieldSite(semfieldsite_item, NyAttributes, NyItem, NyCheckControl, Ny
 
         self.updatePropertiesFromGlossary(_lang)
         if 'fieldsite_rb' in schema_raw_data and schema_raw_data['fieldsite_rb']: self.updateRBFromGlossary(self, _lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:

@@ -29,7 +29,6 @@ from Acquisition import Implicit
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from zope.interface import implements
 import zope.event
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -42,14 +41,13 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTA
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
 
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import make_id
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
 
@@ -369,7 +367,6 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         approved = schema_raw_data.get('approved', None)
         if  approved != self.approved:

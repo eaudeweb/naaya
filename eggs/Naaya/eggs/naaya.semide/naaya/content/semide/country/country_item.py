@@ -24,29 +24,24 @@ from copy import deepcopy
 
 # Zope
 import Globals
-from AccessControl                              import ClassSecurityInfo
-from AccessControl.Permissions                  import view_management_screens, view
-from App.ImageFile                              import ImageFile
-from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
+from App.ImageFile import ImageFile
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import zope.event
 
 # Naaya
 from naaya.content.base.constants import MUST_BE_NONEMPTY, MUST_BE_POSITIV_INT, MUST_BE_DATETIME
 from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTAUTHORIZED,
-EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
-EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
+EXCEPTION_NOTAUTHORIZED_MSG, MESSAGE_SAVEDCHANGES, )
 from Products.NaayaCore.constants import PREFIX_PORTLET
 
-from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
 
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.managers.import_parser import import_parser
-from Products.Naaya.NyFolder import NyFolder, addNyFolder
-from Products.NaayaBase.NyValidation import NyValidation
-from naaya.content.url.url_item import addNyURL
-from naaya.content.file.file_item import addNyFile
+from Products.Naaya.NyFolder import NyFolder
 
 from naaya.content.semide.news.semnews_item import METATYPE_OBJECT as METATYPE_NYSEMNEWS
 from naaya.content.semide.event.semevent_item import METATYPE_OBJECT as METATYPE_NYSEMEVENT
@@ -491,7 +486,6 @@ class NyCountry(NyFolder):
             return REQUEST.RESPONSE.redirect('%s/manage_edit_html?lang=%s' % (self.absolute_url(), _lang))
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
         else:
@@ -551,7 +545,6 @@ class NyCountry(NyFolder):
                 return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
         self.updatePropertiesFromGlossary(_lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), _lang)
 
         if schema_raw_data.get('discussion', None):
             self.open_for_comments()
