@@ -1,0 +1,18 @@
+<tal:block metal:use-macro="python: here.getSite().portal_survey.base_questionnaire_edit_html.macros['page']">
+	<metal:block fill-slot="custom_boxes">
+		<!-- Survey template -->
+		<div class="field-inline" tal:define="stool context/portal_survey|nothing;
+		                                      stype here/getSurveyTemplate;
+		                                      canAddSurveyTemplate python:stype and stool and stool.checkPermissionAdministrate();
+		                                      stype_path python:stype and stype.absolute_url()">
+			<label i18n:translate="">Survey template</label>
+			<a tal:attributes="href stype_path"
+			   tal:omit-tag="not:canAddSurveyTemplate">
+				<span tal:content="stype/title"/>
+			</a>
+			<div class="surveyDescription" 
+				tal:condition="stype/description"
+				tal:content="structure stype/description" />
+		</div>
+	</metal:block>
+</tal:block>

@@ -1,0 +1,2 @@
+<tal:block metal:use-macro="python: here.getSite().portal_survey.base_questionnaire_edit_html.macros['page']">
+</tal:block>

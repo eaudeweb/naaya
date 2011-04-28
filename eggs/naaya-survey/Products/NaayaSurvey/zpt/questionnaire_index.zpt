@@ -1,0 +1,11 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('NaayaSurvey.base_questionnaire_index').macros['page']">
+
+<tal:block metal:fill-slot="toolbar">
+	<div class="buttons">
+		<tal:block condition="here/checkPermissionEditObjects">
+			<a tal:attributes="href here/edit_html/absolute_url" i18n:translate="">Edit</a>
+		</tal:block>
+	</div>
+</tal:block>
+
+</tal:block>
