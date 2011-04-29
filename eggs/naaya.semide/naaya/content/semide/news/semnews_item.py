@@ -277,7 +277,6 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += semnews_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
