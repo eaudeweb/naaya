@@ -131,6 +131,19 @@ class NyBase(NyDublinCore):
         """
         return len(self.getLocalProperty('title', lang)) > 0
 
+    security.declarePrivate('tags')
+    def tags(self, lang):
+        """
+        For each portal language an index I{tags}_I{lang} is created.
+        Process the keywords for the specific catalog index.
+
+        B{This method can be overwritten by some types of objects if additonal
+        properties values must be considered as keywords.}
+        @param lang: the index language
+        @type lang: string
+        """
+        return filter(None, self.getLocalProperty('keywords', lang).split(','))
+
     #Syndication RDF
     security.declarePrivate('syndicateThisHeader')
     def syndicateThisHeader(self):
