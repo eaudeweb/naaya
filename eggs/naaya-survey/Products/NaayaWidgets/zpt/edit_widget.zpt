@@ -1,15 +1,14 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
 
 <link rel="stylesheet" type="text/css" media="all"
-	tal:define="stool here/portal_survey;"
-	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
 
 <h1 i18n:translate="">Edit Question</h1>
 
 <div class="floated-buttons">
 	<span class="buttons">
 	<a tal:attributes="href string:${here/absolute_url}/preview_html"
-		i18n:translate="">Back to index</a>
+		i18n:translate="">Preview</a>
 	</span>
 </div>
 

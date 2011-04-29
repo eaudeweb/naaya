@@ -58,8 +58,6 @@ from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
 from statistics.ComboboxMatrixTabularStatistic import ComboboxMatrixTabularStatistic
 from statistics.TextAnswerListing import TextAnswerListing
 
-from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
-
 WIDGETS = dict([(widget.meta_type, widget) for widget in AVAILABLE_WIDGETS])
 
 class BaseSurveyTemplate(Folder, LocalPropertyManager):
@@ -381,9 +379,6 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     #
     # Macros
     #
-    security.declareProtected(view, 'tabs')
-    tabs = PageTemplateFile('zpt/surveytemplate_tabs', globals())
-
     security.declareProtected(view, 'base_edit_attachments_html')
     base_edit_attachments_html = PageTemplateFile('zpt/base_surveytemplate_edit_attachments', globals())
 

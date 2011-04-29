@@ -42,7 +42,7 @@ div.widgetViewMode {
 }
 
 .widgetViewMode li {
-	background: url(http://aoa.ew.eea.europa.eu/portal_survey/fancy_checkmark) no-repeat 0 50%;
+	background: fancy_checkmark no-repeat 0 50%;
 	padding-left: 11px;
 }
 

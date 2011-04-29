@@ -14,7 +14,6 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 from Products.NaayaSurvey.SurveyQuestionnaire import SurveyQuestionnaire, SurveyQuestionnaireException
 from Products.NaayaSurvey.SurveyReport import SurveyReport
-from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
 
 # stub imports
@@ -28,9 +27,9 @@ class MegaSurveyTestCase(NaayaTestCase):
 
     def afterSetUp(self):
         self.login()
-        manage_addSurveyTool(self.portal)
         id = manage_addMegaSurvey(self.portal, title='Testing survey')
         self.survey = self.portal._getOb(id)
+        self.portal.manage_install_pluggableitem('Naaya Mega Survey')
 
     def beforeTearDown(self):
         self.logout()

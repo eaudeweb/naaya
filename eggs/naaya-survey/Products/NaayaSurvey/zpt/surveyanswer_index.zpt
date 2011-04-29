@@ -2,12 +2,12 @@
 <metal:block fill-slot="body">
 
 <link rel="stylesheet" type="text/css" media="all"
-	tal:attributes="href string:${here/portal_survey/absolute_url}/css_survey_common" />
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/portal_survey/absolute_url}/survey_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
 
 <h1>
 	<img tal:attributes="
@@ -83,9 +83,7 @@
 
 			<tal:block tal:condition="can_edit">
 			<input type="hidden" name="answer_id" tal:attributes="value here/id" />
-			<tal:block define="stype here/getSurveyTemplate;
-							   rendered python:test(stype, stype.render(mode='edit', datamodel=here.getDatamodel()), 'Error');"
-					content="structure rendered">
+			<tal:block content="structure python:here.render(mode='edit', datamodel=here.getDatamodel())">
 			</tal:block>
 			<tal:block condition="not:here/checkPermissionSkipCaptcha"
 					content="structure here/showCaptcha">
@@ -108,9 +106,7 @@
 		</form>
 	</tal:block>
 	<tal:block condition="python: not try_to_edit or not can_edit">
-		<tal:block define="stype here/getSurveyTemplate;
-						   rendered python:test(stype, stype.render(mode='view', datamodel=here.getDatamodel()), 'Error');"
-				content="structure rendered">
+		<tal:block content="structure python:here.render(mode='view', datamodel=here.getDatamodel())">
 		</tal:block>
 	</tal:block>
 

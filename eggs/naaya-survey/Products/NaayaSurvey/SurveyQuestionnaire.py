@@ -53,56 +53,6 @@ class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
     pass
 
-def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=None, **kwargs):
-    """ """
-    if not title:
-        title = 'Survey Instance'
-    if not id:
-        id = genObjectId(title)
-
-    idSuffix = ''
-    while id+idSuffix in context.objectIds():
-        idSuffix = genRandomId(p_length=4)
-    id = id + idSuffix
-
-    # Get selected language
-    lang = REQUEST and REQUEST.form.get('lang', None)
-    lang = lang or kwargs.get('lang', context.gl_get_selected_language())
-
-    if REQUEST:
-        kwargs.update(REQUEST.form)
-    kwargs['releasedate'] = context.process_releasedate(kwargs.get('releasedate', DateTime()))
-    kwargs['expirationdate'] = context.process_releasedate(kwargs.get('expirationdate', DateTime()))
-    contributor = context.REQUEST.AUTHENTICATED_USER.getUserName()
-    #log post date
-    auth_tool = context.getAuthenticationTool()
-    auth_tool.changeLastPost(contributor)
-
-    kwargs['id'] = id
-    kwargs.setdefault('title', title)
-    kwargs.setdefault('lang', lang)
-
-    ob = SurveyQuestionnaire(**kwargs)
-    context.gl_add_languages(ob)
-    context._setObject(id, ob)
-
-    ob = context._getOb(id)
-    ob.updatePropertiesFromGlossary(lang)
-    ob.submitThis()
-    context.recatalogNyObject(ob)
-
-    # Return
-    if not REQUEST:
-        return id
-    #redirect if case
-    if REQUEST.has_key('submitted'): ob.submitThis()
-    l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if l_referer == 'questionnaire_manage_add' or l_referer.find('questionnaire_manage_add') != -1:
-        return context.manage_main(context, REQUEST, update_menu=1)
-    elif l_referer == 'questionnaire_add_html':
-        context.setSession('referer', context.absolute_url())
-        REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
-
 def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Content-Type', content_type)
     if length is not None:
@@ -119,7 +69,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     icon = 'misc_/NaayaSurvey/NySurveyQuestionnaire.gif'
     icon_marked = 'misc_/NaayaSurvey/NySurveyQuestionnaire_marked.gif'
 
-    _constructors = (manage_addSurveyQuestionnaire,)
+    _constructors = ()
 
     all_meta_types = ()
 
@@ -209,20 +159,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         """ """
         return getattr(self, id, '')
 
-    security.declareProtected(view, 'getSurveyTemplate')
-    def getSurveyTemplate(self):
-        """Return the survey template used for this questionnaire"""
-        stool = self.portal_survey
-        return getattr(stool, self._survey_template)
-
-    security.declareProtected(view, 'getSurveyTemplateId')
-    def getSurveyTemplateId(self):
-        """Return survey template id; used by the catalog tool."""
-        stype = self.getSurveyTemplate()
-        if not stype:
-            return ''
-        return stype.getId()
-
     #
     # Answer edit methods
     #
@@ -259,7 +195,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         #check datamodel
         datamodel = {}
         errors = []
-        for widget in self.getSurveyTemplate().getWidgets():
+        for widget in self.getWidgets():
             try:
                 value = widget.getDatamodel(kwargs)
                 if not draft:
@@ -516,7 +452,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_view_report_html')
     def questionnaire_view_report_html(self, report_id, REQUEST):
         """View the report report_id"""
-        report = self.getSurveyTemplate().getReport(report_id)
+        report = self.getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
         return report.view_report_html(answers=self.getAnswers())
@@ -556,7 +492,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_export')
     def questionnaire_export(self, report_id, REQUEST, answers=None):
         """ Exports the report in excel format """
-        report = self.getSurveyTemplate().getReport(report_id)
+        report = self.getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
         assert excel_export_available
@@ -627,18 +563,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     #
     # Site pages
     #
-    security.declareProtected(PERMISSION_ADD_QUESTIONNAIRE, 'questionnaire_add_html')
-    questionnaire_add_html = NaayaPageTemplateFile('zpt/questionnaire_add',
-                             globals(), 'NaayaSurvey.questionnaire_add')
-
-    security.declareProtected(view, 'index_html')
-    index_html = NaayaPageTemplateFile('zpt/questionnaire_index',
-                     globals(), 'NaayaSurvey.questionnaire_index')
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
-    edit_html = NaayaPageTemplateFile('zpt/questionnaire_edit',
-                    globals(), 'NaayaSurvey.questionnaire_edit')
-
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'view_reports_html')
     view_reports_html = NaayaPageTemplateFile('zpt/questionnaire_view_reports',
                         globals(), 'NaayaSurvey.questionnaire_view_reports')
@@ -684,13 +608,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if answer is None:
             raise NotFound("You haven't taken this survey") # TODO: replace with a proper exception/error message
         return answer.index_html(REQUEST=REQUEST)
-
-    #
-    # macros & other html snippets
-    #
-    security.declareProtected(view, 'base_index_html')
-    base_index_html = NaayaPageTemplateFile('zpt/base_questionnaire_index',
-                          globals(), 'NaayaSurvey.base_questionnaire_index')
 
     security.declareProtected(view, 'showCaptcha')
     def showCaptcha(self):
