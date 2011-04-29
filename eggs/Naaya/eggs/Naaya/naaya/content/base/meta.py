@@ -71,7 +71,7 @@ def register_naaya_content(_context, factory, **kwargs):
     else:
         return
     _contents[factory['meta_type']] = factory
-    _misc.update(factory['_misc'])
+    _misc.update(factory.get('_misc', {}))
 
     # register _misc into Zope
     if not Application.misc_.__dict__.has_key('NaayaContent'):
@@ -85,7 +85,7 @@ def register_naaya_content(_context, factory, **kwargs):
     security = ClassSecurityInfo()
     NyFolderBase.security = security
 
-    if factory['meta_type'] != 'Naaya Folder':
+    if factory['meta_type'] != 'Naaya Folder' and 'folder_constructors' in factory:
 
         for folder_property, object_constructor in factory['folder_constructors']:
             setattr(NyFolderBase, folder_property, object_constructor)

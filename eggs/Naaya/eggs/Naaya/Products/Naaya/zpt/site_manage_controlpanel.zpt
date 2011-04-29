@@ -34,8 +34,8 @@
             <a tal:condition="schema" tal:content="meta_type" tal:attributes="href string:${schema/absolute_url}/admin_html" />
             <tal:block condition="not:schema" tal:content="meta_type" />
         </td>
-        <td tal:content="content_type/module" />
-        <td tal:content="content_type/permission" />
+        <td tal:content="content_type/module|nothing" />
+        <td tal:content="content_type/permission|nothing" />
         <td style="text-align: center" tal:content="structure python:test(installed, '&#x2713;', '')" />
         <td>
             <form method="post" tal:attributes="action string:${here/absolute_url}/">

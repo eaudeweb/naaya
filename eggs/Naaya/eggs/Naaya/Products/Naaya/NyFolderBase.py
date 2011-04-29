@@ -288,7 +288,7 @@ class NyFolderBase(Folder, NyPermissions):
             folder_meta_types = self.folder_meta_types
         else:
             folder_meta_types = [METATYPE_FOLDER,
-                                 'Naaya Forum', 'Naaya Mega Survey',
+                                 'Naaya Forum',
                                  'Naaya Photo Gallery', 'Naaya Photo Folder',
                                  'Naaya TalkBack Consultation']
         r = []
