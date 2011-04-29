@@ -403,7 +403,6 @@ class NyMeetingFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue('View' in html)
         self.assertTrue('Properties' in html)
         self.assertTrue('Subobjects' in html)
-        self.assertTrue('Dynamic properties' in html)
         self.assertTrue('Security' in html)
         self.assertTrue('Undo' in html)
 
@@ -547,12 +546,12 @@ class NyMeetingParticipantsTestCase(NaayaFunctionalTestCase):
         def assert_access():
             self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in self.browser.get_html()) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' not in self.browser.get_html())
             self.browser_do_logout()
         def assert_no_access():
             self.browser_do_login('test_participant1', 'participant')
             self.browser.go('http://localhost/portal/info/mymeeting')
-            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html()) 
+            self.assertTrue('http://localhost/portal/info/mymeeting/participants/subscriptions/subscribe' in self.browser.get_html())
             self.browser_do_logout()
 
         self.assertTrue(hasattr(self.portal.info, 'mymeeting'))
