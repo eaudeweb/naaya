@@ -10,6 +10,7 @@
     </name>
     <definition>
       <translation lang="en">CBD focal area (Status and trends of the components of biological diversity)</translation>
+      <translation lang="fr">Domaine d'intervention de la CDB (Situation et tendances des composantes de la diversit&#233; biologique)</translation>
       <translation lang="nl">CBD aandachtsgebied (Status en trends van componenten van biologische diversiteit)</translation>
     </definition>
     <element id="01_01" title="Abundance and distribution of species">
@@ -22,8 +23,8 @@
         <translation lang="ro">Abunden&#355;a &#351;i distribu&#355;ia speciilor</translation>
       </name>
       <definition>
-        <translation lang="en">CBD headline indicator (Trends in abundance and distribution of selected species) and SEBI indicator (Abundance and distribution of selected species)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Trends in aantal en verspreiding van soorten) and SEBI indicator (Aantal en verspreiding van specifieke soorten)</translation>
+        <translation lang="en">CBD headline indicator (Trends in abundance and distribution of selected species), SEBI indicator (Abundance and distribution of selected species)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Trends in aantal en verspreiding van soorten), SEBI indicator (Aantal en verspreiding van specifieke soorten)</translation>
       </definition>
     </element>
     <element id="01_02" title="Status of threathened species">
@@ -90,6 +91,7 @@
       </name>
       <definition>
         <translation lang="en">CBD thematic programme (Island Biodiversity)</translation>
+        <translation lang="fr">Programme th&#233;matique de la CDB (Biodiversit&#233; insulaire)</translation>
         <translation lang="nl">CBD thematisch programma (Biodiversiteit van Eilanden)</translation>
       </definition>
     </element>
@@ -102,6 +104,7 @@
       </name>
       <definition>
         <translation lang="en">CBD thematic programme (Mountain biodiversity)</translation>
+        <translation lang="fr">Programme th&#233;matique de la CDB (Biodiversit&#233; des montagnes)</translation>
         <translation lang="nl">CBD thematisch programma (Biodiversiteit van Bergen)</translation>
       </definition>
     </element>
@@ -113,8 +116,8 @@
         <translation lang="ro">Identificarea, monitorizarea, indicatori &#537;i evalu&#259;ri</translation>
       </name>
       <definition>
-        <translation lang="en">CBD cross-cutting issue (Identification, Monitoring, Indicators and Assessments) and CBD cross-cutting issue (Global Taxonomy Initiative)</translation>
-        <translation lang="nl">CDB dwarsdoorsnijdend thema (Identificatie, Monitoring, Indicatoren en Evaluaties) and CDB dwarsdoorsnijdend thema (Mondiaal Taxonomie Initiatief)</translation>
+        <translation lang="en">CBD cross-cutting issue (Identification, Monitoring, Indicators and Assessments), CBD cross-cutting issue (Global Taxonomy Initiative)</translation>
+        <translation lang="nl">CDB dwarsdoorsnijdend thema (Identificatie, Monitoring, Indicatoren en Evaluaties), CDB dwarsdoorsnijdend thema (Mondiaal Taxonomie Initiatief)</translation>
       </definition>
     </element>
     <element id="01_09" title="Plant Conservation">
@@ -124,7 +127,7 @@
       </name>
       <definition>
         <translation lang="en">CBD cross-cutting issue (Global Strategy for Plant Conservation)</translation>
-        <translation lang="nl">CDB dwarsdoorsnijdend thema (Global Strategy for Bescherming van Planten)</translation>
+        <translation lang="nl">CDB dwarsdoorsnijdend thema (Mondiale Strategie voor Bescherming van Planten)</translation>
       </definition>
     </element>
   </folder>
@@ -163,7 +166,7 @@
       </name>
       <definition>
         <translation lang="en">CBD headline indicator  (Area of forest, agricultural and aquaculture ecosystems under sustainable management), SEBI indicator (Agriculture: nitrogen balance) SEBI indicator (Agriculture: area under management practices potentially supporting biodiversity), CBD thematic programme (Agricultural biodiversity)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator  (Area of forest, agricultural and aquaculture ecosystems under sustainable management), SEBI indicator (Landbouw: stikstofbalans) SEBI indicator (Landbouw: areaal onder beheer met een potentieel gunstig effect op biodiversiteit), CBD thematisch programma (Agrarische biodiversiteit)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator  (Areaal aan bos-, landbouw- en aquacultuur ecosystemen onder duurzaam beheer), SEBI indicator (Landbouw: stikstofbalans) SEBI indicator (Landbouw: areaal onder beheer met een potentieel gunstig effect op biodiversiteit), CBD thematisch programma (Agrarische biodiversiteit)</translation>
       </definition>
     </element>
     <element id="02_03" title="Sustainable fishery and aquaculture management">
@@ -176,7 +179,7 @@
       </name>
       <definition>
         <translation lang="en">CBD headline indicator (Area of forest, agricultural and aquaculture ecosystems under sustainable management), SEBI indicator (Fisheries: European commercial fish stocks), SEBI indicator (Aquaculture: effluent water quality from finfish farms)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Area of forest, agricultural and aquaculture ecosystems under sustainable management), SEBI indicator (Visserij: Europese commerci&#235;le visbestanden), SEBI indicator (Aquacultuur: kwaliteit effluentwater van viskwekerijen)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Areaal aan bos-, landbouw- en aquacultuur ecosystemen onder duurzaam beheer), SEBI indicator (Visserij: Europese commerci&#235;le visbestanden), SEBI indicator (Aquacultuur: kwaliteit effluentwater van viskwekerijen)</translation>
       </definition>
     </element>
     <element id="02_04" title="Products derived from sustainable sources">
@@ -200,8 +203,8 @@
         <translation lang="ro">Amprenta ecologic&#259;</translation>
       </name>
       <definition>
-        <translation lang="en">CBD headline indicator (Ecological Footprint and related concepts) and SEBI indicator (Ecological Footprint of European countries)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Ecologische Voetafdruk and related concepts) and SEBI indicator (Ecologische Voetafdruk of European countries)</translation>
+        <translation lang="en">CBD headline indicator (Ecological Footprint and related concepts), SEBI indicator (Ecological Footprint of European countries)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Ecologische voetafdruk en gerelateerde concepten), SEBI indicator (Ecologische voetafdruk van Europese landen)</translation>
       </definition>
     </element>
     <element id="02_06" title="Biodiversity for Development">
@@ -245,6 +248,7 @@
     </name>
     <definition>
       <translation lang="en">CBD focal area (Threats to biodiversity)</translation>
+      <translation lang="fr">Domaine d'intervention de la CDB (Menaces &#224; la biodiversit&#233;)</translation>
       <translation lang="nl">CBD aandachtsgebied (Bedreigingen voor biodiversiteit)</translation>
     </definition>
     <element id="03_01" title="Nitrogen deposition">
@@ -321,6 +325,7 @@
     </name>
     <definition>
       <translation lang="en">CBD focal area (Ecosystem integrity and Ecosystem goods and services)</translation>
+      <translation lang="fr">Domaine d'intervention de la CDB (Int&#233;grit&#233; des &#233;cosyst&#232;mes et biens et services d&#233;riv&#233;s des &#233;cosyst&#232;mes)</translation>
       <translation lang="nl">CBD aandachtsgebied (Integriteit van ecosystemen en ecosysteemdiensten)</translation>
     </definition>
     <element id="04_01" title="Marine Trophic Index">
@@ -334,7 +339,7 @@
       </name>
       <definition>
         <translation lang="en">CBD headline indicator (Marine Trophic Index), SEBI indicator (Marine Trophic Index of European seas), CBD thematic programme (Marine and Coastal Biodiversity)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Mariene Trofische index), SEBI indicator (Mariene Trofische index of European seas), CBD thematisch programma (Biodiversiteit van Zee en Kust)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Mariene Trofische index), SEBI indicator (Mariene Trofische Index van de Europese zee&#235;n), CBD thematisch programma (Biodiversiteit van Zee en Kust)</translation>
       </definition>
     </element>
     <element id="04_02" title="Trophic integrity of terrestrial and freshwater ecosystems">
@@ -357,8 +362,8 @@
         <translation lang="ro">Fragmentarea zonelor naturale &#351;i semi-naturale</translation>
       </name>
       <definition>
-        <translation lang="en">CBD headline indicator (Connectivity /Fragmentation of ecosystems), SEBI indicator (Fragmentation of natural and semi-natural areas)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Connectivity /Fragmentation of ecosystems), SEBI indicator (Fragmentatie van natuurlijke en semi-natuurlijke gebieden)</translation>
+        <translation lang="en">CBD headline indicator (Connectivity or Fragmentation of ecosystems), SEBI indicator (Fragmentation of natural and semi-natural areas)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Connectiviteit of fragmentatie van ecosystemen), SEBI indicator (Fragmentatie van natuurlijke en semi-natuurlijke gebieden)</translation>
       </definition>
     </element>
     <element id="04_04" title="Fragmentation of river systems">
@@ -371,8 +376,8 @@
         <translation lang="ro">Fragmentarea sistemelor de r&#226;u</translation>
       </name>
       <definition>
-        <translation lang="en">CBD headline indicator (Connectivity /Fragmentation of ecosystems), SEBI indicator (Fragmentation of river systems), CBD thematic programme (Inland Waters Biodiversity)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Connectivity /Fragmentation of ecosystems), SEBI indicator (Fragmentatie van riviersystemen), CBD thematisch programma (Biodiverstiteit van binnenwateren)</translation>
+        <translation lang="en">CBD headline indicator (Connectivity or Fragmentation of ecosystems), SEBI indicator (Fragmentation of river systems), CBD thematic programme (Inland Waters Biodiversity)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Connectiviteit of fragmentatie van ecosystemen), SEBI indicator (Fragmentatie van riviersystemen), CBD thematisch programma (Biodiverstiteit van binnenwateren)</translation>
       </definition>
     </element>
     <element id="04_05" title="Nutrients in transitional, coastal and marine waters">
@@ -386,6 +391,7 @@
       </name>
       <definition>
         <translation lang="en">SEBI indicator (Nutrients in transitional, coastal and marine waters)</translation>
+        <translation lang="fr">Indicateur du SEBI (Nutriments dans les eaux marines, coti&#232;res et de transition)</translation>
         <translation lang="nl">SEBI indicator (Nutri&#235;nten in kust- en zeewateren)</translation>
       </definition>
     </element>
@@ -400,7 +406,7 @@
       </name>
       <definition>
         <translation lang="en">CBD headline indicator (Water quality of freshwater ecosystems), SEBI indicator (Freshwater quality), CBD thematic programme (Inland Waters Biodiversity)</translation>
-        <translation lang="nl">CBD hoofdlijnindicator (Waterkwaliteit van zoetwater  ecosystemen), SEBI indicator (Zoetwaterkwaliteit), CBD thematisch programma (Inland Waters Biodiversity)</translation>
+        <translation lang="nl">CBD hoofdlijnindicator (Waterkwaliteit van zoetwater  ecosystemen), SEBI indicator (Zoetwaterkwaliteit), CBD thematisch programma (Biodiverstiteit van binnenwateren)</translation>
       </definition>
     </element>
     <element id="04_07" title="Human-induced ecosystem failure">
@@ -436,6 +442,7 @@
       </name>
       <definition>
         <translation lang="en">CBD headline indicator (Biodiversity for food and medicine)</translation>
+        <translation lang="fr">Indicateur-cl&#233; de la CDB (Biodiversit&#233; pour l'alimentation et la m&#233;decine)</translation>
         <translation lang="nl">CBD hoofdlijnindicator (Biodiversiteit voor voedsel en medicijnen)</translation>
       </definition>
     </element>
@@ -447,8 +454,8 @@
         <translation lang="ro">Biodiversitate &#537;i turism</translation>
       </name>
       <definition>
-        <translation lang="en">CBD cross-cutting issue (Biological Diversity and tourism)</translation>
-        <translation lang="nl">CDB dwarsdoorsnijdend thema (Biological Diversity and tourism)</translation>
+        <translation lang="en">CBD cross-cutting issue (Tourism and Biodiversity)</translation>
+        <translation lang="nl">CDB dwarsdoorsnijdend thema (Tourisme en Biodiversiteit)</translation>
       </definition>
     </element>
   </folder>
@@ -484,7 +491,7 @@
       </name>
       <definition>
         <translation lang="en">CBD cross-cutting issue (Traditional Knowledge, Innovations and Practices)</translation>
-        <translation lang="nl">CDB dwarsdoorsnijdend thema (Traditional Knowledge, Innovaties and Practices)</translation>
+        <translation lang="nl">CDB dwarsdoorsnijdend thema (Traditionele Kennis, Innovaties en Praktijken)</translation>
       </definition>
     </element>
     <element id="05_03" title="Best practices">
@@ -496,7 +503,7 @@
       </name>
       <definition>
         <translation lang="en">CBD cross-cutting issue (Traditional Knowledge, Innovations and Practices)</translation>
-        <translation lang="nl">CDB dwarsdoorsnijdend thema (Traditional Knowledge, Innovations and Practices)</translation>
+        <translation lang="nl">CDB dwarsdoorsnijdend thema (Traditionele Kennis, Innovaties en Praktijken)</translation>
       </definition>
     </element>
   </folder>
@@ -509,8 +516,8 @@
       <translation lang="ro">Accesul la resursele genetice &#537;i &#238;mp&#259;r&#539;irea echitabil&#259; a acestora</translation>
     </name>
     <definition>
-      <translation lang="en">CBD focal area (Status of access and benefit-sharing ), CBD cross-cutting issue (Access to genetic recourses and benefit-sharing )</translation>
-      <translation lang="nl">CBD aandachtsgebied (Status van toegang en het delen van voordelen ), CDB dwarsdoorsnijdend thema (Access to genetic recourses and benefit-sharing )</translation>
+      <translation lang="en">CBD focal area (Status of access and benefit-sharing ), CBD cross-cutting issue (Access to genetic resources and benefit-sharing )</translation>
+      <translation lang="nl">CBD aandachtsgebied (Status van toegang en het delen van voordelen ), CDB dwarsdoorsnijdend thema (Toegang tot genetische bronnen en het delen van voordelen )</translation>
     </definition>
   </folder>
   <folder id="07" title="Resources for biodiversity">
@@ -559,6 +566,7 @@
       </name>
       <definition>
         <translation lang="en">CBD cross-cutting issue (Liability and Redress)</translation>
+        <translation lang="fr">Questions transectorielles de la CDB (Responsabilit&#233; et r&#233;paration)</translation>
         <translation lang="nl">CDB dwarsdoorsnijdend thema (Aansprakelijkheid en compensatie)</translation>
       </definition>
     </element>
