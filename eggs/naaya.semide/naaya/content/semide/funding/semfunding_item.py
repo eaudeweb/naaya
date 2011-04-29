@@ -228,7 +228,6 @@ class NySemFunding(semfunding_item, NyAttributes, NyItem, NyCheckControl, NyCont
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += semfunding_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 

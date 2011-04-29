@@ -30,6 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from App.ImageFile import ImageFile
 from OFS.Image import cookId
+from DateTime import DateTime
 import zope.event
 
 #Naaya
@@ -310,7 +311,6 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += semevent_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
@@ -334,11 +334,11 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
 
     security.declareProtected(view, 'resource_date')
     def resource_date(self):
-        return getattr(self, 'start_date', None)
+        return DateTime(getattr(self, 'start_date', None))
 
     security.declareProtected(view, 'resource_end_date')
     def resource_end_date(self):
-        return getattr(self, 'end_date', None) or self.resource_date()
+        return DateTime(getattr(self, 'end_date', None)) or self.resource_date()
 
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
