@@ -111,10 +111,6 @@ function fSet(ctrl, value)
 			tal:attributes="value topic/id; selected python:topic.id==here.getSession('topic', here.getVersionProperty('topic'))" tal:content="topic/title"  i18n:translate="">topic</option>
 	</select>
 </div>
-<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
-	<tal:block tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang))">dynamic html control</tal:block>
-</div>
 <div class="field">
 	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
 	<input type="submit" value="Save changes" i18:attributes="value" />
