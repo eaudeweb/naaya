@@ -121,15 +121,6 @@
 
             </table>
 
-            <tal:block define="dynamic_properties python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-            <table tal:condition="dynamic_properties" border="0" cellspacing="2" cellpadding="2">
-                <tr tal:repeat="record dynamic_properties">
-                    <th i18n:translate="" tal:content="record/name" />
-                    <td tal:content="python:here.getPropertyValue(record.id)"/>
-                </tr>
-            </table>
-            </tal:block>
-
             <p tal:define="site here/getSite">
                 <a style="float: left; text-align: center; padding: 10px" title="Download meeting to your calendar"
                       tal:attributes="href string:${here/absolute_url}/get_ics">
