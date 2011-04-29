@@ -29,7 +29,6 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import HTMLFile
 import Products
 
 #Product imports
@@ -113,7 +112,7 @@ def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     #generate table of contents
-    if toc: 
+    if toc:
         toc_body = self._generate_toc(body)
     else:
         toc_body = ''
@@ -126,7 +125,6 @@ def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
     ob = NyStudy(id, title, description, coverage, keywords, sortorder, body,
         contributor, topic, scope, toc_body, toc, releasedate, lang)
     self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
@@ -196,7 +194,6 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += study_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
@@ -261,13 +258,12 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
         #generate table of contents
-        if toc: 
+        if toc:
             toc_body = self._generate_toc(body)
         else:
             toc_body = ''
         self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
         self.updatePropertiesFromGlossary(lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
             else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -308,12 +304,11 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
             else:
                 approved, approved_by = 0, None
             #generate table of contents
-            if toc: 
+            if toc:
                 toc_body = self._generate_toc(body)
             else:
                 toc_body = ''
             self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
-            self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
             self.updatePropertiesFromGlossary(lang)
             self.approveThis(approved, approved_by)
@@ -391,26 +386,24 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 #generate table of contents
-                if toc: 
+                if toc:
                     toc_body = self._generate_toc(body)
                 else:
                     toc_body = ''
                 self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
                 self.updatePropertiesFromGlossary(lang)
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
                 if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 #generate table of contents
-                if toc: 
+                if toc:
                     toc_body = self._generate_toc(body)
                 else:
                     toc_body = ''
                 self.version.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
                 self.version.updatePropertiesFromGlossary(lang)
-                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
             self._p_changed = 1
