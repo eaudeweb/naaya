@@ -1062,10 +1062,10 @@ class CHMSite(NySite):
     def get_related_items(self, item):
         """ """
         lang = self.gl_get_selected_language()
-        attr_name = 'objectkeywords_' + lang
+        attr_name = 'tags_' + lang
         if not hasattr(item.aq_base, attr_name):
             return []
-        keywords = getattr(item, attr_name).split(' ')
+        keywords = getattr(item, attr_name)
         search_args = {attr_name: keywords, 'approved': 1}
         results = self.getCatalogedObjectsCheckView(**search_args)
         if item in results:
