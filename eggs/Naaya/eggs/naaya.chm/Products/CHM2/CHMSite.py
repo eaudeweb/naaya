@@ -1066,6 +1066,8 @@ class CHMSite(NySite):
         if not hasattr(item.aq_base, attr_name):
             return []
         keywords = getattr(item, attr_name)
+        if not keywords:
+            return []
         search_args = {attr_name: keywords, 'approved': 1}
         results = self.getCatalogedObjectsCheckView(**search_args)
         if item in results:
