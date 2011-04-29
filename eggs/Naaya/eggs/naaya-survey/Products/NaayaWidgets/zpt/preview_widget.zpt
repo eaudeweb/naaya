@@ -2,8 +2,7 @@
 <metal:block fill-slot="body">
 
 <link rel="stylesheet" type="text/css" media="all"
-	tal:define="stool here/portal_survey;"
-	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
@@ -12,6 +11,13 @@
 <h1>
 	<tal:block i18n:translate="">Preview of:</tal:block> <tal:block replace="here/title" />
 </h1>
+
+<div class="floated-buttons">
+	<span class="buttons">
+	<a tal:attributes="href string:${here/aq_parent/absolute_url}/edit_questions_html"
+		i18n:translate="">Back to questions</a>
+	</span>
+</div>
 
 <!-- Submission bar -->
 <div id="admin_this_folder">

@@ -17,11 +17,14 @@
 #
 # Cristian Ciupitu, Eau de Web
 
+import logging
+
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from DateTime import DateTime
-from Globals import InitializeClass
+from Globals import InitializeClass, DTMLFile
+from App.ImageFile import ImageFile
 from zLOG import LOG, ERROR, DEBUG
 from AccessControl.Permissions import change_permissions
 
@@ -37,6 +40,12 @@ from permissions import (PERMISSION_ADD_MEGASURVEY, PERMISSION_ADD_ANSWER,
                          PERMISSION_ADD_REPORT, PERMISSION_ADD_ATTACHMENT,
                          PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS,
                          PERMISSION_VIEW_REPORTS)
+from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
+
+log = logging.getLogger(__name__)
+
+megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add',
+                      globals(), 'NaayaSurvey.megasurvey_add')
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
@@ -111,16 +120,6 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         """What can you put inside me?"""
         return BaseSurveyTemplate.all_meta_types(self, interfaces)
 
-    security.declareProtected(view, 'getSurveyTemplate')
-    def getSurveyTemplate(self):
-        """Return the survey template used for this questionnaire"""
-        return self
-
-    security.declareProtected(view, 'getSurveyTemplateId')
-    def getSurveyTemplateId(self):
-        """Return survey template id; used by the catalog tool."""
-        return None
-
     security.declareProtected(view, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
@@ -153,10 +152,6 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     #
     # Site pages
     #
-    security.declareProtected(PERMISSION_ADD_MEGASURVEY, 'megasurvey_add_html')
-    megasurvey_add_html = NaayaPageTemplateFile('zpt/megasurvey_add',
-                          globals(), 'NaayaSurvey.megasurvey_add')
-
     security.declareProtected(view, 'index_html')
     index_html = NaayaPageTemplateFile('zpt/megasurvey_index',
                      globals(), 'NaayaSurvey.megasurvey_index')
@@ -188,4 +183,81 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'generateFullReport')
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addAttachment')
 
+    # static files
+    css_survey_common = DTMLFile('www/survey_common.css', globals())
+    fancy_checkmark = ImageFile('www/fancy_checkmark.gif', globals())
+    survey_js = ImageFile('www/survey.js', globals())
+
+    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'bogus')
+    def bogus(self):
+        """ Needed in Naaya Access. It is mandatory that a permission must be
+        declared so it can be used in Naaya Access.
+        This should be removed once this issue is solved
+
+        """
+        pass
+
 InitializeClass(MegaSurvey)
+
+def get_content_type_config():
+    return {
+        'meta_type': MegaSurvey.meta_type,
+        'label': u"Survey",
+        'folder_constructors': [
+            ('megasurvey_add_html', megasurvey_add_html),
+            ('manage_addMegaSurvey', manage_addMegaSurvey),
+        ],
+        'permission': PERMISSION_ADD_MEGASURVEY,
+        'add_form': 'megasurvey_add_html',
+    }
+
+def install_email_templates(site):
+    import os.path
+    email_tool = site.getEmailTool()
+    log.info("Configuring email notifications on site %r", site)
+    for template, title in [('email_survey_answer.txt', 'Survey answered'),
+                            ('email_survey_answer_to_respondent.txt', 'Survey answered')]:
+        id = template[:-4] # without .txt
+        f = open(os.path.join(os.path.dirname(__file__),
+                              'templates', template), 'r')
+        content = f.read()
+        f.close()
+        t_ob = email_tool._getOb(id, None)
+        if t_ob is None:
+            email_tool.manage_addEmailTemplate(id, title, content)
+        else:
+            t_ob.manageProperties(title=title, body=content)
+
+def install_permissions(site):
+    """
+    Configure security for surveys:
+        - Manager + Administrator: add/manage survey templates
+        - Contributor: add/manage questionnaires (surveys)
+        - Anonymous + Authenticated: add answer (take survey) & view reports
+    """
+    log.info('Configuring security for surveys on site %r', site)
+
+    site.manage_permission(PERMISSION_ADD_ATTACHMENT, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_REPORT, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
+    site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', ), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', ), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor', 'Owner'), acquire=0)
+    site.manage_permission(PERMISSION_EDIT_ANSWERS, ('Manager', 'Administrator', ), acquire=0)
+
+def install_catalog_index(site):
+    """Configure catalog tool:
+        - add a survey_template index for the getSurveyTemplateId method
+    """
+    catalog_tool = site.getCatalogTool()
+    log.info('Configuring catalog tool %r', catalog_tool)
+    if 'respondent' not in catalog_tool.indexes():
+        catalog_tool.addIndex('respondent', 'FieldIndex')
+
+def pluggable_item_installed_in_site(evt):
+    if evt.meta_type != MegaSurvey.meta_type:
+        return # some other content type that we don't care about
+    site = evt.context
+    install_email_templates(site)
+    install_permissions(site)
