@@ -110,7 +110,7 @@ class SurveyAnswer(Folder, NyProperties):
         if isinstance(value, FileUpload):
             return # Handle somewhere else
 
-        widget = self.getSurveyTemplate().getWidget(key)
+        widget = self.getWidget(key)
         if widget.localized:
             for lang in self.gl_get_languages():
                 lang_value = value.get(lang, None)
@@ -132,7 +132,7 @@ class SurveyAnswer(Folder, NyProperties):
     def getDatamodel(self):
         """ """
         return dict([(widget.id, self.get(widget.id))
-                     for widget in self.getSurveyTemplate().getSortedWidgets()])
+                     for widget in self.getSortedWidgets()])
 
     def get(self, key, default=None, lang=None):
         """Returns the value for key, else default
@@ -181,7 +181,7 @@ class SurveyAnswer(Folder, NyProperties):
         """ Return values as list.
         """
         datamodel=self.getDatamodel()
-        widgets = self.getSurveyTemplate().getSortedWidgets()
+        widgets = self.getSortedWidgets()
         atool = self.getSite().getAuthenticationTool()
         ut = utils()
         respondent = atool.getUserFullNameByID(self.respondent)

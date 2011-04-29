@@ -17,21 +17,10 @@
 #
 # Alin Voinea, Eau de Web
 
-# Survey tool
-PERMISSION_ADD_SURVEYTOOL = 'Naaya - Add Naaya Survey Tool'
-
-# Survey template
-PERMISSION_ADD_SURVEYTEMPLATE = 'Naaya - Add Naaya Survey Template'
-PERMISSION_MANAGE_SURVEYTEMPLATE = 'Naaya - Manage Naaya Survey Template'
 PERMISSION_ADD_REPORT = 'Naaya - Add Naaya Survey Report'
 PERMISSION_ADD_ATTACHMENT = 'Naaya - Add Naaya Survey Attachment'
-
-# Questionnaire
-PERMISSION_ADD_QUESTIONNAIRE = 'Naaya - Add Naaya Survey Questionnaire'
 PERMISSION_ADD_ANSWER = 'Naaya - Add Naaya Survey Answer'
 PERMISSION_VIEW_ANSWERS = 'Naaya - View Naaya Survey Answers'
 PERMISSION_EDIT_ANSWERS = 'Naaya - Edit Naaya Survey Answers'
 PERMISSION_VIEW_REPORTS = 'Naaya - View Naaya Survey Reports'
-
-# Mega survey
 PERMISSION_ADD_MEGASURVEY = 'Naaya - Add Naaya Mega Survey'

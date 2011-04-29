@@ -2,8 +2,7 @@
 <metal:block fill-slot="body">
 
 <link rel="stylesheet" type="text/css" media="all"
-	tal:define="stool here/portal_survey;"
-	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
