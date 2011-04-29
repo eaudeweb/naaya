@@ -96,49 +96,58 @@ def _split_english(translations_dict):
     del translations_dict_copy['en']
     return translations_dict['en'], translations_dict_copy
 
-def _warn_if_replacements_incomplete(value, fragments):
+def _warn_if_replacements_incomplete(value, dictionary_keys):
     initial = value
-    for fragment_en, fragment_trans in fragments:
+    for fragment_en in dictionary_keys:
         value = value.replace(fragment_en, '')
     value = re.sub(r'[^\w\s]+', '', value).strip()
     if value:
         log.warn("Possibly not all strings replaced: %r -> %r", initial, value)
 
 class DescriptionParser(object):
+    dictionary = {}
+
     def __init__(self, first_row, term_trans,
                  get_translations, default_fragments):
+
         self.value_en = _strip_prefix(val(first_row[2]), 'Relates to: ')
 
         term_en, term_trans = _split_english(term_trans)
-        self.fragments = list(default_fragments)
-        self.fragments += [(term_en, term_trans)]
+        self.dictionary[term_en] = term_trans
+        self.dictionary.update(default_fragments)
+
         self.get_translations = get_translations
 
     def handle(self, extra_row):
         fragment_en = val(extra_row[3])
         fragment_translations = self.get_translations(extra_row)
-        self.fragments += [(fragment_en, fragment_translations)]
+        self.dictionary[fragment_en] = fragment_translations
 
     def compile_translations(self):
         lang_codes = set(language_codes.values())
-        for fragment_en, fragment_trans in self.fragments:
-            lang_codes &= set(fragment_trans.keys())
 
-        self.fragments.sort(reverse=True, key=lambda f: len(f[0]))
-
-        _warn_if_replacements_incomplete(self.value_en, self.fragments)
+        dictionary_keys = self.dictionary.keys()
+        dictionary_keys.sort(reverse=True, key=len)
+        _warn_if_replacements_incomplete(self.value_en, dictionary_keys)
 
         out = {'en': self.value_en}
-        for lang_code in lang_codes:
+        for lang_code in language_codes.values():
             value = self.value_en
-            for fragment_en, fragment_trans in self.fragments:
-                fragment_trans_value = fragment_trans[lang_code]
-                if fragment_en in value:
-                    value = value.replace(fragment_en, fragment_trans_value)
-                else:
-                    pass
-                    #log.warn("English value not found: %r", fragment_en)
-            out[lang_code] = value
+
+            for fragment_en in dictionary_keys:
+                if fragment_en not in value:
+                    continue
+                fragment_trans = self.dictionary[fragment_en]
+                try:
+                    fragment_trans_value = fragment_trans[lang_code]
+                except KeyError:
+                    break # we can't translate in this language!
+                value = value.replace(fragment_en, fragment_trans_value)
+
+            else:
+                # all translations completed
+                out[lang_code] = value
+
         return out
 
 def extract_data_from_xls(xls_path):
@@ -270,4 +279,5 @@ if __name__ == '__main__':
     import sys
     logging.basicConfig()
     glossary_data = extract_data_from_xls(sys.argv[1])
-    print tostring(glossary_to_xml(glossary_data), pretty_print=True)
+    xml = glossary_to_xml(glossary_data)
+    sys.stdout.write(tostring(xml, pretty_print=True))
