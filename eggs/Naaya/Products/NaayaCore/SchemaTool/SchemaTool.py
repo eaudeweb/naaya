@@ -84,7 +84,7 @@ class SchemaTool(Folder):
             schemas[meta_type] = content
 
         for meta_type, content_type in self.get_pluggable_content().iteritems():
-            if content_type['default_schema'] is None:
+            if content_type.get('default_schema', None) is None:
                 # this content type has not been ported to Schema
                 continue
             schemas[meta_type] = {

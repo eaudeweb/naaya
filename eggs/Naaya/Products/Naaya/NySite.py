@@ -3483,7 +3483,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             return ['title', 'description', 'coverage', 'keywords', 'sortorder',
                     'releasedate', 'maintainer_email']
         if self.is_pluggable_item_installed(meta_type):
-            return self.get_pluggable_content().get(meta_type, None)['properties'].keys()
+            return self.get_pluggable_content().get(meta_type, None).get('properties', {}).keys()
         return []
 
     def get_pluggable_item_properties_item(self, meta_type, prop):
@@ -3491,14 +3491,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def get_pluggable_item_property_mandatory(self, meta_type, prop):
         if self.is_pluggable_item_installed(meta_type):
-            return self.get_pluggable_content().get(meta_type, None)['properties'][prop][0]
+            config = self.get_pluggable_content().get(meta_type, {})
+            entry = config.get('properties', {}).get(prop, [0])
+            return entry[0]
         return 0
 
     def check_pluggable_item_properties(self, meta_type, **args):
         l = []
         la = l.append
         translate = self.getPortalTranslations().translate
-        for k, v in self.get_pluggable_content().get(meta_type, None)['properties'].items():
+        for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
             if v[0] == 1 or v[1]:   #this property is mandatory
                 if args.has_key(k):    #property found in parameters list
                     value = args.get(k)

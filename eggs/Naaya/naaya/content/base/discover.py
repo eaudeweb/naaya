@@ -34,6 +34,9 @@ def initialize(context):
 
     #register classes
     for x in _get_content_types()['content'].values():
+        if '_class' not in x:
+            # maybe this content type does not want to be registered?
+            continue
         context.registerClass(
                 x['_class'],
                 permission=x['permission'],
