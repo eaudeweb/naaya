@@ -195,15 +195,22 @@ def convertToList(s):
         s = [s]
     return s
 
-def html2text(html, trim_length=512):
+def html2text(html, trim_length=512, ellipsis=False):
     """
     Strip all tags from ``html``. If ``trim_length`` is not None,
     limit the output length to ``trim_length`` characters.
+
+    If the `ellipsis` flag is set to True, and `trim length` is not
+    a false value (e.g. zero, None), then search for the nearest word
+    boundary to the left, trim there, and insert an ellipsis ("...").
     """
     soup = BeautifulSoup(html)
-    text = unescape_html_entities(''.join(soup.findAll(text=True)))
+    text = unescape_html_entities(''.join(soup.findAll(text=True))).strip()
     if trim_length:
         text = text[:trim_length]
+        if ellipsis:
+            ELLIPSIS = u'\u2026'
+            text = re.sub(r'(?<=\s)\S+$', ELLIPSIS, text)
     return text
 
 def normalize_template(src):
