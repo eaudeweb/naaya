@@ -216,7 +216,6 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += blog_entry_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
