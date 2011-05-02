@@ -88,7 +88,7 @@ class FormsTool(Folder):
         pluggable_content = self.get_pluggable_content()
 
         for meta_type, pluggable_item in pluggable_content.iteritems():
-            for form_id in pluggable_item['forms']:
+            for form_id in pluggable_item.get('forms', []):
                 module_name = pluggable_item['module']
                 title = '%s %s' % (module_name, form_id)
                 path = join(pluggable_item['package_path'], 'zpt', '%s.zpt' % form_id)
