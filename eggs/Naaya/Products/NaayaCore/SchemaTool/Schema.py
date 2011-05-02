@@ -200,7 +200,7 @@ class Schema(Folder):
     def get_content_type(self):
         """ Get content_type with this schema attached"""
         for content_type in self.get_pluggable_content().values():
-            if self.id == content_type['schema_name']:
+            if self.id == content_type.get('schema_name', None):
                 return content_type
         return None
 
@@ -209,7 +209,7 @@ class Schema(Folder):
         """ get initial definition for this schema, from the NyZzz Python module """
         content_type = self.get_content_type()
         if content_type is not None:
-            return content_type['default_schema']
+            return content_type.get('default_schema', None)
         else:
             return None
 
