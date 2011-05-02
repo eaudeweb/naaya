@@ -128,7 +128,9 @@ class SchemaTool(Folder):
         """ Get a list of all schemas, indexed my meta_type """
         output = {}
         for content_type in self.getSite().get_pluggable_content().values():
-            name = content_type['schema_name']
+            name = content_type.get('schema_name', None)
+            if name is None:
+                continue
             meta_type = content_type['meta_type']
             if installed is True:
                 if not self.getSite().is_pluggable_item_installed(meta_type):

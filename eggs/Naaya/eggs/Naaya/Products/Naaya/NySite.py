@@ -3465,7 +3465,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def get_pluggable_metatypes_validation(self):
         #returns a list with all meta_types for validation process
-        return [x['meta_type'] for x in self.get_pluggable_content().values() if x['validation'] == 1]
+        return [x['meta_type'] for x in self.get_pluggable_content().values() if x.get('validation', None) == 1]
 
     def get_pluggable_item(self, meta_type):
         return self.get_pluggable_content().get(meta_type, None)
