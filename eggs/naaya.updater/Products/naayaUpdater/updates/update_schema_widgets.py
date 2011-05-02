@@ -49,7 +49,7 @@ class UpdateSchemaWidgets(UpdateScript):
             raise RuntimeError('There are multiple languages present on this portal')
 
         catalog_tool = portal.getCatalogTool()
-        meta_type = schema.get_meta_type()
+        meta_type = schema.title
         lang = portal.get_selected_language()
 
         for widget in widgets:
