@@ -21,8 +21,9 @@
                 is_entitled here/checkPermissionPublishObjects;
                 site here/getSite">
 <link rel="stylesheet" type="text/css" media="all"
-      tal:define="stool here/portal_survey;"
-      tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+		tal:define="target_answer here/target_answer;
+					survey target_answer/getSurveyTemplate"
+      tal:attributes="href string:${survey/absolute_url}/css_survey_common" />
 
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
