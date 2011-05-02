@@ -41,6 +41,7 @@ class UpdateSchemaWidgets(UpdateScript):
                 return False
         return True
 
+
     def unlocalize(self, portal, schema, widgets):
         """ Move the data from _local_properties to simple attribute on object
         After all the objects in question are modified
@@ -49,7 +50,7 @@ class UpdateSchemaWidgets(UpdateScript):
             raise RuntimeError('There are multiple languages present on this portal')
 
         catalog_tool = portal.getCatalogTool()
-        meta_type = schema.title
+        meta_type = _get_meta_type(portal, schema)
         lang = portal.get_selected_language()
 
         for widget in widgets:
@@ -77,7 +78,7 @@ class UpdateSchemaWidgets(UpdateScript):
         """
 
         catalog_tool = portal.getCatalogTool()
-        meta_type = schema.get_meta_type()
+        meta_type = _get_meta_type(portal, schema)
         lang = portal.get_selected_language()
 
         for widget in widgets:
@@ -93,3 +94,11 @@ class UpdateSchemaWidgets(UpdateScript):
                 delattr(ob, widget.prop_name())
             ob.recatalogNyObject(ob)
             self.log.info('Updated %r', ob.absolute_url(1))
+
+def _get_meta_type(portal, schema):
+    for meta_type, _schema in portal.getSchemaTool().listSchemas().items():
+        if schema == _schema:
+            return meta_type
+    else:
+        raise ValueError("No meta_type for %r" % schema)
+
