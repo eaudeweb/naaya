@@ -303,7 +303,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         current_address = target_answer.w_location.address
         target_answer.w_location = Geo(lat=lat, lon=lon, address=current_address)
 
-    security.declareProtected(view_management_screens, 'target_answer')
+    security.declareProtected(view, 'target_answer')
     def target_answer(self):
         return self.getSite().restrictedTraverse(self.target_path)
 
