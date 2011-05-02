@@ -26,7 +26,6 @@ import sys
 from Globals import InitializeClass
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
-from OFS.Image import File, cookId
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -236,7 +235,6 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
         """ """
         l_options = ()
         l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += publication_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
