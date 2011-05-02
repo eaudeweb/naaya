@@ -218,8 +218,11 @@ class CatalogTool(ZCatalog, utils):
             self.reindexIndex('istranslated_%s' % lang, self.REQUEST)
         except:
             pass
-        self.addIndex('%s_%s' % ('tags', lang), 'KeywordIndex')
-        self.reindexIndex('%s_%s' % ('tags', lang), self.REQUEST)
+        try:
+            self.addIndex('%s_%s' % ('tags', lang), 'KeywordIndex')
+            self.reindexIndex('%s_%s' % ('tags', lang), self.REQUEST)
+        except:
+            pass
 
     security.declarePrivate('del_index_for_lang')
     def del_index_for_lang(self, name, lang):
@@ -243,7 +246,10 @@ class CatalogTool(ZCatalog, utils):
         """
         self.del_index_for_lang('objectkeywords', lang)
         self.del_index_for_lang('istranslated', lang)
-        self.delIndex('%s_%s' % ('tags', lang))
+        try:
+            self.delIndex('%s_%s' % ('tags', lang))
+        except:
+            pass
 
     security.declareProtected(view_management_screens, 'manage_maintenance')
     _manage_maintenance = PageTemplateFile('zpt/manage_maintenance', globals())
