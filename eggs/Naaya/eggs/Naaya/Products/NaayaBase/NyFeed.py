@@ -13,6 +13,7 @@ import urllib2
 from zope.component import getUtility
 
 from interfaces import INyFeedHarvester
+from naaya.core.utils import unescape_html_entities
 
 
 
@@ -68,7 +69,10 @@ class NyFeed:
         self.__feed_encoding = encoding
         self.__feed_etag = etag
         self.__feed_modified = modified
-        if entries is not None: self.__feed_entries = deepcopy(entries)
+        if entries is not None:
+            for entry in entries:
+                entry['title'] = unescape_html_entities(entry['title'])
+            self.__feed_entries = deepcopy(entries)
         else: self.__feed_entries = []
         self._p_changed = 1
 

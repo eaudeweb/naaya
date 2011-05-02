@@ -5,7 +5,6 @@ Utilities to make Zope2 a friendlier place.
 
 import datetime
 import sys
-import re
 import urllib
 
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -14,17 +13,13 @@ from Acquisition import Implicit
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 from Globals import DTMLFile
-from AccessControl.Permissions import view
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from DateTime import DateTime
 import simplejson as json
 from decimal import Decimal
 from dateutil.parser import parse
-from utils import force_to_unicode
-from utils import is_valid_email
-
-from naaya.core.utils import path_in_site
-from naaya.core.utils import force_to_unicode
+from naaya.core.utils import force_to_unicode, is_valid_email
+from naaya.core.utils import path_in_site, unescape_html_entities
 
 
 def redirect_to(tmpl):
@@ -166,6 +161,10 @@ class RestrictedToolkit(SimpleItem):
     def url_quote(self, value):
         """ URL-quote the given value. """
         return urllib.quote(value)
+
+    def unescape_html_entities(self, text):
+        """ unescape html entities from the given text """
+        return unescape_html_entities(text)
 
 InitializeClass(RestrictedToolkit)
 
