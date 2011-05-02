@@ -31,7 +31,7 @@ class Subscriptions(SimpleItem):
         self._signups = OOBTree()
         self._account_subscriptions = OOBTree()
 
-    security.declareProtected(view, 'getMeeting')
+    security.declarePublic('getMeeting')
     def getMeeting(self):
         return self.aq_parent.aq_parent
 
@@ -192,7 +192,7 @@ class Subscriptions(SimpleItem):
 
         return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-    security.declareProtected(view, 'welcome')
+    security.declarePublic('welcome')
     def welcome(self, REQUEST):
         """ """
         if 'logout' in REQUEST.form:
