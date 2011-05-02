@@ -1073,7 +1073,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect('%s/admin_map_html' %
                                       self.absolute_url())
 
-    security.declareProtected(view, 'setup_map_engine_html')
+    security.declarePublic('setup_map_engine_html')
     def setup_map_engine_html(self, request, **kwargs):
         """ render the HTML needed to set up the current map engine """
         kwargs.update(request.form)
