@@ -166,6 +166,15 @@ class RestrictedToolkit(SimpleItem):
         """ unescape html entities from the given text """
         return unescape_html_entities(text)
 
+    def simple_paginate(self, items, per_page=4):
+        """
+        A very simple paginator::
+
+            >>> self.rstk.simple_paginate([1, 2, 3, 4, 5, 6], per_page=4)
+            [[1, 2, 3, 4], [5, 6]]
+        """
+        return simple_paginate(items, per_page)
+
 InitializeClass(RestrictedToolkit)
 
 
@@ -374,3 +383,9 @@ def icon_for_content_type(context, mime_type):
         'url': '%s/getContentTypePicture?id=%s' % (site_url, mime_type),
         'title': site.getContentTypeTitle(mime_type),
     }
+
+def simple_paginate(items, per_page=4):
+    output = []
+    for offset in xrange(0, len(items), per_page):
+        output.append(items[offset:offset+per_page])
+    return output
