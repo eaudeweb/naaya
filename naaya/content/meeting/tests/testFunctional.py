@@ -5,7 +5,6 @@ from Testing import ZopeTestCase
 #Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
-from Products.NaayaSurvey.SurveyTool import manage_addSurveyTool, SurveyTool
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
 
 #Meeting imports
@@ -609,10 +608,6 @@ class NyMeetingSurveyTestCase(NaayaFunctionalTestCase):
         addPortalMeetingUsers(self.portal)
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
 
-        try:
-            manage_addSurveyTool(self.portal)
-        except:
-            pass
         meeting = self.portal.info.mymeeting
         manage_addMegaSurvey(meeting, title='MySurvey')
         meeting.survey_pointer = 'info/mymeeting/mysurvey'
@@ -974,10 +969,6 @@ class NyMeetingAccess(NaayaFunctionalTestCase):
         self.portal.info.mymeeting.participants._set_attendee('test_participant1', PARTICIPANT_ROLE)
         self.portal.info.mymeeting.participants._set_attendee('test_participant2', PARTICIPANT_ROLE)
 
-        try:
-            manage_addSurveyTool(self.portal)
-        except:
-            pass
         meeting = self.portal.info.mymeeting
         manage_addMegaSurvey(meeting, title='MySurvey')
         meeting.survey_pointer = 'info/mymeeting/mysurvey'
