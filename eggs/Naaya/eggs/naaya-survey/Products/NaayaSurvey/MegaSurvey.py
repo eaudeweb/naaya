@@ -120,6 +120,10 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         """What can you put inside me?"""
         return BaseSurveyTemplate.all_meta_types(self, interfaces)
 
+    def getSurveyTemplate(self):
+        """ """
+        return self
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
