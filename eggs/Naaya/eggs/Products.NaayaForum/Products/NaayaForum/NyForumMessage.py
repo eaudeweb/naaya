@@ -1,6 +1,7 @@
 from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
