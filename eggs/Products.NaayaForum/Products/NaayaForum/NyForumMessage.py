@@ -226,7 +226,7 @@ class NyForumMessage(NyForumBase, Folder):
 
     #site pages
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/message_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/message_index', globals(), 'forum_message_index')
 
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'edit_html')
     edit_html = PageTemplateFile('zpt/message_edit', globals())
