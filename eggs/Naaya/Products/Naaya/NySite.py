@@ -2226,7 +2226,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if not self.is_pluggable_item_installed(pluggable['meta_type']):
                 continue
             zope_perm = pluggable['permission']
-            label = "Submit %s objects" % pluggable['_class'].meta_label
+            if '_class' in pluggable:
+                meta_label = pluggable['_class'].meta_label
+            else:
+                meta_label = pluggable['meta_type']
+            label = "Submit %s objects" % meta_label
             permission_names[zope_perm] = label
         permission_names.update(naaya_known_permissions)
 
