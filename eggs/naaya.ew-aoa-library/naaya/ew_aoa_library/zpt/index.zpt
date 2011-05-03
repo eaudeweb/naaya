@@ -164,10 +164,21 @@
 						Resource efficiency topics</option>
 				</select>
 			</div>
+			<div class="field" tal:define="and_or options/and_or|string:and">
+				<label for="and_or" i18n:translate="">Theme selection type (AND/OR)</label>
+				<select name="and_or" size="1">
+					<option i18n:translate="" value="and"
+						tal:attributes="selected python:'and' == and_or">
+						AND</option>
+					<option i18n:translate="" value="or"
+						tal:attributes="selected python:'or'  == and_or">
+						OR</option>
+				</select>
+			</div>
 		</div>
 		<div class="field" style="float:left" tal:define="topics options/topics|python:[]">
 			<label style="display:none" for="topics"
-				i18n:translate="">Topics</label>
+				i18n:translate="">Topics (selected with AND)</label>
 			<select style="display:none" name="topics" multiple="True" size="9">
 				<option i18n:translate="" value="a0"
 					class="w_water-resources-topics"
@@ -351,10 +362,21 @@
 						Resource efficiency topics</option>
 				</select>
 			</div>
+			<div class="field" tal:define="and_or options/and_or|string:and">
+				<label for="and_or" i18n:translate="">Theme selection type (AND/OR)</label>
+				<select name="and_or" size="1">
+					<option i18n:translate="" value="and"
+						tal:attributes="selected python:'and' == and_or">
+						AND</option>
+					<option i18n:translate="" value="or"
+						tal:attributes="selected python:'or'  == and_or">
+						OR</option>
+				</select>
+			</div>
 		</div>
 		<div class="field" style="float:left" tal:define="topics options/topics|python:[]">
 			<label style="display:none" for="topics"
-				i18n:translate="">Topics</label>
+				i18n:translate="">Topics (selected with AND)</label>
 			<select style="display:none" name="topics" multiple="True" size="9">
 				<option i18n:translate="" value="a0"
 					class="w_water-resources-topics"
