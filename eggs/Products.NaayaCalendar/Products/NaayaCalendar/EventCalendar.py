@@ -21,7 +21,6 @@ __version__='$Revision: 1.38 $'[11:-2]
 # python imports
 from os.path import join
 import calendar
-from datetime import datetime
 import time
 
 # Zope imports
@@ -141,21 +140,53 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                         (start_minutes, end_minutes) = \
                           catalog._catalog.getIndexDataForRID(rid)[interval_idx]
 
-                        if start_minutes is None:
-                            start_date = None
-                        else:
-                            start_date = datetime.fromtimestamp(start_minutes * 60)
-                            start_date = self.getDate(start_date)
+                        start_date = self.getDateFromMinutes(start_minutes)
+                        end_date = self.getDateFromMinutes(end_minutes)
 
-                        if end_minutes is None:
-                            end_date = None
-                        else:
-                            end_date = datetime.fromtimestamp(end_minutes * 60)
-                            end_date = self.getDate(end_date)
-
-                        events.append((event, start_date, end_date))
+                        events.append((event,
+                                        self.getDate(start_date),
+                                        self.getDate(end_date)))
 
         return events
+
+    security.declareProtected(view, 'getEventsByMonth')
+    def getEventsByMonth(self):
+        """
+        Return the events grouped by start_date per month (sorted by start_date)
+        """
+        ret = {}
+        catalog = self.unrestrictedTraverse(self.catalog)
+        visited_paths = set()
+        for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+            for brain in catalog({'meta_type': meta_type}):
+                path = brain.getPath()
+                if path in visited_paths:
+                    continue
+                visited_paths.add(path)
+
+                event = brain.getObject()
+                if not evalPredicate(predicate, event):
+                    continue
+
+                rid = brain.getRID()
+                start_minutes, end_minutes = \
+                        catalog._catalog.getIndexDataForRID(rid)[interval_idx]
+
+                start_date = self.getDateFromMinutes(start_minutes)
+                end_date = self.getDateFromMinutes(end_minutes)
+
+                if start_date is None:
+                    continue
+
+                key = start_date.month, start_date.year
+                if key not in ret:
+                    ret[key] = []
+
+                ret[key].append((event, start_date, end_date))
+
+        for key in ret:
+            ret[key].sort(key=lambda x: x[1])
+        return ret
 
     security.declareProtected(view, 'hasEventsByDay')
     def hasEventsByDay(self, year, month):

@@ -20,6 +20,7 @@ __version__='$Revision: 1.24 $'[11:-2]
 
 # python imports
 from time import localtime, mktime, strftime
+from datetime import datetime
 
 #Zope import
 from DateTime import DateTime
@@ -199,6 +200,13 @@ class DateFunctions:
             try:    return DateTime(l_date).strftime("%d %B %Y")
             except: return setTranslation('', 'empty')
         else:       return setTranslation('', 'empty')
+
+    def getDateFromMinutes(self, minutes):
+        """ return date based on minutes coresponding to an indexed date """
+        try:
+            return datetime.fromtimestamp(minutes * 60)
+        except:
+            return None
 
     def isLeapYear(self, year):
         """ return 1 for leap years, 0 for non-leap years """
