@@ -3,23 +3,18 @@ try:
     import json
 except ImportError:
     import simplejson as json
-from os.path import join, isfile
+from os.path import join
 from urllib import quote
-from copy import copy
-from cStringIO import StringIO
 from zipfile import ZipFile
 from datetime import datetime, timedelta
-import simplejson as json
 from urlparse import urlparse
 import logging
 import time
 import os
 
 import zLOG
-from OFS.Folder import Folder, manage_addFolder
+from OFS.Folder import Folder
 from OFS.Image import manage_addImage
-from OFS.DTMLMethod import addDTMLMethod
-from OFS.DTMLDocument import addDTMLDocument
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
@@ -30,10 +25,9 @@ from AccessControl.Permissions import change_permissions
 from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from Globals import DTMLFile
-import Products
 from zope.interface import implements
 from App.ImageFile import ImageFile
-from zope import component, interface
+from zope import component
 import transaction
 from zope.deprecation import deprecate
 from zope.app.component.site import LocalSiteManager, SiteManagerContainer
@@ -75,7 +69,6 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyCommonView import NyCommonView
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
-from Products.NaayaCore.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
@@ -88,13 +81,12 @@ from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.Localizer import manage_addLocalizer
-from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
 from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
-from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
+from NyFolder import folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, cooldown, is_ajax
@@ -103,7 +95,6 @@ from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-from Products.NaayaCore.interfaces import ICaptcha
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 
