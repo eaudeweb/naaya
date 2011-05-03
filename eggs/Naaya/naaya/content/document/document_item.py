@@ -14,7 +14,8 @@ from naaya.content.base.events import NyContentObjectEditEvent
 from zope.interface import implements
 from interfaces import INyDocument
 
-from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
+from Products.NaayaBase.NyContentType import (NyContentType,
+                                              NY_CONTENT_BASE_SCHEMA)
 from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
@@ -29,18 +30,27 @@ from naaya.core import submitter
 #module constants
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
-    'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
+    'title':        (1, MUST_BE_NONEMPTY,
+                        'The Title field must have a value.'),
     'description':  (0, '', ''),
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
-    'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
+    'sortorder':    (0, MUST_BE_POSITIV_INT,
+                    'The Sort order field must contain a positive integer.'),
+    'releasedate':  (0, MUST_BE_DATETIME,
+                    'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'body':         (0, '', ''),
     'lang':         (0, '', '')
 }
 DEFAULT_SCHEMA = {
-    'body': dict(sortorder=100, widget_type='TextArea', label='Body (HTML)', localized=True, tinymce=True),
+    'body': {
+        'sortorder': 100,
+        'widget_type': 'TextArea',
+        'label': 'Body (HTML)',
+        'localized': True,
+        'tinymce': True
+    },
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
@@ -63,7 +73,8 @@ config = {
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'document.gif'),
         '_misc': {
                 'NyDocument.gif': ImageFile('www/document.gif', globals()),
-                'NyDocument_marked.gif': ImageFile('www/document_marked.gif', globals()),
+                'NyDocument_marked.gif': ImageFile('www/document_marked.gif',
+                globals()),
             },
     }
 
@@ -71,8 +82,11 @@ def document_add(self, REQUEST=None, RESPONSE=None):
     """ """
     id = uniqueId('doc', lambda x: self._getOb(x, None) is not None)
     self.addNyDocument(id)
-    if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
-    else: return id
+    if REQUEST:
+        REQUEST.RESPONSE.redirect('%s/add_html' %
+                                    self._getOb(id).absolute_url())
+    else:
+        return id
 
 def _create_NyDocument_object(parent, id, contributor):
     id = uniqueId(slugify(id, removelist=[]),
@@ -93,13 +107,15 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     else:
         schema_raw_data = kwargs
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    _releasedate = self.process_releasedate(
+                                schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('body', '')
 
     id = uniqueId(slugify(id or schema_raw_data.get('title', '') or 'doc',
                           removelist=[]),
                   lambda x: self._getOb(x, None) is not None)
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyDocument_object(self, id, contributor)
     ob._setLocalPropValue('title', _lang, '')
@@ -107,7 +123,8 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     sortorder_widget = ob._get_schema().getWidget('sortorder')
     schema_raw_data.setdefault('sortorder', sortorder_widget.default)
 
-    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate, _all_values=False)
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang,
+                    _override_releasedate=_releasedate, _all_values=False)
     if form_errors:
         raise ValueError(form_errors.popitem()[1]) # pick a random error
 
@@ -120,14 +137,16 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     if REQUEST is not None:
         if REQUEST.has_key('submitted'): ob.submitThis()
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'document_manage_add' or l_referer.find('document_manage_add') != -1:
+        if (l_referer == 'document_manage_add' or
+           l_referer.find('document_manage_add') != -1):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'document_add':
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
     return ob.getId()
 
-def importNyDocument(self, param, id, attrs, content, properties, discussion, objects):
+def importNyDocument(self, param, id, attrs, content, properties, discussion,
+                     objects):
     #this method is called during the import process
     try: param = abs(int(param))
     except: param = 0
@@ -143,7 +162,8 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
                 try: self.manage_delObjects([id])
                 except: pass
 
-            contributor = self.utEmptyToNone(attrs['contributor'].encode('utf-8'))
+            contributor = self.utEmptyToNone(
+                                attrs['contributor'].encode('utf-8'))
             if contributor is None:
                 contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             ob = _create_NyDocument_object(self, id, contributor)
@@ -151,9 +171,12 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
             ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
 
             for property, langs in properties.items():
-                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+                [ ob._setLocalPropValue(property, lang, langs[lang])
+                  for lang in langs if langs[lang]!='' ]
+            ob.approveThis(
+                approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(
+                    attrs['approved_by'].encode('utf-8')))
             if attrs['releasedate'].encode('utf-8') != '':
                 ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
             ob.checkThis(attrs['validation_status'].encode('utf-8'),
@@ -169,7 +192,8 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
 class document_item(Implicit, NyContentData):
     """ """
 
-class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyValidation, NyContentType):
+class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl,
+                 NyValidation, NyContentType):
     """ """
 
     implements(INyDocument)
@@ -183,8 +207,14 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         """ """
         l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
+            l_options += ({
+                'label': 'Properties',
+                'action': 'manage_edit_html'
+            },)
+        l_options += ({
+            'label': 'View',
+            'action': 'index_html'
+        },) + NyContainer.manage_options[3:8]
         return l_options
 
     def all_meta_types(self, interfaces=None):
@@ -210,11 +240,13 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
+        return u' '.join([self._objectkeywords(lang),
+                          self.getLocalProperty('body', lang)])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+        return ('validation_status="%s" validation_date="%s" '
+               'validation_by="%s" validation_comment="%s"') % \
             (self.utXmlEncode(self.validation_status),
                 self.utXmlEncode(self.validation_date),
                 self.utXmlEncode(self.validation_by),
@@ -225,10 +257,12 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<body lang="%s"><![CDATA[%s]]></body>' % (l, self.utToUtf8(self.getLocalProperty('body', l))))
+            ra('<body lang="%s"><![CDATA[%s]]></body>' % (l,
+                self.utToUtf8(self.getLocalProperty('body', l))))
         for i in self.getUploadedImages():
             ra('<img param="0" id="%s" content="%s" />' % \
-                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+                (self.utXmlEncode(i.id()), self.utXmlEncode(
+                self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 
     #zmi actions
@@ -243,10 +277,12 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+                            _override_releasedate=_releasedate)
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
 
@@ -270,42 +306,53 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         """ """
         schema_raw_data = dict(REQUEST.form)
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _releasedate = self.process_releasedate(
+            schema_raw_data.pop('releasedate', ''), self.releasedate)
 
         parent = self.getParentNode()
         id = uniqueId(slugify(schema_raw_data.get('title', '') or 'doc',
                               removelist=[]),
                       lambda x: parent._getOb(x, None) is not None)
 
-        schema_raw_data['title'] = schema_raw_data.get('title', '').replace(self.id, id)
-        schema_raw_data['description'] = schema_raw_data.get('description', '').replace(self.id, id)
-        schema_raw_data['body'] = schema_raw_data.get('body', '').replace(self.id, id)
+        schema_raw_data['title'] = schema_raw_data.get('title', '').replace(
+                                                                self.id, id)
+        schema_raw_data['description'] = schema_raw_data.get('description',
+                                                    '').replace(self.id, id)
+        schema_raw_data['body'] = schema_raw_data.get('body',
+                                                    '').replace(self.id, id)
 
         #check mandatory fiels
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+                                _override_releasedate=_releasedate)
 
         submitter_errors = submitter.info_check(self.aq_parent, REQUEST, self)
         form_errors.update(submitter_errors)
 
         if not form_errors:
-            #replace the old id with the new one (for absolute URLs or pictures)
+            #replace the old id with the new one
+            #(for absolute URLs or pictures)
 
             parent.manage_renameObjects([self.id], [id])
             if self.checkPermissionSkipApproval():
-                approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+                approved = 1
+                approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
-                approved, approved_by = 0, None
+                approved = 0
+                approved_by = None
 
             self.approveThis(approved, approved_by)
             self.submitThis()
             self.recatalogNyObject(self)
-            notify(NyContentObjectAddEvent(self, self.contributor, schema_raw_data))
+            notify(NyContentObjectAddEvent(self, self.contributor,
+                                           schema_raw_data))
             self.setSession('referer', self.getParentNode().absolute_url())
             return self.object_submitted_message(REQUEST)
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
+            REQUEST.RESPONSE.redirect('%s/messages_html' %
+                                        self.getParentNode().absolute_url())
         else:
+            #XXX: `l_referer` is not used
             l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
             self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
             REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
@@ -313,7 +360,9 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
         """ """
-        if (not self.checkPermissionEditObject()) or (self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName()):
+        if ((not self.checkPermissionEditObject()) or
+            (self.checkout_user !=
+             self.REQUEST.AUTHENTICATED_USER.getUserName())):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not self.hasVersion():
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
@@ -323,7 +372,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         self.version = None
         self._p_changed = 1
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' %
+                                                self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
@@ -338,7 +388,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         self.version.copy_naaya_properties_from(self)
         self._p_changed = 1
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' %
+            self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
@@ -348,7 +399,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
 
         if self.hasVersion():
             obj = self.version
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+            if (self.checkout_user !=
+                self.REQUEST.AUTHENTICATED_USER.getUserName()):
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         else:
             obj = self
@@ -358,9 +410,11 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         else:
             schema_raw_data = kwargs
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
+        _releasedate = self.process_releasedate(
+                    schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+        form_errors = self.process_submitted_form(schema_raw_data, _lang,
+                    _override_releasedate=_releasedate)
 
         if not form_errors:
             self._p_changed = 1
@@ -371,15 +425,19 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             auth_tool.changeLastPost(contributor)
             notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (
+                                self.absolute_url(), _lang))
         else:
             if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                self._prepare_error_response(REQUEST, form_errors,
+                                                schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (
+                                            self.absolute_url(), _lang))
             else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
-
+                # pick a random error
+                raise ValueError(form_errors.popitem()[1])
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/document_manage_edit', globals())
@@ -388,7 +446,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
     security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+        from Products.NaayaBase.NyContentType import \
+                                        get_schema_helper_for_metatype
         form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
         parent = self.aq_parent
         return self.getFormsTool().getContent({
@@ -415,7 +474,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
 
 InitializeClass(NyDocument)
 
-manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add', globals())
+manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add',
+                                                globals())
 manage_addNyDocument_html.kind = config['meta_type']
 manage_addNyDocument_html.action = 'addNyDocument'
 config.update({
