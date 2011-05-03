@@ -71,7 +71,8 @@ class NyFeed:
         self.__feed_modified = modified
         if entries is not None:
             for entry in entries:
-                entry['title'] = unescape_html_entities(entry['title'])
+                if isinstance(entry, dict) and entry.has_key('title'):
+                    entry['title'] = unescape_html_entities(entry['title'])
             self.__feed_entries = deepcopy(entries)
         else: self.__feed_entries = []
         self._p_changed = 1
