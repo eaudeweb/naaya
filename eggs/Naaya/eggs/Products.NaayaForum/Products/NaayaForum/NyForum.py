@@ -2,6 +2,7 @@ from os.path import join
 
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view, change_permissions
@@ -19,6 +20,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from interfaces import INyForum
 
@@ -370,7 +372,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
 
     #site pages
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/forum_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/forum_index', globals(), 'forum_index')
 
     security.declareProtected(view, 'messages_feed')
     messages_feed = messages_feed
