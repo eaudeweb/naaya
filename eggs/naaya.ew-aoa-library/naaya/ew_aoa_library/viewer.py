@@ -310,6 +310,7 @@ class AoALibraryViewer(SimpleItem):
         show_unapproved = REQUEST.get('show_unapproved', None)
         if not self.checkPermissionPublishObjects():
             show_unapproved = None
+        and_or = REQUEST.get('and_or')
         themes = REQUEST.get('themes', [])
         if not isinstance(themes, list):
             themes = [themes]
@@ -327,12 +328,25 @@ class AoALibraryViewer(SimpleItem):
                     survey_answer.get('w_geo-coverage-region', '').lower()):
                 return False
             if themes:
-                for theme in themes:
-                    for topics_list in survey_answer.get(theme):
-                        if len(topics_list) > 0:
+                if and_or == 'and':
+                    for theme in themes:
+                        for topics_list in survey_answer.get(theme):
+                            if len(topics_list) > 0:
+                                break
+                        else:
+                            return False
+                else:
+                    topic_present = False
+                    for theme in themes:
+                        for topics_list in survey_answer.get(theme):
+                            if len(topics_list) > 0:
+                                topic_present = True
+                                break
+                        if topic_present:
                             break
-                    else:
+                    if not topic_present:
                         return False
+
             if topics:
                 for topic in topics:
                     theme  = topics_to_themes[topic[0]]
@@ -342,7 +356,7 @@ class AoALibraryViewer(SimpleItem):
 
         shadows = filter(respects_filter,
                 self.iter_assessments(show_unapproved=show_unapproved))
-        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes, topics=topics)
+        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes, topics=topics, and_or=and_or)
 
 
     security.declareProtected(view, 'filter_answers_library')
@@ -355,6 +369,7 @@ class AoALibraryViewer(SimpleItem):
         except ValueError:
             year = None
         official_country_region = REQUEST.get('official_country_region', None)
+        and_or = REQUEST.get('and_or')
         themes = REQUEST.get('themes', [])
         if not isinstance(themes, list):
             themes = [themes]
@@ -389,21 +404,29 @@ class AoALibraryViewer(SimpleItem):
                         official_country_region.lower() not in answer_region:
                     return False
             if themes:
+                topic_present = False
                 for theme in themes:
                     answer_theme = survey_answer.get(theme)
-                    if not answer_theme:
-                        return False
+                    if and_or == 'and':
+                        if not answer_theme:
+                            return False
+                    else:
+                        if answer_theme:
+                            topic_present = True
                     theme_topics = [int(topic[1]) for topic in topics
                             if topics_to_themes[topic[0]] == theme]
                     for topic in theme_topics:
                         if topic not in answer_theme:
                             return False
+                if and_or == 'or' and not topic_present:
+                    return False
+
             return True
 
         shadows = filter(respects_filter, self.iter_assessments())
         return self.index_html(shadows=shadows, organization=organization,
                 year=year, official_country_region=official_country_region,
-                themes=themes, topics=topics)
+                themes=themes, topics=topics, and_or=and_or)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
