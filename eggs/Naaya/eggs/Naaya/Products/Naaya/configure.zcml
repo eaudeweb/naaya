@@ -46,6 +46,10 @@
     handler=".subscribers.update_maintopics_after_move"
     for="naaya.content.base.interfaces.INyContentObjectMovedEvent"
     />
+  <subscriber
+    handler=".subscribers.site_cloned"
+    for="Products.Naaya.interfaces.INySite OFS.event.ObjectClonedEvent"
+    />
 
   <include package="naaya.core" />
   <include package="naaya.content.base" />

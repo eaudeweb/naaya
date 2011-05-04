@@ -5,13 +5,10 @@
 
 from base64 import encodestring, decodestring
 from urllib import quote, unquote
-import sys
 
 from Acquisition import aq_inner, aq_parent
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from ZPublisher import BeforeTraverse
-from zLOG import LOG, ERROR
 from ZPublisher.HTTPRequest import HTTPRequest
 from Globals import InitializeClass
 

@@ -171,3 +171,68 @@ class SiteIndexNotInLayoutTest(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal')
         html = self.browser.get_html()
         self.assertEqual(html.strip(), self.TEXT)
+
+class TestNySiteOFS(NaayaFunctionalTestCase):
+    """Perform OFS operations (copy/cut/paste/delete) on `INySite` objects"""
+
+    def afterSetUp(self):
+        #Add basic auth credentials so we can access the ZMI
+        self.browser.creds.add_password('Zope',
+            self.portal.aq_parent.absolute_url(), 'admin', '')
+
+    def _paste(self):
+        form = self.browser.get_form(2)
+        field = self.browser.get_form_field(form, 'manage_pasteObjects:method')
+        self.browser.clicked(form, field)
+        self.browser.submit()
+
+    def test_copypaste(self):
+        """ `Copy` & `Paste`"""
+        self.browser.go(self.portal.aq_parent.absolute_url() +
+                        '/manage_main/')
+        form = self.browser.get_form(2)
+        field = self.browser.get_form_field(form, 'manage_copyObjects:method')
+        self.browser.clicked(form, field)
+        form['ids:list'] = ['portal']
+        self.browser.submit()
+
+        self._paste()
+        self.assertTrue('copy_of_portal' in self.browser.get_html())
+
+    def test_cutpaste(self):
+        """ `Cut` & `Paste` """
+
+        self.browser.go(self.portal.aq_parent.absolute_url() +
+                        '/manage_main/')
+        form = self.browser.get_form(2)
+        field = self.browser.get_form_field(form, 'manage_cutObjects:method')
+        self.browser.clicked(form, field)
+        form['ids:list'] = ['portal']
+        self.browser.submit()
+
+        self._paste()
+        self.assertTrue('portal' in self.browser.get_html())
+
+    def test_delete(self):
+        """ `Delete` button """
+        self.browser.go(self.portal.aq_parent.absolute_url() +
+                        '/manage_main/')
+        form = self.browser.get_form(2)
+        field = self.browser.get_form_field(form, 'manage_delObjects:method')
+        self.browser.clicked(form, field)
+        form['ids:list'] = ['portal']
+        self.browser.submit()
+        self.assertTrue('portal' not in self.browser.get_html())
+
+    def test_copypaste_before_traverse(self):
+        """ `Copy` & `Paste` and test that __before_traverse__ is changed """
+        self.test_copypaste()
+
+        old_traverse = self.portal.__before_traverse__
+        new_traverse = self.portal.aq_parent.copy_of_portal.__before_traverse__
+
+        for key in old_traverse.keys():
+            if key not in new_traverse: #Some keys should be modified
+                break
+        else:
+            raise ValueError("Same __before_traverse__ as in original portal")
