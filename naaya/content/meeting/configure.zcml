@@ -6,12 +6,6 @@
 
   <naaya:content factory=".meeting.get_config" />
 
-  <zope:adapter
-    factory=".meeting.NyMeetingIndexing"
-    provides="Products.NaayaCore.CatalogTool.interfaces.INyCatalogIndexing"
-    for=".interfaces.INyMeeting"
-    />
-
   <configure zcml:condition="installed Products.naayaUpdater">
       <zope:utility name="add_allow_register_feature.update"
           provides="Products.naayaUpdater.interfaces.IUpdateScript"
