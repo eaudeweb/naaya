@@ -67,7 +67,7 @@
     <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html" i18n:translate="">Basket of approvals</a></li>
 </ul>
 </div>
-<div class="cleaner"/>
+<div class="cleaner"></div>
 <h1 tal:content="here/title_or_id"/>
 
 <p tal:content="here/get_description"/>
