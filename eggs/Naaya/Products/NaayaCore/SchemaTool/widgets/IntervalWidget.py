@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Widget import Widget, WidgetError, manage_addWidget
 from naaya.core.custom_types import Interval
+from naaya.core.exceptions import i18n_exception
 
 def addIntervalWidget(container, id="", title="Interval Widget", REQUEST=None, **kwargs):
     """ Contructor for Interval widget"""
@@ -25,6 +28,22 @@ class IntervalWidget(Widget):
     default = None
 
 
+    def normalize_date(self, date, time, all_day, name):
+        """ Used by parseFormData """
+        if date is None:
+            return date
+        try:
+            ds = map(int, date.split("/"))
+            if all_day is True:
+                return datetime(ds[2], ds[1], ds[0])
+            else:
+                (h, m) = map(int, time.split(":"))
+                return datetime(ds[2], ds[1], ds[0], h, m)
+        except Exception, e:
+            raise i18n_exception(WidgetError,
+                                 'Bad value (${date}, ${time}) for ${who}',
+                                 date=repr(date), time=repr(time), who=name)
+
     def parseFormData(self, data):
         if self.isEmptyDatamodel(data):
             return None
@@ -33,7 +52,9 @@ class IntervalWidget(Widget):
             return data
 
         if not isinstance(data, dict):
-            raise WidgetError('Expected multiple values for "%s"' % self.title)
+            raise i18n_exception(WidgetError,
+                                 'Expected multiple values for "${title}"',
+                                 title=self.title)
 
         try:
             start_date = data.get('start_date', None)
@@ -51,9 +72,24 @@ class IntervalWidget(Widget):
             all_day = data.get('all_day', False)
             if all_day:
                 all_day = True
-            return Interval(start_date, start_time, end_date, end_time, all_day)
+
+            if None in (start_date, end_date):
+                raise i18n_exception(WidgetError,
+                                     'Start time (date) and End time (date) ' +
+                                     'must both have values')
+            elif all_day is False and None in (start_time, end_time):
+                raise i18n_exception(WidgetError,
+                                     'Start time (hh:mm) and End time (hh:mm)' +
+                                 ' must both have values when all_day is False')
+            else:
+                start_date = self.normalize_date(start_date, start_time,
+                                                 all_day, "Start Time")
+                end_date = self.normalize_date(end_date, end_time, all_day,
+                                          "End Time")
+
+            return Interval(start_date, end_date, all_day)
         except ValueError, e:
-            raise WidgetError(str(e))
+            raise i18n_exception(WidgetError, str(e))
 
     def isEmptyDatamodel(self, value):
         if isinstance(value, dict):
@@ -73,7 +109,9 @@ class IntervalWidget(Widget):
         """
         Turn data to string as seen in form
         """
-        if value == Interval():
+        # right assertion used for some old empty Interval objects
+        # saved with all_day = True which failed first assertion
+        if value == Interval() or value.start_date is None:
             return None
         else:
             return {'start_date': value.start_date.strftime('%d/%m/%Y'),
