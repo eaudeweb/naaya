@@ -6,6 +6,8 @@ Utilities to make Zope2 a friendlier place.
 import datetime
 import sys
 import urllib
+import urllib2
+import simplejson
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -389,3 +391,13 @@ def simple_paginate(items, per_page=4):
     for offset in xrange(0, len(items), per_page):
         output.append(items[offset:offset+per_page])
     return output
+
+def shorten_url(url):
+    """ use http://is.gd to shorten a given URL """
+    page = urllib2.urlopen('http://is.gd/create.php?format=json&url=%s' % urllib.quote(url))
+    # unpack the data
+    result = simplejson.load(page)
+    if result.has_key('errorcode'):
+        raise Exception, result['errormessage']
+    else:
+        return result['shorturl']
