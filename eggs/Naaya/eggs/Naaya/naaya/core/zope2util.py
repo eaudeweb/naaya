@@ -177,6 +177,16 @@ class RestrictedToolkit(SimpleItem):
         """
         return simple_paginate(items, per_page)
 
+    def shorten_url(self, url):
+        """
+        Use http://is.gd to shorten a given URL::
+
+            >>> self.shorten_url('www.example.com')
+            http://is.gd/RGW31T
+        """
+
+        return shorten_url(url)
+
 InitializeClass(RestrictedToolkit)
 
 
@@ -393,9 +403,7 @@ def simple_paginate(items, per_page=4):
     return output
 
 def shorten_url(url):
-    """ use http://is.gd to shorten a given URL """
     page = urllib2.urlopen('http://is.gd/create.php?format=json&url=%s' % urllib.quote(url))
-    # unpack the data
     result = simplejson.load(page)
     if result.has_key('errorcode'):
         raise Exception, result['errormessage']
