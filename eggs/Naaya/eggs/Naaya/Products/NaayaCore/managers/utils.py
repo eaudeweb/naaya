@@ -206,7 +206,7 @@ def html2text(html, trim_length=512, ellipsis=False):
     """
     soup = BeautifulSoup(html)
     text = unescape_html_entities(''.join(soup.findAll(text=True))).strip()
-    if trim_length:
+    if trim_length and trim_length < len(text):
         text = text[:trim_length]
         if ellipsis:
             ELLIPSIS = u'\u2026'
