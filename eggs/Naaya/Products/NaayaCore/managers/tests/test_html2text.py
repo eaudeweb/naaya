@@ -24,3 +24,8 @@ class Html2TextTest(unittest.TestCase):
         self.assertEqual(html2text("some long text here",
                                    trim_length=12, ellipsis=True),
                          u"some long \u2026")
+
+    def test_long_trim(self):
+        self.assertEqual(html2text('short text',
+                                   trim_length=100, ellipsis=True),
+                         'short text')
