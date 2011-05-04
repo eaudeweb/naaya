@@ -19,7 +19,7 @@
 		shadows options/shadows;
 		no_answers options/no_answers|nothing">
 
-<h1 tal:content="here/title_or_id"></h1>
+<h1 i18n:translate="" tal:content="here/title_or_id"></h1>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#javascript_label').hide();
