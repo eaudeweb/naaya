@@ -44,7 +44,7 @@
     <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
 </ul>
 </div>
-<div class="cleaner"/>
+<div class="cleaner"></div>
 <h1>Glossary basket of approvals</h1>
 
 <tal:block condition="here/sync_remote_url" content="structure here/sync_info_text"/>

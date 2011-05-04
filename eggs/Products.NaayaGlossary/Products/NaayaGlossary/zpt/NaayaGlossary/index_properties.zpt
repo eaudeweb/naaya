@@ -22,7 +22,7 @@
     <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
 </ul>
 </div>
-<div class="cleaner"/>
+<div class="cleaner"></div>
 <h1>Glossary properties</h1>
 
 <form name="frmBasicProperties" action="updateGlossaryProperties" method="post">
