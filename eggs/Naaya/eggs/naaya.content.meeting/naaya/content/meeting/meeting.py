@@ -36,7 +36,6 @@ from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import relative_object_path
 from interfaces import INyMeeting
 from Products.Naaya.NySite import NySite
-from Products.NaayaCore.CatalogTool.interfaces import INyCatalogIndexing
 
 #Meeting imports
 from naaya.content.meeting import (OBSERVER_ROLE, WAITING_ROLE, PARTICIPANT_ROLE,
@@ -596,6 +595,20 @@ class NyMeeting(NyContentData, NyFolder):
                            'attachment;filename=%s.ics' % self.getId())
         REQUEST.RESPONSE.write(ics_data)
 
+    ### Compatibility code
+
+    security.declarePublic('start_date')
+    @property
+    def start_date(self):
+        d = self.interval.start_date
+        return DateTime(d.year, d.month, d.day)
+
+    security.declarePublic('start_date')
+    @property
+    def end_date(self):
+        d = self.interval.end_date
+        return DateTime(d.year, d.month, d.day)
+
 InitializeClass(NyMeeting)
 
 manage_addNyMeeting_html = PageTemplateFile('zpt/meeting_manage_add', globals())
@@ -619,18 +632,6 @@ config.update({
     'validation': issubclass(NyMeeting, NyValidation),
     '_class': NyMeeting,
 })
-
-class NyMeetingIndexing(object):
-
-    def __init__(self, context):
-        self.context = context
-
-    def __getattr__(self, name):
-        if name in ('start_date', 'end_date'):
-            d = getattr(self.context.interval, name)
-            return DateTime(d.year, d.month, d.day)
-        else:
-            return getattr(self.context, name)
 
 def get_config():
     return config
