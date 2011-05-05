@@ -1,86 +1,83 @@
-Changelog
-=========
-
 2.11.03 (unreleased)
 --------------------
- * Folder listing fetches all information about listed objects using adapters.
- * Fix: ``naaya.core.zope2util.permission_add_role`` used to incorrectly toggle
-   the permission.
- * Fix: Zip export used to leave out extensions if filename already contained
-   a dot.
- * Remove all license headers and a lot of uneeded files (e.g. empty readmes).
- * Roles editing is protected with the permission `Change permissons`.
- * Fix: "Exception while rendering an error message".
- * Clean up NotificationTool. Subscribers now receive emails on zip/csv import.
- * Zip download now includes URLs as well.
- * Naaya sites have a `LocalSiteManager`.
- * `ActionLogger` remembers events in ZODB. Each site has one.
- * New widget type, `IntervalWidget`.
- * `NotificationTool` saves edit events in the action logger.
- * Notifications can be disabled temporarily by admins for their own edits.
- * New `GlossaryWidget` with jquery-ui.
+* Folder listing fetches all information about listed objects using adapters.
+* Fix: ``naaya.core.zope2util.permission_add_role`` used to incorrectly toggle
+  the permission.
+* Fix: Zip export used to leave out extensions if filename already contained
+  a dot.
+* Remove all license headers and a lot of uneeded files (e.g. empty readmes).
+* Roles editing is protected with the permission `Change permissons`.
+* Fix: "Exception while rendering an error message".
+* Clean up NotificationTool. Subscribers now receive emails on zip/csv import.
+* Zip download now includes URLs as well.
+* Naaya sites have a `LocalSiteManager`.
+* `ActionLogger` remembers events in ZODB. Each site has one.
+* New widget type, `IntervalWidget`.
+* `NotificationTool` saves edit events in the action logger.
+* Notifications can be disabled temporarily by admins for their own edits.
+* New `GlossaryWidget` with jquery-ui.
 
 2.11.02 (2011-03-01)
 --------------------
- * New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
-   `checkPermissionSkipApproval` replaces `glCheckPermissionPublishObjects`.
- * Content objects have new `deleteThis` method with permission
-   `Naaya - Delete objects`.
- * Improvements to Zip import and export: title/id mapping, preservation of
-   timestamps, keeping empty folders.
- * Usability improvements to notifications administration page.
- * Separate email addresses for admin notifications and error reports.
+* New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
+  `checkPermissionSkipApproval` replaces `glCheckPermissionPublishObjects`.
+* Content objects have new `deleteThis` method with permission
+  `Naaya - Delete objects`.
+* Improvements to Zip import and export: title/id mapping, preservation of
+  timestamps, keeping empty folders.
+* Usability improvements to notifications administration page.
+* Separate email addresses for admin notifications and error reports.
 
 
 2.11.01 (2011-02-02)
 --------------------
- * Support for i18n messages with different values for ID and English
+* Support for i18n messages with different values for ID and English
    translation, useful for handling homonyms.
 
 
 2.10.12 (2011-01-11)
 --------------------
- * Zip export uses temporary file instead of building archive in memory.
- * Feature: anonymous subscriptions to notifications. Improvements to
-   subscriptions UI.
- * Refactoring of custom index_html template for folders.
- * New paginator for naaya: used in site_search and notification admin.
- * CSV import of user accounts.
+* Zip export uses temporary file instead of building archive in memory.
+* Feature: anonymous subscriptions to notifications. Improvements to
+  subscriptions UI.
+* Refactoring of custom index_html template for folders.
+* New paginator for naaya: used in site_search and notification admin.
+* CSV import of user accounts.
 
 2.10.11 (2010-12-07)
 --------------------
- * Map info balloons no longer require a catalog search; they are requested
-   based on visible markeres on the map.
- * Load information for LDAP users from a cache, if available. The cache is
-   created by the ``naaya.ldapdump`` package.
- * Fix: Users with `View` privileges in a sub-folder but not at site level no
-   longer receive `Unauthorized` errors.
- * Fix: many issues with site search.
- * Selenium testing harness refactoring; can use CherryPy instead of wsgiref.
- * Feature: customize template for each Schema Widget instance.
+* Map info balloons no longer require a catalog search; they are requested
+  based on visible markeres on the map.
+* Load information for LDAP users from a cache, if available. The cache is
+  created by the ``naaya.ldapdump`` package.
+* Fix: Users with `View` privileges in a sub-folder but not at site level no
+  longer receive `Unauthorized` errors.
+* Fix: many issues with site search.
+* Selenium testing harness refactoring; can use CherryPy instead of wsgiref.
+* Feature: customize template for each Schema Widget instance.
 
 2.10.10 (2010-11-04)
 --------------------
- * ProfilesTool refactored to subclass from BTreeFolder2. Update script:
-   `Change ProfilesTool to use BTree`.
- * ProfilesTool moved from NaayaCore to Products.NaayaProfilesTool because it
-   is rarely used and shouldn't be in the Core
- * Major UI update for Products.NaayaCore.AuthenticationTool. Using ajax
-   in user management (administration), fixed a lot of bugs and improved LDAP
-   performance.
- * Fix: NotificationTool subscriptions - strip user_id spaces. The update
-   script `Remove spaces from ...` will remove existing spaces.
- * Feature: user password reset with email verification
- * Fix: templates customized in ``portal_forms`` now accept ``**kwargs``
- * Refactoring for code that walks a `RefTree`
- * Improvements to DiskFile object; new DiskTemplate object; can be added
-   from ``skel.xml``.
- * Meta tags for all content types (index pages). Includes: `description`,
-   `keywords`, `contributor`, `dc.language` and `title`
- * Permissions editor: shows acquired permissions; fix locating target object
- * Comments refactored to store information in a hidden folder. Update script:
-   `Migration script from Naaya Comments`.
+* ProfilesTool refactored to subclass from BTreeFolder2. Update script:
+  `Change ProfilesTool to use BTree`.
+* ProfilesTool moved from NaayaCore to Products.NaayaProfilesTool because it
+  is rarely used and shouldn't be in the Core
+* Major UI update for Products.NaayaCore.AuthenticationTool. Using ajax
+  in user management (administration), fixed a lot of bugs and improved LDAP
+  performance.
+* Fix: NotificationTool subscriptions - strip user_id spaces. The update
+  script `Remove spaces from ...` will remove existing spaces.
+* Feature: user password reset with email verification
+* Fix: templates customized in ``portal_forms`` now accept ``**kwargs``
+* Refactoring for code that walks a `RefTree`
+* Improvements to DiskFile object; new DiskTemplate object; can be added
+  from ``skel.xml``.
+* Meta tags for all content types (index pages). Includes: `description`,
+  `keywords`, `contributor`, `dc.language` and `title`
+* Permissions editor: shows acquired permissions; fix locating target object
+* Comments refactored to store information in a hidden folder. Update script:
+  `Migration script from Naaya Comments`.
 
 2.10.9 (2010-10-06)
 -------------------
- * First numbered version
+* First numbered version
