@@ -60,6 +60,8 @@ Other
     :maxdepth: 2
 
     glossary
+    changelog
+
 
 Indices and tables
 ++++++++++++++++++

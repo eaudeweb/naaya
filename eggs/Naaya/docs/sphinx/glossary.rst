@@ -21,7 +21,7 @@ Some terms used in the documentation are described here.
         many others.
 
     Buildout
-        The `zc.buildout`_ package is a tool for deploying complex Python-based
+        The zc.buildout_ package is a tool for deploying complex Python-based
         systems. It was developed to help install Zope and Plone sites, but is being
         used for various repetitive tasks where a predictable result is required.
 
@@ -82,6 +82,19 @@ Some terms used in the documentation are described here.
     Portal
         A portal is synonymous to a site.
 
-.. [1] Some recipes, e.g. `plone.recipe.bundlecheckout`_, update their `part`
+    TAL
+        Template Attribute Language is an AttributeLanguage used to create 
+        dynamic templates. By marking elements of your HTML or XML document 
+        with TAL statement attributes, you can replace parts of the document 
+        with dynamically computed content.
+
+    ZPT
+        Zope Page Template - the default templates in Zope framework
+
+
+
+.. [1] Some recipes, e.g. plone.recipe.bundlecheckout, update their `part`
        on each run of `buildout`.
-.. `ZODB book` http://readthedocs.org/docs/zodb-documentation/latest/index.html
+.. _`ZODB book`: http://readthedocs.org/docs/zodb-documentation/latest/index.html
+.. _`ConfigParser`: http://docs.python.org/library/configparser.html
+.. _`zc.buildout`: http://pypi.python.org/pypi/zc.buildout
