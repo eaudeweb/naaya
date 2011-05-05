@@ -128,10 +128,14 @@
         </div>
         <div style="margin-top:1em;">
             <label for="meta_types" i18n:translate="">Content type(s):</label>
+            <br />
+            <input type="checkbox" checked="checked" class="toggle-all" id="toggle-all" rel="content-types" />
+            <label for="toggle-all" i18n:translate="">All types</label>
+            <br />
             <ul style="list-style-type:none;" id="meta_types">
         <tal:block repeat="item here/searchable_content">
             <li tal:define="item_label python:here.get_meta_type_label(item)">
-            <input type="checkbox" style="margin:0 3px;"
+            <input type="checkbox" style="margin:0 3px;" class="content-types"
                    tal:attributes="checked python:item in meta_types;
                                     id python:item.replace(' ', '_');
                                     name python:item.replace(' ', '_');" />

@@ -1,4 +1,5 @@
-/**
+$(document).ready(function(){
+ /**
  * Used for selenium testing in case of ajax
  * Use it in the tests like this:
  *  selenium.wait_for_condition('window.selenium_ready==true', 100)
@@ -7,6 +8,30 @@ var selenium_ready;
 $.ajaxSetup({
     beforeSend : function(xhr, opts){ selenium_ready = false; },
     complete: function(XMLHttpRequest, textStatus){ selenium_ready = true; }
+});
+
+/**
+ * Toggle checkboxes
+ *
+ * For a element (link, checkbox..) `.toggle-all` given it's `rel` attribute 
+ * toggle all checkboxes with `class` = `rel`
+ */
+$('.toggle-all').live('click', function(e){
+    var self = $(this);
+    var rel = self.attr("rel");
+    var checked = self.hasClass('toggled');
+    self.toggleClass('toggled');
+
+    if(this.tagName.toLowerCase() == 'a'){
+        e.preventDefault();
+    }
+    if(checked){
+        $("input." + rel).attr('checked', 'checked');
+    }else{
+        $("input." + rel).attr('checked', '');
+    }
+});
+
 });
 
 /**
@@ -102,6 +127,8 @@ function unserialize(data){
     $.each(rows, function(i, row){
         var key_val = url_decode(row).split('=');
         return_dict[key_val[0]] = key_val[1];
-    })
+    });
     return return_dict;
 }
+
+
