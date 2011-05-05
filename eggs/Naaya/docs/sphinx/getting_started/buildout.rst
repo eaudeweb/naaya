@@ -47,7 +47,7 @@ Naaya also requires PIL to be installed. You can install the latest PIL using pi
 
     pip install PIL
 
-Or, if you don't have pip, you can manually install PIL:
+Or, if you don't have pip, you can manually install PIL::
 
     wget http://effbot.org/downloads/Imaging-1.1.7.tar.gz
     tar -xzf Imaging-1.1.7.tar.gz
