@@ -10,4 +10,8 @@
     factory=".glossary_widget_bold_words.patch_glossary_widget"
     />
 
+  <naaya:call
+    factory=".layout_utils.patch_rstk"
+    />
+
 </configure>
