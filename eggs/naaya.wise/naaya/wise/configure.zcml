@@ -2,4 +2,7 @@
 <utility name="wise-harvester"
          provides="Products.NaayaBase.interfaces.INyFeedHarvester"
          factory=".harvester.WiseHarvester" />
+<utility name="bise-harvester"
+         provides="Products.NaayaBase.interfaces.INyFeedHarvester"
+         factory=".harvester.BiseHarvester" />
 </configure>
