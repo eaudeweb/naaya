@@ -1,5 +1,5 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
-<div style="margin: 20px 1% 5px 1%" />
+<div style="margin: 20px 1% 5px 1%"></div>
 
 <h1 tal:content="python:here.getCenterOb().title_or_id()" i18n:translate="" />
 
