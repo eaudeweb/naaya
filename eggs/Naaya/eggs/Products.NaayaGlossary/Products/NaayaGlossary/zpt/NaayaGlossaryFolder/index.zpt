@@ -17,7 +17,7 @@
 					language python:here.get_language_by_code(selected_lang);
 					translation python:here.get_translation_by_language(language)">
 
-	<div style="margin: 20px 1% 5px 1%" />
+    <div style="margin: 20px 1% 5px 1%"></div>
 
 	<h1>
 		<img src="misc_/NaayaGlossary/folder.gif" alt="Glossary Folder" title="Glossary Folder" align="middle" i18n:attributes="title alt" />
@@ -95,7 +95,7 @@
 		</div>
 	</tal:block>
 		<p><br clear="all" style="display: block; margin-bottom: 30px;"></p>
-		<div style="height:2px;" />
+        <div style="height:2px;"></div>
 		</td>
 		</tr>
 	</table>

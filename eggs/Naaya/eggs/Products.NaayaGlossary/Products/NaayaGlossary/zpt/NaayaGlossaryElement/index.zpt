@@ -17,7 +17,7 @@
 					language python:here.get_language_by_code(selected_lang);
 					translation python:here.get_translation_by_language(language)">
 
-	<div style="margin: 20px 1% 5px 1%" />
+    <div style="margin: 20px 1% 5px 1%"></div>
 
 	<h1>
 		<img src="misc_/NaayaGlossary/element.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title alt" />&nbsp;
