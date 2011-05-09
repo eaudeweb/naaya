@@ -3822,8 +3822,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def i18n_js(self, lang='en', REQUEST=None):
         """ translations for messages used by JavaScript """
         portal_translations = self.getPortalTranslations()
-        translate = lambda msg: portal_translations(msg, lang=lang)
-        translations = dict( (msg, translate(msg)) for msg in JS_MESSAGES )
+        translations = dict( (msg, portal_translations(msg, lang=lang))
+                                for msg in JS_MESSAGES )
 
         if REQUEST is not None:
             REQUEST.RESPONSE.setHeader('Content-Type',
