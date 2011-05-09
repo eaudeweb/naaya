@@ -150,27 +150,26 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         return events
 
     security.declareProtected(view, 'getEventsByMonth')
-    def getEventsByMonth(self):
+    def getEventsByMonth(self, month_events_limit=0):
         """
         Return the events grouped by start_date per month (sorted by start_date)
+
+        @param month_events_limit: if not 0 limits the results per one month
         """
         ret = {}
         catalog = self.unrestrictedTraverse(self.catalog)
         visited_paths = set()
         for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+            catalog_index = catalog._catalog.getIndex(interval_idx)
             for brain in catalog({'meta_type': meta_type}):
                 path = brain.getPath()
                 if path in visited_paths:
                     continue
                 visited_paths.add(path)
 
-                event = brain.getObject()
-                if not evalPredicate(predicate, event):
-                    continue
-
                 rid = brain.getRID()
                 start_minutes, end_minutes = \
-                        catalog._catalog.getIndexDataForRID(rid)[interval_idx]
+                        catalog_index.getEntryForObject(rid)
 
                 start_date = self.getDateFromMinutes(start_minutes)
                 end_date = self.getDateFromMinutes(end_minutes)
@@ -181,6 +180,13 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                 key = start_date.month, start_date.year
                 if key not in ret:
                     ret[key] = []
+                if (len(ret[key]) >= month_events_limit and
+                        month_events_limit != 0):
+                    continue
+
+                event = brain.getObject()
+                if not evalPredicate(predicate, event):
+                    continue
 
                 ret[key].append((event, start_date, end_date))
 
