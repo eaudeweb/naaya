@@ -1,4 +1,5 @@
-<div tal:attributes="style string:float: right;;
+<div class="map_container"
+    tal:attributes="style string:float: right;;
                                   width: ${here/objmap_width_px}px">
 
 <div id="map" tal:attributes="style string:width: ${here/objmap_width_px}px;;
