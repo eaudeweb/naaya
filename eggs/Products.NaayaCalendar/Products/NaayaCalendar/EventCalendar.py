@@ -124,8 +124,9 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         events = []
         catalog = self.unrestrictedTraverse(self.catalog)
         items = {}
-        for date in dates:
-            for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+        for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+            catalog_index = catalog._catalog.getIndex(interval_idx)
+            for date in dates:
                 for brain in catalog({'meta_type': meta_type,
                                       interval_idx: date}):
                     path = brain.getPath()
@@ -138,7 +139,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                         rid = brain.getRID()
                         # dates are stored in index as minutes since 1st jan 70
                         (start_minutes, end_minutes) = \
-                          catalog._catalog.getIndexDataForRID(rid)[interval_idx]
+                                          catalog_index.getEntryForObject(rid)
 
                         start_date = self.getDateFromMinutes(start_minutes)
                         end_date = self.getDateFromMinutes(end_minutes)
