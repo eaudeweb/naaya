@@ -93,13 +93,13 @@
                     <metal:block define-slot="left-port">
                         <div id="left_port">
                             <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'left')">
-                                <tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
+                                <tal:block replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" on-error="python:here.log_page_error(error)" />
                             </tal:block>
                         </div>
                     </metal:block>
                     <metal:block define-slot="middle-port">
                         <div id="middle_port">
-                            <div id="breadcrumbtrail" on-error="python:here.log_page_error(error)">
+                            <div id="breadcrumbtrail" tal:on-error="python:here.log_page_error(error)">
                                 <tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
                                     <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
                                     <span tal:condition="not:repeat/crumb/end"> &raquo; </span>
