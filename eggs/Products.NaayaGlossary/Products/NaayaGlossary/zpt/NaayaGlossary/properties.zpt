@@ -2,6 +2,8 @@
 <span tal:replace="structure here/manage_tabs"/>
 <link rel="stylesheet" type="text/css" href="style_console_css" />
 
+<script src="misc_/Naaya/jquery.js"></script>
+
 <h1>Basic properties</h1>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
@@ -25,13 +27,25 @@
 				<th align="left"><strong>Parents selectable</strong></th>
 				<td><input type="checkbox" name="parent_anchors" tal:attributes="checked here/parent_anchors" /></td>
 			</tr>
-			<tr>
+			<tr class="description-field"
+			    tal:define="current_lang here/gl_get_selected_language">
 				<th align="left">
 					<strong>Description</strong>
-					(<tal:block content="here/gl_get_selected_language"/>)
+					<span class="description-language">(<tal:block
+						content="current_lang"/>)</span>
 				</th>
-				<td><textarea name="description:utf8:ustring" rows="4" cols="80"
-					tal:content="here/get_description"></textarea></td>
+				<td>
+					<tal:block repeat="lang_code here/get_language_codes">
+						<span style="display:none" class="lang_name"
+						      tal:content="python:here.get_language_by_code(lang_code)"/>
+						<textarea rows="4" cols="80"
+						          tal:attributes="name string:description-${lang_code}:utf8:ustring;
+						                          style python:test(lang_code == current_lang,
+						                                            None, 'display:none')"
+						          tal:content="python:here.get_description(lang_code)"
+						          ></textarea>
+					</tal:block>
+				</td>
 			</tr>
 			<tr>
 				<td>&nbsp;</td>
@@ -41,5 +55,7 @@
 		</table>
 	</td></tr>
 </table>
+
+<metal:block use-macro="here/index_properties_html/macros/description-lang-script"/>
 
 <span tal:replace="structure here/manage_page_footer"/>
