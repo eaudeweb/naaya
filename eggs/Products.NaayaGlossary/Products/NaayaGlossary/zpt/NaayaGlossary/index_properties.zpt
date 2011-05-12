@@ -41,15 +41,72 @@
             <input type="checkbox" name="parent_anchors" id="selectable" tal:attributes="checked here/parent_anchors" />
         </div>
 
-        <div class="field">
+        <div class="field description-field"
+             tal:define="current_lang here/gl_get_selected_language">
+
             <label for="description">Description
-            (<tal:block content="here/gl_get_selected_language"/>)</label>
-            <textarea name="description:utf8:ustring" rows="4" cols="80"
-                      tal:content="here/get_description"></textarea>
+            <span class="description-language">(<tal:block
+              content="here/gl_get_selected_language"/>)</span>
+            </label>
+
+
+
+            <tal:block repeat="lang_code here/get_language_codes">
+              <span style="display:none" class="lang_name"
+                    tal:content="python:here.get_language_by_code(lang_code)"/>
+              <textarea rows="4" cols="80"
+                        tal:attributes="name string:description-${lang_code}:utf8:ustring;
+                                        style python:test(lang_code == current_lang,
+                                                          None, 'display:none')"
+                        tal:content="python:here.get_description(lang_code)"
+                        ></textarea>
+            </tal:block>
+
         </div>
 
         <input type="submit" name="save" value="Save Changes">
 </form>
+
+<metal:block define-macro="description-lang-script">
+<script>
+$(function() {
+
+  var description_inputs = $('.description-field textarea');
+  var description_language = $('span.description-language');
+
+  var menu = $('<select'+'>');
+  description_inputs.each(function() {
+    var lang_data = get_lang_data(this);
+    //console.log(lang_data);
+    var option = $('<option'+'>').appendTo(menu);
+    option.text(lang_data['name']).attr('value', lang_data['code']);
+    if($(this).is(':visible')) {
+      option.attr('selected', 'selected');
+    }
+  });
+  description_language.after(' ', menu);
+
+  menu.change(function(evt) {
+    var new_lang = $(this).val();
+    description_inputs.each(function() {
+      if(get_lang_data(this)['code'] == new_lang)
+        $(this).show();
+      else
+        $(this).hide();
+    });
+    description_language.text('('+new_lang+')');
+  });
+
+  function get_lang_data(textarea) {
+      var input_name = $(textarea).attr('name').split(':')[0];
+      var code = input_name.split('-')[1];
+      var name = $(textarea).prev().text();
+      return {'code': code, 'name': name};
+  }
+
+});
+</script>
+</metal:block>
 
 <br />
 
