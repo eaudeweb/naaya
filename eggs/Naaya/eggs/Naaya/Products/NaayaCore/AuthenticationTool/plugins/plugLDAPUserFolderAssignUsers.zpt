@@ -164,7 +164,8 @@
                 <td tal:define="uid item/user_id">
                     <tal:block replace="uid"></tal:block>
                     <span tal:condition="python: uid in here.user_names() and here.getUserSource(uid) != 'n/a'">
-                        <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"  i18n:attributes="alt" />
+                        <img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames"
+                             i18n:attributes="alt" tal:define="global any_username_conflict python:True" />
                     </span>
                 </td>
                 <td tal:content="item/full_name">cn</td>
@@ -180,7 +181,7 @@
         
         <br />
         
-        <div class="tip cleaner">
+        <div class="tip cleaner" tal:condition="any_username_conflict|nothing">
             <p i18n:translate="">
 				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" 
 				title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
