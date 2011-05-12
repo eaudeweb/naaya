@@ -266,13 +266,16 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageBasicProperties')
     def manageBasicProperties(self, title='', approved=0, parent_anchors=0,
-                                    description=None, REQUEST=None):
+                                    REQUEST=None, **kwargs):
         """ manage basic properties for NyGlossary """
+        kwargs.update(getattr(REQUEST, 'form', {}))
         self.title =        title
         self.approved =     approved
         self.parent_anchors = parent_anchors
-        if description is not None:
-            self.set_description(description)
+        for lang in self.get_language_codes():
+            key = 'description-%s' % lang
+            if key in kwargs:
+                self.set_description(kwargs[key], lang)
         if REQUEST: return REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
     def definition_lang(self, language):
@@ -652,9 +655,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryProperties')
     def updateGlossaryProperties(self, title='', approved='', parent_anchors='',
-                                       description=None, REQUEST=None):
+                                       REQUEST=None):
         """ """
-        self.manageBasicProperties(title, approved, parent_anchors, description)
+        self.manageBasicProperties(title, approved, parent_anchors, REQUEST=REQUEST)
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_properties_html')
 
