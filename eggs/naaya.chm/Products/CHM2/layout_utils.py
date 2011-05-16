@@ -21,7 +21,12 @@ def has_view_name(names, REQUEST):
     should be displayed through standard_template in the chm3 layout.
     """
     def get_view_name(REQUEST):
-        return REQUEST.PUBLISHED.__name__
+        try:
+            return REQUEST.PUBLISHED.__name__
+        except AttributeError:
+            # we are probably in an error state
+            # the request doesn't have the attribute 'PUBLISHED'
+            return None
 
     def get_object_class(REQUEST):
         return type(REQUEST.PARENTS[0].aq_base)
