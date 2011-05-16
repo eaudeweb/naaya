@@ -13,6 +13,7 @@ from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addN
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from interfaces import INyForumTopic
 from feeds import messages_feed
+from naaya.core.zope2util import path_in_site
 
 try:
     from zope.event import notify as zope_notify
@@ -272,6 +273,14 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'subscribe_for_notifications')
+    def subscribe_for_notifications(self, REQUEST):
+        """ add subscription for currently-logged-in user """
+        notification_tool = self.getNotificationTool()
+        location = path_in_site(self)
+        notification_tool.subscribe_me(REQUEST, location, 'instant')
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'setRestrictions')
     def setRestrictions(self, access='all', roles=[], REQUEST=None):

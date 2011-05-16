@@ -19,6 +19,7 @@
 			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
 			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span class="buttons" i18n:translate="">Post message</span></a>
 			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/restrict_html"><span class="buttons" i18n:translate="">Restrict</span></a>
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/subscribe_for_notifications"><span class="buttons" i18n:translate="">Subscribe for notifications</span></a>
 		</div>
 	</div>
 	<div class="forum_topic_author">
