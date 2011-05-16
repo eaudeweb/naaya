@@ -12,6 +12,8 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher.HTTPRequest import record
 from App.ImageFile import ImageFile
+from OFS.Image import manage_addImage
+from OFS.Folder import manage_addFolder
 
 from constants import *
 from Products.NaayaBase.constants import *
@@ -1073,6 +1075,24 @@ class CHMSite(NySite):
         if item in results:
             results.remove(item)
         return results
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
+    def admin_savemaintopic_image(self, mainsection, image, REQUEST=None):
+        """ """
+        layout_tool = self.getLayoutTool()
+        skin = layout_tool.get_current_skin()
+        # add images folder if it doesn't exist
+        if not skin.hasObject('main_section_images'):
+            manage_addFolder(skin, 'main_section_images')
+        main_section_images = skin._getOb('main_section_images')
+
+        # remove old image if exists
+        if main_section_images.hasObject(mainsection):
+            main_section_images.manage_delObjects([mainsection])
+
+        manage_addImage(main_section_images, mainsection, image)
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
 InitializeClass(CHMSite)
 
