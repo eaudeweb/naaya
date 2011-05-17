@@ -128,9 +128,6 @@ class PlugBase(SimpleItem):
 
     def has_user(self, user_id):
         user_ob = self.getUserFolder().getUser(user_id)
-        if user_ob is not None:
-            return True
-        else:
-            return False
+        return user_ob is not None
 
 InitializeClass(PlugBase)
