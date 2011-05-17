@@ -45,7 +45,7 @@
 <div class="field">
 	<label for="notify" i18n:translate="">Notify</label>
 	<input type="checkbox" name="notify" id="notify" tal:attributes="checked here/notify" />
-	<span i18n:translate="">Notify me by e-mail if someone answers to this</span>
+	<span i18n:translate="">Notify the author by e-mail if someone answers to this</span>
 </div>
 <div class="field-inline">
 	<strong tal:content="python:here.utShowFullDateTime(here.postdate)" />, <strong tal:content="here/author" />
