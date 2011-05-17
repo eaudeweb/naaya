@@ -42,7 +42,7 @@
 		<td class="form-label">Notify</td>
 		<td>
 			<input type="checkbox" name="notify" id="notify" tal:attributes="checked here/notify" />
-			Notify me by e-mail if someone answers to this
+			Notify the author by e-mail if someone answers to this
 		</td>
 	</tr>
 	<tr>
