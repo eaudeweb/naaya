@@ -57,11 +57,6 @@
 		tal:content="string:The attachment is larger than permitted (${file_max_size} Bytes). Please select a smaller file."/>
 	<input type="file" name="attachment" id="attachment" />
 </div>
-<div class="field">
-	<label for="notify" i18n:translate="">Notify</label>
-	<input type="checkbox" name="notify" id="notify" tal:attributes="checked python:request.get('notify', None) or here.getSession('notify', None)" />
-	<span i18n:translate="">Notify me by e-mail if someone answers to this</span>
-</div>
 
 <tal:block condition="not:here/checkPermissionSkipCaptcha">
     <span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />

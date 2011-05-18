@@ -5,23 +5,33 @@
 	<img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" />
 	<span tal:replace="here/title_or_id" />
 	<a tal:attributes="href string:${here/absolute_url}/messages_feed"
-	   ><img src="misc_/NaayaCore/xml.png" /></a>
+		><img src="misc_/NaayaCore/xml.png" /></a>
 	<a tal:attributes="href string:${here/absolute_url}/messages_feed?format=atom"
-	   ><img src="misc_/NaayaCore/xml-blue.jpg" /></a>
+		><img src="misc_/NaayaCore/xml-blue.jpg" /></a>
 </h1>
 
 <div class="forum_topic">
 	<div class="forum_message_top"
 		tal:define="add_permission python:here.checkPermissionAddForumMessage() and here.is_topic_opened();
-					edit_permission here/checkPermissionModifyForumTopic"
-		tal:condition="python:add_permission or edit_permission">
+					edit_permission here/checkPermissionModifyForumTopic">
 		<div class="message_top_buttons2">
 			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
 			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span class="buttons" i18n:translate="">Post message</span></a>
 			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/restrict_html"><span class="buttons" i18n:translate="">Restrict</span></a>
-			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/subscribe_for_notifications"><span class="buttons" i18n:translate="">Subscribe for notifications</span></a>
+
+			<tal:block define="notif_tool here/getNotificationTool;
+						notif_url notif_tool/absolute_url;
+						subscripions_url string:${notif_url}/my_subscriptions_html;
+						location python: here.rstk.path_in_site(here);">
+				<a tal:attributes="href string:${subscripions_url}?location=${location}"
+					class="buttons notifications-link"
+					title="Subscribe to notifications"
+					i18n:attributes="title"><span class="buttons" i18n:translate="">Subscribe to notifications</span></a>
+			</tal:block>
+
 		</div>
 	</div>
+
 	<div class="forum_topic_author">
 		<span tal:replace="python:here.utShowFullDateTime(here.postdate)" />,
 		<a tal:attributes="href string:#" tal:content="here/author" />

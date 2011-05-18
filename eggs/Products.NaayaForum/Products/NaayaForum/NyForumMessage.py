@@ -3,7 +3,7 @@ import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 from constants import *
@@ -21,7 +21,7 @@ NyForumMessage_creation_hooks = []
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
 message_add_html = PageTemplateFile('zpt/message_add', globals())
 def addNyForumMessage(self, id='', inreplyto='', title='', description='', attachment='',
-    notify='', REQUEST=None):
+    REQUEST=None):
     """ """
     if self.is_topic_opened():
         if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
@@ -31,11 +31,9 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         id = self.utSlugify(id)
         if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
         if inreplyto == '': inreplyto = None
-        if notify: notify = 1
-        else: notify = 0
 
         if REQUEST is not None:
-            for k in ['title', 'description', 'notify']:
+            for k in ['title', 'description']:
                 self.delSession(k)
             if not self.checkPermissionSkipCaptcha():
                 _contact_word = REQUEST.form.get('contact_word', '')
@@ -43,16 +41,15 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
                 if captcha_validator:
                     self.setSessionErrorsTrans(captcha_validator)
                     for k, v in REQUEST.form.items():
-                        if k in ['title', 'description', 'notify']:
+                        if k in ['title', 'description']:
                             self.setSession(k, v)
                     return REQUEST.RESPONSE.redirect(self.absolute_url() + '/message_add_html')
 
         author, postdate = self.processIdentity()
-        ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
+        ob = NyForumMessage(id, inreplyto, title, description, author, postdate)
         self._setObject(id, ob)
         ob = self._getOb(id)
         self.handleAttachmentUpload(ob, attachment)
-        self.notifyOnMessage(ob)
         for hook in NyForumMessage_creation_hooks:
             hook(ob)
         if zope_notify is not None:
@@ -96,13 +93,12 @@ class NyForumMessage(NyForumBase, Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, inreplyto, title, description, notify, author, postdate):
+    def __init__(self, id, inreplyto, title, description, author, postdate):
         """ """
         self.id = id
         self.inreplyto = inreplyto
         self.title = title
         self.description = description
-        self.notify = notify
         self.author = author
         self.postdate = postdate
         NyForumBase.__dict__['__init__'](self)
@@ -121,15 +117,12 @@ class NyForumMessage(NyForumBase, Folder):
 
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'saveProperties')
-    def saveProperties(self, title='', description='', notify='', REQUEST=None):
+    def saveProperties(self, title='', description='', REQUEST=None):
         """ """
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
-        if notify: notify = 1
-        else: notify = 0
         self.title = title
         self.description = description
-        self.notify = notify
         self._p_changed = 1
         if zope_notify is not None:
             if REQUEST is not None:
@@ -166,8 +159,7 @@ class NyForumMessage(NyForumBase, Folder):
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'replyMessage')
-    def replyMessage(self, title='', description='', attachment='', notify='',
-        REQUEST=None):
+    def replyMessage(self, title='', description='', attachment='', REQUEST=None):
         """ """
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
@@ -177,7 +169,7 @@ class NyForumMessage(NyForumBase, Folder):
                 REQUEST.set('file_max_size', self.file_max_size)
                 return self.reply_html.__of__(self)(REQUEST)
         captcha_redirect = addNyForumMessage(self.get_topic_object(), id, self.id,
-                                            title, description, attachment, notify, REQUEST)
+                                            title, description, attachment, REQUEST)
         if captcha_redirect:
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/reply_html')
         if REQUEST:
@@ -209,15 +201,12 @@ class NyForumMessage(NyForumBase, Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', notify='', REQUEST=None):
+    def manageProperties(self, title='', description='', REQUEST=None):
         """ """
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
-        if notify: notify = 1
-        else: notify = 0
         self.title = title
         self.description = description
-        self.notify = notify
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 

@@ -29,7 +29,6 @@ class ForumBasicTestCase(NaayaFunctionalTestCase):
                         category='Test category',
                         description='Test Description',
                         attachment=myfile,
-                        notify=True,
                         sort_reverse=True,
                         )
         topic = forum.topic_id
@@ -38,13 +37,11 @@ class ForumBasicTestCase(NaayaFunctionalTestCase):
                         title='Message title',
                         description='Message Description',
                         attachment=myfile,
-                        notify=True,
                         )
         message = topic.message_id
         message.replyMessage(title='Reply to message_id',
                         description='Reply message description',
                         attachment=myfile,
-                        notify=True,
                         )
         transaction.commit()
 
