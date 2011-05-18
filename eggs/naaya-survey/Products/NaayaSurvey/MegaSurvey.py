@@ -25,12 +25,11 @@ from AccessControl.Permissions import view
 from DateTime import DateTime
 from Globals import InitializeClass, DTMLFile
 from App.ImageFile import ImageFile
-from zLOG import LOG, ERROR, DEBUG
-from AccessControl.Permissions import change_permissions
+from AccessControl.Permission import Permission
 
 # Product imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import genRandomId, tmpfile, make_id
+from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
@@ -157,7 +156,13 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     # Site pages
     #
     security.declareProtected(view, 'index_html')
-    index_html = NaayaPageTemplateFile('zpt/megasurvey_index',
+    def index_html(self):
+        """ """
+        if not self.checkPermissionSkipCaptcha() and not self.recaptcha_is_present():
+            raise ValueError("Invalid recaptcha keys")
+        return self._index_html()
+
+    _index_html = NaayaPageTemplateFile('zpt/megasurvey_index',
                      globals(), 'NaayaSurvey.megasurvey_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
@@ -200,6 +205,23 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
 
         """
         pass
+
+    security.declarePublic('display_admin_warning')
+    def display_admin_warning(self):
+        return self.checkPermissionPublishObjects()\
+                and self.anonymous_has_access()\
+                and not self.recaptcha_is_present()\
+                and not self.anonymous_skips_captcha()
+
+    security.declarePublic('anonymous_has_access')
+    def anonymous_has_access(self):
+        return 'Anonymous' in self.edit_access.getPermissionMapping()['Naaya - Add Naaya Survey Answer']
+
+    security.declarePublic('anonymous_skips_captcha')
+    def anonymous_skips_captcha(self):
+        permission = 'Naaya - Skip Captcha'
+        permission_object = Permission(permission, (), self)
+        return 'Anonymous' in permission_object.getRoles()
 
 InitializeClass(MegaSurvey)
 
