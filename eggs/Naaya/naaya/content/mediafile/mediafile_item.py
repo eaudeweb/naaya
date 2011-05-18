@@ -157,6 +157,9 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
+    if hasattr(_file, 'filename') and _file.filename.split('.')[-1] == 'mp3':
+        _skip_videofile_check == True
+
     if not _skip_videofile_check:
         video_errors = _check_video_file(_file)
         if video_errors:
@@ -423,10 +426,13 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
         ctype = file.headers.get("content-type")
         filename = file.filename.split(".")
-        file.filename = filename[0] + ".flv"
-        file.headers["content-type"] = "application/x-flash-video"
-        mid = self.manage_addFile('', file)
-        self._processFile(mid, ctype)
+        if filename[-1] == 'mp3':
+            self.manage_addFile('', file)
+        else:
+            file.filename = filename[0] + ".flv"
+            file.headers["content-type"] = "application/x-flash-video"
+            mid = self.manage_addFile('', file)
+            self._processFile(mid, ctype)
 
     security.declarePrivate("_processFile")
     def _processFile(self, mid, ctype):
@@ -601,6 +607,9 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         if not (video and self.is_ext):
             return 0
         return video.get_size()
+
+    def is_audio(self):
+        return 'mp3' == self.getSingleMediaId().split('.')[-1]
 
 InitializeClass(NyMediaFile_extfile)
 
