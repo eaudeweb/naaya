@@ -34,13 +34,6 @@
 		<td class="form-label">Attachment</td>
 		<td><input type="file" name="attachment" id="attachment" /></td>
 	</tr>
-	<tr>
-		<td class="form-label">Notify</td>
-		<td>
-			<input type="checkbox" name="notify" id="notify" checked="checked" />
-			Notify me by e-mail if someone answers to this
-		</td>
-	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
 </table>
 </form>
