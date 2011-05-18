@@ -20,12 +20,12 @@ class FlowPlayerBase(BrowserView):
 class FlowPlayer(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/flowplayer-3.1.5.swf'
+        return '/++resource++flowplayer/flowplayer-3.2.7.swf'
 
 class FlowPlayerJs(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/flowplayer-3.1.4.min.js'
+        return '/++resource++flowplayer/flowplayer-3.2.6.min.js'
 
 class ConfigJs(FlowPlayerBase):
     @property
@@ -35,7 +35,7 @@ class ConfigJs(FlowPlayerBase):
 class ControlsPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/plugins/controls/flowplayer.controls-3.1.5.swf'
+        return '/++resource++flowplayer/plugins/controls/flowplayer.controls-3.2.3.swf'
 
 class ControlsTubePlugin(FlowPlayerBase):
     @property
@@ -45,12 +45,17 @@ class ControlsTubePlugin(FlowPlayerBase):
 class CaptionPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/plugins/caption/flowplayer.captions-3.1.4.swf'
+        return '/++resource++flowplayer/plugins/caption/flowplayer.captions-3.2.3.swf'
 
 class ContentPlugin(FlowPlayerBase):
     @property
     def resource(self):
-        return '/++resource++flowplayer/plugins/content/flowplayer.content-3.1.0.swf'
+        return '/++resource++flowplayer/plugins/content/flowplayer.content-3.2.0.swf'
+
+class AudioPlugin(FlowPlayerBase):
+    @property
+    def resource(self):
+        return '/++resource++flowplayer/plugins/audio/flowplayer.audio-3.2.2.swf'
 
 class SubRip(BrowserView):
     """ Get subtitle property """
