@@ -46,11 +46,6 @@
 	</div>
 </tal:block>
 <div class="field">
-	<label for="notify" i18n:translate="">Notify</label>
-	<input type="checkbox" name="notify" id="notify" tal:attributes="checked python:request.get('notify', None)" />
-	<span i18n:translate="">Notify me by e-mail if someone answers to this</span>
-</div>
-<div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>
 </form>

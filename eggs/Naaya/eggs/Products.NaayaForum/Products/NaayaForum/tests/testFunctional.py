@@ -1,6 +1,4 @@
-import re
 from unittest import TestSuite, makeSuite
-from copy import deepcopy
 from StringIO import StringIO
 
 import transaction
@@ -33,7 +31,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
                         category='Test category',
                         description='Test Description',
                         attachment=myfile,
-                        notify=True,
                         sort_reverse=True,
                         )
         topic = forum.topic_id
@@ -42,13 +39,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
                         title='Message title',
                         description='Message Description',
                         attachment=myfile,
-                        notify=True,
                         )
         message = topic.message_id
         message.replyMessage(title='Reply to message_id',
                         description='Reply message description',
                         attachment=myfile,
-                        notify=True,
                         )
         transaction.commit()
 
@@ -113,7 +108,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'title:utf8:ustring',
             'description:utf8:ustring',
             'category:utf8:ustring',
-            'notify',
             'attachment',
         ])
         found_controls = set(c.name for c in form.controls)
@@ -122,12 +116,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'Test Add subject'
         form['category:utf8:ustring'] = ['Test category 2']
         form['description:utf8:ustring'] = 'Test Add Description'
-        form['notify'] = ['on']
         mytestfile = StringIO('some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
@@ -146,7 +139,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         headers = self.browser._browser._response._headers
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
         self.failUnlessEqual(html, 'some test data')
-        self.assertEqual(topic.notify, True)
 
         # Check hit counter
         topiclink = 'http://localhost/portal/forum_id/%s' % topic.id
@@ -167,12 +159,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'Test subject (Large file)'
         form['category:utf8:ustring'] = ['Test category']
         form['description:utf8:ustring'] = 'Test Description (Large file)'
-        form['notify'] = ['on']
         mytestfile = StringIO('some very large test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
@@ -183,7 +174,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(form['title:utf8:ustring'], 'Test subject (Large file)')
         self.assertEqual(form['category:utf8:ustring'], ['Test category'])
         self.assertEqual(form['description:utf8:ustring'], 'Test Description (Large file)')
-        self.assertEqual(form['notify'], ['on'])
 
         self.browser_do_logout()
 
@@ -200,7 +190,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'title:utf8:ustring',
             'description:utf8:ustring',
             'category:utf8:ustring',
-            'notify',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
@@ -208,14 +197,12 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form['title:utf8:ustring'] = 'Test subject 2'
         form['category:utf8:ustring'] = ['Test category 2']
         form['description:utf8:ustring'] = 'Description'
-        form['notify'] = False
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
         topic = self.portal.forum_id.objectValues(['Naaya Forum Topic'])[0]
         self.assertEqual(topic.title, 'Test subject 2')
         self.assertEqual(topic.category, 'Test category 2')
         self.assertEqual(topic.description, 'Description')
-        self.assertEqual(topic.notify, False)
 
         #Delete Attachment
         form = self.browser.get_form('frmDelete')
@@ -237,7 +224,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
@@ -257,7 +244,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
             'title:utf8:ustring',
             'description:utf8:ustring',
             'attachment',
-            'notify',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
@@ -265,12 +251,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
         form['title:utf8:ustring'] = 'Message title 2'
         form['description:utf8:ustring'] = 'Message description 2'
-        form['notify'] = ['on']
         mytestfile = StringIO('some test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
@@ -288,7 +273,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         headers = self.browser._browser._response._headers
         self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
         self.failUnlessEqual(html, 'some test data')
-        self.assertEqual(message.notify, True)
 
         self.browser_do_logout()
 
@@ -299,12 +283,11 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         form = self.browser.get_form('frmAdd')
         form['title:utf8:ustring'] = 'Message title 2'
         form['description:utf8:ustring'] = 'Message description 2'
-        form['notify'] = ['on']
         mytestfile = StringIO('some very very big test data')
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))
@@ -319,7 +302,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(form['title:utf8:ustring'], 'Message title 2')
         self.assertEqual(form['description:utf8:ustring'].strip(),
                          'Message description 2')
-        self.assertEqual(form['notify'], ['on'])
 
         self.browser_do_logout()
 
@@ -351,7 +333,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         expected_controls = set([
             'title:utf8:ustring',
             'description:utf8:ustring',
-            'notify',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
@@ -359,7 +340,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
 
         form['title:utf8:ustring'] = 'Message title modified'
         form['description:utf8:ustring'] = 'Message description modified'
-        form['notify'] = []
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         self.browser.submit()
 
@@ -367,7 +347,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         message = self.portal.forum_id.topic_id.message_id
         self.assertEqual(message.title, 'Message title modified')
         self.assertEqual(message.description, 'Message description modified')
-        self.assertEqual(message.notify, False)
 
         self.browser_do_logout()
 
@@ -381,7 +360,7 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         filename='the_test_file.txt'
         form.find_control('attachment').add_file(
                                                 mytestfile,
-                                                filename='the_test_file.txt',
+                                                filename=filename,
                                                 content_type='text/plain; charset=utf-8'
                                                 )
         self.browser.clicked(form, self.browser.get_form_field(form, 'attachment'))

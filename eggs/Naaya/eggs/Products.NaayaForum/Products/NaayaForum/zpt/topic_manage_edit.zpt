@@ -39,13 +39,6 @@
 		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr>
-		<td class="form-label">Notify</td>
-		<td>
-			<input type="checkbox" name="notify" id="notify" tal:attributes="checked here/notify" />
-			Notify the author by e-mail if someone answers to this
-		</td>
-	</tr>
-	<tr>
 		<td class="form-label">Author</td>
 		<td tal:content="here/author" />
 	</tr>
