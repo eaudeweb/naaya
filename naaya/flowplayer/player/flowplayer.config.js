@@ -6,17 +6,25 @@
  * @return nothing.
  */
 var flowplayer_config = function(site, container, movie, subtitle, image,
-        autoPlay){
+        autoPlay, autoHide){
   if(!window.flowplayer){
     // flowplayer js not loaded
     return;
   }
 
-  if (!autoPlay) { // default value for autoPlay
+  if (!autoPlay || autoPlay == 'false') { // default value for autoPlay
       var autoPlay = false;
+  }
+  if (autoHide == 'false') {
+      var autoHide = false;
+  }
+  else {
+        var autoHide = true;
   }
 
   var player_url = site + '/flowplayer.swf';
+//  var audio_url = site + '/flowplayer.audio.swf';
+  var controls_url = site + '/flowplayer.controls.swf';
   container = container || 'player';
 
   // Config
@@ -25,15 +33,17 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 		playlist: [
 			{
 				url: image,
-				scaling: 'orig'
+				scaling: 'scale' //'orig' as an alternative
 			},
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				autoBuffering: false
+				coverImage: { url: image, scaling: 'scale' },
 			}
 		],
-		plugins: {}
+		plugins: {
+            controls: { autoHide: autoHide, fullscreen: autoHide, height: 30}
+		}
 	};
   }
   else{
@@ -42,10 +52,12 @@ var flowplayer_config = function(site, container, movie, subtitle, image,
 			{
 				url: movie,
 				autoPlay: autoPlay,
-				autoBuffering: true
+				autoBuffering: true,
 			}
 		],
-		plugins: {}
+		plugins: {
+            controls: {autoHide: autoHide, fullscreen: autoHide, height: 30}
+		}
 	};
   }
 
