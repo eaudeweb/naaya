@@ -1,4 +1,5 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
@@ -38,4 +39,5 @@
 </div>
 </form>
 
-<tal:block tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
