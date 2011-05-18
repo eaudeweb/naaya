@@ -1,11 +1,8 @@
-from os.path import join
-
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.Permissions import view_management_screens, view, change_permissions
+from AccessControl.Permissions import view_management_screens, view
 from zope import interface
 
 import naaya.sql
@@ -19,7 +16,6 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.NyAccess import NyAccess
-from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from interfaces import INyForum
@@ -28,9 +24,6 @@ STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR(80) UNIQUE',
                       'hits': 'INTEGER DEFAULT 0'}
 
-email_templates = {
-    'notification-on-reply': EmailPageTemplateFile('emailpt/notification.zpt', globals()),
-}
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
@@ -197,42 +190,6 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     def getPendingFolders(self): return []
     def getFolders(self): return self.getPublishedFolders()
     def hasContent(self): return (len(self.getObjects()) > 0)
-
-    security.declarePrivate('notifyOnMessage')
-    def notifyOnMessage(self, msg):
-        """
-        When a new message is created, checks all its parents
-        for B{notify} flag. If on, then send email notification.
-        """
-        #process the list of emails
-        portal = self.getSite()
-        authenticationtool_ob = portal.getAuthenticationTool()
-        emails = set()
-        for m in msg.get_message_parents(msg):
-            if m.notify:
-                user = authenticationtool_ob.get_user_with_userid(m.author)
-                if user: emails.add(authenticationtool_ob.getUserEmail(user))
-
-        #build message body
-        msg_body = {
-            'url': '%s#%s' % (msg.get_topic_path(), msg.id),
-            'site_title': self.site_title,
-            'title': msg.title_or_id(),
-            'description': self.html2text(msg.description, trim_length=None),
-            'author': msg.author,
-            'postdate': self.utShowFullDateTime(msg.postdate),
-                   }
-
-        template = self._get_template('notification-on-reply')
-        mail_data = template(**msg_body)
-
-        #send emails
-        email_tool = portal.getEmailTool()
-        for email in emails:
-            email_tool.sendEmail(p_content = mail_data['body_text'],
-                                 p_to = email,
-                                 p_from = email_tool._get_from_address(),
-                                 p_subject = mail_data['subject'])
 
     security.declareProtected(view, 'checkTopicsPermissions')
     def checkTopicsPermissions(self):

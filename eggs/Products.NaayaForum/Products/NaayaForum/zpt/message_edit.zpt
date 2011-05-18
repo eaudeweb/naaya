@@ -22,11 +22,7 @@
 	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
 	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="here/description" />
 </div>
-<div class="field">
-	<label for="notify" i18n:translate="">Notify</label>
-	<input type="checkbox" name="notify" id="notify" tal:attributes="checked here/notify" />
-	<span i18n:translate="">Notify the author by e-mail if someone answers to this</span>
-</div>
+
 <div class="field-inline">
 	<strong tal:content="python:here.utShowFullDateTime(here.postdate)" />, <strong tal:content="here/author" />
 </div>

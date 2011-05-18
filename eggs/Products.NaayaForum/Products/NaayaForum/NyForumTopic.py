@@ -2,7 +2,7 @@ from OFS.Folder import Folder
 import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from zope import interface
 
@@ -26,11 +26,9 @@ NyForumTopic_creation_hooks = []
 manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals())
 topic_add_html = PageTemplateFile('zpt/topic_add', globals())
 def addNyForumTopic(self, id='', title='', category='', description='',
-    attachment='', notify='', sort_reverse=False, REQUEST=None):
+    attachment='', sort_reverse=False, REQUEST=None):
     """ """
     id = self.utSlugify(id or title or PREFIX_NYFORUMTOPIC)
-    if notify: notify = 1
-    else: notify = 0
     author, postdate = self.processIdentity()
     #by default a topic is opened, status = 0; when closed status = 1
     status = 0
@@ -39,7 +37,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
             REQUEST.set('file_max_size', self.file_max_size)
             return topic_add_html.__of__(self)(REQUEST)
 
-    ob = NyForumTopic(id, title, category, description, notify, author, postdate, status, sort_reverse)
+    ob = NyForumTopic(id, title, category, description, author, postdate, status, sort_reverse)
     self._setObject(id, ob)
     ob = self._getOb(id)
     self.handleAttachmentUpload(ob, attachment)
@@ -101,13 +99,12 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     sort_reverse = False
     status = 0
 
-    def __init__(self, id, title, category, description, notify, author, postdate, status, sort_reverse=False):
+    def __init__(self, id, title, category, description, author, postdate, status, sort_reverse=False):
         """ """
         self.id = id
         self.title = title
         self.category = category
         self.description = description
-        self.notify = notify
         self.author = author
         self.postdate = postdate
         self.status = status
@@ -231,17 +228,14 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', status='', description='',
-        notify='', postdate='', sort_reverse=False, REQUEST=None):
+        postdate='', sort_reverse=False, REQUEST=None):
         """ """
         try: status = abs(int(status))
         except: status = 0
-        if notify: notify = 1
-        else: notify = 0
         self.title = title
         self.category = category
         self.status = status
         self.description = description
-        self.notify = notify
         self.sort_reverse = sort_reverse
         self._p_changed = 1
         if zope_notify is not None:
@@ -314,18 +308,15 @@ class NyForumTopic(NyRoleManager, NyForumBase, Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', category='', status='', description='', notify='', postdate='',
+    def manageProperties(self, title='', category='', status='', description='', postdate='',
         REQUEST=None):
         """ """
         try: status = abs(int(status))
         except: status = 0
-        if notify: notify = 1
-        else: notify = 0
         self.title = title
         self.category = category
         self.status = status
         self.description = description
-        self.notify = notify
         if postdate:
             if self.utGetDate(str(postdate)):
                 self.postdate = self.utGetDate(str(postdate))
