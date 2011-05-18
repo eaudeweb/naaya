@@ -62,6 +62,13 @@
 
   <browser:page
     for="*"
+    name="flowplayer.audio.swf"
+    class=".resources.AudioPlugin"
+    permission="zope.Public"
+    />
+
+  <browser:page
+    for="*"
     name="flowplayer.srt"
     class=".resources.SubRip"
     permission="zope.Public"
