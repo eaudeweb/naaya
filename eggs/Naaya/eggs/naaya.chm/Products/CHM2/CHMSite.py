@@ -4,6 +4,7 @@ from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
 from zipfile import ZipFile
+from PIL import Image
 
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -32,6 +33,7 @@ from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 from Products.NaayaForum.NyForum import addNyForum
 from Products.CHM2.managers.captcha_tool import captcha_tool
+from Products.NaayaCore.managers.utils import make_id
 
 METATYPE_NYURL = 'Naaya URL'
 
@@ -1076,9 +1078,57 @@ class CHMSite(NySite):
             results.remove(item)
         return results
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
-    def admin_savemaintopic_image(self, mainsection, image, REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'upload_maintopic_temp_image')
+    def upload_maintopic_temp_image(self, REQUEST):
         """ """
+        temp_folder = self.getSite().temp_folder
+        file = REQUEST.form.get('upload_file', None)
+
+        image_size = get_image_size(file)
+        if file is None or not image_size:
+            return None
+        x = image_size[0]
+        y = image_size[1]
+        filename = file.filename
+        id = make_id(temp_folder, id=filename)
+        manage_addImage(temp_folder, id, file=file)
+        ob = getattr(temp_folder, id)
+        ob.filename = filename
+        ob.p_changed = 1
+        if 4 * x > 3 * y:
+            return (ob.absolute_url(), (x - 3 * y / 4) / 2, 0,   (x + 3 * y / 4) / 2, y)
+        else:
+            return (ob.absolute_url(), 0, (y - (4 * x / 3)) / 2,    x, (y + (4 * x / 3)) / 2)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_savemaintopic_image')
+    def admin_savemaintopic_image(self, mainsection, upload_picture_url,
+            x1, y1, x2, y2, REQUEST=None):
+        """ """
+        def process_picture(picture, crop_coordinates):
+            image_string = data2stringIO(picture.data)
+            img = Image.open(image_string)
+            fmt = img.format
+            crop_size = crop_coordinates[2] - crop_coordinates[0]
+            if crop_size == 0:
+                x = img.size[0]
+                y = img.size[1]
+                crop_size = x
+                if 4 * x > 3 * y:
+                    crop_coordinates = ((x - 3 * y / 4) / 2, 0, (x + 3 * y / 4) / 2, y)
+                else:
+                    crop_coordinates = (0, (y - (4 * x / 3)) / 2, x, (y + (4 * x / 3)) / 2)
+
+            img = img.crop(crop_coordinates)
+            if crop_size > 162:
+                crop_size = 162
+            try:
+                img = img.resize((crop_size, 4 * crop_size / 3), Image.ANTIALIAS)
+            except AttributeError:
+                img = img.resize((width, height))
+            newimg = StringIO()
+            img.save(newimg, fmt, quality=85)
+            return newimg.getvalue()
+
         layout_tool = self.getLayoutTool()
         skin = layout_tool.get_current_skin()
         # add images folder if it doesn't exist
@@ -1090,7 +1140,14 @@ class CHMSite(NySite):
         if main_section_images.hasObject(mainsection):
             main_section_images.manage_delObjects([mainsection])
 
-        manage_addImage(main_section_images, mainsection, image)
+        if upload_picture_url:
+            temp_folder = self.getSite().temp_folder
+            picture_id = upload_picture_url.split('/')[-1]
+            picture = getattr(temp_folder, picture_id)
+            crop_coordinates = (x1, y1, x2, y2)
+            croped_picture = process_picture(picture, crop_coordinates)
+            manage_addImage(main_section_images, mainsection, croped_picture)
+
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
@@ -1150,3 +1207,26 @@ def glossary_dump_from_skel(files_path):
     dump_file.seek(0)
 
     return dump_file
+
+def get_image_size(file):
+    """
+    Test if the specified uploaded B{file} is a valid image.
+    """
+    try:
+        image = Image.open(file)
+    except: # Python Imaging Library doesn't recognize it as an image
+        return False
+    else:
+        file.seek(0)
+        return image.size
+
+def data2stringIO(data):
+    str_data = StringIO()
+    if isinstance(data, str):
+        str_data.write(data)
+    else:
+        while data is not None:
+            str_data.write(data.data)
+            data=data.next
+    str_data.seek(0)
+    return str_data
