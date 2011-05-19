@@ -130,8 +130,13 @@ class DescriptionParser(object):
         dictionary_keys.sort(reverse=True, key=len)
         _warn_if_replacements_incomplete(self.value_en, dictionary_keys)
 
-        out = {'en': self.value_en}
+        _relates_to_en = 'Relates to:'
+        out = {'en': _relates_to_en + ' ' + self.value_en}
         for lang_code in language_codes.values():
+            relates_to = self.dictionary[_relates_to_en].get(lang_code, '')
+            if relates_to:
+                relates_to += ' '
+
             value = self.value_en
 
             for fragment_en in dictionary_keys:
@@ -146,7 +151,7 @@ class DescriptionParser(object):
 
             else:
                 # all translations completed
-                out[lang_code] = value
+                out[lang_code] = relates_to + value
 
         return out
 
@@ -154,15 +159,18 @@ def extract_data_from_xls(xls_path):
     wb = xlrd.open_workbook(xls_path)
     sh = wb.sheet_by_index(0)
 
-    HEADING_ROW = 9
+    HEADING_ROW = 11
     assert sh.cell(HEADING_ROW, 2).value == "Description"
 
     get_translations = TranslationsExtractor(sh.row(HEADING_ROW), 4, 24)
 
     default_fragments = []
-    for c in range(3, HEADING_ROW):
+    for c in range(4, HEADING_ROW):
         row = sh.row(c)
-        default_fragments += [(val(row[3]), get_translations(row))]
+        value_en = val(row[3])
+        trans = get_translations(row)
+        trans['en'] = value_en
+        default_fragments += [(value_en, trans)]
 
     glossary = Glossary()
     description_parser = None
