@@ -70,9 +70,8 @@ def get_library_answer(answer):
     survey_info = get_library_survey_info(answer.getSite())
     for x_id, x_values in survey_info.items():
         for xv in x_values:
-            for av in answer_values:
-                if xv == av:
-                    return survey._getOb(x_id)
+            if xv and xv in answer_values:
+                return survey._getOb(x_id)
 
     return None
 
@@ -207,6 +206,13 @@ def extract_survey_answer_data_general_template(answer):
     uploader = {}
     for language in answer.gl_get_languages():
         uploader[language] = ', '.join(filter(None, [answer.get(key='w_name', lang=language), answer.get(key='w_organisation', lang=language)]))
+    if library_answer:
+        publication_year = library_answer.get('w_assessment-year')
+    else:
+        publication_year = answer.get('w_q3-publishing-year-assessment')\
+            or answer.get('w_hardcopy')
+    if publication_year:
+        publication_year = 'Year: %s' % publication_year
     attrs = {
         'id': answer.getId(),
         'title': answer.get('w_q1-name-assessment-report'),
@@ -223,7 +229,7 @@ def extract_survey_answer_data_general_template(answer):
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(library_answer, 'w_theme'),
         'topics': sorted(all_topics),
-        'publication_year': 'Year: %s' % library_answer.get('w_assessment-year'),
+        'publication_year': publication_year,
         'modification_time': answer.modification_time,
     }
 
