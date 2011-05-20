@@ -23,7 +23,7 @@
     "sv": "Swedish"
   }, 
   "properties": {
-    "parent_anchors": false, 
+    "parent_anchors": true, 
     "description": {}
   }
 }
