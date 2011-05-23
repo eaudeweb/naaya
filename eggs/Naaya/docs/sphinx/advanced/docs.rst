@@ -14,11 +14,11 @@ which contains a part named `naaya-docs` similar to this one::
     recipe = collective.recipe.sphinxbuilder
     source = ${buildout:directory}/src/Naaya/docs/sphinx
     build = ${buildout:directory}/var/docs
-    eggs =
-        repoze.sphinx.autointerface
     extra-paths =
-        ${buildout:directory}/src/Naaya
-        ${buildout:directory}/eggs/*
+        ${zope-instance:zope2-location}/lib/python
+    eggs =
+        ${zope-instance:eggs}
+        repoze.sphinx.autointerface
 
 Some clarifications:
 
