@@ -5,6 +5,7 @@ from copy import copy
 from cStringIO import StringIO
 from zipfile import ZipFile
 from PIL import Image
+import urllib
 
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -1141,6 +1142,7 @@ class CHMSite(NySite):
             main_section_images.manage_delObjects([mainsection])
 
         if upload_picture_url:
+            upload_picture_url = urllib.unquote(upload_picture_url)
             temp_folder = self.getSite().temp_folder
             picture_id = upload_picture_url.split('/')[-1]
             picture = getattr(temp_folder, picture_id)
