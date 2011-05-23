@@ -1,8 +1,7 @@
-
 import zLOG
+from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
 
 from constants import *
 from naaya.content.base.discover import get_pluggable_content
