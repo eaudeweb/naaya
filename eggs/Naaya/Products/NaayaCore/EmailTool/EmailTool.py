@@ -4,6 +4,7 @@ templates, e-mail sending and logging of all e-mail traffic.
 
 """
 
+import os
 import time
 import smtplib
 import cStringIO
@@ -11,6 +12,8 @@ from urlparse import urlparse
 import logging
 import email.MIMEText, email.Utils, email.Charset, email.Header
 
+from zope.component import queryUtility, getGlobalSiteManager
+from zope.sendmail.interfaces import IMailDelivery
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -90,9 +93,12 @@ class EmailTool(Folder):
         return self._errors_report(errors=errors)
 
     #api
-    security.declareProtected(view, 'sendEmail')
-    def sendEmail(self, p_content, p_to, p_from, p_subject):
-        #sends a generic email
+    security.declarePrivate('sendEmail')
+    def sendEmail(self, p_content, p_to, p_from, p_subject, _immediately=False):
+        """
+        Send email message on transaction commit. If the transaction fails,
+        the message is discarded.
+        """
         if not isinstance(p_to, list):
             p_to = [e.strip() for e in p_to.split(',')]
 
@@ -109,25 +115,29 @@ class EmailTool(Folder):
             if diverted_mail is not None: # we're inside a unit test
                 diverted_mail.append([p_content, p_to, p_from, p_subject])
                 return 1
-            elif not (self.mail_server_name and self.mail_server_port):
+
+            delivery = delivery_for_site(self.getSite())
+            if delivery is None:
                 mail_logger.info('Not sending email from %r because mail '
                                  'server is not configured',
                                  site_path)
                 return 0
-            elif not p_to:
+
+            if not p_to:
                 mail_logger.info('Not sending email from %r - no recipients',
                                  site_path)
                 return 0
-            else:
-                mail_logger.info('Sending email from site: %r '
-                                 'to: %r subject: %r',
-                                 site_path, p_to, p_subject)
-                l_message = create_message(p_content, p_to, p_from, p_subject)
-                server = smtplib.SMTP(self.mail_server_name,
-                                      self.mail_server_port)
-                server.sendmail(p_from, p_to, l_message)
-                server.quit()
-                return 1
+
+            if _immediately:
+                delivery = _ImmediateDelivery(delivery)
+
+            mail_logger.info('Sending email from site: %r '
+                             'to: %r subject: %r',
+                             site_path, p_to, p_subject)
+            l_message = create_message(p_content, p_to, p_from, p_subject)
+            delivery.send(p_from, p_to, l_message)
+            return 1
+
         except:
             mail_logger.error('Did not send email from site: %r to: %r '
                               'because an error occurred',
@@ -135,6 +145,16 @@ class EmailTool(Folder):
             if site is not None:
                 self.getSite().log_current_error()
             return 0
+
+    security.declarePrivate('sendEmailImmediately')
+    def sendEmailImmediately(self, *args, **kwargs):
+        """
+        Send email message straight away, without waiting for transaction
+        commit. Useful when sending error emails because the transaction
+        will probably be aborted.
+        """
+        kwargs['_immediately'] = True
+        self.sendEmail(*args, **kwargs)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
@@ -202,3 +222,47 @@ def create_message(text, addr_to, addr_from, subject):
     message['Date'] = email.Utils.formatdate()
 
     return message.as_string()
+
+def delivery_for_site(site):
+    delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
+    if delivery is not None:
+        return delivery
+
+    elif site.mail_server_name and site.mail_server_port:
+        from zope.sendmail.mailer import SMTPMailer
+        from zope.sendmail.delivery import DirectMailDelivery
+        site_mailer = SMTPMailer(site.mail_server_name, site.mail_server_port)
+        return DirectMailDelivery(site_mailer)
+
+    else:
+        return None
+
+class _ImmediateDelivery(object):
+    """
+    Hack a queued message delivery to send the message immediately, and not
+    wait for transaction finish; useful when sending error messages.
+    """
+    def __init__(self, delivery):
+        self._d = delivery
+
+    def send(self, fromaddr, toaddrs, message):
+        message = 'Message-Id: <%s>\n%s' % (self._d.newMessageId(), message)
+        # make data_manager think it's being called by a transaction
+        data_manager = self._d.createDataManager(fromaddr, toaddrs, message)
+        data_manager.tpc_finish(None)
+
+def configure_mail_queue():
+    """
+    Check if a mail queue path is configured; register a QueuedMailDelivery.
+    """
+    queue_path = os.environ.get('NAAYA_MAIL_QUEUE', None)
+    if queue_path is None:
+        return
+
+    from zope.sendmail.interfaces import IMailDelivery
+    from zope.sendmail.delivery import QueuedMailDelivery
+    gsm = getGlobalSiteManager()
+    gsm.registerUtility(QueuedMailDelivery(queue_path),
+                        IMailDelivery, "naaya-mail-delivery")
+
+    mail_logger.info("Mail queue: %r", queue_path)
