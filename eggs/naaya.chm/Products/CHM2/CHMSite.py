@@ -1092,6 +1092,7 @@ class CHMSite(NySite):
         y = image_size[1]
         filename = file.filename
         id = make_id(temp_folder, id=filename)
+        temp_folder.manage_delObjects(temp_folder.objectIds('Image'))
         manage_addImage(temp_folder, id, file=file)
         ob = getattr(temp_folder, id)
         ob.filename = filename
@@ -1149,6 +1150,7 @@ class CHMSite(NySite):
             crop_coordinates = (x1, y1, x2, y2)
             croped_picture = process_picture(picture, crop_coordinates)
             manage_addImage(main_section_images, mainsection, croped_picture)
+            temp_folder.manage_delObjects(temp_folder.objectIds('Image'))
 
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
