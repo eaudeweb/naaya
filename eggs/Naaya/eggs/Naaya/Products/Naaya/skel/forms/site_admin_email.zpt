@@ -22,10 +22,15 @@
 
 <form method="post" tal:attributes="action string:${site_url}/admin_email" enctype="multipart/form-data">
 	<dl>
-		<dt i18n:translate="">Mail server name</dt>
-		<dd><input type="text" name="mail_server_name" size="50" tal:attributes="value here/mail_server_name" /></dd>
-		<dt i18n:translate="">Mail server port</dt>
-		<dd><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></dd>
+		<div tal:attributes="style python:test(queue_enabled, 'display:none', None)">
+			<dt i18n:translate="">Mail server name</dt>
+			<dd><input type="text" name="mail_server_name" size="50" tal:attributes="value here/mail_server_name" /></dd>
+			<dt i18n:translate="">Mail server port</dt>
+			<dd><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></dd>
+		</div>
+		<p class="tip" tal:condition="queue_enabled">
+			Outgoing messages are being sent to a queue on disk.
+		</p>
 		<dt i18n:translate="">Default from address</dt>
 		<dd><input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" /></dd>
 		<dt i18n:translate="">Administrators' emails (comma separated)</dt>

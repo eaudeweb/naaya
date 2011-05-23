@@ -3030,7 +3030,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email_html')
     def admin_email_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_email')
+        from zope.sendmail.interfaces import IMailDelivery
+        delivery = component.queryUtility(IMailDelivery, 'naaya-mail-delivery')
+        queue_enabled = bool(delivery is not None)
+        vars = {'here': self, 'queue_enabled': queue_enabled}
+        return self.getFormsTool().getContent(vars, 'site_admin_email')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos_html')
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
@@ -3395,7 +3399,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@IPADDRESS@@', p_error_ip)
         l_content = l_content.replace('@@USER@@', p_error_user)
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
-        self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
+        self.getEmailTool().sendEmailImmediately(l_content, p_to, p_from, l_subject)
 
     def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation,
                             p_username, p_location_path,

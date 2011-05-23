@@ -2,6 +2,7 @@
            xmlns:zcml="http://namespaces.zope.org/zcml">
   <include package=".adapter" />
   <include package=".CatalogTool" />
+  <include package=".EmailTool" />
   <include package=".GeoMapTool" />
   <include package=".NotificationTool" />
   <include package=".PortletsTool" />

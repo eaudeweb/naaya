@@ -1,6 +1,7 @@
 # Python
 import time
 from BeautifulSoup import BeautifulSoup
+from mock import patch
 
 # Zope
 from DateTime import DateTime
@@ -60,7 +61,9 @@ class TestNySite(NaayaTestCase):
 
         self.assertNotEqual(aDate, now, "The two dates were equal!")
 
-    def test_notify_on_errors(self):
+    @patch('Products.NaayaCore.EmailTool.EmailTool'
+           '.EmailTool.sendEmailImmediately')
+    def test_notify_on_errors(self, mock_send_mail):
         self.portal.notify_on_errors_email = 'errors@pivo.edw.ro'
         error_log = self.portal.error_log
         error_log.setProperties(keep_entries=20,
@@ -72,15 +75,13 @@ class TestNySite(NaayaTestCase):
         self.portal.processNotifyOnErrors(error_type='Unauthorized',
                 error_value='You are not authorized to access this resource',
                 REQUEST=request)
-        sent_mails = list(self._logged_mails())
-        self.assertEquals(len(sent_mails), 0)
+        self.assertEqual(mock_send_mail.call_count, 0)
 
         # The NotFound error is not listed in error_log. An email will be send.
         self.portal.processNotifyOnErrors(error_type='NotFound',
                                           error_value='Page is not found',
                                           REQUEST=request)
-        sent_mails = list(self._logged_mails())
-        self.assertEquals(len(sent_mails), 1)
+        self.assertEqual(mock_send_mail.call_count, 1)
 
 
 class TestNySiteListing(NaayaFunctionalTestCase):

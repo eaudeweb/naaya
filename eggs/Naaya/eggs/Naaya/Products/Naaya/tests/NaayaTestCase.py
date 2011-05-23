@@ -3,6 +3,7 @@ import unittest
 import tempfile
 import shutil
 
+from mock import patch
 import transaction
 from Testing.ZopeTestCase import Functional
 from zope.interface import alsoProvides
@@ -16,28 +17,21 @@ class ITestSite(INySite):
 from Products.NaayaCore.EmailTool import EmailTool
 
 def divert_mail():
-    class smtplib_replacement(object):
-        class SMTP:
-            def __init__(s, server, port):
-                mail_log.append( ('init', {}) )
+    delivery_patch = patch('Products.NaayaCore.EmailTool'
+                           '.EmailTool.delivery_for_site')
+    mock_delivery = delivery_patch.start().return_value
 
-            def sendmail(s, from_addr, to_addr, message):
-                mail_log.append( ('sendmail',
-                                  {'from': from_addr,
-                                   'to': to_addr,
-                                   'message': message}) )
-
-            def quit(s):
-                mail_log.append( ('quit', {}) )
-
-    _orig_smtplib = EmailTool.smtplib
-    EmailTool.smtplib = smtplib_replacement
     mail_log = []
+    def mock_send(from_addr, to_addrs, message):
+        info = {'from': from_addr, 'to': to_addrs, 'message': message}
+        # TODO no need to log `init` and `quit`, just the messages.
+        mail_log.append(('init', {}))
+        mail_log.append(('sendmail', info))
+        mail_log.append(('quit', {}))
 
-    def restore():
-        EmailTool.smtplib = _orig_smtplib
+    mock_delivery.send.side_effect = mock_send
 
-    return mail_log, restore
+    return mail_log, delivery_patch.stop
 
 def wrap_with_request(app):
     from StringIO import StringIO

@@ -27,6 +27,8 @@ General settings
 -------------------
 
 
+.. _admin-portal-properties:
+
 Portal properties
 +++++++++++++++++++++++
 This section is used to manage general administrative tasks concerning
