@@ -152,6 +152,7 @@ class GlossaryWidget(StringWidget):
 
             kids = ob.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE,
                                     NAAYAGLOSSARY_ELEMENT_METATYPE])
+            kids = sorted(kids, key=lambda ob: ob.getId())
             children = [recursive_tree(kid) for kid in kids if kid.approved]
 
             if ob is glossary:
