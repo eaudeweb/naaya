@@ -1,0 +1,33 @@
+.submenu-holder, .submenu-holder ul.menu-item-content, .submenu-holder ul li {
+z-index: 9998;
+zoom: 1;
+position: relative;
+}
+
+div.toolTip {
+	z-index: 9999;
+}
+
+.toolTipLeftArrow .arrow {
+  width: 40px;
+}
+
+#header #menu ul li ul.menu-item-content {
+	z-index: 1;
+}
+
+#header #menu ul li ul.menu-item-content li.col ul li a,
+#header #menu ul li ul.menu-item-content li.col ul li
+{
+	position: absolute;
+	overflow: auto;
+}
+
+.home-medium-column,
+.home-large-column {
+	z-index: -1;
+}
+
+#categories #categories-slideshow .categories-list h3 a img {
+	z-index: -1;
+}
