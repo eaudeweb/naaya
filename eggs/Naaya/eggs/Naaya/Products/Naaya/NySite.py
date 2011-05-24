@@ -258,6 +258,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #Register Action Logger utility
         sm.registerUtility(ActionLogger(), IActionLogger)
 
+        # initially, nobody can skip approval process
+        self._set_submit_unapproved(True)
+
         #load default skeleton
         self.loadSkeleton(NAAYA_PRODUCT_PATH)
         #set default main topics
@@ -305,9 +308,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
             notificationtool_ob = self.getNotificationTool()
-
-            # initially, nobody can skip approval process
-            self._set_submit_unapproved(True)
 
             #load security permissions and roles
             if skel_handler.root.security is not None:
