@@ -3516,13 +3516,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         if not value or not self.utIsFloat(value, positive=0): la(translate('', v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
                         if value != self.getSession('captcha', '') and not self.checkPermissionPublishDirect(): la(translate('', v[2]))
-                    elif v[1] == MUST_BE_FLVFILE:
-                        if not (value and value.headers.get("content-type", "") in [
-                            "application/x-flash-video", "video/x-flv"]):
-                            la(translate('', v[2]))
-                    elif v[1] == MUST_BE_VIDEOFILE:
-                        # TODO: Handle this
-                        pass
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
