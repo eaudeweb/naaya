@@ -91,15 +91,18 @@ class GenericViewAdapter(object):
 
 class NyFolderViewAdapter(NyContentTypeViewAdapter):
     def get_info_text(self):
+        if not self.display_subobject_count:
+            return ""
+
         trans = self.ob.getPortalTranslations().trans
         msg = []
 
         lenfol = len(self.ob.listed_folders_info())
         if lenfol > 0:
             if lenfol > 1:
-                txt = trans('${number} folders', number=str(lenfol))
+                txt = trans('${number} subfolders', number=str(lenfol))
             else:
-                txt = trans('1 folder')
+                txt = trans('1 subfolder')
             msg.append(txt)
 
         lenobj = len(self.ob.listed_objects_info())
@@ -113,4 +116,4 @@ class NyFolderViewAdapter(NyContentTypeViewAdapter):
         if msg:
             return "(" + ', '.join(msg) + ")"
         else:
-            return trans("folder is empty")
+            return trans("folder contains no sub-items")
