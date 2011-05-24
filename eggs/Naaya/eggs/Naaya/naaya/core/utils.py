@@ -2,7 +2,6 @@ from datetime import datetime
 from os import path
 import re
 import htmlentitydefs
-import logging
 import warnings
 import tempfile
 import urllib

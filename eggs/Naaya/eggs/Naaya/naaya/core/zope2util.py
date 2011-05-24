@@ -6,8 +6,6 @@ Utilities to make Zope2 a friendlier place.
 import datetime
 import sys
 import urllib
-import urllib2
-import simplejson
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
@@ -21,8 +19,7 @@ import simplejson as json
 from decimal import Decimal
 from dateutil.parser import parse
 from naaya.core.utils import force_to_unicode, is_valid_email
-from naaya.core.utils import path_in_site, unescape_html_entities
-
+from naaya.core.utils import unescape_html_entities
 
 def redirect_to(tmpl):
     """
@@ -176,16 +173,6 @@ class RestrictedToolkit(SimpleItem):
             [[1, 2, 3, 4], [5, 6]]
         """
         return simple_paginate(items, per_page)
-
-    def shorten_url(self, url):
-        """
-        Use http://is.gd to shorten a given URL::
-
-            >>> self.shorten_url('www.example.com')
-            http://is.gd/RGW31T
-        """
-
-        return shorten_url(url)
 
 InitializeClass(RestrictedToolkit)
 
@@ -402,10 +389,3 @@ def simple_paginate(items, per_page=4):
         output.append(items[offset:offset+per_page])
     return output
 
-def shorten_url(url):
-    page = urllib2.urlopen('http://is.gd/create.php?format=json&url=%s' % urllib.quote(url))
-    result = simplejson.load(page)
-    if result.has_key('errorcode'):
-        raise Exception, result['errormessage']
-    else:
-        return result['shorturl']
