@@ -61,7 +61,7 @@ if ffmpeg_available:
 else:
     zLOG.LOG("NyMediaFile", zLOG.WARNING,
              "Video conversion will not be supported.")
-    PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
+    #PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 
 FLV_HEADERS = ["application/x-flash-video", "video/x-flv", "video/flv"]
 
@@ -122,7 +122,7 @@ def _check_video_file(the_file):
         return []
     else:
         if not the_file or \
-        (the_file.headers.get("content-type", "") not in FLV_HEADERS and file_extension != 'flv'):
+        (the_file.headers.get("content-type", "") not in FLV_HEADERS and file_extension != '.flv'):
             return ['The file must be a valid flash video file (.flv)']
     return []
 
@@ -157,8 +157,8 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
-    if os.path.splitext(getattr(_file, 'filename', ''))[1] == 'mp3':
-        _skip_videofile_check == True
+    if os.path.splitext(getattr(_file, 'filename', ''))[1] == '.mp3':
+        _skip_videofile_check = True
 
     if not _skip_videofile_check:
         video_errors = _check_video_file(_file)
@@ -426,7 +426,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
         ctype = file.headers.get("content-type")
         filename = os.path.splitext(getattr(file, 'filename', ''))
-        if filename[1] == 'mp3':
+        if filename[1] == '.mp3':
             self.manage_addFile('', file)
         else:
             file.filename = filename[0] + ".flv"
@@ -609,7 +609,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         return video.get_size()
 
     def is_audio(self):
-        return 'mp3' == os.path.splitext(self.getSingleMediaId())[1]
+        return '.mp3' == os.path.splitext(self.getSingleMediaId())[1]
 
 InitializeClass(NyMediaFile_extfile)
 
