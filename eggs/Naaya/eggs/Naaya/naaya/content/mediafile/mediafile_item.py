@@ -64,6 +64,7 @@ else:
     #PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 
 FLV_HEADERS = ["application/x-flash-video", "video/x-flv", "video/flv"]
+MP3_HEADERS = ["audio/mpeg"]
 
 # this dictionary is updated at the end of the module
 config = {
@@ -113,7 +114,7 @@ def _create_NyMediaFile_object(parent, id, contributor):
     ob.after_setObject()
     return ob
 
-def _check_video_file(the_file):
+def _check_media_file(the_file):
     if the_file is None:
         return ['No file was uploaded']
     file_extension = os.path.splitext(getattr(the_file, 'filename', ''))[1]
@@ -122,7 +123,8 @@ def _check_video_file(the_file):
         return []
     else:
         if not the_file or \
-        (the_file.headers.get("content-type", "") not in FLV_HEADERS and file_extension != '.flv'):
+        (the_file.headers.get("content-type", "") not in FLV_HEADERS+MP3_HEADERS \
+        and file_extension not in ['.flv', 'mp3']):
             return ['The file must be a valid flash video file (.flv)']
     return []
 
@@ -157,11 +159,8 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
-    if os.path.splitext(getattr(_file, 'filename', ''))[1] == '.mp3':
-        _skip_videofile_check = True
-
     if not _skip_videofile_check:
-        video_errors = _check_video_file(_file)
+        video_errors = _check_media_file(_file)
         if video_errors:
             form_errors['mediafile'] = video_errors
 
