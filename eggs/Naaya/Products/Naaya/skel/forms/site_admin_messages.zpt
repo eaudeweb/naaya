@@ -20,12 +20,12 @@
 </p>
 
 <fieldset>
-	<legend i18n:translate="">Original label in English language.</legend>
+	<legend i18n:translate="">Original label in English</legend>
 	<div style="padding:1em;background-color:#f0f0f0;" tal:content="message" />
 </fieldset>
 
 <p i18n:translate="">
-	You can translate this message in the following languages.
+	You can translate this message in the following languages:
 </p>
 
 <tal:block tal:repeat="language languages">

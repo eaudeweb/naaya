@@ -9,8 +9,15 @@
 </div>
 
 <p tal:define="folder python:here.aq_parent.absolute_url(1)" i18n:translate="">
-    Import objects from CSV file to
-    <i i18n:name="folder" tal:content="folder" />:
+  You can import structured information to
+  <i i18n:name="folder" tal:content="folder" /> from a CSV file. Select the
+  object type, download the CSV template containing the requested columns to be
+  filled in, and then upload the filled in CSV file.
+</p>
+
+<p i18n:translate="">
+  When selecting an object type, the generated CSV template will replicate the
+  fields of that object type's edit form, which you will fill in.
 </p>
 
 <form name="csv_import" action="" method="post" enctype="multipart/form-data">

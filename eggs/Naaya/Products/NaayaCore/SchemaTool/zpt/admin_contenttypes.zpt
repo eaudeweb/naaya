@@ -2,7 +2,12 @@
 <metal:block use-macro="here/admin_pt/macros/page">
 	<metal:block fill-slot="tab_contents">
 
-		<p i18n:translate="">Select a content type to configure its properties.</p>
+		<p i18n:translate="">
+			This form exposes all content types available in the portal, allows the
+			configuration of their properties. Portal administrators can also decide
+			whether content types available in the portal should be geo-tagged and
+			ratable.
+		</p>
 
 		<tal:block tal:define="schemas python:here.listSchemas(installed=True).values()">
 		<ul tal:condition="schemas" tal:repeat="schema schemas">

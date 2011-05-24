@@ -16,15 +16,19 @@
 </ul>
 </div>
 <div id="tabbedmenuend"></div>
+
 <p i18n:translate="" class="cleaner">
-	This form allows you to create new portlets from a <em i18n:name="folder" i18n:translate="">folder</em>,
-	using it's title and description.
+	This form allows you to create new portlets from a
+	<em i18n:name="folder" i18n:translate="">folder</em>, using its title and
+	description.
 </p>
+
 <fieldset>
 	<legend i18n:translate="">Choose the folder you wish to generate a portlet from</legend>
 	<p i18n:translate="">
-		You are presented with a sitemap of this portal; select a folder by clicking on
-		its name and push <em i18n:name="create-button" i18n:translate="">Create</em>.
+		From the portal sitemap displayed below, select a folder by clicking on its
+		name and then clicking
+		<em i18n:name="create-button" i18n:translate="">Create</em>.
 	</p>
 	<form name="frmportlets" method="post" tal:attributes="action string:${site_url}/admin_addfolderportlet">
 	<script type="text/javascript">

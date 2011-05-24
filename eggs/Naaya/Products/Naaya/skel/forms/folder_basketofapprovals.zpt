@@ -6,10 +6,17 @@
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 
 <p i18n:translate="">
-	This page lists all the pending (not yet approved) and published (approved) items from this folder. 
-	For the pending onces, you can review them, select <strong i18n:name="approve-button" i18n:translate="">Approve</strong> or <strong i18n:name="delete-button" i18n:translate="">Delete</strong>
-	for any subset and click <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
-	For the already approved ones, you can un-approve some of them and therefore make them not available for the public anymore.
+	This page lists all pending (not yet approved) and published (approved) items
+	from this folder.  You can review, <strong i18n:name="approve-button"
+	i18n:translate="">Approve</strong> or <strong i18n:name="delete-button"
+	i18n:translate="">Delete</strong> any subset of the pending items.  You can
+	unapprove some of the published items, therefore making them no longer
+	available for the public, and you can delete published items.
+</p>
+
+<p i18n:translate="">
+	Don't forget to click the <strong i18n:name="save-button"
+	i18n:translate="">Save changes</strong> button  to confirm your changes.
 </p>
 
 <h2 i18n:translate="">Pending items</h2>

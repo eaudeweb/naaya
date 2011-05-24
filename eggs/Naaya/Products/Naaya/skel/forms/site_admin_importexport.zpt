@@ -18,10 +18,14 @@
 	<strong i18n:translate="">Note:</strong> <span tal:omit-tag="" i18n:translate="">the source of the messages in this portal is <em i18n:name="english" i18n:translate="">English</em>. This page allows you to import/export translations of messages in other languages.</span>
 </p>
 <fieldset>
-	<legend i18n:translate="">Export messages to PO file</legend>
+	<legend i18n:translate="">Export messages to a PO file</legend>
 	<div class="fieldset_div">
 		<p i18n:translate="">
-			You can export the messages and their translations to PO files. Check <em i18n:name="locale-pot" i18n:translate="">locale.pot</em> to get only the messages, without their translations. Check any other option to get a PO file with the messages and their	translations to the selected language. Then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+			Select <em i18n:name="locale-pot" i18n:translate="">locale.pot</em> to
+			get only the messages, without their translations. Select any other
+			option to get a PO file with the messages and their translations into
+			the selected language. Then click the
+			<em i18n:name="export" i18n:translate="">Export</em> button.
 		</p>
 		<form method="post" tal:attributes="action string:${site_url}/admin_exportmessages">
 		<dl>
@@ -42,11 +46,12 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">Import translations from PO file</legend>
+	<legend i18n:translate="">Import translations from a PO file</legend>
 	<div class="fieldset_div">
 		<p i18n:translate="">
-			You can add new messages and translations by importing a PO file. Enter the
-			filename, select the language of the translations and click the
+			You can add new messages and translations by importing a PO file. Browse
+			the file from your local computer, select the language of the
+			translations and click the
 			<em i18n:name="import" i18n:translate="">Import</em> button.
 		</p>
 		<form method="post" tal:attributes="action string:${site_url}/admin_importmessages" enctype="multipart/form-data">
@@ -69,10 +74,13 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">Export messages to XLIFF file</legend>
+	<legend i18n:translate="">Export messages to an XLIFF file</legend>
 	<div class="fieldset_div">
 		<p i18n:translate="">
-			You can export the messages and their translations to XLIFF files. Check any option to get a XLIFF file with the messages and their translations to the selected language. Then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+			You can export the messages and their translations to XLIFF files. Check
+			any option to get an XLIFF file with the messages and their translations
+			to the selected language. Then click the
+			<em i18n:name="export" i18n:translate="">Export</em> button.
 		</p>
 		<form method="post" tal:attributes="action string:${site_url}/admin_exportxliff">
 		<dl>
@@ -100,10 +108,14 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">Import translations from XLIFF file</legend>
+	<legend i18n:translate="">Import translations from an XLIFF file</legend>
 	<div class="fieldset_div">
 		<p i18n:translate="">
-			You can add new messages and translations by importing an XLIFF file. Enter the filename that contains messages translated in one of the portal languages and click the <em i18n:name="import" i18n:translate="">Import</em> button. The language of the translations should be specified inside the XLIFF file.
+			You can add new messages and translations by importing an XLIFF file.
+			Browse the file from yout local computer that contains messages
+			translated in one of the portal languages and click the
+			<em i18n:name="import" i18n:translate="">Import</em> button. The language
+			of the translations should be specified inside the XLIFF file.
 		</p>
 		<form method="post" tal:attributes="action string:${site_url}/admin_importxliff" enctype="multipart/form-data">
 		<dl>
@@ -116,12 +128,14 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">Export messages as spreadsheet</legend>
+	<legend i18n:translate="">Export messages as spreadsheet files</legend>
 	<div class="fieldset_div" tal:define="site here/getSite; 
 						trans_url site/getPortalTranslationsPath; 
 						default_lang site/gl_get_default_language;">
 		<p i18n:translate="">
-			You can export the messages and their translations to spreadsheet files. Choose the language and the desired format then click the <em i18n:name="export" i18n:translate="">Export</em> button.
+			You can export the messages and their translations to spreadsheet files.
+			Choose a language, the file format, and then click the
+			<em i18n:name="export" i18n:translate="">Export</em> button.
 		</p>
 		<p i18n:translate="">
 			<strong i18n:name="warning" i18n:translate="">WARNING:</strong> Make sure your editor (eg. MS Excel) supports UTF-8 encoding, otherwise some characters might not display correctly.
@@ -150,12 +164,15 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">Import messages from spreadsheet</legend>
+	<legend i18n:translate="">Import messages as spreadsheet files</legend>
 	<div class="fieldset_div" tal:define="site here/getSite; 
 						trans_url site/getPortalTranslationsPath; 
 						default_lang site/gl_get_default_language;">
 		<p i18n:translate="">
-			You can import the messages and their translations from spreadsheet files. Choose the language and the format then click the <em i18n:name="import" i18n:translate="">Import</em> button.
+			You can import messages and their translations from spreadsheet files.
+			Browse a file from your local computer, choose a language, the format,
+			and then click the
+			<em i18n:name="import" i18n:translate="">Import</em> button.
 		</p>
 		<p i18n:translate="">
 			<strong i18n:name="warning" i18n:translate="">WARNING:</strong> Make sure the file you are importing is encoded in UTF-8, otherwise translated messages might not be imported correctly.

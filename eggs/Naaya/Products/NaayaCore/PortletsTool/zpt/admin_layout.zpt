@@ -3,7 +3,13 @@
 <h1 metal:fill-slot="title" i18n:translate="">Arrange portlets</h1>
 
 <metal:block fill-slot="section">
+
+<p i18n:translate="">
+  This page allows the administration of portlets and the creation of new ones.
+</p>
+
 <metal:block use-macro="template/macros/body" />
+
 </metal:block>
 
 </metal:block>

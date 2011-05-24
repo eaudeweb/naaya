@@ -4,11 +4,14 @@
 
 <tal:block metal:fill-slot="section" tal:define="show python:request.get('show', ''); lang python:request.get('lang', here.gl_get_selected_language())">
 <p i18n:translate="" tal:omit-tag="">
-	This page lists the folders from this portal (grouped by top-level containing folder) that contain items which have not yet been translated in the specified language. Click on "Show items" to expand the list of un-translated content. Click on each link to edit and translate the item.
+	This page lists the folders from this portal (grouped by top-level containing
+	folder) that contain items which haven't been translated yet into the
+	selected language. Click on "Show items" to expand the list of untranslated
+	content. Click on each link to edit and translate the item.
 </p>
 <br/><br/>
 <form method="get" action="">
-	<label for="lang" i18n:translate="">Show items that have not been translated in </label>
+	<label for="lang" i18n:translate="">Show items not translated in</label>
 	<select name="lang" tal:define="translate python:here.getPortalTranslations().gettext">
 		<option tal:repeat="item here/gl_get_languages_map"
 			tal:attributes="value python:item['id']; selected python:item['id'] == lang"
