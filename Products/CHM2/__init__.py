@@ -49,6 +49,8 @@ def initialize(context):
 
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
+    'jquery.ajaxupload.min.js':ImageFile('www/jquery.ajaxupload.min.js', globals()),
+    'jquery.Jcrop.min.js':ImageFile('www/jquery.Jcrop.min.js', globals()),
 }
 
 #process config.xml file
