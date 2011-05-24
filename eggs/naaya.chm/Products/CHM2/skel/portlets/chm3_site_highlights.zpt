@@ -1,0 +1,48 @@
+<metal:block use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['site_portlet']">
+<metal:block fill-slot="portlet_content">
+
+<tal:block define="catalog_tool here/getCatalogTool;
+					objects python:catalog_tool.getCatalogedObjects(meta_type=['Naaya News', 'Naaya Story'], topitem=1, approved=1, has_picture=True);
+					items python:here.rstk.simple_paginate(objects, 4)"
+           condition="items">
+
+<div class="highlights-box">
+	<div class="large-box">
+		<div class="box-top">
+			<h3 i18n:translate="">Highlights</h3>
+		</div>
+		<div class="box-body">
+			<div class="body-content">
+				<div class="highlights-content">
+					<div class="highlights-panel">
+						<div class="highlights-group"
+								tal:repeat="subitems items"
+								tal:attributes="id string:highlights-group-${repeat/subitems/number}">
+							<tal:block repeat="item subitems">
+							<div class="highlights-item" tal:condition="item/hasSmallPicture">
+								<a class="border" tal:attributes="href item/absolute_url; title item/title">
+									<img tal:attributes="src string:${item/absolute_url}/getSmallPicture?version=1; title item/title" alt=""/>
+									<span tal:content="python: here.rstk.html2text(item.title, trim_length=18, ellipsis=True)" />
+								</a>
+							</div>
+							</tal:block>
+						</div>
+					</div>
+				</div>
+
+				<div class="highlights-controllers">
+					<a class="button-back" title="Scroll left" href="javascript:void(0); " rel="highlights-button">
+						<span i18n:translate="">Left</span>
+					</a>
+					<a class="button-forward" title="Scroll right" href="javascript:void(0); " rel="highlights-button">
+						<span i18n:translate="">Right</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</tal:block>
+
+</metal:block>
+</metal:block>
