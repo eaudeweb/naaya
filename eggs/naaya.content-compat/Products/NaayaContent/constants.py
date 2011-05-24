@@ -31,8 +31,6 @@ from naaya.content.base.constants import (
     MUST_BE_POSITIV_INT,
     MUST_BE_POSITIV_FLOAT,
     MUST_BE_CAPTCHA,
-    MUST_BE_FLVFILE,
-    MUST_BE_VIDEOFILE
 )
 
 import warnings
