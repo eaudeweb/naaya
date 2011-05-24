@@ -35,19 +35,6 @@ from converters.MediaConverter import \
 from parsers import DEFAULT_PARSER as SubtitleParser
 
 #module constants
-PROPERTIES_OBJECT = {
-    'id':           (0, '', ''),
-    'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
-    'description':  (0, '', ''),
-    'coverage':     (0, '', ''),
-    'keywords':     (0, '', ''),
-    'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
-    'discussion':   (0, '', ''),
-    'file':         (1, '', ''),
-    'lang':         (0, '', ''),
-    'subtitle':     (0, '', ''),
-}
 DEFAULT_SCHEMA = {
     # add NyMediaFile-specific properties here
 }
@@ -56,12 +43,9 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 # If converters installed file must be video, otherwise must be flash video (flv)
 
 ffmpeg_available = can_convert() and NyFSContainer.is_ext
-if ffmpeg_available:
-    PROPERTIES_OBJECT["file"] = (1, MUST_BE_VIDEOFILE, "The file must be a valid video file (e.g. .avi, .mpg, .mp4, etc.)")
-else:
+if not ffmpeg_available:
     zLOG.LOG("NyMediaFile", zLOG.WARNING,
              "Video conversion will not be supported.")
-    #PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 
 FLV_HEADERS = ["application/x-flash-video", "video/x-flv", "video/flv"]
 MP3_HEADERS = ["audio/mpeg"]
@@ -77,7 +61,6 @@ config = {
         'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index', 'mediafile_subtitle'],
         'add_form': 'mediafile_add_html',
         'description': 'This is Naaya MediaFile type.',
-        'properties': PROPERTIES_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyMediaFile',
         '_module': sys.modules[__name__],

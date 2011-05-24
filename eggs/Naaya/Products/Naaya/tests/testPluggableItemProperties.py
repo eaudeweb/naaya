@@ -88,23 +88,6 @@ class PluggableItemPropertiesTestCase(ZopeTestCase.TestCase):
         self.failUnlessEqual(self.do_check(template, {'a1': '123'}, session={'captcha': '123'}), [])
         self.failUnlessEqual(self.do_check(template, {'a1': 'asdf'}, session={'captcha': '123'}), ['errmsg'])
 
-    def test_MUST_BE_FLVFILE(self):
-        class DummyFlvFile(object):
-            def __init__(self, headers):
-                self.headers = headers
-
-        template = {'a1': (1, constants.MUST_BE_FLVFILE, 'errmsg')}
-        self.failUnlessEqual(self.do_check(template, {'a1': DummyFlvFile({'content-type': "video/x-flv"})}), [])
-        self.failUnlessEqual(self.do_check(template, {'a1': DummyFlvFile({'content-type': "application/x-flash-video"})}), [])
-        self.failUnlessEqual(self.do_check(template, {'a1': DummyFlvFile({'content-type': 'some_other'})}), ['errmsg'])
-        self.failUnlessEqual(self.do_check(template, {'a1': DummyFlvFile({})}), ['errmsg'])
-        self.failUnlessEqual(self.do_check(template, {'a1': None}), ['errmsg'])
-
-    def test_MUST_BE_VIDEOFILE(self):
-        template = {'a1': (1, constants.MUST_BE_VIDEOFILE, 'errmsg')}
-        # MUST_BE_VIDEOFILE makes no checks whatsoever
-        self.failUnlessEqual(self.do_check(template, {'a1': None}), [])
-
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(PluggableItemPropertiesTestCase))
