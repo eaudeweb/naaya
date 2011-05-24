@@ -1,20 +1,13 @@
-
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zope.interface import Interface, implements
-from zope.component import adapts, provideAdapter
-from OFS.interfaces import IItem
 import zLOG
 
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
-from Products.Naaya.interfaces import INySite, IObjectView
-from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
+from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-
 
 class NyFolderBase(Folder, NyPermissions):
     """
@@ -69,7 +62,6 @@ class NyFolderBase(Folder, NyPermissions):
         sorted_objects = self.utSortObjsListByAttr(sorted_objects, skey, rkey)
 
         ret = []
-        site_url = self.getSite().absolute_url()
         for o in sorted_objects:
             o_view = IObjectView(o)
             versionable, editable = o_view.version_status()
@@ -83,7 +75,6 @@ class NyFolderBase(Folder, NyPermissions):
                 'self': o,
                 'view': o_view,
             }
-
             if info['approved'] or info['del_permission'] or info['copy_permission'] or info['edit_permission']:
                 ret.append(info)
 
@@ -277,7 +268,7 @@ class NyFolderBase(Folder, NyPermissions):
         return meta_item[1]
 
     def process_submissions(self):
-        """Returns info meta_types and their constructors views that can be 
+        """Returns info meta_types and their constructors views that can be
         added inside a folder.
 
         [(FUNC_NAME, LABEL), (...), ...]

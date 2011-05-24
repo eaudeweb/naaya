@@ -28,6 +28,10 @@ class NyContentTypeViewAdapter(object):
     def get_size(self):
         return ""
 
+    def get_download_url(self):
+        """ A direct download url """
+        return ""
+
 
 class NyFileViewAdapter(NyContentTypeViewAdapter):
     def get_icon(self):
@@ -36,6 +40,9 @@ class NyFileViewAdapter(NyContentTypeViewAdapter):
     def get_size(self):
         return pretty_size(self.ob.size)
 
+    def get_download_url(self):
+        """ A direct download url """
+        return self.ob.getDownloadUrl()
 
 class NyExFileViewAdapter(NyContentTypeViewAdapter):
     def get_icon(self):
@@ -44,6 +51,9 @@ class NyExFileViewAdapter(NyContentTypeViewAdapter):
     def get_size(self):
         return pretty_size(self.ob.size())
 
+    def get_download_url(self):
+        """ A direct download url """
+        return self.ob.getDownloadUrl()
 
 class GenericViewAdapter(object):
     def __init__(self, ob):
@@ -70,6 +80,10 @@ class GenericViewAdapter(object):
             }
         else:
             return None
+
+    def get_download_url(self):
+        """ A direct download url """
+        return ""
 
     def get_size(self):
         return ""

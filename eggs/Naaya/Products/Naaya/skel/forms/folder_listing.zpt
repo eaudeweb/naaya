@@ -223,6 +223,15 @@ $(document).ready(function(){
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+                        <a tal:define="download_url object_info/view/get_download_url"
+                           tal:condition="download_url"
+                           tal:attributes="href download_url;"
+                           title="Download"
+                           i18n:attributes="title">
+                           <img tal:attributes="src string:${site_url}/misc_/Naaya/download-file.png"
+                                alt="Download"
+                                i18n:attributes="alt" />
+                        </a>
 						<em tal:condition="object/can_be_seen"
 						    tal:content="object_info/view/get_info_text" />
 						<span class="available_langs" tal:condition="python:here.item_has_title(object, object.title)">

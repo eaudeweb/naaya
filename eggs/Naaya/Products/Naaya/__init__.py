@@ -53,6 +53,7 @@ misc_ = {
     'copy.gif':ImageFile('www/copy.gif', globals()),
     'cut.gif':ImageFile('www/cut.gif', globals()),
     'delete.gif':ImageFile('www/delete.gif', globals()),
+    'download-file.png':ImageFile('www/download-file.png', globals()),
     'edit':ImageFile('www/edit.gif', globals()),
     'fullscreencollapse_icon.gif':ImageFile('www/fullscreencollapse_icon.gif', globals()),
     'fullscreenexpand_icon.gif':ImageFile('www/fullscreenexpand_icon.gif', globals()),
