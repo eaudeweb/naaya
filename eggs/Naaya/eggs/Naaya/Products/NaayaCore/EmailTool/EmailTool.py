@@ -14,6 +14,7 @@ import email.MIMEText, email.Utils, email.Charset, email.Header
 
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.sendmail.interfaces import IMailDelivery
+from zope.sendmail.mailer import SMTPMailer
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -223,15 +224,27 @@ def create_message(text, addr_to, addr_from, subject):
 
     return message.as_string()
 
+class BestEffortSMTPMailer(SMTPMailer):
+    """
+    Try to send the message; if we fail, just log the error, and don't abort
+    the transaction.
+    """
+    def send(self, fromaddr, toaddrs, message):
+        try:
+            super(BestEffortSMTPMailer, self).send(fromaddr, toaddrs, message)
+        except:
+            mail_logger.exception("Failed to send email message.")
+            # TODO write message to the portal's `error_log`
+
 def delivery_for_site(site):
     delivery = queryUtility(IMailDelivery, 'naaya-mail-delivery')
     if delivery is not None:
         return delivery
 
     elif site.mail_server_name and site.mail_server_port:
-        from zope.sendmail.mailer import SMTPMailer
         from zope.sendmail.delivery import DirectMailDelivery
-        site_mailer = SMTPMailer(site.mail_server_name, site.mail_server_port)
+        site_mailer = BestEffortSMTPMailer(site.mail_server_name,
+                                           site.mail_server_port)
         return DirectMailDelivery(site_mailer)
 
     else:
