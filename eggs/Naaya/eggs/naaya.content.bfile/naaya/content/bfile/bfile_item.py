@@ -8,7 +8,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from App.ImageFile import ImageFile
 from Globals import InitializeClass
-from OFS.Image import cookId
 from persistent.list import PersistentList
 from zExceptions import NotFound
 from zope.event import notify
@@ -25,14 +24,13 @@ from Products.NaayaBase.NyContentType import (
 from naaya.content.base.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
-from naaya.core.utils import pretty_size
+from naaya.core.utils import pretty_size, force_to_unicode
 
 from NyBlobFile import make_blobfile, trim_filename
 
@@ -361,7 +359,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
                 viewable = True
 
             return {
-                'filename': version.filename,
+                'filename': force_to_unicode(version.filename),
                 'content_type': version.content_type,
                 'pretty_size': pretty_size(version.size),
                 'removed': version.removed,
