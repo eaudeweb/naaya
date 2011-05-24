@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import sys, os
 import xml.sax.saxutils
 
-version = '1.0-edw5'
+version = '1.0-edw6'
 
 def read(*rnames):
     text = open(os.path.join(os.path.dirname(__file__), *rnames)).read()
