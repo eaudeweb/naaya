@@ -25,6 +25,7 @@ TAG_MAPPING = {
     'layout/skin/diskfile': {'rename': 'diskfiles', 'type': 'list'},
     'layout/skin/disktemplate': {'rename': 'disktemplates', 'type': 'list'},
     'layout/skin/scheme/style': {'rename': 'styles', 'type': 'list'},
+    'layout/skin/scheme/file': {'rename': 'files', 'type': 'list'},
     'layout/skin/scheme/image': {'rename': 'images', 'type': 'list'},
     'layout/skin/scheme/diskfile': {'rename': 'diskfiles', 'type': 'list'},
     'layout/skin/scheme/disktemplate': {'rename': 'disktemplates',

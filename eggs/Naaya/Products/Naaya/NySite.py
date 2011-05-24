@@ -405,6 +405,14 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                             image_ob.update_data(data=content)
                             image_ob._p_changed=1
 
+                        for file in scheme.files:
+                            content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, file.id), 'rb')
+                            if not scheme_ob._getOb(file.id, None):
+                                scheme_ob.manage_addImage(id=file.id, file='', title=file.title)
+                            file_ob = scheme_ob._getOb(file.id)
+                            file_ob.update_data(data=content)
+                            file_ob._p_changed=1
+
                         for diskfile in scheme.diskfiles:
                             manage_addDiskFile(scheme_ob, pathspec='/'.join([
                                 layout_diskpath_prefix(),
@@ -524,6 +532,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         portletstool_ob.unassign_portlet('', 'center', portlet_id)
                     for portlet_id in skel_handler.root.portlets.center.split(','):
                         portletstool_ob.assign_portlet('', "center", portlet_id, False)
+                if skel_handler.root.portlets.right:
+                    for portlet_id in portletstool_ob.get_portlet_ids_for('', 'right'):
+                        portletstool_ob.unassign_portlet('', 'right', portlet_id)
+                    for portlet_id in skel_handler.root.portlets.right.split(','):
+                        portletstool_ob.assign_portlet('', "right", portlet_id, False)
             #load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
