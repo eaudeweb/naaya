@@ -1,0 +1,14 @@
+#mcs_container .customScrollBox {
+  overflow:auto;
+}
+
+#mcs_container .dragger_container,
+.pagination-pages,
+.toolTip, .submenu-holder
+{
+  display:none;
+}
+
+.dropdown-submenu {
+  display: block;
+}

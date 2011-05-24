@@ -1,0 +1,57 @@
+#global-navigation, #categories, #menu, #footer, #breadcrumb {
+    display: none;
+}
+
+.hidden, .folder-feeds, .commentbox_add, #admin_this_folder, #toolbar {
+    display: none;
+}
+
+
+#site-title {
+    font-size: 1.3em;
+    color:#000000;
+    font-weight:bold;
+}
+#site-description {
+    font-size: 0.9em;
+    position:relative;
+    left:0;
+    color:#000000;
+    font-weight:bold;
+    padding-bottom: 1em;
+}
+
+.left {
+    float: left;
+}
+
+#biodiv-news-body .scroll-item, #biodiv-news-body .content-footer {
+    display: none;
+}
+#biodiv-news-body #scroll-page-1 {
+    display: block;
+}
+#biodiv-news-body .scroll-mask {
+    height: 450px !important;
+}
+#biodiv-news-body .scroll-panel {
+    width: 250px !important;
+}
+
+#calendar-box .items-group, #calendar-box .calendar-mask, #calendar-box .calendar-top-details, #calendar-box .calendar-button-holder {
+    display: none;
+}
+#calendar-box .box-top, #calendar-box .items-group.active {
+    display: block;
+}
+#calendar-box .box-item-content {
+    margin-left: 12px;
+}
+
+div.home-large-column {
+    width: 650px;
+}
+#center_port, #right_port {
+    display: none;
+}
+

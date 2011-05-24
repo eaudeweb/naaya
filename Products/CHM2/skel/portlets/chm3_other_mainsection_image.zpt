@@ -1,0 +1,17 @@
+<metal:block use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['page_portlet']">
+<metal:block fill-slot="portlet_content">
+
+<tal:block define="layout_tool here/getLayoutTool;
+                   skin layout_tool/get_current_skin;
+                   main_section_images skin/main_section_images|nothing"
+            condition="main_section_images">
+<div class="center"
+    style="text-align: center; width: 170px; margin: 0 auto; margin-bottom: 15px"
+    tal:condition="python: here in here.getMainTopics() and main_section_images.hasObject(here.id)">
+    <img class="border"
+        tal:attributes="src string:${main_section_images/absolute_url}/${here/id}"/>
+</div>
+</tal:block>
+
+</metal:block>
+</metal:block>
