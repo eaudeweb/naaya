@@ -116,7 +116,7 @@ def _create_NyMediaFile_object(parent, id, contributor):
 def _check_video_file(the_file):
     if the_file is None:
         return ['No file was uploaded']
-    file_extension = the_file.filename.split('.')[-1]
+    file_extension = os.path.splitext(getattr(the_file, 'filename', ''))[1]
     if ffmpeg_available:
         # TODO: check if our file is a valid video file!
         return []
@@ -157,7 +157,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         submitter_errors = submitter.info_check(self, REQUEST, ob)
         form_errors.update(submitter_errors)
 
-    if hasattr(_file, 'filename') and _file.filename.split('.')[-1] == 'mp3':
+    if os.path.splitext(getattr(_file, 'filename', ''))[1] == 'mp3':
         _skip_videofile_check == True
 
     if not _skip_videofile_check:
@@ -425,8 +425,8 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         self.manage_delObjects(self.objectIds())
 
         ctype = file.headers.get("content-type")
-        filename = file.filename.split(".")
-        if filename[-1] == 'mp3':
+        filename = os.path.splitext(getattr(file, 'filename', ''))
+        if filename[1] == 'mp3':
             self.manage_addFile('', file)
         else:
             file.filename = filename[0] + ".flv"
@@ -609,7 +609,7 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
         return video.get_size()
 
     def is_audio(self):
-        return 'mp3' == self.getSingleMediaId().split('.')[-1]
+        return 'mp3' == os.path.splitext(self.getSingleMediaId())[1]
 
 InitializeClass(NyMediaFile_extfile)
 
