@@ -71,6 +71,7 @@
                         }
                     },
                     ui : {
+                         theme_name : "classic",
                          selected_parent_close : false
                     },
                     types : {
