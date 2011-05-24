@@ -16,10 +16,13 @@
 </ul>
 </div>
 <div id="tabbedmenuend"></div>
+
 <p i18n:translate="" class="cleaner">
-	This form allows you to create new portlets from a <em i18n:name="remote-channel" i18n:translate="">remote channel</em>,
-	which displays the a certain number of items from that channel.
+	This form allows you to create new portlets from a
+	<em i18n:name="remote-channel" i18n:translate="">remote channel</em>, which
+	will display a certain number of items from that channel.
 </p>
+
 <fieldset>
 	<legend i18n:translate="">Choose the remote channel you wish to generate a portlet from</legend>
 	<p i18n:translate="">

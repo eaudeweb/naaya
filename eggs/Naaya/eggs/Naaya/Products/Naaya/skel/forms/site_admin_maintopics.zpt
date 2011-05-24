@@ -35,8 +35,8 @@
 	}
 </script>
 <p i18n:translate="">
-	This section allows administrators to manage the main sections.
-	You can set the order by drag and drop the boxes and click <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
+	The order of display can be set by dragging and dropping the boxes, and then
+	clicking <strong i18n:name="save-button" i18n:translate="">Save positions</strong>.
 </p>
 <form name="frmDragDrop" method="post" action="">
 	<ul id="maintopicslist" class="boxy">
@@ -88,10 +88,12 @@
 </fieldset>
 <br />
 <fieldset>
-	<legend i18n:translate="">"Select existing folder" - "Assign existing folder as main section"</legend>
+	<legend i18n:translate="">Assign existing folder as main section</legend>
 	<form method="post" tal:attributes="action string:${site_url}/admin_updatemaintopics" name="frmEditTopic">
 		<p i18n:translate="">
-		Pick a folder from this portal and press the <em i18n:name="submit-button" i18n:translate="">Submit</em> button in order to mark it as main category.
+			Pick a folder from this portal and press the
+			<em i18n:name="submit-button" i18n:translate="">Submit</em>
+			button in order to mark it as main section.
 		</p>
 
 		<div class="field">
@@ -112,7 +114,8 @@
 	<legend i18n:translate="">Navigation properties</legend>
 	<form method="post" tal:attributes="action string:${site_url}/admin_updatemaintopics_navigation" name="frmNavigation">
 		<p i18n:translate="">
-		Set up default style of navigation and press the <em i18n:name="submit-button" i18n:translate="">Submit</em> button.
+		Select a default navigation style and press the
+		<em i18n:name="submit-button" i18n:translate="">Save</em> button.
 		</p>
 		<div class="field">
 			<label>
@@ -124,7 +127,7 @@
 				</select>
 				<tal:block i18n:translate="">Default expanded</tal:block>
 			</label>
-			<em class="help-text" i18n:translate="">The above option allows you to specify whenever the maintopics are expanded or colapsed by default </em>
+			<em class="help-text" i18n:translate="">The above option allows you to specify if the main sections are expanded or collapsed by default.</em>
 		</div>
 		<div class="field">
 			<label>
@@ -154,7 +157,7 @@
 		</div>
 		<div class="field">
 			<label for="submit-button" class="invisible" i18n:translate="">Submit button</label>
-			<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
+			<input type="submit" value="Save" id="submit-button" i18n:attributes="value" />
 		</div>
 	</form>
 </fieldset>

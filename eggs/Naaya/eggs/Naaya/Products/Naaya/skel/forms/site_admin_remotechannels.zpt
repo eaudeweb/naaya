@@ -8,10 +8,12 @@
 				ob_id python:request.get('id', '');
 				ob_data python:syndication_tool.get_data_remote_channel(ob_id)">
 <p i18n:translate="">
-	This section lists the remote channels defined by portal administrators. When adding
-	or changing a channel, don't forget to update the remote information by clicking the
-	<em i18n:name="update-button" i18n:translate="">Update now</em> link next to the channel's name. You should have a cron job working in your
-	system to update this information on regular basis (e.g. once a day); ask your system
+	This page lists the remote channels defined by portal administrators. When
+	adding or changing a channel, don't forget to update the remote information
+	by clicking the
+	<em i18n:name="update-button" i18n:translate="">Update now</em> link next to
+	the channel's name. You should have a cron job working on your system to
+	update this information on a regular basis (e.g. once a day); ask your system
 	administrator for more details.
 </p>
 <h2 tal:condition="python:ob_data[0]!='add'">

@@ -7,9 +7,11 @@
 		syndication_tool here/getSyndicationTool;
 		channels python:syndication_tool.objectValues(['Naaya Channel Aggregator'])">
 <p i18n:translate="">
-	This section lists the remote channels aggregators defined by portal administrators and lets you manage them.
-	A remote channels aggregator is a collection of remote channels that contains all the data from
-	the channels defined in the <a tal:attributes="href string:${site_url}/admin_remotechannels_html" >Remote channels</a> section.
+	This page lists the remote channels aggregators defined by portal
+	administrators and lets you manage them. A remote channels aggregator is a
+	collection of remote channels that contains all the data from the channels
+	defined in the <a tal:attributes="href
+	string:${site_url}/admin_remotechannels_html" >Remote channels</a> page.
 </p>
 <h2 tal:condition="python:request.get('id', '')">
 	<a tal:attributes="href string:${site_url}/admin_remotechannels_aggregators_html" i18n:translate="">Add new aggregator</a>

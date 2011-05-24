@@ -8,10 +8,10 @@
 					portal_map here/getGeoMapTool;">
 
 <p i18n:translate="">
-	These settings apply to the <a tal:attributes="href string:${map_url}">
-    portal_map</a> and the GeoPoint and ther other
-    <a tal:attributes="href string:${here/absolute_url}/portal_schemas/admin_html">
-    geo-taggable content</a>.
+	These settings apply to the
+	<a tal:attributes="href string:${map_url}">portal_map</a> and to all the
+	<a tal:attributes="href string:${here/absolute_url}/portal_schemas/admin_html"
+	>geo-taggable content types</a>.
 </p>
 
 <div id="tabbedmenu">

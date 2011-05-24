@@ -21,7 +21,7 @@
 </div>
 
 <p i18n:translate="">
-	Select the kinds of object types that can be added inside this folder and 
+	Select the content types that can be added inside this folder and
 	its subfolders and press <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
 </p>
 

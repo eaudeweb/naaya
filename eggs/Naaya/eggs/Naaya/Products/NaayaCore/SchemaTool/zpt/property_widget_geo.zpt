@@ -28,16 +28,25 @@
         </p>
         <strong>A. Identifying a location on the map:</strong>
         <ul>
-            <li>Click Show map;</li>
-            <li>Move inside the map and zoom in to the most relevand location;</li>
-            <li>Click again at that specific location, a pin will appear and the coordinates for that point are provided.</li>
+            <li>Click <em>Show map</em>;</li>
+            <li>
+              Move inside the map and zoom in to the most relevant location;
+            </li>
+            <li>
+              Click again at that specific location, a pin will appear and the
+              coordinates for that point will be automatically retrieved and
+              filled in.
+            </li>
         </ul>
         <strong>B. If you know the address:</strong>
         <ul>
-            <li>Type the address in the <em>Address</em> field;
-            <li>Click Show map;
-            <li>The <em>Center map</em> button will show nearby the <em>Address</em> field;
-            <li>Click on <em>Center map</em> button and get the coordinates for that address.
+            <li>Type the address in the <em>Address</em> field;</li>
+            <li>Click <em>Show map</em>;</li>
+            <li>
+              Click on the <em>Center map</em> button, right next to the
+              <em>Address</em>
+              field, and get the coordinates for the address.
+            </li>
         </ul>
     </div>
     <div style="padding:0.5em;">

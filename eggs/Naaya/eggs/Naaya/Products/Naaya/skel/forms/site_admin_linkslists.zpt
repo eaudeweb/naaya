@@ -4,7 +4,12 @@
 
 <tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
 <p i18n:translate="">
-	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em i18n:name="translate-messages" i18n:translate="">Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
+	This page allows you to define, customise and delete lists (groups) of links
+	to internal or external pages. When these links are displayed in the portal,
+	their titles and descriptions will be translatable from the
+	<em i18n:name="translate-messages" i18n:translate="">Translate messages</em>
+	area. If you choose to automatically create a portlet, you can then choose to
+	have it displayed in this portal, in the desired location.
 </p>
 <fieldset><legend i18n:translate="">Add new list of links</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addlinkslist">

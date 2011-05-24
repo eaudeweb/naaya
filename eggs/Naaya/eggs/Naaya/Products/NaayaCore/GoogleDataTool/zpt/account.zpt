@@ -43,7 +43,7 @@
 	</span>
 
 	<form method="post" action="" name="frmAccount" id="frmAccount" tal:condition="authorization">
-		<p>Selected your website from the list below and save it as default account.</p>
+		<p>Select your website from the list below and save it as default account.</p>
 		<label for="account">Accounts</label>
 		<select name="account">
 			<option></option>
@@ -54,7 +54,11 @@
 					tal:content="title" />
 		</tal:block>
 		</select>
-		<p>The statistics are shown since today until the start date selected below.</p>
+		<p>
+			By choosing below the start date for the statistics - either dynamic
+			(last month/3 months/6 months/year) or a specific date, the statistics
+			will be shown from that start date until today.
+		</p>
 		<label for="date_interval">Dynamic start date</label>
 		<select name="date_interval">
 			<option></option>
