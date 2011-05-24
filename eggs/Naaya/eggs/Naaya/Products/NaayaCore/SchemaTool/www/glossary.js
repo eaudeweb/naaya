@@ -188,6 +188,9 @@ function load_tree(tree_container, tree_buttons_div) {
                 add_value(node_value);
             }
         },
+        ui : {
+            theme_name : "classic"
+        },
         types : {
             "default" : {
                 draggable: false,

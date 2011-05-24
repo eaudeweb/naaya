@@ -175,6 +175,9 @@ $(function () {
                 url : "portal_portlets/get_reftrees_as_json_data"
             }
         },
+        ui : {
+            theme_name : "classic"
+        },
         plugins : { 
             contextmenu : {
                 items : {
