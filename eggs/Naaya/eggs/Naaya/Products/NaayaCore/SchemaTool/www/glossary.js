@@ -81,16 +81,17 @@ function load_ui() {
     var dialog_div = $('.glossary-widget-dialog-content', container);
     pick_button.show();
     pick_button.click(function() {
+        buttons = {};
+        close_text = gettext("Close");
+        buttons[close_text] = function() {
+            $(this).dialog( "close" );
+        };
         dialog_div.show().dialog({
             width: 650,
             minHeight: 300,
             dialogClass: 'glossary-widget-dialog',
             position: 'top',
-            buttons: {
-                Close:function() {
-                    $(this).dialog( "close" );
-                }
-            }
+            buttons: buttons
         });
         load_tree($('.glossary-widget-tree', dialog_div),
                   $('.glossary-widget-tree-buttons', dialog_div));
