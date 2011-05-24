@@ -22,7 +22,6 @@ class SchemaAdminTest(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/portal_schemas/NyDocument/admin_html')
 
         html = self.browser.get_html()
-        import pdb; pdb.set_trace()
         self.assertTrue('<h1>Manage content types - HTML Document</h1>' in html)
 
         self.assertTrue('Title' in html)
