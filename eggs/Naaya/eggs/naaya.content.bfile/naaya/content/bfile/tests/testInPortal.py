@@ -117,7 +117,3 @@ class NyBFileTestCase(NaayaTestCase):
                              submitted=1, contributor='contributor')
         self.assertEqual(file_id, 'assapa-c-r-_aaaa1') # as returned by unidecode
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyBFileTestCase))
-    return suite

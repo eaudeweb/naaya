@@ -1,13 +1,12 @@
 import os
 import re
-from unittest import TestSuite, makeSuite
 from StringIO import StringIO
-from copy import deepcopy
 import urllib
 
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.bfile.bfile_item import addNyBFile
 
 class BrowserFileTestingMixin(object):
@@ -30,8 +29,6 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
     def afterSetUp(self):
         self.portal.manage_install_pluggableitem('Naaya Blob File')
-        from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyBFile(self.portal.myfolder, id='mybfile', title='My file', submitted=1, contributor='contributor')
         transaction.commit()
@@ -167,6 +164,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         self.browser.go('http://localhost/portal/myfolder/mybfile')
         html = self.browser.get_html()
+
         self.assertTrue('download/1/afile' in html)
         self.assertTrue('download/2/afile' in html)
         self.assertTrue('download/3/afile' in html)
@@ -249,11 +247,32 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
 
         addNyBFile(self.portal.myfolder, submitted=1,
                    contributor='contributor', id='test', title="test",
-                   uploaded_file=uploaded_file)
+                   uploaded_file=uploaded_file, approved=True)
         transaction.commit()
         #View the file
         self.browser.go('http://localhost/portal/myfolder/test/download/1/test.txt?action=view')
         self.assertEqual(file_contents, self.browser.get_html())
+
+    def test_direct_download(self):
+        """ In folder listing we should have a download link that allows users
+        to download the last version directly
+
+        """
+        file_contents = 'simple contents'
+        uploaded_file = StringIO(file_contents)
+        uploaded_file.filename = 'test.txt'
+        uploaded_file.headers = {'content-type': 'text/plain; charset=utf-8'}
+
+        addNyBFile(self.portal.myfolder, id='mybfile_download', title='My file',
+                   uploaded_file=uploaded_file, submitted=1,
+                   contributor='admin')
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder')
+        self.assertTrue(
+        self.portal.myfolder.mybfile_download.current_version_download_url() in
+        self.browser.get_html())
 
     def test_view_zip(self):
         """ Custom view of zipfile """
@@ -406,9 +425,3 @@ class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
         self.browser.go(self.ob_url + '/download/1/my.png')
         self.assertRedirectLoginPage()
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyBFileFunctionalTestCase))
-    suite.addTest(makeSuite(VersioningTestCase))
-    suite.addTest(makeSuite(SecurityTestCase))
-    return suite
