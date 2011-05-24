@@ -2,14 +2,12 @@
 
 <span tal:replace="structure here/style_html" tal:omit-tag="" />
 
-<p>
-    <span i18n:translate="" tal:omit-tag="">
-        This page presents the most recent broken links log, obtained at
-    </span>
-    <strong tal:content="python:here.umFormatDateTimeToString(here.date_create)" />
-    <span i18n:translate="" tal:omit-tag="">
-        by URL checker. The links below appear in <em>URL</em>, <em>news</em> and <em>events</em> items from this portal.
-    </span>
+<p tal:define="when python:here.umFormatDateTimeToString(here.date_create)"
+   i18n:translate="">
+    This page displays the results of the most recent URL checker for broken
+    links, generated at <strong tal:content="when" i18n:name=""></strong> by
+    URL checker. The links below appear in <em>URL</em>, <em>news</em> and
+    <em>events</em> items from this portal.
 </p>
 
 <tal:block define="start python:int(request.get('start', 0));
