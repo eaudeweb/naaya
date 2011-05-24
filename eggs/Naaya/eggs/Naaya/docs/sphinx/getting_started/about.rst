@@ -1,6 +1,8 @@
 About Naaya
 ===========
 
+History
+-------
 Naaya was originally developed by Finsiel, Romania.
 Today’s version of Naaya is written as a set of Python products for Zope. 
 Around 9 years ago, the need was expressed in the European Environment Agency to have a portal toolkit
@@ -33,6 +35,30 @@ regular fixes, extensions, enhancements, that made the tools more modern and use
 custom products have been built for each of these communities, in order to respond to specific 
 requirements such as new content types and integration with external databases. 
 
+
+Requirements
+------------
+Source code for Naaya is freely available under the Mozilla Public License, and
+runs on top of an open source stack, there is no need for any license. The
+platform of choice is Linux but Mac OS and Windows are fully supported. Naaya
+is not suited for shared-hosting enviromnents; recommended minimum hardware is
+a virtual machine with 256MB of RAM.
+
+Naaya stores data in the Zope database (ZODB) which is stored in a file on the
+filesystem, so there is no need for an SQL database. Typically there would be
+an Apache (or Nginx, etc) front-end web server that proxies requests to Naaya's
+Zope server. Apart from that it requires a few commonly-available libraries
+(zlib, glib, libxml, libpng, libjpeg).
+
+Installation is performed using Buildout. Given a fresh install of a recent
+Linux distribution, one can install Naaya in about 10 minutes, as most of the
+process is automated. See the installation documentation for more details:
+http://naaya.eaudeweb.ro/docs/getting_started/installation.html
+
+Most administrative tasks are performed through-the-web: setting up portals,
+configuring user permissions, customizing the look-and-feel, managing content,
+translating messages, and even simple tweaks to functionality (e.g. HTML page
+templates).
 
 
 Releases
