@@ -59,4 +59,6 @@ JS_MESSAGES = [
     'Please select one or more items to rename.',
 # Ajax file upload (CHM NyMunicipality)
     'Replace picture',
+# glossary widget, jquery-ui dialog
+    'Close',
 ]
