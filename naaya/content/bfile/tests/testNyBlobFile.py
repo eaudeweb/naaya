@@ -163,8 +163,3 @@ class NyBlobFileTransactionsTestCase(NaayaTestCase):
         self.assertEqual(bf.filename, 'a.txt')
         self.assertEqual(bf.content_type, 'application/octet-stream')
 
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyBlobFileTestCase))
-    suite.addTest(makeSuite(NyBlobFileTransactionsTestCase))
-    return suite

@@ -68,3 +68,8 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
             return pretty_size(version.size)
         else:
             return ""
+
+    def get_download_url(self):
+        return self.ob.current_version_download_url()
+
+
