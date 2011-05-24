@@ -91,7 +91,7 @@ class GenericViewAdapter(object):
 
 class NyFolderViewAdapter(NyContentTypeViewAdapter):
     def get_info_text(self):
-        if not self.display_subobject_count:
+        if not self.ob.display_subobject_count:
             return ""
 
         trans = self.ob.getPortalTranslations().trans
