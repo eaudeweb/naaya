@@ -4,9 +4,13 @@
 
 <tal:block metal:fill-slot="section" tal:define="site here/getSite; predefined site/getPredefinedUploads">
 <p i18n:translate="">
-	This page presents the latest 50 items uploaded in this portal.
-	Select the items that you want to appear in the <em i18n:name="Selected_uploads" i18n:translate="">Selected uploads</em> portlet
-	from the latest 50 items published on the website and click <em i18n:name="Save_changes" i18n:translate="">Save changes</em>.
+	This page displays the latest 50 items uploaded in the portal. Select the
+	items that you want to have displayed in the
+	<em i18n:name="Selected_uploads" i18n:translate="">Latest uploads</em>
+	portlet, out of the latest 50 items published on the website, and click
+	<em i18n:name="Save_changes" i18n:translate="">Save changes</em>.
+	If you don’t select any of the latest items in the list, the most recent five
+	will be displayed by default.
 </p>
 <form action="setPredefinedUploads" method="post" name="frmPredefined">
 <table border="0" cellspacing="1" cellpadding="1" width="100%">

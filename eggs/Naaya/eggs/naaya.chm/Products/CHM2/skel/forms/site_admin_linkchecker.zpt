@@ -11,7 +11,12 @@
 </div>
 
 <p i18n:translate="">
-	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. You can consult the last broken links log and manually run the checker now.
+	The URL checker runs at regular intervals on your system and creates logs
+	with the broken links found at that time.  You can consult the last broken
+	links log or choose the option to manually
+	<em i18n:name="Save_changes" i18n:translate="">run the checker now</em>.
+	Manually running the URL checker will not produce a log, it will only display
+	the results in this page.
 </p>
 
 <tal:block tal:condition="python:request.has_key('run')">
