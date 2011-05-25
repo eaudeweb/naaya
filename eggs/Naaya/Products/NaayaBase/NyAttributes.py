@@ -49,5 +49,5 @@ class NyAttributes:
         elif name.startswith('tags_'):
             parts = name.split('_')
             func, lang = parts[0], parts[1]
-            return self.tags(lang)
+            return self._tags(lang)
         raise AttributeError, name
