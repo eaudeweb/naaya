@@ -68,7 +68,8 @@ function addRowInnerHTML(tblId)
 		<textarea name="adt_comment.comment:utf8:ustring:records" id="adt_comment.comment:records" rows="4" cols="50"></textarea>
 </div>
 
-	<input type="button" value="Add comment" onclick="addRowInnerHTML('tblInnerHTML');" class="consultation_lc_button" />
+	<input type="button" value="Add comment" i18n:attributes="value"
+		onclick="addRowInnerHTML('tblInnerHTML');" class="consultation_lc_button" />
 	</tal:block>
 	<div class="field"><input type="submit" value="Add Review" i18n:attributes="value" /></div>
 </form>

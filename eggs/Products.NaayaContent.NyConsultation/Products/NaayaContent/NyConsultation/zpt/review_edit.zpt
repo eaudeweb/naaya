@@ -77,7 +77,8 @@ function deleteComment(elem){
 		<input type="button" onClick="javascript:deleteComment(this)" i18n:attributes="value" value="Delete this comment" />
 	</div>
 
-	<input type="button" value="Add comment" onclick="addRowInnerHTML('tblInnerHTML');" class="consultation_lc_button" />
+	<input type="button" value="Add comment" i18n:attributes="value"
+		onclick="addRowInnerHTML('tblInnerHTML');" class="consultation_lc_button" />
 	</tal:block>
 	<div class="field"><input type="submit" value="Edit Review" i18n:attributes="value" /></div>
 </form>
