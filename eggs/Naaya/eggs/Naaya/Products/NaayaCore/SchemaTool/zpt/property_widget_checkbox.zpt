@@ -1,14 +1,10 @@
-<div class="field-inline" tal:define="
-    value options/value|False;
-    errors options/errors;
-    prop_id here/prop_name;">
-    <label tal:attributes="for prop_id" class="widget-title">
-        <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
-        <span tal:condition="here/required" class="mandatory_field">*</span>
-    </label>
-    <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <input type="checkbox" tal:attributes="
+<tal:block define="field_class string:field-inline">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <input type="checkbox" tal:attributes="
         checked python:test(value, 'checked', None);
         name string:${prop_id}:boolean;
         id prop_id" />
-</div>
+    </metal:block>
+</metal:block>
+</tal:block>

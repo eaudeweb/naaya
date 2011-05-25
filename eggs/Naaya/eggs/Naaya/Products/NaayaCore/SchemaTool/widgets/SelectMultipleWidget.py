@@ -23,6 +23,7 @@ class SelectMultipleWidget(Widget):
 
     list_id = ''
     data_type = 'list'
+    help_text = u'Select one or more items from the list'
 
     def convert_from_user_string(self, value):
         """ Convert a user-readable string to a value that can be saved """

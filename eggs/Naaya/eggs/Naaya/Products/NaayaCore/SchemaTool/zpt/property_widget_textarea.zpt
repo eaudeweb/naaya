@@ -1,19 +1,17 @@
-<div class="field cleaner" tal:define="
-    value options/value|nothing;
-    errors options/errors;
-    prop_id here/prop_name;
-    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
-    <label tal:attributes="for prop_id" class="widget-title">
-        <tal:block i18n:translate=""><span tal:replace="here/title" /></tal:block>
-        <span tal:condition="here/required" class="mandatory_field">*</span>
-    </label>
-    <p class="form-errors" tal:condition="errors" tal:content="errors" />
-    <tal:block define="editor here/getEditorTool" condition="here/tinymce|nothing"
-        replace="structure python:editor.render(prop_id, curr_lang, image_support=True)" />
-    <textarea tal:attributes="
-        rows here/rows;
-        cols here/columns;
-        name string:${prop_id}:utf8:ustring;
-        id prop_id"
-        tal:content="value"></textarea>
-</div>
+<tal:block define="
+field_class string:field cleaner;
+curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+">
+<metal:block use-macro="here/widget_macro/macros/widget">
+    <metal:block fill-slot="input">
+        <tal:block define="editor here/getEditorTool" condition="here/tinymce|nothing"
+            replace="structure python:editor.render(prop_id, curr_lang, image_support=True)" />
+        <textarea tal:attributes="
+            rows here/rows;
+            cols here/columns;
+            name string:${prop_id}:utf8:ustring;
+            id prop_id"
+            tal:content="value"></textarea>
+    </metal:block>
+</metal:block>
+</tal:block>

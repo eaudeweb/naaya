@@ -1,6 +1,5 @@
 # Zope imports
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -10,10 +9,9 @@ from DateTime import DateTime
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
-from Products.NaayaCore.managers.utils import utils
+from naaya.core.custom_types import Interval
 
 from geo import Geo
-from naaya.core.custom_types import Interval
 
 WIDGET_ID_SUFFIX = '-property'
 
@@ -27,7 +25,6 @@ DATA_TYPES = {
     'list': list,
     'interval': Interval
 }
-
 
 def propname_from_widgetid(widgetid):
     if not widgetid.endswith(WIDGET_ID_SUFFIX):
@@ -137,6 +134,13 @@ class Widget(Folder):
             'type': 'string',
             'mode': 'w',
         },
+        {
+            'id': 'help_text',
+            'label': 'Help text',
+            'type': 'string',
+            'mode': 'w',
+        },
+
     )
 
     multiple_form_values = False
@@ -148,6 +152,7 @@ class Widget(Folder):
     data_type = 'str'
     visible = True
     custom_template = ''
+    help_text = u''
 
     def __init__(self, id, title='', lang=None):
         Folder.__init__(self, id=id)
@@ -287,6 +292,7 @@ class Widget(Folder):
     def convert_to_session(self, value):
         return value
 
+    widget_macro = PageTemplateFile('../zpt/property_widget_macro', globals())
     hidden_template = PageTemplateFile('../zpt/property_widget_hidden',
                                        globals())
 
