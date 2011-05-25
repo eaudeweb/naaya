@@ -122,6 +122,10 @@
                 tal:content="selection_item/title" i18n:translate="" />
         </select>
 
+        <tal:block condition="here/list_is_tree">
+            <div tal:attributes="id string:${prop_id}_tree"></div>
+        </tal:block>
+
         <tal:block condition="python:selection_list is None">
         <p i18n:translate="">Missing selection list. Current values:</p>
         <ul>
