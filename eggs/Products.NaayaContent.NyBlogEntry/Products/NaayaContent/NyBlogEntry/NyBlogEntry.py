@@ -250,8 +250,7 @@ class NyBlogEntry(blog_entry_item, NyAttributes, NyContainer, NyCheckControl, Ny
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('content', lang)])
 
-    security.declarePrivate('tags')
-    def tags(self, lang):
+    def _tags(self, lang):
         return u'%s' % self.getLocalProperty('keywords', lang)
 
     security.declarePrivate('export_this_tag_custom')
