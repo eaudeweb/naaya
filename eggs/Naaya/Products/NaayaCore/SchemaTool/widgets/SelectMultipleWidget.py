@@ -23,7 +23,7 @@ class SelectMultipleWidget(Widget):
 
     list_id = ''
     data_type = 'list'
-    help_text = u'Click on one or more items from list below to \
+    help_text = u'Click on one or more items from the list below to \
                   select/deselect them.'
 
     def convert_from_user_string(self, value):
