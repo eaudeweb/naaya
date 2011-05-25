@@ -50,7 +50,7 @@
             </tal:block>
         </div>
         <br />
-        <input type="submit" value="Add comment" />
+        <input type="submit" value="Add comment" i18n:attributes="value" />
     </form>
     </tal:block>
 </div>
