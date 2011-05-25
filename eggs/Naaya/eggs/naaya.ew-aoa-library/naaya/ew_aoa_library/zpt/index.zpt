@@ -584,16 +584,6 @@
 		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
-	<!-- Country -->
-	<th rowspan="2" tal:condition="python:rkey and skey=='country' or skey!='country'">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=country">Country</a>
-		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
-	</th>
-	<th rowspan="2" tal:condition="python:not rkey and skey=='country'">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=country&rkey=True">Country</a>
-		<img tal:condition="python:skey=='country'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
-	</th>
-
 	<th colspan="2" i18n:translate="">Geo coverage:</th>
 
 	<!-- Year of publication -->
@@ -660,7 +650,6 @@
 	</td>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
-	<td tal:content="python:i.get('country')"/>
 	<td tal:content="i/geo_coverage_country|nothing"/>
 	<td tal:content="i/geo_coverage_region|nothing"/>
 	<td tal:condition="review_template"
