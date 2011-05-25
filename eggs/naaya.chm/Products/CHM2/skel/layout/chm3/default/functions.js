@@ -321,13 +321,14 @@ $(document).ready(function(){
 	/**
 	 * Multimedia
 	 */
-	if( $('#multimedia-files-tiled').length || $('#multimedia-files-full').legth ){
+	if( $('#multimedia-files-tiled').length || $('#multimedia-files-full').length ){
 	
 		$("a.mfile-link").click(function(e) {
 			e.preventDefault();
 			var mfile_id = parseInt($(this).attr("id").split("-")[2]);
 			select_mfile(this);
 			currentFile = mfile_id;
+			multimedia_full_show_buttons(currentFile, totalFiles);
 			multimedia_show_view('full');
 			return false;
 		});
@@ -484,8 +485,6 @@ $(document).ready(function(){
 			if( ($(this).hasClass('button-back') && (currentFile == 1)) || ($(this).hasClass('button-forward') && (currentFile == totalFiles)) ){
 				$(this).addClass('disabled');
 				return false;
-			}else {
-				$('#multimedia-files-full .multimedia-pagination a').removeClass('disabled');
 			}
 	
 			/**
@@ -500,6 +499,7 @@ $(document).ready(function(){
 			var mfile_link = $("#m-file-" + goToFile);
 			select_mfile(mfile_link);
 			currentFile = goToFile;
+			multimedia_full_show_buttons(currentFile, totalFiles);
 		});
 	}
 });
@@ -664,7 +664,7 @@ function select_mfile(mfile_link) {
 	var media_id = $('img', mfile_link).attr('alt');
 	var video_src = mfile_url + '/' + media_id;
 	var video_title = $(mfile_link).attr('title');
-	flowplayer_config("http://www.biodiversiteit.nl", "multimedia-show",
+	flowplayer_config(site_url, "multimedia-show",
 		video_src, "", "", true);
 	$('.file-title', '#multimedia-files-full').html(video_title);
 	$('.file-more', '#multimedia-files-full').attr('href', mfile_url);
@@ -690,6 +690,17 @@ function multimedia_show_view(elementToShow) {
 
 	$("#button-toggle-" + elementToShow + "").addClass('selected');
 	$("#button-toggle-" + elementToHide + "").removeClass('selected');
+}
+
+function multimedia_full_show_buttons(currentFile, totalFiles) {
+	$('#multimedia-files-full .multimedia-pagination a').removeClass('disabled');
+
+	if (currentFile == 1) {
+		$('#multimedia-files-full .multimedia-pagination a.button-back').addClass('disabled');
+	}
+	if (currentFile == totalFiles) {
+		$('#multimedia-files-full .multimedia-pagination a.button-forward').addClass('disabled');
+	}
 }
 
 /**

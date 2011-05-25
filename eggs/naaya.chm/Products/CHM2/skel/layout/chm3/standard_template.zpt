@@ -47,6 +47,7 @@
       Default JavaScripts
     </tal:block>
 
+    <script tal:define="site here/getSite; site_url site/absolute_url;" tal:content="string: var site_url = '${site_url}';"></script>
     <script type="text/javascript" tal:attributes="src string:${skin_files_path}/scroll.js"></script>
     <script type="text/javascript" tal:attributes="src string:${skin_files_path}/easing.js"></script>
     <script type="text/javascript" tal:attributes="src string:${skin_files_path}/mousewheel.js"></script>
