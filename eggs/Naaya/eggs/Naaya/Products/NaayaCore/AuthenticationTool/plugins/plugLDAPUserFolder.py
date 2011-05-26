@@ -25,8 +25,6 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from naaya.core.utils import is_ajax
 from naaya.core.zope2util import relative_object_path
 
-from send_group_emails_thread import start_sending_emails
-
 import ldap_cache
 
 plug_name = 'plugLDAPUserFolder'
@@ -335,9 +333,11 @@ class plugLDAPUserFolder(PlugBase):
             return on_error('Invalid location path')
         ob.acl_satellite.add_group_roles(group, roles)
         if send_mail:
-            userids = self.group_member_ids(group)
-            start_sending_emails(self.getSite(),
-                    group, userids, roles, loc, location)
+            site = self.getSite()
+            auth_tool = site.getAuthenticationTool()
+            user_id_list = self.group_member_ids(group)
+            for user_email in auth_tool.getUsersEmails(user_id_list):
+                site.sendAccountModifiedEmail(user_email, roles, loc, location)
 
         if REQUEST is not None:
             self.setSessionInfoTrans("Role(s) succesfully assigned")
