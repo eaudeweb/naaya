@@ -127,7 +127,7 @@ class RecoverPassword(SimpleItem):
                                                  confirmation_url=url)
         email_tool = self.getSite().getEmailTool()
         email_tool.sendEmail(email_data['body_text'], [email],
-                             email_tool._get_from_address(),
+                             email_tool.get_addr_from(),
                              email_data['subject'])
 
         if REQUEST is not None:
