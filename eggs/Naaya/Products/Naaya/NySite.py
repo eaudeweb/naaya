@@ -408,7 +408,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         for file in scheme.files:
                             content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, file.id), 'rb')
                             if not scheme_ob._getOb(file.id, None):
-                                scheme_ob.manage_addImage(id=file.id, file='', title=file.title)
+                                scheme_ob.manage_addFile(id=file.id, file='', title=file.title)
                             file_ob = scheme_ob._getOb(file.id)
                             file_ob.update_data(data=content)
                             file_ob._p_changed=1
