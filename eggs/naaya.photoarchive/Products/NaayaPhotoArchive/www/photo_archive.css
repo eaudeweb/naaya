@@ -144,7 +144,7 @@ padding: 0.1em 0.5em;
 }
 
 .image-holder:hover {
-  background: transparent url(misc_/NaayaPhotoArchive/photo_background_hover.png) no-repeat scroll left center;
+  background: transparent url(/misc_/NaayaPhotoArchive/photo_background_hover.png) no-repeat scroll left center;
 }
 .image-holder a {
   text-decoration: none;
@@ -229,7 +229,7 @@ padding: 0.1em 0.5em;
 }
 
 .album-image-holder {
-  background:transparent url(misc_/NaayaPhotoArchive/album_background.gif) no-repeat scroll left center;
+  background:transparent url(/misc_/NaayaPhotoArchive/album_background.gif) no-repeat scroll left center;
   height:240px;
   width:240px;
 }
