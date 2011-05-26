@@ -332,4 +332,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_add_on_error_for_standard_template_breadcrumb.UpdateAddOnerrorForStandardTemplateBreadcrumb"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="cleanup_mainsections.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_cleanup_mainsections.UpdateCleanupMainsections"
+      permission="zope2.ViewManagementScreens" />
 </configure>
