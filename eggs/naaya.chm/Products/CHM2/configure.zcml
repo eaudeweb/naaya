@@ -11,7 +11,7 @@
     />
 
   <naaya:call
-    factory=".layout_utils.patch_rstk"
+    factory=".rstk_utils.patch_rstk"
     />
 
 </configure>
