@@ -1,20 +1,15 @@
 import types
-import urllib
-from urllib2 import urlopen
-import simplejson
 
 from naaya.content.base.interfaces import INyContentObject
 from naaya.core.zope2util import RestrictedToolkit
 
-def patch_rstk():
-    patch_rstk_func(has_view_name)
-    patch_rstk_func(shorten_url)
 
 def patch_rstk_func(func):
     def new_func(self, *args, **kwargs):
         return func(*args, **kwargs)
     method = types.MethodType(new_func, None, RestrictedToolkit)
     setattr(RestrictedToolkit, func.__name__, method)
+
 
 def has_view_name(names, REQUEST):
     """
@@ -40,10 +35,6 @@ def has_view_name(names, REQUEST):
     return (view_name in names and
                 INyContentObject.implementedBy(cls))
 
-def shorten_url(url):
-    page = urlopen('http://is.gd/create.php?format=json&url=%s' % urllib.quote(url))
-    result = simplejson.load(page)
-    if result.has_key('errorcode'):
-        raise Exception, result['errormessage']
-    else:
-        return result['shorturl']
+
+def patch_rstk():
+    patch_rstk_func(has_view_name)
