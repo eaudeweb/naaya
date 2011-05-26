@@ -15,6 +15,7 @@ import email.MIMEText, email.Utils, email.Charset, email.Header
 from zope.component import queryUtility, getGlobalSiteManager
 from zope.sendmail.interfaces import IMailDelivery
 from zope.sendmail.mailer import SMTPMailer
+from zope.deprecation import deprecate
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -79,7 +80,16 @@ class EmailTool(Folder):
         else:
             return 'notifications@%s' % urlparse(self.REQUEST.SERVER_URL)[1]
 
+    @deprecate('_get_from_address renamed to get_addr_from')
     def _get_from_address(self):
+        return self.get_addr_from()
+
+    security.declarePrivate('get_addr_from')
+    def get_addr_from(self):
+        """
+        Get "From:" address, to use in mails originating from this portal. If
+        no such address is configured then we attempt to guess it.
+        """
         addr_from = self.getSite().mail_address_from
         return addr_from or self._guess_from_address()
 
@@ -89,7 +99,7 @@ class EmailTool(Folder):
         errors = []
         if not (self.mail_server_name and self.mail_server_port):
             errors.append('Mail server address/port not configured')
-        if not self._get_from_address():
+        if not self.get_addr_from():
             errors.append('"From" address not configured')
         return self._errors_report(errors=errors)
 
@@ -121,6 +131,11 @@ class EmailTool(Folder):
             if delivery is None:
                 mail_logger.info('Not sending email from %r because mail '
                                  'server is not configured',
+                                 site_path)
+                return 0
+
+            if not p_from:
+                mail_logger.info('Not sending email from %r - no sender',
                                  site_path)
                 return 0
 

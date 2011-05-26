@@ -1121,7 +1121,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     # deprecated
     def get_portal_mail_address(self):
-        return self.getEmailTool()._get_from_address()
+        return self.getEmailTool().get_addr_from()
 
     def notifyFolderMaintainer(self, p_folder, p_object, **kwargs):
         """
@@ -1133,7 +1133,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if len(l_emails) > 0:
                 #old way gets mails rejected
                 #mail_from = self.get_portal_mail_address()
-                mail_from = self.getEmailTool()._get_from_address()
+                mail_from = self.getEmailTool().get_addr_from()
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url(), **kwargs)
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
@@ -3340,9 +3340,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         template = etool._getOb('email_confirmuser')
         msubj = template.title
         mbody = template.body % info
-        mfrom = self.mail_address_from or self.administrator_email or \
-              'no-reply@' + portal_url.replace('http:', '', 1
-                            ).replace('/', '').replace('www.', '')
+        mfrom = etool.get_addr_from()
         etool.sendEmail(mbody, mto, mfrom, msubj)
 
     def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
@@ -3356,8 +3354,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@EMAIL@@', p_email)
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
-        mail_from = self.mail_address_from
-        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+        email_tool = self.getEmailTool()
+        mail_from = email_tool.get_addr_from()
+        email_tool.sendEmail(l_content, p_email, mail_from, l_subject)
 
     def sendAccountModifiedEmail(self, email, roles, loc, location):
         #sends an email informing the user about the modifications to its account
@@ -3388,8 +3387,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         content = content.replace('@@ROLES@@', roles)
 
         #send mail
-        mail_from = self.mail_address_from
-        self.getEmailTool().sendEmail(content, email, mail_from, subject)
+        email_tool = self.getEmailTool()
+        mail_from = email_tool.get_addr_from()
+        email_tool.getEmailTool().sendEmail(content, email, mail_from, subject)
 
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
         #sends a feedback email
@@ -3643,8 +3643,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         Sends bulk mail with the specified subject and body to
         all email addresses in 'mails'
         """
+        addr_from = self.getEmailTool().get_addr_from()
         for mail in mails:
-            self.getEmailTool().sendEmail(mail_body, mail, self.mail_address_from, mail_subject)
+            self.getEmailTool().sendEmail(mail_body, mail, addr_from, mail_subject)
 
         if REQUEST:
             self.setSessionInfoTrans('Mail sent. (${date})', date=self.utGetTodayDate())

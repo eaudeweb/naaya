@@ -243,7 +243,7 @@ class NotificationTool(Folder):
 
         #Send email
         email_tool = self.getSite().getEmailTool()
-        email_from = email_tool._get_from_address()
+        email_from = email_tool.get_addr_from()
         email_template = EmailPageTemplateFile(
             'emailpt/confirm.zpt', globals())
         email_data = email_template.render_email(
@@ -344,7 +344,7 @@ class NotificationTool(Folder):
         """
         portal = self.getSite()
         email_tool = portal.getEmailTool()
-        addr_from = email_tool._get_from_address()
+        addr_from = email_tool.get_addr_from()
         for addr_to, kwargs in messages_by_email.iteritems():
             translate = self.getSite().getPortalTranslations()
             kwargs.update({'portal': portal, '_translate': translate})
