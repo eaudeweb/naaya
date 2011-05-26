@@ -2745,7 +2745,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                               'admin_ordermaintopics')
     def admin_ordermaintopics(self, positions=None, REQUEST=None):
         """ Save sortorder to maintopics by creating a new in the new order """
-        if positions is not None:
+        if positions:
             new_order = filter(lambda path: path in self.maintopics,
                                positions.split('|'))
             if len(new_order) == len(self.maintopics):
