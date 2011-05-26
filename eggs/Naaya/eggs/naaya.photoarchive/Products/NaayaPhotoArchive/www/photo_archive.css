@@ -137,7 +137,7 @@ padding: 0.1em 0.5em;
 }
 
 .image-holder {
-  background: transparent url(misc_/NaayaPhotoArchive/photo_background.png) no-repeat scroll left center;
+  background: transparent url(/misc_/NaayaPhotoArchive/photo_background.png) no-repeat scroll left center;
   height: 120px;
   width: 120px;
   margin-bottom: 0.4em;
