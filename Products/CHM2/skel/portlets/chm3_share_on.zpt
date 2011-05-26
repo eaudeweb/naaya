@@ -7,7 +7,7 @@
     <div class="box-title">
       <span i18n:translate="">Share on</span>
     </div>
-    <div class="box-content" tal:define="short_url python:here.rstk.shorten_url(here.absolute_url())">
+    <div class="box-content">
 		<a class="twitter-share-button" title="Twitter" href="http://twitter.com/share"
 			data-count="none" i18n:translate="" i18n:attributes="title">Twitter</a>
 		<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
