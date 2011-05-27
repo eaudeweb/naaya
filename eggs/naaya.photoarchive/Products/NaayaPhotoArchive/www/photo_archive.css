@@ -121,12 +121,16 @@ padding: 0.1em 0.5em;
 }
 
 .g-album-content {
-  margin-right: 20.5em;
+  margin-right: 22.5em;
   height: 100%;
 }
 
 #selection_buttons {
   width: auto;
+}
+
+#selection_buttons input {
+	cursor: pointer;
 }
 
 .thumbnail-layout {
@@ -290,7 +294,6 @@ padding: 0.1em 0.5em;
 
 .paginator-head {
   font-weight: bold;
-  font-size: 1.2em;
 }
 
 .paginator-pages span {
@@ -298,9 +301,6 @@ padding: 0.1em 0.5em;
   font-size: 1.2em;
   text-decoration: none;
 }
-
-
-
 
 fieldset {
 	border-width: thin;
@@ -324,4 +324,9 @@ fieldset dd {
 	float: left;
 	margin-left: 0.5em;
 	width: 35em;
+}
+
+
+.paginator label {
+	vertical-align: middle;
 }
