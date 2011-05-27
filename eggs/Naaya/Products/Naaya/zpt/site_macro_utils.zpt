@@ -37,7 +37,7 @@ Optional:
 	
 	<div class="paginator-footer">
 		<span i18n:translate="">Showing page</span>
-		<label i18n:translate="" tal:content="label" tal:condition="label" />
+		<!--<label i18n:translate="" tal:content="label" tal:condition="label" />-->
 		<span tal:replace="python:curr_page+1" />
 		<span i18n:translate="" tal:omit-tag="">of</span>
 		<span tal:replace="paginator/pages" />
@@ -45,7 +45,7 @@ Optional:
 		
 	<div class="paginator-head">
 		<span i18n:translate="">Showing</span>
-		<label i18n:translate="" tal:content="label" tal:condition="label" />
+		<!--<label i18n:translate="" tal:content="label" tal:condition="label" />-->
 		<span tal:replace="python:paginator.first_on_page(curr_page)" /> - <span tal:replace="python:paginator.last_on_page(curr_page)" />
 		<span i18n:translate="" tal:omit-tag="">of</span>
 		<span tal:replace="paginator/hits" />
