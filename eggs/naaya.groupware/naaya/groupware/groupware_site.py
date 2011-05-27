@@ -5,6 +5,7 @@ import Globals
 from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from App.ImageFile import ImageFile
@@ -106,19 +107,15 @@ class GroupwareSite(NySite):
     def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER']
 
-        def check_role(role_name):
-            ldap_user_folder = self.aq_parent.acl_users
-            result = ldap_user_folder.authorize(user, self, self,
-                                       'index_html', self.index_html,
-                                       (role_name,))
-            return result
-
-        if self.checkPermissionPublishObjects():
+        if user.has_permission(PERMISSION_PUBLISH_OBJECTS, self):
             return 'admin'
-        elif check_role('Contributor'):
+
+        elif user.allowed(self, ['Contributor']):
             return 'member'
-        elif self.checkPermissionView():
+
+        elif user.has_permission(view, self):
             return 'viewer'
+
         else:
             return 'restricted'
 
