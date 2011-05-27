@@ -21,18 +21,15 @@ tal:define="
 			</a>
 		</div>
 		<div class="image-details" tal:attributes="id string:div_${photo_id}" metal:define-slot="details">
-			<a tal:omit-tag="not:follow_link" tal:attributes="href photo/absolute_url; title string:Image information">
-				<img src="/misc_/NaayaPhotoArchive/InfoIcon.png"/>
-			</a>
 			<input type="checkbox" name="ids:list" tal:attributes="value photo_id; id photo_id" />
 			<label tal:attributes="for photo_id" tal:content="structure python:here.word_break(photo.title_or_id())" />
 		</div>
 		</tal:block>
 	</div>
 	</tal:block>
+  <div class="cleaner">&nbsp;</div>
+  <div metal:use-macro="here/macro_utils/macros/paginator" />
 </div>
-<div style="clear: left;">
-	<div metal:use-macro="here/macro_utils/macros/paginator" />
-</div>
+
 
 </metal:block>
