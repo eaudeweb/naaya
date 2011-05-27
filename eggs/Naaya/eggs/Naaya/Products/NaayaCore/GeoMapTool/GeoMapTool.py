@@ -773,21 +773,18 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                       self.map_index.absolute_url())
 
     def _index_template(self):
-        if hasattr(self, 'map_index'):
+        if 'map_index' in self.objectIds():
             return self._getOb('map_index')
-        for skel_handler in reversed(self.get_all_skel_handlers()):
-            skel_path = skel_handler.skel_path
-            map_index_path = os.path.join(skel_path, 'others', 'map_index.zpt')
-            if os.path.isfile(map_index_path):
-                return PageTemplateFile(map_index_path).__of__(self)
         else:
             return self.view_map_html
 
     security.declareProtected(view, 'view_map_html')
-    view_map_html = PageTemplateFile('zpt/map_index', globals())
+    view_map_html = NaayaPageTemplateFile('zpt/map_index', globals(),
+                                          'map_index')
 
     security.declareProtected(view, 'embed_map_html')
-    _embed_map_html = PageTemplateFile('zpt/map_embed', globals())
+    _embed_map_html = NaayaPageTemplateFile('zpt/map_embed', globals(),
+                                            'map_embed')
     def embed_map_html(self, REQUEST):
         """ embeddable map, for iframe """
         if 'map_embed' in self.objectIds():
