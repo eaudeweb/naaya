@@ -1,5 +1,6 @@
 import os
 import sys
+import mimetypes
 
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent
@@ -243,8 +244,9 @@ class file_item(NyContentData, NyFSFile):
                     filename = cookId('', '', file)[0]
                     if filename != '':
                         data, size = self._read_data(file)
-                        content_type = self._get_content_type(file, data,
-                            self.__name__, 'application/octet-stream')
+                        content_type = mimetypes.guess_type(file.filename)[0]
+                        if content_type is None:
+                            content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
                         return data, content_type, size, filename
                 else:
                     return file, '', None, ''
