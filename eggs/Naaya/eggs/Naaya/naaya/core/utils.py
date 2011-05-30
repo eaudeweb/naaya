@@ -6,6 +6,8 @@ import warnings
 import tempfile
 import urllib
 
+from zope.deprecation import deprecate
+
 mimetype_map = {
     '.css'  : 'text/css',
     '.html' : 'text/html',
@@ -33,6 +35,7 @@ mimetype_map = {
     '.mpg'  : 'video/mpeg',
 }
 
+@deprecate('mimetype_from_filename is deprecated use mimetype.guess_type')
 def mimetype_from_filename(filename, default=None):
     ext = path.splitext(filename)[1]
     return mimetype_map.get(ext, default)
