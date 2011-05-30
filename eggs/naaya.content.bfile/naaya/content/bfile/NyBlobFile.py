@@ -1,5 +1,6 @@
 """Storage and provider of blob files"""
 import urllib
+import mimetypes
 
 from ZODB.blob import Blob
 from ZODB.interfaces import BlobError
@@ -9,10 +10,7 @@ from zope.interface import implements
 
 from interfaces import INyBlobFile
 
-from naaya.core.utils import mimetype_from_filename
-
 COPY_BLOCK_SIZE = 65536 # 64KB
-DEFAULT_MIMETYPE = 'application/octet-stream'
 
 class NyBlobFile(Persistent):
     """Naaya container for files stored using ZODB Blob"""
@@ -86,9 +84,9 @@ class NyBlobFile(Persistent):
 def make_blobfile(the_file, **kwargs):
     filename = trim_filename(the_file.filename)
 
-    content_type = getattr(the_file, 'headers', {}).get('content-type', None)
+    content_type = mimetypes.guess_type(the_file.filename)[0]
     if content_type is None:
-        content_type = mimetype_from_filename(filename, DEFAULT_MIMETYPE)
+        content_type = getattr(the_file, 'headers', {}).get('content-type', 'application/octet-stream')
 
     meta = {
         'filename': filename,
