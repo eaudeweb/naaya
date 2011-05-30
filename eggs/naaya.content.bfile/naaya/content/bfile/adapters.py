@@ -56,11 +56,13 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
             return ""
 
     def get_icon(self):
-        version = self.ob.current_version
-        if version is not None:
-            return icon_for_content_type(self.ob, version.content_type)
-        else:
-            return super(BFileViewAdapter, self).get_icon()
+        if self.ob.approved:
+            version = self.ob.current_version
+
+            if version is not None:
+                return icon_for_content_type(self.ob, version.content_type)
+
+        return super(BFileViewAdapter, self).get_icon()
 
     def get_size(self):
         version = self.ob.current_version
