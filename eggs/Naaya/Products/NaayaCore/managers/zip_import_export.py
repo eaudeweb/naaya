@@ -22,16 +22,11 @@ import transaction
 from Products.Naaya.NyFolder import NyFolder
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from naaya.content.contact.interfaces import INyContact
-from naaya.content.document.interfaces import INyDocument
-from naaya.content.event.interfaces import INyEvent
-from naaya.content.file.interfaces import INyFile
-from naaya.content.news.interfaces import INyNews
-from naaya.content.story.interfaces import INyStory
-from naaya.content.url.interfaces import INyURL
 from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import relative_object_path
 from naaya.content.file.file_item import addNyFile
+
+from interfaces import IZipExportObject
 
 try:
     from naaya.content.bfile.bfile_item import addNyBFile
@@ -217,288 +212,107 @@ class ZipExportTool(Implicit, Item):
         open file object. Caller should close the file to free temporary
         disk space.
         """
-        if REQUEST and not self.getParentNode().checkPermissionView():
-            raise Unauthorized
 
-        errors = []
+        errors = None
+        if REQUEST is not None:
+            errors = []
+            if not self.getParentNode().checkPermissionView():
+                raise Unauthorized
 
         my_container = self.getParentNode()
-
-        objects_to_archive = self.gather_objects(my_container)
-
         temp_file = tempfile.TemporaryFile()
         zip_file = ZipFile(temp_file, 'w')
-        archive_files = []
-        try:
-            for obj in objects_to_archive:
-                added_path = None
-                if self.is_exportable(obj):
-                    added_path = self.add_object_to_zip(obj, zip_file)
-                if added_path:
-                    archive_files.append((obj.title_or_id(),
-                                          getattr(obj, 'meta_label',
-                                                  obj.meta_type),
-                                          added_path))
 
-            self.add_index(zip_file, archive_files)
-            zip_file.close()
-        except Exception, e:
-            errors.append(e)
+        builder = RecursiveZipBuilder(zip_file, errors)
+        builder.recurse(my_container, IZipExportObject(my_container).filename)
+        builder.write_index()
 
+        zip_file.close()
         temp_file.seek(0)
 
-        if REQUEST is not None:
-            if errors:
-                transaction.abort()
-                self.setSessionErrorsTrans(errors)
-                return REQUEST.RESPONSE.redirect(my_container.absolute_url())
-            else:
-                response = REQUEST.RESPONSE
-                response.setHeader('content-type', 'application/zip')
-                response.setHeader('content-disposition',
-                                   'attachment; filename=%s.zip' %
-                                   my_container.getId())
-                return stream_response(REQUEST.RESPONSE, temp_file)
-        else:
-            if errors:
-                return errors
-            else:
-                return temp_file
+        if REQUEST is None:
+            return temp_file
 
-    security.declarePrivate('gather_objects')
-    def gather_objects(self, container):
-        objects = []
-        for obj in container.objectValues():
-            objects.append(obj)
-            if isinstance(obj, NyFolder):
-                objects.extend(self.gather_objects(obj))
-        return objects
+        if errors:
+            transaction.abort() # TODO use ZODB savepoints
+            self.setSessionErrorsTrans(errors)
+            return REQUEST.RESPONSE.redirect(my_container.absolute_url())
 
-    security.declarePrivate('add_object_to_zip')
-    def add_object_to_zip(self, obj, zip_file):
-        zip_path = self.get_zip_path(obj)
-        if isinstance(zip_path, unicode):
-            zip_path = zip_path.encode('utf-8')
-        object_zip_data, object_zip_filename = self.get_zip_content(obj)
-        if isinstance(obj, NyFolder):
-            object_zip_data = 'Naaya Folder'
-        else:
-            zip_path_ext = os.path.splitext(zip_path)[1]
-            original_ext = os.path.splitext(object_zip_filename)[1]
-            if zip_path_ext != original_ext:
-                zip_path += original_ext
-        if object_zip_data:
-            if isinstance(object_zip_data, unicode):
-                object_zip_data = object_zip_data.encode('utf-8')
-
-            #Add modification datetime
-            if hasattr(obj, 'releasedate'):
-                date = obj.releasedate
-                zipinfo = ZipInfo(filename=zip_path,
-                                  date_time=(date.year(), date.month(),
-                                             date.day(), date.hour(),
-                                             date.minute(),
-                                             int(date.second()), ))
-            else:
-                zipinfo = ZipInfo(filename=zip_path)
-
-            #Set external_attr to 16, otherwise empty folders will not be
-            #preserved
-            if object_zip_data == 'Naaya Folder':
-                zipinfo.external_attr = 16
-
-            zip_file.writestr(zipinfo, object_zip_data)
-            return zip_path
-
-    security.declarePrivate('add_index')
-    def add_index(self, zip_file, archive_files):
-        index_content = [('Title', 'Type', 'Path')]
-        index_content.extend(archive_files)
-        index_content = ['\t'.join(row).encode('utf-8') for \
-                         row in index_content]
-        index_content = '\n'.join(index_content)
-        zip_file.writestr('index.txt', index_content)
-
-    security.declarePrivate('get_zip_path')
-    def get_zip_path(self, obj):
-        my_container = self.getParentNode()
-        my_container_path = my_container.getPhysicalPath()
-        object_path = obj.getPhysicalPath()
-        relative_object_path = object_path[len(my_container_path[:-1]):]
-        object_zip_path = []
-        for path in relative_object_path:
-            object_zip_path.append(path)
-        if isinstance(obj, NyFolder):
-            object_zip_path.append('')
-        return '/'.join(object_zip_path)
-
-    security.declarePrivate('get_zip_content')
-    def get_zip_content(self, obj):
-        try:
-            export_adapter = IZipExportObject(obj)
-            return export_adapter()
-        except TypeError:
-            return ('', '')
-
-    security.declarePrivate('user_has_view_permission')
-    def user_has_view_permission(self, obj):
-        return obj.checkPermissionView()
-
-    security.declarePrivate('is_exportable')
-    def is_exportable(self, obj):
-        return obj.approved and self.user_has_view_permission(obj)
+        response = REQUEST.RESPONSE
+        response.setHeader('content-type', 'application/zip')
+        response.setHeader('content-disposition',
+                           'attachment; filename=%s.zip' %
+                           my_container.getId())
+        return stream_response(REQUEST.RESPONSE, temp_file)
 
 InitializeClass(ZipExportTool)
 
-class IZipExportObject(Interface):
-    def __call__():
-        """Return data (as `str`) and filename, as a tuple
-        """
 
-class URLZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyURL)
+class RecursiveZipBuilder(object):
 
-    def __init__(self, context):
-        self.context = context
+    def __init__(self, zip_file, error_container):
+        self.zip_file = zip_file
+        self.error_container = error_container
+        self.index_txt = StringIO()
+        self.index_txt.write('\t'.join(['Title', 'Type', 'Path']) + '\n')
 
-    def __call__(self):
-        obj = self.context
-        portal = obj.getSite()
-        schema_tool = portal.getSchemaTool()
+    def recurse(self, obj, parent_path=''):
+        for sub_obj in obj.objectValues():
+            try:
+                self.add_object_to_zip(sub_obj, parent_path)
 
-        schema = schema_tool.getSchemaForMetatype(obj.meta_type)
+            except Exception, e:
+                if self.error_container is None:
+                    raise
+                self.error_container.append(e)
 
-        obj_data = []
-        obj_data.append('<html><body>')
-        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
+    def write_index(self, filename='index.txt'):
+        self.zip_file.writestr(filename, self.index_txt.getvalue())
 
-        for widget in schema.listWidgets():
-            if widget.prop_name() in ['description', 'locator']:
-                obj_widget_value = getattr(obj, widget.prop_name(), '')
-                widget_data = widget._convert_to_form_string(obj_widget_value)
+    def add_object_to_zip(self, obj, parent_path):
+        try:
+            target = IZipExportObject(obj)
+        except TypeError:
+            return
 
-                if not widget_data:
-                    continue
+        if target.skip:
+            return
 
-                obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
-                                                                     widget_data))
+        target_path = parent_path + target.filename
 
-        obj_data.append('</body></html>')
-        zip_data = '\n'.join(obj_data)
-        zip_filename = '%s.html' % self.context.getId()
-        return zip_data, zip_filename
+        if isinstance(target_path, unicode):
+            # we could convert target_path to utf-8, but that would just mask
+            # a bug elsewhere; better to raise an exception so we fix the
+            # original cause.
+            raise ValueError("All paths must be byte strings!")
 
+        data = target.data
+        if isinstance(data, unicode):
+            data = data.encode('utf-8')
 
-class DocumentZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyDocument)
+        t = target.timestamp
+        if t is None:
+            zipinfo = ZipInfo(target_path)
 
-    def __init__(self, context):
-        self.context = context
+        else:
+            date_time = (t.year(), t.month(), t.day(),
+                         t.hour(), t.minute(), int(t.second()))
+            zipinfo = ZipInfo(target_path, date_time)
 
-    def __call__(self):
-        zip_data = ("<html><body>"
-                    "<h1>%(document_title)s</h1>"
-                    "<div>%(document_description)s</div>"
-                    "<div>%(document_body)s</div>"
-                    "</body></html>") % \
-                 {'document_title': self.context.title,
-                  'document_description': self.context.description,
-                  'document_body': self.context.body}
+        if target.export_as_folder:
+            # Set external_attr to 16, otherwise empty folders will not be
+            # preserved
+            zipinfo.external_attr = 16
 
-        zip_filename = '%s.html' % self.context.getId()
-        return zip_data, zip_filename
+        self.zip_file.writestr(zipinfo, data)
 
-class StoryZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyStory)
+        index_row = (target.title.encode('utf-8'),
+                     target.meta_label, target_path)
+        self.index_txt.write('\t'.join(index_row) + '\n')
 
-    def __init__(self, context):
-        self.context = context
+        if target.export_as_folder:
+            self.recurse(obj, target_path)
 
-    def __call__(self):
-        zip_data = self.context.body
-        zip_filename = '%s.html' % self.context.getId()
-        return zip_data, zip_filename
-
-class FileZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyFile)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        zip_data = self.context.get_data()
-        filename = self.context.utToUtf8(self.context.downloadfilename())
-        filename = self.context.utSlugify(filename)
-        zip_filename = filename
-        return zip_data, zip_filename
-
-class ContactZipAdapter(object):
-    implements(IZipExportObject)
-    adapts(INyContact)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        zip_data = self.context.export_vcard()
-        zip_filename = '%s.vcf' % self.context.getId()
-        return zip_data, zip_filename
-
-class NewsAndEventZipExport(object):
-
-    def export_data_for_zip(self):
-        obj = self.context
-        portal = obj.getSite()
-        schema_tool = portal.getSchemaTool()
-
-        schema = schema_tool.getSchemaForMetatype(obj.meta_type)
-
-        obj_data = []
-        obj_data.append('<html><body>')
-        obj_data.append('<h1>%s</h1>' % obj.title_or_id())
-
-        for widget in schema.listWidgets():
-            if widget.prop_name() in ['sortorder', 'topitem', 'title']:
-                continue
-            if not widget.visible:
-                continue
-            obj_widget_value = getattr(obj, widget.prop_name(), '')
-            widget_data = widget._convert_to_form_string(obj_widget_value)
-
-            if not widget_data:
-                continue
-
-            obj_data.append('<h2>%s</h2><p><div>%s</div></p>' % (widget.title,
-                                                                 widget_data))
-
-        obj_data.append('</body></html>')
-        zip_data = '\n'.join(obj_data)
-        zip_filename = '%s.html' % self.context.getId()
-        return zip_data, zip_filename
-
-class EventZipAdapter(NewsAndEventZipExport):
-    implements(IZipExportObject)
-    adapts(INyEvent)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        return self.export_data_for_zip()
-
-class NewsZipAdapter(NewsAndEventZipExport):
-    implements(IZipExportObject)
-    adapts(INyNews)
-
-    def __init__(self, context):
-        self.context = context
-
-    def __call__(self):
-        return self.export_data_for_zip()
 
 class FileIterator(object):
     """
