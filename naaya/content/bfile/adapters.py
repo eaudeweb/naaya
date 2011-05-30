@@ -1,19 +1,22 @@
 """Adapters for content view and zip import/export"""
 
+import os.path
 from Products.Naaya.adapters import NyContentTypeViewAdapter
+from Products.NaayaCore.managers.zip_export_adapters import DefaultZipAdapter
 from naaya.core.zope2util import DT2dt, ensure_tzinfo, icon_for_content_type
 from naaya.core.utils import pretty_size
 
 from interfaces import INyBFile
 
-class BFileZipAdapter(object):
-    def __init__(self, context):
-        self.context = context
+class BFileZipAdapter(DefaultZipAdapter):
 
-    def __call__(self):
-        zip_data = self.context.current_version.open().read()
-        zip_filename = self.context.current_version.filename
-        return zip_data, zip_filename
+    @property
+    def data(self):
+        return self.context.current_version.open().read()
+
+    @property
+    def extension(self):
+        return os.path.splitext(self.context.current_version.filename)[1]
 
 class GenericViewer(object):
     """Generic view for all mime types"""
