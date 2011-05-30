@@ -7,14 +7,7 @@
   <include package=".NotificationTool" />
   <include package=".PortletsTool" />
   <include package=".GoogleDataTool" />
-
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.DocumentZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.FileZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.ContactZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.EventZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.NewsZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.StoryZipAdapter" />
-  <adapter factory="Products.NaayaCore.managers.zip_import_export.URLZipAdapter" />
+  <include package=".managers" />
 
   <adapter factory="Products.NaayaCore.managers.recaptcha_utils.CaptchaProvider" />
 
