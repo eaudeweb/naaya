@@ -82,7 +82,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
                              'attachment')
-        self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
+        self.assertEqual(headers['content-type'], 'text/plain')
         self.failUnlessEqual(html, TEST_FILE_DATA)
 
         self.browser_do_logout()
@@ -127,7 +127,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
                              'attachment')
-        self.assertEqual(headers['content-type'], 'text/plain; charset=latin-1')
+        self.assertEqual(headers['content-type'], 'text/plain')
         self.failUnlessEqual(html, TEST_FILE_DATA_2)
 
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html?lang=fr')
@@ -135,17 +135,17 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         form['title:utf8:ustring'] = 'french_title'
         TEST_FILE_DATA_3 = 'some new data for my file'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_3),
-            filename='the_new_bfile.txt', content_type='text/html; charset=utf-8')
+            filename='the_new_bfile.html', content_type='text/html; charset=utf-8')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
         self.browser.go('http://localhost/portal/myfolder/mybfile/'
-                        'download/2/the_new_bfile.txt')
+                        'download/2/the_new_bfile.html')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
                              'attachment')
-        self.assertEqual(headers['content-type'], 'text/html; charset=utf-8')
+        self.assertEqual(headers['content-type'], 'text/html')
         self.failUnlessEqual(html, TEST_FILE_DATA_3)
 
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
@@ -232,7 +232,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin
         self.failUnlessEqual(self.browser_get_header('content-disposition'),
                              "attachment")
         self.assertEqual(self.browser_get_header('content-type'),
-                         'text/plain; charset=utf-8')
+                         'text/plain')
         self.failUnlessEqual(html, 'simple contents')
 
         self.browser_do_logout()

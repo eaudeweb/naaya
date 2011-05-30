@@ -30,7 +30,7 @@ class NyBFileTestCase(NaayaTestCase):
 
     def test_add_with_file(self):
         myfile = StringIO('hello data!')
-        myfile.filename = 'my.txt'
+        myfile.filename = 'my.jpg'
         myfile.headers = {'content-type': 'image/jpeg'}
 
         now_pre = datetime.utcnow()
@@ -46,9 +46,31 @@ class NyBFileTestCase(NaayaTestCase):
         ver = mybfile.current_version
         self.assertTrue(now_pre <= ver.timestamp <= now_post)
         self.assertEqual(ver.open().read(), 'hello data!')
-        self.assertEqual(ver.filename, 'my.txt')
+        self.assertEqual(ver.filename, 'my.jpg')
         self.assertEqual(ver.size, 11)
         self.assertEqual(ver.content_type, 'image/jpeg')
+
+    def test_add_with_file_with_fake_content_type(self):
+        myfile = StringIO('hello data!')
+        myfile.filename = 'my.pdf'
+        myfile.headers = {'content-type': 'image/jpeg'}
+
+        now_pre = datetime.utcnow()
+        self.add_bfile(id='mybfile', title='My bfile', uploaded_file=myfile)
+        now_post = datetime.utcnow()
+
+        mybfile = self.portal.myfolder.mybfile
+        self.assertTrue(mybfile.id, 'mybfile')
+        self.assertTrue(mybfile.title, 'My bfile')
+        self.assertEqual(len(mybfile._versions), 1)
+        self.assertTrue(mybfile.current_version is mybfile._versions[0])
+
+        ver = mybfile.current_version
+        self.assertTrue(now_pre <= ver.timestamp <= now_post)
+        self.assertEqual(ver.open().read(), 'hello data!')
+        self.assertEqual(ver.filename, 'my.pdf')
+        self.assertEqual(ver.size, 11)
+        self.assertEqual(ver.content_type, 'application/pdf')
 
     def test_change_file(self):
         myfile = StringIO('hello data!')
