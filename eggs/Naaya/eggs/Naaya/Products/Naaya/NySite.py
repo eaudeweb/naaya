@@ -162,6 +162,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     rights = LocalProperty('rights')
     display_contributor = "on"
     display_subobject_count = ""
+    display_subobject_count_for_admins = ""
     default_logo = ''
     content_versioning_enabled = True
     notify_on_errors_email = ''
@@ -213,6 +214,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         # Choose whether or not the contributor should be displayed
         self.display_contributor = "on"
         self.display_subobject_count = ""
+        self.display_subobject_count_for_admins = ""
         self.default_logo = ''
         contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
@@ -2177,6 +2179,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.switch_language        = kwargs.get('switch_language', 0)
         self.display_contributor    = kwargs.get('display_contributor', '')
         self.display_subobject_count= kwargs.get('display_subobject_count', '')
+        self.display_subobject_count_for_admins= kwargs.get('display_subobject_count_for_admins', '')
 
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
