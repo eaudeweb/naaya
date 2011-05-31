@@ -94,29 +94,30 @@
         <tal:block condition="not:suggestions">
             <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
         </tal:block>
-		<tal:block condition="not:here/library_link">
+		<tal:block condition="not:here/library_id">
 			<p>
 				<strong i18n:translate="" class="message-error">
 					This assessment doesn't have a parent in the VL
 				</strong>
 			</p>
 		</tal:block>
-		<tal:block condition="here/library_link">
-			<br/>
-			<p>
-				<strong i18n:translate="">Assessment location in the VL:</strong>
-				<tal:block content="here/geo_location/address|string: - "/>
-				(<a i18n:translate="" tal:attributes="href string:${here/library_link}?edit=1" target="_blank">edit</a>)
-			</p>
-		</tal:block>
     </tal:block>
 	<form id="set_region" name="set_region" method="post" action=".">
 		<strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong><br/><br/>
 		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
-			size="100" tal:attributes="value here/geo_coverage_country|nothing"/><br/><br/>
+			size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
+			<tal:block condition="here/library_id|nothing">
+				(<tal:block content="python:test(here.library_geo_coverage_country, here.library_geo_coverage_country, 'emtpy')"/>
+				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+			</tal:block>
+			<br/><br/>
 		<strong><label for="geo_coverage_region" i18n:translate="">Geo coverage: region</label></strong><br/><br/>
 		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
 			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
+			<tal:block condition="here/library_id|nothing">
+				(<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>
+				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+			</tal:block>
 		<br/><br/>
 		<input type="submit" name="set_region:method" value="Save country/region" i18n:attributes="value"/>
 	</form>
