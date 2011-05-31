@@ -193,6 +193,10 @@ def extract_survey_answer_data_library(answer):
 
 def extract_survey_answer_data_general_template(answer):
     library_answer = get_library_answer(answer)
+    if library_answer:
+        library_link = library_answer.absolute_url()
+    else:
+        library_link = None
 
     all_topics = set()
     multiple_selects = [
@@ -217,6 +221,7 @@ def extract_survey_answer_data_general_template(answer):
         'id': answer.getId(),
         'title': answer.get('w_q1-name-assessment-report'),
         'geo_location': general_template_extract_geo_location(answer),
+        'library_link': library_link,
         'uploader': uploader,
         'country': answer.get(key='w_country', default=''),
         #This is commented because (now) we don't want to show review template answers on the map
