@@ -105,7 +105,7 @@
 			<br/>
 			<p>
 				<strong i18n:translate="">Assessment location in the VL:</strong>
-				<tal:block content="here/geo_location/address"/>
+				<tal:block content="here/geo_location/address|nothing"/>
 				(<a i18n:translate="" tal:attributes="href string:${here/library_link}?edit=1" target="_blank">edit</a>)
 			</p>
 		</tal:block>
