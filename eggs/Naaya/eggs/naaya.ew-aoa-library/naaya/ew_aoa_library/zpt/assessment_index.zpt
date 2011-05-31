@@ -107,7 +107,7 @@
 		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
 			size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
 			<tal:block condition="here/library_id|nothing">
-				(<tal:block content="python:test(here.library_geo_coverage_country, here.library_geo_coverage_country, 'emtpy')"/>
+				("<tal:block content="python:test(here.library_geo_coverage_country, here.library_geo_coverage_country, 'emtpy')"/>"
 				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
 			</tal:block>
 			<br/><br/>
@@ -115,7 +115,7 @@
 		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
 			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
 			<tal:block condition="here/library_id|nothing">
-				(<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>
+				("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
 				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
 			</tal:block>
 		<br/><br/>
