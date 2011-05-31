@@ -194,9 +194,9 @@ def extract_survey_answer_data_library(answer):
 def extract_survey_answer_data_general_template(answer):
     library_answer = get_library_answer(answer)
     if library_answer:
-        library_link = library_answer.absolute_url()
+        library_id = library_answer.getId()
     else:
-        library_link = None
+        library_id = None
 
     all_topics = set()
     multiple_selects = [
@@ -221,7 +221,7 @@ def extract_survey_answer_data_general_template(answer):
         'id': answer.getId(),
         'title': answer.get('w_q1-name-assessment-report'),
         'geo_location': general_template_extract_geo_location(answer),
-        'library_link': library_link,
+        'library_id': library_id,
         'uploader': uploader,
         'country': answer.get(key='w_country', default=''),
         #This is commented because (now) we don't want to show review template answers on the map
@@ -248,6 +248,12 @@ def extract_survey_answer_data_general_template(answer):
     attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', '')
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
+    if library_answer:
+        attrs['library_geo_coverage_country'] = getattr(library_answer.aq_base, 'w_official-country-region', '')
+        attrs['library_geo_coverage_region'] = getattr(library_answer.aq_base, 'w_geo-coverage-region', '')
+    else:
+        attrs['library_geo_coverage_country'] = None
+        attrs['library_geo_coverage_region'] = None
 
     return attrs
 
