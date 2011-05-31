@@ -94,8 +94,22 @@
         <tal:block condition="not:suggestions">
             <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
         </tal:block>
+		<tal:block condition="not:here/library_link">
+			<p>
+				<strong i18n:translate="" class="message-error">
+					This assessment doesn't have a parent in the VL
+				</strong>
+			</p>
+		</tal:block>
+		<tal:block condition="here/library_link">
+			<br/>
+			<p>
+				<strong i18n:translate="">Assessment location in the VL:</strong>
+				<tal:block content="here/geo_location/address"/>
+				(<a i18n:translate="" tal:attributes="href string:${here/library_link}?edit=1" target="_blank">edit</a>)
+			</p>
+		</tal:block>
     </tal:block>
-	<br/>
 	<form id="set_region" name="set_region" method="post" action=".">
 		<strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong><br/><br/>
 		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
