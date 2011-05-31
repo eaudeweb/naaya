@@ -35,7 +35,7 @@ mimetype_map = {
     '.mpg'  : 'video/mpeg',
 }
 
-@deprecate('mimetype_from_filename is deprecated use mimetype.guess_type')
+@deprecate('mimetype_from_filename is deprecated, use mimetype.guess_type')
 def mimetype_from_filename(filename, default=None):
     ext = path.splitext(filename)[1]
     return mimetype_map.get(ext, default)
