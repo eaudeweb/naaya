@@ -23,6 +23,8 @@ from naaya.content.semide.textlaws.semtextlaws_item import config; METATYPE_NYSE
 from naaya.content.semide.news.semnews_item import config; METATYPE_NYSEMNEWS = config['meta_type']
 from naaya.content.semide.event.semevent_item import config; METATYPE_NYSEMEVENT = config['meta_type']
 
+from naaya.core.zope2util import ofs_path
+
 from Products.SEMIDE.constants import (SEMIDE_PRODUCT_PATH, TITLE_FLASHTOOL,
 ID_FLASHTOOL, FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION,
 VACANCIES, CALLFORPROPOSALS, TENDERS, PAPERS, TRAINING)
@@ -407,16 +409,20 @@ class FlashTool(Folder, ProfileMeta, utils):
                                 )
                             ))
                     #News tag
-                    news.append(E.news(desc_elem, {
-                        'title': sanitize_xml_data(
-                            obj.getLocalProperty('title', lang)),
-                        'source': obj.getLocalProperty('source', lang),
-                        'source_link': obj.source_link,
-                        'file_link': obj.file_link,
-                        'url': obj.absolute_url(0),
-                        'lang': lang,
-                        'isrtl': str(self.is_arabic(lang))
-                     }))
+                    try:
+                        news.append(E.news(desc_elem, {
+                            'title': sanitize_xml_data(
+                                obj.getLocalProperty('title', lang)),
+                            'source': obj.getLocalProperty('source', lang),
+                            'source_link': obj.source_link,
+                            'file_link': obj.file_link,
+                            'url': obj.absolute_url(0),
+                            'lang': lang,
+                            'isrtl': str(self.is_arabic(lang))
+                         }))
+                    except:
+                        log.exception("Failed to add %r to xml", ofs_path(obj))
+                        raise
             return tuple(news)
 
         def generate_events(obj_list):
@@ -439,18 +445,22 @@ class FlashTool(Folder, ProfileMeta, utils):
                     addr_elem = E.address(sanitize_xml_data(
                         obj.getLocalProperty('', lang)))
                     #Events tag
-                    events.append(E.events(desc_elem, addr_elem, {
-                        'title': sanitize_xml_data(
-                            obj.getLocalProperty('title', lang)),
-                        'start_date': str(obj.start_date),
-                        'end_date': str(obj.end_date),
-                        'source': obj.getLocalProperty('source', lang),
-                        'source_link': obj.source_link,
-                        'file_link': obj.file_link,
-                        'url': obj.absolute_url(0),
-                        'lang': lang,
-                        'isrtl': str(self.is_arabic(lang))
-                     }))
+                    try:
+                        events.append(E.events(desc_elem, addr_elem, {
+                            'title': sanitize_xml_data(
+                                obj.getLocalProperty('title', lang)),
+                            'start_date': str(obj.start_date),
+                            'end_date': str(obj.end_date),
+                            'source': obj.getLocalProperty('source', lang),
+                            'source_link': obj.source_link,
+                            'file_link': obj.file_link,
+                            'url': obj.absolute_url(0),
+                            'lang': lang,
+                            'isrtl': str(self.is_arabic(lang))
+                         }))
+                    except:
+                        log.exception("Failed to add %r to xml", ofs_path(obj))
+                        raise
             return tuple(events)
 
         for lang in langs:
