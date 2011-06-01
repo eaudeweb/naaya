@@ -24,6 +24,7 @@ from naaya.content.semide.news.semnews_item import config; METATYPE_NYSEMNEWS = 
 from naaya.content.semide.event.semevent_item import config; METATYPE_NYSEMEVENT = config['meta_type']
 
 from naaya.core.zope2util import ofs_path
+from naaya.core.utils import force_to_unicode
 
 from Products.SEMIDE.constants import (SEMIDE_PRODUCT_PATH, TITLE_FLASHTOOL,
 ID_FLASHTOOL, FLASHTOOL_METATYPE, FLASHTEMPLATE_METATYPE, INBRIEF, NOMINATION,
@@ -48,7 +49,7 @@ XML_ILLEGALS = u'|'.join(u'[%s-%s]' % (s, e) for s, e in [
 RE_SANITIZE_XML = re.compile(XML_ILLEGALS, re.M | re.U)
 
 def sanitize_xml_data(data):
-    return RE_SANITIZE_XML.sub('', data).encode('utf-8',
+    return RE_SANITIZE_XML.sub('', force_to_unicode(data)).encode('utf-8',
                                 'xmlcharrefreplace').decode('utf-8')
 
 def manage_addFlashTool(self, REQUEST=None):
@@ -413,15 +414,17 @@ class FlashTool(Folder, ProfileMeta, utils):
                         news.append(E.news(desc_elem, {
                             'title': sanitize_xml_data(
                                 obj.getLocalProperty('title', lang)),
-                            'source': obj.getLocalProperty('source', lang),
-                            'source_link': obj.source_link,
-                            'file_link': obj.file_link,
-                            'url': obj.absolute_url(0),
-                            'lang': lang,
-                            'isrtl': str(self.is_arabic(lang))
+                            'source': sanitize_xml_data(
+                                obj.getLocalProperty('source', lang)),
+                            'source_link': sanitize_xml_data(obj.source_link),
+                            'file_link': sanitize_xml_data(obj.file_link),
+                            'url': sanitize_xml_data(obj.absolute_url(0)),
+                            'lang': sanitize_xml_data(lang),
+                            'isrtl': sanitize_xml_data(
+                                str(self.is_arabic(lang))),
                          }))
                     except:
-                        log.exception("Failed to add %r to xml", ofs_path(obj))
+                        logger.exception("Failed to add %r to xml", ofs_path(obj))
                         raise
             return tuple(news)
 
@@ -449,17 +452,18 @@ class FlashTool(Folder, ProfileMeta, utils):
                         events.append(E.events(desc_elem, addr_elem, {
                             'title': sanitize_xml_data(
                                 obj.getLocalProperty('title', lang)),
-                            'start_date': str(obj.start_date),
-                            'end_date': str(obj.end_date),
-                            'source': obj.getLocalProperty('source', lang),
-                            'source_link': obj.source_link,
-                            'file_link': obj.file_link,
-                            'url': obj.absolute_url(0),
-                            'lang': lang,
-                            'isrtl': str(self.is_arabic(lang))
+                            'start_date': sanitize_xml_data(str(obj.start_date)),
+                            'end_date': sanitize_xml_data(str(obj.end_date)),
+                            'source': sanitize_xml_data(
+                                obj.getLocalProperty('source', lang)),
+                            'source_link': sanitize_xml_data(obj.source_link),
+                            'file_link': sanitize_xml_data(obj.file_link),
+                            'url': sanitize_xml_data(obj.absolute_url(0)),
+                            'lang': sanitize_xml_data(lang),
+                            'isrtl': sanitize_xml_data(str(self.is_arabic(lang))),
                          }))
                     except:
-                        log.exception("Failed to add %r to xml", ofs_path(obj))
+                        logger.exception("Failed to add %r to xml", ofs_path(obj))
                         raise
             return tuple(events)
 
