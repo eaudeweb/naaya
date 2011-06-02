@@ -37,7 +37,7 @@
 			<input type="checkbox" name="predefined" tal:attributes="value url" />
 		</td>
 		<td>
-			<a tal:attributes="href string:${url}" tal:content="python:here.utTruncateString(title_or_id, 100)" />
+			<a tal:attributes="href url" tal:content="python:here.html2text(title_or_id, 100, ellipsis=True)" />
 		</td>
 		<td tal:content="python:site.utShowDateTime(date)" />
 		</tal:block>
