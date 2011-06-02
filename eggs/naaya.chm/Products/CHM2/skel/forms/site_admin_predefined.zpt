@@ -9,7 +9,7 @@
 	<em i18n:name="Selected_uploads" i18n:translate="">Latest uploads</em>
 	portlet, out of the latest 50 items published on the website, and click
 	<em i18n:name="Save_changes" i18n:translate="">Save changes</em>.
-	If you don’t select any of the latest items in the list, the most recent five
+	If you don't select any of the latest items in the list, the most recent five
 	will be displayed by default.
 </p>
 <form action="setPredefinedUploads" method="post" name="frmPredefined">
