@@ -17,13 +17,16 @@
 </metal:block> -->
 
 <metal:block fill-slot="body"
-    tal:define="review_template python:'tools/general_template/general-template' in here.target_path;
-                is_entitled here/checkPermissionPublishObjects;
-                site here/getSite">
-<link rel="stylesheet" type="text/css" media="all"
-		tal:define="target_answer here/target_answer;
-					survey target_answer/getSurveyTemplate"
-      tal:attributes="href string:${survey/absolute_url}/css_survey_common" />
+    tal:define="virtual_library python:'tools/virtual_library/bibliography-details-each-assessment' in here.target_path;
+		review_template python:'tools/general_template/general-template' in here.target_path;
+		country_fiches python:'tools/country_fiches' in here.target_path;
+		cf_pair here/get_cf_pair;
+		is_entitled here/checkPermissionPublishObjects;
+		site here/getSite">
+	<link rel="stylesheet" type="text/css" media="all"
+			tal:define="target_answer here/target_answer;
+						survey target_answer/getSurveyTemplate"
+		  tal:attributes="href string:${survey/absolute_url}/css_survey_common" />
 
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
@@ -35,65 +38,123 @@
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
     tal:condition="is_entitled">
+
+	<span tal:condition="python: virtual_library and not cf_pair" class="buttons">
+		<script>
+			function setCookies(vlid){
+				var vl_title_en = $('#w_assessment-name-en').text();
+				setCookie('vl_title_en', vl_title_en, 1);
+				var vl_title_ru = $('#w_assessment-name-ru').text();
+				setCookie('vl_title_ru', vl_title_ru, 1);
+				var vl_author_en = $('#w_body-conducting-assessment-en').text();
+				setCookie('vl_author_en', vl_author_en, 1);
+				var vl_author_ru = $('#w_body-conducting-assessment-ru').text();
+				setCookie('vl_author_ru', vl_author_ru, 1);
+				var vl_country = $('#w_official-country-region').text();
+				setCookie('vl_country', vl_country, 1);
+				var vl_year = $('#w_assessment-year').text();
+				setCookie('vl_year', vl_year, 1);
+				var vl_url = $('#w_assessment-url').text();
+				setCookie('vl_url', vl_url, 1);
+				var vl_themes = new Array();
+				$('#w_theme li').each(function(){
+					vl_themes.push($(this).text().replace(/^\s+|\s+$/g,""));
+				});
+				for (i=0;i<4;i++){
+					deleteCookie('vl_theme_'+i);
+				};
+				if(vl_themes.length > 0){
+					for (i=0;i<vl_themes.length;i++){
+						setCookie('vl_theme_'+i, vl_themes[i], 1);
+					}
+				};
+				deleteCookie('cf_theme_water');
+				deleteCookie('cf_theme_ge');
+				deleteCookie('cf_country');
+				deleteCookie('cf_document');
+				setCookie('vl_vlid', vlid, 1);
+
+				function setCookie(c_name,value,expires){
+					// set time, it's in milliseconds
+					var today = new Date();
+					today.setTime( today.getTime() );
+					if ( expires ){
+						expires = expires * 1000 * 60 * 60 * 24;
+					}
+					var expires_date = new Date( today.getTime() + (expires) );
+					var path = '/';
+					document.cookie=c_name + "=" + escape(value) +
+						( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+						( ( path ) ? ";path=" + path : "" );
+				}
+				function deleteCookie(name){
+					path = '/'
+					document.cookie = name + "=" +
+						( ( path ) ? ";path=" + path : "") +
+						";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+				}
+			}
+		</script>
+		<a id="export_to_cf" i18n:translate=""
+			tal:define="vlid here/id;
+			vlid_json python:here.rstk.json_dumps(vlid)"
+			tal:attributes="href python:here.getSite().tools.country_fiches.absolute_url();
+				onclick string:javascript:setCookies(${vlid_json})">
+				Export to Country Fiches
+		</a>
+	</span>
+	<span tal:condition="python: virtual_library and cf_pair" class="buttons">
+		<a i18n:translate="" target="_blank"
+		tal:attributes="href python:here.getSite().absolute_url() + '/tools/country_fiches/' + cf_pair">
+			Go to answer from the country fiches</a>
+	</span>
     <tal:block define="approved_date python:here.approved_date(here);
-                suggestions here/suggestions" tal:condition="review_template">
-        <tal:block condition="approved_date">
-            <div>
-                <strong i18n:translate="" class="widget-title">
-                    This assessment has been approved
-                </strong>
-            </div>
-            <br/>
-            <div style="width:200px">
-                <a class="survey-button"
-                    tal:attributes="href string:unapprove_assessment" i18n:translate="">
-                        Unapprove assessment
-                </a>
-            </div>
-            <br/>
-        </tal:block>
-        <tal:block condition="not:approved_date">
-            <p>
-                <strong i18n:translate="" class="message-error">
-                    This assessment is not yet approved
-                </strong>
-            </p>
-            <br/>
-            <div>
-                <a class="survey-button"
-                    tal:attributes="href string:approve_assessment" i18n:translate="">
-                        Approve assessment
-                </a>
-            </div>
-            <br/>
-            <form id="send_suggestion" name="send_suggestion" method="post" action=".">
-                <label for="suggestion" i18n:translate="">Send a suggestion to the uploader</label><br/>
-                <textarea id="suggestion" name="suggestion:utf8:ustring" cols="50" rows="5"></textarea><br/>
-                <input type="submit" name="add_suggestion:method" value="Send" i18n:attributes="value"/>
-            </form>
-            <br/>
-        </tal:block>
-        <tal:block condition="suggestions">
-            <div>
-                <strong i18n:translate="" tal:condition="suggestions">
-                    Following suggestion(s) were emailed to the uploader:
-                </strong>
-            </div>
-            <br/>
-            <ul>
-                <li tal:repeat="suggestion suggestions" tal:content="suggestion"/>
-            </ul>
-            <br/>
-            <div style="width:200px">
-                <a class="survey-button"
-                    tal:attributes="href string:remove_suggestions" i18n:translate="">
-                    Remove suggestions
-                </a>
-            </div>
-        </tal:block>
-        <tal:block condition="not:suggestions">
-            <strong i18n:translate="" >There are no suggestions</strong><br/><br/>
-        </tal:block>
+                suggestions here/suggestions" condition="review_template">
+		<span tal:condition="approved_date" class="buttons">
+			<a
+				tal:attributes="href string:unapprove_assessment" i18n:translate="">
+					Unapprove assessment
+			</a>
+		</span>
+		<span tal:condition="not:approved_date" class="buttons">
+			<a
+				tal:attributes="href string:approve_assessment" i18n:translate="">
+					Approve assessment
+			</a>
+		</span>
+		<span tal:condition="suggestions" class="buttons">
+				<a
+					tal:attributes="href string:remove_suggestions" i18n:translate="">
+					Remove suggestions
+				</a>
+		</span>
+		<p tal:condition="approved_date">
+			<strong i18n:translate="" class="widget-title">
+				This assessment has been approved
+			</strong>
+		</p>
+		<p tal:condition="not:approved_date">
+			<strong i18n:translate="" class="message-error">
+				This assessment is not yet approved
+			</strong>
+		</p>
+		<form id="send_suggestion" name="send_suggestion" method="post" action=".">
+			<label for="suggestion" i18n:translate="">Send a suggestion to the uploader</label><br/>
+			<textarea id="suggestion" name="suggestion:utf8:ustring" cols="50" rows="5"></textarea><br/>
+			<input type="submit" name="add_suggestion:method" value="Send" i18n:attributes="value"/>
+		</form>
+		<tal:block condition="suggestions">
+			<p><strong i18n:translate="" tal:condition="suggestions">
+					Following suggestion(s) were emailed to the uploader:
+				</strong>
+			</p>
+			<ul>
+				<li tal:repeat="suggestion suggestions" tal:content="suggestion"/>
+			</ul>
+		</tal:block>
+		<tal:block condition="not:suggestions">
+			<p><strong i18n:translate="" >There are no suggestions</strong></p>
+		</tal:block>
 		<tal:block condition="not:here/library_id">
 			<p>
 				<strong i18n:translate="" class="message-error">
@@ -103,7 +164,7 @@
 		</tal:block>
     </tal:block>
 	<form id="set_region" name="set_region" method="post" action=".">
-		<strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong><br/><br/>
+		<p><strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong></p>
 		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
 			size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
 			<tal:block condition="here/library_id|nothing">
