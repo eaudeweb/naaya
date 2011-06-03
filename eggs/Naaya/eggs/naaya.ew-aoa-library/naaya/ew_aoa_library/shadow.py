@@ -448,6 +448,15 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
 
     _manage_updates_html = PageTemplateFile('zpt/shadow_manage_update', globals())
 
+    security.declareProtected(view, 'get_cf_pair')
+    def get_cf_pair(self):
+        """Return the id of the paired answer from the country fiches, if existent"""
+        country_fiches = self.getSite().tools.country_fiches
+        for answer in country_fiches.objectValues('Naaya Survey Answer'):
+            if answer.get('w_vlid') == self.getId():
+                return answer.getId()
+                
+
 def get_survey_id(answer):
     return answer.aq_parent.id
 
