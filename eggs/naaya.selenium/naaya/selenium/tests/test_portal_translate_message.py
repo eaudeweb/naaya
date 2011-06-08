@@ -53,7 +53,7 @@ class NaayaPortal_translate_messageTest(SeleniumTestCase):
         selen.click("link=Translate message")
         selen.wait_for_page_to_load(self._selenium_page_timeout)
 
-        self.assertEqual("Original label in English language.",
+        self.assertEqual(u"Original label in English",
         selen.get_text("//div[@id='center_content']/fieldset[1]/legend"))
 
         selen.click("link=%s" % language['tag2'])
