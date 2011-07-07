@@ -22,7 +22,8 @@
 				<tbody>
 					<tr tal:repeat="item items/object_list">
 						<td>
-							<img tal:attributes="src item/icon; alt item/meta_type" />
+							<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+							     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 							<a tal:attributes="href item/absolute_url" tal:content="item/title" /><br />
 							<span tal:content="python:here.splitTextByWords(here.utStripAllHtmlTags(item.description), 20)" />
 						<td tal:content="python:here.utShowDateTime(item.releasedate)" />

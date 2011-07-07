@@ -6,7 +6,10 @@
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<li tal:repeat="item channel/get_objects_for_rdf"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+		<li tal:repeat="item channel/get_objects_for_rdf">
+			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			     tal:attributes="src icon/url; title icon/title; alt icon/title"
+			     style="vertical-align: -5px;" />
 			<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" />
 			<tal:block tal:condition="here/show_releasedate">
 				[<span i18n:translate="" tal:omit-tag="">posted on:</span>

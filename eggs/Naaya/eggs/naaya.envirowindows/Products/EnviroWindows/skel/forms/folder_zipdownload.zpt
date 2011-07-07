@@ -57,7 +57,10 @@ function fCheckSelection(){
 		</tr>
 		<tr tal:repeat="doc python:here.getDocuments(path)">
 			<td class="checkbox"><input type="checkbox" name="ids:list" tal:attributes="value doc/id" /></td>
-			<td class="type"><img tal:attributes=" src doc/icon; alt doc/meta_type; title doc/meta_type"/></td>
+			<td class="type">
+				<img tal:define="icon python:here.rstk.get_object_view_info(doc)['icon']"
+				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+			</td>
 			<td class="title-column"><a tal:attributes="href doc/absolute_url" tal:content="doc/title_or_id" title="doc/title_or_id" />
 			<td class="title-column" tal:content="doc/contributor" />
 			<td class="size-column" tal:content="python:str(doc.utShowSizeKb(doc.size())) + ' Kb'" />
