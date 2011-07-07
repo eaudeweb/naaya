@@ -195,6 +195,8 @@ def extract_survey_answer_data_library(answer):
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
+    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', -1)
+
     return attrs
 
 def extract_survey_answer_data_general_template(answer):
@@ -389,6 +391,23 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     def set_region(self, REQUEST):
         """ Saves the official country/region"""
         survey_answer = self.get_survey_answer(self.getId())
+        setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country'))
+        setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'save_vl')
+    def save_vl(self, REQUEST):
+        """ Saves country/region and document type for VL"""
+        survey_answer = self.get_survey_answer(self.getId())
+
+        document_type = REQUEST.get('document_type')
+        if document_type == -1:
+            if hasattr(survey_answer.aq_base, 'w_type-document'):
+                delattr(survey_answer, 'w_type-document')
+        else:
+            setattr(survey_answer, 'w_type-document', document_type)
+
         setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country'))
         setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
         survey_answer._p_changed = True
