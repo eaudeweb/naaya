@@ -43,26 +43,23 @@ def get_all_values_with_lang(answer, widget_id):
 
     return ret
 
-possible_answers = []
-the_user = container.REQUEST.AUTHENTICATED_USER.getUserName()
+possible_answers = {}
 answered = []
-for template_answer in the_template.objectValues('Naaya Survey Answer'):
-    if template_answer.respondent != the_user:
-        continue
+the_user = container.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    answered.extend(get_all_values(template_answer, 'w_q1-name-assessment-report'))
+for template_answer in the_template.objectValues('Naaya Survey Answer'):
+    if template_answer.respondent == the_user:
+        vlid = getattr(template_answer, 'w_vlid')
+        if vlid:
+            answered.append(vlid)
 
 lang = the_library.gl_get_selected_language()
 for library_answer in the_library.objectValues('Naaya Survey Answer'):
     if library_answer.is_draft():
         continue
-
-    values = get_all_values_with_lang(library_answer, 'w_assessment-name')
-    answered_values = [value for lang, value in values.items() if value in answered]
-    if answered_values:
+    if library_answer.getId() in answered:
         continue
+    title_values = get_all_values_with_lang(library_answer, 'w_assessment-name')
+    possible_answers[library_answer.getId()] = title_values
 
-    possible_answers.append(values)
-
-possible_answers.sort(key=lambda x: x.get('en', x.get('ru')))
 return possible_answers

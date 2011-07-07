@@ -15,6 +15,7 @@ from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 import shadow
 
 survey_answer_metatype = 'Naaya Survey Answer'
+shadow_metatype = 'Naaya EW_AOA Shadow Object'
 
 def physical_path(obj):
     return '/'.join(obj.getPhysicalPath())
@@ -152,20 +153,44 @@ class AoALibraryViewer(SimpleItem):
         state['updated_answers'] = {}
         state['errors'] = {}
         state['orphan_answers'] = []
+        state['already_updated'] = []
         review_template = self.aq_parent['tools']['general_template']['general-template']
-        if REQUEST.form.has_key('update_rt_titles'):
-            library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        update_type = REQUEST.form.get('update_type')
+        if update_type == 'update_rt_titles':
             self._update_rt_titles(state, review_template, library)
-        if REQUEST.form.has_key('update_remove_acronyms'):
+        if update_type == 'update_remove_acronyms':
             self._update_remove_acronyms(state, review_template)
-        if REQUEST.form.has_key('update_vl_countries_and_region'):
-            library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        if update_type == 'update_vl_countries_and_region':
             self._update_vl_countries_and_region(state, review_template, library)
+        if update_type == 'update_vl_id_in_rt':
+            self._update_vl_id_in_rt(state)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
-            orphan_answers=state['orphan_answers'])
+            orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_vl_id_in_rt(self, state):
+        rt_viewer = self.aq_parent['review-template-viewer']
+        for rt_shadow in rt_viewer.iter_assessments():
+            target_answer = rt_shadow.target_answer()
+            if rt_shadow.library_id:
+                vlid = target_answer.get('w_vlid')
+                if vlid:
+                    if vlid == rt_shadow.library_id:
+                        state['already_updated'].append(target_answer.absolute_url())
+                    else:
+                        import pdb;pdb.set_trace()
+                        state['errors'][target_answer.absolute_url()] = "Existent id differs from the suggested one"
+                else:
+                    setattr(target_answer, 'w_vlid', rt_shadow.library_id)
+                    target_answer._p_changed = True
+                    state['updated_answers'][target_answer.absolute_url()] = [rt_shadow.library_id]
+            else:
+                state['orphan_answers'].append(target_answer.absolute_url())
+
+
 
     def _update_vl_countries_and_region(self, state, review_template, library):
         def match_answers(vl_answer, rt_answer):

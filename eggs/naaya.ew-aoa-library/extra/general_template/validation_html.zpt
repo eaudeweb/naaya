@@ -11,8 +11,8 @@
 					$(this).html(process_acronyms(acronym_map, $(this).html()));
 				});
 
-				var assessment_en = $('#w_q1-name-assessment-report-en').val();
-				var assessment_ru = $('#w_q1-name-assessment-report-ru').val();
+				var vlid = $('#w_vlid').val();
+				$('#w_vlid').attr('readonly', 'readonly');
 				if (!edit || edit.length == 0)
 				{
 					$('#w_q1-name-assessment-report').hide();
@@ -21,29 +21,28 @@
 					$('#w_q1-name-assessment-report').after('<'+'select\
 						name="select-name-assessment-report:utf8:ustring"\
 						id="select-name-assessment-report"><'+'/select>');
+					var please_select = "Please select";
 					if (curr_lang == 'ru'){
-						$('#select-name-assessment-report').append($('<'+'option>').attr('value', 'Пожалуйста выберите').text('Пожалуйста выберите'));
-						}
-					else{
-						$('#select-name-assessment-report').append($('<'+'option>').attr('value', 'Please select').text('Please select'));
+						please_select = "Пожалуйста выберите";
 					}
-					for (i=0;i<labels.length;i++)
-					{
+					$('#select-name-assessment-report').append($('<'+'option>').attr('value', '0').text(please_select));
+
+					$.each(labels, function(k,v){
 						/* If the current language has no value in the library
 						the first language available will be used */
-						display_text = get_any_value(labels[i], curr_lang);
+						display_text = get_value(v, curr_lang, true);
 						if (display_text.length>104)
 						{
 							display_text = display_text.slice(0,104) + '...'
 						}
-						$('#select-name-assessment-report').append($('<'+'option>').attr('value', i).text(display_text));
-					}
+						$('#select-name-assessment-report').append($('<'+'option>').attr('value', k).text(display_text));
+					});
+
 					/* If the assessment was already selected (that is if the user is returned
 					to the page because of missing mandatory fields, select the value again */
-					if (assessment_en.length>0 || assessment_ru.length>0)
+					if (vlid.length>0)
 					{
-						assessment = pick_a_value(assessment_en, assessment_ru, curr_lang);
-						$('#select-name-assessment-report').val(key_from_value(labels, assessment));
+						$('#select-name-assessment-report').val(vlid);
 					}
 				}
 				else
@@ -60,6 +59,7 @@
 				apply_table_styling();
 				$('#select-name-assessment-report').change(function(){
 					var value = $('#select-name-assessment-report').val();
+					$('#w_vlid').val(value);
 					$('#w_q1-name-assessment-report-en').val(get_value(labels[value], 'en'));
 					$('#w_q1-name-assessment-report-ru').val(get_value(labels[value], 'ru'));
 					apply_table_styling();
@@ -149,7 +149,7 @@
 		function show_hide(edit, curr_lang){
 			var confirmation = $('#w_confirmation').val();
 			var assessment = $('#select-name-assessment-report').val();
-			if (assessment == 'Please select' || assessment == 'Пожалуйста выберите')
+			if (assessment == '0')
 			{
 				$('.widgetEditMode').hide();
 				$('#select-name-assessment-report').parent().show();
@@ -196,14 +196,10 @@
 			$('#w_geo-coverage-region').parent().hide();
 		}
 		function reset_select(select_id, curr_lang){
-			if(curr_lang == 'ru'){
-				$(select_id).val('Пожалуйста выберите');
-			}
-			else{
-				$(select_id).val('Please select');
-			}
+			$(select_id).val('0');
 			$('#w_q1-name-assessment-report-en').val('');
 			$('#w_q1-name-assessment-report-ru').val('');
+			$('#w_vlid').val('');
 		}
 		function process_acronyms(acronym_map, string){
 			for (i=0;i<acronym_map.length;i++)
@@ -279,57 +275,17 @@
 			}
 			return answer
 		}
-		function key_from_value(labels, value){
-			key = 'Inexistent';
-			for (i=0;i<labels.length;i++)
-			{
-				$.each(labels[i], function(k, v){
-					if (v == value)
-					{
-						key = i;
-					}
-				});
-			}
-			return key;
-		}
-		function pick_a_value(assessment_en, assessment_ru, curr_lang){
-			if (curr_lang == 'en')
-			{
-				if (assessment_en.length>0)
-				{
-					return assessment_en
+		function get_value(dictionary, curr_lang, any){
+			var a_value = '';
+			for (key in dictionary){
+				if(any){
+					a_value = dictionary[key];
 				}
-				else{
-					return assessment_ru
-				}
-			}
-			else{
-				if (assessment_ru.length>0)
-				{
-					return assessment_ru
-				}
-				else{
-					return assessment_en
-				}
-			}
-		}
-		function get_value(dictionary, curr_lang){
-			if (has_key(dictionary, curr_lang))
-			{
-				return dictionary[curr_lang];
-			}
-			else{
-				return '';
-			}
-		}
-		function get_any_value(dictionary, curr_lang){
-			if (has_key(dictionary, curr_lang))
-			{
-				return dictionary[curr_lang];
-			}
-			else{
-				return dictionary[keys(dictionary)[0]];
-			}
+				if (key == curr_lang){
+					return dictionary[key];
+				};
+			};
+			return a_value;
 		}
 		function add_table_header(curr_lang){
 			if(curr_lang == 'ru'){

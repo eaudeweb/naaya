@@ -7,16 +7,18 @@
 
 <form action="">
 	<input type="hidden" name="submit" value="True" />
-	<input type="checkbox" name="update_rt_titles" value="True" /><label>Update review template titles</label><br/>
-	<input type="checkbox" name="update_remove_acronyms" value="True" /><label>Correct answers containing acronym code</label><br/>
-	<input type="checkbox" name="update_vl_countries_and_region" value="True" /><label>Update library country and region values</label><br/>
+	<input type="radio" name="update_type" value="update_rt_titles" /><label>Update review template titles</label><br/>
+	<input type="radio" name="update_type" value="update_remove_acronyms" /><label>Correct answers containing acronym code</label><br/>
+	<input type="radio" name="update_type" value="update_vl_countries_and_region" /><label>Update library country and region values</label><br/>
+	<input type="radio" name="update_type" value="update_vl_id_in_rt" /><label>Save id of parent in the RT</label><br/>
 	<input type="submit" value="Submit" />
 </form>
 
 <tal:block define="updated_answers options/updated_answers|nothing;
+					already_updated options/already_updated|nothing;
 					errors options/errors|nothing;
 					orphan_answers options/orphan_answers|nothing;"
-					condition="python:updated_answers or errors or orphan_answers">
+					condition="python:updated_answers or errors or orphan_answers or already_updated">
 
 	<tal:block condition="errors">
 		<p style="color:red" tal:define="count python:len(errors)"
@@ -29,9 +31,7 @@
 						Library answer assessment name is empty or not localized
 					</a>
 					<a tal:condition="python:value!='AttributeError'"
-						tal:attributes="href key" i18n:translate="">
-						Unspecified error (invalid library answer)
-					</a>
+						tal:attributes="href key" i18n:translate="" tal:content="value"/>
 				</tal:block>
 			</li>
 		</ul>
@@ -56,6 +56,16 @@
 				<ul>
 					<li tal:repeat="property python:answer[1]" tal:content="property"/>
 				</ul>
+			</li>
+		</ul>
+	</tal:block>
+
+	<tal:block condition="already_updated">
+		<p tal:define="count python:len(already_updated)"
+			tal:content="string:${count} answers were already updated."></p>
+		<ul>
+			<li tal:repeat="answer already_updated">
+				<a tal:content="python:answer" tal:attributes="href python:answer"/>
 			</li>
 		</ul>
 	</tal:block>
