@@ -19,19 +19,14 @@
 __version__='$Revision: 1.38 $'[11:-2]
 
 # python imports
-from os.path import join
 import calendar
-import time
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
-from OFS.Image import manage_addImage, Image
-import OFS
-from Globals import InitializeClass, package_home
+from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 import Products
@@ -77,7 +72,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         self.day_len = day_len
         self.start_day = start_day
         self.catalog = catalog
-        self.cal_meta_types = []
+        self.cal_meta_types = {}
 
     def __str__(self):  return self.index_html()
 
