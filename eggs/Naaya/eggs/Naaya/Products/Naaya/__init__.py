@@ -1,17 +1,13 @@
-import zLOG
-from Globals import InitializeClass
+import Globals
 from App.ImageFile import ImageFile
-from AccessControl import ClassSecurityInfo
-
-from constants import *
-from naaya.content.base.discover import get_pluggable_content
-from naaya.content.base import discover
-import NySite
-import NyFolder
-import NyFolderBase
 
 def initialize(context):
     """ """
+    from constants import PERMISSION_ADD_SITE, PERMISSION_ADD_FOLDER
+    from naaya.content.base.discover import get_pluggable_content
+    from naaya.content.base import discover
+    import NySite
+    import NyFolder
     #register classes
     context.registerClass(
         NySite.NySite,
@@ -141,6 +137,12 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
 
     See NaayaForum for an example.
     """
+    import zLOG
+    from AccessControl import ClassSecurityInfo
+    from Globals import InitializeClass
+    import NyFolder
+    import NyFolderBase
+
     security = ClassSecurityInfo()
     NyFolderBase.NyFolderBase.security = security
 
