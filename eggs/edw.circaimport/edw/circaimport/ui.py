@@ -74,7 +74,7 @@ class ImportNotificationsFromCirca(BrowserPage):
         if self.request['REQUEST_METHOD'] == 'GET':
             return import_notifications_zpt.__of__(ctx)()
 
-        from csv_extract import get_notifications_mapping
+        from notifications_extract import get_notifications_mapping
         name = self.request.form['filename']
 
         dbfile = open(upload_prefix + '/' + name, 'rb')
