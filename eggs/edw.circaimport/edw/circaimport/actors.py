@@ -26,7 +26,7 @@ class DemoActor(object):
 try:
     from datetime import datetime
     from Products.Naaya.NyFolder import addNyFolder
-    from naaya.core.utils import path_in_site
+    from naaya.core.zope2util import path_in_site
     from naaya.core.utils import mimetype_from_filename
     from naaya.content.url.url_item import addNyURL
     from naaya.content.bfile.bfile_item import addNyBFile, make_blobfile
@@ -73,7 +73,7 @@ class ZopeActor(object):
         }
         new_folder_id = addNyFolder(parent, **kwargs)
         new_folder = parent[new_folder_id]
-        #print>>self.report, "folder: %r" % path_in_site(new_folder)
+        print>>self.report, "Added folder: %r" % path_in_site(new_folder)
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
@@ -113,7 +113,7 @@ class ZopeActor(object):
             the_file = parent[the_file_id]
 
         the_file._versions.append(bf)
-        #print>>self.report, "file: %r" % path_in_site(the_file)
+        print>>self.report, "Added file: %r" % path_in_site(the_file)
         self.count['files'] += 1
 
     def url_entry(self, parent_path, ob_id, filename, url,
@@ -135,7 +135,7 @@ class ZopeActor(object):
         new_url_id = addNyURL(parent, **kwargs)
         self.rename[orig_path] = parent_path + '/' + new_url_id
         new_url = parent[new_url_id]
-        #print>>self.report, "url: %r" % path_in_site(new_url)
+        print>>self.report, "Added url: %r" % path_in_site(new_url)
         self.count['urls'] += 1
 
     def warn(self, msg):
