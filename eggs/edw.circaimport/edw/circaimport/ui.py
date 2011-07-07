@@ -4,7 +4,7 @@ from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import transaction
 
-from edw.circaimport import (work_in_zope, add_roles_from_circa_export,
+from middleware import (work_in_zope, add_roles_from_circa_export,
                              add_notifications_from_circa_export,
                              add_acls_from_circa_export)
 
