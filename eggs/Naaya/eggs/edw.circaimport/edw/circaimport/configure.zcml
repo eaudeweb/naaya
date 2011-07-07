@@ -2,6 +2,13 @@
            xmlns:browser="http://namespaces.zope.org/browser">
 
   <browser:page
+      for="Products.Naaya.interfaces.INySite"
+      name="import_all_from_circa"
+      class=".ui.ImportAllFromCirca"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
       for="Products.Naaya.interfaces.INyFolder"
       name="import_files_from_circa_html"
       class=".ui.ImportFilesFromCirca_html"
