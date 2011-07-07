@@ -92,9 +92,32 @@ Some terms used in the documentation are described here.
         Zope Page Template - the default templates in Zope framework
 
 
+    Site manager
+        Another name for a :term:`ZCA` component registry. Site managers hold
+        a catalogue of utilities and adapters. See the `ZCA guide`_ for a
+        description of its API. The documentation of zope.component_ might
+        also be useful.
+
+    Global site manager
+        The default :term:`Site manager` of Zope. This is where ZCML
+        directives register components. It's not persisted in any ZODB, rather
+        it's re-created at every application start-up. The global
+        :func:`getUtility`, :func:`getAdapter` etc. functions all use the
+        global site manager. To access it explicitly, call
+        :func:`zope.component.getGlobalSiteManager`.
+
+    Local site manager
+        A :term:`Site manager` that is persisted in ZODB. In Naaya, each
+        portal has its own local site manager, that inherits from the
+        :term:`Global site manager`. Local site managers are implemented by the
+        zope.site_ package.
+
 
 .. [1] Some recipes, e.g. plone.recipe.bundlecheckout, update their `part`
        on each run of `buildout`.
 .. _`ZODB book`: http://readthedocs.org/docs/zodb-documentation/latest/index.html
 .. _`ConfigParser`: http://docs.python.org/library/configparser.html
 .. _`zc.buildout`: http://pypi.python.org/pypi/zc.buildout
+.. _`ZCA guide`: http://www.muthukadan.net/docs/zca.html
+.. _zope.component: http://pypi.python.org/pypi/zope.component
+.. _zope.site: http://pypi.python.org/pypi/zope.site
