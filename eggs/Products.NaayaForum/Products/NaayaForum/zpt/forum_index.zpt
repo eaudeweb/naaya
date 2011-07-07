@@ -25,8 +25,8 @@
   }
 </style>
 
-<h1>
-	<img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" />
+<h1 tal:define="site_object_index python:here.getFormsTool().getForm('site_object_index')">
+	<metal:block use-macro="site_object_index/macros/icon"/>
 	<span tal:replace="here/title_or_id" />
 	<a tal:attributes="href string:${here/absolute_url}/messages_feed"
 	   ><img src="misc_/NaayaCore/xml.png" /></a>
