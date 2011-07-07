@@ -35,7 +35,7 @@ from Acquisition import Implicit
 #Zope imports
 
 #Product imports
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 
 class entrypress_item(Implicit, NyProperties):

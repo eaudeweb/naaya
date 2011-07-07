@@ -51,7 +51,7 @@ from naaya.content.semide.document.semdocument_item   import METATYPE_OBJECT as 
 from naaya.content.semide.multimedia.semmultimedia_item  import METATYPE_OBJECT as METATYPE_NYSEMMULTIMEDIA #Deprecated
 from naaya.content.semide.textlaws.semtextlaws_item   import METATYPE_OBJECT as METATYPE_NYSEMTEXTLAWS
 
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyValidation import NyValidation
 
 

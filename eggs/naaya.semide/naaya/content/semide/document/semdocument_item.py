@@ -42,7 +42,7 @@ EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
 
 from Products.NaayaCore.managers.utils import make_id
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer

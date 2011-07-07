@@ -2376,10 +2376,18 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
             trans = self.utToUnicode(res[k])
             if trans: sem_ob._setLocalPropValue(prop, k, trans)
 
+    security.declarePublic('changeLangAndRedirect')
     def changeLangAndRedirect(self, lang='', url='', REQUEST=None):
         """ """
-        self.getLocalizer().changeLanguage(lang)
-        if REQUEST: REQUEST.RESPONSE.redirect(url)
+        # Code compatible with both Localizer (old) and naaya.i18n (new)
+        portal_i18n = self.getPortalI18n()
+        if portal_i18n is None:
+            self.getLocalizer().changeLanguage(lang)
+        else:
+            portal_i18n.change_selected_language(lang)
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(url)
 
     security.declarePublic('stripAllHtmlTags')
     def stripAllHtmlTags(self, p_text):

@@ -10,7 +10,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 
 from Products.NaayaCore.managers import utils as naaya_utils
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from BaseParticipant import BaseParticipant
 from SemidePress import SemidePress
 from utilities.Slugify import slugify
