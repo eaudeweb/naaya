@@ -46,7 +46,8 @@
                     <label tal:attributes="title zope_perm; for input_id"
                            tal:content="perm/title"
                            class="middle-label" />
-                    <div class="admin-info-text" style="display: none">
+                    <a class="right info-link" href="javascript:void(0);" i18n:translate="">Details</a>
+                    <div class="admin-info-text">
                       <p tal:content="perm/description"/>
                       <p>
                         <em>Zope permission:
