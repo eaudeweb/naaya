@@ -28,6 +28,7 @@ class GWPortalTestPlugin(NaayaPortalTestPlugin):
     """ Nose plugin that prepares the environment for a Groupware site to run
 
     """
+    name = 'naaya-groupware'
 
     def portal_fixture(self, app):
         """ Create a groupware site and return the portal_id.
