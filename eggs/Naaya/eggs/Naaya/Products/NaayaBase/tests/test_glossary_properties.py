@@ -60,7 +60,7 @@ class PropertyUpdaterTest(NaayaTestCase):
 
     def setUp(self):
         from naaya.content.url.url_item import addNyURL
-        self.portal.add_language('de')
+        self.portal.gl_add_site_language('de')
         glossary = self._set_up_glossary(self.portal)
         self.portal.keywords_glossary = glossary.getId()
         widget = self.portal['portal_schemas']['NyURL']['keywords-property']
