@@ -60,14 +60,20 @@ def get_library_survey_info(site):
     return get_library_survey_info.cache
 
 def get_library_answer(answer):
+    #First look for the saved parent id
+    #and if that answer still exists in the library, return it
+    survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
+    saved_parent_id = answer.get('w_vlid')
+    if saved_parent_id and hasattr(survey, saved_parent_id):
+        return(survey._getOb(saved_parent_id))
+
+    #if not, try it the old way, comparing titles
+    survey_info = get_library_survey_info(answer.getSite())
     answer_value = answer.get('w_q1-name-assessment-report')
     if isinstance(answer_value, dict):
         answer_values = answer_value.values()
     else:
         answer_values = [answer_value]
-
-    survey = getattr(answer.getSite().tools.virtual_library, 'bibliography-details-each-assessment')
-    survey_info = get_library_survey_info(answer.getSite())
     for x_id, x_values in survey_info.items():
         for xv in x_values:
             if xv and xv in answer_values:
