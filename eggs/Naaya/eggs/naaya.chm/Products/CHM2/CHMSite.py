@@ -25,7 +25,7 @@ from Products.NaayaCore.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
-from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
+from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
@@ -102,7 +102,7 @@ class CHMSite(NySite):
         self.getLayoutTool().manage_delObjects('skin')
 
         #set default PhotoFolder
-        manage_addNyPhotoFolder(self, id=ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE)
+        addNyPhotoFolder(self, id=ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE)
         self._getOb(ID_PHOTOARCHIVE).approveThis()
 
         #create and configure LinkChecker instance

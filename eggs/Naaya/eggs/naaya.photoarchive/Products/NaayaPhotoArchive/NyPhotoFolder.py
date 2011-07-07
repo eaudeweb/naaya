@@ -72,7 +72,7 @@ def photofolder_add_html(self, REQUEST):
     return _photofolder_add_html.__of__(self)(REQUEST, form_helper=form_helper)
 
 
-def manage_addNyPhotoFolder(self, id='', REQUEST=None, _klass=None, **kwargs):
+def addNyPhotoFolder(self, id='', REQUEST=None, _klass=None, **kwargs):
     """
     Create a PhotoFolder type of object.
     """
