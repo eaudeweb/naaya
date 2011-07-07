@@ -192,6 +192,10 @@ def add_acls_from_circa_export(site, filepath):
             print>>report, "Couldn't find object at path: %s" % path
             continue
 
+        if ob.meta_type != 'Naaya folder':
+            print>>report, "Error: Object %r is not a folder (Naaya can only restrict permissions on folders)" % relative_object_path(ob, site)
+            continue
+
         # add users acls
         userids = [val[:-6] for val in values if val.endswith('@circa')]
         non_userids = [val for val in values if not val.endswith('@circa')]
