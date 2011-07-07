@@ -1,6 +1,8 @@
 """
 This patch takes the output of GlossaryWidget.glossary_tree and marks certain
 words as bold. Those words are selected which are only found in a single term.
+Also, for the `chm_nl` portal, it passes the glossary's title through the
+translation tool.
 """
 
 import re
@@ -48,6 +50,12 @@ def glossary_tree_wrapper(widget, REQUEST, lang='en', **kw):
         # skip the top node because it's the glossary itself
         for sub_tree in tree['children']:
             bold_words_in_tree(sub_tree, bold_map)
+
+        # chm_nl - translate the title
+        portal = widget.getSite()
+        if widget.getPhysicalPath()[1] == 'chm_nl':
+            translate = portal.getPortalTranslations()
+            tree['data']['title'] = translate(tree['data']['title'])
 
         tree_json = json.dumps(tree)
 
