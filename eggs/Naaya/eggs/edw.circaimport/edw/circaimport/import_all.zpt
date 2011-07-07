@@ -19,7 +19,8 @@
       <label>ACLs exported file: <input name="filename_acls"/></label>
       <br/>
       <br/>
-      <input type="submit" value="Import" />
+      <input type="submit" name="report" value="Report" />
+      <input type="submit" name="import" value="Import" />
     </form>
     <code tal:condition="options/reports|nothing">
         <tal:block repeat="report options/reports">
