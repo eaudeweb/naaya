@@ -428,28 +428,30 @@ class FlashTool(Folder, ProfileMeta, utils):
                         raise
             return tuple(news)
 
-        def generate_events(obj_list):
+        def generate_events(obj_list, ignore_desc=False):
             events = []
             for obj in obj_list:
                 if obj.istranslated(lang):
                     #Description tag
-                    if mesg_type == 'html':
-                        desc_elem = E.description(sanitize_xml_data(
-                                obj.getLocalProperty('description', lang))
-                        )
+                    if ignore_desc is False:
+                        if mesg_type == 'html':
+                            desc_elem = E.description(sanitize_xml_data(
+                                    obj.getLocalProperty('description', lang))
+                            )
+                        else:
+                            desc_elem = E.description(sanitize_xml_data(
+                                    self.utStripAllHtmlTags(
+                                       obj.getLocalProperty('description', lang)
+                                    )
+                            ))
                     else:
-                        desc_elem = E.description(sanitize_xml_data(
-                                self.utStripAllHtmlTags(
-                                   obj.getLocalProperty('description', lang)
-                                )
-                        ))
-
+                        desc_elem = E.description('')
                     #Address tag
                     addr_elem = E.address(sanitize_xml_data(
                         obj.getLocalProperty('', lang)))
                     #Events tag
                     try:
-                        events.append(E.events(desc_elem, addr_elem, {
+                        events.append(E.event(desc_elem, addr_elem, {
                             'title': sanitize_xml_data(
                                 obj.getLocalProperty('title', lang)),
                             'start_date': sanitize_xml_data(str(obj.start_date)),
@@ -495,7 +497,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                                           **{'id': 'training'}))
             #events section
             if events:
-                sections.append(E.section(*generate_events(events),
+                sections.append(E.section(*generate_events(events, True),
                                           **{'id': 'events'}))
             xml = E.eflash (
                 E.title(sanitize_xml_data(self.title)),
