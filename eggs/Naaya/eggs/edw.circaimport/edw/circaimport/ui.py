@@ -154,8 +154,27 @@ class ImportACLsFromCirca(BrowserPage):
                 new_roles = list(new_roles)
             permission_object.setRoles(new_roles)
 
+        ROLES_MAPPING = {'0': 'Administrator',
+                '1': 'Viewer',
+                '2': 'Contributor',
+                '3': 'Viewer',
+                '4': 'Viewer'}
+        def compute_roles_mapping(acls):
+            non_userids = []
+            for values in acls.values():
+                non_userids.extend([val for val in values if not val.endswith('@circa')])
+            roles = [val[2:] for val in non_userids if val.startswith('__')]
+            roles = list(set(roles)) # remove duplicates
+            roles = map(int, roles)
+            roles.append(6)
+            max_role = max(roles)
+
+            ROLES_MAPPING[str(max_role)] = 'Authenticated'
+            ROLES_MAPPING[str(max_role - 1)] = 'Anonymous'
+            for i in xrange(5, max_role - 1):
+                ROLES_MAPPING[str(i)] = 'Viewer'
+
         def get_role(circa_profile):
-            ROLES_MAPPING = {} # waiting for feedback on this
             DEFAULT_ROLE = 'Viewer'
 
             if circa_profile in ROLES_MAPPING:
@@ -171,6 +190,7 @@ class ImportACLsFromCirca(BrowserPage):
 
         users_map, roles_map = {}, {}
         errors = []
+        compute_roles_mapping(acls)
         for path, values in acls.items():
             try:
                 ob = ctx.getSite().unrestrictedTraverse(path.strip('/'))
