@@ -10,18 +10,20 @@ def prepare_glossary_with_data(portal):
 
     manage_addGlossaryCentre(portal, 'my_glossary')
     glossary = portal['my_glossary']
+    glossary.parent_anchors = True
 
     glossary.manage_addGlossaryFolder('1', "Bucket")
     bucket = glossary['1']
     bucket.set_translations_list('German', "Eimer")
 
     bucket.manage_addGlossaryElement('2', "Water")
-    water = bucket['2']
-    water.set_translations_list('German', "Wasser")
+    bucket['2'].set_translations_list('German', "Wasser")
 
     bucket.manage_addGlossaryElement('3', "Ice")
-    ice = bucket['3']
-    ice.set_translations_list('German', "Eis")
+    bucket['3'].set_translations_list('German', "Eis")
+
+    bucket.manage_addGlossaryElement('4', "Train station")
+    bucket['4'].set_translations_list('German', "Bahnhof")
 
     return glossary
 
@@ -34,7 +36,8 @@ def prepare_mock_glossary(portal):
 
     glossary_data = [{'English': "Water", 'German': "Wasser"},
                      {'English': "Ice", 'German': "Eis"},
-                     {'English': "Bucket", 'German': "Eimer"}]
+                     {'English': "Bucket", 'German': "Eimer"},
+                     {'English': "Train station", 'German': "Bahnhof"}]
 
     def search_result(data):
         result = Mock()
@@ -126,6 +129,14 @@ class PropertyUpdaterTest(NaayaTestCase):
         self.inject_property("Feuer, Eis", 'de')
         self.set_property("Eis", 'de')
         self.assertEqual(self.get_property('en'), "Fire, Ice")
+
+    def test_add_folder_term(self):
+        self.set_property("Bucket", 'en')
+        self.assertEqual(self.get_property('de'), "Eimer")
+
+    def test_add_multiword_value(self):
+        self.set_property("Train station", 'en')
+        self.assertEqual(self.get_property('de'), "Bahnhof")
 
 class MockedPropertyUpdaterTest(PropertyUpdaterTest):
     """ The same set of tests, with a mock glossary """
