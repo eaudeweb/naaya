@@ -5,6 +5,7 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 class GeoPointCommonTest(_CommonContentTest):
 
     def add_object(self, parent):
+        parent.getSite().manage_install_pluggableitem('Naaya GeoPoint')
         kwargs = {'title': 'My geopoint', 'geo_location': Geo('13', '13')}
         ob = parent[addNyGeoPoint(parent, **kwargs)]
         ob.approveThis()

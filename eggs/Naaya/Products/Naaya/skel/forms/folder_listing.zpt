@@ -139,10 +139,11 @@ $(document).ready(function(){
 							type="checkbox" name="id" tal:attributes="value folder/id" />
 					</td>
 					<td class="type" style="width: 4%;">
-						<img tal:attributes="
-							src python:test(folder.approved, folder.icon, folder.icon_marked);
-							alt python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type);
-							title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" />
+						<img tal:define="icon folder_info/view/get_icon"
+						     tal:condition="icon"
+						     tal:attributes="src icon/url;
+						                     alt icon/title;
+						                     title icon/title" />
 					</td>
 					<td class="title-column">
 						<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />

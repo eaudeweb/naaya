@@ -35,6 +35,7 @@ class _CommonContentTest(NaayaTestCase):
 
     def _get_folder_icon_src(self):
         request = Request.blank(self.ob.aq_parent.absolute_url())
+        request.headers['Cookie'] = '__ac=YWRtaW46' # login as "admin"
         page = parse_html(request.get_response(self.wsgi_request).body)
         for tr in css(page, 'table#folderfile_list tr'):
             links = [a.attrib['href'] for a in css(tr, 'td a')]
@@ -47,12 +48,12 @@ class _CommonContentTest(NaayaTestCase):
 
     def test_icon(self):
         self.assertEqual(self._get_h1_icon_src(), self.ob.icon)
-        #TODO self.assertEqual(self._get_folder_icon_src(), self.ob.icon)
+        self.assertEqual(self._get_folder_icon_src(), self.ob.icon)
 
         self.ob.approveThis(0, None)
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), self.ob.icon_marked)
-        #TODO self.assertEqual(self._get_folder_icon_src(), self.ob.icon_marked)
+        self.assertEqual(self._get_folder_icon_src(), self.ob.icon_marked)
 
     def test_customized_icon(self):
         from naaya.content.base.meta import get_schema_name
@@ -65,7 +66,9 @@ class _CommonContentTest(NaayaTestCase):
 
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), df.absolute_url())
+        self.assertEqual(self._get_folder_icon_src(), df.absolute_url())
 
         self.ob.approveThis(0, None)
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), df_marked.absolute_url())
+        self.assertEqual(self._get_folder_icon_src(), df_marked.absolute_url())
