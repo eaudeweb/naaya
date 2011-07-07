@@ -622,6 +622,17 @@ class AoALibraryViewer(SimpleItem):
                 year=year, official_country_region=official_country_region,
                 themes=themes, topics=topics, and_or=and_or)
 
+    security.declareProtected(view, 'filter_answers_cf_vl_aggregator')
+    def filter_answers_cf_vl_aggregator(self, country):
+        """ Filter answers for cf and vl agregator """
+        def respects_filter(shadow):
+            if country not in shadow.geo_coverage_country:
+                return False
+            if shadow.document_type == 0:
+                return False
+            return True
+        return filter(respects_filter, self.iter_assessments())
+
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
     for brain in catalog(meta_type=AoALibraryViewer.meta_type):
