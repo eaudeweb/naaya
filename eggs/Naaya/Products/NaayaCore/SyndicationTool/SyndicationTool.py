@@ -205,11 +205,12 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
                 E.description(self.utToUtf8(s.description))
                )
             xml.append(image)
-        received_items = ''.join([i.syndicateThis(lang) for i in p_items])
+        received_items = ''.join([i.syndicateThis() for i in p_items])
         received = '<rdf:RDF %s>%s</rdf:RDF>' % (''.join(header), received_items)
         xml_received = etree.XML(received, etree.XMLParser(strip_cdata = False))
         xml.extend(xml_received)
-        return etree.tostring(xml, xml_declaration = True, encoding = "utf-8")
+        self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
+        return etree.tostring(xml, xml_declaration=True, encoding="utf-8")
 
     #protected
     security.declareProtected(view_management_screens, 'hasImage')

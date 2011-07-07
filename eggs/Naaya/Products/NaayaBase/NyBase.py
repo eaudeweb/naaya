@@ -13,6 +13,10 @@ from naaya.content.base.events import (NyContentObjectApproveEvent,
 
 from NyCheckControl import NyCheckControl
 from NyDublinCore import NyDublinCore
+from Products.NaayaCore.managers.utils import get_nsmap
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 class NyBase(NyDublinCore):
     """
@@ -195,17 +199,43 @@ class NyBase(NyDublinCore):
         """
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:type>%s</dc:type>' % self.type())
-        ra('<dc:format>%s</dc:format>' % self.format())
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+        syndication_tool = self.getSyndicationTool()
+        namespaces = syndication_tool.getNamespaceItemsList()
+        nsmap = get_nsmap(namespaces)
+        rdf_namespace = nsmap['rdf']
+        dc_namespace = nsmap['dc']
+        Rdf = ElementMaker(namespace=rdf_namespace, nsmap=nsmap)
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        E = ElementMaker(None, nsmap=nsmap)
+        xml = Rdf.RDF(
+                E.item(
+                    {'{%s}about'%rdf_namespace : self.absolute_url()},
+                    E.link(self.absolute_url()),
+                    E.title(self.getLocalProperty('title', lang)),
+                    E.description(self.getLocalProperty('description', lang)),
+                    Dc.title(self.getLocalProperty('title', lang)),
+                    Dc.identifier(self.identifier()),
+                    Dc.date(self.utShowFullDateTimeHTML(self.releasedate)),
+                    Dc.description(self.getLocalProperty('description', lang)),
+                    Dc.contributor(self.contributor),
+                    Dc.language(lang)
+                )
+            )
+        item = xml[0]
+        for k in self.getLocalProperty('coverage', lang).split(','):
+            item.append(Dc.coverage(k.strip()))
+        for k in self.getLocalProperty('keywords', lang).split(','):
+            item.append(Dc.item(k.strip()))
+        item.append(Dc.rights(self.getLocalProperty('rights', lang)))
+        the_rest = (
+                Dc.publisher(l_site.getLocalProperty('publisher', lang)),
+                Dc.creator(l_site.getLocalProperty('creator', lang)),
+                Dc.type(self.type()),
+                Dc.format(self.format()),
+                Dc.source(l_site.getLocalProperty('publisher', lang)),
+               )
+        item.extend(the_rest)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #Handlers for export in xml format
     security.declarePublic('export_this')

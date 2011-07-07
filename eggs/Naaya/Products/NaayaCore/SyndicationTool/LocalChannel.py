@@ -8,7 +8,10 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.interfaces import ILocalChannel
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, get_nsmap, rss_channel_for_channel, rss_item_for_channel
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 manage_addLocalChannelForm = PageTemplateFile('zpt/localchannel_manage_add', globals())
 def manage_addLocalChannel(self, id='', title='', description='', language=None, type='',
@@ -57,28 +60,9 @@ class LocalChannel(SimpleItem, utils):
         self.numberofitems = numberofitems
 
     security.declarePrivate('syndicateThis')
-    def syndicateThis(self, lang=None):
-        s = self.getSite()
-        if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra('<item rdf:about="%s">' % self.absolute_url())
-        ra('<link>%s</link>' % self.absolute_url())
-        ra('<title>%s</title>' % self.utXmlEncode(self.title_or_id()))
-        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.description))
-        ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.title_or_id()))
-        ra('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
-        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(self.description))
-        ra('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
-        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(self.language))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.creator))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(self.publisher))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
-        ra('<dc:type>%s</dc:type>' % self.utXmlEncode(self.get_channeltype_title(self.type)))
-        ra('<dc:format>text/xml</dc:format>')
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.publisher))
-        ra('</item>')
-        return ''.join(r)
+    def syndicateThis(self):
+        xml = rss_item_for_channel(self)
+        return etree.tostring(xml, xml_declaration=False, encoding="utf-8")
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', language=None, type='', objmetatype=[], numberofitems='', REQUEST=None):
@@ -109,7 +93,6 @@ class LocalChannel(SimpleItem, utils):
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
         """ """
-
         if feed == 'atom':
             return self.syndicateAtom(self, self.get_objects_for_rdf(), self.language)
 
@@ -118,44 +101,35 @@ class LocalChannel(SimpleItem, utils):
         if lang == 'auto':
             lang = self.gl_get_selected_language()
         l_items = self.get_objects_for_rdf()
-        r = []
-        ra = r.append
-        ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<rdf:RDF %s>' % self.getNamespacesForRdf())
-        ra('<channel rdf:about="%s">' % s.absolute_url())
-        ra('<title>%s</title>' % self.utXmlEncode(self.title))
-        ra('<link>%s</link>' % s.absolute_url())
-        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.description))
-        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(self.description))
-        ra('<dc:identifier>%s</dc:identifier>' % s.absolute_url())
-        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.getLocalProperty('publisher', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(s.getLocalProperty('creator', lang)))
-        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.getLocalProperty('site_title', lang)))
-        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.getLocalProperty('site_subtitle', lang)))
-        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(s.getLocalProperty('rights', lang)))
-        ra('<dc:type>%s</dc:type>' % self.utXmlEncode(self.type))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(s.getLocalProperty('publisher', lang)))
-        ra('<items>')
-        ra('<rdf:Seq>')
+        namespaces = self.getNamespaceItemsList()
+        nsmap = nsmap = get_nsmap(namespaces)
+        header = []
+        for n in namespaces:
+            header.append(str(n))
+        rdf_namespace = nsmap['rdf']
+        Rdf = ElementMaker(namespace=rdf_namespace, nsmap=nsmap)
+        E = ElementMaker(None, nsmap=nsmap)
+
+        xml = Rdf.RDF(rss_channel_for_channel(self, lang))
+
+        channel = xml[0];  items = channel[-1]
+        seq = etree.SubElement(items, '{%s}seq'%rdf_namespace)
         for i in l_items:
-            ra('<rdf:li rdf:resource="%s"/>' % i.absolute_url())
-        ra('</rdf:Seq>')
-        ra('</items>')
-        ra('</channel>')
+            x = etree.SubElement(seq, '{%s}li'%rdf_namespace, resource=i.absolute_url())
         if self.hasImage():
-            ra('<image>')
-            ra('<title>%s</title>' % self.utXmlEncode(self.title))
-            ra('<url>%s</url>' % self.getImagePath())
-            ra('<link>%s</link>' % s.absolute_url())
-            ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.description))
-            ra('</image>')
-        for i in l_items:
-            ra(i.syndicateThis(lang))
-        ra("</rdf:RDF>")
+            image = E.image(
+                E.title(self.title),
+                E.url(self.getImagePath()),
+                E.link(s.absolute_url()),
+                E.description(self.utToUtf8(self.description))
+               )
+            xml.append(image)
+        received_items = ''.join([i.syndicateThis() for i in l_items])
+        received = '<rdf:RDF %s>%s</rdf:RDF>' % (''.join(header), received_items)
+        xml_received = etree.XML(received, etree.XMLParser(strip_cdata = False))
+        xml.extend(xml_received)
         self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
-        return ''.join(r)
+        return etree.tostring(xml, xml_declaration=True, encoding="utf-8")
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
