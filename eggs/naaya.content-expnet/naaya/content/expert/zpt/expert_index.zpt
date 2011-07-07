@@ -27,10 +27,9 @@
 	</div>
 </tal:block>
 
-<h1 tal:define="is_ratable here/is_ratable">
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-		title here/get_meta_label;
-		alt here/get_meta_label" />
+<h1 tal:define="is_ratable here/is_ratable;
+                site_object_index python:here.getFormsTool()['site_object_index']">
+	<metal:block use-macro="site_object_index/macros/icon"/>
 		<span tal:replace="string:${here/personal_title} ${here/title}" />
 		<tal:block condition="is_ratable"
 						replace="structure here/user_rating_view|nothing"/>
