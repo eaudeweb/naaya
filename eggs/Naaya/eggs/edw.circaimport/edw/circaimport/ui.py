@@ -31,7 +31,7 @@ class ImportAllFromCirca(BrowserPage):
 
         try:
             if 'report' in self.request.form:
-                transaction.begin()
+                savepoint = transaction.savepoint()
 
             filename_files = self.request.form['filename_files']
             import_files_path = self.request.form['import_files_path']
@@ -54,7 +54,7 @@ class ImportAllFromCirca(BrowserPage):
 
         finally:
             if 'report' in self.request.form:
-                transaction.abort()
+                savepoint.rollback()
 
         return import_all_zpt.__of__(ctx)(reports=reports)
 
