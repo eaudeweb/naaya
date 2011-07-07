@@ -134,7 +134,7 @@ def all_documents(site):
             "theme": shadow.theme,
             "document_type": document_type,
             "year": shadow.publication_year,
-            "author": shadow.uploader, # is `uploader` the right field here?
+            "author": shadow.author,
             "url": shadow.url,
             "library_url": shadow.absolute_url(),
         }
