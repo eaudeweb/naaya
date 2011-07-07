@@ -89,7 +89,7 @@
     </fieldset>
 
     <fieldset>
-        <legend i18n:translate">="List of account subscriptions</legend>
+        <legend i18n:translate="">List of account subscriptions</legend>
         <form method="post" action="manageAccountSubscriptions" name="formManageAccountSubscriptions">
             <table class="datatable" width="95%">
                 <tr>
