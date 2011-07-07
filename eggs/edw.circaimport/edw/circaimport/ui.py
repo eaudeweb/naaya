@@ -7,19 +7,19 @@ from naaya.core.zope2util import relative_object_path
 
 upload_prefix = None
 
-import_zpt = PageTemplateFile('import.zpt', globals())
-import_result_zpt = PageTemplateFile('import_result.zpt', globals())
+import_files_zpt = PageTemplateFile('import_files.zpt', globals())
+import_files_result_zpt = PageTemplateFile('import_files_result.zpt', globals())
 import_roles_zpt = PageTemplateFile('import_roles.zpt', globals())
 import_notifications_zpt = PageTemplateFile('import_notifications.zpt',
                                             globals())
 import_acls_zpt = PageTemplateFile('import_acls.zpt', globals())
 
-class ImportFromCirca_html(BrowserPage):
+class ImportFilesFromCirca_html(BrowserPage):
     def __call__(self):
         ctx = self.context.aq_inner # because self subclasses from Explicit
-        return import_zpt.__of__(ctx)()
+        return import_files_zpt.__of__(ctx)()
 
-class ImportFromCirca(BrowserPage):
+class ImportFilesFromCirca(BrowserPage):
     def __call__(self):
         if upload_prefix is None:
             return "upload prefix not configured"
@@ -28,7 +28,7 @@ class ImportFromCirca(BrowserPage):
         #name = ctx.REQUEST.get('name')
         name = self.request.form['filename']
         report = work_in_zope(ctx, name, upload_prefix)
-        return import_result_zpt.__of__(ctx)(report=report)
+        return import_files_result_zpt.__of__(ctx)(report=report)
 
 
 class ImportRolesFromCirca(BrowserPage):

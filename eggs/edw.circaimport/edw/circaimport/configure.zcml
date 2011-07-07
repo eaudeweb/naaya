@@ -4,14 +4,14 @@
   <browser:page
       for="Products.Naaya.interfaces.INyFolder"
       name="import_files_from_circa_html"
-      class=".ui.ImportFromCirca_html"
+      class=".ui.ImportFilesFromCirca_html"
       permission="zope2.ViewManagementScreens"
       />
 
   <browser:page
       for="Products.Naaya.interfaces.INyFolder"
       name="import_files_from_circa"
-      class=".ui.ImportFromCirca"
+      class=".ui.ImportFilesFromCirca"
       permission="zope2.ViewManagementScreens"
       />
 
