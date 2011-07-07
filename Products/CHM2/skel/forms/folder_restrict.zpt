@@ -19,7 +19,7 @@
 <p i18n:translate="">
 	This page allows you to restrict/grant access to this folder for certain groups of
 	users. You are asked to provide the roles users must have in order to have access.
-	All users having the roles of <em>Administrator</em> or <em>Manager</em> will still have
+	All users having the roles of <em i18n:name="administrator" i18n:translate="">Administrator</em> or <em i18n:name="manager" i18n:translate="">Manager</em> will still have
 	access to the restricted areas.
 </p>
 
