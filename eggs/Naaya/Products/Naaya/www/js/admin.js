@@ -17,11 +17,7 @@ function selectAll(name){
 }
 
 function set_up_info_boxes() {
-	$('div.admin-info-text').each(function() {
-		var button = $('<a class="right info-link">').text("Details").click(toggle_info);
-		button.attr('href', 'javascript:void(0);');
-		$(this).before(button);
-	});
+	$('a.info-link').click(toggle_info);
 
 	function toggle_info(evt) {
 		evt.preventDefault();
