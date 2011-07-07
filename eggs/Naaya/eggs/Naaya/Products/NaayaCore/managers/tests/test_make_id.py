@@ -7,7 +7,7 @@ from Testing import ZopeTestCase
 from OFS.SimpleItem import SimpleItem
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.managers.utils import make_id, genObjectId, slugify
+from Products.NaayaCore.managers.utils import make_id, slugify
 
 class Parent(object):
 
