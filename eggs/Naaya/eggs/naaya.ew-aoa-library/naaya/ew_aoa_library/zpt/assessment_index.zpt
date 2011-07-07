@@ -30,6 +30,8 @@
 						survey target_answer/getSurveyTemplate"
 		  tal:attributes="href string:${survey/absolute_url}/css_survey_common" />
 
+<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
+
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
 	<span class="buttons">
@@ -124,16 +126,35 @@
 
 	<tal:block condition="virtual_library">
 	<tal:block define="approved_date python:here.approved_date(here);">
+		<div id="approve_error" class="message-error" style="display: none">
+			<fieldset>
+				<legend i18n:translate="">Errors</legend>
+				<div class="fieldset_div">
+					<ul>
+						<li tal:condition="not: here/geo_coverage_country"
+							i18n:translate="">Value required for "Geo coverage: country"</li>
+						<li tal:condition="not: here/geo_coverage_region"
+							i18n:translate="">Value required for "Geo coverage: region"</li>
+						<li tal:attributes="not: here/document_type"
+							i18n:translate="">Value required for "Type of document"</li>
+					</ul>
+				</div>
+			</fieldset>
+		</div>
 		<span tal:condition="approved_date" class="buttons">
-			<a tal:attributes="href string:unapprove_assessment" i18n:translate="">
+			<a id="approve_link" tal:attributes="href string:unapprove_assessment" i18n:translate="">
 					Unapprove assessment
 			</a>
 		</span>
 		<span tal:condition="not:approved_date" class="buttons">
-			<a tal:attributes="href string:approve_assessment" i18n:translate="">
+			<a id="approve_link" tal:attributes="href string:approve_assessment" i18n:translate="">
 					Approve assessment
 			</a>
 		</span>
+		<p i18n:translate="">Upon approval, the assessment will appear in the
+			<a tal:attributes="href python:here.getSite().absolute_url() + '/viewer_aggregator'"
+				i18n:name="viewer_aggregator" i18n:translate="">Virtual Library and Country fiches Viewer</a>
+		</p>
 	</tal:block>
 	<form id="save_vl" name="save_vl" method="post" action=".">
 		<p><strong><label for="geo_coverage_country" i18n:translate="">
@@ -190,10 +211,12 @@
 	</tal:block>
 </div>
 
+<script type="text/javascript" tal:attributes="src string:${library_object/absolute_url}/survey_js"></script>
 <tal:block content="structure here/render_answer" />
 
 <tal:block condition="virtual_library">
-<script tal:content="string:var country_list=${country_choices};"/>
+<script tal:content="string:var country_list=${country_choices};
+	var document_type=${here/document_type}; var countries=${here/geo_coverage_country}; var region='${here/geo_coverage_region}';"/>
 <script tal:condition="virtual_library">
 $('#country_single_select').change(function(){
 	country_index = $(this).val();
@@ -204,6 +227,15 @@ $('#country_single_select').change(function(){
 $('input[name="geo_coverage_country:list:int"]').click(function() {
 	$(this).removeAttr('checked');
 	$(this).parent().hide();
+});
+$('#approve_link').click(function() {
+	if ($.trim($(this).text()) == 'Approve assessment') {
+		if (document_type == 0 || countries.length == 0 || region == '') {
+			$('#approve_error').show();
+			return false; // don't approve
+		}
+	}
+	return true;
 });
 </script>
 </tal:block>
