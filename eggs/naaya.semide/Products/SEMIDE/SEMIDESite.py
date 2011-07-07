@@ -2380,11 +2380,11 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def changeLangAndRedirect(self, lang='', url='', REQUEST=None):
         """ """
         # Code compatible with both Localizer (old) and naaya.i18n (new)
-        portal_i18n = self.getPortalI18n()
-        if portal_i18n is None:
-            self.getLocalizer().changeLanguage(lang)
-        else:
+        try:
+            portal_i18n = portal.getPortalI18n()
             portal_i18n.change_selected_language(lang)
+        except AttributeError:
+            self.getLocalizer().changeLanguage(lang)
 
         if REQUEST:
             REQUEST.RESPONSE.redirect(url)
