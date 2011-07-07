@@ -37,7 +37,7 @@ function fCheckSelection(){
 
 <tal:block condition="folder/can_be_seen">
 
-<p i18n:translate="">Select the files you want to download in a ZIP archive. After making the selection, press the <em>Download</em> button to obtain the ZIP file which you can download to your computer.</p>
+<p i18n:translate="">Select the files you want to download in a ZIP archive. After making the selection, press the <em i18n:name="download" i18n:translate="">Download</em> button to obtain the ZIP file which you can download to your computer.</p>
 
 <div>
 	<div id="toolbar">
