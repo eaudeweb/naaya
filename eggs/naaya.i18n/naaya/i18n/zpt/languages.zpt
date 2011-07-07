@@ -1,0 +1,64 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)
+</div>
+
+
+<fieldset>
+	<p class="form-help">
+		Languages in this portal
+	</p>
+	<form method="post" action="manage_delLanguages">
+	<tal:block tal:repeat="item here/gl_get_languages_mapping">
+	<input type="checkbox" name="languages:tuple" tal:attributes="value python:item['code']" />
+	<span tal:replace="python:'%s [%s]' % (item['name'], item['code'])" />
+	<br />
+	</tal:block>
+	<input type="submit" value="Delete" />
+	</form>
+</fieldset>
+<br />
+
+<fieldset>
+	<p class="form-help">
+		Set default language
+	</p>
+	<form method="post" action="manage_changeDefaultLang">
+		<input type="text" name="language" tal:attributes="value here/gl_get_default_language" />
+		<input type="submit" value="Change" />
+	</form>
+</fieldset>
+<br />
+
+<fieldset>
+	<p class="form-help">
+		Add a new language
+	</p>
+	<form method="post" action="manage_addLanguage" name="manage_addLanguage"
+	      tal:define="languages here/gl_get_languages">
+	<select name="language">
+		<option name="" value="">Please select or enter a language</option>
+		<tal:block tal:repeat="item here/gl_get_all_languages">
+		<option tal:condition="python:item['code'] not in languages"
+			tal:attributes="value python:item['code']; name python:item['name']"
+			tal:content="python:'%s [%s]' % (item['name'], item['code'])" />
+		</tal:block>
+	</select>
+	<br />
+	<input type="text" name="language_name" size="19" placeholder="Language Name" />
+	<input type="text" name="language_code" size="3" placeholder="Code" />
+	<input type="submit" value="Add" />
+	<script type='text/javascript'>
+	document.manage_addLanguage.language.onchange = function(){
+		var frm = document.manage_addLanguage;
+		var selection = frm.language[frm.language.selectedIndex];
+		frm.language_code.value = selection.getAttribute("value");
+		frm.language_name.value = selection.getAttribute("name");
+	}
+	</script>
+	</form>
+</fieldset>
+
+<span tal:replace="structure here/manage_page_footer" />
