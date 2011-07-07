@@ -388,7 +388,7 @@ class _CommonContentTests(SeleniumTestCase):
 
         transaction.abort()
         ob = self.portal['info']['test-object-%s' % self.rnd]
-        assert ob.keywords == "Shrubbery, Ni"
+        self.assertEqual(ob.keywords, u'Ni,')
 
     @with_mock_captcha
     def test_with_captcha(self):
