@@ -1,7 +1,7 @@
-from naaya.content.base.tests.common import _CommonContentTest
+from naaya.content.base.tests.common import _IconTests
 from naaya.content.news.news_item import addNyNews
 
-class News(_CommonContentTest):
+class NewsIconTests(_IconTests):
 
     def add_object(self, parent):
         ob = parent[addNyNews(parent, title='My news')]
