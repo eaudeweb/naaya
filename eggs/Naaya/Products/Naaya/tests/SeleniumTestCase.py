@@ -169,6 +169,7 @@ class NaayaSeleniumTestPlugin(Plugin):
         self.tzope = tzope
         self.http_thread = None
         self.selenium = None
+        self.app = None
 
     def options(self, parser, env):
         Plugin.options(self, parser, env)
@@ -216,15 +217,18 @@ class NaayaSeleniumTestPlugin(Plugin):
                 my_selenium.start()
             except socket.error, e:
                 assert False, "Could no connect to selenium: %s" % e
-
             # only set self.selenium if no exception was thrown so far
             self.selenium = my_selenium
 
+        if self.app is None:
+            #Set reference to app as well
+            cleanup, portal_db_layer = self.tzope.db_layer()
+            self.app = portal_db_layer.open().root()['Application']
+
         testCase.test.selenium = self.selenium
+        testCase.test.app = self.app
 
     def afterTest(self, test):
-        if not isinstance(test.test, SeleniumTestCase):
-            return
         if self.selenium is not None:
             self.selenium.delete_all_visible_cookies()
 
