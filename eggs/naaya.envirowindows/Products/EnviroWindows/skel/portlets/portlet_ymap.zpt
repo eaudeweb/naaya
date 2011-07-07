@@ -123,10 +123,10 @@ div.marker-body h3 {
 					<input type="checkbox" name="geo_types:list"
 						tal:attributes="value child/id; id child/id; 
 								onclick string:javascript:startMapRefresh();" style="float: left; width: 2em;" />
-					<div style="text-align: center;"><label tal:attributes="for child/id" i18n:translate="" style="padding: 0.5em 0;">
+					<div style="text-align: center;"><label tal:attributes="for child/id" style="padding: 0.5em 0;">
 						<img tal:condition="python:child.picture is not None" style="zoom: 85%"
-						tal:attributes="src string:portal_map/getSymbolPicture?id=${child/id}; alt child/title" /> 
-						<span tal:content="child/title" /></label>
+						tal:attributes="src string:portal_map/getSymbolPicture?id=${child/id}; alt child/title" i18n:attributes="alt" /> 
+						<span i18n:translate="" tal:content="child/title" /></label>
 					</div>
 				</li>
 			</ul>
@@ -147,8 +147,8 @@ div.marker-body h3 {
 
 	<div style="display:none" id="map_markers"></div>
 </div>
-	<p i18n:translate="" style="font-size: 90%; margin-top: 0;">You can also use <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher) 
-	<input type="submit" value="View in Google Earth" name="portal_map/downloadLocationsKml:method" i18n:attributes="value" class="map-button" /></p>
+	<p i18n:translate="" style="font-size: 90%; margin-top: 0;">You can also use <a href="http://earth.google.com/downloads.html" i18n:name="google-earth-viewer">Google Earth viewer</a> (version 4.0 or higher) 
+	<input type="submit" value="View in Google Earth" name="portal_map/downloadLocationsKml:method" i18n:attributes="value" class="map-button" i18n:name="view-in-google-earth" /></p>
 </form>
 <form id="list_locations_form" action="list_locations" method="get" style="display:none">
 	<input type="hidden" name="lat_min" />
