@@ -4,7 +4,7 @@
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
 <h1 i18n:translate="">Add TalkBack Consultation Paragraph</h1>
-<p i18n:translate="">Note: if you are pasting text from Word or similar applications, you should use one of the <em>Paste from Word</em> or <em>Paste as Plain Text</em> buttons.</p>
+<p i18n:translate="">Note: if you are pasting text from Word or similar applications, you should use one of the <em i18n:name="paste-from-word" i18n:translate="">Paste from Word</em> or <em i18n:name="paste-as-plain-text" i18n:translate="">Paste as Plain Text</em> buttons.</p>
 
 <form name="frmAdd" method="post" action="addSection"
   tal:define="title python:here.getSession('title', ''); body python:here.getSession('body', '')">
