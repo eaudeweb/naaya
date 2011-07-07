@@ -1,23 +1,25 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 <metal:block fill-slot="meta">
-    <meta tal:define="description here/description;
-                      content python:here.html2text(description);"
-          tal:condition="content"
-          tal:attributes="content content" name="description" />
-    <meta tal:attributes="content here/contributor" name="author" />
-    <meta tal:attributes="content here/gl_get_selected_language"
-          name="dc.language" />
-    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
-          name="title" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta tal:define="description here/description;
+					  content python:here.html2text(description);"
+		  tal:condition="content"
+		  tal:attributes="content content" name="description" />
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:attributes="content here/gl_get_selected_language"
+		  name="dc.language" />
+	<meta tal:attributes="content string:${here/title} | ${here/site_title}"
+		  name="title" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </metal:block>
 
 <metal:block fill-slot="body"
 	tal:define="
 		review_template python:here.target_path == 'tools/general_template/general-template';
 		library python: here.target_path == 'tools/virtual_library/bibliography-details-each-assessment';
+		country_fiches python: here.target_path == 'tools/country_fiches';
 		site here/getSite;
 		library_object site/tools/virtual_library/bibliography-details-each-assessment;
+		country_fiches_object site/tools/country_fiches;
 		shadows options/shadows;
 		no_answers options/no_answers|nothing">
 
@@ -89,7 +91,7 @@
 		$('#show_filters').hide();
 	}
 	function display_topics(selected_value){
-        if (selected_value == null)
+		if (selected_value == null)
 		{
 			$('label[for="topics"]').hide();
 			$('[name="topics"]').hide();
@@ -98,9 +100,9 @@
 			$('label[for="topics"]').css('display', 'block');
 			$('[name="topics"]').show();
 			$('[name="topics"] option').hide();
-            for (i=0; i<selected_value.length; i++){
-			    $('.'+selected_value[i]).show();
-            }
+			for (i=0; i<selected_value.length; i++){
+				$('.'+selected_value[i]).show();
+			}
 		}
 	}
 	function check_answers(){
@@ -148,21 +150,21 @@
 				<select name="themes" multiple="True" size="4">
 					<option i18n:translate="" value="w_water-resources-topics"
 						tal:attributes="selected
-                        python:'w_water-resources-topics' in themes ">
+						python:'w_water-resources-topics' in themes ">
 						Water resources topics</option>
 					<option i18n:translate=""
 						value="w_water-resource-management-topics"
 						tal:attributes="selected
-                        python:'w_water-resource-management-topics' in
-                        themes">
+						python:'w_water-resource-management-topics' in
+						themes">
 						Water resource management topics</option>
 					<option i18n:translate="" value="w_green-economy-topics"
 						tal:attributes="selected
-                        python:'w_green-economy-topics' in themes">
+						python:'w_green-economy-topics' in themes">
 						Green economy topics</option>
 					<option i18n:translate="" value="w_resource-efficiency-topics"
 						tal:attributes="selected
-                        python:'w_resource-efficiency-topics' in themes">
+						python:'w_resource-efficiency-topics' in themes">
 						Resource efficiency topics</option>
 				</select>
 			</div>
@@ -342,25 +344,25 @@
 					tal:attributes="value options/official_country_region|nothing"/>
 			</div>
 			<div class="field" tal:define="themes
-            options/themes|python:[]">
+			options/themes|python:[]">
 				<label for="themes" i18n:translate="">Themes</label>
 				<select name="themes" multiple="True" size="4">
 					<option i18n:translate="" value="w_water-resources-topics"
 						tal:attributes="selected
-                        python:'w_water-resources-topics' in themes ">
+						python:'w_water-resources-topics' in themes ">
 						Water resources topics</option>
 					<option i18n:translate=""
 						value="w_water-resource-management-topics"
 						tal:attributes="selected
-                        python:'w_water-resource-management-topics' in themes">
+						python:'w_water-resource-management-topics' in themes">
 						Water resource management topics</option>
 					<option i18n:translate="" value="w_green-economy-topics"
 						tal:attributes="selected
-                        python:'w_green-economy-topics' in themes">
+						python:'w_green-economy-topics' in themes">
 						Green economy topics</option>
 					<option i18n:translate="" value="w_resource-efficiency-topics"
 						tal:attributes="selected
-                        python:'w_resource-efficiency-topics' in themes">
+						python:'w_resource-efficiency-topics' in themes">
 						Resource efficiency topics</option>
 				</select>
 			</div>
@@ -536,7 +538,7 @@
 	<input type="hidden" id="answers_filter" tal:attributes="value filter"/>
 	<!-- If the "sort by" property has an attribute "lower",
 		convert the value to lower before sorting -->
-    <tal:block condition="shadows">
+	<tal:block condition="shadows">
 	<tal:block condition="python:hasattr(shadows[0].get(skey), 'lower')">
 		<tal:block define="dummy python:shadows.sort(key=lambda x: x.get(skey).lower(), reverse=rkey);" />
 	</tal:block>
@@ -546,7 +548,7 @@
 	<tal:block condition="python:skey == 'approved_date'" >
 		<tal:block define="dummy python:shadows.sort(key=lambda x: here.approved_date(x), reverse=rkey);" />
 	</tal:block>
-    </tal:block>
+	</tal:block>
 
 <thead tal:define="url here/absolute_url">
 <tr>
@@ -586,7 +588,7 @@
 		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
-	<th colspan="2" i18n:translate="">Geo coverage:</th>
+	<th tal:condition="python: library or review_template" colspan="2" i18n:translate="">Geo coverage:</th>
 
 	<!-- Year of publication -->
 	<th rowspan="2" tal:condition="python:review_template and (rkey and skey=='publication_year' or skey!='publication_year')">
@@ -630,6 +632,7 @@
 	</th>
 
 	<!-- Geo coverage: region -->
+	<tal:block condition="python: library or review_template">
 	<th tal:condition="python: (rkey and skey=='geo_coverage_region' or skey!='geo_coverage_region')">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region">Region</a>
 		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
@@ -638,35 +641,44 @@
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=geo_coverage_region&rkey=True">Region</a>
 		<img tal:condition="python:skey=='geo_coverage_region'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
+	</tal:block>
 </tr>
 </thead>
-<tbody tal:define="country_choices python: library_object['w_official-country-region'].getChoices();">
+<tbody tal:define="vl_country_choices python: library_object['w_official-country-region'].getChoices();
+					cf_country_choices python: country_fiches_object['w_country'].getChoices();">
 <tr tal:repeat="i shadows">
-<tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td><input type="checkbox" name="answer_ids" tal:attributes="value i/id" /></td>
-	<td>
-			<a tal:define="url i/absolute_url" tal:attributes="href string:${url}; title topics_as_label" tal:content="python: i.get('title')"></a>
+	<td tal:condition="python: library or review_template">
+		<a tal:define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)"
+			tal:attributes="href i/absolute_url; title topics_as_label"
+			tal:content="python: i.get('title')"></a>
+	</td>
+	<td tal:condition="python: country_fiches">
+		<a tal:attributes="href i/absolute_url"
+			tal:content="python: i.get('title')"></a>
 	</td>
 	<td tal:condition="not:review_template">
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
-    <td tal:define="countries i/geo_coverage_country|nothing">
-        <tal:block condition="python: countries and review_template"
-            content="countries"/>
-        <tal:block condition="python: countries and library"
-            content="python:', '.join(country_choices[country] for country in countries)"/>
-    </td>
-	<td tal:content="i/geo_coverage_region|nothing"/>
+	<td tal:define="countries i/geo_coverage_country|nothing">
+		<tal:block condition="python: countries and review_template"
+			content="countries"/>
+		<tal:block condition="python: countries and library"
+			content="python:', '.join(vl_country_choices[country] for country in countries)"/>
+		<tal:block condition="python: countries and country_fiches"
+			content="python:', '.join(cf_country_choices[country] for country in countries)"/>
+	</td>
+	<td tal:condition="python: library or review_template"
+		tal:content="i/geo_coverage_region|nothing"/>
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
 	<td i18n:translate="" tal:condition="review_template" >
-        <span tal:condition="python:here.approved_date(i)">Approved</span>
-        <span tal:condition="python:not here.approved_date(i)">Pending</span>
-    </td>
+		<span tal:condition="python:here.approved_date(i)">Approved</span>
+		<span tal:condition="python:not here.approved_date(i)">Pending</span>
+	</td>
 	<td tal:condition="review_template" tal:content="python: here.utShowFullDateTime(here.approved_date(i))"/>
-</tal:block>
 </tr>
 </tbody>
 </table>
