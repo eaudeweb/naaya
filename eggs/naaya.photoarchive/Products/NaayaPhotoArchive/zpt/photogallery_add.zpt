@@ -1,5 +1,5 @@
 <tal:block define="
-    action string:manage_addNyPhotoGallery;
+    action string:addNyPhotoGallery;
     kind string:Naaya Photo Gallery;
     form_helper options/form_helper">
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_add').macros['page']">

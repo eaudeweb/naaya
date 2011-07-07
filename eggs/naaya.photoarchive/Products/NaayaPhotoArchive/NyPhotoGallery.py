@@ -53,7 +53,7 @@ def gallery_add_html(self, REQUEST):
     form_helper = get_schema_helper_for_metatype(self, METATYPE_NYPHOTOGALLERY)
     return _gallery_add_html.__of__(self)(REQUEST, form_helper=form_helper)
 
-def manage_addNyPhotoGallery(self, id='', REQUEST=None, contributor=None,
+def addNyPhotoGallery(self, id='', REQUEST=None, contributor=None,
         _klass=None, **kwargs):
     """
     Create a Photo Gallery.

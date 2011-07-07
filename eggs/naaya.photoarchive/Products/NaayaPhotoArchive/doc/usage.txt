@@ -12,7 +12,7 @@ Gallery
   
     >>> self.login()
     >>> info = self.portal.info
-    >>> gallery_id = info.manage_addNyPhotoGallery(id='mygallery', title='My Gallery')
+    >>> gallery_id = info.addNyPhotoGallery(id='mygallery', title='My Gallery')
     >>> gallery = info[gallery_id]
     >>> gallery.title
     u'My Gallery'

@@ -1,5 +1,5 @@
 from naaya.content.base.tests.common import _IconTests
-from Products.NaayaPhotoArchive.NyPhotoGallery import manage_addNyPhotoGallery
+from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 
 
@@ -13,7 +13,7 @@ class PhotoGalleryIconTests(_IconTests):
             'contributor': 'contributor',
             'start_date': "10/10/2000",
         }
-        ob = parent[manage_addNyPhotoGallery(parent, **kwargs)]
+        ob = parent[addNyPhotoGallery(parent, **kwargs)]
         ob.approveThis()
         return ob
 

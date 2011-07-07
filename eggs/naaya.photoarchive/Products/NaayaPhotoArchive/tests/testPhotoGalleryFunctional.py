@@ -32,9 +32,9 @@ class NyPhotoGalleryFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaPhotoArchive.NyPhotoGallery import manage_addNyPhotoGallery
+        from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
-        manage_addNyPhotoGallery(self.portal.myfolder, id='mygallery', title='My photo gallery', submitted=1, contributor='contributor')
+        addNyPhotoGallery(self.portal.myfolder, id='mygallery', title='My photo gallery', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
