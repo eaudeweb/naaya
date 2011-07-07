@@ -1,10 +1,10 @@
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
 
-<tal:block define="global current_form_id request/form_id|nothing" />
+<tal:block define="global name request/name|nothing" />
 
-<tal:block define="global default_form python:here.getDefaultForm(current_form_id)" />
-<h2>Customize <code tal:content="current_form_id" /></h2>
+<tal:block define="global default_form python:here.getDefaultForm(name)" />
+<h2>Customize <code tal:content="name" /></h2>
 
 <textarea rows="20" readonly="readonly" tal:content="default_form"
   style="width: 95%; background-color: #ddd; border: 1px solid #737373;" />
@@ -13,7 +13,7 @@
 
 <form method="post" tal:attributes="action
   string:${here/absolute_url}/manage_customizeForm">
-    <input type="hidden" name="form_id" tal:attributes="value current_form_id" />
+    <input type="hidden" name="name" tal:attributes="value name" />
     <input type="submit" value="Customize" />
 </form>
 
