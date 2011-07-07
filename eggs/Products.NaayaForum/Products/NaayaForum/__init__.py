@@ -53,7 +53,9 @@ def initialize(context):
 
 misc_ = {
     'NyForum.gif':ImageFile('www/NyForum.gif', globals()),
+    'NyForum_marked.gif':ImageFile('www/NyForum_marked.gif', globals()),
     'NyForumTopic.gif':ImageFile('www/NyForumTopic.gif', globals()),
+    'NyForumMessage.gif':ImageFile('www/NyForumMessage.gif', globals()),
     'NyForumMessage.gif':ImageFile('www/NyForumMessage.gif', globals()),
     'attachment.gif':ImageFile('www/attachment.gif', globals()),
 }
