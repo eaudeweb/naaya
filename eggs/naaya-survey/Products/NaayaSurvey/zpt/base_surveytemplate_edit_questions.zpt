@@ -78,10 +78,8 @@ function toggleSelect(caller){
 					tal:attributes="value object/getId" />
 			</td>
 			<td class="type" style="width: 4%;">
-				<img tal:attributes="
-					src object/icon;
-					alt object/meta_type;
-					title object/meta_type"/>
+				<img tal:define="icon python:here.rstk.get_object_view_info(object)['icon']"
+				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 			</td>
 			<td class="title-column">
 			<a tal:attributes="
