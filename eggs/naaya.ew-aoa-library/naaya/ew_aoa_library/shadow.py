@@ -180,6 +180,7 @@ def extract_survey_answer_data_library(answer):
                             answer.get('w_assessment-url'),
                             answer.get('w_assessment-url'),
                        ),
+        'publication_year': answer.get('w_assessment-year'),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
         'topics': sorted(all_topics),
@@ -193,7 +194,7 @@ def extract_survey_answer_data_library(answer):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
 
-    attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', '')
+    attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', [])
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
@@ -206,6 +207,7 @@ def extract_survey_answer_data_country_fiches(answer):
             'id': answer.getId(),
             'title': answer.get('w_title'),
             'geo_coverage_country': answer.get('w_country'),
+            'publication_year': answer.get('w_publication-year'),
             'uploader': answer.get('w_author'),
             'target_path': path_in_site(answer),
             'theme': extract_multipleselect(answer, 'w_theme'),
