@@ -195,7 +195,7 @@ def extract_survey_answer_data_library(answer):
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
-    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', -1)
+    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', 0)
 
     return attrs
 
@@ -402,7 +402,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         survey_answer = self.get_survey_answer(self.getId())
 
         document_type = REQUEST.get('document_type')
-        if document_type == -1:
+        if document_type == 0:
             if hasattr(survey_answer.aq_base, 'w_type-document'):
                 delattr(survey_answer, 'w_type-document')
         else:
