@@ -51,6 +51,7 @@ setup(name='Naaya',
           'naaya.content-compat',
           'naaya.flowplayer',
           'naaya.content.bfile',
+          'naaya.i18n'
 
           #Testing
           # 'twill',
