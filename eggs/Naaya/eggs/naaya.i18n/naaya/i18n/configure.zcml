@@ -1,0 +1,24 @@
+<configure xmlns:naaya="http://namespaces.zope.org/zope"
+           xmlns:zope="http://namespaces.zope.org/zope"
+           xmlns:five="http://namespaces.zope.org/five"
+           >
+
+   <five:registerPackage package="." initialize=".initialize" />
+
+   <zope:adapter
+         factory=".patches.NySitePublishTraverse"
+      />
+
+   <naaya:utility
+      factory=".NyI18nTranslator"
+      provides="zope.i18n.interfaces.ITranslationDomain"
+      name="default"
+      />
+
+   <naaya:utility
+      name="LocalizerToNaayaI18n.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.LocalizerToNaayaI18n"
+      permission="zope2.ViewManagementScreens" />
+
+</configure>
