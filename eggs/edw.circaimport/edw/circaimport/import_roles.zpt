@@ -8,32 +8,8 @@
       <input type="submit" value="Import" />
     </form>
     <tal:block condition="options/report|nothing">
-    <h1>Import from CIRCA - error report</h1>
+    <h1>Report</h1>
     <code><pre tal:content="options/report"></pre></code>
-    </tal:block>
-    <tal:block condition="options/user_2_role|nothing">
-    <h1>Users imported from CIRCA</h1>
-    <table tal:define="user_2_role options/user_2_role">
-        <tr><th>User</th><th>Role</th></tr>
-        <tal:block repeat="user user_2_role/keys">
-        <tr>
-            <td tal:content="user"/>
-            <td tal:content="python:user_2_role[user]"/>
-        </tr>
-        </tal:block>
-    </table>
-    </tal:block>
-    <tal:block condition="options/group_2_role|nothing">
-    <h1>Groups imported from CIRCA</h1>
-    <table tal:define="group_2_role options/group_2_role">
-        <tr><th>User</th><th>Role</th></tr>
-        <tal:block repeat="group group_2_role/keys">
-        <tr>
-            <td tal:content="group"/>
-            <td tal:content="python:group_2_role[group]"/>
-        </tr>
-        </tal:block>
-    </table>
     </tal:block>
   </metal:block>
 </metal:block>

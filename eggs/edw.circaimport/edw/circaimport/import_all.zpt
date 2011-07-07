@@ -1,0 +1,30 @@
+<metal:block use-macro="here/standard_template_macro">
+  <metal:block fill-slot="body">
+    <h1>Import from CIRCA</h1>
+    <form tal:attributes="action string:${here/absolute_url}/import_all_from_circa"
+          method="post">
+      <label>Files and folders exported file: <input name="filename_files"/></label>
+      <br/>
+      <label>Files and folders import to folder: <input name="import_files_path"/></label>
+      <br/>
+      <br/>
+      <label>Roles exported file: <input name="filename_roles"/></label>
+      <br/>
+      <label>LDAP source title <input name="source_title"/></label>
+      <br/>
+      <br/>
+      <label>Notifications exported file: <input name="filename_notifications"/></label>
+      <br/>
+      <br/>
+      <label>ACLs exported file: <input name="filename_acls"/></label>
+      <br/>
+      <br/>
+      <input type="submit" value="Import" />
+    </form>
+    <code tal:condition="options/reports|nothing">
+        <tal:block repeat="report options/reports">
+        <pre tal:content="report"></pre>
+        </tal:block>
+    </code>
+  </metal:block>
+</metal:block>
