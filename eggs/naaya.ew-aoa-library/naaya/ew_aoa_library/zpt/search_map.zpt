@@ -1,0 +1,130 @@
+<div id="tabbedmenu"
+     tal:define="translate python:here.getPortalTranslations().gettext;
+                 lang_map here/gl_get_languages_map">
+  <ul>
+    <li tal:repeat="item lang_map"
+        tal:attributes="id python:test(item['selected'], 'currenttab', None)">
+      <a tal:attributes="href string:${here/absolute_url}/gl_changeLanguage?old_lang=${item/id};"
+         tal:content="python:translate(item['title'])"></a>
+    </li>
+  </ul>
+</div>
+
+<div id="tabbedmenuend"></div>
+
+<div id="aoa-search-map">
+
+  <div id="filters">
+
+    <div id="filters-form-holder">
+      <p>
+        Fill in the form below in order to search the available documents.
+      </p>
+      <form method="GET" action="" name="filters-form" id="filters-form">
+        <input type="text" name="text" size="65" id="description"
+               placeholder="Search text in title and description of the documents" class="input-text" />
+        <input type="submit" value="Search" class="button submit"
+               id="filter-button" />
+        <div class="fields-separator">&nbsp;</div>
+
+        <select name="theme" class="input-select">
+          <option value="">All themes</option>
+          <option tal:repeat="option options/filter_options/themes"
+                  tal:attributes="value option"
+                  tal:content="option"></option>
+        </select>
+
+        <select name="author-organisation" class="input-select"
+                tal:condition="nothing">
+          <option disabled value="">Author organisation</option>
+          <option>Org 1</option>
+          <option>Org 2</option>
+          <option>Org 3</option>
+        </select>
+
+        <select name="document-type" class="input-select">
+          <option value="">All document types</option>
+          <option tal:repeat="option options/filter_options/document_types"
+                  tal:attributes="value option"
+                  tal:content="option"></option>
+        </select>
+
+        <input type="text" name="year" placeholder="Publication`s year"
+               class="input-text" id="year" size="14" />
+
+      </form>
+
+    </div>
+
+    <div id="countries-map"></div>
+
+  </div>
+
+  <div id="results" class="hidden">
+
+    <div class="loading-animation hidden">
+      <img src="++resource++naaya.ew_aoa_library-www/ajax-loader.gif" />
+      Searching...
+    </div>
+
+    <ul class="search-results">
+      <div class="template">
+        <li class="document">
+          <a href="javascript:" class="title">${title}</a>
+        </li>
+      </div>
+    </ul>
+  </div>
+
+  <div id="document-info">
+    <div class="template">
+      <dl>
+
+        <dt>Title</dt>
+        <dd><a href="${library_url}">${title}</a></dd>
+
+        {{if author}}
+        <dt>Author</dt>
+        <dd>${author}</dd>
+        {{/if}}
+
+        {{if year}}
+        <dt>Year</dt>
+        <dd>${year}</dd>
+        {{/if}}
+
+        {{if url}}
+        <dt>URL</dt>
+        <dd><a href="${url}">${url}</a></dd>
+        {{/if}}
+
+        <dt>Country</dt>
+        {{each country}}
+          <dd>${$value}</dd>
+        {{/each}}
+
+        <dt>Theme</dt>
+        {{each theme}}
+          <dd>${$value}</dd>
+        {{/each}}
+
+        {{if document_type.length}}
+          <dt>Document type</dt>
+          {{each document_type}}
+            <dd>${$value}</dd>
+          {{/each}}
+        {{/if}}
+
+      </dl>
+    </div>
+  </div>
+  
+  <div class="cleaner">&nbsp;</div>
+</div>
+
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
+<script src="++resource++naaya.ew_aoa_library-www/search.js"></script>
+<script tal:define="cfg python:here.rstk.json_dumps(options['map_config'])"
+        tal:content="string:window.M = {config: ${cfg}};"></script>
