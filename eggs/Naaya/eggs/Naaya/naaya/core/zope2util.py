@@ -429,3 +429,9 @@ def simple_paginate(items, per_page=4):
         output.append(items[offset:offset+per_page])
     return output
 
+def get_site_manager(context):
+    """
+    Return the site manager for a given object. It will typically return the
+    local site manager of the object's site.
+    """
+    return context.getSite().getSiteManager()
