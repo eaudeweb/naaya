@@ -138,7 +138,7 @@ class InvitationsContainer(SimpleItem):
 
         email_tool = self.getEmailTool()
         email_tool.sendEmail(mail_data['body_text'],
-                             email, email_tool._get_from_address(),
+                             email, email_tool.get_addr_from(),
                              mail_data['subject'])
 
     security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'index_html')

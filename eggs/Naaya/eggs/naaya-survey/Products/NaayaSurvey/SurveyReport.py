@@ -34,7 +34,7 @@ from zLOG import LOG, DEBUG
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import genObjectId, genRandomId
+from Products.NaayaCore.managers.utils import slugify, genRandomId
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 import statistics
@@ -47,7 +47,7 @@ def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     ZMI method that creates an object of this type.
     """
     if not id:
-        id = genObjectId(title)
+        id = slugify(title)
 
     idSuffix = ''
     while id+idSuffix in context.objectIds():

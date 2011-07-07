@@ -19,11 +19,12 @@ will be accessible like this::
 The zope server shouldn't server static content directly. Until another method
 """
 import os
+import mimetypes
 from Globals import package_home
 from zipfile import ZipFile
 
 from zope2util import CaptureTraverse
-from utils import mimetype_from_filename
+
 
 class StaticServeFromZip(object):
     """ Serves static files from a zip file"""
@@ -47,7 +48,7 @@ class StaticServeFromZip(object):
 
         try:
             data = zf.read(self._path)
-            content_type = mimetype_from_filename(self._path)
+            content_type, content_encoding = mimetypes.guess_type(filepath)
             if content_type:
                 REQUEST.RESPONSE.setHeader('content-type', content_type)
                 REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=31556926')
@@ -76,7 +77,7 @@ def StaticServeFromFolder(path, _globals=None, cache=True):
 
         try:
             data = fd.read()
-            content_type = mimetype_from_filename(filepath)
+            content_type, content_encoding = mimetypes.guess_type(filepath)
             if content_type:
                 REQUEST.RESPONSE.setHeader('content-type', content_type)
                 if cache:

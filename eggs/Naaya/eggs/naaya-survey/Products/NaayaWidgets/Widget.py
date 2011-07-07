@@ -27,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import genObjectId, genRandomId
+from Products.NaayaCore.managers.utils import slugify, genRandomId
 from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
@@ -41,7 +41,7 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         title = str(klass)
     if not id:
         # prevent any name clashes by using the 'w_' prefix
-        id = 'w_' + genObjectId(title)
+        id = 'w_' + slugify(title)
 
     idSuffix = ''
     while (id+idSuffix in container.objectIds() or

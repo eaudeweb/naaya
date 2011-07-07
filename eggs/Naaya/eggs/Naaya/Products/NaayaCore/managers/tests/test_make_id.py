@@ -7,7 +7,7 @@ from Testing import ZopeTestCase
 from OFS.SimpleItem import SimpleItem
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.managers.utils import make_id, genObjectId
+from Products.NaayaCore.managers.utils import make_id, genObjectId, slugify
 
 class Parent(object):
 
@@ -75,7 +75,7 @@ class make_id_TestCase(NaayaFunctionalTestCase):
 
 class SlugifyTestCase(ZopeTestCase.TestCase):
     def assert_slug(self, initial_string, expected_slug):
-        slug = genObjectId(initial_string)
+        slug = slugify(initial_string)
         self.assertEqual(slug, expected_slug)
 
     def test_simple(self):
