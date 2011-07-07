@@ -1210,6 +1210,13 @@ def glossary_dump_from_skel(files_path):
 
     return dump_file
 
+def update_chm_terms_glossary(glossary):
+    skel_dump_path = os.path.join(CHM2_PRODUCT_PATH, 'skel', 'others',
+                                  'chm_terms_translations')
+    dump_data = glossary_dump_from_skel(skel_dump_path)
+    glossary.dump_import(dump_data)
+    import transaction; transaction.commit()
+
 def get_image_size(file):
     """
     Test if the specified uploaded B{file} is a valid image.
