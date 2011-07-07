@@ -20,8 +20,44 @@ from Products.NaayaCore.constants import *
 from Products.NaayaCore.LayoutTool.Template import (
     manage_addTemplateForm, manage_addTemplate, Template)
 from Products.NaayaCore.managers.utils import html_diff
+import naaya.content.base.discover
 
-template_cache = {}
+def get_template_file(template_path, _memo={}):
+    if template_path in _memo:
+        template = _memo[template_path]
+    else:
+        template = _memo[template_path] = PageTemplateFile(template_path)
+    return template
+
+naaya_templates = {}
+def register_naaya_template(tmpl, form_id):
+    naaya_templates[form_id] = tmpl
+
+def get_templates_from_skel(skel_handler):
+    if skel_handler.root.forms is None:
+        return
+
+    skel_path = skel_handler.skel_path
+    for form in skel_handler.root.forms.forms:
+        path = join(skel_path, 'forms', '%s.zpt' % form.id)
+        tmpl = get_template_file(path)
+        yield {'id': form.id, 'form_ob': tmpl}
+
+def get_templates_from_pluggable_content():
+    pluggable_content = naaya.content.base.discover.get_pluggable_content()
+
+    for meta_type, pluggable_item in pluggable_content.iteritems():
+        for form_id in pluggable_item.get('forms', []):
+            module_name = pluggable_item['module']
+            path = join(pluggable_item['package_path'], 'zpt', '%s.zpt' % form_id)
+            tmpl = get_template_file(path)
+            yield {'id': form_id, 'form_ob': tmpl}
+
+def get_templates_from_naaya_code():
+    # forms of type NaayaPageTemplateFile
+    for form_id, tmpl in naaya_templates.iteritems():
+        yield {'id': form_id, 'form_ob': tmpl}
+
 
 def manage_addFormsTool(self, REQUEST=None):
     """
@@ -76,27 +112,14 @@ class FormsTool(Folder):
         """
         # get forms from skel folders
         for skel_handler in reversed(self.get_all_skel_handlers()):
-            if skel_handler.root.forms is None:
-                continue
+            for template_info in get_templates_from_skel(skel_handler):
+                yield template_info
 
-            skel_path = skel_handler.skel_path
-            for form in skel_handler.root.forms.forms:
-                path = join(skel_path, 'forms', '%s.zpt' % form.id)
-                yield {'id': form.id, 'title': form.title, 'path': path}
+        for template_info in get_templates_from_pluggable_content():
+            yield template_info
 
-        # get forms from pluggable items
-        pluggable_content = self.get_pluggable_content()
-
-        for meta_type, pluggable_item in pluggable_content.iteritems():
-            for form_id in pluggable_item.get('forms', []):
-                module_name = pluggable_item['module']
-                title = '%s %s' % (module_name, form_id)
-                path = join(pluggable_item['package_path'], 'zpt', '%s.zpt' % form_id)
-                yield {'id': form_id, 'title': title, 'path': path}
-
-        # forms of type NaayaPageTemplateFile
-        for form_id, tmpl in naaya_templates.iteritems():
-            yield {'id': form_id, 'title': form_id, 'form_ob': tmpl}
+        for template_info in get_templates_from_naaya_code():
+            yield template_info
 
     security.declareProtected(view_management_screens, 'registered_form_ids')
     def registered_form_ids(self):
@@ -105,10 +128,7 @@ class FormsTool(Folder):
     def getDefaultForm(self, form_id):
         for form in self.listDefaultForms():
             if form['id'] == form_id:
-                if 'form_ob' in form:
-                    return form['form_ob']._text
-                else:
-                    return self.futRead(form['path'], 'r')
+                return form['form_ob']._text
         else:
             raise KeyError('Not found form named "%s"' % form_id)
 
@@ -116,18 +136,12 @@ class FormsTool(Folder):
         """ get the non-customized form """
         for form in self.listDefaultForms():
             if form['id'] == form_id:
-                if 'form_ob' in form:
-                    t = form['form_ob']
-                else:
-                    file_path = form['path']
-                    if file_path in template_cache:
-                        t = template_cache[file_path]
-                    else:
-                        t = PageTemplateFile(file_path)
-                        template_cache[file_path] = t
+                template = form['form_ob']
+                break
+        else:
+            raise KeyError('Not found form named "%s"' % form_id)
 
-                return t.__of__(self)
-        raise KeyError('Not found form named "%s"' % form_id)
+        return template.__of__(self)
 
     def getForm(self, form_id):
         """
@@ -178,16 +192,13 @@ class FormsTool(Folder):
         """ Copy the form from disk to zodb """
         for form in self.listDefaultForms():
             if form['id'] == form_id:
-                if 'form_ob' in form:
-                    body = form['form_ob']._text
-                else:
-                    body = self.futRead(form['path'], 'r')
+                body = form['form_ob']._text
                 break
         else:
             raise KeyError('Not found form named "%s"' % form_id)
 
         ob = Template(id=form['id'],
-                      title=form['title'],
+                      title=form['id'],
                       text=body,
                       content_type='text/html')
         ob._naaya_original_text = body
@@ -201,7 +212,3 @@ class FormsTool(Folder):
     manage_customize = PageTemplateFile('zpt/manage_customize', globals())
 
 InitializeClass(FormsTool)
-
-naaya_templates = {}
-def register_naaya_template(tmpl, form_id):
-    naaya_templates[form_id] = tmpl
