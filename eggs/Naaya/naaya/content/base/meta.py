@@ -18,6 +18,7 @@ from zope.app.i18n import ZopeMessageFactory as _
 from constants import *
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.Naaya.NyFolderBase import NyFolderBase
+from Products.NaayaCore.SchemaTool.SchemaTool import lookup_schema_product
 
 
 class INaayaContent(Interface):
@@ -98,5 +99,13 @@ def register_naaya_content(_context, factory, **kwargs):
 def get_schema_name(portal, meta_type):
     if meta_type == 'Naaya Folder':
         return 'NyFolder'
-    else:
-        return portal.get_pluggable_item(meta_type)['schema_name']
+
+    pluggable = portal.get_pluggable_item(meta_type)
+    if pluggable is not None:
+        return pluggable['schema_name']
+
+    schema_info = lookup_schema_product(meta_type)
+    if schema_info is not None:
+        return schema_info['id']
+
+    raise KeyError("No schema_name found for %r in %r" % (meta_type, portal))

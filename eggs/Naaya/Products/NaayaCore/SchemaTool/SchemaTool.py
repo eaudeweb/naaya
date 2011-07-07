@@ -25,6 +25,9 @@ def register_schema_product(name, label, meta_type, default_schema):
         'defaults':default_schema,
     }
 
+def lookup_schema_product(meta_type):
+    return _other_schema_products.get(meta_type, None)
+
 def manage_addSchemaTool(self, REQUEST=None):
     """Add SchemaTool """
 
