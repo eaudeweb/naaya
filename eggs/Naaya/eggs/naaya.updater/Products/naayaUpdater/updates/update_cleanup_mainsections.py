@@ -5,7 +5,7 @@ class UpdateCleanupMainsections(UpdateScript):
     authors = ['Andrei Laza']
     creation_date = 'May 26, 2011'
     priority = PRIORITY['LOW']
-    description = "This removes main sections that are not in the database (If you get 'Saving positons failed. New order list and old list have different length'"
+    description = "This removes main sections that are not in the database (If you get 'Saving positons failed. New order list and old list have different length'). This happens if you remove a folder without removing it from mainsections list."
 
     def _update(self, portal):
         used_mainsections = portal.getMainTopics()
