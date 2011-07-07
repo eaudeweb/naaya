@@ -57,7 +57,10 @@
 		<th i18n:translate="">Delete</th>
 	</tr>
 	<tr tal:repeat="item python:paginator.get_page(page)">
-		<td width="1%"><img tal:attributes="src item/icon; alt item/title_or_id" /></td>
+		<td width="1%">
+			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+		</td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html"><img tal:attributes="src string:${item/absolute_url}/view?display=Album; alt item/title_or_id; title item/title_or_id" /></a></td>
 		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
@@ -103,7 +106,10 @@
 		<th i18n:translate="">Delete</th>
 	</tr>
 	<tr tal:repeat="item python:paginator.get_page(page)">
-		<td width="1%"><img tal:attributes="src item/icon; alt item/meta_type" /></td>
+		<td width="1%">
+			<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+			     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+		</td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html"><img tal:attributes="src string:${item/absolute_url}/view?display=Album; alt item/title_or_id; title item/title_or_id" /></a></td>
 		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
