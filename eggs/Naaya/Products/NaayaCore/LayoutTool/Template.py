@@ -1,10 +1,12 @@
-
+from zope.interface import implements
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 from Products.NaayaCore.constants import *
+
+from interfaces import INyTemplate
 
 manage_addTemplateForm = PageTemplateFile('zpt/template_add', globals())
 def manage_addTemplate(self, id='', title='', file='', content_type='text/html', REQUEST=None):
@@ -23,6 +25,7 @@ def manage_addTemplate(self, id='', title='', file='', content_type='text/html',
 
 class Template(ZopePageTemplate):
     """ """
+    implements(INyTemplate)
 
     meta_type = METATYPE_TEMPLATE
     icon = 'misc_/NaayaCore/Template.gif'
