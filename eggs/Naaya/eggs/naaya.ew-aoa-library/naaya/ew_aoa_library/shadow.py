@@ -195,7 +195,6 @@ def extract_survey_answer_data_library(answer):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
 
-
     attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', [])
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
@@ -491,6 +490,23 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
                 return self._manage_updates_html(respondent_success=True)
         else:
             return self._manage_updates_html()
+
+    def get_main_themes(self):
+        """ """
+        ret = set()
+        if isinstance(self.theme, list):
+            for t in self.theme:
+                if t in self.water_themes:
+                    ret.add('Water')
+                if t in self.ge_themes:
+                    ret.add('Green Economy')
+        else:
+            if t in self.water_themes:
+                ret.add('Water')
+            if t in self.ge_themes:
+                ret.add('Green Economy')
+
+        return list(ret)
 
     _manage_updates_html = PageTemplateFile('zpt/shadow_manage_update', globals())
 
