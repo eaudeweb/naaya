@@ -75,7 +75,8 @@ function checkApp(frm, control)
 				<td><img tal:attributes="src item/icon" alt="" /></td>
 				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
-				<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
+				<td tal:define="contributor item/contributor; username python:here.getAuthenticationTool().name_from_userid(item.contributor)"
+					tal:content="string: ${contributor} (${username})" />
 				<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
 				<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
 				<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
@@ -116,7 +117,8 @@ function checkApp(frm, control)
 				<td><img tal:attributes="src item/icon" alt="" /></td>
 				<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 				<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
-				<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
+				<td tal:define="contributor item/contributor; username python:here.getAuthenticationTool().name_from_userid(item.contributor)"
+					tal:content="string: ${contributor} (${username})" />
 				<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
 				<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>
 				<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>

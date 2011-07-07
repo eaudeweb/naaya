@@ -4,7 +4,6 @@
 		<form id="site_login" title="Portal login"/>
 		<form id="site_unauthorized" title="Access denied"/>
 		<form id="site_admin_properties" title="Portal properties"/>
-		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_index" title="Folder index customisation for Groupware"/>
 		<form id="folder_listing" title="Folder contents customisation for Groupware"/>
