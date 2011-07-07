@@ -20,14 +20,16 @@ Building python
 
 .. note::
 
-    The `recommended` python version is *2.6.6*.
+    The `recommended` python version is *2.4.6*. 
+    Naaya has also been tested on Zope 2.12 with python 2.6.6 but is still 
+    under testing stage.
 
 Before we download and install python we need to have the following
 dependencies first:
 
 * build-essential (Required to compile python)
 * zlib1g-dev (Used for zip support)
-* libglib2.0-dev (Required by Itools)
+* libglib2.0-dev (Required by itools)
 * libreadline-dev (Optional: useful for debugging purposes)
 * libxslt-dev (Required by `lxml`_)
 
