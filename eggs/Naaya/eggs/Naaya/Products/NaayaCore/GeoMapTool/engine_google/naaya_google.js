@@ -212,6 +212,10 @@
         map_with_points: function(map_div_id, points) {
             setup_map(map_div_id);
             draw_points_on_map(points);
+
+            return {
+                the_map: the_map
+            }
         },
         portal_map: function(map_div_id) {
             setup_map(map_div_id);
