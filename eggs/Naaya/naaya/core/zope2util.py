@@ -9,7 +9,8 @@ import urllib
 
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permission import Permission
-from Acquisition import Implicit
+from Acquisition import Implicit, aq_base
+from OFS.interfaces import IItem, IObjectManager, IApplication
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
 from Globals import DTMLFile
@@ -20,6 +21,8 @@ from decimal import Decimal
 from dateutil.parser import parse
 from naaya.core.utils import force_to_unicode, is_valid_email
 from naaya.core.utils import unescape_html_entities
+from Products.Naaya.interfaces import INySite
+from backport import any
 
 def redirect_to(tmpl):
     """
@@ -388,13 +391,29 @@ def path_in_site(obj):
     """
     return relative_object_path(obj, obj.getSite())
 
-def ofs_walk(ob):
-    yield ob
-    if not hasattr(ob.aq_base, 'objectValues'):
-        return
-    for sub_ob in ob.objectValues():
-        for item in ofs_walk(sub_ob):
-            yield item
+def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
+    """
+    Walk the Zope object graph and yield the objects it finds.
+
+    :param top: Object where the walk starts. Regardless of `filter` and
+        `containers`, `top` is never yielded, but always walked.
+    :param filter: Filter yielded objects. An object will be yielded only if
+        it provides one of the specified interfaces.
+    :param containers: Choose which container objects are walked.
+        :func:`ofs_walk` will call itself recursively if an object implements
+        one of the specified interfaces.
+    """
+
+    if not hasattr(aq_base(top), 'objectValues'):
+        raise ValueError("Object %r does not have sub-objects" % top)
+
+    for ob in top.objectValues():
+        if any(i.providedBy(ob) for i in filter):
+            yield ob
+
+        if any(i.providedBy(ob) for i in containers):
+            for item in ofs_walk(ob, filter, containers):
+                yield item
 
 def icon_for_content_type(context, mime_type):
     site = context.getSite()
