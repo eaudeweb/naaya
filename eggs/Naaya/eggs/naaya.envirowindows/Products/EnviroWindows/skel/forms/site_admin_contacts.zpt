@@ -30,7 +30,7 @@
 		<h2>Export</h2>
 		<form action="export_contacts_to_csv" method="post">
 			<p i18n:translate="">Select or type the path to a location from whitch to export contacts.
-			If you want to export all portal contacts select the portal root or type <em>/</em></p>
+			If you want to export all portal contacts select the portal root or type <em i18n:name="slash">/</em></p>
 			<input class="sitemap_tree1_target" type="text" name="location" id="location_export" size="50"
 				tal:attributes="value python:options.get('location', None)" />
 			<div class="sitemap_tree" id='sitemap_tree1'></div>
@@ -40,14 +40,14 @@
 		</form>
 
 		<h2>Import</h2>
-		<p i18n:translate="">This form allows you to upload multiple <em>Contact</em> items from
+		<p i18n:translate="">This form allows you to upload multiple <em i18n:name="contact" i18n:translate="">Contact</em> items from
 		a comma separated file. In case your Naaya portal has enabled geolocation for Contacts,
-		fill in the <em>Latitude</em>, <em>Longitude</em> , <em>Location URL</em> and <em>Location type</em>.
+		fill in the <em i18n:name="latitude" i18n:translate="">Latitude</em>, <em i18n:name="longitude" i18n:translate="">Longitude</em> , <em i18n:name="location" i18n:translate="">Location URL</em> and <em i18n:name="location-type" i18n:translate="">Location type</em>.
 		If the latitude and longitude are not provided, the system will try to find these coordinates from the
-		<em>Postal address</em> field. The <em>Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()"> defined in the portal</a>.
+		<em i18n:name="postal-address" i18n:translate="">Postal address</em> field. The <em i18n:name="location-type" i18n:translate="">Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()" i18n:name="defined-in-the-portal" i18n:translate="" > defined in the portal</a>.
 		</p>
-		<p i18n:translate=""><strong>TIP:</strong> Make sure that the encoding of your CSV file is either Latin-1 or UTF-8 and
-		that you select the matching <em>Encoding</em> option in the combo box below.
+		<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">TIP:</strong> Make sure that the encoding of your CSV file is either Latin-1 or UTF-8 and
+		that you select the matching <em i18n:name="encoding" i18n:translate="">Encoding</em> option in the combo box below.
 		</p>
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
 
@@ -86,7 +86,7 @@
 		<h2>Export</h2>
 		<form action="export_contacts_vcard" method="post">
 			<p i18n:translate="">Select or type the path to a location from whitch to export contacts.
-			If you want to export all portal contacts select the portal root or type <em>/</em></p>
+			If you want to export all portal contacts select the portal root or type <em i18n:name="slash">/</em></p>
 			<input class="sitemap_tree3_target" type="text" name="location" id="location_export" size="50"
 				tal:attributes="value python:options.get('location', None)" />
 			<div class="sitemap_tree" id='sitemap_tree3'></div>
@@ -121,7 +121,7 @@
 			to pick contacts from a particular folder.</p>
 		<form method="post" action="sendMailToContacts" tal:define="mail_from here/mail_address_from">
 			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">If you want to use this feature please add a valid email address in the "Default from address" field
-			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
+			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html" i18n:name="portal-properties-page" i18n:translate="">portal properties page</a>.
 			</div>
 			<div class="field">
 			<label for="location_mail" i18n:translate="">Location</label>
@@ -163,7 +163,7 @@
 			</table>
 
 			</tal:block>
-			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em>Contact</em> items</span>
+			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em i18n:name="contact" i18n:translate="">Contact</em> items</span>
 		</tal:block>
 	</tal:block>
 </tal:block>

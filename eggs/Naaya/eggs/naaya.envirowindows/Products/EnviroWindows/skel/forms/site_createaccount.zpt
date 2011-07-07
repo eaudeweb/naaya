@@ -4,7 +4,7 @@
 <h1 i18n:translate="">Application for contributor privileges</h1>
 
 <p i18n:translate="">
-	Fill your data in the form below and press the <strong>Submit request</strong> button.
+	Fill your data in the form below and press the <strong i18n:name="submit-request" i18n:translate="">Submit request</strong> button.
 	The Webmaster will be informed of your application for contribution privileges.
 	You will be notified about the result of your request.
 </p>
@@ -40,7 +40,7 @@
 		<td><input type="text" name="organisation:utf8:ustring" size="40" tal:attributes="value here/getSessionUserOrganisation" /></td>
 	</tr>
 	<tr>
-		<td valign="top" i18n:translate="">Location<br />the privileges should apply</td>
+		<td valign="top" i18n:translate="">Location<br i18n:name="br" />the privileges should apply</td>
 		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/>		<span i18n:translate="" tal:omit-tag="">Entire portal</span>
 		</td>
 	</tr>
