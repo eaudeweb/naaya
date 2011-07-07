@@ -7,7 +7,7 @@
 				$('p').each(function(){
 					$(this).html(process_acronyms(acronym_map, $(this).html()));
 				});
-				$('.widgetEditMode').each(function(){
+				$('.widget-title').each(function(){
 					$(this).html(process_acronyms(acronym_map, $(this).html()));
 				});
 
@@ -112,6 +112,22 @@
 				$('#opener').click(function() {
 					$('#report_preview').dialog('open');
 					return false;
+				});
+				//Hide the 'Show my answers' link
+				$('#show_answers').slideToggle();
+				//Hide the 'my answers' section
+				//for cases when there are too many of those
+				$('.hide_show_answers').click(function(e){
+					$('#my_answers_box').slideToggle();
+					$('#show_answers').slideToggle();
+				});
+				//Hide the 'Show my drafts' link
+				$('#show_drafts').slideToggle();
+				//Hide the 'my drafts' section
+				//for cases when there are too many of those
+				$('.hide_show_drafts').click(function(e){
+					$('#my_drafts_box').slideToggle();
+					$('#show_drafts').slideToggle();
 				});
 			});
 		}
