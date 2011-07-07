@@ -50,6 +50,9 @@ class AoALibraryViewer(SimpleItem):
     water_document_types = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     ge_document_types = [0, 1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
 
+    water_themes = ['Water', 'Water resources', 'Water resource management', 'Водные ресурсы', 'Управление водными ресурсами']
+    ge_themes = ['Green Economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов']
+
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, target_path):
@@ -637,9 +640,9 @@ class AoALibraryViewer(SimpleItem):
                 return False
 
             if theme == 'Water':
-                check_themes = ['Water', 'Water resources', 'Water resource management', 'Водные ресурсы', 'Управление водными ресурсами']
+                check_themes = self.water_themes
             else: # theme == 'Green Economy'
-                check_themes = ['Green Economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов']
+                check_themes = self.ge_themes
             if isinstance(shadow.theme, list):
                 for t in shadow.theme:
                     if t in check_themes:

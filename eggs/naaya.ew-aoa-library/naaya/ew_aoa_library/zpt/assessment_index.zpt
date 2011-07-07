@@ -170,11 +170,19 @@
 			Type of document
 		</label></strong>
 		<br/><br/>
-		<select name="document_type:int" id="document_type">
-			<option tal:repeat="document_type document_types"
+		<select name="document_type:int" id="document_type"
+			tal:define="main_themes here/get_main_themes;
+						has_both_themes python: len(main_themes) == 2;
+						has_one_theme python: len(main_themes) == 1;
+						has_no_theme python: len(main_themes) == 0;
+						themes_document_types python: test(has_one_theme and main_themes[0] == 'Water', here.water_document_types, here.ge_document_types)"
+			tal:attributes="disabled python: test(main_themes, '', 'disabled');">
+			<tal:block repeat="document_type document_types">
+			<option tal:condition="python: not (has_one_theme) or (has_one_theme and repeat['document_type'].index in themes_document_types)"
 					tal:attributes="value repeat/document_type/index;
 						selected python: repeat['document_type'].index == here.document_type"
-					tal:content="document_type" />
+						tal:content="document_type" />
+			</tal:block>
 		</select>
 		<br/><br/>
 		<input type="submit" name="save_vl:method" value="Save" i18n:attributes="value"/>
