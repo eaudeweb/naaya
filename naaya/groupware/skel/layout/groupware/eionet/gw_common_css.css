@@ -1854,3 +1854,35 @@ form.user-form .field-inline, form.user-form .field {
 form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inline input[type="password"]:focus {
 	background-color: #FFFFDD;
 }
+
+
+/**
+ * Added 15 Iun 2011
+*/
+.right {
+	float: right;
+}
+
+.middle-label {
+	vertical-align: middle;
+	line-height: 1.9
+}
+
+.info-link {
+	background: url("misc_/Naaya/info.png") no-repeat scroll 6px center transparent;
+	font-size: 1px;
+	-moz-outline: none;
+	     outline: none;
+	text-indent: -9999px;
+	padding: 10px;
+	text-decoration: none !important;
+}
+
+.admin-info-text {
+	clear: both;
+	margin: 0;
+	border-top: 1px dashed #DFDFDF;
+	padding: 5px;
+	color: #333;
+	background: #FFFAE2;
+}
