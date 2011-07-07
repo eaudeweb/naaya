@@ -4,10 +4,14 @@ $(document).ready(function(){
  * Use it in the tests like this:
  *  selenium.wait_for_condition('window.selenium_ready==true', 100)
  */
-var selenium_ready;
+window.selenium_ready = true;
 $.ajaxSetup({
-    beforeSend : function(xhr, opts){ selenium_ready = false; },
-    complete: function(XMLHttpRequest, textStatus){ selenium_ready = true; }
+    beforeSend : function(xhr, opts){ 
+        window.selenium_ready = false; 
+    },
+    complete: function(XMLHttpRequest, textStatus){ 
+        window.selenium_ready = true; 
+    }
 });
 
 /**
