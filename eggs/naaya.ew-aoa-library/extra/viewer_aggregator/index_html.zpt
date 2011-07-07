@@ -44,8 +44,7 @@
 
 <tal:block condition="python: selected_country is not None">
     <tal:block define="results python: here.aggregate_vl_cf_viewers(selected_country, selected_theme);
-                        document_type_names here/document_types;
-                        cf_document_type_converter here/convert_document_type_to_cf;
+                       heading_mapping here/get_survey_for_headings;
     ">
 <table>
     <tal:block repeat="item results">
@@ -57,26 +56,27 @@
             <td colspan="2" style="color: #468966; font-weight: bold;"
                 i18n:translate="" tal:content="heading" />
         </tr>
-        <tr tal:repeat="dt_item document_types/items">
-            <tal:block define="dt_i python: dt_item[0];
-                               shadows python: dt_item[1];">
-            <td valign="top" style="color: #00B050;" i18n:translate=""
-                tal:content="python: test(not(len(document_types) == 1 and document_type_names[dt_i] == heading), document_type_names[dt_i], '')"/>
-            <td><ul style="list-style-type: none">
+        <tr>
+            <td valign="top"></td>
+            <td><ul style="list-stype-type: none">
+                <tal:block repeat="dt_item document_types/items">
+                    <tal:block define="dt_i python: dt_item[0];
+                                       shadows python: dt_item[1];">
                 <li tal:repeat="shadow shadows">
                     <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}"
                         tal:content="python: shadow.getLocalProperty('title', lang)"></a>
                     <span tal:content="shadow/publication_year|nothing"/>
                 </li>
-                <li tal:define="survey python: shadows[0].target_survey();
+                    </tal:block>
+                </tal:block>
+                <li tal:define="survey python: heading_mapping[heading];
                                 survey_url survey/absolute_url;
                                 is_vl python: 'virtual_library' in survey_url;
                                 add_url python: test(is_vl, survey_url,
-                                    '%s?theme=%s&document_type=%s&geo_coverage_country=%s' % (survey_url, selected_theme, cf_document_type_converter[dt_i], selected_country))">
+                                    '%s?theme=%s&geo_coverage_country=%s' % (survey_url, selected_theme, selected_country))">
                     <a tal:attributes="href add_url">Add new...</a>
                 </li>
             </ul></td>
-            </tal:block>
         </tr>
         </tal:block>
     </tal:block>
