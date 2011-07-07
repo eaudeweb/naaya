@@ -18,7 +18,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 <br />
 <tal:block tal:define="drp_opt python:['Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']" >
 <table summary="">
-	<caption>1. Safeguard the EU’s most important habitats and species</caption>
+	<caption>1. Safeguard the EU&#x2019;s most important habitats and species</caption>
 	<colgroup span="1" class="column1" />
 	<colgroup span="1" class="column2" />
 	<colgroup span="1" class="column3" />
@@ -778,7 +778,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 	<tbody>
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
-			<td>Implement ‘Countdown 2010’ initiative<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement &#x2018;Countdown 2010&#x2019; initiative<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
