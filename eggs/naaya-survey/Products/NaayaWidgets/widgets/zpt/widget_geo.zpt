@@ -28,7 +28,7 @@
         Address: <tal:block i18n:name="" content="address" /><br />
     </p>
 
-    <tal:block condition="datamodel">
+    <tal:block condition="python: datamodel and lat and lon">
     <div id="map"
          tal:attributes="style string:overflow: hidden;;
                                       width: ${geomap_tool/objmap_width_px}px;;
