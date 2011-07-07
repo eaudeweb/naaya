@@ -1,31 +1,36 @@
 import sys
 import re
 
-import csv
-
 from pprint import pprint
 
-
-def get_notifications_mapping(dbfile):
+def get_notifications_mapping(dbprintedfd):
     notifications, not_matched = {}, {}
+    row_re = re.compile('([a-zA-Z0-9_@]+)\s+(.*)')
     user_re = re.compile('([a-zA-Z0-9_]+)@circa')
 
-    dbreader = csv.reader(dbfile)
-    for row in dbreader:
-        user_match = user_re.match(row[0])
+    for row in dbprintedfd:
+        row_match = row_re.match(row)
+        if row_match is None:
+            if None not in not_matched:
+                not_matched[None] = []
+            not_matched[None].append(row)
+            continue
 
+        raw_values = row_match.group(2)
+        raw_values = [val.strip(')|(') for val in raw_values.split(')|(')]
         values = []
-        for val in row[1:]:
+        for val in raw_values:
             val_items = val.split(':')
             assert len(val_items) == 2
             path, notif_type = tuple(val_items)
             values.append({'path': path, 'notif_type': int(notif_type)})
 
+        user_match = user_re.match(row_match.group(1))
         if user_match is None:
-            not_matched[row[0]] = values
+            notifications[row_match.group(1)] = values
         else:
-            user = user_match.group(1)
-            notifications[user] = values
+            notifications[user_match.group(1)] = values
+
     return notifications, not_matched
 
 
