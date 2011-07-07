@@ -1,6 +1,7 @@
 import re
 from unittest import TestSuite, makeSuite
 from BeautifulSoup import BeautifulSoup
+from DateTime import DateTime
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -32,7 +33,8 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.failUnlessEqual(form['sortorder:utf8:ustring'], '100')
+        self.assertEqual(form['sortorder:utf8:ustring'], '100')
+        self.assertEqual(form['releasedate'], DateTime().strftime('%d/%m/%Y'))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
         form['title:utf8:ustring'] = 'test_url'
