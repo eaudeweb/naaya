@@ -78,44 +78,106 @@
 
   <div id="document-info">
     <div class="template">
-      <dl>
+      <div class="template-section">
+        <span class="inline-block label">
+          Title
+        </span>
 
-        <dt>Title</dt>
-        <dd><a href="${library_url}">${title}</a></dd>
+        <span class="inline-block toggle-icon expanded"></span>
 
-        {{if author}}
-        <dt>Author</dt>
-        <dd>${author}</dd>
-        {{/if}}
+        <div class="template-subsection">
+          <a href="${library_url}" title="${title}">${title}</a>
+        </div>
+      </div>
 
-        {{if year}}
-        <dt>Year</dt>
-        <dd>${year}</dd>
-        {{/if}}
+      {{if author}}
+      <div class="template-section">
+        <span class="inline-block label">
+          Author
+        </span>
 
-        {{if url}}
-        <dt>URL</dt>
-        <dd><a href="${url}">${url}</a></dd>
-        {{/if}}
+        <span class="inline-block toggle-icon expanded"></span>
 
-        <dt>Country</dt>
-        {{each country}}
-          <dd>${$value}</dd>
-        {{/each}}
+        <div class="template-subsection">
+          <span>${author}</span>
+        </div>
+      </div>
+      {{/if}}
 
-        <dt>Theme</dt>
-        {{each theme}}
-          <dd>${$value}</dd>
-        {{/each}}
+      {{if year}}
+      <div class="template-section">
+        <span class="inline-block label">
+          Year
+        </span>
 
-        {{if document_type.length}}
-          <dt>Document type</dt>
-          {{each document_type}}
-            <dd>${$value}</dd>
+        <span class="inline-block toggle-icon expanded"></span>
+
+        <div class="template-subsection">
+          <span>${year}</span>
+        </div>
+      </div>
+      {{/if}}
+
+      {{if url}}
+      <div class="template-section">
+        <span class="inline-block label">
+          URL
+        </span>
+
+        <span class="inline-block toggle-icon expanded"></span>
+
+        <div class="template-subsection">
+          <a href="${url}" title="${url}">${url}</a>
+        </div>
+      </div>
+      {{/if}}
+
+      <div class="template-section">
+        <span class="inline-block label">
+          Country
+        </span>
+
+        <span class="inline-block toggle-icon expanded"></span>
+
+        <div class="template-subsection">
+          {{each country}}
+            <span>- ${$value}</span>
+            <br />
           {{/each}}
-        {{/if}}
+        </div>
+      </div>
 
-      </dl>
+      <div class="template-section">
+        <span class="inline-block label">
+          Theme
+        </span>
+
+        <span class="inline-block toggle-icon expanded"></span>
+
+        <div class="template-subsection">
+          {{each theme}}
+            <span>- ${$value}</span>
+            <br />
+          {{/each}}
+        </div>
+      </div>
+
+      {{if document_type.length}}
+      <div class="template-section">
+        <span class="inline-block label">
+          Document type
+        </span>
+
+        <span class="inline-block toggle-icon expanded"></span>
+
+        <div class="template-subsection">
+          {{each document_type}}
+            <span>- ${$value}</span>
+            <br />
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
     </div>
   </div>
   
