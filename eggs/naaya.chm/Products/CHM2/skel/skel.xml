@@ -251,7 +251,9 @@
 				<file id="scroll.js" title=""/>
 				<file id="superfish.js" title=""/>
 				<file id="superslight-min.js" title=""/>
-				<image id="arrow-down.png" title=""/>
+				<image id="NyFolder-icon" title=""/>
+				<image id="NyFolder-icon-marked" title=""/>
+				<image id="arrow-down.png" title=""/>
 				<image id="arrow-left.png" title=""/>
 				<image id="arrow-right.png" title=""/>
 				<image id="arrow-up.png" title=""/>

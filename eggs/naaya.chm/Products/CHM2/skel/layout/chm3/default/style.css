@@ -173,7 +173,7 @@ h1 {
 }
 
 h1 img {
-	height: 24px;
+	max-height: 24px;
 	vertical-align: middle;
 	margin: 0;
 }
