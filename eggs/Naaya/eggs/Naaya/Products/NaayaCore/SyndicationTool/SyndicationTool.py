@@ -26,6 +26,9 @@ import ScriptChannel
 import RemoteChannelFacade
 import ChannelAggregator
 
+from lxml import etree
+from lxml.builder import ElementMaker
+
 def manage_addSyndicationTool(self, REQUEST=None):
     """ """
     ob = SyndicationTool(ID_SYNDICATIONTOOL, TITLE_SYNDICATIONTOOL)
@@ -158,43 +161,55 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     def syndicateSomething(self, p_url, p_items=[], lang=None):
         s = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<rdf:RDF %s>' % self.getNamespacesForRdf())
-        ra('<channel rdf:about="%s">' % s.absolute_url())
-        ra('<title>%s</title>' % s.utXmlEncode(s.title))
-        ra('<link>%s</link>' % p_url)
-        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(s.description))
-        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(s.description))
-        ra('<dc:identifier>%s</dc:identifier>' % p_url)
-        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(s.creator))
-        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.title))
-        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.site_subtitle))
-        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(s.rights))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(s.publisher))
-        ra('<items>')
-        ra('<rdf:Seq>')
+        namespaces = self.getNamespaceItemsList()
+        nsmap = {}
+        header = []
+        for n in namespaces:
+            if n.prefix != '':
+                nsmap[n.prefix] = n.value
+            else:
+                nsmap[None] = n.value
+            header.append(str(n))
+        rdf_namespace = nsmap['rdf']
+        dc_namespace = nsmap['dc']
+        Rdf = ElementMaker(namespace=rdf_namespace, nsmap=nsmap)
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        E = ElementMaker(None, nsmap=nsmap)
+        xml = Rdf.RDF(
+          E.channel(
+            E.title(s.title),
+            E.link(p_url),
+            E.description(s.description),
+            Dc.description(s.description),
+            Dc.identifier(p_url),
+            Dc.date(self.utShowFullDateTimeHTML(self.utGetTodayDate())),
+            Dc.publisher(s.publisher),
+            Dc.creator(s.creator),
+            Dc.subject(s.title),
+            Dc.subject(s.site_subtitle),
+            Dc.language(lang),
+            Dc.source(s.publisher),
+            Dc.items(),
+            about = s.absolute_url()
+          )
+        )
+        channel = xml[0];  items = channel[-1]
+        seq = etree.SubElement(items, '{%s}seq'%rdf_namespace)
         for i in p_items:
-            ra('<rdf:li rdf:resource="%s"/>' % i.absolute_url())
-        ra('</rdf:Seq>')
-        ra('</items>')
-        ra('</channel>')
+            x = etree.SubElement(seq, '{%s}li'%rdf_namespace, resource=i.absolute_url())
         if self.hasImage():
-            ra('<image>')
-            ra('<title>%s</title>' % self.utXmlEncode(s.title))
-            ra('<url>%s</url>' % self.getImagePath())
-            ra('<link>%s</link>' % s.absolute_url())
-            ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(s.description))
-            ra('</image>')
-        for i in p_items:
-            ra(i.syndicateThis(lang))
-        ra("</rdf:RDF>")
-        self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
-        return ''.join(r)
+            image = E.image(
+                E.title(s.title),
+                E.url(self.getImagePath()),
+                E.link(s.absolute_url()),
+                E.description(self.utToUtf8(s.description))
+               )
+            xml.append(image)
+        received_items = ''.join([i.syndicateThis(lang) for i in p_items])
+        received = '<rdf:RDF %s>%s</rdf:RDF>' % (''.join(header), received_items)
+        xml_received = etree.XML(received, etree.XMLParser(strip_cdata = False))
+        xml.extend(xml_received)
+        return etree.tostring(xml, xml_declaration = True, encoding = "utf-8")
 
     #protected
     security.declareProtected(view_management_screens, 'hasImage')
