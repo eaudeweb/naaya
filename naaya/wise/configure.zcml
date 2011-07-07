@@ -5,4 +5,7 @@
 <utility name="bise-harvester"
          provides="Products.NaayaBase.interfaces.INyFeedHarvester"
          factory=".harvester.BiseHarvester" />
+<utility name="euractiv-harvester"
+         provides="Products.NaayaBase.interfaces.INyFeedHarvester"
+         factory=".euractiv_harvester.Harvester" />
 </configure>
