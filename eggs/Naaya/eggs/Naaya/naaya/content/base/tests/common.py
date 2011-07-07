@@ -5,6 +5,9 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.core.testutils import parse_html, css
 
 
+IMAGE_PATH_SPEC = 'Products.Naaya:skel/layout/skin/scheme/trash.gif'
+
+
 class _CommonContentTest(NaayaTestCase):
     """
     Common tests for Naaya content objects
@@ -50,3 +53,19 @@ class _CommonContentTest(NaayaTestCase):
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), self.ob.icon_marked)
         #TODO self.assertEqual(self._get_folder_icon_src(), self.ob.icon_marked)
+
+    def test_customized_icon(self):
+        from naaya.content.base.meta import get_schema_name
+        skin = self.portal.getLayoutTool().getCurrentSkin()
+        name = get_schema_name(self.portal, self.ob.meta_type)
+        skin.manage_addDiskFile(id=name + '-icon', pathspec=IMAGE_PATH_SPEC)
+        df = skin[name + '-icon']
+        skin.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
+        df_marked = skin[name + '-icon-marked']
+
+        transaction.commit()
+        self.assertEqual(self._get_h1_icon_src(), df.absolute_url())
+
+        self.ob.approveThis(0, None)
+        transaction.commit()
+        self.assertEqual(self._get_h1_icon_src(), df_marked.absolute_url())

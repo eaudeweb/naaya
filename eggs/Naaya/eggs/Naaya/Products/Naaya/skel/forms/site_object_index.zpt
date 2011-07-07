@@ -43,7 +43,7 @@
 </metal:block>
 
 <metal:block define-macro="icon">
-<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-                     title here/get_meta_label;
-                     alt here/get_meta_label" />
+<img tal:define="icon python:here.rstk.get_icon_for_object_index(here);
+                 meta_label here/get_meta_label"
+     tal:attributes="src icon; title meta_label; alt meta_label" />
 </metal:block>
