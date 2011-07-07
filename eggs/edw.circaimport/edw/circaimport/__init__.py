@@ -219,15 +219,15 @@ def add_acls_from_circa_export(site, filepath):
             if user is None:
                 print>>report, 'User not found: %s' % user_id
                 continue
-            set_acl_for_user(ob, user)
-            print>>report, 'Granted view on path %s for user %s' % (path, user_id)
+            #set_acl_for_user(ob, user)
+            print>>report, '(Deactivated) Granted view on path %s for user %s' % (path, user_id)
 
         # add roles acls
         roles = [val[2:] for val in non_userids if val.startswith('__')]
         roles = list(set(map(get_role, roles)))
         if roles:
-            set_acl_for_roles(ob, roles)
-            print>>report, 'Granted view on path %s for roles %s' % (path, roles)
+            #set_acl_for_roles(ob, roles)
+            print>>report, '(Deactivated) Granted view on path %s for roles %s' % (path, roles)
 
         # not matched values
         nonvals = [val for val in non_userids if not val.startswith('__')]
