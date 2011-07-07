@@ -1,0 +1,288 @@
+<metal:block define-macro="validate">
+	<script tal:define="site here/getSite;
+			library_object site/tools/country_fiches;
+			country_choices python: library_object['w_country'].getChoices();"
+		tal:content="string:var country_list=${country_choices};">
+	</script>
+	<script>
+		function process_form(curr_lang, edit, water_document_types, ge_document_types, document_type, geo_coverage_country, theme) {
+			$(function(){
+				var country_codes = {};
+				for (var country_i = 0; country_i < country_list.length; country_i++) {
+					var country = country_list[country_i];
+					country_codes[country] = country_i;
+				}
+				var vl_themes_water = [
+					'Water resources', 'Water resource management', 'Водные ресурсы', 'Управление водными ресурсами'
+				];
+				var vl_themes_ge = [
+					'Green economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов'
+				];
+				$('form[name="frmAdd"]').show();
+				$('#w_vlid').parent().hide();
+
+				if (curr_lang == 'ru') {
+					$('#w_sector option:first-child').text('Пожалуйста выберите');
+				} else {
+					$('#w_sector option:first-child').text('Please select');
+				}
+
+				var themes_selected = new Array();
+
+				$('[name="w_country:list"]').hide();
+				$('[name="w_country:list"]').next().hide();
+				$('[name="w_country:list"]').siblings('br').remove();
+
+				var country_single_select = $('<select>').attr({
+					'name': 'country_single_select:utf8:ustring',
+					'id': 'country_single_select'});
+				if (curr_lang == 'ru'){
+					country_single_select.append($('<option>').attr('value', 'Please select').text('Пожалуйста выберите'));
+				}
+				else{
+					country_single_select.append($('<option>').attr('value', 'Please select').text('Please select'));
+				}
+				$.each(country_codes, function(k,v){
+					country_single_select.append($('<option>').attr('value', v).text(k));
+				});
+				$('[for="w_country"]').after(country_single_select);
+				$('#country_single_select').before($('<div>').attr('class', 'tooltips'));
+
+				if(!edit || edit.length == 0){
+					if (theme === null) {
+						if(getCookie('cf_theme_water') == 'True'){
+							$('#w_theme_0').attr('checked', 'checked');
+						};
+						if(getCookie('cf_theme_ge') == 'True'){
+							$('#w_theme_1').attr('checked', 'checked');
+						};
+					} else {
+						if (theme === 'Water') {
+							$('#w_theme_0').attr('checked', 'checked');
+							$('#w_theme_1').removeAttr('checked');
+						} else if (theme === 'Green Economy') {
+							$('#w_theme_0').removeAttr('checked');
+							$('#w_theme_1').attr('checked', 'checked');
+						}
+					}
+
+					if (geo_coverage_country === null) {
+						var selected_country_codes = getCookie('cf_country');
+						if (selected_country_codes){
+							selected_country_codes = selected_country_codes.split(':');
+							$.each(selected_country_codes, function(k,v){
+								show_country(v);
+							});
+						}
+					} else {
+						show_country(geo_coverage_country);
+					}
+
+					if (document_type === null) {
+						$('#w_type-document').val(getCookie('cf_document'));
+					} else {
+						$('#w_type-document').val(document_type);
+					}
+
+					update_visibility();
+				};
+
+				themes_selected = $("input[name='w_theme:list']:checked");
+				countries_selected = $("input[name='w_country:list']:checked:hidden");
+				if (countries_selected){
+					countries_selected.each(function(){
+						show_country($(this).val());
+					});
+				}
+				update_document_types(themes_selected);
+				$('input[name="w_theme:list"]').click(function(){
+					themes_selected = $("input[name='w_theme:list']:checked");
+					update_document_types(themes_selected);
+					update_visibility();
+				});
+				$('#w_type-document').change(function(){
+					setCookie('cf_document', $('#w_type-document').val(), 1)
+					update_visibility();
+				});
+
+				$('#country_single_select').change(function(){
+					show_country($(this).val());
+					//Reset select to default value
+					$('#country_single_select').val('Please select');
+					update_cf_country_cookie();
+				});
+				$('[name="w_country:list"]').click(function(){
+					$(this).removeAttr('checked');
+					$(this).hide();
+					$(this).next().slideToggle();
+					$(this).next().next().remove();
+					$('#country_single_select option[value='+$(this).val()+']').show();
+					update_cf_country_cookie();
+				});
+
+			});
+
+			function show_country(country_code){
+				$('#w_country_'+country_code).attr('checked', 'checked');
+				$('#w_country_'+country_code).next().after($('<br/>'));
+				$('#w_country_'+country_code).show();
+				$('#w_country_'+country_code).next().show();
+				$('#country_single_select option[value='+country_code+']').hide();
+			}
+
+			function hide_country(country_code){
+				$('#w_country_'+country_code).removeAttr('checked');
+				$('#w_country_'+country_code).hide();
+				$('#w_country_'+country_code).next().slideToggle();
+				$('#w_country_'+country_code).next().next().remove();
+				$('#country_single_select option[value='+country_code+']').hide();
+			}
+
+			function update_cf_country_cookie(){
+				var cf_country_cookie = '';
+				$('[name="w_country:list"]:checked').each(function(){
+					if (cf_country_cookie == ''){
+						cf_country_cookie = $(this).val();
+					}
+					else{
+						cf_country_cookie = cf_country_cookie + ':' + $(this).val();
+					}
+				});
+				setCookie('cf_country', cf_country_cookie, 1);
+			}
+
+			function simulate_dict(a){
+				var o = {};
+				for(var i=0;i<a.length;i++){
+					o[a[i]]='';
+				}
+				return o;
+			}
+
+			function update_document_types(themes_selected){
+				for (i=0;i<4;i++){
+					deleteCookie('cf_theme_'+i);
+				};
+				deleteCookie('cf_theme_water');
+				deleteCookie('cf_theme_ge');
+
+				if (!themes_selected || themes_selected.length == 0){
+					$('#w_type-document').attr('disabled', 'disabled');
+				}
+				else{
+					$('#w_type-document option').hide();
+					$('#w_type-document option[value=0]').show();
+					$('#w_type-document').removeAttr('disabled');
+					for (i=0;i<themes_selected.length;i++)
+					{
+						if (themes_selected[i].id == 'w_theme_0'){
+							setCookie('cf_theme_water', 'True', 1);
+							for (j=0;j<water_document_types.length;j++){
+								$('#w_type-document option[value='+water_document_types[j]+']').show();
+							};
+						}
+						if (themes_selected[i].id == 'w_theme_1'){
+							setCookie('cf_theme_ge', 'True', 1);
+							for (j=0;j<ge_document_types.length;j++){
+								$('#w_type-document option[value='+ge_document_types[j]+']').show();
+							};
+						}
+					}
+				}
+				var current_document_type = $('#w_type-document').val()
+				if($('#w_type-document option[value='+current_document_type+']:visible').length == 0){
+					$('#w_type-document').val('0');
+					deleteCookie('cf_document');
+				}
+			}
+
+			function update_visibility(){
+				var cf_document = $('#w_type-document').val(cf_document);
+				if (cf_document == '21' || cf_document == '22'){
+					slide_hide($('#w_author').parent());
+					slide_hide($('#w_publication-year').parent());
+				}
+				else{
+					slide_show($('#w_author').parent());
+					slide_show($('#w_publication-year').parent());
+				}
+
+				var themes_selected = $("input[name='w_theme:list']:checked");
+				var green_economy = false;
+				for (i=0;i<themes_selected.length;i++){
+					if(themes_selected[i].id == 'w_theme_1'){
+						green_economy = true;
+					}
+				}
+				if (green_economy){
+					slide_show($('#w_sector').parent());
+				}
+				else{
+					slide_hide($('#w_sector').parent());
+				};
+			}
+
+			function slide_show(obj){
+				if (obj.css('display') == 'none'){
+					obj.slideDown();
+				}
+			}
+			function slide_hide(obj){
+				if (obj.css('display') != 'none'){
+					obj.slideUp();
+				}
+			}
+
+			function setCookie(c_name,value,expires){
+				// set time, it's in milliseconds
+				var today = new Date();
+				today.setTime( today.getTime() );
+				if ( expires ){
+					expires = expires * 1000 * 60 * 60 * 24;
+				}
+				var expires_date = new Date( today.getTime() + (expires) );
+				var path = '/';
+				document.cookie=c_name + "=" + escape(value) +
+					( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
+					( ( path ) ? ";path=" + path : "" );
+			}
+
+			function getCookie(c_name){
+				var i,x,y,ARRcookies=document.cookie.split(";");
+				for (i=0;i<ARRcookies.length;i++){
+					x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+					y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+					x=x.replace(/^\s+|\s+$/g,"");
+					if (x==c_name){
+						return unescape(y);
+					}
+				}
+			}
+
+			function deleteCookie(name){
+				path = '/'
+				document.cookie = name + "=" +
+					( ( path ) ? ";path=" + path : "") +
+					";expires=Thu, 01-Jan-1970 00:00:01 GMT";
+			}
+		}
+	</script>
+	<script tal:define="
+			site here/getSite;
+			viewer_object python: site['country-fiches-viewer'];
+			curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+			curr_lang_json python:here.rstk.json_dumps(curr_lang);
+			document_type_selected request/document_type|nothing;
+			document_type_selected_json python:here.rstk.json_dumps(document_type_selected);
+			geo_coverage_country_selected request/geo_coverage_country|nothing;
+			geo_coverage_country_selected_json python:here.rstk.json_dumps(geo_coverage_country_selected);
+			theme_selected request/theme|nothing;
+			theme_selected_json python:here.rstk.json_dumps(theme_selected);
+			edit request/edit|nothing;
+			edit_json python:here.rstk.json_dumps(edit)"
+			tal:content="structure string:process_form(${curr_lang_json}, ${edit_json},
+								 ${viewer_object/water_document_types}, ${viewer_object/ge_document_types},
+								 ${document_type_selected_json}, ${geo_coverage_country_selected_json}, ${theme_selected_json})">
+	</script>
+	<link rel="stylesheet" type="text/css" media="screen" href="/misc_/Naaya/jquery-ui.css" />
+</metal:block>
