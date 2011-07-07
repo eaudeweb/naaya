@@ -13,9 +13,6 @@ from Products.Naaya.interfaces import INySite
 class ITestSite(INySite):
     """ Marker interface for a test portal; useful for registering fixtures """
 
-# Naaya imports
-from Products.NaayaCore.EmailTool import EmailTool
-
 def divert_mail():
     delivery_patch = patch('Products.NaayaCore.EmailTool'
                            '.EmailTool.delivery_for_site')
@@ -175,18 +172,13 @@ class NaayaPortalTestPlugin(Plugin):
     """
     Nose plugin that prepares the environment for a NaayaTestCase to run
     """
+    name = 'naaya-portal'
 
     def __init__(self, tzope):
         Plugin.__init__(self)
         self.tzope = tzope
         self.cleanup_portal_layer = None
         self.cleanup_test_layer = None
-
-    def options(self, parser, env):
-        pass
-
-    def configure(self, options, config):
-        self.enabled = True
 
     def portal_fixture(self, app):
         """ Create and return a portal"""

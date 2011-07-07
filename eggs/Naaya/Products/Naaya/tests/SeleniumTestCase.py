@@ -1,15 +1,9 @@
 import sys
-import optparse
-import time
 import errno
 import socket
 
 from threading import Thread
-
-import unittest
-from unittest import TestCase, TestSuite, makeSuite
 from nose.plugins import Plugin
-
 from webob.dec import wsgify
 
 from NaayaTestCase import NaayaTestCase
@@ -162,6 +156,8 @@ class NaayaSeleniumTestPlugin(Plugin):
     Nose plugin that prepares the environment for a SeleniumTestCase to run
     """
 
+    name = 'naaya-selenium'
+
     def __init__(self, tzope):
         super(NaayaSeleniumTestPlugin, self).__init__()
         self.tzope = tzope
@@ -181,38 +177,24 @@ class NaayaSeleniumTestPlugin(Plugin):
         parser.add_option("--ny-selenium-browsers", dest="browsers",
                 help="Select the browsers used in testing. Use one value from "
                 "%s" % BROWSERS, default="*firefox")
-        parser.add_option("--ny-selenium", dest="skip_selenium_tests",
-                help=("Enable ny-selenium plugin for running selenium "
-                      "test cases in nynose"),
-                      action="store_false", default=True)
         parser.add_option("--ny-cherrypy", dest='httpd_name',
                 action='store_const', const='cherrypy', default='wsgiref',
                 help="Use CherryPy when starting a test http server")
 
     def configure(self, options, config):
         global HTTP_PORT, SELENIUM_GRID_PORT
-        Plugin.configure(self, options, config)
+        super(NaayaSeleniumTestPlugin, self).configure(options, config)
 
         HTTP_PORT = options.HTTP_PORT
         SELENIUM_GRID_PORT = options.SELENIUM_GRID_PORT
         self.browsers = options.browsers
-        self.skip_selenium_tests = options.skip_selenium_tests
         self.httpd_name = options.httpd_name
-
-        self.enabled = True
 
     def skip_test_callable(self, test):
         """This replaces the run() method in TestCase `test`"""
         return
 
     def prepareTestCase(self, testCase):
-        # if regular TestCase, abort selenium init
-        if not isinstance(testCase.test, SeleniumTestCase):
-            return
-
-        # We have a SeleniumTestCase
-        if self.skip_selenium_tests:
-            return self.skip_test_callable
 
         if self.http_thread is None:
             th = NaayaHttpThread(self.tzope, self.httpd_name)
@@ -236,8 +218,6 @@ class NaayaSeleniumTestPlugin(Plugin):
 
     def afterTest(self, test):
         if not isinstance(test.test, SeleniumTestCase):
-            return
-        if self.skip_selenium_tests:
             return
         if self.selenium is not None:
             self.selenium.delete_all_visible_cookies()
