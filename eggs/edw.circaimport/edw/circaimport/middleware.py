@@ -40,6 +40,10 @@ def work_in_zope(context, name, root_path):
     zip_fs_file.close()
     return report.getvalue()
 
+def get_acl_users_sources_titles(site):
+    auth_tool = site.getAuthenticationTool()
+    return [source.title for source in auth_tool.getSources()]
+
 def add_roles_from_circa_export(site, filepath, ldap_source_title):
     from ldif_extract import get_user_and_group_mapping
     user_2_role, group_2_role = get_user_and_group_mapping(filepath)
