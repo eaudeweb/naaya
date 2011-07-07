@@ -209,7 +209,7 @@ def extract_survey_answer_data_country_fiches(answer):
             'title': answer.get('w_title'),
             'geo_coverage_country': answer.get('w_country'),
             'publication_year': answer.get('w_publication-year'),
-            'uploader': answer.get('w_author'),
+            'author': answer.get('w_author'),
             'target_path': path_in_site(answer),
             'theme': extract_multipleselect(answer, 'w_theme'),
             'modification_time': answer.modification_time,
