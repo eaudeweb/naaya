@@ -15,10 +15,8 @@
 </metal:block>
 
 <metal:block fill-slot="body">
-<h1>
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-		title here/get_meta_label;
-		alt here/get_meta_label" />
+<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
+	<metal:block use-macro="site_object_index/macros/icon"/>
 		<tal:block define="province here/province;
 							province python:here.get_node_title('provinces', province);
 							global province python:here.getSite().getPortalTranslations()(province)">
