@@ -28,9 +28,7 @@
                                                 .getForm('site_object_index'))"
                  fill-slot="body">
         <h1>
-          <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-            title here/get_meta_label;
-            alt here/get_meta_label" />
+          <metal:block use-macro="site_object_index/macros/icon"/>
           <span tal:replace="here/title_or_id" />
         <tal:block condition="is_ratable"
                         replace="structure here/user_rating_view|nothing"/>
