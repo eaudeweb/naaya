@@ -79,10 +79,10 @@ class AoALibraryViewer(SimpleItem):
         return obj.__of__(self)
 
     security.declareProtected(view, 'iter_assessments')
-    def iter_assessments(self, show_unapproved=True):
+    def iter_assessments(self, show_unapproved=True, show_drafts=False):
         survey = self.target_survey()
         for answer in survey.objectValues(survey_answer_metatype):
-            if answer.is_draft():
+            if answer.is_draft() and not show_drafts:
                 continue
             if not hasattr(answer, 'approved_date') and not show_unapproved:
                 continue
@@ -173,16 +173,12 @@ class AoALibraryViewer(SimpleItem):
 
     def _update_vl_id_in_rt(self, state):
         rt_viewer = self.aq_parent['review-template-viewer']
-        for rt_shadow in rt_viewer.iter_assessments():
+        for rt_shadow in rt_viewer.iter_assessments(show_drafts=True):
             target_answer = rt_shadow.target_answer()
             if rt_shadow.library_id:
                 vlid = target_answer.get('w_vlid')
                 if vlid:
-                    if vlid == rt_shadow.library_id:
-                        state['already_updated'].append(target_answer.absolute_url())
-                    else:
-                        import pdb;pdb.set_trace()
-                        state['errors'][target_answer.absolute_url()] = "Existent id differs from the suggested one"
+                    state['already_updated'].append(target_answer.absolute_url())
                 else:
                     setattr(target_answer, 'w_vlid', rt_shadow.library_id)
                     target_answer._p_changed = True
@@ -280,27 +276,29 @@ class AoALibraryViewer(SimpleItem):
 
     def _update_rt_titles(self, state, review_template, library):
         for answer in review_template.objectValues(survey_answer_metatype):
-            title_dict = answer.get('w_q1-name-assessment-report')
-            if not title_dict:
+            vl_id = answer.get('w_vlid')
+            if not vl_id:
                 state['orphan_answers'].append(answer.absolute_url())
                 continue
-            temp_title = title_dict['en']
-            if not temp_title:
-                temp_title = title_dict['ru']
-            for vl_answer in library.objectValues(survey_answer_metatype):
-                try:
-                    vl_answers = [vl_title.strip() for vl_title in vl_answer.get('w_assessment-name').values()]
-                    if  temp_title.strip() in vl_answers:
-                        new_title = vl_answer.get('w_assessment-name')
-                        answer.set_property('w_q1-name-assessment-report', {'en': new_title['en'], 'ru': new_title['ru']})
-                        state['updated_answers'][answer.absolute_url()] = []
-                        break
-                except AttributeError:
-                    state['errors'][vl_answer.absolute_url()] = "AttributeError"
-                except:
-                    state['errors'][vl_answer.absolute_url()] = "Unhandled"
-            else:
-                state['orphan_answers'].append(answer.absolute_url())
+
+            vl_answer = getattr(library, vl_id, None)
+            if vl_answer is None:
+                state['errors'][vl_answer.absolute_url()] = "Specified answer id doesn't exist in the Virtual Library"
+                continue
+            try:
+                new_title = vl_answer.get('w_assessment-name')
+                old_title = answer.get('w_q1-name-assessment-report')
+                if new_title['en'] != old_title['en'] or \
+                    new_title['ru'] != old_title['ru']:
+                    answer.set_property('w_q1-name-assessment-report', {'en': new_title['en'], 'ru': new_title['ru']})
+                    state['updated_answers'][answer.absolute_url()] = []
+                    break
+                else:
+                    state['already_updated'].append(answer.absolute_url())
+            except AttributeError:
+                state['errors'][vl_answer.absolute_url()] = "AttributeError"
+            except:
+                state['errors'][vl_answer.absolute_url()] = "Unhandled"
 
     security.declareProtected(view, 'viewer_view_report_html')
     def viewer_view_report_html(self, REQUEST):
