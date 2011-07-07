@@ -23,9 +23,12 @@
           tal:attributes="href here/absolute_url" />
 </metal:block>
 
-<metal:block fill-slot="body">
+<metal:block tal:define="site_object_index python:here.getFormsTool()['site_object_index']"
+             fill-slot="body">
 
-<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <span tal:replace="here/title_or_id" />
+<h1>
+	<metal:block use-macro="site_object_index/macros/icon"/>
+	<span tal:replace="here/title_or_id" />
 	<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
 		<span i18n:translate="">Item only translated in </span>
 		<span tal:repeat="lang here/gl_get_languages_map">
@@ -34,7 +37,7 @@
 	</span>
 </h1>
 
-<metal:block use-macro="here/portal_forms/site_object_index/macros/action_buttons"/>
+<metal:block use-macro="site_object_index/macros/action_buttons"/>
 
 <!-- Map widget -->
 <tal:block condition="python:here.prop_details('geo_location')['show']"

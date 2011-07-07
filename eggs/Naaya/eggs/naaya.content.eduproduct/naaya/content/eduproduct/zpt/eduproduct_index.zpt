@@ -21,8 +21,8 @@
     <metal:block fill-slot="head"></metal:block>
 
     <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
-        <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-            title here/get_meta_label; alt here/get_meta_label" />
+        <h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
+            <metal:block use-macro="site_object_index/macros/icon"/>
             <span tal:replace="here/title_or_id" />
             <tal:block condition="is_ratable"
                             replace="structure here/user_rating_view|nothing"/>
