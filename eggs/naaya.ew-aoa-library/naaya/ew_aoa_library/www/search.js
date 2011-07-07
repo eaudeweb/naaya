@@ -16,6 +16,18 @@ $(function() {
       });
   });
 
+  $('.toggle-icon').live('click', function(){
+    if( $(this).hasClass('expanded') && ($('.template-subsection', $(this).parent()).is(':visible') == true) ){
+      $('.template-subsection', $(this).parent()).slideUp();
+      $(this).removeClass('expanded').addClass('collapsed');
+    }
+
+    if( $(this).hasClass('collapsed') && ($('.template-subsection', $(this).parent()).is(':visible') == false) ){
+      $('.template-subsection', $(this).parent()).slideDown();
+      $(this).removeClass('collapsed').addClass('expanded');
+    }
+  });
+
 $('#filters-form').submit(function(evt) {
   evt.preventDefault();
 
