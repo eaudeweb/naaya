@@ -4,7 +4,8 @@ from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import transaction
 
-from middleware import (work_in_zope, add_roles_from_circa_export,
+from middleware import (work_in_zope, get_acl_users_sources_titles,
+                             add_roles_from_circa_export,
                              add_notifications_from_circa_export,
                              add_acls_from_circa_export)
 
@@ -24,8 +25,9 @@ class ImportAllFromCirca(BrowserPage):
         if upload_prefix is None:
             return "upload prefix not configured"
         ctx = self.context.aq_inner # because self subclasses from Explicit
+        sources = get_acl_users_sources_titles(ctx)
         if self.request['REQUEST_METHOD'] == 'GET':
-            return import_all_zpt.__of__(ctx)()
+            return import_all_zpt.__of__(ctx)(sources=sources)
 
         reports = []
 
@@ -56,7 +58,7 @@ class ImportAllFromCirca(BrowserPage):
             if 'report' in self.request.form:
                 savepoint.rollback()
 
-        return import_all_zpt.__of__(ctx)(reports=reports)
+        return import_all_zpt.__of__(ctx)(sources=sources, reports=reports)
 
 
 class ImportFilesFromCirca_html(BrowserPage):
@@ -81,15 +83,16 @@ class ImportRolesFromCirca(BrowserPage):
             return "upload prefix not configured"
 
         ctx = self.context.aq_inner # because self subclasses from Explicit
+        sources = get_acl_users_sources_titles(ctx)
         if self.request['REQUEST_METHOD'] == 'GET':
-            return import_roles_zpt.__of__(ctx)()
+            return import_roles_zpt.__of__(ctx)(sources=sources)
 
         name = self.request.form['filename']
         ldap_source_title = self.request.form['source_title']
 
         report = add_roles_from_circa_export(ctx, os.path.join(upload_prefix, name), ldap_source_title)
 
-        return import_roles_zpt.__of__(ctx)(report=report)
+        return import_roles_zpt.__of__(ctx)(sources=sources, report=report)
 
 
 class ImportNotificationsFromCirca(BrowserPage):
