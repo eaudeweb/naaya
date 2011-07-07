@@ -54,6 +54,7 @@ from constants                                          import *
 from utils                                              import utils, catalog_utils
 from parsers.xliff_parser                               import xliff_parser
 from Products.NaayaCore.managers.utils                  import file_utils
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaGlossary.parsers.subjects_parser     import subjects_parser
 from Products.NaayaGlossary.parsers.stop_words_parser   import stop_words_parser
 from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
@@ -1331,11 +1332,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     map_alphabetical_html = PageTemplateFile("zpt/NaayaGlossary/map_alphabetical", globals())
 
     #unified index
-    index_html =            PageTemplateFile('zpt/NaayaGlossary/index', globals())
-    index_themes_html =     PageTemplateFile('zpt/NaayaGlossary/index_themes', globals())
-    index_approvals_html =  PageTemplateFile('zpt/NaayaGlossary/index_approvals', globals())
-    index_impexp_html =     PageTemplateFile('zpt/NaayaGlossary/index_import_export', globals())
-    index_properties_html = PageTemplateFile('zpt/NaayaGlossary/index_properties', globals())
+    index_html =            NaayaPageTemplateFile('zpt/NaayaGlossary/index', globals(), 'glossary_index')
+    index_themes_html =     NaayaPageTemplateFile('zpt/NaayaGlossary/index_themes', globals(), 'glossary_index_themes')
+    index_approvals_html =  NaayaPageTemplateFile('zpt/NaayaGlossary/index_approvals', globals(), 'glossary_index_approvals')
+    index_impexp_html =     NaayaPageTemplateFile('zpt/NaayaGlossary/index_import_export', globals(), 'glossary_index_import_export')
+    index_properties_html = NaayaPageTemplateFile('zpt/NaayaGlossary/index_properties', globals(), 'glossary_index_properties')
 
     sync_info_text =        PageTemplateFile('zpt/NaayaGlossary/sync_info', globals())
 
