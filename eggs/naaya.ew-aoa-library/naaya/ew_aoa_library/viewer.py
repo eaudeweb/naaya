@@ -47,6 +47,9 @@ class AoALibraryViewer(SimpleItem):
         {'label':'Updates', 'action':'manage_update_html'},
     ) + SimpleItem.manage_options
 
+    water_document_types = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    ge_document_types = [0, 1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
+
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, target_path):
