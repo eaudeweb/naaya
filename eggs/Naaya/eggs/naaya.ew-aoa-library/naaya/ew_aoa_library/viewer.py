@@ -54,7 +54,7 @@ class AoALibraryViewer(SimpleItem):
         self.title = title
         self.target_path = target_path
 
-    security.declareProtected(view_management_screens, 'target_survey')
+    security.declareProtected(view, 'target_survey')
     def target_survey(self):
         return self.getSite().restrictedTraverse(self.target_path)
 
