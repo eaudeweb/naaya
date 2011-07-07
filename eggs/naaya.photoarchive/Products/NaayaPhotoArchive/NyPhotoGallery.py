@@ -34,7 +34,7 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 # Self imports
 from constants import *
 from Products.NaayaBase.constants import *
-from NyPhotoFolder import manage_addNyPhotoFolder as m_addNyPhotoFolder
+from NyPhotoFolder import addNyPhotoFolder as m_addNyPhotoFolder
 from NyPhotoFolder import photofolder_add_html
 from photo_archive import photo_archive_base
 
@@ -253,9 +253,6 @@ class NyPhotoGallery(NyRoleManager, NyContentData, NyAttributes, photo_archive_b
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
     security.declareProtected(view, 'pasteObjects')
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'updateSessionFrom')
-
-    security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'manage_addNyPhotoFolder')
-    manage_addNyPhotoFolder = m_addNyPhotoFolder
 
     security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'addNyPhotoFolder')
     addNyPhotoFolder = m_addNyPhotoFolder

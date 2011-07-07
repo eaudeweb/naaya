@@ -44,7 +44,7 @@ register_content(
 register_content(
     module=NyPhotoFolder,
     klass=NyPhotoFolder.NyPhotoFolder,
-    module_methods={'manage_addNyPhotoFolder': PERMISSION_ADD_PHOTOFOLDER,
+    module_methods={'addNyPhotoFolder': PERMISSION_ADD_PHOTOFOLDER,
        'photofolder_add_html': PERMISSION_ADD_PHOTOFOLDER},
     klass_methods={},
     add_method=('photofolder_add_html', PERMISSION_ADD_PHOTOFOLDER),
@@ -79,7 +79,7 @@ def initialize(context):
         permission = PERMISSION_ADD_PHOTOFOLDER,
         constructors = (
                 NyPhotoFolder.photofolder_add_html,
-                NyPhotoFolder.manage_addNyPhotoFolder,
+                NyPhotoFolder.addNyPhotoFolder,
                 ),
         icon = 'www/NyPhotoFolder.gif'
         )

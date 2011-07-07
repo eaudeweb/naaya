@@ -26,7 +26,7 @@ from StringIO import StringIO
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
-from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
+from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
 from Products.NaayaPhotoArchive.NyPhoto import addNyPhoto
 
 import patchTestEnv
@@ -48,7 +48,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyPhotoGallery(self.portal.myfolder, id='mygallery', title='My photo gallery', submitted=1, contributor='contributor')
-        manage_addNyPhotoFolder(self.portal.myfolder.mygallery, id='myalbum', title='My photo album')
+        addNyPhotoFolder(self.portal.myfolder.mygallery, id='myalbum', title='My photo album')
         addNyPhoto(self.portal.myfolder.mygallery.myalbum, id="myphoto1", title="My photo 1")
         addNyPhoto(self.portal.myfolder.mygallery.myalbum, id="myphoto2", title="My photo 2")
         self.portal.myfolder.approveThis()
@@ -267,7 +267,7 @@ class NyPhotoFolderFunctionalTestCase(NaayaFunctionalTestCase):
         return #TODO: cannot paste from the test; some photos are not correctly pasted (d and d, e-34, and pasting when id exists)
         photos_zip = load_file('data/test.zip')
         addNyPhotoGallery(self.portal.myfolder, id='mygallery2', title='My second photo gallery', submitted=1, contributor='contributor')
-        manage_addNyPhotoFolder(self.portal.myfolder.mygallery2, id='myalbum', title='My photo album')
+        addNyPhotoFolder(self.portal.myfolder.mygallery2, id='myalbum', title='My photo album')
         self.portal.myfolder.mygallery2.myalbum.uploadPhotoOrZip(photos_zip)
         import transaction; transaction.commit()
 
