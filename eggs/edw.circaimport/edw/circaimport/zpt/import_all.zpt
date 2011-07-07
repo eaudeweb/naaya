@@ -33,10 +33,8 @@
       <input type="submit" name="report" value="Report" />
       <input type="submit" name="import" value="Import" />
     </form>
-    <code tal:condition="options/reports|nothing">
-        <tal:block repeat="report options/reports">
-        <pre tal:content="report"></pre>
-        </tal:block>
+    <code tal:condition="options/report|nothing">
+        <pre tal:content="options/report"></pre>
     </code>
   </metal:block>
 </metal:block>
