@@ -58,7 +58,7 @@
         </tr>
         <tr>
             <td valign="top"></td>
-            <td><ul style="list-stype-type: none">
+            <td><ul style="list-style-type: none">
                 <tal:block repeat="dt_item document_types/items">
                     <tal:block define="dt_i python: dt_item[0];
                                        shadows python: dt_item[1];">
