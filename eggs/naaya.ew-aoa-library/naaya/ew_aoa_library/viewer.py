@@ -48,6 +48,32 @@ class AoALibraryViewer(SimpleItem):
         {'label':'Updates', 'action':'manage_update_html'},
     ) + SimpleItem.manage_options
 
+
+    all_document_types = [
+        'Please select', #0
+        'Section in State of Environment report', #1
+        'Section in environmental performance review', #2
+        'State of water assessment/report – National level', #3
+        'State of water assessment/report – Sub-national level', #4
+        'State of water assessment/report – Regional level', #5
+        'State of green economy assessment/report – National level', #6
+        'State of green economy assessment/report – Sub-national level', #7
+        'State of green economy assessment/report – Regional level', #8
+        'Sectorial report', #9
+        'Water sector or NGOs report', #10
+        'Water statistics', #11
+        'Environmental statistics', #12
+        'Environmental indicator set – National', #13
+        'Environmental indicator set – Sub-national', #14
+        'Environmental indicator set – Regional', #15
+        'Environmental compendium', #16
+        'Water indicator set', #17
+        'Website', #18
+        'Library services', #19
+        'Country profiles', #20
+        'National Institution dealing with water', #21
+        'National Institution dealing with green economy', #22
+    ]
     water_document_types = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     ge_document_types = [0, 1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
 
