@@ -6,6 +6,7 @@ From the outside it's like a read-only File object.
 import os
 from os import path
 import sys
+import mimetypes
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -14,7 +15,6 @@ from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import METATYPE_DISKFILE
-from naaya.core.utils import mimetype_from_filename
 
 
 def remove_excluded(name_list):
@@ -96,8 +96,11 @@ class DiskFile(SimpleItem):
         self.pathspec = pathspec
 
     def _get_mime_type(self):
-        return mimetype_from_filename(self.pathspec,
-                                      'application/octet-stream')
+        content_type, content_encoding = mimetypes.guess_type(self.pathspec)
+        if content_type is None:
+            return  'application/octet-stream'
+        else:
+            return content_type
 
     def _get_data(self):
         f = open(resolve(self.pathspec), 'rb')

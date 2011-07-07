@@ -354,7 +354,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         try:
             sender_email = self.getNotificationTool().from_email
         except AttributeError:
-            sender_email = email_tool._get_from_address()
+            sender_email = email_tool.get_addr_from()
 
         try:
             recp_email = auth_tool.getUserEmail(recipient)
