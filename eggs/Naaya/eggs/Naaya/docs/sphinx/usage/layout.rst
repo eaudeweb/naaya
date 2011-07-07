@@ -33,7 +33,7 @@ Icons for content types
 
 Content objects display an icon on their `index` page. By default, this is the
 icon registered with Zope, which is also shown in the ZMI. The icon can be
-customized: if there is an image in the current skin, named ``NyFolder-icon``
-or ``NyFolder-icon-marked`` (replace ``NyFolder`` with any other content type),
-it will be used instead. Note however that this customization does not affect
-object listings in folders - perhaps it should.
+customized: if there is an image in the current layout color scheme, named
+``NyFolder-icon`` or ``NyFolder-icon-marked`` (replace ``NyFolder`` with any
+other content type), it will be used instead. Note however that this
+customization does not affect object listings in folders - perhaps it should.
