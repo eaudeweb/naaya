@@ -50,7 +50,7 @@ class AoALibraryViewer(SimpleItem):
     water_document_types = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
     ge_document_types = [0, 1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
 
-    water_themes = ['Water', 'Water resources', 'Water resource management', 'Водные ресурсы', 'Управление водными ресурсами']
+    water_themes = ['Water', 'Water resources', 'Water resource management', 'воды', 'Водные ресурсы', 'Управление водными ресурсами']
     ge_themes = ['Green Economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов']
 
     security = ClassSecurityInfo()
