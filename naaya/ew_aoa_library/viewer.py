@@ -165,11 +165,182 @@ class AoALibraryViewer(SimpleItem):
             self._update_vl_countries_and_region(state, review_template, library)
         if update_type == 'update_vl_id_in_rt':
             self._update_vl_id_in_rt(state)
+        if update_type == 'update_vl_countries':
+            self._update_vl_countries(state, library)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_vl_countries(self, state, library):
+        country_list = [
+        "Albania",
+        "Armenia",
+        "Austria",
+        "Azerbaijan",
+        "Belarus",
+        "Belgium",
+        "Bosnia and Herzegovina",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Georgia",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Iceland",
+        "Ireland",
+        "Italy",
+        "Kazakhstan",
+        "Kyrgyzstan",
+        "Latvia",
+        "Liechtenstein",
+        "Lithuania",
+        "Luxembourg",
+        "FYR of Macedonia",
+        "Malta",
+        "Republic of Moldova",
+        "Montenegro",
+        "the Netherlands",
+        "Norway",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Russian Federation",
+        "Serbia",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "Tajikistan",
+        "Turkey",
+        "Turkmenistan",
+        "Ukraine",
+        "the United Kingdom",
+        "Uzbekistan",
+        "Kosovo under un security council 1244/9950",
+        "Afghanistan",
+        "Algeria",
+        "Australia",
+        "Brazil",
+        "Cambodia",
+        "Cameroun",
+        "Canada",
+        "China",
+        "Costa Rica",
+        "Egypt",
+        "Honduras",
+        "India",
+        "Indonesia",
+        "Iran",
+        "Israel",
+        "Japan",
+        "Jordan",
+        "Kenya",
+        "Korea",
+        "Lebanon",
+        "Libya",
+        "Mauritius",
+        "Monaco",
+        "Morocco",
+        "Nepal",
+        "Nigeria",
+        "Palestinian territory",
+        "Singapore",
+        "Syria",
+        "Tunisia",
+        "Uganda",
+        "USA",
+        "others", # San Marino, Andorra, Monaco
+        ]
+
+        # update the question information
+        from Products.NaayaSurvey.migrations import basic_replace
+        from Products.NaayaWidgets.widgets.CheckboxesWidget import addCheckboxesWidget
+        new_widget = basic_replace(library, 'w_official-country-region', addCheckboxesWidget)
+        new_widget._setLocalPropValue('choices', 'en', country_list)
+        new_widget._setLocalPropValue('choices', 'ru', country_list)
+
+        mapping = dict([(country, i) for i, country in enumerate(country_list)])
+        mapping['Belgium (the Region of Flanders)'] = mapping['Belgium']
+        mapping['Bosnia-Herzegovina'] = mapping['Bosnia and Herzegovina']
+        mapping['Bosnia'] = mapping['Bosnia and Herzegovina']
+        mapping['Brasil'] = mapping['Brazil']
+        mapping['Herzegovina'] = mapping['Bosnia and Herzegovina']
+        mapping['Croati'] = mapping['Croatia']
+        mapping['the Czech Republic'] = mapping['Czech Republic']
+        mapping['Germany.'] = mapping['Germany']
+        mapping['Kosovo'] = mapping['Kosovo under un security council 1244/9950']
+        mapping['Former Yugoslav Republic of Macedonia'] = mapping['FYR of Macedonia']
+        mapping['Moldova'] = mapping['Republic of Moldova']
+        mapping['Monako'] = mapping['Monaco']
+        mapping['Netherlands'] = mapping['the Netherlands']
+        mapping['Russia Federation'] = mapping['Russian Federation']
+        mapping['Russia'] = mapping['Russian Federation']
+        mapping['Slovak Republic'] = mapping['Slovakia']
+        mapping['United Kingdom'] = mapping['the United Kingdom']
+        mapping['others.'] = mapping['others']
+
+        mapping['Caucasus'] = ['Armenia', 'Azerbaijan', 'Georgia']
+        mapping['Eastern Europe'] = ['Belarus', 'Moldova', 'Ukraine']
+        mapping['Central Asia'] = ['Kazakhstan', 'Kyrgyzstan', 'Tajikistan', 'Turkmenistan', 'Uzbekistan']
+
+        ignored = set([""])
+
+        for vl_answer in library.objectValues(survey_answer_metatype):
+            country_val = vl_answer.get('w_official-country-region')
+            if isinstance(country_val, list):
+                state['already_updated'].append(vl_answer.absolute_url())
+            else:
+                # hardcoded
+                if not country_val:
+                    vl_answer.set_property('w_official-country-region', [])
+                    state['updated_answers'][vl_answer.absolute_url()] = []
+                    continue
+                elif country_val == "(Rostov, Sverdlovsk, Tver) Russian Federation":
+                    vl_answer.set_property('w_official-country-region', [mapping["Russian Federation"]])
+                    state['updated_answers'][vl_answer.absolute_url()] = ["Russian Federation"]
+                    continue
+                elif country_val.strip() == "Areas of Mali Ston Bay, the mouth of the river Krka and waters of the northwestern part of the Zadar Count in Croatia":
+                    vl_answer.set_property('w_official-country-region', [mapping["Croatia"]])
+                    state['updated_answers'][vl_answer.absolute_url()] = ["Croatia"]
+                    continue
+
+                # dynamic
+                countries = [country.strip() for country in country_val.split(',')]
+
+                # split last 'and' instead of ','
+                ending_country = countries[-1].split(' and ')
+                if len(ending_country) == 2:
+                    countries[-1] = ending_country[0].strip()
+                    countries.append(ending_country[1].strip())
+
+                # match and replace
+                for country in countries:
+                    if country in ignored:
+                        continue
+                    if country not in mapping:
+                        state['errors'][vl_answer.absolute_url()] = 'Not matched %s' % country
+                        break
+                else:
+                    #ignore duplicates
+                    value = []
+                    for country in set(countries) - ignored:
+                        if isinstance(mapping[country], list):
+                            for c in mapping[country]:
+                                value.append(mapping[c])
+                        else:
+                            value.append(mapping[country])
+                    vl_answer.set_property('w_official-country-region', sorted(set(value)))
+                    state['updated_answers'][vl_answer.absolute_url()] = [country for country in countries]
+
 
     def _update_vl_id_in_rt(self, state):
         rt_viewer = self.aq_parent['review-template-viewer']

@@ -16,6 +16,8 @@
 	tal:define="
 		review_template python:here.target_path == 'tools/general_template/general-template';
 		library python: here.target_path == 'tools/virtual_library/bibliography-details-each-assessment';
+		site here/getSite;
+		library_object site/tools/virtual_library/bibliography-details-each-assessment;
 		shadows options/shadows;
 		no_answers options/no_answers|nothing">
 
@@ -638,7 +640,7 @@
 	</th>
 </tr>
 </thead>
-<tbody>
+<tbody tal:define="country_choices python: library_object['w_official-country-region'].getChoices();">
 <tr tal:repeat="i shadows">
 <tal:block define="topics_as_label python:'Topics:\n\n' + ''.join('* %s\n' % t for t in i.topics)">
 	<td><input type="checkbox" name="answer_ids" tal:attributes="value i/id" /></td>
@@ -650,7 +652,12 @@
 	</td>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
-	<td tal:content="i/geo_coverage_country|nothing"/>
+    <td tal:define="countries i/geo_coverage_country|nothing">
+        <tal:block condition="python: countries and review_template"
+            content="countries"/>
+        <tal:block condition="python: countries and library"
+            content="python:', '.join(country_choices[country] for country in countries)"/>
+    </td>
 	<td tal:content="i/geo_coverage_region|nothing"/>
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
