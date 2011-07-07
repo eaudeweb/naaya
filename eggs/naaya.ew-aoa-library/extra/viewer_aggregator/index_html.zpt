@@ -38,23 +38,38 @@
 <br/><br/>
 <br/><br/>
 
-<table condition="python: selected_country is not None">
+<tal:block condition="python: selected_country is not None">
     <tal:block define="results python: here.aggregate_vl_cf_viewers(selected_country, selected_theme);
-                       document_types python: cf['w_type-document'].getChoices();">
-    <tr tal:repeat="item results/items">
-        <td tal:content="python: document_types[item[0]]"
-            valign="top" style="color: #00B050;"/>
-        <td><ul style="list-style-type: none">
-            <li tal:repeat="shadow python: item[1]">
-                <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}"
-                    tal:content="python: shadow.getLocalProperty('title', lang)"></a>
-                <span tal:content="shadow/publication_year|nothing"/>
-                <!--<a tal:attributes="href shadow/absolute_url" tal:content="shadow/title_or_id"></a>-->
-            </li>
-        </ul></td>
-    </tr>
+                       document_type_names python: cf['w_type-document'].getChoices();">
+<table>
+    <tal:block repeat="item results">
+        <tal:block define="heading python: item[0];
+                           document_types python: item[1];"
+                    condition="document_types"
+        >
+        <tr>
+            <td colspan="2" style="color: #468966; font-weight: bold;"
+                i18n:translate="" tal:content="heading" />
+        </tr>
+        <tr tal:repeat="dt_item document_types/items">
+            <tal:block define="dt_i python: dt_item[0];
+                               shadows python: dt_item[1];">
+            <td valign="top" style="color: #00B050;"
+                tal:content="python: test(not(len(document_types) == 1 and document_type_names[dt_i] == heading), document_type_names[dt_i], '')"/>
+            <td><ul style="list-style-type: none">
+                <li tal:repeat="shadow shadows">
+                    <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}"
+                        tal:content="python: shadow.getLocalProperty('title', lang)"></a>
+                    <span tal:content="shadow/publication_year|nothing"/>
+                </li>
+            </ul></td>
+            </tal:block>
+        </tr>
+        </tal:block>
     </tal:block>
 </table>
+    </tal:block>
+</tal:block>
 
 </metal:block>
 </metal:block>
