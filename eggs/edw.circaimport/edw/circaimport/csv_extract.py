@@ -13,7 +13,13 @@ def get_notifications_mapping(dbfile):
     dbreader = csv.reader(dbfile)
     for row in dbreader:
         user_match = user_re.match(row[0])
-        values = row[1:]
+
+        values = []
+        for val in row[1:]:
+            val_items = val.split(':')
+            assert len(val_items) == 2
+            path, notif_type = tuple(val_items)
+            values.append({'path': path, 'notif_type': int(notif_type)})
 
         if user_match is None:
             not_matched[row[0]] = values
@@ -32,7 +38,7 @@ if __name__ == '__main__':
         dbfile = open(sys.argv[1], 'rb')
         notifications, not_matched = get_notifications_mapping(dbfile)
         dbfile.close()
-    except ValueError:
+    except ValueError, e:
         print 'Usage: python %s <path-to-file.csv>' % sys.argv[0]
         sys.exit(1)
 

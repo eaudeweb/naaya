@@ -83,19 +83,26 @@ class ImportNotificationsFromCirca(BrowserPage):
 
         subscriptions = []
         errors = []
+        ignored = {}
         notif_tool = ctx.getNotificationTool()
         auth_tool = ctx.getAuthenticationTool()
-        for user_id, paths in notifications.items():
+        for user_id, values in notifications.items():
             user = auth_tool.get_user_with_userid(user_id)
             if user is None:
                 errors.append('User not found: %s' % user_id)
                 continue
 
-            for path in paths:
+            for val in values:
+                if val['notif_type'] == 3:
+                    if user_id not in ignored:
+                        ignored[user_id] = []
+                    ignored[user_id].append(val['path'])
+                    continue
+
                 try:
-                    ob = ctx.getSite().unrestrictedTraverse(path.strip('/'))
+                    ob = ctx.getSite().unrestrictedTraverse(val['path'].strip('/'))
                 except KeyError:
-                    errors.append("Couldn't find object at path: %s" % path)
+                    errors.append("Couldn't find object at path: %s" % val['path'])
                     continue
 
                 location = relative_object_path(ob, ctx.getSite())
@@ -108,10 +115,11 @@ class ImportNotificationsFromCirca(BrowserPage):
                     continue
 
                 subscriptions.append({'user_id': user_id,
-                                      'path': path})
+                                      'path': val['path']})
 
         return import_notifications_zpt.__of__(ctx)(subscriptions=subscriptions,
                                                     not_matched=not_matched,
+                                                    ignored=ignored,
                                                     errors=errors)
 
 
