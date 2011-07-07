@@ -12,6 +12,7 @@
 	<input type="radio" name="update_type" value="update_vl_countries_and_region" /><label>Update library country and region values</label><br/>
 	<input type="radio" name="update_type" value="update_vl_id_in_rt" /><label>Save id of parent in the RT</label><br/>
 	<input type="radio" name="update_type" value="update_vl_countries" /><label>Migrate countries from text to a list of items</label><br/>
+	<input type="radio" name="update_type" value="update_cf_countries" /><label>Migrate country fiches countries: add San Marino, Andorra, Monaco</label><br/>
 	<input type="submit" value="Submit" />
 </form>
 
