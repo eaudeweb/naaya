@@ -11,6 +11,7 @@ from urlparse import urlparse
 import logging
 import time
 import os
+import operator
 
 import zLOG
 from OFS.Folder import Folder
@@ -41,6 +42,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
 import naaya.content.base
+from naaya.content.base.meta import get_schema_name
 from naaya.content.base.constants import *
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
@@ -2228,20 +2230,28 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
 
     def get_naaya_permissions_in_site(self):
-        permission_names = {}
+        """ Return list of permissions relevant to this portal. """
+        permission_map = {}
         for pluggable in self.get_pluggable_content().values():
-            if not self.is_pluggable_item_installed(pluggable['meta_type']):
+            meta_type = pluggable['meta_type']
+            if not self.is_pluggable_item_installed(meta_type):
                 continue
             zope_perm = pluggable['permission']
             if '_class' in pluggable:
                 meta_label = pluggable['_class'].meta_label
             else:
-                meta_label = pluggable['meta_type']
-            label = "Submit %s objects" % meta_label
-            permission_names[zope_perm] = label
-        permission_names.update(naaya_known_permissions)
+                meta_label = meta_type
+            title = "Submit %s objects" % meta_label
+            schema_name = get_schema_name(self, meta_type)
+            description = "Create content objects of type %s" % schema_name
+            permission_map[zope_perm] = {
+                'title': title,
+                'description': description,
+                'zope_permission': zope_perm,
+            }
+        permission_map.update(_naaya_known_permissions)
 
-        return permission_names
+        return permission_map
 
     #
     # Admin User management. XXX: Should be moved to AuthenticationTool
@@ -2347,18 +2357,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(change_permissions, 'admin_editrole_html')
     def admin_editrole_html(self, role, REQUEST):
         """ """
-        permission_names = self.get_naaya_permissions_in_site()
+        permission_list = self.get_naaya_permissions_in_site().values()
+        permission_list.sort(key=operator.itemgetter('title'))
+
         zope_perm_for_role = {}
-        for zope_perm in permission_names:
+        for perm in permission_list:
+            zope_perm = perm['zope_permission']
             p = Permission(zope_perm, (), self)
             zope_perm_for_role[zope_perm] = bool(role in p.getRoles())
 
         tmpl = self.getFormsTool().getForm('site_admin_editrole').__of__(self)
-        sorted_perm = sorted( (permission_names[zope_perm], zope_perm)
-                              for zope_perm in permission_names )
         options = {
             'role': role,
-            'sorted_perm': sorted_perm,
+            'permission_list': permission_list,
             'zope_perm_for_role': zope_perm_for_role,
         }
         return tmpl(REQUEST, **options)
@@ -3153,13 +3164,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslist_html')
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        permission_names = self.get_naaya_permissions_in_site()
-        sorted_perm = sorted((permission_names[zope_perm], zope_perm)
-                             for zope_perm in permission_names)
+        permission_list = self.get_naaya_permissions_in_site().values()
+        permission_list.sort(key=operator.itemgetter('title'))
 
         tmpl = self.getFormsTool().getForm('site_admin_linkslist').__of__(self)
-        options = {'permission_names': permission_names,
-                   'sorted_perm': sorted_perm}
+        options = {
+            'permission_list': permission_list,
+            'permission_titles': dict((p['zope_permission'], p['title'])
+                                      for p in permission_list),
+        }
         return tmpl(REQUEST, **options)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
@@ -3949,25 +3962,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
 InitializeClass(NySite)
 
-naaya_known_permissions = {
-    'Naaya - Add comments for content': "Submit comments",
-    'Naaya - Copy content': "Copy objects",
-    'Naaya - Delete content': "Delete objects",
-    'Naaya - Edit content': "Edit objects",
-    'Naaya - Manage comments for content': "Manage comments",
-    'Naaya - Publish content': "Administration",
-    'Naaya - Skip Captcha': "Skip captcha verification",
-    'Naaya - Translate pages': "Translate messages",
-    'Naaya - Zip export': "Export folder as Zip",
-    'Naaya - Validate content': "Validate objects",
-    PERMISSION_ADD_FOLDER: "Submit Folder objects",
-    PERMISSION_SKIP_APPROVAL: "Skip the approval process",
-    'View': "Access content",
-    'Change permissions': "Change permissions",
-}
-
-def register_naaya_permission(zope_perm, label):
+_naaya_known_permissions = {}
+def register_naaya_permission(zope_perm, title, description=""):
     """
     Register a permission so that administrators can assign it to roles.
     """
-    naaya_known_permissions[zope_perm] = label
+    _naaya_known_permissions[zope_perm] = {
+        'title': title,
+        'description': description,
+        'zope_permission': zope_perm,
+    }
+import _permissions
+_permissions.register_default_permissions()
