@@ -8,12 +8,10 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
-from App.ImageFile import ImageFile
 from zExceptions import BadRequest
 
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
-from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
@@ -105,19 +103,15 @@ class GroupwareSite(NySite):
         self.getPropertiesTool().manageMainTopics(['about', 'library'])
 
     def get_user_access(self):
-        user = self.REQUEST['AUTHENTICATED_USER']
-
-        if user.has_permission(PERMISSION_PUBLISH_OBJECTS, self):
-            return 'admin'
-
-        elif user.allowed(self, ['Contributor']):
-            return 'member'
-
-        elif user.has_permission(view, self):
-            return 'viewer'
-
-        else:
-            return 'restricted'
+        user = self.REQUEST.get('AUTHENTICATED_USER', None)
+        if user is not None:
+            if user.has_permission(PERMISSION_PUBLISH_OBJECTS, self):
+                return 'admin'
+            elif user.allowed(self, ['Contributor']):
+                return 'member'
+            elif user.has_permission(view, self):
+                return 'viewer'
+        return 'restricted'
 
     def get_gw_root(self):
         return self.aq_parent.absolute_url()
