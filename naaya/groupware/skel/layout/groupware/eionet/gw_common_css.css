@@ -1866,6 +1866,7 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 .middle-label {
 	vertical-align: middle;
 	line-height: 1.9
+	float: left;
 }
 
 .info-link {
@@ -1876,9 +1877,12 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	text-indent: -9999px;
 	padding: 10px;
 	text-decoration: none !important;
+	position: relative;
+	zoom: 1;
 }
 
 .admin-info-text {
+	display: none;
 	clear: both;
 	margin: 0;
 	border-top: 1px dashed #DFDFDF;
