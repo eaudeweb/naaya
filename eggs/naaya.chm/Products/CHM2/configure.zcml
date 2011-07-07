@@ -7,7 +7,7 @@
     />
 
   <naaya:call
-    factory=".glossary_widget_bold_words.patch_glossary_widget"
+    factory=".glossary_widget_wrapper.patch_glossary_widget"
     />
 
   <naaya:call
