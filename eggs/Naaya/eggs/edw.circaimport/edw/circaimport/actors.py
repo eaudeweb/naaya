@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger('edw.circaimport.ui')
+
 class DemoActor(object):
     def __init__(self):
         self.count = {'files': 0, 'folders': 0, 'urls': 0}
@@ -51,10 +55,9 @@ def join_parent_path(parent_path, ob_id):
         return ob_id
 
 class ZopeActor(object):
-    def __init__(self, context, report, default_userid=''):
+    def __init__(self, context, default_userid=''):
         assert with_naaya
         self.context = context
-        self.report = report
         self.count = {'files': 0, 'folders': 0, 'urls': 0}
         self.rename = {}
         self.default_userid = default_userid
@@ -73,7 +76,7 @@ class ZopeActor(object):
         }
         new_folder_id = addNyFolder(parent, **kwargs)
         new_folder = parent[new_folder_id]
-        print>>self.report, "Added folder: %r" % path_in_site(new_folder)
+        logger.info("Added folder: %r", path_in_site(new_folder))
         self.count['folders'] += 1
 
     def document_entry(self, parent_path, ob_id, filename, data_file,
@@ -92,9 +95,9 @@ class ZopeActor(object):
         if orig_path in self.rename:
             ob_path = self.rename.get(orig_path)
             the_file = self.context.restrictedTraverse(ob_path)
-            self.warn('new document version for %r' % orig_path)
+            logger.warn('new document version for %r' % orig_path)
             if keywords or description:
-                self.warn('ignoring keywords=%r, description=%r' %
+                logger.warn('ignoring keywords=%r, description=%r' %
                           (keywords, description))
 
         else:
@@ -113,7 +116,7 @@ class ZopeActor(object):
             the_file = parent[the_file_id]
 
         the_file._versions.append(bf)
-        print>>self.report, "Added file: %r" % path_in_site(the_file)
+        logger.info("Added file: %r", path_in_site(the_file))
         self.count['files'] += 1
 
     def url_entry(self, parent_path, ob_id, filename, url,
@@ -135,11 +138,11 @@ class ZopeActor(object):
         new_url_id = addNyURL(parent, **kwargs)
         self.rename[orig_path] = parent_path + '/' + new_url_id
         new_url = parent[new_url_id]
-        print>>self.report, "Added url: %r" % path_in_site(new_url)
+        logger.info("Added url: %r", path_in_site(new_url))
         self.count['urls'] += 1
 
     def warn(self, msg):
-        print>>self.report, "WARN: %s" % msg
+        logger.warn(msg)
 
     def finished(self):
-        print>>self.report, 'done:', repr(self.count)
+        logger.debug('done: %s', repr(self.count))
