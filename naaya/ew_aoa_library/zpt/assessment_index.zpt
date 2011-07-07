@@ -58,7 +58,7 @@
 				setCookie('vl_url', vl_url, 1);
 				var vl_themes = new Array();
 				$('#w_theme li').each(function(){
-					vl_themes.push($(this).text().replace(/^\s+|\s+$/g,""));
+					vl_themes.push($.trim($(this).text()));
 				});
 				for (i=0;i<4;i++){
 					deleteCookie('vl_theme_'+i);
