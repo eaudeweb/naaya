@@ -11,14 +11,15 @@
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Status and trends of the components of biological diversity"</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Situation et tendances des composantes de la diversit&#233; biologique"</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Elurikkuse komponentide seisund ja trendid"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Situation et tendances des composantes de la diversit&#233; biologique"</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Status en trends van componenten van biologische diversiteit"</translation>
     </definition>
     <element id="01_01" title="Abundance and distribution of species">
       <name>
         <translation lang="de">H&#228;ufigkeit und Verbreitung von Arten</translation>
         <translation lang="en">Abundance and distribution of species</translation>
-        <translation lang="et">Liigirikkus ja liikide levik</translation>
+        <translation lang="et">Liikide arvukus ja levik</translation>
         <translation lang="fr">Abondance et distribution des esp&#232;ces</translation>
         <translation lang="it">Abbondanza e la distribuzione delle specie</translation>
         <translation lang="nl">Aantal en verspreiding van soorten</translation>
@@ -26,6 +27,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Trends in abundance and distribution of selected species", SEBI indicator "Abundance and distribution of selected species"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Valitud liikide arvukuse ja leviku trendid", SEBI indikaator "Valitud liikide arvukus ja levik"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Tendances de l'abondance et de la distribution des esp&#232;ces", Indicateur du SEBI "Abondance et distribution des esp&#232;ces s&#233;lectionn&#233;"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Trends in aantal en verspreiding van soorten", SEBI indicator "Aantal en verspreiding van specifieke soorten"</translation>
       </definition>
     </element>
@@ -41,7 +44,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Change in status of threatened species", SEBI indicator "Red List Index for European species", SEBI indicator "Species of European interest"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Changement dans le statut des esp&#232;ces menac&#233;es", Indicateur du SEBI "Indice Liste Rouge pour les esp&#232;ces europ&#233;ennes", Indicateur du SEBI "Esp&#232;ces d'int&#233;r&#234;t europ&#233;en"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Ohustatud liikide seisundi muutus", SEBI indikaator "Euroopa liikide punase nimestiku indeks", SEBI indikaator "Euroopa t&#228;htsusega liigid"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Changement dans le statut des esp&#232;ces menac&#233;es", Indicateur du SEBI "Indice Liste Rouge pour les esp&#232;ces europ&#233;ennes", Indicateur du SEBI "Esp&#232;ces d'int&#233;r&#234;t europ&#233;en"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Verandering in status van bedreigde soorten", SEBI indicator "Rode Lijst voor Europese soorten", SEBI indicator "Soorten van Europees belang"</translation>
       </definition>
     </element>
@@ -49,7 +53,7 @@
       <name>
         <translation lang="de">Gr&#246;&#223;e ausgew&#228;hlter Biome, &#214;kosysteme und Lebensr&#228;ume</translation>
         <translation lang="en">Extent of selected biomes, ecosystems and habitats</translation>
-        <translation lang="et">Bioomide, &#246;kos&#252;steemide ja koosluste ulatus</translation>
+        <translation lang="et">Valitud bioomide, &#246;kos&#252;steemide ja elupaikade ulatus</translation>
         <translation lang="fr">Etendue des biomes, &#233;cosyst&#232;mes et habitats s&#233;lectionn&#233;s</translation>
         <translation lang="it">Misura dell'ambiente selezionato, ecosistemi e habitat</translation>
         <translation lang="nl">Areaal van specifieke biomen, ecosystemen en habitats</translation>
@@ -57,7 +61,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Trends in extent of selected biomes, ecosystems, and habitats", CBD cross-cutting issue "Ecosystems Approach"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Tendances de l'&#233;tendue des biomes, &#233;cosyst&#232;mes et habitats", Questions transectorielles de la CDB "L'approche par &#233;cosyst&#232;me"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Valitud bioomide, &#246;kos&#252;steemide ja elupaikade ulatuse trendid", BMK valdkondadevaheline k&#252;simus "&#214;kos&#252;steemne l&#228;henemine"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Tendances de l'&#233;tendue des biomes, &#233;cosyst&#232;mes et habitats", Questions transectorielles de la CDB "L'approche par &#233;cosyst&#232;me"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Trends in areaal van specifieke biomen, ecosystemen en habitats", CDB dwarsdoorsnijdend thema "Ecosysteembenadering"</translation>
       </definition>
     </element>
@@ -73,7 +78,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Trends in genetic diversity of domesticated animals, cultivated plants, and fish species of major socioeconomic importance", SEBI indicator "Livestock genetic diversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Tendances de la diversit&#233; g&#233;n&#233;tique des animaux domestiques, des plantes cultiv&#233;es et des esp&#232;ces de poissons d'importance socio-&#233;conomique majeure", Indicateur du SEBI "Diversit&#233; g&#233;n&#233;tique du b&#233;tail"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Koduloomade, kultuurtaimede ja majandusliku t&#228;htsusega kalaliikide geneetilise mitmekesisuse trendid", SEBI indikaator "Kariloomade geneetiline mitmekesisus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Tendances de la diversit&#233; g&#233;n&#233;tique des animaux domestiques, des plantes cultiv&#233;es et des esp&#232;ces de poissons d'importance socio-&#233;conomique majeure", Indicateur du SEBI "Diversit&#233; g&#233;n&#233;tique du b&#233;tail"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Trends in genetische diversiteit van gedomesticeerde dieren, gecultiveerde planten en vissoorten van groot socioeconomisch belang", SEBI indicator "Genetische diversiteit van vee"</translation>
       </definition>
     </element>
@@ -81,6 +87,7 @@
       <name>
         <translation lang="de">Gesch&#252;tzte Gebiete</translation>
         <translation lang="en">Protected areas</translation>
+        <translation lang="et">Kaitsealused alad</translation>
         <translation lang="fr">Aires prot&#233;g&#233;es</translation>
         <translation lang="it">Aree protette</translation>
         <translation lang="nl">Beschermde gebieden</translation>
@@ -88,57 +95,67 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Coverage of protected areas", SEBI indicator "Nationally designated protected areas", SEBI indicator "Sites designated under the EU Habitats and Birds Directives", CBD cross-cutting issue "Protected Areas"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kaitsealuste alade ulatus", SEBI indikaator "Riiklikud kaitsealused alad", SEBI indikaator "EL loodus- ja linnudirektiiviga m&#228;&#228;ratletud alad", BMK valdkondadevaheline k&#252;simus "Kaitsealused alad"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Couverture des aires prot&#233;g&#233;es", Indicateur du SEBI "Aires prot&#233;g&#233;es d&#233;sign&#233;es au niveau national", Indicateur du SEBI "Sites d&#233;sign&#233;s en vertu des directives europ&#233;ennes Habitats et Oiseaux", Questions transectorielles de la CDB "Aires prot&#233;g&#233;es"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Omvang van beschermde gebieden", SEBI indicator "Nationaal aangewezen beschermde gebieden", SEBI indicator "Gebieden aangewezen onder de EU Vogel- en habitatrichtlijn", CDB dwarsdoorsnijdend thema "Beschermde gebieden"</translation>
       </definition>
     </element>
     <element id="01_06" title="Island Biodiversity">
       <name>
         <translation lang="en">Island Biodiversity</translation>
+        <translation lang="et">Saarte elurikkus</translation>
         <translation lang="fr">Biodiversit&#233; insulaire</translation>
         <translation lang="nl">Biodiversiteit van Eilanden</translation>
         <translation lang="ro">Diversitatea insular&#259;</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD thematic programme "Island Biodiversity"</translation>
-        <translation lang="fr">Programme th&#233;matique de la CDB "Biodiversit&#233; insulaire"</translation>
+        <translation lang="et">Seondub: BMK temaatiline programm "Saarte elurikkus"</translation>
+        <translation lang="fr">Concerne: Programme th&#233;matique de la CDB "Biodiversit&#233; insulaire"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD thematisch programma "Biodiversiteit van Eilanden"</translation>
       </definition>
     </element>
     <element id="01_07" title="Mountain biodiversity">
       <name>
         <translation lang="en">Mountain biodiversity</translation>
+        <translation lang="et">M&#228;gede elurikkus</translation>
         <translation lang="fr">Biodiversit&#233; des montagnes</translation>
         <translation lang="nl">Biodiversiteit van Bergen</translation>
         <translation lang="ro">Diversitatea montan&#259;/alpin&#259;</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD thematic programme "Mountain biodiversity"</translation>
-        <translation lang="fr">Programme th&#233;matique de la CDB "Biodiversit&#233; des montagnes"</translation>
+        <translation lang="et">Seondub: BMK temaatiline programm "M&#228;gede elurikkus"</translation>
+        <translation lang="fr">Concerne: Programme th&#233;matique de la CDB "Biodiversit&#233; des montagnes"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD thematisch programma "Biodiversiteit van Bergen"</translation>
       </definition>
     </element>
     <element id="01_08" title="Identification, Monitoring, Indicators and Assessments">
       <name>
         <translation lang="en">Identification, Monitoring, Indicators and Assessments</translation>
+        <translation lang="et">Identifitseerimine, seire, indikaatorid ja hindamised</translation>
         <translation lang="fr">Identification, surveillance, indicateurs et &#233;valuation</translation>
         <translation lang="nl">Identificatie, Monitoring, Indicatoren en Evaluaties</translation>
         <translation lang="ro">Identificarea, monitorizarea, indicatori &#537;i evalu&#259;ri</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Identification, Monitoring, Indicators and Assessments", CBD cross-cutting issue "Global Taxonomy Initiative"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Identification, surveillance, indicateurs et &#233;valuation", Questions transectorielles de la CDB "Initiative taxonomique mondiale"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Identifitseerimine, seire, indikaatorid ja hindamised", BMK valdkondadevaheline k&#252;simus "&#220;leilmne taksonoomiline algatus"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Identification, surveillance, indicateurs et &#233;valuation", Questions transectorielles de la CDB "Initiative taxonomique mondiale"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Identificatie, Monitoring, Indicatoren en Evaluaties", CDB dwarsdoorsnijdend thema "Mondiaal Taxonomie Initiatief"</translation>
       </definition>
     </element>
     <element id="01_09" title="Plant Conservation">
       <name>
         <translation lang="en">Plant Conservation</translation>
+        <translation lang="et">Taimede kaitse</translation>
         <translation lang="fr">Conservation des plantes</translation>
         <translation lang="nl">Bescherming van Planten</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Global Strategy for Plant Conservation"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Strat&#233;gie mondiale pour la conservation des plantes"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "&#220;leilmne taimede kaitse strateegia"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Strat&#233;gie mondiale pour la conservation des plantes"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Mondiale Strategie voor Bescherming van Planten"</translation>
       </definition>
     </element>
@@ -147,7 +164,7 @@
     <name>
       <translation lang="de">Nachhaltige Nutzung der biologischen Vielfalt</translation>
       <translation lang="en">Sustainable use of biodiversity</translation>
-      <translation lang="et">Elurikkuse s&#228;&#228;stev kasutamine</translation>
+      <translation lang="et">Elurikkuse kestlik kasutamine</translation>
       <translation lang="fr">Utilisation durable de la biodiversit&#233;</translation>
       <translation lang="it">Uso sostenibile della diversit&#224; biologica</translation>
       <translation lang="nl">Duurzaam gebruik van biodiversiteit</translation>
@@ -155,13 +172,14 @@
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Sustainable Use", CBD cross-cutting issue "Sustainable use of biodiversity"</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Utilisation durable", Questions transectorielles de la CDB "Utilisation durable de la biodiversit&#233;"</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Kestlik kasutamine", BMK valdkondadevaheline k&#252;simus "Elurikkuse kestlik kasutamine"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Utilisation durable", Questions transectorielles de la CDB "Utilisation durable de la biodiversit&#233;"</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Duurzaam gebruik", CDB dwarsdoorsnijdend thema "Duurzaam gebruik van biodiversiteit"</translation>
     </definition>
     <element id="02_01" title="Forest under sustainable management">
       <name>
         <translation lang="en">Forest under sustainable management</translation>
-        <translation lang="et">J&#228;tkusuutlikult majandatavad metsad</translation>
+        <translation lang="et">Kestlikult majandatav mets</translation>
         <translation lang="fr">Gestion durable des for&#234;ts</translation>
         <translation lang="it">Superficie forestale sotto un management sostenibile</translation>
         <translation lang="nl">Bossen onder duurzaam beheer</translation>
@@ -169,13 +187,15 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Forest: growing stock, increment and fellings", SEBI indicator "Forest: deadwood", CBD thematic programme "Forest Biodiversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "For&#234;ts : mat&#233;riel sur pied, croissance et abattage", Indicateur du SEBI "For&#234;ts : bois mort", Programme th&#233;matique de la CDB "Biodiversit&#233; foresti&#232;re"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "Mets: kasvava metsa tagavara, juurdekasv ja raiemahud", SEBI indikaator "Mets: surnud puit", BMK temaatiline programm "Metsa elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "For&#234;ts : mat&#233;riel sur pied, croissance et abattage", Indicateur du SEBI "For&#234;ts : bois mort", Programme th&#233;matique de la CDB "Biodiversit&#233; foresti&#232;re"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Areaal aan bos-, landbouw- en aquacultuur ecosystemen onder duurzaam beheer", SEBI indicator "Bossen: houtvoorraad, aanwas en vellingen", SEBI indicator "Bossen: dood hout", CBD thematisch programma "Biodiversiteit van Bossen"</translation>
       </definition>
     </element>
     <element id="02_02" title="Agricultural practices potentially supporting biodiversity">
       <name>
         <translation lang="en">Agricultural practices potentially supporting biodiversity</translation>
+        <translation lang="et">Elurikkust potentsiaalselt toetavad p&#245;llumajanduspraktikad</translation>
         <translation lang="fr">Pratiques agricoles susceptibles de favoriser la biodiversit&#233;</translation>
         <translation lang="it">Agricoltura: area al di sotto delle pratiche di un management potenzialmente sostengono la biodiversit&#224;</translation>
         <translation lang="nl">Landbouw praktijken welke potentieel gunstig zijn voor biodiversiteit</translation>
@@ -183,14 +203,15 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator  "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Agriculture: nitrogen balance" SEBI indicator "Agriculture: area under management practices potentially supporting biodiversity", CBD thematic programme "Agricultural biodiversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB  "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "Agriculture : bilan azot&#233;" Indicateur du SEBI "Agriculture : zones sous pratiques de gestion supportant potentiellement la biodiversit&#233;", Programme th&#233;matique de la CDB "Biodiversit&#233; agricole"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja  "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "P&#245;llumajandus: l&#228;mmastiku tasakaal" SEBI indikaator "P&#245;llumajandus: elurikkust potentsiaalselt toetava majandamisega ala", BMK temaatiline programm "P&#245;llumajanduslik elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB  "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "Agriculture : bilan azot&#233;" Indicateur du SEBI "Agriculture : zones sous pratiques de gestion supportant potentiellement la biodiversit&#233;", Programme th&#233;matique de la CDB "Biodiversit&#233; agricole"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator  "Areaal aan bos-, landbouw- en aquacultuur ecosystemen onder duurzaam beheer", SEBI indicator "Landbouw: stikstofbalans" SEBI indicator "Landbouw: areaal onder beheer met een potentieel gunstig effect op biodiversiteit", CBD thematisch programma "Agrarische biodiversiteit"</translation>
       </definition>
     </element>
     <element id="02_03" title="Sustainable fishery and aquaculture management">
       <name>
         <translation lang="en">Sustainable fishery and aquaculture management</translation>
-        <translation lang="et">J&#228;tkusuutlik kalandus ja akvakultuuri majandamine</translation>
+        <translation lang="et">Kestlik kala- ja veekultuuride majandus</translation>
         <translation lang="fr">Gestion durable de la p&#234;che et de l'aquaculture</translation>
         <translation lang="it">Management sostenibile della pesca e acquacoltura</translation>
         <translation lang="nl">Duurzame visserij en aquacultuur management</translation>
@@ -198,20 +219,23 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Area of forest, agricultural and aquaculture ecosystems under sustainable management", SEBI indicator "Fisheries: European commercial fish stocks", SEBI indicator "Aquaculture: effluent water quality from finfish farms"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "P&#234;cheries : stocks de poissons commerciaux en Europe", Indicateur du SEBI "Aquaculture : qualit&#233; de l'eau des effluents des fermes piscicoles"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikult majandatava metsa, p&#245;llumajandusmaa ja veekultuuride pindala", SEBI indikaator "Kalandus: Euroopa t&#246;&#246;nduslikud kalavarud", SEBI indikaator "Veekultuur: merekalade farmidest v&#228;lja voolava vee kvaliteet"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "R&#233;gion d'&#233;cosyst&#232;me forestier, d'agriculture ou d'aquaculture g&#233;r&#233;e de mani&#232;re durable", Indicateur du SEBI "P&#234;cheries : stocks de poissons commerciaux en Europe", Indicateur du SEBI "Aquaculture : qualit&#233; de l'eau des effluents des fermes piscicoles"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Areaal aan bos-, landbouw- en aquacultuur ecosystemen onder duurzaam beheer", SEBI indicator "Visserij: Europese commerci&#235;le visbestanden", SEBI indicator "Aquacultuur: kwaliteit effluentwater van viskwekerijen"</translation>
       </definition>
     </element>
     <element id="02_04" title="Products derived from sustainable sources">
       <name>
         <translation lang="en">Products derived from sustainable sources</translation>
+        <translation lang="et">Kestlikest allikatest p&#228;rinevad tooted</translation>
         <translation lang="fr">Produits issus de sources durables</translation>
         <translation lang="nl">Producten vanuit duurzame bronnen</translation>
         <translation lang="ro">Produse derivate din surse durabile</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Proportion of products derived from sustainable sources"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Proportion de produits issus de sources durables"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kestlikest allikatest p&#228;rinevate toodete osakaal"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Proportion de produits issus de sources durables"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Aandeel producten afkomstig uit hernieuwbare bronnen"</translation>
       </definition>
     </element>
@@ -226,43 +250,50 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Ecological Footprint and related concepts", SEBI indicator "Ecological Footprint of European countries"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Empreinte &#233;cologique et concepts associ&#233;s", Indicateur du SEBI "Empreinte &#233;cologique des pays europ&#233;ens"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;koloogiline jalaj&#228;lg ja seotud m&#245;isted", SEBI indikaator "Euroopa riikide &#246;koloogiline jalaj&#228;lg"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Empreinte &#233;cologique et concepts associ&#233;s", Indicateur du SEBI "Empreinte &#233;cologique des pays europ&#233;ens"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Ecologische voetafdruk en gerelateerde concepten", SEBI indicator "Ecologische voetafdruk van Europese landen"</translation>
       </definition>
     </element>
     <element id="02_06" title="Biodiversity for Development">
       <name>
         <translation lang="en">Biodiversity for Development</translation>
+        <translation lang="et">Arengut toetav elurikkus</translation>
         <translation lang="fr">Biodiversit&#233; et D&#233;veloppement</translation>
         <translation lang="nl">Biodiversiteit voor Ontwikkeling</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Biodiversity for Development"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Biodiversit&#233; et D&#233;veloppement"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Arengut toetav elurikkus"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Biodiversit&#233; et D&#233;veloppement"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Biodiversiteit voor Ontwikkeling"</translation>
       </definition>
     </element>
     <element id="02_07" title="Economics, Trade and Incentive measures">
       <name>
         <translation lang="en">Economics, Trade and Incentive measures</translation>
+        <translation lang="et">Majandus, kaubandus ja toetused</translation>
         <translation lang="fr">&#201;conomie, commerce et mesures d'incitation</translation>
         <translation lang="nl">Economie, Handel en Stimuleringsmaatregelen</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Economics, Trade and Incentive measures"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "&#201;conomie, commerce et mesures d'incitation"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Majandus, kaubandus ja toetused"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "&#201;conomie, commerce et mesures d'incitation"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Economie, Handel en Stimuleringsmaatregelen"</translation>
       </definition>
     </element>
     <element id="02_08" title="Gender">
       <name>
         <translation lang="en">Gender</translation>
+        <translation lang="et">Sugu</translation>
         <translation lang="fr">Genre</translation>
         <translation lang="nl">Gender</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Gender and Biodiversity"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Genre et biodiversit&#233;"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Sugu ja elurikkus"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Genre et biodiversit&#233;"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Gender en Biodiversiteit"</translation>
       </definition>
     </element>
@@ -278,7 +309,8 @@
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Threats to biodiversity"</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Menaces &#224; la biodiversit&#233;"</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Ohud elurikkusele"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Menaces &#224; la biodiversit&#233;"</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Bedreigingen voor biodiversiteit"</translation>
     </definition>
     <element id="03_01" title="Nitrogen deposition">
@@ -292,7 +324,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Nitrogen deposition", SEBI indicator "Critical load exceedance for nitrogen"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "D&#233;p&#244;ts d'azote", Indicateur du SEBI "D&#233;passement des charges critiques d'azote"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "L&#228;mmastiku ladestumine", SEBI indikaator "Kriitilist piiri &#252;letav l&#228;mmastikukogus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "D&#233;p&#244;ts d'azote", Indicateur du SEBI "D&#233;passement des charges critiques d'azote"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Stikstof depositie", SEBI indicator "Overschrijding van duurzame depositieniveau voor stikstof"</translation>
       </definition>
     </element>
@@ -307,7 +340,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Trends in invasive alien species", SEBI indicator "Invasive alien species", CBD cross-cutting issue "Invasive alien species"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Tendances des esp&#232;ces exotiques envahissantes", Indicateur du SEBI "Esp&#232;ces exotiques envahissantes", Questions transectorielles de la CDB "Esp&#232;ces exotiques envahissantes"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Invasiivsete v&#245;&#245;rliikide trendid", SEBI indikaator "Invasiivsed v&#245;&#245;rliigid", BMK valdkondadevaheline k&#252;simus "Invasiivsed v&#245;&#245;rliigid"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Tendances des esp&#232;ces exotiques envahissantes", Indicateur du SEBI "Esp&#232;ces exotiques envahissantes", Questions transectorielles de la CDB "Esp&#232;ces exotiques envahissantes"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Trends in invasieve exotische soorten", SEBI indicator "Invasieve exotische soorten", CDB dwarsdoorsnijdend thema "Invasieve exotische soorten"</translation>
       </definition>
     </element>
@@ -315,7 +349,7 @@
       <name>
         <translation lang="de">Klimawandel</translation>
         <translation lang="en">Climate change</translation>
-        <translation lang="et">Kliimamuutused</translation>
+        <translation lang="et">Kliimamuutus</translation>
         <translation lang="fr">Changements climatiques</translation>
         <translation lang="it">Il cambiamento climatico</translation>
         <translation lang="nl">Klimaatverandering</translation>
@@ -323,32 +357,37 @@
       </name>
       <definition>
         <translation lang="en">Relates to: SEBI indicator "Impact of climate change on biodiversity", CBD cross-cutting issue "Climate Change and Biodiversity"</translation>
-        <translation lang="fr">Indicateur du SEBI "Impact des changements climatiques sur la biodiversit&#233;", Questions transectorielles de la CDB "Changements climatiques et biodiversit&#233;"</translation>
+        <translation lang="et">Seondub: SEBI indikaator "Kliimamuutuse m&#245;ju elurikkusele", BMK valdkondadevaheline k&#252;simus "Kliimamuutus ja elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur du SEBI "Impact des changements climatiques sur la biodiversit&#233;", Questions transectorielles de la CDB "Changements climatiques et biodiversit&#233;"</translation>
         <translation lang="nl">Is gerelateerd aan: SEBI indicator "Impact van klimaatverandering op biodiversiteit", CDB dwarsdoorsnijdend thema "Klimaatverandering en Biodiversiteit"</translation>
       </definition>
     </element>
     <element id="03_04" title="Desertification">
       <name>
         <translation lang="en">Desertification</translation>
+        <translation lang="et">K&#245;rbestumine</translation>
         <translation lang="fr">D&#233;sertification</translation>
         <translation lang="nl">Woestijnvorming</translation>
         <translation lang="ro">De&#537;ertificare</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD thematic programme "Dry and Sub-humid Lands Biodiversity"</translation>
-        <translation lang="fr">Programme th&#233;matique de la CDB "Biodiversit&#233; des terres arides et sub-humides"</translation>
+        <translation lang="et">Seondub: BMK temaatiline programm "Kuivade ja parasniiskete alade elurikkus"</translation>
+        <translation lang="fr">Concerne: Programme th&#233;matique de la CDB "Biodiversit&#233; des terres arides et sub-humides"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD thematisch programma "Biodiversiteit van droge en subhumide gebieden"</translation>
       </definition>
     </element>
     <element id="03_05" title="Impact assessment">
       <name>
         <translation lang="en">Impact assessment</translation>
+        <translation lang="et">M&#245;jude hindamine</translation>
         <translation lang="fr">&#201;valuation d'impact</translation>
         <translation lang="nl">Effectbeoordeling</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Impact assessment"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "&#201;valuation d'impact"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "M&#245;jude hindamine"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "&#201;valuation d'impact"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Effectbeoordeling"</translation>
       </definition>
     </element>
@@ -357,7 +396,7 @@
     <name>
       <translation lang="de">Intaktheit von &#214;kosystemen und &#214;kosystemleistungen</translation>
       <translation lang="en">Ecosystem integrity and Ecosystem goods and services</translation>
-      <translation lang="et">&#214;kos&#252;steemi terviklikkus ja &#246;kos&#252;steemi tooted ja teenused</translation>
+      <translation lang="et">&#214;kos&#252;steemi terviklikkus ja &#246;kos&#252;steemi tooted ning teenused</translation>
       <translation lang="fr">Int&#233;grit&#233; des &#233;cosyst&#232;mes et biens et services d&#233;riv&#233;s des &#233;cosyst&#232;mes</translation>
       <translation lang="it">Integrit&#224; dell' ecosistema e beni e servizi dell' ecosistema</translation>
       <translation lang="nl">Integriteit van ecosystemen en ecosysteemdiensten</translation>
@@ -365,14 +404,15 @@
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Ecosystem integrity and Ecosystem goods and services"</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Int&#233;grit&#233; des &#233;cosyst&#232;mes et biens et services d&#233;riv&#233;s des &#233;cosyst&#232;mes"</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "&#214;kos&#252;steemi terviklikkus ja &#246;kos&#252;steemi tooted ning teenused"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Int&#233;grit&#233; des &#233;cosyst&#232;mes et biens et services d&#233;riv&#233;s des &#233;cosyst&#232;mes"</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Integriteit van ecosystemen en ecosysteemdiensten"</translation>
     </definition>
     <element id="04_01" title="Marine Trophic Index">
       <name>
         <translation lang="de">Marine trophic Index</translation>
         <translation lang="en">Marine Trophic Index</translation>
-        <translation lang="et">Mere troofsuse indeks</translation>
+        <translation lang="et">Mere troofilisusindeks</translation>
         <translation lang="fr">Indice trophique marin</translation>
         <translation lang="it">Indice trofici marino</translation>
         <translation lang="nl">Mariene Trofische index</translation>
@@ -380,18 +420,22 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Marine Trophic Index", SEBI indicator "Marine Trophic Index of European seas", CBD thematic programme "Marine and Coastal Biodiversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Indice trophique marin", Indicateur du SEBI "Indice trophique marin des mers europ&#233;ennes", Programme th&#233;matique de la CDB "Biodiversit&#233; marine et c&#244;ti&#232;re"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Mere troofilisusindeks", SEBI indikaator "Euroopa merede troofilisusindeks", BMK temaatiline programm "Mere ja ranniku elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Indice trophique marin", Indicateur du SEBI "Indice trophique marin des mers europ&#233;ennes", Programme th&#233;matique de la CDB "Biodiversit&#233; marine et c&#244;ti&#232;re"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Mariene Trofische index", SEBI indicator "Mariene Trofische Index van de Europese zee&#235;n", CBD thematisch programma "Biodiversiteit van Zee en Kust"</translation>
       </definition>
     </element>
     <element id="04_02" title="Trophic integrity of terrestrial and freshwater ecosystems">
       <name>
         <translation lang="en">Trophic integrity of terrestrial and freshwater ecosystems</translation>
+        <translation lang="et">Maismaa ja magevee &#246;kos&#252;steemide troofiline terviklikkus</translation>
         <translation lang="fr">Int&#233;grit&#233; trophique des &#233;cosyst&#232;mes terrestres et d'eau douce</translation>
         <translation lang="nl">Trofische integriteit van terrestrische ecosystemen en binnenwateren</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Trophic integrity of other ecosystems"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Teiste &#246;kos&#252;steemide troofiline terviklikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Int&#233;grit&#233; trophique des autres &#233;cosyst&#232;mes"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Trofische integriteit van overige ecosystemen"</translation>
       </definition>
     </element>
@@ -407,7 +451,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Connectivity or Fragmentation of ecosystems", SEBI indicator "Fragmentation of natural and semi-natural areas"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Connectivit&#233; / fragmentation des &#233;cosyst&#232;mes", Indicateur du SEBI "Fragmentation des zones naturelles et semi-naturelles"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;kos&#252;steemide sidusus v&#245;i killustatus", SEBI indikaator "Looduslike ja pool-looduslike alade killustumine"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Connectivit&#233; ou fragmentation des &#233;cosyst&#232;mes", Indicateur du SEBI "Fragmentation des zones naturelles et semi-naturelles"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Connectiviteit of fragmentatie van ecosystemen", SEBI indicator "Fragmentatie van natuurlijke en semi-natuurlijke gebieden"</translation>
       </definition>
     </element>
@@ -423,7 +468,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Connectivity or Fragmentation of ecosystems", SEBI indicator "Fragmentation of river systems", CBD thematic programme "Inland Waters Biodiversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Connectivit&#233; / fragmentation des &#233;cosyst&#232;mes", Indicateur du SEBI "Fragmentation des syst&#232;mes hydrographiques", Programme th&#233;matique de la CDB "Biodiversit&#233; des eaux int&#233;rieures"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "&#214;kos&#252;steemide sidusus v&#245;i killustatus", SEBI indikaator "J&#245;es&#252;steemide killustumine", BMK temaatiline programm "Sisevete elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Connectivit&#233; ou fragmentation des &#233;cosyst&#232;mes", Indicateur du SEBI "Fragmentation des syst&#232;mes hydrographiques", Programme th&#233;matique de la CDB "Biodiversit&#233; des eaux int&#233;rieures"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Connectiviteit of fragmentatie van ecosystemen", SEBI indicator "Fragmentatie van riviersystemen", CBD thematisch programma "Biodiverstiteit van binnenwateren"</translation>
       </definition>
     </element>
@@ -439,7 +485,8 @@
       </name>
       <definition>
         <translation lang="en">Relates to: SEBI indicator "Nutrients in transitional, coastal and marine waters"</translation>
-        <translation lang="fr">Indicateur du SEBI "Nutriments dans les eaux marines, coti&#232;res et de transition"</translation>
+        <translation lang="et">Seondub: SEBI indikaator "Toitained siirde-, ranniku- ja merevees"</translation>
+        <translation lang="fr">Concerne: Indicateur du SEBI "Nutriments dans les eaux marines, coti&#232;res et de transition"</translation>
         <translation lang="nl">Is gerelateerd aan: SEBI indicator "Nutri&#235;nten in kust- en zeewateren"</translation>
       </definition>
     </element>
@@ -455,32 +502,37 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Water quality of freshwater ecosystems", SEBI indicator "Freshwater quality", CBD thematic programme "Inland Waters Biodiversity"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Qualit&#233; de l'eau dans les &#233;cosyst&#232;mes d'eau douce", Indicateur du SEBI "Qualit&#233; des eaux douces", Programme th&#233;matique de la CDB "Biodiversit&#233; des eaux int&#233;rieures"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Magevee &#246;kos&#252;steemide veekvaliteet", SEBI indikaator "Magevee kvaliteet", BMK temaatiline programm "Sisevete elurikkus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Qualit&#233; de l'eau dans les &#233;cosyst&#232;mes d'eau douce", Indicateur du SEBI "Qualit&#233; des eaux douces", Programme th&#233;matique de la CDB "Biodiversit&#233; des eaux int&#233;rieures"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Waterkwaliteit van zoetwater  ecosystemen", SEBI indicator "Zoetwaterkwaliteit", CBD thematisch programma "Biodiverstiteit van binnenwateren"</translation>
       </definition>
     </element>
     <element id="04_07" title="Human-induced ecosystem failure">
       <name>
         <translation lang="en">Human-induced ecosystem failure</translation>
+        <translation lang="et">Inimtekkeline &#246;kos&#252;steemi h&#228;iring</translation>
         <translation lang="fr">&#233;checs des &#233;cosyst&#232;mes d'origine anthropique</translation>
         <translation lang="nl">Door mensen veroorzaakte verstoring van ecosystemen</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Incidence of human-induced ecosystem failure"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Incidence de l'origine anthropique des &#233;checs des &#233;cosyst&#232;mes"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Inimtekkeliste &#246;kos&#252;steemi h&#228;iringute esinemissagedus"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Incidence de l'origine anthropique des &#233;checs des &#233;cosyst&#232;mes"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Mate van voorkomen van door mensen veroorzaakte verstoring van ecosystemen"</translation>
       </definition>
     </element>
     <element id="04_08" title="Health and well-being of humans">
       <name>
         <translation lang="en">Health and well-being of humans</translation>
+        <translation lang="et">Inimeste tervis ja heaolu</translation>
         <translation lang="fr">Sant&#233; et bien-&#234;tre de l'homme</translation>
         <translation lang="nl">Gezondheid en welzijn van mensen</translation>
         <translation lang="ro">S&#259;n&#259;tatea &#351;i bun&#259;starea oamenilor</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Health and well-being of communities who depend directly on local ecosystem goods and services"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Sant&#233; et bien-&#234;tre des communaut&#233;s de d&#233;pendance directe aux biens et services locaux fournis par les &#233;cosyst&#232;mes"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Kohaliku &#246;kos&#252;steemi toodetest ja teenustest otseselt s&#245;ltuvate kogukondade tervis ja heaolu"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Sant&#233; et bien-&#234;tre des communaut&#233;s de d&#233;pendance directe aux biens et services locaux fournis par les &#233;cosyst&#232;mes"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Gezondheid en welzijn van menselijke gemeenschappen die direct afhankelijk zijn van locale ecosysteemgoederen en -diensten"</translation>
       </definition>
     </element>
@@ -496,19 +548,22 @@
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Biodiversity for food and medicine"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Biodiversit&#233; pour l'alimentation et la m&#233;decine"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Elurikkus toidu ja meditsiini jaoks"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Biodiversit&#233; pour l'alimentation et la m&#233;decine"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Biodiversiteit voor voedsel en medicijnen"</translation>
       </definition>
     </element>
     <element id="04_10" title="Biodiversity and  tourism">
       <name>
         <translation lang="en">Biodiversity and  tourism</translation>
+        <translation lang="et">Elurikkus ja turism</translation>
         <translation lang="fr">Biodiversit&#233; et tourisme</translation>
         <translation lang="nl">Biodiversiteit en toerisme</translation>
         <translation lang="ro">Biodiversitate &#537;i turism</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Tourism and Biodiversity"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Turism ja Elurikkus"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Tourisme en Biodiversiteit"</translation>
       </definition>
     </element>
@@ -516,51 +571,59 @@
   <folder id="05" title="Knowledge of biodiversity">
     <name>
       <translation lang="en">Knowledge of biodiversity</translation>
+      <translation lang="et">Elurikkusealased teadmised</translation>
       <translation lang="fr">Connaissance de la biodiversit&#233;</translation>
       <translation lang="nl">Kennis van biodiversiteit</translation>
       <translation lang="ro">Cunoa&#351;terea biodiversit&#259;&#355;ii</translation>
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Status of traditional knowledge, innovations and Practices"</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Statut des connaissances, innovations et pratiques traditionnelles"</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Traditsiooniliste teadmiste, uuenduste ja praktikate seisund"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Statut des connaissances, innovations et pratiques traditionnelles"</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Status van traditionele kennis, innovaties en praktijken"</translation>
     </definition>
     <element id="05_01" title="Traditional knowledge">
       <name>
         <translation lang="en">Traditional knowledge</translation>
+        <translation lang="et">Traditsioonilised teadmised</translation>
         <translation lang="fr">Connaissances traditionnelles</translation>
         <translation lang="nl">Traditionele kennis</translation>
         <translation lang="ro">Cuno&#537;tin&#539;e tradi&#539;ionale</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD headline indicator "Status and trends of linguistic diversity and numbers of speakers of indigenous languages", CBD headline indicator "Other indicator of the status of indigenous and traditional knowledge", CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices"</translation>
-        <translation lang="fr">Indicateur-cl&#233; de la CDB "Situation et tendances de la diversit&#233; linguistique et du nombre de locuteurs de langues autochtones.", Indicateur-cl&#233; de la CDB "Autres indicateurs de la situation des savoirs traditionnels et autochtones", Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
+        <translation lang="et">Seondub: BMK &#252;ldn&#228;itaja "Keelelise mitmekesisuse seisund ja trendid ning p&#245;liskeele r&#228;&#228;kijate arv", BMK &#252;ldn&#228;itaja "Teine indikaator p&#245;lis- ja traditsiooniliste teadmiste seisundi kohta", BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika"</translation>
+        <translation lang="fr">Concerne: Indicateur-cl&#233; de la CDB "Situation et tendances de la diversit&#233; linguistique et du nombre de locuteurs de langues autochtones.", Indicateur-cl&#233; de la CDB "Autres indicateurs de la situation des savoirs traditionnels et autochtones", Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
         <translation lang="nl">Is gerelateerd aan: CBD hoofdlijnindicator "Status en trends van taal diversiteit en het aantal sprekers van inheemse talen", CBD hoofdlijnindicator "Andere indicatoren van de status van inheemse en traditionele kennis", CDB dwarsdoorsnijdend thema "Traditionele Kennis, Innovaties en Praktijken"</translation>
       </definition>
     </element>
     <element id="05_02" title="Innovations">
       <name>
         <translation lang="en">Innovations</translation>
+        <translation lang="et">Uuendused</translation>
         <translation lang="fr">Innovations</translation>
         <translation lang="nl">Innovaties</translation>
         <translation lang="ro">Inova&#539;ii</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Traditionele Kennis, Innovaties en Praktijken"</translation>
       </definition>
     </element>
     <element id="05_03" title="Best practices">
       <name>
         <translation lang="en">Best practices</translation>
+        <translation lang="et">Parimad praktikad</translation>
         <translation lang="fr">Meilleures pratiques</translation>
         <translation lang="nl">Praktijkvoorbeelden</translation>
         <translation lang="ro">bune practici</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Traditional Knowledge, Innovations and Practices"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Traditsioonilised teadmised ja oskused, innovatsioon ja praktika"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Connaissances, innovations et pratiques traditionnelles"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Traditionele Kennis, Innovaties en Praktijken"</translation>
       </definition>
     </element>
@@ -568,28 +631,30 @@
   <folder id="06" title="Access to genetic resources and benefit-sharing">
     <name>
       <translation lang="en">Access to genetic resources and benefit-sharing</translation>
-      <translation lang="et">Ligip&#228;&#228;s ja kasu jaotumine</translation>
+      <translation lang="et">Ligip&#228;&#228;s geneetilistele ressurssidele ja kasu jaotamine</translation>
       <translation lang="fr">Acc&#232;s aux ressources g&#233;n&#233;tiques et partage des avantages</translation>
       <translation lang="nl">Toegang tot genetische bronnen en het delen van voordelen</translation>
       <translation lang="ro">Accesul la resursele genetice &#537;i &#238;mp&#259;r&#539;irea echitabil&#259; a acestora</translation>
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Status of access and benefit-sharing ", CBD cross-cutting issue "Access to genetic resources and benefit-sharing "</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Statut de l'acc&#232;s aux ressources g&#233;n&#233;tiques et partage des avantages ", Questions transectorielles de la CDB "Acc&#232;s aux ressources g&#233;n&#233;tiques et partage des avantages "</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Ligip&#228;&#228;su ja kasu jaotamise olukord ", BMK valdkondadevaheline k&#252;simus "Ligip&#228;&#228;s geneetilistele ressurssidele ja kasu jaotamine "</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Statut de l'acc&#232;s aux ressources g&#233;n&#233;tiques et partage des avantages ", Questions transectorielles de la CDB "Acc&#232;s aux ressources g&#233;n&#233;tiques et partage des avantages "</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Status van toegang en het delen van voordelen ", CDB dwarsdoorsnijdend thema "Toegang tot genetische bronnen en het delen van voordelen "</translation>
     </definition>
   </folder>
   <folder id="07" title="Resources for biodiversity">
     <name>
       <translation lang="en">Resources for biodiversity</translation>
-      <translation lang="et">Vahendid elurikkuse kaitsmiseks</translation>
+      <translation lang="et">Ressursid elurikkuse jaoks</translation>
       <translation lang="fr">Ressources pour la biodiversit&#233;</translation>
       <translation lang="nl">Hulpbronnen voor biodiversiteit</translation>
       <translation lang="ro">Resurse pentru biodiversitate</translation>
     </name>
     <definition>
       <translation lang="en">Relates to: CBD focal area "Status of resource transfers "</translation>
-      <translation lang="fr">Domaine d'intervention de la CDB "Statut du transfert des ressources "</translation>
+      <translation lang="et">Seondub: BMK tegevusvaldkond "Ressursside &#252;lekandmise olukord "</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la CDB "Statut du transfert des ressources "</translation>
       <translation lang="nl">Is gerelateerd aan: CBD aandachtsgebied "Status van transfers van hulpbronnen "</translation>
     </definition>
     <element id="07_01" title="Financing biodiversity management">
@@ -602,33 +667,37 @@
       </name>
       <definition>
         <translation lang="en">Relates to: SEBI indicator "Financing biodiversity management", CBD cross-cutting issue "Biodiversity for Development", CBD headline indicator "Official development assistance provided in support of the Convention"</translation>
-        <translation lang="fr">Indicateur du SEBI "Financement de la gestion de la biodiversit&#233;", Questions transectorielles de la CDB "Biodiversit&#233; et D&#233;veloppement", Indicateur-cl&#233; de la CDB "Aide publique au d&#233;veloppement fournie &#224; l'appui de la Convention"</translation>
+        <translation lang="et">Seondub: SEBI indikaator "Elurikkuse valdkonna rahastamine", BMK valdkondadevaheline k&#252;simus "Arengut toetav elurikkus", BMK &#252;ldn&#228;itaja "Ametlik arenguabi tagamaks toetus Konventsioonile"</translation>
+        <translation lang="fr">Concerne: Indicateur du SEBI "Financement de la gestion de la biodiversit&#233;", Questions transectorielles de la CDB "Biodiversit&#233; et D&#233;veloppement", Indicateur-cl&#233; de la CDB "Aide publique au d&#233;veloppement fournie &#224; l'appui de la Convention"</translation>
       </definition>
     </element>
     <element id="07_02" title="Technology transfer and cooperation">
       <name>
         <translation lang="en">Technology transfer and cooperation</translation>
-        <translation lang="et">Tehnoloogia vahetamine</translation>
+        <translation lang="et">Tehnoloogia vahetamine ja koost&#246;&#246;</translation>
         <translation lang="fr">Transfert de technologies et coop&#233;ration</translation>
         <translation lang="nl">Technologieoverdracht en samenwerking</translation>
         <translation lang="ro">Cooperarea &#537;i transferul de tehnologie</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Technology transfer and cooperation", CBD headline indicator "Indicator of technology transfer"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Transfert de technologies et coop&#233;ration", Indicateur-cl&#233; de la CDB "Indicateur du transfert de technologies"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Tehnoloogia vahetamine ja koost&#246;&#246;", BMK &#252;ldn&#228;itaja "Tehnoloogia vahetamise indikaator"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Transfert de technologies et coop&#233;ration", Indicateur-cl&#233; de la CDB "Indicateur du transfert de technologies"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Technologieoverdracht en samenwerking", CBD hoofdlijnindicator "Indicator voor technologieoverdracht"</translation>
       </definition>
     </element>
     <element id="07_03" title="Liability and Redress">
       <name>
         <translation lang="en">Liability and Redress</translation>
+        <translation lang="et">Kohustus ja h&#252;vitis</translation>
         <translation lang="fr">Responsabilit&#233; et r&#233;paration</translation>
         <translation lang="nl">Aansprakelijkheid en compensatie</translation>
         <translation lang="ro">R&#259;spundere &#537;i repara&#539;ie</translation>
       </name>
       <definition>
         <translation lang="en">Relates to: CBD cross-cutting issue "Liability and Redress"</translation>
-        <translation lang="fr">Questions transectorielles de la CDB "Responsabilit&#233; et r&#233;paration"</translation>
+        <translation lang="et">Seondub: BMK valdkondadevaheline k&#252;simus "Kohustus ja h&#252;vitis"</translation>
+        <translation lang="fr">Concerne: Questions transectorielles de la CDB "Responsabilit&#233; et r&#233;paration"</translation>
         <translation lang="nl">Is gerelateerd aan: CDB dwarsdoorsnijdend thema "Aansprakelijkheid en compensatie"</translation>
       </definition>
     </element>
@@ -644,7 +713,8 @@
     </name>
     <definition>
       <translation lang="en">Relates to: EU focal area "Public opinion", SEBI indicator "Public awareness", CBD cross-cutting issue "Communication, Education &amp; Public Awareness"</translation>
-      <translation lang="fr">Domaine d'intervention de la EU "Opinion publique", Indicateur du SEBI "Sensibilisation du public", Questions transectorielles de la CDB "Communication, &#233;ducation et sensibilisation du public"</translation>
+      <translation lang="et">Seondub: EL tegevusvaldkond "Avalik arvamus", SEBI indikaator "&#220;ldsuse teadlikkus", BMK valdkondadevaheline k&#252;simus "Kommunikatsioon, haridus ja &#252;ldsuse teadlikkus"</translation>
+      <translation lang="fr">Concerne: Domaine d'intervention de la EU "Opinion publique", Indicateur du SEBI "Sensibilisation du public", Questions transectorielles de la CDB "Communication, &#233;ducation et sensibilisation du public"</translation>
       <translation lang="nl">Is gerelateerd aan: EU aandachtsgebied "Publieke opinie", SEBI indicator "Publiek bewustzijn", CDB dwarsdoorsnijdend thema "Communicatie, Educatie en Publiek Bewustzijn"</translation>
     </definition>
   </folder>
