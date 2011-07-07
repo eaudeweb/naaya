@@ -23,7 +23,7 @@ from Products.Naaya.NyFolder import NyFolder
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from naaya.core.utils import force_to_unicode
-from naaya.core.zope2util import relative_object_path
+from naaya.core.zope2util import relative_object_path, get_site_manager
 from naaya.content.file.file_item import addNyFile
 
 from interfaces import IZipExportObject
@@ -223,8 +223,12 @@ class ZipExportTool(Implicit, Item):
         temp_file = tempfile.TemporaryFile()
         zip_file = ZipFile(temp_file, 'w')
 
-        builder = RecursiveZipBuilder(zip_file, errors)
-        builder.recurse(my_container, IZipExportObject(my_container).filename)
+        sm = get_site_manager(my_container)
+        builder = RecursiveZipBuilder(zip_file, errors, sm)
+        zip_adapter = sm.queryAdapter(my_container, IZipExportObject)
+        if zip_adapter is None:
+            REQUEST.RESPONSE.notFoundError()
+        builder.recurse(my_container, zip_adapter.filename)
         builder.write_index()
 
         zip_file.close()
@@ -250,11 +254,12 @@ InitializeClass(ZipExportTool)
 
 class RecursiveZipBuilder(object):
 
-    def __init__(self, zip_file, error_container):
+    def __init__(self, zip_file, error_container, sm):
         self.zip_file = zip_file
         self.error_container = error_container
         self.index_txt = StringIO()
         self.index_txt.write('\t'.join(['Title', 'Type', 'Path']) + '\n')
+        self.sm = sm
 
     def recurse(self, obj, parent_path=''):
         for sub_obj in obj.objectValues():
@@ -270,9 +275,8 @@ class RecursiveZipBuilder(object):
         self.zip_file.writestr(filename, self.index_txt.getvalue())
 
     def add_object_to_zip(self, obj, parent_path):
-        try:
-            target = IZipExportObject(obj)
-        except TypeError:
+        target = self.sm.queryAdapter(obj, IZipExportObject)
+        if target is None:
             return
 
         if target.skip:
