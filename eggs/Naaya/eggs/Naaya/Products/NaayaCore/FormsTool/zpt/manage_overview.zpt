@@ -1,8 +1,8 @@
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
 
-<tal:block define="global current_form_id request/form_id|nothing;
-                   global registered_form_ids here/registered_form_ids" />
+<tal:block define="global current_form_id request/name|nothing;
+                   global registered_templates here/registered_templates" />
 
 <style>
     h2 {
@@ -31,19 +31,19 @@
 <script>
 $(function() {
     $('li.customized').each(function() {
-        var form_id = $('a.template', $(this)).text();
-        var button = make_delete_button(form_id, "Delete custom template?");
+        var name = $('a.template', $(this)).text();
+        var button = make_delete_button(name, "Delete custom template?");
         $(this).append(" ", button.text("revert"));
     });
 
     $('li.local').each(function() {
         console.log(this);
-        var form_id = $('a.template', $(this)).text();
-        var button = make_delete_button(form_id, "Delete local template?");
+        var name = $('a.template', $(this)).text();
+        var button = make_delete_button(name, "Delete local template?");
         $(this).append(" ", button.text("delete"));
     });
 
-    function make_delete_button(form_id, question) {
+    function make_delete_button(name, question) {
         var button = $('<a href="#" class="button-for-custom">');
         button.click(function(evt) {
             evt.preventDefault();
@@ -53,7 +53,7 @@ $(function() {
                 button.show();
             }).addClass('button-for-custom');
             var yes_button = $('<a>').text('yes').click(function(evt) {
-                $.post('./manage_delObjects', {'ids:list': form_id},
+                $.post('./manage_delObjects', {'ids:list': name},
                        function() {
                     window.location.reload(true);
                 });
@@ -68,7 +68,7 @@ $(function() {
 </script>
 
 <tal:block define="extra_templates python:[tid for tid in here.objectIds()
-                                           if tid not in registered_form_ids]"
+                                           if tid not in registered_templates]"
            condition="extra_templates">
 <h2>Extra templates created here</h2>
 <ul class="template_listing">
@@ -85,21 +85,21 @@ $(function() {
 
 <h2>Registered templates</h2>
 <ul class="template_listing">
-    <tal:block define="customized_form_ids here/objectIds;
+    <tal:block define="customized_templates here/objectIds;
                        here_url here/absolute_url"
-               repeat="form_id registered_form_ids">
-        <li tal:define="customized python:form_id in customized_form_ids;
+               repeat="name registered_templates">
+        <li tal:define="customized python:name in customized_templates;
                         form_url python:test(customized,
-                            '%s/%s/manage_workspace' % (here_url, form_id),
-                            'manage_customize?form_id=%s' % form_id)"
+                            '%s/%s/manage_workspace' % (here_url, name),
+                            'manage_customize?name=%s' % name)"
             tal:attributes="class python:test(customized, 'customized', None)">
             <a class="template"
                tal:attributes="href form_url"
-               tal:content="form_id"></a>
+               tal:content="name"></a>
             <a class="button-for-custom"
                tal:condition="customized"
                tal:attributes="href string:${here/absolute_url
-                                    }/show_diff?form_id=${form_id}"
+                                    }/show_diff?name=${name}"
                >diff</a>
         </li>
     </tal:block>

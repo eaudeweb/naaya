@@ -85,7 +85,7 @@
 </tal:block>
 
 <script src="misc_/Naaya/jquery.autocomplete.min.js"></script>
-<script tal:content="string:var form_ids=${here/portal_forms/registered_form_ids};">
+<script tal:content="string:var form_ids=${here/portal_forms/registered_templates};">
 </script>
 <script>
     $(document).ready(function(){

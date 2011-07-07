@@ -35,7 +35,7 @@ class NaayaTemplateTestCase(NaayaTestCase.NaayaTestCase):
 
     def test_customize(self):
         forms_tool = self.portal.portal_forms
-        ids = [f['id'] for f in forms_tool.listDefaultForms()]
+        ids = [f.__name__ for f in forms_tool.listDefaultForms()]
         self.assertTrue('my_tmpl' in ids)
         my_tmpl_aq = forms_tool.getForm('my_tmpl')
         self.assertTrue(my_tmpl_aq.aq_self is NyDocument.my_tmpl)
