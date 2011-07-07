@@ -168,6 +168,7 @@ class AoALibraryViewer(SimpleItem):
         state['already_updated'] = []
         review_template = self.aq_parent['tools']['general_template']['general-template']
         library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        country_fiches = self.aq_parent['tools']['country_fiches']
         update_type = REQUEST.form.get('update_type')
         if update_type == 'update_rt_titles':
             self._update_rt_titles(state, review_template, library)
@@ -179,11 +180,85 @@ class AoALibraryViewer(SimpleItem):
             self._update_vl_id_in_rt(state)
         if update_type == 'update_vl_countries':
             self._update_vl_countries(state, library)
+        if update_type == 'update_cf_countries':
+            self._update_cf_countries(state, country_fiches)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_cf_countries(self, state, country_fiches):
+        country_list = [
+        "Albania",
+        "Andorra",
+        "Armenia",
+        "Austria",
+        "Azerbaijan",
+        "Belarus",
+        "Belgium",
+        "Bosnia and Herzegovina",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Georgia",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Iceland",
+        "Ireland",
+        "Italy",
+        "Kazakhstan",
+        "Kyrgyzstan",
+        "Latvia",
+        "Liechtenstein",
+        "Lithuania",
+        "Luxembourg",
+        "FYR of Macedonia",
+        "Malta",
+        "Republic of Moldova",
+        "Monaco",
+        "Montenegro",
+        "the Netherlands",
+        "Norway",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Russian Federation",
+        "San Marino",
+        "Serbia",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "Tajikistan",
+        "Turkey",
+        "Turkmenistan",
+        "Ukraine",
+        "the United Kingdom",
+        "Uzbekistan",
+        "Kosovo under un security council 1244/9950",
+        ]
+
+        widget = getattr(country_fiches.aq_base, 'w_country')
+        old_countries = widget.getChoices()
+        widget._setLocalPropValue('choices', 'en', country_list)
+        widget._setLocalPropValue('choices', 'ru', country_list)
+
+        for cf_answer in country_fiches.objectValues(survey_answer_metatype):
+            old_country_val = cf_answer.get('w_country')
+            new_country_val = []
+            for c_i in old_country_val:
+                new_country_val.append(country_list.index(old_countries[c_i]))
+            cf_answer.set_property('w_country', new_country_val)
+            state['updated_answers'][cf_answer.absolute_url()] = map(lambda x: country_list[x], new_country_val)
+
 
     def _update_vl_countries(self, state, library):
         country_list = [
