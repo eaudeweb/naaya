@@ -180,10 +180,10 @@ class RestrictedToolkit(SimpleItem):
     def get_icon_for_object_index(self, ob):
         """ Get URL of icon to display on object index page. """
         from naaya.content.base.meta import get_schema_name
-        skin = self.getLayoutTool().getCurrentSkin()
+        scheme = self.getLayoutTool().getCurrentSkinScheme()
         name = get_schema_name(self.getSite(), ob.meta_type)
-        skin_icon = skin._getOb(name + '-icon', None)
-        skin_icon_marked = skin._getOb(name + '-icon-marked', None)
+        skin_icon = scheme._getOb(name + '-icon', None)
+        skin_icon_marked = scheme._getOb(name + '-icon-marked', None)
 
         if not ob.approved and skin_icon_marked is not None:
             return skin_icon_marked.absolute_url()

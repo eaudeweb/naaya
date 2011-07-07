@@ -57,12 +57,12 @@ class _CommonContentTest(NaayaTestCase):
 
     def test_customized_icon(self):
         from naaya.content.base.meta import get_schema_name
-        skin = self.portal.getLayoutTool().getCurrentSkin()
+        scheme = self.portal.getLayoutTool().getCurrentSkinScheme()
         name = get_schema_name(self.portal, self.ob.meta_type)
-        skin.manage_addDiskFile(id=name + '-icon', pathspec=IMAGE_PATH_SPEC)
-        df = skin[name + '-icon']
-        skin.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
-        df_marked = skin[name + '-icon-marked']
+        scheme.manage_addDiskFile(id=name + '-icon', pathspec=IMAGE_PATH_SPEC)
+        df = scheme[name + '-icon']
+        scheme.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
+        df_marked = scheme[name + '-icon-marked']
 
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), df.absolute_url())
