@@ -167,6 +167,7 @@ def extract_survey_answer_data_library(answer):
     attrs = {
         'id': answer.getId(),
         'title': answer.get('w_assessment-name'),
+        'url': answer.get('w_assessment-url'),
         'geo_location': answer.get('w_location'),
         'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
                                   answer.get('w_submitter-organisation'), ),
@@ -207,6 +208,7 @@ def extract_survey_answer_data_country_fiches(answer):
     attrs =  {
             'id': answer.getId(),
             'title': answer.get('w_title'),
+            'url': answer.get('w_url'),
             'geo_coverage_country': answer.get('w_country'),
             'publication_year': answer.get('w_publication-year'),
             'author': answer.get('w_author'),
