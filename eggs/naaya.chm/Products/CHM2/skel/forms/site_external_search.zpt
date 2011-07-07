@@ -119,7 +119,10 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="record records">
-				<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" /></td>
+				<td style="text-align: middle">
+					<img tal:define="icon python:here.rstk.get_object_view_info(record)['icon']"
+					     tal:attributes="src icon/url; title icon/title; alt icon/title" />
+				</td>
 				<td>
 					<a tal:attributes="href record/url" tal:content="python:test(record['title'], record['title'], record['url'])" />
 					<span tal:condition="python:record['description'] is not None">
