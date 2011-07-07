@@ -16,14 +16,22 @@ for shadow in vl_shadows:
 document_type_names = cf['w_type-document'].getChoices()
 heading_document_types = container.heading_document_types()
 
-ret = {}
+group_by_heading = {}
 for heading, document_types in heading_document_types.items():
-    ret[heading] = {}
+    group_by_heading[heading] = {}
     for dt in document_types:
         dt_i = document_type_names.index(dt)
         if dt_i in group_by_document_type:
-            ret[heading][dt_i] = group_by_document_type[dt_i]
+            group_by_heading[heading][dt_i] = group_by_document_type[dt_i]
 
-ret = list(ret.items())
-ret.sort()
+ret = []
+if theme == 'Water':
+    for heading in container.water_headings_in_order():
+        if heading in group_by_heading:
+            ret.append((heading, group_by_heading[heading]))
+else: # theme == 'Green Economy'
+    for heading in container.ge_headings_in_order():
+        if heading in group_by_heading:
+            ret.append((heading, group_by_heading[heading]))
+
 return ret
