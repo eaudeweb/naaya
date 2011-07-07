@@ -13,6 +13,7 @@ from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddE
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 
 import shadow
+import map_search
 
 survey_answer_metatype = 'Naaya Survey Answer'
 shadow_metatype = 'Naaya EW_AOA Shadow Object'
@@ -127,6 +128,11 @@ class AoALibraryViewer(SimpleItem):
         if REQUEST is not None:
             url = '%s/manage_workspace' % self.absolute_url()
             REQUEST.RESPONSE.redirect(url)
+
+    def do_map_search(self, REQUEST):
+        """ """
+        #reload(map_search)
+        return map_search.do_search(self, REQUEST)
 
     _index_html = NaayaPageTemplateFile('zpt/index', globals(),
                             'naaya.ew_aoa_library.viewer.index_html')
