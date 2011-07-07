@@ -40,8 +40,10 @@
                i18n:attributes="value"/>
           <div class="glossary-widget-dialog-content" style="display: none">
           <div class="glossary-widget-tree-buttons">
-              <a href="javascript:" i18n:translate="">Expand all</a>
-              <a href="javascript:" i18n:translate="">Collapse all</a>
+              [<a href="javascript:" i18n:translate="">Expand all</a>]
+              [<a href="javascript:" i18n:translate="">Collapse all</a>]
+              [<a tal:attributes="href glossary/absolute_url"
+                 i18n:translate="">View glossary</a>]
             </div>
             <div class="glossary-widget-tree"></div>
           </div>
