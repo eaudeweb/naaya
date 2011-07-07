@@ -12,7 +12,7 @@ Let's add an album
 
     >>> self.login()
     >>> info = self.portal.info
-    >>> gallery_id = info.manage_addNyPhotoGallery(id='mygallery', title='My Gallery')
+    >>> gallery_id = info.addNyPhotoGallery(id='mygallery', title='My Gallery')
     >>> gallery = info[gallery_id]
     >>> album_id = gallery.addNyPhotoFolder(id='myalbum', title='My Album')
     >>> album = gallery[album_id]
@@ -33,7 +33,7 @@ Was it indexed in portal catalog ?
 
 Let's cut an album
 
-    >>> gallery_id = info.manage_addNyPhotoGallery(id='new_gallery', title='New Gallery')
+    >>> gallery_id = info.addNyPhotoGallery(id='new_gallery', title='New Gallery')
     >>> new_gallery = info[gallery_id]
     >>> cp = gallery.cutObjects(ids=['copy_of_myalbum'])
     >>> res = new_gallery.pasteObjects(cp_data=cp)

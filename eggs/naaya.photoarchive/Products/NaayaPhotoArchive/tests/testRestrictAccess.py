@@ -37,11 +37,11 @@ class PhotoRestrictAccessTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaPhotoArchive.NyPhotoGallery import manage_addNyPhotoGallery
+        from Products.NaayaPhotoArchive.NyPhotoGallery import addNyPhotoGallery
         from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
         from Products.NaayaPhotoArchive.NyPhoto import addNyPhoto
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
-        manage_addNyPhotoGallery(self.portal.myfolder, id='g', title='My gallery', submitted=1, contributor='admin')
+        addNyPhotoGallery(self.portal.myfolder, id='g', title='My gallery', submitted=1, contributor='admin')
         manage_addNyPhotoFolder(self.portal.myfolder.g, id='f', title='My folder', submitted=1, contributor='admin')
         addNyPhoto(self.portal.myfolder.g.f, id='myphoto', title='My photo', submitted=1, contributor='contributor')
         import transaction; transaction.commit()

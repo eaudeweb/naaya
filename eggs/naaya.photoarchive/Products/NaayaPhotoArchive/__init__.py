@@ -35,7 +35,7 @@ from Products.NaayaCore.SchemaTool.SchemaTool import register_schema_product
 register_content(
     module=NyPhotoGallery,
     klass=NyPhotoGallery.NyPhotoGallery,
-    module_methods={'manage_addNyPhotoGallery': PERMISSION_ADD_PHOTOGALLERY,
+    module_methods={'addNyPhotoGallery': PERMISSION_ADD_PHOTOGALLERY,
         'gallery_add_html': PERMISSION_ADD_PHOTOGALLERY},
     klass_methods={},
     add_method=('gallery_add_html', PERMISSION_ADD_PHOTOGALLERY),
@@ -69,7 +69,7 @@ def initialize(context):
         permission = PERMISSION_ADD_PHOTOGALLERY,
         constructors = (
                 NyPhotoGallery.gallery_add_html,
-                NyPhotoGallery.manage_addNyPhotoGallery,
+                NyPhotoGallery.addNyPhotoGallery,
                 ),
         icon = 'www/NyPhotoGallery.gif'
         )

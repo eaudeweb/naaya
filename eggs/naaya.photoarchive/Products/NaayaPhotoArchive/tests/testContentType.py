@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from Products.NaayaPhotoArchive.NyPhotoGallery import NyPhotoGallery, manage_addNyPhotoGallery
+from Products.NaayaPhotoArchive.NyPhotoGallery import NyPhotoGallery, addNyPhotoGallery
 from Products.NaayaPhotoArchive.NyPhotoFolder import NyPhotoFolder
 from Products.Naaya.tests import NaayaTestCase
 from Products.NaayaBase.NyRoleManager import NyRoleManager
@@ -33,7 +33,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
 
     def _add_gallery(self):
         """ Add and search gallery """
-        manage_addNyPhotoGallery(self._portal().info, id='mygallery', title='Photo Gallery', lang='en')
+        addNyPhotoGallery(self._portal().info, id='mygallery', title='Photo Gallery', lang='en')
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Photo Gallery'])
         for x in meta:
             if x.getLocalProperty('title', 'en') == 'Photo Gallery':
