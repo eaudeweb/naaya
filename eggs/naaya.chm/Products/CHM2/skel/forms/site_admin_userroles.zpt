@@ -43,7 +43,7 @@
 				<hr />
 				<h3 i18n:translate="">Roles in the portal</h3>
 				<p i18n:translate="">
-					This is the list of roles this user has either on the entire portal or on specific locations. If you want to revoke one or more roles, just check them and click <em>Revoke</em>.
+					This is the list of roles this user has either on the entire portal or on specific locations. If you want to revoke one or more roles, just check them and click <em i18n:name="revoke" i18n:translate="">Revoke</em>.
 				</p>
 				<form method="post" tal:attributes="action string:${site_url}/admin_revokeuserroles">
 					<ul tal:define="user_roles python: users_roles.get(name)">
