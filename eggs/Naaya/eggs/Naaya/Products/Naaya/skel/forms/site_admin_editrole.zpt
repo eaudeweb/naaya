@@ -28,15 +28,15 @@
                 </th>
                 <th i18n:translate="" class="th-left">Permission</th>
             </tr>
-            <tal:block repeat="pair options/sorted_perm">
-            <tr tal:define="input_id string:inperm-${repeat/pair/index};
-                            label python:pair[0];
-                            zope_perm python:pair[1]"
-                tal:attributes="class python:test(path('repeat/pair/odd'),
+            <tal:block repeat="perm options/permission_list">
+            <tr tal:define="input_id string:inperm-${repeat/perm/index};
+                            zope_perm perm/zope_permission"
+                tal:attributes="class python:test(path('repeat/perm/odd'),
                                          'row-odd', 'row-even')">
                 <td class="center checkbox">
 
-                    <input type="checkbox" tal:attributes="
+                    <input type="checkbox"
+                           tal:attributes="
                         name string:zope_perm_list:list;
                         value zope_perm;
                         id input_id;
@@ -44,7 +44,15 @@
                 </td>
                 <td>
                     <label tal:attributes="title zope_perm; for input_id"
-                           tal:content="label" />
+                           tal:content="perm/title"
+                           class="middle-label" />
+                    <div class="admin-info-text" style="display: none">
+                      <p tal:content="perm/description"/>
+                      <p>
+                        <em>Zope permission:
+                        <tal:block content="zope_perm"/></em>
+                      </p>
+                    </div>
                 </td>
             </tr>
             </tal:block>
@@ -56,6 +64,12 @@
 
         <input type="submit" value="Save changes" i18n:attributes="value" />
     </form>
+
+<script>
+$(function() {
+});
+</script>
+
 </metal:block>
 </metal:block></metal:block>
 </metal:block>

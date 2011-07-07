@@ -83,6 +83,15 @@ class TestNySite(NaayaTestCase):
                                           REQUEST=request)
         self.assertEqual(mock_send_mail.call_count, 1)
 
+    def test_list_permissions(self):
+        perms = self.portal.get_naaya_permissions_in_site()
+        skip_captcha = 'Naaya - Skip Captcha'
+        self.assertTrue(skip_captcha in perms.keys())
+        self.assertTrue('Naaya - Add Naaya URL objects' in perms.keys())
+        self.assertEqual(perms[skip_captcha]['zope_permission'], skip_captcha)
+        self.assertTrue('title' in perms[skip_captcha].keys())
+        self.assertTrue('description' in perms[skip_captcha].keys())
+
 
 class TestNySiteListing(NaayaFunctionalTestCase):
     """ """
