@@ -55,10 +55,10 @@
 			 <h2 i18n:translate="">Past events:</h2>
 			 <span tal:define="channel python:here.getSyndicationTool().pastevents_rdf">
 				 <a tal:attributes="href channel/absolute_url" style="background-color: #FFFFFF;">
-					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
 				 </a>
 				 <a tal:attributes="href string:${channel/absolute_url}/?feed=atom" style="background-color: #FFFFFF;">
-					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
 				 </a>
 
 			 </span>
@@ -67,10 +67,10 @@
 			 <h2 i18n:translate="">Upcoming events:</h2>
 			 <span tal:define="channel python:here.getSyndicationTool().upcomingevents_rdf">
 				 <a tal:attributes="href channel/absolute_url" style="background-color: #FFFFFF;">
-					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+					 <img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
 				 </a>
 				 <a tal:attributes="href string:${channel/absolute_url}/?feed=atom" style="background-color: #FFFFFF;">
-					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+					 <img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
 				 </a>
 
 			 </span>

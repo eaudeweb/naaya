@@ -7,7 +7,7 @@
 <p i18n:translate="">
     This form displays the users defined in this source that have roles in the current portal.
     You can revoke a role prior assigned to a user by ticking in the appropiate check box
-    and clicking the <em>Revoke selected roles</em> button.
+    and clicking the <em i18n:name="revoke-selected-roles" i18n:translate="">Revoke selected roles</em> button.
 </p>
 <div class="datatable">
 	<table cellspacing="0" cellpadding="4"

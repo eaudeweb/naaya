@@ -10,7 +10,7 @@
 
 <p i18n:translate="" class="cleaner">
 	This page allows the definition of categories that will be used to classify
-	any <a href="./admin_map_contenttypes_html">geo-taggable content</a> within the portal.
+	any <a href="./admin_map_contenttypes_html" i18n:name="geo-taggable-content" i18n:translate="">geo-taggable content</a> within the portal.
 	(e.g. hotels, resorts, monuments, tourist attractions).
 </p>
 
@@ -47,7 +47,7 @@
 		<dt i18n:translate="">Icon</dt>
 		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed
 			on the map so it is recommended to create it with these dimensions from the start and make it
-			transparent. Picture types allowed on the map: <strong>.PNG</strong>, <strong>.GIF</strong>.</dd>
+			transparent. Picture types allowed on the map: <strong i18n:name="png">.PNG</strong>, <strong i18n:name="gif">.GIF</strong>.</dd>
 		<dd><div i18n:translate="">Example pins (download the image on your computer and upload it below):</div>
 			<tal:block repeat="i python:range(1,20)">
 				<img tal:attributes="src string:misc_/NaayaCore/pin${i}.png; alt string:pin${i}.png" />

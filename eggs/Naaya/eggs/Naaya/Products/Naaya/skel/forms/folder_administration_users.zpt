@@ -131,7 +131,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td valign="top" width="20%" class="form-label" i18n:translate=""><span tal:omit-tag="" i18n:translate="">Location:(folder)</span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span></td>
+		<td valign="top" width="20%" class="form-label" i18n:translate="">Location:(folder)<br i18n:name="br" />e.g. /folderURL</td>
 		<td valign="top" width="*">
 			<script type="text/javascript">
 			<!--

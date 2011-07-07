@@ -17,7 +17,7 @@
 	Only the local channels listed below will appear when clicking the syndication icon 
 	( <img i18n:name="xml-icon" src="misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /> ) available in some browsers 
 	(e.g. Internet Explorer 7, Mozilla Firefox 2).
-	Local channels are automatically generated in both <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29">Atom</a> 
+	Local channels are automatically generated in both <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29" i18n:name="atom-standard">Atom</a> 
 	and <a i18n:name="rdf-link" href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a> formats.
 	Read more about <a i18n:name="atom-link" href="http://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared" i18n:translate="">
 	the differences between these formats on the Atom wiki</a>.

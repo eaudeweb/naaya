@@ -15,7 +15,7 @@
 </form>
 <br/>
 
-<p i18n:translate="">These are the properties available for <strong tal:content="here/title" />
+<p i18n:translate="">These are the properties available for <strong tal:content="here/title" i18n:name="title" i18n:translate=""/>
     objects. Click a property to change it.</p>
 
 <table class="datatable" style="width: 50em;">

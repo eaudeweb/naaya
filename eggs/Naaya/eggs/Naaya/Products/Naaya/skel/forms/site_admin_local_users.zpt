@@ -37,7 +37,7 @@
 		</div>
 
 		<div class="loader">
-			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
+			<img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt; title" /><span i18n:translate="">&nbsp;Loading... please wait!</span>
 		</div>
     </form>
 
@@ -224,13 +224,13 @@
      tal:condition="python:any_new_account or any_username_conflict">
 	<p>
 		<span i18n:translate="" tal:condition="any_new_account">
-			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt title" i18n:name="image" /> local users added in the past 5 days
+			<img src="misc_/Naaya/star.png" alt="New account" title="New account" i18n:attributes="alt; title" i18n:name="image" /> local users added in the past 5 days
 		</span>
 
 		<tal:block condition="user_sources">
 		<br class="cleaner" />
 		<span i18n:translate="" tal:condition="any_username_conflict">
-			<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username.
+			<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="image" /> local and LDAP accounts for the same username.
 		</span>
 		</tal:block>
 	</p>

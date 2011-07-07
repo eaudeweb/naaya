@@ -7,8 +7,8 @@
 					first_letter python:request.get('first_letter', '');">
 
 <p i18n:translate="" class="cleaner">
-This page lists the locations that do not have coordinates. The test is made on the following fields: <em>location type</em>, <em>address</em>, <em>longitude</em> and <em>latitude</em>.
-<br/>Only objects from geo-taggable content types will be shown.
+This page lists the locations that do not have coordinates. The test is made on the following fields: <em i18n:name="location-type" i18n:translate="">location type</em>, <em i18n:name="address" i18n:translate="">address</em>, <em i18n:name="longitude" i18n:translate="">longitude</em> and <em i18n:name="latitude" i18n:translate="">latitude</em>.
+<br i18n:name="br"/>Only objects from geo-taggable content types will be shown.
 </p>
 
 <br clear="all" />

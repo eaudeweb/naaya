@@ -126,8 +126,8 @@
 		</div>
 		<div id="portalmap">
 			<div class="portalmap_portlet">
-				<div class="portalmap_portlet_title" i18n:translate="">
-					<p>Find address</p>
+				<div class="portalmap_portlet_title">
+					<p i18n:translate="">Find address</p>
 				</div>
 				<div>
 					<input type="text" id="address" name="address:ustring:utf8"
@@ -137,8 +137,8 @@
 						value="Go" disabled="disabled" onclick="findAddress()"
 						i18n:attributes="value"/>
 				</div>
-				<div class="portalmap_portlet_title" i18n:translate="">
-					<p>Filter locations</p>
+				<div class="portalmap_portlet_title">
+					<p i18n:translate="">Filter locations</p>
 				</div>
 				<div class="map_filters">
 					<div>

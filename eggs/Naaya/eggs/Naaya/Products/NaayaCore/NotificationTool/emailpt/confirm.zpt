@@ -15,14 +15,14 @@ Best regards,
 </body_text>
 <body_html>
 <tal:block define="site python: options['here'].getSite()" i18n:translate="">
-Hello,<br /><br />
+Hello,<br i18n:name="br" /><br i18n:name="br" />
 
-You subscribed to the <tal:block replace="python: site.title_or_id()" i18n:name="portal_title" /> mailing list.<br />
-In order to activate your account please click the link bellow:<br />
+You subscribed to the <tal:block replace="python: site.title_or_id()" i18n:name="portal_title" /> mailing list.<br i18n:name="br" />
+In order to activate your account please click the link bellow:<br i18n:name="br" />
 <tal:block replace="structure python: '%s/%s?key=%s' % (site.getNotificationTool().absolute_url(), 'confirm', options['key'])"
-           i18n:name="activation_link" /><br />
-<br />
-Best regards,<br />
+           i18n:name="activation_link" /><br i18n:name="br" />
+<br i18n:name="br" />
+Best regards,<br i18n:name="br" />
 <tal:block replace="python:site.title_or_id()" i18n:name="portal_title_2" /> postmaster.
 </tal:block>
 </body_html>
