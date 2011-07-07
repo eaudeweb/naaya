@@ -11,12 +11,12 @@
                             (perm_edit_object and perm_publish_objects) or
                             perm_validate_objects)">
     <span id="submission" tal:condition="perm_add_something">
-        <span i18n:translate="Submit" tal:omit-tag=""></span>:
+        <span i18n:translate="" tal:omit-tag="">Submit</span>:
         <select name="typetoadd"
             tal:attributes="onchange string:document.location.href='${url}/'
                                 + this.options[this.selectedIndex].value">
 
-            <option value="#" i18n:translate="Type to add"></option>
+            <option value="#" i18n:translate="">Type to add</option>
             <option tal:repeat="item submissions"
                     tal:attributes="value python:item[0]"
                     tal:content="python:item[1]"

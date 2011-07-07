@@ -12,7 +12,7 @@
 
     <div class="floated-buttons">
         <span class="buttons">
-            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
         </span>
     </div>
 
@@ -23,35 +23,35 @@
 
     <form method="post" action="signup" name="formSignup">
         <div class="field">
-            <label for="first_name" i18n:translate="First name"></label>
+            <label for="first_name" i18n:translate="">First name</label>
             <p class="form-errors" tal:define="err formerrors/first_name|nothing"
                 tal:condition="err" tal:content="err" />
             <input type="text" name="first_name:utf8:ustring" id="first_name"
                  size="50" tal:attributes="value formdata/first_name|nothing" />
         </div>
         <div class="field">
-            <label for="last_name" i18n:translate="Last name"></label>
+            <label for="last_name" i18n:translate="">Last name</label>
             <p class="form-errors" tal:define="err formerrors/last_name|nothing"
                 tal:condition="err" tal:content="err" />
             <input type="text" name="last_name:utf8:ustring" id="last_name"
                  size="50" tal:attributes="value formdata/last_name|nothing" />
         </div>
         <div class="field">
-            <label for="email" i18n:translate="E-mail address"></label>
+            <label for="email" i18n:translate="">E-mail address</label>
             <p class="form-errors" tal:define="err formerrors/email|nothing"
                 tal:condition="err" tal:content="err" />
             <input type="text" name="email:utf8:ustring" id="email"
                  size="50" tal:attributes="value formdata/email|nothing" />
         </div>
         <div class="field">
-            <label for="organization" i18n:translate="Organization"></label>
+            <label for="organization" i18n:translate="">Organization</label>
             <p class="form-errors" tal:define="err formerrors/organization|nothing"
                 tal:condition="err" tal:content="err" />
             <input type="text" name="organization:utf8:ustring" id="organization"
                  size="50" tal:attributes="value formdata/organization|nothing" />
         </div>
         <div class="field">
-            <label for="phone" i18n:translate="Phone number"></label>
+            <label for="phone" i18n:translate="">Phone number</label>
             <p class="form-errors" tal:define="err formerrors/phone|nothing"
                 tal:condition="err" tal:content="err" />
             <input type="text" name="phone:utf8:ustring" id="phone"
