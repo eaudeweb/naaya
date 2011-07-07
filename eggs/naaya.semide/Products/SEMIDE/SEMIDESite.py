@@ -52,7 +52,7 @@ from Products.NaayaGlossary.NyGlossary              import manage_addGlossaryCen
 from Products.NaayaGlossary.constants               import NAAYAGLOSSARY_CENTRE_METATYPE
 from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
 from Products.NaayaLinkChecker.LinkChecker          import manage_addLinkChecker
-from Products.NaayaPhotoArchive.NyPhotoGallery      import manage_addNyPhotoGallery
+from Products.NaayaPhotoArchive.NyPhotoGallery      import addNyPhotoGallery
 from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLERY
 from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
 from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
@@ -193,7 +193,7 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         self.getPortletsTool().manage_delObjects('topnav_links')
 
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
-        manage_addNyPhotoGallery(self, ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE, contributor=self.getAuthenticationToolPath(1))
+        addNyPhotoGallery(self, ID_PHOTOARCHIVE, title=TITLE_PHOTOARCHIVE, contributor=self.getAuthenticationToolPath(1))
 
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
