@@ -180,6 +180,7 @@ def extract_survey_answer_data_library(answer):
                             answer.get('w_assessment-url'),
                             answer.get('w_assessment-url'),
                        ),
+        'approved': hasattr(answer.aq_base, 'approved_date') and answer.approved_date is not None,
         'publication_year': answer.get('w_assessment-year'),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
@@ -193,6 +194,7 @@ def extract_survey_answer_data_library(answer):
         if answer_id.startswith(prefix):
             answer_id = answer_id[len(prefix):]
         attrs['title'] = "Assessment %s" % answer_id
+
 
     attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', [])
 
