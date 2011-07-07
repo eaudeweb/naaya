@@ -21,7 +21,6 @@ __version__='$Revision: 1.6 $'[11:-2]
 from App.ImageFile import ImageFile
 
 import EventCalendar
-from DateFunctions import DateFunctions
 
 def initialize(context):
     """ Event calendar """

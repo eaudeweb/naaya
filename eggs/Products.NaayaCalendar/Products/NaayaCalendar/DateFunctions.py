@@ -1,38 +1,12 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# Portions created by EEA are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Alex Ghica, Finsiel Romania
+import calendar
+from time import localtime
+from datetime import datetime, date
 
-__version__='$Revision: 1.24 $'[11:-2]
-
-# python imports
-from time import localtime, mktime, strftime
-from datetime import datetime
-
-#Zope import
+#Can we lose this please?
 from DateTime import DateTime
 
-
-class DateFunctions:
+class DateFunctions(object):
     """ date functions """
-
-    def __init__(self):
-        """ constructor """
-        pass
-
 
     #################
     #   CONSTANTS   #
@@ -208,19 +182,9 @@ class DateFunctions:
         except:
             return None
 
-    def isLeapYear(self, year):
-        """ return 1 for leap years, 0 for non-leap years """
-        return year % 4 == 0 and (year % 100 <> 0 or year % 400 == 0)
-
-    def getWeekday(self, year, month, day):
-        """ return weekday (0-6 ~ Mon-Sun) for year (1970-...), month (1-12), day (1-31) """
-        secs = mktime((year, month, day, 0, 0, 0, 0, 0, 0))
-        tuple = localtime(secs)
-        return tuple[6]
-
     def getMonthRange(self, year, month):
-        """ return weekday (0-6 ~ Mon-Sun) and number of days (28-31) for year, month """
-        if not 1 <= int(month) <= 12: raise ValueError, 'bad month number'
-        day1 = self.getWeekday(int(year), int(month), 1)
-        ndays = self.mdays[int(month)] + (int(month) == 2 and self.isLeapYear(int(year)))
-        return day1, ndays
+        """ return weekday (0-6 ~ Mon-Sun) and number of days (28-31)
+        for year, month """
+        start_day, end_day = calendar.monthrange(year, month)
+        return date(year, month, 1).weekday(), end_day
+
