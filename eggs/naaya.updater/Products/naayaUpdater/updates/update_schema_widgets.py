@@ -47,7 +47,8 @@ class UpdateSchemaWidgets(UpdateScript):
         After all the objects in question are modified
         """
         if len(portal.get_languages()) > 1:
-            raise RuntimeError('There are multiple languages present on this portal')
+            raise ValueError(
+                'There are multiple languages present on this portal')
 
         catalog_tool = portal.getCatalogTool()
         meta_type = _get_meta_type(portal, schema)
@@ -59,14 +60,18 @@ class UpdateSchemaWidgets(UpdateScript):
         objects = [brain.getObject() for brain in
                    catalog_tool(meta_type=meta_type)]
         for ob in objects:
+            if hasattr(ob, widget.prop_name()): #Already updated?
+                 self.log.info('Skipped %r', ob.absolute_url(1))
+                 continue
             for widget in widgets:
                 try:
                     value = ob._local_properties[widget.prop_name()][lang][0]
+                    del ob._local_properties[widget.prop_name()]
                 except KeyError:
-                    raise RuntimeError("%r does not have %r" % (
-                                       ob.absolute_url(1), widget.id))
-                del ob._local_properties[widget.prop_name()]
-                if isinstance(value, str):
+                    continue
+                if widget.data_type == 'bool':
+                    value = bool(value)
+                elif isinstance(value, str):
                     value = unicode(value, 'utf-8')
                 setattr(ob, widget.prop_name(), value)
             ob.recatalogNyObject(ob)
