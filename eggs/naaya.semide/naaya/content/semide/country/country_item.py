@@ -60,7 +60,7 @@ METATYPE_OBJECT =       'Naaya Country Folder'
 LABEL_OBJECT =          'Country Folder'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Country objects'
 
-OBJECT_FORMS =          ['country_add', 'country_edit', 'country_index', 'country_editportlet', 'country_custom_header', 'country_custom_footer']
+OBJECT_FORMS =          ['country_add', 'country_edit', 'country_index', 'country_editportlet']
 OBJECT_CONSTRUCTORS =   ['manage_addNyCountry_html', 'country_add_html', 'addNyCountry', 'importNyCountry']
 OBJECT_ADD_FORM =       'country_add_html'
 DESCRIPTION_OBJECT =    'This is Naaya Country type.'
