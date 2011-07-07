@@ -21,7 +21,7 @@
     <div class="description-text">
         <p tal:condition="groups_roles_map" i18n:translate="">
             Roles currently granted for <tal:block i18n:name="source_title" replace="source_title"></tal:block> groups are listed in the table
-            below. Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role assigned to a group.
+            below. Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt; title" /> to revoke role assigned to a group.
         </p>
     </div>
     
@@ -103,7 +103,7 @@
         <p i18n:translate="">
             The list below presents the <tal:block i18n:name="source_title" replace="source_title"></tal:block> users that have roles in
             this portal.
-            Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt title" /> to revoke role(s) assigned to a user.
+            Click <img i18n:name="revoke-icon" src="misc_/Naaya/revoke_permission.png" alt="Revoke roles" title="Revoke roles" i18n:attributes="alt; title" /> to revoke role(s) assigned to a user.
         </p>
     </div>
 

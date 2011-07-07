@@ -39,7 +39,7 @@ Example:
 </div>
 <div class="field">
 	<label for="subtitle"><span i18n:translate="" tal:omit-tag="">Subtitle</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span></label>
-	<p i18n:translate=""><strong>Tip:</strong> you can edit subtitle in text area below or upload it from a local file.</p>
+	<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">Tip:</strong> you can edit subtitle in text area below or upload it from a local file.</p>
 	<textarea
 		onfocus="javascript:displayToolTips('subtitle_tips', 'block')"
 		onblur="javascript:displayToolTips('subtitle_tips', 'none')"

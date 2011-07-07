@@ -11,7 +11,7 @@
 	administrators and lets you manage them. A remote channels aggregator is a
 	collection of remote channels that contains all the data from the channels
 	defined in the <a tal:attributes="href
-	string:${site_url}/admin_remotechannels_html" >Remote channels</a> page.
+	string:${site_url}/admin_remotechannels_html" i18n:name="remote-channels" i18n:translate="" >Remote channels</a> page.
 </p>
 <h2 tal:condition="python:request.get('id', '')">
 	<a tal:attributes="href string:${site_url}/admin_remotechannels_aggregators_html" i18n:translate="">Add new aggregator</a>

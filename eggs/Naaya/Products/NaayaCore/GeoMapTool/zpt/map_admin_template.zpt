@@ -9,8 +9,8 @@
 
 <p i18n:translate="">
 	These settings apply to the
-	<a tal:attributes="href string:${map_url}">portal_map</a> and to all the
-	<a tal:attributes="href string:${here/absolute_url}/portal_schemas/admin_html"
+	<a tal:attributes="href string:${map_url}" i18n:name="portal-map" i18n:translate="">portal_map</a> and to all the
+	<a tal:attributes="href string:${here/absolute_url}/portal_schemas/admin_html" i18n:name="geo-taggable-content-types" i18n:translate=""
 	>geo-taggable content types</a>.
 </p>
 

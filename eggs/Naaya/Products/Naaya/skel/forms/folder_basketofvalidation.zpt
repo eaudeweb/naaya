@@ -6,7 +6,7 @@
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 
 <p i18n:translate="">
-	This page lists the items from this folder along with their validation status. After reviewing them, select <strong i18n:name="checked" i18n:translate="">Checked - OK</strong> is the information contained by an item is still valid or <strong>Checked - Not OK</strong>, in which case you must enter a comment explaining why. Click <strong i18n:name="save-button" i18n:translate="">Save changes</strong> in the end.
+	This page lists the items from this folder along with their validation status. After reviewing them, select <strong i18n:name="checked" i18n:translate="">Checked - OK</strong> is the information contained by an item is still valid or <strong i18n:name="checked-not-ok" i18n:translate="">Checked - Not OK</strong>, in which case you must enter a comment explaining why. Click <strong i18n:name="save-button" i18n:translate="">Save changes</strong> in the end.
 </p>
 
 <tal:block tal:define="items here/getObjectsForValidation">

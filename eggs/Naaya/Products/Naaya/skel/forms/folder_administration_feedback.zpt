@@ -32,7 +32,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td valign="top" i18n:translate="">Contact postal address<br />(appears on the feedback form)</td>
+			<td valign="top" i18n:translate="">Contact postal address<br i18n:name="br" />(appears on the feedback form)</td>
 			<td>
 				<textarea name="postal" rows="4" cols="28" tal:content="python:test(iscustomized, here.getFeedbackCustomizedPostal(), '')"></textarea>
 			</td>

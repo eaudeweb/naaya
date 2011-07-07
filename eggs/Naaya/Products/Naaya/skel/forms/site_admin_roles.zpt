@@ -38,8 +38,8 @@
 	<div class="separator"></div>
 	
 	<div class="description-text">
-		<p class="cleaner">
-			Click edit icon (<img src="misc_/Naaya/edit" alt="edit link" tal:attributes="title string:Edit permissions" i18n:attributes="alt title" />) to edit role`s permissions.
+		<p class="cleaner" i18n:translate="">
+			Click edit icon (<img src="misc_/Naaya/edit" alt="edit link" tal:attributes="title string:Edit permissions" i18n:attributes="alt; title" i18n:name="edit-link"/>) to edit role`s permissions.
 		</p>
 	</div>
 	

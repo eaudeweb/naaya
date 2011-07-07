@@ -10,7 +10,7 @@
     <div class="description-text">
 		<p i18n:translate="">
         Type a <tal:block replace="source_title" /> group or select one from the list generated
-        when pressing the <em>pick</em> button, then select what
+        when pressing the <em i18n:name="pick" i18n:translate="">pick</em> button, then select what
         role you wish to grant to that group.
         </p>
     </div>

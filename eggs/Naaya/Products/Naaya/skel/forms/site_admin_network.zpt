@@ -7,7 +7,7 @@
 				portals here/get_networkportals_list">
 <p i18n:translate="">
 	This page presents the list of portals that participate in your network.
-	This list will be used in the <a tal:attributes="href string:${site_url}/external_search_html">external search form</a> where users can choose
+	This list will be used in the <a tal:attributes="href string:${site_url}/external_search_html" i18n:name="external-search-form" i18n:translate="">external search form</a> where users can choose
 	to search on a subset of these sites.
 </p>
 <fieldset>

@@ -76,7 +76,7 @@
         <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_roles" tal:define="users python:acl_tool.getSortedUsersWithRoles(target_roles, skey, rkey)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
             <fieldset tal:condition="users">
-                <legend i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
+                <legend i18n:translate="">Step 2: Select one or more users, then click on <em i18n:name="Compose-message" i18n:translate="">Compose message</em></legend>
                 <table class="datatable" id="user_listing" tal:condition="users">
                     <thead>
                         <tr>
@@ -141,7 +141,7 @@
         </tal:block>
         <form action="send_mail_to_roles" method="post" tal:condition="mails">
 			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
-			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
+			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html" i18n:name="portal-properties-page" i18n:translate="">portal properties page</a>.
 			</div>
             <div class="field">
                 <label for="mail_subject" i18n:translate="">Subject</label>

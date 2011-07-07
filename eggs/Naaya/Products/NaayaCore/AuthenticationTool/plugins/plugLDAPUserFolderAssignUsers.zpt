@@ -97,7 +97,7 @@
 
 
     <div id="waiting_for_search_results" class="loader">
-        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt title" />
+        <img class="ajax-loader" src='misc_/Naaya/ajax-loader.gif' title="Loading" alt="Search results" i18n:attributes="alt; title" />
         <span i18n:translate="">&nbsp;Loading... please wait!</span>
     </div>
 
@@ -184,7 +184,7 @@
         <div class="tip cleaner" tal:condition="any_username_conflict|nothing">
             <p i18n:translate="">
 				<img src="misc_/Naaya/conflict_users.png" alt="Conflicting usernames" 
-				title="Conflicting usernames" i18n:attributes="alt title" i18n:name="image" /> local and LDAP accounts for the same username
+				title="Conflicting usernames" i18n:attributes="alt; title" i18n:name="image" /> local and LDAP accounts for the same username
             </p>
         </div>
         <tal:block tal:condition="python:len(ldap_users) > 10">
