@@ -194,3 +194,17 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+### Custom Naaya related handlers ###
+def skip_zope_related_members(app, what, name, obj, skip, options):
+    """
+    Currently skips security related methods added by ClassSecurityInfo.
+    See http://sphinx.pocoo.org/ext/autodoc.html#event-autodoc-skip-member
+
+    """
+    if name.endswith('__roles__'):
+        return True
+    return skip
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip_zope_related_members)
