@@ -171,7 +171,6 @@
 		</label></strong>
 		<br/><br/>
 		<select name="document_type:int" id="document_type">
-			<option value="-1" i18n:translate="">Please select</option>
 			<option tal:repeat="document_type document_types"
 					tal:attributes="value repeat/document_type/index;
 						selected python: repeat['document_type'].index == here.document_type"
