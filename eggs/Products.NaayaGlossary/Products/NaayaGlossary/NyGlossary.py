@@ -203,6 +203,17 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         try: catalog_obj.addColumn('summary')
         except: pass
 
+    security.declarePrivate('rebuildCatalog')
+    def rebuildCatalog(self):
+        if NAAYAGLOSSARY_CATALOG_NAME in self.objectIds():
+            self.manage_delObjects([NAAYAGLOSSARY_CATALOG_NAME])
+
+        self.addCatalog()
+        catalog = self.getGlossaryCatalog()
+
+        for item in self._walk_glossary_items():
+            catalog.catalog_object(item)
+
     def mapLocalizerLangs(self):
         """ """
         results = []
