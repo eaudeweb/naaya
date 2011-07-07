@@ -95,3 +95,8 @@ def register_naaya_content(_context, factory, **kwargs):
     # log success
     zLOG.LOG('naaya.content', zLOG.DEBUG, 'Pluggable module "%s" registered' % factory['meta_type'])
 
+def get_schema_name(portal, meta_type):
+    if meta_type == 'Naaya Folder':
+        return 'NyFolder'
+    else:
+        return portal.get_pluggable_item(meta_type)['schema_name']

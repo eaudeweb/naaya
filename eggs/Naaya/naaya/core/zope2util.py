@@ -174,6 +174,27 @@ class RestrictedToolkit(SimpleItem):
         """
         return simple_paginate(items, per_page)
 
+    def get_icon_for_object_index(self, ob):
+        """ Get URL of icon to display on object index page. """
+        from naaya.content.base.meta import get_schema_name
+        skin = self.getLayoutTool().getCurrentSkin()
+        name = get_schema_name(self.getSite(), ob.meta_type)
+        skin_icon = skin._getOb(name + '-icon', None)
+        skin_icon_marked = skin._getOb(name + '-icon-marked', None)
+
+        if not ob.approved and skin_icon_marked is not None:
+            return skin_icon_marked.absolute_url()
+
+        elif skin_icon is not None:
+            # even if object is unapproved, choose the customized icon
+            return skin_icon.absolute_url()
+
+        elif ob.approved:
+            return ob.icon
+
+        else:
+            return ob.icon_marked
+
 InitializeClass(RestrictedToolkit)
 
 
