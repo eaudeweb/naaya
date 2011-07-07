@@ -42,18 +42,18 @@
                             site_object_index python:here.getFormsTool()['site_object_index']">
                 <a class="b_download" tal:condition="here/showBulkDownloadButton|nothing"
                         tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
-                    <span i18n:translate="Bulk download"></span>
+                    <span i18n:translate="">Bulk download</span>
                 </a>
                 <metal:block use-macro="site_object_index/macros/icon"/>
                 <tal:block tal:replace="here/title_or_id" />
                 <tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()">
-                    [<tal:block i18n:translate="Limited access"/>]
+                    [<tal:block i18n:translate="">Limited access</tal:block>]
                 </tal:block>
                 <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
-                    [<tal:block i18n:translate="Restricted access"/>]
+                    [<tal:block i18n:translate="">Restricted access</tal:block>]
                 </tal:block>
                 <span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
-                    <span i18n:translate="Item only translated in"></span>
+                    <span i18n:translate="">Item only translated in</span>
                     <span tal:repeat="lang here/gl_get_languages_map">
                         <a tal:content="python:' %s' % lang['title']"
                             tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
@@ -74,7 +74,7 @@
 
             <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
             <tr tal:condition="here/interval">
-                <th i18n:translate="Period"></th>
+                <th i18n:translate="">Period</th>
                 <td>
 
                     <span tal:define="all_day here/interval/all_day;
@@ -86,7 +86,7 @@
             </tr>
            <tal:block condition="python:here.prop_details('geo_location')['show']">
             <tr tal:condition="here/geo_address">
-                <th i18n:translate="Address"></th>
+                <th i18n:translate="">Address</th>
                 <td>
                     <a href="javascript:toggleHideShow('map_parent_div')" tal:content="here/geo_address"/>
                 </td>
@@ -108,7 +108,7 @@
             <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
             picture python:portal_map.getSymbolPicture(here.geo_type)"
                 tal:condition="python: title != '' and here.geo_location">
-                    <th i18n:translate="Type"></th>
+                    <th i18n:translate="">Type</th>
                     <td>
                 <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
                 <span tal:replace="title" />
