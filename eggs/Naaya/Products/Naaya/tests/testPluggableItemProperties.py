@@ -1,38 +1,23 @@
-from unittest import TestSuite, makeSuite
-from Testing import ZopeTestCase
+from unittest import TestSuite
 
 from naaya.content.base import constants
 from Products.Naaya.NySite import NySite
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-class DummyTranslations(object):
-    def translate(self, arg1, msg):
-        return msg
 
-class DummyNySiteForPropCheck(NySite):
-    def __init__(self, attrs, session):
-        self.portal_translations = DummyTranslations()
-        self.attrs = attrs
-        self.session = session
-
-    def getSession(self, name, default):
-        return self.session.get(name, default)
-
-    def get_pluggable_content(self):
-        return {'Naaya Dummy': {'properties': self.attrs}}
-
-class PluggableItemPropertiesTestCase(ZopeTestCase.TestCase):
+class PluggableItemPropertiesTestCase(NaayaFunctionalTestCase):
     """ TestCase for NySite.check_pluggable_item_properties """
 
-    def afterSetUp(self):
-        return
-        self.orig_get_pluggable_content = NySite.get_pluggable_content
-
-    def beforeTearDown(self):
-        return
-        NySite.get_pluggable_content = self.orig_get_pluggable_content
-
     def do_check(self, schema, data, session={}):
-        site = DummyNySiteForPropCheck(schema, session=session)
+        site = self.portal
+        def get_pluggable_content():
+            return {'Naaya Dummy': {'properties': schema}}
+        def getSession(name, default):
+            return site.session.get(name, default)
+
+        site.get_pluggable_content = get_pluggable_content
+        site.session = session
+        site.getSession = getSession
         return site.check_pluggable_item_properties('Naaya Dummy', **data)
 
     def test_no_data(self):
@@ -87,8 +72,3 @@ class PluggableItemPropertiesTestCase(ZopeTestCase.TestCase):
         template = {'a1': (1, constants.MUST_BE_CAPTCHA, 'errmsg')}
         self.failUnlessEqual(self.do_check(template, {'a1': '123'}, session={'captcha': '123'}), [])
         self.failUnlessEqual(self.do_check(template, {'a1': 'asdf'}, session={'captcha': '123'}), ['errmsg'])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(PluggableItemPropertiesTestCase))
-    return suite
