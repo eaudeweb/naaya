@@ -14,20 +14,6 @@ def force_to_unicode(s):
     else:
         raise ValueError('expected `str` or `unicode`')
 
-def get_all_values(answer, widget_id):
-    ret = []
-
-    value = answer.get(widget_id, default=None)
-    if not isinstance(value, basestring):
-        if hasattr(value, 'items'):
-            for lang, lang_value in value.items():
-                if lang_value:
-                    ret.append(force_to_unicode(lang_value))
-    elif value:
-        ret.append(force_to_unicode(value))
-
-    return ret
-
 def get_all_values_with_lang(answer, widget_id):
     ret = {}
 
