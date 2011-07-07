@@ -20,9 +20,10 @@
     tal:define="virtual_library python:'tools/virtual_library/bibliography-details-each-assessment' in here.target_path;
 		review_template python:'tools/general_template/general-template' in here.target_path;
 		country_fiches python:'tools/country_fiches' in here.target_path;
-		cf_pair here/get_cf_pair;
 		is_entitled here/checkPermissionPublishObjects;
-		site here/getSite">
+        site here/getSite;
+        library_object site/tools/virtual_library/bibliography-details-each-assessment;
+        country_choices python: library_object['w_official-country-region'].getChoices();">
 	<link rel="stylesheet" type="text/css" media="all"
 			tal:define="target_answer here/target_answer;
 						survey target_answer/getSurveyTemplate"
@@ -38,76 +39,6 @@
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
     tal:condition="is_entitled">
-
-	<span tal:condition="python: virtual_library and not cf_pair" class="buttons">
-		<script>
-			function setCookies(vlid){
-				var vl_title_en = $('#w_assessment-name-en').text();
-				setCookie('vl_title_en', vl_title_en, 1);
-				var vl_title_ru = $('#w_assessment-name-ru').text();
-				setCookie('vl_title_ru', vl_title_ru, 1);
-				var vl_author_en = $('#w_body-conducting-assessment-en').text();
-				setCookie('vl_author_en', vl_author_en, 1);
-				var vl_author_ru = $('#w_body-conducting-assessment-ru').text();
-				setCookie('vl_author_ru', vl_author_ru, 1);
-				var vl_country = $('#w_official-country-region').text();
-				setCookie('vl_country', vl_country, 1);
-				var vl_year = $('#w_assessment-year').text();
-				setCookie('vl_year', vl_year, 1);
-				var vl_url = $('#w_assessment-url').text();
-				setCookie('vl_url', vl_url, 1);
-				var vl_themes = new Array();
-				$('#w_theme li').each(function(){
-					vl_themes.push($.trim($(this).text()));
-				});
-				for (i=0;i<4;i++){
-					deleteCookie('vl_theme_'+i);
-				};
-				if(vl_themes.length > 0){
-					for (i=0;i<vl_themes.length;i++){
-						setCookie('vl_theme_'+i, vl_themes[i], 1);
-					}
-				};
-				deleteCookie('cf_theme_water');
-				deleteCookie('cf_theme_ge');
-				deleteCookie('cf_country');
-				deleteCookie('cf_document');
-				setCookie('vl_vlid', vlid, 1);
-
-				function setCookie(c_name,value,expires){
-					// set time, it's in milliseconds
-					var today = new Date();
-					today.setTime( today.getTime() );
-					if ( expires ){
-						expires = expires * 1000 * 60 * 60 * 24;
-					}
-					var expires_date = new Date( today.getTime() + (expires) );
-					var path = '/';
-					document.cookie=c_name + "=" + escape(value) +
-						( ( expires ) ? ";expires=" + expires_date.toGMTString() : "" ) +
-						( ( path ) ? ";path=" + path : "" );
-				}
-				function deleteCookie(name){
-					path = '/'
-					document.cookie = name + "=" +
-						( ( path ) ? ";path=" + path : "") +
-						";expires=Thu, 01-Jan-1970 00:00:01 GMT";
-				}
-			}
-		</script>
-		<a id="export_to_cf" i18n:translate=""
-			tal:define="vlid here/id;
-			vlid_json python:here.rstk.json_dumps(vlid)"
-			tal:attributes="href python:here.getSite().tools.country_fiches.absolute_url();
-				onclick string:javascript:setCookies(${vlid_json})">
-				Export to Country Fiches
-		</a>
-	</span>
-	<span tal:condition="python: virtual_library and cf_pair" class="buttons">
-		<a i18n:translate="" target="_blank"
-		tal:attributes="href python:here.getSite().absolute_url() + '/tools/country_fiches/' + cf_pair">
-			Go to answer from the country fiches</a>
-	</span>
     <tal:block define="approved_date python:here.approved_date(here);
                 suggestions here/suggestions" condition="review_template">
 		<span tal:condition="approved_date" class="buttons">
@@ -163,14 +94,39 @@
 			</p>
 		</tal:block>
     </tal:block>
-	<form id="set_region" name="set_region" method="post" action=".">
+    <form id="set_region" name="set_region" method="post" action=".">
+
 		<p><strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong></p>
-		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
-			size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
-			<tal:block condition="here/library_id|nothing">
-				("<tal:block content="python:test(here.library_geo_coverage_country, here.library_geo_coverage_country, 'emtpy')"/>"
-				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
-			</tal:block>
+        <tal:block condition="review_template">
+            <input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
+                size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
+            <tal:block condition="here/library_id|nothing">
+            ("
+                <tal:block condition="here/library_geo_coverage_country"
+                    content="python:', '.join(country_choices[country] for country in here.library_geo_coverage_country)"/>
+                <tal:block condition="not: here/library_geo_coverage_country">emtpy</tal:block>
+            "
+                <a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+            </tal:block>
+        </tal:block>
+        <tal:block condition="virtual_library">
+            <select id="country_single_select">
+                <option value="" i18n:translate="">Please select</option>
+                <option tal:repeat="country country_choices"
+                    tal:attributes="value repeat/country/index" tal:content="country" />
+            </select>
+
+            <div tal:repeat="country country_choices" tal:attributes="
+                    id string:geo_coverage_country_top_${repeat/country/index};
+                    style python: test(repeat['country'].index in here.geo_coverage_country, 'display: block', 'display: none');">
+                <input type="checkbox" name="geo_coverage_country:list:int" tal:attributes="
+                        id string:geo_coverage_country_${repeat/country/index};
+                        checked python: repeat['country'].index in here.geo_coverage_country;
+                        value repeat/country/index;"
+                    />
+                <label tal:attributes="for string:geo_coverage_country_${repeat/country/index}" tal:content="country"/>
+            </div>
+        </tal:block>
 			<br/><br/>
 		<strong><label for="geo_coverage_region" i18n:translate="">Geo coverage: region</label></strong><br/><br/>
 		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
@@ -185,6 +141,22 @@
 </div>
 
 <tal:block content="structure here/render_answer" />
+
+<tal:block condition="virtual_library">
+<script tal:content="string:var country_list=${country_choices};"/>
+<script tal:condition="virtual_library">
+$('#country_single_select').change(function(){
+    country_index = $(this).val();
+    $('#geo_coverage_country_'+country_index).attr('checked', 'checked');
+    $('#geo_coverage_country_top_'+country_index).show();
+    $('#country_single_select').val('Please select');
+});
+$('input[name="geo_coverage_country:list:int"]').click(function() {
+    $(this).removeAttr('checked');
+    $(this).parent().hide();
+});
+</script>
+</tal:block>
 
 </metal:block>
 
