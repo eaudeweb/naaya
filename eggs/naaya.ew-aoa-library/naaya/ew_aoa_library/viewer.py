@@ -722,6 +722,13 @@ class AoALibraryViewer(SimpleItem):
                 return False
 
             if theme == 'Water':
+                if shadow.document_type not in self.water_document_types:
+                    return False
+            else: # theme == 'Green Economy'
+                if shadow.document_type not in self.ge_document_types:
+                    return False
+
+            if theme == 'Water':
                 check_themes = self.water_themes
             else: # theme == 'Green Economy'
                 check_themes = self.ge_themes
