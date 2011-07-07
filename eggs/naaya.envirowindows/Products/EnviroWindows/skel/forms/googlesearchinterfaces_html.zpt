@@ -4,7 +4,7 @@
 	<tal:block tal:condition="here/checkPermissionPublishObjects">
 		<tal:block metal:fill-slot="section">
 			<p i18n:translate="">
-				This page lists all the <em><strong>Google Search Interfaces</strong></em> installed in this portal.
+				This page lists all the <strong i18n:name="google-search-interfaces" i18n:translate="">Google Search Interfaces</strong> installed in this portal.
 			</p>
 			<table border="1" cellspacing="0" cellpadding="0">
 				<tr>
