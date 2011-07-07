@@ -142,6 +142,8 @@ def extract_survey_answer_data(answer):
                     extract_survey_answer_data_library,
                'bibliography-assessments-geo-5':
                     extract_survey_answer_data_library,
+               'country_fiches':
+                    extract_survey_answer_data_country_fiches,
                'general-template':
                     extract_survey_answer_data_general_template}
 
@@ -196,6 +198,21 @@ def extract_survey_answer_data_library(answer):
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
     attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', 0)
+
+    return attrs
+
+def extract_survey_answer_data_country_fiches(answer):
+    attrs =  {
+            'id': answer.getId(),
+            'title': answer.get('w_title'),
+            'geo_coverage_country': answer.get('w_country'),
+            'uploader': answer.get('w_author'),
+            'target_path': path_in_site(answer),
+            'theme': extract_multipleselect(answer, 'w_theme'),
+            'modification_time': answer.modification_time,
+            }
+
+    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document')
 
     return attrs
 
