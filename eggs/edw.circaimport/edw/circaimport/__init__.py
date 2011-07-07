@@ -170,14 +170,21 @@ def add_acls_from_circa_export(site, filepath):
             '3': 'Viewer',
             '4': 'Viewer'}
     def compute_roles_mapping(acls):
+        """
+        Computes the ROLES_MAPPING variable based on:
+        https://svn.eionet.europa.eu/projects/Zope/ticket/4095#comment:10
+
+        The last 2 roles are 'Anonymous' and 'Authenticated':
+            any other roles are added before those
+        """
         non_userids = []
         for values in acls.values():
             non_userids.extend([val for val in values if not val.endswith('@circa')])
         roles = [val[2:] for val in non_userids if val.startswith('__')]
         roles = list(set(roles)) # remove duplicates
-        roles = map(int, roles)
-        roles.append(6)
+        roles = map(int, roles) # convert to integers
         max_role = max(roles)
+        max_role = max(max_role, 6) # max role should be at least 6
 
         ROLES_MAPPING[str(max_role)] = 'Authenticated'
         ROLES_MAPPING[str(max_role - 1)] = 'Anonymous'
