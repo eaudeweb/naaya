@@ -219,7 +219,7 @@ class AoALibraryViewer(SimpleItem):
         "Liechtenstein",
         "Lithuania",
         "Luxembourg",
-        "FYR of Macedonia",
+        "Former Yugoslav Republic of Macedonia",
         "Malta",
         "Republic of Moldova",
         "Monaco",
@@ -291,7 +291,7 @@ class AoALibraryViewer(SimpleItem):
         "Liechtenstein",
         "Lithuania",
         "Luxembourg",
-        "FYR of Macedonia",
+        "Former Yugoslav Republic of Macedonia",
         "Malta",
         "Republic of Moldova",
         "Monaco",
@@ -367,7 +367,8 @@ class AoALibraryViewer(SimpleItem):
         mapping['the Czech Republic'] = mapping['Czech Republic']
         mapping['Germany.'] = mapping['Germany']
         mapping['Kosovo'] = mapping['Kosovo under un security council 1244/9950']
-        mapping['Former Yugoslav Republic of Macedonia'] = mapping['FYR of Macedonia']
+        mapping['FYR of Macedonia'] = mapping['Former Yugoslav Republic of Macedonia']
+
         mapping['Moldova'] = mapping['Republic of Moldova']
         mapping['Monako'] = mapping['Monaco']
         mapping['Netherlands'] = mapping['the Netherlands']
