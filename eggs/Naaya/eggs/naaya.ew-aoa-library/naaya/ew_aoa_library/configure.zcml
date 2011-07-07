@@ -1,4 +1,5 @@
 <configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:five="http://namespaces.zope.org/five">
 
   <five:registerPackage
@@ -8,5 +9,17 @@
 
   <subscriber handler=".viewer.survey_answer_created" />
   <subscriber handler=".viewer.survey_answer_removed" />
+
+  <browser:resourceDirectory
+    name="naaya.ew_aoa_library-www"
+    directory="www"
+    />
+
+  <adapter
+    for="Products.Naaya.interfaces.INySite"
+    provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
+    factory=".map_search.AoaSearchMapPortlet"
+    name="aoa_search_map"
+    />
 
 </configure>
