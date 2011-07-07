@@ -29,6 +29,9 @@ from Products.NaayaCore.managers.paginator import ObjectPaginator
 from naaya.core.utils import force_to_unicode, unescape_html_entities
 from naaya.core.zope2util import DT2dt, is_valid_email
 
+from lxml import etree
+from lxml.builder import ElementMaker
+
 #constants
 
 default_remove_words = [
@@ -1318,3 +1321,66 @@ class vcard_file:
 
     def get_size(self):
         return len(self.data)
+
+def get_nsmap(namespaces):
+    nsmap = {}
+    for n in namespaces:
+        if n.prefix != '':
+            nsmap[n.prefix] = n.value
+        else:
+            nsmap[None] = n.value
+    return nsmap
+
+def rss_item_for_channel(channel):
+    s = channel.getSite()
+    namespaces = channel.getNamespaceItemsList()
+    nsmap = get_nsmap(namespaces)
+    rdf_namespace = nsmap['rdf']
+    dc_namespace = nsmap['dc']
+    Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+    E = ElementMaker(None, nsmap=nsmap)
+    item = E.item(
+         {'{%s}about'%rdf_namespace : channel.absolute_url()},
+         E.link(channel.absolute_url()),
+         E.title(channel.title_or_id()),
+         E.description(channel.description),
+         E.title(channel.title_or_id()),
+         Dc.title(channel.title_or_id()),
+         Dc.description(channel.description),
+         Dc.contributor(channel.contributor),
+         Dc.language(channel.language),
+         Dc.creator(channel.creator),
+         Dc.publisher(channel.publisher),
+         Dc.rights(channel.rights),
+         Dc.type(channel.get_channeltype_title(channel.type)),
+         Dc.format('text/xml'),
+         Dc.source(channel.publisher)
+        )
+    return item
+
+def rss_channel_for_channel(channel, lang):
+    s = channel.getSite()
+    namespaces = channel.getNamespaceItemsList()
+    nsmap = get_nsmap(namespaces)
+    dc_namespace = nsmap['dc']
+    Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+    E = ElementMaker(None, nsmap=nsmap)
+    channel = E.channel(
+            E.title(channel.title),
+            E.link(s.absolute_url()),
+            E.description(channel.description),
+            Dc.description(channel.description),
+            Dc.identifier(s.absolute_url()),
+            Dc.date(channel.utShowFullDateTimeHTML(channel.utGetTodayDate())),
+            Dc.publisher(s.getLocalProperty('publisher', lang)),
+            Dc.creator(s.getLocalProperty('creator', lang)),
+            Dc.subject(s.getLocalProperty('site_title', lang)),
+            Dc.subject(s.getLocalProperty('site_subtitle', lang)),
+            Dc.language(lang),
+            Dc.rights(s.getLocalProperty('rights', lang)),
+            Dc.type(channel.type),
+            Dc.source(s.getLocalProperty('publisher', lang)),
+            Dc.items(),
+           about = s.absolute_url()
+          )
+    return channel
