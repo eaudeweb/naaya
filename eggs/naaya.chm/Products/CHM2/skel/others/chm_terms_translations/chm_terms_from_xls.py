@@ -4,6 +4,8 @@ from lxml.etree import tostring
 import xlrd
 import re
 from cStringIO import StringIO
+import json
+import collections
 
 log = logging.getLogger(__name__)
 
@@ -63,6 +65,7 @@ class Folder(Term):
 class Glossary(object):
     def __init__(self):
         self.folders = []
+        self.description = {}
 
     def append(self, folder):
         self.folders.append(folder)
@@ -175,6 +178,9 @@ def extract_data_from_xls(xls_path):
     glossary = Glossary()
     description_parser = None
 
+    glossary.description.update(get_translations(sh.row(2)))
+    glossary.description['en'] = val(sh.row(2)[3])
+
     for n in range(HEADING_ROW+1, sh.nrows-1):
         row = sh.row(n)
         theme_name = val(row[0])
@@ -256,6 +262,15 @@ def glossary_to_xml(glossary):
 
     return doc_xml
 
+def get_metadata(glossary):
+    return {
+        'languages': collections.OrderedDict(sorted(language_names.items())),
+        'properties': {
+            'parent_anchors': True,
+            'description': collections.OrderedDict(sorted(glossary.description.items())),
+        },
+    }
+
 def ny_glossary_load_languages(ny_glossary):
     for lang_code, language in language_names.iteritems():
         if language not in ny_glossary.get_english_names():
@@ -283,9 +298,16 @@ def do_import(ny_glossary, xls_path, autocommit=True):
         transaction.commit()
 
 
-if __name__ == '__main__':
+def main():
     import sys
     logging.basicConfig()
     glossary_data = extract_data_from_xls(sys.argv[1])
-    xml = glossary_to_xml(glossary_data)
-    sys.stdout.write(tostring(xml, pretty_print=True))
+    if len(sys.argv) > 2 and sys.argv[2] == 'metadata':
+        print json.dumps(get_metadata(glossary_data), indent=2)
+    else:
+        xml = glossary_to_xml(glossary_data)
+        sys.stdout.write(tostring(xml, pretty_print=True))
+
+
+if __name__ == '__main__':
+    main()
