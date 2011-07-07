@@ -14,7 +14,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 </style>
 <h1><em tal:content="python:here.agency" i18n:translate="" />'s answer to <em tal:content="python:here.getParentNode().title_or_id()" /></h1>
 <p><span i18n:translate="">This page lists the answers given by</span> <strong tal:content="python:here.agency" /> <span i18n:translate="">from</span> <strong tal:content="python:here.country" /> <span i18n:translate="">submitted by</span> <strong tal:content="python:here.survey_contributor" />.</p>
-<a tal:attributes="href python:here.getParentNode().manage_answers.absolute_url()" tal:content="string:View all answers for this survey." />
+<a tal:attributes="href python:here.getParentNode().absolute_url() + '/manage_answers'" tal:content="string:View all answers for this survey." />
 <br />
 <tal:block tal:define="drp_opt python:['Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']" >
 <table summary="">
