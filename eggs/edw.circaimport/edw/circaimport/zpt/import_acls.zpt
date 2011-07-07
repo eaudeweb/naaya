@@ -8,7 +8,7 @@
     </form>
     <tal:block condition="options/report|nothing">
     <h1>Report</h1>
-    <code><pre tal:content="options/report"></pre></code>
+    <code><pre tal:content="structure options/report"></pre></code>
     </tal:block>
   </metal:block>
 </metal:block>

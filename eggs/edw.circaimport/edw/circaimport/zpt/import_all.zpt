@@ -34,7 +34,7 @@
       <input type="submit" name="import" value="Import" />
     </form>
     <code tal:condition="options/report|nothing">
-        <pre tal:content="options/report"></pre>
+        <pre tal:content="structure options/report"></pre>
     </code>
   </metal:block>
 </metal:block>
