@@ -44,7 +44,7 @@
 
 <tal:block condition="python: selected_country is not None">
     <tal:block define="results python: here.aggregate_vl_cf_viewers(selected_country, selected_theme);
-                       document_type_names python: cf['w_type-document'].getChoices();">
+                       document_type_names here/document_types;">
 <table>
     <tal:block repeat="item results">
         <tal:block define="heading python: item[0];
