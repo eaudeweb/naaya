@@ -321,13 +321,15 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     manage_properties = PageTemplateFile('zpt/manage_properties', globals())
 
     security.declarePublic('index_html')
-    index_html = PageTemplateFile('zpt/month_events', globals())
+    index_html = NaayaPageTemplateFile('zpt/month_events',
+                                       globals(), 'calendar_listing')
 
     security.declarePublic('day_events')
     day_events = PageTemplateFile('zpt/day_events', globals())
 
     security.declarePublic('show_calendar')
-    show_calendar = PageTemplateFile('zpt/index', globals())
+    show_calendar = NaayaPageTemplateFile('zpt/index',
+                                        globals(), 'calendar_box')
 
     security.declarePublic('calendar_style')
     calendar_style = NaayaPageTemplateFile('zpt/style_css',
