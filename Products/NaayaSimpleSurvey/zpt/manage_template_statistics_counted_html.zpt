@@ -92,7 +92,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 <div class="cleaner"> </div>
 
 <table summary="">
-	<caption>1. Safeguard the EU’s most important habitats and species</caption>
+	<caption>1. Safeguard the EU&#x2019;s most important habitats and species</caption>
 	<colgroup span="1" class="column1" />
 	<colgroup span="1" class="column2" />
 	<colgroup span="1" class="column3" />
@@ -553,7 +553,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 	<tbody>
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
-			<td>Implement ‘Countdown 2010’ initiative.</td>
+			<td>Implement &#x2018;Countdown 2010&#x2019; initiative.</td>
 			<td tal:repeat="header table_header" class="results">
 				<tal:block replace="python:here.count_attr_value(atr, table_mapping.get(header, header))" />
 			</td>
