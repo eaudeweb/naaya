@@ -13,7 +13,8 @@
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf">
 			<a tal:attributes="href item/absolute_url">
-				<img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" alt="" />
+				<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+				     tal:attributes="src icon/url; title icon/title; alt icon/title" />
 				<tal:block content="item/title_or_id" />
 			</a>
 			<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(item.releasedate)"/>]</span>
