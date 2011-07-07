@@ -722,7 +722,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def searchGlossary(self, query='', size=10000, language='English', definition='*', REQUEST=None):
         """ search glossary """
         if not size: size = 10000
-        results = self.cu_search_catalog([NAAYAGLOSSARY_ELEMENT_METATYPE], query, size, language, definition)
+        meta_types = [NAAYAGLOSSARY_ELEMENT_METATYPE]
+        if self.parent_anchors:
+            meta_types += [NAAYAGLOSSARY_FOLDER_METATYPE]
+        results = self.cu_search_catalog(meta_types, query, size, language, definition)
         return (language, query, results)
 
     def folder_list_sorted(self):
