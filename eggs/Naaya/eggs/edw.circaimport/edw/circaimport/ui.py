@@ -10,13 +10,14 @@ from edw.circaimport import (work_in_zope, add_roles_from_circa_export,
 
 upload_prefix = None
 
-import_all_zpt = PageTemplateFile('import_all.zpt', globals())
-import_files_zpt = PageTemplateFile('import_files.zpt', globals())
-import_files_result_zpt = PageTemplateFile('import_files_result.zpt', globals())
-import_roles_zpt = PageTemplateFile('import_roles.zpt', globals())
-import_notifications_zpt = PageTemplateFile('import_notifications.zpt',
+import_all_zpt = PageTemplateFile('zpt/import_all.zpt', globals())
+import_files_zpt = PageTemplateFile('zpt/import_files.zpt', globals())
+import_files_result_zpt = PageTemplateFile('zpt/import_files_result.zpt',
                                         globals())
-import_acls_zpt = PageTemplateFile('import_acls.zpt', globals())
+import_roles_zpt = PageTemplateFile('zpt/import_roles.zpt', globals())
+import_notifications_zpt = PageTemplateFile('zpt/import_notifications.zpt',
+                                        globals())
+import_acls_zpt = PageTemplateFile('zpt/import_acls.zpt', globals())
 
 class ImportAllFromCirca(BrowserPage):
     def __call__(self):
