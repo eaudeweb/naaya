@@ -41,3 +41,9 @@
   </div>
   </tal:block>
 </metal:block>
+
+<metal:block define-macro="icon">
+<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+                     title here/get_meta_label;
+                     alt here/get_meta_label" />
+</metal:block>

@@ -6,10 +6,7 @@
     </div>
     <br />
     <h1>
-        <img tal:attributes="
-            src python:test(here.approved, here.icon, here.icon_marked);
-            title here/get_meta_label;
-            alt here/get_meta_label" />
+        <metal:block use-macro="site_object_index/macros/icon"/>
         <tal:block tal:replace="here/title_or_id" />
         <tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
             [Limited access]
