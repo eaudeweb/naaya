@@ -2,11 +2,10 @@ $(function() {
   $('#description').val($('#description').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
   $('#year').val($('#year').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
 
-
   $('input.input-text').each(function(){
       $(this).focus(function(){
         if( $(this).val() == $(this).attr('placeholder') ){
-          $(this).val('').css({'color': '#000000', 'font-style': 'normal'});;
+          $(this).val('').css({'color': '#000000', 'font-style': 'normal'});
         }
       });
 
@@ -51,9 +50,17 @@ function perform_search(form_data) {
     update_document_list(results['documents']);
     //update_polygon_numbers(results['documents']);
   });
-  $('.loading-animation').fadeOut();
-  if($('#results').is(':visible') == false){
+
+  $('.loading-animation').fadeOut('fast', toggle_results_list('show'));
+}
+
+function toggle_results_list(action){
+  if( ($('#results').is(':visible') === false) && (action === 'show') ){
     $("#results").show("slide", { direction: "left" }, 500);
+  }else {
+    if( ($('#results').is(':visible') === true) && (action === 'hide') ){
+      $("#results").hide("slide", { direction: "left" }, 500);
+    }
   }
 }
 
@@ -114,10 +121,19 @@ function update_polygon_numbers(documents) {
 }
 
 function show_document(doc) {
-  var html = template['document-info'].tmpl(doc)
+  var html = template['document-info'].tmpl(doc);
   var dialog = $('div#document-info').empty().append(html).dialog({
+    title: doc.title,
+    resizable: false,
+    maxHeight: 600,
+    width: 600,
     modal: true,
-    zIndex: 1100
+    zIndex: 1100,
+    buttons: {
+      "Close": function(){
+        $(this).dialog("close");
+      }
+    }
   });
 }
 
