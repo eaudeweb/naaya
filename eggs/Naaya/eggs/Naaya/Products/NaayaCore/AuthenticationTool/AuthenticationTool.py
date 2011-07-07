@@ -7,11 +7,9 @@ user roles, role permissions and searching.
 
 import re
 import time
-import string
-from copy import copy, deepcopy
+from copy import copy
 from StringIO import StringIO
 import csv
-import simplejson as json
 from warnings import warn
 
 from App.ImageFile import ImageFile
@@ -20,13 +18,10 @@ from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
 from AccessControl import ClassSecurityInfo
 from AccessControl.User import BasicUserFolder
-from AccessControl.User import SpecialUser, SimpleUser
-from AccessControl.Permissions import view_management_screens, view,\
-                                    manage_users
+from AccessControl.User import SimpleUser
+from AccessControl.Permissions import view, manage_users
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from DateTime import DateTime
-from zope.event import notify
 from persistent.list import PersistentList
 
 from naaya.core.utils import is_ajax, render_macro, force_to_unicode
@@ -40,10 +35,7 @@ from plugins_tool import plugins_tool
 from User import User
 from Role import Role
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaBase.events import NyAddUserRoleEvent, NySetUserRoleEvent,\
-                                        NyDelUserRoleEvent
 from Products.NaayaBase.interfaces import IRoleLogger
-from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils import is_valid_email, UnicodeReader
 from Products.NaayaCore.managers.import_export import set_response_attachment
 
@@ -212,26 +204,30 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return text
 
     security.declarePrivate('_doAddUser')
-    def _doAddUser(self, name, password, roles, domains, firstname, lastname, email, **kw):
+    def _doAddUser(self, name, password, roles, domains, firstname, lastname,
+                    email, **kw):
         """Create a new user. The 'password' will be the
            original input password, unencrypted. This
            method is responsible for performing any needed encryption."""
 
         if password is not None and self.encrypt_passwords:
             password = self._encryptPassword(password)
-        self.data[name] = User(name, password, roles, domains, firstname, lastname, email)
+        self.data[name] = User(name, password, roles, domains, firstname,
+                    lastname, email)
         self._p_changed = 1
         return name
 
     security.declarePrivate('_doChangeUser')
-    def _doChangeUser(self, name, password, roles, domains, firstname, lastname, email, lastupdated, **kw):
+    def _doChangeUser(self, name, password, roles, domains, firstname,
+                lastname, email, lastupdated, **kw):
         """Modify an existing user. The 'password' will be the
            original input password, unencrypted. The implementation of this
            method is responsible for performing any needed encryption."""
 
         user=self.data[name]
         if password is not None:
-            if self.encrypt_passwords and not self._isPasswordEncrypted(password):
+            if (self.encrypt_passwords and
+                not self._isPasswordEncrypted(password)):
                 password = self._encryptPassword(password)
             user.__ = password
         user.setRoles(self.getSite(), roles)
@@ -318,8 +314,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return res
 
     security.declareProtected(manage_users, 'manage_addUser')
-    def manage_addUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
-        lastname='', email='', strict=0, REQUEST=None, **kwargs):
+    def manage_addUser(self, name='', password='', confirm='', roles=[],
+                domains=[], firstname='', lastname='', email='', strict=0,
+                REQUEST=None, **kwargs):
         """ """
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
@@ -328,8 +325,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if not check_username(name):
             raise ValidationError, 'Username: only letters and numbers allowed'
         if captcha_prov_word != captcha_gen_word:
-            raise ValidationError, 'The word you typed does not match with the '
-            'one shown in the image. Please try again.'
+            raise ValidationError, 'The word you typed does not match with the'
+            ' one shown in the image. Please try again.'
         if not firstname:
             raise ValidationError, 'The first name must be specified'
         if not lastname:
@@ -384,8 +381,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return user
 
     security.declareProtected(manage_users, 'manage_changeUser')
-    def manage_changeUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
-        lastname='', email='', REQUEST=None):
+    def manage_changeUser(self, name='', password='', confirm='', roles=[],
+                          domains=[], firstname='', lastname='', email='',
+                          REQUEST=None):
         """ """
         user_ob = self.getUser(name)
         email = email.strip()
@@ -406,8 +404,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             for n in users:
                 us = self.getUser(n)
                 if email == us.email:
-                    raise i18n_exception(ValidationError, 'A user with the specified email '
-                        'already exists, username ${user}', user=n)
+                    raise i18n_exception(ValidationError,
+                        'A user with the specified email already exists, '
+                        'username ${user}', user=n)
         if not name:
             raise ValidationError, 'A username must be specified'
         if not self.getUser(name):
@@ -487,13 +486,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         Returns information about all the users' roles inside the given path.
         """
         users_roles = {}
-        for folder in self.getCatalogedObjects(meta_type=[METATYPE_FOLDER,'Folder'], has_local_role=1, path=path):
+        for folder in self.getCatalogedObjects(
+                meta_type=[METATYPE_FOLDER,'Folder'],
+                has_local_role=1, path=path):
             for roles_tuple in folder.get_local_roles():
                 local_roles = self.getLocalRoles(roles_tuple[1])
                 if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
                     if not users_roles.has_key(str(roles_tuple[0])):
                         users_roles[str(roles_tuple[0])] = []
-                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+                    users_roles[str(roles_tuple[0])].append(
+                            (local_roles, folder.absolute_url(1)))
         return users_roles
 
     security.declareProtected(manage_users, 'search_users')
@@ -554,7 +556,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         dummy = DummyUser(name=name,
                                 firstname=full_name.split(' ')[0],
                                 lastname=u''.join(full_name.split(' ')[1:]),
-                                email=user_source.getUserEmail(name, user_folder),
+                                email=user_source.getUserEmail(name,
+                                    user_folder),
                                 roles=role)
                         dummy_users.append(dummy)
             user_objects.extend(dummy_users)
@@ -573,7 +576,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if REQUEST is not None and is_ajax(REQUEST):
             template = form_data.get('template', '')
             try:
-                return render_macro(self.getSite(), template, 'datatable', skey=skey,
+                return render_macro(self.getSite(), template, 'datatable',
+                    skey=skey,
                     rkey=rkey, all_users_objects=users,
                     users=users[(page*per_page):(page * per_page + per_page)],
                     per_page=per_page, site_url=self.getSitePath(),
@@ -596,9 +600,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             users = []
             users_a = users.append
             for user in self.getUsers():
-                if user.name.find(self.utToUtf8(query))!=-1 or user.email.find(self.utToUtf8(query))!=-1 or \
-                        user.firstname.find(self.utToUtf8(query))!=-1 or user.lastname.find(self.utToUtf8(query))!=-1:
-                    users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email))
+                if (user.name.find(self.utToUtf8(query))!=-1 or
+                    user.email.find(self.utToUtf8(query))!=-1 or
+                    user.firstname.find(self.utToUtf8(query))!=-1 or
+                    user.lastname.find(self.utToUtf8(query))!=-1
+                ):
+                    users_a((user.name, '%s %s' % (
+                        user.firstname, user.lastname), user.email))
             if limit and len(users) > int(limit):
                 return 0, []
             else:
@@ -672,7 +680,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             if x in userroles:
                 userroles.remove(x)
         if len(userroles): ra((userroles, ''))
-        folders = self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1)
+        folders = self.getCatalogedObjects(meta_type=p_meta_types,
+                    has_local_role=1)
         folders.insert(0, self.getSite())
         for folder in folders:
             for roles_tuple in folder.get_local_roles():
@@ -701,9 +710,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         list_roles = self.getAuthenticatedUserRoles()
         for roles, path in list_roles:
-            if (('Manager' in roles) or ('Administrator' in roles)) and path == '':
+            if ((('Manager' in roles) or ('Administrator' in roles)) and
+                    path == ''):
                 return True
-            elif (('Manager' in roles) or ('Administrator' in roles)) and path == path:
+            elif ((('Manager' in roles) or ('Administrator' in roles)) and
+                    path == path):
                 return True
         return False
 
@@ -721,7 +732,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             user = self.getUser(username)
             users_roles[username] = [(self.getUserRoles(user), '')]
 
-        for folder in self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1):
+        for folder in self.getCatalogedObjects(meta_type=p_meta_types,
+                has_local_role=1):
             for roles_tuple in folder.get_local_roles():
                 local_roles = self.getLocalRoles(roles_tuple[1])
                 if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
@@ -736,7 +748,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         users = {}
         for k, v in self.getUsersRoles().items():
-            if (len(v) > 1 and len(v[1][0]) > 0) or (len(v) == 1 and len(v[0][0]) > 0):
+            if ((len(v) > 1 and len(v[1][0]) > 0) or
+                (len(v) == 1 and len(v[0][0]) > 0)):
                 users[k] = v
         return users
 
@@ -764,7 +777,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                 if set(location[0]).intersection(set(roles)):
                     if user_id not in local_result.keys():
                         user_obj = self.getUser(user_id)
-                        user_name = "%s %s" % (self.getUserFirstName(user_obj), self.getUserLastName(user_obj))
+                        user_name = "%s %s" % (self.getUserFirstName(user_obj),
+                                self.getUserLastName(user_obj))
                         user_email = self.getUserEmail(user_obj)
                         local_result[user_id] = {
                             'name': handle_unicode(user_name),
@@ -784,7 +798,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if set(user_role[0]).intersection(set(roles)):
                         user_id = user[0]
                         user_name = user[1]
-                        user_email = source_obj.getUserEmail(user_id, source_obj.getUserFolder())
+                        user_email = source_obj.getUserEmail(user_id,
+                                source_obj.getUserFolder())
                         external_users[user_id] = {
                             'name': handle_unicode(user_name),
                             'email': user_email
@@ -1021,7 +1036,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # check ldap users and groups
         for source in self.getSources():
             # users
-            portal_roles = source.getUsersRoles(source.getUserFolder()).get(uid, [])
+            portal_roles = source.getUsersRoles(
+                    source.getUserFolder()).get(uid, [])
             if portal_roles:
                 for role, location in portal_roles:
                     if location == self.getSite().absolute_url(1):
@@ -1160,7 +1176,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ """
         return self.checkPermissionPublishObjects()
 
-    def makeRolesString(self, roles, path='', date=None, user_granting_roles=None, from_group=None):
+    def makeRolesString(self, roles, path='', date=None,
+            user_granting_roles=None, from_group=None):
         filtered_roles = self.getLocalRoles(roles)
         if filtered_roles == []:
             return None
