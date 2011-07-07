@@ -137,6 +137,12 @@ class NaayaHttpThread(Thread):
 class SeleniumTestCase(NaayaTestCase):
     _selenium_page_timeout = "5000"
 
+    def run(self, result=None):
+        if not hasattr(self, 'selenium'):
+            from nose import SkipTest
+            raise SkipTest("%s needs selenium" % type(self))
+        super(SeleniumTestCase, self).run(result)
+
     def login_user(self, user, password):
         self.selenium.open("/portal/login_html", True)
         self.selenium.wait_for_page_to_load(self._selenium_page_timeout)
