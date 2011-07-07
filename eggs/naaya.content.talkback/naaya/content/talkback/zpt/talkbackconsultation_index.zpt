@@ -145,7 +145,7 @@
 </form>
 
 <p tal:condition="python:not here.list_sections() and here.checkPermissionManageTalkBackConsultation()" i18n:translate="">You have not added any sections to this consultation yet.
-You can add a section by clicking on the <em>Add Section</em> link on the top bar.</p>
+You can add a section by clicking on the <em i18n:name="add-section" i18n:translate="">Add Section</em> link on the top bar.</p>
 
 <p tal:condition="python:not here.list_sections() and not here.checkPermissionManageTalkBackConsultation()" i18n:translate="">
 	No sections have yet been added to this consultation. Please try again at a later time.
