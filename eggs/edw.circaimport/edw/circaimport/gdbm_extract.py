@@ -8,8 +8,9 @@ def gdbm2csv(dbpath, csvpath):
     csv_file = open(csvpath, 'wb')
     writer = csv.writer(csv_file)
     for k in db.keys():
+        if not db[k]:
+            continue
         values = [val.strip(')|(') for val in db[k].split(')|(')]
-        values = [val.split(':')[0] for val in values]
         row = [k] + values
         writer.writerow(row)
     db.close()
