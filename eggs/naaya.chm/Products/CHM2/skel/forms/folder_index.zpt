@@ -61,10 +61,10 @@
 	</metal:block>
 	<div class="folder-feeds" metal:define-slot="folder-feeds">
 		<a tal:attributes="href string:${here/absolute_url}/index_rdf">
-			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt title" />
+			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
 		</a>
 		<a tal:attributes="href string:${here/absolute_url}/index_atom">
-			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
+			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
 		</a>
 	</div>
 
