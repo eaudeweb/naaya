@@ -176,6 +176,7 @@ class AoALibraryViewer(SimpleItem):
     def _update_vl_countries(self, state, library):
         country_list = [
         "Albania",
+        "Andorra",
         "Armenia",
         "Austria",
         "Azerbaijan",
@@ -206,6 +207,7 @@ class AoALibraryViewer(SimpleItem):
         "FYR of Macedonia",
         "Malta",
         "Republic of Moldova",
+        "Monaco",
         "Montenegro",
         "the Netherlands",
         "Norway",
@@ -213,6 +215,7 @@ class AoALibraryViewer(SimpleItem):
         "Portugal",
         "Romania",
         "Russian Federation",
+        "San Marino",
         "Serbia",
         "Slovakia",
         "Slovenia",
@@ -248,7 +251,6 @@ class AoALibraryViewer(SimpleItem):
         "Lebanon",
         "Libya",
         "Mauritius",
-        "Monaco",
         "Morocco",
         "Nepal",
         "Nigeria",
@@ -623,13 +625,30 @@ class AoALibraryViewer(SimpleItem):
                 themes=themes, topics=topics, and_or=and_or)
 
     security.declareProtected(view, 'filter_answers_cf_vl_aggregator')
-    def filter_answers_cf_vl_aggregator(self, country):
+    def filter_answers_cf_vl_aggregator(self, country, theme):
         """ Filter answers for cf and vl agregator """
         def respects_filter(shadow):
             if country not in shadow.geo_coverage_country:
                 return False
             if shadow.document_type == 0:
                 return False
+
+            if theme == 'Water':
+                check_themes = ['Water', 'Water resources', 'Water resource management', 'Водные ресурсы', 'Управление водными ресурсами']
+            else: # theme == 'Green Economy'
+                check_themes = ['Green Economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов']
+            if isinstance(shadow.theme, list):
+                for t in shadow.theme:
+                    if t in check_themes:
+                        break
+                else:
+                    return False
+            else:
+                if shadow.theme not in check_themes:
+                    return False
+
+            if hasattr(shadow.aq_base, 'approved'):
+                return shadow.approved
             return True
         return filter(respects_filter, self.iter_assessments())
 
