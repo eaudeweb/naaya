@@ -1,0 +1,60 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block fill-slot="body"
+    tal:define="selected_country python:request.get('country', None);
+                selected_theme python:request.get('theme', None);
+                site here/getSite;
+                lang site/get_selected_language;
+                cf_viewer python: site['country-fiches-viewer'];
+                cf cf_viewer/target_survey;">
+
+<form action="." method="post">
+    <label for="country_select" style="color: #468966; font-weight: bold;" i18n:translate="">
+        Name of the country:
+    </label>
+    <select name="country:int" id="country_select">
+        <option tal:repeat="country python: cf['w_country'].getChoices()"
+             tal:attributes="value repeat/country/index;
+                 selected python: selected_country == repeat['country'].index;"
+             tal:content="country" i18n:translate=""/>
+    </select>
+    <br/>
+    <br/>
+    <label for="theme_select" style="color: #468966; font-weight: bold;" i18n:translate="">
+        Theme:
+    </label>
+    <select name="theme" id="theme_select">
+        <option value="Water"
+            tal:attributes="selected python: selected_theme == 'Water'"
+            i18n:translate="">Water</option>
+        <option value="Green Economy"
+            tal:attributes="selected python: selected_theme == 'Green Economy'"
+            i18n:translate="">Green Economy</option>
+    </select>
+    <br/>
+    <br/>
+    <input type="submit" value="Search"/>
+</form>
+
+<br/><br/>
+<br/><br/>
+
+<table condition="python: selected_country is not None">
+    <tal:block define="results python: here.aggregate_vl_cf_viewers(selected_country, selected_theme);
+                       document_types python: cf['w_type-document'].getChoices();">
+    <tr tal:repeat="item results/items">
+        <td tal:content="python: document_types[item[0]]"
+            valign="top" style="color: #00B050;"/>
+        <td><ul style="list-style-type: none">
+            <li tal:repeat="shadow python: item[1]">
+                <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}"
+                    tal:content="python: shadow.getLocalProperty('title', lang)"></a>
+                <span tal:content="shadow/publication_year|nothing"/>
+                <!--<a tal:attributes="href shadow/absolute_url" tal:content="shadow/title_or_id"></a>-->
+            </li>
+        </ul></td>
+    </tr>
+    </tal:block>
+</table>
+
+</metal:block>
+</metal:block>
