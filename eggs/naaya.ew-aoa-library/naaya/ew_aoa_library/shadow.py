@@ -428,7 +428,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         else:
             setattr(survey_answer, 'w_type-document', document_type)
 
-        setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country'))
+        setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country', []))
         setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
