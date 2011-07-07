@@ -21,29 +21,29 @@ function toggleSelect(checkbox, form_name, name) {
         users python:here.getAttendees(sort_on)">
     <tr>
         <th width="30px" tal:condition="meeting/checkPermissionChangePermissions">
-            <span i18n:translate="Select"></span>
+            <span i18n:translate="">Select</span>
             <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, '${form_name}', '${input_name}')"/>
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=name"
-                 i18n:translate="Name"></a>
+                 i18n:translate="">Name</a>
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=email"
-                 i18n:translate="Email"></a>
+                 i18n:translate="">Email</a>
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=o"
-                 i18n:translate="Organization"></a>
+                 i18n:translate="">Organization</a>
         </th>
-        <th><span i18n:translate="Phone number"></span></th>
+        <th><span i18n:translate="">Phone number</span></th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=uid"
-                 i18n:translate="User ID"></a>
+                 i18n:translate="">User ID</a>
         </th>
         <th>
             <a tal:attributes="href string:${request/ACTUAL_URL}?sort_on=role"
-                i18n:translate="Status"></a>
+                i18n:translate="">Status</a>
         </th>
     </tr>
     <tr tal:repeat="user users"

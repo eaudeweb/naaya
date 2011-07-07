@@ -24,20 +24,20 @@
 
     <div class="floated-buttons">
         <span class="buttons">
-            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
         </span>
     </div>
 
-    <p i18n:translate="This page allows the administrators to send emails to the participants of the meeting. The meeting contact email is used as default for the sender address."></p>
+    <p i18n:translate="">This page allows the administrators to send emails to the participants of the meeting. The meeting contact email is used as default for the sender address.</p>
 
     <form method="post" action="send_email" name="formSendEmail">
         <div class="field">
-            <label class="widget-title" for="from_email" i18n:translate="From: "></label>
+            <label class="widget-title" for="from_email" i18n:translate="">From:</label>
             <input type="text" name="from_email:utf8:ustring" id="from_email" size="50"
                 tal:attributes="value meeting/contact_email"/>
         </div>
         <div class="field">
-            <label class="widget-title" i18n:translate="To: "></label>
+            <label class="widget-title" i18n:translate="">To:</label>
             <a id="show_hide_attendees" href="javascript:toggleHideShow('show_hide_attendees', 'attendees_table')">Hide recipients</a>
 
             <div id="attendees_table">
@@ -45,11 +45,11 @@
             </div>
         </div>
         <div class="field">
-            <label class="widget-title" for="subject" i18n:translate="Subject: "></label>
+            <label class="widget-title" for="subject" i18n:translate="">Subject:</label>
             <input type="text" name="subject:utf8:ustring" id="subject" size="50"/>
         </div>
         <div class="field">
-            <label class="widget-title" for="body_text" i18n:translate="Body: "></label>
+            <label class="widget-title" for="body_text" i18n:translate="">Body:</label>
             <textarea name="body_text:utf8:ustring" id="body_text" cols="50" rows="10"></textarea>
         </div>
         <input type="submit" name="send_email" value="Send newsletter"/>

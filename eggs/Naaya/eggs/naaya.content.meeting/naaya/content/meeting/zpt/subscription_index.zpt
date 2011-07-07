@@ -29,10 +29,10 @@
 
     <div class="floated-buttons">
         <span class="buttons">
-            <a tal:attributes="href meeting/participants/absolute_url" i18n:translate="Participants management"></a>
+            <a tal:attributes="href meeting/participants/absolute_url" i18n:translate="">Participants management</a>
         </span>
         <span class="buttons">
-            <a tal:attributes="href meeting/absolute_url" i18n:translate="Back to index"></a>
+            <a tal:attributes="href meeting/absolute_url" i18n:translate="">Back to index</a>
         </span>
     </div>
 
@@ -41,28 +41,28 @@
     </p>
 
     <fieldset>
-        <legend i18n:translate="List of signups"></legend>
+        <legend i18n:translate="">List of signups</legend>
         <form method="post" action="manageSignups" name="formManageSignups">
             <table class="datatable" width="95%">
                 <tr>
                     <th width="30px">
-                        <span i18n:translate="Select"></span>
+                        <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageSignups', 'keys:list')"/>
                     </th>
                     <th>
-                        <span i18n:translate="Name"></span>
+                        <span i18n:translate="">Name</span>
                     </th>
                     <th>
-                        <span i18n:translate="Email"></span>
+                        <span i18n:translate="">Email</span>
                     </th>
                     <th>
-                        <span i18n:translate="Organization"></span>
+                        <span i18n:translate="">Organization</span>
                     </th>
                     <th>
-                        <span i18n:translate="Phone number"></span>
+                        <span i18n:translate="">Phone number</span>
                     </th>
                     <th>
-                        <span i18n:translate="Status"></span>
+                        <span i18n:translate="">Status</span>
                     </th>
                 </tr>
                 <tr tal:repeat="signup here/getSignups">
@@ -89,28 +89,28 @@
     </fieldset>
 
     <fieldset>
-        <legend i18n:translate="List of account subscriptions"></legend>
+        <legend i18n:translate">="List of account subscriptions</legend>
         <form method="post" action="manageAccountSubscriptions" name="formManageAccountSubscriptions">
             <table class="datatable" width="95%">
                 <tr>
                     <th width="30px">
-                        <span i18n:translate="Select"></span>
+                        <span i18n:translate="">Select</span>
                         <input type="checkbox" tal:attributes="onclick string:javascript:toggleSelect(this, 'formManageAccountSubscriptions', 'uids:list')"/>
                     </th>
                     <th>
-                        <span i18n:translate="Name"></span>
+                        <span i18n:translate="">Name</span>
                     </th>
                     <th>
-                        <span i18n:translate="Email"></span>
+                        <span i18n:translate="">Email</span>
                     </th>
                     <th>
-                        <span i18n:translate="Organization"></span>
+                        <span i18n:translate="">Organization</span>
                     </th>
                     <th>
-                        <span i18n:translate="Phone number"></span>
+                        <span i18n:translate="">Phone number</span>
                     </th>
                     <th>
-                        <span i18n:translate="Status"></span>
+                        <span i18n:translate="">Status</span>
                     </th>
                 </tr>
                 <tr tal:repeat="account_subscription here/getAccountSubscriptions">
