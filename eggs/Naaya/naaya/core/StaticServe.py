@@ -48,7 +48,7 @@ class StaticServeFromZip(object):
 
         try:
             data = zf.read(self._path)
-            content_type, content_encoding = mimetypes.guess_type(filepath)
+            content_type, content_encoding = mimetypes.guess_type(self._path)
             if content_type:
                 REQUEST.RESPONSE.setHeader('content-type', content_type)
                 REQUEST.RESPONSE.setHeader('Cache-Control', 'max-age=31556926')
