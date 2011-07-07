@@ -25,12 +25,15 @@ $(document).ready(function(){
         }
         localStorage.form = '';
     });
+    /**
+    This is not good enough to work
     $(':input').change(function(){
         localStorage.form = $(this).parents('form').serialize();
     });
     if (localStorage.form){
         unserialize(localStorage.form);
     }
+    **/
     //Create links
     $('body pre').html(Linkify($('body pre').html()));
 });
