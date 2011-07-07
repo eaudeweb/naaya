@@ -85,6 +85,14 @@ def capture_events(*required):
 class NaayaTestCase(unittest.TestCase):
 
     _naaya_plugin = 'NaayaPortalTestPlugin'
+    _naaya_test_enabled = False
+
+    def run(self, result=None):
+        if self._naaya_test_enabled:
+            super(NaayaTestCase, self).run(result)
+        else:
+            from nose import SkipTest
+            raise SkipTest("NaayaPortalTestPlugin needed for %s" % type(self))
 
     def setUp(self):
         #Cleanup all action logs before starting
@@ -269,6 +277,8 @@ class NaayaPortalTestPlugin(Plugin):
             the_test.fake_request = fake_root.REQUEST
 
             self.cleanup_test_layer = cleanup
+
+            the_test._naaya_test_enabled = True
 
     def afterTest(self, test):
         if getattr(test.test, '_naaya_plugin', None) == self.__class__.__name__:
