@@ -15,13 +15,8 @@ class NyContentTypeViewAdapter(object):
         return ""
 
     def get_icon(self):
-        if self.ob.approved:
-            url = self.ob.icon
-        else:
-            url = self.ob.icon_marked
-
         return {
-            'url': url,
+            'url': self.ob.rstk.get_icon_for_object_index(self.ob),
             'title': self.ob.get_meta_label(),
         }
 
