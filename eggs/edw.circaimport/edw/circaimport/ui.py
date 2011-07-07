@@ -29,8 +29,24 @@ def init_log_stream():
     log = StringIO()
     handler = logging.StreamHandler(log)
     handler.setLevel(logging.DEBUG)
+    handler.setFormatter(UIFormatter())
     logger.addHandler(handler)
     return log
+
+class UIFormatter(logging.Formatter):
+    color_codes = {
+            'DEBUG': 'blue',
+            'INFO': 'green',
+            'WARNING': 'orange',
+            'ERROR': 'orangered',
+            'CRITICAL': 'red'
+            }
+    html = """<span style="color: %s">%s: %s</span>"""
+    def format(self, record):
+        message = record.msg % record.args
+        return self.html % (self.color_codes[record.levelname],
+                            record.levelname,
+                            message)
 
 class ImportAllFromCirca(BrowserPage):
     def __call__(self):
