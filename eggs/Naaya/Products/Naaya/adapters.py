@@ -1,54 +1,25 @@
 from naaya.core.zope2util import DT2dt, icon_for_content_type
 from naaya.core.utils import pretty_size
+def _get_icon_url(ob):
+    site = ob.getSite()
+    scheme = site.getLayoutTool().getCurrentSkinScheme()
+    name = ob.meta_type.replace(' ', '_')
+    skin_icon = scheme._getOb(name + '-icon', None)
+    skin_icon_marked = scheme._getOb(name + '-icon-marked', None)
 
-class NyContentTypeViewAdapter(object):
-    def __init__(self, ob):
-        self.ob = ob
+    if not ob.approved and skin_icon_marked is not None:
+        return skin_icon_marked.absolute_url()
 
-    def version_status(self):
-        return self.ob.version_status()
+    elif skin_icon is not None:
+        # even if object is unapproved, choose the customized icon
+        return skin_icon.absolute_url()
 
-    def get_modification_date(self):
-        return DT2dt(self.ob.releasedate)
+    elif ob.approved:
+        return ob.icon
 
-    def get_info_text(self):
-        return ""
+    else:
+        return ob.icon_marked
 
-    def get_icon(self):
-        return {
-            'url': self.ob.rstk.get_icon_for_object_index(self.ob),
-            'title': self.ob.get_meta_label(),
-        }
-
-    def get_size(self):
-        return ""
-
-    def get_download_url(self):
-        """ A direct download url """
-        return ""
-
-
-class NyFileViewAdapter(NyContentTypeViewAdapter):
-    def get_icon(self):
-        return icon_for_content_type(self.ob, self.ob.getContentType())
-
-    def get_size(self):
-        return pretty_size(self.ob.size)
-
-    def get_download_url(self):
-        """ A direct download url """
-        return self.ob.getDownloadUrl()
-
-class NyExFileViewAdapter(NyContentTypeViewAdapter):
-    def get_icon(self):
-        return icon_for_content_type(self.ob, self.ob.content_type())
-
-    def get_size(self):
-        return pretty_size(self.ob.size())
-
-    def get_download_url(self):
-        """ A direct download url """
-        return self.ob.getDownloadUrl()
 
 class GenericViewAdapter(object):
     def __init__(self, ob):
@@ -70,7 +41,7 @@ class GenericViewAdapter(object):
             else:
                 title = self.ob.meta_type
             return {
-                'url': self.ob.icon,
+                'url': _get_icon_url(self.ob),
                 'title': title,
             }
         else:
@@ -82,6 +53,39 @@ class GenericViewAdapter(object):
 
     def get_size(self):
         return ""
+
+
+class NyContentTypeViewAdapter(GenericViewAdapter):
+
+    def version_status(self):
+        return self.ob.version_status()
+
+    def get_modification_date(self):
+        return DT2dt(self.ob.releasedate)
+
+
+class NyFileViewAdapter(NyContentTypeViewAdapter):
+    def get_icon(self):
+        return icon_for_content_type(self.ob, self.ob.getContentType())
+
+    def get_size(self):
+        return pretty_size(self.ob.size)
+
+    def get_download_url(self):
+        """ A direct download url """
+        return self.ob.getDownloadUrl()
+
+
+class NyExFileViewAdapter(NyContentTypeViewAdapter):
+    def get_icon(self):
+        return icon_for_content_type(self.ob, self.ob.content_type())
+
+    def get_size(self):
+        return pretty_size(self.ob.size())
+
+    def get_download_url(self):
+        """ A direct download url """
+        return self.ob.getDownloadUrl()
 
 
 class NyFolderViewAdapter(NyContentTypeViewAdapter):

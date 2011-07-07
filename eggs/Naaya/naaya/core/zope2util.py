@@ -19,6 +19,7 @@ from DateTime import DateTime
 import simplejson as json
 from decimal import Decimal
 from dateutil.parser import parse
+from Products.Naaya.interfaces import IObjectView
 from naaya.core.utils import force_to_unicode, is_valid_email
 from naaya.core.utils import unescape_html_entities
 from Products.Naaya.interfaces import INySite
@@ -177,26 +178,28 @@ class RestrictedToolkit(SimpleItem):
         """
         return simple_paginate(items, per_page)
 
-    def get_icon_for_object_index(self, ob):
-        """ Get URL of icon to display on object index page. """
-        from naaya.content.base.meta import get_schema_name
-        scheme = self.getLayoutTool().getCurrentSkinScheme()
-        name = get_schema_name(self.getSite(), ob.meta_type)
-        skin_icon = scheme._getOb(name + '-icon', None)
-        skin_icon_marked = scheme._getOb(name + '-icon-marked', None)
+    def get_object_view_info(self, ob):
+        """
+        Get object icon, meta_label, and other information, useful when
+        displaying the object in a list (e.g. folder index, search results,
+        latest news). Behind the scenes, data comes from adapters to the
+        :class:`~Products.Naaya.interfaces.IObjectView` interface.
+        Currently returns the following fields:
 
-        if not ob.approved and skin_icon_marked is not None:
-            return skin_icon_marked.absolute_url()
+        `icon`
+            the return value from
+            :func:`~Products.Naaya.interfaces.IObjectView.get_icon`
+        """
 
-        elif skin_icon is not None:
-            # even if object is unapproved, choose the customized icon
-            return skin_icon.absolute_url()
+        view_adapter = get_site_manager(ob).getAdapter(ob, IObjectView)
 
-        elif ob.approved:
-            return ob.icon
+        # Ideally we would just return the adapter, but RestrictedPython blocks
+        # all access to its methods.
+        return {
+            'icon': view_adapter.get_icon(),
+            # TODO add other fields as needed
+        }
 
-        else:
-            return ob.icon_marked
 
 InitializeClass(RestrictedToolkit)
 

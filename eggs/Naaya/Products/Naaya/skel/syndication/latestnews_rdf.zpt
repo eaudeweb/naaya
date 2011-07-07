@@ -13,7 +13,9 @@
 <ul tal:condition="channel/get_objects_for_rdf">
 <li tal:repeat="item channel/get_objects_for_rdf">
 	<a tal:attributes="href item/absolute_url">
-		<img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" style="vertical-align: -5px;" alt="" />
+		<img tal:define="icon python:here.rstk.get_object_view_info(item)['icon']"
+		     tal:attributes="src icon/url; title icon/title; alt icon/title"
+		     style="vertical-align: -5px;" />
 		<tal:block content="item/title_or_id" />
 	</a>
 	<div tal:condition="item/hasSmallPicture"><img tal:attributes="src string:${item/absolute_url}/getSmallPicture" alt="" /></div>

@@ -54,16 +54,14 @@ class _IconTests(NaayaTestCase):
         return css(tr, 'td img')[0].attrib['src']
 
     def _customize_icon(self):
-        from naaya.content.base.meta import get_schema_name
         scheme = self.portal.getLayoutTool().getCurrentSkinScheme()
-        name = get_schema_name(self.portal, self.ob.meta_type)
+        name = self.ob.meta_type.replace(' ', '_')
         scheme.manage_addDiskFile(id=name + '-icon', pathspec=IMAGE_PATH_SPEC)
         return scheme[name + '-icon']
 
     def _customize_icon_marked(self):
-        from naaya.content.base.meta import get_schema_name
         scheme = self.portal.getLayoutTool().getCurrentSkinScheme()
-        name = get_schema_name(self.portal, self.ob.meta_type)
+        name = self.ob.meta_type.replace(' ', '_')
         scheme.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
         return scheme[name + '-icon-marked']
 

@@ -11,14 +11,15 @@
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <ul tal:condition="channel/get_objects_for_rdf">
-<li tal:repeat="item channel/get_objects_for_rdf">
-	<a tal:attributes="href item/absolute_url">
-		<img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" style="vertical-align: -5px;" alt="" />
-		<tal:block content="item/title_or_id" />
+<li tal:repeat="comment_item channel/get_objects_for_rdf">
+	<a tal:attributes="href comment_item/absolute_url">
+		<img tal:define="icon python:here.rstk.get_object_view_info(comment_item)['icon']"
+		     tal:attributes="src icon/url; title icon/title; alt icon/title"
+		     style="vertical-align: -5px;" />
+		<tal:block content="comment_item/title_or_id" />
 	</a>
-	<div tal:condition="item/hasSmallPicture"><img tal:attributes="src string:${item/absolute_url}/getSmallPicture" alt="" /></div>
 	<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span>
-	<span tal:replace="python:here.utShowDateTime(item.releasedate)" />]</span>
+	<span tal:replace="python:here.utShowDateTime(comment_item.releasedate)" />]</span>
 </li>
 </ul>
 </tal:block>
