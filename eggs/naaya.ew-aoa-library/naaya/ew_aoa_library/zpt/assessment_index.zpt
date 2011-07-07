@@ -1,29 +1,30 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 <metal:block fill-slot="meta">
-    <meta tal:define="description here/description;
-                      content python:here.html2text(description);"
-          tal:condition="content"
-          tal:attributes="content content" name="description" />
-    <meta tal:attributes="content here/contributor" name="author" />
-    <meta tal:attributes="content here/gl_get_selected_language"
-          name="dc.language" />
-    <meta tal:attributes="content string:${here/title} | ${here/site_title}"
-          name="title" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta tal:define="description here/description;
+					  content python:here.html2text(description);"
+		  tal:condition="content"
+		  tal:attributes="content content" name="description" />
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:attributes="content here/gl_get_selected_language"
+		  name="dc.language" />
+	<meta tal:attributes="content string:${here/title} | ${here/site_title}"
+		  name="title" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </metal:block>
 
 <!-- <metal:block metal:fill-slot="header-title">
-    <title tal:content="string:${here/title} | ${here/site_title}" />
+	<title tal:content="string:${here/title} | ${here/site_title}" />
 </metal:block> -->
 
 <metal:block fill-slot="body"
-    tal:define="virtual_library python:'tools/virtual_library/bibliography-details-each-assessment' in here.target_path;
+	tal:define="virtual_library python:'tools/virtual_library/bibliography-details-each-assessment' in here.target_path;
 		review_template python:'tools/general_template/general-template' in here.target_path;
 		country_fiches python:'tools/country_fiches' in here.target_path;
 		is_entitled here/checkPermissionPublishObjects;
-        site here/getSite;
-        library_object site/tools/virtual_library/bibliography-details-each-assessment;
-        country_choices python: library_object['w_official-country-region'].getChoices();">
+		site here/getSite;
+		library_object site/tools/virtual_library/bibliography-details-each-assessment;
+		country_choices python: library_object['w_official-country-region'].getChoices();
+		document_types python: library_object['w_type-document'].getChoices();">
 	<link rel="stylesheet" type="text/css" media="all"
 			tal:define="target_answer here/target_answer;
 						survey target_answer/getSurveyTemplate"
@@ -31,16 +32,16 @@
 
 <h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
-    <span class="buttons">
-        <a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
-            tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
-    </span>
+	<span class="buttons">
+		<a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
+			tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
+	</span>
 </div>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
-    tal:condition="is_entitled">
-    <tal:block define="approved_date python:here.approved_date(here);
-                suggestions here/suggestions" condition="review_template">
+	tal:condition="is_entitled">
+	<tal:block define="approved_date python:here.approved_date(here);
+				suggestions here/suggestions" condition="review_template">
 		<span tal:condition="approved_date" class="buttons">
 			<a
 				tal:attributes="href string:unapprove_assessment" i18n:translate="">
@@ -93,41 +94,22 @@
 				</strong>
 			</p>
 		</tal:block>
-    </tal:block>
-    <form id="set_region" name="set_region" method="post" action=".">
+	</tal:block>
 
+	<tal:block condition="review_template">
+	<form id="set_region" name="set_region" method="post" action=".">
 		<p><strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong></p>
-        <tal:block condition="review_template">
-            <input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
-                size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
-            <tal:block condition="here/library_id|nothing">
-            ("
-                <tal:block condition="here/library_geo_coverage_country"
-                    content="python:', '.join(country_choices[country] for country in here.library_geo_coverage_country)"/>
-                <tal:block condition="not: here/library_geo_coverage_country">emtpy</tal:block>
-            "
-                <a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
-            </tal:block>
-        </tal:block>
-        <tal:block condition="virtual_library">
-            <select id="country_single_select">
-                <option value="" i18n:translate="">Please select</option>
-                <option tal:repeat="country country_choices"
-                    tal:attributes="value repeat/country/index" tal:content="country" />
-            </select>
-
-            <div tal:repeat="country country_choices" tal:attributes="
-                    id string:geo_coverage_country_top_${repeat/country/index};
-                    style python: test(repeat['country'].index in here.geo_coverage_country, 'display: block', 'display: none');">
-                <input type="checkbox" name="geo_coverage_country:list:int" tal:attributes="
-                        id string:geo_coverage_country_${repeat/country/index};
-                        checked python: repeat['country'].index in here.geo_coverage_country;
-                        value repeat/country/index;"
-                    />
-                <label tal:attributes="for string:geo_coverage_country_${repeat/country/index}" tal:content="country"/>
-            </div>
-        </tal:block>
-			<br/><br/>
+		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
+				size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
+		<tal:block condition="here/library_id|nothing">
+			("
+				<tal:block condition="here/library_geo_coverage_country"
+					content="python:', '.join(country_choices[country] for country in here.library_geo_coverage_country)"/>
+				<tal:block condition="not: here/library_geo_coverage_country">emtpy</tal:block>
+			"
+			<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+		</tal:block>
+		<br/><br/>
 		<strong><label for="geo_coverage_region" i18n:translate="">Geo coverage: region</label></strong><br/><br/>
 		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
 			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
@@ -138,6 +120,67 @@
 		<br/><br/>
 		<input type="submit" name="set_region:method" value="Save country/region" i18n:attributes="value"/>
 	</form>
+	</tal:block>
+
+	<tal:block condition="virtual_library">
+	<tal:block define="approved_date python:here.approved_date(here);">
+		<span tal:condition="approved_date" class="buttons">
+			<a tal:attributes="href string:unapprove_assessment" i18n:translate="">
+					Unapprove assessment
+			</a>
+		</span>
+		<span tal:condition="not:approved_date" class="buttons">
+			<a tal:attributes="href string:approve_assessment" i18n:translate="">
+					Approve assessment
+			</a>
+		</span>
+	</tal:block>
+	<form id="save_vl" name="save_vl" method="post" action=".">
+		<p><strong><label for="geo_coverage_country" i18n:translate="">
+			Geo coverage: country
+		</label></strong></p>
+		<select id="country_single_select">
+			<option value="" i18n:translate="">Please select</option>
+			<option tal:repeat="country country_choices"
+					tal:attributes="value repeat/country/index"
+					tal:content="country" />
+		</select>
+		<div tal:repeat="country country_choices" tal:attributes="
+				id string:geo_coverage_country_top_${repeat/country/index};
+				style python: test(repeat['country'].index in here.geo_coverage_country, 'display: block', 'display: none');">
+			<input type="checkbox" name="geo_coverage_country:list:int" tal:attributes="
+					id string:geo_coverage_country_${repeat/country/index};
+					checked python: repeat['country'].index in here.geo_coverage_country;
+					value repeat/country/index;" />
+			<label tal:attributes="for string:geo_coverage_country_${repeat/country/index}" tal:content="country"/>
+		</div>
+		<br/><br/>
+		<strong><label for="geo_coverage_region" i18n:translate="">
+			Geo coverage: region
+		</label></strong>
+		<br/><br/>
+		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
+			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
+			<tal:block condition="here/library_id|nothing">
+				("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
+				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+			</tal:block>
+		<br/><br/>
+		<strong><label for="document_type" i18n:translate="">
+			Type of document
+		</label></strong>
+		<br/><br/>
+		<select name="document_type:int" id="document_type">
+			<option value="-1" i18n:translate="">Please select</option>
+			<option tal:repeat="document_type document_types"
+					tal:attributes="value repeat/document_type/index;
+						selected python: repeat['document_type'].index == here.document_type"
+					tal:content="document_type" />
+		</select>
+		<br/><br/>
+		<input type="submit" name="save_vl:method" value="Save" i18n:attributes="value"/>
+	</form>
+	</tal:block>
 </div>
 
 <tal:block content="structure here/render_answer" />
@@ -146,14 +189,14 @@
 <script tal:content="string:var country_list=${country_choices};"/>
 <script tal:condition="virtual_library">
 $('#country_single_select').change(function(){
-    country_index = $(this).val();
-    $('#geo_coverage_country_'+country_index).attr('checked', 'checked');
-    $('#geo_coverage_country_top_'+country_index).show();
-    $('#country_single_select').val('Please select');
+	country_index = $(this).val();
+	$('#geo_coverage_country_'+country_index).attr('checked', 'checked');
+	$('#geo_coverage_country_top_'+country_index).show();
+	$('#country_single_select').val('Please select');
 });
 $('input[name="geo_coverage_country:list:int"]').click(function() {
-    $(this).removeAttr('checked');
-    $(this).parent().hide();
+	$(this).removeAttr('checked');
+	$(this).parent().hide();
 });
 </script>
 </tal:block>
