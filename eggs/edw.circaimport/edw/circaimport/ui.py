@@ -2,6 +2,7 @@ import os.path
 
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+import transaction
 
 from edw.circaimport import (work_in_zope, add_roles_from_circa_export,
                              add_notifications_from_circa_export,
@@ -27,24 +28,32 @@ class ImportAllFromCirca(BrowserPage):
 
         reports = []
 
-        filename_files = self.request.form['filename_files']
-        import_files_path = self.request.form['import_files_path']
-        if filename_files and import_files_path:
-            files_ctx = ctx.restrictedTraverse(import_files_path)
-            reports.append(work_in_zope(files_ctx, filename_files, upload_prefix))
+        try:
+            if 'report' in self.request.form:
+                transaction.begin()
 
-        filename_roles = self.request.form['filename_roles']
-        ldap_source_title = self.request.form['source_title']
-        if filename_roles and ldap_source_title:
-            reports.append(add_roles_from_circa_export(ctx, os.path.join(upload_prefix, filename_roles), ldap_source_title))
+            filename_files = self.request.form['filename_files']
+            import_files_path = self.request.form['import_files_path']
+            if filename_files and import_files_path:
+                files_ctx = ctx.restrictedTraverse(import_files_path)
+                reports.append(work_in_zope(files_ctx, filename_files, upload_prefix))
 
-        filename_notifications = self.request.form['filename_notifications']
-        if filename_notifications:
-            reports.append(add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, filename_notifications)))
+            filename_roles = self.request.form['filename_roles']
+            ldap_source_title = self.request.form['source_title']
+            if filename_roles and ldap_source_title:
+                reports.append(add_roles_from_circa_export(ctx, os.path.join(upload_prefix, filename_roles), ldap_source_title))
 
-        filename_acls = self.request.form['filename_acls']
-        if filename_acls:
-            reports.append(add_acls_from_circa_export(ctx, os.path.join(upload_prefix, filename_acls)))
+            filename_notifications = self.request.form['filename_notifications']
+            if filename_notifications:
+                reports.append(add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, filename_notifications)))
+
+            filename_acls = self.request.form['filename_acls']
+            if filename_acls:
+                reports.append(add_acls_from_circa_export(ctx, os.path.join(upload_prefix, filename_acls)))
+
+        finally:
+            if 'report' in self.request.form:
+                transaction.abort()
 
         return import_all_zpt.__of__(ctx)(reports=reports)
 
