@@ -75,6 +75,7 @@
            content="structure python: here.prop_display_tr('coverage')" />
 <tal:block condition="here/keywords"
            content="structure python: here.prop_display_tr('keywords')" />
+<tal:block content="structure python: here.prop_display_tr('releasedate')" />
 
 <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
 	picture python:portal_map.getSymbolPicture(here.geo_type)"
