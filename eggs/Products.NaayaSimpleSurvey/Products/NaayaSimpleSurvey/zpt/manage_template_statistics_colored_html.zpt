@@ -36,7 +36,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 
 <tal:block tal:define="statistics here/get_statistics" tal:condition="python:'%s%%' % statistics.has_key('a113')">
 <table summary="">
-	<caption>1. Safeguard the EU’s most important habitats and species</caption>
+	<caption>1. Safeguard the EU&#x2019;s most important habitats and species</caption>
 	<colgroup span="1" class="column1" />
 	<thead>
 		<tr>

@@ -92,7 +92,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 
 <tal:block tal:define="statistics here/get_statistics" tal:condition="python:'%s%%' % statistics.has_key('a113')">
 <table summary="">
-	<caption>1. Safeguard the EU’s most important habitats and species</caption>
+	<caption>1. Safeguard the EU&#x2019;s most important habitats and species</caption>
 	<colgroup span="1" class="column1" />
 	<colgroup span="1" class="column2" />
 	<colgroup span="1" class="column3" />
@@ -623,7 +623,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 	<tbody>
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
-			<td>Implement ‘Countdown 2010’ initiative.</td>
+			<td>Implement &#x2018;Countdown 2010&#x2019; initiative.</td>
 			<td class="results"><span tal:replace="python:'%s%%' % statistics[atr]['N']" /></td>
 			<td class="results"><span tal:replace="python:'%s%%' % statistics[atr]['Mi']" /></td>
 			<td class="results"><span tal:replace="python:'%s%%' % statistics[atr]['Me']" /></td>

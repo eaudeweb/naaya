@@ -45,7 +45,7 @@ printing mode(so all page content is included).</p>
 
 
 <table summary="">
-	<caption>1. Safeguard the EU’s most important habitats and species</caption>
+	<caption>1. Safeguard the EU&#x2019;s most important habitats and species</caption>
 	<colgroup span="1" class="column1" />
 	<colgroup span="1" class="column2" />
 	<colgroup span="3" class="column3" />
@@ -851,7 +851,7 @@ printing mode(so all page content is included).</p>
 	<tbody>
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
-			<td>Implement ‘Countdown 2010’ initiative<br /><br /><label tal:attributes="for python:'%sC' % atr">Additional comments (if any):</label><br /><textarea rows="1" maxlength="350" tal:content="python:ses.get('%sC' % atr, '')" tal:attributes="name python:'%sC' % atr; id python:'%sC' % atr"></textarea>
+			<td>Implement &#x2018;Countdown 2010&#x2019; initiative<br /><br /><label tal:attributes="for python:'%sC' % atr">Additional comments (if any):</label><br /><textarea rows="1" maxlength="350" tal:content="python:ses.get('%sC' % atr, '')" tal:attributes="name python:'%sC' % atr; id python:'%sC' % atr"></textarea>
 			<td><label for="atr" tal:attributes="for python:'%sP' % atr">Primary</label><br /><select tal:attributes="id python:'%sP' % atr; name python:'%sP' % atr"><option tal:repeat="opt drp_opt" tal:content="opt" tal:attributes="value opt;selected python:ses.get('%sP' % atr, '') == opt" /></select></td>
 			<td><label for="atr" tal:attributes="for python:'%sS' % atr">Secondary</label><br /><select tal:attributes="id python:'%sS' % atr; name python:'%sS' % atr"><option tal:repeat="opt drp_opt" tal:content="opt" tal:attributes="value opt;selected python:ses.get('%sS' % atr, '') == opt" /></select></td>
 			<td><label for="atr" tal:attributes="for python:'%sT' % atr">Tertiary</label><br /><select tal:attributes="id python:'%sT' % atr; name python:'%sT' % atr"><option tal:repeat="opt drp_opt" tal:content="opt" tal:attributes="value opt;selected python:ses.get('%sT' % atr, '') == opt" /></select></td>
