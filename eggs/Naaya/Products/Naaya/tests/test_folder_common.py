@@ -1,7 +1,7 @@
-from naaya.content.base.tests.common import _CommonContentTest
+from naaya.content.base.tests.common import _IconTests
 from Products.Naaya.NyFolder import addNyFolder
 
-class FolderCommonTest(_CommonContentTest):
+class FolderIconTests(_IconTests):
 
     def add_object(self, parent):
         addNyFolder(parent, 'myfol', contributor='contributor', submitted=1)

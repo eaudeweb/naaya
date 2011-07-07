@@ -1,3 +1,13 @@
+"""
+Common content tests
+====================
+
+Pluggable content code conforms to a set of interfaces. The tests here are
+designed to be subclassed by each content type, to test this common behaviour.
+Several classes are provided so that each content type can choose to run a
+subset of the tests.
+"""
+
 import transaction
 from webob import Request
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
@@ -8,16 +18,13 @@ from naaya.core.testutils import parse_html, css
 IMAGE_PATH_SPEC = 'Products.Naaya:skel/layout/skin/scheme/trash.gif'
 
 
-class _CommonContentTest(NaayaTestCase):
+class _IconTests(NaayaTestCase):
     """
     Common tests for Naaya content objects
 
     `ob`
         Object under test. Created by `setUp`.
     """
-
-    # TODO naaya.content.base.tests.testContentTypeConformance should be
-    # refactored to use the _CommonContentTest pattern
 
     def add_object(self, parent):
         """ Create and return an instance of the class to be tested. """

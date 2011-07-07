@@ -1,7 +1,7 @@
-from naaya.content.base.tests.common import _CommonContentTest
+from naaya.content.base.tests.common import _IconTests
 from naaya.content.contact.contact_item import addNyContact
 
-class ContactCommonTest(_CommonContentTest):
+class ContactIconTests(_IconTests):
 
     def add_object(self, parent):
         parent.getSite().manage_install_pluggableitem('Naaya Contact')
