@@ -1930,6 +1930,9 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	font-style: italic;
 }
 
+/**
+ * Added 15 Iun 2011
+*/
 .right {
 	float: right;
 }
