@@ -53,29 +53,54 @@ class _IconTests(NaayaTestCase):
 
         return css(tr, 'td img')[0].attrib['src']
 
-    def test_icon(self):
-        self.assertEqual(self._get_h1_icon_src(), self.ob.icon)
-        self.assertEqual(self._get_folder_icon_src(), self.ob.icon)
-
-        self.ob.approveThis(0, None)
-        transaction.commit()
-        self.assertEqual(self._get_h1_icon_src(), self.ob.icon_marked)
-        self.assertEqual(self._get_folder_icon_src(), self.ob.icon_marked)
-
-    def test_customized_icon(self):
+    def _customize_icon(self):
         from naaya.content.base.meta import get_schema_name
         scheme = self.portal.getLayoutTool().getCurrentSkinScheme()
         name = get_schema_name(self.portal, self.ob.meta_type)
         scheme.manage_addDiskFile(id=name + '-icon', pathspec=IMAGE_PATH_SPEC)
-        df = scheme[name + '-icon']
-        scheme.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
-        df_marked = scheme[name + '-icon-marked']
+        return scheme[name + '-icon']
 
+    def _customize_icon_marked(self):
+        from naaya.content.base.meta import get_schema_name
+        scheme = self.portal.getLayoutTool().getCurrentSkinScheme()
+        name = get_schema_name(self.portal, self.ob.meta_type)
+        scheme.manage_addDiskFile(id=name + '-icon-marked', pathspec=IMAGE_PATH_SPEC)
+        return scheme[name + '-icon-marked']
+
+    def test_index_page_icon(self):
+        self.assertEqual(self._get_h1_icon_src(), self.ob.icon)
+
+        df = self._customize_icon()
         transaction.commit()
         self.assertEqual(self._get_h1_icon_src(), df.absolute_url())
+
+        self.ob.approveThis(0, None)
+        transaction.commit()
+        self.assertEqual(self._get_h1_icon_src(), df.absolute_url())
+
+        df.aq_parent.manage_delObjects([df.getId()])
+        transaction.commit()
+        self.assertEqual(self._get_h1_icon_src(), self.ob.icon_marked)
+
+        df_marked = self._customize_icon_marked()
+        transaction.commit()
+        self.assertEqual(self._get_h1_icon_src(), df_marked.absolute_url())
+
+    def test_folder_listing_icon(self):
+        self.assertEqual(self._get_folder_icon_src(), self.ob.icon)
+
+        df = self._customize_icon()
+        transaction.commit()
         self.assertEqual(self._get_folder_icon_src(), df.absolute_url())
 
         self.ob.approveThis(0, None)
         transaction.commit()
-        self.assertEqual(self._get_h1_icon_src(), df_marked.absolute_url())
+        self.assertEqual(self._get_folder_icon_src(), df.absolute_url())
+
+        df.aq_parent.manage_delObjects([df.getId()])
+        transaction.commit()
+        self.assertEqual(self._get_folder_icon_src(), self.ob.icon_marked)
+
+        df_marked = self._customize_icon_marked()
+        transaction.commit()
         self.assertEqual(self._get_folder_icon_src(), df_marked.absolute_url())
