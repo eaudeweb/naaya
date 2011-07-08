@@ -5,7 +5,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaWidgets.Widget import Widget
 
 class MultipleChoiceWidget(Widget):

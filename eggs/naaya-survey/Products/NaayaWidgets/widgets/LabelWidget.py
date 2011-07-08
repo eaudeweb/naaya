@@ -24,7 +24,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 

@@ -23,7 +23,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaWidgets.Widget import manage_addWidget
 
 from MatrixWidget import MatrixWidget

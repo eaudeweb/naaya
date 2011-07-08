@@ -33,7 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import zLOG
 
 # Naaya imports
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
