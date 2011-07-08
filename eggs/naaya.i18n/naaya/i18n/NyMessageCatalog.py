@@ -59,10 +59,19 @@ class NyMessageCatalog(Persistent):
     ### INyTranslationCatalog
 
     def edit_message(self, msgid, lang, translation):
-        # language existance test **not present in Localizer**:
+        # input type sanitize
+        if isinstance(msgid, str):
+            logger.warn(('Got str "%s" in edit_message for msgid, '
+                         'expecting unicode') % msgstr)
+            msgid = force_to_unicode(msgid)
+        if isinstance(translation, str):
+            logger.warn(('Got str "%s" in edit_message for translation, '
+                         'expecting unicode') % translation)
+            translation = force_to_unicode(translation)
+        # language existance test
         if lang not in self.get_languages():
             return
-        # Add-by-edit functionality **not present in Localizer**:
+        # Add-by-edit functionality
         if not self._message_exists(msgid):
             self.gettext(msgid, lang)
         self._messages[msgid][lang] = translation
