@@ -3,7 +3,6 @@ import transaction
 from App.ImageFile import ImageFile
 
 import NaayaUpdater
-import NaayaPatches
 
 UpdaterID = NaayaUpdater.UPDATERID
 logger = logging.getLogger('naayaUpdater')
