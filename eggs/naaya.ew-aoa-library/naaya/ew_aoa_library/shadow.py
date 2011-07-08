@@ -162,8 +162,6 @@ def get_document_types_mapping(survey):
     mapping = {}
     for idx, label in list(enumerate(survey['w_type-document'].getChoices())):
         mapping[idx] = force_to_unicode(label)
-    if survey.getId() == 'country_fiches':
-        del mapping[0]
 
     setattr(survey, cache_name, mapping)
     return mapping
