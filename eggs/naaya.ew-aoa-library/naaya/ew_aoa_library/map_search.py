@@ -261,5 +261,5 @@ class AoaSearchMapPortlet(object):
         tmpl_options['macro'] = self.site.getPortletsTool()._get_macro(position)
         return self.template.__of__(context)(**tmpl_options)
 
-    template = NaayaPageTemplateFile('zpt/search_map', globals(),
-                'naaya.ew_aoa_library.search_map')
+    template = NaayaPageTemplateFile('zpt/map_search', globals(),
+                'naaya.ew_aoa_library.map_search')
