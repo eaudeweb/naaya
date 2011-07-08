@@ -3,6 +3,7 @@
 # Python imports
 import unittest
 from urllib import quote
+from mock import Mock
 
 # Zope imports
 from Products.PageTemplates.PageTemplate import PageTemplate
@@ -34,28 +35,24 @@ else:
             wrapper.message_edit('Administration', 'de', 'Verwaltung', '')
             wrapper.gettext('Unkown', 'en')
         else:
-            catalog = NaayaI18n('id', 'title',
-                                [('en', 'English'), ('de', 'German')])\
-                      .get_message_catalog()
+            portal_i18n = NaayaI18n('id', 'title',
+                                    [('en', 'English'), ('de', 'German')])
+            catalog = portal_i18n.get_message_catalog()
             catalog.edit_message('Administration', 'de', 'Verwaltung')
             catalog.gettext('Unkown', 'en')
-            wrapper = TranslationsToolWrapper(catalog)
+            site_mock = Mock()
+            getPortalI18n = site_mock.getPortalI18n
+            getPortalI18n.return_value = portal_i18n
+
+            wrapper = TranslationsToolWrapper(portal_i18n)
+            wrapper.getSite = lambda: site_mock
+
         return wrapper
 
     class TranslationsToolWrapperTest(unittest.TestCase):
 
         def setUp(self):
             self.wrapper = _wrapper_factory()
-
-
-        def test_get_msg_translations(self):
-            self.assertEqual(self.wrapper.get_msg_translations('Administration', ''),
-                             '')
-            self.assertEqual(self.wrapper.get_msg_translations('', ''), None)
-            self.assertEqual(self.wrapper.get_msg_translations('Administration', 'en'),
-                             'Administration')
-            self.assertEqual(self.wrapper.get_msg_translations('Administration', 'de'),
-                             'Verwaltung')
 
         def test_msgEncodeDecode(self):
             self.assertEqual(self.wrapper.message_encode(' 1+'), 'IDEr\n')
@@ -113,8 +110,9 @@ else:
                 pass
 
             # step 3: force negotiation to de, regardless of negotiator
+            portal_i18n = self.portal.getPortalI18n()
             self.portal.REQUEST['EDW_SelectedLanguage'] = {('en', 'de'): 'de'}
-            self.portal.REQUEST['TraversalRequestNameStack'] = ['de']
+            self.portal.REQUEST.cookies[portal_i18n.get_negotiator().cookie_id] = 'de'
 
         def test_translate(self):
             # add message and translation
@@ -122,7 +120,7 @@ else:
             try:
                 self.portal.getPortalTranslations().message_edit('${count} dogs', 'de', '${count} Hunde', '')
             except AttributeError:
-                self.portal.getPortalTranslations().edit_message('${count} dogs', 'de', '${count} Hunde')
+                self.portal.getPortalI18n().get_message_catalog().edit_message('${count} dogs', 'de', '${count} Hunde')
 
             # and test!
             in_de = self.portal.getPortalTranslations().trans('${count} dogs',

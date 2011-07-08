@@ -1,12 +1,9 @@
 
-# Python imports
 from urllib import quote
 from base64 import encodestring, decodestring
 import re
 import locale
 
-# Zope imports
-from zope.i18n import interpolate
 from zope.i18n.interfaces import ITranslationDomain
 from zope.component import queryUtility
 from zope.deprecation import deprecate
@@ -14,8 +11,6 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Acquisition import Implicit
 
-# Product imports
-from LanguageManagers import NyLanguages
 
 class TranslationsToolWrapper(Implicit):
 

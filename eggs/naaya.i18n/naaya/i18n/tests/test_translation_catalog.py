@@ -1,30 +1,10 @@
 # -*- coding: UTF-8 -*-
-# Python imports
 import unittest
 from mock import patch
 
-# Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 
-# Project imports
 from naaya.i18n.interfaces import INyTranslationCatalog
-try:
-    from naaya.i18n.LocalizerWrapper import LocalizerWrapper
-except ImportError:
-    pass
-else:
-    class LocalizerWrapperTest(NaayaTestCase, _TranslationCatalog):
-        def catalog_factory(self, **kw):
-            """ create, clean and return Localizer instance here"""
-            catalog = LocalizerWrapper(self.portal)
-            # erase catalog
-            catalog.clear()
-            for lang in catalog.get_languages():
-                catalog.del_language(lang)
-            if kw.has_key('languages'):
-                for lang in kw['languages']:
-                    catalog.add_language(lang)
-            return catalog
 
 
 class _TranslationCatalog(unittest.TestCase):
@@ -127,3 +107,24 @@ class NyMessageCatalogTest(NaayaTestCase, _TranslationCatalog):
             for lang in kw['languages']:
                 catalog.add_language(lang)
         return catalog
+
+# If Localizer available and installed (with translations tool working)
+# also run test suite with LocalizerWrapper
+try:
+    from naaya.i18n.LocalizerWrapper import LocalizerWrapper
+    from Products.NaayaCore.constants import ID_TRANSLATIONSTOOL
+except ImportError:
+    pass
+else:
+    class LocalizerWrapperTest(NaayaTestCase, _TranslationCatalog):
+        def catalog_factory(self, **kw):
+            """ create, clean and return Localizer instance here"""
+            catalog = LocalizerWrapper(self.portal)
+            # erase catalog
+            catalog.clear()
+            for lang in catalog.get_languages():
+                catalog.del_language(lang)
+            if kw.has_key('languages'):
+                for lang in kw['languages']:
+                    catalog.add_language(lang)
+            return catalog

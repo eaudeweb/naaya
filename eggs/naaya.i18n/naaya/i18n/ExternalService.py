@@ -1,5 +1,4 @@
 
-# Python imports
 try:
     import json
 except ImportError:
@@ -42,7 +41,7 @@ def external_translate(message, target_lang):
 
         try:
             translation = ''.join([ x[0] for x in json_data[0] ])
-        except KeyError:
+        except LookupError:
             # no translation or unexpected response
             return ''
         else:

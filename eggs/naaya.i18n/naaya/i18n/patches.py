@@ -1,15 +1,12 @@
 
-# Python imports
 import threading
 import logging
 logger = logging.getLogger(__name__)
 
-# Zope imports
 from zope.component import adapts
 from zope.publisher.interfaces import IRequest
 from ZPublisher.BaseRequest import DefaultPublishTraverse
 
-# Naaya imports
 from Products.Naaya.interfaces import INySite
 
 
@@ -32,7 +29,7 @@ class NySitePublishTraverse(DefaultPublishTraverse):
         populate_threading_local(portal, request)
 
         if portal_i18n is not None:
-            lang_manager = portal_i18n.get_portal_lang_manager()
+            lang_manager = portal_i18n.get_lang_manager()
             if name in lang_manager.getAvailableLanguages():
                 request[portal_i18n.get_negotiator().cookie_id] = name
                 # update selected language, it may be the one found in url
@@ -51,7 +48,7 @@ def populate_threading_local(portal, request):
     """
     portal_i18n = portal.getPortalI18n()
     if portal_i18n is not None:
-        lang_manager = portal_i18n.get_portal_lang_manager()
+        lang_manager = portal_i18n.get_lang_manager()
         i18n = {}
         i18n['default_language'] = lang_manager.get_default_language()
         i18n['languages_mapping'] = portal_i18n.get_languages_mapping()

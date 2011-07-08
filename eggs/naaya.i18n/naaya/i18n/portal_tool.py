@@ -1,11 +1,9 @@
 
-# Python imports
 import re
 from base64 import encodestring, decodestring
 from urllib import quote
 
-# Zope imports
-from OFS.Folder import Folder
+from zope.i18n import interpolate
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from ZPublisher import HTTPRequest
@@ -22,17 +20,14 @@ except ImportError:
 from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-# Naaya imports
 from constants import ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N
 
-# Product imports
-from LanguageManagers import NyPortalLanguageManager, NyLanguages
-from LanguageManagers import normalize_code
+from LanguageManagers import NyPortalLanguageManager
+from LanguageManagers import normalize_code, get_language_name, get_languages
 from NyMessageCatalog import NyMessageCatalog
 from NyNegotiator import NyNegotiator
-from interfaces import INyTranslationCatalog
 from ImportExport import TranslationsImportExport
-from patches import populate_threading_local, get_i18n_context, get_request
+from patches import populate_threading_local
 from ExternalService import external_translate
 
 
@@ -81,7 +76,7 @@ def manage_addNaayaI18n(self, languages=[('en', 'English')],
         RESPONSE.redirect('manage_main')
 
 
-class NaayaI18n(Folder):
+class NaayaI18n(SimpleItem):
     """
     Naaya instantiates a **NaayaI18n** object insides its root. This object
     holds the whole internationalization data and operations:
@@ -127,17 +122,6 @@ class NaayaI18n(Folder):
 
     def get_lang_manager(self):
         """
-        Returns a NyLanguages instance, capable of managing
-        a list of ISO 639 language code and names, based on languages.txt
-        in naaya.i18n
-
-        """
-        if not hasattr(self, 'lang_manager'):
-            self.lang_manager = NyLanguages()
-        return self.lang_manager
-
-    def get_portal_lang_manager(self):
-        """
         Returns NyPortalLanguageManager instance in portal, capable
         of managing available languages
 
@@ -149,20 +133,23 @@ class NaayaI18n(Folder):
         return TranslationsImportExport(self.get_message_catalog())
 
     ### More specific methods:
+    def get_all_languages_mapping(self):
+        return get_languages()
+
     def get_language_name(self, code):
         """
         Get the language name for 'code'. It first looks up
         languages manually added in portal, then asks for languages
-        in NyLanguages (naaya.i18n/languages.txt) which finally falls back
+        in naaya.i18n/languages.txt which finally falls back
         to '???' string
 
         """
-        if code in self.get_portal_lang_manager().getAvailableLanguages():
+        if code in self.get_lang_manager().getAvailableLanguages():
             # try to get name from added langs to site
-            return self.get_portal_lang_manager().get_language_name(code)
-        else:
-            # not there, default to NyLanguages: loads the large languages.txt
             return self.get_lang_manager().get_language_name(code)
+        else:
+            # not there, default to languages.txt
+            return get_language_name(code)
 
     security.declarePublic('get_languages_mapping')
     def get_languages_mapping(self):
@@ -195,7 +182,7 @@ class NaayaI18n(Folder):
         lang_code = normalize_code(lang_code)
         if lang_name is None:
             # search for name directly in languages.txt, obviously not in site
-            lang_name = self.get_lang_manager().get_language_name(lang_code)
+            lang_name = get_language_name(lang_code)
         # add language to portal:
         self._portal_langs.addAvailableLanguage(lang_code, lang_name)
         # and to catalog:
@@ -288,7 +275,7 @@ class NaayaI18n(Folder):
         if isinstance(message, unicode):
             encoding = HTTPRequest.default_encoding
             message = message.encode(encoding)
-    
+
         return encodestring(message)
 
     ### Private methods for private views
@@ -545,7 +532,7 @@ class NaayaI18n(Folder):
     security.declareProtected(view_management_screens, 'manage_import_po')
     def manage_import_po(self, file, language, REQUEST, RESPONSE):
         """ Import PO file into catalog, for an existing language """
-        if language not in self.get_portal_lang_manager().getAvailableLanguages():
+        if language not in self.get_lang_manager().getAvailableLanguages():
             raise ValueError('%s language is not available in portal' % language)
         else:
             import_tool = self.get_importexport_tool()
