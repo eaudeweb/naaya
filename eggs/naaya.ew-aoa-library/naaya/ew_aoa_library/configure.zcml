@@ -16,7 +16,7 @@
     />
 
   <adapter
-    for="Products.Naaya.interfaces.INySite"
+    for=".interfaces.IAoaPortal"
     provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
     factory=".map_search.AoaSearchMapPortlet"
     name="aoa_search_map"
