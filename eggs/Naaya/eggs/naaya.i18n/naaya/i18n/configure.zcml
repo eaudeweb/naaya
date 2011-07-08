@@ -10,7 +10,7 @@
       />
 
    <naaya:utility
-      factory=".NyI18nTranslator"
+      factory=".utilities.NyI18nTranslator"
       provides="zope.i18n.interfaces.ITranslationDomain"
       name="default"
       />

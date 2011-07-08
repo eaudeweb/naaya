@@ -221,7 +221,7 @@ class TranslationsImportExport(object):
                     seg = etree.SubElement(tuv, "seg")
                     seg.text = msgkey
         return etree.tostring(root, xml_declaration=True, encoding=charset,
-                              pretty_print=True) 
+                              pretty_print=True)
 
 
     ### Import methods ###

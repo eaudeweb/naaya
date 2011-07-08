@@ -17,6 +17,11 @@ class LocalizerToNaayaI18n(UpdateScript):
         """
         Summary of update:
          * test for portal_i18n existance, if true, skip portal
+         * get languages and default language
+         * create portal_i18n, place it in portal
+         * copy message translations
+         * delete Localizer and portal_translations
+         * fix localized properties
 
         """
         if isinstance(portal.getPortalI18n(), NaayaI18n):
@@ -54,5 +59,7 @@ class LocalizerToNaayaI18n(UpdateScript):
         # Clean up and delete localizer
         localizer.manage_beforeDelete(localizer, portal)
         portal._delObject('Localizer')
-        self.log.debug('Localizer removed, migration is complete!')
+        portal._delObject('portal_translations')
+        self.log.debug('Localizer and Portal translations removed, '
+                       'migration is complete!')
         return True
