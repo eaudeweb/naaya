@@ -229,10 +229,14 @@ def extract_survey_answer_data_library(answer):
         attrs['title'] = "Assessment %s" % answer_id
 
     attrs['geo_coverage_country'] = getattr(answer.aq_base, 'w_official-country-region', [])
+    if attrs['geo_coverage_country'] is None:
+        attrs['geo_coverage_country'] = []
 
     attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
 
-    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', 0)
+    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', [])
+    if attrs['document_type'] is None:
+        attrs['document_type'] = []
 
     survey = answer.getSurveyTemplate()
     document_types = get_document_types_mapping(survey)
@@ -244,7 +248,8 @@ def extract_survey_answer_data_library(answer):
         'viewer_title_ru': answer.getLocalProperty(
                             'w_assessment-name', lang='ru'),
         'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
-        'viewer_document_type': [document_types[attrs['document_type']]],
+        'viewer_document_type': [document_types[dt_i] for dt_i in
+                                 attrs['document_type']],
         'viewer_year': attrs['publication_year'],
         'viewer_author': answer.getLocalProperty(
                             'w_body-conducting-assessment', lang='en'),
@@ -267,7 +272,9 @@ def extract_survey_answer_data_country_fiches(answer):
             'modification_time': answer.modification_time,
             }
 
-    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document')
+    attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', [])
+    if attrs['document_type'] is None:
+        attrs['document_type'] = []
 
     survey = answer.getSurveyTemplate()
     document_types = get_document_types_mapping(survey)
@@ -277,7 +284,8 @@ def extract_survey_answer_data_country_fiches(answer):
         'viewer_title_en': answer.getLocalProperty('w_title', lang='en'),
         'viewer_title_ru': answer.getLocalProperty('w_title', lang='ru'),
         'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
-        'viewer_document_type': [document_types[attrs['document_type']]],
+        'viewer_document_type': [document_types[dt_i] for dt_i in
+                                 attrs['document_type']],
         'viewer_year': attrs['publication_year'],
         'viewer_author': attrs['author'],
         'viewer_country': [countries[idx] for idx in
