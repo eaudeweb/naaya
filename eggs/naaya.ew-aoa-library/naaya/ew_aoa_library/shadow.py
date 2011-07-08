@@ -422,14 +422,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     def save_vl(self, REQUEST):
         """ Saves country/region and document type for VL"""
         survey_answer = self.get_survey_answer(self.getId())
-
-        document_type = REQUEST.get('document_type')
-        if document_type == 0:
-            if hasattr(survey_answer.aq_base, 'w_type-document'):
-                delattr(survey_answer, 'w_type-document')
-        else:
-            setattr(survey_answer, 'w_type-document', document_type)
-
+        setattr(survey_answer, 'w_type-document', REQUEST.get('document_type', []))
         setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country', []))
         setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
         survey_answer._p_changed = True
@@ -509,6 +502,27 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
                 ret.add('Green Economy')
 
         return list(ret)
+
+    def get_document_types_for_themes(self, themes):
+        """ """
+        themes_document_types = set()
+        if 'Water' in themes:
+            for dt_i in self.water_document_types:
+                themes_document_types.add(self.all_document_types[dt_i])
+        if 'Green Economy' in themes:
+            for dt_i in self.ge_document_types:
+                themes_document_types.add(self.all_document_types[dt_i])
+
+        survey = self.target_survey()
+        survey_document_types = survey['w_type-document'].getChoices()
+
+        choices = set(survey_document_types) & themes_document_types
+        return [{'index': survey_document_types.index(dt), 'value': dt}
+                for dt in survey_document_types if dt in choices]
+
+    def get_document_type_choices(self):
+        """ """
+        return self.get_document_types_for_themes(self.get_main_themes())
 
     _manage_updates_html = PageTemplateFile('zpt/shadow_manage_update', globals())
 
