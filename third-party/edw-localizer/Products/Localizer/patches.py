@@ -119,46 +119,6 @@ if patch is False:
 
 
 
-# PATCH 2: Unicode
-#
-# Enables support of Unicode in ZPT.
-# For Zope 2.6b1+
-#   - if LOCALIZER_USE_ZOPE_UNICODE, use standard Zope Unicode handling,
-#   - otherwise use Localizer's version of StringIO for ZPT and TAL.
-
-# Fix uses of StringIO with a Unicode-aware StringIO
-
-class LocalizerStringIO(originalStringIO):
-
-    def write(self, s):
-        if isinstance(s, unicode):
-            response = get_request().RESPONSE
-            try:
-                s = response._encode_unicode(s)
-            except AttributeError:
-                # not an HTTPResponse
-                pass
-        originalStringIO.write(self, s)
-
-
-def patchedStringIO(self):
-    return LocalizerStringIO()
-
-
-if not os.environ.get('LOCALIZER_USE_ZOPE_UNICODE'):
-    logger.info('Full Unicode-aware ZPT.')
-    # Patch the StringIO method of TALInterpreter and PageTemplate
-    if zope_version == '2.9':
-        from TAL.TALInterpreter import TALInterpreter
-        TALInterpreter.StringIO = patchedStringIO
-    else:
-        from zope.pagetemplate import pagetemplate
-        pagetemplate.StringIO = patchedStringIO
-
-    PageTemplate.StringIO = patchedStringIO
-
-
-
 # PATCH 3: Accept
 #
 # Adds the variable AcceptLanguage to the REQUEST.  It provides a higher
