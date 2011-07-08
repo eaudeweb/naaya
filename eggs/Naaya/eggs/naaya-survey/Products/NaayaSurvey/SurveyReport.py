@@ -35,7 +35,7 @@ from zLOG import LOG, DEBUG
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import slugify, genRandomId
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 import statistics
 from statistics.BaseStatistic import manage_addStatistic
