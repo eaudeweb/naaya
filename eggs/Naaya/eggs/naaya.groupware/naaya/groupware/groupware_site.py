@@ -178,9 +178,13 @@ class GroupwareSite(NySite):
                     log_entry = log
                     log_entry_id = log_id
                 if count == 2: #Raise an error because this key is old
-                    raise BadRequest("Key %s has already been used" % key)
+                    self.setSessionErrorsTrans(
+                            "Key ${key} has already been used", key=key)
+                    return REQUEST.RESPONSE.redirect(
+                            self.getSite().absolute_url())
             if log_entry == None:
-                raise KeyError("Key %s not found" % key)
+                self.setSessionErrorsTrans("Key ${key} not found", key=key)
+                return REQUEST.RESPONSE.redirect(self.getSite().absolute_url())
 
             session_data.update({key: log_entry_id})
             self.setSession('log_entry', session_data)
