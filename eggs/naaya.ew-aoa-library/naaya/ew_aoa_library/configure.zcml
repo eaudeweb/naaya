@@ -22,4 +22,11 @@
     name="aoa_search_map"
     />
 
+  <browser:page
+      for=".interfaces.IAoaPortal"
+      name="set_up_catalog_indexes"
+      class=".catalog.SetUpCatalogIndexes"
+      permission="zope2.ViewManagementScreens"
+      />
+
 </configure>
