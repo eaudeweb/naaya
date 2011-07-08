@@ -246,7 +246,8 @@ def extract_survey_answer_data_library(answer):
         'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
         'viewer_document_type': [document_types[attrs['document_type']]],
         'viewer_year': attrs['publication_year'],
-        'viewer_author': u"",
+        'viewer_author': answer.getLocalProperty(
+                            'w_body-conducting-assessment', lang='en'),
         'viewer_country': [countries[idx] for idx in
                            attrs['geo_coverage_country']]
     })
