@@ -503,23 +503,6 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
 
         return list(ret)
 
-    def get_document_types_for_themes(self, themes):
-        """ """
-        themes_document_types = set()
-        if 'Water' in themes:
-            for dt_i in self.water_document_types:
-                themes_document_types.add(self.all_document_types[dt_i])
-        if 'Green Economy' in themes:
-            for dt_i in self.ge_document_types:
-                themes_document_types.add(self.all_document_types[dt_i])
-
-        survey = self.target_survey()
-        survey_document_types = survey['w_type-document'].getChoices()
-
-        choices = set(survey_document_types) & themes_document_types
-        return [{'index': survey_document_types.index(dt), 'value': dt}
-                for dt in survey_document_types if dt in choices]
-
     def get_document_type_choices(self):
         """ """
         return self.get_document_types_for_themes(self.get_main_themes())
