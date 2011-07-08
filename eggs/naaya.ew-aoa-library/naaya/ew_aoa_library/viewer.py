@@ -7,6 +7,7 @@ from zope.app.container.interfaces import (IObjectAddedEvent,
 from zope import interface
 from zope.component import adapter
 from ZPublisher import NotFound
+import transaction
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
@@ -74,8 +75,8 @@ class AoALibraryViewer(SimpleItem):
         'National Institution dealing with water', #21
         'National Institution dealing with green economy', #22
     ]
-    water_document_types = [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
-    ge_document_types = [0, 1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
+    water_document_types = [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    ge_document_types = [1, 2, 6, 7, 8, 9, 12, 13, 14, 15, 16, 18, 19, 20, 22]
 
     water_themes = ['Water', 'Water resources', 'Water resource management', 'Воды', 'Водные ресурсы', 'Управление водными ресурсами']
     ge_themes = ['Green Economy', 'Green economy', 'Resource efficiency', '"Зеленая" экономика', 'Эффективность использования ресурсов']
@@ -208,11 +209,104 @@ class AoALibraryViewer(SimpleItem):
             self._update_vl_countries(state, library)
         if update_type == 'update_cf_countries':
             self._update_cf_countries(state, country_fiches)
+        if update_type == 'update_cf_types_of_documents':
+            self._update_cf_types_of_documents(state, country_fiches)
+        if update_type == 'update_remove_please_select_type_of_document':
+            self._update_remove_please_select_type_of_document(state, library, country_fiches)
+        if update_type == 'update_to_multiple_types_of_documents':
+            self._update_to_multiple_types_of_documents(state, library, country_fiches)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _update_to_multiple_types_of_documents(self, state, library, country_fiches):
+        # update the question information
+        from Products.NaayaSurvey.migrations import basic_replace
+        from Products.NaayaWidgets.widgets.CheckboxesWidget import addCheckboxesWidget
+
+        def do_update(survey):
+            document_types = survey['w_type-document'].getChoices()
+            new_widget = basic_replace(survey, 'w_type-document', addCheckboxesWidget)
+            new_widget._setLocalPropValue('choices', 'en', document_types)
+            new_widget._setLocalPropValue('choices', 'ru', document_types)
+
+            for answer in survey.objectValues(survey_answer_metatype):
+                old_type_of_document = answer.get('w_type-document')
+                if isinstance(old_type_of_document, list):
+                    continue
+
+                if old_type_of_document is None:
+                    answer.set_property('w_type-document', [])
+                else:
+                    answer.set_property('w_type-document', [old_type_of_document])
+
+                state['updated_answers'][answer.absolute_url()] = ['Updated from %r to %r' % (old_type_of_document, answer.get('w_type-document'))]
+
+        do_update(library)
+        do_update(country_fiches)
+
+
+    def _update_remove_please_select_type_of_document(self, state, library, country_fiches):
+        def do_update(survey):
+            document_types = survey['w_type-document'].getChoices()
+            if document_types[0] != 'Please select':
+                return
+
+            survey['w_type-document']._setLocalPropValue('choices', 'en', document_types[1:])
+            survey['w_type-document']._setLocalPropValue('choices', 'ru', document_types[1:])
+
+            for answer in survey.objectValues(survey_answer_metatype):
+                old_type_of_document = answer.get('w_type-document')
+                if old_type_of_document == 0 or old_type_of_document is None:
+                    answer.set_property('w_type-document', None)
+                else:
+                    answer.set_property('w_type-document', old_type_of_document - 1)
+
+                state['updated_answers'][answer.absolute_url()] = ['Updated from %r to %r' % (old_type_of_document, answer.get('w_type-document'))]
+
+        do_update(library)
+        do_update(country_fiches)
+
+    def _update_cf_types_of_documents(self, state, country_fiches):
+        cf_types_of_docuements = [
+            'Please select',
+            'Water sector or NGOs report',
+            'Water statistics',
+            'Environmental statistics',
+            'Environmental indicator set – National',
+            'Environmental indicator set – Sub-national',
+            'Environmental indicator set – Regional',
+            'Environmental compendium',
+            'Water indicator set',
+            'Website',
+            'Library services',
+            'Country profiles',
+            'National Institution dealing with water',
+            'National Institution dealing with green economy',
+        ]
+        savepoint = transaction.savepoint()
+
+        widget = getattr(country_fiches.aq_base, 'w_type-document')
+        old_types_of_documents = widget.getChoices()
+
+        for cf_answer in country_fiches.objectValues(survey_answer_metatype):
+            old_type_of_document = old_types_of_documents[cf_answer.get('w_type-document')]
+            try:
+                new_type_of_document = cf_types_of_docuements.index(old_type_of_document)
+            except ValueError:
+                state['errors'][cf_answer.absolute_url()] = 'Not matched %s' % old_type_of_document
+            else:
+                cf_answer.set_property('w_type-document', new_type_of_document)
+                state['updated_answers'][cf_answer.absolute_url()] = [cf_types_of_docuements[new_type_of_document]]
+
+        widget._setLocalPropValue('choices', 'en', cf_types_of_docuements)
+        widget._setLocalPropValue('choices', 'ru', cf_types_of_docuements)
+
+        if state['errors']:
+            savepoint.rollback()
+
 
     def _update_cf_countries(self, state, country_fiches):
         country_list = [
@@ -744,14 +838,25 @@ class AoALibraryViewer(SimpleItem):
         def respects_filter(shadow):
             if country not in shadow.geo_coverage_country:
                 return False
-            if shadow.document_type == 0:
+            if hasattr(shadow.aq_base, 'approved') and not shadow.approved:
+                return False
+
+            shadow_document_types = [self.get_normalized_document_type(dt_i)
+                                        for dt_i in shadow.document_type]
+            if not shadow_document_types:
                 return False
 
             if theme == 'Water':
-                if shadow.document_type not in self.water_document_types:
+                for dt_i in shadow_document_types:
+                    if dt_i in self.water_document_types:
+                        break
+                else:
                     return False
             else: # theme == 'Green Economy'
-                if shadow.document_type not in self.ge_document_types:
+                for dt_i in shadow_document_types:
+                    if dt_i in self.ge_document_types:
+                        break
+                else:
                     return False
 
             if theme == 'Water':
@@ -768,10 +873,35 @@ class AoALibraryViewer(SimpleItem):
                 if shadow.theme not in check_themes:
                     return False
 
-            if hasattr(shadow.aq_base, 'approved'):
-                return shadow.approved
             return True
         return filter(respects_filter, self.iter_assessments())
+
+    security.declareProtected(view, 'get_document_types_for_themes')
+    def get_document_types_for_themes(self, themes):
+        """ """
+        themes_document_types = set()
+        if 'Water' in themes:
+            for dt_i in self.water_document_types:
+                themes_document_types.add(self.all_document_types[dt_i])
+        if 'Green Economy' in themes:
+            for dt_i in self.ge_document_types:
+                themes_document_types.add(self.all_document_types[dt_i])
+
+        survey = self.target_survey()
+        survey_document_types = survey['w_type-document'].getChoices()
+
+        choices = set(survey_document_types) & themes_document_types
+        return [{'index': survey_document_types.index(dt), 'value': dt}
+                for dt in survey_document_types if dt in choices]
+
+    security.declareProtected(view, 'get_normalized_document_type')
+    def get_normalized_document_type(self, document_type):
+        """ """
+        survey = self.target_survey()
+        survey_document_types = survey['w_type-document'].getChoices()
+
+        dt_name = survey_document_types[document_type]
+        return self.all_document_types.index(dt_name)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()

@@ -11,7 +11,7 @@
                     cf_viewer python: site['country-fiches-viewer'];
                     cf cf_viewer/target_survey;">
 
-        <h1 i18n:translate="">Virtual Library and Country Fiches Viewer</h1>
+        <h1 i18n:translate="">Country Fiches Viewer</h1>
 
         <form action="." method="get" id="aggregator-form">
             <p i18n:translate="" class="help message">
@@ -69,8 +69,8 @@
                 
                 <tal:block repeat="item results">
                     <tal:block define="heading python: item[0];
-                                       document_types python: item[1];"
-                                condition="document_types">
+                                       shadows python: item[1];"
+                                condition="shadows">
                     
                     <div class="result-section">
                         <div class="result-section-title-holder">
@@ -96,20 +96,14 @@
                         <div class="clear">&nbsp;</div>
                         
                         <ul>
-                            <tal:block repeat="dt_item document_types/items">
-                                <tal:block define="dt_i python: dt_item[0];
-                                                   shadows python: dt_item[1];">
-                                <li tal:repeat="shadow shadows">
-                                    <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}?edit=1"
-                                        tal:content="python: shadow.getLocalProperty('title', lang)"></a>
-                                    <tal:block define="publication_year shadow/publication_year|string:"
-                                        condition="publication_year">
-                                    (<span i18n:translate="">Published year:</span>
-                                        <span tal:content="publication_year" />)
-                                    </tal:block>
-                                </li>
+                            <li tal:repeat="shadow shadows">
+                                <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}?edit=1"
+                                    tal:content="python: shadow.getLocalProperty('title', lang)"></a>
+                                <tal:block define="publication_year shadow/publication_year|string:"
+                                    condition="publication_year">
+                                (<span tal:content="publication_year" />)
                                 </tal:block>
-                            </tal:block>
+                            </li>
                         </ul>
                     </div>
                     </tal:block>
@@ -119,4 +113,3 @@
         </div>
     </metal:block>
 </metal:block>
-

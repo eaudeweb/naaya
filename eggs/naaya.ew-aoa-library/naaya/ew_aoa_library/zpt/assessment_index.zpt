@@ -191,20 +191,23 @@
 			Type of document
 		</label></strong>
 		<br/><br/>
-		<select name="document_type:int" id="document_type"
-			tal:define="main_themes here/get_main_themes;
-						has_both_themes python: len(main_themes) == 2;
-						has_one_theme python: len(main_themes) == 1;
-						has_no_theme python: len(main_themes) == 0;
-						themes_document_types python: test(has_one_theme and main_themes[0] == 'Water', here.water_document_types, here.ge_document_types)"
-			tal:attributes="disabled python: test(main_themes, '', 'disabled');">
-			<tal:block repeat="document_type document_types">
-			<option tal:condition="python: not (has_one_theme) or (has_one_theme and repeat['document_type'].index in themes_document_types)"
-					tal:attributes="value repeat/document_type/index;
-						selected python: repeat['document_type'].index == here.document_type"
-						tal:content="document_type" />
-			</tal:block>
+		<tal:block define="dt_choices here/get_document_type_choices">
+		<select id="document_type_single_select">
+			<option value="" i18n:translate="">Please select</option>
+			<option tal:repeat="dt_choice dt_choices"
+					tal:attributes="value dt_choice/index"
+					tal:content="dt_choice/value" />
 		</select>
+		<div tal:repeat="dt_choice dt_choices" tal:attributes="
+				id string:document_type_top_${dt_choice/index};
+				style python: test(dt_choice['index'] in here.document_type, 'display: block', 'display: none');">
+			<input type="checkbox" name="document_type:list:int" tal:attributes="
+					id string:document_type_${dt_choice/index};
+					checked python: dt_choice['index'] in here.document_type;
+					value dt_choice/index;" />
+			<label tal:attributes="for string:document_type_${dt_choice/index}" tal:content="dt_choice/value"/>
+		</div>
+		</tal:block>
 		<br/><br/>
 		<input type="submit" name="save_vl:method" value="Save" i18n:attributes="value"/>
 	</form>
@@ -230,12 +233,22 @@ $('input[name="geo_coverage_country:list:int"]').click(function() {
 });
 $('#approve_link').click(function() {
 	if ($.trim($(this).text()) == 'Approve assessment') {
-		if (document_type == 0 || countries.length == 0 || region == '') {
+		if (document_type.length == 0 || countries.length == 0 || region == '') {
 			$('#approve_error').show();
 			return false; // don't approve
 		}
 	}
 	return true;
+});
+$('#document_type_single_select').change(function(){
+	country_index = $(this).val();
+	$('#document_type_'+country_index).attr('checked', 'checked');
+	$('#document_type_top_'+country_index).show();
+	$('#document_type_single_select').val('Please select');
+});
+$('input[name="document_type:list:int"]').click(function() {
+	$(this).removeAttr('checked');
+	$(this).parent().hide();
 });
 </script>
 </tal:block>
