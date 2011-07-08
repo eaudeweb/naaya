@@ -13,7 +13,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope import component
 
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, html2text
 from managers.namespaces_tool import namespaces_tool
 from managers.channeltypes_manager import channeltypes_manager
 from Products.Naaya.interfaces import INySite, IHeartbeat
@@ -179,7 +179,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
           E.channel(
             E.title(s.title),
             E.link(p_url),
-            E.description(s.description),
+            E.description(html2text(s.description, trim_length=None)),
             Dc.description(s.description),
             Dc.identifier(p_url),
             Dc.date(self.utShowFullDateTimeHTML(self.utGetTodayDate())),
@@ -189,12 +189,12 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
             Dc.subject(s.site_subtitle),
             Dc.language(lang),
             Dc.source(s.publisher),
-            Dc.items(),
-            about = s.absolute_url()
+            E.items(),
+            {'{%s}about'%rdf_namespace : s.absolute_url()}
           )
         )
         channel = xml[0];  items = channel[-1]
-        seq = etree.SubElement(items, '{%s}seq'%rdf_namespace)
+        seq = etree.SubElement(items, '{%s}Seq'%rdf_namespace)
         for i in p_items:
             x = etree.SubElement(seq, '{%s}li'%rdf_namespace, resource=i.absolute_url())
         if self.hasImage():

@@ -113,7 +113,7 @@ class LocalChannel(SimpleItem, utils):
         xml = Rdf.RDF(rss_channel_for_channel(self, lang))
 
         channel = xml[0];  items = channel[-1]
-        seq = etree.SubElement(items, '{%s}seq'%rdf_namespace)
+        seq = etree.SubElement(items, '{%s}Seq'%rdf_namespace)
         for i in l_items:
             x = etree.SubElement(seq, '{%s}li'%rdf_namespace, resource=i.absolute_url())
         if self.hasImage():

@@ -28,9 +28,13 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaBase.NyFSFile import NyFSFile
-from Products.NaayaCore.managers.utils import uniqueId, slugify
+from Products.NaayaBase.NyBase import rss_item_for_object
+from Products.NaayaCore.managers.utils import uniqueId, slugify, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 try:
     from Products.TextIndexNG2.Registry import ConverterRegistry
@@ -407,19 +411,23 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
-        r = []
-        ra = r.append
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Text</dc:type>')
-        ra('<dc:format>application</dc:format>')
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+        item = rss_item_for_object(self, lang)
+        syndication_tool = self.getSyndicationTool()
+        namespaces = syndication_tool.getNamespaceItemsList()
+        nsmap = get_nsmap(namespaces)
+        dc_namespace = nsmap['dc']
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        the_rest = Dc.root(
+            Dc.type('Text'),
+            Dc.format('application'),
+            Dc.source(l_site.publisher),
+            Dc.creator(l_site.creator),
+            Dc.publisher(l_site.publisher)
+            )
+        item.extend(the_rest)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     def _fileitemkeywords(self, lang):
         """ """

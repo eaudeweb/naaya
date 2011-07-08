@@ -30,7 +30,8 @@ from naaya.content.base.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaBase.NyBase import rss_item_for_object
+from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
 from naaya.core.zope2util import relative_object_path
@@ -45,6 +46,9 @@ from participants import Participants
 from email import EmailSender, configureEmailNotifications
 from reports import MeetingReports
 from subscriptions import SignupUsersTool
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -339,22 +343,28 @@ class NyMeeting(NyContentData, NyFolder):
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Meeting</dc:type>')
-        ra('<dc:format>text</dc:format>')
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.interval.start_date))
-        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.interval.end_date))
-        ra('<ev:location>%s</ev:location>' % self.utXmlEncode(self.geo_address()))
-        ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.contact_person))
-        ra('<ev:type>Meeting</ev:type>')
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+        item = rss_item_for_object(self, lang)
+        syndication_tool = self.getSyndicationTool()
+        namespaces = syndication_tool.getNamespaceItemsList()
+        nsmap = get_nsmap(namespaces)
+        dc_namespace = nsmap['dc']
+        ev_namespace = nsmap['ev']
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        Ev = ElementMaker(namespace=ev_namespace, nsmap=nsmap)
+        the_rest = Dc.root(
+            Dc.type('Meeting'),
+            Dc.format('text'),
+            Dc.source(l_site.getLocalProperty('publisher', lang)),
+            Dc.creator(l_site.getLocalProperty('creator', lang)),
+            Dc.publisher(l_site.getLocalProperty('publisher', lang)),
+            Ev.startdate(self.utShowFullDateTimeHTML(self.interval.start_date)),
+            Ev.enddate(self.utShowFullDateTimeHTML(self.interval.end_date)),
+            Ev.location(self.geo_address()),
+            Ev.organizer(self.contact_person),
+            Ev.type('Meeting')
+            )
+        item.extend(the_rest)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     def _check_meeting_dates(self, form_errors):
         _startdate = getattr(self, 'interval.start_date', '')

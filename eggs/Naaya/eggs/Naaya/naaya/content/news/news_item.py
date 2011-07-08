@@ -22,11 +22,15 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import slugify, uniqueId
+from Products.NaayaBase.NyBase import rss_item_for_object
+from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyNews
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #pluggable type metadata
 PROPERTIES_OBJECT = {
@@ -306,17 +310,21 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Text</dc:type>')
-        ra('<dc:format>text</dc:format>')
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+        item = rss_item_for_object(self, lang)
+        syndication_tool = self.getSyndicationTool()
+        namespaces = syndication_tool.getNamespaceItemsList()
+        nsmap = get_nsmap(namespaces)
+        dc_namespace = nsmap['dc']
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        the_rest = Dc.root(
+            Dc.type('Text'),
+            Dc.format('text'),
+            Dc.source(self.source),
+            Dc.creator(l_site.creator),
+            Dc.publisher(l_site.publisher)
+            )
+        item.extend(the_rest)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     def getSmallPicture(self, version=None, REQUEST=None):
         """ """

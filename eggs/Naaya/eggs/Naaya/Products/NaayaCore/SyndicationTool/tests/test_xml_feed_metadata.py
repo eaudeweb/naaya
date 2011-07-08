@@ -33,12 +33,13 @@ class Test_xml_feed_metadata(NaayaTestCase):
         subject = xpath('dc:subject', channel)
         language = xpath('dc:language', channel)[0]
         resources = tree.xpath(
-                            '/rdf:RDF/a:channel/dc:items/rdf:seq/rdf:li',
+                            '/rdf:RDF/a:channel/a:items/rdf:Seq/rdf:li',
                              namespaces=namespaces)
         items = tree.xpath('/rdf:RDF/a:item', namespaces=namespaces)
         script_channels = self.portal.getSyndicationTool().get_script_channels()
+        rdf_namespace = namespaces['rdf']
 
-        self.assertEqual(channel.attrib['about'], self.portal.absolute_url())
+        self.assertEqual(channel.attrib['{%s}about'%rdf_namespace], self.portal.absolute_url())
         self.assertEqual(title.text, self.portal.title)
         self.assertEqual(link.text, self.portal.absolute_url())
         self.assertEqual(description.text, self.portal.description)
@@ -50,7 +51,6 @@ class Test_xml_feed_metadata(NaayaTestCase):
         self.assertEqual(subject[1].text, self.portal.site_subtitle)
         self.assertEqual(language.text, self.portal.gl_get_selected_language())
 
-        rdf_namespace = namespaces['rdf']
         script_channels_urls = [s.absolute_url() for s in script_channels]
         about_attr = [item.attrib['{%s}about'%rdf_namespace] for item in items]
         resource_attr = [resource.attrib['resource'] for resource in resources]

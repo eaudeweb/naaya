@@ -1,12 +1,12 @@
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SyndicationTool.managers.namespaces_tool import namespaces_tool
-from Products.NaayaBase import NyBase
-from naaya.content.url.url_item import addNyURL
+from Products.NaayaBase.NyBase import rss_item_for_object
+from naaya.content.event.event_item import addNyEvent
 
 from lxml import etree
 
 class NySyndicationTestCase(NaayaFunctionalTestCase):
-    def test_latestuploads(self):
+    def test_rss_item_for_object(self):
         syndication_tool = self.portal.getSyndicationTool()
         namespaces = {}
         for n in syndication_tool.getNamespaceItemsList():
@@ -14,24 +14,27 @@ class NySyndicationTestCase(NaayaFunctionalTestCase):
                 namespaces[n.prefix] = n.value
             else:
                 namespaces['a'] = n.value
-        addNyURL(self.portal['info'], 'testurl', title="URL")
-        testurl =  self.portal['info']['testurl']
-        testurl.approveThis()
-        self.portal.recatalogNyObject(self.portal['info']['testurl'])
-        tree = etree.XML(self.portal.portal_syndication['latestuploads_rdf'].index_html())
-        found = 0
-        resources = tree.xpath('//rdf:li[@resource]', namespaces=namespaces)
-        for resource in resources:
-            if resource.attrib['resource']==testurl.absolute_url():
-                found = 1
-        namespace = namespaces['a']
-        rdf_namespace = namespaces['rdf']
-        items = tree.xpath('./a:item', namespaces=namespaces)
-        my_url_item = tree.xpath("./a:item[@rdf:about='%s']"%testurl.absolute_url(),
-                                 namespaces=namespaces)[0]
-        contributor = my_url_item.xpath('./dc:contributor',namespaces=namespaces)[0]
-        format = my_url_item.xpath('./dc:format', namespaces=namespaces)[0]
+        addNyEvent(self.portal['info'], id='9000', contributor='Me',
+                   title='Eveniment', start_date='12/12/2012', description='About something')
+        event = self.portal['info']['9000']
+        event.approveThis()
+        self.portal.recatalogNyObject(self.portal['info']['9000'])
+        lang = self.portal.gl_get_selected_language()
+        tree = rss_item_for_object(event, lang)
+        title = tree.xpath('./title',namespaces=namespaces)[0]
+        link = tree.xpath('./link', namespaces=namespaces)[0]
+        description = tree.xpath('./description', namespaces=namespaces)[0]
+        dc_title = tree.xpath('./dc:title',namespaces=namespaces)[0]
+        identifier = tree.xpath('./dc:identifier',namespaces=namespaces)[0]
+        dc_description = tree.xpath('./dc:description', namespaces=namespaces)[0]
+        contributor = tree.xpath('./dc:contributor', namespaces=namespaces)[0]
+        language = tree.xpath('./dc:language', namespaces=namespaces)[0]
 
-        self.assertEqual(found,1)
-        self.assertEqual(contributor.text, self.portal['info']['testurl'].contributor)
-        self.assertEqual(format.text, 'text/html')
+        self.assertEqual(title.text, event.title)
+        self.assertEqual(link.text, event.absolute_url())
+        self.assertEqual(description.text, event.description)
+        self.assertEqual(dc_title.text, event.title)
+        self.assertEqual(identifier.text, event.absolute_url())
+        self.assertEqual(dc_description.text, event.description)
+        self.assertEqual(contributor.text, event.contributor)
+        self.assertEqual(language.text, lang)
