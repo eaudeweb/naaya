@@ -8,30 +8,6 @@ from zope.interface import implements
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n import interpolate
 
-try:
-    from Products import Localizer
-except ImportError:
-    pass
-else:
-    from LocalizerWrapper import LocalizerWrapper
-
-    class NyLocalizerTranslator(object):
-
-        implements(ITranslationDomain)
-
-        def translate(self, msgid, mapping=None, context=None, target_language=None,
-                      default=None):
-            try:
-                site = context['PARENTS'][0].getSite()
-                localizer = LocalizerWrapper(site)
-            except KeyError, e:
-                # malformed Request, probably we are in a mock/testing env.
-                return msgid
-
-            # TODO: set target_language if we want to move negotiation here
-            return localizer.translate(msgid, mapping, context, target_language,
-                                       default)
-
 
 class NyI18nTranslator(object):
 

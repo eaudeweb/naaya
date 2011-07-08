@@ -1,18 +1,14 @@
 
-# Python imports
 from lxml.html.soupparser import fromstring
 from lxml.cssselect import CSSSelector
 import re
 
-# Zope imports
 import transaction
 from zope.app.component.site import threadSiteSubscriber
 
-# Naaya imports
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-# Product imports
 from naaya.i18n.LocalPropertyManager import LocalAttribute
 
 
