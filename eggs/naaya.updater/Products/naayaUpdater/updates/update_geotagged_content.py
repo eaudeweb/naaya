@@ -22,7 +22,7 @@
 from decimal import Decimal
 
 #Zope imports
-from Products.Localizer.LocalAttributes import LocalAttribute
+from naaya.i18n.LocalPropertyManager import LocalAttribute
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript
