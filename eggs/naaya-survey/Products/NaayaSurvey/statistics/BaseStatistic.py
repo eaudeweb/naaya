@@ -26,7 +26,7 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Naaya imports
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 
 def manage_addStatistic(klass, container, id="", question=None, REQUEST=None, **kwargs):
