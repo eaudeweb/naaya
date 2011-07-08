@@ -1,14 +1,11 @@
 
-# Zope imports
 from zope.i18n.interfaces import INegotiator, ILanguageAvailability
 from zope.component import providedBy
 
-# Naaya imports
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.constants import DEFAULT_PORTAL_LANGUAGE_CODE
 from nose.plugins.skip import SkipTest
 
-# Product imports
 from naaya.i18n.constants import (ID_NAAYAI18N, TITLE_NAAYAI18N,
                                   METATYPE_NAAYAI18N)
 from naaya.i18n.interfaces import INyTranslationCatalog
@@ -26,7 +23,7 @@ class TestPortalTool(NaayaTestCase):
 
     def test_components_availability(self):
         self.assertTrue(ILanguageAvailability.providedBy(
-                           self.tool.get_portal_lang_manager()))
+                                                  self.tool.get_lang_manager()))
         self.assertTrue(INegotiator.providedBy(self.tool.get_negotiator()))
         self.assertTrue(INyTranslationCatalog.providedBy(
                                                self.tool.get_message_catalog()))
@@ -94,9 +91,6 @@ class TestNySiteApi(NaayaTestCase):
                          'English/United States')
         self.assertEqual(self.portal.gl_get_language_name('un-known'), '???')
 
-    def test_add_languages(self):
-        pass
-
     def test_changeLanguage(self):
         i18n = self.portal.getPortalI18n()
         cookie_id = i18n.get_negotiator().cookie_id
@@ -104,8 +98,9 @@ class TestNySiteApi(NaayaTestCase):
                          DEFAULT_PORTAL_LANGUAGE_CODE)
         self.portal.gl_changeLanguage('de')
         self.assertTrue(self.portal.REQUEST.RESPONSE.cookies.has_key(cookie_id))
-        self.assertEqual(self.portal.REQUEST.RESPONSE.cookies[cookie_id],
-                         {'path': '/portal', 'value': 'de'})
+        cookie = self.portal.REQUEST.RESPONSE.cookies[cookie_id]
+        self.assertEqual(cookie['path'], '/portal')
+        self.assertEqual(cookie['value'], 'de')
 
     def test_add_site_language(self):
         self.portal.gl_add_site_language('fr')

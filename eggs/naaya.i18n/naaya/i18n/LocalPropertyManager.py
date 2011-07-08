@@ -1,18 +1,15 @@
 # -*- coding: UTF-8 -*-
 
-# Python imports
 from time import time
 
-# Zope
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from ExtensionClass import Base
 from zope.deprecation import deprecate
 
-# Product imports
 from patches import get_request, get_i18n_context
 from NyNegotiator import NyNegotiator
-from LanguageManagers import NyLanguages
+from LanguageManagers import get_language_name
 
 class LocalAttribute(Base):
     """
@@ -190,11 +187,11 @@ class LocalPropertyManager(object):
     def get_language_name(self, lang):
         """
         Deprecated: Use gl_get_language_name on NySite or even better,
-        use get_language_name on getPortalI18n().get_portal_lang_manager()
+        use get_language_name on getPortalI18n().get_lang_manager()
         This deprecated version can not return custom named languages
 
         """
-        return NyLanguages().get_language_name(lang)
+        return get_language_name(lang)
 
 
 InitializeClass(LocalPropertyManager)

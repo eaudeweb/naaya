@@ -1,9 +1,7 @@
 
-# Python imports
 import re
 from lxml.html.soupparser import fromstring
 
-# Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 class TestManageMessagesInZmi(NaayaFunctionalTestCase):

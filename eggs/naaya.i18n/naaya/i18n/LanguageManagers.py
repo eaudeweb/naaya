@@ -1,15 +1,16 @@
-# Python imports
+"""
+This modules provides procedures for obtaining all available languages
+in different formats and a class to store available languages in a portal.
+
+"""
+
 import os.path
 import re
 
-# Zope imports
 from zope.interface import implements
-from zope.i18n.interfaces import (IModifiableUserPreferredLanguages,
-                                  ILanguageAvailability)
 from Persistence import Persistent
 from persistent.list import PersistentList
 
-# Project imports
 from interfaces import INyLanguageManagement
 
 
@@ -22,64 +23,44 @@ def normalize_code(code):
     else:
         return parts[0]
 
-class NyLanguages(object):
+def get_languages_list():
+    languages = {}
+    cwd = __file__.rsplit(os.path.sep, 1)[0]
+    filename = os.path.join(cwd, 'languages.txt')
+    for line in open(filename).readlines():
+        line = line.strip()
+        if line and line[0] != '#':
+            code, name = line.split(' ', 1)
+            languages[normalize_code(code)] = name
 
-    def __init__(self):
-        self.reset()
+    return languages
 
-    def reset(self):
-        self.languages = {}
-        cwd = __file__.rsplit(os.path.sep, 1)[0]
-        filename = os.path.join(cwd, 'languages.txt')
-        for line in open(filename).readlines():
-            line = line.strip()
-            if line and line[0] != '#':
-                code, name = line.split(' ', 1)
-                self.languages[normalize_code(code)] = name
+def get_languages():
+    languages = get_languages_list()
+    language_codes = languages.keys()
+    language_codes.sort()
+    return[ {'code': x, 'name': languages[x]} for x in language_codes ]
 
-        # Builds a sorted list with the languages code and name
-        language_codes = self.languages.keys()
-        language_codes.sort()
-        self.langs = [ {'code': x,
-                        'name': self.languages[x]} for x in language_codes ]
+def get_language_name(code):
+    """
+    Returns the name of a language. In order to return the name of a custom
+    language added in portal, use get_language_name on portal_i18n portal tool
 
-    def add_language(self, code, name):
-        """
-        Returns code of added language, None if code already exists
-        """
-        code = normalize_code(code)
-        if self.languages.has_key(code):
-            raise KeyError("`%s` language code already exists" % code)
-        self.languages[code] = name
-        language_codes = self.languages.keys()
-        language_codes.sort()
-        self.langs = [ {'code': x,
-                        'name': self.languages[x]} for x in language_codes ]
+    """
+    code = normalize_code(code)
+    return get_languages_list().get(code, '???')
 
-    def del_language(self, code):
-        """
-        Returns deleted language code, None if language code not found
-        """
-        code = normalize_code(code)
-        if code not in self.languages.keys():
-            raise KeyError("`%s` language code doesn't exist" % code)
-        name = self.languages[code]
-        del self.languages[code]
-        self.langs.pop(self.langs.index({'code': code, 'name': name}))
-
-    def get_language_name(self, code):
-        """
-        Returns the name of a language.
-        """
-        code = normalize_code(code)
-        return self.languages.get(code, '???')
-
-    def get_all_languages(self):
-        return self.langs
 
 class NyPortalLanguageManager(Persistent):
+    """
+    Portal_i18n has an instance of this type, accessible by *get_lang_manager()*
+    method. It supplies add/edit/remove/set_default operations with languages
+    available in portal and it is also used to get current available
+    languages and default language.
 
-    implements(ILanguageAvailability)
+    """
+    implements(INyLanguageManagement)
+
 
     def __init__(self, default_langs=[('en', 'English')]):
         if not isinstance(default_langs, list):
@@ -96,8 +77,7 @@ class NyPortalLanguageManager(Persistent):
         """Adds available language in portal"""
         lang_code = normalize_code(lang_code)
         if not lang_name:
-            n = NyLanguages()
-            lang_name = n.get_language_name(lang_code)
+            lang_name = get_language_name(lang_code)
         if lang_code not in self.getAvailableLanguages():
             self.portal_languages.append((lang_code, lang_name))
 
