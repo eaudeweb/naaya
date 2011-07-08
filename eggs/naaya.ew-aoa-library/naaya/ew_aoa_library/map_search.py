@@ -6,6 +6,8 @@ import Globals
 from App.config import getConfiguration
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
+from devel import aoa_devel_hook
+
 log = logging.getLogger(__name__)
 
 country_list = [ # TODO `country_list` should not be duplicated here
@@ -256,7 +258,7 @@ class AoaSearchMapPortlet(object):
         self.site = site
 
     def __call__(self, context, position):
-        #import sys; reload(sys.modules[__name__])
+        aoa_devel_hook(__name__)
         tmpl_options = portlet_template_options(self.site)
         tmpl_options['macro'] = self.site.getPortletsTool()._get_macro(position)
         return self.template.__of__(context)(**tmpl_options)

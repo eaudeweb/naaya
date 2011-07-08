@@ -15,6 +15,7 @@ from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 
 import shadow
 import map_search
+from devel import aoa_devel_hook
 
 survey_answer_metatype = 'Naaya Survey Answer'
 shadow_metatype = 'Naaya EW_AOA Shadow Object'
@@ -94,8 +95,7 @@ class AoALibraryViewer(SimpleItem):
 
     security.declarePrivate('wrap_answer')
     def wrap_answer(self, answer):
-        #if Globals.DevelopmentMode:
-        #    reload(shadow)
+        #aoa_devel_hook(shadow.__name__)
 
 # disable the cache (-- moregale)
 #        if not hasattr(self, '_v_shadow_cache') or Globals.DevelopmentMode:
@@ -158,7 +158,8 @@ class AoALibraryViewer(SimpleItem):
 
     def do_map_search(self, REQUEST):
         """ """
-        #reload(map_search)
+        aoa_devel_hook(shadow.__name__)
+        aoa_devel_hook(map_search.__name__)
         return map_search.do_search(self, REQUEST)
 
     _index_html = NaayaPageTemplateFile('zpt/index', globals(),
