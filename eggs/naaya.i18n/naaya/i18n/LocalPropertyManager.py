@@ -133,10 +133,10 @@ class LocalPropertyManager(object):
             if i18n is None: # didn't traverse any portal yet, e.g. zmi root
                 lang = 'en'
             else:
-                neg = NyNegotiator(request=request, cookie_id=i18n['cookie_id'])
+                neg = NyNegotiator()
                 # need to negotiate lang based on available langs for this prop.
                 lang = neg.getLanguage(self._local_properties[id].keys(),
-                                       fallback=False)
+                                       request, fallback=False)
             if lang is None:
                 # eg: we ask default (en), id has only 'de', lang is then None
                 # because fallback=False (or else it would have been `de`)

@@ -53,7 +53,6 @@ def populate_threading_local(portal, request):
         i18n['default_language'] = lang_manager.get_default_language()
         i18n['languages_mapping'] = portal_i18n.get_languages_mapping()
         i18n['selected_language'] = portal_i18n.get_selected_language()
-        i18n['cookie_id'] = portal_i18n.get_negotiator().cookie_id
         set_i18n_context(i18n)
 
     set_request(request)

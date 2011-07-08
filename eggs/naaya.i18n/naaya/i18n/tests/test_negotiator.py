@@ -13,21 +13,21 @@ from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 # Product imports
 from naaya.i18n.NyNegotiator import NyNegotiator
+from naaya.i18n.constants import COOKIE_ID
 
 class NegotiatorTestSuite(NaayaTestCase):
 
-    cookie_id = 'LOCALIZER_LANGUAGE'
 
     def setUp(self):
         self.negotiator = NyNegotiator()
         self.req = self.portal.REQUEST
         self.req['HTTP_ACCEPT_LANGUAGE'] = 'pt-br'
-        self.req.cookies[self.cookie_id] = 'es'
+        self.req.cookies[COOKIE_ID] = 'es'
         self.req[self.negotiator.cookie_id] = 'de'
-        self.req.form[self.cookie_id] = 'fr'
+        self.req.form[COOKIE_ID] = 'fr'
 
     def test_negotiation_cache(self):
-        client_langs = {'browser': 'pt-BR',
+        client_langs = {'browser': ['pt-BR'],
                         'path': 'de',
                         'cookie': 'es',
                         'url': 'fr'}
@@ -63,7 +63,7 @@ class NegotiatorTestSuite(NaayaTestCase):
 
     def test_negotiate_partial(self):
         self.negotiator.set_policy('cookie')
-        self.req.cookies[self.cookie_id] = 'pt-un'
+        self.req.cookies[COOKIE_ID] = 'pt-un'
         result = self.negotiator.getLanguage(('en', 'pt-br', 'pt-un', 'fr'), self.req)
         self.assertEqual(result, 'pt-UN')
         result = self.negotiator.getLanguage(('en', 'pt-br', 'fr'), self.req)
@@ -73,14 +73,14 @@ class NegotiatorTestSuite(NaayaTestCase):
 
     def test_negotiate_priorities(self):
         self.negotiator.set_policy(('cookie', 'browser', 'url'))
-        self.req.cookies[self.cookie_id] = 'bg' # fails
+        self.req.cookies[COOKIE_ID] = 'bg' # fails
         self.req['HTTP_ACCEPT_LANGUAGE'] = 'es' # fails
-        self.req.form[self.cookie_id] = 'de' # hits
+        self.req.form[COOKIE_ID] = 'de' # hits
         result = self.negotiator.getLanguage(('en', 'de', 'fr'), self.req)
         self.assertEqual(result, 'de')
 
     def test_default_fallback(self):
-        self.req.cookies[self.cookie_id] = 'fr' # fails
+        self.req.cookies[COOKIE_ID] = 'fr' # fails
         result = self.negotiator.getLanguage(('de', 'en', 'es'), self.req)
         self.assertEqual(result, 'de')
 
