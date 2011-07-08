@@ -1,8 +1,15 @@
 <metal:block define-macro="validate">
 	<script tal:define="site here/getSite;
 			library_object site/tools/country_fiches;
-			country_choices python: library_object['w_country'].getChoices();"
-		tal:content="string:var country_list=${country_choices};">
+			viewer_object python: site['country-fiches-viewer'];
+			country_choices python: library_object['w_country'].getChoices();
+			water_document_type_choices python: here.rstk.json_dumps(viewer_object.get_document_types_for_themes(['Water']));
+			ge_document_type_choices python: here.rstk.json_dumps(viewer_object.get_document_types_for_themes(['Green Economy']));
+			both_document_type_choices python: here.rstk.json_dumps(viewer_object.get_document_types_for_themes(['Water', 'Green Economy']));"
+		tal:content="string:var country_list=${country_choices};
+					 var water_document_type_choices=${water_document_type_choices};
+					 var ge_document_type_choices=${ge_document_type_choices};
+					 var both_document_type_choices=${both_document_type_choices};">
 	</script>
 	<script>
 		function process_form(curr_lang, edit, water_document_types, ge_document_types, document_type, geo_coverage_country, theme) {
@@ -48,6 +55,26 @@
 				$('[for="w_country"]').after(country_single_select);
 				$('#country_single_select').before($('<div>').attr('class', 'tooltips'));
 
+				$('[name="w_type-document:list"]').hide();
+				$('[name="w_type-document:list"]').next().hide();
+				$('[name="w_type-document:list"]').next().next().hide();
+
+				var document_type_single_select = $('<select>').attr({
+					'name': 'document_type_single_select:utf8:ustring',
+					'id': 'document_type_single_select'});
+				if (curr_lang == 'ru'){
+					document_type_single_select.append($('<option>').attr('value', 'Please select').text('Пожалуйста выберите'));
+				}
+				else{
+					document_type_single_select.append($('<option>').attr('value', 'Please select').text('Please select'));
+				}
+				for (i = 0; i < both_document_type_choices.length; i++) {
+					var x = both_document_type_choices[i];
+					document_type_single_select.append($('<option>').attr('value', x.index).text(x.value));
+				}
+				$('[for="w_type-document"]').after(document_type_single_select);
+				$('#document_type_single_select').before($('<div>').attr('class', 'tooltips'));
+
 				if(!edit || edit.length == 0){
 					if (theme === null) {
 						if(getCookie('cf_theme_water') == 'True'){
@@ -79,29 +106,51 @@
 					}
 
 					if (document_type === null) {
-						$('#w_type-document').val(getCookie('cf_document'));
+						var selected_document_types = getCookie('cf_document');
+						if (selected_document_types){
+							selected_document_types = selected_document_types.split(':');
+							$.each(selected_document_types, function(k,v){
+								show_document_type(v);
+							});
+						}
 					} else {
-						$('#w_type-document').val(document_type);
+						show_document_type(document_type);
 					}
 
 					update_visibility();
 				};
 
 				themes_selected = $("input[name='w_theme:list']:checked");
+				document_types_selected = $("input[name='w_type-document:list']:checked:hidden");
+				if (document_types_selected){
+					document_types_selected.each(function(){
+						show_document_type($(this).val());
+					});
+				}
 				countries_selected = $("input[name='w_country:list']:checked:hidden");
 				if (countries_selected){
 					countries_selected.each(function(){
 						show_country($(this).val());
 					});
 				}
+				update_theme_cookie(themes_selected);
 				update_document_types(themes_selected);
 				$('input[name="w_theme:list"]').click(function(){
 					themes_selected = $("input[name='w_theme:list']:checked");
+					update_theme_cookie(themes_selected);
 					update_document_types(themes_selected);
 					update_visibility();
 				});
-				$('#w_type-document').change(function(){
-					setCookie('cf_document', $('#w_type-document').val(), 1)
+				$('#document_type_single_select').change(function(){
+					show_document_type($(this).val());
+					//Reset select to default value
+					$('#document_type_single_select').val('Please select');
+					update_cf_document_type_cookie();
+					update_visibility();
+				});
+				$('[name="w_type-document:list"]').click(function(){
+					hide_document_type($(this).val());
+					update_cf_document_type_cookie();
 					update_visibility();
 				});
 
@@ -121,6 +170,20 @@
 				});
 
 			});
+
+			function show_document_type(dt_index){
+				$('#w_type-document_'+dt_index).attr('checked', 'checked');
+				$('#w_type-document_'+dt_index).show();
+				$('#w_type-document_'+dt_index).next().show();
+				$('#w_type-document_'+dt_index).next().next().show();
+			}
+
+			function hide_document_type(dt_index){
+				$('#w_type-document_'+dt_index).removeAttr('checked');
+				$('#w_type-document_'+dt_index).hide();
+				$('#w_type-document_'+dt_index).next().hide();
+				$('#w_type-document_'+dt_index).next().next().hide();
+			}
 
 			function show_country(country_code){
 				$('#w_country_'+country_code).attr('checked', 'checked');
@@ -159,50 +222,77 @@
 				return o;
 			}
 
-			function update_document_types(themes_selected){
-				for (i=0;i<4;i++){
-					deleteCookie('cf_theme_'+i);
-				};
+			function update_theme_cookie(themes_selected) {
 				deleteCookie('cf_theme_water');
 				deleteCookie('cf_theme_ge');
-
-				if (!themes_selected || themes_selected.length == 0){
-					$('#w_type-document').attr('disabled', 'disabled');
-				}
-				else{
-					$('#w_type-document option').hide();
-					$('#w_type-document option[value=0]').show();
-					$('#w_type-document').removeAttr('disabled');
-					for (i=0;i<themes_selected.length;i++)
-					{
-						if (themes_selected[i].id == 'w_theme_0'){
-							setCookie('cf_theme_water', 'True', 1);
-							for (j=0;j<water_document_types.length;j++){
-								$('#w_type-document option[value='+water_document_types[j]+']').show();
-							};
-						}
-						if (themes_selected[i].id == 'w_theme_1'){
-							setCookie('cf_theme_ge', 'True', 1);
-							for (j=0;j<ge_document_types.length;j++){
-								$('#w_type-document option[value='+ge_document_types[j]+']').show();
-							};
-						}
+				if (themes_selected && themes_selected.length > 0){
+					if (themes_selected.length == 2) {
+						setCookie('cf_theme_water', 'True', 1);
+						setCookie('cf_theme_ge', 'True', 1);
+					} else if (themes_selected[0].id == 'w_theme_0') { // just Water
+						setCookie('cf_theme_water', 'True', 1);
+					} else { // just Green Economy
+						setCookie('cf_theme_ge', 'True', 1);
 					}
 				}
-				var current_document_type = $('#w_type-document').val()
-				if($('#w_type-document option[value='+current_document_type+']:visible').length == 0){
-					$('#w_type-document').val('0');
-					deleteCookie('cf_document');
+			}
+
+			function update_cf_document_type_cookie(){
+				var cf_document_values = [];
+				$('[name="w_type-document:list"]:checked').each(function(){
+					cf_document_values.push($(this).val());
+				});
+				setCookie('cf_document', cf_document_values.join(':'), 1);
+			}
+
+			function update_document_types(themes_selected){
+				if (!themes_selected || themes_selected.length == 0){
+					$('#document_type_single_select').attr('disabled', 'disabled');
+					for (i = 0; i < both_document_type_choices.length; i++) {
+						hide_document_type(both_document_type_choices[i].index); // remove if not allowed
+					}
+				} else {
+					$('#document_type_single_select').removeAttr('disabled');
+
+					if (themes_selected.length == 2) {
+						var choices = both_document_type_choices;
+					} else if (themes_selected[0].id == 'w_theme_0') { // just Water
+						var choices = water_document_type_choices;
+					} else { // just Green Economy
+						var choices = ge_document_type_choices;
+					}
+
+					// compute which document types are choices and which are not
+					var is_choice = {};
+					for (i = 0; i < both_document_type_choices.length; i++) {
+						is_choice[both_document_type_choices[i].index] = false;
+					}
+					for (i = 0; i < choices.length; i++) {
+						is_choice[choices[i].index] = true;
+					}
+
+					for (i = 0; i < both_document_type_choices.length; i++) {
+						if (is_choice[both_document_type_choices[i].index]) {
+							$('#document_type_single_select option[value=' + both_document_type_choices[i].index + ']').show();
+						} else {
+							$('#document_type_single_select option[value=' + both_document_type_choices[i].index + ']').hide();
+							hide_document_type(both_document_type_choices[i].index); // remove if not allowed
+						}
+					}
 				}
 			}
 
 			function update_visibility(){
-				var cf_document = $('#w_type-document').val(cf_document);
-				if (cf_document == '21' || cf_document == '22'){
+				var hide_author_and_year = false;
+				$('input[name="w_type-document:list"]:checked').each(function() {
+					if ($(this).val() == 11 || $(this).val() == 12) {
+						hide_author_and_year = true;
+					}
+				});
+				if (hide_author_and_year){
 					slide_hide($('#w_author').parent());
 					slide_hide($('#w_publication-year').parent());
-				}
-				else{
+				} else{
 					slide_show($('#w_author').parent());
 					slide_show($('#w_publication-year').parent());
 				}

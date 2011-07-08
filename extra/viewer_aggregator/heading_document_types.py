@@ -4,7 +4,7 @@ return {
 'State of water assessment/report': ['State of water assessment/report – National level',
                                      'State of water assessment/report – Sub-national level',
                                      'State of water assessment/report – Regional level'],
-'State of green economy assessment/report': ['State of green economy assessment/report – National level',
+'Green economy assessment/report': ['State of green economy assessment/report – National level',
                                              'State of green economy assessment/report – Sub-national level',
                                              'State of green economy assessment/report – Regional level'],
 'Sectorial report': ['Sectorial report'],
