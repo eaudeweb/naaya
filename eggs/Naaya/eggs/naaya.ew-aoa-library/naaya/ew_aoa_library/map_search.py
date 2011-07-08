@@ -2,6 +2,7 @@ from time import time
 import logging
 import simplejson as json
 from naaya.core.backport import any
+from naaya.core.zope2util import ofs_path
 import Globals
 from App.config import getConfiguration
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -100,6 +101,16 @@ country_list = [ # TODO `country_list` should not be duplicated here
 ]
 
 
+def catalog_filters_for_shadows(site):
+    return {
+        'meta_type': "Naaya EW_AOA Shadow Object",
+        'path': [
+            ofs_path(site['virtual-library-viewer']),
+            ofs_path(site['country-fiches-viewer']),
+        ],
+    }
+
+
 def get_filter_mappings(site):
     vl_viewer = site['virtual-library-viewer']
     vl_survey = vl_viewer.target_survey()
@@ -157,52 +168,48 @@ def all_documents(site):
         }
 
 
-def filter_documents(request, ctx):
-    text = request.form.get('text', '').decode('utf-8').strip().lower()
+def filter_documents(ctx, request):
+    site = ctx.getSite()
+    lang = site.gl_get_selected_language()
 
-    document_type = request.form.get('document-type', None)
-
-    theme = request.form.get('theme', None)
-
-    year = request.form.get('year', '').strip()
-
-    if not year:
-        year = None
+    def get_field(name, default=None):
+        value = request.form.get(name, '').decode('utf-8').strip()
+        return value or default
 
     country = request.form.get('country[]', [])
     if isinstance(country, basestring):
         country = [country]
 
-    search_countries = set(country or country_list)
+    filters = catalog_filters_for_shadows(site)
+    filters.update({
+        'viewer_country': country or country_list,
+        'viewer_document_type': get_field('document-type'),
+        'viewer_theme': get_field('theme'),
+        'viewer_year': get_field('year'),
+        'viewer_title_'+lang: get_field('text', ''),
+    })
 
+    for name in ['viewer_document_type', 'viewer_theme', 'viewer_year']:
+        if filters[name] is None:
+            del filters[name]
 
-    # perform the actual filtering
-    for document in all_documents(ctx.getSite()):
-
-        if document_type is not None:
-            if document_type != document['document_type']:
-                continue
-
-        if theme is not None:
-            if theme not in document['theme']:
-                continue
-
-        if year is not None:
-            if year != document['year']:
-                continue
-
-        if text not in document['title'].lower():
-            continue
-
-        if not any(i in search_countries for i in document['country']):
-            continue
-
-        yield document
+    for brain in site.getCatalogTool()(**filters):
+        shadow = brain.getObject()
+        yield {
+            "title": shadow.viewer_title_en,
+            "country": shadow.viewer_country,
+            "theme": shadow.viewer_theme,
+            "document_type": shadow.viewer_document_type,
+            "year": shadow.viewer_year,
+            "author": shadow.viewer_author,
+            "url": shadow.url,
+            "library_url": shadow.absolute_url(),
+        }
 
 
 def do_search(ctx, request):
     t0 = time()
-    documents = list(filter_documents(request, ctx))
+    documents = list(filter_documents(ctx, request))
 
     return json.dumps({
         'query-time': time() - t0,
@@ -212,8 +219,8 @@ def do_search(ctx, request):
 
 def docs_and_countries(site):
     t0 = time()
-    for document in all_documents(site):
-        yield document['country']
+    for brain in site.getCatalogTool()(**catalog_filters_for_shadows(site)):
+        yield brain['viewer_country']
     #print 'docs_and_countries:', time() - t0
 
 
