@@ -1344,7 +1344,6 @@ def rss_item_for_channel(channel):
          E.link(channel.absolute_url()),
          E.title(channel.title_or_id()),
          E.description(channel.description),
-         E.title(channel.title_or_id()),
          Dc.title(channel.title_or_id()),
          Dc.description(channel.description),
          Dc.contributor(channel.contributor),
@@ -1362,6 +1361,7 @@ def rss_channel_for_channel(channel, lang):
     s = channel.getSite()
     namespaces = channel.getNamespaceItemsList()
     nsmap = get_nsmap(namespaces)
+    rdf_namespace = nsmap['rdf']
     dc_namespace = nsmap['dc']
     Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
     E = ElementMaker(None, nsmap=nsmap)
@@ -1380,7 +1380,7 @@ def rss_channel_for_channel(channel, lang):
             Dc.rights(s.getLocalProperty('rights', lang)),
             Dc.type(channel.type),
             Dc.source(s.getLocalProperty('publisher', lang)),
-            Dc.items(),
-           about = s.absolute_url()
+            E.items(),
+           {'{%s}about'%rdf_namespace : s.absolute_url()}
           )
     return channel

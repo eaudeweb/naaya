@@ -147,7 +147,6 @@ class NyBase(NyDublinCore):
         """
         return filter(None, self.getLocalProperty('keywords', lang).split(','))
 
-    #Syndication RDF
     security.declarePrivate('syndicateThisHeader')
     def syndicateThisHeader(self):
         """
@@ -187,6 +186,7 @@ class NyBase(NyDublinCore):
         ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.getLocalProperty('rights', lang)))
         return ''.join(r)
 
+    #Syndication RDF
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
         """
@@ -225,7 +225,7 @@ class NyBase(NyDublinCore):
         for k in self.getLocalProperty('coverage', lang).split(','):
             item.append(Dc.coverage(k.strip()))
         for k in self.getLocalProperty('keywords', lang).split(','):
-            item.append(Dc.item(k.strip()))
+            item.append(Dc.subject(k.strip()))
         item.append(Dc.rights(self.getLocalProperty('rights', lang)))
         the_rest = (
                 Dc.publisher(l_site.getLocalProperty('publisher', lang)),
@@ -314,3 +314,38 @@ class NyBase(NyDublinCore):
         return ''
 
 InitializeClass(NyBase)
+
+def rss_item_for_object(obj,lang):
+    syndication_tool = obj.getSyndicationTool()
+    namespaces = syndication_tool.getNamespaceItemsList()
+    nsmap = get_nsmap(namespaces)
+    dc_namespace = nsmap['dc']
+    Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+    rdf_namespace = nsmap['rdf']
+    E = ElementMaker(None, nsmap=nsmap)
+    xml = E.item(
+        {'{%s}about'%rdf_namespace : obj.absolute_url()},
+        E.link(obj.absolute_url()),
+        E.title(obj.getLocalProperty('title', lang)),
+        E.description(obj.getLocalProperty('description', lang)),
+        Dc.title(obj.getLocalProperty('title', lang)),
+        Dc.identifier(obj.identifier()),
+        Dc.date(obj.utShowFullDateTimeHTML(obj.releasedate)),
+        Dc.description(obj.getLocalProperty('description', lang)),
+        Dc.contributor(obj.contributor),
+        Dc.language(lang)
+        )
+    for k in obj.getLocalProperty('coverage', lang).split(','):
+        xml.append(Dc.coverage(k.strip()))
+    for k in obj.getLocalProperty('keywords', lang).split(','):
+        xml.append(Dc.subject(k.strip()))
+    xml.append(Dc.rights(obj.getLocalProperty('rights', lang)))
+    return xml
+
+rdf_ns_map = {
+    'ev' : 'http://purl.org/rss/1.0/modules/event/',
+    'dc' : 'http://purl.org/dc/elements/1.1/',
+    'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'a' : 'http://purl.org/rss/1.0/'
+}
+

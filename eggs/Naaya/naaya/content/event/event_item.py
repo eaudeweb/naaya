@@ -23,13 +23,17 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaCore.managers.utils import slugify, uniqueId
+from Products.NaayaBase.NyBase import rss_item_for_object
+from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core.zope2util import DT2dt
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from interfaces import INyEvent
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -261,22 +265,30 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Event</dc:type>')
-        ra('<dc:format>text</dc:format>')
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
-        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
-        ra('<ev:location>%s</ev:location>' % self.utXmlEncode(self.getLocalProperty('location', lang)))
-        ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('host', lang)))
-        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getPortalTranslations().translate('', self.getEventTypeTitle(self.event_type))))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+        self.getLocalProperty('location')
+        item = rss_item_for_object(self, lang)
+        syndication_tool = self.getSyndicationTool()
+        namespaces = syndication_tool.getNamespaceItemsList()
+        nsmap = get_nsmap(namespaces)
+        dc_namespace = nsmap['dc']
+        ev_namespace = nsmap['ev']
+        Dc = ElementMaker(namespace=dc_namespace, nsmap=nsmap)
+        Ev = ElementMaker(namespace=ev_namespace, nsmap=nsmap)
+        the_rest = Dc.root(
+            Dc.type('Event'),
+            Dc.format('text'),
+            Dc.source(l_site.publisher),
+            Dc.creator(l_site.creator),
+            Dc.publisher(l_site.publisher),
+            Ev.location(self.location),
+            Ev.organizer(self.host),
+            Ev.type(self.getPortalTranslations().translate('', self.getEventTypeTitle(self.event_type))),
+            Ev.startdate(self.utShowFullDateTimeHTML(self.start_date))
+        )
+        if self.end_date:
+            the_rest.append(Ev.enddate(self.utShowFullDateTimeHTML(self.end_date)))
+        item.extend(the_rest)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
