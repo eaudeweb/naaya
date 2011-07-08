@@ -155,16 +155,24 @@ def extract_survey_answer_data(answer):
     return func(answer)
 
 def get_document_types_mapping(survey):
+    cache_name = '_v_aoa_document_types_map'
+    if hasattr(survey, cache_name):
+        return getattr(survey, cache_name)
+
     mapping = {}
     for idx, label in list(enumerate(survey['w_type-document'].getChoices())):
         mapping[idx] = force_to_unicode(label)
     if survey.getId() == 'country_fiches':
         del mapping[0]
 
-    # TODO cache `mapping` as a volatile attribute on the survey
+    setattr(survey, cache_name, mapping)
     return mapping
 
 def get_countries_mapping(survey):
+    cache_name = '_v_aoa_countries_map'
+    if hasattr(survey, cache_name):
+        return getattr(survey, cache_name)
+
     if survey.getId() == 'country_fiches':
         widget_name = 'w_country'
     elif survey.getId() == 'bibliography-details-each-assessment':
@@ -174,7 +182,7 @@ def get_countries_mapping(survey):
     for idx, label in enumerate(survey[widget_name].getChoices()):
         mapping[idx] = force_to_unicode(label)
 
-    # TODO cache `mapping` as a volatile attribute on the survey
+    setattr(survey, cache_name, mapping)
     return mapping
 
 def extract_survey_answer_data_library(answer):
