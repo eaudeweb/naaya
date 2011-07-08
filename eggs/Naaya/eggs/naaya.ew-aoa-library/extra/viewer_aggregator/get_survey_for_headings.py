@@ -8,7 +8,7 @@ return {
 'Section in State of Environment report': [vl],
 'Section in environmental performance review': [vl],
 'State of water assessment/report': [vl],
-'State of green economy assessment/report': [vl],
+'Green economy assessment/report': [vl],
 'Sectorial report': [vl],
 'Water sector or NGOs report': [vl],
 'Water statistics': [vl, cf],

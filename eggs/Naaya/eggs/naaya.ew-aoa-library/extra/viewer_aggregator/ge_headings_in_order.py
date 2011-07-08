@@ -1,5 +1,5 @@
 return [
-    'State of green economy assessment/report',
+    'Green economy assessment/report',
     'Section in State of Environment report',
     'Sectorial report',
     'Environmental statistics',
