@@ -1,4 +1,3 @@
-
 import re
 from base64 import encodestring, decodestring
 from urllib import quote
@@ -9,12 +8,10 @@ from AccessControl import ClassSecurityInfo
 from ZPublisher import HTTPRequest
 try:
     # Zope 2.12
-    from zope.i18nmessageid import ZopeMessageFactory as _
     from App.special_dtml import DTMLFile
     from App.class_init import InitializeClass
 except ImportError:
     # Zope <= 2.11
-    from zope.app.i18n import ZopeMessageFactory as _
     from Globals import DTMLFile
     from Globals import InitializeClass
 from AccessControl.Permissions import view_management_screens
@@ -30,19 +27,6 @@ from ImportExport import TranslationsImportExport
 from patches import populate_threading_local
 from ExternalService import external_translate
 
-
-# used by get_namespace mainly (to prefill dtml vars)
-def to_unicode(x):
-    """In Zope the ISO-8859-1 encoding has an special status, normal strings
-    are considered to be in this encoding by default.
-    """
-    if isinstance(x, unicode):
-        return x
-    encoding = HTTPRequest.default_encoding
-    return unicode(x, encoding)
-
-def filter_sort(x, y):
-    return cmp(to_unicode(x), to_unicode(y))
 
 def get_url(url, batch_start, batch_size, regex, lang, empty, **kw):
     params = []
@@ -104,14 +88,12 @@ class NaayaI18n(SimpleItem):
                                     lang_codes)
         self._catalog = catalog
 
+    security.declarePrivate('get_negotiator')
     def get_negotiator(self):
         """ Return NyNegotiator instance, based on current request """
-        try:
-            return NyNegotiator(request=self.getSite().REQUEST)
-        except AttributeError:
-            # maybe debug/testing environment?
-            return NyNegotiator()
+        return NyNegotiator()
 
+    security.declarePrivate('get_message_catalog')
     def get_message_catalog(self):
         """
         Returns Message Catalog (NyMessageCatalog instance).
@@ -120,6 +102,7 @@ class NaayaI18n(SimpleItem):
         """
         return self._catalog
 
+    security.declarePrivate('get_lang_manager')
     def get_lang_manager(self):
         """
         Returns NyPortalLanguageManager instance in portal, capable
@@ -128,14 +111,17 @@ class NaayaI18n(SimpleItem):
         """
         return self._portal_langs
 
+    security.declarePrivate('get_importexport_tool')
     def get_importexport_tool(self):
         """ Returns the import-export wrapper for Message Catalog """
         return TranslationsImportExport(self.get_message_catalog())
 
+    security.declarePublic('get_all_languages_mapping')
     ### More specific methods:
     def get_all_languages_mapping(self):
         return get_languages()
 
+    security.declarePublic('get_language_name')
     def get_language_name(self, code):
         """
         Get the language name for 'code'. It first looks up
@@ -144,9 +130,10 @@ class NaayaI18n(SimpleItem):
         to '???' string
 
         """
-        if code in self.get_lang_manager().getAvailableLanguages():
+        lang_manager = self.get_lang_manager()
+        if code in lang_manager.getAvailableLanguages():
             # try to get name from added langs to site
-            return self.get_lang_manager().get_language_name(code)
+            return lang_manager.get_language_name(code)
         else:
             # not there, default to languages.txt
             return get_language_name(code)
@@ -169,6 +156,7 @@ class NaayaI18n(SimpleItem):
                            'default': l == default})
         return result
 
+    security.declarePrivate('add_language')
     def add_language(self, lang_code, lang_name=None):
         """
         Adds a new supported language in portal_i18n.
@@ -188,6 +176,7 @@ class NaayaI18n(SimpleItem):
         # and to catalog:
         self._catalog.add_language(lang_code)
 
+    security.declarePrivate('del_language')
     def del_language(self, lang):
         """
         Deletes a language from portal_i18n:
@@ -198,26 +187,24 @@ class NaayaI18n(SimpleItem):
         self._portal_langs.delAvailableLanguage(lang)
         self._catalog.del_language(lang)
 
+    security.declarePublic('get_selected_language')
     def get_selected_language(self, context=None):
         """ Performs negotiation and returns selected languag based on context
         or finds context using threading.local patch """
+        if context is None:
+            context = self.getSite().REQUEST
         return self.get_negotiator().getLanguage(
                             self._portal_langs.getAvailableLanguages(), context)
 
-    def change_selected_language(self, lang, goto=None, expires=None):
+    security.declarePublic('change_selected_language')
+    def change_selected_language(self, lang, goto=None):
         """ Sets a cookie with a new preferred selected language """
         request = self.REQUEST
         response = request.RESPONSE
         negotiator = self.get_negotiator()
 
-        # Changes the cookie (it could be something different)
-        parent = self.aq_parent
-        path = parent.absolute_url()[len(request['SERVER_URL']):] or '/'
-        if expires is None:
-            response.setCookie(negotiator.cookie_id, lang, path=path)
-        else:
-            response.setCookie(negotiator.cookie_id, lang, path=path,
-                               expires=unquote(expires))
+        negotiator.change_language(lang, self, request)
+
         # Comes back
         if goto is None:
             goto = request['HTTP_REFERER']
@@ -349,7 +336,7 @@ class NaayaI18n(SimpleItem):
         for m, t in self.get_message_catalog().messages():
             if query.search(m) and (not empty or not t.get(lang, '').strip()):
                 messages.append(m)
-        messages.sort(filter_sort)
+        messages.sort()
         # How many messages
         n = len(messages)
         namespace['n_messages'] = n
@@ -378,14 +365,12 @@ class NaayaI18n(SimpleItem):
                 message = messages[0]
                 translation = self.get_message_catalog()\
                                   .gettext(message, lang, '')
-                message = to_unicode(message)
                 message_encoded = self.message_encode(message)
         else:
             message_encoded = message
             message = self.message_decode(message_encoded)
             #translations = self.get_translations(message)
             translation = self.get_message_catalog().gettext(message, lang, '')
-            message = to_unicode(message)
         namespace['message'] = message
         namespace['message_encoded'] = message_encoded
         #namespace['translations'] = translations
@@ -394,7 +379,6 @@ class NaayaI18n(SimpleItem):
         # Calculate the current message
         namespace['messages'] = []
         for x in messages:
-            x = to_unicode(x)
             x_encoded = self.message_encode(x)
             url = get_url(
                 REQUEST.URL, batch_start, batch_size, regex, lang, empty,
@@ -408,7 +392,7 @@ class NaayaI18n(SimpleItem):
         # The languages
         for language in languages:
             code = language['code']
-            language['name'] = _(language['name'])
+            language['name'] = self.get_translation(unicode(language['name']))
             language['url'] = get_url(REQUEST.URL, batch_start, batch_size,
                 regex, code, empty, msg=message_encoded)
         namespace['languages'] = languages
@@ -433,7 +417,7 @@ class NaayaI18n(SimpleItem):
                       REQUEST['regex'], REQUEST.get('lang', ''),
                       REQUEST.get('empty', 0),
                       msg=message_encoded,
-                      manage_tabs_message=_(u'Saved changes.'))
+                      manage_tabs_message=self.get_translation(u'Saved changes.'))
         RESPONSE.redirect(url)
 
     security.declareProtected('Manage messages', 'manage_delMessage')
@@ -446,7 +430,7 @@ class NaayaI18n(SimpleItem):
                       REQUEST['batch_start'], REQUEST['batch_size'],
                       REQUEST['regex'], REQUEST.get('lang', ''),
                       REQUEST.get('empty', 0),
-                      manage_tabs_message=_(u'Saved changes.'))
+                      manage_tabs_message=self.get_translation(u'Saved changes.'))
         RESPONSE.redirect(url)
 
     #### Languages Tab ####
@@ -460,7 +444,8 @@ class NaayaI18n(SimpleItem):
         Add a new language for this portal.
         """
         self.getSite().gl_add_site_language(language_code, language_name)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_languages?save=ok')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_languages?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_delLanguages')
     def manage_delLanguages(self, languages, REQUEST=None):
@@ -468,7 +453,8 @@ class NaayaI18n(SimpleItem):
         Delete one or more languages.
         """
         self.getSite().gl_del_site_languages(languages)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_languages?save=ok')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_languages?save=ok')
 
     security.declareProtected(view_management_screens,
                               'manage_changeDefaultLang')
@@ -477,7 +463,8 @@ class NaayaI18n(SimpleItem):
         Change the default portal language.
         """
         self.getSite().gl_change_site_defaultlang(language)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_languages?save=ok')
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_languages?save=ok')
 
     #### Export Tab ####
 
@@ -546,5 +533,9 @@ class NaayaI18n(SimpleItem):
     security.declareProtected(view_management_screens, 'manage_import_xliff')
     def manage_import_xliff(self, file, language, REQUEST, RESPONSE):
         raise NotImplementedError("Xliff import is not yet implemented")
+
+    #######################################################################
+    # Naaya Administration screens
+    #######################################################################
 
 InitializeClass(NaayaI18n)

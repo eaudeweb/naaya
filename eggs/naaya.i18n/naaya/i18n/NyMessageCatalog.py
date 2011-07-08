@@ -1,7 +1,6 @@
 
-# Python imports
+import logging
 
-# Zope imports
 try:
     # zope 2.12
     from Persistence import PersistentMapping
@@ -11,10 +10,8 @@ except ImportError:
 from Persistence import Persistent
 from zope.interface import implements
 
-# Naaya imports
 from naaya.core.utils import force_to_unicode
 
-# Product imports
 from interfaces import INyTranslationCatalog
 
 def update_transaction_note():
@@ -60,9 +57,10 @@ class NyMessageCatalog(Persistent):
 
     def edit_message(self, msgid, lang, translation):
         # input type sanitize
+        logger = logging.getLogger(__name__)
         if isinstance(msgid, str):
             logger.warn(('Got str "%s" in edit_message for msgid, '
-                         'expecting unicode') % msgstr)
+                         'expecting unicode') % msgid)
             msgid = force_to_unicode(msgid)
         if isinstance(translation, str):
             logger.warn(('Got str "%s" in edit_message for translation, '
@@ -108,7 +106,6 @@ class NyMessageCatalog(Persistent):
         # Add it if it's not in the dictionary
         if not self._message_exists(msgid):
             if msgstr is not None:
-                import logging
                 logger = logging.getLogger(__name__)
                 logger.warn('Got str "%s" in gettext, expecting unicode'
                             % msgstr)

@@ -54,8 +54,11 @@ class LocalizerToNaayaI18n(UpdateScript):
         for (msgid, trans) in portal_trans._messages.items():
             if isinstance(msgid, str):
                 msgid = force_to_unicode(msgid)
+            # one call to gettext, to add 'en' identical translation, if missing
+            message_cat.gettext(msgid, def_lang)
             msg_cnt += 1
             for lang in trans:
+                found = message_cat.gettext(msgid, lang, '')
                 if lang != 'note':
                     trans_cnt += 1
                     if isinstance(trans[lang], unicode):
@@ -67,9 +70,13 @@ class LocalizerToNaayaI18n(UpdateScript):
                                         "translation") % type(trans[lang]))
                         self.log.error("Migration cancelled")
                         return False
-                    message_cat.edit_message(msgid, lang, translation)
-        self.log.debug('%d msg ids copied, a total of %d translation mappings.'
+                    if translation != found:
+                        message_cat.edit_message(msgid, lang, translation)
+            
+        self.log.debug('%d iterated, a total of %d translation mappings.'
                        % (msg_cnt, trans_cnt))
+        self.log.debug('Message Catalog now counts %d entries (msgid-s).'
+                       % len(message_cat._messages.keys()))
 
         # Fix local properties:
         # * remove translations with None-index (instead of language code)

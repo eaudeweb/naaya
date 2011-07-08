@@ -1,29 +1,30 @@
+"""
+NyNegotiator handles negotiation using available languages and
+request passed to getLanguage.
+It is initialized in portal_tool and in LocalPropertyManager, when
+selecting language for a localized property.
 
-# Zope imports
+* cookie_id is used from constants.COOKIE_ID
+* policy is a hardcoded list/tuple of priorities
+
+"""
+
 from zope.i18n.interfaces import INegotiator
 from zope.interface import implements
 from ZPublisher.Request import Request
-from patches import get_request
 
-# Product imports
 from LanguageManagers import normalize_code
+from constants import COOKIE_ID
 
 class NyNegotiator(object):
     implements(INegotiator)
 
-    def __init__(self, cookie_id='LOCALIZER_LANGUAGE',
-                 policy=('path', 'url', 'cookie', 'browser'),
-                 request=None):
+    def __init__(self):
         """
-            * `cookie_id` is a key looked up in cookies/querystrings
-            * `policy` can be 'browser', 'url', 'path', 'cookie',
-            or any combination as a list of priorities
+        Loading default configuration
         """
-        self.cookie_id = cookie_id
-        self.request = request
-        if not isinstance(self.request, Request):
-            self.request = get_request()
-        self.set_policy(policy)
+        self.cookie_id = COOKIE_ID
+        self.set_policy(('path', 'url', 'cookie', 'browser'))
 
     def set_policy(self, policy):
         if isinstance(policy, str):
@@ -53,34 +54,32 @@ class NyNegotiator(object):
             return None
 
     # INegotiator interface:
-    def getLanguage(self, available, request=None, fallback=True):
+    def getLanguage(self, available, request, fallback=True):
         """
         Returns the language dependent on the policy.
 
         If `fallback` is True (default), return first av. language on failure.
         If `fallback` is False, return None on failure, let third party app
         choose an app-dependant default (eg get_default_language() in portal)
+
         """
-        if request is None:
-            if self.request is not None:
-                request = self.request
-            else:
-                raise ValueError("No request to manage negotiation")
         available = map(normalize_code, available)
         # here we keep {'xx': 'xx-zz'} for xx-zz, for fallback cases
         secondary = {}
         for x in [av for av in available if av.find("-") > -1]:
             secondary[x.split("-", 1)[0]] = x
 
-        AcceptLanguage = request.get('HTTP_ACCEPT_LANGUAGE', '')
-        if AcceptLanguage is None:
-            AcceptLanguage = ''
+        accept_langs = request.get('HTTP_ACCEPT_LANGUAGE', '')
+        if accept_langs in (None, ''):
+            accept_langs = []
+        else:
+            accept_langs = accept_langs.split(';', 1)[0].split(',')
 
         cookie = request.cookies.get(self.cookie_id, '')
         url = request.form.get(self.cookie_id, '')
         path = request.get(self.cookie_id, '')
 
-        client_langs = {'browser': normalize_code(AcceptLanguage),
+        client_langs = {'browser': map(normalize_code, accept_langs),
                         'url': normalize_code(url),
                         'path': normalize_code(path),
                         'cookie': normalize_code(cookie)}
@@ -93,19 +92,29 @@ class NyNegotiator(object):
             return cached_value
 
         for policy in self.policy:
-            lang = client_langs[policy]
-            if lang in available:
-                self._update_cache(key, lang, request)
-                return lang
-            elif lang.find("-") > -1:
-                first_code = lang.split("-", 1)[0]
-                # if xx-yy not found, but xx is available, return xx
-                if first_code in available:
-                    return first_code
-                # if xx-yy not found, but xx-zz is available, return xx-zz
-                elif first_code in secondary.keys():
-                    return secondary[first_code]
+            langs = client_langs[policy]
+            if not isinstance(langs, list):
+                langs = [langs, ]
+            for lang in langs:
+                if lang in available:
+                    self._update_cache(key, lang, request)
+                    return lang
+                elif lang.find("-") > -1:
+                    first_code = lang.split("-", 1)[0]
+                    # if xx-yy not found, but xx is available, return xx
+                    if first_code in available:
+                        return first_code
+                    # if xx-yy not found, but xx-zz is available, return xx-zz
+                    elif first_code in secondary.keys():
+                        return secondary[first_code]
         if fallback:
             return available[0]
         else:
             return None
+
+    def change_language(self, lang, context, request):
+        """ Changes the cookie value for COOKIE_ID to specified language """
+        response = request.RESPONSE
+        parent = context.aq_parent
+        path = parent.absolute_url()[len(request['SERVER_URL']):] or '/'
+        response.setCookie(self.cookie_id, lang, path=path)
