@@ -7,6 +7,7 @@ from AccessControl.Permissions import view, view_management_screens
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from naaya.core.zope2util import path_in_site
+from naaya.core.utils import force_to_unicode
 
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
 
@@ -153,6 +154,29 @@ def extract_survey_answer_data(answer):
     func = mapping[survey_id]
     return func(answer)
 
+def get_document_types_mapping(survey):
+    mapping = {}
+    for idx, label in list(enumerate(survey['w_type-document'].getChoices())):
+        mapping[idx] = force_to_unicode(label)
+    if survey.getId() == 'country_fiches':
+        del mapping[0]
+
+    # TODO cache `mapping` as a volatile attribute on the survey
+    return mapping
+
+def get_countries_mapping(survey):
+    if survey.getId() == 'country_fiches':
+        widget_name = 'w_country'
+    elif survey.getId() == 'bibliography-details-each-assessment':
+        widget_name = 'w_official-country-region'
+
+    mapping = {}
+    for idx, label in enumerate(survey[widget_name].getChoices()):
+        mapping[idx] = force_to_unicode(label)
+
+    # TODO cache `mapping` as a volatile attribute on the survey
+    return mapping
+
 def extract_survey_answer_data_library(answer):
     all_topics = set()
     multiple_selects = [
@@ -202,6 +226,23 @@ def extract_survey_answer_data_library(answer):
 
     attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', 0)
 
+    survey = answer.getSurveyTemplate()
+    document_types = get_document_types_mapping(survey)
+    countries = get_countries_mapping(survey)
+
+    attrs.update({
+        'viewer_title_en': answer.getLocalProperty(
+                            'w_assessment-name', lang='en'),
+        'viewer_title_ru': answer.getLocalProperty(
+                            'w_assessment-name', lang='ru'),
+        'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
+        'viewer_document_type': [document_types[attrs['document_type']]],
+        'viewer_year': attrs['publication_year'],
+        'viewer_author': u"",
+        'viewer_country': [countries[idx] for idx in
+                           attrs['geo_coverage_country']]
+    })
+
     return attrs
 
 def extract_survey_answer_data_country_fiches(answer):
@@ -218,6 +259,21 @@ def extract_survey_answer_data_country_fiches(answer):
             }
 
     attrs['document_type'] = getattr(answer.aq_base, 'w_type-document')
+
+    survey = answer.getSurveyTemplate()
+    document_types = get_document_types_mapping(survey)
+    countries = get_countries_mapping(survey)
+
+    attrs.update({
+        'viewer_title_en': answer.getLocalProperty('w_title', lang='en'),
+        'viewer_title_ru': answer.getLocalProperty('w_title', lang='ru'),
+        'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
+        'viewer_document_type': [document_types[attrs['document_type']]],
+        'viewer_year': attrs['publication_year'],
+        'viewer_author': attrs['author'],
+        'viewer_country': [countries[idx] for idx in
+                           attrs['geo_coverage_country']]
+    })
 
     return attrs
 
