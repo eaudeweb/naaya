@@ -5,9 +5,9 @@
 <p tal:define="when python:here.umFormatDateTimeToString(here.date_create)"
    i18n:translate="">
     This page displays the results of the most recent URL checker for broken
-    links, generated at <strong tal:content="when" i18n:name=""></strong> by
-    URL checker. The links below appear in <em>URL</em>, <em>news</em> and
-    <em>events</em> items from this portal.
+    links, generated at <strong tal:content="when" i18n:name="when"></strong> by
+    URL checker. The links below appear in <em i18n:name="url" i18n:translate="">URL</em>, <em i18n:name="news" i18n:translate="">news</em> and
+    <em i18n:name="events" i18n:translate="">events</em> items from this portal.
 </p>
 
 <tal:block define="start python:int(request.get('start', 0));
