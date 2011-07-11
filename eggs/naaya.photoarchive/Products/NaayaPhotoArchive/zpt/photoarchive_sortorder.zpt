@@ -19,7 +19,7 @@
 </h1>
 
 <p i18n:translate="">
-	Change the properties in the form below and click <strong>Save order.</strong>
+	Change the properties in the form below and click <strong i18n:name="save_order" i18n:translate="">Save order.</strong>
 </p>
 
 <div id="admin_this_folder">
