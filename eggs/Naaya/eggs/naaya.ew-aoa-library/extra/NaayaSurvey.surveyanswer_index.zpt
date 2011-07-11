@@ -1,14 +1,17 @@
 <metal:block use-macro="here/standard_template_macro">
-<metal:block fill-slot="body">
 
+<metal:block fill-slot="head">
 <link rel="stylesheet" type="text/css" media="all"
 	tal:attributes="href string:${here/absolute_url}/css_survey_common" />
+<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/survey_js"></script>
+</metal:block>
 
+<metal:block fill-slot="body">
 <h1>
 	<img tal:attributes="
 		src python:test(here.approved, here.icon, here.icon_marked);
