@@ -193,7 +193,7 @@
 
             <div class="field">
             <table class="datatable">
-                <tr i18n:translate="">
+                <tr>
                     <th i18n:translate="">Language</th>
                     <th i18n:translate="">Translation</th>
                     <th i18n:translate="">Translate</th>

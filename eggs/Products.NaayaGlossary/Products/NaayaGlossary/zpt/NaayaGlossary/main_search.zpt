@@ -5,7 +5,7 @@
 		<td valign="top" class="main-cell">
 		<!-- Title -->
 		<h1>
-			<img src="misc_/NaayaGlossary/glossary.gif" alt="Glossary" title="Glossary" align="middle" i18n:attributes="title alt" />&nbsp;
+			<img src="misc_/NaayaGlossary/glossary.gif" alt="Glossary" title="Glossary" align="middle" i18n:attributes="title; alt" />&nbsp;
 			<span i18n:translate="" tal:content="here/title_or_id" />
 		</h1>
 
