@@ -28,10 +28,10 @@
 		</select>
 	</div>
 
-	<div i18n:translate="">Meta Types <br /><small>(to search for)</small></div>
+	<div i18n:translate="">Meta Types <br i18n:name="br" /><small i18n:name="to_search_for" i18n:translate="">(to search for)</small></div>
 	<div><textarea name="cal_meta_types" cols="40" rows="5" tal:content="python:here.getCalMetaTypes()"></textarea></div>
 
-	<div i18n:translate="">Use catalog <br /><small>(catalog's id)</small></div>
+	<div i18n:translate="">Use catalog <br i18n:name="br"/><small i18n:name="catalog_id" i18n:translate="">(catalog's id)</small></div>
 	<div>
 		<input type="text" name="catalog" size="30" tal:attributes="value here/catalog" />
 		<small tal:condition="here/get_catalog">catalog found</small>

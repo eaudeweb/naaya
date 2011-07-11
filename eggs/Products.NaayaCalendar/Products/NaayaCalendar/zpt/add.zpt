@@ -31,11 +31,11 @@
 		</select>
 	</div>
 
-	<div style="float: left;" i18n:translate="">Use catalog<br /> <small>(catalog's id)</small></div>
+	<div style="float: left;" i18n:translate="">Use catalog<br i18n:name="br" /><small i18n:name="catalog_id" i18n:translate="">(catalog's id)</small></div>
 	<div style="margin-left: 10em;"><input type="text" name="catalog" size="30" value="portal_catalog" /></div>
 
 	<br />
-	<p i18n:translate="">After adding the calendar, you can configure the meta types to seach for by using the <em>Properties</em> tab from the ZMI.</p>
+	<p i18n:translate="">After adding the calendar, you can configure the meta types to seach for by using the <em i18n:name="properties" i18n:translate="">Properties</em> tab from the ZMI.</p>
 
 	<div style="margin-left: 10em;"><input type="submit" value="Add Naaya Calendar" i18n:attributes="value" /></div>
 </form>
