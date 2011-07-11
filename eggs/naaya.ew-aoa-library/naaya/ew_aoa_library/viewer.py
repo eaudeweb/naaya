@@ -904,6 +904,13 @@ class AoALibraryViewer(SimpleItem):
         dt_name = survey_document_types[document_type]
         return self.all_document_types.index(dt_name)
 
+    security.declareProtected(view, 'get_library_ids')
+    def get_library_ids(self):
+        """
+        This function is for Review Template Viewer only
+        """
+        return set(rt_answer.library_id for rt_answer in self.iter_assessments())
+
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()
     for brain in catalog(meta_type=AoALibraryViewer.meta_type):
