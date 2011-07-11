@@ -674,10 +674,10 @@
 		tal:content="i/geo_coverage_region|nothing"/>
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
-	<td i18n:translate="" tal:condition="review_template" >
-		<span tal:condition="python:here.approved_date(i)">Approved</span>
-		<span tal:condition="python:not here.approved_date(i)">Pending</span>
-	</td>
+	<td  tal:condition="review_template" >
+        <span tal:condition="python:here.approved_date(i)"  i18n:translate="">Approved</span>
+        <span tal:condition="python:not here.approved_date(i)" i18n:translate="">Pending</span>
+    </td>
 	<td tal:condition="review_template" tal:content="python: here.utShowFullDateTime(here.approved_date(i))"/>
 </tr>
 </tbody>
