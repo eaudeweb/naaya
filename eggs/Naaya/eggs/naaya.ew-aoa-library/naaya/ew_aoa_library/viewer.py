@@ -57,10 +57,10 @@ class AoALibraryViewer(SimpleItem):
         'Section in environmental performance review', #2
         'State of water assessment/report – National level', #3
         'State of water assessment/report – Sub-national level', #4
-        'State of water assessment/report – Regional level', #5
+        'State of water assessment/report – Regional/Global level', #5
         'State of green economy assessment/report – National level', #6
         'State of green economy assessment/report – Sub-national level', #7
-        'State of green economy assessment/report – Regional level', #8
+        'State of green economy assessment/report – Regional/Global level', #8
         'Sectorial report', #9
         'Water sector or NGOs report', #10
         'Water statistics', #11
