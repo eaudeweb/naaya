@@ -15,6 +15,9 @@ tal:content="here/target_path"></a>.
         <a tal:define="url assessment/absolute_url"
            tal:attributes="href string:${url}/manage_workspace"
            tal:content="assessment/title_or_id"></a>
+        <tal:block condition="assessment/library_id|nothing">
+        with library id: <span tal:content="assessment/library_id"/>
+        </tal:block>
     </li>
 </ul>
 
