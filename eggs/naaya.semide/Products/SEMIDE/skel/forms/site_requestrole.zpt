@@ -3,7 +3,7 @@
 <h1 i18n:translate="">Create an account on this portal</h1>
 
 <p i18n:translate="">
-	Fill your data in the form below and press the <strong>Submit request</strong> button.
+	Fill your data in the form below and press the <strong i18n:name="submit_request" i18n:translate="">Submit request</strong> button.
 	An account will be created for you and you will receive a confirmation mail with these credentials.
 	All fields are mandatory.
 </p>
@@ -11,7 +11,7 @@
 <form method="post" tal:attributes="action string:${here/getSitePath}/processCreateAccountForm">
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
-		<td valign="top" i18n:translate="">Username<br /></td>
+		<td valign="top" i18n:translate="">Username</td>
 		<td><input type="text" name="username" size="40" tal:attributes="value here/getSessionUserName" /></td>
 	</tr>
 	<tr>

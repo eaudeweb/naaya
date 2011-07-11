@@ -38,7 +38,7 @@
 </script>
 <p i18n:translate="">
 	This section allows administrators to manage the main sections.
-	You can set the order by drag and drop the boxes and click <strong>Save positions</strong>.
+	You can set the order by drag and drop the boxes and click <strong i18n:name="save_positions" i18n:translate="">Save positions</strong>.
 </p>
 <style type="text/css">
 <!--
@@ -85,9 +85,9 @@
 	<input type="submit" name="../admin_ordermaintopics:method" value="Save positions" i18n:attributes="value"/>
 	<input type="submit" name="../admin_deletemaintopics:method" value="Remove" i18n:attributes="value"/>
 </form>
-<p i18n:translate="">
-	<strong>Tip:</strong> when you delete a main section, the corresponding folder will be just
-	taken out from the main sections' list, not physically deleted.
+<p>
+	<strong i18n:translate="">Tip</strong>: <tal:block i18n:translate="">when you delete a main section, the corresponding folder will be just
+	taken out from the main sections' list, not physically deleted.</tal:block>
 </p>
 
 <fieldset>
@@ -128,7 +128,7 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_updatemaintopics" name="frmEditTopic">
 
 <p i18n:translate="">
-Pick a folder from this portal and press the <em>Submit</em> button in order to mark it as main category.
+Pick a folder from this portal and press the <em i18n:name="submit" i18n:translate="">Submit</em> button in order to mark it as main category.
 </p>
 
 <div class="field">

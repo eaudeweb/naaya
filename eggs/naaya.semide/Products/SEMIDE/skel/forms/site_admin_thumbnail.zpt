@@ -20,7 +20,7 @@
 <fieldset><legend i18n:translate="">Add a new image</legend>
 <div class="fieldset_div">
 	<p i18n:translate="">
-		To add a new image press the <strong>Browse</strong> button below, select the image you want to upload and click <strong>Add thumbnail</strong>.
+		To add a new image press the <strong i18n:name="browse" i18n:translate="">Browse</strong> button below, select the image you want to upload and click <strong i18n:name="add_thumbnail" i18n:translate="">Add thumbnail</strong>.
 	</p>
 	<form method="post" tal:attributes="action string:${site_url}/add_thumb" enctype="multipart/form-data">
 		<label for="thumb_file" i18n:translate="">Upload image</label>
@@ -33,7 +33,7 @@
 <fieldset><legend i18n:translate="">Images list</legend>
 <div class="fieldset_div">
 	<p i18n:translate="">
-		Select the image(s) you want to delete and click <strong>Delete selected images</strong>
+		Select the image(s) you want to delete and click <strong i18n:name="delete_selected_images" i18n:translate="">Delete selected images</strong>
 	</p>
 	<form method="post" tal:attributes="action string:${site_url}/del_thumb" enctype="multipart/form-data">
 		<ul class="list_of_images">

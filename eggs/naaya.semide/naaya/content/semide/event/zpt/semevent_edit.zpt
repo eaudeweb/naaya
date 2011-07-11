@@ -6,7 +6,7 @@
     <tal:block condition="python: form_item['name'] not in ['relation', 'subject', 'working_langs']" replace="structure form_item/html" />
 	<div tal:condition="python: form_item['name'] == 'relation'" class="field">
 		<label for="relation"><span i18n:translate="" tal:omit-tag="">Relation</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'relation')" class="mandatory_field"> *</span></label>
-		<p i18n:translate=""><strong>Tip:</strong> you can and URL address in the field below or pick one from the sitemap</p>
+		<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">Tip:</strong> you can and URL address in the field below or pick one from the sitemap</p>
 		<input type="text" name="relation" id="relation" size="50" tal:attributes="value python:here.getSession('relation', here.getVersionProperty('relation'))" />
 		<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'relation');;" />
 	</div>

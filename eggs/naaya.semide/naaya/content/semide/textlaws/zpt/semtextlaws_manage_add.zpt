@@ -77,7 +77,7 @@
 		<label for="relation" i18n:translate="">Relation</label>
 	</td>
 	<td>
-		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick from the site map</p>
+		<p i18n:translate=""><strong i18n:name="tip" i18n:translate="">Tip:</strong> you can type free text in the field below or pick from the site map</p>
 		<input type="text" name="relation" id="relation" size="50" value="" />
 		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path here/getAuthenticationToolPath" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 	</td>

@@ -39,7 +39,7 @@
 <tal:block condition="python:flag">
 <p class="page-description" i18n:translate="">
 	The e-Flash monthly notification was triggered successfully and the newsletter is now publicly available in the 
-	<a tal:attributes="href string:${here/getFlashArchivePath}">e-Flash archive</a>.
+	<a tal:attributes="href string:${here/getFlashArchivePath}" i18n:name="eflash_archive" i18n:translate="">e-Flash archive</a>.
 </p>
 </tal:block>
 

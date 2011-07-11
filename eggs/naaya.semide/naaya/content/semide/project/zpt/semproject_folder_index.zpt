@@ -152,14 +152,14 @@
       sortdown_gif string:${here/getSitePath}/images/sortdown.gif;
       req_params python:here.getRequestParams(request)">
   <tr>
-  <th class="checkbox" style="width: 4%;" tal:condition="btn_select" i18n:translate="">
+  <th class="checkbox" style="width: 4%;" tal:condition="btn_select">
     <input type="checkbox" class="select-all" />
   </th>
   <th style="width: 10%;">
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=start_date${rkey_param};
         title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Starting date
     <img tal:attributes="src python:test(skey=='start_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-      width="12" height="12" alt=""/>
+      width="12" height="12" alt="" i18n:name="starting_date"/>
     </a>
   </th>
   <th>

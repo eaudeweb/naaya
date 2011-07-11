@@ -4,11 +4,11 @@
 
 <tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
 <p i18n:translate="">
-	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em>Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
+	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em i18n:name="translate_message" i18n:translate="">Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
 </p>
 
-<p i18n:translate="">
-	<strong>Note: </strong> the lists marked with the <img src="misc_/Naaya/checkin" border="0" alt="Locked" i18n:attributes="alt" /> icon cannot be deleted since they are used in the graphical interface.
+<p>
+	<strong i18n:translate="">Note</strong>: <tal:block i18n:translate="">the lists marked with the <img src="misc_/Naaya/checkin" border="0" alt="Locked" i18n:attributes="alt" i18n:name="locked"/> icon cannot be deleted since they are used in the graphical interface.</tal:block>
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelinkslist">

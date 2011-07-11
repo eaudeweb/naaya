@@ -1,7 +1,7 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_schema_edit').macros['page']">
 	<tal:block metal:fill-slot="custom_properties">
 	<div class="field">
-		<label i18n:translate="">Upload flag from  <small>(small picture)</small></label>
+		<label i18n:translate="">Upload flag from  <small i18n:name="small_picture" i18n:translate="">(small picture)</small></label>
 	</div>
 	<div class="field-inline">
 		<input type="radio" name="source" id="source-file" value="file" checked="checked" />
