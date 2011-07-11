@@ -36,31 +36,31 @@
 <fieldset style="width: 30%; float: right;"><legend i18n:translate="">Search tips:</legend>
 <table cellpadding="2">
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>and</strong> water</td>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="and" i18n:translate="">and</strong> water</td>
 	<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
 </tr>
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>or</strong> water</td>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong i18n:name="or" i18n:translate="">or</strong> water</td>
 	<td valign="top" i18n:translate="">either of the words occur in the document</td>
 </tr>
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong>not</strong> water</td>
+	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong i18n:name="not" i18n:translate="">not</strong> water</td>
 	<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
 </tr>
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate=""><strong>"</strong>water fish<strong>"</strong></td>
-	<td valign="top" i18n:translate="">the exact expression <em>water fish</em> occurs</td>
+	<td valign="top" style="border: 1px dashed black;" ><strong>"</strong><tal:block i18n:translate="">water fish</tal:block><strong>"</strong></td>
+	<td valign="top" i18n:translate="">the exact expression <em i18n:name="water_fish" i18n:translate="">water fish</em> occurs</td>
 </tr>
 <tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">wate<strong>*</strong></td>
-	<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+	<td valign="top" style="border: 1px dashed black;" ><tal:block i18n:translate="">wate</tal:block><strong>*</strong></td>
+	<td valign="top" i18n:translate="">everything starting with <em i18n:name="wate" i18n:translate="">wate</em></td>
 </tr>
 </table>
 </fieldset>
 
 <h2 i18n:translate="">Thesaurus search</h2>
 
-<p i18n:translate="">The text is searched in local thesaurus <strong>terms and definitions</strong> from this website.</p>
+<p i18n:translate="">The text is searched in local thesaurus <strong i18n:name="terms_and_definitions" i18n:translate="">terms and definitions</strong> from this website.</p>
 
 <form	name="frmSearchThesaurus" method="post"
 		tal:attributes="action string:${here/getThesaurusPath}/search_html">
