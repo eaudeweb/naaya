@@ -19,8 +19,8 @@
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <p i18n:translate="">
-	A cache with the channel content is available here: details about the channel and the items.<br />
-	The channel can be updated at any moment by clicking on the <strong>Update</strong> button.
+	A cache with the channel content is available here: details about the channel and the items.<br i18n:name="br" />
+	The channel can be updated at any moment by clicking on the <strong i18n:name="update" i18n:translate="">Update</strong> button.
 </p>
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
 <div id="admin_this_folder" tal:condition="permission">
