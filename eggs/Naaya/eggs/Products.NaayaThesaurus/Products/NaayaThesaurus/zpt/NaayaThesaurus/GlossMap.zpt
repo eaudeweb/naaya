@@ -164,7 +164,7 @@
 	<!-- Thesaurus search -->
 	<tal:block condition="python:tab=='srch'">
 		<!-- Search form -->
-		<p i18n:translate="">The text is searched in local thesaurus <strong>terms and definitions</strong> from this website.</p>
+		<p i18n:translate="">The text is searched in local thesaurus <strong i18n:name="terms_and_definitions" i18n:translate="">terms and definitions</strong> from this website.</p>
 		<form	name="frmSearchThesaurus" method="post"
 				tal:attributes="action string:${here/getThesaurusPath}/GlossMap_html">
 			<strong i18n:translate="">Query string</strong>
