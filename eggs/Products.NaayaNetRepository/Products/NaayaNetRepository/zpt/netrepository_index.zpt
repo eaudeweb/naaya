@@ -38,7 +38,7 @@ function fDeleteObjects()
 <h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 
 <p i18n:translate="">
-	The Registry stores information about the portals participating in this network and their channels publicly exposed in RSS/RDF format. This will allow webmasters to find URLs of the RDF files for different channels and use them in their websites to display headlines of items from related sites. To search for channels, access the <strong>Search channels</strong> page.
+	The Registry stores information about the portals participating in this network and their channels publicly exposed in RSS/RDF format. This will allow webmasters to find URLs of the RDF files for different channels and use them in their websites to display headlines of items from related sites. To search for channels, access the <strong i18n:name="search_channels" i18n:translate="">Search channels</strong> page.
 </p>
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
 <div id="admin_this_folder">

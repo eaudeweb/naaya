@@ -39,10 +39,10 @@ function fDeleteObjects()
 <h2><a tal:attributes="href here/url" tal:content="here/url" /></h2>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
-<p i18n:translate="">
-	This page lists the relevant channels published by this site along with their description.
+<p >
+	<tal:block i18n:translate="">This page lists the relevant channels published by this site along with their description.</tal:block>
 	<span tal:condition="permission" i18n:translate="">The list of channels can be updated by
-	clicking on the <strong>Update</strong>. Also, channels can be added/modified/deleted manually. The ones harvested automatically cannot be deleted or changed.
+	clicking on the <strong i18n:name="update" i18n:translate="">Update</strong>. Also, channels can be added/modified/deleted manually. The ones harvested automatically cannot be deleted or changed.
 	</span>
 </p>
 
