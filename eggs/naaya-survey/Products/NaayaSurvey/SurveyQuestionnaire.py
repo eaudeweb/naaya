@@ -289,6 +289,16 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                 REQUEST.RESPONSE.redirect('%s?edit=1' % answer.absolute_url())
         return answer_id
 
+    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteAnswer')
+    def deleteAnswer(self, answer_id, REQUEST=None):
+        """ """
+        self._delObject(answer_id)
+        LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG,
+                'Deleting answer %s' % answer_id)
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+
     #
     # Email notifications
     #

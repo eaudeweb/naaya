@@ -58,6 +58,9 @@
 									Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft">Overwrite as draft</strong> button if you wish to save an interim version.
 									Upon saving an interim version, your answer will not be considered a final answer anymore.
 								</p>
+								<p tal:condition="editing" i18n:translate="">
+									If you want to remove the questionnaire, click the <strong i18n:name="delete_answer">Delete answer</strong> button at the end. (Note: you will not be able to recover the responses afterwards).
+								</p>
 							</div>
 						</div>
 					</div>
@@ -70,6 +73,8 @@
 						<input type="submit" tal:condition="here/canAddAnswerDraft"
 							tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
 							i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+						<input type="submit" value="Delete answer"
+							i18n:attributes="value" name="deleteSurveyAnswer:method"/>
 					</div>
 				</div>
 			</div>
@@ -92,6 +97,8 @@
 				<input type="submit" tal:condition="here/canAddAnswerDraft"
 					tal:attributes="value python: test(not here.is_draft(), 'Overwrite as draft', 'Save as draft')"
 					i18n:attributes="value" name="addSurveyAnswerDraft:method"/>
+				<input type="submit" value="Delete answer"
+					i18n:attributes="value" name="deleteSurveyAnswer:method"/>
 			</div>
 			</tal:block>
 			<p class="message-error" tal:condition="not: can_edit" i18n:translate="">
