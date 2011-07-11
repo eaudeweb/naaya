@@ -11,7 +11,7 @@
 <p i18n:translate="">
 	This page allows you to restrict/grant access to this topic for certain groups of
 	users. You are asked to provide the roles users must have in order to have access.
-	All users having the roles of <em>Administrator</em> or <em>Manager</em> will still have
+	All users having the roles of <em i18n:name="administrator" i18n:translate="">Administrator</em> or <em i18n:name="manager" i18n:translate="">Manager</em> will still have
 	access to the restricted areas.
 </p>
 
@@ -39,8 +39,8 @@
 	If you need a new group of people to grant access to for this area, the following steps should be followed:
 </p>
 <ol>
-	<li i18n:translate=""><a href="admin_roles_html">define a new role</a> without any permissions</li>
-	<li i18n:translate="">assign the desired users to this role using the <a href="admin_roles_html">Users and roles</a> form from the <a href="admin_users_html">Users' management</a> area</li>
+	<li i18n:translate=""><a href="admin_roles_html" i18n:name="define_a_new_role" i18n:translate="">define a new role</a> without any permissions</li>
+	<li i18n:translate="">assign the desired users to this role using the <a href="admin_roles_html" i18n:name="users_and_roles" i18n:translate="">Users and roles</a> form from the <a href="admin_users_html" i18n:name="users_management" i18n:translate="">Users' management</a> area</li>
 	<li i18n:translate="">return to this form and restrict the access for that role</li>
 <ol>
 </fieldset>
