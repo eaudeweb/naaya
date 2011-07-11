@@ -22,7 +22,7 @@
 </div>
 
 <p i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>.
+	Fill the properties in the form below and click <strong i18n:name="submit" i18n:translate="">Submit</strong>.
 </p>
 
 <form name="frmEdit" method="post"

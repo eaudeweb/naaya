@@ -7,7 +7,7 @@
 
 <tal:block tal:condition="here/is_topic_opened">
 <p i18n:translate="">
-	By default just this message will be erased if you press <strong>Confirm</strong>.
+	By default just this message will be erased if you press <strong i18n:name="confirm" i18n:translate="">Confirm</strong>.
 	If you check the box below, all the replies to this message will be also deleted.
 	If the replies are not deleted they become replies to the parent message.
 </p>
