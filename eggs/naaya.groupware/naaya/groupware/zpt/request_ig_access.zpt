@@ -45,7 +45,7 @@
                 <a href="./" i18n:translate="">Go to IG home page.</a>
             </tal:block>
             <p tal:condition="not:logged_in" i18n:translate="">
-                You need to <a href="login/login_form">login</a> with your EIONET account before you can use this form.
+                You need to <a href="login/login_form" i18n:name="login" i18n:translate="">login</a> with your EIONET account before you can use this form.
             </p>
             <tal:block condition="mail_sent">
                 <p i18n:translate="">
