@@ -41,7 +41,7 @@ country_list = [ # TODO `country_list` should not be duplicated here
     "Liechtenstein",
     "Lithuania",
     "Luxembourg",
-    "FYR of Macedonia",
+    "Former Yugoslav Republic of Macedonia",
     "Malta",
     "Republic of Moldova",
     "Monaco",
