@@ -22,10 +22,10 @@
         Latitude: <tal:block i18n:name="" content="lat" />
     </p>
     <p i18n:translate="" tal:condition="lon">
-        Longitude: <tal:block i18n:name="" content="lon" /><br />
+        Longitude: <tal:block i18n:name="" content="lon" />
     </p>
     <p i18n:translate="" tal:condition="address">
-        Address: <tal:block i18n:name="" content="address" /><br />
+        Address: <tal:block i18n:name="" content="address" />
     </p>
 
     <tal:block condition="python: datamodel and lat and lon">
