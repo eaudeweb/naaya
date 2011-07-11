@@ -10,7 +10,7 @@
 <p i18n:translate="">
 	This section lists the remote channels defined by portal administrators. When adding
 	or changing a channel, don't forget to update the remote information by clicking the
-	<em>Update now</em> link next to the channel's name. You should have a cron job working in your
+	<em i18n:name="update_name" i18n:translate="">Update now</em> link next to the channel's name. You should have a cron job working in your
 	system to update this information on regular basis (e.g. once a day); ask your system
 	administrator for more details.
 </p>

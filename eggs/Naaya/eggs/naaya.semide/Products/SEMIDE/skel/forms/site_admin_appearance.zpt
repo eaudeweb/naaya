@@ -55,7 +55,7 @@ th {
 <p i18n:translate="">
 	The changes that you make in the form below will overwrite the
 	corresponding images and CSS classes in the current colour scheme
-	(see <strong>Portal layout</strong> tab).
+	(see <strong i18n:name="portal_layout" i18n:translate="">Portal layout</strong> tab).
 </p>
 
 <form method="post" enctype="multipart/form-data"
@@ -167,7 +167,7 @@ th {
 						<input type="file" id="bckg_left" name="bckg_left" />
 					</p>
 					<p>
-						<span tal:omit-tag=""  i18n:translate=""><em>Note</em>: this background image repeats itself on the Y axis.</span>
+						<em i18n:translate="">Note</em>: <tal:block i18n:translate="">this background image repeats itself on the Y axis.</tal:block>
 					</p>
 				</div>
 
@@ -182,7 +182,7 @@ th {
 						<input type="file" id="bckg_left_ar" name="bckg_left_ar" />
 					</p>
 					<p>
-						<span tal:omit-tag="" i18n:translate=""><em>Note</em>: this background image repeats itself on the Y axis.</span>
+						<em i18n:translate="">Note</em>: <tal:block i18n:translate="">this background image repeats itself on the Y axis.</tal:block>
 					</p>
 				</div>
 
@@ -366,12 +366,12 @@ th {
 				<input type="text" size="10" id="breadbar_bg" name="breadbar_bg" tal:attributes="value color" />
 			</tal:block>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: also affects the background of the Quick access and Search.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">also affects the background of the Quick access and Search.</tal:block>
 			</p>
 		</div>
 		<div class="group">
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><strong>Note</strong>: There are three borders below the bar which contains the Quick access, Breadcrumb trail and Search.</span>
+				<strong i18n:translate="">Note</strong>: <tal:block i18n:translate="">There are three borders below the bar which contains the Quick access, Breadcrumb trail and Search.</tal:block>
 			</p>
 			<div class="idented_block">
 				<div class="field">
@@ -420,7 +420,7 @@ th {
 				<input type="file" id="bck_search" name="bck_search" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: this image spans over the Quick access and Search areas too.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">this image spans over the Quick access and Search areas too.</tal:block>
 			</p>
 		</div>
 
@@ -444,7 +444,7 @@ th {
 				<input type="file" id="bck_search_ar" name="bck_search_ar" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: this image spans over the Quick access and Search areas too.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">this image spans over the Quick access and Search areas too.</tal:block>
 			</p>
 		</div>
 	</div>
@@ -459,7 +459,7 @@ th {
 				<input type="text" size="10" id="quick_bg" name="quick_bg" tal:attributes="value color" />
 			</tal:block>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if not <em>transparent</em> this setting overrides the background colour set for the Breadcrumb trail.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if not <em i18n:name="transparent" i18n:translate="">transparent</em> this setting overrides the background colour set for the Breadcrumb trail.</tal:block>
 			</p>
 		</div>
 		<div class="field">
@@ -468,7 +468,7 @@ th {
 				<input type="text" size="10" id="quick_right_border" name="quick_right_border" tal:attributes="value color" />
 			</tal:block>
 			<p>
-				<span tal:omit-tag=""  i18n:translate=""><em>Note</em>: for arabic languages this setting turns to left side border.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">for arabic languages this setting turns to left side border.</tal:block>
 			</p>
 		</div>
 
@@ -493,7 +493,7 @@ th {
 				<input type="file" id="bg_quickaccess" name="bg_quickaccess" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if displayed this image appears over the one of the breadcrumb bar.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if displayed this image appears over the one of the breadcrumb bar.</tal:block>
 			</p>
 		</div>
 
@@ -517,7 +517,7 @@ th {
 				<input type="file" id="bg_quickaccess_ar" name="bg_quickaccess_ar" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if displayed this image appears over the one of the breadcrumb bar.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if displayed this image appears over the one of the breadcrumb bar.</tal:block>
 			</p>
 		</div>
 	</div>
@@ -532,7 +532,7 @@ th {
 				<input type="text" size="10" id="search_bg" name="search_bg" tal:attributes="value color" />
 			</tal:block>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if not <em>transparent</em> this setting overrides the background colour set for the Breadcrumb trail.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if not <em i18n:name="transparent" i18n:translate="">transparent</em> this setting overrides the background colour set for the Breadcrumb trail.</tal:block>
 			</p>
 		</div>
 		<div class="field">
@@ -541,7 +541,7 @@ th {
 				<input type="text" size="10" id="search_left_border" name="search_left_border" tal:attributes="value color" />
 			</tal:block>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: for arabic languages this setting turns to right side border.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">for arabic languages this setting turns to right side border.</tal:block>
 			</p>
 		</div>
 
@@ -565,7 +565,7 @@ th {
 				<input type="file" id="bg_search" name="bg_search" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if displayed this image appears over the one of the breadcrumb bar.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if displayed this image appears over the one of the breadcrumb bar.</tal:block>
 			</p>
 		</div>
 
@@ -589,7 +589,7 @@ th {
 				<input type="file" id="bg_search_ar" name="bg_search_ar" />
 			</p>
 			<p>
-				<span tal:omit-tag="" i18n:translate=""><em>Note</em>: if displayed this image appears over the one of the breadcrumb bar.</span>
+				<em i18n:translate="">Note</em>: <tal:block i18n:translate="">if displayed this image appears over the one of the breadcrumb bar.</tal:block>
 			</p>
 		</div>
 	</div>

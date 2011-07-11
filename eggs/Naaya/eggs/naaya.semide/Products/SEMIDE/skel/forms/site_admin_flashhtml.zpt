@@ -30,8 +30,8 @@
 				This form allows administrators to generate/edit the HTML version of the e-Flash notification message before being sent.
 			</p>
 			<p i18n:translate="">
-				To switch to the text version of this notification please click the <em>text</em> link below.
-				In order to generate/regenerate the e-Flash notification press the <em>Generate</em> button.
+				To switch to the text version of this notification please click the <em i18n:name="text" i18n:translate="">text</em> link below.
+				In order to generate/regenerate the e-Flash notification press the <em i18n:name="generate" i18n:translate="">Generate</em> button.
 				Be advised that by doing so, you will loose all the modifications on both HTML and text versions of the e-Flash notification.
 			</p>
 			<input style="vertical-align:middle;" type="submit" value="Generate" i18n:attributes="value" />

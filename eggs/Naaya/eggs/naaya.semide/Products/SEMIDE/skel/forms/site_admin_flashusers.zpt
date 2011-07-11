@@ -28,7 +28,7 @@
 
 	<p i18n:translate="">
 		This page lists the users subscribed to the e-Flash newsletter and those that have chosen to receive instant notifications from this site. You can edit each user's account information, name and email by clicking on its username.
-		You can easily find a specific user by searching a string that might appear in the <em>username</em>, <em>first name</em>, <em>last name</em> or <em>email</em>.
+		You can easily find a specific user by searching a string that might appear in the <em i18n:name="username" i18n:translate="">username</em>, <em i18n:name="first_name" i18n:translate="">first name</em>, <em i18n:name="last_name" i18n:translate="">last name</em> or <em i18n:name="email" i18n:translate="">email</em>.
 	</p>
 
 	<div>
@@ -161,7 +161,7 @@
 
 	<h2 i18n:translate="">Export subscribers</h2>
 	<p i18n:translate="">
-		If you need the entire list of the subscribers from this portal you can export it in <strong>CSV</strong> format which can be read by spreadsheet applications (e.g. MS Excel).
+		If you need the entire list of the subscribers from this portal you can export it in <strong i18n:name="csv" i18n:translate="">CSV</strong> format which can be read by spreadsheet applications (e.g. MS Excel).
 	</p>
 
 	<div>

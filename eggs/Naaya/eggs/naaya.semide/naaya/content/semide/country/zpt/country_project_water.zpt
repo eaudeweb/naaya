@@ -221,36 +221,36 @@ function toggleSelect(caller){
       sortdown_gif string:${here/getSitePath}/images/sortdown.gif;
       req_params python:here.getRequestParams(request)">
   <tr>
-    <th class="checkbox" style="width: 4%;" i18n:translate="">
+    <th class="checkbox" style="width: 4%;" >
       <input type="checkbox" onclick="toggleSelect(this)" 
         tal:condition="btn_select"/>
     </th>
     <th style="width: 10%;">
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=start_date${rkey_param};
-          title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Starting date
+          title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" ><tal:block i18n:translate="">Starting date</tal:block>
     <img tal:attributes="src python:test(skey=='start_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-      width="12" height="12" alt=""/>
+      width="12" height="12" alt="" />
     </a>
     </th>
     <th>
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
-          title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Title
+          title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" ><tal:block i18n:translate="">Title</tal:block>
     <img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-      width="12" height="12" alt=""/>
+      width="12" height="12" alt="" />
     </a>
     </th>
     <th style="width: 15%;">
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=coverage${rkey_param};
-          title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Countries
+          title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" ><tal:block i18n:translate="">Countries</tal:block>
     <img tal:attributes="src python:test(skey=='coverage', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-      width="12" height="12" alt=""/>
+      width="12" height="12" alt="" />
     </a>
     </th>
     <th>
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=programme${rkey_param};
-          title python:test(skey=='programme', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Programme
+          title python:test(skey=='programme', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" ><tal:block i18n:translate="">Programme</tal:block>
     <img tal:attributes="src python:test(skey=='programme', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-      width="12" height="12" alt=""/>
+      width="12" height="12" alt="" />
     </a>
     </th>
     <th><span i18n:translate="" title="not sortable">Link</span></th>

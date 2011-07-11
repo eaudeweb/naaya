@@ -16,7 +16,7 @@
 </ul>
 </div>
 <p i18n:translate="">
-	This form allows you to create new portlets from a <em>remote channel</em>,
+	This form allows you to create new portlets from a <em i18n:name="remote_channel" i18n:translate="">remote channel</em>,
 	which displays the a certain number of items from that channel.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteremotechportlet">
