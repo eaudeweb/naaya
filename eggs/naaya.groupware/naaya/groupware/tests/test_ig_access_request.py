@@ -90,11 +90,13 @@ class IGReviewTestCase(GWFunctionalTestCase):
         self.p.__exit__()
 
     def test_review_request_fail(self):
-        """ An invalid key should rais an KeyError error"""
+        """ An invalid key should display an error message """
 
+        key = 'somekey'
         self.browser.go(self.portal.absolute_url() +
-                        '/review_ig_request?key=xxx')
-        self.assertTrue('KeyError' in self.browser.get_html())
+                        '/review_ig_request?key=%s' % key)
+        self.assertTrue('Key %s not found' % key
+                in self.browser.get_html())
 
     def test_review_request(self):
         """ Generate a request then get the review form"""
@@ -151,7 +153,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
         self.assertEqual(len(action_logger), 2)
 
     def test_reject_reason_email(self):
-        """ Reject with a reason """
+        """ Reject with a reason and notify the user with an e-mail """
 
         action_logger = self.portal.getActionLogger()
         key = action_logger[1].key
@@ -169,7 +171,7 @@ class IGReviewTestCase(GWFunctionalTestCase):
                         dict(self.mail_log)['sendmail']['message'])
 
     def test_2_times(self):
-        """ Try to use the same key twice """
+        """ Try to use the same key twice and fail in doing so """
 
         action_logger = self.portal.getActionLogger()
         action_logger.append(action_logger[1])
@@ -178,4 +180,5 @@ class IGReviewTestCase(GWFunctionalTestCase):
         key = action_logger[1].key
         self.browser.go(self.portal.absolute_url() +
                         '/review_ig_request?key=%s' % key)
-        self.assertTrue('BadRequest' in self.browser.get_html())
+        self.assertTrue('Key %s has already been used' % key in
+                    self.browser.get_html())
