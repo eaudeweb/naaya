@@ -23,9 +23,9 @@ textarea {width: 98%;}
 <tal:block tal:condition="python:here.check_template_deadline() or here.checkPermissionPublishObjects()">
 <p i18n:translate="" tal:condition="python:here.check_if_answered(request)">You already answered this survey.</p>
 <tal:block tal:condition="python:not(here.check_if_answered(request)) or here.checkPermissionPublishObjects()" tal:define="ses python:here.REQUEST.SESSION">
-<p i18n:translate="">Please fill in the appropriate boxes, then click the <em>Submit answer</em> button.<br />
-<strong>NOTE:</strong> You can answer this survey only once.<br />
-<strong>TIP:</strong> If you wish to print this page before submitting make sure you specify the <em>landscape</em> 
+<p i18n:translate="">Please fill in the appropriate boxes, then click the <em i18n:name="submit_answer" i18n:translate="">Submit answer</em> button.<br i18n:name="br"/>
+<strong i18n:name="note" i18n:translate="">NOTE:</strong> You can answer this survey only once.<br i18n:name="br"/>
+<strong i18n:name="tip" i18n:translate="">TIP:</strong> If you wish to print this page before submitting make sure you specify the <em i18n:name="landscape" i18n:translate="">landscape</em> 
 printing mode(so all page content is included).</p>
 
 <form id="survey" method="post" action="addNySurveyAnswer" tal:define="drp_opt python:['none', 'Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']">
