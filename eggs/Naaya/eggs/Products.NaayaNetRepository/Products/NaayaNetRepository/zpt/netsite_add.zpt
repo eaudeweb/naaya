@@ -9,7 +9,7 @@
 <h1 i18n:translate="">Add site</h1>
 
 <p i18n:translate="">
-	Fill the properties in the form below and click <strong>Add</strong>.
+	Fill the properties in the form below and click <strong i18n:name="add" i18n:translate="">Add</strong>.
 </p>
 <form method="post" tal:attributes="action string:${here/absolute_url}/addNyNetSite" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <div class="field" tal:define="selected_language here/gl_get_selected_language">
