@@ -204,7 +204,7 @@
 		</div>
 		<div class="field">
 			<label for="hotel" i18n:translate="">
-			<span i18n:translate="">Hotel</span> *</label>
+			<span i18n:name="hotel" i18n:translate="">Hotel</span> *</label>
 			<div tal:condition="python:request.has_key('hotel_error')"
 				class="message-error" i18n:translate="">
 				The hotel is mandatory!
@@ -238,7 +238,7 @@
 				tal:attributes="value request/arrival_time|here/arrival_time" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="arrival_flight_number" i18n:translate="">
+			<label class="mandatory" for="arrival_flight_number" >
 			<span i18n:translate="">Flight number</span> *</label>
 			<div tal:condition="python:request.has_key('arrival_flight_number_error')"
 				class="message-error" i18n:translate="">
@@ -248,7 +248,7 @@
 				tal:attributes="value request/arrival_flight_number|here/arrival_flight_number" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="arrival_flight_company" i18n:translate="">
+			<label class="mandatory" for="arrival_flight_company" >
 			<span i18n:translate="">Flight company</span> *</label>
 			<div tal:condition="python:request.has_key('arrival_flight_company_error')"
 				class="message-error" i18n:translate="">
@@ -283,7 +283,7 @@
 				tal:attributes="value request/departure_time|here/departure_time" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="departure_flight_number" i18n:translate="">
+			<label class="mandatory" for="departure_flight_number" >
 			<span i18n:translate="">Flight number</span> *</label>
 			<div tal:condition="python:request.has_key('departure_flight_number_error')"
 				class="message-error" i18n:translate="">
@@ -293,7 +293,7 @@
 				tal:attributes="value request/departure_flight_number|here/departure_flight_number" />
 		</div>
 		<div class="field">
-			<label class="mandatory" for="departure_flight_company" i18n:translate="">
+			<label class="mandatory" for="departure_flight_company" >
 			<span i18n:translate="">Flight company</span> *</label>
 			<div tal:condition="python:request.has_key('departure_flight_company_error')"
 				class="message-error" i18n:translate="">

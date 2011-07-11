@@ -33,8 +33,8 @@
 			</li>
 		</ul>
 	</div>
-	<p class="page-description" i18n:translate="">In order to build the e-Flash, set the <em>Notification date</em> (this is the date on which the e-Flash will be sent automatically to the subscribers).</p>
-	<p class="page-description" i18n:translate="">The administrator has the possibility to choose the number of days before the e-Flash notification process is triggered by setting the <em>Admin notification</em>. All the news, events and documents contained by the e-Flash, will be those submitted in the period indicated by the <em>News interval</em>, <em>Events interval</em> and <em>Documents interval</em> properties.</p>
+	<p class="page-description" i18n:translate="">In order to build the e-Flash, set the <em i18n:name="notification_date" i18n:translate="">Notification date</em> (this is the date on which the e-Flash will be sent automatically to the subscribers).</p>
+	<p class="page-description" i18n:translate="">The administrator has the possibility to choose the number of days before the e-Flash notification process is triggered by setting the <em i18n:name="admin_notification" i18n:translate="">Admin notification</em>. All the news, events and documents contained by the e-Flash, will be those submitted in the period indicated by the <em i18n:name="news_interval" i18n:translate="">News interval</em>, <em i18n:name="events_interval" i18n:translate="">Events interval</em> and <em i18n:name="documents_interval" i18n:translate="">Documents interval</em> properties.</p>
 	<p class="page-description" i18n:translate=""
     style="margin-bottom:25px">The News.news_date, Events.start_date and Document.start_date are the properties according with which these items will be gathered.</p>
 	<form method="post" action="admin_flash_settings" name="frmFlashTool">
@@ -48,7 +48,7 @@
 		<tr>
 			<th class="form-label" i18n:translate="">Archive location</th>
 			<td>
-				<p i18n:translate=""><strong>Tip:</strong> enter the relative URL of the folder where the monthly e-Flash will be stored. (e.g. thematicdirs/eflash)</p>
+				<p ><strong i18n:translate="">Tip</strong>: <tal:block i18n:translate="">enter the relative URL of the folder where the monthly e-Flash will be stored. (e.g. thematicdirs/eflash)</tal:block></p>
 				<input type="text" name="archive_path" id="archive_path"
            size="50"
            tal:attributes="value flash_tool/archive_path" />
@@ -72,7 +72,7 @@
 			</script>
 			<th class="form-label" i18n:translate="">Location</th>
 			<td>
-				<p i18n:translate=""><strong>Tip:</strong> you can and URL address in the field below or pick one from the sitemap</p>
+				<p><strong i18n:translate="">Tip</strong>:<tal:block i18n:translate="">you can and URL address in the field below or pick one from the sitemap</tal:block></p>
 				<input type="text" name="path" id="path" size="50"
            tal:attributes="value flash_tool/path" />
 				<input type="button" value="Pick" i18n:translate=""
@@ -136,7 +136,7 @@
        style="padding: 5px 0px 5px; text-align:center">Instant notification settings</th>
 		</tr>
 		<tr class="list-header">
-			<th class="form-label" i18n:translate="">Instant notifications <br /> meta types</th>
+			<th class="form-label" i18n:translate="">Instant notifications <br i18n:name="br"/> meta types</th>
 			<td><select name="uploadmetatypes" size="10" multiple="true">
 					<option tal:repeat="item here/get_pluggable_installed_meta_types"
              tal:attributes="value item; selected python:item in flash_tool.uploadmetatypes"
