@@ -36,7 +36,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyProperties import NyProperties
 
-from permissions import PERMISSION_VIEW_ANSWERS
+from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS
 from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
 gUtil = utils()
@@ -193,6 +193,15 @@ class SurveyAnswer(Folder, NyProperties):
 
     def is_draft(self):
         return getattr(self, 'draft', False)
+
+    security.declareProtected(PERMISSION_EDIT_ANSWERS, 'deleteSurveyAnswer')
+    def deleteSurveyAnswer(self, REQUEST=None):
+        """ """
+        survey = self.aq_inner.aq_parent
+        survey.deleteAnswer(self.id)
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(survey.absolute_url())
 
 class NySurveyAnswerAddEvent(object):
     """ """
