@@ -94,28 +94,28 @@
 		The HelpDesk Agent allows administrators of this portal to successfully
 		track and respond to ticket HelpDesk issues. Documentation of relevant
 		cases is kept into archives and it is easily accessible by performing
-		searches using various filters: <em>List Issues</em>.
+		searches using various filters: <em i18n:name="list_issues" i18n:translate="">List Issues</em>.
 	</p>
 	<h2 i18n:translate="">Usage</h2>
 	<ul>
 		<li i18n:translate="">
-			insert your problem (issue) using the <strong>Post issue</strong> form.
+			insert your problem (issue) using the <strong i18n:name="post_issue" i18n:translate="">Post issue</strong> form.
 		</li>
 		<li i18n:translate="">
 			you will receive a confirmation e-mail when adding an issue and one
 			for every modification brought to it (assignation of a person to handle
 			the issue, comments added, etc.). Comments can be added by the person
 			assigned to handle your request or by a regular end user of the portal
-			<br /><br />
+			
 		</li>
 		<li i18n:translate="">
 			a ticket number will be automatically generated at addition time and
 			you will be provided with the URL of the issue for later consultation
-			<br /><br />
+			
 		</li>
 		<li i18n:translate="">
 			consult the evolution of the issues submitted by accessing the Issue
-			tracker URL and listing issues<br /><br />
+			tracker URL and listing issues
 		</li>
 		<li i18n:translate="">
 			you are also able to consult and filter public issues and to add
@@ -128,25 +128,25 @@
 		<li i18n:translate="">
 			when new issues are posted, the Administrators receive e-mails with
 			the URL and are in title to review the submission and edit it: by
-			changing the <strong>Security</strong> from <em>private</em> to
-			<em>public</em> the item will be visible for everyone; also, a Resolver
+			changing the <strong i18n:name="security" i18n:translate="">Security</strong> from <em i18n:name="private" i18n:translate="">private</em> to
+			<em i18n:name="public" i18n:translate="">public</em> the item will be visible for everyone; also, a Resolver
 			can be assigned from the existing list to handle the issue. From that
 			moment on, the Resolver will be also notified by e-mail about the changes
-			in the item<br /><br />
+			in the item
 		</li>
 		<li i18n:translate="">
 			Issue Administrators and Resolvers are able to filter and browse the
 			entire archive of issues (public or not) and to add comments to any of
-			them<br /><br />
+			them
 		</li>
 		<li i18n:translate="">
 			Issue Resolvers are only able to edit and see the history of the issues
 			that have been assigned to them, while the Administrators have full rights
-			on all issues - edit, make public, view history, delete<br /><br />
+			on all issues - edit, make public, view history, delete
 		</li>
 		<li i18n:translate="">
-			Issue Administrators can consult the <em>Reports</em> that display statistics
-			regarding the existing issues and resolvers that handle them<br /><br />
+			Issue Administrators can consult the <em i18n:name="reports" i18n:translate="">Reports</em> that display statistics
+			regarding the existing issues and resolvers that handle them
 		</li>
 	</ul>
 	</tal:block>
