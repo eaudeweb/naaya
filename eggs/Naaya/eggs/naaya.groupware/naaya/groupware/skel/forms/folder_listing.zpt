@@ -128,7 +128,7 @@ $(document).ready(function(){
                          src="misc_/Naaya/sort_desc.gif" />
                 </th>
 
-                <th i18n:translate="">
+                <th>
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=contributor"
                         tal:condition="python: skey != 'contributor' or rkey"
                         i18n:translate="">Owner</a>
@@ -141,7 +141,7 @@ $(document).ready(function(){
                     <img tal:condition="python: skey == 'contributor' and rkey"
                          src="misc_/Naaya/sort_desc.gif" />
                 </th>
-                <th i18n:translate="">
+                <th>
                     <a class="sort-key" tal:attributes="href string:${here/absolute_url}?skey=modif_date"
                         tal:condition="python: skey != 'modif_date' or rkey"
                         i18n:translate="">Date</a>

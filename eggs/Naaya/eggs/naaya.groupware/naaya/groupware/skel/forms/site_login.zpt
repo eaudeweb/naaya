@@ -8,16 +8,16 @@
                 <h1 i18n:translate="">Log out</h1>
                 <div id="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="username" /></em>.</div>
                 <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
-                <p><a tal:attributes="href here/absolute_url" title="Back" i18n:translate="">Back to <em tal:content="here/title_or_id" /></a></p>
+                <p><a tal:attributes="href here/absolute_url" title="Back" i18n:translate="">Back to <em tal:content="here/title_or_id" i18n:name="title_or_id" /></a></p>
                 <p i18n:translate="">
                     If you wish to remove yourself from this interest group you can
                     <a href="./relinquish_membership_html" i18n:name="relinquish_link" i18n:translate="">relinquish your membership</a>.
                 </p>
                 <div class="right-floated-tip">
-                    <div>Tips</div>
+                    <div i18n:translate="">Tips</div>
                     <ul>
-                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging out? Make sure that cookies are allowed in your browser</li>
-                        <li i18n:translate=""><strong>&raquo;</strong> If you opened child browser windows from this one, those will maintain your authentication</li>
+                        <li ><strong >&raquo;</strong> <tal:block i18n:translate="" >Having trouble logging out? Make sure that cookies are allowed in your browser</tal:block></li>
+                        <li ><strong >&raquo;</strong> <tal:block i18n:translate="" >If you opened child browser windows from this one, those will maintain your authentication</tal:block></li>
                     </ul>
                 </div>
                 <br />
