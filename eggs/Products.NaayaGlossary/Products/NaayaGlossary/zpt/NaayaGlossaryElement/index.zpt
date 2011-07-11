@@ -20,7 +20,7 @@
     <div style="margin: 20px 1% 5px 1%"></div>
 
 	<h1>
-		<img src="misc_/NaayaGlossary/element.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title alt" />&nbsp;
+		<img src="misc_/NaayaGlossary/element.gif" alt="Glossary Element" title="Glossary Element" align="middle" i18n:attributes="title; alt" />&nbsp;
 		<span tal:content="translation" tal:condition="translation" />
 		<span tal:condition="python:not translation">
 			<em i18n:translate="">no translation available</em>
