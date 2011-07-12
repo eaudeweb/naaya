@@ -1,17 +1,9 @@
-from unittest import TestSuite, makeSuite
-
+import unittest
 from OFS.SimpleItem import Item
-from Testing.ZopeTestCase import TestCase
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplate
 
-class EmailPageTemplateUnitTest(TestCase):
+class EmailPageTemplateUnitTest(unittest.TestCase):
     """ unit test for notifications """
-
-    def afterSetUp(self):
-        pass
-
-    def beforeTearDown(self):
-        pass
 
     def test_render(self):
         test_template = (
@@ -92,8 +84,3 @@ class EmailPageTemplateUnitTest(TestCase):
 
         self.assertEqual(render_body(t=translate), 'the Y value')
         self.assertEqual(render_body('fr', translate), 'la valeur Y')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(EmailPageTemplateUnitTest))
-    return suite
