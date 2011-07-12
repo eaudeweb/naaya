@@ -2,20 +2,17 @@
 <span tal:replace="structure here/manage_tabs"/>
 
 	<h2>The list of available plugins</h2>
-	<form action="managePlugins"><input type="submit" value="Refresh plugins list"></form>
 	<form>
 	<table border="0" cellspacing="0" cellpadding="4" width="100%">
 		<tr class="row-header">
-			<td class="cell-header">Name</td>
-			<td class="cell-header">Doc</td>
-			<td class="cell-header">Version</td>
-			<td class="cell-header">Object type</td>
+            <th class="cell-header">Name</th>
+            <th class="cell-header">Object type</th>
+			<th class="cell-header">Info</th>
 		</tr>
 		<tr tal:repeat="item here/getPlugins" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
-			<td tal:content="python:here.getPluginName(item)"/>
-			<td tal:content="python:here.getPluginDoc(item)"/>
-			<td tal:content="python:here.getPluginVersion(item)"/>
-			<td tal:content="python:here.getPluginObjectType(item)"/>
+			<td tal:content="item/name"/>
+			<td tal:content="item/object_type"/>
+			<td tal:content="item/doc"/>
 		</tr>
 	</table>
 	</form>
@@ -28,7 +25,7 @@
 		<tr>
 			<td>Select users folder</td>
 			<td>
-				<select name="source_path">
+				<select name="source_path" id="source_path">
 					<option tal:repeat="userfolder here/getSuperUserFolders"
 							tal:attributes="value python:userfolder.absolute_url(1)"
 							tal:content="string:${userfolder/meta_type} - ${userfolder/absolute_url}">user folder</option>

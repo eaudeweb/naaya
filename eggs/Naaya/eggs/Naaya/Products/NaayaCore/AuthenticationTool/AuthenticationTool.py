@@ -182,7 +182,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self.id = id
         self.title = title
         self.data = PersistentMapping()
-        plugins_tool.__dict__['__init__'](self)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
@@ -1136,12 +1135,6 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """
         try: return self._getOb(p_source_id)
         except: return None
-
-    security.declareProtected(manage_users, 'managePlugins')
-    def managePlugins(self, REQUEST=None):
-        """ Refresh the list of available plugins """
-        self.loadPlugins()
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_sources_html')
 
     def manageAddSource(self, source_path, title='', REQUEST = None):
         """ """
