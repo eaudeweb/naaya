@@ -184,6 +184,7 @@
   <div class="cleaner">&nbsp;</div>
 </div>
 
+<script src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
 <script src="http://openlayers.org/api/OpenLayers.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 <script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
