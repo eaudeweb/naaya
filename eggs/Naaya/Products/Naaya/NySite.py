@@ -118,8 +118,7 @@ def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQ
     ut = utils()
     id = ut.utSlugify(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
-    portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
-    self._setObject(id, NySite(id, portal_uid, title, lang))
+    self._setObject(id, NySite(id, title, lang))
     ob = self._getOb(id)
     ob.createPortalTools()
     if default_content:
@@ -173,10 +172,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     www = StaticServeFromFolder("www", globals())
 
-    def __init__(self, id, portal_uid, title, lang):
+    def __init__(self, id, title='', lang=None):
         """ """
         self.id = id
-        self.__portal_uid = portal_uid
+        self.__portal_uid = '%s_%s' % (PREFIX_SITE, self.utGenerateUID())
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('site_title', lang, title)
         self._setLocalPropValue('site_subtitle', lang, u'')
