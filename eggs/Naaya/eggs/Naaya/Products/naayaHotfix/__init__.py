@@ -21,7 +21,9 @@ from Globals import PersistentMapping
 
 # Localizer patch crash pagetamplates. Restore pagetemplate.StringIO
 from zope.pagetemplate import pagetemplate
-pagetemplate.StringIO = StringIO
+if pagetemplate.StringIO != StringIO:
+    LOG('naayaHotfix', INFO, "Undoing damage done by Localizer patching")
+    pagetemplate.StringIO = StringIO
 
 #patch for MessageCatalog
 def po_import(self, lang, data):
