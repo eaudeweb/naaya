@@ -21,7 +21,6 @@ def patch_fs_paths_and_pack():
         from App.ApplicationManager import ApplicationManager
         from App.ApplicationManager import AltDatabaseManager
         from AccessControl.requestmethod import postonly
-        from extfile_pack import pack_disk
 
         @postonly
         def am_manage_pack(self, days=0, REQUEST=None):
