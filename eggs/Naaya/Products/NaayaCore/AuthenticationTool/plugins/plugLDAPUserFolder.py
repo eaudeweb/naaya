@@ -1,13 +1,13 @@
 import logging
 
 import Acquisition
-from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import manage_users
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
 from zope.event import notify
+from zope.interface import implements
 
 try:
     import ldap
@@ -18,20 +18,15 @@ except:
 
 from Products.NaayaCore.AuthenticationTool.plugBase import PlugBase
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool import UserInfo
+from Products.NaayaCore.AuthenticationTool.interfaces import IAuthenticationToolPlugin
+
 from Products.Naaya.NySite import NySite
 from Products.NaayaBase.events import NyAddGroupRoleEvent, NyRemoveGroupRoleEvent
-from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from naaya.core.utils import is_ajax
 from naaya.core.zope2util import relative_object_path
 
 import ldap_cache
-
-plug_name = 'plugLDAPUserFolder'
-plug_doc = 'Plugin for LDAPUserFolder'
-plug_version = '1.0.0'
-plug_object_type = 'LDAPUserFolder'
-
 
 LDAP_ROOT_ID = 'ROOT'
 
@@ -59,8 +54,11 @@ class ldap_user:
 InitializeClass(ldap_user)
 
 class plugLDAPUserFolder(PlugBase):
-    """ """
+    """ Plugin for LDAPUserFolder """
 
+    implements(IAuthenticationToolPlugin)
+
+    object_type = 'LDAPUserFolder'
     meta_type = 'Plugin for user folder'
     default_encoding = 'latin-1' # TODO: this should be editable from ZMI
     group_to_roles_mapping = PersistentDict()
@@ -72,7 +70,6 @@ class plugLDAPUserFolder(PlugBase):
         self.located = {}
         self.canonical_name = {}
         self.buffer = {}
-        group_to_roles_mapping = PersistentDict()
         PlugBase.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
