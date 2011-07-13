@@ -49,45 +49,6 @@ else:
 
         return wrapper
 
-    class TranslationsToolWrapperTest(unittest.TestCase):
-
-        def setUp(self):
-            self.wrapper = _wrapper_factory()
-
-        def test_msgEncodeDecode(self):
-            self.assertEqual(self.wrapper.message_encode(' 1+'), 'IDEr\n')
-            self.assertEqual(self.wrapper.msgEncode(' 1+'),
-                             quote(self.wrapper.message_encode(' 1+')))
-            self.assertEqual(self.wrapper.msgEncode(' 1+'), 'IDEr%0A')
-            self.assertEqual(self.wrapper.message_decode(
-                                       self.wrapper.message_encode(' 1+')), ' 1+')
-            self.assertEqual(self.wrapper.message_decode('IDEr\n'), ' 1+')
-
-        def test_languages_mapping(self):
-            mapping = self.wrapper.tt_get_languages_mapping()
-
-            self.assertEqual(len(mapping), 1)
-            self.assertTrue(mapping[0].has_key('code'))
-            self.assertTrue(mapping[0].has_key('name'))
-            self.assertTrue(mapping[0].has_key('default'))
-            self.assertEqual(mapping[0]['code'], 'de')
-            self.assertEqual(mapping[0]['name'], 'German')
-
-        def test_get_messages(self):
-            messages = self.wrapper.tt_get_messages('', 'msg', True)
-            messages_order_de = self.wrapper.tt_get_messages('', 'de', True)
-            self.assertEqual(messages,
-                             [('Unkown', False), ('Administration', True)])
-            self.assertEqual(messages_order_de,
-                             [('Administration', True), ('Unkown', False)])
-
-        def test_get_not_translated_messages_count(self):
-            count = self.wrapper.tt_get_not_translated_messages_count('')
-            self.assertEqual(count, {'de': 1})
-            count = self.wrapper.tt_get_not_translated_messages_count('nkow')
-            self.assertEqual(count, {'de': 1})
-            count = self.wrapper.tt_get_not_translated_messages_count('x')
-            self.assertEqual(count, False)
 
     class TranslationsToolWrapperNaayaTest(NaayaTestCase):
 
@@ -128,14 +89,14 @@ else:
             self.assertEqual(in_de, '3 Hunde')
 
         def test_template_translation(self):
-            self.tmpl = PageTemplate(id='test_tmpl')
-            self.tmpl.pt_edit('<p i18n:translate="">Home for'
+            tmpl = PageTemplate(id='test_tmpl')
+            tmpl.pt_edit('<p i18n:translate="">Home for'
                               ' <span i18n:name="hours">3</span> hours</p>',
                               'text/html')
 
-            self.assertEqual(self.tmpl.__of__(self.portal)(),
+            self.assertEqual(tmpl.__of__(self.portal)(),
                              '<p>Home for <span>3</span> hours</p>')
             self.portal.getLocalizer().edit_message('Home for ${hours} hours', 'en',
                                                     'Home für ${hours} Stunden')
-            self.assertEqual(self.tmpl.__of__(self.portal)(),
+            self.assertEqual(tmpl.__of__(self.portal)(),
                              '<p>Home für <span>${hours}</span> Stunden</p>')
