@@ -55,8 +55,7 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
     ut = utils()
     id = ut.utCleanupId(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
-    portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
-    self._setObject(id, CHMSite(id, portal_uid, title, lang))
+    self._setObject(id, CHMSite(id, title=title, lang=lang))
     chm_site = self._getOb(id)
     chm_site.loadDefaultData(load_glossaries)
 
@@ -81,12 +80,12 @@ class CHMSite(NySite):
     security = ClassSecurityInfo()
     default_geographical_coverage = ''
 
-    def __init__(self, id, portal_uid, title, lang):
+    def __init__(self, *args, **kwargs):
         """ """
         self.predefined_latest_uploads = []
         self.show_releasedate = 1
         self.workgroups = []
-        NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
+        NySite.__dict__['__init__'](self, *args, **kwargs)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, load_glossaries=[]):
