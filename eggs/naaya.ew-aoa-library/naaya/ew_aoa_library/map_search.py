@@ -111,61 +111,25 @@ def catalog_filters_for_shadows(site):
     }
 
 
-def get_filter_mappings(site):
-    vl_viewer = site['virtual-library-viewer']
-    vl_survey = vl_viewer.target_survey()
-
-    cf_viewer = site['country-fiches-viewer']
-    cf_survey = cf_viewer.target_survey()
-
-    flat = lambda x: list(enumerate(x))
-
+def shadow_to_dict(shadow):
     return {
-        'cf': {
-            'document_types': flat(cf_survey['w_type-document'].getChoices())[1:],
-            'themes': flat(cf_survey['w_theme'].getChoices()),
-        },
-        'vl': {
-            'document_types': flat(vl_survey['w_type-document'].getChoices())[1:],
-            'themes': flat(vl_survey['w_theme'].getChoices()),
-        },
+        "title": shadow.viewer_title_en,
+        "country": shadow.viewer_country,
+        "theme": shadow.viewer_theme,
+        "document_type": shadow.viewer_document_type,
+        "year": shadow.viewer_year,
+        "author": shadow.viewer_author,
+        "url": shadow.url,
+        "library_url": shadow.absolute_url(),
     }
 
 
 def all_documents(site):
-    mappings = get_filter_mappings(site)
-    cf_document_types = dict(mappings['cf']['document_types'])
-    vl_document_types = dict(mappings['vl']['document_types'])
-
     for shadow in site['country-fiches-viewer'].iter_assessments():
-        document_type = []
-        if shadow.document_type != 0:
-            document_type = [cf_document_types[shadow.document_type]]
-        yield {
-            "title": shadow.getLocalProperty('title', 'en'),
-            "country": [country_list[i] for i in shadow.geo_coverage_country],
-            "theme": shadow.theme,
-            "document_type": document_type,
-            "year": shadow.publication_year,
-            "author": shadow.author,
-            "url": shadow.url,
-            "library_url": shadow.absolute_url(),
-        }
+        yield shadow_to_dict(shadow)
 
     for shadow in site['virtual-library-viewer'].iter_assessments():
-        document_type = []
-        if shadow.document_type != 0:
-            document_type = [vl_document_types[shadow.document_type]]
-        yield {
-            "title": shadow.getLocalProperty('title', 'en'),
-            "country": [country_list[i] for i in shadow.geo_coverage_country],
-            "theme": shadow.theme,
-            "document_type": document_type,
-            "year": shadow.publication_year,
-            "author": shadow.uploader, # is `uploader` the right field here?
-            "url": shadow.url,
-            "library_url": shadow.absolute_url(),
-        }
+        yield shadow_to_dict(shadow)
 
 
 def filter_documents(ctx, request):
@@ -194,17 +158,7 @@ def filter_documents(ctx, request):
             del filters[name]
 
     for brain in site.getCatalogTool()(**filters):
-        shadow = brain.getObject()
-        yield {
-            "title": shadow.viewer_title_en,
-            "country": shadow.viewer_country,
-            "theme": shadow.viewer_theme,
-            "document_type": shadow.viewer_document_type,
-            "year": shadow.viewer_year,
-            "author": shadow.viewer_author,
-            "url": shadow.url,
-            "library_url": shadow.absolute_url(),
-        }
+        yield shadow_to_dict(brain.getObject())
 
 
 def do_search(ctx, request):
@@ -226,18 +180,16 @@ def docs_and_countries(site):
 
 def portlet_template_options(site):
     vl_viewer = site['virtual-library-viewer']
-
     vl_survey = vl_viewer.target_survey()
-    document_types = vl_survey['w_type-document'].getChoices()
-    themes = vl_survey['w_theme'].getChoices()
+    cf_viewer = site['country-fiches-viewer']
+    cf_survey = cf_viewer.target_survey()
 
-    search_url = (vl_viewer.absolute_url() + '/do_map_search')
+    search_url = vl_viewer.absolute_url() + '/do_map_search'
 
-    mappings = get_filter_mappings(site)
-    themes = set(dict(mappings['cf']['themes']).values() +
-                 dict(mappings['vl']['themes']).values())
-    document_types = set(dict(mappings['cf']['document_types']).values() +
-                         dict(mappings['vl']['document_types']).values())
+    themes = set(cf_survey['w_theme'].getChoices() +
+                 vl_survey['w_theme'].getChoices())
+    document_types = set(cf_survey['w_type-document'].getChoices()[1:] +
+                         vl_survey['w_type-document'].getChoices()[1:])
 
     map_config = {
         'tiles_url': tiles_url,
