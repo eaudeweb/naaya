@@ -19,6 +19,7 @@
 from os.path import join
 
 #Zope imports
+import Globals
 from App.ImageFile import ImageFile
 
 #Product imports
