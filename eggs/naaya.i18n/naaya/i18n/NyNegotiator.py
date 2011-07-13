@@ -17,6 +17,18 @@ from LanguageManagers import normalize_code
 from constants import COOKIE_ID
 
 class NyNegotiator(object):
+    """
+    Implementation of i18n negotiator, using cache on Request,
+    with available policies:
+    * path - language code present in url, after portal
+    * url - language code in querystring
+    * cookie - language setting saved in cookie
+    * browser - HTTP_ACCEPT_LANGUAGE header
+
+    Performs negotiation and sets preferred language in cookie.
+
+    """
+
     implements(INegotiator)
 
     def __init__(self):

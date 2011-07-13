@@ -130,7 +130,7 @@
 	<tr tal:repeat="message messages">
 		<td tal:define="index repeat/message/index;" tal:content="python: index + paging_start" />
 		<td>
-			<a tal:define="mesg python:admin_i18n.msgEncode(message[0])"
+			<a tal:define="mesg python:admin_i18n.message_encode_and_quote(message[0])"
 				tal:attributes="href string:${portal_i18n_url}/admin_messages_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${mesg}"
 				tal:content="python:message[0][:50]" />
 		</td>

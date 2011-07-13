@@ -9,7 +9,7 @@ from zope.deprecation import deprecate
 
 from patches import get_request, get_i18n_context
 from NyNegotiator import NyNegotiator
-from LanguageManagers import get_language_name
+from LanguageManagers import get_iso639_name
 
 class LocalAttribute(Base):
     """
@@ -191,7 +191,7 @@ class LocalPropertyManager(object):
         This deprecated version can not return custom named languages
 
         """
-        return get_language_name(lang)
+        return get_iso639_name(lang)
 
 
 InitializeClass(LocalPropertyManager)

@@ -1,4 +1,10 @@
+"""
+This is the main data type for translation storage. NyMessageCatalog implements
+:py:class:`~naaya.i18n.interfaces.INyTranslationCatalog`
+Its implementation is based on indexing msgid-s and their translations
+in a PersistentMapping.
 
+"""
 import logging
 
 try:
@@ -56,6 +62,7 @@ class NyMessageCatalog(Persistent):
     ### INyTranslationCatalog
 
     def edit_message(self, msgid, lang, translation):
+        """Edits or adds message with `translation` in `lang` language"""
         # input type sanitize
         logger = logging.getLogger(__name__)
         if isinstance(msgid, str):
@@ -70,18 +77,17 @@ class NyMessageCatalog(Persistent):
         if lang not in self.get_languages():
             return
         # Add-by-edit functionality
-        if not self._message_exists(msgid):
+        if not self._messages.has_key(msgid):
             self.gettext(msgid, lang)
         self._messages[msgid][lang] = translation
 
     def del_message(self, msgid):
-        """ """
+        """Deletes message and its translations from catalog"""
         if self._messages.has_key(msgid):
             del self._messages[msgid]
 
     def gettext(self, msgid, lang=None, default=None):
-        """Returns the corresponding translation of msgid in Catalog.
-        """
+        """Returns the corresponding translation of msgid in Catalog."""
         msgstr = None
         if not isinstance(msgid, basestring):
             raise TypeError('Only strings can be translated.')
@@ -104,7 +110,7 @@ class NyMessageCatalog(Persistent):
             return default
 
         # Add it if it's not in the dictionary
-        if not self._message_exists(msgid):
+        if not self._messages.has_key(msgid):
             if msgstr is not None:
                 logger = logging.getLogger(__name__)
                 logger.warn('Got str "%s" in gettext, expecting unicode'
@@ -146,10 +152,6 @@ class NyMessageCatalog(Persistent):
         """
         for (msgid, translations_dict) in self._messages.items():
             yield (msgid, translations_dict)
-
-
-    def _message_exists(self, message):
-        return self._messages.has_key(message)
 
     ### Dictionary-like API
 
