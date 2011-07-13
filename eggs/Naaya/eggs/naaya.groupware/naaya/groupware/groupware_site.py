@@ -29,8 +29,7 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     ut = utils()
     id = ut.utCleanupId(id)
     if not id: id = 'gw' + ut.utGenRandomId(6)
-    portal_uid = '%s_%s' % ('gw', ut.utGenerateUID())
-    self._setObject(id, GroupwareSite(id, portal_uid, title, lang))
+    self._setObject(id, GroupwareSite(id, title=title, lang=lang))
     ob = self._getOb(id)
     ob.loadDefaultData()
     if REQUEST is not None:
@@ -58,9 +57,9 @@ class GroupwareSite(NySite):
     portal_is_archived = False
     content_versioning_enabled = False
 
-    def __init__(self, id, portal_uid, title, lang):
+    def __init__(self, *args, **kwargs):
         """ """
-        NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
+        NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
         self.portal_is_archived = False # The semantics of this flag is that you can't request membership of the IG any longer.
 
