@@ -22,7 +22,7 @@
 	</tr>
 	<tr tal:repeat="message messages">
 		<td align="center"><input type="checkbox" name="messages" tal:attributes="value python:message[0]" />
-		<td tal:define="msg_enc python:admin_i18n.msgEncode(message[0])">
+		<td tal:define="msg_enc python:admin_i18n.message_encode_and_quote(message[0])">
 			<a tal:attributes="href string:${portal_i18n_url}/admin_messages_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${msg_enc}"
 				tal:content="python:message[0]" />
 		</td>

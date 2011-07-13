@@ -1,4 +1,7 @@
+"""
+Module containing a wrapper of import/export methods for Message Catalog.
 
+"""
 # Python imports
 import time
 from datetime import datetime
@@ -19,19 +22,25 @@ empty_po_header = {'last_translator_name': '',
                    'charset': 'UTF-8'}
 
 class TranslationsImportExport(object):
+    """
+    Wrapper for NyMessageCatalog, providing import/export methods
+    in various formats: pot, po, xliff, tmx
 
+    """
 
     def __init__(self, catalog):
         self._catalog = catalog
 
     def backslash_escape(self, x):
-        trans = [('"', '\\"'), ('\n', '\\n'), ('\r', '\\r'), ('\t', '\\t')]
+        trans = [('\\', '\\\\'), ('"', '\\"'), ('\n', '\\n'), ('\r', '\\r'),
+                 ('\t', '\\t')]
         for a, b in trans:
             x = x.replace(a, b)
         return x
 
     def backslash_unescape(self, x):
-        trans = [('\\"', '"'), ('\\n', '\n'), ('\\r', '\r'), ('\\t', '\t')]
+        trans = [('\\"', '"'), ('\\n', '\n'), ('\\r', '\r'), ('\\t', '\t'),
+                 ('\\\\', '\\')]
         for a, b in trans:
             x = x.replace(a, b)
         return x
@@ -174,7 +183,9 @@ class TranslationsImportExport(object):
                               pretty_print=True)
 
     def export_tmx(self):
-        """Exports the content of the message catalog to a TMX file
+        """
+        Exports the content of the message catalog to a TMX file
+
         """
         orglang = self._catalog._default_language
 
@@ -227,7 +238,11 @@ class TranslationsImportExport(object):
     ### Import methods ###
 
     def import_po(self, lang, filehandler):
+        """
+        Imports a po file in the given `lang` language. Requires a `filehandler`
+        to the uploaded file. This method closes the handler.
 
+        """
         # Load the data
         line = filehandler.readline()
         BEFORE_HEADER = 0; IN_HEADER = 1; IN_MAPPINGS = 2

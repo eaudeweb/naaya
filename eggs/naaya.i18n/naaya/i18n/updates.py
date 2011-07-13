@@ -1,4 +1,9 @@
+"""
+Naaya updates regarding internationalization. Current update scripts:
+ * LocalizerToNaayaI18n - converts to naaya.i18n a portal instance
+ using Localizer
 
+"""
 import itertools
 
 from naaya.core.zope2util import ofs_walk
@@ -6,10 +11,16 @@ from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.utils import force_to_unicode
 
 from naaya.i18n.portal_tool import NaayaI18n, manage_addNaayaI18n
-from naaya.i18n.LocalPropertyManager import LocalAttribute
+from Products.Localizer.LocalPropertyManager import LocalAttribute
 
 
 class LocalizerToNaayaI18n(UpdateScript):
+    """
+    Complete migration from Products.Localizer to naaya.i18n:
+     * Moves Localizer data to a new naaya.i18n instance
+     * cleans up and normalizes local properties on objects
+
+    """
     title = 'Complete migration from Products.Localizer to naaya.i18n'
     creation_date = 'Jun 24, 2011'
     authors = ['Mihnea Simian']
@@ -72,7 +83,7 @@ class LocalizerToNaayaI18n(UpdateScript):
                         return False
                     if translation != found:
                         message_cat.edit_message(msgid, lang, translation)
-            
+
         self.log.debug('%d iterated, a total of %d translation mappings.'
                        % (msg_cnt, trans_cnt))
         self.log.debug('Message Catalog now counts %d entries (msgid-s).'
@@ -88,9 +99,9 @@ class LocalizerToNaayaI18n(UpdateScript):
         for obj in all_objects:
             for (key, value) in obj.__dict__.items():
                 if isinstance(value, LocalAttribute):
-                    self.log.debug("Found: %r.%s", obj, key)
+                    self.log.debug("Found LocalAttribute: %r.%s", obj, key)
                     localprops_cnt += 1
-                    delattr(object, key)
+                    delattr(obj, key)
             _local_properties = getattr(obj, '_local_properties', None)
             if _local_properties is not None:
                 for (property, trans) in _local_properties.items():
@@ -108,4 +119,5 @@ class LocalizerToNaayaI18n(UpdateScript):
         portal._delObject('portal_translations')
         self.log.debug('Localizer and Portal translations removed, '
                        'migration is complete!')
+
         return True

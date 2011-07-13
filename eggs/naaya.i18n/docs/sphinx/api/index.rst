@@ -14,6 +14,18 @@ of the public API available for restricted access resides here.
 
     portal_tool
 
+Portal Languages
+---------------
+
+**NyPortalLanguages** is the classed used for managing available languages
+in portal.
+
+.. toctree::
+    :maxdepth: 2
+    :glob:
+
+    portal_languages
+
 
 Message Catalog
 ---------------
@@ -25,7 +37,7 @@ by *interfaces.INyCatalog* interface.
     :maxdepth: 2
     :glob:
 
-    message_catalog/*
+    message_catalog
 
 
 Negotiator
@@ -38,7 +50,7 @@ browser. It has some configuration settings which can be tweaked by programmers.
     :maxdepth: 2
     :glob:
 
-    negotiator/*
+    negotiator
 
 
 Property Manager
@@ -51,7 +63,7 @@ values for objects in database.
     :maxdepth: 2
     :glob:
 
-    property_manager/*
+    property_manager
 
 
 Import Export Tool
@@ -64,4 +76,27 @@ for **Message Catalog** data.
     :maxdepth: 2
     :glob:
 
-    import_export/*
+    import_export
+    Portal Languages
+---------------
+
+**NyPortalLanguages** is the classed used for managing available languages
+in portal.
+
+.. toctree::
+    :maxdepth: 2
+    :glob:
+
+    portal_languages
+
+External Translation Service
+---------------
+
+**ExternalService** is used to suggest translations for managers, using
+Google Translate external HTTP calls.
+
+.. toctree::
+    :maxdepth: 2
+    :glob:
+
+    external_service
