@@ -1,0 +1,60 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Translate message</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="portal_i18n_url here/getPortalI18nPath;
+                    query python:request.get('query', '');
+                    start python:request.get('start', '');
+                    skey python:request.get('skey', 'msg');
+                    rkey python:request.get('rkey', '');
+                    sort_qs python:'start=%s&amp;skey=%s&amp;rkey=%s&amp;query=%s' % (start, skey, rkey, query);
+                    portal_i18n here/getPortalI18n;
+                    admin_i18n portal_i18n/get_admin_i18n;
+                    languages admin_i18n/get_languages_mapping;
+                    msg_encoded python:request.get('msg', '');
+                    message python:portal_i18n.message_decode(msg_encoded)">
+
+<p>
+	<a tal:attributes="href string:${portal_i18n_url}/admin_translations_html?${sort_qs}"
+		i18n:translate="">Back to translation form</a>
+</p>
+
+<fieldset>
+	<legend i18n:translate="">Original label in English</legend>
+	<div style="padding:1em;background-color:#f0f0f0;" tal:content="message" />
+</fieldset>
+
+<p i18n:translate="">
+	You can translate this message in the following languages:
+</p>
+
+<tal:block tal:repeat="language languages">
+<fieldset>
+	<legend  tal:content="python:language['name']" />
+	<form method="post" tal:attributes="action string:${portal_i18n_url}/admin_editmessage;
+					    name python:'translate_' + language['code']">
+		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:admin_i18n.get_message_translation(message, language['code'])" /></div>
+		<input type="hidden" name="message:utf8:ustring" tal:attributes="value message" />
+		<input type="hidden" name="language" tal:attributes="value python:language['code']">
+		<input type="hidden" name="start" tal:attributes="value start" />
+		<input type="hidden" name="skey" tal:attributes="value skey" />
+		<input type="hidden" name="rkey" tal:attributes="value rkey" />
+		<input type="hidden" name="query" tal:attributes="value query" />
+		<input type="submit" value="Save changes" i18n:attributes="value" />
+		<input type="reset" value="Reset" i18n:attributes="value" />
+	</form>
+	<div tal:condition="python: language['code']!='en'">
+
+		Suggestion:
+		<a tal:content="python:portal_i18n.external_translate(message, language['code'])"
+		   href='javascript:void(0);' class='suggest_translation'
+		   tal:attributes="name python:language['code']"/> (click to use)
+
+	</div>
+</fieldset>
+</tal:block>
+
+</tal:block>
+
+</tal:block>
