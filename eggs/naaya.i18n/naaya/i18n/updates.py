@@ -11,7 +11,10 @@ from Products.naayaUpdater.updates import UpdateScript
 from naaya.core.utils import force_to_unicode
 
 from naaya.i18n.portal_tool import NaayaI18n, manage_addNaayaI18n
-from Products.Localizer.LocalPropertyManager import LocalAttribute
+try:
+    from Products.Localizer.LocalPropertyManager import LocalAttribute
+except ImportError:
+    from naaya.i18n.LocalPropertyManager import LocalAttribute
 
 
 class LocalizerToNaayaI18n(UpdateScript):
