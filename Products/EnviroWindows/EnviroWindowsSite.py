@@ -60,8 +60,7 @@ def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
     ut = utils()
     id = ut.utCleanupId(id)
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
-    portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
-    self._setObject(id, EnviroWindowsSite(id, portal_uid, title, lang))
+    self._setObject(id, EnviroWindowsSite(id, title=title, lang=lang))
     self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
@@ -82,9 +81,9 @@ class EnviroWindowsSite(NySite):
     security = ClassSecurityInfo()
     display_subobject_count = "on"
 
-    def __init__(self, id, portal_uid, title, lang):
+    def __init__(self, *args, **kwargs):
         """ """
-        NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
+        NySite.__dict__['__init__'](self, *args, **kwargs)
         self.display_subobject_count = "on"
 
     security.declarePrivate('loadDefaultData')
