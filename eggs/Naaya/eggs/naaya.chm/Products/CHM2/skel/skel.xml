@@ -27,7 +27,7 @@
 		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_urlmap" title="Portal url map"/>
 	</forms>
-	<layout default_skin_id="chm3" default_scheme_id="default">
+	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
 			<template id="standard_template" title="Customized standard template"/>
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
@@ -400,7 +400,7 @@
 		<scriptchannel id="latestrelevantuploads_rdf" title="Selected uploads" description="Selected uploads" language="en" type="Miscellaneous" numberofitems="5" portlet="1"/>
 		<remotechannel id="biodiv_news" title="Biodiversity news" url="http://www.nlbif.nl/rss/biodiversity_news_en.xml" numbershownitems="10" />
 	</syndication>
-	<portlets left="chm3_site_biodiv_news,chm3_site_calendar" center="chm3_site_multimedia,chm3_site_highlights,chm3_other_related_items,chm3_share_on" right="chm3_other_mainsection_image,chm3_other_portlet_maincategories">
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<portlet id="portlet_calendar" title="Calendar of Events"/>
