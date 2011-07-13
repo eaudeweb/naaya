@@ -15,6 +15,10 @@ from interfaces import INyLanguageManagement
 
 
 def normalize_code(code):
+    """
+    Normalizes language code case to ISO639 format, eg. 'en_us' becomes 'en-US'
+
+    """
     not_letter = re.compile(r'[^a-z]+', re.IGNORECASE)
     parts = re.sub(not_letter, '-', code).split('-', 1)
     parts[0] = parts[0].lower()
@@ -24,6 +28,11 @@ def normalize_code(code):
         return parts[0]
 
 def get_languages_list():
+    """
+    Returns a mapping {'lang-code': 'Lang-name', ..} with all languages
+    specified in ISO639 format in languages.txt
+
+    """
     languages = {}
     cwd = __file__.rsplit(os.path.sep, 1)[0]
     filename = os.path.join(cwd, 'languages.txt')
@@ -36,15 +45,23 @@ def get_languages_list():
     return languages
 
 def get_languages():
+    """
+    Returns a list of mappings
+    [ {'code': 'lang-code', 'name': 'Language name'}, .. ]
+    with all languages specified in ISO639 format in languages.txt
+
+    """
     languages = get_languages_list()
     language_codes = languages.keys()
     language_codes.sort()
     return[ {'code': x, 'name': languages[x]} for x in language_codes ]
 
-def get_language_name(code):
+def get_iso639_name(code):
     """
-    Returns the name of a language. In order to return the name of a custom
-    language added in portal, use get_language_name on portal_i18n portal tool
+    Returns the name of a language.
+    Used by get_language_name in portal_i18n tool, in order to
+    return the name of a language which is not a custom language
+    added in portal (used as fallback or default language name for a code)
 
     """
     code = normalize_code(code)
@@ -69,7 +86,7 @@ class NyPortalLanguageManager(Persistent):
         self.portal_languages = PersistentList(default_langs)
 
     def getAvailableLanguages(self):
-        """Return a sequence of language tags for available languages
+        """Return a sequence of language tags/codes for available languages
         """
         return tuple([ x[0] for x in self.portal_languages ])
 
@@ -77,11 +94,15 @@ class NyPortalLanguageManager(Persistent):
         """Adds available language in portal"""
         lang_code = normalize_code(lang_code)
         if not lang_name:
-            lang_name = get_language_name(lang_code)
+            lang_name = get_iso639_name(lang_code)
         if lang_code not in self.getAvailableLanguages():
             self.portal_languages.append((lang_code, lang_name))
 
     def delAvailableLanguage(self, lang):
+        """
+        Deletes specified language from available languages list in portal
+
+        """
         lang = normalize_code(lang)
         pos = list(self.getAvailableLanguages()).index(lang)
         if pos > -1:
@@ -92,6 +113,11 @@ class NyPortalLanguageManager(Persistent):
 
     # MORE:
     def set_default_language(self, lang):
+        """
+        Sets default language in language manager. Default language
+        is mainly used in negotiation.
+
+        """
         lang = normalize_code(lang)
         if lang not in self.getAvailableLanguages():
             raise ValueError("Language %s is not provided by portal" % lang)
@@ -103,9 +129,14 @@ class NyPortalLanguageManager(Persistent):
         self.portal_languages.insert(0, new_default)
 
     def get_default_language(self):
+        """ Returns default language """
         return self.portal_languages[0][0]
 
     def get_language_name(self, code):
+        """
+        Returns the name of a language available in portal, '???' otherwise.
+
+        """
         pos = list(self.getAvailableLanguages()).index(code)
         if pos > -1:
             return self.portal_languages[pos][1]

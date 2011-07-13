@@ -1,6 +1,11 @@
+"""
+Provides an interface for administration views in Naaya.
+
+"""
 import re
 import locale
 from urllib import quote
+from base64 import encodestring, decodestring
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from Acquisition import Implicit
@@ -14,6 +19,31 @@ except ImportError:
 from constants import PERMISSION_TRANSLATE_PAGES
 
 
+def message_encode(message):
+    """
+    Encodes a message to an ASCII string.
+
+    To be used in the user interface, to avoid problems with the
+    encodings, HTML entities, etc..
+
+    """
+    if isinstance(message, unicode):
+        message = message.encode('utf-8')
+
+    return encodestring(message)
+
+def message_decode(message):
+    """
+    Decodes a message from an ASCII string.
+
+    To be used in the user interface, to avoid problems with the
+    encodings, HTML entities, etc..
+
+    """
+    message = decodestring(message)
+    return unicode(message, 'utf-8')
+
+
 class AdminI18n(Implicit):
 
     security = ClassSecurityInfo()
@@ -22,13 +52,26 @@ class AdminI18n(Implicit):
         self.portal_i18n = portal_i18n
         self.catalog = portal_i18n.get_message_catalog()
 
-    security.declarePublic('msgEncode')
-    def msgEncode(self, message):
+    ### helper methods
+
+    security.declarePublic('message_decode')
+    def message_decode(self, message):
+        """
+        Decodes a message from an ASCII string.
+
+        To be used in the user interface, to avoid problems with the
+        encodings, HTML entities, etc..
+
+        """
+        return message_decode(message)
+
+    security.declarePublic('message_encode_and_quote')
+    def message_encode_and_quote(self, message):
         """
         Encodes a message in order to be passed as parameter in
         the query string.
         """
-        return quote(self.portal_i18n.message_encode(message))
+        return quote(message_encode(message))
 
     security.declarePublic('get_message_translation')
     def get_message_translation(self, message, lang):

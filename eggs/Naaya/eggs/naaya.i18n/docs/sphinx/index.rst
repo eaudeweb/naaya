@@ -25,16 +25,6 @@ Learn about internationalizing your Naaya based products.
 
     programmer_guide/*
 
-Advanced topics
-------------------
-This is the technical specification of how was naaya.i18n build to work.
-
-.. toctree::
-    :maxdepth: 2
-    :glob:
-
-    advanced/*
-
 API documentation
 -----------------
 

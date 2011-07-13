@@ -23,14 +23,14 @@ class TranslationsToolWrapper(Implicit):
 
     security.declarePublic('trans')
     @deprecate(("Portal Translations/trans is deprecated, use "
-                "portal/getPortalI18n/get_translation"))
+                "portal.getPortalI18n().get_translation(msg, **kwargs)"))
     def trans(self, msg, **kwargs):
         """ Translate message and interpolate using kwargs mapping """
         return self.portal_i18n.get_translation(msg, **kwargs)
 
     security.declarePublic('gettext')
     @deprecate(("Portal Translations/gettext is deprecated, use "
-                "portal/getPortalI18n/get_message_translation"))
+        "portal.getPortalI18n().get_message_translation(msg, lang, default)"))
     def gettext(self, message, lang=None, add=1, default=None):
         return self.portal_i18n.get_message_translation(message, lang, default)
 
@@ -43,7 +43,8 @@ class TranslationsToolWrapper(Implicit):
     # In Naaya: Session messages are translated using this
     security.declarePublic('translate')
     @deprecate(("Translate method shouldn't be called on message catalog;"
-                " call the translate of ITranslationDomain utility"))
+                " call the translate of ITranslationDomain utility, or use "
+                "portal.getPortalI18n().get_translation(msg, **kwargs)"))
     def translate(self, domain, msgid, *args, **kw):
         """This method is required to get the i18n namespace from ZPT working.
         """

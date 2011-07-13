@@ -6,7 +6,7 @@ from urllib import quote
 from mock import Mock
 
 # Zope imports
-from Products.PageTemplates.PageTemplate import PageTemplate
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 # Naaya imports
 from naaya.i18n import NaayaI18n
@@ -89,14 +89,10 @@ else:
             self.assertEqual(in_de, '3 Hunde')
 
         def test_template_translation(self):
-            tmpl = PageTemplate(id='test_tmpl')
+            tmpl = ZopePageTemplate(id='test_tmpl')
             tmpl.pt_edit('<p i18n:translate="">Home for'
                               ' <span i18n:name="hours">3</span> hours</p>',
                               'text/html')
 
             self.assertEqual(tmpl.__of__(self.portal)(),
-                             '<p>Home for <span>3</span> hours</p>')
-            self.portal.getLocalizer().edit_message('Home for ${hours} hours', 'en',
-                                                    'Home für ${hours} Stunden')
-            self.assertEqual(tmpl.__of__(self.portal)(),
-                             '<p>Home für <span>${hours}</span> Stunden</p>')
+                             u'<p>Home for <span>3</span> hours</p>\n')

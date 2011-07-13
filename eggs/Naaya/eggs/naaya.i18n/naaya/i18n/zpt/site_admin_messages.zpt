@@ -4,16 +4,16 @@
 
 <tal:block metal:fill-slot="section"
 	tal:define="portal_i18n_url here/getPortalI18nPath;
+		    portal_i18n here/getPortalI18n;
+                    admin_i18n portal_i18n/get_admin_i18n;
                     query python:request.get('query', '');
                     start python:request.get('start', '');
                     skey python:request.get('skey', 'msg');
                     rkey python:request.get('rkey', '');
                     sort_qs python:'start=%s&amp;skey=%s&amp;rkey=%s&amp;query=%s' % (start, skey, rkey, query);
-                    portal_i18n here/getPortalI18n;
-                    admin_i18n portal_i18n/get_admin_i18n;
                     languages admin_i18n/get_languages_mapping;
                     msg_encoded python:request.get('msg', '');
-                    message python:portal_i18n.message_decode(msg_encoded)">
+                    message python:admin_i18n.message_decode(msg_encoded)">
 
 <p>
 	<a tal:attributes="href string:${portal_i18n_url}/admin_translations_html?${sort_qs}"
