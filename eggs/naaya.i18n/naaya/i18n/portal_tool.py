@@ -17,14 +17,18 @@ except ImportError:
 from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from constants import ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N
+from Products.NaayaBase.constants import (MESSAGE_SAVEDCHANGES,
+                                          PERMISSION_PUBLISH_OBJECTS)
 
+from constants import (ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N,
+                       PERMISSION_TRANSLATE_PAGES)
 from LanguageManagers import NyPortalLanguageManager
 from LanguageManagers import normalize_code, get_language_name, get_languages
 from NyMessageCatalog import NyMessageCatalog
 from NyNegotiator import NyNegotiator
 from ImportExport import TranslationsImportExport
 from patches import populate_threading_local
+from admin_i18n import AdminI18n
 from ExternalService import external_translate
 
 
@@ -119,6 +123,7 @@ class NaayaI18n(SimpleItem):
     security.declarePublic('get_all_languages_mapping')
     ### More specific methods:
     def get_all_languages_mapping(self):
+        """ Return all existent known language codes in naaya.i18n """
         return get_languages()
 
     security.declarePublic('get_language_name')
@@ -196,6 +201,11 @@ class NaayaI18n(SimpleItem):
         return self.get_negotiator().getLanguage(
                             self._portal_langs.getAvailableLanguages(), context)
 
+    security.declarePublic('get_default_language')
+    def get_default_language(self):
+        """ Returns default language in portal """
+        return self.get_lang_manager().get_default_language()
+
     security.declarePublic('change_selected_language')
     def change_selected_language(self, lang, goto=None):
         """ Sets a cookie with a new preferred selected language """
@@ -225,16 +235,25 @@ class NaayaI18n(SimpleItem):
             lang = self.get_selected_language()
         return self.get_message_catalog().gettext(message, lang, default)
 
+    security.declarePublic('get_translation_in_lang')
+    def get_translation_in_lang(self, msg, lang, **kwargs):
+        """
+        Translate message in selected language using Message Catalog
+        and substitute named identifiers with values supplied by kwargs mapping
+
+        """
+        msg = self.get_message_catalog().gettext(msg, lang)
+        return interpolate(msg, kwargs)
+
     security.declarePublic('get_translation')
     def get_translation(self, msg, **kwargs):
         """
-        Translate message using Message Catalog
+        Translate message in selected language using Message Catalog
         and substitute named identifiers with values supplied by kwargs mapping
 
         """
         lang = self.get_selected_language()
-        msg = self.get_message_catalog().gettext(msg, lang)
-        return interpolate(msg, kwargs)
+        return self.get_translation_in_lang(msg, lang, **kwargs)
 
     ### Public general purpose methods
     security.declarePublic('message_decode')
@@ -537,5 +556,82 @@ class NaayaI18n(SimpleItem):
     #######################################################################
     # Naaya Administration screens
     #######################################################################
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'get_admin_i18n')
+    def get_admin_i18n(self):
+        """ """
+        return AdminI18n(self).__of__(self)
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_translations_html')
+    admin_translations_html = PageTemplateFile('zpt/site_admin_translations', globals())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_messages_html')
+    admin_messages_html = PageTemplateFile('zpt/site_admin_messages', globals())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importexport_html')
+    admin_importexport_html = PageTemplateFile('zpt/site_admin_importexport', globals())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
+    def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
+        """ """
+        ob = self.get_message_catalog()
+        message_encoded = self.message_encode(message)
+        ob.edit_message(message, language, translation)
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
+                (self.absolute_url(), quote(message_encoded), start, skey, rkey, query))
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmesg_html')
+    admin_delmesg_html = PageTemplateFile('zpt/site_admin_delmessages', globals())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
+    def admin_delmsg(self, messages=[], REQUEST=None):
+        """ """
+        message_catalog = self.get_message_catalog()
+        messages = self.utConvertToList(messages)
+        for message in messages:
+            message_catalog.del_message(message)
+        if REQUEST:
+            self.getSite().setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_translations_html')
+    admin_basket_translations_html = PageTemplateFile('zpt/site_admin_basket_translations', globals())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
+    def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.manage_export_po(x, REQUEST, RESPONSE)
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importmessages')
+    def admin_importmessages(self, lang, file, REQUEST=None, RESPONSE=None):
+        """ """
+        if REQUEST:
+            if not file:
+                self.getSite().setSessionErrorsTrans('You must select a file to import.')
+                return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
+            else:
+                self.manage_import_po(file, lang, REQUEST, RESPONSE)
+                self.getSite().setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
+    def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.manage_export_xliff(export_all, x, REQUEST, RESPONSE)
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
+    def admin_importxliff(self, file, REQUEST=None):
+        """ """
+        raise NotImplementedError("Imports not yet implemented in naaya.i18n")
+        if REQUEST:
+            if not file:
+                self.getSite().setSessionErrorsTrans('You must select a file to import.')
+                return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
+            else:
+                self.manage_xliff_import(file)
+                self.getSite().setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
 InitializeClass(NaayaI18n)
