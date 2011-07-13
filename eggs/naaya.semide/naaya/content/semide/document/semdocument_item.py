@@ -41,7 +41,7 @@ from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS, EXCEPTION_NOTA
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, \
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES
 
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from naaya.i18n.LocalPropertyManager import LocalProperty
 
 from Products.NaayaBase.NyItem import NyItem
@@ -50,9 +50,13 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyBase import rss_item_for_object
 
 from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 from naaya.core import submitter
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 # Module constants
 METATYPE_OBJECT = 'Naaya Semide Document'
@@ -322,31 +326,32 @@ class NySemDocument(semdocument_item, NyAttributes, NyItem, NyCheckControl, NyCo
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>%s</dc:type>' % self.utXmlEncode(self.document_type))
-        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(self.getLocalProperty('publisher', lang)))
-        ra('<dc:file_link>%s</dc:file_link>' % self.utXmlEncode(self.getLocalProperty('file_link', lang)))
-        ra('<dc:file_link_local>%s</dc:file_link_local>' % self.utXmlEncode(self.getLocalProperty('file_link_local', lang)))
-        ra('<dc:relation>%s</dc:relation>' % self.utXmlEncode(self.relation))
+        item = rss_item_for_object(self, lang)
+        nsmap = get_nsmap(self.getSyndicationTool().getNamespaceItemsList())
+        Dc = ElementMaker(namespace=nsmap['dc'], nsmap=nsmap)
+        Ut = ElementMaker(namespace=nsmap['ut'], nsmap=nsmap)
+        item.extend(Dc.root(
+            Dc.type(self.document_type),
+            Dc.format(self.format()),
+            Dc.source(self.getLocalProperty('source', lang)),
+            Dc.creator(self.getLocalProperty('creator', lang)),
+            Dc.publisher(self.getLocalProperty('publisher', lang)),
+            Dc.relation(self.relation),
+            Ut.file_link(self.getLocalProperty('file_link', lang)),
+            Ut.file_link_local(self.getLocalProperty('file_link_local', lang))
+            ))
         for k in self.subject:
             if k:
                 theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
                 theme_name = theme_ob.theme_name
                 if theme_name:
-                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
-
-        ra('<ut:creator_mail>%s</ut:creator_mail>' % self.utXmlEncode(self.creator_email))
-        ra('<ut:type_document>%s</ut:type_document>' % self.utXmlEncode(self.document_type))
-        ra('<ut:source_link>%s</ut:source_link>' % self.utXmlEncode(self.source_link))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+                    item.append(Dc.subject(theme_name.strip()))
+        item.extend(Dc.root(
+            Ut.creator_mail(self.creator_email),
+            Ut.type_document(self.document_type),
+            Ut.source_link(self.source_link)
+        ))
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

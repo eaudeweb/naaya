@@ -20,6 +20,7 @@ class NySyndicationTestCase(NaayaFunctionalTestCase):
         event.approveThis()
         self.portal.recatalogNyObject(self.portal['info']['9000'])
         lang = self.portal.gl_get_selected_language()
+        self.portal._setLocalPropValue('rights', lang, 'No rights')
         tree = rss_item_for_object(event, lang)
         title = tree.xpath('./title',namespaces=namespaces)[0]
         link = tree.xpath('./link', namespaces=namespaces)[0]
@@ -29,6 +30,7 @@ class NySyndicationTestCase(NaayaFunctionalTestCase):
         dc_description = tree.xpath('./dc:description', namespaces=namespaces)[0]
         contributor = tree.xpath('./dc:contributor', namespaces=namespaces)[0]
         language = tree.xpath('./dc:language', namespaces=namespaces)[0]
+        rights = tree.xpath('./dc:rights', namespaces=namespaces)[0]
 
         self.assertEqual(title.text, event.title)
         self.assertEqual(link.text, event.absolute_url())
@@ -38,3 +40,4 @@ class NySyndicationTestCase(NaayaFunctionalTestCase):
         self.assertEqual(dc_description.text, event.description)
         self.assertEqual(contributor.text, event.contributor)
         self.assertEqual(language.text, lang)
+        self.assertEqual(rights.text, event.rights)

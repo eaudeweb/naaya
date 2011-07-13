@@ -15,7 +15,7 @@ from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOT
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from naaya.i18n.LocalPropertyManager import LocalProperty
 
 from Products.Naaya.NyFolder import addNyFolder
@@ -25,11 +25,15 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core import submitter
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #Module constants
 METATYPE_OBJECT = 'Naaya Semide News'
@@ -344,37 +348,39 @@ class NySemNews(semnews_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Text</dc:type>')
-        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:relation>%s</dc:relation>' % self.utXmlEncode(self.relation))
+        item = rss_item_for_object(self, lang)
+        nsmap = get_nsmap(self.getSyndicationTool().getNamespaceItemsList())
+        Dc = ElementMaker(namespace=nsmap['dc'], nsmap=nsmap)
+        Ut = ElementMaker(namespace=nsmap['ut'], nsmap=nsmap)
+        item.extend(Dc.root(
+            Dc.type('Text'),
+            Dc.format(self.format()),
+            Dc.source(self.getLocalProperty('source', lang)),
+            Dc.creator(self.getLocalProperty('creator', lang)),
+            Dc.publisher(self.getLocalProperty('publisher', lang)),
+            Dc.relation(self.relation)
+            ))
         for k in self.subject:
             if k:
                 theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
                 theme_name = theme_ob.theme_name
                 if theme_name:
-                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
-
+                    item.append(Dc.subject(theme_name.strip()))
         for k in self.getLocalProperty('keywords', lang).split(','):
-            ra('<ut:keywords>%s</ut:keywords>' % self.utXmlEncode(k))
-        ra('<ut:creator_mail>%s</ut:creator_mail>' % self.utXmlEncode(self.creator_email))
-        ra('<ut:contact_name>%s</ut:contact_name>' % self.utXmlEncode(self.getLocalProperty('contact_person', lang)))
-        ra('<ut:contact_mail>%s</ut:contact_mail>' % self.utXmlEncode(self.getLocalProperty('contact_email', lang)))
-        ra('<ut:contact_phone>%s</ut:contact_phone>' % self.utXmlEncode(self.getLocalProperty('contact_phone', lang)))
-        ra('<ut:news_type>%s</ut:news_type>' % self.utXmlEncode(self.news_type))
-        ra('<ut:file_link>%s</ut:file_link>' % self.utXmlEncode(self.getLocalProperty('file_link', lang)))
-        ra('<ut:file_link_local>%s</ut:file_link_local>' % self.utXmlEncode(self.getLocalProperty('file_link_local', lang)))
-        ra('<ut:source_link>%s</ut:source_link>' % self.utXmlEncode(self.source_link))
-        ra('<ut:start_date>%s</ut:start_date>' % self.utShowFullDateTimeHTML(self.news_date))
-        ra('<ut:save_date>%s</ut:save_date>' % self.utShowFullDateTimeHTML(self.bobobase_modification_time()))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+            item.append(Ut.keywords(k))
+        item.extend(Ut.root(
+            Ut.creator_mail(self.creator_email),
+            Ut.contact_name(self.getLocalProperty('contact_person', lang)),
+            Ut.contact_mail(self.getLocalProperty('contact_email', lang)),
+            Ut.contact_phone(self.getLocalProperty('contact_phone', lang)),
+            Ut.news_type(self.news_type),
+            Ut.file_link(self.getLocalProperty('file_link', lang)),
+            Ut.file_link_local(self.getLocalProperty('file_link_local', lang)),
+            Ut.source_link(self.source_link),
+            Ut.start_date(self.utShowFullDateTimeHTML(self.news_date)),
+            Ut.save_date(self.utShowFullDateTimeHTML(self.bobobase_modification_time()))
+        ))
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #zmi actions
     def manage_FTPget(self):
