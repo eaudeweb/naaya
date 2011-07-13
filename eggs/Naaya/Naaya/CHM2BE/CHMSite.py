@@ -23,8 +23,8 @@ from Products.CHM2.CHMSite import CHMSite
 from constants import CHM2BE_PRODUCT_PATH
 
 def wrap_loadDefaultData(method):
-    def loadDefaultData(self, *args, *kwargs):
-        method(self, *args, *kwargs)
+    def loadDefaultData(self, *args, **kwargs):
+        method(self, *args, **kwargs)
         self.loadSkeleton(join(CHM2BE_PRODUCT_PATH))
     return loadDefaultData
 
