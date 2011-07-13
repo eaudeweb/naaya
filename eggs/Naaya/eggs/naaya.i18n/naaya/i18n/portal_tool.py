@@ -280,7 +280,7 @@ class NaayaI18n(SimpleItem):
 
     ### Private methods for private views
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'manage_messages')
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'external_translate')
     def external_translate(self, message, target_lang):
         """
         Private method that returns a translation based on an external
@@ -573,7 +573,7 @@ class NaayaI18n(SimpleItem):
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
         """ """
         ob = self.get_message_catalog()
-        message_encoded = self.message_encode(message)
+        message_encoded = message_encode(message)
         ob.edit_message(message, language, translation)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
