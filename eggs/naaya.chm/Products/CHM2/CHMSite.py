@@ -1130,7 +1130,8 @@ class CHMSite(NySite):
             return newimg.getvalue()
 
         layout_tool = self.getLayoutTool()
-        skin = layout_tool.get_current_skin()
+        # not using get_current_skin to make it work for CHMBE
+        skin = layout_tool._getOb(layout_tool.getCurrentSkinId()) # to work for CHMBE
         # add images folder if it doesn't exist
         if not skin.hasObject('main_section_images'):
             manage_addFolder(skin, 'main_section_images')
