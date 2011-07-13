@@ -183,7 +183,7 @@ class NyBase(NyDublinCore):
             ra('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(k.strip()))
         for k in self.getLocalProperty('keywords', lang).split(','):
             ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k.strip()))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.getLocalProperty('rights', lang)))
+        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
         return ''.join(r)
 
     #Syndication RDF
@@ -339,7 +339,7 @@ def rss_item_for_object(obj,lang):
         xml.append(Dc.coverage(k.strip()))
     for k in obj.getLocalProperty('keywords', lang).split(','):
         xml.append(Dc.subject(k.strip()))
-    xml.append(Dc.rights(obj.getLocalProperty('rights', lang)))
+    xml.append(Dc.rights(obj.rights))
     return xml
 
 rdf_ns_map = {

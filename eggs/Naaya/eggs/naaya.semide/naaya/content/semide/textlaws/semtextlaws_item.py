@@ -39,17 +39,21 @@ from Products.NaayaBase.constants import (PERMISSION_EDIT_OBJECTS, EXCEPTION_NOT
 EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import utils, make_id
+from Products.NaayaCore.managers.utils import utils, make_id, get_nsmap
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyBase import rss_item_for_object
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core import submitter
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Text of Laws'
@@ -311,33 +315,36 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>%s</dc:type>' % self.utXmlEncode(self.type_law))
-        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:relation>%s</dc:relation>' % self.utXmlEncode(self.relation))
+        item = rss_item_for_object(self, lang)
+        nsmap = get_nsmap(self.getSyndicationTool().getNamespaceItemsList())
+        Dc = ElementMaker(namespace=nsmap['dc'], nsmap=nsmap)
+        Ut = ElementMaker(namespace=nsmap['ut'], nsmap=nsmap)
+        item.extend(Dc.root(
+            Dc.type(self.type_law),
+            Dc.format(self.format()),
+            Dc.source(self.getLocalProperty('source', lang)),
+            Dc.creator(l_site.getLocalProperty('creator', lang)),
+            Dc.publisher(l_site.getLocalProperty('publisher', lang)),
+            Dc.relation(self.relation)
+            ))
         for k in self.subject:
             if k:
                 theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
                 theme_name = theme_ob.theme_name
                 if theme_name:
-                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
-
-        ra('<ut:type_law>%s</ut:type_law>' % self.utXmlEncode(self.type_law))
-        ra('<ut:file_link>%s</ut:file_link>' % self.utXmlEncode(self.file_link))
-        ra('<ut:file_link_local>%s</ut:file_link_local>' % self.utXmlEncode(self.file_link_local))
-        ra('<ut:official_journal_ref>%s</ut:official_journal_ref>' % self.utXmlEncode(self.getLocalProperty('official_journal_ref', lang)))
-        ra('<ut:source_link>%s</ut:source_link>' % self.utXmlEncode(self.source_link))
-        ra('<ut:geozone>%s</ut:geozone>' % self.utXmlEncode(self.geozone))
-        ra('<ut:original_language>%s</ut:original_language>' % self.utXmlEncode(self.original_language))
-        ra('<ut:statute>%s</ut:statute>' % self.utXmlEncode(self.statute))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+                    item.append(Dc.subject(theme_name.strip()))
+        item.extend(Dc.root(
+            Ut.type_law(self.type_law),
+            Ut.file_link(self.file_link),
+            #Ut.file_link_local(self.file_link_local),
+            Ut.official_journal_ref(self.getLocalProperty('official_journal_ref', lang)),
+            Ut.source_link(self.source_link),
+            Ut.geozone(self.geozone),
+            Ut.original_language(self.original_language),
+            Ut.statute(self.statute)
+        ))
+        print etree.tostring(item, xml_declaration=False, encoding="utf-8", pretty_print=True)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

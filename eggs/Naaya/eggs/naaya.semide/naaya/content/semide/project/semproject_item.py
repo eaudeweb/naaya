@@ -17,12 +17,13 @@ PERMISSION_DELETE_OBJECTS, EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG,
 EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG, EXCEPTION_STARTEDVERSION_MSG,
 MESSAGE_SAVEDCHANGES)
 
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, \
                                         NY_CONTENT_BASE_SCHEMA
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
@@ -42,6 +43,9 @@ from naaya.content.semide.fieldsite.semfieldsite_item import (
 from naaya.content.semide.document.semdocument_item import (
     addNySemDocument, semdocument_add_html,
     importNySemDocument, METATYPE_OBJECT as METATYPE_NYSEMDOCUMENT)
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Project'
@@ -368,81 +372,91 @@ class NySemProject(semproject_item, NyAttributes, NyImportExport, NyContainer, N
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Text</dc:type>')
-        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        item = rss_item_for_object(self, lang)
+        nsmap = get_nsmap(self.getSyndicationTool().getNamespaceItemsList())
+        Dc = ElementMaker(namespace=nsmap['dc'], nsmap=nsmap)
+        Ut = ElementMaker(namespace=nsmap['ut'], nsmap=nsmap)
+        item.extend(Dc.root(
+            Dc.type('Text'),
+            Dc.format(self.format()),
+            Dc.source(l_site.getLocalProperty('creator', lang)),
+            Dc.creator(l_site.getLocalProperty('creator', lang)),
+            Dc.publisher(l_site.getLocalProperty('publisher', lang))
+        ))
         for k in self.subject:
             if k:
                 theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
                 theme_name = theme_ob.theme_name
                 if theme_name:
-                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
-
-        ra('<ut:ID>%s</ut:ID>' % self.utXmlEncode(self.id))
-        ra('<ut:Acronym>%s</ut:Acronym>' % self.utXmlEncode(self.getLocalProperty('acronym', lang)))
-        ra('<ut:Title>%s</ut:Title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
-        ra('<ut:Budget_Total Currency="EUR">%s</ut:Budget_Total>' % self.utXmlEncode(self.budget))
+                    item.append(theme_name.strip())
+        item.extend(Ut.root(
+            Ut.ID(self.id),
+            Ut.Acronym(self.getLocalProperty('acronym', lang)),
+            Ut.Title(self.getLocalProperty('title', lang)),
+            Ut.Budget_Total(self.budget, Currency="EUR"),
+        ))
         for k in self.getLocalProperty('keywords', lang).split(','):
-            ra('<ut:keywords>%s</ut:keywords>' % self.utXmlEncode(k))
+            item.append(Ut.keywords(k))
         for fund_item in self.getFundings():
-            ra('<ut:Funding>')
-            ra('<ut:Source>%s</ut:Source>' % self.utXmlEncode(fund_item.getLocalProperty('funding_source', lang)))
-            ra('<ut:Programme>%s</ut:Programme>' % self.utXmlEncode(fund_item.getLocalProperty('funding_programme', lang)))
-            ra('<ut:Type>%s</ut:Type>' % self.utXmlEncode(fund_item.getLocalProperty('funding_type', lang)))
-            ra('<ut:Funding_Rate>%s</ut:Funding_Rate>' % self.utXmlEncode(fund_item.getLocalProperty('funding_rate', lang)))
-            ra('</ut:Funding>')
-        ra('<ut:Programme_Field>%s</ut:Programme_Field>' % self.utXmlEncode(self.getLocalProperty('programme', lang)))
-        ra('<ut:Source>%s</ut:Source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<ut:WebSite>%s</ut:WebSite>' % self.utXmlEncode(self.resourceurl))
-        ra('<ut:Background><![CDATA[%s]]></ut:Background>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
-        ra('<ut:Objectives><![CDATA[%s]]></ut:Objectives>' % self.utXmlEncode(self.getLocalProperty('objectives', lang)))
-        ra('<ut:Results><![CDATA[%s]]></ut:Results>' % self.utXmlEncode(self.getLocalProperty('results', lang)))
-        ra('<ut:Starting_Date>%s</ut:Starting_Date>' % self.utShowFullDateTimeHTML(self.start_date))
-        ra('<ut:Ending_Date>%s</ut:Ending_Date>' % self.utShowFullDateTimeHTML(self.end_date))
+            item.extend(Ut.Root(
+                Ut.Funding(
+                    Ut.Source(fund_item.getLocalProperty('funding_source', lang)),
+                    Ut.Programme(fund_item.getLocalProperty('funding_programme', lang)),
+                    Ut.Type(fund_item.getLocalProperty('funding_type', lang)),
+                    Ut.Funding_Rate(fund_item.getLocalProperty('funding_rate', lang))),
+                Ut.Programme_Field(self.getLocalProperty('programme', lang)),
+                Ut.Source(self.getLocalProperty('source', lang)),
+                Ut.WebSite(self.resourceurl),
+                Ut.Background(self.getLocalProperty('description', lang)),
+                Ut.Objectives(self.getLocalProperty('objectives', lang)),
+                Ut.Results(self.getLocalProperty('results', lang)),
+                Ut.Starting_Date(self.start_date),
+                Ut.Ending_date(self.end_date)
+            ))
         for doc_item in self.getDocuments():
-            ra('<ut:Document>')
-            ra('<dc:title>%s</dc:title>' % self.utXmlEncode(doc_item.getLocalProperty('title', lang)))
-            ra('<dc:file_link>%s</dc:file_link>' % self.utXmlEncode(doc_item.getLocalProperty('file_link', lang)))
-            ra('<ut:type_document>%s</ut:type_document>' % self.utXmlEncode(doc_item.document_type))
-            ra('</ut:Document>')
+            item.append(Ut.Document(
+                Dc.title(doc_item.getLocalProperty('title', lang)),
+                Dc.file_link(doc_item.getLocalProperty('file_link', lang)),
+                Ut.type_document(doc_item.document_type),
+            ))
+        partners = Ut.Partners()
+         #TODO: the acronym property was not specified
         for org_item in self.getOrganisations():
-            ra('<ut:Partners>')
-            #TODO: the acronym property was not specified
-            ra('<ut:Or_Name Or_Acronym="%s">%s</ut:Or_Name>' % ('acronym', self.utXmlEncode(org_item.getLocalProperty('results', lang))))
-            ra('<ut:Or_Type>%s</ut:Or_Type>' % self.utXmlEncode(org_item.org_type))
-            ra('<ut:Or_Desc>%s</ut:Or_Desc>' % self.utXmlEncode(org_item.getLocalProperty('description', lang)))
-            ra('<ut:Or_address>%s</ut:Or_address>' % self.utXmlEncode(org_item.getLocalProperty('address', lang)))
+            partners.extend(Ut.root(
+                Ut.Or_Name(org_item.getLocalProperty('results', lang), Or_Acronym='acronym'),
+                Ut.Or_Type(org_item.org_type),
+                Ut.Or_Desc(org_item.getLocalProperty('description', lang)),
+                Ut.Or_address(org_item.getLocalProperty('address', lang))
+            ))
             for k in self.splitToList(org_item.getLocalProperty('coverage', lang)):
-                ra('<ut:Or_Country>%s</ut:Or_Country>' % self.utXmlEncode(k))
-            ra('<ut:Or_WebSite>%s</ut:Or_WebSite>' % self.utXmlEncode(org_item.org_url))
-            #TODO: explain the coordinator attribute
-            #TODO: contacts must be a list
-            ra('<ut:Or_Contact Coordinator="0">')
-            #TODO: explain attribute 'Project_Manager'
-            ra('<ut:Co_Title>%s</ut:Co_Title>' % self.utXmlEncode(org_item.getLocalProperty('contact_title', lang)))
-            ra('<ut:Co_FirstName>%s</ut:Co_FirstName>' % self.utXmlEncode(org_item.getLocalProperty('contact_firstname', lang)))
-            ra('<ut:Co_LastName>%s</ut:Co_LastName>' % self.utXmlEncode(org_item.getLocalProperty('contact_lastname', lang)))
-            ra('<ut:Co_Position>%s</ut:Co_Position>' % self.utXmlEncode(org_item.getLocalProperty('contact_position', lang)))
-            ra('<ut:Co_Email>%s</ut:Co_Email>' % self.utXmlEncode(org_item.contact_email))
-            ra('<ut:Co_Tel>%s</ut:Co_Tel>' % self.utXmlEncode(org_item.contact_phone))
-            ra('<ut:Co_Fax>%s</ut:Co_Fax>' % self.utXmlEncode(org_item.contact_fax))
-            ra('</ut:Or_Contact>')
-            ra('</ut:Partners>')
+                partners.append(Ut.Or_Country(k))
+            partners.extend(Ut.root(
+                   Ut.Or_WebSite(org_item.org_url),
+                    #TODO: explain the coordinator attribute
+                    #TODO: contacts must be a list
+                   Ut.Or_Contact(
+                    #TODO: explain attribute 'Project_Manager
+                       Ut.Co_Title(org_item.getLocalProperty('contact_title', lang)),
+                       Ut.Co_FirstName(org_item.getLocalProperty('contact_firstname', lang)),
+                       Ut.Co_LastName(org_item.getLocalProperty('contact_lastname', lang)),
+                       Ut.Co_Position(org_item.getLocalProperty('contact_position', lang)),
+                       Ut.Co_Email(org_item.contact_email),
+                       Ut.Co_Tel(org_item.contact_phone),
+                       Ut.Co_Fax(org_item.contact_fax),
+                       Coordinator="0"
+                   )
+                ))
+        if self.getOrganisations(): item.append(partners)
+        field_sites = Ut.Field_sites()
         for fs_item in self.getFieldSites():
-            ra('<ut:Field_sites>')
-            ra('<ut:Site_name>%s</ut:Site_name>' % self.utXmlEncode(fs_item.getLocalProperty('title', lang)))
-            ra('<ut:Site_country>%s</ut:Site_country>' % self.utXmlEncode(fs_item.getLocalProperty('coverage', lang)))
+            field_sites = Ut.Field_sites(
+                Ut.Site_name(fs_item.getLocalProperty('title', lang)),
+                Ut.Site_country(fs_item.getLocalProperty('coverage', lang))
+            )
             for k in self.splitToList(fs_item.getLocalProperty('fieldsite_rb', lang)):
-                ra('<ut:River_basin>%s</ut:River_basin>' % self.utXmlEncode(k))
-            ra('</ut:Field_sites>')
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+                field_sites.append(Ut.River_basin(k))
+        if self.getFieldSites(): item.append(field_sites)
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     def getOrganisations(self): return self.objectValues(METATYPE_NYSEMORGANISATION)
     def getFundings(self):      return self.objectValues(METATYPE_NYSEMFUNDING)

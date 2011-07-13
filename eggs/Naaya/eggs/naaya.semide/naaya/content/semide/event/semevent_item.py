@@ -40,18 +40,22 @@ EXCEPTION_NOTAUTHORIZED_MSG, EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG,
 EXCEPTION_STARTEDVERSION_MSG, MESSAGE_SAVEDCHANGES, EXCEPTION_STARTEDVERSION)
 
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaCore.managers.utils import make_id
+from Products.NaayaCore.managers.utils import make_id, get_nsmap
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core import submitter
+
+from lxml import etree
+from lxml.builder import ElementMaker
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Event'
@@ -391,47 +395,52 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r = []
-        ra = r.append
-        ra(self.syndicateThisHeader())
-        ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Event</dc:type>')
-        ra('<dc:format>%s</dc:format>' % self.utXmlEncode(self.format()))
-        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        ra('<dc:relation>%s</dc:relation>' % self.utXmlEncode(self.relation))
+        item = rss_item_for_object(self, lang)
+        nsmap = get_nsmap(self.getSyndicationTool().getNamespaceItemsList())
+        Dc = ElementMaker(namespace=nsmap['dc'], nsmap=nsmap)
+        Ev = ElementMaker(namespace=nsmap['ev'], nsmap=nsmap)
+        Ut = ElementMaker(namespace=nsmap['ut'], nsmap=nsmap)
+        item.extend(Dc.root(
+            Dc.type('Event'),
+            Dc.format(self.format()),
+            Dc.source(self.getLocalProperty('source', lang)),
+            Dc.creator(self.getLocalProperty('creator', lang)),
+            Dc.publisher(l_site.getLocalProperty('publisher', lang)),
+            Dc.relation(self.relation),
+        ))
         for k in self.subject:
-            if k:
-                theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
-                theme_name = theme_ob.theme_name
-                if theme_name:
-                    ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(theme_name.strip()))
-
-        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
-        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
-        ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('organizer', lang)))
-        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.event_type))
-
+            theme_ob = self.getPortalThesaurus().getThemeByID(k, self.gl_get_selected_language())
+            theme_name = theme_ob.theme_name
+            if theme_name:
+                item.append(Dc.subject(theme_name.strip()))
+        item.extend(Ev.root(
+            Ev.organizer(self.utXmlEncode(self.getLocalProperty('organizer', lang))),
+            Ev.type(self.utXmlEncode(self.event_type)),
+            Ev.startdate(self.utShowFullDateTimeHTML(self.start_date))
+            ))
+        if self.end_date:
+            item.append(Ev.enddate(self.utShowFullDateTimeHTML(self.end_date)))
         for k in self.getLocalProperty('keywords', lang).split(','):
-            ra('<ut:keywords>%s</ut:keywords>' % self.utXmlEncode(k))
-        ra('<ut:creator_mail>%s</ut:creator_mail>' % self.utXmlEncode(self.creator_email))
-        ra('<ut:contact_name>%s</ut:contact_name>' % self.utXmlEncode(self.getLocalProperty('contact_person', lang)))
-        ra('<ut:contact_mail>%s</ut:contact_mail>' % self.utXmlEncode(self.contact_email))
-        ra('<ut:contact_phone>%s</ut:contact_phone>' % self.utXmlEncode(self.contact_phone))
-        ra('<ut:event_type>%s</ut:event_type>' % self.utXmlEncode(self.event_type))
-        ra('<ut:file_link>%s</ut:file_link>' % self.utXmlEncode(self.getLocalProperty('file_link', lang)))
-        ra('<ut:file_link_copy>%s</ut:file_link_copy>' % self.utXmlEncode(self.getLocalProperty('file_link_copy', lang)))
-        ra('<ut:source_link>%s</ut:source_link>' % self.utXmlEncode(self.source_link))
-        ra('<ut:organizer>%s</ut:organizer>' % self.utXmlEncode(self.getLocalProperty('organizer', lang)))
-        ra('<ut:geozone>%s</ut:geozone>' % self.utXmlEncode(self.geozone))
-        ra('<ut:address>%s</ut:address>' % self.utXmlEncode(self.getLocalProperty('address', lang)))
-        ra('<ut:duration>%s</ut:duration>' % self.utXmlEncode(self.getLocalProperty('duration', lang)))
-        ra('<ut:start_date>%s</ut:start_date>' % self.utShowFullDateTimeHTML(self.start_date))
-        ra('<ut:end_date>%s</ut:end_date>' % self.utShowFullDateTimeHTML(self.end_date))
-        ra('<ut:event_status>%s</ut:event_status>' % self.utXmlEncode(self.event_status))
-        ra(self.syndicateThisFooter())
-        return ''.join(r)
+            item.append(Ut.keyword(k))
+        item.extend(Ut.root(
+            Ut.creator_mail(self.creator_email),
+            Ut.contact_name(self.getLocalProperty('contact_person', lang)),
+            Ut.contact_mail(self.contact_email),
+            Ut.contact_phone(self.contact_phone),
+            Ut.event_type(self.event_type),
+            Ut.file_link(self.getLocalProperty('file_link', lang)),
+            Ut.file_link_copy(self.getLocalProperty('file_link_copy', lang)),
+            Ut.source_link(self.source_link),
+            Ut.organizer(self.getLocalProperty('organizer', lang)),
+            Ut.geozone(self.geozone),
+            Ut.address(self.getLocalProperty('address', lang)),
+            Ut.duration(self.getLocalProperty('duration', lang)),
+            Ut.event_status(self.event_status),
+            Ut.start_date(self.utShowFullDateTimeHTML(self.start_date))
+        ))
+        if self.end_date:
+            item.append(Ut.end_date(self.utShowFullDateTimeHTML(self.end_date)))
+        return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
