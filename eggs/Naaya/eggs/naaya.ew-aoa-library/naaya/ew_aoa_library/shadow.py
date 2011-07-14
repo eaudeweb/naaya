@@ -9,7 +9,15 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from naaya.core.zope2util import path_in_site
 from naaya.core.utils import force_to_unicode
 
+import logging
+log = logging.getLogger(__name__)
+
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
+
+water_themes = ['Water', 'Water resources', 'Water resource management',
+                'Воды', 'Водные ресурсы', 'Управление водными ресурсами']
+ge_themes = ['Green Economy', 'Green economy', 'Resource efficiency',
+             '"Зеленая" экономика', 'Эффективность использования ресурсов']
 
 def extract_checkboxmatrix(answer, widget_name):
     widget = answer.getSurveyTemplate()[widget_name]
@@ -183,6 +191,15 @@ def get_countries_mapping(survey):
     setattr(survey, cache_name, mapping)
     return mapping
 
+def main_theme(name):
+    if name in ge_themes:
+        return u"Green economy"
+    elif name in water_themes:
+        return u"Water"
+    else:
+        log.warn("Unknown theme %r", name)
+        return u""
+
 def extract_survey_answer_data_library(answer):
     all_topics = set()
     multiple_selects = [
@@ -245,7 +262,7 @@ def extract_survey_answer_data_library(answer):
                             'w_assessment-name', lang='en'),
         'viewer_title_ru': answer.getLocalProperty(
                             'w_assessment-name', lang='ru'),
-        'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
+        'viewer_main_theme': [main_theme(t) for t in attrs['theme']],
         'viewer_document_type': [document_types[dt_i] for dt_i in
                                  attrs['document_type']],
         'viewer_year': attrs['publication_year'],
@@ -281,7 +298,7 @@ def extract_survey_answer_data_country_fiches(answer):
     attrs.update({
         'viewer_title_en': answer.getLocalProperty('w_title', lang='en'),
         'viewer_title_ru': answer.getLocalProperty('w_title', lang='ru'),
-        'viewer_theme': [force_to_unicode(label) for label in attrs['theme']],
+        'viewer_main_theme': [main_theme(t) for t in attrs['theme']],
         'viewer_document_type': [document_types[dt_i] for dt_i in
                                  attrs['document_type']],
         'viewer_year': attrs['publication_year'],
