@@ -10,7 +10,7 @@ manage_addStyle_html = PageTemplateFile('zpt/style_add', globals())
 def manage_addStyle(self, id='', title='', file='', REQUEST=None):
     """ """
     if file == '':
-        file = '<span tal:replace="python:request.RESPONSE.setHeader(\'content-type\', \'text/css\')"/>'
+        file = '/* stylesheet! */'
     ob = Style(id, title, file)
     self._setObject(id, ob)
     if REQUEST is not None:
