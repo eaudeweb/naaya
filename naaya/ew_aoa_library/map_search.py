@@ -11,95 +11,6 @@ from devel import aoa_devel_hook
 
 log = logging.getLogger(__name__)
 
-country_list = [ # TODO `country_list` should not be duplicated here
-    "Albania",
-    "Andorra",
-    "Armenia",
-    "Austria",
-    "Azerbaijan",
-    "Belarus",
-    "Belgium",
-    "Bosnia and Herzegovina",
-    "Bulgaria",
-    "Croatia",
-    "Cyprus",
-    "Czech Republic",
-    "Denmark",
-    "Estonia",
-    "Finland",
-    "France",
-    "Georgia",
-    "Germany",
-    "Greece",
-    "Hungary",
-    "Iceland",
-    "Ireland",
-    "Italy",
-    "Kazakhstan",
-    "Kyrgyzstan",
-    "Latvia",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Former Yugoslav Republic of Macedonia",
-    "Malta",
-    "Republic of Moldova",
-    "Monaco",
-    "Montenegro",
-    "the Netherlands",
-    "Norway",
-    "Poland",
-    "Portugal",
-    "Romania",
-    "Russian Federation",
-    "San Marino",
-    "Serbia",
-    "Slovakia",
-    "Slovenia",
-    "Spain",
-    "Sweden",
-    "Switzerland",
-    "Tajikistan",
-    "Turkey",
-    "Turkmenistan",
-    "Ukraine",
-    "the United Kingdom",
-    "Uzbekistan",
-    "Kosovo under un security council 1244/9950",
-    "Afghanistan",
-    "Algeria",
-    "Australia",
-    "Brazil",
-    "Cambodia",
-    "Cameroun",
-    "Canada",
-    "China",
-    "Costa Rica",
-    "Egypt",
-    "Honduras",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Israel",
-    "Japan",
-    "Jordan",
-    "Kenya",
-    "Korea",
-    "Lebanon",
-    "Libya",
-    "Mauritius",
-    "Morocco",
-    "Nepal",
-    "Nigeria",
-    "Palestinian territory",
-    "Singapore",
-    "Syria",
-    "Tunisia",
-    "Uganda",
-    "USA",
-    "others",
-]
-
 
 def catalog_filters_for_shadows(site):
     return {
@@ -146,15 +57,16 @@ def filter_documents(ctx, request):
 
     filters = catalog_filters_for_shadows(site)
     filters.update({
-        'viewer_country': country or country_list,
+        'viewer_country': country,
         'viewer_document_type': get_field('document-type'),
         'viewer_theme': get_field('theme'),
         'viewer_year': get_field('year'),
         'viewer_title_'+lang: get_field('text', ''),
     })
 
-    for name in ['viewer_document_type', 'viewer_theme', 'viewer_year']:
-        if filters[name] is None:
+    for name in ['viewer_country', 'viewer_document_type',
+                 'viewer_theme', 'viewer_year']:
+        if filters[name] in (None, []):
             del filters[name]
 
     for brain in site.getCatalogTool()(**filters):
