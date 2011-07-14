@@ -265,13 +265,17 @@ class CatalogTool(ZCatalog, utils):
             cataloged_paths = set()
             broken_paths = set()
             for brain in self():
+                broken = False
                 try:
                     ob = brain.getObject()
                 except:
-                    broken_paths.add(brain.getPath())
-                    continue
+                    broken = True
 
-                if ob.meta_type == 'Broken Because Product is Gone':
+                if (ob is None or
+                    ob.meta_type == 'Broken Because Product is Gone'):
+                    broken = True
+
+                if broken:
                     broken_paths.add(brain.getPath())
                     continue
 
