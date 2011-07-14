@@ -14,6 +14,9 @@ class INyObjectContainer(Interface):
     sitemaps or rebuilding the catalog.
     """
 
+    def objectValues():
+        """ Get a list of contained objects. """
+
 class IHeartbeat(Interface):
     """ Interface for Heartbeat event """
     when = Attribute('when')
