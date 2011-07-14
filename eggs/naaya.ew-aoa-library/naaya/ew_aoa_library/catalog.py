@@ -22,8 +22,8 @@ def set_up_catalog_indexes(site, request):
     log.addHandler(log_handler)
     try:
         # remove any existing indexes
-        for name in ['viewer_title_en', 'viewer_title_ru',
-                     'viewer_theme', 'viewer_document_type',
+        for name in ['viewer_title_en', 'viewer_title_ru', 'viewer_theme',
+                     'viewer_main_theme', 'viewer_document_type',
                      'viewer_country', 'viewer_author', 'viewer_year']:
             if catalog._catalog.indexes.has_key(name):
                 log.info('removing index %r', name)
@@ -49,7 +49,7 @@ def set_up_catalog_indexes(site, request):
 
         add_fulltext_index('viewer_title_en')
         add_fulltext_index('viewer_title_ru')
-        add_keyword_index('viewer_theme')
+        add_keyword_index('viewer_main_theme')
         add_keyword_index('viewer_document_type')
         add_keyword_index('viewer_country')
         add_field_index('viewer_author')
