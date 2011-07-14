@@ -12,6 +12,7 @@ import transaction
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
+from naaya.core.interfaces import INyObjectContainer
 
 import shadow
 import map_search
@@ -40,7 +41,7 @@ topics_to_themes = {
                     }
 
 class AoALibraryViewer(SimpleItem):
-    interface.implements(INyCatalogAware)
+    interface.implements(INyCatalogAware, INyObjectContainer)
 
     meta_type = "Naaya EW_AOA Library Viewer"
 
@@ -121,6 +122,10 @@ class AoALibraryViewer(SimpleItem):
             if not hasattr(answer, 'approved_date') and not show_unapproved:
                 continue
             yield self.wrap_answer(answer)
+
+    security.declareProtected(view, 'objectValues')
+    def objectValues(self):
+        return list(self.iter_assessments())
 
     def __getitem__(self, key):
         survey = self.target_survey()
