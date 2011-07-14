@@ -62,6 +62,8 @@ class CheckerThread(Thread):
             return "SSL error: " + err
         except InvalidURL:
             return "Invalid URL."
+        except Exception, e:
+            return "Link checker error: " + err
 
     def sanitize(self, msg):
         if isinstance(IOError, ClassType) and isinstance(msg, IOError):

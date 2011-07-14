@@ -287,7 +287,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         internal_links = []
         for ob_url, val in urlsinfo.items():
             for v in val:
-                link = v[0]
+                link = v[0].split('#', 1)[0]
                 if is_absolute_url(link):
                     external_links.add(link)
                 else:
