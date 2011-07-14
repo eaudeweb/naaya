@@ -343,7 +343,6 @@ class NySemTextLaws(semtextlaws_item, NyAttributes, NyItem, NyCheckControl, NyCo
             Ut.original_language(self.original_language),
             Ut.statute(self.statute)
         ))
-        print etree.tostring(item, xml_declaration=False, encoding="utf-8", pretty_print=True)
         return etree.tostring(item, xml_declaration=False, encoding="utf-8")
 
     #zmi actions
