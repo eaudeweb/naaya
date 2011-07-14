@@ -26,7 +26,7 @@ def shadow_to_dict(shadow):
     return {
         "title": shadow.viewer_title_en,
         "country": shadow.viewer_country,
-        "theme": shadow.viewer_theme,
+        "theme": shadow.viewer_main_theme,
         "document_type": shadow.viewer_document_type,
         "year": shadow.viewer_year,
         "author": shadow.viewer_author,
@@ -59,13 +59,13 @@ def filter_documents(ctx, request):
     filters.update({
         'viewer_country': country,
         'viewer_document_type': get_field('document-type'),
-        'viewer_theme': get_field('theme'),
+        'viewer_main_theme': get_field('theme'),
         'viewer_year': get_field('year'),
         'viewer_title_'+lang: get_field('text', ''),
     })
 
     for name in ['viewer_country', 'viewer_document_type',
-                 'viewer_theme', 'viewer_year']:
+                 'viewer_main_theme', 'viewer_year']:
         if filters[name] in (None, []):
             del filters[name]
 
@@ -98,8 +98,6 @@ def portlet_template_options(site):
 
     search_url = vl_viewer.absolute_url() + '/do_map_search'
 
-    themes = set(cf_survey['w_theme'].getChoices() +
-                 vl_survey['w_theme'].getChoices())
     document_types = set(cf_survey['w_type-document'].getChoices()[1:] +
                          vl_survey['w_type-document'].getChoices()[1:])
 
@@ -114,7 +112,7 @@ def portlet_template_options(site):
     return {
         'map_config': map_config,
         'filter_options': {
-            'themes': sorted(themes),
+            'themes': [u"Water", u"Green economy"],
             'document_types': sorted(document_types),
         },
     }
