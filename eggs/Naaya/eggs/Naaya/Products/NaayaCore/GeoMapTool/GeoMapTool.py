@@ -74,20 +74,32 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     """
 
     #center map in Europe
-    _cluster_pngs = [ImageFile('images/cluster_less_10.png', globals()),
-                        ImageFile('images/cluster_10_100.png', globals()),
-                        ImageFile('images/cluster_100_1k.png', globals()),
-                        ImageFile('images/cluster_1k_more.png', globals())]
+    _cluster_pngs = [ImageFile('images/cluster_about_10.png', globals()),
+                        ImageFile('images/cluster_about_20.png', globals()),
+                        ImageFile('images/cluster_about_50.png', globals()),
+                        ImageFile('images/cluster_about_100.png', globals()),
+                        ImageFile('images/cluster_about_200.png', globals()),
+                        ImageFile('images/cluster_about_500.png', globals()),
+                        ImageFile('images/cluster_about_1000.png', globals()),
+                        ImageFile('images/cluster_2000_more.png', globals())]
 
     def _pick_cluster(self, len_group):
-        if len_group > 1000:
-            return 3
-        elif len_group > 100:
-            return 2
-        elif len_group > 10:
-            return 1
+        if len_group < 15:
+            return 0 # about 10
+        elif len_group < 30:
+            return 1 # about 20
+        elif len_group < 75:
+            return 2 # about 50
+        elif len_group < 150:
+            return 3 # about 100
+        elif len_group < 300:
+            return 4 # about 200
+        elif len_group <= 750:
+            return 5 # about 500
+        elif len_group <= 2000:
+            return 6 # about 1000
         else:
-            return 0
+            return 7
 
     _marker_template = """
         <div class="marker-body">
