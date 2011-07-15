@@ -17,6 +17,7 @@ from zLOG import LOG, INFO, DEBUG
 from Products.NaayaLinkChecker.Utils import *
 from Products.NaayaLinkChecker.CheckerThread import CheckerThread
 from Products.NaayaLinkChecker import LogEntry
+from naaya.core.utils import force_to_unicode
 
 THREAD_COUNT = 4
 
@@ -400,7 +401,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             for entry in log.url_list:
                 for url in entry[4]:
                     try:
-                        if url[0].decode() == link:
+                        if force_to_unicode(url[0]) == force_to_unicode(link):
                             failed += 1
                             continue
                     except UnicodeDecodeError:
