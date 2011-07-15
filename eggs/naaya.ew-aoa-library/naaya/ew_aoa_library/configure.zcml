@@ -18,7 +18,7 @@
   <adapter
     for=".interfaces.IAoaPortal"
     provides="Products.NaayaCore.PortletsTool.interfaces.INyPortlet"
-    factory=".map_search.AoaSearchMapPortlet"
+    factory=".jsmap.AoaSearchMapPortlet"
     name="aoa_search_map"
     />
 
@@ -26,6 +26,13 @@
       for=".interfaces.IAoaPortal"
       name="set_up_catalog_indexes"
       class=".catalog.SetUpCatalogIndexes"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
+      for=".interfaces.IAoaPortal"
+      name="jsmap_search_documents"
+      class=".jsmap.SearchDocuments"
       permission="zope2.ViewManagementScreens"
       />
 

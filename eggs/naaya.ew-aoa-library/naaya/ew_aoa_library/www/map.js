@@ -1,12 +1,7 @@
-$(function() {
+(function() {
 
-if(window.M == null) {
-  window.M = {config: {
-    'tiles_url': "tiles/countries",
-    'search_url': "search",
-    'www_prefix': "data"
-  }};
-}
+var M = window.M = {};
+
 M.debug = true;
 M.proj_wgs1984 = new OpenLayers.Projection("EPSG:4326");
 M.map_projection = new OpenLayers.Projection("EPSG:900913");
@@ -14,14 +9,13 @@ M.project = function(point) {
   return point.clone().transform(M.proj_wgs1984, M.map_projection);
 }
 
-M.countries_map = new OpenLayers.Map('countries-map');
+M.xyz_layer = function(name) {
+  return new OpenLayers.Layer.XYZ(name,
+    M.config['tiles_url'] + "/${z}/${x}/${y}.png",
+    {'sphericalMercator': true, 'numZoomLevels': 7}
+  );
+}
 
-M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
-M.countries_map.addControl(M.layer_switcher);
-$('.baseLbl', M.layer_switcher.layersDiv).text("Geographic level");
-M.layer_switcher.maximizeControl();
-
-M.views = {};
 M.add_view = function(tiles_layer) {
   var this_view = M.views[tiles_layer.name] = {};
 
@@ -127,32 +121,35 @@ M.update_all_document_counts = function(docs_and_countries) {
   });
 };
 
-var geojson_format = new OpenLayers.Format.GeoJSON({
-  'internalProjection': M.map_projection,
-  'externalProjection': M.proj_wgs1984
-});
+M.create_map_search = function(options) {
+  M.countries_map = new OpenLayers.Map(options['map_div']);
 
-M.add_view(xyz_layer("Country"));
-M.add_view(xyz_layer("Region"));
-M.countries_map.setCenter(M.project(new OpenLayers.LonLat(35, 57)), 3);
+  M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
+  M.countries_map.addControl(M.layer_switcher);
+  $('.baseLbl', M.layer_switcher.layersDiv).text("Geographic level");
+  M.layer_switcher.maximizeControl();
 
-$.get(M.config['www_prefix'] + '/countries.json', function(json_data) {
-  var view = M.views["Country"];
-  view.set_features(geojson_format.read(json_data));
-  view.update_document_counts(M.config['docs_and_countries']);
-});
+  var geojson_format = new OpenLayers.Format.GeoJSON({
+    'internalProjection': M.map_projection,
+    'externalProjection': M.proj_wgs1984
+  });
 
-$.get(M.config['www_prefix'] + '/regions.json', function(json_data) {
-  var view = M.views["Region"];
-  view.set_features(geojson_format.read(json_data));
-  view.update_document_counts(M.config['docs_and_countries']);
-});
+  M.views = {};
+  M.add_view(M.xyz_layer("Country"));
+  M.add_view(M.xyz_layer("Region"));
+  M.countries_map.setCenter(M.project(new OpenLayers.LonLat(35, 57)), 3);
 
-function xyz_layer(name) {
-  return new OpenLayers.Layer.XYZ(name,
-    M.config['tiles_url'] + "/${z}/${x}/${y}.png",
-    {'sphericalMercator': true, 'numZoomLevels': 7}
-  );
-}
+  $.get(M.config['www_prefix'] + '/countries.json', function(json_data) {
+    var view = M.views["Country"];
+    view.set_features(geojson_format.read(json_data));
+    view.update_document_counts(M.config['docs_and_countries']);
+  });
 
-});
+  $.get(M.config['www_prefix'] + '/regions.json', function(json_data) {
+    var view = M.views["Region"];
+    view.set_features(geojson_format.read(json_data));
+    view.update_document_counts(M.config['docs_and_countries']);
+  });
+};
+
+})();
