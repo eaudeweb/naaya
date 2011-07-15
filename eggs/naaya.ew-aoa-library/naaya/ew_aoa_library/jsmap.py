@@ -84,7 +84,7 @@ def do_search(ctx, request):
     })
 
 
-class SearchDocuments(BrowserPage):
+class SearchMapDocuments(BrowserPage):
     def __call__(self):
         aoa_devel_hook(__name__)
         aoa_devel_hook('naaya.ew_aoa_library.shadow')
@@ -104,7 +104,7 @@ def portlet_template_options(site):
     cf_viewer = site['country-fiches-viewer']
     cf_survey = cf_viewer.target_survey()
 
-    search_url = site.absolute_url() + '/jsmap_search_documents'
+    search_url = site.absolute_url() + '/jsmap_search_map_documents'
 
     document_types = set(cf_survey['w_type-document'].getChoices()[1:] +
                          vl_survey['w_type-document'].getChoices()[1:])
@@ -128,17 +128,11 @@ def portlet_template_options(site):
 
 tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 
-class AoaSearchMapPortlet(object):
-    title = 'AoA Search Map'
+class SearchMap(BrowserPage):
+    def __call__(self):
+        context = self.aq_parent
+        options = portlet_template_options(context.getSite())
+        return map_search_template.__of__(context)(**options)
 
-    def __init__(self, site):
-        self.site = site
-
-    def __call__(self, context, position):
-        aoa_devel_hook(__name__)
-        tmpl_options = portlet_template_options(self.site)
-        tmpl_options['macro'] = self.site.getPortletsTool()._get_macro(position)
-        return self.template.__of__(context)(**tmpl_options)
-
-    template = NaayaPageTemplateFile('zpt/map_search', globals(),
-                'naaya.ew_aoa_library.map_search')
+map_search_template = NaayaPageTemplateFile('zpt/map_search', globals(),
+                                            'naaya.ew_aoa_library.map_search')
