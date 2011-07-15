@@ -1,3 +1,6 @@
+<metal:block use-macro="here/standard_template_macro">
+<metal:block fill-slot="body">
+
 <div id="tabbedmenu"
      tal:define="translate python:here.getPortalTranslations().gettext;
                  lang_map here/gl_get_languages_map">
@@ -193,3 +196,6 @@
   jQuery(document).ready(function() {
     M.create_map_search({map_div: 'countries-map'});
   });"></script>
+
+</metal:block>
+</metal:block>
