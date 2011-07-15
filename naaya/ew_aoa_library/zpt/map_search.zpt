@@ -188,5 +188,8 @@
 <script src="++resource++naaya.ew_aoa_library-www/jquery.tmpl.min.js"></script>
 <script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
 <script src="++resource++naaya.ew_aoa_library-www/search.js"></script>
-<script tal:define="cfg python:here.rstk.json_dumps(options['map_config'])"
-        tal:content="string:window.M = {config: ${cfg}};"></script>
+<script tal:content="structure string:
+  M.config = ${options/map_config};
+  jQuery(document).ready(function() {
+    M.create_map_search({map_div: 'countries-map'});
+  });"></script>

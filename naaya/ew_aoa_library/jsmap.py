@@ -5,6 +5,7 @@ from naaya.core.backport import any
 from naaya.core.zope2util import ofs_path
 import Globals
 from App.config import getConfiguration
+from zope.publisher.browser import BrowserPage
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from devel import aoa_devel_hook
@@ -83,6 +84,13 @@ def do_search(ctx, request):
     })
 
 
+class SearchDocuments(BrowserPage):
+    def __call__(self):
+        aoa_devel_hook(__name__)
+        aoa_devel_hook('naaya.ew_aoa_library.shadow')
+        return do_search(self.aq_parent, self.request)
+
+
 def docs_and_countries(site):
     t0 = time()
     for brain in site.getCatalogTool()(**catalog_filters_for_shadows(site)):
@@ -96,7 +104,7 @@ def portlet_template_options(site):
     cf_viewer = site['country-fiches-viewer']
     cf_survey = cf_viewer.target_survey()
 
-    search_url = vl_viewer.absolute_url() + '/do_map_search'
+    search_url = site.absolute_url() + '/jsmap_search_documents'
 
     document_types = set(cf_survey['w_type-document'].getChoices()[1:] +
                          vl_survey['w_type-document'].getChoices()[1:])
@@ -110,7 +118,7 @@ def portlet_template_options(site):
     }
 
     return {
-        'map_config': map_config,
+        'map_config': json.dumps(map_config),
         'filter_options': {
             'themes': [u"Water", u"Green economy"],
             'document_types': sorted(document_types),
