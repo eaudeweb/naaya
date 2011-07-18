@@ -1,6 +1,6 @@
 #Zope imports
 from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Globals import InitializeClass
 from AccessControl.Permissions import view
 from AccessControl import ClassSecurityInfo
@@ -35,6 +35,7 @@ class LogEntry(SimpleItem, UtilsManager):
         UtilsManager.__dict__['__init__'](self)
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/LogEntry_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/LogEntry_index', globals(),
+                                       'linkchecker_log_index')
 
 InitializeClass(LogEntry)
