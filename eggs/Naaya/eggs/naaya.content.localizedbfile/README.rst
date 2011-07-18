@@ -25,10 +25,14 @@ zope-instance part is [zope-instance]::
         recipe = plone.recipe.zope2instance
         eggs =
                 Naaya
+                naaya.content.bfile
                 naaya.content.localizedbfile
         zcml =
+                naaya.content.bfile
                 naaya.content.localizedbfile
 
+See install instructions of naaya.content.bfile. They apply to localized bfile
+as well.
 
 Testing
 -----------
@@ -36,3 +40,8 @@ Testing
 
         nynose --with-naaya-portal naaya.content.localizedbfile
 
+About
+---------
+
+This project was created by Emilia Ciobanu as part of her internship 
+at Eau de Web (Bucharest)
