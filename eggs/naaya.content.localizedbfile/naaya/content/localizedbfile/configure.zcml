@@ -4,4 +4,6 @@
 
   <naaya:content factory=".localizedbfile_item.get_config" />
 
+  <include package=".updates" />
+
 </configure>
