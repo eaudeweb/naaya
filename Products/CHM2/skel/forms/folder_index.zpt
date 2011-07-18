@@ -24,7 +24,6 @@
 <metal:block metal:fill-slot="body">
 	<metal:block metal:define-slot="page-middle">
 		<metal:block define-macro="folder-title">
-		<div class="box-top">
 		<h1>
 			<metal:block use-macro="python: here.getFormsTool().getForm('site_object_index').macros['icon']"></metal:block>
 			<tal:block tal:replace="here/title_or_id" />
@@ -49,31 +48,16 @@
 				i18n:attributes="title"
 				i18n:translate="">Zip download</a>
 		</h1>
-		</div>
 		</metal:block>
 
-		<div class="box-body">
-			<div class="body-content">
-				<div class="customScrollBox">
-					<div class="container">
-						<div class="content">
-							<p tal:condition="python:here.description!=''"
-								tal:content="structure here/description" />
+		<p tal:condition="python:here.description!=''"
+			tal:content="structure here/description" />
 
-							<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
-								<metal:block fill-slot="menu_extension">
-									<span tal:replace="structure here/menusubmissions" />
-								</metal:block>
-							</metal:block>
-						</div>
-					</div>
-				</div>
-				<div class="dragger_container">
-					<div class="dragger"></div>
-				</div>
-				<a href="#" class="scrollUpBtn"></a> <a href="#" class="scrollDownBtn"></a>
-			</div>
-		</div>
+		<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+			<metal:block fill-slot="menu_extension">
+				<span tal:replace="structure here/menusubmissions" />
+			</metal:block>
+		</metal:block>
 	</metal:block>
 
 	<div class="folder-feeds" metal:define-slot="folder-feeds">
