@@ -54,8 +54,7 @@ class CheckerThread(Thread):
             file.close()
             return 'OK'
         except IOError, msg:
-            msg = self.sanitize(msg)
-            return msg
+            return "I/O error: %r %s" % (msg, msg)
         except socket.timeout:
             return "Attempted connect timed out."
         except socket.sslerror, err:
@@ -64,14 +63,3 @@ class CheckerThread(Thread):
             return "Invalid URL."
         except Exception, e:
             return "Link checker error: " + err
-
-    def sanitize(self, msg):
-        if isinstance(IOError, ClassType) and isinstance(msg, IOError):
-            # Do the other branch recursively
-            msg.args = self.sanitize(msg.args)
-        elif isinstance(msg, TupleType):
-            if len(msg) >= 4 and msg[0] == 'http error' and isinstance(msg[3], InstanceType):
-                # Remove the Message instance -- it may contain
-                # a file object which prevents pickling.
-                msg = str(msg[1]) + ': ' + str(msg[2])
-        return msg
