@@ -245,7 +245,7 @@
             </div>
             </metal:block>
 
-            <div id="center_content">
+            <div id="center_content_holder">
                 <metal:block define-slot="body">
                   <!--SITE_HEADERFOOTER_MARKER-->
                 </metal:block>

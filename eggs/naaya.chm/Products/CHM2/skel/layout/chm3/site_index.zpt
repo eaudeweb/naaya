@@ -10,7 +10,7 @@
     </tal:block>
     <meta tal:attributes="content here/contributor" name="author" />
     <style media="screen">
-		#center_content {
+		#center_content_holder {
 		width: 100% !important;
 		}
     </style>
