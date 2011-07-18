@@ -86,7 +86,8 @@ def make_blobfile(the_file, **kwargs):
 
     content_type = mimetypes.guess_type(the_file.filename)[0]
     if content_type is None:
-        content_type = getattr(the_file, 'headers', {}).get('content-type', 'application/octet-stream')
+        content_type = getattr(the_file, 'headers', {}).get('content-type',
+                'application/octet-stream')
 
     meta = {
         'filename': filename,
