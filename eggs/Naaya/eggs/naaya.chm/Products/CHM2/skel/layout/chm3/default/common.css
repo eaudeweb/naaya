@@ -1,8 +1,8 @@
 /* Required tags - these classes appear in the forms */
 
-#center_content {
-  margin-right: 10px;
-  width: 740px;
+#center_content_holder {
+  margin: 0 10px;
+  width: 730px;
 	float: left;
 }
 
@@ -62,35 +62,35 @@
 	font-weight: bold;
 }
 
-#center_content .edit-holder {
+#center_content_holder .edit-holder {
 	clear: both;
 }
 
-#center_content #tabbedmenu,
-#center_content .tabbedmenu {
+#center_content_holder #tabbedmenu,
+#center_content_holder .tabbedmenu {
 	margin-left: 0;
 	margin-bottom: 15px;
 	position: relative;
 	left: 0 !important;
 }
 
-#center_content #tabbedmenu ul,
-#center_content .tabbedmenu ul {
+#center_content_holder #tabbedmenu ul,
+#center_content_holder .tabbedmenu ul {
 	padding: 0 !important;
 	position: relative;
 	top: 1px;
 }
 
-#center_content #tabbedmenu a,
-#center_content .tabbedmenu a {
+#center_content_holder #tabbedmenu a,
+#center_content_holder .tabbedmenu a {
 	border: 1px solid #DFDFDF !important;
 	border-bottom: 1px solid #86B6E0 !important;
 }
 
-#center_content #tabbedmenu #currenttab a,
-#center_content .tabbedmenu .currenttab a,
-#center_content #tabbedmenu a:hover,
-#center_content .tabbedmenu a:hover {
+#center_content_holder #tabbedmenu #currenttab a,
+#center_content_holder .tabbedmenu .currenttab a,
+#center_content_holder #tabbedmenu a:hover,
+#center_content_holder .tabbedmenu a:hover {
 	border: 1px solid #86B6E0 !important;
 }
 
@@ -232,6 +232,7 @@ dd#admin_textarea{
 }
 #folderfile_list .type img{
 	margin-top: 4px;
+	width: 16px;
 }
 #folderfile_list th.type{
 	vertical-align: middle;
