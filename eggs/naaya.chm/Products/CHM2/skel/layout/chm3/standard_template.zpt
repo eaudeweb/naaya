@@ -213,7 +213,7 @@
         </div>
       </div>
 
-        <div id="content-holder">
+        <div id="content-holder" tal:define="non_site_index python: here.rstk.has_view_name(['index_html'], request) and here != here.getSite()">
           <div class="clear">&nbsp;</div>
           <div id="content">
 
@@ -245,10 +245,12 @@
             </div>
             </metal:block>
 
-            <div id="center_content_holder">
+            <div id="center_content_holder" tal:attributes="class python: test(non_site_index, 'page-big-column left', '')">
+                <div tal:attributes="class python: test(non_site_index, 'innerpage-large-box', '')">
                 <metal:block define-slot="body">
                   <!--SITE_HEADERFOOTER_MARKER-->
                 </metal:block>
+                </div>
                 <metal:block define-slot="center-portlets">
                 <div id="center_port" tal:condition="python: here.rstk.has_view_name(['index_html'], request) and here != here.getSite()">
                   <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
