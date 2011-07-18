@@ -2,7 +2,6 @@
 from datetime import datetime
 import os
 import sys
-import urllib
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -12,12 +11,11 @@ from persistent.list import PersistentList
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implements
-import zope.component
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.zope2util import CaptureTraverse
-from interfaces import INyBFile, IBFileContentViewer
+from interfaces import INyBFile
 
 from Products.NaayaBase.NyContentType import (
     NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA)
@@ -30,9 +28,9 @@ from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import make_id, toAscii
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
-from naaya.core.utils import pretty_size, force_to_unicode
 
 from NyBlobFile import make_blobfile, trim_filename
+from utils import file_has_content, tmpl_version, get_view_adapter
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -153,16 +151,6 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
-def get_view_adapter(version):
-    """Find an file content viewer adapter based on content type"""
-
-    name = version.content_type
-    try:
-        return zope.component.getAdapter(version, IBFileContentViewer, name)
-    except zope.component.interfaces.ComponentLookupError:
-        name = name.split('/')[0] + '/*'
-        return zope.component.queryAdapter(version, IBFileContentViewer, name)
-
 def bfile_download(context, path, REQUEST):
     """
     Perform a download of `context` (must be instance of NyBFile).
@@ -200,7 +188,6 @@ def bfile_download(context, path, REQUEST):
 
 class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
-
     implements(INyBFile)
 
     meta_type = config['meta_type']
@@ -272,6 +259,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
+
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
@@ -351,32 +339,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         generate a dictionary with info about all versions, suitable for
         use in a page template
         """
-        def tmpl_version(version, ver_id):
-            """ """
-            #Try to get the adapter for this version and set viewable
-            viewable = False
-            if get_view_adapter(version) is not None:
-                viewable = True
 
-            return {
-                'filename': force_to_unicode(version.filename),
-                'content_type': version.content_type,
-                'pretty_size': pretty_size(version.size),
-                'removed': version.removed,
-                'url':  ('%s/download/%s/%s' %
-                         (self.absolute_url(),
-                          ver_id,
-                          urllib.quote(version.filename, safe=''))),
-                'icon_url': ('%s/getContentTypePicture?id=%s' %
-                             (self.getSite().absolute_url(),
-                              version.content_type)),
-                'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
-                'id': ver_id,
-                'is_current': False,
-                'viewable': viewable,
-            }
-
-        versions = [tmpl_version(ver, str(n+1))
+        versions = [tmpl_version(self, ver, str(n+1))
                     for n, ver in enumerate(self._versions)
                     if not ver.removed]
 
@@ -421,11 +385,3 @@ config.update({
 
 def get_config():
     return config
-
-def file_has_content(file_ob):
-    if file_ob is None:
-        return False
-    elif file_ob.filename == '':
-        return False
-    else:
-        return True
