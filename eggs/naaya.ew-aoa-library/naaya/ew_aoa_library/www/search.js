@@ -115,10 +115,17 @@ function update_document_list(documents) {
   }
 
   $.each(documents, function(n, doc) {
-    doc_li = template['search-results'].tmpl(doc);
+    var doc_li = template['search-results'].tmpl(doc);
     $('a.title', doc_li).click(function(evt) {
       evt.preventDefault();
-      show_document(doc);
+      $('div.document-info').slideUp('fast', function() { $(this).remove(); });
+      if($('div.document-info', doc_li).length > 0) {
+        return; // click was on the current selection
+      }
+      var html = template['document-info'].tmpl(doc);
+      var doc_info = $('<div class="document-info">').html(html);
+      $(doc_li.append(doc_info));
+      doc_info.hide().slideDown('fast');
     });
     results.append(doc_li);
   });
@@ -130,23 +137,6 @@ function update_polygon_numbers(documents) {
     docs_and_countries.push(doc['country']);
   });
   M.update_all_document_counts(docs_and_countries);
-}
-
-function show_document(doc) {
-  var html = template['document-info'].tmpl(doc);
-  var dialog = $('div#document-info').empty().append(html).dialog({
-    title: doc.title,
-    resizable: false,
-    maxHeight: 600,
-    width: 600,
-    modal: true,
-    zIndex: 1100,
-    buttons: {
-      "Close": function(){
-        $(this).dialog("close");
-      }
-    }
-  });
 }
 
 });
