@@ -167,6 +167,7 @@
                                 <metal:block define-slot="body">
                                     <!--SITE_HEADERFOOTER_MARKER-->
                                 </metal:block>
+                                <metal:block define-slot="right-portlets"></metal:block>
 
                         </div>
             <div class="clearer"> </div>
