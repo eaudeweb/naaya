@@ -121,6 +121,17 @@ M.update_all_document_counts = function(docs_and_countries) {
   });
 };
 
+M.geojson_format = new OpenLayers.Format.GeoJSON({
+  'internalProjection': M.map_projection,
+  'externalProjection': M.proj_wgs1984
+});
+
+M.load_features = function(name, callback) {
+  $.get(M.config['www_prefix'] + '/' + name, function(json_data) {
+    callback(M.geojson_format.read(json_data));
+  });
+};
+
 M.create_map_search = function(options) {
   M.countries_map = new OpenLayers.Map(options['map_div']);
 
@@ -128,11 +139,6 @@ M.create_map_search = function(options) {
   M.countries_map.addControl(M.layer_switcher);
   $('.baseLbl', M.layer_switcher.layersDiv).text("Geographic level");
   M.layer_switcher.maximizeControl();
-
-  var geojson_format = new OpenLayers.Format.GeoJSON({
-    'internalProjection': M.map_projection,
-    'externalProjection': M.proj_wgs1984
-  });
 
   M.views = {};
   M.add_view(M.xyz_layer("Country"));
@@ -144,16 +150,42 @@ M.create_map_search = function(options) {
   }
   M.countries_map.zoomToMaxExtent();
 
-  $.get(M.config['www_prefix'] + '/countries.json', function(json_data) {
+  M.load_features('countries.json', function(features) {
     var view = M.views["Country"];
-    view.set_features(geojson_format.read(json_data));
+    view.set_features(features);
     view.update_document_counts(M.config['docs_and_countries']);
   });
 
-  $.get(M.config['www_prefix'] + '/regions.json', function(json_data) {
+  M.load_features('regions.json', function(features) {
     var view = M.views["Region"];
-    view.set_features(geojson_format.read(json_data));
+    view.set_features(features);
     view.update_document_counts(M.config['docs_and_countries']);
+  });
+};
+
+M.create_map_document = function(options) {
+  M.document_map = new OpenLayers.Map(options['map_div'], {controls: []});
+  M.document_map.addLayer(M.xyz_layer("Background"));
+  M.document_map.setCenter(M.project(new OpenLayers.LonLat(30, 57)), 2);
+
+  M.load_features('countries.json', function(features) {
+    M.countries_layer = new OpenLayers.Layer.Vector(
+      'Countries',
+      {styleMap: new OpenLayers.StyleMap({
+        'default': new OpenLayers.Style({
+          'fillOpacity': 0.7,
+          'fillColor': '#000',
+          'strokeOpacity': 0
+        })
+      })});
+    M.document_map.addLayer(M.countries_layer);
+
+    var countries = M.config['document_countries'];
+    $.each(features, function(n, country_poly) {
+      if(countries.indexOf(country_poly['attributes']['name']) > -1) {
+        M.countries_layer.addFeatures([country_poly]);
+      }
+    });
   });
 };
 

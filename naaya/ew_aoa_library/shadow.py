@@ -1,4 +1,5 @@
 # encoding: utf-8
+import simplejson as json
 from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -14,6 +15,9 @@ from naaya.core.utils import force_to_unicode
 
 import logging
 log = logging.getLogger(__name__)
+
+from devel import aoa_devel_hook
+import jsmap
 
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
 
@@ -465,8 +469,15 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         return '\n'.join(views)
 
     security.declareProtected(view, 'index_html')
-    index_html = NaayaPageTemplateFile('zpt/assessment_index', globals(),
+    _index_html = NaayaPageTemplateFile('zpt/assessment_index', globals(),
                             'naaya.ew_aoa_library.shadow.index_html')
+    def index_html(self, REQUEST):
+        """ public view of an AoA document """
+        aoa_devel_hook(jsmap.__name__)
+        options = {
+            'map_config': json.dumps(jsmap.map_config_for_document(self)),
+        }
+        return self._index_html(REQUEST, **options)
 
     manage_main = PageTemplateFile('zpt/assessment_manage_main', globals())
 

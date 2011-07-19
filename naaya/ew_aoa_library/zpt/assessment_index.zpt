@@ -32,13 +32,13 @@
 
 <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
 
-<h1 tal:content="here/title_or_id"></h1>
 <div class="floated-buttons">
 	<span class="buttons">
 		<a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
 			tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
 	</span>
 </div>
+<h1 tal:content="here/title_or_id"></h1>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
 	tal:condition="is_entitled">
@@ -213,6 +213,16 @@
 	</form>
 	</tal:block>
 </div>
+
+<div id="document-map"></div>
+
+<script src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
+<script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
+<script tal:content="structure string:
+  M.config = ${options/map_config};
+  jQuery(document).ready(function() {
+    M.create_map_document({map_div: 'document-map'});
+  });"></script>
 
 <script type="text/javascript" tal:attributes="src string:${library_object/absolute_url}/survey_js"></script>
 <tal:block content="structure here/render_answer" />
