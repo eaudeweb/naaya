@@ -195,3 +195,11 @@ div#document-info {
   float: right;
   cursor: pointer;
 }
+
+#document-map {
+  width: 300px;
+  height: 200px;
+  border: 2px solid #888;
+  float: right;
+  background: #eee;
+}
