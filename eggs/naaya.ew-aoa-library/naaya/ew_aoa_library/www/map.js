@@ -127,10 +127,61 @@ M.geojson_format = new OpenLayers.Format.GeoJSON({
 });
 
 M.load_features = function(name, callback) {
-  $.get(M.config['www_prefix'] + '/' + name, function(json_data) {
-    callback(M.geojson_format.read(json_data));
-  });
+  $.get(M.config['www_prefix'] + '/' + name, callback);
 };
+
+M.set_up_country_coverage_layer = function() {
+  M.country_coverage_layer = new OpenLayers.Layer.Vector(
+    "Country coverage",
+    {displayInLayerSwitcher: false,
+     visibility: false,
+     styleMap: new OpenLayers.StyleMap({
+      'default': new OpenLayers.Style({
+        'fillColor': "#cc0",
+        'strokeColor': "#cc0",
+        'fillOpacity': 0.4,
+        'strokeOpacity': 0.1,
+        'strokeWidth': 4
+      })
+    })});
+  M.countries_map.addLayer(M.country_coverage_layer);
+
+  var ClickControl = OpenLayers.Class(OpenLayers.Control, {
+      clickHandler: function() {},
+
+      initialize: function(clickHandler) {
+          OpenLayers.Control.prototype.initialize.apply(this, []);
+          if(clickHandler) this.clickHandler = clickHandler;
+          this.handler = new OpenLayers.Handler.Click(
+              this, {'click': this.trigger}, {'delay': 0});
+      },
+
+      trigger: function(e) {
+          this.clickHandler(e.xy);
+      }
+  });
+  M.country_coverage_click_control = new ClickControl(M.hide_country_coverage);
+  M.countries_map.addControl(M.country_coverage_click_control);
+};
+
+M.hide_country_coverage = function() {
+  M.country_coverage_click_control.deactivate();
+  M.country_coverage_layer.setVisibility(false);
+  M.get_current_view().polygons_layer.setVisibility(true);
+}
+
+M.show_country_coverage = function(countries) {
+  M.get_current_view().polygons_layer.setVisibility(false);
+  M.country_coverage_layer.removeAllFeatures();
+  $.each(M.all_country_features, function(n, feature) {
+    var country_name = feature.attributes['countries'][0];
+    if(countries.indexOf(country_name) > -1) {
+      M.country_coverage_layer.addFeatures([feature]);
+    }
+  });
+  M.country_coverage_layer.setVisibility(true);
+  M.country_coverage_click_control.activate();
+}
 
 M.create_map_search = function(options) {
   M.countries_map = new OpenLayers.Map(options['map_div']);
@@ -150,15 +201,19 @@ M.create_map_search = function(options) {
   }
   M.countries_map.zoomToMaxExtent();
 
-  M.load_features('countries.json', function(features) {
+  M.load_features('countries.json', function(features_json) {
     var view = M.views["Country"];
-    view.set_features(features);
+    view.set_features(M.geojson_format.read(features_json));
     view.update_document_counts(M.config['docs_and_countries']);
+
+    // parse the JSON twice so we get different IDs for the features
+    M.all_country_features = M.geojson_format.read(features_json);
+    M.set_up_country_coverage_layer();
   });
 
-  M.load_features('regions.json', function(features) {
+  M.load_features('regions.json', function(features_json) {
     var view = M.views["Region"];
-    view.set_features(features);
+    view.set_features(M.geojson_format.read(features_json));
     view.update_document_counts(M.config['docs_and_countries']);
   });
 };
@@ -168,7 +223,7 @@ M.create_map_document = function(options) {
   M.document_map.addLayer(M.xyz_layer("Background"));
   M.document_map.setCenter(M.project(new OpenLayers.LonLat(30, 57)), 2);
 
-  M.load_features('countries.json', function(features) {
+  M.load_features('countries.json', function(features_json) {
     M.countries_layer = new OpenLayers.Layer.Vector(
       'Countries',
       {styleMap: new OpenLayers.StyleMap({
@@ -181,7 +236,7 @@ M.create_map_document = function(options) {
     M.document_map.addLayer(M.countries_layer);
 
     var countries = M.config['document_countries'];
-    $.each(features, function(n, country_poly) {
+    $.each(M.geojson_format.read(features_json), function(n, country_poly) {
       if(countries.indexOf(country_poly['attributes']['name']) > -1) {
         M.countries_layer.addFeatures([country_poly]);
       }

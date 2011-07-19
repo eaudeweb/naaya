@@ -126,6 +126,7 @@ function update_document_list(documents) {
       var doc_info = $('<div class="document-info">').html(html);
       $(doc_li.append(doc_info));
       doc_info.hide().slideDown('fast');
+      M.show_country_coverage(doc['country']);
     });
     results.append(doc_li);
   });
