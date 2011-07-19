@@ -136,3 +136,11 @@ class SearchMap(BrowserPage):
 
 map_search_template = NaayaPageTemplateFile('zpt/map_search', globals(),
                                             'naaya.ew_aoa_library.map_search')
+
+def map_config_for_document(shadow):
+    return {
+        'tiles_url': tiles_url,
+        'debug': bool(Globals.DevelopmentMode),
+        'www_prefix': "++resource++naaya.ew_aoa_library-www",
+        'document_countries': shadow.viewer_country,
+    }
