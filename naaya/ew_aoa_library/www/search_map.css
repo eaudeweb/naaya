@@ -203,3 +203,7 @@ div#document-info {
   float: right;
   background: #eee;
 }
+
+div.document-info {
+  padding-left: 20px;
+}
