@@ -2,6 +2,7 @@
 from sets import Set
 import time
 import urlparse
+import urllib
 
 #Zope imports
 from AccessControl import ClassSecurityInfo, Unauthorized
@@ -294,7 +295,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 else:
                     url = urlparse.urljoin(ob_url, link)
                     scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-                    internal_links.append((link, path))
+                    internal_links.append((link, urllib.unquote(path)))
         external_links = iter2Queue(external_links)
         #start threads
         LOG('NaayaLinkChecker', INFO, 'Starting %u link checking threads' % THREAD_COUNT)
@@ -315,7 +316,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def checkInternalLinks(self, links, logresults):
         for link, path in links:
             try:
-                doc  = self.unrestrictedTraverse(str(path), None)
+                # unrestrictedTraverse would start at app root with a leading '/'
+                doc  = self.unrestrictedTraverse(str(path).lstrip('/'), None)
             except:
                 doc = None
             if doc is None:
