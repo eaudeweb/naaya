@@ -137,7 +137,7 @@
 
       <div class="template-section">
         <span class="inline-block label">
-          Country
+          Countries
         </span>
 
         <span class="inline-block toggle-icon expanded"></span>
@@ -152,7 +152,7 @@
 
       <div class="template-section">
         <span class="inline-block label">
-          Theme
+          Themes
         </span>
 
         <span class="inline-block toggle-icon expanded"></span>
@@ -168,7 +168,7 @@
       {{if document_type.length}}
       <div class="template-section">
         <span class="inline-block label">
-          Document type
+          Document types
         </span>
 
         <span class="inline-block toggle-icon expanded"></span>

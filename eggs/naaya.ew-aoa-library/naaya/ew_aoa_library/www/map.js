@@ -137,7 +137,12 @@ M.create_map_search = function(options) {
   M.views = {};
   M.add_view(M.xyz_layer("Country"));
   M.add_view(M.xyz_layer("Region"));
-  M.countries_map.setCenter(M.project(new OpenLayers.LonLat(35, 57)), 3);
+
+
+  M.countries_map.zoomToMaxExtent = function() {
+    M.countries_map.setCenter(M.project(new OpenLayers.LonLat(35, 57)), 3);
+  }
+  M.countries_map.zoomToMaxExtent();
 
   $.get(M.config['www_prefix'] + '/countries.json', function(json_data) {
     var view = M.views["Country"];

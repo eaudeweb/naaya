@@ -26,7 +26,7 @@
       for=".interfaces.IAoaPortal"
       name="jsmap_search_map_documents"
       class=".jsmap.SearchMapDocuments"
-      permission="zope2.ViewManagementScreens"
+      permission="zope2.View"
       />
 
   <browser:page

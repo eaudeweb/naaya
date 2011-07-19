@@ -1,3 +1,4 @@
+# encoding: utf-8
 from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
