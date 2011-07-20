@@ -99,6 +99,7 @@ from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
+from naaya.component import bundles
 
 from events import NyPluggableItemInstalled
 
@@ -175,6 +176,19 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def __init__(self, id, title='', lang=None):
         """ """
         self.id = id
+
+        #Set local site manager
+        sm = LocalSiteManager(self)
+
+        #This was done because Zope2 setSiteManager does not set the ISite
+        #interface which is needed to do component lookup in site managers.
+        SiteManagerContainer.setSiteManager.im_func(self, sm)
+        self.setSiteManager(sm)
+
+        #Set up a default bundle for this site
+        bundle = bundles.get('Naaya')
+        self.set_bundle(bundle)
+
         self.__portal_uid = '%s_%s' % (PREFIX_SITE, self.utGenerateUID())
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('site_title', lang, title)
@@ -224,6 +238,26 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         portlets_manager.__dict__['__init__'](self)
         networkportals_manager.__dict__['__init__'](self)
 
+    security.declarePrivate('get_bundle')
+    def get_bundle(self):
+        """ Get current Naaya bundle"""
+        return self.getSiteManager().__bases__[0]
+
+    security.declarePrivate('set_bundle')
+    def set_bundle(self, bundle):
+        """ Setup a bundle for this site. This tells the site manager that
+        it's parent is the bundle. Without the bundle the resolution of
+        components will be like this::
+
+            Local Site Manager -> Global Site Manager
+
+        Using bundles the resolution looks like this::
+
+            Local Site Manager -> Naaya Bundle -> Global Site Manager
+
+        """
+        self.getSiteManager().__bases__ = (bundle,)
+
     security.declarePrivate('createPortalTools')
     def createPortalTools(self):
         """ """
@@ -250,14 +284,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
-        #Set local site manager
-        sm = LocalSiteManager(self)
 
-        #This was done because Zope2 setSiteManager does not set the ISite
-        #interface which is needed to do component lookup in site managers.
-        SiteManagerContainer.setSiteManager.im_func(self, sm)
-        self.setSiteManager(sm)
-
+        sm = self.getSiteManager()
         #Register Action Logger utility
         sm.registerUtility(ActionLogger(), IActionLogger)
 

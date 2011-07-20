@@ -112,6 +112,10 @@ Some terms used in the documentation are described here.
         :term:`Global site manager`. Local site managers are implemented by the
         zope.site_ package.
 
+    Bundle
+        A :term:`site manager` that inherits from other bundles, or from the
+        :term:`global site manager`.
+
 
 .. [1] Some recipes, e.g. plone.recipe.bundlecheckout, update their `part`
        on each run of `buildout`.
