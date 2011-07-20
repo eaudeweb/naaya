@@ -1,0 +1,33 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+  metal:use-macro="here/main_template/macros/master"
+  i18n:domain="eea">
+<head>
+
+<metal:css fill-slot="css_slot">
+  <style type="text/css" media="all">
+    <!-- @import url(++resource++eea.aoamap/view.css); -->
+  </style>
+</metal:css>
+
+<metal:js fill-slot="javascript_head_slot">
+  <script type="text/javascript"
+    src="++resource++eea.aoamap/view.js"></script>
+</metal:js>
+
+</head>
+
+<body>
+<div metal:fill-slot="main">
+
+  <div metal:use-macro="here/document_actions/macros/document_actions">
+    Document actions (print, sendto etc)
+  </div>
+
+<div>
+  Ana are mere
+</div>
+
+</div>
+</body>
+</html>

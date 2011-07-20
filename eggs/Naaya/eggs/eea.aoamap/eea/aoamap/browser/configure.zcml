@@ -1,0 +1,16 @@
+<configure
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea">
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    name="aoa-map.html"
+    template="map.pt"
+    permission="zope2.View"
+    />
+
+  <browser:resourceDirectory
+    name="eea.aoamap"
+    directory="./www" />
+
+</configure>
