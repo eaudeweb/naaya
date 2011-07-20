@@ -59,21 +59,10 @@ function perform_search(form_data) {
       console.log("search results: " + results['documents'].length +
                   " documents in " + t + " seconds");
     }
+    $('.loading-animation').hide();
     update_document_list(results['documents']);
     //update_polygon_numbers(results['documents']);
   });
-
-  $('.loading-animation').fadeOut('fast', toggle_results_list('show'));
-}
-
-function toggle_results_list(action){
-  if( ($('#results').is(':visible') === false) && (action === 'show') ){
-    $("#results").show("slide", { direction: "left" }, 500);
-  }else {
-    if( ($('#results').is(':visible') === true) && (action === 'hide') ){
-      $("#results").hide("slide", { direction: "left" }, 500);
-    }
-  }
 }
 
 function perform_demo_search(form_data) {
@@ -104,7 +93,14 @@ function get_template(elem) {
 var template = {
   'search-results': get_template($('ul.search-results')),
   'document-info': get_template($('div#document-info'))
+};
+
+function collapse_document_info() {
+  var document_info = $('ul.search-results div.document-info');
+  document_info.slideUp('fast', function() { $(this).remove(); });
 }
+
+$('div#filters').bind('map-coverage-hidden', collapse_document_info);
 
 function update_document_list(documents) {
   var results = $('ul.search-results').empty();
@@ -118,9 +114,13 @@ function update_document_list(documents) {
     var doc_li = template['search-results'].tmpl(doc);
     $('a.title', doc_li).click(function(evt) {
       evt.preventDefault();
-      $('div.document-info').slideUp('fast', function() { $(this).remove(); });
       if($('div.document-info', doc_li).length > 0) {
-        return; // click was on the current selection
+        // click was on the current selection
+        M.hide_country_coverage();
+        return;
+      }
+      else {
+        collapse_document_info();
       }
       var html = template['document-info'].tmpl(doc);
       var doc_info = $('<div class="document-info">').html(html);

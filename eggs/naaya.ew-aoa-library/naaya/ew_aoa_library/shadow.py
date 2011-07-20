@@ -269,7 +269,7 @@ def extract_survey_answer_data_library(answer):
                             'w_assessment-name', lang='en'),
         'viewer_title_ru': answer.getLocalProperty(
                             'w_assessment-name', lang='ru'),
-        'viewer_main_theme': [main_theme(t) for t in attrs['theme']],
+        'viewer_main_theme': sorted(set(main_theme(t) for t in attrs['theme'])),
         'viewer_document_type': [document_types[dt_i] for dt_i in
                                  attrs['document_type']],
         'viewer_year': attrs['publication_year'],
@@ -305,7 +305,7 @@ def extract_survey_answer_data_country_fiches(answer):
     attrs.update({
         'viewer_title_en': answer.getLocalProperty('w_title', lang='en'),
         'viewer_title_ru': answer.getLocalProperty('w_title', lang='ru'),
-        'viewer_main_theme': [main_theme(t) for t in attrs['theme']],
+        'viewer_main_theme': sorted(set(main_theme(t) for t in attrs['theme'])),
         'viewer_document_type': [document_types[dt_i] for dt_i in
                                  attrs['document_type']],
         'viewer_year': attrs['publication_year'],
