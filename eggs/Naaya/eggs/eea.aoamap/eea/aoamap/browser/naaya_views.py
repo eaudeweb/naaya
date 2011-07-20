@@ -2,6 +2,7 @@ import simplejson as json
 from zope.publisher.browser import BrowserPage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile \
                                              as z2_PageTemplateFile
+from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from naaya.ew_aoa_library.jsmap import docs_and_countries
 from naaya.ew_aoa_library.jsmap import get_document_types
 from naaya.ew_aoa_library.jsmap import tiles_url
@@ -27,10 +28,20 @@ def portlet_template_options(site):
     }
 
 
+map_template = PageTemplateFile('map.pt', globals())
+
+def render_map_html(site):
+    options = portlet_template_options(site)
+    return map_template(**options)
+
+
 naaya_map_template = z2_PageTemplateFile('naaya_map.zpt', globals())
 
 class SearchMap(BrowserPage):
     def __call__(self):
         context = self.aq_parent
-        options = portlet_template_options(context.getSite())
+        site = context.getSite()
+        options = {
+            'map_html': render_map_html(site),
+        }
         return naaya_map_template.__of__(context)(**options)
