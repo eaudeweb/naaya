@@ -9,12 +9,22 @@ M.project = function(point) {
   return point.clone().transform(M.proj_wgs1984, M.map_projection);
 }
 
+M.debug_log = function() {
+  if(M.config['debug'] && window.console) {
+    console.log.apply(console, arguments);
+  }
+};
+
 M.xyz_layer = function(name) {
   return new OpenLayers.Layer.XYZ(name,
     M.config['tiles_url'] + "/${z}/${x}/${y}.png",
     {'sphericalMercator': true, 'numZoomLevels': 7}
   );
-}
+};
+
+M.country_selection_changed = function() {
+  $(M.countries_map.div).trigger('map-selection-changed');
+};
 
 M.add_view = function(tiles_layer) {
   var this_view = M.views[tiles_layer.name] = {};
@@ -50,8 +60,13 @@ M.add_view = function(tiles_layer) {
   };
 
   this_view.select_polygon = new OpenLayers.Control.SelectFeature(
-    this_view.polygons_layer,
-    {'multiple': true, 'toggle': true, 'clickout': false});
+    this_view.polygons_layer, {
+      'multiple': true,
+      'toggle': true,
+      'clickout': false,
+      'onSelect': M.country_selection_changed,
+      'onUnselect': M.country_selection_changed
+    });
   this_view.select_polygon.handlers.feature.stopDown = false;
   M.countries_map.addControl(this_view.select_polygon);
 
@@ -113,6 +128,10 @@ M.get_selected_countries = function() {
     $.merge(countries, feature.attributes['countries']);
   });
   return countries;
+};
+
+M.deselect_all_polygons = function() {
+  M.get_current_view().select_polygon.unselectAll();
 };
 
 M.update_all_document_counts = function(docs_and_countries) {

@@ -30,9 +30,24 @@ $(function() {
 
 $('#filters-form').submit(function(evt) {
   evt.preventDefault();
+  request_search();
+});
 
-  form_data = {};
-  $.each($(this).serializeArray(), function(n, field) {
+$('div#filters').bind('map-selection-changed', function(evt) {
+  request_search();
+});
+
+$('#filters-form').change(function(evt) {
+  request_search();
+});
+
+$('#filters-form #reset-button').click(function() {
+  M.deselect_all_polygons();
+});
+
+function get_search_form_data() {
+  var form_data = {};
+  $.each($('#filters-form').serializeArray(), function(n, field) {
     if(field.value)
       form_data[field.name] = field.value;
   });
@@ -46,22 +61,54 @@ $('#filters-form').submit(function(evt) {
   if(form_data['year'] == $('#year').attr('placeholder')) {
     form_data['year'] = "";
   }
+  return form_data;
+}
 
+M.search_busy = false;
+M.delayed_search_timeout = null;
+M.next_form_data = null;
+M.last_search = "{}";
+
+function request_search() {
+  M.next_form_data = get_search_form_data();
+  clearTimeout(M.delayed_search_timeout);
+  M.delayed_search_timeout = setTimeout(search_now, 300);
+}
+
+function search_completed(form_data) {
+  M.search_busy = false;
+  M.last_search = JSON.stringify(form_data);
+  search_now();
+}
+
+function search_now() {
+  if(M.search_busy) {
+    return;
+  }
+  if(M.next_form_data == null) {
+    return;
+  }
+  var form_data = M.next_form_data;
+  M.next_form_data = null;
+  if(JSON.stringify(form_data) == M.last_search) {
+    M.debug_log('skipping search because filters are the same');
+    return;
+  }
+  M.search_busy = true;
   perform_search(form_data);
-});
+}
 
 function perform_search(form_data) {
   $('ul.search-results').text('');
   $('.loading-animation').fadeIn();
   $.getJSON(M.config['search_url'], form_data, function(results) {
-    if(M.config['debug'] && window.console) {
-      var t = Math.round(results['query-time'] * 100) / 100;
-      console.log("search results: " + results['documents'].length +
-                  " documents in " + t + " seconds");
-    }
+    var t = Math.round(results['query-time'] * 100) / 100;
+    M.debug_log("search results: " + results['documents'].length +
+                " documents in " + t + " seconds");
     $('.loading-animation').hide();
     update_document_list(results['documents']);
     //update_polygon_numbers(results['documents']);
+    search_completed(form_data);
   });
 }
 

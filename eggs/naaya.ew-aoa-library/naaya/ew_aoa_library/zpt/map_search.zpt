@@ -26,8 +26,13 @@
       <form method="GET" action="" name="filters-form" id="filters-form">
         <input type="text" name="text" size="65" id="description"
                placeholder="Search text in title and description of the documents" class="input-text" />
+
         <input type="submit" value="Search" class="button submit"
                id="filter-button" />
+
+        <input type="reset" value="Reset" class="button reset"
+               id="reset-button" />
+
         <div class="fields-separator">&nbsp;</div>
 
         <select name="theme" class="input-select">
