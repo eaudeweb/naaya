@@ -216,9 +216,9 @@
 
 <div id="document-map"></div>
 
-<script src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
-<script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
-<script tal:content="structure string:
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/map.js"></script>
+<script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   jQuery(document).ready(function() {
     M.create_map_document({map_div: 'document-map'});
@@ -228,9 +228,9 @@
 <tal:block content="structure here/render_answer" />
 
 <tal:block condition="virtual_library">
-<script tal:content="string:var country_list=${country_choices};
+<script type="text/javascript" tal:content="string:var country_list=${country_choices};
 	var document_type=${here/document_type}; var countries=${here/geo_coverage_country}; var region='${here/geo_coverage_region}';"/>
-<script tal:condition="virtual_library">
+<script type="text/javascript" tal:condition="virtual_library">
 $('#country_single_select').change(function(){
 	country_index = $(this).val();
 	$('#geo_coverage_country_'+country_index).attr('checked', 'checked');
