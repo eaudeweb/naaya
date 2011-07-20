@@ -87,7 +87,7 @@ def walk_backup(index_file, open_backup_file, actor):
         date = parse_date(line['UPLOADDATE'])
         userid = parse_userid(line['OWNER'])
         keywords = line['KEYWORDS']
-        reference = line['REFERENCE']
+        reference = line.get('REFERENCE', '')
         status = line['STATUS']
         doc_zip_path = line['FILENAME']
         doc_split_path = doc_zip_path.split('/')
