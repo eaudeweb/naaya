@@ -553,21 +553,34 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         for property, langs in node.properties.items():
                             for lang in langs:
                                 node_ob._setLocalPropValue(property, lang, langs[lang])
+
+                if skel_handler.root.portlets.inherit:
+                    # this can have 'left', 'right', 'center' and also portlet_ids
+                    inherit_portlets = set(skel_handler.root.portlets.inherit.split(','))
+                else:
+                    # default inherit just left portlets (as it was before)
+                    inherit_portlets = set(['left'])
                 if skel_handler.root.portlets.left:
                     for portlet_id in portletstool_ob.get_portlet_ids_for('', 'left'):
                         portletstool_ob.unassign_portlet('', 'left', portlet_id)
                     for portlet_id in skel_handler.root.portlets.left.split(','):
-                        portletstool_ob.assign_portlet('', "left", portlet_id, True)
+                        inherit = (('left' in inherit_portlets)
+                                or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet('', "left", portlet_id, inherit)
                 if skel_handler.root.portlets.center:
                     for portlet_id in portletstool_ob.get_portlet_ids_for('', 'center'):
                         portletstool_ob.unassign_portlet('', 'center', portlet_id)
                     for portlet_id in skel_handler.root.portlets.center.split(','):
-                        portletstool_ob.assign_portlet('', "center", portlet_id, False)
+                        inherit = (('center' in inherit_portlets)
+                                or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet('', "center", portlet_id, inherit)
                 if skel_handler.root.portlets.right:
                     for portlet_id in portletstool_ob.get_portlet_ids_for('', 'right'):
                         portletstool_ob.unassign_portlet('', 'right', portlet_id)
                     for portlet_id in skel_handler.root.portlets.right.split(','):
-                        portletstool_ob.assign_portlet('', "right", portlet_id, False)
+                        inherit = (('right' in inherit_portlets)
+                                or (portlet_id in inherit_portlets))
+                        portletstool_ob.assign_portlet('', "right", portlet_id, inherit)
             #load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
