@@ -52,7 +52,7 @@
                   tal:content="option"></option>
         </select>
 
-        <input type="text" name="year" placeholder="Publication`s year"
+        <input type="text" name="year" placeholder="Publication year"
                class="input-text" id="year" size="14" />
 
       </form>
@@ -63,7 +63,7 @@
 
   </div>
 
-  <div id="results" class="hidden">
+  <div id="results">
 
     <div class="loading-animation hidden">
       <img src="++resource++naaya.ew_aoa_library-www/ajax-loader.gif" />
@@ -187,11 +187,11 @@
   <div class="cleaner">&nbsp;</div>
 </div>
 
-<script src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
-<script src="++resource++naaya.ew_aoa_library-www/jquery.tmpl.min.js"></script>
-<script src="++resource++naaya.ew_aoa_library-www/map.js"></script>
-<script src="++resource++naaya.ew_aoa_library-www/search.js"></script>
-<script tal:content="structure string:
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/map.js"></script>
+<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/search.js"></script>
+<script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   jQuery(document).ready(function() {
     M.create_map_search({map_div: 'countries-map'});

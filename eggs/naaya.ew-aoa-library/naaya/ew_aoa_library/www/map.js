@@ -168,6 +168,7 @@ M.hide_country_coverage = function() {
   M.country_coverage_click_control.deactivate();
   M.country_coverage_layer.setVisibility(false);
   M.get_current_view().polygons_layer.setVisibility(true);
+  $(M.countries_map.div).trigger('map-coverage-hidden');
 }
 
 M.show_country_coverage = function(countries) {
