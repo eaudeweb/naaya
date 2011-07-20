@@ -37,6 +37,17 @@ Where major tools reside.
     NaayaCore/*
 
 
+naaya.component
+---------------
+
+Component registration organized in bundles
+
+.. toctree::
+    :maxdepth: 2
+
+    naaya.component
+
+
 naaya.core
 -------------
 
