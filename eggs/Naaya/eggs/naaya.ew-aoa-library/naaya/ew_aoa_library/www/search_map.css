@@ -37,6 +37,14 @@ input.button:hover {
   background-color: #5C95A8;
 }
 
+input.button.reset {
+  background-color: #737373;
+}
+
+input.button.reset:hover {
+  background-color: #959595;
+}
+
 .fields-separator {
   clear: both;
   display: block;
