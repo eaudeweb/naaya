@@ -13,6 +13,8 @@
 <metal:js fill-slot="javascript_head_slot">
   <script type="text/javascript"
     src="++resource++eea.aoamap/view.js"></script>
+  <script type="text/javascript"
+    src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
 </metal:js>
 
 </head>
@@ -24,9 +26,7 @@
     Document actions (print, sendto etc)
   </div>
 
-<div>
-  Ana are mere
-</div>
+<tal:block content="structure python:view.get_map_html()"/>
 
 </div>
 </body>

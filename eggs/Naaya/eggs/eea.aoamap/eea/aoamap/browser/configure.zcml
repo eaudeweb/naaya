@@ -7,8 +7,16 @@
     i18n_domain="eea">
     <browser:page
       for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+      name="aoa-map-search"
+      class=".plone_views.AoaMapSearch"
+      permission="zope2.View"
+      />
+
+    <browser:page
+      for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
       name="aoa-map.html"
       template="plone_map.pt"
+      class=".plone_views.AoaMap"
       permission="zope2.View"
       />
   </configure>
