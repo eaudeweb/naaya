@@ -71,7 +71,7 @@
   <div id="results">
 
     <div class="loading-animation hidden">
-      <img src="++resource++naaya.ew_aoa_library-www/ajax-loader.gif" />
+      <img src="++resource++eea.aoamap/ajax-loader.gif" />
       Searching...
     </div>
 
@@ -192,10 +192,10 @@
   <div class="cleaner">&nbsp;</div>
 </div>
 
-<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
-<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/jquery.tmpl.min.js"></script>
-<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/map.js"></script>
-<script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/search.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/openlayers/OpenLayers.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   jQuery(document).ready(function() {

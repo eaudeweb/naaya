@@ -3,10 +3,10 @@ import logging
 import simplejson as json
 from naaya.core.backport import any
 from naaya.core.zope2util import ofs_path
+from naaya.core.utils import force_to_unicode
 import Globals
 from App.config import getConfiguration
 from zope.publisher.browser import BrowserPage
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 from devel import aoa_devel_hook
 
@@ -98,44 +98,21 @@ def docs_and_countries(site):
     #print 'docs_and_countries:', time() - t0
 
 
-def portlet_template_options(site):
+def get_document_types(site):
     vl_viewer = site['virtual-library-viewer']
     vl_survey = vl_viewer.target_survey()
+    vl_document_types = vl_survey['w_type-document'].getChoices()[1:]
+
     cf_viewer = site['country-fiches-viewer']
     cf_survey = cf_viewer.target_survey()
+    cf_document_types = cf_survey['w_type-document'].getChoices()[1:]
 
-    search_url = site.absolute_url() + '/jsmap_search_map_documents'
-
-    document_types = set(cf_survey['w_type-document'].getChoices()[1:] +
-                         vl_survey['w_type-document'].getChoices()[1:])
-
-    map_config = {
-        'tiles_url': tiles_url,
-        'search_url': search_url,
-        'debug': bool(Globals.DevelopmentMode),
-        'www_prefix': "++resource++naaya.ew_aoa_library-www",
-        'docs_and_countries': list(docs_and_countries(site)),
-    }
-
-    return {
-        'map_config': json.dumps(map_config),
-        'filter_options': {
-            'themes': [u"Water", u"Green economy"],
-            'document_types': sorted(document_types),
-        },
-    }
+    document_types = set(force_to_unicode(t) for t in
+                         cf_document_types + vl_document_types)
+    return sorted(document_types)
 
 
 tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
-
-class SearchMap(BrowserPage):
-    def __call__(self):
-        context = self.aq_parent
-        options = portlet_template_options(context.getSite())
-        return map_search_template.__of__(context)(**options)
-
-map_search_template = NaayaPageTemplateFile('zpt/map_search', globals(),
-                                            'naaya.ew_aoa_library.map_search')
 
 def map_config_for_document(shadow):
     return {

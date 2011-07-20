@@ -10,11 +10,6 @@
   <subscriber handler=".viewer.survey_answer_created" />
   <subscriber handler=".viewer.survey_answer_removed" />
 
-  <browser:resourceDirectory
-    name="naaya.ew_aoa_library-www"
-    directory="www"
-    />
-
   <browser:page
       for=".interfaces.IAoaPortal"
       name="set_up_catalog_indexes"
@@ -26,13 +21,6 @@
       for=".interfaces.IAoaPortal"
       name="jsmap_search_map_documents"
       class=".jsmap.SearchMapDocuments"
-      permission="zope2.View"
-      />
-
-  <browser:page
-      for=".interfaces.IAoaPortal"
-      name="search_map"
-      class=".jsmap.SearchMap"
       permission="zope2.View"
       />
 

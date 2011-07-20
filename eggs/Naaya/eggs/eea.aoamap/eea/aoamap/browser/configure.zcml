@@ -1,13 +1,26 @@
 <configure
-  xmlns:browser="http://namespaces.zope.org/browser"
-  i18n_domain="eea">
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  xmlns:browser="http://namespaces.zope.org/browser">
 
-  <browser:page
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
-    name="aoa-map.html"
-    template="map.pt"
-    permission="zope2.View"
-    />
+  <configure
+    zcml:condition="installed Products.CMFPlone"
+    i18n_domain="eea">
+    <browser:page
+      for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+      name="aoa-map.html"
+      template="plone_map.pt"
+      permission="zope2.View"
+      />
+  </configure>
+
+  <configure zcml:condition="installed naaya.ew_aoa_library">
+    <browser:page
+      for="naaya.ew_aoa_library.interfaces.IAoaPortal"
+      name="search_map"
+      class=".naaya_views.SearchMap"
+      permission="zope2.View"
+      />
+  </configure>
 
   <browser:resourceDirectory
     name="eea.aoamap"
