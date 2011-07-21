@@ -93,6 +93,10 @@ def walk_backup(index_file, open_backup_file, actor):
         reference = line.get('REFERENCE', '')
         status = line['STATUS']
         doc_zip_path = line['FILENAME']
+
+        # fix folder_path if folder_ids start with an underscore
+        doc_zip_path = doc_zip_path.replace('/_', '/~')
+
         doc_split_path = doc_zip_path.split('/')
         doc_filename = doc_split_path[-1].encode('utf-8')
         doc_langver = doc_split_path[-2]
