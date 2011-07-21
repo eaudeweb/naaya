@@ -226,7 +226,9 @@ def html_diff(source, target):
     import difflib
     from cStringIO import StringIO
     lines = lambda s: StringIO(normalize_template(s)).readlines()
-    htmlquote = lambda s: s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    html_escape_table = {'&': '&amp;', '<': '&lt;', '>': '&gt;',
+            '"': '&quot;', "'": '&apos;', ' ': '&nbsp;', '\t': '&#09'}
+    htmlquote = lambda s: "".join(html_escape_table.get(c, c) for c in s)
     output = StringIO()
     output.write('<div style="font-family: monospace;">')
     for line in difflib.unified_diff(lines(source), lines(target)):
