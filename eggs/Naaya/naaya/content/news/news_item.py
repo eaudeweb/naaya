@@ -60,7 +60,8 @@ DEFAULT_SCHEMA = {
     'resourceurl':      dict(sortorder=130, widget_type='String',   label='Concerned URL'),
     'source':           dict(sortorder=140, widget_type='String',   label='Source', localized=True),
 }
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
+DEFAULT_SCHEMA['description'].update(help_text='Keep this description short, about 50 words. Use the <strong>Details</strong> field below to add more information.')
 
 # this dictionary is updated at the end of the module
 config = {
