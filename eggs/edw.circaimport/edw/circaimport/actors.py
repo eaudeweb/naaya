@@ -64,9 +64,6 @@ class ZopeActor(object):
 
     def folder_entry(self, parent_path, folder_id,
                      title, description, date, userid):
-        # fix folder_id if it starts with an underscore
-        if folder_id[0] == '_':
-            folder_id = '~%s' % folder_id[1:]
 
         parent = get_parent(self.context, parent_path)
         kwargs = {
