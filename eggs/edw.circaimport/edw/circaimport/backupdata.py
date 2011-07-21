@@ -55,7 +55,7 @@ def walk_backup(index_file, open_backup_file, actor):
         folder_path =  line['FILENAME'][:-1].encode('utf-8')
 
         # fix folder_path if folder_ids start with an underscore
-        folder_path.replace('/_', '/~')
+        folder_path = folder_path.replace('/_', '/~')
 
         if '/' in folder_path:
             parent_path, folder_id = folder_path.rsplit('/', 1)
