@@ -27,7 +27,7 @@ NY_CONTENT_BASE_SCHEMA = {
     'geo_type':     dict(sortorder=26, widget_type='GeoType', data_type='str', label='Geographical location type', visible=False),
     'coverage':     dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True),
     'keywords':     dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True),
-    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=True),
+    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=True, visible=False),
     'releasedate':  dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=True),
     'discussion':   dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments'),
 }

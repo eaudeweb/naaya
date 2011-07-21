@@ -74,6 +74,14 @@
              provides="Products.naayaUpdater.interfaces.IUpdateScript"
              component=".updates.SkipApprovalPermission"
              permission="zope2.ViewManagementScreens" />
+    <utility name="hide_sortorder_property_from_schemas"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.HideSortOrderFromSchemas"
+             permission="zope2.ViewManagementScreens" />
+    <utility name="add_help_text_on_news_description"
+             provides="Products.naayaUpdater.interfaces.IUpdateScript"
+             component=".updates.AddHelpTextOnNewsDescription"
+             permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
