@@ -198,6 +198,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             @rtype: list
             @return: links contained in the properties of ob
         """
+        def strip_hash(link):
+            return link.split('#', 1)[0]
+
         all_links = []
         if properties is None:
             properties = self.getPropertiesMeta(ob.meta_type)
@@ -222,7 +225,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     # Skip default value for some fields
                     if value == 'http://':
                         continue
-                    all_links.append( (value, property, lang) )
+                    all_links.append( (strip_hash(value), property, lang) )
                 else:
                     try:
                         try:
@@ -237,7 +240,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     except Exception, err: # invalid html, unicode errors etc.
                         LOG('NaayaLinkChecker', DEBUG, 'an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
                         links = get_links_from_text(value)
-                    all_links.extend([ (x, property, lang) for x in links ]) # TODO: use generator comprehension
+                    all_links.extend((strip_hash(x), property, lang)
+                                      for x in links)
         return all_links
 
     security.declarePrivate('verifyIP')
@@ -292,7 +296,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         internal_links = []
         for ob_url, val in urlsinfo.items():
             for v in val:
-                link = v[0].split('#', 1)[0]
+                link = v[0]
                 if is_absolute_url(link):
                     external_links.add(link)
                 else:
@@ -336,8 +340,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             ob = self.unrestrictedTraverse(urlparse.urlsplit(ob_url)[2])
             buf = []
             for link in links:
-                err = logresults.get(link[0], None)
-                if err != 'OK' or manual:
+                err = logresults.get(link[0], 'NOT CHECKED')
+                if err not in ('OK', 'NOT CHECKED'):
                     buf.append((link[0], err, link[1], link[2]))
             if buf:
                 log.append((ob.getId(), ob.meta_type, ob.absolute_url(1), ob.icon, buf))
