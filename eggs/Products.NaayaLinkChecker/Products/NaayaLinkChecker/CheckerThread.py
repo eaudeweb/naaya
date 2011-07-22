@@ -49,7 +49,7 @@ def check_link(url, proxy=''):
     file = MyURLopener()
     if proxy != '':
         file.proxies['http'] = proxy
-    socket.setdefaulttimeout(5)
+    socket.setdefaulttimeout(20)
     try:
         file.open(url)
         file.close()
