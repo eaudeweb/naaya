@@ -156,12 +156,14 @@ class ImportNotificationsFromCirca(BrowserPage):
         if self.request['REQUEST_METHOD'] == 'GET':
             return import_notifications_zpt.__of__(ctx)()
 
-        name = self.request.form['filename']
+        notif_type = self.request.form['notif_type']
+        filename = self.request.form['filename']
 
         log = init_log_stream()
 
         try:
-            add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, name))
+            add_notifications_from_circa_export(ctx,
+                    os.path.join(upload_prefix, filename), notif_type)
         except:
             logger.critical(traceback.format_exc())
 
