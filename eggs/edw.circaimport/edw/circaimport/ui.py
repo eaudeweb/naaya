@@ -66,8 +66,8 @@ class ImportAllFromCirca(BrowserPage):
             filename_files = self.request.form['filename_files']
             import_files_path = self.request.form['import_files_path']
             if filename_files and import_files_path:
-                files_ctx = ctx.restrictedTraverse(import_files_path)
                 try:
+                    files_ctx = ctx.restrictedTraverse(import_files_path)
                     add_files_and_folders_from_circa_export(files_ctx, filename_files, upload_prefix)
                 except:
                     logger.critical(traceback.format_exc())
