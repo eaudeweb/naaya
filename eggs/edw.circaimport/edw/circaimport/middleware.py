@@ -1,6 +1,7 @@
 from StringIO import StringIO
 from zipfile import ZipFile
 import logging
+import datetime
 
 import backupdata
 
@@ -35,10 +36,29 @@ def add_files_and_folders_from_circa_export(context, name, root_path):
     current_user = context.REQUEST.AUTHENTICATED_USER.getId()
 
     actor = ZopeActor(context, current_user)
-    def open_backup_file(name):
-        return StringIO(zf.read(name))
+    def _open_on_key_error(name):
+        """
+        Patches for when the names are wrong (usuallu unicode encoding problems)
+        """
+        chain = name.split('/')
+        parent_path = '/'.join(chain[:-1])
+        matching_path = parent_path + '/' + chain[-1][0]
+        matches = [fname for fname in zf.namelist()
+                if fname.startswith(matching_path)]
+        assert len(matches) == 1
+        return StringIO(zf.read(matches[0]))
 
-    backupdata.walk_backup(index_file, open_backup_file, actor)
+    def open_backup_file(name):
+        try:
+            return StringIO(zf.read(name))
+        except KeyError:
+            return _open_on_key_error(name)
+
+    def get_date(name):
+        info = zf.getinfo(name)
+        return datetime.date(*info.date_time[0:3])
+
+    backupdata.walk_backup(index_file, open_backup_file, get_date, actor)
 
     actor.finished()
 
