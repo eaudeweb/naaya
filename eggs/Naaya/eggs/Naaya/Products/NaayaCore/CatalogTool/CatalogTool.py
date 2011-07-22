@@ -13,6 +13,7 @@ from Products.ZCatalog.ZCatalog import ZCatalog
 from Products.ZCatalog.Catalog import Catalog
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.component import queryAdapter
+from OFS.Uninstalled import BrokenClass
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
@@ -271,8 +272,7 @@ class CatalogTool(ZCatalog, utils):
                 except:
                     broken = True
 
-                if (ob is None or
-                    ob.meta_type == 'Broken Because Product is Gone'):
+                if ob is None or isinstance(ob, BrokenClass):
                     broken = True
 
                 if broken:
