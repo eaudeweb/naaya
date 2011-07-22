@@ -214,6 +214,12 @@ def add_acls_from_circa_export(site, filepath):
     acls, not_matched = get_acl_mapping(fd)
     fd.close()
 
+    if not acls:
+        logger.info('No matched acls')
+        if not_matched:
+            logger.warn('Not matched rows (from the exported file): %s' % not_matched)
+        return
+
     compute_roles_mapping(acls)
     for path, values in acls.items():
         try:
