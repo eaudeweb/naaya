@@ -107,7 +107,7 @@ def add_roles_from_circa_export(site, filepath, ldap_source_title):
 
     logger.debug('done importing roles')
 
-def add_notifications_from_circa_export(site, filepath):
+def add_notifications_from_circa_export(site, filepath, notif_type):
     logger.debug('start importing notifications')
 
     from notifications_extract import get_notifications_mapping
@@ -138,7 +138,7 @@ def add_notifications_from_circa_export(site, filepath):
             try:
                 notif_tool.add_account_subscription(user_id,
                                                     location,
-                                                    'instant', 'en')
+                                                    notif_type, 'en')
             except ValueError, msg:
                 logger.error("Couldn't add subscription for user %s at location %s: %s", user_id, val['path'], msg)
                 continue
