@@ -41,25 +41,28 @@ class CheckerThread(Thread):
                     continue
             except Empty:
                 break
-            result = self.readhtml(url)
+            result = check_link(url, self.proxy)
             self.logresults[url] = str(result)
 
-    def readhtml(self, url):
-        file = MyURLopener()
-        if self.proxy != '':
-            file.proxies['http'] = self.proxy
-        socket.setdefaulttimeout(5)
-        try:
-            file.open(url)
-            file.close()
-            return 'OK'
-        except IOError, msg:
-            return "I/O error: %r %s" % (msg, msg)
-        except socket.timeout:
-            return "Attempted connect timed out."
-        except socket.sslerror, err:
-            return "SSL error: " + err
-        except InvalidURL:
-            return "Invalid URL."
-        except Exception, e:
-            return "Link checker error: " + err
+
+def check_link(url, proxy=''):
+    file = MyURLopener()
+    if proxy != '':
+        file.proxies['http'] = proxy
+    socket.setdefaulttimeout(5)
+    try:
+        file.open(url)
+        file.close()
+        return 'OK'
+    except IOError, e:
+        if e.errno == 'socket error' and e.strerror.args == ('timed out',):
+            return "Timeout"
+        return "I/O error: %r %s" % (e, e)
+    except socket.timeout:
+        return "Attempted connect timed out."
+    except socket.sslerror, err:
+        return "SSL error: " + err
+    except InvalidURL:
+        return "Invalid URL"
+    except Exception, e:
+        return "Link checker internal error: " + err
