@@ -374,6 +374,8 @@ class plugLDAPUserFolder(PlugBase):
             group_user_members = result['results'][result['size']-1]['uniqueMember']
             group_users = []
             for member in group_user_members:
+                if member == '':
+                    continue # we found a placeholder member for empty groups
                 try:
                     uid = member.split(',')[0].split('=')[1]
                 except IndexError, e:
