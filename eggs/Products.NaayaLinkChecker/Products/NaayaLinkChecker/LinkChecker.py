@@ -19,6 +19,7 @@ from Products.NaayaLinkChecker.Utils import *
 from Products.NaayaLinkChecker.CheckerThread import CheckerThread
 from Products.NaayaLinkChecker import LogEntry
 from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import folder_manage_main_plus
 
 THREAD_COUNT = 4
 
@@ -41,7 +42,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     manage_options = (ObjectManager.manage_options[0],) + \
           ({'label' : 'Properties', 'action' : 'manage_properties'},
-          {'label' : 'Run', 'action' : 'index_html'},
           {'label' : 'Logs', 'action' : 'log_html'},) + SimpleItem.manage_options
 
     def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10):
@@ -157,7 +157,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     yield obj[1]
 
     security.declarePrivate('processObjects')
-    def processObjects(self):
+    def processObjects(self, limit=0):
         """Get a list of 'findObjects' results and for each result:
             - gets all specified properties
             - parse the content of each property and extract links
@@ -166,6 +166,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         results = {}
         all_urls = 0
         for obj in self.findObjects():
+            if limit > 0:
+                if len(results) >= limit:
+                    break
             links = self.getLinksFromOb(obj)
             results[obj.absolute_url(1)] = links
             all_urls += len(links)
@@ -262,11 +265,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.manage_addLogEntry('_cron', time.localtime(), log_entries)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
-    def manualCheck(self):
+    def manualCheck(self, limit=0):
         """ extract the urls from the objects,
             verify them and return the results for the broken links found
         """
-        urlsinfo, total = self.processObjects()
+        urlsinfo, total = self.processObjects(limit)
         log_entries, all_urls = self.checkLinks(urlsinfo, total)
         now = time.localtime()
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(),
@@ -419,9 +422,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declareProtected(view_management_screens, 'manage_properties')
     manage_properties = PageTemplateFile("zpt/LinkChecker_edit", globals())
 
+    manage_main = folder_manage_main_plus
+    ny_before_listing = PageTemplateFile('zpt/LinkChecker_manage_main_header', globals())
+
     #site pages
-    security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile("zpt/LinkChecker_index", globals())
+    security.declareProtected(view, 'manual_check_html')
+    manual_check_html = PageTemplateFile("zpt/LinkChecker_manual", globals())
 
     security.declareProtected(view, 'style_html')
     style_html = PageTemplateFile("zpt/LinkChecker_style", globals())
