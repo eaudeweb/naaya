@@ -36,7 +36,7 @@ def parse_userid(s):
     else:
         return str(s)
 
-def walk_backup(index_file, open_backup_file, actor):
+def walk_backup(index_file, open_backup_file, get_date, actor):
     folders_info = {'root_path': '',
                     'known_folders': {'': None}}
 
@@ -50,18 +50,23 @@ def walk_backup(index_file, open_backup_file, actor):
     def handle_folder(line):
         title = line['TITLE']
         description = line['ABSTRACT']
-        date = parse_date(line['CREATED'])
         userid = parse_userid(line['OWNER'])
-        folder_path =  line['FILENAME'][:-1].encode('utf-8')
+        folder_zip_path =  line['FILENAME'][:-1].encode('utf-8')
 
-        # fix folder_path if folder_ids start with an underscore
-        folder_path = folder_path.replace('/_', '/~')
+        # for zope replace starting underscores
+        folder_zope_path = folder_zip_path.replace('/_', '/~')
 
-        if '/' in folder_path:
-            parent_path, folder_id = folder_path.rsplit('/', 1)
+        # use get_date as a backup
+        try:
+            date = parse_date(line['CREATED'])
+        except ValueError:
+            date = get_date(folder_zip_path)
+
+        if '/' in folder_zope_path:
+            parent_path, folder_id = folder_zope_path.rsplit('/', 1)
         else:
             parent_path = ''
-            folder_id = folder_path
+            folder_id = folder_zope_path
 
         if len(folders_info['known_folders']) == 1:
             assert folders_info['root_path'] == ''
@@ -71,15 +76,15 @@ def walk_backup(index_file, open_backup_file, actor):
                 folders_info['root_path'] = ''
 
         parent_path = remove_root_path(parent_path)
-        folder_path = remove_root_path(folder_path)
+        folder_zope_path = remove_root_path(folder_zope_path)
 
         assert parent_path in folders_info['known_folders']
 
-        if folder_path in folders_info['known_folders']:
-            assert line['CREATED'] == folders_info['known_folders'][folder_path]['CREATED']
-            assert line['OWNER'] == folders_info['known_folders'][folder_path]['OWNER']
+        if folder_zope_path in folders_info['known_folders']:
+            assert line['CREATED'] == folders_info['known_folders'][folder_zope_path]['CREATED']
+            assert line['OWNER'] == folders_info['known_folders'][folder_zope_path]['OWNER']
             return
-        folders_info['known_folders'][folder_path] = line
+        folders_info['known_folders'][folder_zope_path] = line
 
         actor.folder_entry(parent_path, folder_id,
                            title, description, date, userid)
@@ -87,17 +92,22 @@ def walk_backup(index_file, open_backup_file, actor):
     def handle_file(line):
         title = line['TITLE']
         description = line['ABSTRACT']
-        date = parse_date(line['UPLOADDATE'])
         userid = parse_userid(line['OWNER'])
         keywords = line['KEYWORDS']
         reference = line.get('REFERENCE', '')
         status = line['STATUS']
         doc_zip_path = line['FILENAME']
 
-        # fix folder_path if folder_ids start with an underscore
-        doc_zip_path = doc_zip_path.replace('/_', '/~')
+        # for zope replace starting underscores
+        doc_zope_path = doc_zip_path.replace('/_', '/~')
 
-        doc_split_path = doc_zip_path.split('/')
+        # use get_date as a backup
+        try:
+            date = parse_date(line['UPLOADDATE'])
+        except ValueError:
+            date = get_date(doc_zip_path)
+
+        doc_split_path = doc_zope_path.split('/')
         doc_filename = doc_split_path[-1].encode('utf-8')
         doc_langver = doc_split_path[-2]
         doc_dpl_name = str(doc_split_path[-3])
