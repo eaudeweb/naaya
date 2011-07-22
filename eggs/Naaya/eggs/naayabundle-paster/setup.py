@@ -3,7 +3,7 @@ from setuptools import setup
 version = '0.1'
 
 setup(
-    name='naayabundle-paste',
+    name='naayabundle-paster',
     version=version,
     description="paster templates",
     long_description="""\
