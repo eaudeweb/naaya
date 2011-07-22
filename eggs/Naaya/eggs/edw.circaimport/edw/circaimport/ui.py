@@ -1,5 +1,6 @@
 import os.path
 import logging
+import traceback
 from StringIO import StringIO
 
 from zope.publisher.browser import BrowserPage
@@ -66,20 +67,32 @@ class ImportAllFromCirca(BrowserPage):
             import_files_path = self.request.form['import_files_path']
             if filename_files and import_files_path:
                 files_ctx = ctx.restrictedTraverse(import_files_path)
-                add_files_and_folders_from_circa_export(files_ctx, filename_files, upload_prefix)
+                try:
+                    add_files_and_folders_from_circa_export(files_ctx, filename_files, upload_prefix)
+                except:
+                    logger.critical(traceback.format_exc())
 
             filename_roles = self.request.form['filename_roles']
             ldap_source_title = self.request.form['source_title']
             if filename_roles and ldap_source_title:
-                add_roles_from_circa_export(ctx, os.path.join(upload_prefix, filename_roles), ldap_source_title)
+                try:
+                    add_roles_from_circa_export(ctx, os.path.join(upload_prefix, filename_roles), ldap_source_title)
+                except:
+                    logger.critical(traceback.format_exc())
 
             filename_notifications = self.request.form['filename_notifications']
             if filename_notifications:
-                add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, filename_notifications))
+                try:
+                    add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, filename_notifications))
+                except:
+                    logger.critical(traceback.format_exc())
 
             filename_acls = self.request.form['filename_acls']
             if filename_acls:
-                add_acls_from_circa_export(ctx, os.path.join(upload_prefix, filename_acls))
+                try:
+                    add_acls_from_circa_export(ctx, os.path.join(upload_prefix, filename_acls))
+                except:
+                    logger.critical(traceback.format_exc())
 
         finally:
             if 'report' in self.request.form:
@@ -103,7 +116,10 @@ class ImportFilesFromCirca(BrowserPage):
 
         log = init_log_stream()
 
-        add_files_and_folders_from_circa_export(ctx, name, upload_prefix)
+        try:
+            add_files_and_folders_from_circa_export(ctx, name, upload_prefix)
+        except:
+            logger.critical(traceback.format_exc())
 
         return import_files_result_zpt.__of__(ctx)(report=log.getvalue())
 
@@ -123,7 +139,10 @@ class ImportRolesFromCirca(BrowserPage):
 
         log = init_log_stream()
 
-        add_roles_from_circa_export(ctx, os.path.join(upload_prefix, name), ldap_source_title)
+        try:
+            add_roles_from_circa_export(ctx, os.path.join(upload_prefix, name), ldap_source_title)
+        except:
+            logger.critical(traceback.format_exc())
 
         return import_roles_zpt.__of__(ctx)(sources=sources, report=log.getvalue())
 
@@ -141,7 +160,10 @@ class ImportNotificationsFromCirca(BrowserPage):
 
         log = init_log_stream()
 
-        add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, name))
+        try:
+            add_notifications_from_circa_export(ctx, os.path.join(upload_prefix, name))
+        except:
+            logger.critical(traceback.format_exc())
 
         return import_notifications_zpt.__of__(ctx)(report=log.getvalue())
 
@@ -159,6 +181,9 @@ class ImportACLsFromCirca(BrowserPage):
 
         log = init_log_stream()
 
-        add_acls_from_circa_export(ctx, os.path.join(upload_prefix, name))
+        try:
+            add_acls_from_circa_export(ctx, os.path.join(upload_prefix, name))
+        except:
+            logger.critical(traceback.format_exc())
 
         return import_acls_zpt.__of__(ctx)(report=log.getvalue())
