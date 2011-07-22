@@ -214,6 +214,7 @@
 	</tal:block>
 </div>
 
+<tal:block condition="nothing">
 <div id="document-map"></div>
 
 <script type="text/javascript" src="++resource++naaya.ew_aoa_library-www/openlayers/OpenLayers.js"></script>
@@ -223,6 +224,7 @@
   jQuery(document).ready(function() {
     M.create_map_document({map_div: 'document-map'});
   });"></script>
+</tal:block>
 
 <script type="text/javascript" tal:attributes="src string:${library_object/absolute_url}/survey_js"></script>
 <tal:block content="structure here/render_answer" />
