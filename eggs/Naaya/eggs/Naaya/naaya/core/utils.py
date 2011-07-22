@@ -38,7 +38,7 @@ mimetype_map = {
 @deprecate('mimetype_from_filename is deprecated, use mimetypes.guess_type')
 def mimetype_from_filename(filename, default=None):
     ext = path.splitext(filename)[1]
-    return mimetype_map.get(ext, default)
+    return mimetype_map.get(ext.lower(), default)
 
 def get_noaq_attr(obj, attr, default):
     """
