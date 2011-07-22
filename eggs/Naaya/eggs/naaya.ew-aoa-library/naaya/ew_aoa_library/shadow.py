@@ -473,10 +473,10 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
                             'naaya.ew_aoa_library.shadow.index_html')
     def index_html(self, REQUEST):
         """ public view of an AoA document """
-        aoa_devel_hook(jsmap.__name__)
-        options = {
-            'map_config': json.dumps(jsmap.map_config_for_document(self)),
-        }
+        #aoa_devel_hook(jsmap.__name__)
+        #options = {
+        #    'map_config': json.dumps(jsmap.map_config_for_document(self)),
+        #}
         return self._index_html(REQUEST, **options)
 
     manage_main = PageTemplateFile('zpt/assessment_manage_main', globals())
