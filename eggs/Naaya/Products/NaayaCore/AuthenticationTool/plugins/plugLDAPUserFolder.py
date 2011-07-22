@@ -377,9 +377,7 @@ class plugLDAPUserFolder(PlugBase):
                 try:
                     uid = member.split(',')[0].split('=')[1]
                 except IndexError, e:
-                    auth_logger.exception("Can't parse the uid "
-                                          "(skipping member %s)",
-                                          member)
+                    log.exception("Can't parse the uid %r, skipping", member)
                 else:
                     group_users.append(uid)
             return group_users
