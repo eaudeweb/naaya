@@ -79,7 +79,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def setUserLocation(self, user, user_location):
         self.located[user] = user_location
-        self_p_changed = 1
+        self._p_changed = 1
 
     def delUserLocation(self, user):
         try:
@@ -102,7 +102,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def setUserCanonicalName(self, user, user_name):
         self.canonical_name[user] = user_name
-        self_p_changed = 1
+        self._p_changed = 1
 
     def delUserCanonicalName(self, user):
         try:
