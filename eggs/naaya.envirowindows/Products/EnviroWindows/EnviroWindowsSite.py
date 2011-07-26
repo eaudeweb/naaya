@@ -44,7 +44,7 @@ from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
-from Products.NaayaCore.managers.utils              import CSVReader
+from Products.NaayaCore.managers.import_export      import CSVReader
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.contact.contact_item             import addNyContact
 from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode

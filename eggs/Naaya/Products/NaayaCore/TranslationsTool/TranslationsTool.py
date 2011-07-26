@@ -16,7 +16,7 @@ from Products.Localizer.MessageCatalog import MessageCatalog, message_encode, me
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import spreadsheet_file
-from Products.NaayaCore.managers.utils import CSVReader
+from Products.NaayaCore.managers.import_export import CSVReader
 
 
 def manage_addTranslationsTool(self, languages=None, REQUEST=None):

@@ -19,13 +19,17 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, Unauthorized
 from DateTime import DateTime
 from zope.event import notify
-from Products.NaayaCore.events import CSVImportEvent
+import logging
 
+from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+
+logger = logging.getLogger(__name__)
+
 
 class CSVImportTool(Implicit, Item):
     title = "CSV import"
@@ -387,7 +391,8 @@ def relative_path_to_site(ob):
     ob_path = '/'.join(ob.getPhysicalPath())
     return ob_path[len(site_path):]
 
-class UTF8Recoder:
+
+class UTF8Recoder(object):
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8
     """
@@ -400,7 +405,8 @@ class UTF8Recoder:
     def next(self):
         return self.reader.next().encode("utf-8")
 
-class UnicodeReader:
+
+class UnicodeReader(object):
     """
     A CSV reader which will iterate over lines in the CSV file "f",
     which is encoded in the given encoding.
@@ -416,3 +422,32 @@ class UnicodeReader:
 
     def __iter__(self):
         return self
+
+
+class CSVReader(object):
+    """ Manipulate CSV files """
+
+    def __init__(self, file, dialect, encoding):
+        """ """
+        if dialect == 'comma':
+            dialect=csv.excel
+        elif dialect == 'tab':
+            dialect=csv.excel_tab
+        else:
+            dialect=csv.excel
+        self.csv = UnicodeReader(file, dialect, encoding)
+
+    def read(self):
+        """ return the content of the file """
+        try:
+            header = self.csv.next()
+            output = []
+            for values in self.csv:
+                buf = {}
+                for field, value in zip(header, values):
+                    buf[field.encode('utf-8')] = value.encode('utf-8')
+                output.append(buf)
+            return (output, '')
+        except Exception, ex:
+            logger.exception('Read error')
+            return (None, ex)
