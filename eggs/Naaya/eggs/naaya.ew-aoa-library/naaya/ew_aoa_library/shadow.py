@@ -8,7 +8,7 @@ from AccessControl.Permissions import view, view_management_screens
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager
 from zope import interface
 from naaya.core.zope2util import path_in_site
 from naaya.core.utils import force_to_unicode

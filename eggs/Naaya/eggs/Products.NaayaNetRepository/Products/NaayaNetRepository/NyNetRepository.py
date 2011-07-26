@@ -31,7 +31,7 @@ from AccessControl.Permissions import view_management_screens, view
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyNetSite
 
 manage_addNyNetRepository_html = PageTemplateFile('zpt/netrepository_manage_add', globals())

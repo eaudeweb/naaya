@@ -32,7 +32,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyFeed import NyFeed
 from Products.Naaya.constants import *
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 manage_addNyNetChannel_html = PageTemplateFile('zpt/netchannel_manage_add', globals())
 def addNyNetChannel(self, id='', title='', description='', url='', language=None,
