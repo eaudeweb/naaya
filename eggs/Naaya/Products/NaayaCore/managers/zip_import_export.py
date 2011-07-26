@@ -1,25 +1,17 @@
 from StringIO import StringIO
-from copy import copy
 from zipfile import ZipFile, ZipInfo
 import tempfile
-import os.path
 
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view
 from Acquisition import Implicit
-from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.SimpleItem import Item
 from Products.NaayaCore.events import ZipImportEvent
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZPublisher.Iterators import IStreamIterator
-from zope.component import adapts
 from zope.event import notify
-from zope.interface import Interface
-from zope.interface import implements
 import transaction
 
-from Products.Naaya.NyFolder import NyFolder
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from naaya.core.utils import force_to_unicode
