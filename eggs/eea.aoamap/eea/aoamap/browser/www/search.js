@@ -68,6 +68,7 @@ M.search_busy = false;
 M.delayed_search_timeout = null;
 M.next_form_data = null;
 M.last_search = "{}";
+M.animation_speed = 300;
 
 function request_search() {
   M.next_form_data = get_search_form_data();
@@ -147,7 +148,8 @@ var template = {
 
 function collapse_document_info() {
   var document_info = $('ul.search-results div.document-info');
-  document_info.remove();
+  document_info.slideUp(M.animation_speed, function() { $(this).remove(); });
+  return document_info;
 }
 
 $('div#filters').bind('map-coverage-hidden', collapse_document_info);
@@ -170,16 +172,24 @@ function update_document_list(documents) {
         M.hide_country_coverage();
         return;
       }
-      else {
-        collapse_document_info();
-      }
+      var collapsing_doc = collapse_document_info();
       var html = template['document-info'].tmpl(doc);
       var doc_info = $('<div class="document-info">').html(html);
       $(doc_li.append(doc_info));
+      var list_offset = $('ul.search-results').offset()['top'];
 
-      doc_info.slideDown(300, function(){
-        $('#results').scrollTo(doc_li, 300);
-      });
+      var offset = doc_li.offset()['top'];
+      console.log(offset);
+      if(collapsing_doc.length > 0) {
+        var collapsing_offset = collapsing_doc.offset()['top'];
+        if(offset > collapsing_offset) {
+          offset -= collapsing_doc.height();
+        }
+      }
+      console.log('list_offset', list_offset, 'offset', offset)
+
+      doc_info.hide().slideDown(M.animation_speed);
+      $('#results').scrollTo(offset - list_offset, M.animation_speed);
 
       M.show_country_coverage(doc['country']);
     });
