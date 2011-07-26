@@ -215,3 +215,20 @@ div#document-info {
 div.document-info {
   padding-left: 20px;
 }
+
+div.country-info-box { /* translucent yellow */
+  background: rgb(230, 230, 90);
+  background: rgba(255, 255, 0, 0.6);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99ffff00, endColorstr=#99ffff00);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99ffff00, endColorstr=#99ffff00)";
+}
+
+div.country-info-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
+  font-size: 20pt;
+  padding: 3px;
+}
