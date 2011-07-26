@@ -1139,12 +1139,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def manageAddSource(self, source_path, title='', REQUEST = None):
         """ """
         source_obj = self.unrestrictedTraverse('/' + source_path, None)
-        plugin_obj = self.getPluginInstance(source_obj.meta_type)
+        plugin_factory = self.getPluginFactory(source_obj.meta_type)
+
         id = self.utGenRandomId()
-        plugin_obj.id = id
-        plugin_obj.obj_path = source_path
-        plugin_obj.title = title
+        plugin_obj = plugin_factory(id, source_obj, title)
         self._setObject(id, plugin_obj)
+
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_sources_html')
 
