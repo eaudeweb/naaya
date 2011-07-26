@@ -46,7 +46,7 @@ from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 
 import naaya.content.infofolder.skel as skel
 from naaya.content.infofolder.constants import *
