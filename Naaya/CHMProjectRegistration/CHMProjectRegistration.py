@@ -29,8 +29,8 @@ import time
 from datetime import datetime, date, timedelta
 
 from Products.NaayaCore.managers import utils as naaya_utils
-from Products.NaayaCore.managers.csv_import_export import UnicodeReader
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.NaayaCore.managers.import_export import UnicodeReader
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from CHMProject import CHMProject
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
