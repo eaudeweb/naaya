@@ -28,6 +28,25 @@ class LocalAttribute(Base):
 # (localizer <= 0.8.0): other classes import 'LocalProperty'
 LocalProperty = LocalAttribute
 
+def requires_localproperty(obj, name):
+    """
+
+    Returns True if LocalAttribute needs to be set on instance
+    to override any class or superclass variables
+    that are neither LocalAttribute, nor ForceGetattr.
+
+    """
+    try:
+        attr_value = getattr(obj.__class__, name)
+    except AttributeError:
+        # if no such attribute, no need to override
+        return False
+    else:
+        # cross import issue
+        from Products.NaayaBase.NyContentType import ForceGetattr
+        return not isinstance(attr_value, (LocalProperty, ForceGetattr))
+
+
 class LocalPropertyManager(object):
     """
     Mixin class that allows to manage localized properties.
@@ -88,7 +107,8 @@ class LocalPropertyManager(object):
         """
         if not self.hasLocalProperty(id):
             self._local_properties_metadata += ({'id': id, 'type': type},)
-            setattr(self, id, LocalProperty(id))
+            if requires_localproperty(self, id):
+                setattr(self, id, LocalProperty(id))
 
         if lang is not None:
             self.set_localpropvalue(id, lang, value)

@@ -9,7 +9,7 @@ from zope.app.component.site import threadSiteSubscriber
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-from naaya.i18n.LocalPropertyManager import LocalAttribute
+from naaya.i18n.LocalPropertyManager import LocalAttribute, LocalPropertyManager
 
 
 class LocalPropertyManagerTestSuite(NaayaFunctionalTestCase):
@@ -46,6 +46,20 @@ class LocalPropertyManagerTestSuite(NaayaFunctionalTestCase):
         setattr(self.ob, 'unspecific', 'unlocalized_value')
         self.assertAttrValue('unspecific', 'English', 'unlocalized_value')
 
+    def test_override_class_variables(self):
+        class SuperClass(object):
+            superclass_var = 'superclass_var'
+        class Class(SuperClass, LocalPropertyManager):
+            class_var = 'class_var'
+
+        cl = Class()
+        cl.set_localproperty('class_var', 'string')
+        cl.set_localproperty('superclass_var', 'string')
+        cl.set_localproperty('nonclass_var', 'string')
+        self.assertTrue(isinstance(cl.__dict__['superclass_var'],
+                                   LocalAttribute))
+        self.assertTrue(isinstance(cl.__dict__['class_var'], LocalAttribute))
+        self.assertTrue(cl.__dict__.get('nonclass_var', None) is None)
 
 class LocalPropertiesFunctionalTestSuite(NaayaFunctionalTestCase):
 
