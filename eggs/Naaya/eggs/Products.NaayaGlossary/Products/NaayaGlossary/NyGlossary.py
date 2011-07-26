@@ -1,67 +1,38 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Original Code is NaayaGlossary version 1.0
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Ghica Alexandru, Finsiel Romania
-# David Batranu, Eau de Web
-
-
-#Python imports
 import string
-from copy       import copy
-from os.path    import join
+from copy import copy
+from os.path import join
 import simplejson as json
 from zipfile import ZipFile
 from cStringIO import StringIO
 import logging
-import tempfile
-import urllib
 import lxml.etree
 
-#Zope imports
 import transaction
 from persistent.mapping import PersistentMapping
 import Products
-import AccessControl.User
-from OFS.Folder                                 import Folder
-from ZPublisher.HTTPRequest                     import record
-from AccessControl                              import ClassSecurityInfo, getSecurityManager
-from Products.ZCatalog.ZCatalog                 import ZCatalog
-from Globals                                    import MessageDialog, InitializeClass
-from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
-from AccessControl.Permissions                  import view_management_screens, view
-from zope.app.container.interfaces import IObjectAddedEvent, IObjectRemovedEvent
+from OFS.Folder import Folder
+from ZPublisher.HTTPRequest import record
+from AccessControl import ClassSecurityInfo, getSecurityManager
+from Products.ZCatalog.ZCatalog import ZCatalog
+from Globals import MessageDialog, InitializeClass
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from AccessControl.Permissions import view_management_screens, view
+from zope.app.container.interfaces import (IObjectAddedEvent,
+        IObjectRemovedEvent)
 
-#Product imports
 import NyGlossaryFolder
-from constants                                          import *
-from utils                                              import utils, catalog_utils
-from parsers.xliff_parser                               import xliff_parser
-from Products.NaayaCore.managers.utils                  import file_utils
+from constants import *
+from utils import utils, catalog_utils
+from parsers.xliff_parser import xliff_parser
+from Products.NaayaCore.managers.utils import file_utils
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaGlossary.parsers.subjects_parser     import subjects_parser
-from Products.NaayaGlossary.parsers.stop_words_parser   import stop_words_parser
-from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
+from Products.NaayaGlossary.parsers.subjects_parser import subjects_parser
+from Products.NaayaGlossary.parsers.stop_words_parser import stop_words_parser
+from Products.NaayaGlossary.parsers.import_parsers import glossary_export
 
-#Naaya imports
 from Products.NaayaCore.managers.utils import genObjectId
-from naaya.core.zope2util import relative_object_path, ofs_walk, ofs_path
+from naaya.core.zope2util import ofs_walk, ofs_path
 from naaya.core.utils import download_to_temp_file
 from interfaces import INyGlossaryItem, IItemTranslationChanged
 
