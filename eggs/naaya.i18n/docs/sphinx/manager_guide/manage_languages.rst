@@ -1,5 +1,5 @@
 Managing available languages
-=============================
+============================
 
 By default, a Naaya site is available only in English. You can view the
 available languages in Zope Management Interface by accessing
@@ -20,6 +20,6 @@ language is within his preferred languages. This is also the default fallback
 language.
 
 This setting does not influence the default translation for new found strings.
-Each new found message without translation is still considered English,
+Each new found message without translation is still considered in English,
 since most of the Naaya and Zope products are edited so.
 
