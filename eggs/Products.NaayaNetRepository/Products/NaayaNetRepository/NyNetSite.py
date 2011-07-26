@@ -33,7 +33,7 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyFeed import NyFeed
 from Products.Naaya.constants import *
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyNetChannel
 
 manage_addNyNetSite_html = PageTemplateFile('zpt/netsite_manage_add', globals())
