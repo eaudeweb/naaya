@@ -15,7 +15,7 @@ of the public API available for restricted access resides here.
     portal_tool
 
 Portal Languages
----------------
+----------------
 
 **NyPortalLanguages** is the classed used for managing available languages
 in portal.
@@ -41,7 +41,7 @@ by *interfaces.INyCatalog* interface.
 
 
 Negotiator
----------------
+----------
 
 The **Negotiator** is responsible for selecting a display language for the
 browser. It has some configuration settings which can be tweaked by programmers.
@@ -77,8 +77,9 @@ for **Message Catalog** data.
     :glob:
 
     import_export
-    Portal Languages
----------------
+
+Portal Languages
+----------------
 
 **NyPortalLanguages** is the classed used for managing available languages
 in portal.
@@ -90,7 +91,7 @@ in portal.
     portal_languages
 
 External Translation Service
----------------
+----------------------------
 
 **ExternalService** is used to suggest translations for managers, using
 Google Translate external HTTP calls.

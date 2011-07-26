@@ -4,8 +4,8 @@ request passed to getLanguage.
 It is initialized in portal_tool and in LocalPropertyManager, when
 selecting language for a localized property.
 
-* cookie_id is used from constants.COOKIE_ID
-* policy is a hardcoded list/tuple of priorities
+* `cookie_id` is used from constants.COOKIE_ID
+* `policy` is a hardcoded list/tuple of priorities
 
 """
 
@@ -20,10 +20,11 @@ class NyNegotiator(object):
     """
     Implementation of i18n negotiator, using cache on Request,
     with available policies:
-    * path - language code present in url, after portal
-    * url - language code in querystring
-    * cookie - language setting saved in cookie
-    * browser - HTTP_ACCEPT_LANGUAGE header
+
+    * `path` - language code present in url, after portal
+    * `url` - language code in querystring
+    * `cookie` - language setting saved in cookie
+    * `browser` - HTTP_ACCEPT_LANGUAGE header
 
     Performs negotiation and sets preferred language in cookie.
 
@@ -68,11 +69,13 @@ class NyNegotiator(object):
     # INegotiator interface:
     def getLanguage(self, available, request, fallback=True):
         """
-        Returns the language dependent on the policy.
+        Returns the best matching language based on `available` languages,
+        preferred languages in `request` and negotiation policies.
 
-        If `fallback` is True (default), return first av. language on failure.
+        If `fallback` is True (default), return first available
+        language on failure.
         If `fallback` is False, return None on failure, let third party app
-        choose an app-dependant default (eg get_default_language() in portal)
+        choose an app-dependant default (e.g. get_default_language() in portal)
 
         """
         available = map(normalize_code, available)

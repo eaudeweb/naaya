@@ -13,7 +13,9 @@ portal manager.
     :maxdepth: 2
     :glob:
 
-    manager_guide/*
+    manager_guide/manage_languages
+    manager_guide/translating_messages
+    manager_guide/advanced_operations
 
 Programmer's Guide
 ------------------
@@ -23,7 +25,7 @@ Learn about internationalizing your Naaya based products.
     :maxdepth: 2
     :glob:
 
-    programmer_guide/*
+    programmer_guide
 
 API documentation
 -----------------
