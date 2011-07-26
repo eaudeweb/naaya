@@ -1,38 +1,14 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Ghica Alexandru, Finsiel Romania
-
-
-# python imports
-import string
-
-# Zope imports
-from Globals                                    import DTMLFile, InitializeClass
-from AccessControl                              import ClassSecurityInfo
-from OFS.SimpleItem                             import SimpleItem
-from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from AccessControl.Permissions                  import view_management_screens, view
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from OFS.SimpleItem import SimpleItem
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from AccessControl.Permissions import view_management_screens
 from zope import interface
 from zope import event
 
 # product imports
-from constants  import *
-from utils      import utils, catalog_utils
+from constants import *
+from utils import utils, catalog_utils
 from interfaces import INyGlossaryElement
 from events import ItemTranslationChanged
 
@@ -49,16 +25,19 @@ class ElementBasic:
         self.contributor = contributor
 
 
-manage_addGlossaryElement_html = PageTemplateFile('zpt/NaayaGlossaryElement/add', globals())
+manage_addGlossaryElement_html = PageTemplateFile('zpt/NaayaGlossaryElement/add',
+        globals())
 
-def manage_addGlossaryElement(self, id='', title='', source='', subjects=[], contributor='', approved=1, REQUEST=None):
+def manage_addGlossaryElement(self, id='', title='', source='', subjects=[],
+        contributor='', approved=1, REQUEST=None):
     """ adds a new NyGlossaryElement object """
     ob = NyGlossaryElement(id, title, source, subjects, contributor, approved)
     self._setObject(id, ob)
     element_obj = self._getOb(id)
     element_obj.subjects = self.get_subject_by_codes(subjects)
     element_obj.load_translations_list()
-    from NyGlossary import set_default_translation #imported here to avoid cross-import errors
+    #imported here to avoid cross-import errors
+    from NyGlossary import set_default_translation
     set_default_translation(element_obj)
 
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
