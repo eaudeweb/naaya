@@ -15,7 +15,6 @@
     <tal:block repeat="source sources">
         <tal:block define="user_folder source/getUserFolder;
                         expand python:source.splitToList(request.get('expand', 'ROOT'));
-                c python:source.connectLDAP(user_folder);
                         roles_tree python:source.getRoles(expand);">
 
             <table border="0" cellspacing="0" cellpadding="2" width="100%">
