@@ -11,11 +11,12 @@ class PlugBase(SimpleItem):
         SimpleItem.manage_options
         )
 
-    def __init__(self):
+    def __init__(self, id, source_obj, title):
         """ """
-        self.id = None
-        self.obj_path = None
-        self.title = None
+        super(PlugBase, self).__init__(id)
+        self.id = id
+        self.obj_path = source_obj.absolute_url(1)
+        self.title = title
 
     def getUserFolder(self):
         #return the user folder object

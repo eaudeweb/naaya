@@ -14,12 +14,15 @@ class TestPluginsTool(NaayaTestCase):
             'name': 'plugLDAPUserFolder',
             'object_type': 'LDAPUserFolder'
         }]
-        self.assertEqual(self.portal.acl_users.getPlugins(), expected)
+        self.assertEqual(self.portal.acl_users.getPluginsInfo(), expected)
 
     def test_get_plugin_instance(self):
         """ Return a instance of a specific plugin """
-        plug_instance = self.portal.acl_users.getPluginInstance('User Folder')
-        self.assertEqual(plug_instance.object_type, 'User Folder')
+        acl_users = self.portal.acl_users
+        root_acl_users = self.portal.aq_parent.acl_users
+        plugin_class = acl_users.getPluginFactory(root_acl_users.meta_type)
+        plugin_instance = plugin_class(1, root_acl_users, '')
+        self.assertEqual(plugin_instance.object_type, root_acl_users.meta_type)
 
 class TestFunctionalPluginsTool(NaayaFunctionalTestCase):
     """ Functional tests for plugins_tool """
@@ -37,4 +40,3 @@ class TestFunctionalPluginsTool(NaayaFunctionalTestCase):
         form['source_path'] = ['acl_users']
         self.browser.submit()
         self.assertTrue('Test source' in self.browser.get_html())
-

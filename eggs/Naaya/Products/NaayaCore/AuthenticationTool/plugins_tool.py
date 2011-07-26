@@ -3,7 +3,7 @@ from Products.NaayaCore.AuthenticationTool.interfaces import IAuthenticationTool
 class plugins_tool(object):
     """ Read the authentication plugins """
 
-    def getPlugins(self):
+    def getPluginsInfo(self):
         """ Return a list of dictionaries containing the information about the
         plugins """
 
@@ -20,23 +20,15 @@ class plugins_tool(object):
             })
         return plugins
 
-    def getPluginInstance(self, object_type):
-        """Given a plugin instance based on it's object_type.
-
-        After we got the right plugin we will get the utility that has the same
-        name as the class"""
+    def getPluginFactory(self, object_type):
+        """ Return a plugin class based on it's object_type """
 
         site_manager = self.getSite().getSiteManager()
-        for plugin in self.getPlugins():
+        for plugin in self.getPluginsInfo():
             if plugin['object_type'] == object_type:
-                try:
-                    return site_manager.queryUtility(IAuthenticationToolPlugin,
-                            plugin['name'])()
-                except:
-                    self.log_current_error()
-                    return None
+                return site_manager.queryUtility(IAuthenticationToolPlugin,
+                                                 plugin['name'])
         return None
-
 
     def getKnownMetaTypes(self):
         """ Return a list of known meta_types.
@@ -46,5 +38,4 @@ class plugins_tool(object):
 
         """
 
-        return [plugin['object_type'] for plugin in self.getPlugins()]
-
+        return [plugin['object_type'] for plugin in self.getPluginsInfo()]

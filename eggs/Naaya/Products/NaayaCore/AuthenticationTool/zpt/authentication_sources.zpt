@@ -9,7 +9,7 @@
             <th class="cell-header">Object type</th>
 			<th class="cell-header">Info</th>
 		</tr>
-		<tr tal:repeat="item here/getPlugins" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
+		<tr tal:repeat="item here/getPluginsInfo" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
 			<td tal:content="item/name"/>
 			<td tal:content="item/object_type"/>
 			<td tal:content="item/doc"/>

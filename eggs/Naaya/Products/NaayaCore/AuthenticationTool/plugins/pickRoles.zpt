@@ -14,7 +14,6 @@
 
 <tal:block define="user_folder python:here.getUserFolder();
                     expand python:here.splitToList(request.get('expand', 'ROOT'));
-		    c python:here.connectLDAP(user_folder);
                     roles_tree python:here.getRoles(expand);">
 
 <table border="0" cellspacing="0" cellpadding="2" width="100%">

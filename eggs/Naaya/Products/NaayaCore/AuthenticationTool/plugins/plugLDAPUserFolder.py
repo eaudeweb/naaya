@@ -63,14 +63,13 @@ class plugLDAPUserFolder(PlugBase):
     default_encoding = 'latin-1' # TODO: this should be editable from ZMI
     group_to_roles_mapping = PersistentDict()
 
-    def __init__(self):
+    def __init__(self, id, source_obj, title):
         """ constructor """
+        super(plugLDAPUserFolder, self).__init__(id, source_obj, title)
         self._user_objs = {}
-        self.delegate = None
         self.located = {}
         self.canonical_name = {}
         self.buffer = {}
-        PlugBase.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
 
@@ -150,11 +149,14 @@ class plugLDAPUserFolder(PlugBase):
     def getGroupScope(self, acl_folder):
         return acl_folder.groups_scope
 
-    def connectLDAP(self, acl_folder):
-        """Open a connection to the server"""
-        self.delegate = LDAPDelegate()
-        self.delegate.addServer(self.getLDAPServer(acl_folder), use_ssl=0)
-        self.delegate.connect()
+    def get_ldap_delegate(self):
+        delegate = LDAPDelegate()
+
+        acl_folder = self.getUserFolder()
+        for server in acl_folder.getServers():
+            delegate.addServer(server.get('host'), use_ssl=0)
+
+        return delegate
 
     def getSortedUserRoles(self, skey='', rkey=''):
         """ sort users list """
@@ -221,7 +223,8 @@ class plugLDAPUserFolder(PlugBase):
         searchScope = ldap.SCOPE_ONELEVEL
         searchFilter = 'objectClass=*'
         ROLESretrieveAttributes = ('cn','description')
-        roles = self.delegate.search(dn, searchScope, searchFilter, ROLESretrieveAttributes)
+        delegate = self.get_ldap_delegate()
+        roles = delegate.search(dn, searchScope, searchFilter, ROLESretrieveAttributes)
         return roles['results']
 
     def _cacheRole(self, role):
@@ -366,7 +369,8 @@ class plugLDAPUserFolder(PlugBase):
         root_dn = self.getRootDN(ldap_folder)
         scope = self.getGroupScope(ldap_folder)
         if not cache.get(group, {}):
-            result = self.delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+            delegate = self.get_ldap_delegate()
+            result = delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
             cache[group] = result
         else:
             result = cache[group]
@@ -401,7 +405,8 @@ class plugLDAPUserFolder(PlugBase):
         for group_id, group_dn in groups:
             dn = self.getRootDN(acl_folder)
             scope = self.getGroupScope(acl_folder)
-            result = self.delegate.search(dn, scope, filter_format('(cn=%s)', (group_id,)), ['uniqueMember', 'member'])
+            delegate = self.get_ldap_delegate()
+            result = delegate.search(dn, scope, filter_format('(cn=%s)', (group_id,)), ['uniqueMember', 'member'])
             for val in result['results']:
                 for dn in val['uniqueMember']:
                     p_username = self._user_id_from_dn(dn)
