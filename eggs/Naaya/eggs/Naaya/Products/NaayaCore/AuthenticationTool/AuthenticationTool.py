@@ -36,8 +36,9 @@ from User import User
 from Role import Role
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.interfaces import IRoleLogger
-from Products.NaayaCore.managers.utils import is_valid_email, UnicodeReader
-from Products.NaayaCore.managers.import_export import set_response_attachment
+from Products.NaayaCore.managers.utils import is_valid_email
+from Products.NaayaCore.managers.import_export import (set_response_attachment,
+                                                       UnicodeReader)
 
 from recover_password import RecoverPassword
 
