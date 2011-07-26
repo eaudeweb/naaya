@@ -40,7 +40,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaBase.NyAccess import NyAccess
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
