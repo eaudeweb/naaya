@@ -67,7 +67,7 @@ function get_search_form_data() {
 M.search_busy = false;
 M.delayed_search_timeout = null;
 M.next_form_data = null;
-M.last_search = "{}";
+M.search_cache = new Cache(50);
 M.animation_speed = 300;
 
 function request_search() {
@@ -76,9 +76,8 @@ function request_search() {
   M.delayed_search_timeout = setTimeout(search_now, 300);
 }
 
-function search_completed(form_data) {
+function search_completed() {
   M.search_busy = false;
-  M.last_search = JSON.stringify(form_data);
   search_now();
 }
 
@@ -91,10 +90,6 @@ function search_now() {
   }
   var form_data = M.next_form_data;
   M.next_form_data = null;
-  if(JSON.stringify(form_data) == M.last_search) {
-    M.debug_log('skipping search because filters are the same');
-    return;
-  }
   M.search_busy = true;
   perform_search(form_data);
 }
@@ -102,18 +97,34 @@ function search_now() {
 function perform_search(form_data) {
   $('ul.search-results').text('');
   $('.loading-animation').fadeIn();
-  $.getJSON(M.config['search_url'], form_data, function(results) {
-    var t = Math.round(results['query-time'] * 100) / 100;
-    M.debug_log("search results: " + results['documents'].length +
-                " documents in " + t + " seconds");
-    $('.loading-animation').hide();
-    update_document_list(results['documents']);
-    //update_polygon_numbers(results['documents']);
-    search_completed(form_data);
-    if($('#results').is(':visible') == false){
-      $("#results").show("slide", { direction: "left" }, 500);
-    }
-  });
+
+  var form_data_json = JSON.stringify(form_data);
+
+  var cached_result = M.search_cache.getItem(form_data_json);
+  if(cached_result == null) {
+    $.getJSON(M.config['search_url'], form_data, function(results) {
+      var t = Math.round(results['query-time'] * 100) / 100;
+      M.debug_log("search results: " + results['documents'].length +
+                  " documents in " + t + " seconds");
+      M.search_cache.setItem(form_data_json, results);
+      show_search_result(results);
+      search_completed();
+    });
+  }
+  else {
+    M.debug_log('result found in cache');
+    show_search_result(cached_result);
+    search_completed();
+  }
+}
+
+function show_search_result(results) {
+  $('.loading-animation').hide();
+  update_document_list(results['documents']);
+  //update_polygon_numbers(results['documents']);
+  if($('#results').is(':visible') == false){
+    $("#results").show("slide", { direction: "left" }, 500);
+  }
 }
 
 function perform_demo_search(form_data) {
