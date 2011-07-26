@@ -164,6 +164,12 @@
     </div>
   </div>
 
+  <div id="country-info">
+    <div class="template">
+      <span>${name}</span>
+    </div>
+  </div>
+
   <div class="visualClear">&nbsp;</div>
 </div>
 <div class="visualClear">&nbsp;</div>
@@ -175,6 +181,7 @@
 <script type="text/javascript" src="++resource++eea.aoamap/cache.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/country_info.js"></script>
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   jQuery(document).ready(function() {

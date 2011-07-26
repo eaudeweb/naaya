@@ -146,15 +146,9 @@ function perform_demo_search(form_data) {
   $.getJSON('data/test-documents.json').success(update_document_list);
 }
 
-function get_template(elem) {
-  var template_elem = $('.template', elem);
-  template_elem.remove().template();
-  return template_elem;
-}
-
 var template = {
-  'search-results': get_template($('ul.search-results')),
-  'document-info': get_template($('div#document-info'))
+  'search-results': M.get_template($('ul.search-results')),
+  'document-info': M.get_template($('div#document-info'))
 };
 
 function collapse_document_info() {

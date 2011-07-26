@@ -26,6 +26,12 @@ M.country_selection_changed = function() {
   $(M.countries_map.div).trigger('map-selection-changed');
 };
 
+M.get_template = function(elem) {
+  var template_elem = $('.template', elem);
+  template_elem.remove().template();
+  return template_elem;
+}
+
 M.add_view = function(tiles_layer) {
   var this_view = M.views[tiles_layer.name] = {};
 
@@ -204,6 +210,7 @@ M.show_country_coverage = function(countries) {
 }
 
 M.create_map_search = function(options) {
+  M.map_div = $('#' + options['map_div']);
   M.countries_map = new OpenLayers.Map(options['map_div']);
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
@@ -239,6 +246,7 @@ M.create_map_search = function(options) {
 };
 
 M.create_map_document = function(options) {
+  M.map_div = $('#' + options['map_div']);
   M.document_map = new OpenLayers.Map(options['map_div'], {controls: []});
   M.document_map.addLayer(M.xyz_layer("Background"));
   M.document_map.setCenter(M.project(new OpenLayers.LonLat(30, 57)), 2);
