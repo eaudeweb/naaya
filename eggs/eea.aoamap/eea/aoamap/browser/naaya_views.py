@@ -16,7 +16,7 @@ def portlet_template_options(site):
         'search_url': search_url,
         'debug': True,
         'www_prefix': "++resource++eea.aoamap",
-        'docs_and_countries': list(docs_and_countries(site)),
+        'docs_and_countries': [],
     }
 
     return {

@@ -109,6 +109,9 @@ function perform_search(form_data) {
     update_document_list(results['documents']);
     //update_polygon_numbers(results['documents']);
     search_completed(form_data);
+    if($('#results').is(':visible') == false){
+      $("#results").show("slide", { direction: "left" }, 500);
+    }
   });
 }
 
@@ -144,7 +147,7 @@ var template = {
 
 function collapse_document_info() {
   var document_info = $('ul.search-results div.document-info');
-  document_info.slideUp('fast', function() { $(this).remove(); });
+  document_info.remove();
 }
 
 $('div#filters').bind('map-coverage-hidden', collapse_document_info);
@@ -155,6 +158,7 @@ function update_document_list(documents) {
   if(documents.length == 0) {
     var msg = "No results were found for this query";
     $('ul.search-results').append($('<li>').text(msg));
+
   }
 
   $.each(documents, function(n, doc) {
@@ -172,7 +176,11 @@ function update_document_list(documents) {
       var html = template['document-info'].tmpl(doc);
       var doc_info = $('<div class="document-info">').html(html);
       $(doc_li.append(doc_info));
-      doc_info.hide().slideDown('fast');
+
+      doc_info.slideDown(300, function(){
+        $('#results').scrollTo(doc_li, 300);
+      });
+
       M.show_country_coverage(doc['country']);
     });
     results.append(doc_li);

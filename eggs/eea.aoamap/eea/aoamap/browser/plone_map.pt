@@ -5,14 +5,12 @@
 <head>
 
 <metal:css fill-slot="css_slot">
-  <style type="text/css" media="all">
-    <!-- @import url(++resource++eea.aoamap/view.css); -->
+  <style type="text/css" media="screen">
+    <!-- @import url(++resource++eea.aoamap/search_map_eea.css); -->
   </style>
 </metal:css>
 
 <metal:js fill-slot="javascript_head_slot">
-  <script type="text/javascript"
-    src="++resource++eea.aoamap/view.js"></script>
   <script type="text/javascript"
     src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
 </metal:js>
@@ -25,6 +23,14 @@
   <div metal:use-macro="here/document_actions/macros/document_actions">
     Document actions (print, sendto etc)
   </div>
+
+<div class="visualClear">&nbsp;</div>
+
+<h1>AoA Search Map</h1>
+
+<p class="documentDescription">
+ How to search the map? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in neque vel mauris aliquet fermentum nec quis dolor. Proin fermentum justo sed metus ornare eleifend.
+</p>
 
 <tal:block content="structure python:view.get_map_html()"/>
 

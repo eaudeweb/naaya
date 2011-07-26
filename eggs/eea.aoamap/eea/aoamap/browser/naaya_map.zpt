@@ -1,6 +1,10 @@
 <metal:block use-macro="here/standard_template_macro">
 <metal:block fill-slot="body">
 
+<style type="text/css" media="all">
+  <!-- @import url(++resource++eea.aoamap/search_map.css); -->
+</style>
+
 <div id="tabbedmenu"
      tal:define="translate python:here.getPortalTranslations().gettext;
                  lang_map here/gl_get_languages_map">
