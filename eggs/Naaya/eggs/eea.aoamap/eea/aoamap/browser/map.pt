@@ -10,10 +10,10 @@
         <input type="text" name="text" size="65" id="description"
                placeholder="Search text in title and description of the documents" class="input-text" />
 
-        <input type="submit" value="Search" class="button submit"
+        <input type="submit" value="Search" class="standalone"
                id="filter-button" />
 
-        <input type="reset" value="Reset" class="button reset"
+        <input type="reset" value="Reset" class="standalone"
                id="reset-button" />
 
         <div class="fields-separator">&nbsp;</div>
@@ -23,14 +23,6 @@
           <option tal:repeat="option options/filter_options/themes"
                   tal:attributes="value option"
                   tal:content="option"></option>
-        </select>
-
-        <select name="author-organisation" class="input-select"
-                tal:condition="nothing">
-          <option disabled value="">Author organisation</option>
-          <option>Org 1</option>
-          <option>Org 2</option>
-          <option>Org 3</option>
         </select>
 
         <select name="document-type" class="input-select">
@@ -51,7 +43,7 @@
 
   </div>
 
-  <div id="results">
+  <div id="results" class="hidden">
 
     <div class="loading-animation hidden">
       <img src="++resource++eea.aoamap/ajax-loader.gif" />
@@ -171,11 +163,14 @@
       {{/if}}
     </div>
   </div>
-  
-  <div class="cleaner">&nbsp;</div>
+
+  <div class="visualClear">&nbsp;</div>
 </div>
+<div class="visualClear">&nbsp;</div>
 
 <script type="text/javascript" src="++resource++eea.aoamap/openlayers/OpenLayers.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/jquery-ui.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
