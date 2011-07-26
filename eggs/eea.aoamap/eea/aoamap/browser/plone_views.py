@@ -59,7 +59,7 @@ class AoaMap(BrowserView):
 class AoaMapSearch(BrowserView):
 
     def __call__(self):
-        search_url = (aoa_url + '/jsmap_search_map_documents?' +
+        search_url = (aoa_url + 'jsmap_search_map_documents?' +
                       self.request.QUERY_STRING)
         json_response = urllib.urlopen(search_url).read()
         self.request.RESPONSE.setHeader('Content-Type', 'application/json')
