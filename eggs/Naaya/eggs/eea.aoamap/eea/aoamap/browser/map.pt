@@ -172,6 +172,7 @@
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery-ui.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/cache.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
 <script type="text/javascript" tal:content="structure string:
