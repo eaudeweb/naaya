@@ -27,7 +27,7 @@ from Products.NaayaBase.constants import (MESSAGE_SAVEDCHANGES,
 from constants import (ID_NAAYAI18N, TITLE_NAAYAI18N, METATYPE_NAAYAI18N,
                        PERMISSION_TRANSLATE_PAGES)
 from LanguageManagers import NyPortalLanguageManager
-from LanguageManagers import normalize_code, get_iso639_name, get_languages
+from LanguageManagers import normalize_code, get_iso639_name
 from NyMessageCatalog import NyMessageCatalog
 from NyNegotiator import NyNegotiator
 from ImportExport import TranslationsImportExport
@@ -145,17 +145,6 @@ class NaayaI18n(SimpleItem):
             # not there, default to languages.txt
             return get_iso639_name(code)
 
-    security.declarePublic('get_all_languages_mapping')
-    def get_all_languages_mapping(self):
-        """
-        Returns a list of mappings
-        [ {'code': 'lang-code', 'name': 'Language name'}, .. ]
-        containing all existent known language codes in naaya.i18n
-        as specified in languages.txt, in ISO639 format.
-
-        """
-        return get_languages()
-
     security.declarePublic('get_languages_mapping')
     def get_languages_mapping(self):
         """
@@ -239,32 +228,6 @@ class NaayaI18n(SimpleItem):
 
     ### Translation API ###
 
-    security.declarePublic('get_message_translation')
-    def get_message_translation(self, message, lang=None, default=None):
-        """
-        Returns the translation of the given message in the given language,
-        as it is stored in Message Catalog (no interpolation).
-
-        Mainly used when in need to supply a default
-        and no interpolation required.
-
-        """
-        if not lang:
-            lang = self.get_selected_language()
-        return self.get_message_catalog().gettext(message, lang, default)
-
-    security.declarePublic('get_translation_in_lang')
-    def get_translation_in_lang(self, msg, lang, **kwargs):
-        """
-        Translate message in selected language using Message Catalog
-        and substitute named identifiers with values supplied by kwargs mapping
-
-        Mainly used when you want to specify translation language.
-
-        """
-        msg = self.get_message_catalog().gettext(msg, lang)
-        return interpolate(msg, kwargs)
-
     security.declarePublic('get_translation')
     def get_translation(self, msg, **kwargs):
         """
@@ -276,7 +239,8 @@ class NaayaI18n(SimpleItem):
 
         """
         lang = self.get_selected_language()
-        return self.get_translation_in_lang(msg, lang, **kwargs)
+        msg = self.get_message_catalog().gettext(msg, lang)
+        return interpolate(msg, kwargs)
 
     ### Private methods for private views
 
