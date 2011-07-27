@@ -79,8 +79,6 @@
           Author
         </span>
 
-        <span class="inline-block toggle-icon expanded"></span>
-
         <div class="template-subsection">
           <span>${author}</span>
         </div>
@@ -93,8 +91,6 @@
           Year
         </span>
 
-        <span class="inline-block toggle-icon expanded"></span>
-
         <div class="template-subsection">
           <span>${year}</span>
         </div>
@@ -106,8 +102,6 @@
         <span class="inline-block label">
           URL
         </span>
-
-        <span class="inline-block toggle-icon expanded"></span>
 
         <div class="template-subsection">
           <a href="${url}" title="${url}">${url}</a>
@@ -124,8 +118,7 @@
 
         <div class="template-subsection">
           {{each country}}
-            <span>- ${$value}</span>
-            <br />
+            <span>${$value}</span>,
           {{/each}}
         </div>
       </div>
@@ -139,8 +132,7 @@
 
         <div class="template-subsection">
           {{each theme}}
-            <span>- ${$value}</span>
-            <br />
+            <span>${$value}</span>,
           {{/each}}
         </div>
       </div>
@@ -155,8 +147,7 @@
 
         <div class="template-subsection">
           {{each document_type}}
-            <span>- ${$value}</span>
-            <br />
+            <span>${$value}</span>,
           {{/each}}
         </div>
       </div>
