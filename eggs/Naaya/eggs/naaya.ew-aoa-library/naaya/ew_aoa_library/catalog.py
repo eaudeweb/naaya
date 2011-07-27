@@ -56,7 +56,7 @@ def set_up_catalog_indexes(site, request):
         add_field_index('viewer_year')
 
         # columns for metadata
-        for name in ['viewer_country']:
+        for name in ['viewer_country', 'viewer_main_theme']:
             if catalog._catalog.schema.has_key(name):
                 log.info('removing metadata column %r', name)
                 catalog.delColumn(name)

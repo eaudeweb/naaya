@@ -42,7 +42,6 @@ class AoaMap(BrowserView):
             'search_url': self.context.absolute_url() + '/aoa-map-search',
             'debug': True,
             'www_prefix': "++resource++eea.aoamap",
-            'docs_and_countries': [],
         }
 
         options = {
