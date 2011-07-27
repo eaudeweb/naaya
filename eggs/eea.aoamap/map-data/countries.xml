@@ -22,7 +22,7 @@
     <StyleName>Borders</StyleName>
     <Datasource>
       <Parameter name="type">shape</Parameter>
-      <Parameter name="file">natearth/50m_admin_0_countries.shp</Parameter>
+      <Parameter name="file">geodata/50m_admin_0_countries.shp</Parameter>
     </Datasource>
   </Layer>
 
@@ -30,7 +30,7 @@
     <StyleName>Labels</StyleName>
     <Datasource>
       <Parameter name="type">ogr</Parameter>
-      <Parameter name="file">../eea/aoamap/browser/www/countries.json</Parameter>
+      <Parameter name="file">geodata/country-bodies.json</Parameter>
       <Parameter name="layer">OGRGeoJSON</Parameter>
     </Datasource>
   </Layer>
