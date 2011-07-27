@@ -91,11 +91,21 @@ class SearchMapDocuments(BrowserPage):
         return do_search(self.aq_parent, self.request)
 
 
-def docs_and_countries(site):
+def documents_summary(site):
     t0 = time()
     for brain in site.getCatalogTool()(**catalog_filters_for_shadows(site)):
-        yield brain['viewer_country']
-    #print 'docs_and_countries:', time() - t0
+        yield {
+            'countries': brain['viewer_country'],
+            'themes': brain['viewer_main_theme'],
+        }
+    #print 'documents_summary:', time() - t0
+
+
+class DocumentsSummary(BrowserPage):
+    def __call__(self):
+        aoa_devel_hook(__name__)
+        aoa_devel_hook('naaya.ew_aoa_library.shadow')
+        return json.dumps(list(documents_summary(self.aq_parent.getSite())))
 
 
 def get_document_types(site):
