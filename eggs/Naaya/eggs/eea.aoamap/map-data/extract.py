@@ -318,6 +318,28 @@ def simplify_main(args):
             raise ValueError("%r %r", (e, f['properties']))
     json.dump(geojson(features), sys.stdout)
 
+def feature_area(feature):
+    geometry = feature['geometry']
+    if geometry['type'] != 'Polygon':
+        raise ValueError('Unknown geometry type %r' % geometry['type'])
+    return area(geometry['coordinates'][0])
+
+def country_bodies_main(args):
+    features = json.load(sys.stdin)['features']
+
+    for f in features:
+        geometry = f['geometry']
+
+        if geometry['type'] == 'MultiPolygon':
+            ordered_polys = sorted(geometry['coordinates'],
+                                   key=number_of_points, reverse=True)
+            geometry['coordinates'] = ordered_polys[0]
+            geometry['type'] = 'Polygon'
+
+    features.sort(key=feature_area)
+
+    json.dump(geojson(features), sys.stdout, indent=2)
+
 
 def parse_args():
     import argparse
@@ -335,6 +357,9 @@ def parse_args():
 
     simplify_parser = subparsers.add_parser('simplify')
     simplify_parser.set_defaults(subcommand=simplify_main)
+
+    country_bodies_parser = subparsers.add_parser('country_bodies')
+    country_bodies_parser.set_defaults(subcommand=country_bodies_main)
 
     return parser.parse_args()
 
