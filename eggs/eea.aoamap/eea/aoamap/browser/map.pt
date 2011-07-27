@@ -157,7 +157,11 @@
 
   <div id="country-info">
     <div class="template">
-      <span>${name}</span>
+      <span>
+        ${name}: ${documents_total} assessments
+        (${documents_green_economy} green economy,
+        ${documents_water} water)
+      </span>
     </div>
   </div>
 
@@ -166,6 +170,7 @@
 <div class="visualClear">&nbsp;</div>
 
 <script type="text/javascript" src="++resource++eea.aoamap/openlayers/OpenLayers.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery-ui.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>

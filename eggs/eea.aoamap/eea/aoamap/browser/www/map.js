@@ -9,6 +9,8 @@ M.project = function(point) {
   return point.clone().transform(M.proj_wgs1984, M.map_projection);
 }
 
+M.docs_summary_result = $.Deferred();
+
 M.debug_log = function() {
   if(M.config['debug'] && window.console) {
     console.log.apply(console, arguments);
@@ -207,7 +209,7 @@ M.show_country_coverage = function(countries) {
   });
   M.country_coverage_layer.setVisibility(true);
   M.country_coverage_click_control.activate();
-}
+};
 
 M.create_map_search = function(options) {
   M.map_div = $('#' + options['map_div']);
@@ -228,10 +230,14 @@ M.create_map_search = function(options) {
   }
   M.countries_map.zoomToMaxExtent();
 
+  if(M.config['docs_summary_url']) {
+    $.getJSON(M.config['docs_summary_url']).done(M.docs_summary_result.resolve);
+  }
+
   M.load_features('countries.json', function(features_json) {
     var view = M.views["Country"];
     view.set_features(M.geojson_format.read(features_json));
-    view.update_document_counts(M.config['docs_and_countries']);
+    M.docs_summary_result.done(view.update_document_counts);
 
     // parse the JSON twice so we get different IDs for the features
     M.all_country_features = M.geojson_format.read(features_json);
@@ -241,7 +247,7 @@ M.create_map_search = function(options) {
   M.load_features('regions.json', function(features_json) {
     var view = M.views["Region"];
     view.set_features(M.geojson_format.read(features_json));
-    view.update_document_counts(M.config['docs_and_countries']);
+    M.docs_summary_result.done(view.update_document_counts);
   });
 };
 
