@@ -24,4 +24,11 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      for=".interfaces.IAoaPortal"
+      name="jsmap_docs_summary"
+      class=".jsmap.DocumentsSummary"
+      permission="zope2.View"
+      />
+
 </configure>
