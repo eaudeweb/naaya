@@ -68,7 +68,10 @@ class LDAPConnection(object):
         for dn, attr_dict in returned:
             ret[dn] = {}
             for attr, values in attr_dict.items():
-                ret[dn][attr] = [v.decode(self._encoding) for v in values]
+                try:
+                    ret[dn][attr] = [v.decode(self._encoding) for v in values]
+                except UnicodeDecodeError:
+                    log.exception('dn:%s attr:%s', dn, attr)
         return ret
 
 def get_ldap_connection(config):
