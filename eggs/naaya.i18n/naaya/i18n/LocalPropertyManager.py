@@ -100,16 +100,17 @@ class LocalPropertyManager(object):
     security.declareProtected('Manage properties', 'set_localproperty')
     def set_localproperty(self, id, type, lang=None, value=None):
         """
-        Adds a new local property:
-         * adds type and id to _local_properties_metadata
-         * adds value for lang only if lang is not None and value is not None
-
+        Adds a new local property. If both `lang` and `value` are supplied,
+        then the corresponding value is also set. Otherwise, the property
+        will behave like a blank string in usage.
         """
+        #  adds type and id to _local_properties_metadata
         if not self.hasLocalProperty(id):
             self._local_properties_metadata += ({'id': id, 'type': type},)
             if requires_localproperty(self, id):
                 setattr(self, id, LocalProperty(id))
 
+        # adds value for lang only if lang is not None and value is not None
         if lang is not None:
             self.set_localpropvalue(id, lang, value)
 

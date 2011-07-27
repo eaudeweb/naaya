@@ -17,6 +17,7 @@ except ImportError:
     from Globals import InitializeClass
 
 from constants import PERMISSION_TRANSLATE_PAGES
+from LanguageManagers import get_languages
 
 
 def message_encode(message):
@@ -80,8 +81,7 @@ class AdminI18n(Implicit):
         as it is stored in Message Catalog (no interpolation).
 
         """
-        return self.get_message_catalog().gettext(message, lang, '')
-
+        return self.catalog().gettext(message, lang, '')
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'get_messages')
     def get_messages(self, query, skey, rkey):
@@ -124,6 +124,17 @@ class AdminI18n(Implicit):
         if rkey: t.reverse()
         msgs = [val for (key, val) in t]
         return msgs
+
+    security.declarePublic('get_all_languages')
+    def get_all_languages(self):
+        """
+        Returns a list of mappings
+        [ {'code': 'lang-code', 'name': 'Language name'}, .. ]
+        containing all existent known language codes in naaya.i18n
+        as specified in languages.txt, in ISO639 format.
+
+        """
+        return get_languages()
 
     security.declarePublic('get_languages_mapping')
     def get_languages_mapping(self):

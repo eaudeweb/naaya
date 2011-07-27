@@ -15,6 +15,7 @@ from naaya.core.utils import force_to_unicode
 from naaya.i18n.portal_tool import NaayaI18n, manage_addNaayaI18n
 try:
     from Products.Localizer.LocalPropertyManager import LocalAttribute
+    from Products.Localizer.Localizer import Localizer
     from naaya.i18n.LocalPropertyManager import LocalAttribute as NewLocalAttribute
     from naaya.i18n.LocalPropertyManager import requires_localproperty
 except ImportError:
@@ -118,9 +119,12 @@ else:
             all_objects = itertools.chain([portal], ofs_walk(portal))
             for obj in all_objects:
                 # Part 0: if broken, report it
+                #         if other localizer in NySite child, skip it
                 if isinstance(obj, BrokenClass):
                     self.log.error(("Object %r is broken! Unable to fix local"
                                     " properties, if any ") % obj)
+                    continue
+                if isinstance(obj, Localizer) and obj != localizer:
                     continue
 
                 # Part 1: delete unnecessary LocalAttributes on instances
@@ -143,11 +147,8 @@ else:
                 _local_properties = getattr(obj, '_local_properties', None)
                 if _local_properties is not None:
                     for (property, trans) in _local_properties.items():
-                        try:
-                            if property not in obj._local_properties_metadata:
-                                obj.set_localproperty(property, 'string')
-                        except Exception, e:
-                            import pdb; pdb.set_trace()
+                        if property not in obj._local_properties_metadata:
+                            obj.set_localproperty(property, 'string')
                         for (lang, translation) in trans.items():
                             if lang is None or not translation:
                                 del trans[lang]
