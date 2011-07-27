@@ -19,7 +19,7 @@
 	<select name="lang">
 		<option tal:repeat="item portal_i18n/get_languages_mapping"
 			tal:attributes="value python:item['code']; selected python:item['code'] == lang"
-			tal:content="python:portal_i18n.get_translation_in_lang(item['name'], item['code'])" />
+			tal:content="python:admin_i18n.get_message_translation(item['name'], item['code'])" />
 	</select>
 	<input type="submit" value="Show"/>
 </form>

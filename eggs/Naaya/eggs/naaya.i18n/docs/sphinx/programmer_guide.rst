@@ -17,10 +17,6 @@ Common operations in Python logic
 'en'
 >>> portal_i18n.get_translation(u'Saved (${date})', date='19.07.2011 17:15')
 u'Saved (19.07.2011 17:15)'
->>> portal_i18n.get_translation_in_lang(u'Administration', 'de')
-u'Verwaltung'
->>> portal_i18n.get_message_translation(u'Inexistent ${var}', 'en', default='')
-u''
 
 Please read the specific of the three translation methods 
 in :doc:`api/portal_tool`.

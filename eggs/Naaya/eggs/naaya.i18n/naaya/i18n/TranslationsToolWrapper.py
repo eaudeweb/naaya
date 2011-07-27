@@ -30,9 +30,13 @@ class TranslationsToolWrapper(Implicit):
 
     security.declarePublic('gettext')
     @deprecate(("Portal Translations/gettext is deprecated, use "
-        "portal.getPortalI18n().get_message_translation(msg, lang, default)"))
+        "portal.getPortalI18n().get_translation(msg, **kwargs)"))
     def gettext(self, message, lang=None, add=1, default=None):
-        return self.portal_i18n.get_message_translation(message, lang, default)
+        if not lang:
+            lang = self.portal_i18n.get_selected_language()
+        message_catalog = self.portal_i18n.get_message_catalog()
+        return message_catalog.gettext(message, lang, default)
+
 
     security.declarePublic('__call__')
     def __call__(self, message, lang=None, add=1, default=None):
