@@ -134,17 +134,19 @@ div#results ul li {
 
 div#results ul li a,
 .ui-widget-content a {
-  font-size: 13px;
+  font-size: 12px;
+  line-height: 1.2;
   color: #44464B !important;
 }
 
 div#results ul li a:hover,
 .ui-widget-content a:hover {
   color: #000000 !important;
+  text-decoration: none;
 }
 
 div#results ul li:hover {
-  background: #F2F2F2;
+  background: #F9F9F9;
 }
 
 div#document-info {
@@ -159,27 +161,36 @@ div#document-info {
   margin-right: 20px;
 }
 
+.document .title {
+  font-weight: bold;
+  text-decoration: none;
+}
+
 .template-section {
   border-top: 1px solid #D3D3D3;
   clear: both;
   overflow: hidden;
-  padding: 10px 0;
-  font-size: 13px;
+  padding: 5px 0;
+  font-size: 11px;
+  line-height: 1.1;
+}
+
+.template-section:first-child {
+  border: none;
 }
 
 .template-subsection {
-  font-size: 12px;
-  color: #777777;
-  line-height: 1.3;
+  font-size: 11px;
+  color: #555555;
+  line-height: 1.2;
   overflow: hidden;
   clear: both;
 }
 
 .inline-block {
-  display: inline-block;
-  position: relative;
   float: left;
-  padding-bottom: 4px;
+  position: relative;
+  display: inline-block;
 }
 
 .label {
@@ -217,8 +228,9 @@ div.document-info {
 }
 
 div.country-info-box { /* translucent yellow */
-  background: rgb(230, 230, 90);
-  background: rgba(255, 255, 0, 0.6);
+  background: #F9F9F9;
+  background: #F9F9F9;
+  opacity: 0.9;
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99ffff00, endColorstr=#99ffff00);
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99ffff00, endColorstr=#99ffff00)";
 }
@@ -229,6 +241,6 @@ div.country-info-box {
   left: 0;
   right: 0;
   z-index: 1100;
-  font-size: 20pt;
-  padding: 3px;
+  font-size: 20px;
+  padding: 5px;
 }
