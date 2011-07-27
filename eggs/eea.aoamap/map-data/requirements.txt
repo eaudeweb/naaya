@@ -1,0 +1,5 @@
+gdal
+tilestache
+werkzeug
+modestmaps
+pil
