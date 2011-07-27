@@ -76,16 +76,27 @@ pick_regions = {
         ["Armenia", "Azerbaijan", "Georgia"],
 }
 
-def number_of_points(multi_polygon):
-    return sum(len(ring) for ring in multi_polygon)
+def number_of_points(polygon):
+    return sum(len(ring) for ring in polygon)
 
-def simplify_ring(ring):
-    for line in ring:
-        if len(line) < 50:
+def simplify_poly(poly):
+    new_poly = []
+    for idx, ring in enumerate(poly):
+        if len(ring) < 25:
+            tolerance = 0.01
+        elif len(ring) < 50:
             tolerance = 0.03
         else:
             tolerance = 0.12
-        line[:] = dp.simplify_points(line, tolerance)
+        new_ring = dp.simplify_points(ring, tolerance)
+        if len(new_ring) < 4:
+            if idx == 0:
+                return []
+
+        else:
+            new_poly.append(new_ring)
+
+    return new_poly
 
 def points_in_geometry(geometry):
     if geometry['type'] == 'Polygon':
@@ -98,13 +109,18 @@ def points_in_geometry(geometry):
 
 def simplify_geometry(geometry):
     if geometry['type'] == 'Polygon':
-        simplify_ring(geometry['coordinates'])
+        geometry['coordinates'] = simplify_poly(geometry['coordinates'])
+
     elif geometry['type'] == 'MultiPolygon':
+        geometry['coordinates'] = filter(None, (simplify_poly(p)
+                                    for p in geometry['coordinates']))
         geometry['coordinates'].sort(key=number_of_points, reverse=True)
-        for ring in geometry['coordinates']:
-            simplify_ring(ring)
+
     else:
         raise ValueError('Unknown geometry type %r' % geometry['type'])
+
+    if not geometry['coordinates']:
+        raise ValueError("polygon removed")
 
 def area(ring):
     return sum(ring[i][0] * ring[i+1][1] - ring[i+1][0] * ring[i][1]
@@ -296,8 +312,11 @@ def regions_main(args):
 def simplify_main(args):
     features = json.load(sys.stdin)['features']
     for f in features:
-        simplify_geometry(f['geometry'])
-    json.dump(geojson(features), sys.stdout, indent=2)
+        try:
+            simplify_geometry(f['geometry'])
+        except ValueError, e:
+            raise ValueError("%r %r", (e, f['properties']))
+    json.dump(geojson(features), sys.stdout)
 
 
 def parse_args():

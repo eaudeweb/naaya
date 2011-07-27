@@ -11,7 +11,7 @@
 
   <Style name="Labels">
     <Rule>
-      <TextSymbolizer name="name"
+      <TextSymbolizer name="[name]"
         face-name="DejaVu Sans Book" size="10" wrap-width="20"
         fill="black" halo-fill="#bdb" halo-radius="1"
         avoid-edges="true" />
