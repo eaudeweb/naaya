@@ -122,8 +122,14 @@ function show_search_result(results) {
   $('.loading-animation').hide();
   update_document_list(results['documents']);
   //update_polygon_numbers(results['documents']);
-  if($('#results').is(':visible') == false){
-    $("#results").show("slide", { direction: "left" }, 500);
+
+  var results = $('#results');
+  if(results.is(':visible')){
+    results.css({backgroundColor: '#ddd'});
+    results.animate({backgroundColor: '#fff'}, 500);
+  }
+  else {
+    results.show("slide", { direction: "left" }, 500);
   }
 }
 

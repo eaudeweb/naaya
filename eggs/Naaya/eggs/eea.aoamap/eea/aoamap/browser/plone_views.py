@@ -37,6 +37,11 @@ map_template = PageTemplateFile('map.pt', globals())
 class AoaMap(BrowserView):
 
     def get_map_html(self):
+        # TODO helpful error when AoA portal is down
+        aoa_data = urllib.urlopen(aoa_url + 'jsmap_search_map_config')
+        aoa_config = json.load(aoa_data)
+        aoa_data.close()
+
         map_config = {
             'tiles_url': tiles_url,
             'search_url': self.context.absolute_url() + '/aoa-map-search',

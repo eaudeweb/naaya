@@ -2,28 +2,23 @@ $(function() {
 
 var country_info_template = M.get_template($('div#country-info'));
 
-M.country_info_result = {};
-M.country_info = function(name) {
-  return setdefault(M.country_info_result, name, $.Deferred());
-};
+M.country_info = {};
 
-M.docs_summary_result.done(function(docs_summary) {
-  var country_info_map = {};
-  var short_name = {'Water': 'water', 'Green economy': 'green_economy'};
-  $.each(docs_summary, function() {
-    var doc = this;
-    $.each(doc['countries'], function() {
-      var info = setdefault(country_info_map, this, {});
-      $.each(doc['themes'], function() {
-        inc(info, 'documents_' + (short_name[this] || 'other'));
-      });
-      inc(info, 'documents_total')
+var country_info_map = {};
+var short_name = {'Water': 'water', 'Green economy': 'green_economy'};
+$.each(M.config['documents_summary'], function() {
+  var doc = this;
+  $.each(doc['countries'], function() {
+    var info = setdefault(country_info_map, this, {});
+    $.each(doc['themes'], function() {
+      inc(info, 'documents_' + (short_name[this] || 'other'));
     });
+    inc(info, 'documents_total');
   });
+});
 
-  $.each(country_info_map, function(name, info) {
-    M.country_info(name).resolve(info);
-  });
+$.each(country_info_map, function(name, info) {
+  M.country_info[name] = info;
 });
 
 $('div#filters').bind('map-selection-changed', function(evt) {
@@ -32,15 +27,14 @@ $('div#filters').bind('map-selection-changed', function(evt) {
   if(countries.length != 1) {
     return;
   }
-  var country_name = countries[0];
-  var country_info_box = $('<div class="country-info-box">').hide();
+  var name = countries[0];
+  var tmpl_data = {name: name, code: M.config['country_code'][name]};
+  $.extend(tmpl_data, M.country_info[name]);
+  var html = country_info_template.tmpl(tmpl_data);
+  var flag = $('<img>').attr('src', M.config['www_prefix'] + '/flags/' +
+                                    M.config['country_code'][name] + '.gif');
+  var country_info_box = $('<div class="country-info-box">').append(flag, html);
   $('.olMapViewport', M.map_div).append(country_info_box);
-
-  M.country_info(country_name).done(function(info) {
-    var tmpl_data = $.extend({name: country_name}, info);
-    var html = country_info_template.tmpl(tmpl_data);
-    country_info_box.append(html).show();
-  });
 });
 
 function setdefault(dic, name, value) {

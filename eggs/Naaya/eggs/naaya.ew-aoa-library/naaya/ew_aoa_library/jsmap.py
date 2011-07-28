@@ -1,3 +1,4 @@
+import os.path
 from time import time
 import logging
 import simplejson as json
@@ -11,6 +12,10 @@ from zope.publisher.browser import BrowserPage
 from devel import aoa_devel_hook
 
 log = logging.getLogger(__name__)
+
+
+country_code = json.load(open(os.path.join(os.path.dirname(__file__),
+                                           'country_code.json')))
 
 
 def catalog_filters_for_shadows(site):
@@ -101,11 +106,18 @@ def documents_summary(site):
     #print 'documents_summary:', time() - t0
 
 
-class DocumentsSummary(BrowserPage):
+def search_map_initial_data(site):
+    return {
+        'documents_summary': list(documents_summary(site)),
+        'country_code': country_code,
+    }
+
+
+class SearchMapInitial(BrowserPage):
     def __call__(self):
         aoa_devel_hook(__name__)
         aoa_devel_hook('naaya.ew_aoa_library.shadow')
-        return json.dumps(list(documents_summary(self.aq_parent.getSite())))
+        return json.dumps(search_map_initial_data(self.aq_parent.getSite()))
 
 
 def get_document_types(site):
