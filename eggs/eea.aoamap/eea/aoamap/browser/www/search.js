@@ -190,14 +190,12 @@ function update_document_list(documents) {
       var list_offset = $('ul.search-results').offset()['top'];
 
       var offset = doc_li.offset()['top'];
-      console.log(offset);
       if(collapsing_doc.length > 0) {
         var collapsing_offset = collapsing_doc.offset()['top'];
         if(offset > collapsing_offset) {
           offset -= collapsing_doc.height();
         }
       }
-      console.log('list_offset', list_offset, 'offset', offset)
 
       doc_info.hide().slideDown(M.animation_speed);
       $('#results').scrollTo(offset - list_offset, M.animation_speed);
