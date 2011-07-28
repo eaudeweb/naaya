@@ -4,20 +4,21 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile \
                                              as z2_PageTemplateFile
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from naaya.ew_aoa_library.jsmap import get_document_types
+from naaya.ew_aoa_library.jsmap import search_map_initial_data
 from naaya.ew_aoa_library.jsmap import tiles_url
 
 
 def portlet_template_options(site):
     search_url = site.absolute_url() + '/jsmap_search_map_documents'
-    docs_summary_url = site.absolute_url() + '/jsmap_docs_summary'
+    aoa_config = search_map_initial_data(site)
 
     map_config = {
         'tiles_url': tiles_url,
         'search_url': search_url,
-        'docs_summary_url': docs_summary_url,
         'debug': True,
         'www_prefix': "++resource++eea.aoamap",
     }
+    map_config.update(aoa_config)
 
     return {
         'map_config': json.dumps(map_config),
