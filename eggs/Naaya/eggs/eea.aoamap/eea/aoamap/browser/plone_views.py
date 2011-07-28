@@ -1,8 +1,11 @@
 import simplejson as json
 import urllib
+import logging
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+
+log = logging.getLogger(__name__)
 
 document_types = [
     u'Country profiles',
@@ -38,9 +41,13 @@ class AoaMap(BrowserView):
 
     def get_map_html(self):
         # TODO helpful error when AoA portal is down
-        aoa_data = urllib.urlopen(aoa_url + 'jsmap_search_map_config')
-        aoa_config = json.load(aoa_data)
-        aoa_data.close()
+        try:
+            aoa_data = urllib.urlopen(aoa_url + 'jsmap_search_map_config')
+            aoa_config = json.load(aoa_data)
+            aoa_data.close()
+        except:
+            log.exception("Could not load configuration for AoA search map")
+            return "Error loading configuration for AoA search map"
 
         map_config = {
             'tiles_url': tiles_url,
@@ -48,6 +55,7 @@ class AoaMap(BrowserView):
             'debug': True,
             'www_prefix': "++resource++eea.aoamap",
         }
+        map_config.update(aoa_config)
 
         options = {
             'map_config': json.dumps(map_config),
