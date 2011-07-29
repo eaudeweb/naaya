@@ -434,9 +434,8 @@ class NyContentData(NyProperties):
     def _change_schema_properties(self, _lang=None, **kwargs):
         """
         Change specific properties of this object
-
-        Note: this method should only be called by process_submitted_form of NyContentType
         """
+        #TODO This method should be formalised as an API method
         if _lang is None:
             _lang = self.gl_get_selected_language()
         schema = self._get_schema()
