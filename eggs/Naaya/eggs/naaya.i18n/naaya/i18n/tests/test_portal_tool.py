@@ -53,7 +53,7 @@ class TestNySiteApi(NaayaTestCase):
 
     def test_get_languages(self):
         self.assertEqual(self.portal.gl_get_languages(),
-                         ('de', DEFAULT_PORTAL_LANGUAGE_CODE))
+                         (DEFAULT_PORTAL_LANGUAGE_CODE, 'de'))
 
     def test_get_languages_mapping(self):
         self.portal.gl_change_site_defaultlang(DEFAULT_PORTAL_LANGUAGE_CODE)
@@ -104,8 +104,9 @@ class TestNySiteApi(NaayaTestCase):
 
     def test_add_site_language(self):
         self.portal.gl_add_site_language('fr')
+        self.portal.gl_add_site_language('ar')
         self.assertEqual(self.portal.gl_get_languages(),
-                         ('de', DEFAULT_PORTAL_LANGUAGE_CODE, 'fr'))
+                         (DEFAULT_PORTAL_LANGUAGE_CODE, 'ar', 'de', 'fr'))
 
     def test_del_site_languages(self):
         self.portal.gl_add_site_language('fr')

@@ -34,7 +34,7 @@
 	<legend  tal:content="python:language['name']" />
 	<form method="post" tal:attributes="action string:${portal_i18n_url}/admin_editmessage;
 					    name python:'translate_' + language['code']">
-		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:admin_i18n.get_message_translation(message, language['code'])" /></div>
+		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:admin_i18n.get_message_translation(message, language['code'], '')" /></div>
 		<input type="hidden" name="message:utf8:ustring" tal:attributes="value message" />
 		<input type="hidden" name="language" tal:attributes="value python:language['code']">
 		<input type="hidden" name="start" tal:attributes="value start" />
