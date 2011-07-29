@@ -30,4 +30,9 @@ class TestOrderFolder(NaayaTestCase):
         self.assertEqual(self.portal.folder1.objectIds(),
                 order_seq + ['folder11'])
 
+    def test_extra_id(self):
+        """ An ID that is not inside the folder """
 
+        order_seq = ['folder13', 'asdf']
+        folderutils.sort_folder(self.portal.folder1, order_seq)
+        self.assertEqual(['folder13', 'folder12', 'folder11'])
