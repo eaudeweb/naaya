@@ -75,13 +75,13 @@ class AdminI18n(Implicit):
         return quote(message_encode(message))
 
     security.declarePublic('get_message_translation')
-    def get_message_translation(self, message, lang):
+    def get_message_translation(self, message, lang, default=None):
         """
         Returns the translation of the given message in the given language,
         as it is stored in Message Catalog (no interpolation).
 
         """
-        return self.catalog().gettext(message, lang, '')
+        return self.catalog.gettext(message, lang, default)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'get_messages')
     def get_messages(self, query, skey, rkey):

@@ -97,6 +97,8 @@ class NyPortalLanguageManager(Persistent):
             lang_name = get_iso639_name(lang_code)
         if lang_code not in self.getAvailableLanguages():
             self.portal_languages.append((lang_code, lang_name))
+            # call set_default_language to reorder them alphabetically
+            self.set_default_language(self.get_default_language())
 
     def delAvailableLanguage(self, lang):
         """
@@ -116,7 +118,8 @@ class NyPortalLanguageManager(Persistent):
     def set_default_language(self, lang):
         """
         Sets default language in language manager. Default language
-        is mainly used in negotiation.
+        is mainly used in negotiation. Also rearranges langs order: first
+        is default, the rest are sorted alphabetically.
 
         """
         lang = normalize_code(lang)
@@ -127,6 +130,10 @@ class NyPortalLanguageManager(Persistent):
             return
         pos = available.index(lang)
         new_default = self.portal_languages.pop(pos)
+        # PersistentList can not sort by key
+        to_sort = list(self.portal_languages)
+        to_sort.sort(key=lambda x: x[0])
+        self.portal_languages = PersistentList(to_sort)
         self.portal_languages.insert(0, new_default)
 
     def get_default_language(self):
