@@ -114,6 +114,7 @@ def search_map_initial_data(site):
                          get_countries_mapping(cf_survey).iteritems())
 
     return {
+        'document_types': get_document_types(site),
         'documents_summary': list(documents_summary(site)),
         'country_code': country_code,
         'country_index': country_index,
