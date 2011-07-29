@@ -17,9 +17,14 @@ Common operations in Python logic
 'en'
 >>> portal_i18n.get_translation(u'Saved (${date})', date='19.07.2011 17:15')
 u'Saved (19.07.2011 17:15)'
+>>> portal_i18n.get_default_language()
+'nl'
+>>> portal_i18n.get_language_name('nl')
+'Dutch'
+>>> portal_i18n.get_languages_mapping()
+[{'code': 'nl', 'name': 'Dutch'}, {'code': 'en', 'name': 'English'}]
 
-Please read the specific of the three translation methods 
-in :doc:`api/portal_tool`.
+Please read the complete available interface in :doc:`api/portal_tool`.
 
 Translation in templates
 -------------------------
