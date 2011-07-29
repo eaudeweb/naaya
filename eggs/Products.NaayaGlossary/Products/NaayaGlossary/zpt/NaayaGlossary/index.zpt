@@ -24,8 +24,6 @@
 <style type="text/css">
 	.management_div {
 		width: 50%;
-		float: right;
-		border: 1px solid black;
 	}
 
 	#glossary_mapping {
@@ -83,15 +81,27 @@
 					selected_item python:here.getGlossaryChild(request.get('item', ''));
 					insert_after  python:here.getGlossaryChild(request.get('insert', ''))">
 	<p>
-		<a class="button" href="javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
-		<a class="button" href="javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
+		<a class="button expand-tree" i18n:translate="">Expand all</a>
+		<a class="button collapse-tree" i18n:translate="">Collapse all</a>
 	</p>
 	<tal:block tal:define="expand python:request.get('expand', '');
 				tree python:here.getStructMap(here.splitToList(expand), None, 1);
 				expand python:here.getSiteMapTrail(expand, tree);
-				expand_list python:here.splitToList(expand);">
+                expand_list python:here.splitToList(expand);">
+    <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/jstree/jquery.tree.min.js"></script>
+    <!-- Set some constants for the jstree init -->
+    <script type="text/javascript"
+        tal:define="tree_get_url tree_get_url|string:;
+        can_edit_str python:str(bool(can_edit)).lower()"
+            tal:content="string:
+            var TREE_GET_URL = '${here/absolute_url}/get_json_tree/';
+            var CAN_EDIT = ${can_edit_str};">
+    </script>
+    <script type="text/javascript" src="misc_/NaayaGlossary/tree.js"></script>
+    <div id="jstree_container" class="tree glossary_tree"><!-- tree container --></div>
 
-
+    <noscript>
+    <p i18n:translate="" style="color: green">You need to have JavaScript enabled for easy navigation and/or editing.</p>
 	<form id="glossary_mapping" name="frmGlossMap" method="get" action="">
 		<table>
 			<tr tal:repeat="tree_node tree">
@@ -143,17 +153,20 @@
 				</td>
 			</tr>
 		</table>
-		<tal:block condition="can_edit">
-			<br />
-			<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))">Add Glossary Folder</a>
-		</tal:block>
 		<input type="hidden" name="expand" tal:attributes="value expand" />
 		<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
 		<input type="hidden" name="lang" tal:attributes="value selected_lang" />
 		<input type="hidden" name="item" />
 	</form>
-
+    </noscript>
+    <tal:block condition="can_edit">
+    <div style="clear: both;">
+            <br />
+			<a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))" i18n:translate="">Add Glossary Folder</a>
+            <a class="button" id="save_order" tal:attributes="href string:${here/absolute_url}/save_order" i18n:translate="">Save order</a>
+    </div>
 	</tal:block>
+    </tal:block>
 
     <tal:block tal:condition="can_edit">
     <div class="management_div" tal:condition="selected_item">

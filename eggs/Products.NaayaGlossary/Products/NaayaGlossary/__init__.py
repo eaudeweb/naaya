@@ -64,5 +64,7 @@ misc_ = {
     'related_ico.gif':      ImageFile('www/related_ico.gif', globals()),
     'plus.gif':             ImageFile('www/plus.gif', globals()),
     'minus.gif':            ImageFile('www/minus.gif', globals()),
-    'square.gif':           ImageFile('www/square.gif', globals())
+    'square.gif':           ImageFile('www/square.gif', globals()),
+    # Javascripts
+    'tree.js':              ImageFile('www/tree.js', globals()),
 }
