@@ -45,8 +45,3 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         
         brains = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya GeoPoint'])
         self.assertEqual(len(brains), 0)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    return suite

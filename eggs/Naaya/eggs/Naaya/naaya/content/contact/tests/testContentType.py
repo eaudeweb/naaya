@@ -52,8 +52,3 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=[self.doc_meta_type,])
         
         self.assertEqual(meta, [])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    return suite

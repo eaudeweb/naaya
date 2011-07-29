@@ -39,8 +39,3 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEquals(script.text, 'var test;')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(GoogleDataToolFunctionalTestCase))
-    return suite

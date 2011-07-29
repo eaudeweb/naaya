@@ -179,8 +179,3 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_extfile[0].string == 'My file')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyExFileFunctionalTestCase))
-    return suite

@@ -157,8 +157,3 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_url[0].string == 'My url')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyURLFunctionalTestCase))
-    return suite

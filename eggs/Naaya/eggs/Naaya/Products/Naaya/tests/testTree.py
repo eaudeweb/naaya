@@ -70,10 +70,3 @@ class TestTree(NaayaTestCase):
                 ]},
                 {'ob': myfol.f2, 'has_children': False},
             ]})
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestTree))
-    return suite
-

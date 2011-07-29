@@ -35,8 +35,3 @@ class SkelTestCase(NaayaTestCase):
             for permission in role.permissions:
                 self.assertNotEqual(permission.name, None)
                 self.assertNotEqual(permission.name, '')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(SkelTestCase))
-    return suite

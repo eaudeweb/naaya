@@ -194,9 +194,3 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'ver_geopoint_version')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyGeoPointFunctionalTestCase))
-    suite.addTest(makeSuite(NyGeoPointVersioningFunctionalTestCase))
-    return suite

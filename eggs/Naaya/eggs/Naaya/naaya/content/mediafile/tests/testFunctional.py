@@ -183,8 +183,3 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_mediafile[0].string == 'My media file')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyMediaFileFunctionalTestCase))
-    return suite

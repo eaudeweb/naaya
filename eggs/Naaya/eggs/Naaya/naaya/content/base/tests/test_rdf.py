@@ -78,8 +78,3 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
         self.assertAccessDenied(False)
         self.assertTrue(rdf_fragment in self.browser.get_html())
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(RdfFunctionalTest))
-    return suite

@@ -32,8 +32,3 @@ class EmailTestCase(FunctionalTestCase):
         self.failUnlessEqual(len(to), 2)
         self.failUnless('test_to_1@example.com' in to)
         self.failUnless('test_to_2@example.com' in to)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(EmailTestCase))
-    return suite

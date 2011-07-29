@@ -58,9 +58,3 @@ class RoleTest(NaayaFunctionalTestCase):
 
         (p._Naaya___Add_Naaya_URL_objects_Permission,
          p._Naaya___Edit_content_Permission) = orig_perm
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(RoleTest))
-    return suite

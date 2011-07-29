@@ -280,8 +280,3 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.failUnless(objects[0].geo_location.lat == Decimal('23.3'))
         self.failUnless(objects[0].geo_location.lon == Decimal('29.0'))
         self.failUnless(objects[0].geo_location.address == 'Testing file')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(GeoFilterTestCase))
-    return suite

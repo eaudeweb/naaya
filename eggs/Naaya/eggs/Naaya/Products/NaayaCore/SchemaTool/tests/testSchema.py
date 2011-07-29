@@ -288,10 +288,3 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = True
         self.portal.info.contact.discussion = 0
         transaction.commit()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(SchemaUnitTestCase))
-    suite.addTest(makeSuite(SchemaTestCase))
-    suite.addTest(makeSuite(SchemaFunctionalTestCase))
-    return suite

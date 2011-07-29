@@ -148,16 +148,3 @@ class NyZipImport(NaayaTestCase):
         self.assertEqual(expected_sender, mail[2])
         self.assertEqual(expected_subject, mail[3])
         EmailTool.divert_mail(False)
-
-def test_suite():
-    try:
-        import naaya.content.bfile
-    except ImportError:
-        skip = True
-    else:
-        skip = False
-
-    suite = TestSuite()
-    if not skip:
-        suite.addTest(makeSuite(NyZipImport))
-    return suite

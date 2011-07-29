@@ -104,9 +104,3 @@ class SlugifyTestCase(ZopeTestCase.TestCase):
         u'\u0640\u0636\u0636\u0637\u0640\u0637\u0640\u0637\u0637\u0638\u0640\u0638\u0640'
         u'\u0638\u0638'),
         'aabbbbttttththththjjjjhhhhkhkhkhkhdddhdhrrzzssssshshshshssssddddttttzzzz'.lower())
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(make_id_TestCase))
-    suite.addTest(makeSuite(SlugifyTestCase))
-    return suite

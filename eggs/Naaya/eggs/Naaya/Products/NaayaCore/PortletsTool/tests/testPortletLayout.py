@@ -316,10 +316,3 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
 
         self.browser.go('http://localhost/portal/fol')
         self.failIf('Test Portlet 2' in self.browser.get_html())
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(PortletArrangementUnitTestCase))
-    suite.addTest(makeSuite(PortletArrangementTestCase))
-    suite.addTest(makeSuite(PortletAdminFunctionalTestCase))
-    return suite

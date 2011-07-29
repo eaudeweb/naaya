@@ -115,9 +115,3 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/info/administration_users_html', 'admin')
         self.assert_page_ok('/portal/info/administration_logo_html', 'admin')
         self.assert_page_ok('/portal/info/administration_basket_html', 'admin')
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(PageLoadTests))
-    return suite

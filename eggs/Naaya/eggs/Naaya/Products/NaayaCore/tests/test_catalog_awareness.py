@@ -57,9 +57,3 @@ class CatalogAwarenessTest(NaayaTestCase):
 
         myfol.manage_delObjects(['ob'])
         self.assertEqual(len(self.search(NyURL.meta_type)), 0)
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(CatalogAwarenessTest))
-    return suite

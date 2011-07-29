@@ -109,8 +109,3 @@ class LdapGroupRolesTest(NaayaTestCase):
 
         fol1.acl_satellite.remove_group_roles('group1', ['B'])
         self.assertEqual(fol1.__ny_ldap_group_roles__, {})
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(LdapGroupRolesTest))
-    return suite

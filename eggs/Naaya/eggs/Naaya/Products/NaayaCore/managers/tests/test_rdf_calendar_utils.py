@@ -30,8 +30,3 @@ class TestCase(NaayaFunctionalTestCase):
                 break
         self.assertEqual(item['startdate'],
                     self.portal.info.event1.releasedate.strftime(date_format))
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestCase))
-    return suite

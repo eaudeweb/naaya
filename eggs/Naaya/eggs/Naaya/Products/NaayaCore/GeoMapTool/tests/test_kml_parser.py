@@ -47,8 +47,3 @@ class KMLParserTestCase(ZopeTestCase.TestCase):
             index = parsed_data.index(location)
             for key in location.keys():
                 self.failUnlessEqual(location[key], expected_data[index][key])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(KMLParserTestCase))
-    return suite

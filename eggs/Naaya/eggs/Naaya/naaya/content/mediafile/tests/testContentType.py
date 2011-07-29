@@ -81,8 +81,3 @@ class NaayaContentTestCase(FunctionalTestCase):
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])
         self.assertEqual(meta, [])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    return suite

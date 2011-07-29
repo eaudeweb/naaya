@@ -113,9 +113,3 @@ class EmailSenderTestCase(TestCase):
         self.assertEqual(len(os.listdir(self.TMP_FOLDER)), 0)
         self.assertEqual(len(os.listdir(self.SEND_ERROR_FOLDER)), len(esender.error_content))
         self.assertEqual(len(os.listdir(self.SEND_FOLDER)), 0)
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(EmailSenderTestCase))
-    return suite

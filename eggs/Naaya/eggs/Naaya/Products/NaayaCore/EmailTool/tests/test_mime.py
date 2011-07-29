@@ -43,8 +43,3 @@ class MimeTest(unittest.TestCase):
                 'e@edw.ro, f@edw.ro, g@edw.ro,\n'
                 '\th@edw.ro, i@edw.ro, j@edw.ro, '
                 'k@edw.ro, l@edw.ro, m@edw.ro\n' in output)
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(MimeTest))
-    return suite

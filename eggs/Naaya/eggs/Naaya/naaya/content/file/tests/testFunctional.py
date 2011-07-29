@@ -171,8 +171,3 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_file[0].string == 'My file')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyFileFunctionalTestCase))
-    return suite

@@ -122,8 +122,3 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
             'my_int': 13,
         }
         self.assertEqual(dict(obj.dump_data()), ref_data)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyContentTypeTestCase))
-    return suite
