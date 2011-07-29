@@ -34,8 +34,19 @@ $('div#filters').bind('map-selection-changed', function(evt) {
   var flag = $('<img>').attr('src', M.config['www_prefix'] + '/flags/' +
                                     M.config['country_code'][name] + '.gif');
   var country_info_box = $('<div class="country-info-box">').append(flag, html);
+  $('a.link-water-fiche', country_info_box).attr('href',
+      country_fiche_url(name, "Water"));
+  $('a.link-green-economy-fiche', country_info_box).attr('href',
+      country_fiche_url(name, "Green Economy"));
   $('.olMapViewport', M.map_div).append(country_info_box);
+
 });
+
+function country_fiche_url(country_name, theme_name) {
+  return M.config['country_fiche_prefix'] + '?country%3Aint=' +
+      M.config['country_index'][country_name] + '&theme=' +
+      encodeURIComponent(theme_name);
+}
 
 function setdefault(dic, name, value) {
   if(dic[name] == null) {

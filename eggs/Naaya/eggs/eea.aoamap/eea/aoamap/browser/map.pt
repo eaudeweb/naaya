@@ -159,8 +159,8 @@
     <div class="template">
       <span>
         ${name}: ${documents_total} assessments
-        (${documents_green_economy} green economy,
-        ${documents_water} water)
+        (<a class="link-green-economy-fiche">${documents_green_economy} green
+        economy</a>, <a class="link-water-fiche">${documents_water} water</a>)
       </span>
     </div>
   </div>
