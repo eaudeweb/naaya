@@ -1,5 +1,5 @@
 import os
-from os.path import join, isfile
+from os.path import join
 from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
@@ -9,8 +9,7 @@ import urllib
 
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher.HTTPRequest import record
 from App.ImageFile import ImageFile
