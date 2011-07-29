@@ -7,30 +7,6 @@ from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 
 log = logging.getLogger(__name__)
 
-document_types = [
-    u'Country profiles',
-    u'Environmental compendium',
-    u'Environmental indicator set \u2013 National',
-    u'Environmental indicator set \u2013 Regional',
-    u'Environmental indicator set \u2013 Sub-national',
-    u'Environmental statistics',
-    u'Library services',
-    u'National Institution dealing with green economy',
-    u'National Institution dealing with water',
-    u'Section in environmental performance review',
-    u'Sectorial report',
-    u'State of green economy assessment/report \u2013 National level',
-    u'State of green economy assessment/report \u2013 Regional/Global level',
-    u'State of green economy assessment/report \u2013 Sub-national level',
-    u'State of water assessment/report \u2013 National level',
-    u'State of water assessment/report \u2013 Regional/Global level',
-    u'State of water assessment/report \u2013 Sub-national level',
-    u'Water indicator set',
-    u'Water sector or NGOs report',
-    u'Water statistics',
-    u'Website',
-]
-
 tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
 
@@ -38,20 +14,30 @@ aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
 map_template = PageTemplateFile('map.pt', globals())
 
 class AoaMap(BrowserView):
+    """
+    The "AoA map search" page.
+    """
+
+    def _get_aoa_config(self):
+        aoa_data = urllib.urlopen(aoa_url + 'jsmap_search_map_config')
+        aoa_config = json.load(aoa_data)
+        aoa_data.close()
+        return aoa_config
+
+    def _get_search_url(self):
+        return self.context.absolute_url() + '/aoa-map-search'
 
     def get_map_html(self):
-        # TODO helpful error when AoA portal is down
         try:
-            aoa_data = urllib.urlopen(aoa_url + 'jsmap_search_map_config')
-            aoa_config = json.load(aoa_data)
-            aoa_data.close()
+            aoa_config = self._get_aoa_config()
         except:
             log.exception("Could not load configuration for AoA search map")
             return "Error loading configuration for AoA search map"
 
         map_config = {
             'tiles_url': tiles_url,
-            'search_url': self.context.absolute_url() + '/aoa-map-search',
+            'search_url': self._get_search_url(),
+            'country_fiche_prefix': aoa_url + '/viewer_aggregator/',
             'debug': True,
             'www_prefix': "++resource++eea.aoamap",
         }
@@ -61,7 +47,7 @@ class AoaMap(BrowserView):
             'map_config': json.dumps(map_config),
             'filter_options': {
                 'themes': [u"Water", u"Green economy"],
-                'document_types': document_types,
+                'document_types': map_config['document_types'],
             },
         }
 
@@ -69,6 +55,9 @@ class AoaMap(BrowserView):
 
 
 class AoaMapSearch(BrowserView):
+    """
+    Proxy search requests to the AoA portal.
+    """
 
     def __call__(self):
         search_url = (aoa_url + 'jsmap_search_map_documents?' +
