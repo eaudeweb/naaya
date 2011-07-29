@@ -34,6 +34,7 @@ from Products.NaayaGlossary.parsers.import_parsers import glossary_export
 from Products.NaayaCore.managers.utils import genObjectId
 from naaya.core.zope2util import ofs_walk, ofs_path
 from naaya.core.utils import download_to_temp_file
+from naaya.core.folderutils import sort_folder
 from interfaces import INyGlossaryItem, IItemTranslationChanged
 
 log = logging.getLogger('Products.NaayaGlossary')
@@ -737,6 +738,75 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         elements_list = ','.join([x.title or x.id for x in elements]).split(',')
         json_element_list = json.dumps(elements_list)
         return json_element_list
+
+    def get_json_tree(self, REQUEST):
+        """ Return a json tree for glossary """
+        tree_data = {
+            "attributes": {
+                "id": self.getId(),
+                "rel": "root",
+            },
+            "data": {
+                'title': self.title_or_id(),
+            },
+            "children": []
+        }
+        for folder_ob in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
+            folder_data = {
+                'attributes': {
+                    'id': folder_ob.getId(),
+                    'rel': "tree",
+                },
+                'data': {
+                    'title': folder_ob.title_or_id(),
+                    'icon': "misc_/NaayaGlossary/folder.gif",
+                    'attributes': {
+                        'href': folder_ob.absolute_url(),
+                    }
+                },
+                'children': []
+            }
+            for element_ob in folder_ob.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
+                folder_data['children'].append({
+                    'attributes': {
+                        'id': element_ob.getId(),
+                        'rel': 'node',
+                    },
+                    'data': {
+                        'title': element_ob.title_or_id(),
+                        'icon': "misc_/NaayaGlossary/element.gif",
+                        'attributes': {
+                            'href': element_ob.absolute_url(),
+                        }
+                    },
+                   'children': []
+                })
+            tree_data['children'].append(folder_data)
+
+        REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
+        return json.dumps(tree_data)
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'save_order')
+    def save_order(self, REQUEST):
+        """ Save the new order of the tree and return a json reponse """
+        try:
+            tree_data = json.loads(REQUEST.form.get('data'))
+            assert (tree_data['attributes']['id'] == self.getId(),
+                    "This is not the same glossary")
+            folder_ids = []
+            for folder in tree_data['children']:
+                folder_id = folder['attributes']['id']
+                folder_ids.append(folder_id)
+                folder_ob = self._getOb(folder_id)
+
+                element_ids = []
+                for element in folder.get('children', []):
+                    element_ids.append(element['attributes']['id'])
+                sort_folder(folder_ob, element_ids)
+            sort_folder(self, folder_ids)
+        except Exception, e:
+            return 'ERROR: %s' % e
+        return 'OK'
 
     def xliff_import(self, file, add_themes_from_folders='', REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
