@@ -186,9 +186,3 @@ class NyStoryVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'ver_story_version')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyStoryFunctionalTestCase))
-    suite.addTest(makeSuite(NyStoryVersioningFunctionalTestCase))
-    return suite

@@ -350,9 +350,3 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
         self.assertTrue(group_info[1]['user_granting_roles'] == 'admin')
 
         self.browser_do_logout()
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestNyRoleManager))
-    return suite

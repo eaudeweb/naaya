@@ -204,9 +204,3 @@ class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'ver_event_version')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyEventFunctionalTestCase))
-    suite.addTest(makeSuite(NyEventVersioningFunctionalTestCase))
-    return suite

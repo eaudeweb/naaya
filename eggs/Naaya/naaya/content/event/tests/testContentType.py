@@ -60,8 +60,3 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self._portal().info.event1.change_topitem_status()
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Event'], topitem=1)
         self.assertEqual(meta, [])
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    return suite

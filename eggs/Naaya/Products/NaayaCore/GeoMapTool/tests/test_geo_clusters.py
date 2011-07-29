@@ -107,8 +107,3 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     def test_margin(self):
         assert (get_discretized_limits(-90., 90., -180., 180., 10)
                 == get_discretized_limits(-89., 89., -179., 179., 10))
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(GeoClustersTestCase))
-    return suite

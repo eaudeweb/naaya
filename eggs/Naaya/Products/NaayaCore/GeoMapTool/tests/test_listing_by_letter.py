@@ -118,9 +118,3 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
         self.assertEqual(all_num_rows - 2, t_num_rows)
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(ListingByLetterTest))
-    return suite
-

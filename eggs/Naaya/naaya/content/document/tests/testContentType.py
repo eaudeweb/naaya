@@ -188,9 +188,3 @@ class NaayaContentTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
         doc.aq_parent.manage_delObjects([doc.id])
         transaction.commit()
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaContentTestCase))
-    return suite

@@ -73,8 +73,3 @@ class RefTreeFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertEqual(self.tree.node1.weight, 1)
         
         self.assertRaises(ValueError, self.tree.move, self.tree.node2, 'node9')
-        
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(RefTreeFunctionalTestCase))
-    return suite

@@ -71,9 +71,3 @@ def restore_default_glossary_ids(portal):
     for schema in portal['portal_schemas'].objectValues():
         schema['keywords-property'].glossary_id = 'keywords'
         schema['coverage-property'].glossary_id = 'coverage'
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyAdminTestCase))
-    suite.addTest(makeSuite(NyAdminBrowserTestCase))
-    return suite

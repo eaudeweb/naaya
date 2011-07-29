@@ -270,10 +270,3 @@ class NyAccess2LevelTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
         self.assertEqual(saved_mapping, self.testfolder.ny_access.getPermissionMapping())
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyAccessTestCase))
-    suite.addTest(makeSuite(NyAccess2LevelTestCase))
-    return suite
-

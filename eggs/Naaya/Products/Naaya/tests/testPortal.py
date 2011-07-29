@@ -22,9 +22,3 @@ class NaayaTests(NaayaTestCase.NaayaTestCase):
         new_server = 'newMailServer'
         self._portal().getEmailTool().manageSettings(mail_server_name=new_server)
         self.assertEqual(self._portal().mail_server_name, new_server)
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaTests))
-    return suite

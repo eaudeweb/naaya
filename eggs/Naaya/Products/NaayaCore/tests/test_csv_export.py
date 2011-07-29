@@ -101,10 +101,3 @@ class GeopointExportTest(NaayaTestCase):
         self.assertEqual(len(csv_lines), 2) # header line and one object
         csv_data = dict(zip(*(line.split(',') for line in csv_lines)))
         self.assertEqual(csv_data['Geo Type'], 'Test symbol one')
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyCSVExportTest))
-    suite.addTest(makeSuite(GeopointExportTest))
-    return suite

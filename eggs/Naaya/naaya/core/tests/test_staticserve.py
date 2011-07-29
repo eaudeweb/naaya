@@ -26,9 +26,3 @@ class StaticServeFromFolderTest(NaayaFunctionalTestCase):
         server_data = self.browser.get_html()
 
         self.assertEqual(read_data, server_data)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(StaticServeFromFolderTest))
-    return suite
-

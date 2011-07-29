@@ -80,8 +80,3 @@ class NaayaTemplateTestCase(NaayaTestCase.NaayaTestCase):
         forms_tool.my_tmpl.pt_edit(text=text, content_type='text/html')
         output = self.my_tmpl.__of__(self.portal)()
         self.assertTrue(output.find("Bugs Bunny")>-1)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaTemplateTestCase))
-    return suite

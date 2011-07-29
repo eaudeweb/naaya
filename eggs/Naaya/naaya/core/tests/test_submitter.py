@@ -84,8 +84,3 @@ class SubmitterInfoTest(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue("Submitter name is mandatory" in html)
         self.assertTrue("Submitter email is mandatory" in html)
-
-def test_suite():
-    return unittest.TestSuite([
-        unittest.makeSuite(SubmitterInfoTest),
-    ])

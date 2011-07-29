@@ -25,9 +25,3 @@ class NaayaSchemaToolTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnless('Naaya Document' in schemas.keys())
         self.failUnless(schemas['Naaya Document'].absolute_url()
             == self.portal.portal_schemas.NyDocument.absolute_url())
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NaayaSchemaToolTestCase))
-    return suite

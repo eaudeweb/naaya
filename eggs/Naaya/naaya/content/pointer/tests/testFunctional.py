@@ -154,8 +154,3 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
         self.assertTrue(links_to_pointer[0].string == 'My pointer')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyPointerFunctionalTestCase))
-    return suite

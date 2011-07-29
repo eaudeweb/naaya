@@ -67,8 +67,3 @@ class CaptureFunctionalTest(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
         del NyDocument.capturetestthingie__roles__
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(CaptureFunctionalTest))
-    return suite

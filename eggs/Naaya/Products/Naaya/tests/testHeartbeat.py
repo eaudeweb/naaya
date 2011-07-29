@@ -27,9 +27,3 @@ class TestHeartbeat(NaayaFunctionalTestCase):
         self.assertEqual(events, 1)
         self.browser.go('http://localhost/portal/heartbeat')
         self.assertEqual(events, 1)
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestHeartbeat))
-    return suite
-

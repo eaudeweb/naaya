@@ -185,9 +185,3 @@ class NyDocumentVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnlessEqual(form['title:utf8:ustring'], 'ver_doc_version')
 
         self.browser_do_logout()
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(NyDocumentFunctionalTestCase))
-    suite.addTest(makeSuite(NyDocumentVersioningFunctionalTestCase))
-    return suite

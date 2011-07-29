@@ -31,8 +31,3 @@ class make_id_TestCase(NaayaFunctionalTestCase):
             wb = xlrd.open_workbook(file_contents=excel)
             ws = wb.sheets()[0]
             self.assertEqual(ws.cell(1,0).value, 'The News')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(make_id_TestCase))
-    return suite

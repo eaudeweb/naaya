@@ -85,10 +85,3 @@ class WidgetFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         self.browser.creds.add_password('Zope2', 'http://localhost/', 'admin', '')
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(WidgetTestCase))
-    suite.addTest(makeSuite(WidgetDefaultDefinitionTestCase))
-    suite.addTest(makeSuite(WidgetFunctionalTestCase))
-    return suite

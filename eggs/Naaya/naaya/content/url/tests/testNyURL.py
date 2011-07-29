@@ -225,9 +225,3 @@ class TestNyURL(NaayaTestCase):
         self.assertEqual(url.releasedate.day(), 2, "Release day does not match")
         self.assertEqual(url.releasedate.month(), 2, "Release month does not match")
         self.assertEqual(url.releasedate.year(), 2003, "Release year does not match")
-
-
-def test_suite():
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestNyURL))
-    return suite
