@@ -10,11 +10,13 @@ from naaya.ew_aoa_library.jsmap import tiles_url
 
 def portlet_template_options(site):
     search_url = site.absolute_url() + '/jsmap_search_map_documents'
+    country_fiche_prefix = site.absolute_url() + '/viewer_aggregator/'
     aoa_config = search_map_initial_data(site)
 
     map_config = {
         'tiles_url': tiles_url,
         'search_url': search_url,
+        'country_fiche_prefix': country_fiche_prefix,
         'debug': True,
         'www_prefix': "++resource++eea.aoamap",
     }

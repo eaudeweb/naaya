@@ -107,9 +107,16 @@ def documents_summary(site):
 
 
 def search_map_initial_data(site):
+    from shadow import get_countries_mapping
+    cf_viewer = site['country-fiches-viewer']
+    cf_survey = cf_viewer.target_survey()
+    country_index = dict((v,k) for k, v in
+                         get_countries_mapping(cf_survey).iteritems())
+
     return {
         'documents_summary': list(documents_summary(site)),
         'country_code': country_code,
+        'country_index': country_index,
     }
 
 
