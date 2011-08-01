@@ -58,8 +58,8 @@
                 Filter results
             </h2>
 
-            <tal:block define="results python: view.aggregate_vl_cf_viewers(selected_country, selected_theme);
-                               heading_mapping view/get_survey_for_headings;">
+            <tal:block define="results options/results;
+                               heading_mapping options/heading_mapping;">
                 <p class="message help warning" i18n:translate="" tal:condition="not:results">
                     <span i18n:name="icon">
                         <img tal:attributes="src string:${skin_files_path}/info.png" alt="Help" title="Help" i18n:attributes="alt; title" />

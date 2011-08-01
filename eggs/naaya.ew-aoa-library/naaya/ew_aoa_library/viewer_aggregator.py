@@ -1,10 +1,22 @@
-from Products.Five.browser import BrowserView
+from zope.publisher.browser import BrowserPage
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-class viewer_aggregator(BrowserView):
+viewer_zpt = PageTemplateFile('zpt/view_ag_index.zpt', globals())
+
+class viewer_aggregator(BrowserPage):
 
     def __init__(self, context, request):
         self.context = context
         self.request = request
+
+    def __call__(self, country=None, theme=None):
+        ctx = self.context.aq_inner # because self subclasses from Explicit
+        if country is not None:
+            results = self.aggregate_vl_cf_viewers(country, theme)
+        else:
+            results = []
+        heading_mapping  = self.get_survey_for_headings()
+        return viewer_zpt.__of__(ctx)(results=results, heading_mapping=heading_mapping)
 
     def aggregate_vl_cf_viewers(self, country, theme):
         cf_v = self.context['country-fiches-viewer']
