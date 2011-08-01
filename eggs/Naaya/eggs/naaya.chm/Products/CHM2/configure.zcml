@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'
-           xmlns:naaya="http://namespaces.zope.org/naaya">
+           xmlns:naaya="http://namespaces.zope.org/naaya"
+           xmlns:browser="http://namespaces.zope.org/browser">
 
   <subscriber
     handler=".CHMSite.handle_content_type_installed"
@@ -12,6 +13,27 @@
 
   <naaya:call
     factory=".rstk_utils.patch_rstk"
+    />
+
+  <browser:page
+    for="Products.Naaya.interfaces.INyFolder"
+    name="bulk_chm_terms_html"
+    class=".bulk_chm_terms_edit.bulk_chm_terms_html"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    for="Products.Naaya.interfaces.INyFolder"
+    name="bulk_chm_terms_save"
+    class=".bulk_chm_terms_edit.bulk_chm_terms_save"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    for="Products.Naaya.interfaces.INyFolder"
+    name="bulk_chm_terms_delete"
+    class=".bulk_chm_terms_edit.bulk_chm_terms_delete"
+    permission="zope2.ViewManagementScreens"
     />
 
 </configure>
