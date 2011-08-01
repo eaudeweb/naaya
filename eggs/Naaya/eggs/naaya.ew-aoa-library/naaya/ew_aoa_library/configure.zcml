@@ -35,8 +35,7 @@
       for=".interfaces.IAoaPortal"
       name="viewer_aggregator"
       class=".viewer_aggregator.viewer_aggregator"
-      template="zpt/view_ag_index.zpt"
-      permission="zope2.ViewManagementScreens"
+      permission="zope2.View"
       />
 
 </configure>
