@@ -21,7 +21,7 @@ setup(name='naaya.semide',
         'Products.NaayaProfilesTool',
         'naaya.photoarchive',
         'edw-ZOpenArchives',
-        'reportlab == 1.20-edw',
+        'edw-reportlab',
         'pyfribidi == 0.6.0',
         'python-memcached',
     ]
