@@ -32,8 +32,8 @@ import re
 
 # First a little helper, since I don't like to repeat things. (Tismer speaking)
 import string
-def replace(where, what, with):
-    return string.join(string.split(where, what), with)
+def replace(where, what, with_what):
+    return string.join(string.split(where, what), with_what)
 
 # This list of keywords is taken from ref/node13.html of the
 # Python 1.3 HTML documentation. ("access" is intentionally omitted.)
