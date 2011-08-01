@@ -71,6 +71,7 @@
 		<form id="site_admin_versioncontrol" title="Portal administration - version control"/>
 		<form id="site_external_search" title="Portal external search"/>
 		<form id="site_feedback" title="Portal feedback"/>
+		<form id="site_googleanalytics" title="Google Analytics script"/>
 		<form id="site_googletranslate" title="Portal Google Translate widget"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="site_login" title="Portal login"/>
