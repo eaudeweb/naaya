@@ -6,41 +6,42 @@ permission_data = {
     'Naaya - Add comments for content': {
         'title': "Submit comments",
         'description': """
-            Submit comments for Naaya content objects. The comment button
+            Submit comments for Naaya content items. The comment button
             appears at the bottom of an object's index page.
         """,
     },
     'Naaya - Copy content': {
         'title': "Copy objects",
         'description': """
-            Copy content objects from one folder to another.
+            Copy content items from one folder to another.
         """,
     },
     'Naaya - Delete content': {
         'title': "Delete objects",
         'description': """
-            Remove content objects from a folder. If the "Owner" role has this
-            permission, then contributors will be able to remove their own
-            content.
+            Remove content from a folder. If the "Owner" role has
+            this permission, then contributors will be able to remove
+            their own content.
         """,
     },
     'Naaya - Edit content': {
         'title': "Edit objects",
         'description': """
-            Edit any content object.
+            Edit and translate the content items.
         """,
     },
     'Naaya - Manage comments for content': {
         'title': "Manage comments",
         'description': """
-            Edit and remove comments submitted for content objects.
+            Edit and remove comments submitted for content items.
         """,
     },
     'Naaya - Publish content': {
         'title': "Administration",
         'description': """
-            Change a portal's configuration, add/remove users, grant and
-            revoke roles, etc.
+            Change the portal's configurations, manage all content,
+            manage users and roles and all the settings
+            from the Administration area
         """,
     },
     'Naaya - Skip Captcha': {
@@ -65,20 +66,20 @@ permission_data = {
     'Naaya - Validate content': {
         'title': "Validate objects",
         'description': """
-            Approve/unapprove content objects.
+            Validate content items.
         """,
     },
     PERMISSION_ADD_FOLDER: {
         'title': "Submit Folder objects",
         'description': """
-            Create new content objects of type NyFolder.
+            Create new content items of type NyFolder.
         """,
     },
     PERMISSION_SKIP_APPROVAL: {
         'title': "Skip the approval process",
         'description': """
-            Newly created objects will be automatically approved without going
-            through the validation workflow.
+            Newly created objects will be automatically approved
+            without going through the review/approval workflow.
         """,
     },
     'View': {

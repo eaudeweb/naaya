@@ -2283,7 +2283,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             else:
                 meta_label = meta_type
             title = "Submit %s objects" % meta_label
-            description = "Create content objects of type \"%s\"" % meta_type
+            description = "Create new content items of type \"%s\"" % meta_type
             permission_map[zope_perm] = {
                 'title': title,
                 'description': description,
