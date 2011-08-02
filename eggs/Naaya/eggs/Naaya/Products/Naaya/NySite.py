@@ -340,14 +340,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             authenticationtool_ob = self.getAuthenticationTool()
             notificationtool_ob = self.getNotificationTool()
 
-            #load security permissions and roles
-            if skel_handler.root.security is not None:
-                for role in skel_handler.root.security.roles:
-                    if role.name not in self.__ac_roles__:
-                        authenticationtool_ob.addRole(role.name)
-                    for permission in role.permissions:
-                        permission_add_role(self, permission.name, role.name)
-
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
@@ -362,6 +354,15 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                         self.manage_uninstall_pluggableitem(meta_type=meta_type)
                     else:
                         self.manage_install_pluggableitem(meta_type=meta_type)
+
+            #load security permissions and roles
+            if skel_handler.root.security is not None:
+                for role in skel_handler.root.security.roles:
+                    if role.name not in self.__ac_roles__:
+                        authenticationtool_ob.addRole(role.name)
+                    for permission in role.permissions:
+                        permission_add_role(self, permission.name, role.name)
+
             #load properties
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
