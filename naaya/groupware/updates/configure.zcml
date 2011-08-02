@@ -1,0 +1,14 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="naaya">
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility
+      name="owner_permissions.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_owner_permissions.UpdateOwnerPermissions"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
+
+</configure>

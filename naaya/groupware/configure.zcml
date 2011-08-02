@@ -8,4 +8,6 @@
           name="local_users_html"
           class=".ui.LocalUsersPage"
           permission="zope2.ViewManagementScreens"/>
+
+    <include package=".updates" />
 </configure>
