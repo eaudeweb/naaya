@@ -161,6 +161,7 @@ class GlossaryWidget(StringWidget):
             kids = sorted(kids, key=lambda ob: ob.getId())
             children = [recursive_tree(kid) for kid in kids if kid.approved]
 
+            translation_missing = ''
             if ob is glossary:
                 translation = None
                 title = ob.title_or_id()
@@ -176,13 +177,12 @@ class GlossaryWidget(StringWidget):
                     if not title:
                         title = ob.title_or_id()
 
-                    title += (' <span class="glossary-translation-missing">(' +
+                    translation_missing = (' <span class="glossary-translation-missing">(' +
                               language_name + ' translation missing)</span>')
                 definition = ob.get_def_trans_by_language(language_name)
 
-            if ob.meta_type == NAAYAGLOSSARY_FOLDER_METATYPE:
-                if not glossary.parent_anchors:
-                    translation = None
+            insertable = (ob.meta_type != NAAYAGLOSSARY_FOLDER_METATYPE
+                or glossary.parent_anchors)
 
             tree_item = {
                 'attributes': {
@@ -190,7 +190,7 @@ class GlossaryWidget(StringWidget):
                     'type': icons_map.get(ob.meta_type),
                 },
                 'data': {
-                    'title': title,
+                    'title': title + translation_missing,
                     'icon': icon_url,
                 },
                 'children': children,
@@ -198,10 +198,11 @@ class GlossaryWidget(StringWidget):
 
             if ob is glossary:
                 tree_item['state'] = 'open'
-
-            if translation is not None:
-                tree_item['attributes']['glossary-translation'] = translation
-                tree_item['attributes']['rel'] = 'insertable'
+            else:
+                tree_item['attributes']['glossary-translation'] = (
+                    translation or title)
+                if insertable:
+                    tree_item['attributes']['rel'] = 'insertable'
 
             return tree_item
 
