@@ -101,7 +101,23 @@
 		</role>
 
 		<role name="Owner">
+			<permission name="View" />
+			<permission name="Naaya - Copy content" />
 			<permission name="Naaya - Delete content" />
+			<permission name="Naaya - Edit content" />
+			<permission name="Add/Edit/Delete Naaya Forum Topic" />
+			<permission name="Edit/Delete Forum Message" />
+			<permission name="Add Naaya Forum Message" />
+			<permission name="Naaya - Add Naaya Event objects" />
+			<permission name="Naaya - Add Naaya Blob File objects" />
+			<permission name="Naaya - Add Naaya Folder objects" />
+			<permission name="Naaya - Add Naaya Document objects" />
+			<permission name="Naaya - Add Naaya Meeting objects" />
+			<permission name="Naaya - Add Naaya Media File objects" />
+			<permission name="Naaya - Add Naaya News objects" />
+			<permission name="Naaya - Add Naaya Photo" />
+			<permission name="Naaya - Add Naaya Pointer objects" />
+			<permission name="Naaya - Add Naaya URL objects" />
 		</role>
 
 	</security>
