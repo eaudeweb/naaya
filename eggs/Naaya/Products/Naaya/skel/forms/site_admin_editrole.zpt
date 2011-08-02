@@ -16,6 +16,21 @@
     role options/role;
     has_permission python:lambda zp: options['zope_perm_for_role'][zp];">
     <div class="cleaner">&nbsp;</div>
+
+    <div class="right-floated-tip">
+        <div i18n:translate="">Tips</div>
+        <ul>
+            <li i18n:translate="">The <a tal:attributes="href string:${here/absolute_url}/admin_editrole_html?role=Anonymous" i18n:name="Anonymous">Anonymous</a>
+                role is a special role assigned automatically when the user is not logged in.
+                When users are logged in they are considered to also have the Anonymous role, regardless of other roles.</li>
+            <li i18n:translate="">The <a tal:attributes="href string:${here/absolute_url}/admin_editrole_html?role=Authenticated" i18n:name="Authenticated">Authenticated</a>
+                role is assigned automatically to users whom have provided valid authentication credentials.
+                When users are logged in they are considered to also have the Authenticated role, regardless of other roles.</li>
+            <li i18n:translate="">The <a tal:attributes="href string:${here/absolute_url}/admin_editrole_html?role=Owner" i18n:name="Owner">Owner</a>
+                role is assigned automatically to users in the context of items (e.g. folders, files, news items) they create.</li>
+        </ul>
+    </div>
+
     <form method="post" name="editRole"
         tal:attributes="action string:${here/absolute_url}/admin_editrole">
         <input type="hidden" name="role" tal:attributes="value role" />
