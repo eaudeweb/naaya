@@ -59,6 +59,20 @@ visits on a certain range of time, top pages visited, top searches in the
 portal, top referrers; the interval between which the portal statistics
 should be shown is set here, as well as the default account.
 
+The statistics feature 3 tabs:
+
+* Statistics - view statistics
+* Settings - here you can grant access to your account and select websites
+* Script and verification
+
+`Script and verification` page features the ability to configure your website
+property ID (or UA-number) used by Google Analytics script and the ability
+to easily include a meta-verification tag in your pages.
+Your website property ID can be found in your Analytics homepage,
+above each website record, as you can see in the following image:
+
+.. image:: ../_static/images/screenshots/get_analytics_id.jpg
+
 Portal layout
 +++++++++++++++++
 
