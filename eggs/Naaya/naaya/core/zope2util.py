@@ -200,17 +200,20 @@ class RestrictedToolkit(SimpleItem):
             # TODO add other fields as needed
         }
 
-    def google_analytics(self, ga_code):
+    def google_analytics(self, ga_id=''):
         """
         Renders Google Analytics form template using the provided
-        `ga_code` site ID.
+        `ga_id` Analytics Website property ID (UA-number).
 
         """
+        if ga_id == '':
+            # No website ID provided; e.g. not configured in portal_statistics
+            return ''
         site = self.getSite()
         forms_tool = site.getFormsTool()
         ga_form = forms_tool.getForm("site_googleanalytics")
 
-        return ga_form.__of__(site)(ga_code=ga_code)
+        return ga_form.__of__(site)(ga_id=ga_id)
 
 InitializeClass(RestrictedToolkit)
 

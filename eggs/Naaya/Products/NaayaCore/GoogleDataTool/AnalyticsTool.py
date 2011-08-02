@@ -53,8 +53,8 @@ class AnalyticsTool(SimpleItem, utils):
         self.account = None
         self.date_interval = 30
         self.start_date = ''
-        self.ga_verify = '' #Google Analytics verification code
-        self.gw_verify = '' #Google Webmaster verification meta tag
+        self.ga_id = '' # Google Analytics web property ID (UA-number)
+        self.gw_verify = '' # Google Webmaster verification meta tag
         self.clear_cache()
 
     #cache
@@ -103,7 +103,7 @@ class AnalyticsTool(SimpleItem, utils):
     def admin_verify(self, REQUEST):
         """ Administration page for Google verification codes """
         if REQUEST.has_key('save'):
-            self.ga_verify = REQUEST.get('ga_verify', '')
+            self.ga_id = REQUEST.get('ga_id', '')
             self.gw_verify = REQUEST.get('gw_verify', '')
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         return self._admin_verify(REQUEST)
