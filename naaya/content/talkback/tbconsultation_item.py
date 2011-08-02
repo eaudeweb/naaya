@@ -614,6 +614,8 @@ def register_permissions():
     register_naaya_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION,
                               'TalkBack Consultation - submit review')
     register_naaya_permission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
-                              'TalkBack Consultation - invite participants')
+                              'TalkBack Consultation - invite participants',
+                              '''Invite people with no user on this portal
+                                 to comment on TalkBack Consultations''')
     register_naaya_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'TalkBack Consultation - manage')
