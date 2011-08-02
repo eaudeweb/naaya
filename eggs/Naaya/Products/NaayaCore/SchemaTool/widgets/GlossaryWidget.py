@@ -44,6 +44,12 @@ class GlossaryWidget(StringWidget):
             'mode': 'w',
             'type': 'string',
         },
+        {
+            'id':'default',
+            'mode':'w',
+            'type': 'string',
+            'label': 'Default value'
+        },
     )
 
     glossary_id = None

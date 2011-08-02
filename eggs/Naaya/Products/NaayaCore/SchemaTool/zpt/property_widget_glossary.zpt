@@ -1,13 +1,15 @@
 <tal:block define="
+    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+    trans_tool python: here.getSite().getPortalTranslations();
     field_class python:' '.join(['field', 'glossary-widget-mode-%s' % here.display_mode,]);
     schema_tool here/getSchemaTool;
-    value options/value|nothing;
+    default_val python:trans_tool.gettext(getattr(here, 'default', ''), curr_lang);
+    value python:test(options['value'].strip() != '', options['value'], default_val);
     errors options/errors;
     prop_id here/prop_name;
-    curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
     glossary python:here.get_glossary();
     glossary_elements glossary/get_all_element_titles|nothing
-">
+    ">
 <metal:block use-macro="here/widget_macro/macros/widget">
     <metal:block fill-slot="scripts">
         <script tal:content="string:
