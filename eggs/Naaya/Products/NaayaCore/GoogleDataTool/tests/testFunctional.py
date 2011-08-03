@@ -14,13 +14,13 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/portal_statistics/admin_verify')
         self.assertTrue('<h1>Portal statistics</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmVerify')
-        expected_controls = set(['ga_verify', 'gw_verify'])
+        expected_controls = set(['ga_id', 'gw_verify'])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
-        self.browser.clicked(form, self.browser.get_form_field(form, 'ga_verify'))
-        form['ga_verify'] = '<script type="text/javascript">var test;</script>'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'ga_id'))
+        form['ga_id'] = 'UA-12345-67'
         form['gw_verify'] = '<meta name="google-site-verification" content="test-code" />'
 
         self.browser.submit()
@@ -36,6 +36,6 @@ class GoogleDataToolFunctionalTestCase(NaayaFunctionalTestCase):
 
         #check if the GoogleAnalytics javascript is corectly placed in the <head> section, before the closing </head> tag.
         script = head.findAll('script', attrs={'type':'text/javascript'})[-1]
-        self.assertEquals(script.text, 'var test;')
+        self.assertTrue(script.text.find('UA-12345-67') > -1)
 
         self.browser_do_logout()
