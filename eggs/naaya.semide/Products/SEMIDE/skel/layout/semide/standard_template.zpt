@@ -60,6 +60,7 @@
 			</tal:block>
         </metal:block>
         <metal:block define-slot="head"></metal:block>
+        <tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />
 	</head>
 <metal:block define-slot="standard-body">
 <body>
@@ -228,14 +229,6 @@
     </div>
 </div>
 
-<!-- Google Analytics -->
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-_uacct = "UA-1033835-2";
-urchinTracker();
-</script>
-<!-- Google Analytics-END -->
 </body>
 </metal:block>
 </html>
