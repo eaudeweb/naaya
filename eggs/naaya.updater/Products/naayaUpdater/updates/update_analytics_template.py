@@ -12,6 +12,9 @@ class UpdateAnalyticsTemplate(UpdateScript):
                    'new analytics customizable form')
     creation_date = 'Aug 2, 2011'
 
+    # google is not very consistent with format, better be looser
+    id_pattern = re.compile(r'(UA-\d{4,10}-\d{1,3})')
+
     def get_uid(self, analytics_tool, std_tpl_tal):
         """
         Google Analytics ID can be found in two ways:
@@ -21,12 +24,10 @@ class UpdateAnalyticsTemplate(UpdateScript):
         and ga_id1 is search result in standard_template
 
         """
-        # google is not very consistent with format, better be looser
-        id_pat = re.compile(r'(UA-\d{4,10}-\d{1,3})')
         search_areas = (analytics_tool.ga_verify, std_tpl_tal)
         results = []
         for text in search_areas:
-            match = id_pat.search(text)
+            match = self.id_pattern.search(text)
             if match is not None:
                 results.append(match.group())
             else:
@@ -62,20 +63,44 @@ class UpdateAnalyticsTemplate(UpdateScript):
                         'portal statistics') % ga_id)
 
         if ga_id_std:
-            self.log.info('Manual action: remove analytics code from standard template')
+            self.log.info('MANUAL action: remove analytics code from standard template')
 
         old_code = '<tal:block replace="structure here/portal_statistics/ga_verify" />'
         new_code = '<tal:block replace="structure python:here.rstk.google_analytics(here.portal_statistics.ga_id)" />'
 
-        # delete old_code from std template customization
-        # new one is already in head and can not be overwritten by customization
+        # clean up any codes
         if std_tpl_tal.find(old_code) > -1:
             std_tpl_tal = std_tpl_tal.replace(old_code, '')
             self.log.debug("Old Analytics tal successfully removed from standard template")
-            std_template.write(std_tpl_tal)
         if std_tpl_tal.find(new_code) > -1:
             std_tpl_tal = std_tpl_tal.replace(new_code, '')
             self.log.debug("Redundant Analytics tal successfully removed from standard template")
-            std_template.write(std_tpl_tal)
 
-        return True
+        # special case - complete std template overwritten, need to place code
+        if std_tpl_tal.find('</head>') > -1:
+            # try to keep indentation
+            std_tpl_tal = re.sub(r'([ \t]*)</head>',
+                                 r'\1' + new_code + r'\n\1</head>', std_tpl_tal)
+
+        std_template.write(std_tpl_tal)
+
+        # check script appears once (or doesn't appear if id not configured)
+        frm = portal.getFormsTool().getForm('site_index')
+        try:
+            portal.REQUEST.PARENTS[0] = portal
+            html = frm.__of__(portal)()
+        except Exception, e:
+            self.log.debug("Can not test, can not render site_index")
+            return True
+        else:
+            found = self.id_pattern.findall(html)
+            expected = int(ga_id != '') + int(ga_id_std != '')
+            if len(found) == expected:
+                self.log.debug(("%d occurences (%r) of UA-numbers found in "
+                                "site_index, as EXPECTED") % (len(found), found))
+                return True
+            else:
+                self.log.error(("%d UNEXPECTED occurences(%r) of UA-numbers "
+                                "found in site_index, %d were expected")
+                               % (len(found), found, expected))
+                return False
