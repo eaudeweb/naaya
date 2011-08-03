@@ -12,7 +12,7 @@ the content.
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.AuthenticationTool.AuthenticationTool \
         import is_anonymous
-from Products.NaayaCore.managers.utils import is_valid_email
+from naaya.core.utils import is_valid_email
 
 def info_required(parent, request):
     """ What information do we require from this submitter?  """

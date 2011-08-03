@@ -25,7 +25,7 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.EmailTool.EmailPageTemplate import (
     manage_addEmailPageTemplate, EmailPageTemplateFile)
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.utils import is_valid_email
+from naaya.core.utils import is_valid_email
 
 from naaya.core.zope2util import path_in_site
 from naaya.core.zope2util import relative_object_path
