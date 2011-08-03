@@ -194,7 +194,6 @@
                         </div>
                     </div>
                 </metal:block>
-                <tal:block replace="structure here/portal_statistics/ga_verify" />
             </body>
         </metal:block>
     </metal:block>
