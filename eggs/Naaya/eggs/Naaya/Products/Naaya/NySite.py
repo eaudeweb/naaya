@@ -1934,8 +1934,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         if releasedate is None:
             releasedate_range = None
 
-        if not len(query.strip()):
+        # no query
+        if releasedate is None and not query.strip():
             return {'object_list': None, 'error': None}
+
+        if not query.strip():
+            query = None # because query_brains_ex expects None for no query
 
         #search in each language
         brains_list = []
@@ -1955,11 +1959,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         object_list = [k for k in object_list if k.can_be_seen()]
 
         # sort results
-        if skey in ['meta_type', 'title', 'bobobase_modification_time']:
-            if skey == 'bobobase_modification_time':
-                object_list = self.utSortObjsListByMethod(object_list, skey, rkey)
-            else:
-                object_list = self.utSortObjsListByAttr(object_list, skey, rkey)
+        if skey == 'bobobase_modification_time':
+            object_list = self.utSortObjsListByMethod(object_list, skey, rkey)
+        elif skey in ['meta_type', 'title']:
+            object_list = self.utSortObjsListByAttr(object_list, skey, rkey)
         return {'object_list': object_list, 'error': None}
 
     #paging stuff
