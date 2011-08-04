@@ -57,7 +57,6 @@ from Products.NaayaPhotoArchive.constants           import METATYPE_NYPHOTOGALLE
 from Products.NaayaThesaurus.NyThesaurus            import manage_addThesaurus
 from Products.NaayaThesaurus.constants              import NAAYATHESAURUS_METATYPE
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
-from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from Products.ZOpenArchives import (OAIServer, OAIAggregator,
                                     ZCatalogHarvester,OAIHarvester)
