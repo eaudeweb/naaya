@@ -247,22 +247,35 @@ class catalog_tool:
         else: l_filter['meta_type'] = self.searchable_content
         return self.__searchCatalog(l_filter)
 
-    def query_brains_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
+    def query_brains_ex(self, meta_type=None, q=None, lang=None, path=None,
+                              howmany=-1, **kwargs):
         l_results = []
+
         l_filter = {'submitted': 1} #only submitted items
-        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
-        else: l_filter['meta_type'] = self.searchable_content
-        if path is not None: l_filter['path'] = path
+
+        if meta_type:
+            l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else:
+            l_filter['meta_type'] = self.searchable_content
+
+        if path is not None:
+            l_filter['path'] = path
+
         for key, value in kwargs.items():
-            if value is not None: l_filter[key] = value
+            if value is not None:
+                l_filter[key] = value
+
         if q is not None:
             if lang is not None:
                 l_filter['objectkeywords_%s' % lang] = q
                 l_results.extend(self.__searchCatalog(l_filter))
                 l_filter.pop('objectkeywords_%s' % lang)
             l_filter['PrincipiaSearchSource'] = q
+
         l_results.extend(self.__searchCatalog(l_filter))
-        if howmany != -1: l_results = l_results[:howmany]
+
+        if howmany != -1:
+            l_results = l_results[:howmany]
         return l_results
 
     def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
