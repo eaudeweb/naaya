@@ -85,7 +85,7 @@ class UpdateAnalyticsTemplate(UpdateScript):
         std_template.write(std_tpl_tal)
 
         # check script appears once (or doesn't appear if id not configured)
-        frm = portal.getFormsTool().getForm('site_index')
+        frm = portal.getFormsTool().getForm('site_search')
         try:
             portal.REQUEST.PARENTS[0] = portal
             html = frm.__of__(portal)()
