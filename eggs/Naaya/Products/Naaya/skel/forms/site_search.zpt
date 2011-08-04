@@ -19,13 +19,13 @@
     langs here/gl_get_languages;
     languages python:here.utConvertToList(request.get('languages', [here.gl_get_selected_language()]));
     releasedate python:request.get('releasedate', None);
-    releasedate_range python:request.get('releasedate_range', None);
+    releasedate_range python:request.get('releasedate_range', 'min');
     meta_types_list python:[meta for meta in here.searchable_content if meta.replace(' ','_') in request.form.keys()];
     meta_types python:test(len(meta_types_list), meta_types_list, here.searchable_content);
     meta_types_str python:'&amp;'.join(['%s=on' % meta.replace(' ', '_') for meta in meta_types]);
     skey python:request.get('skey', 'title');
     rkey python:request.get('rkey', '');
-    querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), here.utNoneToEmpty(releasedate_range), meta_types_str);
+    querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), releasedate_range, meta_types_str);
     page python:int(request.get('page', 1));">
 <div class="searchQuery">
 <tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types, skey, rkey);
