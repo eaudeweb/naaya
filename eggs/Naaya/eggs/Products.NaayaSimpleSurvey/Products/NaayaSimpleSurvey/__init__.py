@@ -1,5 +1,5 @@
 #Zope imports
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 
 #Product imports
 import NySurvey
