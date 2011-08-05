@@ -9,6 +9,16 @@
              i18n:name="number"/>
     users matching your query.
 </p>
+
+<div class="buttons"
+    tal:define="base_url string:download?search_string=${search_string}&sort_by=${sorted_by}&reverse_sort=${reverse_sorted}">
+    <a tal:attributes="href string:${base_url}&file_type=CSV"
+        i18n:translate="">Download as CSV</a>
+    <a tal:condition="python:here.rstk.we_provide('Excel export')"
+        tal:attributes="href string:${base_url}&file_type=Excel"
+        i18n:translate="">Download as Excel</a>
+</div>
+
 <table class="datatable" style="min-width: 80%;">
     <col />
     <col />

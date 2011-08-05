@@ -36,17 +36,21 @@ class MemberSearch(Implicit, Item):
             }
         return ret
 
-    security.declareProtected(view, 'search_users')
-    def search_users(self, search_string=u'', sort_by='',
-            reverse_sort='False'):
-        """ """
+    def _search_users(self, search_string=u'', sort_by='', reverse_sort=False):
         search_string = search_string.lower()
-        reverse_sort = reverse_sort != 'False'
         local_users_list = self.search_local_users(search_string)
         external_users_list = self.search_external_users(search_string)
         user_list = local_users_list + external_users_list
         if sort_by:
             user_list.sort(key=itemgetter(sort_by), reverse=reverse_sort)
+        return user_list
+
+    security.declareProtected(view, 'search_users_html')
+    def search_users_html(self, search_string=u'', sort_by='',
+            reverse_sort='False'):
+        """ """
+        reverse_sort = reverse_sort != 'False'
+        user_list = self._search_users(search_string, sort_by, reverse_sort)
         return self.user_list_html(search_string=search_string,
                                    sorted_by=sort_by,
                                    reverse_sorted=reverse_sort,
@@ -199,6 +203,39 @@ class MemberSearch(Implicit, Item):
     def is_member(self):
         """ """
         return self.get_user_access() in ['member', 'admin']
+
+    security.declareProtected(view, 'download')
+    def download(self, RESPONSE, search_string=u'', sort_by='',
+            reverse_sort='False', file_type='CSV'):
+        """returns all the search results in a csv or excel file"""
+        reverse_sort = reverse_sort != 'False'
+        users = self._search_users(search_string, sort_by, reverse_sort)
+
+        if self.is_member():
+            header = ['Name', 'Organisation', 'Postal address', 'Email',
+                              'Access level', 'User ID']
+            rows = [[user['name'], user['organisation'], user['postal_address'],
+                     user['email'], user['access_level'], user['userid']]
+                    for user in users]
+        else:
+            header = ['Name', 'Organisation']
+            rows = [[user['name'], user['organisation']]
+                    for user in users]
+
+        exporter = self.getSite().csv_export
+        if file_type == 'CSV':
+            RESPONSE.setHeader('Content-Type', 'text/csv')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=%s.csv' % self.id)
+            return exporter.generate_csv(header, rows)
+        elif file_type == 'Excel' and self.rstk.we_provide('Excel export'):
+            RESPONSE.setHeader('Content-Type', 'application/vnd.ms-excel')
+            RESPONSE.setHeader('Content-Disposition',
+                               'attachment; filename=%s.xls' % self.id)
+            return exporter.generate_excel(header, rows)
+        else:
+            raise ValueError('unknown file format %r' % file_type)
+
 
     index_html = PageTemplateFile('zpt/member_search_index', globals())
     user_list_html = PageTemplateFile('zpt/member_search_list', globals())
