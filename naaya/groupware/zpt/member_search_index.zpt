@@ -23,7 +23,7 @@
 
     <div id="search_results">
         <tal:block condition="python:search_string is not None"
-            tal:content="structure python:here.search_users(search_string,
+            tal:content="structure python:here.search_users_html(search_string,
                                                             sort_by,
                                                             reverse_sort)"/>
     </div>
@@ -42,7 +42,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search_form').ajaxForm({
-                url: 'search_users',
+                url: 'search_users_html',
                 beforeSubmit: beforeSubmit,
                 success: processResponse,
                 error: searchError
@@ -93,7 +93,7 @@
                     url_params = url_params+'&'+reverse_param;
                 }
                 $.ajax({
-                    url: 'search_users' + url_params,
+                    url: 'search_users_html' + url_params,
                     success: processResponse,
                     error: searchError
                 });
