@@ -2,7 +2,6 @@ import os
 import re
 from StringIO import StringIO
 import urllib
-import pickle
 
 import transaction
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -27,6 +26,7 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         transaction.commit()
 
     def test_add(self):
+        """ """
         self.browser_do_login('contributor', 'contributor')
         lang_map = self.portal.gl_get_languages()
 
@@ -86,6 +86,7 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.browser_do_logout()
 
     def test_add_error(self):
+        """ """
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/localizedbfile_add_html')
 
@@ -99,6 +100,7 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.failUnless('Value required for "Title"' in html)
 
     def test_edit(self):
+        """ """
         self.browser_do_login('admin', '')
         lang_map = self.portal.gl_get_languages()
 
@@ -114,7 +116,6 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
 
             if(lang == 'en'):
                 self.failUnlessEqual(form['title:utf8:ustring'], 'My localized file')
-#            if (lang == 'fr')
 
             form['title:utf8:ustring'] = 'New Title - %(language)s' %{'language':lang}
             TEST_FILE_DATA_2 = 'some new data for my file'
@@ -142,22 +143,24 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.browser_do_logout()
 
     def test_edit_remove_versions(self):
+        """ """
         self.browser_do_login('admin', '')
 
+        _lang = 'en'
         for c in range(4):
-            f = self.make_file('afile', 'text/plain', 'some data')
-            lang = 'en'
-            self.portal.myfolder['mylocalizedbfile']._save_file(f, lang)
+            f = self.make_file('afile%(lang)s' %{'lang':c+1}, 'text/plain', 'some data for file%(file)s'
+                    %{'file':c+1})
+            self.portal.myfolder['mylocalizedbfile']._save_file(f, _lang)
 
         transaction.commit()
 
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile')
         html = self.browser.get_html()
 
-        self.assertTrue('download/1/afile' in html)
-        self.assertTrue('download/2/afile' in html)
-        self.assertTrue('download/3/afile' in html)
-        self.assertTrue('download/4/afile' in html)
+        self.assertTrue('download/1/afile1' in html)
+        self.assertTrue('download/2/afile2' in html)
+        self.assertTrue('download/3/afile3' in html)
+        self.assertTrue('download/4/afile4' in html)
 
         self.browser.go('http://localhost/portal/fr/myfolder/mylocalizedbfile')
         html = self.browser.get_html()
@@ -165,28 +168,37 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
 
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
         form = self.browser.get_form('frmEdit')
-        form['versions_to_remove:list'] = ['2', '4']
+        form['versions_to_remove:list'] = ['2']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+        
+        self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['versions_to_remove:list'] = ['3']
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
         mylocalizedbfile = self.portal.myfolder['mylocalizedbfile']
-        _lang = 'en'
+
         self.assertEqual(mylocalizedbfile._versions[_lang][0].removed, False)
         self.assertEqual(mylocalizedbfile._versions[_lang][1].removed, True)
-        self.assertEqual(mylocalizedbfile._versions[_lang][1].removed_by, 'admin')
         self.assertEqual(mylocalizedbfile._versions[_lang][2].removed, False)
-        self.assertEqual(mylocalizedbfile._versions[_lang][3].removed_by, 'admin')
+        self.assertEqual(mylocalizedbfile._versions[_lang][3].removed, True)
 
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile')
         html = self.browser.get_html()
-        self.assertTrue('download/1/afile' in html)
-        self.assertTrue('download/2/afile' not in html)
-        self.assertTrue('download/3/afile' in html)
-        self.assertTrue('download/4/afile' not in html)
+       
+        self.assertTrue('download/1/afile1' in html)
+        self.assertTrue('download/2/afile3' in html)
+        self.assertTrue('download/3/afile2' not in html)
+        self.assertTrue('download/3/afile3' not in html)
+        self.assertTrue('download/4/afile3' not in html)
+        self.assertTrue('download/4/afile4' not in html)
 
         self.browser_do_logout()
 
     def test_edit_error(self):
+        """ """
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile/edit_html')
 
@@ -202,6 +214,7 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         self.browser_do_logout()
 
     def test_utf8_filenames(self):
+        """ """
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/localizedbfile_add_html')
         form = self.browser.get_form('frmAdd')
@@ -246,6 +259,48 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
         #View the file
         self.browser.go('http://localhost/portal/myfolder/test/download/1/test.txt?action=view')
         self.assertEqual(file_contents, self.browser.get_html())
+
+    def test_exceptions(self):
+        """Different Exceptions"""
+
+        file_contents = 'simple contents'
+        uploaded_file = StringIO(file_contents)
+        uploaded_file.filename = 'test.txt'
+        uploaded_file.headers = {'content-type': 'text/plain; charset=utf-8'}
+
+        addNyLocalizedBFile(self.portal.myfolder, submitted=1,
+                   contributor='contributor', id='test', title="test",
+                   uploaded_file=uploaded_file, approved=True)
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/myfolder/test/download/0/test.txt?action=view')
+        self.failUnless('An error was encountered' in self.browser.get_html())
+        self.failUnless('NotFound' in self.browser.get_html())
+
+        self.browser.go('http://localhost/portal/de/myfolder/test/download/1/test.txt?action=view')
+        self.failUnless('An error was encountered' in self.browser.get_html())
+        self.failUnless('NotFound' in self.browser.get_html())
+
+        self.browser.go('http://localhost/portal/fr/myfolder/test/download/1/test.txt?action=view')
+        self.failUnless('An error was encountered' in self.browser.get_html())
+        self.failUnless('NotFound' in self.browser.get_html())
+
+    def test_random_action(self):
+        """Radom action"""
+
+        file_contents = 'simple contents'
+        uploaded_file = StringIO(file_contents)
+        uploaded_file.filename = 'test.txt'
+        uploaded_file.headers = {'content-type': 'text/plain; charset=utf-8'}
+
+        addNyLocalizedBFile(self.portal.myfolder, submitted=1,
+                   contributor='contributor', id='test', title="test",
+                   uploaded_file=uploaded_file, approved=True)
+        transaction.commit()
+    
+        self.browser.go('http://localhost/portal/de/myfolder/test/download/1/test.txt?action=shop')
+        self.failUnless('An error was encountered' in self.browser.get_html())
+        self.failUnless('NotFound' in self.browser.get_html())
 
     def test_direct_download(self):
         """ In folder listing we should have a download link that allows users

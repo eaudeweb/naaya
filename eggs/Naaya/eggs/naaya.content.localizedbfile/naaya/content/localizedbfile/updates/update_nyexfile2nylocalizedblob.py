@@ -8,7 +8,7 @@ from StringIO import StringIO
 from zope.annotation import IAnnotations
 
 #Naaya imports -- to be changed
-from naaya.content.bfile import bfile_item
+from naaya.content.localizedbfile import localizedbfile_item
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 #
 # Export / Import
@@ -23,7 +23,7 @@ class Export(object):
 
     """
 
-    logger = logging.getLogger('nyexfile2nyblob.update')
+    logger = logging.getLogger('nyexfile2nylocalizedblob.update')
 
     def __init__(self, context, data):
         self.context = context
@@ -39,6 +39,7 @@ class Export(object):
                              self.data.get('id', 'ERROR'), len(languages),
                              languages)
         for language in languages:
+            yield language
             nyfile = self.data.pop(language, None)
             if not nyfile:
                 continue
@@ -111,23 +112,25 @@ class Export(object):
 
 class Import(object):
     """
-    Imports Naaya Extended File as a Naaya Blob File
+    Imports Naaya Extended File as a Naaya Localized Blob File
 
     Required arguments:
-    context -- Naaya Blob File instance
+    context -- Naaya Localized Blob File instance
     data -- Export instance
 
     """
 
-    logger = logging.getLogger('nyexfile2nyblob.update')
+    logger = logging.getLogger('nyexfile2nylocalizedblob.update')
 
-    def __init__(self, context, data):
+    def __init__(self,context, data):
         self.context = context
         if getattr(data, 'logger', None):
             self.logger = data.logger
-        self.versions = data.versions
-        self.properties = data.properties
+
         self.local_properties = data.local_properties
+        self.versions = data.versions 
+
+        self.properties = data.properties
         self.annotations = data.annotations
         self.finish = data.data
 
@@ -138,8 +141,15 @@ class Import(object):
         value -- Iterator over NyExFile versions
 
         """
+        language = None
         for version in value:
-            self.context._save_file(version)
+            if version.__class__ is str:
+                language = version
+            elif version.__class__ is  StringIO:
+                self.context._save_file(version, language)
+            else:
+                raise ValueError
+
     versions = property(None, versions)
 
     def properties(self, value):
@@ -183,10 +193,10 @@ class Import(object):
 
         """
         # XXX These should stay in annotations
-        self.context.approved = value.pop('approved')
+#        self.context.approved = value.pop('approved')
         self.context.approved_by = value.pop('approved_by')
         self.context.submitted = value.pop('submitted')
-        self.context.discussion = value.pop('discussion', 0)
+#        self.context.discussion = value.pop('discussion', 0)
 
         # XXX Comments
         comments = value.pop('_NyComments__comments_collection', {})
@@ -265,16 +275,16 @@ class Import(object):
 #
 class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
     """ Update example script  """
-    title = 'Update Naaya Extended Files to Naaya Blob Files'
+    title = 'Update Naaya Extended Files to Naaya Localized Blob Files'
     creation_date = 'Aug 02, 2010'
-    authors = ['Alin Voinea']
+    authors = ['Alin Voinea', 'Emilia Ciobanu']
     priority = PRIORITY['HIGH']
-    description = ('Upgrade diskstorage from ExtFile to Blob. '
+    description = ('Upgrade diskstorage from ExtFile to Localized Blob. '
                    'See WARNINGs in update log for required manual steps')
 
     def exchange(self, value):
         """ Exchange an old Naaya Extended File for a new and
-        fresh Naaya Blob File
+        fresh Naaya Localized Blob File
 
         Required arguments:
         value --Naaya Extended File instance
@@ -292,9 +302,10 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             before['id'] = name
 
         before['meta_type'] = value.meta_type
+
         export = Export(parent, before)
         export.logger = self.log
-        doc = bfile_item.NyBFile(name, contributor)
+        doc = localizedbfile_item.NyLocalizedBFile(name, contributor)
         parent.gl_add_languages(doc)
 
         parent._delObject(name, suppress_events=True)
@@ -331,7 +342,7 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
 
     def update_control_panel(self, portal):
         """ Uninstall Naaya Extended File in Control Panel and install
-        Naaya Blob File if not installed
+        Naaya Localized Blob File if not installed
         """
         # Uninstall Naaya Extended File
         if portal.is_pluggable_item_installed('Naaya Extended File'):
@@ -344,16 +355,16 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             else:
                 self.log.debug('Uninstalled Naaya Extended File in Control Panel')
 
-        # Install Naaya Blob File
-        if not portal.is_pluggable_item_installed('Naaya Blob File'):
+        # Install Naaya Localized Blob File
+        if not portal.is_pluggable_item_installed('Naaya Localized Blob File'):
             try:
-                portal.manage_install_pluggableitem('Naaya Blob File')
+                portal.manage_install_pluggableitem('Naaya Localized Blob File')
             except Exception, err:
                 self.log.warn('You need to manually install '
-                              'Naaya Blob File in Control Panel')
+                              'Naaya Localized Blob File in Control Panel')
                 self.log.error(err)
             else:
-                self.log.debug('Installed Naaya Blob File in Control Panel')
+                self.log.debug('Installed Naaya Localized Blob File in Control Panel')
 
     def update_subobjects(self, portal):
         """ Update allowed subobject in Naaya Folders if Naaya Extended File
@@ -369,8 +380,8 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
         if 'Naaya Extended File' in meta_types:
             meta_types.remove('Naaya Extended File')
             changed = True
-        if 'Naaya Blob File' not in meta_types:
-            meta_types.append('Naaya Blob File')
+        if 'Naaya Localized Blob File' not in meta_types:
+            meta_types.append('Naaya Localized Blob File')
             changed = True
         if changed:
             self.log.debug('Updating portal %s subobjects = %s',
@@ -388,8 +399,8 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             if 'Naaya Extended File' in meta_types:
                 meta_types.remove('Naaya Extended File')
                 changed = True
-            if 'Naaya Blob File' not in meta_types:
-                meta_types.append('Naaya Blob File')
+            if 'Naaya Localized Blob File' not in meta_types:
+                meta_types.append('Naaya Localized Blob File')
                 changed = True
             if changed:
                 self.log.debug('Updating folder %s subobjects = %s',

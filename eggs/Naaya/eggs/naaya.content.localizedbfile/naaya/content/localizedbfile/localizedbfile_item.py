@@ -1,14 +1,9 @@
 from datetime import datetime
 import os
 import sys
-import urllib
-
-import zope.component
 
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
-from App.ImageFile import ImageFile
-from Globals import InitializeClass
+from AccessControl.Permissions import view
 from zExceptions import NotFound
 from zope.event import notify
 from zope.interface import implements
@@ -19,7 +14,7 @@ from naaya.content.base.events import NyContentObjectEditEvent
 from naaya.core.zope2util import CaptureTraverse
 
 from Products.NaayaBase.NyContentType import (
-    NyContentData, NyContentType, NY_CONTENT_BASE_SCHEMA)
+    NyContentData, NyContentType)
 from naaya.content.base.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
@@ -31,7 +26,6 @@ from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
 from naaya.content.bfile.bfile_item import DEFAULT_SCHEMA
-from naaya.content.bfile.bfile_item import NyBFile, _create_NyBFile_object, addNyBFile
 from naaya.content.bfile.NyBlobFile import make_blobfile, trim_filename
 from naaya.content.bfile.utils import file_has_content, tmpl_version, get_view_adapter
 from naaya.content.bfile.interfaces import INyBFile
@@ -59,7 +53,6 @@ config = {
 
 def localizedbfile_add_html(self, REQUEST=None, RESPONSE=None):
     """ Create a Localized BFile object """
-
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
     form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
 
@@ -86,7 +79,6 @@ def _create_LocalizedNyBFile_object(parent, id, contributor):
 
 def addNyLocalizedBFile(self, id='', REQUEST=None, contributor=None, _lang=None, **kwargs):
     """Create a Localized BFile object"""
-
     if REQUEST is not None:
         schema_raw_data = dict(REQUEST.form)
     else:
@@ -94,8 +86,6 @@ def addNyLocalizedBFile(self, id='', REQUEST=None, contributor=None, _lang=None,
 
     if _lang is None:
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-    else:
-        garbage = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
 
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     _uploaded_file = schema_raw_data.pop('uploaded_file', None)
@@ -150,12 +140,7 @@ def addNyLocalizedBFile(self, id='', REQUEST=None, contributor=None, _lang=None,
 
     #redirect if case
     if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'localizedbfile_manage_add' or l_referer.find('localizedbfile_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'localizedbfile_add_html':
-            self.setSession('referer', self.absolute_url())
-            return ob.object_submitted_message(REQUEST)
+        return ob.object_submitted_message(REQUEST)
 
     return ob.getId()
 
@@ -187,7 +172,6 @@ def localizedbfile_download(context, path, REQUEST):
             raise IndexError
     except (IndexError, ValueError, KeyError), e:
         raise NotFound
-
     RESPONSE = REQUEST.RESPONSE
     action = REQUEST.form.get('action', 'download')
     if action == 'view':
@@ -200,10 +184,8 @@ def localizedbfile_download(context, path, REQUEST):
     else:
         raise NotFound
 
-
 class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
-
     implements(INyBFile)
 
     meta_type = config['meta_type']
@@ -248,14 +230,19 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         else:
             return None
 
-    def remove_version(self, number, language, remove_by=None):
-        ver = self._versions[language][number]
-        if ver.removed:
-            return
+    security.declarePrivate('remove_version')
+    def remove_version(self, number, language, removed_by=None):
+
+        if (not self._versions[language]) or (not self._versions[language][number]):
+            raise ValueError # pick a random error
+
+        ver = self._versions[language].pop(number)
+
         ver.removed = True
+        ver.removed_by = removed_by
         ver.removed_at = datetime.utcnow()
-        ver.removed_by = remove_by
         ver.size = None
+
         f = ver.open_write()
         f.write('')
         f.close()
@@ -335,7 +322,7 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
 
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-        for ver_id in versions_to_remove:
+        for ver_id in reversed(versions_to_remove):
             self.remove_version(int(ver_id) - 1, _lang, contributor)
 
         self._p_changed = 1
