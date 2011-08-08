@@ -36,4 +36,5 @@
     permission="zope2.ViewManagementScreens"
     />
 
+    <include package=".updates" />
 </configure>
