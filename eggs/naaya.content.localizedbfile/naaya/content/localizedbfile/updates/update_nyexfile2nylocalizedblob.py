@@ -128,7 +128,7 @@ class Import(object):
             self.logger = data.logger
 
         self.local_properties = data.local_properties
-        self.versions = data.versions 
+        self.versions = data.versions
 
         self.properties = data.properties
         self.annotations = data.annotations
