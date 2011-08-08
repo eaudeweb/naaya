@@ -1,0 +1,14 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="naaya">
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <utility
+      name="expandable_portlets_cleanup.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_expandable_portlets_cleanup.UpdateExpandablePortletsCleanup"
+      permission="zope2.ViewManagementScreens" />
+  </configure>
+
+</configure>

@@ -995,61 +995,6 @@ class CHMSite(NySite):
             file.close()
         return 'DUMP OK.'
 
-
-    #expandable portlets functions
-    security.declareProtected(view, 'epFromCookiesToSession')
-    def epFromCookiesToSession(self):
-        """
-        Moves the data from cookies to session for expandable portlets.
-        """
-        temp = ''
-        c = self.REQUEST.cookies
-        s = self.getSession('ep_expanded_portlets', {})
-        #transfer the cookies to session
-        if c.has_key('ep_expanded_portlets'):
-            for i in c['ep_expanded_portlets'].split('*'):
-                x = i.split('|')
-                path = x[0]
-                portlet = x[1]
-                value = x[2]
-                if value == '1':
-                    try:
-                        s[portlet].pop(path)
-                    except:
-                        pass
-                if value == '2': #set portlet visible with ignorepath
-                    try:
-                        s[portlet] = {}
-                    except:
-                        pass
-                if value == '-1' or value == '-2':
-                    try:
-                        s[portlet][path] = value
-                    except:
-                        s[portlet] = {}
-                        s[portlet][path] = value
-
-        self.setSession('ep_expanded_portlets', s)
-        #delete the cookies
-        self.REQUEST.RESPONSE.setCookie('ep_expanded_portlets','',expires='Wed, 10 Feb 1970 10:00:00 GMT',path="/")
-        return temp
-
-    def epIsPortletCollapsed(self, path='', portlet='', ignorepath = False):
-        if ignorepath:
-            try:
-                if len(self.getSession('ep_expanded_portlets', {})[portlet]) == 0:
-                    return False
-                else:
-                    return True
-            except:
-                return False
-        else:
-            try:
-                dummy = self.getSession('ep_expanded_portlets', {})[portlet][path]
-                return True
-            except:
-                return False
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, REQUEST=None, **kwargs):
         """ """
