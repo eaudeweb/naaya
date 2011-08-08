@@ -1,6 +1,6 @@
 def pat(s):
     """ convert from string into a pattern to use with regexps """
-    return reduce(lambda s, c: s.replace(c, '\\'+c), '(){}[]', s)
+    return reduce(lambda s, c: s.replace(c, '\\'+c), '(){}[]+$', s)
 
 def physical_path(ob):
     return '/'.join(ob.getPhysicalPath())
@@ -15,4 +15,3 @@ def list_folders_with_custom_index(portal):
 
 def get_standard_template(portal):
     return portal.getLayoutTool().getCurrentSkin().standard_template
-
