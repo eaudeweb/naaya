@@ -17,7 +17,7 @@
         <tal:block metal:use-macro="options/macro">
 		<tal:block metal:fill-slot="portlet_title">
 			<div tal:define="additional_classes python:
-			(here.absolute_url() == fold.absolute_url() and ' active ' or '') +
+			(here.rstk.is_descendant_of(here, fold) and ' active ' or '') +
 			(len(fold.getPublishedFolders()) and ' expandable ' or '') +
 			(maintopics_settings['expanded'] and ' expanded' or '')"
 			tal:attributes="class string:mainsection_title ${additional_classes};
@@ -33,7 +33,7 @@
 					tal:condition="fold/getPublishedFolders"
 					tal:attributes="id string:ul${fold/id};">
 					<tal:block repeat="sub_fold fold/getPublishedFolders">
-						<li tal:define="additional_classes python: (here.absolute_url() == sub_fold.absolute_url() and 'active' or '') +
+						<li tal:define="additional_classes python: (here.rstk.is_descendant_of(here, sub_fold) and 'active' or '') +
 							(len(sub_fold.getPublishedFolders()) and ' expandable ' or '') +
 							(maintopics_settings['expand_levels'] >= level+1 and ' expanded' or '')"
 							tal:attributes="class string:mainsection_item ${additional_classes};

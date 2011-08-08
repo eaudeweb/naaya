@@ -131,6 +131,12 @@ class RestrictedToolkit(SimpleItem):
         """
         return json.loads(json_data)
 
+    def is_descendant_of(self, obj, ancestor):
+        """
+        Return if the `obj` is somewhere inside `ancestor`
+        """
+        return is_descendant_of(obj, ancestor)
+
     def path_in_site(self, obj):
         """ Return path relative to site root """
         return path_in_site(obj)
@@ -400,6 +406,15 @@ def ofs_path(obj):
     ``/mysite/about/info``
     """
     return '/'.join(obj.getPhysicalPath())
+
+def is_descendant_of(obj, ancestor):
+    """
+    Return if the `obj` is somewhere inside `ancestor`
+    """
+    # add '/' to make sure last ids are compared correctly
+    ancestor_path = ofs_path(ancestor) + '/'
+    obj_path = ofs_path(obj) + '/'
+    return obj_path.startswith(ancestor_path)
 
 def path_in_site(obj):
     """
