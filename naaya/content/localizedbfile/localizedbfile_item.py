@@ -236,7 +236,10 @@ class NyLocalizedBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyVa
         if (not self._versions[language]) or (not self._versions[language][number]):
             raise ValueError # pick a random error
 
-        ver = self._versions[language].pop(number)
+        ver = self._versions[language][number]
+
+        if ver.removed:
+            return
 
         ver.removed = True
         ver.removed_by = removed_by

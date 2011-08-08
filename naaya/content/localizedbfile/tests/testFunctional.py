@@ -182,18 +182,17 @@ class NyLocalizedBFileFunctional(NaayaFunctionalTestCase, BrowserFileTestingMixi
 
         self.assertEqual(mylocalizedbfile._versions[_lang][0].removed, False)
         self.assertEqual(mylocalizedbfile._versions[_lang][1].removed, True)
-        self.assertEqual(mylocalizedbfile._versions[_lang][2].removed, False)
-        self.assertEqual(mylocalizedbfile._versions[_lang][3].removed, True)
+        self.assertEqual(mylocalizedbfile._versions[_lang][2].removed, True)
+        self.assertEqual(mylocalizedbfile._versions[_lang][3].removed, False)
 
         self.browser.go('http://localhost/portal/myfolder/mylocalizedbfile')
         html = self.browser.get_html()
        
         self.assertTrue('download/1/afile1' in html)
-        self.assertTrue('download/2/afile3' in html)
+        self.assertTrue('download/2/afile3' not in html)
         self.assertTrue('download/3/afile2' not in html)
         self.assertTrue('download/3/afile3' not in html)
-        self.assertTrue('download/4/afile3' not in html)
-        self.assertTrue('download/4/afile4' not in html)
+        self.assertTrue('download/4/afile4' in html)
 
         self.browser_do_logout()
 
