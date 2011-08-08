@@ -1,12 +1,9 @@
-from unittest import TestSuite, makeSuite
 from datetime import datetime
 from StringIO import StringIO
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from naaya.content.localizedbfile.localizedbfile_item import addNyLocalizedBFile
-from mock import Mock, patch
-
-
+from mock import Mock
 
 class NyLocalizedBFileTestCase(NaayaTestCase):
     """ TestCase for Naaya BFile object """
@@ -32,7 +29,7 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         self.assertTrue(mylocalizedbfile.title, 'My Localized bfile')
         self.assertEqual(len(mylocalizedbfile._versions), 0)
         self.assertEqual(mylocalizedbfile.current_version, None)
-
+        
     def test_add_with_file(self):
         myfile = StringIO('hello data!')
         myfile.filename = 'my.jpg'
@@ -122,6 +119,10 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         myfile.filename = 'my.txt'
         self.add_localizedbfile(id='mylocalizedbfile', title='My Localized bfile', uploaded_file=myfile, lang='en')
         mylocalizedbfile = self.portal.myfolder.mylocalizedbfile
+
+        language = 'de'
+        self.assertRaises(KeyError, mylocalizedbfile.remove_version, 1, language)
+        
         language = 'en'
 
         myfile2 = StringIO('new data')
@@ -140,41 +141,42 @@ class NyLocalizedBFileTestCase(NaayaTestCase):
         myfrfile3.filename = 'fr_file3.txt'
         mylocalizedbfile._save_file(myfrfile3, 'fr')
 
+        to_remove = mylocalizedbfile._versions[language][1]
         mylocalizedbfile.remove_version(1, language)
-        rm_ver = mylocalizedbfile._versions[language][1]
-        self.assertEqual(rm_ver.open().read(), '')
-        self.assertEqual(rm_ver.size, None)
-        self.assertEqual(rm_ver.removed, True)
+        self.failUnless(to_remove not in mylocalizedbfile._versions[language])
         self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][0])
 
         myfile3 = StringIO('even newer data')
         myfile3.filename = 'other.txt'
         mylocalizedbfile._save_file(myfile3, language)
-        self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][2])
+        self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][1])
 
-        mylocalizedbfile.remove_version(2, language)
+        self.failUnlessEqual(myfile3.filename, mylocalizedbfile._versions[language][1].filename)
+        mylocalizedbfile.remove_version(1, language)
         self.assertTrue(mylocalizedbfile.current_version is mylocalizedbfile._versions[language][0])
 
         mylocalizedbfile.remove_version(0, language)
         self.assertTrue(mylocalizedbfile.current_version is None)
        
         language = 'fr'
-        mylocalizedbfile.remove_version(1, language)
         rm_ver = mylocalizedbfile._versions[language][1]
-        self.assertEqual(rm_ver.open().read(), '')
-        self.assertEqual(rm_ver.size, None)
-        self.assertEqual(rm_ver.removed, True)
+        mylocalizedbfile.remove_version(1, language)
+        self.failUnless(rm_ver not in mylocalizedbfile._versions[language])
+
         mylocalizedbfile.get_selected_language = Mock(return_value=language)
         cv = mylocalizedbfile.current_version
-        self.assertTrue(cv is mylocalizedbfile._versions[language][2])
+        self.assertTrue(cv is mylocalizedbfile._versions[language][1])
 
-        mylocalizedbfile.remove_version(2, language)
+        mylocalizedbfile.remove_version(1, language)
         cv = mylocalizedbfile.current_version
         self.assertTrue(cv is mylocalizedbfile._versions[language][0])
 
         mylocalizedbfile.remove_version(0, language)
         cv = mylocalizedbfile.current_version
         self.assertTrue(cv is None)
+
+        language = 'en'
+        self.assertRaises(ValueError, mylocalizedbfile.remove_version, 0, language)
 
     def test_add_no_title(self):
         myfile = StringIO('hello data!')
