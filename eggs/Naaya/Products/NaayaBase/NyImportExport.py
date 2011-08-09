@@ -3,11 +3,10 @@ This module contains the class that implements import/export functionality
 using Naaya XML format.
 """
 
-
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens
 
 from constants import *
 from managers.import_parser import import_parser
@@ -36,6 +35,7 @@ class NyImportExport:
         @param url: the URL from where the file will be grabbed
         @param REQUEST: I{optional} parameter to do the redirect
         """
+
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
@@ -61,6 +61,7 @@ class NyImportExport:
         @return a downloadable Naaya XML file
         r = []
         """
+
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
@@ -77,6 +78,7 @@ class NyImportExport:
         Generates an XML with the object content.
         @return: a downloadable Naaya XML file
         """
+
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
@@ -108,6 +110,7 @@ class NyImportExport:
 
         B{This method must be implemented.}
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'exportdata_custom'
 
     #zmi pages

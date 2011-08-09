@@ -1,6 +1,5 @@
 import transaction
 
-# Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.url.url_item import addNyURL
@@ -92,7 +91,10 @@ class NyCommentsTestCase(NaayaFunctionalTestCase):
         self.logout()
 
     def test_get_comments(self):
-        first_comment = self.portal.folder.test_url._comment_add(body='test comment', releasedate='2/10/2010')
-        second_comment = self.portal.folder.test_url._comment_add(body='test comment', releasedate='1/10/2010')
+        first_comment = self.portal.folder.test_url._comment_add(body='test comment', 
+                                                                 releasedate='2/10/2010')
+        second_comment = self.portal.folder.test_url._comment_add(body='test comment',
+                                                                  releasedate='1/10/2010')
         self.assertEqual(self.portal.folder.test_url.count_comments(), 2)
-        self.assertEqual(self.portal.folder.test_url.get_comments_list()[0].releasedate, '1/10/2010')
+        self.assertEqual(self.portal.folder.test_url.get_comments_list()[0].releasedate,
+                         '1/10/2010')

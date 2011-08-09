@@ -3,17 +3,17 @@ This module contains the class that implements the Naaya file system
 file type of object. All types of objects that are file system files
 must extend this class.
 """
+
 from zope.interface import implements
 from Globals import InitializeClass
 from OFS.Image import File, Pdata, getImageInfo
-from OFS.event import ObjectWillBeMovedEvent
 from interfaces import INyFSFile
 from Products.ExtFile.ExtFile import ExtFile
 from Products.ExtFile.ExtImage import ExtImage
-from zope import event as zope_event
 
 class NyFSFile(File):
-    """ ExtFile adapter for File objects.
+    """
+    ExtFile adapter for File objects.
     """
 
     implements(INyFSFile)
@@ -34,6 +34,7 @@ class NyFSFile(File):
 
     def __setstate__(self, state):
         """ Updates """
+
         NyFSFile.inheritedAttribute("__setstate__") (self, state)
         if not hasattr(self, '_ext_file'):
             etitle = getattr(self, 'title', 'File system data')
@@ -97,22 +98,26 @@ class NyFSFile(File):
 
     def PrincipiaSearchSource(self):
         """ Allow file objects to be searched."""
+
         if self.content_type.startswith('text/'):
             return self.get_data()
         return ''
 
     def PUT(self, REQUEST, RESPONSE):
         """Handle HTTP PUT requests"""
+
         self._ext_file.PUT(REQUEST, RESPONSE)
 
     def manage_FTPget(self):
         """ Handle FTP GET requests"""
+
         return self._ext_file.manage_FTPget()
 
 InitializeClass(NyFSFile)
 
 class NyFSImage(NyFSFile):
     """ """
+
     width = ''
     height = ''
     def __init__(self, id, title, file, content_type='', precondition=''):
@@ -151,6 +156,7 @@ class NyFSImage(NyFSFile):
         if width >= 0 and height >= 0:
             self.width = width
             self.height = height
-        NyFSImage.inheritedAttribute('update_data')(self, data, content_type, size, filename)
+        NyFSImage.inheritedAttribute('update_data')(self, data, content_type,
+                                     size, filename)
 
 InitializeClass(NyFSImage)

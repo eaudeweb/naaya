@@ -19,8 +19,6 @@ except ImportError: #<2.12
                                                IObjectMovedEvent)
 from zope.component.interfaces import IObjectEvent
 from OFS.interfaces import IObjectWillBeMovedEvent
-
-
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -83,6 +81,7 @@ class NyComment(SimpleItem):
 
     def export(self):
         """ Export object in Naaya XML format. """
+
         encode = self.getSite().utXmlEncode
         return '<comment id="%s" title="%s" body="%s" author="%s" date="%s" />' % \
             (encode(self.id),
@@ -93,6 +92,7 @@ class NyComment(SimpleItem):
 
     def absolute_url(self):
         """ override `absolute_url` to link to our parent object """
+
         obj = self.aq_parent.aq_parent
         return '%s#comment-%s' % (obj.absolute_url(), self.id)
 
@@ -156,6 +156,7 @@ class comment_item(utils):
         """
         Exports object into Naaya XML format.
         """
+
         return '<comment id="%s" title="%s" body="%s" author="%s" date="%s" />' % \
             (self.utXmlEncode(self.id),
                 self.utXmlEncode(self.title),
@@ -167,6 +168,7 @@ class comment_item(utils):
         """
         Returns title or id.
         """
+
         if not self.title:
             return self.id
         else:
@@ -195,6 +197,7 @@ class NyCommentable:
     security.declareProtected(view, 'get_comments_list')
     def get_comments_list(self):
         """ Return the list of comments sorted by releasedate. """
+
         container = self._get_comments_container()
         if container:
             comments = container.objectValues()
@@ -205,6 +208,7 @@ class NyCommentable:
     security.declareProtected(view, 'count_comments')
     def count_comments(self):
         """ Returns the number of comments. """
+
         container = self._get_comments_container()
         if container:
             return len(container.objectIds())
@@ -222,6 +226,7 @@ class NyCommentable:
         """
         Enable(open) comments.
         """
+
         warn('Function `open_for_comments` is deprecated. NyCommentable reads '
              'the `discussion` property directly',
              DeprecationWarning, stacklevel=2)
@@ -231,6 +236,7 @@ class NyCommentable:
         """
         Disable(close) comments.
         """
+
         warn('Function `close_for_comments` is deprecated. NyCommentable reads '
              'the `discussion` property directly',
              DeprecationWarning, stacklevel=2)
@@ -240,6 +246,7 @@ class NyCommentable:
         """
         Export all the comments in XML format.
         """
+
         r = []
         ra = r.append
         ra('<discussion>')
@@ -253,6 +260,7 @@ class NyCommentable:
         """
         Import comments.
         """
+
         if discussion is not None:
             for c in discussion.comments:
                 self._comment_add(c.id,
@@ -264,10 +272,12 @@ class NyCommentable:
     #permissions
     def checkPermissionAddComments(self):
         """ Check for adding comments. """
+
         return self.checkPermission(PERMISSION_COMMENTS_ADD)
 
     def checkPermissionManageComments(self):
         """ Check for managing comments. """
+
         return self.checkPermission(PERMISSION_COMMENTS_MANAGE)
 
     def _comment_add(self, title='', body='', author='', releasedate=None):
@@ -291,6 +301,7 @@ class NyCommentable:
         """
         Add a comment for this object.
         """
+
         form_data = dict(REQUEST.form)
         author = REQUEST.AUTHENTICATED_USER.getUserName()
 

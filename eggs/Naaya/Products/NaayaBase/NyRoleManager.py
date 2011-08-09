@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from AccessControl.Role import RoleManager
-from zope import event
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
 from Globals import InitializeClass
@@ -13,25 +12,29 @@ from zope.event import notify
 from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 class NyRoleManager(RoleManager):
-    """ notifies on local role modifications """
+    """ Notifies on local role modifications """
+
     security = ClassSecurityInfo()
 
     # manage_add/set/delLocalRoles wrappers
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_addLocalRoles(self, userid, roles, REQUEST=None):
-        """ override Role.manage_addLocalRoles """
+        """ Override Role.manage_addLocalRoles """
+
         notify(NyAddLocalRoleEvent(self, userid, roles))
         return super(NyRoleManager, self).manage_addLocalRoles(userid, roles, REQUEST)
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_setLocalRoles(self, userid, roles, REQUEST=None):
-        """ override Role.manage_setLocalRoles """
+        """ Override Role.manage_setLocalRoles """
+
         notify(NySetLocalRoleEvent(self, userid, roles))
         return super(NyRoleManager, self).manage_setLocalRoles(userid, roles, REQUEST)
 
     security.declareProtected(change_permissions, 'manage_delLocalRoles')
     def manage_delLocalRoles(self, userids, REQUEST=None):
-        """ override Role.manage_delLocalRoles """
+        """ Override Role.manage_delLocalRoles """
+
         notify(NyDelLocalRoleEvent(self, userids))
         return super(NyRoleManager, self).manage_delLocalRoles(userids, REQUEST)
 

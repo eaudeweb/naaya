@@ -1,10 +1,5 @@
-# Python
-from unittest import TestSuite, makeSuite
-
-# Zope
 import transaction
 
-# Products
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaBase.interfaces import IRoleLogger
 
@@ -59,13 +54,19 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
         from Products.Naaya.NySite import NySite
         from Products.Naaya.NyFolder import NyFolder
 
-        self.assertTrue(NySite.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
-        self.assertTrue(NySite.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
-        self.assertTrue(NySite.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
+        self.assertTrue(NySite.manage_addLocalRoles == 
+                        NyRoleManager.manage_addLocalRoles)
+        self.assertTrue(NySite.manage_setLocalRoles == 
+                        NyRoleManager.manage_setLocalRoles)
+        self.assertTrue(NySite.manage_delLocalRoles == 
+                        NyRoleManager.manage_delLocalRoles)
 
-        self.assertTrue(NyFolder.manage_addLocalRoles == NyRoleManager.manage_addLocalRoles)
-        self.assertTrue(NyFolder.manage_setLocalRoles == NyRoleManager.manage_setLocalRoles)
-        self.assertTrue(NyFolder.manage_delLocalRoles == NyRoleManager.manage_delLocalRoles)
+        self.assertTrue(NyFolder.manage_addLocalRoles == 
+                        NyRoleManager.manage_addLocalRoles)
+        self.assertTrue(NyFolder.manage_setLocalRoles == 
+                        NyRoleManager.manage_setLocalRoles)
+        self.assertTrue(NyFolder.manage_delLocalRoles == 
+                        NyRoleManager.manage_delLocalRoles)
 
 
     def test_local_roles_add_remove(self):
@@ -136,7 +137,8 @@ class TestNyRoleManager(NaayaFunctionalTestCase):
         self.browser_do_login('admin', '')
         self.portal.info.manage_setLocalRoles(self.username, ['Manager'])
         from Products.NaayaBase.NyRoleManager import NyRoleManager
-        super(NyRoleManager, self.portal.info).manage_addLocalRoles(self.username, ['Reader'])
+        super(NyRoleManager, self.portal.info).manage_addLocalRoles(self.username,
+                                                                    ['Reader'])
 
         all_info = role_logger.getAllLocalRolesInfo()
         self.assertTrue(all_info.has_key(self.username))

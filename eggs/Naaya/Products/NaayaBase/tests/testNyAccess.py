@@ -1,14 +1,9 @@
-# Pythons imports
-from unittest import TestSuite, makeSuite
 from BeautifulSoup import BeautifulSoup
 
-# Zope imports
-from Testing import ZopeTestCase
 import transaction
 from AccessControl import getSecurityManager
 from AccessControl.Permission import Permission
 
-# Naaya imports
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaBase.NyAccess import NyAccess
@@ -40,7 +35,8 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
         set_mapping = {'View': ('Manager',), 'View History': ('Manager', 'Reviewer')}
 
         # internal test: all the permissions get new values
-        self.assertEqual(set(set_mapping.keys()), set(self.testfolder.ny_access.permissions))
+        self.assertEqual(set(set_mapping.keys()), 
+                         set(self.testfolder.ny_access.permissions))
 
         self.testfolder.ny_access.setPermissionMapping(set_mapping)
 
@@ -71,7 +67,8 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_users(self):
-        set_mapping = {'View': ('Contributor',), 'View History': ('Contributor', 'Reviewer')}
+        set_mapping = {'View': ('Contributor',), 
+                       'View History': ('Contributor', 'Reviewer')}
         self.testfolder.ny_access.setPermissionMapping(set_mapping)
         transaction.commit()
 
@@ -82,13 +79,15 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
         self._test_user_perm('reviewer', 'reviewer', 'View History', 1)
 
     def test_users_functional(self):
-        set_mapping = {'View': ('Contributor',), 'View History': ('Contributor', 'Reviewer')}
+        set_mapping = {'View': ('Contributor',),
+                       'View History': ('Contributor', 'Reviewer')}
         self.testfolder.ny_access.setPermissionMapping(set_mapping)
         transaction.commit()
 
         self.browser_do_login('admin', '')
 
-        self.browser.go(self.testfolder.absolute_url(1) + '/manage_permissionForm?permission_to_manage=View')
+        self.browser.go(self.testfolder.absolute_url(1) +
+                        '/manage_permissionForm?permission_to_manage=View')
         form = self.browser.get_form(1)
         field = self.browser.get_form_field(form, 'roles:list')
         for item in field.items:
@@ -97,7 +96,8 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
             else:
                 self.assertFalse(item._selected)
 
-        self.browser.go(self.testfolder.absolute_url(1) + '/manage_permissionForm?permission_to_manage=View%20History')
+        self.browser.go(self.testfolder.absolute_url(1) + 
+                        '/manage_permissionForm?permission_to_manage=View%20History')
         form = self.browser.get_form(1)
         field = self.browser.get_form_field(form, 'roles:list')
         for item in field.items:
@@ -111,12 +111,14 @@ class NyAccessTestCase(NaayaFunctionalTestCase):
     def test_get_permissions(self):
         self.browser_do_login('admin', '')
 
-        self.browser.go(self.testfolder.absolute_url(1) + '/manage_permissionForm?permission_to_manage=View')
+        self.browser.go(self.testfolder.absolute_url(1) +
+                        '/manage_permissionForm?permission_to_manage=View')
         form = self.browser.get_form(1)
         form['roles:list'] = ('Contributor',)
         self.browser.submit()
 
-        self.assertEqual(self.testfolder.ny_access.getPermissionMapping()['View'], ['Contributor'])
+        self.assertEqual(self.testfolder.ny_access.getPermissionMapping()['View'],
+                         ['Contributor'])
 
         self.browser_do_logout()
 

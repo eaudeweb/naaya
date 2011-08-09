@@ -7,11 +7,9 @@ from cStringIO import StringIO
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
 from Globals import InitializeClass
-from zope.deprecation import deprecate
 
 from naaya.core.zope2util import RestrictedToolkit
 from naaya.core.paginator import NaayaPaginator
-
 from Products.NaayaCore.interfaces import ICaptcha
 from Products.NaayaCore.managers.captcha_tool import captcha_tool
 
@@ -21,6 +19,7 @@ class NyCommonView(object):
     They used to be accessed from NySite via acquisition,
     but that created problems when checking permissions.
     """
+
     rstk = RestrictedToolkit()
 
     security = ClassSecurityInfo()
@@ -28,6 +27,7 @@ class NyCommonView(object):
     security.declareProtected(view, 'getCaptcha')
     def getCaptcha(self):
         """ generate a Captcha image """
+
         g = captcha_tool()
         g.defaultSize = (100, 20)
         i = g.render()
@@ -45,11 +45,13 @@ class NyCommonView(object):
     security.declareProtected(view, 'show_recaptcha')
     def show_recaptcha(self, context):
         """ Returns HTML code for reCAPTCHA """
+
         return ICaptcha(self.getSite()).render_captcha()
 
     security.declareProtected(view, 'is_valid_recaptcha')
     def is_valid_recaptcha(self, context, REQUEST):
         """ Test if reCaptcha is valid. """
+
         return ICaptcha(self.getSite()).is_valid_captcha(REQUEST)
 
     security.declareProtected(view, 'validateCaptcha')
@@ -59,6 +61,7 @@ class NyCommonView(object):
 
         Validates captcha or recaptcha, returns errors if invalid.
         """
+
         if self.recaptcha_is_present():
             if not self.is_valid_recaptcha(self, REQUEST):
                 return ['Verification words do not match the ones in the picture.']
@@ -70,23 +73,27 @@ class NyCommonView(object):
     security.declareProtected(view, 'feedback_html')
     def feedback_html(self, REQUEST=None, RESPONSE=None):
         """ """
+
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     security.declareProtected(view, 'requestrole_html')
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
         """ """
+
         return self.getFormsTool().getContent({'here': self},
                                                'site_requestrole')
 
     security.declareProtected(view, 'channel_details_html')
     def channel_details_html(self, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
+
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'channel_details')
 
     security.declarePublic('standard_error_message')
     def standard_error_message(self, client=None, REQUEST=None, **kwargs):
         """ """
+
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'standard_error_message')
 
@@ -101,6 +108,7 @@ class NyCommonView(object):
     security.declareProtected(view, 'make_paginator')
     def make_paginator(self, *args, **kwargs):
         """ """
+
         return NaayaPaginator(*args, **kwargs).__of__(self)
 
 InitializeClass(NyCommonView)

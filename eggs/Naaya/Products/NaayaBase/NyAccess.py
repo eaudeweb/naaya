@@ -5,7 +5,6 @@ from AccessControl.ImplPython import rolesForPermissionOn
 from AccessControl.Permissions import change_permissions
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-import transaction
 
 class NyAccess(SimpleItem):
     security = ClassSecurityInfo()
@@ -20,21 +19,25 @@ class NyAccess(SimpleItem):
     security.declareProtected(change_permissions, 'getObject')
     def getObject(self):
         """ Returns the object NyAccess is associated to """
+
         return self.aq_inner.aq_parent
 
     security.declareProtected(change_permissions, 'getObjectParent')
     def getObjectParent(self):
         """ Returns the parent of the object """
+
         return self.getObject().aq_inner.aq_parent
 
     security.declareProtected(change_permissions, 'sortedPermissions')
     def sortedPermissions(self):
         """ """
+
         return sorted(self.permissions.keys())
 
     security.declareProtected(change_permissions, 'getValidRoles')
     def getValidRoles(self):
         """ """
+
         roles_to_remove = ['Owner', 'Manager']
         return [role for role in self.getObject().validRoles()
                         if role not in roles_to_remove]
@@ -42,6 +45,7 @@ class NyAccess(SimpleItem):
     security.declareProtected(change_permissions, 'getPermissionsWithAcquiredRoles')
     def getPermissionsWithAcquiredRoles(self):
         """ Return the permissions which acquire roles from their parents """
+
         ret = []
         for permission in self.permissions:
             permission_object = Permission(permission, (), self.getObject())
@@ -52,6 +56,7 @@ class NyAccess(SimpleItem):
     security.declareProtected(change_permissions, 'getPermissionAcquiredMapping')
     def getPermissionAcquiredMapping(self):
         """ """
+
         parent = self.getObjectParent()
         acquiring_permissions = self.getPermissionsWithAcquiredRoles()
         mapping = {}
@@ -65,6 +70,7 @@ class NyAccess(SimpleItem):
     security.declareProtected(change_permissions, 'getPermissionMapping')
     def getPermissionMapping(self):
         """ Return the permission mapping for the object """
+
         mapping = {}
         for permission in self.permissions:
             permission_object = Permission(permission, (), self.getObject())
@@ -77,6 +83,7 @@ class NyAccess(SimpleItem):
         Change the permission mapping for the object.
         This leaves the other permissions (not in mapping.keys()) unchanged
         """
+
         for permission in mapping:
             permission_object = Permission(permission, (), self.getObject())
             permission_object.setRoles(mapping[permission])
@@ -87,6 +94,7 @@ class NyAccess(SimpleItem):
         This is called from index_html
         calls setPermissionMapping after converting the arguments
         """
+
         # consistency checks
         assert isinstance(known_roles, list)
         assert set(self.getValidRoles()) == set(known_roles)

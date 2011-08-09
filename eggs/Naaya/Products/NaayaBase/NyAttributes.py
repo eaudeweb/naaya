@@ -7,10 +7,7 @@ It is used to provide values for two catalog indexes:
     - B{istranslated_I{lang}} where lang is the a language code
 """
 
-
-
 from Products.NaayaBase.NyContentType import NyContentType
-from DateTime import DateTime
 
 class NyAttributes:
     """ """
@@ -29,6 +26,7 @@ class NyAttributes:
         @param name: the attribute name
         @return: should return the attribute value or raise an I{AttributeError} exception.
         """
+
         # this is for performance reasons
         # it should be updated if/when adding new computed attributes
         if not(name and name[0] in 'oict'):

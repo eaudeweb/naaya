@@ -6,10 +6,8 @@ The framework has a built in mechanism for validating content. Only the types
 of objects for which their class extends the I{NyValidation} can be validated.
 """
 
-
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-
 
 class NyValidation:
     """
@@ -47,10 +45,12 @@ class NyValidation:
         self.contributor = ''
         self.approved_by = ''
 
-    def checkThis(self, validation_status, validation_comment, validation_by, validation_date=None):
+    def checkThis(self, validation_status, validation_comment, validation_by,
+                  validation_date=None):
         """
         Handles the validation operation.
         """
+
         if validation_date is None:
             validation_date = self.utGetTodayDate()
         elif validation_date == '' or validation_date =='2010/01/01':

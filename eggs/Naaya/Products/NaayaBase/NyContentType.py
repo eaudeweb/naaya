@@ -21,15 +21,27 @@ from naaya.content.base.interfaces import INyContentObject
 log = logging.getLogger(__name__)
 
 NY_CONTENT_BASE_SCHEMA = {
-    'title':        dict(sortorder=10, widget_type='String', label='Title', required=True, localized=True),
-    'description':  dict(sortorder=20, widget_type='TextArea', label='Description', localized=True, tinymce=True),
-    'geo_location': dict(sortorder=24, widget_type='Geo', data_type='geo', label='Geographical location', visible=False),
-    'geo_type':     dict(sortorder=26, widget_type='GeoType', data_type='str', label='Geographical location type', visible=False),
-    'coverage':     dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True),
-    'keywords':     dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True),
-    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=True, visible=False),
-    'releasedate':  dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=True),
-    'discussion':   dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments'),
+    'title': {'sortorder':10, 'widget_type':'String', 'label':'Title',
+              'required':True, 'localized':True},
+    'description': { 'sortorder':20, 'widget_type':'TextArea',
+                     'label':'Description', 'localized':True,
+                     'tinymce':True},
+    'geo_location': {'sortorder':24, 'widget_type':'Geo', 'data_type':'geo',
+                     'label':'Geographical location', 'visible':False},
+    'geo_type': {'sortorder':26, 'widget_type':'GeoType', 'data_type':'str',
+                 'label':'Geographical location type', 'visible':False},
+    'coverage': {'sortorder':30, 'widget_type':'Glossary',
+                 'label':'Geographical coverage', 'glossary_id':'coverage',
+                 'localized':True},
+    'keywords': {'sortorder':40, 'widget_type':'Glossary', 'label':'Keywords',
+                 'glossary_id':'keywords', 'localized':True},
+    'sortorder': {'sortorder':50, 'widget_type':'String', 'data_type':'int',
+                  'default':'100', 'label':'Sort order', 'required':True,
+                  'visible':False},
+    'releasedate': {'sortorder':60, 'widget_type':'Date', 'data_type':'date',
+                    'label':'Release date', 'required':True},
+    'discussion': {'sortorder':70, 'widget_type':'Checkbox', 'data_type':'int',
+                   'label':'Open for comments'},
 }
 
 class SchemaFormHelper(object):
@@ -37,6 +49,7 @@ class SchemaFormHelper(object):
     Helper object for rendering forms: lists widgets, fills in values, and
     displays form errors
     """
+
     def __init__(self, schema, context, value_callback=None):
         self.schema = schema
         self.context = context
@@ -89,7 +102,8 @@ class SchemaFormHelper(object):
     def form_items(self, add=False):
         for widget in self.schema.listWidgets():
             prop_name = widget.prop_name()
-            yield {'name': prop_name, 'html': self._get_renderer(prop_name, widget, add=add)}
+            yield {'name': prop_name, 'html': self._get_renderer(prop_name,
+                    widget, add=add)}
 
     def del_schema_session_values(self):
         schema_prop_names = self.schema.listPropNames()
@@ -130,7 +144,9 @@ class NyContentType(object):
     security.declarePrivate('getEditRoles')
     def getEditRoles(self):
         # returns a list of roles with the edit permission
-        return [role['name'] for role in self.rolesOfPermission(PERMISSION_EDIT_OBJECTS) if role['selected']]
+        return [role['name'] for role in
+                self.rolesOfPermission(PERMISSION_EDIT_OBJECTS)
+                if role['selected']]
 
     security.declarePrivate('giveEditRights')
     def giveEditRights(self):
@@ -149,11 +165,13 @@ class NyContentType(object):
             self.manage_permission(PERMISSION_EDIT_OBJECTS, roles, acquire=1)
 
     security.declarePrivate('process_submitted_form')
-    def process_submitted_form(self, REQUEST_form, _lang=None, _all_values=True, _override_releasedate=None):
+    def process_submitted_form(self, REQUEST_form, _lang=None,
+                               _all_values=True, _override_releasedate=None):
         """
         take our data from the REQUEST object; if it's OK then save it,
         else return errors.
         """
+
         # TODO: need a method that saves schema properties on an object
         # directly (without passing through widget.parseFormData methods)
         schema = self._get_schema()
@@ -256,6 +274,7 @@ class NyContentType(object):
 
     def is_ratable(self):
         """returns the stars rating view if the content type is ratable"""
+
         schema = self.getSite().portal_schemas.getSchemaForMetatype(self.meta_type)
         return schema.is_ratable
 
@@ -263,6 +282,7 @@ class NyContentType(object):
         """
         Indicates if the current user has access to the current folder.
         """
+
         return self.checkPermission(view)
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteThis')
@@ -285,6 +305,7 @@ InitializeClass(NyContentType)
 
 def _null_getattr(key):
     """ Blank __getattr__ implementation that never returns values """
+
     raise AttributeError(key)
 
 from ExtensionClass import Base
@@ -295,6 +316,7 @@ class ForceGetattr(Base):
     behaves much like Localizer's LocalAttribute, returning the proper value
     for the property.
     """
+
     def __init__(self, prop_name):
         self.prop_name = prop_name
 
@@ -347,6 +369,7 @@ class NyContentData(NyProperties):
 
     def _get_schema(self):
         """ Fetch the schema for this object type """
+
         return self.getSite()._getOb(ID_SCHEMATOOL).getSchemaForMetatype(self.meta_type)
 
     security.declareProtected(view, 'get_schema_helper')
@@ -375,6 +398,7 @@ class NyContentData(NyProperties):
         """
         return property label, value and other info; useful for index_html views
         """
+
         if prop_name == 'contributor':
             authTool = self.getAuthenticationTool()
             value = authTool.getUserFullNameByID(self.contributor)
@@ -403,6 +427,7 @@ class NyContentData(NyProperties):
         Display a property of this object (only if it's not hidden) with the
         correct label using <tr> markup
         """
+
         data = self.prop_details(prop_name, lang)
         data.update(kwargs)
 
@@ -435,6 +460,7 @@ class NyContentData(NyProperties):
         """
         Change specific properties of this object
         """
+
         #TODO This method should be formalised as an API method
         if _lang is None:
             _lang = self.gl_get_selected_language()

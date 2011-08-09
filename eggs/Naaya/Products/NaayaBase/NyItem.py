@@ -3,7 +3,6 @@ This module contains the class that implements the Naaya simple item type of obj
 All types of objects that are not containers must extend this class.
 """
 
-
 from zope.interface import implements
 from OFS.SimpleItem import SimpleItem
 from Globals import InitializeClass
@@ -32,6 +31,7 @@ class NyItem(SimpleItem, NyCommentable, NyBase, NyPermissions, NyDublinCore):
         """
         Constructor.
         """
+
         NyBase.__dict__['__init__'](self)
         NyDublinCore.__dict__['__init__'](self)
 

@@ -1,4 +1,3 @@
-from unittest import TestSuite, makeSuite
 from Testing import ZopeTestCase
 
 from Acquisition import Implicit
@@ -7,7 +6,6 @@ from OFS.SimpleItem import Item
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaCore.SchemaTool.Schema import Schema
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
 def _create_test_schema():
     schema = Schema(id='my_schema', title='my_schema')
@@ -93,7 +91,8 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         obj = NyDummy()
         obj._change_schema_properties(title='title_val', my_str='my_str_val',
             my_local_str='my_local_str_val', my_int=13)
-        obj._change_schema_properties(my_local_str='my_local_str_fr_val', _lang='fr')
+        obj._change_schema_properties(my_local_str='my_local_str_fr_val',
+                                      _lang='fr')
 
         obj2 = dummy_item()
         obj2.copy_naaya_properties_from(obj)
@@ -101,14 +100,16 @@ class NyContentTypeTestCase(ZopeTestCase.TestCase):
         self.failUnlessEqual(obj2.title, 'title_val')
         self.failUnlessEqual(obj2.my_str, 'my_str_val')
         self.failUnlessEqual(obj2.my_local_str, 'my_local_str_val')
-        self.failUnlessEqual(obj2.getLocalProperty('my_local_str', 'fr'), 'my_local_str_fr_val')
+        self.failUnlessEqual(obj2.getLocalProperty('my_local_str', 'fr'),
+                             'my_local_str_fr_val')
         self.failUnlessEqual(obj2.my_int, 13)
 
     def test_change_schema_properties(self):
         obj = NyDummy()
         obj._change_schema_properties(my_int="12")
         self.failUnlessEqual(obj.my_int, 12)
-        self.failUnlessRaises(ValueError, lambda: obj._change_schema_properties(my_int="3.14"))
+        self.failUnlessRaises(ValueError, 
+                              lambda: obj._change_schema_properties(my_int="3.14"))
 
     def test_dump_data(self):
         obj = NyDummy()

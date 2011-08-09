@@ -1,9 +1,5 @@
-#Python
-
-#Zope
 from zope.interface import implements
 
-#Products
 from interfaces import INyAddLocalRoleEvent, INySetLocalRoleEvent, INyDelLocalRoleEvent
 from interfaces import INyAddUserRoleEvent, INySetUserRoleEvent, INyDelUserRoleEvent
 from interfaces import INyAddGroupRoleEvent, INyRemoveGroupRoleEvent
