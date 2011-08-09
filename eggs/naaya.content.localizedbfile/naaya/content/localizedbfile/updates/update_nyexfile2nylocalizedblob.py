@@ -13,6 +13,7 @@ from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 #
 # Export / Import
 #
+
 class Export(object):
     """
     Naaya Extended File data extractor
@@ -58,8 +59,10 @@ class Export(object):
                     continue
 
                 if version.is_broken():
-                    self.logger.warn('\t BROKEN VERSION: %s (%s)', version.getId(), filename)
-                    continue
+                    self.logger.warn('\t BROKEN VERSION: %s (%s)',
+                            version.getId(), filename)
+                    self.logger.warn('Aborting update process')
+                    raise ValueError
 
                 sfile = StringIO(version.data)
                 self.logger.debug('\t VERSION FILENAME: %s', filename)
@@ -73,7 +76,8 @@ class Export(object):
 
             if extfile.is_broken():
                 self.logger.warn('\t BROKEN EXTFILE: %s (%s)', language, filename)
-                continue
+                self.logger.warn('Aborting update process')
+                raise ValueError
 
             sfile = StringIO(extfile.data)
             self.logger.debug('\t FILENAME: %s', filename)
@@ -421,18 +425,27 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             self.log.warn('Check customized templates in %s/portal_forms: %s',
                           portal.absolute_url(1), ', '.join(customized))
 
-        ctool = portal.portal_catalog
-        brains = ctool(meta_type='Naaya Extended File')
-        brains = set(brains)
+        count = 0
+
+        for ob in traverse(portal):
+            self.log.debug('Updating extended file: %s' % ob.absolute_url(1))
+            self.exchange(ob)
+            count += 1
 
         self.log.debug('Updating %s extended files in %s',
-                       len(brains), portal.absolute_url(1))
-
-        for brain in brains:
-            doc = brain.getObject()
-            self.log.debug('Updating extended file: %s' % doc.absolute_url(1))
-            self.exchange(doc)
-
+                       count, portal.absolute_url(1))
         self.update_control_panel(portal)
         self.update_subobjects(portal)
         return True
+
+def traverse(ob):
+    from collections import deque
+    queue = deque([ob])
+    while queue != deque([]):
+        value = queue.popleft()
+        for node in value.objectValues():
+            if hasattr(node, 'meta_type') and node.meta_type == 'Naaya Extended File':
+                yield node
+            if hasattr(node, 'objectValues'):
+                queue.append(node)
+
