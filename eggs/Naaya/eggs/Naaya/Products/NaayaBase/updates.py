@@ -1,6 +1,4 @@
 from Products.naayaUpdater.updates import UpdateScript
-from Products.NaayaBase.constants import PERMISSION_SKIP_APPROVAL
-from naaya.core.zope2util import permission_add_role
 
 class SkipApprovalPermission(UpdateScript):
     title = ('Set the "Naaya - Skip approval" permission '

@@ -5,8 +5,6 @@ All types of objects that are containers must extend this class.
 """
 
 from zope.interface import implements
-from OFS.interfaces import IObjectWillBeAddedEvent
-from zope.app.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -52,7 +50,8 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
 
         """
 
-        return [x for x in map(lambda f, x: f(x, None), (self._getOb,)*len(p_ids), p_ids) if x is not None]
+        ids = map(self._getOb, p_ids)
+        return [x for x in ids if x is not None]
 
     def getObjectsByUrls(self, p_urls):
         """ Returns a list of objects inside this one with the given relative
@@ -60,11 +59,14 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
 
         """
 
-        return [x for x in map(lambda f, x: f(x, None), (self.unrestrictedTraverse,)*len(p_urls), p_urls) if x is not None]
+        objects = map(self.unrestrictedTraverse, p_urls)
+        return [x for x in objects if x is not None]
 
     #restrictions
     def get_valid_roles(self):
-        """returns a list of roles that can be used to restrict this folder"""
+        """
+        Returns a list of roles that can be used to restrict this folder
+        """
 
         roles = list(self.valid_roles())
         filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
@@ -72,19 +74,23 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
 
     def has_restrictions(self):
         """Indicates if this folder has restrictions for the current user."""
+
         return not self.acquiredRolesAreUsedBy(view)
 
     def get_roles_with_access(self):
         """Returns a list of roles that have access to this folder."""
+
         r = []
         ra = r.append
         for x in self.rolesOfPermission(view):
-            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
+            if x['selected'] and x['name'] not in ['Administrator',
+                 'Anonymous', 'Manager', 'Owner']:
                 ra(x['name'])
         return r
 
     def generateItemId(self, p_prefix):
         """Returns a unique id within the container's context"""
+
         max_attempts = 20000
         attempts = max_attempts
         while True:
@@ -96,6 +102,5 @@ class NyContainer(Folder, NyCommentable, NyBase, NyPermissions, NyDublinCore):
             except:
                 break
         return id
-
 
 InitializeClass(NyContainer)

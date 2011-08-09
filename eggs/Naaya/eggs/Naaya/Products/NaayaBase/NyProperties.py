@@ -29,13 +29,14 @@ class NyProperties(LocalPropertyManager):
 
     def __init__(self):
         """ """
+
         self.__dynamic_properties = {}
 
     security = ClassSecurityInfo()
 
     security.declarePrivate('createProperty')
     def createProperty(self, p_id, p_value, lang):
-        """Add a new property"""
+        """ Add a new property"""
 
         self.__dynamic_properties[p_id] = ''
         setattr(self, p_id, LocalProperty(p_id))
@@ -44,7 +45,7 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('deleteProperty')
     def deleteProperty(self, p_id):
-        """Delete a property"""
+        """ Delete a property"""
 
         try:
             del(self.__dynamic_properties[p_id])
@@ -54,13 +55,13 @@ class NyProperties(LocalPropertyManager):
             pass
 
     def getPropertyValue(self, p_id, lang=None):
-        """Returns a property value in the specified language"""
+        """ Returns a property value in the specified language"""
 
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(p_id, lang)
 
     def setProperties(self, dict):
-        """A set of properties is stored as a dictionary. this function adds
+        """ A set of properties is stored as a dictionary. this function adds
         properties to the current object
 
         """
@@ -69,18 +70,18 @@ class NyProperties(LocalPropertyManager):
         self._p_changed = 1
 
     def getProperties(self):
-        """Returns all the properties """
+        """ Returns all the properties """
         return self.__dynamic_properties
 
     security.declarePrivate('createDynamicProperties')
     def createDynamicProperties(self, p_dp_dict, lang):
-        """Create properties with values from a `dict`"""
+        """ Create properties with values from a `dict`"""
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
     security.declarePrivate('updateDynamicProperties')
     def updateDynamicProperties(self, p_dp_dict, lang):
-        """Update properties with values from a `dict`"""
+        """ Update properties with values from a `dict`"""
         if lang is None:
             lang = self.gl_get_selected_language()
         for l_dp in p_dp_dict.keys():
@@ -88,7 +89,7 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('updatePropertiesFromGlossary')
     def updatePropertiesFromGlossary(self, lang):
-        """Update the `keywords` and `coverage` properties from the associated
+        """ Update the `keywords` and `coverage` properties from the associated
         glossary for each language other than the current one
 
         """
@@ -116,7 +117,9 @@ def _translate_to_langs(source_values, translator, lang, lang_names):
     #search associated translations from glossary
     if translator.meta_type == module_glossary_metatype:
         for v in source_values:
-            gloss_elems = translator.searchGlossary(query=v, language=lang_names[lang], definition='')
+            gloss_elems = translator.searchGlossary(query=v,
+                                                    language=lang_names[lang],
+                                                    definition='')
 
             #search for the exact match
             exact_elem = None
@@ -149,7 +152,8 @@ def _translate_to_langs(source_values, translator, lang, lang_names):
             #get the translations of the exact match
             if exact_term:
                 for target_lang in res:
-                    exact_term = translator.getTermByID(exact_term.concept_id, target_lang)
+                    exact_term = translator.getTermByID(exact_term.concept_id,
+                                                        target_lang)
                     if exact_term:
                         trans = exact_term.concept_name
                         if trans:

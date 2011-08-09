@@ -1,9 +1,6 @@
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaCore.SyndicationTool.managers.namespaces_tool import namespaces_tool
 from Products.NaayaBase.NyBase import rss_item_for_object
 from naaya.content.event.event_item import addNyEvent
-
-from lxml import etree
 
 class NySyndicationTestCase(NaayaFunctionalTestCase):
     def test_rss_item_for_object(self):
@@ -15,7 +12,8 @@ class NySyndicationTestCase(NaayaFunctionalTestCase):
             else:
                 namespaces['a'] = n.value
         addNyEvent(self.portal['info'], id='9000', contributor='Me',
-                   title='Eveniment', start_date='12/12/2012', description='About something')
+                   title='Eveniment', start_date='12/12/2012', 
+                   description='About something')
         event = self.portal['info']['9000']
         event.approveThis()
         self.portal.recatalogNyObject(self.portal['info']['9000'])

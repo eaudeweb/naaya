@@ -1,14 +1,14 @@
 """ Events
 """
+
 from zope import event as zope_event
 from OFS.event import ObjectWillBeRemovedEvent, ObjectClonedEvent
 from zope.app.container.interfaces import IObjectRemovedEvent, IObjectAddedEvent
-from zope.app.container.contained import (
-    ObjectMovedEvent,
-    ObjectRemovedEvent,
-    ObjectAddedEvent,
-)
+from zope.app.container.contained import (ObjectMovedEvent,
+                                          ObjectRemovedEvent,
+                                          ObjectAddedEvent,)
 from OFS.interfaces import IObjectWillBeAddedEvent
+
 #
 # Debug
 #
@@ -19,8 +19,8 @@ def printEvent(obj, evt):
 # NyFSFile
 #
 def _handle_obj_version(obj, event_class, *args, **kwargs):
-    """ Notify event on obj.version
-    """
+    """ Notify event on obj.version """
+
     if not 'version' in obj.__dict__.keys():
         return
     version = getattr(obj, 'version', None)
@@ -29,8 +29,8 @@ def _handle_obj_version(obj, event_class, *args, **kwargs):
     zope_event.notify(event_class(version, *args, **kwargs))
 
 def _handle_obj_versions(obj, event_class, *args, **kwargs):
-    """ Notify event on obj.versions
-    """
+    """ Notify event on obj.versions """
+
     getVersionsContainer = getattr(obj, 'getVersionsContainer', None)
     if not getVersionsContainer:
         return
@@ -39,6 +39,7 @@ def _handle_obj_versions(obj, event_class, *args, **kwargs):
 
 def afterAddNyFSFile(obj, event):
     """ Added """
+
     ext_file = obj.get_data(as_string=False)
     ext_file_id = ext_file.getId()
     if IObjectRemovedEvent.providedBy(event):
@@ -57,12 +58,14 @@ def afterAddNyFSFile(obj, event):
 
 def afterCloneNyFSFile(obj, event):
     """ Copy & Paste"""
+
     _handle_obj_version(obj, ObjectClonedEvent)
     _handle_obj_versions(obj, ObjectClonedEvent)
     zope_event.notify(ObjectClonedEvent(obj.get_data(as_string=False)))
 
 def beforeDeleteNyFSFile(obj, event):
     """ Delete NyFSFile """
+
     # Notify object
     ext_file = obj.get_data(as_string=False)
     _handle_obj_version(obj, ObjectWillBeRemovedEvent, obj, 'version')
@@ -73,6 +76,7 @@ def beforeDeleteNyFSFile(obj, event):
 #
 def beforeMoveNyItem(obj, event):
     """A NyItem will be moved."""
+
     if not IObjectWillBeAddedEvent.providedBy(event):
         obj.uncatalogNyObject(obj)
 
@@ -89,6 +93,7 @@ def modifiedNyItem(obj, event):
 #
 def beforeMoveNyContainer(obj, event):
     """A NyContainer will be moved."""
+
     if not IObjectWillBeAddedEvent.providedBy(event):
         obj.uncatalogNyObject(obj)
 

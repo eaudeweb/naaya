@@ -7,7 +7,7 @@ from binascii import crc32
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
@@ -17,9 +17,7 @@ class NyVersioning(utils):
     Class that handles versioning for a single object.
     """
 
-    manage_options = (
-        {'label': 'Versions', 'action': 'manage_versions_html'},
-    )
+    manage_options = ({'label': 'Versions', 'action': 'manage_versions_html'},)
 
     security = ClassSecurityInfo()
 
@@ -31,6 +29,7 @@ class NyVersioning(utils):
 
         B{__versions} - a dictionary that stores versioned data
         """
+
         self.__current_version_uid = None
         self.__versions = {}
 
@@ -43,7 +42,9 @@ class NyVersioning(utils):
         @param p_version_uid: version unique identifier
         @param p_version_data: object data that is versioned
         """
-        self.__versions[p_version_uid] = (self.utGetTodayDate(), p_username, p_version_data)
+
+        self.__versions[p_version_uid] = (self.utGetTodayDate(), p_username,
+                                          p_version_data)
         self.__current_version_uid = p_version_uid
         self._p_changed = 1
 
@@ -52,6 +53,7 @@ class NyVersioning(utils):
         Returns the data for a version entry.
         @param p_version_uid: version unique identifier
         """
+
         try: return self.__versions[p_version_uid][2]
         except: return None
 
@@ -60,6 +62,7 @@ class NyVersioning(utils):
         Deletes a version entry.
         @param p_version_uid: version unique identifier
         """
+
         if self.__versions.has_key(p_version_uid):
             del self.__versions[p_version_uid]
         self._p_changed = 1
@@ -70,12 +73,14 @@ class NyVersioning(utils):
         @param p_version_data: version data
         @param p_data: new data
         """
+
         return crc32(p_version_data) != crc32(p_data)
 
     def getVersions(self):
         """
         Returns the dictionary of versions.
         """
+
         return self.__versions
 
     def setVersions(self, versions):
@@ -83,6 +88,7 @@ class NyVersioning(utils):
         Set versions structure for current object.
         @param versions: dictionary with versions info
         """
+
         self.__versions = dict([(key, value) for key, value in versions.items()])
         self._p_changed = 1
 
@@ -92,6 +98,7 @@ class NyVersioning(utils):
         version is removed because it cointains the current content of the
         object.
         """
+
         return dict([(key, value) for key, value in self.__versions.items()
                     if key != self.__current_version_uid])
 
@@ -99,6 +106,7 @@ class NyVersioning(utils):
         """
         Returns the current version id.
         """
+
         return self.__current_version_uid
 
     def setCurrentVersionId(self, id):
@@ -106,6 +114,7 @@ class NyVersioning(utils):
         Set the current version id.
         @param id: version unique identifier
         """
+
         self.__current_version_uid = id
         self._p_changed = 1
 
@@ -114,6 +123,7 @@ class NyVersioning(utils):
         Returns given version entry.
         @param p_version_uid: version unique identifier
         """
+
         return self.__get_version_data(p_version_uid)
 
     def copyVersions(self, target):
@@ -122,6 +132,7 @@ class NyVersioning(utils):
         current object to the target object.
         @param target: target object
         """
+
         self.setCurrentVersionId(target.getCurrentVersionId())
         self.setVersions(target.getVersions())
 
@@ -129,6 +140,7 @@ class NyVersioning(utils):
         """
         Creates a version entry.
         """
+
         l_version_uid = self.utGenerateUID()
         if self.__current_version_uid is None:
             #no versions yet
@@ -146,8 +158,10 @@ class NyVersioning(utils):
                 compare_with = compare_with_index()
             
             #compare with current version
-            if self.__compare_current_version_data_with_data(compare, compare_with):
-                self.__create_version(l_version_uid, self.objectDataForVersion(), username)
+            if self.__compare_current_version_data_with_data(compare,
+                                                             compare_with):
+                self.__create_version(l_version_uid, self.objectDataForVersion(),
+                                      username)
 
     def objectDataForVersion(self):
         """
@@ -156,6 +170,7 @@ class NyVersioning(utils):
 
         B{This method must be implemented.}
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersion'
 
     def objectDataForVersionCompare(self):
@@ -166,6 +181,7 @@ class NyVersioning(utils):
 
         B{This method must be implemented.}
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersionCompare'
 
     def objectVersionDataForVersionCompare(self, p_version_data):
@@ -178,6 +194,7 @@ class NyVersioning(utils):
 
         @param p_version_data: version data
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'objectVersionDataForVersionCompare'
 
     def versionForObjectData(self, p_version_data=None):
@@ -188,6 +205,7 @@ class NyVersioning(utils):
 
         @param p_version_data: version data
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'versionForObjectData'
 
     def showVersionData(self, vid=None):
@@ -198,6 +216,7 @@ class NyVersioning(utils):
 
         @param vid: version unique identifier
         """
+
         raise EXCEPTION_NOTIMPLEMENTED, 'showVersionData'
 
     #zmi pages

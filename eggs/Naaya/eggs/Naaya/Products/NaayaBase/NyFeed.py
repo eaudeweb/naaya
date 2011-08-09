@@ -15,8 +15,6 @@ from zope.component import getUtility
 from interfaces import INyFeedHarvester
 from naaya.core.utils import unescape_html_entities
 
-
-
 class NyFeed:
     """
     Class that implements functionality for grabbing RDF/RSS/Atom feeds.
@@ -55,11 +53,13 @@ class NyFeed:
         self.__feed_entries = []
         self.__feed_lang = None
 
-    def __set_feed(self, gone=0, feed=None, status=None, version=None, bozo_exception=None, encoding=None, etag=None,
-        modified=None, entries=None):
+    def __set_feed(self, gone=0, feed=None, status=None, version=None,
+                   bozo_exception=None, encoding=None, etag=None,
+                   modified=None, entries=None):
         """
         Set feed data after the feed was parsed.
         """
+
         self.__feed_gone = gone
         if feed is not None: self.__feed_feed = deepcopy(feed)
         else: self.__feed_feed = None
@@ -80,34 +80,44 @@ class NyFeed:
     #api
     def get_feed_feed(self):
         """ Getter for __feed_feed """
+
         return self.__feed_feed
     def get_feed_gone(self):
         """ Getter for I{__feed_gone}. """
+
         return self.__feed_gone
     def get_feed_status(self):
         """ Getter for I{__feed_status}. """
+
         return self.__feed_status
     def get_feed_version(self):
         """ Getter for I{__feed_version}. """
+
         return self.__feed_version
     def get_feed_bozo_exception(self):
         """ Getter for I{__feed_bozo_exception}. """
+
         return self.__feed_bozo_exception
     def get_feed_encoding(self):
         """ Getter for I{__feed_encoding}. """
+
         return self.__feed_encoding
     def get_feed_etag(self):
         """ Getter for I{__feed_etag}. """
+
         return self.__feed_etag
     def get_feed_modified(self):
         """ Getter for I{__feed_modified}. """
+
         return self.__feed_modified
     def get_feed_title(self):
         """ Getter for feed title. """
+
         try: return self.__feed_feed.title
         except: return ''
     def get_feed_lang(self):
         """ Getter for feed language. """
+
         try:
             return self.__feed_feed.language.lower()
         except AttributeError:
@@ -121,6 +131,7 @@ class NyFeed:
         B{Abstract method; this should be implemented by the class who extends
         I{NyFeed}.}
         """
+
         raise NotImplementedError, 'get_feed_url'
 
     def set_new_feed_url(self):
@@ -130,13 +141,16 @@ class NyFeed:
         B{Abstract method; this should be implemented by the class who extends
         I{NyFeed}.}
         """
+
         raise NotImplementedError, 'set_new_feed_url'
 
     def get_feed_items(self):
         """ Getter for I{__feed_entries}. """
+
         return self.__feed_entries
     def count_feed_items(self):
         """ Returns the number of items. """
+
         return len(self.__feed_entries)
 
     def get_feed_item_title(self, item):
@@ -144,18 +158,21 @@ class NyFeed:
         Returns the title of an item.
         @param item: feed item
         """
+
         return item['title']
     def get_feed_item_link(self, item):
         """
         Returns the URL of an item.
         @param item: feed item
         """
+
         return item['link']
     def get_feed_item_keys(self, item):
         """
         Returns all item keys without I{title} and I{link}.
         @param item: feed item
         """
+
         l_keys = item.keys()
         if 'title' in l_keys: l_keys.remove('title')
         if 'link' in l_keys: l_keys.remove('link')
@@ -166,6 +183,7 @@ class NyFeed:
         @param item: feed item
         @param key: key name
         """
+
         value = item.get(key, None)
         if type(value) == type(u''): value = value
         return value
@@ -174,6 +192,7 @@ class NyFeed:
         """
         Handles the feed grabbing and parsing.
         """
+
         if harvester_name is not None:
             # Don't use the default parser; we are configured to use a custom
             # one. Let's see if we can grab it.
@@ -192,9 +211,12 @@ class NyFeed:
         # Default parser
         if http_proxy:
             proxy = urllib2.ProxyHandler({"http":http_proxy})
-            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified, handlers = [proxy])
+            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag,
+                                 modified=self.__feed_modified,
+                                 handlers = [proxy])
         else:
-            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified)
+            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag,
+                                 modified=self.__feed_modified)
 
         if p.get('bozo', 0) == 1:
             #some error occurred
@@ -211,7 +233,9 @@ class NyFeed:
                     else: etag = None
                     if p.has_key('modified'): modified = p.modified
                     else: modified = None
-                    self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
+                    self.__set_feed(feed=p.feed, status=p.status,
+                                    version=p.version, encoding=p.encoding,
+                                    etag=etag,
                         modified=modified, entries=p.entries)
                 elif p.status == 200:
                     #the feed was harvested but with a warning
@@ -220,7 +244,9 @@ class NyFeed:
                     else: etag = None
                     if p.has_key('modified'): modified = p.modified
                     else: modified = None
-                    self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
+                    self.__set_feed(feed=p.feed, status=p.status,
+                                    version=p.version, encoding=p.encoding,
+                                    etag=etag,
                         modified=modified, entries=p.entries)
                 else:
                     #don't know how to handle this; set it as error
@@ -240,7 +266,9 @@ class NyFeed:
                     else: etag = None
                     if p.has_key('modified'): modified = p.modified
                     else: modified = None
-                    self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
+                    self.__set_feed(feed=p.feed, status=p.status,
+                                    version=p.version, encoding=p.encoding,
+                                    etag=etag,
                         modified=modified, entries=p.entries)
                 elif p.status == 302:
                     #the feed was temporarily moved to a new location
@@ -249,7 +277,9 @@ class NyFeed:
                     else: etag = None
                     if p.has_key('modified'): modified = p.modified
                     else: modified = None
-                    self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
+                    self.__set_feed(feed=p.feed, status=p.status,
+                                    version=p.version, encoding=p.encoding,
+                                    etag=etag,
                         modified=modified, entries=p.entries)
                 elif p.status == 304:
                     #the feed was not modified; do nothing
@@ -262,7 +292,9 @@ class NyFeed:
                     else: etag = None
                     if p.has_key('modified'): modified = p.modified
                     else: modified = None
-                    self.__set_feed(feed=p.feed, status=p.status, version=p.version, encoding=p.encoding, etag=etag,
+                    self.__set_feed(feed=p.feed, status=p.status,
+                            version=p.version, encoding=p.encoding,
+                            etag=etag,
                         modified=modified, entries=p.entries)
                 elif p.status == 410:
                     #the feed is gone; DO NOT HARVEST ANYMORE!!!

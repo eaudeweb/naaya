@@ -32,6 +32,7 @@ class NyBase(NyDublinCore):
         submited or not; it applies for object such as Story and Document.
 
         """
+
         self.submitted = 0
 
     security = ClassSecurityInfo()
@@ -42,6 +43,7 @@ class NyBase(NyDublinCore):
         """
         Test if the current object is instance of the B{NyCheckControl} class.
         """
+
         return isinstance(self, NyCheckControl)
 
     security.declareProtected(view_management_screens, 'setContributor')
@@ -51,6 +53,7 @@ class NyBase(NyDublinCore):
         @param contributor: the contributor
         @type contributor: string
         """
+
         self.contributor = contributor
         self._p_changed = 1
 
@@ -62,6 +65,7 @@ class NyBase(NyDublinCore):
         @param approved: the state flag
         @type approved: integer - 0 or 1
         """
+
         #If approved attribute is not changed - do nothing
         if hasattr(self, 'approved') and self.approved == approved:
             return
@@ -88,6 +92,7 @@ class NyBase(NyDublinCore):
         @param releasedate: the date
         @type releasedate: DateTime
         """
+
         self.releasedate = self.utGetDate(releasedate)
         self._p_changed = 1
 
@@ -100,6 +105,7 @@ class NyBase(NyDublinCore):
 
         B{1} - the object has been created
         """
+
         self.submitted = 1
         self._p_changed = 1
 
@@ -123,6 +129,7 @@ class NyBase(NyDublinCore):
         @param lang: the index language
         @type lang: string
         """
+
         return self._objectkeywords(lang)
 
     security.declarePublic('istranslated')
@@ -133,6 +140,7 @@ class NyBase(NyDublinCore):
         @param lang: the index language
         @type lang: string
         """
+
         return len(self.getLocalProperty('title', lang)) > 0
 
     def _tags(self, lang):
@@ -145,6 +153,7 @@ class NyBase(NyDublinCore):
         @param lang: the index language
         @type lang: string
         """
+
         return filter(None, self.getLocalProperty('keywords', lang).split(','))
 
     security.declarePrivate('syndicateThisHeader')
@@ -152,6 +161,7 @@ class NyBase(NyDublinCore):
         """
         Opens the item RDF tag for the current object.
         """
+
         return '<item rdf:about="%s">' % self.absolute_url()
 
     security.declarePrivate('syndicateThisFooter')
@@ -159,6 +169,7 @@ class NyBase(NyDublinCore):
         """
         Closes the item RDF tag for the current object.
         """
+
         return '</item>'
 
     security.declarePrivate('syndicateThisCommon')
@@ -168,6 +179,7 @@ class NyBase(NyDublinCore):
         @param lang: content language
         @type lang: string
         """
+
         r = []
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
@@ -197,6 +209,7 @@ class NyBase(NyDublinCore):
         @param lang: content language
         @type lang: string
         """
+
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
         syndication_tool = self.getSyndicationTool()
@@ -246,6 +259,7 @@ class NyBase(NyDublinCore):
         B{This method can be overwritten by some types of objects in order to
         export specific data.}
         """
+
         r = []
         ra = r.append
         ra(self.export_this_tag())
@@ -269,6 +283,7 @@ class NyBase(NyDublinCore):
 
         """
 
+
         return '<ob meta_type="%s" param="0" id="%s" sortorder="%s" contributor="%s" \
             approved="%s" approved_by="%s" releasedate="%s" discussion="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
@@ -287,6 +302,7 @@ class NyBase(NyDublinCore):
         B{This method can be overwritten by some types of objects in order to
         export specific object data as attributes.}
         """
+
         return ''
 
     security.declarePrivate('export_this_body')
@@ -294,6 +310,7 @@ class NyBase(NyDublinCore):
         """
         Common multilingual object properties are added as tags.
         """
+
         r = []
         ra = r.append
         for l in self.gl_get_languages():
@@ -311,6 +328,7 @@ class NyBase(NyDublinCore):
         B{This method can be overwritten by some types of objects in order to
         export specific object data as tags.}
         """
+
         return ''
 
 InitializeClass(NyBase)
@@ -348,4 +366,3 @@ rdf_ns_map = {
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     'a' : 'http://purl.org/rss/1.0/'
 }
-

@@ -2,7 +2,6 @@
 This module contains the classes for parsing export Naaya XML files.
 """
 
-from copy import deepcopy
 from xml.sax.handler import ContentHandler
 from xml.sax import *
 from cStringIO import StringIO
@@ -61,6 +60,7 @@ class import_handler(ContentHandler):
         """
         Initialize the I{stack} and I{root} variables.
         """
+
         self.root = None
         self.stack = []
 
@@ -123,6 +123,7 @@ class import_handler(ContentHandler):
 
     def endElement(self, name):
         """ """
+
         if name == 'export':
             self.root = self.stack[-1].obj
             self.stack.pop()
@@ -183,6 +184,7 @@ class import_parser:
             stored in the handler object will be imported in the current
             portal.
         """
+
         l_handler = import_handler()
         l_parser = make_parser()
         l_parser.setContentHandler(l_handler)

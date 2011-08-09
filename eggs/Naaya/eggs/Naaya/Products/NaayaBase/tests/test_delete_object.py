@@ -1,7 +1,6 @@
 from AccessControl import Unauthorized
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.url.url_item import addNyURL
 from Products.NaayaBase.constants import PERMISSION_DELETE_OBJECTS
 from naaya.core.zope2util import permission_add_role

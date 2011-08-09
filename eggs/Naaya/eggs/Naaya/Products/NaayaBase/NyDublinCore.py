@@ -1,14 +1,11 @@
-
 """
 This module contains the class that provides Dublin Core elements.
 """
 
-
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 from constants import *
-from NyCheckControl import NyCheckControl
 
 class NyDublinCore:
     """
@@ -19,6 +16,7 @@ class NyDublinCore:
         """
         Initialize variables.
         """
+
         pass
 
     security = ClassSecurityInfo()
@@ -28,6 +26,7 @@ class NyDublinCore:
         """
         The physical or digital manifestation of the resource.
         """
+
         return 'text/html'
 
     security.declarePublic('type')
@@ -35,6 +34,7 @@ class NyDublinCore:
         """
         The nature or genre of the content of the resource.
         """
+
         return 'Text'
 
     security.declarePublic('identifier')
@@ -42,6 +42,7 @@ class NyDublinCore:
         """
         An unambiguous reference to the resource within a given context.
         """
+
         return self.absolute_url()
 
     security.declarePublic('language')
@@ -49,6 +50,7 @@ class NyDublinCore:
         """
         A language of the intellectual content of the resource.
         """
+
         return self.gl_get_selected_language()
 
 InitializeClass(NyDublinCore)
