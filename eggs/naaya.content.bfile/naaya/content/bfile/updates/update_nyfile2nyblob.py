@@ -134,9 +134,9 @@ class Import(object):
         """ Setup non-schema properties
         """
         # XXX These should stay in annotations
-        self.context.approved = value.pop('approved')
-        self.context.approved_by = value.pop('approved_by')
-        self.context.submitted = value.pop('submitted')
+        self.context.approved = value.pop('approved', False)
+        self.context.approved_by = value.pop('approved_by', u"")
+        self.context.submitted = value.pop('submitted', 1)
         self.context.discussion = value.pop('discussion', 0)
         self.context.recatalogNyObject(self.context)
 
@@ -328,3 +328,4 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
 
         self.update_control_panel(portal)
         self.update_subobjects(portal)
+        return True
