@@ -197,10 +197,10 @@ class Import(object):
 
         """
         # XXX These should stay in annotations
-#        self.context.approved = value.pop('approved')
+        self.context.approved = value.pop('approved', False)
         self.context.approved_by = value.pop('approved_by')
         self.context.submitted = value.pop('submitted')
-#        self.context.discussion = value.pop('discussion', 0)
+        self.context.discussion = value.pop('discussion', 0)
 
         # XXX Comments
         comments = value.pop('_NyComments__comments_collection', {})
