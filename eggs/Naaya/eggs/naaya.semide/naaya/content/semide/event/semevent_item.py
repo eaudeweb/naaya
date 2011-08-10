@@ -414,8 +414,8 @@ class NySemEvent(semevent_item, NyAttributes, NyItem, NyCheckControl, NyContentT
             if theme_name:
                 item.append(Dc.subject(theme_name.strip()))
         item.extend(Ev.root(
-            Ev.organizer(self.utXmlEncode(self.getLocalProperty('organizer', lang))),
-            Ev.type(self.utXmlEncode(self.event_type)),
+            Ev.organizer(self.getLocalProperty('organizer', lang)),
+            Ev.type(self.event_type),
             Ev.startdate(self.utShowFullDateTimeHTML(self.start_date))
             ))
         if self.end_date:
