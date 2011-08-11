@@ -67,6 +67,9 @@
 		$('#show_filters').click(function(){
 			show_filters();
 		});
+		$('#hide_filters').click(function(){
+			hide_filters();
+		});
 		display_topics($('[name="themes"]').val());
 		$('[name="themes"]').change(function(){
 			display_topics($('[name="themes"]').val());
@@ -89,6 +92,12 @@
 	function show_filters(){
 		$('#filter_box').show();
 		$('#show_filters').hide();
+		$('#hide_filters').show();
+	}
+	function hide_filters(){
+		$('#filter_box').hide();
+		$('#show_filters').show();
+		$('#hide_filters').hide();
 	}
 	function display_topics(selected_value){
 		if (selected_value == null)
@@ -130,6 +139,8 @@
 	<input type="text" id="searchbox" size="50"/>
 	<a id="show_filters" href="javascript:void(0);"
 		tal:condition="python: review_template or library" i18n:translate="">Advanced filtering</a>
+	<a id="hide_filters" href="javascript:void(0);" style="display:none"
+		tal:condition="python: review_template or library" i18n:translate="">Hide advanced filtering</a>
 </div>
 <br/>
 <fieldset id="filter_box" tal:condition="review_template" style="display:none">
