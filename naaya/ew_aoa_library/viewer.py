@@ -801,10 +801,13 @@ class AoALibraryViewer(SimpleItem):
                 if str(year) not in answer_year:
                     return False
             if official_country_region:
-                answer_country = survey_answer.get('w_official-country-region', '').lower()
+                survey = self.target_survey()
+                countries = survey['w_official-country-region'].getChoices()
+                answer_country = survey_answer.get('w_official-country-region', [])
+                searchable_country = ', '.join(countries[c_i] for c_i in answer_country)
                 answer_region = survey_answer.get('w_geo-coverage-region', '').lower()
-                if official_country_region.lower() not in answer_country and \
-                        official_country_region.lower() not in answer_region:
+                if (official_country_region.lower() not in searchable_country.lower() and
+                        official_country_region.lower() not in answer_region):
                     return False
             if themes:
                 topic_present = False
