@@ -503,7 +503,7 @@ class NyTalkBackConsultation(Implicit, NyContentData, NyContentType,
             else:
                 return 'no-permission'
 
-        if self.get_days_left()[1] <= 0:
+        if self.get_days_left()[1] <= 0 and not self.checkPermissionManageTalkBackConsultation():
             return 'deadline-reached'
 
     security.declareProtected(
