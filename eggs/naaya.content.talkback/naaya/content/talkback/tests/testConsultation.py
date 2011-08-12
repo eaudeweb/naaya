@@ -20,6 +20,7 @@
 import re
 from unittest import TestSuite, makeSuite
 from datetime import date, timedelta
+from DateTime import DateTime
 from StringIO import StringIO
 from BeautifulSoup import BeautifulSoup
 from copy import deepcopy
@@ -106,6 +107,36 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         comment = paragraph.objectValues()[0]
         self.assertEqual(comment.contributor, 'admin')
         self.assertEqual(comment.message, 'I has something to say')
+
+        self.browser_do_logout()
+
+    def test_create_admin_comment_after_expiration(self):
+        consultation = self.portal.myfolder['test-consultation']
+        consultation.addSection(
+            id='sec2', title='sec2', body='blah2')
+        transaction.commit()
+
+        #Change the consultation end date to yesterday,
+        #and check if administrators can still post comments
+        end_date = consultation.end_date
+        new_date = DateTime((date.today() - timedelta(days=1)).strftime('%d/%m/%Y'))
+        self.portal.myfolder['test-consultation'].end_date = new_date
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder/test-consultation/sec2/000')
+        self.assertTrue('Add a comment' in self.browser.get_html())
+        form = self.browser.get_form('frmAdd')
+        form['message:utf8:ustring'] = 'I has something to say 2'
+        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.submit()
+
+        paragraph = consultation['sec2']['000']
+        self.assertEqual(len(paragraph.objectIds()), 1)
+        comment = paragraph.objectValues()[0]
+        self.assertEqual(comment.contributor, 'admin')
+        self.assertEqual(comment.message, 'I has something to say 2')
 
         self.browser_do_logout()
 
