@@ -220,6 +220,31 @@ class AoALibraryViewer(SimpleItem):
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
 
+    #
+    # To remove when migration script for vl region is done
+    #
+    security.declareProtected(view_management_screens, 'vl_regions')
+    def vl_regions(self):
+        """ """
+        library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
+        region_vals = {}
+        for vl_answer in library.objectValues(survey_answer_metatype):
+            region_val = vl_answer.get('w_geo-coverage-region')
+            if isinstance(region_val, basestring):
+                for rs1 in region_val.split(','):
+                    for rs2 in rs1.split(' and '):
+                        for r in rs2.split(' ans '):
+                            region_vals.setdefault(r.strip(), []).append(vl_answer)
+            else:
+                region_vals.setdefault(r, []).append(vl_answer)
+        return region_vals
+
+    security.declareProtected(view_management_screens, 'check_vl_regions')
+    check_vl_regions = PageTemplateFile('zpt/check_vl_regions', globals())
+    #
+    # end of vl region migration helper
+    #
+
     def _update_to_multiple_types_of_documents(self, state, library, country_fiches):
         # update the question information
         from Products.NaayaSurvey.migrations import basic_replace
