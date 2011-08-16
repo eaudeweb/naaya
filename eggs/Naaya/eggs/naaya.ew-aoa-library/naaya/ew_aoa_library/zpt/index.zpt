@@ -27,23 +27,15 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#javascript_label').hide();
-		$('#searchbox').parent().show();
+		$('#filter_box').show();
 		/*Search in page*/
 		$.expr[':'].icontains = function(obj, index, meta, stack){
 			return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
 		};
-		$('#searchbox').keyup(function(){
-			var searchString = $(this).val();
-
-			if (searchString.length > 0){
-				reset_checkboxes();
-				$('.datatable tbody tr').hide();
-				$('.datatable tr:icontains('+searchString+')').show();
-			}
-			else {
-			  $('.datatable tr').show();
-			}
-		})
+		$('#searchbox').keyup(filter_by_searchbox);
+		if ($('#searchbox').val()) {
+			filter_by_searchbox();
+		}
 		if ($('#answers_filter').val() == 'False'){
 			select_toggle = 'Off'
 		}
@@ -76,6 +68,17 @@
 			$('[name="topics"] option').removeAttr('selected');
 		});
 	})
+	function filter_by_searchbox() {
+		var searchString = $('#searchbox').val();
+		if (searchString.length > 0){
+			reset_checkboxes();
+			$('.datatable tbody tr').hide();
+			$('.datatable tr:icontains('+searchString+')').show();
+		}
+		else {
+		  $('.datatable tr').show();
+		}
+	}
 	function select_checkboxes(){
 		$('[name="answer_ids"]').each(function(){
 			if ($(this).parent().parent().css('display') != 'none')
@@ -90,12 +93,12 @@
 		$('#reset_checkboxes').removeAttr('checked');
 	}
 	function show_filters(){
-		$('#filter_box').show();
+		$('#advanced_filters').show();
 		$('#show_filters').hide();
 		$('#hide_filters').show();
 	}
 	function hide_filters(){
-		$('#filter_box').hide();
+		$('#advanced_filters').hide();
 		$('#show_filters').show();
 		$('#hide_filters').hide();
 	}
@@ -131,21 +134,24 @@
 		}
 	}
 </script>
+
 <div class="field" id="javascript_label">
 	<label i18n:translate="" >The filter function requires javascript</label>
 </div>
-<div class="field-inline" tal:condition="shadows" style="display:none">
-	<label id="search_label" i18n:translate="" >Show reports containing text</label>
-	<input type="text" id="searchbox" size="50"/>
-	<a id="show_filters" href="javascript:void(0);"
-		tal:condition="python: review_template or library" i18n:translate="">Advanced filtering</a>
-	<a id="hide_filters" href="javascript:void(0);" style="display:none"
-		tal:condition="python: review_template or library" i18n:translate="">Hide advanced filtering</a>
-</div>
-<br/>
+
 <fieldset id="filter_box" tal:condition="review_template" style="display:none">
-	<legend i18n:translate="">Advanced filtering</legend>
+	<legend i18n:translate="">Filters</legend>
 	<form method="post" action=".">
+	<div class="field-inline" tal:condition="shadows">
+		<label id="search_label" i18n:translate="" >Show reports containing text</label>
+		<input type="text" id="searchbox" name="searchbox" size="50"
+			tal:attributes="value options/searchbox|nothing" />
+		<a id="show_filters" href="javascript:void(0);"
+			tal:condition="python: review_template or library" i18n:translate="">Advanced filtering</a>
+		<a id="hide_filters" href="javascript:void(0);" style="display:none"
+			tal:condition="python: review_template or library" i18n:translate="">Hide advanced filtering</a>
+	</div>
+	<div id="advanced_filters" style="display:none">
 		<div style="float:left">
 			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
 				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
@@ -329,11 +335,22 @@
 			<input type="submit" value="Apply filter" i18n:attributes="value"
 				name="filter_answers_review_template:method"/>
 		</div>
+	</div>
 	</form>
 </fieldset>
 <fieldset id="filter_box" tal:condition="library" style="display:none">
-	<legend i18n:translate="">Advanced filtering</legend>
+	<legend i18n:translate="">Filters</legend>
 	<form method="post" action=".">
+	<div class="field-inline" tal:condition="shadows">
+		<label id="search_label" i18n:translate="" >Show reports containing text</label>
+		<input type="text" id="searchbox" name="searchbox" size="50"
+			tal:attributes="value options/searchbox|nothing" />
+		<a id="show_filters" href="javascript:void(0);"
+			tal:condition="python: review_template or library" i18n:translate="">Advanced filtering</a>
+		<a id="hide_filters" href="javascript:void(0);" style="display:none"
+			tal:condition="python: review_template or library" i18n:translate="">Hide advanced filtering</a>
+	</div>
+	<div id="advanced_filters" style="display:none">
 		<div style="float:left">
 			<div class="field">
 				<label for="w_body-conducting-assessment" i18n:translate="">
@@ -527,6 +544,7 @@
 			<input type="submit" value="Apply filter" i18n:attributes="value"
 				name="filter_answers_library:method"/>
 		</div>
+	</div>
 	</form>
 </fieldset>
 <form name="select_for_report" method="post" action="." onSubmit="return check_answers()">
@@ -686,9 +704,9 @@
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
 	<td  tal:condition="review_template" >
-        <span tal:condition="python:here.approved_date(i)"  i18n:translate="">Approved</span>
-        <span tal:condition="python:not here.approved_date(i)" i18n:translate="">Pending</span>
-    </td>
+		<span tal:condition="python:here.approved_date(i)"  i18n:translate="">Approved</span>
+		<span tal:condition="python:not here.approved_date(i)" i18n:translate="">Pending</span>
+	</td>
 	<td tal:condition="review_template" tal:content="python: here.utShowFullDateTime(here.approved_date(i))"/>
 </tr>
 </tbody>
