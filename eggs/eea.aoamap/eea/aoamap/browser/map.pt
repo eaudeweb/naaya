@@ -7,14 +7,9 @@
         Fill in the form below in order to search the available documents.
       </p>
       <form method="GET" action="" name="filters-form" id="filters-form">
-        <input type="text" name="text" size="65" id="description"
-               placeholder="Search text in title and description of the documents" class="input-text" />
-
-        <input type="submit" value="Search" class="standalone"
-               id="filter-button" />
-
-        <input type="reset" value="Reset" class="standalone"
-               id="reset-button" />
+        <input type="text" name="text" size="45" id="description"
+               placeholder="Search title and description"
+               class="input-text" />
 
         <div class="fields-separator">&nbsp;</div>
 
@@ -31,8 +26,16 @@
           <option value="other-objects">Other objects</option>
         </select>
 
+        <div class="fields-separator">&nbsp;</div>
+
         <input type="text" name="year" placeholder="Publication year"
                class="input-text" id="year" size="14" />
+
+        <input type="submit" value="Search" class="standalone"
+               id="filter-button" />
+
+        <input type="reset" value="Reset" class="standalone"
+               id="reset-button" />
 
       </form>
 
@@ -42,7 +45,7 @@
 
   </div>
 
-  <div id="results" class="hidden">
+  <div id="results">
 
     <div class="loading-animation hidden">
       <img src="++resource++eea.aoamap/ajax-loader.gif" />

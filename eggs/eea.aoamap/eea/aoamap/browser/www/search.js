@@ -1,6 +1,10 @@
 jQuery(document).ready(function($) {
-  $('#description').val($('#description').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
-  $('#year').val($('#year').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
+
+function setup_filter_form_visuals() {
+  $('#description').val($('#description').attr('placeholder')).css(
+    {'color': '#999999', 'font-style': 'italic'});
+  $('#year').val($('#year').attr('placeholder')).css(
+    {'color': '#999999', 'font-style': 'italic'});
 
   $('input.input-text').each(function(){
       $(this).focus(function(){
@@ -11,22 +15,29 @@ jQuery(document).ready(function($) {
 
       $(this).blur(function(){
         if( $(this).val() == '' ){
-          $(this).val($(this).attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
+          $(this).val($(this).attr('placeholder')).css(
+            {'color': '#999999', 'font-style': 'italic'});
         }
       });
   });
 
   $('.toggle-icon').live('click', function(){
-    if( $(this).hasClass('expanded') && ($('.template-subsection', $(this).parent()).is(':visible') == true) ){
+    if( $(this).hasClass('expanded') &&
+        ($('.template-subsection', $(this).parent()).is(':visible') == true)){
       $('.template-subsection', $(this).parent()).slideUp();
       $(this).removeClass('expanded').addClass('collapsed');
     }
 
-    if( $(this).hasClass('collapsed') && ($('.template-subsection', $(this).parent()).is(':visible') == false) ){
+    if( $(this).hasClass('collapsed') &&
+        ($('.template-subsection', $(this).parent()).is(':visible') == false)){
       $('.template-subsection', $(this).parent()).slideDown();
       $(this).removeClass('collapsed').addClass('expanded');
     }
   });
+}
+
+setup_filter_form_visuals();
+
 
 $('#filters-form').submit(function(evt) {
   evt.preventDefault();
@@ -123,14 +134,8 @@ function show_search_result(results) {
   update_document_list(results['documents']);
   //update_polygon_numbers(results['documents']);
 
-  var results = $('#results');
-  if(results.is(':visible')){
-    results.css({backgroundColor: '#ddd'});
-    results.animate({backgroundColor: '#fff'}, 500);
-  }
-  else {
-    results.show("slide", { direction: "left" }, 500);
-  }
+  $('#results').css({backgroundColor: '#ddd'}).animate(
+                    {backgroundColor: '#fff'}, 500);
 }
 
 function perform_demo_search(form_data) {

@@ -22,7 +22,7 @@ $.each(country_info_map, function(name, info) {
 });
 
 $('div#filters').bind('map-selection-changed', function(evt) {
-  $('div.country-info-box', M.map_div).remove();
+  $('div.country-info-box').remove();
   var countries = M.get_selected_countries();
   if(countries.length != 1) {
     return;
@@ -38,7 +38,7 @@ $('div#filters').bind('map-selection-changed', function(evt) {
       country_fiche_url(name, "Water"));
   $('a.link-green-economy-fiche', country_info_box).attr('href',
       country_fiche_url(name, "Green Economy"));
-  $('.olMapViewport', M.map_div).append(country_info_box);
+  $('#filters-form-holder').after(country_info_box);
 
 });
 
