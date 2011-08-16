@@ -127,8 +127,12 @@ div#results ul {
 
 div#results ul li {
   margin: 0;
-  padding: 7px;
   border-bottom: 1px solid #DFDFDF;
+}
+
+div#results ul li a.title {
+  display: block;
+  padding: 7px;
 }
 
 div#results ul li a,
@@ -136,7 +140,6 @@ div#results ul li a,
   font-size: 12px;
   line-height: 1.2;
   color: #44464B !important;
-  display: block;
 }
 
 div#results ul li a:hover,
@@ -167,7 +170,6 @@ div#document-info {
 }
 
 .template-section {
-  border-top: 1px solid #D3D3D3;
   clear: both;
   overflow: hidden;
   padding: 5px 0;

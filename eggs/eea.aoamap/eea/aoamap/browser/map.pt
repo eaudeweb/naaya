@@ -53,7 +53,7 @@
     </div>
 
     <ul class="search-results">
-      <div class="template">
+      <div class="template" style="display: none">
         <li class="document">
           <a href="javascript:" class="title">${title}</a>
         </li>
@@ -61,99 +61,42 @@
     </ul>
   </div>
 
+  <div style="display: none">
   <div id="document-info">
     <div class="template">
+
       <div class="template-section">
-        <span class="inline-block label">
-          Title
-        </span>
-
-        <span class="inline-block toggle-icon expanded"></span>
-
         <div class="template-subsection">
-          <a href="${library_url}" title="${title}">${title}</a>
+          Author: ${author}
+          {{if year}}(${year}){{/if}}
         </div>
       </div>
 
-      {{if author}}
       <div class="template-section">
-        <span class="inline-block label">
-          Author
-        </span>
-
         <div class="template-subsection">
-          <span>${author}</span>
+          Coverage: {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
         </div>
       </div>
-      {{/if}}
 
-      {{if year}}
       <div class="template-section">
-        <span class="inline-block label">
-          Year
-        </span>
-
         <div class="template-subsection">
-          <span>${year}</span>
+          Themes:
+          {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
+          {{if document_type.length}}
+              ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
+          {{/if}}
         </div>
       </div>
-      {{/if}}
 
       {{if url}}
       <div class="template-section">
-        <span class="inline-block label">
-          URL
-        </span>
-
         <div class="template-subsection">
-          <a href="${url}" title="${url}">${url}</a>
+            Download:
+            <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
         </div>
       </div>
       {{/if}}
 
-      <div class="template-section">
-        <span class="inline-block label">
-          Countries
-        </span>
-
-        <span class="inline-block toggle-icon expanded"></span>
-
-        <div class="template-subsection">
-          {{each country}}
-            <span>${$value}</span>,
-          {{/each}}
-        </div>
-      </div>
-
-      <div class="template-section">
-        <span class="inline-block label">
-          Themes
-        </span>
-
-        <span class="inline-block toggle-icon expanded"></span>
-
-        <div class="template-subsection">
-          {{each theme}}
-            <span>${$value}</span>,
-          {{/each}}
-        </div>
-      </div>
-
-      {{if document_type.length}}
-      <div class="template-section">
-        <span class="inline-block label">
-          Document types
-        </span>
-
-        <span class="inline-block toggle-icon expanded"></span>
-
-        <div class="template-subsection">
-          {{each document_type}}
-            <span>${$value}</span>,
-          {{/each}}
-        </div>
-      </div>
-      {{/if}}
     </div>
   </div>
 
@@ -165,6 +108,7 @@
         economy</a>, <a class="link-water-fiche">${documents_water} water</a>)
       </span>
     </div>
+  </div>
   </div>
 
   <div class="visualClear">&nbsp;</div>
