@@ -149,7 +149,7 @@ class NaayaTestCase(unittest.TestCase):
     def remove_content_type(self, meta_type):
         self.portal.manage_uninstall_pluggableitem(meta_type)
 
-    def serve_http(self, host='', port=8081):
+    def serve_http(self, host='localhost', port=8081):
         from webob.dec import wsgify
         @wsgify.middleware
         def no_hop_by_hop(request, app):
@@ -160,7 +160,7 @@ class NaayaTestCase(unittest.TestCase):
 
         from wsgiref.simple_server import make_server
         server = make_server(host, port, no_hop_by_hop(self.wsgi_request))
-        print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
+        print 'serving pages on http://%s:%d/; press ^C to stop' % (host, port)
         server.serve_forever()
 
 class FunctionalTestCase(NaayaTestCase, Functional): # not really, but good enough for us
