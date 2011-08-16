@@ -20,7 +20,8 @@
 	tal:define="virtual_library python:'tools/virtual_library/bibliography-details-each-assessment' in here.target_path;
 		review_template python:'tools/general_template/general-template' in here.target_path;
 		country_fiches python:'tools/country_fiches' in here.target_path;
-		is_entitled here/checkPermissionPublishObjects;
+		is_admin here/checkPermissionPublishObjects;
+		is_authenticated python:request['AUTHENTICATED_USER'].getUserName() != 'Anonymous User';
 		site here/getSite;
 		library_object site/tools/virtual_library/bibliography-details-each-assessment;
 		country_choices python: library_object['w_official-country-region'].getChoices();
@@ -32,7 +33,7 @@
 
 <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
 
-<div class="floated-buttons">
+<div class="floated-buttons" tal:condition="is_authenticated">
 	<span class="buttons">
 		<a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
 			tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
@@ -41,7 +42,7 @@
 <h1 tal:content="here/title_or_id"></h1>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
-	tal:condition="is_entitled">
+	tal:condition="is_admin">
 	<tal:block define="approved_date python:here.approved_date(here);
 				suggestions here/suggestions" condition="review_template">
 		<span tal:condition="approved_date" class="buttons">
