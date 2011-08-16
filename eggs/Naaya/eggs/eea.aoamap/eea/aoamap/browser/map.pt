@@ -19,17 +19,16 @@
         <div class="fields-separator">&nbsp;</div>
 
         <select name="theme" class="input-select">
-          <option value="">All themes</option>
+          <option value="">Water + Green economy</option>
           <option tal:repeat="option options/filter_options/themes"
                   tal:attributes="value option"
                   tal:content="option"></option>
         </select>
 
-        <select name="document-type" class="input-select">
-          <option value="">All document types</option>
-          <option tal:repeat="option options/filter_options/document_types"
-                  tal:attributes="value option"
-                  tal:content="option"></option>
+        <select name="library" class="input-select">
+          <option value="">All objects</option>
+          <option value="virtual-library">Virtual library</option>
+          <option value="other-objects">Other objects</option>
         </select>
 
         <input type="text" name="year" placeholder="Publication year"
