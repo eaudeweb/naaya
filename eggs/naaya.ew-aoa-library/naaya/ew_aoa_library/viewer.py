@@ -759,7 +759,11 @@ class AoALibraryViewer(SimpleItem):
 
         shadows = filter(respects_filter,
                 self.iter_assessments(show_unapproved=show_unapproved))
-        return self.index_html(shadows=shadows, official_country_region=official_country_region, show_unapproved=show_unapproved, themes=themes, topics=topics, and_or=and_or)
+        searchbox = REQUEST.get('searchbox', '')
+        return self.index_html(searchbox=searchbox, shadows=shadows,
+                official_country_region=official_country_region,
+                show_unapproved=show_unapproved, themes=themes, topics=topics,
+                and_or=and_or)
 
 
     security.declareProtected(view, 'filter_answers_library')
@@ -830,8 +834,10 @@ class AoALibraryViewer(SimpleItem):
             return True
 
         shadows = filter(respects_filter, self.iter_assessments())
-        return self.index_html(shadows=shadows, organization=organization,
-                year=year, official_country_region=official_country_region,
+        searchbox = REQUEST.get('searchbox', '')
+        return self.index_html(searchbox=searchbox, shadows=shadows,
+                organization=organization, year=year,
+                official_country_region=official_country_region,
                 themes=themes, topics=topics, and_or=and_or)
 
     security.declareProtected(view, 'filter_answers_cf_vl_aggregator')
