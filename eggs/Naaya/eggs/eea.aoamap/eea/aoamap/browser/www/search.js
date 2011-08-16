@@ -1,5 +1,14 @@
 jQuery(document).ready(function($) {
 
+M.ellipsis = function(txt, n) {
+  if(txt.length < n) {
+    return txt;
+  }
+  else {
+    return txt.substr(0, n) + "...";
+  }
+};
+
 function setup_filter_form_visuals() {
   $('#description').val($('#description').attr('placeholder')).css(
     {'color': '#999999', 'font-style': 'italic'});
