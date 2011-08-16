@@ -1,4 +1,4 @@
-$(function() {
+jQuery(document).ready(function($) {
   $('#description').val($('#description').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
   $('#year').val($('#year').attr('placeholder')).css({'color': '#999999', 'font-style': 'italic'});
 

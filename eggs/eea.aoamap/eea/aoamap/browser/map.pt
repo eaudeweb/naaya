@@ -180,6 +180,9 @@
 <script type="text/javascript" src="++resource++eea.aoamap/country_info.js"></script>
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
-  jQuery(document).ready(function() {
+  M.jQuery = jQuery;
+  jQuery.noConflict(true);
+  M.jQuery(document).ready(function() {
     M.create_map_search({map_div: 'countries-map'});
-  });"></script>
+  });
+  "></script>
