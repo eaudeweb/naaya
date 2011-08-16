@@ -1,4 +1,4 @@
-$(function() {
+jQuery(document).ready(function($) {
 
 var country_info_template = M.get_template($('div#country-info'));
 

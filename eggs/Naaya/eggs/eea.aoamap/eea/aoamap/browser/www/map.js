@@ -1,4 +1,4 @@
-(function() {
+(function($) {
 
 var M = window.M = {};
 
@@ -275,4 +275,4 @@ M.create_map_document = function(options) {
   });
 };
 
-})();
+})(jQuery);
