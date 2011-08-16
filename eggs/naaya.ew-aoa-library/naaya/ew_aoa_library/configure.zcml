@@ -38,4 +38,9 @@
       permission="zope2.View"
       />
 
+  <browser:resourceDirectory
+      name="naaya.ew_aoa_library"
+      directory="./www"
+      />
+
 </configure>
