@@ -720,8 +720,12 @@ class AoALibraryViewer(SimpleItem):
         topics = REQUEST.get('topics', [])
         if not isinstance(topics, list):
             topics = [topics]
+        searchbox = REQUEST.get('searchbox', '')
+
         if not (official_country_region or themes or show_unapproved):
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            shadows = list(
+                    self.iter_assessments(show_unapproved=show_unapproved))
+            return self.index_html(searchbox=searchbox, shadows=shadows)
 
         def respects_filter(shadow):
             survey_answer = self.get_survey_answer(shadow.getId())
@@ -759,7 +763,6 @@ class AoALibraryViewer(SimpleItem):
 
         shadows = filter(respects_filter,
                 self.iter_assessments(show_unapproved=show_unapproved))
-        searchbox = REQUEST.get('searchbox', '')
         return self.index_html(searchbox=searchbox, shadows=shadows,
                 official_country_region=official_country_region,
                 show_unapproved=show_unapproved, themes=themes, topics=topics,
@@ -783,9 +786,11 @@ class AoALibraryViewer(SimpleItem):
         topics = REQUEST.get('topics', [])
         if not isinstance(topics, list):
             topics = [topics]
+        searchbox = REQUEST.get('searchbox', '')
 
         if not (organization or year or official_country_region or themes):
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            shadows = list(self.iter_assessments())
+            return self.index_html(searchbox=searchbox, shadows=shadows)
 
         def respects_filter(shadow):
             survey_answer = self.get_survey_answer(shadow.getId())
@@ -834,7 +839,6 @@ class AoALibraryViewer(SimpleItem):
             return True
 
         shadows = filter(respects_filter, self.iter_assessments())
-        searchbox = REQUEST.get('searchbox', '')
         return self.index_html(searchbox=searchbox, shadows=shadows,
                 organization=organization, year=year,
                 official_country_region=official_country_region,
