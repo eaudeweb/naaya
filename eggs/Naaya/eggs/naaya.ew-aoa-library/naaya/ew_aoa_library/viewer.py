@@ -813,7 +813,10 @@ class AoALibraryViewer(SimpleItem):
                 survey = self.target_survey()
                 countries = survey['w_official-country-region'].getChoices()
                 answer_country = survey_answer.get('w_official-country-region', [])
-                searchable_country = ', '.join(countries[c_i] for c_i in answer_country)
+                if answer_country is None:
+                    searchable_country = ''
+                else:
+                    searchable_country = ', '.join(countries[c_i] for c_i in answer_country)
                 answer_region = survey_answer.get('w_geo-coverage-region', '').lower()
                 if (official_country_region.lower() not in searchable_country.lower() and
                         official_country_region.lower() not in answer_region):
