@@ -37,7 +37,6 @@ def shadow_to_dict(shadow):
         "year": shadow.viewer_year,
         "author": shadow.viewer_author,
         "url": shadow.url,
-        "library_url": shadow.absolute_url(),
     }
 
 
@@ -63,15 +62,19 @@ def filter_documents(ctx, request):
 
     filters = catalog_filters_for_shadows(site)
     filters.update({
-        'viewer_country': country,
-        'viewer_document_type': get_field('document-type'),
+        'viewer_country': {'query': country, 'operator': 'and'},
         'viewer_main_theme': get_field('theme'),
         'viewer_year': get_field('year'),
         'viewer_title_'+lang: get_field('text', ''),
     })
 
-    for name in ['viewer_country', 'viewer_document_type',
-                 'viewer_main_theme', 'viewer_year']:
+    library = get_field('library')
+    if library == 'virtual-library':
+        filters['path'] = [ofs_path(site['virtual-library-viewer'])]
+    elif library == 'other-objects':
+        filters['path'] = [ofs_path(site['country-fiches-viewer'])]
+
+    for name in ['viewer_country', 'viewer_main_theme', 'viewer_year']:
         if filters[name] in (None, []):
             del filters[name]
 
