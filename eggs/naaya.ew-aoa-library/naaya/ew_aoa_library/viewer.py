@@ -223,7 +223,7 @@ class AoALibraryViewer(SimpleItem):
     #
     # To remove when migration script for vl region is done
     #
-    security.declareProtected(view_management_screens, 'vl_regions')
+    security.declareProtected(view, 'vl_regions')
     def vl_regions(self):
         """ """
         library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
