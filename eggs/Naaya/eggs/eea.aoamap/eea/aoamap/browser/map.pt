@@ -115,6 +115,7 @@
 </div>
 <div class="visualClear">&nbsp;</div>
 
+<script type="text/javascript" src="++resource++eea.aoamap/proj4js-compressed.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/openlayers/OpenLayers.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery-1.6.2.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.scrollTo.js"></script>
