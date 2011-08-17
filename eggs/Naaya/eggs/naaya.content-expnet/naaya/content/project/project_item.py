@@ -338,10 +338,8 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         """ """
         return self.getFormsTool().getContent({'here': self}, 'project_edit')
 
-    def getTopics(self, category):
-        ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'expnet_topics', None)
-        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
+    def getChmTerms(self):
+        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):

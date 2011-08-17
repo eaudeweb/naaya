@@ -1,7 +1,22 @@
 <configure
   xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns:zope="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
   i18n_domain="naaya.content">
 
   <naaya:content factory=".project_item.get_config" />
+
+  <configure zcml:condition="installed Products.naayaUpdater">
+    <zope:utility name="Dutch_CHM_portal"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.MainTopicsToChmTerms"
+          permission="zope2.ViewManagementScreens" />
+
+    <zope:utility name="Typo"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.FixTypo"
+          permission="zope2.ViewManagementScreens" />
+  </configure>
+
 
 </configure>
