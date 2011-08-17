@@ -30,7 +30,9 @@
         <label style="display: inline-block; width: 7em" i18n:translate="" for="required">Mandatory</label>
         <input type="checkbox" id="required" name="required:boolean" tal:attributes="
             checked python: test(here.required, 'checked', None);
-            disabled python: test(here.must_be_mandatory(), 'disabled', None)" />
+            disabled python: test(here.must_be_mandatory(), 'disabled', None);" />
+            <input tal:condition="here/must_be_mandatory" type="hidden" name="required:boolean"
+            tal:attributes="value python:bool(here.required)" />
     </div>
 
     <div class="field-inline">
