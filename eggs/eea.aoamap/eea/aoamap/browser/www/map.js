@@ -2,9 +2,11 @@
 
 var M = window.M = {};
 
+Proj4js.defs["LAEA_52N_65E"] = "+proj=laea +lat_0=52 +lon_0=65";
+
 M.debug = true;
 M.proj_wgs1984 = new OpenLayers.Projection("EPSG:4326");
-M.map_projection = new OpenLayers.Projection("EPSG:900913");
+M.map_projection = new OpenLayers.Projection("LAEA_52N_65E");
 M.project = function(point) {
   return point.clone().transform(M.proj_wgs1984, M.map_projection);
 };
@@ -227,7 +229,7 @@ M.create_map_search = function(options) {
 
 
   M.countries_map.zoomToMaxExtent = function() {
-    M.countries_map.setCenter(M.project(new OpenLayers.LonLat(35, 57)), 3);
+    M.countries_map.setCenter(M.project(new OpenLayers.LonLat(58.37, 61.48)), 3);
   }
   M.countries_map.zoomToMaxExtent();
 

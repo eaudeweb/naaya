@@ -1,39 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
-<Map background-color="#d0e0ee" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs +over">
+<Map background-color="#9ab"
+     srs="+proj=laea +lat_0=52 +lon_0=65">
 
-  <Style name="Borders">
+  <Style name="Raster">
     <Rule>
-      <PolygonSymbolizer fill="#9b9" />
-      <LineSymbolizer stroke="#575" stroke-width="1.0" />
+      <RasterSymbolizer scaling="bilinear"/>
     </Rule>
   </Style>
 
-  <Style name="Labels">
-    <Rule>
-      <TextSymbolizer name="[name]"
-        face-name="DejaVu Sans Book" size="10" wrap-width="20"
-        fill="black" halo-fill="#bdb" halo-radius="1"
-        avoid-edges="true" />
-    </Rule>
-  </Style>
-
-  <Layer name="borders" srs="+init=epsg:4326">
-    <StyleName>Borders</StyleName>
+  <Layer name="raster-gdal" srs="+proj=laea +lat_0=52 +lon_0=65">
+    <StyleName>Raster</StyleName>
     <Datasource>
-      <Parameter name="type">shape</Parameter>
-      <Parameter name="file">geodata/50m_admin_0_countries.shp</Parameter>
+      <Parameter name="type">gdal</Parameter>
+      <Parameter name="base">/Users/alexm/Desktop/aoa-tiled-map</Parameter>
+      <Parameter name="file">cut-raster.tiff</Parameter>
     </Datasource>
   </Layer>
-
-  <Layer name="labels" srs="+init=epsg:4326">
-    <StyleName>Labels</StyleName>
-    <Datasource>
-      <Parameter name="type">ogr</Parameter>
-      <Parameter name="file">geodata/country-bodies.json</Parameter>
-      <Parameter name="layer">OGRGeoJSON</Parameter>
-    </Datasource>
-  </Layer>
-
 
 </Map>
