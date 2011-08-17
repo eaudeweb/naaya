@@ -368,6 +368,9 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         return self.getFormsTool().getContent({'here': self}, 'expert_edit')
 
     def getChmTerms(self):
+        if (not hasattr(self.aq_base, 'chm_terms')
+                or not self.aq_base.chm_terms):
+            return []
         return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
