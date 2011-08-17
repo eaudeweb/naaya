@@ -216,7 +216,7 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
         l_options = ()
         #if not self.hasVersion():
         #    l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += organisation_item.manage_options
+        l_options += organisation_item.manage_options(self)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
@@ -391,10 +391,8 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
-    def getTopics(self, category):
-        ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'expnet_topics', None)
-        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
+    def getChmTerms(self):
+        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
