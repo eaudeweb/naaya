@@ -11,12 +11,6 @@
           provides="Products.naayaUpdater.interfaces.IUpdateScript"
           component=".updates.MainTopicsToChmTerms"
           permission="zope2.ViewManagementScreens" />
-
-    <zope:utility name="Typo"
-          provides="Products.naayaUpdater.interfaces.IUpdateScript"
-          component=".updates.FixTypo"
-          permission="zope2.ViewManagementScreens" />
   </configure>
-
 
 </configure>
