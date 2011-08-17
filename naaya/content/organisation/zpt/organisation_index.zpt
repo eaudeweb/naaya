@@ -73,7 +73,7 @@
 <div class="main-content" tal:define="
 				geo_location here/geo_location;
 				address geo_location/address|string:;
-				main_topics python:here.getTopics(here.main_topics);
+				chm_terms python:here.getChmTerms();
 				portal_map python:here.getSite().portal_map">
 	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
@@ -93,10 +93,10 @@
 		<h3 i18n:translate="">Contact details</h3>
 		<span tal:replace=" structure here/contact_details"/>
 	</div>
-	<div tal:condition="main_topics">
+	<div tal:condition="chm_terms">
 		<h3 i18n:translate="">Main topics covered</h3>
 		<ul>
-			<tal:block repeat="topic main_topics">
+			<tal:block repeat="topic chm_terms">
 				<li i18n:translate=""><tal:block content="topic/title" /></li>
 			</tal:block>
 		</ul>
