@@ -76,7 +76,7 @@
 <div class="main-content" tal:define="
 				geo_location here/geo_location;
 				address geo_location/address|string:;
-				main_topics python:here.getExpertTopics(here.main_topics);">
+				chm_terms python:here.getChmTerms();">
 	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
 	<tal:block condition="here/details|nothing"
@@ -94,10 +94,10 @@
 	<div tal:condition="address">
 		<span tal:content="address"/>
 	</div>
-	<div tal:condition="main_topics">
+	<div tal:condition="chm_terms">
 		<h3 i18n:translate="">Main areas of expertise</h3>
 		<ul>
-			<tal:block repeat="topic main_topics">
+			<tal:block repeat="topic chm_terms">
 				<li i18n:translate=""><tal:block content="topic/title" /></li>
 			</tal:block>
 		</ul>

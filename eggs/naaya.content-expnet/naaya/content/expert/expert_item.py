@@ -367,10 +367,8 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         """ """
         return self.getFormsTool().getContent({'here': self}, 'expert_edit')
 
-    def getExpertTopics(self, category):
-        ptool = self.getPortletsTool()
-        topics = getattr(ptool, 'expnet_topics', None)
-        return [ topic for topic in topics.get_tree_nodes() if topic.id in category ]
+    def getChmTerms(self):
+        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
