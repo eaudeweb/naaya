@@ -392,6 +392,9 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
     def getChmTerms(self):
+        if (not hasattr(self.aq_base, 'chm_terms')
+                or not self.aq_base.chm_terms):
+            return []
         return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
