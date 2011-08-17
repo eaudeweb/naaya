@@ -239,7 +239,7 @@ class AoALibraryViewer(SimpleItem):
                 region_vals.setdefault(r, []).append(vl_answer)
         return region_vals
 
-    security.declareProtected(view_management_screens, 'check_vl_regions')
+    security.declareProtected(view, 'check_vl_regions')
     check_vl_regions = PageTemplateFile('zpt/check_vl_regions', globals())
     #
     # end of vl region migration helper
