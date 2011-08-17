@@ -339,6 +339,9 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         return self.getFormsTool().getContent({'here': self}, 'project_edit')
 
     def getChmTerms(self):
+        if (not hasattr(self.aq_base, 'chm_terms')
+                or not self.aq_base.chm_terms):
+            return []
         return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
