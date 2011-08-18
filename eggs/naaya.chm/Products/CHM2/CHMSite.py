@@ -1122,6 +1122,11 @@ def add_terms_property_to_schema(schema):
     elif schema.getId() == 'NyExpert':
         prop_spec['sortorder'] = 215
 
+    if (schema.getId() == 'NyExpert'
+            or schema.getId() == 'NyOrganisation'
+            or schema.getId() == 'NyProject'):
+        prop_spec['visible'] = True
+
     schema.addWidget('chm_terms', **prop_spec)
 
 def add_terms_property_to_all_schemas(site):
