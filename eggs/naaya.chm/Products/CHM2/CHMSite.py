@@ -1122,7 +1122,7 @@ def add_terms_property_to_schema(schema):
     elif schema.getId() == 'NyExpert':
         prop_spec['sortorder'] = 215
 
-    schema.addWidget('chm_terms', **prop_spec),
+    schema.addWidget('chm_terms', **prop_spec)
 
 def add_terms_property_to_all_schemas(site):
     schema_tool = site.getSchemaTool()
