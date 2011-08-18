@@ -13,6 +13,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 from naaya.core.interfaces import INyObjectContainer
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 
 import shadow
 from devel import aoa_devel_hook
@@ -223,23 +224,22 @@ class AoALibraryViewer(SimpleItem):
     #
     # To remove when migration script for vl region is done
     #
-    security.declareProtected(view, 'vl_regions')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'vl_regions')
     def vl_regions(self):
         """ """
-        library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
         region_vals = {}
-        for vl_answer in library.objectValues(survey_answer_metatype):
-            region_val = vl_answer.get('w_geo-coverage-region')
+        for shadow in self.iter_assessments():
+            region_val = shadow.get('geo_coverage_region')
             if isinstance(region_val, basestring):
                 for rs1 in region_val.split(','):
                     for rs2 in rs1.split(' and '):
                         for r in rs2.split(' ans '):
-                            region_vals.setdefault(r.strip(), []).append(vl_answer)
+                            region_vals.setdefault(r.strip(), []).append(shadow)
             else:
-                region_vals.setdefault(r, []).append(vl_answer)
+                region_vals.setdefault(r, []).append(shadow)
         return region_vals
 
-    security.declareProtected(view, 'check_vl_regions')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'check_vl_regions')
     check_vl_regions = PageTemplateFile('zpt/check_vl_regions', globals())
     #
     # end of vl region migration helper
