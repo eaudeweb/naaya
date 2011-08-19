@@ -47,11 +47,6 @@
 
   <div id="results">
 
-    <div class="loading-animation hidden">
-      <img src="++resource++eea.aoamap/ajax-loader.gif" />
-      Searching...
-    </div>
-
     <ul class="search-results">
       <div class="template" style="display: none">
         <li class="document">
