@@ -24,7 +24,8 @@ def set_up_catalog_indexes(site, request):
         # remove any existing indexes
         for name in ['viewer_title_en', 'viewer_title_ru', 'viewer_theme',
                      'viewer_main_theme', 'viewer_document_type',
-                     'viewer_country', 'viewer_author', 'viewer_year']:
+                     'viewer_country', 'viewer_region', 'viewer_geolevel',
+                     'viewer_author', 'viewer_year']:
             if catalog._catalog.indexes.has_key(name):
                 log.info('removing index %r', name)
                 catalog.delIndex(name)
@@ -52,6 +53,8 @@ def set_up_catalog_indexes(site, request):
         add_keyword_index('viewer_main_theme')
         add_keyword_index('viewer_document_type')
         add_keyword_index('viewer_country')
+        add_keyword_index('viewer_region')
+        add_field_index('viewer_geolevel')
         add_field_index('viewer_author')
         add_field_index('viewer_year')
 

@@ -175,7 +175,7 @@ def get_document_types_mapping(survey):
         return getattr(survey, cache_name)
 
     mapping = {}
-    for idx, label in list(enumerate(survey['w_type-document'].getChoices())):
+    for idx, label in enumerate(survey['w_type-document'].getChoices()):
         mapping[idx] = force_to_unicode(label)
 
     setattr(survey, cache_name, mapping)
@@ -198,6 +198,19 @@ def get_countries_mapping(survey):
     setattr(survey, cache_name, mapping)
     return mapping
 
+def get_geolevels_mapping(survey):
+    cache_name = '_v_aoa_geolevels_map'
+    if hasattr(survey, cache_name):
+        return getattr(survey, cache_name)
+
+    mapping = {}
+    _prop_name = 'w_theme-coverage'
+    for idx, label in list(enumerate(survey[_prop_name].getChoices())):
+        mapping[idx] = force_to_unicode(label)
+
+    setattr(survey, cache_name, mapping)
+    return mapping
+
 def main_theme(name):
     if name in ge_themes:
         return u"Green economy"
@@ -208,6 +221,8 @@ def main_theme(name):
         return u""
 
 DEFAULT_DATE = DateTime('2011/01/01')
+
+COUNTRY_GEOLEVEL = "National/Local"
 
 def extract_survey_answer_data_library(answer):
     all_topics = set()
@@ -265,6 +280,7 @@ def extract_survey_answer_data_library(answer):
     survey = answer.getSurveyTemplate()
     document_types = get_document_types_mapping(survey)
     countries = get_countries_mapping(survey)
+    geolevels = get_geolevels_mapping(survey)
 
     attrs.update({
         'viewer_title_en': answer.getLocalProperty(
@@ -278,7 +294,10 @@ def extract_survey_answer_data_library(answer):
         'viewer_author': answer.getLocalProperty(
                             'w_body-conducting-assessment', lang='en'),
         'viewer_country': [countries[idx] for idx in
-                           attrs['geo_coverage_country']]
+                           attrs['geo_coverage_country']],
+        'viewer_region': [r.strip() for r in
+                          answer.get('w_geo-coverage-region').split(',')],
+        'viewer_geolevel': geolevels.get(answer['w_theme-coverage']),
     })
 
     return attrs
@@ -314,7 +333,9 @@ def extract_survey_answer_data_country_fiches(answer):
         'viewer_year': attrs['publication_year'],
         'viewer_author': attrs['author'],
         'viewer_country': [countries[idx] for idx in
-                           attrs['geo_coverage_country']]
+                           attrs['geo_coverage_country']],
+        'viewer_region': [],
+        'viewer_geolevel': COUNTRY_GEOLEVEL,
     })
 
     return attrs
