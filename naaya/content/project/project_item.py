@@ -205,7 +205,7 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def manage_options(self):
         """ """
         l_options = ()
-        l_options += project_item.manage_options
+        l_options += project_item.manage_options(self)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
