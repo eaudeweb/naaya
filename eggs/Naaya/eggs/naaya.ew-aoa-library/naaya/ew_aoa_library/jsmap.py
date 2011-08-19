@@ -32,6 +32,7 @@ def shadow_to_dict(shadow):
     return {
         "title": shadow.viewer_title_en,
         "country": shadow.viewer_country,
+        "region": shadow.viewer_region,
         "theme": shadow.viewer_main_theme,
         "document_type": shadow.viewer_document_type,
         "year": shadow.viewer_year,
