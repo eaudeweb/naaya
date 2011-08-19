@@ -207,6 +207,8 @@ def main_theme(name):
         log.warn("Unknown theme %r", name)
         return u""
 
+DEFAULT_DATE = DateTime('2011/01/01')
+
 def extract_survey_answer_data_library(answer):
     all_topics = set()
     multiple_selects = [
@@ -241,8 +243,8 @@ def extract_survey_answer_data_library(answer):
         'theme': extract_multipleselect(answer, 'w_theme'),
         'topics': sorted(all_topics),
         'modification_time': answer.modification_time,
+        'creation_date': answer.get('creation_date') or DEFAULT_DATE,
     }
-
     if not attrs['title']:
         answer_id = attrs['id']
         prefix = 'answer_'
@@ -292,6 +294,7 @@ def extract_survey_answer_data_country_fiches(answer):
             'target_path': path_in_site(answer),
             'theme': extract_multipleselect(answer, 'w_theme'),
             'modification_time': answer.modification_time,
+            'creation_date': answer.get('creation_date') or DEFAULT_DATE,
             }
 
     attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', [])
@@ -361,6 +364,7 @@ def extract_survey_answer_data_general_template(answer):
         'topics': sorted(all_topics),
         'publication_year': publication_year,
         'modification_time': answer.modification_time,
+        'creation_date': answer.get('creation_date') or DEFAULT_DATE,
     }
 
     if not attrs['title']:
