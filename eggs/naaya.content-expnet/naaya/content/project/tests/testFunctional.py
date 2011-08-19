@@ -17,12 +17,14 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         self.install_content_type('Naaya Project')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.project.project_item import addNyProject
+        from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyProject(self.portal.myfolder, id='myproject', title='My project', submitted=1, contributor='contributor')
+        manage_addGlossaryCentre(self.portal, 'chm_terms')
         transaction.commit()
 
     def beforeTearDown(self):
-        self.portal.manage_delObjects(['myfolder'])
+        self.portal.manage_delObjects(['myfolder', 'chm_terms'])
         self.remove_content_type('Naaya Project')
         transaction.commit()
 
@@ -34,7 +36,7 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         expected_controls = set([
             'title:utf8:ustring', 'details:utf8:ustring', 'lang',
             'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring',
-            'main_topics:utf8:ustring:list',
+            'chm_terms:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
