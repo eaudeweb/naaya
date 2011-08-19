@@ -94,33 +94,10 @@ function get_search_form_data() {
   return form_data;
 }
 
-M.search_busy = false;
-M.delayed_search_timeout = null;
-M.next_form_data = null;
 M.animation_speed = 300;
 
 function request_search() {
-  M.next_form_data = get_search_form_data();
-  clearTimeout(M.delayed_search_timeout);
-  M.delayed_search_timeout = setTimeout(search_now, 300);
-}
-
-function search_completed() {
-  M.search_busy = false;
-  search_now();
-}
-
-function search_now() {
-  if(M.search_busy) {
-    return;
-  }
-  if(M.next_form_data == null) {
-    return;
-  }
-  var form_data = M.next_form_data;
-  M.next_form_data = null;
-  M.search_busy = true;
-  perform_search(form_data);
+  perform_search(get_search_form_data());
 }
 
 var geolevel_map = {
@@ -182,50 +159,6 @@ M.build_document_filter = function(form_data) {
   };
 };
 
-function filter_documents(form_data) {
-  var filter = M.build_document_filter(form_data);
-  return {'documents': $.map(M.config['documents'], filter)};
-}
-
-function perform_search(form_data) {
-  $('ul.search-results').text('');
-  $('.loading-animation').fadeIn();
-
-  var form_data_json = JSON.stringify(form_data);
-
-  var result = filter_documents(form_data);
-  show_search_result(result);
-  search_completed();
-}
-
-function show_search_result(results) {
-  $('.loading-animation').hide();
-  update_document_list(results['documents']);
-  //update_polygon_numbers(results['documents']);
-
-  $('#results').css({backgroundColor: '#ddd'}).animate(
-                    {backgroundColor: '#fff'}, 500);
-}
-
-function perform_demo_search(form_data) {
-  if(form_data['country'].length == 0)
-    form_data['country'] = "(all)";
-
-  if(! form_data['text'])
-    form_data['text'] = "(all)";
-
-  if(! form_data['theme'])
-    form_data['theme'] = "(all)";
-
-  if(! form_data['author-organisation'])
-    form_data['author-organisation'] = "(all)";
-
-  var message = "Searching for documents: " + JSON.stringify(form_data);
-  $("div#filters-debug").html(message, "<br>");
-
-  $.getJSON('data/test-documents.json').success(update_document_list);
-}
-
 var template = {
   'search-results': M.get_template($('ul.search-results')),
   'document-info': M.get_template($('div#document-info'))
@@ -239,16 +172,46 @@ function collapse_document_info() {
 
 $('div#filters').bind('map-coverage-hidden', collapse_document_info);
 
-function update_document_list(documents) {
+M.async_loop = function(callback) {
+  var timer = setInterval(function() {
+    var continue_loop = false;
+    try {
+      continue_loop = callback();
+    }
+    finally {
+      if(! continue_loop)
+        clearInterval(timer);
+    }
+  }, 1);
+  return {'stop': function() { clearInterval(timer); }};
+};
+
+var filter_loop = {'stop': function(){}};
+
+function perform_search(form_data) {
+  filter_loop.stop();
   var results = $('ul.search-results').empty();
 
-  if(documents.length == 0) {
-    var msg = "No results were found for this query";
-    $('ul.search-results').append($('<li>').text(msg));
+  var filter = M.build_document_filter(form_data);
+  var all_documents = M.config['documents'];
+  var results_counter = 0;
+  filter_loop = M.async_loop(function() {
+    while(results_counter < all_documents.length) {
+      var doc = filter(all_documents[results_counter]);
+      if(doc != null) {
+        show_one_result(doc);
+      }
+      results_counter += 1;
+      if(results_counter % 20 == 0) return true;
+    }
+    if($('>li', results).length == 0) {
+      var msg = "No results were found for this query";
+      $('ul.search-results').append($('<li>').text(msg));
+    }
+    return false;
+  });
 
-  }
-
-  $.each(documents, function(n, doc) {
+  function show_one_result(doc) {
     var doc_li = template['search-results'].tmpl(doc);
     $('a.title', doc_li).click(function(evt) {
       evt.preventDefault();
@@ -261,7 +224,7 @@ function update_document_list(documents) {
       var html = template['document-info'].tmpl(doc);
       var doc_info = $('<div class="document-info">').html(html);
       $(doc_li.append(doc_info));
-      var list_offset = $('ul.search-results').offset()['top'];
+      var list_offset = results.offset()['top'];
 
       var offset = doc_li.offset()['top'];
       if(collapsing_doc.length > 0) {
@@ -277,7 +240,7 @@ function update_document_list(documents) {
       M.show_country_coverage(doc['country']);
     });
     results.append(doc_li);
-  });
+  }
 }
 
 function update_polygon_numbers(documents) {
