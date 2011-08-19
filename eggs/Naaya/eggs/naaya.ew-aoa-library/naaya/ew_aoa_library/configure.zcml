@@ -26,13 +26,6 @@
 
   <browser:page
       for=".interfaces.IAoaPortal"
-      name="jsmap_search_map_config"
-      class=".jsmap.SearchMapInitial"
-      permission="zope2.View"
-      />
-
-  <browser:page
-      for=".interfaces.IAoaPortal"
       name="viewer_aggregator"
       class=".viewer_aggregator.viewer_aggregator"
       permission="zope2.View"
