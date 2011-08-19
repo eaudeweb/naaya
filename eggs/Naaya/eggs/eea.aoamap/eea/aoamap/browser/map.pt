@@ -47,6 +47,11 @@
 
   <div id="results">
 
+    <div class="loading-animation">
+      <img src="++resource++eea.aoamap/ajax-loader.gif" />
+      Loading documents
+    </div>
+
     <ul class="search-results">
       <div class="template" style="display: none">
         <li class="document">
@@ -124,8 +129,10 @@
 <script type="text/javascript" src="++resource++eea.aoamap/country_info.js"></script>
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
+  M.config['async_config_loaded'] = false;
   M.jQuery = jQuery;
   jQuery.noConflict(true);
+  M.load_async_config();
   M.jQuery(document).ready(function() {
     M.create_map_search({map_div: 'countries-map'});
   });

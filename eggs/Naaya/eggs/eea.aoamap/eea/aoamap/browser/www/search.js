@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+(function($) {
 
 M.ellipsis = function(txt, n) {
   if(txt.length < n) {
@@ -15,6 +15,20 @@ M.tokenize = function(str) {
     if(tk) return tk;
   });
 }
+
+M.load_async_config = function() {
+  M.jQuery.getJSON(M.config['search_url'], function(response) {
+    M.config['country_code'] = response['country_code'];
+    M.config['country_index'] = response['country_index'];
+    M.config['documents'] = response['documents'];
+    M.config['async_config_loaded'] = true;
+    M.configure_country_info();
+    $('div.loading-animation').remove();
+    $(document).ready(function() {
+      M.request_search();
+    });
+  });
+};
 
 function setup_filter_form_visuals() {
   $('#description').val($('#description').attr('placeholder')).css(
@@ -52,25 +66,25 @@ function setup_filter_form_visuals() {
   });
 }
 
-setup_filter_form_visuals();
 
+function setup_search_handlers() {
+  $('#filters-form').submit(function(evt) {
+    evt.preventDefault();
+    M.request_search();
+  });
 
-$('#filters-form').submit(function(evt) {
-  evt.preventDefault();
-  request_search();
-});
+  $('div#filters').bind('map-selection-changed', function(evt) {
+    M.request_search();
+  });
 
-$('div#filters').bind('map-selection-changed', function(evt) {
-  request_search();
-});
+  $('#filters-form').change(function(evt) {
+    M.request_search();
+  });
 
-$('#filters-form').change(function(evt) {
-  request_search();
-});
-
-$('#filters-form #reset-button').click(function() {
-  M.deselect_all_polygons();
-});
+  $('#filters-form #reset-button').click(function() {
+    M.deselect_all_polygons();
+  });
+}
 
 function get_search_form_data() {
   var form_data = {};
@@ -96,7 +110,10 @@ function get_search_form_data() {
 
 M.animation_speed = 300;
 
-function request_search() {
+M.request_search = function() {
+  if(! M.config['async_config_loaded']) {
+    return;
+  }
   perform_search(get_search_form_data());
 }
 
@@ -169,8 +186,6 @@ function collapse_document_info() {
   document_info.slideUp(M.animation_speed, function() { $(this).remove(); });
   return document_info;
 }
-
-$('div#filters').bind('map-coverage-hidden', collapse_document_info);
 
 M.async_loop = function(callback) {
   var timer = setInterval(function() {
@@ -251,4 +266,11 @@ function update_polygon_numbers(documents) {
   M.update_all_document_counts(docs_and_countries);
 }
 
+
+$(document).ready(function() {
+  setup_filter_form_visuals();
+  setup_search_handlers();
+  $('div#filters').bind('map-coverage-hidden', collapse_document_info);
 });
+
+})(jQuery);
