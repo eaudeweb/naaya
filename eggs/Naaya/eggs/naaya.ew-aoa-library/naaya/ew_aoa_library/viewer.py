@@ -129,11 +129,12 @@ class AoALibraryViewer(SimpleItem):
 
     def __getitem__(self, key):
         survey = self.target_survey()
-        if key not in survey.objectIds(survey_answer_metatype):
+        answer = survey[key]
+        if answer.meta_type != survey_answer_metatype:
             raise KeyError
-        if survey[key].is_draft():
+        if answer.is_draft():
             raise KeyError
-        return self.wrap_answer(survey[key])
+        return self.wrap_answer(answer)
 
     def get_survey_answer(self, key):
         survey = self.target_survey()
