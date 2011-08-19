@@ -237,7 +237,6 @@ M.create_map_search = function(options) {
   M.load_features('countries.json', function(features_json) {
     var view = M.views["Country"];
     view.set_features(M.geojson_format.read(features_json));
-    view.update_document_counts(M.config['documents_summary']);
 
     // parse the JSON twice so we get different IDs for the features
     M.all_country_features = M.geojson_format.read(features_json);
@@ -247,7 +246,6 @@ M.create_map_search = function(options) {
   M.load_features('regions.json', function(features_json) {
     var view = M.views["Sub-region"];
     view.set_features(M.geojson_format.read(features_json));
-    view.update_document_counts(M.config['documents_summary']);
   });
 };
 
