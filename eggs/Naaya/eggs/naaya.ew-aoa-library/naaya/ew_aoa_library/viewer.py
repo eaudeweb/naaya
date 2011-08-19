@@ -165,9 +165,8 @@ class AoALibraryViewer(SimpleItem):
                             'naaya.ew_aoa_library.viewer.index_html')
 
     security.declareProtected(view, 'index_html')
-    def index_html(self, **kwargs):
+    def index_html(self, filter=True, **kwargs):
         """ """
-        filter = True
         if not kwargs:
             shadows = list(self.iter_assessments())
             filter = False
@@ -730,6 +729,27 @@ class AoALibraryViewer(SimpleItem):
         else:
             return report.questionnaire_export(REQUEST=REQUEST, report_id='viewer', answers=[])
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(view_management_screens, 'delete_survey_answers')
+    def delete_survey_answers(self, REQUEST):
+        """Delete selected items from the parent survey"""
+        target_survey = self.target_survey()
+
+        answer_ids = REQUEST.get('answer_ids', [])
+        if answer_ids:
+            if isinstance(answer_ids, basestring):
+                answer_ids = [answer_ids]
+            answer_list = [getattr(target_survey, answer_id)
+                for answer_id in answer_ids]
+            shadow_list = [self.wrap_answer(answer) for answer in answer_list]
+            messages = ['Deleted %s - %s' %
+                (shadow_ob.get('id'), shadow_ob.get('title'))
+                for shadow_ob in shadow_list]
+            target_survey.manage_delObjects(answer_ids)
+        else:
+            messages = ['No answer was selected for deletion']
+        return self.index_html(shadows=list(self.iter_assessments()),
+            messages=messages, filter=False)
 
     security.declareProtected(view, 'filter_answers_review_template')
     def filter_answers_review_template(self, REQUEST):

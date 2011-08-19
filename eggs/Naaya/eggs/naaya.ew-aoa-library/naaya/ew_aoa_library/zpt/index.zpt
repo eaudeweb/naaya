@@ -21,7 +21,9 @@
 		library_object site/tools/virtual_library/bibliography-details-each-assessment;
 		country_fiches_object site/tools/country_fiches;
 		shadows options/shadows;
-		no_answers options/no_answers|nothing">
+		no_answers options/no_answers|nothing;
+		is_admin here/checkPermissionPublishObjects;
+		messages options/messages|nothing">
 
 <h1 i18n:translate="" tal:content="here/title_or_id"></h1>
 <script type="text/javascript" src="++resource++naaya.ew_aoa_library/viewers.js"></script>
@@ -44,7 +46,7 @@
 	</div>
 	<div id="advanced_filters" style="display:none">
 		<div style="float:left">
-			<div class="field-inline" tal:condition="here/checkPermissionPublishObjects">
+			<div class="field-inline" tal:condition="is_admin">
 				<label for="show_unapproved" i18n:translate="">Show unapproved answers</label>
 				<input type="checkbox" name="show_unapproved" tal:attributes="checked options/show_unapproved|nothing"/>
 			</div>
@@ -444,9 +446,17 @@
 	<input tal:condition="library" type="hidden" name="library" />
 	<input type="submit" value="Create statistics with selected answers"
 		name="viewer_view_report_html:method" i18n:attributes="value"/>
+	<input tal:condition="is_admin" type="submit"
+		value="Delete selected answers" name="delete_survey_answers:method"
+		i18n:attributes="value"/>
 </div>
 <div class="message-error field" tal:condition="not:shadows">
 	<label i18n:translate="">No answers were found for this query.</label>
+</div>
+<div class="message-error field" tal:condition="messages">
+	<ul>
+		<li tal:repeat="message messages" tal:content="message"/>
+	</ul>
 </div>
 <div class="message-error field" tal:condition="no_answers">
 	<label i18n:translate="">No answers were selected for the statistic.</label>
@@ -487,6 +497,16 @@
 
 	<!-- Cannot sort by themes -->
 	<th rowspan="2" tal:condition="not:review_template" i18n:translate="">Themes</th>
+
+	<!-- Creation date -->
+	<th rowspan="2" tal:condition="python:rkey and skey=='creation_date' or skey!='creation_date'">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=creation_date">Creation date</a>
+		<img tal:condition="python:skey=='creation_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th rowspan="2" tal:condition="python:not rkey and skey=='creation_date'">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=creation_date&rkey=True">Creation date</a>
+		<img tal:condition="python:skey=='creation_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
 
 	<!-- Last modified -->
 	<th rowspan="2" tal:condition="python:rkey and skey=='modification_time' or skey!='modification_time'">
@@ -580,6 +600,7 @@
 	<td tal:condition="not:review_template">
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
+	<td tal:content="python: here.utShowFullDateTime(i.creation_date)"/>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
 	<td tal:define="countries i/geo_coverage_country|nothing">
