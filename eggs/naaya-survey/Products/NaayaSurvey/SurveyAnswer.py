@@ -20,11 +20,8 @@
 # Zope imports
 from DateTime import DateTime
 from OFS.Folder import Folder
-from OFS.Traversable import path2url
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass
 from ZPublisher.HTTPRequest import FileUpload
-from zLOG import LOG, INFO
 from zope import interface
 from zope.event import notify
 
@@ -42,7 +39,7 @@ from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 gUtil = utils()
 
 def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
-                           REQUEST=None, id=None):
+                           REQUEST=None, id=None, creation_date=DateTime()):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
@@ -57,7 +54,7 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
             if id not in context.objectIds():
                 break
 
-    ob = SurveyAnswer(id, respondent, draft)
+    ob = SurveyAnswer(id, respondent, draft, creation_date)
     context._setObject(id, ob)
     ob = context._getOb(id)
 
@@ -80,6 +77,7 @@ class SurveyAnswer(Folder, NyProperties):
     meta_type = "Naaya Survey Answer"
     meta_label = "Survey Answer"
     icon = 'misc_/NaayaSurvey/NySurveyAnswer.gif'
+    creation_date = None
 
     _constructors = (manage_addSurveyAnswer,)
     _properties=()
@@ -94,12 +92,13 @@ class SurveyAnswer(Folder, NyProperties):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, respondent, draft):
+    def __init__(self, id, respondent, draft, creation_date):
         Folder.__init__(self, id)
         NyProperties.__init__(self)
         self.respondent = respondent
         self.draft = bool(draft)
         self.modification_time = DateTime()
+        self.creation_date=creation_date
 
     security.declarePrivate('set_datamodel')
     def set_datamodel(self, datamodel):
@@ -183,7 +182,6 @@ class SurveyAnswer(Folder, NyProperties):
         datamodel=self.getDatamodel()
         widgets = self.getSortedWidgets()
         atool = self.getSite().getAuthenticationTool()
-        ut = utils()
         respondent = atool.getUserFullNameByID(self.respondent)
         res = [respondent]
         for widget in widgets:
