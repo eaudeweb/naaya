@@ -134,7 +134,7 @@ M.build_document_filter = function(form_data) {
 
     /* check for theme */
     if(form_data['theme']) {
-      if(doc['theme'].indexOf(form_data['theme']) < 0) return;
+      if($.inArray(form_data['theme'], doc['theme']) < 0) return;
     }
 
     /* check for library */
@@ -146,7 +146,7 @@ M.build_document_filter = function(form_data) {
     if(form_data['country'].length > 0) {
       var country_match = false;
       $.each(form_data['country'], function(i, country) {
-        if(doc['country'].indexOf(country) > -1) {
+        if($.inArray(country, doc['country']) > -1) {
           country_match = true;
           return false;
         }
@@ -164,7 +164,7 @@ M.build_document_filter = function(form_data) {
     var text_match = true;
     var doc_tokens = M.tokenize(doc['title']);
     $.each(form_text_tokens, function(i, tk) {
-      if(doc_tokens.indexOf(tk) < 0) {
+      if($.inArray(tk, doc_tokens) < 0) {
         text_match = false;
         return false;
       }
