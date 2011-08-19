@@ -103,7 +103,7 @@ M.add_view = function(tiles_layer) {
         // for each document, see if any country matches this feature
         for(var i = 0; i < document_countries.length; i++) {
           var country = document_countries[i];
-          if(feature_countries.indexOf(country) > -1) {
+          if($.inArray(country, feature_countries) > -1) {
             // we have a match. count it and go to next document.
             count += 1;
             return;
@@ -206,7 +206,7 @@ M.show_country_coverage = function(countries) {
   M.country_coverage_layer.removeAllFeatures();
   $.each(M.all_country_features, function(n, feature) {
     var country_name = feature.attributes['countries'][0];
-    if(countries.indexOf(country_name) > -1) {
+    if($.inArray(country_name, countries) > -1) {
       M.country_coverage_layer.addFeatures([feature]);
     }
   });
@@ -269,7 +269,7 @@ M.create_map_document = function(options) {
 
     var countries = M.config['document_countries'];
     $.each(M.geojson_format.read(features_json), function(n, country_poly) {
-      if(countries.indexOf(country_poly['attributes']['name']) > -1) {
+      if($.inArray(country_poly['attributes']['name'], countries) > -1) {
         M.countries_layer.addFeatures([country_poly]);
       }
     });

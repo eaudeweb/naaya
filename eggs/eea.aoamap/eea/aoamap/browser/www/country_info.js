@@ -1,4 +1,4 @@
-jQuery(document).ready(function($) {
+(function($) {
 
 var country_info_template = M.get_template($('div#country-info'));
 
@@ -72,4 +72,4 @@ function inc(dic, name) {
   dic[name] += 1;
 }
 
-});
+})(jQuery);
