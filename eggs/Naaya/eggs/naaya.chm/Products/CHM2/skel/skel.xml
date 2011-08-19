@@ -388,9 +388,6 @@
 		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
 		<pluggablecontenttype meta_type="Naaya TalkBack Consultation" action="1"/>
 		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Expert" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Organisation" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Project" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<channeltype id="Red lists" title="Red lists"/>
