@@ -88,6 +88,22 @@ class XmlImportTest(NaayaTestCase):
         self._import_xml(glossary, 'dump1.xml')
         self.assertEqual(bucket.objectIds(), ['water', 'ice'])
 
+    def test_update_order(self):
+        glossary = helpers.make_glossary(self.portal, langs=['de'])
+        self._import_xml(glossary, 'dump1.xml')
+        # Test initial order
+        folder_ids = glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE])
+        elem_ids = glossary.bucket.objectIds()
+        self.assertEqual(folder_ids, ['bucket', 'glass'])
+        self.assertEqual(elem_ids, ['water', 'ice'])
+
+        # Now import them shuffled, test new order
+        self._import_xml(glossary, 'dump1shuffled.xml')
+        folder_ids = glossary.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE])
+        elem_ids = glossary.bucket.objectIds()
+        self.assertEqual(folder_ids, ['glass', 'bucket'])
+        self.assertEqual(elem_ids, ['ice', 'water'])
+
 
 class ExportTest(NaayaTestCase):
     def test_export_empty(self):
@@ -286,6 +302,7 @@ class DumpExportImportTest(NaayaTestCase):
         glossary.dump_import(StringIO(dump_file), remove_items=True)
 
         connection = glossary._p_jar
+        # assert no commit to DB since no change was required by second import
         self.assertEqual(connection._registered_objects, [])
 
     def test_empty_folders(self):

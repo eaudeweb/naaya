@@ -967,11 +967,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         xml_dump = lxml.etree.parse(dump_file)
 
         old_folder_ids = set(self.objectIds([NAAYAGLOSSARY_FOLDER_METATYPE]))
+        new_folder_ids = []
         for folder_node in xml_dump.xpath('/glossary/folder'):
             folder_id = folder_node.attrib['id']
             folder_title = folder_node.attrib['title']
             name_trans = translations(folder_node.xpath('./name')[0])
             def_trans = translations(folder_node.xpath('./definition')[0])
+
+            new_folder_ids.append(folder_id)
 
             if folder_id in old_folder_ids:
                 old_folder_ids.remove(folder_id)
@@ -986,11 +989,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
             old_element_ids = set(folder.objectIds([
                                     NAAYAGLOSSARY_ELEMENT_METATYPE]))
+            new_element_ids = []
             for element_node in folder_node.xpath('./element'):
                 element_id = element_node.attrib['id']
                 element_title = element_node.attrib['title']
                 name_trans = translations(element_node.xpath('./name')[0])
                 def_trans = translations(element_node.xpath('./definition')[0])
+
+                new_element_ids.append(element_id)
 
                 if element_id in old_element_ids:
                     old_element_ids.remove(element_id)
@@ -1006,8 +1012,14 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             if remove_items and old_element_ids:
                 folder.manage_delObjects(list(old_element_ids))
 
+            # maintain ordering from xml, old un-removed elems left at the end
+            sort_folder(folder, new_element_ids)
+
         if remove_items and old_folder_ids:
             self.manage_delObjects(list(old_folder_ids))
+
+        # maintain ordering from xml, old un-removed elems left at the end
+        sort_folder(self, new_folder_ids)
 
     security.declareProtected(view, 'dump_export')
     def dump_export(self, REQUEST=None):
