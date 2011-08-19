@@ -25,13 +25,15 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         setUp_EW_data(self.portal)
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.expert.expert_item import addNyExpert
+        from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyExpert(self.portal.myfolder, id='myexpert', name='My expert',
             surname='Knowitall', submitted=1, contributor='contributor')
+        manage_addGlossaryCentre(self.portal, 'chm_terms')
         transaction.commit()
 
     def beforeTearDown(self):
-        self.portal.manage_delObjects(['myfolder'])
+        self.portal.manage_delObjects(['myfolder', 'chm_terms'])
         tearDown_EW_data(self.portal)
         self.remove_content_type('Naaya Expert')
         transaction.commit()
