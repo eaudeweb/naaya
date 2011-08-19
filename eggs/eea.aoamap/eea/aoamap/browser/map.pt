@@ -8,7 +8,7 @@
       </p>
       <form method="GET" action="" name="filters-form" id="filters-form">
         <input type="text" name="text" size="45" id="description"
-               placeholder="Search title and description"
+               placeholder="Search for title"
                class="input-text" />
 
         <div class="fields-separator">&nbsp;</div>
@@ -75,6 +75,9 @@
       <div class="template-section">
         <div class="template-subsection">
           Coverage: {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
+          {{if region.length}}
+            ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
+          {{/if}}
         </div>
       </div>
 
@@ -121,7 +124,6 @@
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery-ui.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>
-<script type="text/javascript" src="++resource++eea.aoamap/cache.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/country_info.js"></script>

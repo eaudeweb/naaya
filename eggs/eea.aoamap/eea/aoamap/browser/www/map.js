@@ -225,7 +225,8 @@ M.create_map_search = function(options) {
 
   M.views = {};
   M.add_view(M.xyz_layer("Country"));
-  M.add_view(M.xyz_layer("Region"));
+  M.add_view(M.xyz_layer("Sub-region"));
+  M.add_view(M.xyz_layer("Pan-European"));
 
 
   M.countries_map.zoomToMaxExtent = function() {
@@ -244,7 +245,7 @@ M.create_map_search = function(options) {
   });
 
   M.load_features('regions.json', function(features_json) {
-    var view = M.views["Region"];
+    var view = M.views["Sub-region"];
     view.set_features(M.geojson_format.read(features_json));
     view.update_document_counts(M.config['documents_summary']);
   });
