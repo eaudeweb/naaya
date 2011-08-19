@@ -228,7 +228,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
     def manage_options(self):
         """ """
         l_options = ()
-        l_options += expert_item.manage_options
+        l_options += expert_item.manage_options(self)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         #l_options += NyVersioning.manage_options
         return l_options
