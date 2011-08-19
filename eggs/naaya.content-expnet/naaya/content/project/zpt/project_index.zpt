@@ -53,8 +53,7 @@
 	</div>
 </div>
 
-<div class="main-content" tal:define="
-				chm_terms python:here.getChmTerms();">
+<div class="main-content" tal:define="chm_terms here/getChmTerms">
 	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
 	<tal:block condition="here/details|nothing"

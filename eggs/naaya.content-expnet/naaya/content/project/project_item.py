@@ -54,11 +54,11 @@ from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyProject
 
+from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
+
 METATYPE_OBJECT = 'Naaya Project'
 
 DEFAULT_SCHEMA = {
-    'main_topics': dict(sortorder=200, widget_type='SelectMultiple',
-                        label='Main topics covered', list_id='expnet_topics'),
     'details':     dict(sortorder=210, widget_type='TextArea', label='Details',
                         localized=True, tinymce=True),
 }
@@ -193,7 +193,7 @@ class project_item(Implicit, NyContentData):
     pass
 
 
-class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
+class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentType, ExpnetMixin):
     """ """
 
     meta_type = config['meta_type']
@@ -337,12 +337,6 @@ class NyProject(project_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'project_edit')
-
-    def getChmTerms(self):
-        if (not hasattr(self.aq_base, 'chm_terms')
-                or not self.aq_base.chm_terms):
-            return []
-        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):

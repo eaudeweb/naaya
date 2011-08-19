@@ -76,7 +76,7 @@
 <div class="main-content" tal:define="
 				geo_location here/geo_location;
 				address geo_location/address|string:;
-				chm_terms python:here.getChmTerms();">
+				chm_terms here/getChmTerms">
 	<tal:block condition="here/description|nothing"
 		content="structure here/description" />
 	<tal:block condition="here/details|nothing"
