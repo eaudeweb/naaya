@@ -9,6 +9,13 @@ M.ellipsis = function(txt, n) {
   }
 };
 
+M.tokenize = function(str) {
+  return $.map(str.toLowerCase().split(/\b/), function(tk) {
+    tk = tk.trim();
+    if(tk) return tk;
+  });
+}
+
 function setup_filter_form_visuals() {
   $('#description').val($('#description').attr('placeholder')).css(
     {'color': '#999999', 'font-style': 'italic'});
@@ -74,6 +81,8 @@ function get_search_form_data() {
 
   form_data['country'] = M.get_selected_countries();
 
+  form_data['geolevel'] = M.current_view_name;
+
   if(form_data['text'] == $('#description').attr('placeholder')) {
     form_data['text'] = "";
   }
@@ -81,13 +90,13 @@ function get_search_form_data() {
   if(form_data['year'] == $('#year').attr('placeholder')) {
     form_data['year'] = "";
   }
+
   return form_data;
 }
 
 M.search_busy = false;
 M.delayed_search_timeout = null;
 M.next_form_data = null;
-M.search_cache = new Cache(50);
 M.animation_speed = 300;
 
 function request_search() {
@@ -114,28 +123,79 @@ function search_now() {
   perform_search(form_data);
 }
 
+var geolevel_map = {
+    'Global': 'Pan-European',
+    'Regional/Transboundary': 'Sub-region',
+    'National/Local': 'Country'
+};
+
+M.build_document_filter = function(form_data) {
+  var form_text_tokens = M.tokenize(form_data['text'] || "");
+  return function(doc) {
+
+    /* check for year */
+    if(form_data['year']) {
+      if(form_data['year'] != doc['year']) return;
+    }
+
+    /* check for theme */
+    if(form_data['theme']) {
+      if(doc['theme'].indexOf(form_data['theme']) < 0) return;
+    }
+
+    /* check for library */
+    if(form_data['library']) {
+      if(doc['library'] != form_data['library']) return;
+    }
+
+    /* check for country */
+    if(form_data['country'].length > 0) {
+      var country_match = false;
+      $.each(form_data['country'], function(i, country) {
+        if(doc['country'].indexOf(country) > -1) {
+          country_match = true;
+          return false;
+        }
+      });
+      if(! country_match) return;
+    }
+
+    /* check for geolevel */
+    var geolevel = geolevel_map[doc['geolevel']];
+    if(form_data['geolevel'] == geolevel) {}
+    else if(form_data['geolevel'] == 'Sub-region' && geolevel == 'Country') {}
+    else return;
+
+    /* check text */
+    var text_match = true;
+    var doc_tokens = M.tokenize(doc['title']);
+    $.each(form_text_tokens, function(i, tk) {
+      if(doc_tokens.indexOf(tk) < 0) {
+        text_match = false;
+        return false;
+      }
+    });
+    if(! text_match) return;
+
+    /* all filters match; return document */
+    return doc;
+  };
+};
+
+function filter_documents(form_data) {
+  var filter = M.build_document_filter(form_data);
+  return {'documents': $.map(M.config['documents'], filter)};
+}
+
 function perform_search(form_data) {
   $('ul.search-results').text('');
   $('.loading-animation').fadeIn();
 
   var form_data_json = JSON.stringify(form_data);
 
-  var cached_result = M.search_cache.getItem(form_data_json);
-  if(cached_result == null) {
-    $.getJSON(M.config['search_url'], form_data, function(results) {
-      var t = Math.round(results['query-time'] * 100) / 100;
-      M.debug_log("search results: " + results['documents'].length +
-                  " documents in " + t + " seconds");
-      M.search_cache.setItem(form_data_json, results);
-      show_search_result(results);
-      search_completed();
-    });
-  }
-  else {
-    M.debug_log('result found in cache');
-    show_search_result(cached_result);
-    search_completed();
-  }
+  var result = filter_documents(form_data);
+  show_search_result(result);
+  search_completed();
 }
 
 function show_search_result(results) {
