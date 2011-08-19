@@ -12,13 +12,12 @@ except:
     excel_export_available = False
 
 # Zope imports
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view, view_management_screens
 from DateTime import DateTime
 from Globals import InitializeClass
 from OFS.Traversable import path2url
-from ZPublisher import BadRequest, InternalError, NotFound
+from ZPublisher import NotFound
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, ERROR, DEBUG
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -30,12 +29,10 @@ from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.constants import \
      EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS, \
      PERMISSION_SKIP_CAPTCHA
-from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaWidgets.Widget import WidgetError
@@ -43,7 +40,6 @@ from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.core.zope2util import folder_manage_main_plus
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
-from SurveyReport import manage_addSurveyReport
 from permissions import *
 from questionnaire_item import questionnaire_item
 
@@ -245,10 +241,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         suggestions = []
         respondent = None
+        creation_date = DateTime()
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
             respondent = old_answer.respondent
             suggestions = getattr(old_answer, 'suggestions', [])
+            if not getattr(old_answer, 'draft', False):
+                creation_date = old_answer.get('creation_date')
             # an answer ID was provided explicitly for us to edit, so we
             # remove the old one
             self._delObject(answer_id)
@@ -265,7 +264,9 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         #If we are in edit mode, keep the answer_id from the "old answer"
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST,
-                                           draft=draft, respondent=respondent, id=answer_id)
+                                           draft=draft, respondent=respondent,
+                                           id=answer_id,
+                                           creation_date=creation_date)
         answer = self._getOb(answer_id)
         if suggestions:
             answer.suggestions = suggestions
