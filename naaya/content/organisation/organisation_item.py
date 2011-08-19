@@ -55,6 +55,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.managers.utils import make_id
 
+from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
+
 METATYPE_OBJECT = 'Naaya Organisation'
 
 DEFAULT_SCHEMA = {
@@ -62,8 +64,6 @@ DEFAULT_SCHEMA = {
     'phone':   dict(sortorder=140, widget_type='String', label='Phone'),
     'fax':     dict(sortorder=160, widget_type='String', label='Fax'),
     'email':   dict(sortorder=170, widget_type='String', label='Email address'),
-    'main_topics': dict(sortorder=200, widget_type='SelectMultiple',
-                        label='Main topics covered', list_id='expnet_topics'),
     'contact_details': dict(sortorder=230, widget_type='TextArea',
                             label='Contact details'),
 }
@@ -201,7 +201,7 @@ class organisation_item(Implicit, NyContentData):
     """ """
     pass
 
-class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
+class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, NyContentType, ExpnetMixin):
     """ """
 
     implements(INyOrganisation)
@@ -390,12 +390,6 @@ class NyOrganisation(organisation_item, NyAttributes, NyItem, NyCheckControl, Ny
         self.picture = None
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
-
-    def getChmTerms(self):
-        if (not hasattr(self.aq_base, 'chm_terms')
-                or not self.aq_base.chm_terms):
-            return []
-        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):

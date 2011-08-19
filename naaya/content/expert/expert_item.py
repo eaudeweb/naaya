@@ -55,6 +55,8 @@ from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyExpert
 
+from naaya.content.expnet_common.expnet_mixin import ExpnetMixin
+
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
 LABEL_OBJECT = 'Expert'
@@ -81,9 +83,6 @@ DEFAULT_SCHEMA = {
                               label='Instant messaging'),
     'ref_lang': dict(sortorder=210, widget_type='String',
                      label='Working language(s)'),
-    'main_topics': dict(sortorder=300, widget_type='SelectMultiple',
-                        label='Main areas of expertise',
-                        list_id='expnet_topics'),
     'details': dict(sortorder=310, widget_type='TextArea', label='Details',
                     localized=True, tinymce=True),
 }
@@ -217,7 +216,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
 class expert_item(Implicit, NyContentData):
     """ """
 
-class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
+class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType, ExpnetMixin):
     """ """
     implements(INyExpert)
     meta_type = METATYPE_OBJECT
@@ -366,12 +365,6 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'expert_edit')
-
-    def getChmTerms(self):
-        if (not hasattr(self.aq_base, 'chm_terms')
-                or not self.aq_base.chm_terms):
-            return []
-        return self.chm_terms.split(',')
 
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
