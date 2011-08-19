@@ -19,4 +19,8 @@ def sort_folder(folder_ob, object_ids):
             if ob_data['id'] == ob_id:
                 ordered_objects.append(ob_data)
                 break
-    folder_ob._objects = tuple(ordered_objects + unordered_objects)
+
+    # avoid unnecessary commits (order maintained)
+    desired_order = tuple(ordered_objects + unordered_objects)
+    if folder_ob._objects != desired_order:
+        folder_ob._objects = desired_order
