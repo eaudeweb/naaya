@@ -36,7 +36,6 @@ class NyProjectFunctionalTestCase(NaayaFunctionalTestCase):
         expected_controls = set([
             'title:utf8:ustring', 'details:utf8:ustring', 'lang',
             'geo_location.lat:utf8:ustring', 'geo_location.lon:utf8:ustring',
-            'chm_terms:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
