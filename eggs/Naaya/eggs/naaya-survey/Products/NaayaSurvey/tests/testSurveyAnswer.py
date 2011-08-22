@@ -118,7 +118,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                          0)
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_invalid_captcha_with_request(self, manage_addSurveyAnswer):
@@ -172,7 +173,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey._delObject.assert_called_with('12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id='12345',
-                                                  respondent='usr')
+                                                  respondent='usr',
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_explicit_answer_id_with_request(self, manage_addSurveyAnswer):
@@ -188,7 +190,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey._delObject.assert_called_with('12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,
                                                   draft=False, id='12345',
-                                                  respondent='usr')
+                                                  respondent='usr',
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_no_multiple_answers_no_request(self, manage_addSurveyAnswer):
@@ -204,7 +207,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey._delObject.assert_called_with('12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_no_multiple_answers_with_request(self, manage_addSurveyAnswer):
@@ -221,7 +225,9 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         survey._delObject.assert_called_with('12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,
-                                                  draft=False, id=None, respondent=None)
+                                                  draft=False, id=None,
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_success_no_request(self, manage_addSurveyAnswer):
@@ -235,7 +241,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         self.assertEqual(survey.delSessionKeys.call_count, 0)
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_success_with_request(self, manage_addSurveyAnswer):
@@ -259,7 +266,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                             "http://survey/messages_html")
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_notify_owner(self, manage_addSurveyAnswer):
@@ -272,7 +280,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
         survey._getOb.assert_called_with('answer_12345')
         survey.sendNotificationToOwner.assert_called_with(answer_12345)
 
@@ -287,7 +296,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
         survey._getOb.assert_called_with('answer_12345')
         survey.sendNotificationToRespondent.assert_called_with(answer_12345)
 
@@ -301,7 +311,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
 
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
         survey._getOb.assert_called_with('answer_12345')
         survey.sendNotificationToRespondent.assert_called_with(answer_12345)
 
@@ -325,7 +336,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                                   {'test_widget': ''},
                                                   REQUEST=None,
                                                   draft=True, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_change_other_respondent_answer(self, manage_addSurveyAnswer):
@@ -342,7 +354,8 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey._getOb.assert_called_with('answer_12345')
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=None,
                                                   draft=False, id='answer_12345',
-                                                  respondent='usr')
+                                                  respondent='usr',
+                                                  creation_date=None)
 
     @patch('Products.NaayaSurvey.SurveyQuestionnaire.manage_addSurveyAnswer')
     def test_add_draft_with_request(self, manage_addSurveyAnswer):
@@ -364,4 +377,5 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
                                             "http://survey/answer_12345?edit=1")
         manage_addSurveyAnswer.assert_called_with(survey, {}, REQUEST=REQUEST,
                                                   draft=True, id=None,
-                                                  respondent=None)
+                                                  respondent=None,
+                                                  creation_date=None)
