@@ -1115,6 +1115,7 @@ def add_terms_property_to_schema(schema):
         'label': 'CHM terms',
         'glossary_id': ID_CHM_TERMS,
         'localized': True,
+        'separator': '|',
     }
 
     if schema.getId() == 'NyMunicipality':
