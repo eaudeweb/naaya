@@ -7,10 +7,15 @@
   <naaya:content factory=".project_item.get_config" />
 
   <configure zcml:condition="installed Products.naayaUpdater">
-  <configure zcml:condition="installed naaya.chm">
+  <configure zcml:condition="installed Products.CHM2">
     <zope:utility name="Dutch_CHM_portal"
           provides="Products.naayaUpdater.interfaces.IUpdateScript"
           component=".updates.MainTopicsToChmTerms"
+          permission="zope2.ViewManagementScreens" />
+
+    <zope:utility name="CHMTermsSeparator"
+          provides="Products.naayaUpdater.interfaces.IUpdateScript"
+          component=".updates.ChmTermsSeparator"
           permission="zope2.ViewManagementScreens" />
   </configure>
   </configure>

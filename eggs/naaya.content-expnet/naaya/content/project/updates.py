@@ -2,6 +2,132 @@ from Products.naayaUpdater.updates import UpdateScript
 
 from Products.CHM2.CHMSite import add_terms_property_to_schema
 
+class ChmTermsSeparator(UpdateScript):
+    title = 'chm_terms separator change & title change'
+    authors = ('Andrei Laza',)
+    creation_date = 'Aug 22, 2011'
+    description = 'migrate chm_terms separator from "," to "|"'
+
+    chm_term_titles = {
+            'NyProject': 'Main topics covered',
+            'NyOrganisation': 'Main topics covered',
+            'NyExpert': 'Main areas of expertise',
+            }
+
+    def is_chm_term(self, glossary, term, lang):
+        lang_name = glossary.gl_get_language_name(lang)
+
+        for gfolder in glossary.objectValues('Naaya Glossary Folder'):
+            if gfolder.get_translation_by_language(lang_name) == term:
+                return True
+            for gelement in gfolder.objectValues('Naaya Glossary Element'):
+                if gelement.get_translation_by_language(lang_name) == term:
+                    return True
+        return False
+
+    def match_glossary_terms(self, glossary, value, lang):
+        if not value:
+            self.log.debug('empty value "%r"', value)
+            return []
+
+        migrations = {
+                'Impact assesment':
+                    'Impact assessment',
+                'Trophic integrity of terrestrrial and freshwater ecosystems':
+                    'Trophic integrity of terrestrial and freshwater ecosystems',
+                'Island biodiversity':
+                    'Island Biodiversity',
+                    }
+
+        ret = []
+        l = value.split(',')
+        self.log.debug('items found: %r', l)
+        while l:
+            for i in range(1, len(l) + 1):
+                term = (','.join(l[:i])).strip()
+                if term in migrations:
+                    term = migrations[term]
+                if self.is_chm_term(glossary, term, lang):
+                    self.log.debug('matched "%s"', term)
+                    ret.append(term)
+                    l = l[i:]
+                    break
+
+                term = (', '.join(l[:i])).strip()
+                if term in migrations:
+                    term = migrations[term]
+                if self.is_chm_term(glossary, term, lang):
+                    self.log.debug('matched "%s"', term)
+                    ret.append(term)
+                    l = l[i:]
+                    break
+            else:
+                self.log.warn('consuming "%s"', l[0])
+                l = l[1:]
+        return ret
+
+    def update_type(self, portal, naaya_name, meta_type):
+        self.log.debug('Start updating meta type %s', meta_type)
+        schema_tool = portal.getSchemaTool()
+
+        schema_ob = schema_tool._getOb(naaya_name, default=None)
+        if schema_ob is None: # no schema
+            self.log.debug('%s not in schema - skip it', naaya_name)
+            return True
+        self.log.debug('%s has schema', naaya_name)
+
+        chm_terms_prop = schema_ob._getOb('chm_terms-property', default=None)
+        if chm_terms_prop is None:
+            self.log.debug('No chm_terms property for %s'
+                           ' (probably not installed)' % naaya_name)
+            return True
+
+        if (naaya_name not in self.chm_term_titles
+                or chm_terms_prop.title == self.chm_term_titles[naaya_name]):
+            self.log.debug('No need to update title for %s', naaya_name)
+        else:
+            chm_terms_prop.title = self.chm_term_titles[naaya_name]
+            self.log.debug('Changed title for %s to "%s"', naaya_name,
+                                        self.chm_term_titles[naaya_name])
+
+        if chm_terms_prop.separator == '|':
+            self.log.debug('No need to update separator for %s', meta_type)
+            return True
+        if chm_terms_prop.separator != ',':
+            self.log.error('Expected "," for %s and found %r', meta_type,
+                    chm_terms_prop.separator)
+        assert chm_terms_prop.separator == ','
+
+        # update objects
+        lang_map = portal.gl_get_languages_map()
+        glossary = portal.chm_terms
+        portal_catalog = portal.getCatalogTool()
+        for brain in portal_catalog(meta_type=meta_type):
+            ob = brain.getObject()
+            self.log.debug('Updating %s at %s', meta_type, ob.absolute_url())
+            for lang in lang_map:
+                value = ob.getLocalProperty('chm_terms', lang['id'])
+                value_list = self.match_glossary_terms(glossary, value, lang['id'])
+
+                value = '|'.join(value_list)
+                ob._setLocalPropValue('chm_terms', lang['id'], value)
+
+        chm_terms_prop.separator = '|'
+        return True
+
+    def _update(self, portal):
+        schema_tool = portal.getSchemaTool()
+        schemas = schema_tool.listSchemas()
+
+        ret = True
+        for meta_type in schemas:
+            schema_ob = schemas[meta_type]
+            naaya_name = schema_ob.id
+            if not self.update_type(portal, naaya_name, meta_type):
+                ret = False
+        return ret
+
+
 class MainTopicsToChmTerms(UpdateScript):
     title = 'Dutch CHM portal - pick lists and chm_terms glossary'
     authors = ('Stanciu Gabriel', 'Andrei Laza')
