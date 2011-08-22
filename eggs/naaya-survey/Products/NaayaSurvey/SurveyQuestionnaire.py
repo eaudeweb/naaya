@@ -241,7 +241,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         suggestions = []
         respondent = None
-        creation_date = DateTime()
+        creation_date = None
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
             respondent = old_answer.respondent
@@ -267,6 +267,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                                            draft=draft, respondent=respondent,
                                            id=answer_id,
                                            creation_date=creation_date)
+
         answer = self._getOb(answer_id)
         if suggestions:
             answer.suggestions = suggestions
