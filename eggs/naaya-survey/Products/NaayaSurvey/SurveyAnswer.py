@@ -39,9 +39,12 @@ from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 gUtil = utils()
 
 def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
-                           REQUEST=None, id=None, creation_date=DateTime()):
+                           REQUEST=None, id=None, creation_date=None):
     """ Constructor for SurveyAnswer"""
     global gUtil
+
+    if creation_date is None:
+        creation_date = DateTime
 
     if respondent is None and REQUEST is not None:
             respondent = REQUEST.AUTHENTICATED_USER.getUserName()
