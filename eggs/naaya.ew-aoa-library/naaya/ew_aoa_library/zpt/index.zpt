@@ -498,7 +498,7 @@
 	<!-- Cannot sort by themes -->
 	<th rowspan="2" tal:condition="not:review_template" i18n:translate="">Themes</th>
 
-	<!-- Creation date -->
+	<tal:block condition="is_admin"><!-- Creation date -->
 	<th rowspan="2" tal:condition="python:rkey and skey=='creation_date' or skey!='creation_date'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=creation_date">Creation date</a>
 		<img tal:condition="python:skey=='creation_date'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
@@ -506,7 +506,7 @@
 	<th rowspan="2" tal:condition="python:not rkey and skey=='creation_date'">
 		<a i18n:translate="" tal:attributes="href string:${url}?skey=creation_date&rkey=True">Creation date</a>
 		<img tal:condition="python:skey=='creation_date'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
-	</th>
+	</th></tal:block>
 
 	<!-- Last modified -->
 	<th rowspan="2" tal:condition="python:rkey and skey=='modification_time' or skey!='modification_time'">
@@ -600,7 +600,7 @@
 	<td tal:condition="not:review_template">
 		<ul><li tal:repeat="t python:i.theme or []" tal:content="t" /></ul>
 	</td>
-	<td tal:content="python: here.utShowFullDateTime(i.creation_date)"/>
+	<td tal:condition="is_admin" tal:content="python: here.utShowFullDateTime(i.creation_date)"/>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
 	<td tal:define="countries i/geo_coverage_country|nothing">
