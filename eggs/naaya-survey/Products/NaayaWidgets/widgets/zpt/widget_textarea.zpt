@@ -3,15 +3,20 @@
 </tal:comment>
 
 <tal:block define="
-    mode options/mode|string:view;
-    datamodel options/datamodel|nothing;
+	mode options/mode|string:view;
+	datamodel options/datamodel|nothing;
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode textareaWidget">
 	<strong tal:content="here/title" class="widget-title" />
 	<br />
-	<p tal:condition="datamodel" tal:content="datamodel" class="textareaWidgetAnswer"/>
+	<p tal:condition="datamodel" class="textareaWidgetAnswer">
+		<tal:block repeat="line datamodel/splitlines">
+			<br tal:condition="python: repeat['line'].index != 0"/>
+			<tal:block replace="line"/>
+		</tal:block>
+	</p>
 	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
 		-
 	</span>
@@ -19,8 +24,8 @@
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-     tal:define="datamodel python:here.getSession(widget_id, datamodel);
-                 datamodel python:datamodel or '';">
+	 tal:define="datamodel python:here.getSession(widget_id, datamodel);
+				 datamodel python:datamodel or '';">
 	<label tal:attributes="for widget_id" class="widget-title">
 		<span tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
@@ -36,9 +41,9 @@
 
 <!-- Edit widget properties -->
 <div tal:condition="python:mode == 'manage'" class="widgetManageMode"
-     tal:define="required python:here.getSession('required', here.getProperty('required', None));
-                 rows python:here.getSession('width', here.getProperty('rows', 10));
-                 columns python:here.getSession('size_max', here.getProperty('columns', 50));">
+	 tal:define="required python:here.getSession('required', here.getProperty('required', None));
+				 rows python:here.getSession('width', here.getProperty('rows', 10));
+				 columns python:here.getSession('size_max', here.getProperty('columns', 50));">
 <metal:block use-macro="here/common_render_meth/macros/manage">
 
 <!-- Custom fields -->
