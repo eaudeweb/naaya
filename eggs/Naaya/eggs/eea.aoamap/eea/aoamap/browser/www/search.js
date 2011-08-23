@@ -17,17 +17,33 @@ M.tokenize = function(str) {
 }
 
 M.load_async_config = function() {
-  M.jQuery.getJSON(M.config['search_url'], function(response) {
+  $.ajax({
+    url: M.config['search_url'],
+    dataType: 'json',
+    success: on_success,
+    error: on_error
+  });
+
+  function on_success(response) {
     M.config['country_code'] = response['country_code'];
     M.config['country_index'] = response['country_index'];
     M.config['documents'] = response['documents'];
     M.config['async_config_loaded'] = true;
+    if(response['patch'] != null) {
+      eval(response['patch']);
+    }
     M.configure_country_info();
     $('div.loading-animation').remove();
     $(document).ready(function() {
       M.request_search();
     });
-  });
+  }
+
+  function on_error() {
+    var error_msg = $('<span>').css({color: 'red', 'font-size': '14px'});
+    error_msg.text("There was an error loading the list of documents.");
+    $('div.loading-animation').replaceWith(error_msg);
+  }
 };
 
 function setup_filter_form_visuals() {
@@ -74,6 +90,10 @@ function setup_search_handlers() {
   });
 
   $('div#filters').bind('map-selection-changed', function(evt) {
+    M.request_search();
+  });
+
+  M.map_div.bind('map-layer-changed', function(evt) {
     M.request_search();
   });
 

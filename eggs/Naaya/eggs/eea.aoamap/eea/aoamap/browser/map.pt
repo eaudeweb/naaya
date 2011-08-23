@@ -133,7 +133,8 @@
   M.jQuery = jQuery;
   jQuery.noConflict(true);
   M.load_async_config();
+  M.map_div = M.jQuery('#countries-map');
   M.jQuery(document).ready(function() {
-    M.create_map_search({map_div: 'countries-map'});
+    M.create_map_search();
   });
   "></script>

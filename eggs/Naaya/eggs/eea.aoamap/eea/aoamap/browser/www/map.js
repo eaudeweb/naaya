@@ -14,12 +14,6 @@ M.country_code = {};
 
 M.docs_summary_result = $.Deferred();
 
-M.debug_log = function() {
-  if(M.config['debug'] && window.console) {
-    console.log.apply(console, arguments);
-  }
-};
-
 M.xyz_layer = function(name) {
   return new OpenLayers.Layer.XYZ(name,
     M.config['tiles_url'] + "/${z}/${x}/${y}.png",
@@ -214,9 +208,8 @@ M.show_country_coverage = function(countries) {
   M.country_coverage_click_control.activate();
 };
 
-M.create_map_search = function(options) {
-  M.map_div = $('#' + options['map_div']);
-  M.countries_map = new OpenLayers.Map(options['map_div']);
+M.create_map_search = function() {
+  M.countries_map = new OpenLayers.Map(M.map_div[0].id);
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
   M.countries_map.addControl(M.layer_switcher);
@@ -228,6 +221,9 @@ M.create_map_search = function(options) {
   M.add_view(M.xyz_layer("Sub-region"));
   M.add_view(M.xyz_layer("Pan-European"));
 
+  M.countries_map.events.on({
+    'changebaselayer': function() { M.map_div.trigger('map-layer-changed'); }
+  });
 
   M.countries_map.zoomToMaxExtent = function() {
     M.countries_map.setCenter(M.project(new OpenLayers.LonLat(58.37, 61.48)), 3);
@@ -250,7 +246,6 @@ M.create_map_search = function(options) {
 };
 
 M.create_map_document = function(options) {
-  M.map_div = $('#' + options['map_div']);
   M.document_map = new OpenLayers.Map(options['map_div'], {controls: []});
   M.document_map.addLayer(M.xyz_layer("Background"));
   M.document_map.setCenter(M.project(new OpenLayers.LonLat(30, 57)), 2);
