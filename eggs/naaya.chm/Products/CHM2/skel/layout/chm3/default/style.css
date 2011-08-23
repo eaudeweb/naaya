@@ -164,8 +164,7 @@ h1 {
 	color: #CC0000;
 	background: url('big-section-title-page.png') no-repeat scroll 0 0 #f7f7f7;
 	padding-left: 10px;
-	width: 720px;
-	width: 740;
+	width: 700px;
 	-moz-border-radius: 5px 5px 0px 0px;
 	border-radius: 5px 5px 0px 0px;
 	-webkit-border-radius: 5px 5px 0px 0px;
@@ -1997,6 +1996,15 @@ ul.footer-pagination li {
 /**
  * Innerpage Large box
 */
+.innerpage-large-box {
+	background: #FFFFFF url('big-section-page-bg.png') no-repeat scroll top center;
+	border: 1px solid #E6E6E6;
+	border-top: 1px solid #CFCFCF;
+	width: 733px;
+	max-height: 650px;
+	overflow-y: scroll;
+}
+
 .innerpage-large-box .box-top {
 	background: url("big-section-title-page.png") no-repeat scroll 0 0 transparent;
 	height: 39px;
