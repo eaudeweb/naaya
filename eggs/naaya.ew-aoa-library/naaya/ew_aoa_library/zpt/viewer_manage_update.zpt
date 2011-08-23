@@ -7,6 +7,7 @@
 
 <form action="">
 	<input type="hidden" name="submit" value="True" />
+	<input type="radio" name="update_type" value="update_vl_approval" /><label>Update VL approval type from "per answer" to "per country"</label><br/>
 	<input type="radio" name="update_type" value="update_rt_titles" /><label>Update review template titles</label><br/>
 	<input type="radio" name="update_type" value="update_remove_acronyms" /><label>Correct answers containing acronym code</label><br/>
 	<input type="radio" name="update_type" value="update_vl_countries_and_region" /><label>Update library country and region values</label><br/>

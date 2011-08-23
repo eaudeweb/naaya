@@ -252,7 +252,7 @@ def extract_survey_answer_data_library(answer):
                             answer.get('w_assessment-url'),
                             answer.get('w_assessment-url'),
                        ),
-        'approved': hasattr(answer.aq_base, 'approved_date') and answer.approved_date is not None,
+        'cf_approval_list': answer.get('cf_approval_list', []),
         'publication_year': answer.get('w_assessment-year'),
         'target_path': path_in_site(answer),
         'theme': extract_multipleselect(answer, 'w_theme'),
@@ -553,6 +553,15 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         survey_answer = self.get_survey_answer(self.getId())
         setattr(survey_answer, 'w_type-document', REQUEST.get('document_type', []))
         setattr(survey_answer, 'w_official-country-region', REQUEST.get('geo_coverage_country', []))
+        #remove the approval for each country that is removed from the answer
+        if hasattr(survey_answer, 'cf_approval_list'):
+            cf_approval_list = survey_answer.cf_approval_list
+            survey_countries = survey_answer.aq_parent['w_official-country-region'].getChoices()
+            survey_answer_countries = [survey_countries[index]
+                    for index in survey_answer.get('w_official-country-region')]
+            for country in list(cf_approval_list):
+                if country not in survey_answer_countries:
+                    cf_approval_list.remove(country)
         setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -637,6 +646,31 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         return self.get_document_types_for_themes(self.get_main_themes())
 
     _manage_updates_html = PageTemplateFile('zpt/shadow_manage_update', globals())
+
+    security.declareProtected(view, 'approved_for_cf')
+    def approved_for_cf(self, country):
+        """ Check if the assessment was approved for the current country"""
+        return country in self.cf_approval_list
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'approve_for_cf')
+    def approve_for_cf(self, REQUEST, country):
+        """ Approve answer for CF for this country """
+        survey_answer = self.get_survey_answer(self.getId())
+        if hasattr(survey_answer, 'cf_approval_list'):
+            survey_answer.cf_approval_list.append(country)
+        else:
+            survey_answer.cf_approval_list = [country]
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'unapprove_for_cf')
+    def unapprove_for_cf(self, REQUEST, country):
+        """ Unapprove answer for CF for this country """
+        survey_answer = self.get_survey_answer(self.getId())
+        survey_answer.cf_approval_list.remove(country)
+        survey_answer._p_changed = True
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
 
 def get_survey_id(answer):
     return answer.aq_parent.id
