@@ -23,6 +23,7 @@ M.configure_country_info = function() {
   });
 
   $('div#filters').bind('map-selection-changed', update_country_info);
+  M.map_div.bind('map-layer-changed', update_country_info);
 };
 
 
