@@ -27,10 +27,10 @@
                 Name of the country:
             </label>
             <br />
-            <select name="country:int" id="country_select">
+            <select name="country:utf8:ustring" id="country_select">
                 <option tal:repeat="country python: cf['w_country'].getChoices()"
-                     tal:attributes="value repeat/country/index;
-                         selected python: selected_country == repeat['country'].index;"
+                     tal:attributes="value country;
+                         selected python: selected_country == country;"
                      tal:content="country" i18n:translate=""/>
             </select>
             <br />

@@ -39,7 +39,7 @@
 			tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
 	</span>
 </div>
-<h1 tal:content="here/title_or_id"></h1>
+<h1 tal:content="python: here.get('title')"></h1>
 
 <div class="widgetViewMode" style="background-color:#FFF9D4"
 	tal:condition="is_admin">
@@ -100,63 +100,51 @@
 	</tal:block>
 
 	<tal:block condition="review_template">
-	<form id="set_region" name="set_region" method="post" action=".">
-		<p><strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong></p>
-		<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
-				size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
-		<tal:block condition="here/library_id|nothing">
-			("
-				<tal:block condition="here/library_geo_coverage_country"
-					content="python:', '.join(country_choices[country] for country in here.library_geo_coverage_country)"/>
-				<tal:block condition="not: here/library_geo_coverage_country">emtpy</tal:block>
-			"
-			<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
-		</tal:block>
-		<br/><br/>
-		<strong><label for="geo_coverage_region" i18n:translate="">Geo coverage: region</label></strong><br/><br/>
-		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
-			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
+		<form id="set_region" name="set_region" method="post" action=".">
+			<p><strong><label for="geo_coverage_country" i18n:translate="">Geo coverage: country</label></strong></p>
+			<input id="geo_coverage_country" name="geo_coverage_country:utf8:ustring"
+					size="100" tal:attributes="value here/geo_coverage_country|nothing"/>
 			<tal:block condition="here/library_id|nothing">
-				("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
+				("
+					<tal:block condition="here/library_geo_coverage_country"
+						content="python:', '.join(country_choices[country] for country in here.library_geo_coverage_country)"/>
+					<tal:block condition="not: here/library_geo_coverage_country">emtpy</tal:block>
+				"
 				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
 			</tal:block>
-		<br/><br/>
-		<input type="submit" name="set_region:method" value="Save country/region" i18n:attributes="value"/>
-	</form>
+			<br/><br/>
+			<strong><label for="geo_coverage_region" i18n:translate="">Geo coverage: region</label></strong><br/><br/>
+			<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
+				size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
+				<tal:block condition="here/library_id|nothing">
+					("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
+					<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
+				</tal:block>
+			<br/><br/>
+			<input type="submit" name="set_region:method" value="Save country/region" i18n:attributes="value"/>
+		</form>
 	</tal:block>
 
 	<tal:block condition="virtual_library">
-	<tal:block define="approved_date python:here.approved_date(here);">
-		<div id="approve_error" class="message-error" style="display: none">
-			<fieldset>
-				<legend i18n:translate="">Errors</legend>
-				<div class="fieldset_div">
-					<ul>
-						<li tal:condition="not: here/geo_coverage_country"
-							i18n:translate="">Value required for "Geo coverage: country"</li>
-						<li tal:condition="not: here/geo_coverage_region"
-							i18n:translate="">Value required for "Geo coverage: region"</li>
-						<li tal:attributes="not: here/document_type"
-							i18n:translate="">Value required for "Type of document"</li>
-					</ul>
-				</div>
-			</fieldset>
-		</div>
-		<span tal:condition="approved_date" class="buttons">
-			<a id="approve_link" tal:attributes="href string:unapprove_assessment" i18n:translate="">
-					Unapprove assessment
-			</a>
-		</span>
-		<span tal:condition="not:approved_date" class="buttons">
-			<a id="approve_link" tal:attributes="href string:approve_assessment" i18n:translate="">
-					Approve assessment
-			</a>
-		</span>
-		<p i18n:translate="">Upon approval, the assessment will appear in the
-			<a tal:attributes="href python:here.getSite().absolute_url() + '/viewer_aggregator'"
-				i18n:name="viewer_aggregator" i18n:translate="">Virtual Library and Country fiches Viewer</a>
-		</p>
-	</tal:block>
+	<div id="approve_error" class="message-error" style="display: none">
+		<fieldset>
+			<legend i18n:translate="">Errors</legend>
+			<div class="fieldset_div">
+				<ul>
+					<li tal:condition="not: here/geo_coverage_country"
+						i18n:translate="">Value required for "Geo coverage: country"</li>
+					<li tal:condition="not: here/geo_coverage_region"
+						i18n:translate="">Value required for "Geo coverage: region"</li>
+					<li tal:attributes="not: here/document_type"
+						i18n:translate="">Value required for "Type of document"</li>
+				</ul>
+			</div>
+		</fieldset>
+	</div>
+	<p i18n:translate="">Upon approval, the assessment will appear in the
+		<a tal:attributes="href python:here.getSite().absolute_url() + '/viewer_aggregator'"
+			i18n:name="viewer_aggregator" i18n:translate="">Virtual Library and Country fiches Viewer</a>
+	</p>
 	<form id="save_vl" name="save_vl" method="post" action=".">
 		<p><strong><label for="geo_coverage_country" i18n:translate="">
 			Geo coverage: country
@@ -169,12 +157,29 @@
 		</select>
 		<div tal:repeat="country country_choices" tal:attributes="
 				id string:geo_coverage_country_top_${repeat/country/index};
-				style python: test(repeat['country'].index in here.geo_coverage_country, 'display: block', 'display: none');">
+				style python: test(repeat['country'].index in here.geo_coverage_country, 'width:275px', 'display: none;; width:275px');">
+			<span class="buttons" style="float:right"
+			tal:define="is_approved python:here.approved_for_cf(country)">
+				<a tal:condition="is_approved" class="approve_link" tal:attributes="href string:unapprove_for_cf?country=${country}" i18n:translate="">
+						Unapprove for CF
+				</a>
+				<a tal:condition="not:is_approved" class="approve_link" tal:attributes="href string:approve_for_cf?country=${country};
+				id string:approve_link_${repeat/country/index}"
+				i18n:translate="">
+						Approve for CF
+				</a>
+				<a tal:condition="not:is_approved"
+				tal:attributes="id string:approve_link_${repeat/country/index}_not_saved"
+				i18n:translate="" style="display:none">
+						Not yet saved
+				</a>
+			</span>
 			<input type="checkbox" name="geo_coverage_country:list:int" tal:attributes="
 					id string:geo_coverage_country_${repeat/country/index};
 					checked python: repeat['country'].index in here.geo_coverage_country;
 					value repeat/country/index;" />
-			<label tal:attributes="for string:geo_coverage_country_${repeat/country/index}" tal:content="country"/>
+			<span><label tal:attributes="for string:geo_coverage_country_${repeat/country/index}" tal:content="country"/></span>
+			<div class="clearer"></div>
 		</div>
 		<br/><br/>
 		<strong><label for="geo_coverage_region" i18n:translate="">
@@ -237,6 +242,8 @@
 $('#country_single_select').change(function(){
 	country_index = $(this).val();
 	$('#geo_coverage_country_'+country_index).attr('checked', 'checked');
+	$('#approve_link_'+country_index).hide();
+	$('#approve_link_'+country_index+'_not_saved').show();
 	$('#geo_coverage_country_top_'+country_index).show();
 	$('#country_single_select').val('Please select');
 });
@@ -244,9 +251,9 @@ $('input[name="geo_coverage_country:list:int"]').click(function() {
 	$(this).removeAttr('checked');
 	$(this).parent().hide();
 });
-$('#approve_link').click(function() {
-	if ($.trim($(this).text()) == 'Approve assessment') {
-		if (document_type.length == 0 || countries.length == 0 || region == '') {
+$('.approve_link').click(function() {
+	if ($.trim($(this).text()) == 'Approve for CF') {
+		if (document_type.length == 0){
 			$('#approve_error').show();
 			return false; // don't approve
 		}
