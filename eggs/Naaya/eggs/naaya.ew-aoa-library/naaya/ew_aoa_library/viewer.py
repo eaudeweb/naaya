@@ -197,6 +197,8 @@ class AoALibraryViewer(SimpleItem):
         library = self.aq_parent['tools']['virtual_library']['bibliography-details-each-assessment']
         country_fiches = self.aq_parent['tools']['country_fiches']
         update_type = REQUEST.form.get('update_type')
+        if update_type == 'update_vl_approval':
+            self._update_vl_approval(state, library)
         if update_type == 'update_rt_titles':
             self._update_rt_titles(state, review_template, library)
         if update_type == 'update_remove_acronyms':
@@ -705,6 +707,17 @@ class AoALibraryViewer(SimpleItem):
             except:
                 state['errors'][vl_answer.absolute_url()] = "Unhandled"
 
+    def _update_vl_approval(self, state, library):
+        countries = library['w_official-country-region'].getChoices()
+        for answer in library.objectValues(survey_answer_metatype):
+            if getattr(answer, 'approved_date', None):
+                if getattr(answer, 'cf_approval_list', None):
+                    state['already_updated'].append(answer.absolute_url())
+                    continue
+                answer.cf_approval_list = [countries[index] for index in answer.get('w_official-country-region')]
+                answer._p_changed = True
+                state['updated_answers'][answer.absolute_url()] = []
+
     security.declareProtected(view, 'viewer_view_report_html')
     def viewer_view_report_html(self, REQUEST):
         """View the report for the viewer"""
@@ -897,9 +910,9 @@ class AoALibraryViewer(SimpleItem):
     def filter_answers_cf_vl_aggregator(self, country, theme):
         """ Filter answers for cf and vl agregator """
         def respects_filter(shadow):
-            if country not in shadow.geo_coverage_country:
+            if country not in shadow.viewer_country:
                 return False
-            if hasattr(shadow.aq_base, 'approved') and not shadow.approved:
+            if hasattr(shadow.aq_base, 'cf_approval_list') and country not in shadow.cf_approval_list:
                 return False
 
             shadow_document_types = [self.get_normalized_document_type(dt_i)
