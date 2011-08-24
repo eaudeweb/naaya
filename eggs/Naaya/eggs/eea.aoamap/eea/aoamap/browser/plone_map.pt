@@ -1,39 +1,35 @@
+<tal:block tal:define="foo python:request.set('disable_plone.leftcolumn', 1);
+            bar python:request.set('disable_plone.rightcolumn', 1);"/>
 <html
   xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
   metal:use-macro="here/main_template/macros/master"
   i18n:domain="eea">
+
 <head>
 
-<metal:css fill-slot="css_slot">
-  <style type="text/css" media="screen">
-    <!-- @import url(++resource++eea.aoamap/search_map_eea.css); -->
-  </style>
-</metal:css>
+  <!-- include CSS (plone 2.5) -->
+  <metal:style_slot fill-slot="css_slot">
+    <link href="++resource++eea.aoamap/search_map_eea.css"
+          rel="stylesheet" type="text/css" media="screen" />
+  </metal:style_slot>
 
-<metal:js fill-slot="javascript_head_slot">
-  <script type="text/javascript"
-    src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
-</metal:js>
+  <!-- include CSS (plone 4) -->
+  <metal:style_slot fill-slot="style_slot">
+    <link href="++resource++eea.aoamap/search_map_eea.css"
+          rel="stylesheet" type="text/css" media="screen" />
+  </metal:style_slot>
 
 </head>
 
 <body>
-<div metal:fill-slot="main">
 
-  <div metal:use-macro="here/document_actions/macros/document_actions">
-    Document actions (print, sendto etc)
+  <div metal:fill-slot="main">
+
+    <h1>AoA Search Map</h1>
+
+    <tal:block content="structure python:view.get_map_html()"/>
+
   </div>
 
-<div class="visualClear">&nbsp;</div>
-
-<h1>AoA Search Map</h1>
-
-<p class="documentDescription">
- How to search the map? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris in neque vel mauris aliquet fermentum nec quis dolor. Proin fermentum justo sed metus ornare eleifend.
-</p>
-
-<tal:block content="structure python:view.get_map_html()"/>
-
-</div>
 </body>
 </html>
