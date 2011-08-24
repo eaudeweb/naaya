@@ -9,13 +9,13 @@
 
   <!-- include CSS (plone 2.5) -->
   <metal:style_slot fill-slot="css_slot">
-    <link href="++resource++eea.aoamap/search_map_eea.css"
+    <link href="++resource++eea.aoamap/search_map.css"
           rel="stylesheet" type="text/css" media="screen" />
   </metal:style_slot>
 
   <!-- include CSS (plone 4) -->
   <metal:style_slot fill-slot="style_slot">
-    <link href="++resource++eea.aoamap/search_map_eea.css"
+    <link href="++resource++eea.aoamap/search_map.css"
           rel="stylesheet" type="text/css" media="screen" />
   </metal:style_slot>
 
