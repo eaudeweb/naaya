@@ -100,7 +100,6 @@
 <caption i18n:translate="">All versions</caption>
 <thead>
     <tr>
-        <th i18n:translate="">#</th>
         <th i18n:translate="">File name</th>
         <th i18n:translate="">Upload date</th>
         <th i18n:translate="">Size</th>
@@ -109,7 +108,6 @@
 </thead>
 <tbody>
 <tr tal:repeat="version options/versions">
-    <td tal:content="version/id" />
     <td>
         <a tal:attributes="href version/url"
            tal:content="version/filename"></a>
