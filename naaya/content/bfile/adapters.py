@@ -51,7 +51,7 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
 
     def get_info_text(self):
         trans = self.ob.getPortalTranslations().trans
-        version_count = len(self.ob._versions)
+        version_count = len([v for v in self.ob._versions if not v.removed])
         if version_count > 1:
             msg = trans("${number} versions", number=str(version_count))
             return "(%s)" % msg
