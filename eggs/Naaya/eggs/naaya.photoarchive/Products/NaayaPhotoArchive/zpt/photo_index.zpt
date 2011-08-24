@@ -40,6 +40,7 @@
 </div>
 
 <!-- Right boxes -->
+<metal:block define-slot="right-boxes">
 <div class="g-boxes">
 	<!-- Downloads box -->
 	<div class="g-box">
@@ -81,8 +82,10 @@
 	</div>
 	<metal:block define-slot="photo-details-map" />
 </div>
+</metal:block>
 
 <!-- Image -->
+<metal:block define-slot="image">
 <div class="g-main-content-buttons g-main-content-text" tal:define="
 		next here/next;
 		previous here/previous;">
@@ -136,6 +139,7 @@
 			tal:attributes="value photo_link" />
 	</div>
 </div>
+</metal:block>
 
 <div class="g-main-content" tal:define="
 	album here/getParentNode;
