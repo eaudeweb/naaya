@@ -66,37 +66,29 @@
     <div class="template">
 
       <div class="template-section">
-        <div class="template-subsection">
-          Author: ${author}
-          {{if year}}(${year}){{/if}}
-        </div>
+        Author: ${author}
+        {{if year}}(${year}){{/if}}
       </div>
 
       <div class="template-section">
-        <div class="template-subsection">
-          Coverage: {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
-          {{if region.length}}
-            ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
-          {{/if}}
-        </div>
+        Coverage: {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
+        {{if region.length}}
+          ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
+        {{/if}}
       </div>
 
       <div class="template-section">
-        <div class="template-subsection">
-          Themes:
-          {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
-          {{if document_type.length}}
-              ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
-          {{/if}}
-        </div>
+        Themes:
+        {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
+        {{if document_type.length}}
+            ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
+        {{/if}}
       </div>
 
       {{if url}}
       <div class="template-section">
-        <div class="template-subsection">
-            Download:
-            <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
-        </div>
+        Download:
+        <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
