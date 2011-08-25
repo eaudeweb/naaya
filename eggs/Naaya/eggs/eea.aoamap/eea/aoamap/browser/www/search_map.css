@@ -51,8 +51,18 @@ div#filters {
   border: 1px solid #DFDFDF;
 }
 
+div#selection-info {
+  float: right;
+  height: 80px;
+  width: 300px;
+  overflow: auto;
+  border-bottom: 1px solid #BABBB8;
+  padding: 10px;
+}
+
 div#filters-form-holder {
   float: right;
+  clear: right;
   width: 300px;
   border-bottom: 1px solid #BABBB8;
   padding: 10px;
@@ -131,7 +141,7 @@ div#document-info {
   display: none;
 }
 
-.template {
+.jquery-template {
   display: none;
 }
 

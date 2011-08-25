@@ -25,11 +25,15 @@ M.country_selection_changed = function() {
   $(M.countries_map.div).trigger('map-selection-changed');
 };
 
-M.get_template = function(elem) {
-  var template_elem = $('.template', elem);
-  template_elem.remove().template();
-  return template_elem;
-}
+M.templates = {};
+M.load_templates = function() {
+  $('.jquery-template').each(function(n, tmpl_div) {
+    var tmpl_div = $(this);
+    var name = tmpl_div.attr('id');
+    M.templates[name] = tmpl_div;
+    tmpl_div.remove().template();
+  });
+};
 
 M.add_view = function(tiles_layer) {
   var this_view = M.views[tiles_layer.name] = {};
