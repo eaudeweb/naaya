@@ -139,6 +139,14 @@ M.get_selected_countries = function() {
   return countries;
 };
 
+M.get_selected_regions = function() {
+  if(M.current_view_name != "Sub-region") return [];
+  var layer = M.get_current_view().polygons_layer;
+  return $.map(layer.selectedFeatures, function(feature) {
+    return feature.attributes['name'];
+  });
+};
+
 M.deselect_all_polygons = function() {
   M.get_current_view().select_polygon.unselectAll();
 };

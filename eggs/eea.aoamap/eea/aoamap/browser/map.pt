@@ -13,11 +13,14 @@
       </div>
 
       <div class="jquery-template" style="display: none" id="region-info">
-        <span>region info</span>
+        <span>
+          ${name}
+          {{if countries_txt}} (${countries_txt}) {{/if}}
+        </span>
       </div>
 
       <div class="jquery-template" style="display: none" id="global-info">
-        <span>global info</span>
+        <span>${total_documents} assessments registered</span>
       </div>
 
     </div>
