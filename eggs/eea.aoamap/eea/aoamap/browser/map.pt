@@ -2,6 +2,26 @@
 
   <div id="filters">
 
+    <div id="selection-info">
+
+      <div class="jquery-template" style="display: none" id="country-info">
+        <span>
+          ${name}: ${documents_total} assessments
+          (<a class="link-green-economy-fiche">${documents_green_economy} green
+          economy</a>, <a class="link-water-fiche">${documents_water} water</a>)
+        </span>
+      </div>
+
+      <div class="jquery-template" style="display: none" id="region-info">
+        <span>region info</span>
+      </div>
+
+      <div class="jquery-template" style="display: none" id="global-info">
+        <span>global info</span>
+      </div>
+
+    </div>
+
     <div id="filters-form-holder">
       <p>
         Fill in the form below in order to search the available documents.
@@ -53,7 +73,8 @@
     </div>
 
     <ul class="search-results">
-      <div class="template" style="display: none">
+      <div class="jquery-template" style="display: none"
+           id="search-results-document">
         <li class="document">
           <a href="javascript:" class="title">${title}</a>
         </li>
@@ -61,9 +82,9 @@
     </ul>
   </div>
 
-  <div style="display: none">
-  <div id="document-info">
-    <div class="template">
+  <div>
+    <div class="jquery-template" style="display: none"
+         id="search-results-document-info">
 
       <div class="template-section">
         Author: ${author}
@@ -95,17 +116,6 @@
     </div>
   </div>
 
-  <div id="country-info">
-    <div class="template">
-      <span>
-        ${name}: ${documents_total} assessments
-        (<a class="link-green-economy-fiche">${documents_green_economy} green
-        economy</a>, <a class="link-water-fiche">${documents_water} water</a>)
-      </span>
-    </div>
-  </div>
-  </div>
-
   <div class="visualClear">&nbsp;</div>
 </div>
 <div class="visualClear">&nbsp;</div>
@@ -118,13 +128,14 @@
 <script type="text/javascript" src="++resource++eea.aoamap/jquery.tmpl.min.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/map.js"></script>
 <script type="text/javascript" src="++resource++eea.aoamap/search.js"></script>
-<script type="text/javascript" src="++resource++eea.aoamap/country_info.js"></script>
+<script type="text/javascript" src="++resource++eea.aoamap/infobox.js"></script>
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   M.config['async_config_loaded'] = false;
   M.jQuery = jQuery;
   jQuery.noConflict(true);
   M.load_async_config();
+  M.load_templates();
   M.map_div = M.jQuery('#countries-map');
   M.jQuery(document).ready(function() {
     M.create_map_search();
