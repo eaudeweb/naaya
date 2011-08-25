@@ -32,7 +32,10 @@ M.update_selection_info = function() {
   function selection_info_content() {
     if(M.current_view_name == 'Country') {
       var countries = M.get_selected_countries();
-      if(countries.length == 1) {
+      if(countries.length == 0) {
+        return M.render_global_info();
+      }
+      else if(countries.length == 1) {
         return M.render_country_info(countries[0]);
       }
       else {
@@ -40,10 +43,20 @@ M.update_selection_info = function() {
       }
     }
     else if(M.current_view_name == 'Sub-region') {
-      return "Sub-region";
+      var regions = M.get_selected_regions();
+      if(regions.length == 0) {
+        return M.render_global_info();
+      }
+      else if(regions.length == 1) {
+        var countries = M.get_selected_countries();
+        return M.render_region_info(regions[0], countries);
+      }
+      else {
+        return regions.join(", ");
+      }
     }
     else {
-      return "Pan-european";
+      return M.render_global_info();
     }
   }
 };
@@ -60,6 +73,19 @@ M.render_country_info = function(name) {
   $('a.link-green-economy-fiche', country_info_box).attr('href',
       country_fiche_url(name, "Green Economy"));
   return country_info_box;
+};
+
+M.render_region_info = function(name, countries) {
+  var countries_txt = (countries.length > 1) ? countries.join(", ") : null;
+  return M.templates['region-info'].tmpl({
+    name: name,
+    countries_txt: countries_txt
+  });
+};
+
+M.render_global_info = function() {
+  var total_documents = M.config['documents'].length;
+  return M.templates['global-info'].tmpl({total_documents: total_documents});
 };
 
 function country_fiche_url(country_name, theme_name) {
