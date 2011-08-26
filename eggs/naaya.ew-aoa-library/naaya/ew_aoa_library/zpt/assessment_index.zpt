@@ -25,6 +25,7 @@
 		site here/getSite;
 		library_object site/tools/virtual_library/bibliography-details-each-assessment;
 		country_choices python: library_object['w_official-country-region'].getChoices();
+		region_choices python: library_object['w_geo-coverage-region'].getChoices();
 		document_types python: library_object['w_type-document'].getChoices();">
 	<link rel="stylesheet" type="text/css" media="all"
 			tal:define="target_answer here/target_answer;
@@ -117,7 +118,11 @@
 			<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
 				size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
 				<tal:block condition="here/library_id|nothing">
-					("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
+				("
+					<tal:block condition="here/library_geo_coverage_region"
+						content="python:', '.join(region_choices[region] for region in here.library_geo_coverage_region)"/>
+					<tal:block condition="not: here/library_geo_coverage_region">emtpy</tal:block>
+				"
 					<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
 				</tal:block>
 			<br/><br/>
@@ -182,16 +187,26 @@
 			<div class="clearer"></div>
 		</div>
 		<br/><br/>
-		<strong><label for="geo_coverage_region" i18n:translate="">
+		<p><strong><label for="geo_coverage_region" i18n:translate="">
 			Geo coverage: region
-		</label></strong>
+		</label></strong></p>
+		<select id="region_single_select">
+			<option value="" i18n:translate="">Please select</option>
+			<option tal:repeat="region region_choices"
+					tal:attributes="value repeat/region/index"
+					tal:content="region" />
+		</select>
 		<br/><br/>
-		<input id="geo_coverage_region" name="geo_coverage_region:utf8:ustring"
-			size="100" tal:attributes="value here/geo_coverage_region|nothing"/>
-			<tal:block condition="here/library_id|nothing">
-				("<tal:block content="python:test(here.library_geo_coverage_region, here.library_geo_coverage_region, 'empty')"/>"
-				<a i18n:translate="" tal:attributes="href python:here.getSite().absolute_url() + '/virtual-library-viewer/' + here.library_id" target="_blank">in the virtual library</a>)
-			</tal:block>
+		<div tal:repeat="region region_choices" tal:attributes="
+				id string:geo_coverage_region_top_${repeat/region/index};
+				style python: test(repeat['region'].index in here.geo_coverage_region, 'width:275px', 'display: none;; width:275px');">
+			<input type="checkbox" name="geo_coverage_region:list:int" tal:attributes="
+					id string:geo_coverage_region_${repeat/region/index};
+					checked python: repeat['region'].index in here.geo_coverage_region;
+					value repeat/region/index;" />
+			<span><label tal:attributes="for string:geo_coverage_region_${repeat/region/index}" tal:content="region"/></span>
+			<div class="clearer"></div>
+		</div>
 		<br/><br/>
 		<strong><label for="document_type" i18n:translate="">
 			Type of document
@@ -260,10 +275,20 @@ $('.approve_link').click(function() {
 	}
 	return true;
 });
+$('#region_single_select').change(function(){
+	region_index = $(this).val();
+	$('#geo_coverage_region_'+region_index).attr('checked', 'checked');
+	$('#geo_coverage_region_top_'+region_index).show();
+	$('#region_single_select').val('Please select');
+});
+$('input[name="geo_coverage_region:list:int"]').click(function() {
+	$(this).removeAttr('checked');
+	$(this).parent().hide();
+});
 $('#document_type_single_select').change(function(){
-	country_index = $(this).val();
-	$('#document_type_'+country_index).attr('checked', 'checked');
-	$('#document_type_top_'+country_index).show();
+	dt_index = $(this).val();
+	$('#document_type_'+dt_index).attr('checked', 'checked');
+	$('#document_type_top_'+dt_index).show();
 	$('#document_type_single_select').val('Please select');
 });
 $('input[name="document_type:list:int"]').click(function() {

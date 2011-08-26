@@ -217,35 +217,62 @@ class AoALibraryViewer(SimpleItem):
             self._update_remove_please_select_type_of_document(state, library, country_fiches)
         if update_type == 'update_to_multiple_types_of_documents':
             self._update_to_multiple_types_of_documents(state, library, country_fiches)
+        if update_type == 'update_vl_regions':
+            self._update_vl_regions(state, library)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
 
-    #
-    # To remove when migration script for vl region is done
-    #
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'vl_regions')
-    def vl_regions(self):
+    def _update_vl_regions(self, state, library):
         """ """
-        region_vals = {}
-        for shadow in self.iter_assessments():
-            region_val = shadow.get('geo_coverage_region')
-            if isinstance(region_val, basestring):
-                for rs1 in region_val.split(','):
-                    for rs2 in rs1.split(' and '):
-                        for r in rs2.split(' ans '):
-                            region_vals.setdefault(r.strip(), []).append(shadow)
-            else:
-                region_vals.setdefault(r, []).append(shadow)
-        return region_vals
+        def regions_string_to_list(region_val):
+            if not region_val:
+                return []
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'check_vl_regions')
-    check_vl_regions = PageTemplateFile('zpt/check_vl_regions', globals())
-    #
-    # end of vl region migration helper
-    #
+            ret = []
+            for rs1 in region_val.split(','):
+                for rs2 in rs1.split(' and '):
+                    for r in rs2.split(' ans '):
+                        ret.append(r.strip())
+            return ret
+
+        region_list = ['Caucasus', 'Central Asia', 'Eastern Europe',
+                       'EEA member countries', 'Russian Federation',
+                       'Western Balkans',
+                       'Africa', 'Asia', 'Global', 'Middle East',
+                       'North America', 'Northen Africa', 'Pacific countries',
+                       'other European', 'other OECD countries']
+
+        mapping = dict([(region, i) for i, region in enumerate(region_list)])
+        mapping['Rssuian Federation'] = mapping['Russian Federation']
+        mapping['North of America'] = mapping['North America']
+
+        # update the question information
+        from Products.NaayaSurvey.migrations import basic_replace
+        from Products.NaayaWidgets.widgets.CheckboxesWidget import addCheckboxesWidget
+        new_widget = basic_replace(library, 'w_geo-coverage-region', addCheckboxesWidget)
+        new_widget._setLocalPropValue('choices', 'en', region_list)
+        new_widget._setLocalPropValue('choices', 'ru', region_list)
+
+        for vl_answer in library.objectValues(survey_answer_metatype):
+            region_val = vl_answer.get('w_geo-coverage-region')
+            if isinstance(region_val, list):
+                state['already_updated'].append(vl_answer.absolute_url())
+            else:
+                regions = regions_string_to_list(region_val)
+                for region in regions:
+                    if region not in mapping:
+                        state['errors'][vl_answer.absolute_url()] = \
+                                'Not matched %s' % region
+                        break
+                else:
+                    value = [mapping[r] for r in regions]
+                    vl_answer.set_property('w_geo-coverage-region',
+                            sorted(set(value)))
+                    state['updated_answers'][vl_answer.absolute_url()] = \
+                            regions
 
     def _update_to_multiple_types_of_documents(self, state, library, country_fiches):
         # update the question information
@@ -876,9 +903,15 @@ class AoALibraryViewer(SimpleItem):
                     searchable_country = ''
                 else:
                     searchable_country = ', '.join(countries[c_i] for c_i in answer_country)
-                answer_region = survey_answer.get('w_geo-coverage-region', '').lower()
+
+                regions = survey['w_geo-coverage-region'].getChoices()
+                answer_region = survey_answer.get('w_geo-coverage-region', [])
+                if answer_region is None:
+                    searchable_region = ''
+                else:
+                    searchable_region = ', '.join(regions[r_i] for r_i in answer_region)
                 if (official_country_region.lower() not in searchable_country.lower() and
-                        official_country_region.lower() not in answer_region):
+                        official_country_region.lower() not in searchable_region.lower()):
                     return False
             if themes:
                 topic_present = False
