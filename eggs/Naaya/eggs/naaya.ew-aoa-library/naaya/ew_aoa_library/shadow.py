@@ -198,6 +198,21 @@ def get_countries_mapping(survey):
     setattr(survey, cache_name, mapping)
     return mapping
 
+def get_regions_mapping(survey):
+    cache_name = '_v_aoa_regions_map'
+    if hasattr(survey, cache_name):
+        return getattr(survey, cache_name)
+
+    if survey.getId() == 'bibliography-details-each-assessment':
+        widget_name = 'w_geo-coverage-region'
+
+    mapping = {}
+    for idx, label in enumerate(survey[widget_name].getChoices()):
+        mapping[idx] = force_to_unicode(label)
+
+    setattr(survey, cache_name, mapping)
+    return mapping
+
 def get_geolevels_mapping(survey):
     cache_name = '_v_aoa_geolevels_map'
     if hasattr(survey, cache_name):
@@ -271,7 +286,9 @@ def extract_survey_answer_data_library(answer):
     if attrs['geo_coverage_country'] is None:
         attrs['geo_coverage_country'] = []
 
-    attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', '')
+    attrs['geo_coverage_region'] = getattr(answer.aq_base, 'w_geo-coverage-region', [])
+    if attrs['geo_coverage_region'] is None:
+        attrs['geo_coverage_region'] = []
 
     attrs['document_type'] = getattr(answer.aq_base, 'w_type-document', [])
     if attrs['document_type'] is None:
@@ -280,6 +297,7 @@ def extract_survey_answer_data_library(answer):
     survey = answer.getSurveyTemplate()
     document_types = get_document_types_mapping(survey)
     countries = get_countries_mapping(survey)
+    regions = get_regions_mapping(survey)
     geolevels = get_geolevels_mapping(survey)
 
     attrs.update({
@@ -295,8 +313,8 @@ def extract_survey_answer_data_library(answer):
                             'w_body-conducting-assessment', lang='en'),
         'viewer_country': [countries[idx] for idx in
                            attrs['geo_coverage_country']],
-        'viewer_region': [r.strip() for r in
-                          answer.get('w_geo-coverage-region').split(',')],
+        'viewer_region': [regions[idx] for idx in
+                           attrs['geo_coverage_region']],
         'viewer_geolevel': geolevels.get(answer['w_theme-coverage']),
     })
 
@@ -562,7 +580,7 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
             for country in list(cf_approval_list):
                 if country not in survey_answer_countries:
                     cf_approval_list.remove(country)
-        setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region'))
+        setattr(survey_answer, 'w_geo-coverage-region', REQUEST.get('geo_coverage_region', []))
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
