@@ -585,6 +585,7 @@
 </tr>
 </thead>
 <tbody tal:define="vl_country_choices python: library_object['w_official-country-region'].getChoices();
+					vl_region_choices python: library_object['w_geo-coverage-region'].getChoices();
 					cf_country_choices python: country_fiches_object['w_country'].getChoices();">
 <tr tal:repeat="i shadows">
 	<td><input type="checkbox" name="answer_ids" tal:attributes="value i/id" /></td>
@@ -611,8 +612,12 @@
 		<tal:block condition="python: countries and country_fiches"
 			content="python:', '.join(cf_country_choices[country] for country in countries)"/>
 	</td>
-	<td tal:condition="python: library or review_template"
-		tal:content="i/geo_coverage_region|nothing"/>
+	<td tal:define="regions i/geo_coverage_region|nothing">
+		<tal:block condition="python: regions and review_template"
+			content="regions"/>
+		<tal:block condition="python: regions and library"
+			content="python: ', '.join(vl_region_choices[region] for region in regions)"/>
+	</td>
 	<td tal:condition="review_template"
 		tal:content="i/publication_year|nothing"/>
 	<td  tal:condition="review_template" >

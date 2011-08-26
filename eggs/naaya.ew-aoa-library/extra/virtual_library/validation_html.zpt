@@ -94,7 +94,7 @@ $(function() {
 $('form[name="frmAdd"]').show();
 
 $('#w_official-country-region_0').parent().hide();
-$('#w_geo-coverage-region').parent().hide();
+$('#w_geo-coverage-region_0').parent().hide();
 $('#w_type-document_0').parent().hide();
 $('#w_title-original-language').parent().hide();
 
