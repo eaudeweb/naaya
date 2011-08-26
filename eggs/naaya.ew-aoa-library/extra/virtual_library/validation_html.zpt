@@ -96,6 +96,7 @@ $('form[name="frmAdd"]').show();
 $('#w_official-country-region_0').parent().hide();
 $('#w_geo-coverage-region').parent().hide();
 $('#w_type-document_0').parent().hide();
+$('#w_title-original-language').parent().hide();
 
 function checkboxes_to_dropdown(input_name) {
     var checkboxes = $("input[type=checkbox][name='"+input_name+"']");
