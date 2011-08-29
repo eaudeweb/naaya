@@ -137,10 +137,10 @@ M.request_search = function() {
   perform_search(get_search_form_data());
 }
 
-var geolevel_map = {
-    'Global': 'Pan-European',
-    'Regional/Transboundary': 'Sub-region',
-    'National/Local': 'Country'
+var geolevel_reverse_map = {
+    'Global': 'global',
+    'Regional/Transboundary': 'region',
+    'National/Local': 'country'
 };
 
 M.build_document_filter = function(form_data) {
@@ -175,9 +175,9 @@ M.build_document_filter = function(form_data) {
     }
 
     /* check for geolevel */
-    var geolevel = geolevel_map[doc['geolevel']];
+    var geolevel = geolevel_reverse_map[doc['geolevel']];
     if(form_data['geolevel'] == geolevel) {}
-    else if(form_data['geolevel'] == 'Sub-region' && geolevel == 'Country') {}
+    else if(form_data['geolevel'] == 'region' && geolevel == 'country') {}
     else return;
 
     /* check text */
