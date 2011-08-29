@@ -1,14 +1,18 @@
-<div id="aoa-search-map">
+<div id="aoa-search-map" i18n:domain="eea-aoamap">
 
   <div id="filters">
 
     <div id="selection-info">
 
       <div class="jquery-template" style="display: none" id="country-info">
+        <span i18n:translate="">
+          <tal:t i18n:name="name">${name}</tal:t>:
+          <tal:t i18n:name="documents_total">${documents_total}</tal:t>
+          assessments
+        </span>
         <span>
-          ${name}: ${documents_total} assessments
-          (<a class="link-green-economy-fiche">${documents_green_economy} green
-          economy</a>, <a class="link-water-fiche">${documents_water} water</a>)
+          (<a class="link-green-economy-fiche" i18n:translate=""><tal:t i18n:name="documents_green_economy">${documents_green_economy}</tal:t> green economy</a>,
+          <a class="link-water-fiche" i18n:translate=""><tal:t i18n:name="documents_water">${documents_water}</tal:t> water</a>)
         </span>
       </div>
 
@@ -20,13 +24,16 @@
       </div>
 
       <div class="jquery-template" style="display: none" id="global-info">
-        <span>${total_documents} assessments registered</span>
+        <span i18n:translate="">
+          <tal:t i18n:name="total_documents">${total_documents}</tal:t>
+          assessments registered
+        </span>
       </div>
 
     </div>
 
     <div id="filters-form-holder">
-      <p>
+      <p i18n:translate="">
         Fill in the form below in order to search the available documents.
       </p>
       <form name="filters-form" id="filters-form">
@@ -37,35 +44,44 @@
         <div class="fields-separator">&nbsp;</div>
 
         <select name="theme" class="input-select">
-          <option value="">Water + Green economy</option>
+          <option value="" i18n:translate="">Water + Green economy</option>
           <option tal:repeat="option options/filter_options/themes"
                   tal:attributes="value option"
-                  tal:content="option"></option>
+                  tal:content="option" i18n:translate=""></option>
         </select>
 
         <div class="fields-separator">&nbsp;</div>
 
         <input type="text" name="year" placeholder="Publication year"
-               class="input-text" id="year" size="14" />
+               class="input-text" id="year" size="14"
+               i18n:attributes="placeholder" />
 
         <input type="submit" value="Search" class="standalone"
-               id="filter-button" />
+               id="filter-button"
+               i18n:attributes="value" />
 
         <input type="reset" value="Reset" class="standalone"
-               id="reset-button" />
+               id="reset-button"
+               i18n:attributes="value" />
 
       </form>
 
     </div>
 
-    <div id="countries-map"></div>
+    <div id="countries-map">
+      <div class="translations">
+        <span id="map-label-country" i18n:translate="">Country</span>
+        <span id="map-label-region" i18n:translate="">Sub-region</span>
+        <span id="map-label-global" i18n:translate="">Pan-European</span>
+      </div>
+    </div>
 
   </div>
 
   <div id="results">
 
-    <div class="loading-animation">
-      <img src="++resource++eea.aoamap/ajax-loader.gif" />
+    <div class="loading-animation" i18n:translate="">
+      <img src="++resource++eea.aoamap/ajax-loader.gif" i18n:name="spinner" />
       Loading documents
     </div>
 
@@ -83,30 +99,40 @@
     <div class="jquery-template" style="display: none"
          id="search-results-document-info">
 
-      <div class="template-section">
-        Author: ${author}
-        {{if year}}(${year}){{/if}}
+      <div class="template-section" i18n:translate="">
+        Author: <tal:t i18n:name="author">${author}</tal:t>
+        <tal:t i18n:name="year">{{if year}}(${year}){{/if}}</tal:t>
       </div>
 
-      <div class="template-section">
-        Coverage: {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
-        {{if region.length}}
-          ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
-        {{/if}}
+      <div class="template-section" i18n:translate="">
+        Coverage:
+        <tal:t i18n:name="country-list">
+          {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
+        </tal:t>
+        <tal:t i18n:name="region-list">
+          {{if region.length}}
+            ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
+          {{/if}}
+        </tal:t>
       </div>
 
-      <div class="template-section">
+      <div class="template-section" i18n:translate="">
         Themes:
-        {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
+        <tal:t i18n:name="theme-list">
+          {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
+        </tal:t>
+        <tal:t i18n:name="document-type-list">
         {{if document_type.length}}
             ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
         {{/if}}
+        </tal:t>
       </div>
 
       {{if url}}
-      <div class="template-section">
+      <div class="template-section" i18n:translate="">
         Download:
-        <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
+        <a href="${url}" title="${title}"
+           i18n:name="url">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
@@ -134,6 +160,7 @@
   M.load_async_config();
   M.load_templates();
   M.map_div = M.jQuery('#countries-map');
+  M.get_layer_labels();
   M.jQuery(document).ready(function() {
     M.create_map_search();
   });

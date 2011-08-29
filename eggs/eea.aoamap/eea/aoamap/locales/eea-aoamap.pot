@@ -1,0 +1,87 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-08-29 15:09+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: eea-aoamap\n"
+
+#: ./browser/map.pt:14
+msgid "${documents_green_economy} green economy"
+msgstr ""
+
+#: ./browser/map.pt:15
+msgid "${documents_water} water"
+msgstr ""
+
+#: ./browser/map.pt:10
+msgid "${name}: ${documents_total} assessments"
+msgstr ""
+
+#: ./browser/map.pt:84
+msgid "${spinner} Loading documents"
+msgstr ""
+
+#: ./browser/map.pt:28
+msgid "${total_documents} assessments registered"
+msgstr ""
+
+#: ./browser/map.pt:104
+msgid "Author: ${author} ${year}"
+msgstr ""
+
+#: ./browser/map.pt:73
+msgid "Country"
+msgstr ""
+
+#: ./browser/map.pt:112
+msgid "Coverage: ${country-list} ${region-list}"
+msgstr ""
+
+#: ./browser/map.pt:134
+msgid "Download: ${url}"
+msgstr ""
+
+#: ./browser/map.pt:36
+msgid "Fill in the form below in order to search the available documents."
+msgstr ""
+
+#: ./browser/map.pt:75
+msgid "Pan-European"
+msgstr ""
+
+#: ./browser/map.pt:55
+msgid "Publication year"
+msgstr ""
+
+#: ./browser/map.pt:63
+msgid "Reset"
+msgstr ""
+
+#: ./browser/map.pt:59
+msgid "Search"
+msgstr ""
+
+#: ./browser/map.pt:74
+msgid "Sub-region"
+msgstr ""
+
+#: ./browser/map.pt:124
+msgid "Themes: ${theme-list} ${document-type-list}"
+msgstr ""
+
+#: ./browser/map.pt:47
+msgid "Water + Green economy"
+msgstr ""
+

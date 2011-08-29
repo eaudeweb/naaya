@@ -221,10 +221,13 @@ M.show_country_coverage = function(countries) {
   M.country_coverage_click_control.activate();
 };
 
-M.layer_label = {
-  'country': "Country",
-  'region': "Sub-region",
-  'global': "Pan-European"
+M.get_layer_labels = function() {
+  M.layer_label = {};
+  var trans = $('div.translations', M.map_div);
+  $.each(['country', 'region', 'global'], function(i, name) {
+    M.layer_label[name] = $('span#map-label-'+name, trans).text();
+  });
+  trans.remove();
 };
 
 M.create_map_search = function() {
