@@ -3,7 +3,7 @@ import urllib
 import logging
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
-from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 log = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ class AoaMap(BrowserView):
             },
         }
 
-        return map_template(**options)
+        return map_template.__of__(self.aq_parent)(**options)
 
 
 def get_aoa_response(relative_url):

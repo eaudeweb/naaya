@@ -1,7 +1,6 @@
 <configure
   xmlns:zcml="http://namespaces.zope.org/zcml"
-  xmlns:browser="http://namespaces.zope.org/browser"
-  i18n_domain="eea">
+  xmlns:browser="http://namespaces.zope.org/browser">
 
   <browser:page
     for=".interfaces.IMapViewParent"

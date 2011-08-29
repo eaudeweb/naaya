@@ -1,9 +1,8 @@
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile \
-                                             as z2_PageTemplateFile
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import plone_views
 
 
-naaya_map_template = z2_PageTemplateFile('naaya_map.zpt', globals())
+naaya_map_template = PageTemplateFile('naaya_map.zpt', globals())
 
 
 class SearchMap(plone_views.AoaMap):
