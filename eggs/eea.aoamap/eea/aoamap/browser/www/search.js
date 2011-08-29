@@ -157,11 +157,6 @@ M.build_document_filter = function(form_data) {
       if($.inArray(form_data['theme'], doc['theme']) < 0) return;
     }
 
-    /* check for library */
-    if(form_data['library']) {
-      if(doc['library'] != form_data['library']) return;
-    }
-
     /* check for country */
     if(form_data['country'].length > 0) {
       var country_match = false;
