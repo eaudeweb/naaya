@@ -19,14 +19,6 @@ country_code = json.load(open(os.path.join(os.path.dirname(__file__),
 
 
 def shadow_to_dict(shadow):
-    pth = shadow.getPhysicalPath()
-    if 'virtual-library-viewer' in pth:
-        library = 'virtual-library'
-    elif 'country-fiches-viewer' in pth:
-        library = 'other-objects'
-    else:
-        library = None
-
     return {
         "title": shadow.viewer_title_en,
         "country": shadow.viewer_country,
@@ -37,16 +29,7 @@ def shadow_to_dict(shadow):
         "year": shadow.viewer_year,
         "author": shadow.viewer_author,
         "url": shadow.url,
-        "library": library,
     }
-
-
-def all_documents(site):
-    for shadow in site['country-fiches-viewer'].iter_assessments():
-        yield shadow_to_dict(shadow)
-
-    for shadow in site['virtual-library-viewer'].iter_assessments():
-        yield shadow_to_dict(shadow)
 
 
 def get_country_index(site):
@@ -61,7 +44,8 @@ def get_map_async_config(site):
     return {
         'country_code': country_code,
         'country_index': get_country_index(site),
-        'documents': list(all_documents(site)),
+        'documents': [shadow_to_dict(shadow) for shadow in
+                      site['virtual-library-viewer'].iter_assessments()],
         'query-time': time() - t0,
     }
 
