@@ -40,13 +40,30 @@ class AoaMap(BrowserView):
         return map_template(**options)
 
 
+def get_aoa_response(relative_url):
+    response = urllib.urlopen(aoa_url + relative_url)
+    try:
+        return response.read()
+    finally:
+        response.close()
+
+
 class AoaMapSearch(BrowserView):
     """
     Proxy search requests to the AoA portal.
     """
 
     def __call__(self):
-        search_url = aoa_url + 'jsmap_search_map_documents'
-        json_response = urllib.urlopen(search_url).read()
+        json_response = get_aoa_response('jsmap_search_map_documents')
         self.request.RESPONSE.setHeader('Content-Type', 'application/json')
         return json_response
+
+
+class AddToVirtualLibrary(BrowserView):
+    """
+    Add entries to the Virtual Library
+    """
+
+    def get_vl_form_url(self):
+        return (aoa_url + 'tools/virtual_library/'
+                'bibliography-details-each-assessment?iframe=on')

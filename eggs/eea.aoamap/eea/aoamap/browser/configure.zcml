@@ -18,6 +18,14 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for=".interfaces.IMapViewParent"
+    name="add-to-virtual-library.html"
+    template="vl_form.pt"
+    class=".plone_views.AddToVirtualLibrary"
+    permission="zope2.View"
+    />
+
   <configure zcml:condition="installed naaya.ew_aoa_library">
     <browser:page
       for="naaya.ew_aoa_library.interfaces.IAoaPortal"
