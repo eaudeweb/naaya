@@ -238,6 +238,14 @@
 				</tal:block>
 			</tal:block>
 
+			<div class="widgetEditMode" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
+				<label class="widget-title" for="anonymous_responder_email" i18n:translate="">Responder email</label>
+				<div class="tooltips" i18n:translate="">
+					Instructions and a password allowing you to edit this answer at a later time will be sent to this address.
+				</div>
+				<input id="anonymous_responder_email" type="text" size="100" value="" name="anonymous_responder_email:utf8:ustring">
+			</div>
+
 			<div class="surveySubmit">
 				<input type="submit"
 					tal:attributes="value python: test(my_answer and not my_answer.is_draft() and not here.allow_multiple_answers, 'Change answer', 'Submit')"
