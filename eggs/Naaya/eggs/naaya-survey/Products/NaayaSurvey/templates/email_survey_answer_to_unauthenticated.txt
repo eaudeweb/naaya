@@ -1,0 +1,10 @@
+Hello,
+
+You have taken the survey %(SURVEY_TITLE)s (%(SURVEY_URL)s).
+You can see your answer at:
+
+%(LINK)s
+
+and edit it at:
+
+%(EDIT_LINK)s

@@ -242,7 +242,8 @@ def install_email_templates(site):
     email_tool = site.getEmailTool()
     log.info("Configuring email notifications on site %r", site)
     for template, title in [('email_survey_answer.txt', 'Survey answered'),
-                            ('email_survey_answer_to_respondent.txt', 'Survey answered')]:
+                            ('email_survey_answer_to_respondent.txt', 'Survey answered'),
+                            ('email_survey_answer_to_unauthenticated.txt', 'Survey answered')]:
         id = template[:-4] # without .txt
         f = open(os.path.join(os.path.dirname(__file__),
                               'templates', template), 'r')

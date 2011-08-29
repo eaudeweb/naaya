@@ -33,6 +33,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyProperties import NyProperties
 
+from AccessControl.Permissions import view
 from permissions import PERMISSION_VIEW_ANSWERS, PERMISSION_EDIT_ANSWERS
 from interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 
@@ -130,9 +131,14 @@ class SurveyAnswer(Folder, NyProperties):
         manage_addExtFile(self, id, title=attached_file.filename,
                           file=attached_file)
 
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getDatamodel')
+    security.declareProtected(view, 'getDatamodel')
     def getDatamodel(self):
         """ """
+        #can_view checks permission view answers or if the user is
+        #anonymous, checks if he has provided a valid key
+        if not self.can_view():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+
         return dict([(widget.id, self.get(widget.id))
                      for widget in self.getSortedWidgets()])
 
@@ -166,15 +172,11 @@ class SurveyAnswer(Folder, NyProperties):
 
     _index_html = NaayaPageTemplateFile('zpt/surveyanswer_index',
                     globals(), 'NaayaSurvey.surveyanswer_index')
-    def index_html(self,REQUEST=None):
+    def index_html(self):
         """ Return the answer index if the current user
         is the respondent or has permission to view answers """
 
-        if REQUEST:
-            if self.respondent == REQUEST.AUTHENTICATED_USER.getUserName():
-                return self._index_html()
-
-        if self.checkPermission(PERMISSION_VIEW_ANSWERS):
+        if self.can_view():
             return self._index_html()
         else:
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -203,6 +205,37 @@ class SurveyAnswer(Folder, NyProperties):
 
         if REQUEST:
             REQUEST.RESPONSE.redirect(survey.absolute_url())
+
+    security.declarePublic('can_edit')
+    def can_edit(self):
+        """ """
+        if self.aq_parent.expired():
+            return False
+        authenticated_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        user_is_anonymous = bool(authenticated_user == 'Anonymous User')
+        if user_is_anonymous:
+            key = self.get('anonymous_editing_key')
+            return key and key == self.REQUEST.get('key')
+        else:
+            has_edit_permission = self.checkPermissionEditAnswers()
+            user_is_respondent = bool(authenticated_user == self.respondent)
+            answer_is_approved = self.get('approved_date')
+            return has_edit_permission or (user_is_respondent
+                    and not answer_is_approved)
+
+    security.declarePublic('can_view')
+    def can_view(self):
+        """ """
+        REQUEST = self.REQUEST
+        if self.checkPermission(PERMISSION_VIEW_ANSWERS):
+            return True
+        #check if the user is the respondent
+        #(for anonymous that means providing a valid key
+        elif REQUEST:
+            if self.respondent == REQUEST.AUTHENTICATED_USER.getUserName():
+                key = self.get('anonymous_editing_key')
+                return self.respondent != 'Anonymous User' or (
+                    key and key == REQUEST.get('key'))
 
 class NySurveyAnswerAddEvent(object):
     """ """

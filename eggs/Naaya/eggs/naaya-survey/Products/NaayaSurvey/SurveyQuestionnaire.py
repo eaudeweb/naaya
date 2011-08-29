@@ -242,10 +242,13 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         suggestions = []
         respondent = None
         creation_date = None
+        anonymous_editing_key = None
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
             respondent = old_answer.respondent
             suggestions = getattr(old_answer, 'suggestions', [])
+            anonymous_editing_key = getattr(old_answer,
+                'anonymous_editing_key', None)
             if not getattr(old_answer, 'draft', False):
                 creation_date = old_answer.get('creation_date')
             # an answer ID was provided explicitly for us to edit, so we
@@ -269,10 +272,20 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
                                            creation_date=creation_date)
 
         answer = self._getOb(answer_id)
+
         if suggestions:
             answer.suggestions = suggestions
 
-        if not draft:
+        if self.isAnonymousUser():
+            if anonymous_editing_key:
+                answer.anonymous_editing_key = anonymous_editing_key
+            anonymous_responder_email = kwargs.pop('anonymous_responder_email', None)
+            if anonymous_responder_email:
+                answer.anonymous_responder_email = anonymous_responder_email
+                if not answer.get('anonymous_editing_key'):
+                    answer.anonymous_editing_key = self.utGenRandomId(16)
+                    self.sendNotificationToUnauthenticatedRespondent(answer)
+        elif not draft:
             if self.notify_owner:
                 self.sendNotificationToOwner(answer)
             if (self.notify_respondents == 'ALWAYS'
@@ -314,11 +327,15 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         """
         owner = self.getOwner()
         respondent = self.REQUEST.AUTHENTICATED_USER
+        respondent_name = auth_tool.getUserFullName(respondent)
         auth_tool = self.getSite().getAuthenticationTool()
 
         d = {}
         d['NAME'] = auth_tool.getUserFullName(owner)
-        d['RESPONDENT'] = "User %s" % auth_tool.getUserFullName(respondent)
+        if respondent_name == 'Anonymous User':
+            d['RESPONDENT'] = ("%s, email: %s" % (respondent_name, answer.get('anonymous_responder_email', 'Not available')))
+        else:
+            d['RESPONDENT'] = ("User %s" % auth_tool.getUserFullName(respondent))
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()
@@ -336,7 +353,6 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         if self.isAnonymousUser():
             return
 
-        owner = self.getOwner()
         respondent = self.REQUEST.AUTHENTICATED_USER
         auth_tool = self.getSite().getAuthenticationTool()
 
@@ -346,10 +362,32 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = "%s" % answer.absolute_url()
 
-        self._sendEmailNotification('email_survey_answer_to_respondent', d, respondent)
+        self._sendEmailNotification('email_survey_answer_to_respondent', d,
+                respondent)
+
+    security.declarePrivate('sendNotificationToUnauthenticatedRespondent')
+    def sendNotificationToUnauthenticatedRespondent(self, answer):
+        """Send an email notification about the newly added answer to the email
+            address provided by an anonymous respondent.
+
+            @param answer: the answer object that was added (unsed for the moment)
+            @type answer: SurveyAnswer
+        """
+        recp_email = answer.get('anonymous_responder_email')
+        key = answer.get('anonymous_editing_key', None)
+
+        d = {}
+        d['SURVEY_TITLE'] = self.title
+        d['SURVEY_URL'] = self.absolute_url()
+        d['LINK'] = "%s" % answer.absolute_url()
+        d['EDIT_LINK'] = "%s?edit=1&key=%s" % (answer.absolute_url(), key)
+
+        self._sendEmailNotification('email_survey_answer_to_unauthenticated', d,
+                recp_email=recp_email)
 
     security.declarePrivate('_sendEmailNotification')
-    def _sendEmailNotification(self, template_name, d, recipient):
+    def _sendEmailNotification(self, template_name, d, recipient=None,
+            recp_email=None):
         """Send an email notification.
 
             @param template_name: name of the email template
@@ -359,6 +397,11 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             @param recipient: recipient
             @type recipient: Zope User
         """
+        if recipient is None and recp_email is None:
+            #this only happens when self.isAnonymousUser() is True and the user
+            #has not filled in an email address. So just return
+            return
+
         auth_tool = self.getSite().getAuthenticationTool()
         email_tool = self.getSite().getEmailTool()
         template = email_tool._getOb(template_name)
@@ -369,18 +412,21 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             sender_email = email_tool.get_addr_from()
 
         try:
-            recp_email = auth_tool.getUserEmail(recipient)
+            recp_email = recp_email or auth_tool.getUserEmail(recipient)
             email_tool.sendEmail(template.body % d,
                                  recp_email,
                                  sender_email,
                                  template.title)
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
-            # possible causes - the recipient doesn't have email (e.g. regular Zope user)
+            # possible causes - the recipient doesn't have email
+            #                   (e.g. regular Zope user)
             #                 - we can not send the email
             # these aren't fatal errors, so we'll just log the error
             err = sys.exc_info()
-            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send email notification for survey %s' % (self.absolute_url(),), error=err)
+            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR,
+                'Could not send email notification for survey %s' %
+                (self.absolute_url(),), error=err)
 
     #
     # Answer read methods
