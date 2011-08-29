@@ -14,9 +14,9 @@ M.country_code = {};
 
 M.docs_summary_result = $.Deferred();
 
-M.xyz_layer = function(name) {
-  return new OpenLayers.Layer.XYZ(name,
-    M.config['tiles_url'] + "/${z}/${x}/${y}.png",
+M.xyz_layer = function(label) {
+  return new OpenLayers.Layer.XYZ(label,
+    M.config['tiles_url'] + "aoa-en/${z}/${x}/${y}.png",
     {'sphericalMercator': true, 'numZoomLevels': 7}
   );
 };
@@ -35,14 +35,15 @@ M.load_templates = function() {
   });
 };
 
-M.add_view = function(tiles_layer) {
-  var this_view = M.views[tiles_layer.name] = {};
+M.views = {};
+M.add_view = function(name, tiles_layer) {
+  var this_view = M.views[name] = {'name': name};
 
   this_view.tiles_layer = tiles_layer;
   M.countries_map.addLayer(this_view.tiles_layer);
 
   this_view.polygons_layer = new OpenLayers.Layer.Vector(
-    this_view.tiles_layer.name + ' - polygons',
+    this_view.name + ' - polygons',
     {displayInLayerSwitcher: false,
      visibility: false,
      styleMap: new OpenLayers.StyleMap({
@@ -86,7 +87,7 @@ M.add_view = function(tiles_layer) {
     if(this_view.tiles_layer.getVisibility()) {
       select_control.activate();
       select_control.unselectAll();
-      M.current_view_name = this_view.tiles_layer.name;
+      M.current_view_name = this_view.name;
       this_view.polygons_layer.redraw();
     } else {
       select_control.deactivate();
@@ -140,7 +141,7 @@ M.get_selected_countries = function() {
 };
 
 M.get_selected_regions = function() {
-  if(M.current_view_name != "Sub-region") return [];
+  if(M.current_view_name != 'region') return [];
   var layer = M.get_current_view().polygons_layer;
   return $.map(layer.selectedFeatures, function(feature) {
     return feature.attributes['name'];
@@ -220,6 +221,12 @@ M.show_country_coverage = function(countries) {
   M.country_coverage_click_control.activate();
 };
 
+M.layer_label = {
+  'country': "Country",
+  'region': "Sub-region",
+  'global': "Pan-European"
+};
+
 M.create_map_search = function() {
   M.countries_map = new OpenLayers.Map(M.map_div[0].id);
 
@@ -228,10 +235,9 @@ M.create_map_search = function() {
   $('.baseLbl', M.layer_switcher.layersDiv).text("Geographic level");
   M.layer_switcher.maximizeControl();
 
-  M.views = {};
-  M.add_view(M.xyz_layer("Country"));
-  M.add_view(M.xyz_layer("Sub-region"));
-  M.add_view(M.xyz_layer("Pan-European"));
+  $.each(['country', 'region', 'global'], function(i, name) {
+    M.add_view(name, M.xyz_layer(M.layer_label[name]));
+  });
 
   M.countries_map.events.on({
     'changebaselayer': function() { M.map_div.trigger('map-layer-changed'); }
@@ -243,7 +249,7 @@ M.create_map_search = function() {
   M.countries_map.zoomToMaxExtent();
 
   M.load_features('countries.json', function(features_json) {
-    var view = M.views["Country"];
+    var view = M.views["country"];
     view.set_features(M.geojson_format.read(features_json));
 
     // parse the JSON twice so we get different IDs for the features
@@ -252,7 +258,7 @@ M.create_map_search = function() {
   });
 
   M.load_features('regions.json', function(features_json) {
-    var view = M.views["Sub-region"];
+    var view = M.views["region"];
     view.set_features(M.geojson_format.read(features_json));
   });
 };

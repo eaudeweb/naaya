@@ -30,7 +30,7 @@ M.update_selection_info = function() {
   $('#selection-info').empty().append(selection_info_content());
 
   function selection_info_content() {
-    if(M.current_view_name == 'Country') {
+    if(M.current_view_name == 'country') {
       var countries = M.get_selected_countries();
       if(countries.length == 0) {
         return M.render_global_info();
@@ -42,7 +42,7 @@ M.update_selection_info = function() {
         return countries.join(", ");
       }
     }
-    else if(M.current_view_name == 'Sub-region') {
+    else if(M.current_view_name == 'region') {
       var regions = M.get_selected_regions();
       if(regions.length == 0) {
         return M.render_global_info();
