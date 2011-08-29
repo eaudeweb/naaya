@@ -29,7 +29,7 @@
       <p>
         Fill in the form below in order to search the available documents.
       </p>
-      <form method="GET" action="" name="filters-form" id="filters-form">
+      <form name="filters-form" id="filters-form">
         <input type="text" name="text" size="45" id="description"
                placeholder="Search for title"
                class="input-text" />
@@ -41,12 +41,6 @@
           <option tal:repeat="option options/filter_options/themes"
                   tal:attributes="value option"
                   tal:content="option"></option>
-        </select>
-
-        <select name="library" class="input-select">
-          <option value="">All objects</option>
-          <option value="virtual-library">Virtual library</option>
-          <option value="other-objects">Other objects</option>
         </select>
 
         <div class="fields-separator">&nbsp;</div>
