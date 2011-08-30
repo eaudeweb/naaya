@@ -1,3 +1,10 @@
+from difflib import get_close_matches
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
@@ -14,6 +21,8 @@ from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddE
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
 from naaya.core.interfaces import INyObjectContainer
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from naaya.core.utils import force_to_unicode
+from naaya.core.zope2util import ofs_path
 
 import shadow
 from devel import aoa_devel_hook
@@ -273,6 +282,33 @@ class AoALibraryViewer(SimpleItem):
                             sorted(set(value)))
                     state['updated_answers'][vl_answer.absolute_url()] = \
                             regions
+
+    security.declarePublic('get_close_answers')
+    def get_close_answers(self, title_en, title_ru, year):
+        """ """
+        def get_close_answers_by_lang(shadows, title, lang):
+            shadows_by_title = dict((shadow.get('title', lang), shadow)
+                                    for shadow in shadows)
+
+            matched_titles = get_close_matches(title,
+                                                shadows_by_title.keys(),
+                                                n=2, cutoff=0.6)
+            return [{'title': t,
+                     'answer_url': shadows_by_title[t].target_answer().absolute_url()}
+                     for t in matched_titles]
+
+        ret = []
+
+        catalog = self.getSite().getCatalogTool()
+        brains = catalog(path=ofs_path(self), viewer_year=year)
+        shadows = [b.getObject() for b in brains]
+
+        if title_en:
+            ret.extend(get_close_answers_by_lang(shadows, title_en, 'en'))
+        if title_ru:
+            ret.extend(get_close_answers_by_lang(shadows, title_ru, 'ru'))
+
+        return json.dumps(ret)
 
     def _update_to_multiple_types_of_documents(self, state, library, country_fiches):
         # update the question information
