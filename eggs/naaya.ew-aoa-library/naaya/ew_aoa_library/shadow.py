@@ -453,9 +453,10 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
             else:
                 setattr(self, key, value)
 
-    def get(self, key):
+    def get(self, key, lang=None):
         if self.hasLocalProperty(key):
-            lang = self.gl_get_selected_language()
+            if lang is None:
+                lang = self.gl_get_selected_language()
             value = self.getLocalProperty(key, lang=lang)
             if value:
                 return value

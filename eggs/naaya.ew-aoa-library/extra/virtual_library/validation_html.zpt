@@ -1,4 +1,69 @@
 <metal:block define-macro="validate">
+
+<div id="duplicates" style="display: none">
+</div>
+<script>
+(function() {
+    var search_duplicates_in_progress = false;
+    var search_duplicates_defered = false;
+    function search_duplicates() {
+        var div = $('#duplicates');
+        div.hide();
+
+        var title_en = $('#w_assessment-name-en').attr('value');
+        var title_ru = $('#w_assessment-name-ru').attr('value');
+        var year =  $('#w_assessment-year').attr('value');
+        if (! (year && (title_en || title_ru)) ) {
+            return;
+        }
+
+        if (search_duplicates_in_progress) {
+            search_duplicates_defered = true;
+            return;
+        }
+
+        search_duplicates_in_progress = true;
+        $.ajax({
+                url: 'virtual-library-viewer/get_close_answers',
+                data:{'title_en:utf8:ustring': title_en,
+                       'title_ru:utf8:ustring': title_ru,
+                       'year:utf8:ustring': year},
+                dataType: 'json',
+                success: function(data) {
+                    if (data.length > 0) {
+                        div.text('This entry might be a duplicate. Similar entries:');
+
+                        for (var i = 0; i < data.length; i++) {
+                            var item = data[i];
+                            var url = item.answer_url;
+                            var title = item.title;
+
+                            $('<br/>').appendTo(div);
+                            $('<a href="'+url+'">'+title+'<'+'/a>').appendTo(div);
+                        }
+                        div.show();
+                    } else {
+                        div.hide();
+                    }
+                },
+                complete: function() {
+                    search_duplicates_in_progress = false;
+                    if (search_duplicates_defered) {
+                        search_duplicates_defered = false;
+                        search_duplicates();
+                    }
+                }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#w_assessment-name-en').change(search_duplicates);
+        $('#w_assessment-name-ru').change(search_duplicates);
+        $('#w_assessment-year').change(search_duplicates);
+    });
+})();
+</script>
+
 <script tal:content="python:'var naaya_site_url=%s' % here.rstk.json_dumps(
                               here.getSite().absolute_url())"></script>
 <script>$(function() {
