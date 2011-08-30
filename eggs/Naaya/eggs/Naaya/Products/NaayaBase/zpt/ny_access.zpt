@@ -17,7 +17,7 @@
     </div>
     <div class="clearer"></div>
     <br />
-    <p class="page-description">
+    <p class="page-description" i18n:translate="">
         This page lists the permissions and assigned roles for the current item.
     </p>
     <div id="save-permissions-waiting-response" style="display:none">
