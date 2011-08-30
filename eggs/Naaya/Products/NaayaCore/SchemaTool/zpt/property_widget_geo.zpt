@@ -21,28 +21,28 @@ portal_map here/getGeoMapTool;
 <div style="background-color: #ecf5fa; border: 1px solid #b6cde1;
             margin-top: 0.5em; padding: 0.5em; width: 430px;">
     <div class="tooltips">
-        <p>
+        <p i18n:translate="">
             Please provide the best fit for a geographical location. You can place the information using the options below.
         </p>
-        <strong>A. Identifying a location on the map:</strong>
+        <strong i18n:translate="">A. Identifying a location on the map:</strong>
         <ul>
-            <li>Click <em>Show map</em>;</li>
-            <li>
+            <li i18n:translate="">Click <em i18n:translate="" i18n:name="show_map">Show map</em>;</li>
+            <li i18n:translate="">
               Move inside the map and zoom in to the most relevant location;
             </li>
-            <li>
+            <li i18n:translate="">
               Click again at that specific location, a pin will appear and the
               coordinates for that point will be automatically retrieved and
               filled in.
             </li>
         </ul>
-        <strong>B. If you know the address:</strong>
+        <strong i18n:translate="">B. If you know the address:</strong>
         <ul>
-            <li>Type the address in the <em>Address</em> field;</li>
-            <li>Click <em>Show map</em>;</li>
-            <li>
-              Click on the <em>Center map</em> button, right next to the
-              <em>Address</em>
+            <li i18n:translate="">Type the address in the <em i18n:translate="" i18n:name="address">Address</em> field;</li>
+            <li i18n:translate="">Click <em i18n:translate="" i18n:name="show_map">Show map</em>;</li>
+            <li i18n:translate="">
+              Click on the <em i18n:translate="" i18n:name="center_map">Center map</em> button, right next to the
+              <em i18n:translate="" i18n:name="address">Address</em>
               field, and get the coordinates for the address.
             </li>
         </ul>
@@ -93,7 +93,7 @@ portal_map here/getGeoMapTool;
 
         <input type="button" name="address_button" value="Center map"
                tal:attributes="id string:${prop_id}-centermap"
-               style="display: none;" />
+               style="display: none;" i18n:attributes="value"/>
     </div>
 
     <script tal:define="val python:here.rstk.json_dumps(prop_id)"

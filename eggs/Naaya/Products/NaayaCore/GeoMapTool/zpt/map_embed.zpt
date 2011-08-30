@@ -109,16 +109,11 @@
 					You must have Javascript turned on to access all the Geo Map features.
 				</p>
 			</noscript>
-			<p id="js_links" style="display: none;">
-				Displaying
-				<strong id="record_counter"></strong>
-				&nbsp;<span i18n:translate="">location(s).</span>
-				You can also <a href="." id="view_as_list" target="_blank"
-				i18n:translate="">view these locations as a list</a>,
-				<a href="." id="view_in_google_earth" target="_blank"
-				i18n:translate="">view them in Google Earth</a>
-				or <a href="." id="download_georss" target="_blank"
-				i18n:translate="">download them in GeoRSS format</a>.
+			<p id="js_links" style="display: none;" i18n:translate="">
+				Displaying <strong id="record_counter" i18n:name="locations_number"></strong> location(s).
+				You can also <a href="." id="view_as_list" target="_blank" i18n:translate="" i18n:name="view_locations_list">view these locations as a list</a>,
+				<a href="." id="view_in_google_earth" target="_blank" i18n:translate="" i18n:name="view_in_google_earth">view them in Google Earth</a>
+				or <a href="." id="download_georss" target="_blank" i18n:translate="" i18n:name="download_georss">download them in GeoRSS format</a>.
 			</p>
 			<div id="map"></div>
 			<br clear="all" style="clear:both"/>
@@ -150,7 +145,7 @@
 						disabled="disabled" value="Go" onclick="startMapRefresh()"
 						i18n:attributes="value"/>
 						<noscript>
-							<p><small>eg: "water supply"</small></p>
+							<p><small i18n:translate="">eg: "water supply"</small></p>
 						</noscript>
 					</div>
 					<small>
