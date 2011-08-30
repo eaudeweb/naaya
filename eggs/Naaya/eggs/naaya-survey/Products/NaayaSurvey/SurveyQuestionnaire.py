@@ -327,8 +327,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         """
         owner = self.getOwner()
         respondent = self.REQUEST.AUTHENTICATED_USER
-        respondent_name = auth_tool.getUserFullName(respondent)
         auth_tool = self.getSite().getAuthenticationTool()
+        respondent_name = auth_tool.getUserFullName(respondent)
 
         d = {}
         d['NAME'] = auth_tool.getUserFullName(owner)
