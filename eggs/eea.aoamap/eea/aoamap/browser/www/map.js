@@ -16,7 +16,7 @@ M.docs_summary_result = $.Deferred();
 
 M.xyz_layer = function(label) {
   return new OpenLayers.Layer.XYZ(label,
-    M.config['tiles_url'] + "aoa-en/${z}/${x}/${y}.png",
+    M.config['tiles_url'] + "/${z}/${x}/${y}.png",
     {'sphericalMercator': true, 'numZoomLevels': 7}
   );
 };
