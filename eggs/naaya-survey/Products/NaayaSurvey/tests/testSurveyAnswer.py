@@ -47,6 +47,7 @@ class AddSurveyAnswerTestCase(unittest.TestCase):
         survey.setSessionAnswer = Mock()
         survey.setSession = Mock()
         survey.delSessionKeys = Mock()
+        survey.isAnonymousUser = Mock(return_value=False)
 
         survey.absolute_url = Mock(return_value="http://survey")
         survey._getOb = Mock(side_effect=_getOb_side_effect)
