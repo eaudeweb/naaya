@@ -35,7 +35,7 @@
 </form>
 
 <fieldset><legend i18n:translate="">Tip</legend>
-<p>
+<p i18n:translate="">
 	If you need a new group of people to grant access to for this area, the following steps should be followed:
 </p>
 <ol>
