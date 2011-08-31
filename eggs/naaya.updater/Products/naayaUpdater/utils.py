@@ -2,6 +2,7 @@ import os
 import sys
 import sha
 import types
+import re
 
 from Products.Naaya.interfaces import INySite
 from Products.Naaya import NySite as NySite_module
@@ -124,3 +125,47 @@ def get_contenttype_content(container, id, portal):
                     return readFile(os.path.join(pitem['package_path'], 'zpt',
                                                  frm_name), 'r')
                 break
+
+def add_admin_entry(update_obj, portal, html_line, needle):
+    """
+    `update_obj` - update script instance
+    `portal` - portal to update
+    `html_line` - html line to insert in portlet_administration
+    `needle` - text contained by line prior to insertion place of html_line
+    """
+    portlet = portal.getPortletsTool()['portlet_administration']
+    destination = portlet.read()
+    if html_line in destination > -1:
+        update_obj.log.debug("Line already exists in portlet_administration")
+        return True
+
+    destination = destination.split('\n')
+    updated = False
+    position = -1
+    occurences = 0
+    i = 0
+    for line in destination:
+        i += 1
+        if needle in line:
+            position = i
+            occurences += 1
+
+    if occurences == 0:
+        update_obj.log.debug('Can not find needle "%s"' % needle)
+        return False
+    elif occurences > 1:
+        update_obj.log.debug('%d needles found ("%s"), aborting portlet patch'
+                             % (occurences, needle))
+        return False
+    elif occurences == 1:
+        indentation_pat = re.compile(r'^([\t ]*)')
+        match = indentation_pat.match(destination[position-1])
+        if match is not None:
+            indentation = match.group(1)
+        else:
+            indentation = ''
+        destination.insert(position, indentation + html_line.strip())
+        destination = '\n'.join(destination)
+        portlet.pt_edit(text=destination, content_type='text/html')
+        update_obj.log.debug('Updated admin portlet')
+        return True
