@@ -148,8 +148,8 @@
 	*/
 });</script>
 
-
-
+<tal:block define="schema_tool here/getSchemaTool"><script tal:content="string:
+	var WWW_URL='${schema_tool/absolute_url}/www/';"></script></tal:block>
 
 <script>
 // http://gist.github.com/472607
@@ -163,103 +163,229 @@ $(function() {
 	//	buttons: { "Close": function() { $(this).dialog("close"); } }
 	//});
 
-//Unhide the mai form (hidden so it only works with javascript turned on.
-$('form[name="frmAdd"]').show();
+	//Unhide the main form (hidden so it only works with javascript turned on.
+	$('form[name="frmAdd"]').show();
 
-$('#w_official-country-region_0').parent().hide();
-$('#w_geo-coverage-region_0').parent().hide();
-$('#w_type-document_0').parent().hide();
-$('#w_title-original-language').parent().hide();
+	$('#w_official-country-region_0').parent().hide();
+	$('#w_geo-coverage-region').parent().hide();
+	$('#w_type-document_0').parent().hide();
+	$('#w_title-original-language').hide();
 
-function checkboxes_to_dropdown(input_name) {
-    var checkboxes = $("input[type=checkbox][name='"+input_name+"']");
-    var the_ul = $('<ul'+'>').css('margin-top', '-1em');
-    var the_select = $('<select'+'><option value=""'+'>-- select value --<'+'/option><'+'/select>');
+	languages_mapping = {'none':'Select language',
+						'en':'English',
+						'ro':'Romanian'}
+	$('#w_title-original-language').before('<select id="languages_list">');
+	$.each(languages_mapping, function(key, value){
+		$('#languages_list')
+			.append($('<option>', {value: key})
+			.text(value));
+		});
 
-    $([the_ul, the_select]).insertBefore(checkboxes.first());
+	$('#languages_list').after('<div id="new_language" style="display:none">');
+	$('#new_language').append('<p id="new_language_explanation" class="tooltips">');
+	$('#new_language').append('<input id="new_language_value" type="text">');
+	$('#new_language_value').after(' <a id="add_language_value">');
+	$('#add_language_value')
+		.text('Add')
+		.attr({
+		'href': 'javascript:void(0);',
+		});
+	$('#new_language').after('<ul id="original_titles" class="no_bullets">');
+	$('#languages_list').change(function(){
+		if ($(this).val() != 'none'){
+			if ($('#new_language_value:visible').length>0){
+				$('#new_language_value').attr({
+					'value': '',
+					});
+			}
+			else {
+				$('#new_language').slideDown();
+			}
+		}
+	});
+	$('#add_language_value').click(function(){
+		update_language();
+	})
+	initialize_title_lines();
 
-    checkboxes.each(function() {
-        var checkbox = $(this);
-        var label = checkbox.next('label');
+	function reset_languages_list(){
+		$('#languages_list').val('none');
+		$('#new_language_value').val('');
+		$('#new_language').delay(500).slideUp();
+	}
 
-        var option = $('<option'+'>').text(label.text());
-        option.attr('value', checkbox.attr('value'));
-        the_select.append(option);
+	function initialize_title_lines(){
+		var original_titles = $('#w_title-original-language').val();
+		if (original_titles.length>0)
+		{
+			var original_titles_list = original_titles.split('\n');
+			$.each(original_titles_list, function(index, value){
+				var splitted = value.split(' - ');
+				lang = splitted[0];
+				title = splitted[1];
+				add_title_line(lang, title);
+			})
+		}
+	}
 
-        if(checkbox.is(':checked')) {
-            selected(option);
-        }
+	function update_language(remove){
+		var current_value = $('#w_title-original-language').val();
+		var lang_val = $('#languages_list').val();
+		var lang = $('#languages_list option[value='+lang_val+']').text();
+		if (remove){
+			lang=remove;
+		}
+		var title = $('#new_language_value').val()
+		if (title.length==0 && !remove){
+			return;
+		}
+		if (current_value.length == 0){
+			$('#w_title-original-language').val(lang+' - '+title);
+			add_title_line(lang, title);
+		}
+		else{
+			var current_values = current_value.split('\n');
+			var found = false;
 
-        checkbox.next('label').next('br').remove();
-        checkbox.next('label').remove();
-        checkbox.remove();
-    });
+			for (i=0;i<current_values.length;i++){
+				var curr_values = current_values[i].split(' - ');
+				var curr_lan = curr_values[0];
+				if (curr_lan == lang)
+				{
+					if (remove){
+						$('#'+remove+'_original_title').fadeOut(300).delay(300, function(){$(this).remove();});
+						current_values.splice(i, 1);
+						found = true;
+						reset_languages_list();
+						break;
+					}
+					else{
+						current_values[i]= lang+' - '+title;
+						$('#'+lang+'_original_title').text();
+						$('#'+lang+'_original_title .title').text(' '+lang+' - '+title);
+						found = true;
+					}
+				}
+			}
+			if (! found)
+			{
+				current_values.push(lang+' - '+title);
+				add_title_line(lang, title);
+			}
+			$('#w_title-original-language').val(current_values.join('\n'));
+		}
+		reset_languages_list();
+	}
 
-    the_select.change(function(evt) {
-        var option = $('option:selected', the_select);
-        if(option.val() == "") return;
-        selected(option);
-    });
+	function add_title_line(lang, title){
+		var x_link = $('<a>').attr('href', 'javascript:void(0);');
+		x_link.append($("<img>").attr({
+			src: WWW_URL + "cross.gif",
+			title:'Remove',
+			alt: '[x]'
+		})).addClass('tick-image icon-image');
+		x_link.click(function(){
+			update_language(lang);
+		});
+		var new_title_line = $('<li>').attr({
+			'id': lang+'_original_title',
+			'style': 'display:none',
+			});
+		
+		new_title_line.append(x_link, '<span class="title"> '+lang+' - '+title+'<'+'/span>');
+		new_title_line.appendTo($('#original_titles'));
+		$('#'+lang+'_original_title').slideDown();
+	}
 
-    function selected(option) {
-        var remove_button = $('<a href="javascript:;"'+'>[remove]<'+'/a>');
-        remove_button.css({color: '#a00', 'font-size': '80%'});
-        remove_button.click(function() {
-            selected_li.remove();
-            option.attr('disabled', null);
-        });
-        var hidden_input = $('<input type="hidden"'+'>').attr({
-            name: input_name,
-            value: option.attr('value')
-        });
-        var selected_li = $('<li'+'>').append(
-            option.text(), ' ', remove_button, hidden_input);
+	function checkboxes_to_dropdown(input_name) {
+		var checkboxes = $("input[type=checkbox][name='"+input_name+"']");
+		var the_ul = $('<ul'+'>').css('margin-top', '-1em');
+		var the_select = $('<select'+'><option value=""'+'>-- select value --<'+'/option><'+'/select>');
 
-        option.attr('disabled', 'disabled');
-        $('option', the_select)[0].selected = true;
-        the_ul.append(selected_li);
-    }
-}
+		$([the_ul, the_select]).insertBefore(checkboxes.first());
+
+		checkboxes.each(function() {
+			var checkbox = $(this);
+			var label = checkbox.next('label');
+
+			var option = $('<option'+'>').text(label.text());
+			option.attr('value', checkbox.attr('value'));
+			the_select.append(option);
+
+			if(checkbox.is(':checked')) {
+				selected(option);
+			}
+
+			checkbox.next('label').next('br').remove();
+			checkbox.next('label').remove();
+			checkbox.remove();
+		});
+
+		the_select.change(function(evt) {
+			var option = $('option:selected', the_select);
+			if(option.val() == "") return;
+			selected(option);
+		});
+
+		function selected(option) {
+			var remove_button = $('<a href="javascript:;"'+'>[remove]<'+'/a>');
+			remove_button.css({color: '#a00', 'font-size': '80%'});
+			remove_button.click(function() {
+				selected_li.remove();
+				option.attr('disabled', null);
+			});
+			var hidden_input = $('<input type="hidden"'+'>').attr({
+				name: input_name,
+				value: option.attr('value')
+			});
+			var selected_li = $('<li'+'>').append(
+				option.text(), ' ', remove_button, hidden_input);
+
+			option.attr('disabled', 'disabled');
+			$('option', the_select)[0].selected = true;
+			the_ul.append(selected_li);
+		}
+	}
 
 
-checkboxes_to_dropdown('w_green-economy-topics:list');
-checkboxes_to_dropdown('w_resource-efficiency-topics:list');
-checkboxes_to_dropdown('w_water-resources-topics:list');
-checkboxes_to_dropdown('w_water-resource-management-topics:list');
+	checkboxes_to_dropdown('w_green-economy-topics:list');
+	checkboxes_to_dropdown('w_resource-efficiency-topics:list');
+	checkboxes_to_dropdown('w_water-resources-topics:list');
+	checkboxes_to_dropdown('w_water-resource-management-topics:list');
 
-var widget_green_topics = $("label[for='w_green-economy-topics']").parent();
-var widget_green_efficiency = $("label[for='w_resource-efficiency-topics']").parent();
-var widget_water_topics = $("label[for='w_water-resources-topics']").parent();
-var widget_water_resources = $("label[for='w_water-resource-management-topics']").parent();
+	var widget_green_topics = $("label[for='w_green-economy-topics']").parent();
+	var widget_green_efficiency = $("label[for='w_resource-efficiency-topics']").parent();
+	var widget_water_topics = $("label[for='w_water-resources-topics']").parent();
+	var widget_water_resources = $("label[for='w_water-resource-management-topics']").parent();
 
-function show_hide_widgets(){
-    widget_green_topics.hide();
-    widget_green_efficiency.hide();
-    widget_water_topics.hide();
-    widget_water_resources.hide();
+	function show_hide_widgets(){
+		widget_green_topics.hide();
+		widget_green_efficiency.hide();
+		widget_water_topics.hide();
+		widget_water_resources.hide();
 
-    var themes_checked = $("input[name='w_theme:list']:checked");
-    for (i=0;i<themes_checked.length;i++)
-    {
-        if (themes_checked[i].id == 'w_theme_0'){
-            widget_green_topics.show();
-        };
-        if (themes_checked[i].id == 'w_theme_1'){
-            widget_water_topics.show();
-        };
-        if (themes_checked[i].id == 'w_theme_2'){
-            widget_water_resources.show();
-        };
-        if (themes_checked[i].id == 'w_theme_3'){
-            widget_green_efficiency.show();
-        };
-    }
-}
+		var themes_checked = $("input[name='w_theme:list']:checked");
+		for (i=0;i<themes_checked.length;i++)
+		{
+			if (themes_checked[i].id == 'w_theme_0'){
+				widget_green_topics.show();
+			};
+			if (themes_checked[i].id == 'w_theme_1'){
+				widget_water_topics.show();
+			};
+			if (themes_checked[i].id == 'w_theme_2'){
+				widget_water_resources.show();
+			};
+			if (themes_checked[i].id == 'w_theme_3'){
+				widget_green_efficiency.show();
+			};
+		}
+	}
 
-show_hide_widgets();
-$("input[name='w_theme:list']").click(function() {
-    show_hide_widgets();
-});
+	show_hide_widgets();
+	$("input[name='w_theme:list']").click(function() {
+		show_hide_widgets();
+	});
 
 });
 </script>
