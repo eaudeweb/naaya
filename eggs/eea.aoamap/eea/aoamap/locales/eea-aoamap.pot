@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-08-29 15:09+0000\n"
+"POT-Creation-Date: 2011-08-31 17:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,71 +17,99 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: eea-aoamap\n"
 
-#: ./browser/map.pt:14
-msgid "${documents_green_economy} green economy"
-msgstr ""
-
-#: ./browser/map.pt:15
-msgid "${documents_water} water"
-msgstr ""
-
-#: ./browser/map.pt:10
-msgid "${name}: ${documents_total} assessments"
-msgstr ""
-
-#: ./browser/map.pt:84
-msgid "${spinner} Loading documents"
+#: ./browser/map.pt:11
+msgid "${flag} ${name}: ${number-of-assessments} assessments"
 msgstr ""
 
 #: ./browser/map.pt:28
-msgid "${total_documents} assessments registered"
+msgid "${name}${list-of-countries}: ${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:104
-msgid "Author: ${author} ${year}"
+#: ./browser/map.pt:44
+msgid "${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:73
-msgid "Country"
-msgstr ""
-
-#: ./browser/map.pt:112
-msgid "Coverage: ${country-list} ${region-list}"
-msgstr ""
-
-#: ./browser/map.pt:134
-msgid "Download: ${url}"
-msgstr ""
-
-#: ./browser/map.pt:36
-msgid "Fill in the form below in order to search the available documents."
-msgstr ""
-
-#: ./browser/map.pt:75
-msgid "Pan-European"
+#: ./browser/map.pt:110
+msgid "${spinner} Loading documents"
 msgstr ""
 
 #: ./browser/map.pt:55
+msgid "Astana report"
+msgstr ""
+
+#: ./browser/map.pt:130
+msgid "Author: ${author} ${year}"
+msgstr ""
+
+#: ./browser/map.pt:99
+msgid "Country"
+msgstr ""
+
+#: ./browser/map.pt:18
+msgid "Country fiches: ${link-cf-green-economy}, ${link-cf-water}"
+msgstr ""
+
+#: ./browser/map.pt:138
+msgid "Coverage: ${country-list} ${region-list}"
+msgstr ""
+
+#: ./browser/map.pt:160
+msgid "Download: ${url}"
+msgstr ""
+
+#: ./browser/map.pt:62
+msgid "Fill in the form below in order to search the available documents."
+msgstr ""
+
+#: ./browser/map.pt:17
+msgid "Green economy"
+msgstr ""
+
+#: ./browser/map.pt:101
+msgid "Pan-European"
+msgstr ""
+
+#: ./browser/map.pt:81
 msgid "Publication year"
 msgstr ""
 
-#: ./browser/map.pt:63
+#: ./browser/map.pt:89
 msgid "Reset"
 msgstr ""
 
-#: ./browser/map.pt:59
+#: ./browser/map.pt:85
 msgid "Search"
 msgstr ""
 
-#: ./browser/map.pt:74
+#: ./browser/map.pt:37
+msgid "Statistics of reviewed reports: ${link-statistics-green-economy}, ${link-comparative-overview}; ${link-regional-report}"
+msgstr ""
+
+#: ./browser/map.pt:51
+msgid "Statistics: ${link-statistics-green-economy}, ${link-statistics-water}"
+msgstr ""
+
+#: ./browser/map.pt:100
 msgid "Sub-region"
 msgstr ""
 
-#: ./browser/map.pt:124
+#: ./browser/map.pt:150
 msgid "Themes: ${theme-list} ${document-type-list}"
 msgstr ""
 
-#: ./browser/map.pt:47
+#: ./browser/map.pt:19
+msgid "Water"
+msgstr ""
+
+#: ./browser/map.pt:73
 msgid "Water + Green economy"
+msgstr ""
+
+#: ./browser/map.pt:36
+msgid "comparative overview"
+msgstr ""
+
+#: ./browser/map.pt:38
+msgid "regional report"
 msgstr ""
 
