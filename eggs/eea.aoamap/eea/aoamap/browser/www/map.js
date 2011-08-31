@@ -55,9 +55,7 @@ M.add_view = function(name, tiles_layer) {
         'label': "${count}"
       }),
       'select': new OpenLayers.Style({
-        'fillOpacity': 0.4,
-        'strokeOpacity': 0.1,
-        'strokeWidth': 4
+        'fillOpacity': 0.4
       })
     })});
 
@@ -243,7 +241,10 @@ M.create_map_search = function() {
   });
 
   M.countries_map.events.on({
-    'changebaselayer': function() { M.map_div.trigger('map-layer-changed'); }
+    'changebaselayer': function() {
+      M.hide_country_coverage();
+      M.map_div.trigger('map-layer-changed');
+    }
   });
 
   M.countries_map.zoomToMaxExtent = function() {
