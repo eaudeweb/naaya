@@ -69,10 +69,6 @@ div#filters-form-holder {
 }
 
 div.country-info-box {
-  float: right;
-  clear: right;
-  width: 300px;
-  padding: 10px;
 }
 
 div#countries-map {

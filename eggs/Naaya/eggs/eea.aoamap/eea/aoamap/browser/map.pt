@@ -5,29 +5,55 @@
     <div id="selection-info">
 
       <div class="jquery-template" style="display: none" id="country-info">
-        <span i18n:translate="">
+        <p i18n:translate="">
+          <img class="country-flag" i18n:name="flag" />
           <tal:t i18n:name="name">${name}</tal:t>:
-          <tal:t i18n:name="documents_total">${documents_total}</tal:t>
+          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
           assessments
-        </span>
-        <span>
-          (<a class="link-green-economy-fiche" i18n:translate=""><tal:t i18n:name="documents_green_economy">${documents_green_economy}</tal:t> green economy</a>,
-          <a class="link-water-fiche" i18n:translate=""><tal:t i18n:name="documents_water">${documents_water}</tal:t> water</a>)
-        </span>
+        </p>
+        <p i18n:translate="">
+          Country fiches:
+          <tal:t i18n:name="link-cf-green-economy">
+            <a href="#" i18n:translate="">Green economy</a></tal:t>,
+          <tal:t i18n:name="link-cf-water">
+            <a href="#" i18n:translate="">Water</a></tal:t>
+        </p>
       </div>
 
       <div class="jquery-template" style="display: none" id="region-info">
-        <span>
-          ${name}
-          {{if countries_txt}} (${countries_txt}) {{/if}}
-        </span>
+        <p i18n:translate="">
+          <tal:t i18n:name="name">${name}</tal:t><tal:t
+            i18n:name="list-of-countries">{{if countries_txt}}
+            (${countries_txt}){{/if}}</tal:t>:
+          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
+          assessments
+        </p>
+        <p i18n:translate="">
+          Statistics of reviewed reports:
+          <tal:t i18n:name="link-statistics-green-economy">
+            <a href="#" i18n:translate="">Green economy</a></tal:t>,
+          <tal:t i18n:name="link-comparative-overview">
+            <a href="#" i18n:translate="">comparative overview</a></tal:t>;
+          <tal:t i18n:name="link-regional-report">
+            <a href="#" i18n:translate="">regional report</a></tal:t>
+        </p>
       </div>
 
       <div class="jquery-template" style="display: none" id="global-info">
-        <span i18n:translate="">
-          <tal:t i18n:name="total_documents">${total_documents}</tal:t>
-          assessments registered
-        </span>
+        <p i18n:translate="">
+          <tal:t i18n:name="number-of-assessments">${total_documents}</tal:t>
+          assessments
+        </p>
+        <p i18n:translate="">
+          Statistics:
+          <tal:t i18n:name="link-statistics-green-economy">
+            <a href="#" i18n:translate="">Green economy</a></tal:t>,
+          <tal:t i18n:name="link-statistics-water">
+            <a href="#" i18n:translate="">Water</a></tal:t>
+        </p>
+        <p>
+          <a href="#" i18n:translate="">Astana report</a>
+        </p>
       </div>
 
     </div>

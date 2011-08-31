@@ -27,6 +27,7 @@ M.load_async_config = function() {
   function on_success(response) {
     M.config['country_code'] = response['country_code'];
     M.config['country_index'] = response['country_index'];
+    M.config['region_countries'] = response['region_countries'];
     M.config['documents'] = response['documents'];
     M.config['async_config_loaded'] = true;
     if(response['patch'] != null) {
