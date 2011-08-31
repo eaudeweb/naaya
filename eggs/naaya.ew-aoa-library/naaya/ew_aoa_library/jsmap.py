@@ -16,6 +16,8 @@ log = logging.getLogger(__name__)
 
 country_code = json.load(open(os.path.join(os.path.dirname(__file__),
                                            'country_code.json')))
+region_countries = json.load(open(os.path.join(os.path.dirname(__file__),
+                                               'region_countries.json')))
 
 
 def shadow_to_dict(shadow):
@@ -44,6 +46,7 @@ def get_map_async_config(site):
     return {
         'country_code': country_code,
         'country_index': get_country_index(site),
+        'region_countries': region_countries,
         'documents': [shadow_to_dict(shadow) for shadow in
                       site['virtual-library-viewer'].iter_assessments()],
         'query-time': time() - t0,
