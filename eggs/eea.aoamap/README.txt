@@ -19,3 +19,12 @@ To create a new translation::
 To compile a translation into an MO file::
 
   msgfmt -o locales/en/LC_MESSAGES/eea-aoamap.mo locales/en/LC_MESSAGES/eea-aoamap.po
+
+Deployment
+----------
+
+A few things to remember when deploying the AoA map to production:
+
+* Plone site - configure the map tile source
+* Plone site - configure prefix of AoA portal
+* AoA portal - configure and test cache invalidation URL(s)
