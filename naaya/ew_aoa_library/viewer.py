@@ -292,7 +292,7 @@ class AoALibraryViewer(SimpleItem):
 
             matched_titles = get_close_matches(title,
                                                 shadows_by_title.keys(),
-                                                n=2, cutoff=0.6)
+                                                n=5, cutoff=0.5)
             return [{'title': t,
                      'answer_url': shadows_by_title[t].target_answer().absolute_url()}
                      for t in matched_titles]
