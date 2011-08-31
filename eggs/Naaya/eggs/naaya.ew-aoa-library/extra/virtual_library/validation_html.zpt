@@ -1,14 +1,16 @@
 <metal:block define-macro="validate">
 
-<div id="duplicates" style="display: none">
-</div>
+<fieldset id="duplicates-wrapper" style="display: none">
+    <legend i18n:translate="">This entry might be a duplicate. Similar entries:</legend>
+    <ul id="duplicates">
+    </ul>
+</fieldset>
 <script>
 (function() {
     var search_duplicates_in_progress = false;
     var search_duplicates_defered = false;
     function search_duplicates() {
-        var div = $('#duplicates');
-        div.hide();
+        $('#duplicates-wrapper').hide();
 
         var title_en = $('#w_assessment-name-en').attr('value');
         var title_ru = $('#w_assessment-name-ru').attr('value');
@@ -30,20 +32,26 @@
                        'year:utf8:ustring': year},
                 dataType: 'json',
                 success: function(data) {
-                    if (data.length > 0) {
-                        div.text('This entry might be a duplicate. Similar entries:');
+                    var dup_list = $('#duplicates');
+                    dup_list.empty();
 
+                    var current_answer_id = $('input[name="answer_id"]').val();
+                    if (current_answer_id) {
+                        var reg = new RegExp(current_answer_id + '$');
+                    }
+
+                    if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var item = data[i];
                             var url = item.answer_url;
                             var title = item.title;
 
-                            $('<br/>').appendTo(div);
-                            $('<a href="'+url+'">'+title+'<'+'/a>').appendTo(div);
+                            if (reg && reg.test(item.answer_url)) // test current answer
+                                continue
+
+                            $('<li><a href="'+url+'">'+title+'<'+'/a><'+'/li>').appendTo(dup_list);
                         }
-                        div.show();
-                    } else {
-                        div.hide();
+                        $('#duplicates-wrapper').show();
                     }
                 },
                 complete: function() {
