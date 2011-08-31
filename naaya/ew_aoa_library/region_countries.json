@@ -1,0 +1,66 @@
+{
+  "Caucasus": [
+    "Armenia", 
+    "Azerbaijan", 
+    "Georgia"
+  ], 
+  "Eastern Europe": [
+    "Belarus", 
+    "Republic of Moldova", 
+    "Ukraine"
+  ], 
+  "EEA member countries": [
+    "Austria", 
+    "Belgium", 
+    "Bulgaria", 
+    "Cyprus", 
+    "Czech Republic", 
+    "Denmark", 
+    "Estonia", 
+    "Finland", 
+    "France", 
+    "Germany", 
+    "Greece", 
+    "Hungary", 
+    "Iceland", 
+    "Ireland", 
+    "Italy", 
+    "Latvia", 
+    "Liechtenstein", 
+    "Lithuania", 
+    "Luxembourg", 
+    "Malta", 
+    "Norway", 
+    "Poland", 
+    "Portugal", 
+    "Romania", 
+    "Slovakia", 
+    "Slovenia", 
+    "Spain", 
+    "Sweden", 
+    "Switzerland", 
+    "Turkey", 
+    "the Netherlands", 
+    "the United Kingdom"
+  ], 
+  "Central Asia": [
+    "Kazakhstan", 
+    "Kyrgyzstan", 
+    "Tajikistan", 
+    "Turkmenistan", 
+    "Uzbekistan"
+  ], 
+  "Russian Federation": [
+    "Russian Federation"
+  ], 
+  "Western Balkans": [
+    "Albania", 
+    "Bosnia and Herzegovina", 
+    "Croatia", 
+    "Former Yugoslav Republic of Macedonia", 
+    "Kosovo under un security council 1244/9950", 
+    "Montenegro", 
+    "Serbia"
+  ]
+}
+
