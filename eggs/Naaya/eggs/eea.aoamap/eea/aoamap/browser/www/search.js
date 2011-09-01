@@ -241,6 +241,12 @@ function perform_search(form_data) {
     var doc_li = M.templates['search-results-document'].tmpl(doc);
     $('a.title', doc_li).click(function(evt) {
       evt.preventDefault();
+      if($(this).hasClass('expanded')){
+        $(this).removeClass('expanded').addClass('collapsed');
+      }else {
+        $(this).removeClass('collapsed').addClass('expanded');
+      }
+      
       if($('div.document-info', doc_li).length > 0) {
         // click was on the current selection
         M.hide_country_coverage();

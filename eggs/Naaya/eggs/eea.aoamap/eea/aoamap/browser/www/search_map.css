@@ -39,6 +39,10 @@ input.input-text:focus {
   -moz-box-shadow: 1px 1px 1px #ECECEC;
   box-shadow: 1px 1px 1px #ECECEC;
   border-color: #B1C748;
+  -webkit-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, border-color 0.218s, background-color 0.218s;
+  -moz-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, border-color 0.218s, background-color 0.218s;
+  -o-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, border-color 0.218s, background-color 0.218s;
+  transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, border-color 0.218s, background-color 0.218s;
 }
 
 .search-input {
@@ -148,11 +152,18 @@ div#results ul {
 div#results ul li {
   margin: 0;
   border-bottom: 1px solid #ececec;
+  background-color: #FFFFFF;
+  -webkit-transition: background-color 0.218s;
+  -moz-transition: background-color 0.218s;
+  -o-transition: background-color 0.218s;
+  transition: background-color 0.218s;
 }
 
 div#results ul li a.title {
   display: inline-block;
-  padding: 7px;
+  padding: 7px 15px;
+  margin-left: 10px;
+  text-shadow: 0xp 1px 0px #FFFFFF;
 }
 
 div#results ul li a,
@@ -168,7 +179,11 @@ div#results ul li a:hover,
 }
 
 div#results ul li:hover {
-  background: #F2F2F2;
+  background-color: #F3F3F3;
+  -webkit-transition: background-color 0.218s;
+  -moz-transition: background-color 0.218s;
+  -o-transition: background-color 0.218s;
+  transition: background-color 0.218s;
 }
 
 .document .title {
@@ -190,9 +205,9 @@ div#document-info {
 .template-section {
   clear: both;
   overflow: hidden;
-  padding: 5px 0;
+  padding: 0;
   font-size: 11px;
-  line-height: 1.3;
+  line-height: 1.6;
 }
 
 .inline-block {
@@ -206,22 +221,12 @@ div#document-info {
   font-weight: bold;
 }
 
-.toggle-icon.expanded {
-  background-position: -10px 0;
+.expanded {
+  background: transparent url('expand.png') no-repeat scroll left center;
 }
 
-.toggle-icon.collapsed {
-  background-position: 6px 0;
-}
-
-.toggle-icon {
-  background: transparent url("toggle-icons.png") no-repeat scroll;
-  width: 16px;
-  height: 16px;
-  margin-top: -1px;
-  vertical-align: top;
-  float: right;
-  cursor: pointer;
+.collapsed {
+  background: transparent url('collapse.png') no-repeat scroll left center;
 }
 
 #document-map {
@@ -233,5 +238,69 @@ div#document-info {
 }
 
 div.document-info {
-  padding-left: 20px;
+  padding-left: 25px;
+  padding-bottom: 10px;
+}
+
+#filter-button {
+  -webkit-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -moz-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -o-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  background: -webkit-gradient(linear,0% 40%,0% 70%,from(#478EA5),to(#346F83));
+  background: -moz-linear-gradient(270deg, #478EA5, #346F83) repeat scroll 0 0 transparent;
+  border: 1px solid #346F83;
+  border-radius: 2px 2px 2px 2px;
+  color: #FFFFFF;
+  display: inline-block;
+  font: bold 12px Verdana,Arial,sans-serif;
+  padding: 4px 12px;
+  position: relative;
+  text-shadow: 0 1px 0 #000000;
+}
+
+#filter-button:hover {
+  background-color: #FF9123;
+  background: -webkit-gradient(linear,0% 40%,0% 70%,from(orange),to(#FF9123));
+  background: -moz-linear-gradient(270deg, orange, #FF9123) repeat scroll 0 0 transparent;
+  -webkit-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -moz-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -o-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  color: #FFFFFF;
+  cursor:pointer;
+  border-color: #999999;
+  -webkit-box-shadow:0 2px 5px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: 0 0px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: none;
+}
+
+#reset-button {
+  background-color: whiteSmoke;
+  background-image: -webkit-linear-gradient(top,#f5f5f5,#f1f1f1);
+  background-image: -moz-linear-gradient(top,#f5f5f5,#f1f1f1);
+  background-image: -ms-linear-gradient(top,#f5f5f5,#f1f1f1);
+  background-image: -o-linear-gradient(top,#f5f5f5,#f1f1f1);
+  background-image: linear-gradient(top,#f5f5f5,#f1f1f1);
+  color: #444;
+  border: 1px solid gainsboro;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font: bold 12px Verdana,Arial,sans-serif;
+  padding: 4px 12px;
+  border-radius: 2px 2px 2px 2px;
+  text-shadow: 0 1px 0 #FFFFFF;
+}
+
+#reset-button:hover {
+  cursor: pointer;
+  -webkit-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -moz-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  -o-transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  transition: -webkit-box-shadow 0.218s ease 0s, -moz-box-shadow 0.218s ease 0s, box-shadow 0.218s ease 0s, background 0.218s ease 0s;
+  border-color: #999999;
+  -webkit-box-shadow:0 2px 5px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: 0 0px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  text-shadow: none;
 }
