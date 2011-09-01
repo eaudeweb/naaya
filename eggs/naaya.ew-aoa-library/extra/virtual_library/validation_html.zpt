@@ -170,6 +170,7 @@ $(function() {
 	$('#w_geo-coverage-region').parent().hide();
 	$('#w_type-document_0').parent().hide();
 	$('#w_title-original-language').hide();
+	$('#map-container').parent().parent().parent().hide();
 
 	languages_mapping = {'none':'Select language',
 						'en':'English',
