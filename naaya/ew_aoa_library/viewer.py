@@ -286,11 +286,18 @@ class AoALibraryViewer(SimpleItem):
     security.declarePublic('get_close_answers')
     def get_close_answers(self, title_en, title_ru, year):
         """ """
+        def string_to_match(title):
+            ret = title.lower()
+            for c in ' -/().,;!?':
+                ret = ret.replace(c, '')
+            return ret
+
         def get_close_answers_by_lang(shadows, title, lang):
-            shadows_by_title = dict((shadow.get('title', lang).lower(), shadow)
+            shadows_by_title = dict((string_to_match(shadow.get('title', lang)),
+                                        shadow)
                                     for shadow in shadows)
 
-            matched_titles = get_close_matches(title.lower(),
+            matched_titles = get_close_matches(string_to_match(title),
                                                 shadows_by_title.keys(),
                                                 n=5, cutoff=0.5)
             return [{'title': shadows_by_title[t].get('title', lang),
