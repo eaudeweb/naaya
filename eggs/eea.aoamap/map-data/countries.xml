@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE Map>
-<Map background-color="#9ab"
-     srs="+proj=laea +lat_0=52 +lon_0=65">
+<Map srs="+proj=laea +lat_0=52 +lon_0=65 +a=8000000 +b=8000000">
 
   <Style name="Raster">
     <Rule>
@@ -9,13 +8,31 @@
     </Rule>
   </Style>
 
-  <Layer name="raster-gdal" srs="+proj=laea +lat_0=52 +lon_0=65">
+  <Layer name="raster-gdal"
+         srs="+proj=laea +lat_0=52 +lon_0=65 +a=8000000 +b=8000000">
     <StyleName>Raster</StyleName>
     <Datasource>
       <Parameter name="type">gdal</Parameter>
-      <Parameter name="base">/Users/alexm/Desktop/aoa-tiled-map</Parameter>
-      <Parameter name="file">cut-raster.tiff</Parameter>
+      <Parameter name="base">geodata</Parameter>
+      <Parameter name="file">cut-raster-v2.tiff</Parameter>
     </Datasource>
   </Layer>
+
+  <!--
+  <Style name="Borders">
+    <Rule>
+      <LineSymbolizer stroke="#575" stroke-width="1.0" />
+    </Rule>
+  </Style>
+
+  <Layer name="labels" srs="+init=epsg:4326">
+    <StyleName>Borders</StyleName>
+    <Datasource>
+      <Parameter name="type">ogr</Parameter>
+      <Parameter name="file">geodata/country-bodies.json</Parameter>
+      <Parameter name="layer">OGRGeoJSON</Parameter>
+    </Datasource>
+  </Layer>
+  -->
 
 </Map>
