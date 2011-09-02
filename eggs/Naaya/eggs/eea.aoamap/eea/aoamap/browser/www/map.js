@@ -236,7 +236,6 @@ M.create_map_search = function() {
   M.countries_map = new OpenLayers.Map(M.map_div[0].id, {
     restrictedExtent: extent
   });
-  M.countries_map.addControl(new OpenLayers.Control.MousePosition());
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
   M.countries_map.addControl(M.layer_switcher);
