@@ -67,20 +67,6 @@ function setup_filter_form_visuals() {
         }
       });
   });
-
-  $('.toggle-icon').live('click', function(){
-    if( $(this).hasClass('expanded') &&
-        ($('.template-subsection', $(this).parent()).is(':visible') == true)){
-      $('.template-subsection', $(this).parent()).slideUp();
-      $(this).removeClass('expanded').addClass('collapsed');
-    }
-
-    if( $(this).hasClass('collapsed') &&
-        ($('.template-subsection', $(this).parent()).is(':visible') == false)){
-      $('.template-subsection', $(this).parent()).slideDown();
-      $(this).removeClass('collapsed').addClass('expanded');
-    }
-  });
 }
 
 
@@ -194,6 +180,7 @@ M.build_document_filter = function(form_data) {
 
 function collapse_document_info() {
   var document_info = $('ul.search-results div.document-info');
+  document_info.parent('li.document').removeClass('expanded');
   document_info.slideUp(M.animation_speed, function() { $(this).remove(); });
   return document_info;
 }
@@ -241,33 +228,30 @@ function perform_search(form_data) {
     var doc_li = M.templates['search-results-document'].tmpl(doc);
     $('a.title', doc_li).click(function(evt) {
       evt.preventDefault();
-      if($(this).hasClass('expanded')){
-        $(this).removeClass('expanded').addClass('collapsed');
-      }else {
-        $(this).removeClass('collapsed').addClass('expanded');
-      }
-      
       if($('div.document-info', doc_li).length > 0) {
         // click was on the current selection
         M.hide_country_coverage();
         return;
       }
+      var list_offset = results.offset()['top'];
       var collapsing_doc = collapse_document_info();
       var html = M.templates['search-results-document-info'].tmpl(doc);
       var doc_info = $('<div class="document-info">').html(html);
       $(doc_li.append(doc_info));
-      var list_offset = results.offset()['top'];
+      $(this).parent('li.document').addClass('expanded');
 
       var offset = doc_li.offset()['top'];
       if(collapsing_doc.length > 0) {
         var collapsing_offset = collapsing_doc.offset()['top'];
         if(offset > collapsing_offset) {
-          offset -= collapsing_doc.height();
+          offset -= collapsing_doc.outerHeight();
         }
       }
 
+      // scroll 18px higher to show if there's more content above
+      var scroll_offset = Math.max(offset - list_offset - 18, 0);
       doc_info.hide().slideDown(M.animation_speed);
-      $('#results').scrollTo(offset - list_offset, M.animation_speed);
+      $('#results').scrollTo(scroll_offset, M.animation_speed);
 
       M.show_country_coverage(doc['country']);
     });
