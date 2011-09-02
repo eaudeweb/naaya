@@ -232,7 +232,11 @@ M.get_layer_labels = function() {
 };
 
 M.create_map_search = function() {
-  M.countries_map = new OpenLayers.Map(M.map_div[0].id);
+  var extent = new OpenLayers.Bounds(-8441336, -3173340, 6315323, 6948737);
+  M.countries_map = new OpenLayers.Map(M.map_div[0].id, {
+    restrictedExtent: extent
+  });
+  M.countries_map.addControl(new OpenLayers.Control.MousePosition());
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
   M.countries_map.addControl(M.layer_switcher);
