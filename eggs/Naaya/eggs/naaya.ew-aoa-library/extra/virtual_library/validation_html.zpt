@@ -24,44 +24,48 @@
             return;
         }
 
-        search_duplicates_in_progress = true;
-        $.ajax({
-                url: 'virtual-library-viewer/get_close_answers',
-                data:{'title_en:utf8:ustring': title_en,
-                       'title_ru:utf8:ustring': title_ru,
-                       'year:utf8:ustring': year},
-                dataType: 'json',
-                success: function(data) {
-                    var dup_list = $('#duplicates');
-                    dup_list.empty();
+		search_duplicates_in_progress = true;
+		$.ajax({
+				url: 'virtual-library-viewer/get_close_answers',
+				data:{'title_en:utf8:ustring': title_en,
+					   'title_ru:utf8:ustring': title_ru,
+					   'year:utf8:ustring': year},
+				dataType: 'json',
+				success: function(data) {
+					var dup_list = $('#duplicates');
+					dup_list.empty();
 
-                    var current_answer_id = $('input[name="answer_id"]').val();
-                    if (current_answer_id) {
-                        var reg = new RegExp(current_answer_id + '$');
-                    }
+					var current_answer_id = $('input[name="answer_id"]').val();
+					if (current_answer_id) {
+						var reg = new RegExp(current_answer_id + '$');
+						if (data && data.length > 0) {
+							for (var i = 0; i < data.length; i++) {
+								if (reg.test(data[i].answer_url)) {
+									data.splice(i, 1);
+									break
+								}
+							}
+						}
+					}
 
-                    if (data && data.length > 0) {
-                        for (var i = 0; i < data.length; i++) {
-                            var item = data[i];
-                            var url = item.answer_url;
-                            var title = item.title;
-
-                            if (reg && reg.test(item.answer_url)) // test current answer
-                                continue
-
-                            $('<li><a href="'+url+'">'+title+'<'+'/a><'+'/li>').appendTo(dup_list);
-                        }
-                        $('#duplicates-wrapper').show();
-                    }
-                },
-                complete: function() {
-                    search_duplicates_in_progress = false;
-                    if (search_duplicates_defered) {
-                        search_duplicates_defered = false;
-                        search_duplicates();
-                    }
-                }
-        });
+					if (data && data.length > 0) {
+						for (var i = 0; i < data.length; i++) {
+							var item = data[i];
+							$('<li><a href="'+item.answer_url+'">'
+								+item.title+'<'+'/a><'+'/li>')
+							.appendTo(dup_list);
+						}
+						$('#duplicates-wrapper').show();
+					}
+				},
+				complete: function() {
+					search_duplicates_in_progress = false;
+					if (search_duplicates_defered) {
+						search_duplicates_defered = false;
+						search_duplicates();
+					}
+				}
+		});
     }
 
     $(document).ready(function() {
