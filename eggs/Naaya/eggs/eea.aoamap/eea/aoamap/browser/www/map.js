@@ -2,13 +2,16 @@
 
 var M = window.M = {};
 
-Proj4js.defs["LAEA_52N_65E"] = "+proj=laea +lat_0=52 +lon_0=65";
 
-M.debug = true;
-M.proj_wgs1984 = new OpenLayers.Projection("EPSG:4326");
-M.map_projection = new OpenLayers.Projection("LAEA_52N_65E");
+Proj4js.defs["LONG_LAT_8K"] = "+proj=longlat +units=degrees " +
+                                  "+a=8000000 +b=8000000";
+Proj4js.defs["LAEA_52N_65E_8K"] = "+proj=laea +lat_0=52 +lon_0=65 " +
+                                  "+a=8000000 +b=8000000";
+
+M.proj_long_lat = new OpenLayers.Projection("LONG_LAT_8K");
+M.map_projection = new OpenLayers.Projection("LAEA_52N_65E_8K");
 M.project = function(point) {
-  return point.clone().transform(M.proj_wgs1984, M.map_projection);
+  return point.clone().transform(M.proj_long_lat, M.map_projection);
 };
 M.country_code = {};
 
@@ -16,7 +19,7 @@ M.docs_summary_result = $.Deferred();
 
 M.xyz_layer = function(label) {
   return new OpenLayers.Layer.XYZ(label,
-    M.config['tiles_url'] + "/${z}/${x}/${y}.png",
+    M.config['tiles_url'] + "aoa-en/${z}/${x}/${y}.png" + M.config['map_rev'],
     {'sphericalMercator': true, 'numZoomLevels': 7}
   );
 };
@@ -158,7 +161,7 @@ M.update_all_document_counts = function(docs_and_countries) {
 
 M.geojson_format = new OpenLayers.Format.GeoJSON({
   'internalProjection': M.map_projection,
-  'externalProjection': M.proj_wgs1984
+  'externalProjection': M.proj_long_lat
 });
 
 M.load_features = function(name, callback) {
@@ -247,9 +250,12 @@ M.create_map_search = function() {
     }
   });
 
+  M.countries_map.isValidZoomLevel = function(zoom) {
+    return (zoom > 2 && zoom < 7);
+  };
   M.countries_map.zoomToMaxExtent = function() {
-    M.countries_map.setCenter(M.project(new OpenLayers.LonLat(58.37, 61.48)), 3);
-  }
+    M.countries_map.setCenter(M.project(new OpenLayers.LonLat(50, 63)), 3);
+  };
   M.countries_map.zoomToMaxExtent();
 
   M.load_features('countries.json', function(features_json) {

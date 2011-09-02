@@ -183,6 +183,7 @@
 <script type="text/javascript" tal:content="structure string:
   M.config = ${options/map_config};
   M.config['async_config_loaded'] = false;
+  M.config['map_rev'] = '?5';
   M.jQuery = jQuery;
   jQuery.noConflict(true);
   M.load_async_config();

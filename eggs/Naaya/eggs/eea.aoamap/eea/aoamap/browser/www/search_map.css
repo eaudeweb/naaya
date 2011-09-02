@@ -46,11 +46,11 @@ input.input-text:focus {
 }
 
 .search-input {
-  width: 315px;
+  width: 260px;
 }
 
 select.input-select {
-  width: 320px;
+  width: 265px;
   height: 28px;
   padding: 5px 3px 5px 0;
 }
@@ -91,8 +91,8 @@ div#filters {
 
 div#selection-info {
   float: right;
-  max-height: 195px;
-  width: 323px;
+  height: 220px;
+  width: 273px;
   overflow: auto;
   border-bottom: 1px solid #BABBB8;
   padding: 5px 10px 0;
@@ -106,7 +106,7 @@ div#selection-info a:hover {
 div#filters-form-holder {
   float: right;
   clear: right;
-  width: 323px;
+  width: 273px;
   padding: 5px 10px 10px;
 }
 
@@ -114,8 +114,8 @@ div.country-info-box {
 }
 
 div#countries-map {
-  width: 650px;
-  height: 300px;
+  width: 700px;
+  height: 400px;
 }
 
 div#countries-map .olControlLayerSwitcher {
