@@ -117,7 +117,7 @@
       <div class="jquery-template" style="display: none;"
            id="search-results-document">
         <li class="document">
-          <a href="javascript:" class="title expanded">${title}</a>
+          <a href="javascript:" class="title">${title}</a>
         </li>
       </div>
     </ul>
