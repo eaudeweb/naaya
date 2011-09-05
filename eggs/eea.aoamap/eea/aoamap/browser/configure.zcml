@@ -19,6 +19,22 @@
 
   <browser:page
     for=".interfaces.IMapViewParent"
+    name=".import_countryfiches.html"
+    class=".plone_views.ImportCountryFiches"
+    template="import_countryfiches.pt"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    for=".interfaces.IMapViewParent"
+    name=".import_countryfiches.submit"
+    class=".plone_views.ImportCountryFiches"
+    attribute="submit"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <browser:page
+    for=".interfaces.IMapViewParent"
     name="add-to-virtual-library.html"
     template="vl_form.pt"
     class=".plone_views.AddToVirtualLibrary"
