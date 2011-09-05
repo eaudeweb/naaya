@@ -146,6 +146,10 @@ class Utils:
     #   URL Functions   #
     #####################
 
+    def utURL(self, REQUEST=None):
+        """ returns URL0 """
+        return self.REQUEST.URL0
+
     def utRemoveFromQS(self, list):
         """ returns a REQUEST.QUERY_STRING (using REQUEST.form,
             REQUEST.form=REQUEST.QUERY_STRING as a dictionary)
