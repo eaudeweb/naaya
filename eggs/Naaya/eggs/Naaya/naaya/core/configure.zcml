@@ -1,6 +1,10 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure xmlns="http://namespaces.zope.org/zope"
+    xmlns:naaya="http://namespaces.zope.org/naaya">
+
     <adapter factory="naaya.core.portlets.MainSectionsPortlet"
              name="portlet_maincategories" />
+
+    <naaya:call factory=".utils.set_default_socket_timeout_to_1min" />
 
     <subscriber handler="naaya.core.heartbeat.cleanup_unsubmitted_objects" />
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />

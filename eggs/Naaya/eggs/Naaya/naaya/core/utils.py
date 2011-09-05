@@ -5,6 +5,7 @@ import htmlentitydefs
 import warnings
 import tempfile
 import urllib
+import socket
 
 from zope.deprecation import deprecate
 
@@ -192,3 +193,13 @@ def download_to_temp_file(url):
         url_file.close()
     temp_file.seek(0)
     return temp_file
+
+def set_default_socket_timeout_to_1min():
+    """
+    Sets the default timeout for new socket objects to 1 minute.
+
+    Default in python is no timeout (None). This is unacceptable e.g. for cron
+    jobs that can keep threads blocked indefinitely waiting to open an URL.
+    This should be called when starting zope.
+    """
+    socket.setdefaulttimeout(60) # in seconds
