@@ -123,7 +123,8 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             catalog_index = catalog._catalog.getIndex(interval_idx)
             for date in dates:
                 for brain in catalog({'meta_type': meta_type,
-                                      interval_idx: date}):
+                                      interval_idx: date,
+                                      'approved': 1}):
                     path = brain.getPath()
                     if path in items:
                         continue
@@ -157,7 +158,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         visited_paths = set()
         for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
             catalog_index = catalog._catalog.getIndex(interval_idx)
-            for brain in catalog({'meta_type': meta_type}):
+            for brain in catalog({'meta_type': meta_type, 'approved': 1}):
                 path = brain.getPath()
                 if path in visited_paths:
                     continue
@@ -201,7 +202,8 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             brains_by_day[day] = []
             for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
                 brains_by_day[day].extend(catalog({'meta_type': meta_type,
-                                                   interval_idx: date}))
+                                                   interval_idx: date,
+                                                   'approved': 1}))
 
         # cache getObject + evalPredicate results for each path
         positive_paths = set()
