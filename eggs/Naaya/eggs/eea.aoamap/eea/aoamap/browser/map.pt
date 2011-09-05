@@ -22,8 +22,9 @@
 
       <div class="jquery-template" style="display: none;" id="region-info">
         <p i18n:translate="">
-          <strong>
-          <tal:t i18n:name="name">${name}</tal:t></strong>
+          <tal:t i18n:name="name">
+            <strong>${name}</strong>
+          </tal:t>
           <tal:t
             i18n:name="list-of-countries">{{if countries_txt}}
             (${countries_txt}){{/if}}</tal:t>:
@@ -127,40 +128,32 @@
     <div class="jquery-template" style="display: none;"
          id="search-results-document-info">
 
-      <div class="template-section" i18n:translate="">
-        <strong i18n:name="author_label">Author:</strong> <tal:t i18n:name="author">${author}</tal:t>
-        <tal:t i18n:name="year">{{if year}}(${year}){{/if}}</tal:t>
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Author</tal:t>:</strong>
+        ${author}
+        {{if year}}(${year}){{/if}}
       </div>
 
-      <div class="template-section" i18n:translate="">
-        <strong i18n:name="coverage_label">Coverage:</strong>
-        <tal:t i18n:name="country-list">
-          {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
-        </tal:t>
-        <tal:t i18n:name="region-list">
-          {{if region.length}}
-            ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
-          {{/if}}
-        </tal:t>
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Coverage</tal:t>:</strong>
+        {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
+        {{if region.length}}
+          ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
+        {{/if}}
       </div>
 
-      <div class="template-section" i18n:translate="">
-        <strong i18n:name="theme_label">Themes:</strong>
-        <tal:t i18n:name="theme-list">
-          {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
-        </tal:t>
-        <tal:t i18n:name="document-type-list">
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Themes</tal:t>:</strong>
+        {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
         {{if document_type.length}}
             ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
         {{/if}}
-        </tal:t>
       </div>
 
       {{if url}}
-      <div class="template-section" i18n:translate="">
-        <strong i18n:name="download_label">Download:</strong>
-        <a href="${url}" title="${title}"
-           i18n:name="url">${M.ellipsis(url, 100)}</a>
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Download</tal:t>:</strong>
+        <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
