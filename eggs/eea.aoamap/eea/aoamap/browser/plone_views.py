@@ -4,7 +4,7 @@ import logging
 import lxml.html.soupparser, lxml.etree, lxml.cssselect
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 
 log = logging.getLogger(__name__)
 
@@ -12,7 +12,7 @@ tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
 
 
-map_template = PageTemplateFile('map.pt', globals())
+map_template = ViewPageTemplateFile('map.pt', globals())
 
 
 def css(sel, target):
@@ -43,7 +43,7 @@ class AoaMap(BrowserView):
             },
         }
 
-        return map_template.__of__(self.aq_parent)(**options)
+        return map_template(self, **options)
 
 
 def get_aoa_response(relative_url):
