@@ -3995,8 +3995,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return 'The heart did not beat since last system restart.'
 
     # functions for translation
-    def translate(self, *args):
-        return translate(*args)
+    def translate(self, text, dest_lang, src_lang=None):
+        return translate(text, dest_lang, src_lang)
 
     def translate_url(self, *args):
         return translate_url(*args)
