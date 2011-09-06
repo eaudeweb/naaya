@@ -284,7 +284,7 @@ class AoALibraryViewer(SimpleItem):
                             regions
 
     security.declarePublic('get_close_answers')
-    def get_close_answers(self, title_en, title_ru, year):
+    def get_close_answers(self, title_en, title_ru, year, original_title):
         """ """
         def string_to_match(title):
             ret = title.lower()
@@ -292,7 +292,7 @@ class AoALibraryViewer(SimpleItem):
                 ret = ret.replace(c, '')
             return ret
 
-        def get_close_answers_by_lang(shadows, title, lang):
+        def get_close_answers_by_lang_title(shadows, title, lang):
             shadows_by_title = dict((string_to_match(shadow.get('title', lang)),
                                         shadow)
                                     for shadow in shadows)
@@ -304,16 +304,35 @@ class AoALibraryViewer(SimpleItem):
                      'answer_url': shadows_by_title[t].target_answer().absolute_url()}
                      for t in matched_titles]
 
+        def get_close_answers_by_lang_original(shadows, title, lang):
+            shadows_by_title = dict((string_to_match(shadow.original_title[lang]),
+                                        shadow)
+                                    for shadow in shadows
+                                    if lang in shadow.original_title)
+
+            matched_titles = get_close_matches(string_to_match(title),
+                                                shadows_by_title.keys(),
+                                                n=5, cutoff=0.9)
+            return [{'title': shadows_by_title[t].original_title[lang],
+                     'answer_url': shadows_by_title[t].target_answer().absolute_url()}
+                     for t in matched_titles]
         ret = []
 
         catalog = self.getSite().getCatalogTool()
         brains = catalog(path=ofs_path(self), viewer_year=year)
         shadows = [b.getObject() for b in brains]
 
+        if original_title:
+            original_title_map = shadow.extract_original_title_dict(original_title)
+            for lang in original_title_map:
+                ret.extend(get_close_answers_by_lang_original(shadows,
+                                            original_title_map[lang],
+                                            lang))
+
         if title_en:
-            ret.extend(get_close_answers_by_lang(shadows, title_en, 'en'))
+            ret.extend(get_close_answers_by_lang_title(shadows, title_en, 'en'))
         if title_ru:
-            ret.extend(get_close_answers_by_lang(shadows, title_ru, 'ru'))
+            ret.extend(get_close_answers_by_lang_title(shadows, title_ru, 'ru'))
 
         return json.dumps(ret)
 
