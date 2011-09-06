@@ -56,6 +56,10 @@ def extract_singleselect(answer, widget_name):
     else:
         return widget.choices[datamodel]
 
+def extract_original_title_dict(orig_title_str):
+    lines = orig_title_str.splitlines()
+    return dict(l.split(' - ', 1) for l in lines)
+
 def get_library_survey_info(site):
     if hasattr(get_library_survey_info, 'cache'):
         return get_library_survey_info.cache
@@ -252,6 +256,7 @@ def extract_survey_answer_data_library(answer):
 
     attrs = {
         'id': answer.getId(),
+        'original_title': extract_original_title_dict(answer.get('w_title-original-language', '')),
         'title': answer.get('w_assessment-name'),
         'url': answer.get('w_assessment-url'),
         'geo_location': answer.get('w_location'),
@@ -446,7 +451,9 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
     def __init__(self, id, **attrs):
         self._setId(id)
         for key, value in attrs.items():
-            if isinstance(value, dict):
+            if key == 'original_title':
+                setattr(self, key, value)
+            elif isinstance(value, dict):
                 self._setLocalProperty(key, 'string')
                 for lang, lang_value in value.items():
                     self._setLocalPropValue(key, lang, lang_value)
