@@ -15,6 +15,12 @@
       provides="Products.naayaUpdater.interfaces.IUpdateScript"
       component=".update_nyexfile2nyblob.UpdateNyExFile2NyBlobFile"
       permission="zope2.ViewManagementScreens" />
+
+    <utility
+      name="content_type.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".update_content_type.UpdateContentType"
+      permission="zope2.ViewManagementScreens" />
   </configure>
 
 </configure>
