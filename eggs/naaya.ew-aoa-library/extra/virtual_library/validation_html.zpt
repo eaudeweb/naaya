@@ -1,35 +1,37 @@
 <metal:block define-macro="validate">
 
 <fieldset id="duplicates-wrapper" style="display: none">
-    <legend i18n:translate="">This entry might be a duplicate. Similar entries:</legend>
-    <ul id="duplicates">
-    </ul>
+	<legend i18n:translate="">This entry might be a duplicate. Similar entries:</legend>
+	<ul id="duplicates">
+	</ul>
 </fieldset>
 <script>
 (function() {
-    var search_duplicates_in_progress = false;
-    var search_duplicates_defered = false;
-    function search_duplicates() {
-        $('#duplicates-wrapper').hide();
+	var search_duplicates_in_progress = false;
+	var search_duplicates_defered = false;
+	function search_duplicates() {
+		$('#duplicates-wrapper').hide();
 
-        var title_en = $('#w_assessment-name-en').attr('value');
-        var title_ru = $('#w_assessment-name-ru').attr('value');
-        var year =  $('#w_assessment-year').attr('value');
-        if (! (year && (title_en || title_ru)) ) {
-            return;
-        }
+		var title_en = $('#w_assessment-name-en').attr('value');
+		var title_ru = $('#w_assessment-name-ru').attr('value');
+		var original_title = $('#w_title-original-language').attr('value');
+		var year =  $('#w_assessment-year').attr('value');
+		if (! (year && (title_en || title_ru || original_title)) ) {
+			return;
+		}
 
-        if (search_duplicates_in_progress) {
-            search_duplicates_defered = true;
-            return;
-        }
+		if (search_duplicates_in_progress) {
+			search_duplicates_defered = true;
+			return;
+		}
 
 		search_duplicates_in_progress = true;
 		$.ajax({
 				url: 'virtual-library-viewer/get_close_answers',
 				data:{'title_en:utf8:ustring': title_en,
-					   'title_ru:utf8:ustring': title_ru,
-					   'year:utf8:ustring': year},
+						'title_ru:utf8:ustring': title_ru,
+						'original_title:utf8:ustring': original_title,
+						'year:utf8:ustring': year},
 				dataType: 'json',
 				success: function(data) {
 					var dup_list = $('#duplicates');
@@ -66,18 +68,19 @@
 					}
 				}
 		});
-    }
+	}
 
-    $(document).ready(function() {
-        $('#w_assessment-name-en').change(search_duplicates);
-        $('#w_assessment-name-ru').change(search_duplicates);
-        $('#w_assessment-year').change(search_duplicates);
-    });
+	$(document).ready(function() {
+		$('#w_assessment-name-en').change(search_duplicates);
+		$('#w_assessment-name-ru').change(search_duplicates);
+		$('#w_title-original-language').change(search_duplicates);
+		$('#w_assessment-year').change(search_duplicates);
+	});
 })();
 </script>
 
 <script tal:content="python:'var naaya_site_url=%s' % here.rstk.json_dumps(
-                              here.getSite().absolute_url())"></script>
+							  here.getSite().absolute_url())"></script>
 <script>$(function() {
 
 	/*var widget_green_topics = $("label[for='w_green-economy-topics']").parent();
@@ -154,7 +157,26 @@
 
 <tal:block define="schema_tool here/getSchemaTool"><script tal:content="string:
 	var WWW_URL='${schema_tool/absolute_url}/www/';"></script></tal:block>
-
+<script tal:define="curr_lang python: request.get('lang', None) or here.gl_get_selected_language();
+					curr_lang_json python: here.rstk.json_dumps(curr_lang);
+					site here/getSite;
+					library_object site/tools/virtual_library/bibliography-details-each-assessment;
+					country_choices python: library_object['w_official-country-region'].getChoices();
+					region_choices python: library_object['w_geo-coverage-region'].getChoices();"
+		tal:content="string:var curr_lang = ${curr_lang_json};
+							var country_choices = ${country_choices};
+							var region_choices = ${region_choices};">
+</script>
+<div id="modal-select-language" style="display: none"
+		title="Could not add the title in original language"
+		i18n:attributes="title">
+	<p i18n:translate="">Please select a language first</p>
+</div>
+<div id="modal-enter-title" style="display: none"
+		title="Could not add the title in original language"
+		i18n:attributes="title">
+	<p i18n:translate="">Please enter the title for the selected language</p>
+</div>
 <script>
 // http://gist.github.com/472607
 $(function() {
@@ -170,53 +192,165 @@ $(function() {
 	//Unhide the main form (hidden so it only works with javascript turned on.
 	$('form[name="frmAdd"]').show();
 
-	$('#w_official-country-region_0').parent().hide();
-	$('#w_geo-coverage-region').parent().hide();
+	// function to transform a list of checkboxes with same name
+	// to a single select hidding the items not selected
+	function list_selection(list_id, choices) {
+		function show_item(i) {
+			$('#' + list_id + '_' + i).attr('checked', 'checked');
+			$('#' + list_id + '_' + i).next().after($('<br/>'));
+			$('#' + list_id + '_' + i).show();
+			$('#' + list_id + '_' + i).next().show();
+		}
+		function hide_item(i) {
+			$('#' + list_id + '_' + i).removeAttr('checked');
+			$('#' + list_id + '_' + i).hide();
+			$('#' + list_id + '_' + i).next().hide();
+			$('#' + list_id + '_' + i).next().next().remove();
+		}
+
+		var single_select = $('<select>').attr({
+			'name': list_id + '_single_select:utf8:ustring',
+			'id': list_id + '_single_select'});
+		if (curr_lang == 'ru') {
+			single_select.append($('<option>').attr('value', 'Please select').text('Пожалуйста выберите'));
+		} else {
+			single_select.append($('<option>').attr('value', 'Please select').text('Please select'));
+		}
+		$.each(choices, function(i, value){
+			single_select.append($('<option>').attr('value', i).text(value));
+			if (! $('#' + list_id + '_' + i).attr('checked')) {
+				hide_item(i);
+			}
+		});
+		$('#' + list_id + '_0').before(single_select);
+		$('#' + list_id + '_0').before('<br/>');
+
+		single_select.change(function() {
+			show_item($(this).val());
+			single_select.val('Please select');
+		});
+		$('input[name="' + list_id + ':list"]').click(function () {
+			hide_item($(this).val());
+		});
+	}
+	list_selection('w_official-country-region', country_choices);
+	list_selection('w_geo-coverage-region', region_choices);
+
 	$('#w_type-document_0').parent().hide();
 	$('#w_title-original-language').hide();
 	$('#map-container').parent().parent().parent().hide();
 
-	languages_mapping = {'none':'Select language',
-						'en':'English',
-						'ro':'Romanian'}
-	$('#w_title-original-language').before('<select id="languages_list">');
-	$.each(languages_mapping, function(key, value){
+	var languages = {'Select language':'none',
+					'Albanian': 'sq',
+					'Armenian': 'hy',
+					'Azerbaijani': 'az',
+					'Belarusian': 'be',
+					'Bosnian': 'bs',
+					'Bulgarian': 'bg',
+					'Croatian': 'hr',
+					'Czech': 'cs',
+					'Danish': 'da',
+					'Dutch': 'nl',
+					'English': 'en',
+					'Estonian': 'et',
+					'Finnish': 'fi',
+					'French': 'fr',
+					'Georgian': 'ka',
+					'German': 'de',
+					'Greek': 'el',
+					'Hungarian': 'hu',
+					'Icelandic': 'is',
+					'Irish (Gaelic)': 'ga',
+					'Italian': 'it',
+					'Kazakh': 'kk',
+					'Kirghiz': 'ky',
+					'Latvian': 'lv',
+					'Lithuanian': 'lt',
+					'Macedonian': 'mk',
+					'Maltese': 'mt',
+					'Montenegrin': 'srp',
+					'Norwegian': 'no',
+					'Polish': 'pl',
+					'Portuguese': 'pt',
+					'Romanian': 'ro',
+					'Russian': 'ru',
+					'Serbian': 'sr',
+					'Slovak': 'sk',
+					'Slovene': 'sl',
+					'Spanish': 'es',
+					'Swedish': 'sv',
+					'Tajik': 'tg',
+					'Turkish': 'tr',
+					'Turkmen': 'tk',
+					'Ukrainian': 'uk',
+					'Uzbek': 'uz'
+					};
+	$('<select id="languages_list">')
+		.insertBefore($('#w_title-original-language'));
+	//$('#w_title-original-language').before('<select id="languages_list">');
+	/*for (i=0;i<languages.length;i++){
+		$('#languages_list')
+			.append($('<option>', {value: languages[i]})
+			.text(languages[i]));
+		}*/
+	$.each(languages, function(key, value){
 		$('#languages_list')
 			.append($('<option>', {value: key})
-			.text(value));
+			.text(key));
 		});
 
-	$('#languages_list').after('<div id="new_language" style="display:none">');
-	$('#new_language').append('<p id="new_language_explanation" class="tooltips">');
-	$('#new_language').append('<input id="new_language_value" type="text">');
-	$('#new_language_value').after(' <a id="add_language_value">');
-	$('#add_language_value')
+	$('<div id="new_language" />')
+		.insertAfter($('#languages_list'));
+	$('<input id="new_language_value" type="text" />')
+		.attr('size', '80')
+		.appendTo($('#new_language'));
+	$('<a id="add_language_value" />')
 		.text('Add')
 		.attr({
-		'href': 'javascript:void(0);',
-		});
-	$('#new_language').after('<ul id="original_titles" class="no_bullets">');
-	$('#languages_list').change(function(){
-		if ($(this).val() != 'none'){
-			if ($('#new_language_value:visible').length>0){
-				$('#new_language_value').attr({
-					'value': '',
-					});
-			}
-			else {
-				$('#new_language').slideDown();
-			}
+		'href': 'javascript:void(0)',
+		'style': 'margin-left:1em'
+		})
+		.insertAfter($('#new_language_value'));
+	$('<ul id="original_titles" />')
+		.attr('style', 'margin:0; padding:3px;')
+		.addClass('no_bullets')
+		.insertAfter($('#new_language'));
+	$('#add_language_value').click(function() {
+		if ($("#languages_list").val() == 'Select language') {
+			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+			$( "#modal-select-language:ui-dialog" ).dialog( "destroy" );
+			$( "#modal-select-language" ).dialog({
+				modal: true,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+			return;
 		}
-	});
-	$('#add_language_value').click(function(){
+
+		if (! $("#new_language_value").val()) {
+			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+			$( "#modal-enter-title:ui-dialog" ).dialog( "destroy" );
+			$( "#modal-enter-title" ).dialog({
+				modal: true,
+				buttons: {
+					Ok: function() {
+						$( this ).dialog( "close" );
+					}
+				}
+			});
+			return;
+		}
+
 		update_language();
-	})
+	});
 	initialize_title_lines();
 
 	function reset_languages_list(){
-		$('#languages_list').val('none');
+		$('#languages_list').val('Select language');
 		$('#new_language_value').val('');
-		$('#new_language').delay(500).slideUp();
 	}
 
 	function initialize_title_lines(){
@@ -226,26 +360,47 @@ $(function() {
 			var original_titles_list = original_titles.split('\n');
 			$.each(original_titles_list, function(index, value){
 				var splitted = value.split(' - ');
-				lang = splitted[0];
-				title = splitted[1];
+				var lang = splitted[0];
+				var title = splitted[1];
 				add_title_line(lang, title);
 			})
 		}
 	}
 
+	function update_name_of_assessment(lang, title){
+			if (lang == 'English'){
+				$('#w_assessment-name-en').val(title);
+				if (title.length>0){
+					$('#w_assessment-name-en').attr('readonly', 'readonly');
+				}
+				else {
+					$('#w_assessment-name-en').removeAttr('readonly');
+				}
+			}
+			else if (lang == 'Russian'){
+				$('#w_assessment-name-ru').val(title);
+				if (title.length>0){
+					$('#w_assessment-name-ru').attr('readonly', 'readonly');
+				}
+				else {
+					$('#w_assessment-name-ru').removeAttr('readonly');
+				}
+			}
+	}
+
 	function update_language(remove){
 		var current_value = $('#w_title-original-language').val();
-		var lang_val = $('#languages_list').val();
-		var lang = $('#languages_list option[value='+lang_val+']').text();
+		var lang = $('#languages_list').val();
 		if (remove){
 			lang=remove;
 		}
-		var title = $('#new_language_value').val()
+		var title = $('#new_language_value').val();
 		if (title.length==0 && !remove){
 			return;
 		}
 		if (current_value.length == 0){
 			$('#w_title-original-language').val(lang+' - '+title);
+			$('#w_title-original-language').trigger('change');
 			add_title_line(lang, title);
 		}
 		else{
@@ -262,12 +417,12 @@ $(function() {
 						current_values.splice(i, 1);
 						found = true;
 						reset_languages_list();
+						update_name_of_assessment(lang, '');
 						break;
 					}
 					else{
 						current_values[i]= lang+' - '+title;
-						$('#'+lang+'_original_title').text();
-						$('#'+lang+'_original_title .title').text(' '+lang+' - '+title);
+						add_title_line(lang, title);
 						found = true;
 					}
 				}
@@ -278,28 +433,47 @@ $(function() {
 				add_title_line(lang, title);
 			}
 			$('#w_title-original-language').val(current_values.join('\n'));
+			$('#w_title-original-language').trigger('change');
 		}
 		reset_languages_list();
 	}
 
 	function add_title_line(lang, title){
-		var x_link = $('<a>').attr('href', 'javascript:void(0);');
-		x_link.append($("<img>").attr({
+		var delete_link = $('<a>')
+			.attr({
+			'href': 'javascript:void(0);',
+			'style': 'color: rgb(170, 0, 0); font-size: 80%;'
+			})
+			.text('[remove]');
+		/*delete_link.append($("<img>").attr({
 			src: WWW_URL + "cross.gif",
 			title:'Remove',
 			alt: '[x]'
-		})).addClass('tick-image icon-image');
-		x_link.click(function(){
+		})).addClass('tick-image icon-image');*/
+		delete_link.click(function(){
 			update_language(lang);
+		});
+		var edit_link = $('<a>')
+			.attr({
+			'href': 'javascript:void(0);',
+			'style': 'font-size: 80%;'
+			})
+			.text('[edit]');
+		edit_link.click(function(){
+			//update_language(lang);
+			$('#languages_list').val(lang);
+			$('#new_language_value').val(title);
 		});
 		var new_title_line = $('<li>').attr({
 			'id': lang+'_original_title',
-			'style': 'display:none',
+			'style': 'display:none'
 			});
 		
-		new_title_line.append(x_link, '<span class="title"> '+lang+' - '+title+'<'+'/span>');
+		new_title_line.append('<span class="title">'+title+' - <'+'em>'+lang+'<'+'/em><'+'/span> ', edit_link, ' ', delete_link);
+		$('#'+lang+'_original_title').remove();
 		new_title_line.appendTo($('#original_titles'));
 		$('#'+lang+'_original_title').slideDown();
+		update_name_of_assessment(lang, title);
 	}
 
 	function checkboxes_to_dropdown(input_name) {
@@ -392,6 +566,76 @@ $(function() {
 		show_hide_widgets();
 	});
 
+	var legend_elem = $("#w_submitter-name").parent().prev();
+	var elem = $("#w_submitter-name").parent();
+	var elements = [];
+	for (var i = 0; i < 4; i++) {
+		elements.push(elem);
+		elem = elem.next();
+	}
+	var fieldset = $('<fieldset><'+'/fieldset');
+	fieldset.append('<legend>' + legend_elem.text() + '<'+'/legend>');
+	for (var i = 0; i < 4; i++) {
+		fieldset.append(elements[i]);
+	}
+	fieldset.insertBefore(legend_elem);
+	legend_elem.remove();
+
+	// predefined values for type of organisation
+	var single_select = $('<select>').attr({
+		'id': 'w_submitter-organisation_single_select'
+	});
+	if (curr_lang == 'ru') {
+		single_select.append($('<option>').attr('value', '').text('Пожалуйста выберите'));
+	} else {
+		single_select.append($('<option>').attr('value', '').text('Please select'));
+	}
+	var choices = ['University/academia',
+					'government',
+					'NGO',
+					'industry',
+					'general public'];
+	var current_value = $("#w_submitter-organisation").val();
+	var has_value = false;
+	for (var i = 0; i < choices.length; i++) {
+		if (current_value == choices[i]) {
+			has_value = true;
+			break
+		}
+	}
+	if (!has_value && current_value) {
+		choices.push(current_value);
+	}
+	$.each(choices, function (i, value) {
+		single_select.append($('<option>').attr('value', value).text(value));
+	});
+	if (current_value) {
+		single_select.val(current_value);
+	}
+	single_select.change(function() {
+		$("#w_submitter-organisation").val($(this).val());
+	});
+	$("#w_submitter-organisation").hide();
+	$("#w_submitter-organisation").parent().append(single_select);
+
+	function set_international_organisation_label() {
+		$("label[for='w_country-or-international-organisation'] span:first-child")
+			.text('Name of international organisation');
+	}
+	function set_country_label() {
+		$("label[for='w_country-or-international-organisation'] span:first-child")
+			.text('Country');
+	}
+
+	if ($("#w_theme-coverage_0").attr("checked")
+		|| $("#w_theme-coverage_1").attr("checked")) {
+		set_international_organisation_label();
+	} else if ($("#w_theme-coverage_2").attr("checked")) {
+		set_country_label();
+	}
+	$("#w_theme-coverage_0").change(set_international_organisation_label);
+	$("#w_theme-coverage_1").change(set_international_organisation_label);
+	$("#w_theme-coverage_2").change(set_country_label);
 });
 </script>
 </metal:block>
