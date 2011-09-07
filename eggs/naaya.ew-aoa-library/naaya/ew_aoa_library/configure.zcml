@@ -31,6 +31,13 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      for=".interfaces.IAoaPortal"
+      name="country_profile"
+      class=".country_profile.CountryProfileView"
+      permission="zope2.View"
+      />
+
   <browser:resourceDirectory
       name="naaya.ew_aoa_library"
       directory="./www"
