@@ -18,8 +18,9 @@ M.country_code = {};
 M.docs_summary_result = $.Deferred();
 
 M.xyz_layer = function(label) {
-  return new OpenLayers.Layer.XYZ(label,
-    M.config['tiles_url'] + "aoa-en/${z}/${x}/${y}.png" + M.config['map_rev'],
+  var url_pattern = M.config['tiles_url'] + "aoa-" + M.config['language'] +
+                    "/${z}/${x}/${y}.png" + M.config['map_rev'];
+  return new OpenLayers.Layer.XYZ(label, url_pattern,
     {'sphericalMercator': true, 'numZoomLevels': 7}
   );
 };

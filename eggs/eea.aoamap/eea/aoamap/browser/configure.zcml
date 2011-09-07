@@ -11,7 +11,7 @@
 
   <browser:page
     for=".interfaces.IMapViewParent"
-    name="aoa-map.html"
+    name="folder_listing"
     template="plone_map.pt"
     class=".plone_views.AoaMap"
     permission="zope2.View"

@@ -105,7 +105,7 @@ M.render_global_info = function() {
 };
 
 function country_fiche_url(country_name, theme_name) {
-  return M.config['country_fiche_prefix'] + '?country%3Aint=' +
+  return M.config['aoa_report_root_url'] + '?country%3Aint=' +
       M.config['country_index'][country_name] + '&theme=' +
       encodeURIComponent(theme_name);
 }

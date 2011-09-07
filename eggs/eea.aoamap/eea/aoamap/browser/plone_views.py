@@ -6,6 +6,7 @@ import lxml.html.soupparser, lxml.etree, lxml.cssselect
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+from zope.component import getMultiAdapter
 
 log = logging.getLogger(__name__)
 
@@ -26,15 +27,29 @@ class AoaMap(BrowserView):
     """
 
     def _get_search_url(self):
-        return self.context.absolute_url() + '/aoa-map-search'
+        return self._get_root_url() + '/aoa-map-search'
+
+    def _get_current_language(self):
+        context = self.aq_parent
+        portal_state = getMultiAdapter((context, self.request),
+                                       name=u'plone_portal_state')
+        return portal_state.language()
+
+    def _get_root_url(self):
+        return self.aq_parent.getCanonical().absolute_url()
 
     def get_map_html(self):
+        lang = self._get_current_language()
+        if lang != 'ru':
+            lang = 'en'
+
         map_config = {
             'tiles_url': tiles_url,
             'search_url': self._get_search_url(),
-            'country_fiche_prefix': aoa_url + '/viewer_aggregator/',
+            'root_url': self._get_root_url(),
             'debug': True,
             'www_prefix': "++resource++eea.aoamap",
+            'language': lang,
         }
 
         options = {
