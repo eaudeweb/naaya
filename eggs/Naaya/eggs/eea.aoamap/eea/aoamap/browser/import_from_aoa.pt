@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html>
+<head>
+  <style>
+    table#generator-matrix th, table#generator-matrix td {
+      border: 1px solid #aaa;
+    }
+    table#generator-matrix {
+      border-collapse: collapse;
+    }
+    table#generator-matrix th.country-name {
+      text-align: left;
+    }
+    table#generator-matrix td label {
+      display: block;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
+    table#generator-matrix tbody th button {
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+<h1>Import documents from AoA portal</h1>
+
+<form method="post" action=".import_from_aoa.submit"
+      tal:define="aoa_data view/aoa_data">
+
+  <input type="submit"/>
+
+  <table id="generator-matrix">
+    <thead>
+      <tr>
+        <th class="document-all"></th>
+        <th class="document-wa">Water fiche</th>
+        <th class="document-ge">Green economy fiche</th>
+        <th class="document-cp">Country profile</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="country aoa_data/countries">
+        <th tal:content="country" class="country-name"
+            tal:attributes="country country"></th>
+        <td><label>
+          <input type="checkbox" name="country-document:list"
+                 tal:attributes="value string:${country}-wa;
+                                 class string:document-wa;
+                                 country country"/>
+        </label></td>
+        <td><label>
+          <input type="checkbox" name="country-document:list"
+                 tal:attributes="value string:${country}-ge;
+                                 class string:document-ge;
+                                 country country"/>
+        </label></td>
+        <td><label>
+          <input type="checkbox" name="country-document:list"
+                 tal:attributes="value string:${country}-cp;
+                                 class string:document-cp;
+                                 country country"/>
+        </label></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <input type="submit"/>
+
+</form>
+
+<script src="++resource++eea.aoamap/jquery-1.6.2.min.js"></script>
+<script>
+$(document).ready(function() {
+  var table = $('table#generator-matrix');
+  var inputs = $('input[type=checkbox]', table);
+
+  $('th.document-all').append(all_button(inputs));
+  $('th.document-wa').append(' ', all_button(inputs.filter('.document-wa')));
+  $('th.document-ge').append(' ', all_button(inputs.filter('.document-ge')));
+  $('th.document-cp').append(' ', all_button(inputs.filter('.document-cp')));
+
+  $('tbody th').each(function() {
+    var th = $(this);
+    var country = th.attr('country');
+    var by_country = '[country=' + country.replace(/ /g, '\\ ') + ']';
+    th.append(' ', all_button(inputs.filter(by_country)));
+  });
+
+  function all_button(inputs) {
+    var button = $('<button>').text('all');
+    button.click(function(evt) {
+      evt.preventDefault();
+      if(inputs.filter(':not(:checked)').length > 0) {
+        inputs.attr('checked', 'checked');
+      }
+      else {
+        inputs.attr('checked', null);
+      }
+    });
+    return button;
+  }
+});
+</script>
+</body>
+</html>

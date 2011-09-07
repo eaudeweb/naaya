@@ -1,6 +1,7 @@
 import simplejson as json
 import urllib
 import logging
+from StringIO import StringIO
 import lxml.html.soupparser, lxml.etree, lxml.cssselect
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
@@ -74,7 +75,7 @@ class AddToVirtualLibrary(BrowserView):
         return (aoa_url + 'tools/virtual_library/'
                 'bibliography-details-each-assessment?iframe=on')
 
-class ImportCountryFiches(BrowserView):
+class ImportFromAoa(BrowserView):
     """
     Import country fiches from AoA portal as Page objects
     """
@@ -89,41 +90,71 @@ class ImportCountryFiches(BrowserView):
         }
 
     def submit(self):
-        msg = "Created documents:\n"
-        for country in self.request.form['country']:
-            for theme, theme_code in [("Water", 'wa'), ("Green Economy", 'ge')]:
-                url = ('viewer_aggregator'
-                       '?country%%3Autf8%%3Austring=%s'
-                       '&theme=%s') % (country, theme)
-                aoa_html = get_aoa_response(url)
-                aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
-                cf_doc = css('div.filter-results', aoa_doc)[0]
-                cf_data = {
-                    'country': country,
-                    'country_code': country,
-                    'theme': theme,
-                    'theme_code': theme_code,
-                    'html_content': lxml.etree.tostring(cf_doc).decode('utf-8'),
-                }
-                doc = update_country_fiche(self.aq_parent, cf_data)
-                msg += "%r\n" % doc
+        out = StringIO()
 
-        msg += "done\n"
+        print>>out, "Creating documents:\n"
 
-        return msg
+        theme_name = {
+            'wa': "Water",
+            'ge': "Green economy",
+            'cp': None,
+        }
+
+        for country_document in self.request.form.get('country-document', []):
+            country, theme_code = country_document.split('-')
+            theme = theme_name[theme_code]
+
+            if theme is None:
+                doc = update_country_profile(self.aq_parent, country)
+            else:
+                doc = update_country_fiche(self.aq_parent, country, theme)
+
+            print>>out, repr(doc)
+
+        print>>out, "\ndone"
+        return out.getvalue()
 
 
-def update_country_fiche(folder, cf_data):
-    doc_id = 'cf-%s-%s' % (cf_data['country_code'], cf_data['theme_code'])
-
+def update_plone_document(folder, doc_id, title, text):
     try:
         doc = folder[doc_id]
     except:
         folder.invokeFactory(type_name="Document", id=doc_id)
         doc = folder[doc_id]
 
-    title = "Country fiche %s - %s" % (cf_data['country'], cf_data['theme'])
     doc.setTitle(title)
-    doc.getField('text').getMutator(doc)(cf_data['html_content'])
+    doc.getField('text').getMutator(doc)(text)
 
     return doc
+
+
+def slug(name):
+    return name.replace(' ', '-')
+
+
+def update_country_profile(folder, country):
+    doc_id = '%s-profile' % (slug(country),)
+    title = "%s - country profile" % (country,)
+    text = "Country profile HTML goes here"
+
+    url = ('country_profile?toplone=1&country%%3Autf8%%3Austring=%s' % country)
+    aoa_html = get_aoa_response(url)
+    aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
+    cf_doc = css('div.aoa-cp-body', aoa_doc)[0]
+    text = lxml.etree.tostring(cf_doc).decode('utf-8')
+
+    return update_plone_document(folder, doc_id, title, text)
+
+
+def update_country_fiche(folder, country, theme):
+    doc_id = '%s-%s' % (slug(country), slug(theme))
+    title = "%s - country fiche %s" % (country, theme)
+
+    url = ('viewer_aggregator?toplone=1&country%%3Autf8%%3Austring=%s&theme=%s' %
+           (country, theme))
+    aoa_html = get_aoa_response(url)
+    aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
+    cf_doc = css('div.aoa-cf-content', aoa_doc)[0]
+    text = lxml.etree.tostring(cf_doc).decode('utf-8')
+
+    return update_plone_document(folder, doc_id, title, text)

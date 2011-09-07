@@ -19,16 +19,16 @@
 
   <browser:page
     for=".interfaces.IMapViewParent"
-    name=".import_countryfiches.html"
-    class=".plone_views.ImportCountryFiches"
-    template="import_countryfiches.pt"
+    name=".import_from_aoa.html"
+    class=".plone_views.ImportFromAoa"
+    template="import_from_aoa.pt"
     permission="zope2.ViewManagementScreens"
     />
 
   <browser:page
     for=".interfaces.IMapViewParent"
-    name=".import_countryfiches.submit"
-    class=".plone_views.ImportCountryFiches"
+    name=".import_from_aoa.submit"
+    class=".plone_views.ImportFromAoa"
     attribute="submit"
     permission="zope2.ViewManagementScreens"
     />
