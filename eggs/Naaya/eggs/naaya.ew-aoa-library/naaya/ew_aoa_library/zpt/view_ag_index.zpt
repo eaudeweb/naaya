@@ -70,6 +70,18 @@
                     No search results found for the selected criteria.
                 </p>
 
+                <p class="aoa-cf-preamble" tal:condition="toplone">
+                  Country fiches are overviews of available environmental
+                  information (reports, indicators, statistics) per country
+                  organised alongside two thematic areas: water and related
+                  ecosystems and green economy. When possible the fiches were
+                  complemented with information about the main institutional
+                  players holding environmental information in the country and
+                  regional level. The country fiches have been compiled with
+                  the support of the National Focal Points and National Contact
+                  Points from the pan-European region.
+                </p>
+
                 <tal:block repeat="item results">
                     <tal:block define="heading python: item[0];
                                        shadows python: item[1];"
