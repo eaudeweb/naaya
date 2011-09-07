@@ -5,8 +5,9 @@ from StringIO import StringIO
 import lxml.html.soupparser, lxml.etree, lxml.cssselect
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
-from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+from zope.pagetemplate.pagetemplatefile import PageTemplateFile
 from zope.component import getMultiAdapter
+from zope import i18n
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +15,27 @@ tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
 
 
-map_template = ViewPageTemplateFile('map.pt', globals())
+class I18nTemplate(PageTemplateFile):
+    """ hack Zope's page templates to give us sane translation behaviour """
+
+    def __init__(self, template_name):
+        return super(I18nTemplate, self).__init__(template_name, globals())
+
+    def __call__(self, lang, *args, **kwargs):
+        self.__lang = lang
+        return super(I18nTemplate, self).__call__(*args, **kwargs)
+
+    def __translate(self, msgid, domain=None, mapping=None, default=None):
+        return i18n.translate(msgid, domain, mapping, default=default,
+                              target_language=self.__lang)
+
+    def pt_getEngineContext(self, namespace):
+        context = super(I18nTemplate, self).pt_getEngineContext(namespace)
+        context.translate = self.__translate
+        return context
+
+
+map_template = I18nTemplate('map.pt')
 
 
 def css(sel, target):
@@ -59,7 +80,7 @@ class AoaMap(BrowserView):
             },
         }
 
-        return map_template(self, **options)
+        return map_template(lang, **options)
 
 
 def get_aoa_response(relative_url):
