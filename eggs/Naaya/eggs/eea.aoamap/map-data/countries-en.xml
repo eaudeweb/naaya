@@ -14,7 +14,7 @@
     <Datasource>
       <Parameter name="type">gdal</Parameter>
       <Parameter name="base">geodata</Parameter>
-      <Parameter name="file">cut-raster-v2.tiff</Parameter>
+      <Parameter name="file">cut-raster-v2-en.tiff</Parameter>
     </Datasource>
   </Layer>
 
