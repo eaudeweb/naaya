@@ -155,17 +155,6 @@ def update_country_fiche(folder, country, theme):
     aoa_html = get_aoa_response(url)
     aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
     cf_doc = css('div.aoa-cf-content', aoa_doc)[0]
-    text = COUNTRY_FICHE_PREAMBLE + lxml.etree.tostring(cf_doc).decode('utf-8')
+    text = lxml.etree.tostring(cf_doc).decode('utf-8')
 
     return update_plone_document(folder, doc_id, title, text)
-
-COUNTRY_FICHE_PREAMBLE = (
-    '\n\n<p class="aoa-cf-preamble">Country fiches are overviews of '
-    'available environmental information (reports, indicators, '
-    'statistics) per country organised alongside two thematic areas: '
-    'water and related ecosystems and green economy. When possible the '
-    'fiches were complemented with information about the main '
-    'institutional players holding environmental information in the '
-    'country and regional level. The country fiches have been compiled '
-    'with the support of the National Focal Points and National Contact '
-    'Points from the pan-European region.</p>\n\n')
