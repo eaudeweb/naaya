@@ -240,12 +240,14 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
             return
 
         suggestions = []
+        cf_approval_list = []
         respondent = None
         creation_date = None
         anonymous_editing_key = None
         if answer_id is not None:
             old_answer = self._getOb(answer_id)
             respondent = old_answer.respondent
+            cf_approval_list = getattr(old_answer, 'cf_approval_list', [])
             suggestions = getattr(old_answer, 'suggestions', [])
             anonymous_editing_key = getattr(old_answer,
                 'anonymous_editing_key', None)
@@ -275,6 +277,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         if suggestions:
             answer.suggestions = suggestions
+        if cf_approval_list:
+            answer.cf_approval_list = cf_approval_list
 
         if self.isAnonymousUser():
             if anonymous_editing_key:
