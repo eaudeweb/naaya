@@ -1,3 +1,5 @@
+<script src="http://ecn.dev.virtualearth.net/mapcontrol/v6.3/js/atlascompat.js">
+</script>
 <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2">
 </script>
 <script tal:content="structure
