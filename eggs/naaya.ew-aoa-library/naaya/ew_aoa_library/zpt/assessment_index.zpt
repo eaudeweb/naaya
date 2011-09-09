@@ -34,7 +34,7 @@
 
 <link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/aggregator.css" />
 
-<div class="floated-buttons" tal:condition="is_authenticated">
+<div class="floated-buttons" tal:condition="is_admin">
 	<span class="buttons">
 		<a tal:define="answer_url string:${site/absolute_url}/${here/target_path}"
 			tal:attributes="href string:${answer_url}?edit=1">Go to the original answer</a>
