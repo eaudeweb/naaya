@@ -191,6 +191,7 @@ $(function() {
 
 	//Unhide the main form (hidden so it only works with javascript turned on.
 	$('form[name="frmAdd"]').show();
+	$('#anonymous_responder_email').parent().hide()
 
 	// function to transform a list of checkboxes with same name
 	// to a single select hidding the items not selected
@@ -238,7 +239,7 @@ $(function() {
 
 	$('#w_type-document_0').parent().hide();
 	$('#w_title-original-language').hide();
-	$('#map-container').parent().parent().parent().hide();
+	//$('#map-container').parent().parent().parent().hide();
 
 	var languages = {'Select language':'none',
 					'Albanian': 'sq',
@@ -367,9 +368,26 @@ $(function() {
 		}
 	}
 
+	function google_translate(text, dest_lang, src_lang, target_field){
+		$.get('translate', {'text:utf8:ustring': text, dest_lang: dest_lang, src_lang: src_lang}, 
+			function(data){
+				if (console){
+					console.log($('#'+target_field).val().length);
+					console.log($('#'+target_field).val().split(': ')[0]);
+				}
+				if (data.length>0){
+					if ($('#'+target_field).val().length == 0 ||
+						$('#'+target_field).val().split(': ')[0] == 'Google translation'){
+						$('#'+target_field).val('Google translation: '+data);
+					}
+				}
+			});
+	}
+
 	function update_name_of_assessment(lang, title){
 			if (lang == 'English'){
 				$('#w_assessment-name-en').val(title);
+				google_translate(title, 'ru', lang, 'w_assessment-name-ru');
 				if (title.length>0){
 					$('#w_assessment-name-en').attr('readonly', 'readonly');
 				}
@@ -379,12 +397,17 @@ $(function() {
 			}
 			else if (lang == 'Russian'){
 				$('#w_assessment-name-ru').val(title);
+				google_translate(title, 'en', lang, 'w_assessment-name-en');
 				if (title.length>0){
 					$('#w_assessment-name-ru').attr('readonly', 'readonly');
 				}
 				else {
 					$('#w_assessment-name-ru').removeAttr('readonly');
 				}
+			}
+			else{
+				google_translate(title, 'en', lang, 'w_assessment-name-en');
+				google_translate(title, 'ru', lang, 'w_assessment-name-ru');
 			}
 	}
 
@@ -636,6 +659,10 @@ $(function() {
 	$("#w_theme-coverage_0").change(set_international_organisation_label);
 	$("#w_theme-coverage_1").change(set_international_organisation_label);
 	$("#w_theme-coverage_2").change(set_country_label);
+	$('#anonymous_responder_email').val($('#w_submitter-email').val());	$('#w_submitter-email').change(function(){
+		$('#anonymous_responder_email').val($('#w_submitter-email').val());
+	});
+
 });
 </script>
 </metal:block>
