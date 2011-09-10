@@ -48,7 +48,7 @@
 			}
 		}
 	}
-	function check_answers(){
+	/*function check_answers(){
 		var submit_ok = false;
 		$('[name="answer_ids"]').each(function(){
 			if ($(this).attr('checked') == true){
@@ -60,10 +60,19 @@
 			return true;
 		}
 		else{
-			alert(gettext('Please select at least one report to generate statistics'));
+			alert(gettext('Please select at least one report'));
 			return false;
 		}
 	}
+
+	function remove_irelevant(){
+		$('[name="answer_ids"]').each(function(){
+			if ($(this).attr('checked') != true){
+				$(this).parent().parent().remove();
+			}
+		});
+		return true;
+	}*/
 
 	$(document).ready(function(){
 		$('#javascript_label').hide();
@@ -106,6 +115,29 @@
 		$('[name="themes"]').change(function(){
 			display_topics($('[name="themes"]').val());
 			$('[name="topics"] option').removeAttr('selected');
+		});
+		$('.update_geo_location').change(function(){
+			select_box = $(this).parent().parent().find('input[name="answer_ids"]');
+			update_geo_location = $.trim($(this).val());
+			if (update_geo_location.length>0){
+				select_box.attr('checked', 'checked');
+			}
+			else{
+				select_box.removeAttr('checked');
+			}
+		});
+		$('#show_only_missing').removeAttr('checked');
+		$('#show_only_missing').click(function(){
+			if ($('#show_only_missing:checked').length == 1)
+			{
+				$('.missing_coordinates').each(function(){
+					if ($(this).val() == 0){
+						$(this).parent().parent().remove();
+					}
+				});
+				$('#show_only_missing_container').hide()
+				$('#please_refresh').show()
+			}
 		});
 	});
 }());
