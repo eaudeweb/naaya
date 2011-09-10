@@ -440,6 +440,72 @@
 	</div>
 	</form>
 </fieldset>
+<div tal:condition="python:library and is_admin"
+	id="show_only_missing_container">
+	<label>
+		<strong>Only show answers with missing coordinates</strong>
+	</label>
+	<input type="checkbox" id="show_only_missing"/>
+</div>
+<div id="please_refresh" class="message-error field" style="display:none"
+	 tal:condition="python:library and is_admin">
+	<label>
+		<strong>Answers with correct coordinates are now hidden.<br/>Please refresh the page if you need to list all answers again.</strong>
+	</label>	
+</div>
+<script type="text/javascript">
+	function check_answers(){
+		var submit_ok = false;
+		$('[name="answer_ids"]').each(function(){
+			if ($(this).attr('checked') == true){
+				submit_ok = true;
+			}
+		});
+		if (submit_ok == true)
+		{
+			return true;
+		}
+		else{
+			alert(gettext('Please select at least one report'));
+			return false;
+		}
+	}
+
+	function verify_relevance(){
+		var checked = $('[name="answer_ids"]:checked');
+		if(checked.length>0){
+			$('[name="answer_ids"]').each(function(){
+				if ($(this).attr('checked') != true){
+					$(this).parent().parent().hide();
+				}
+			});
+			var has_address = false;
+			$('[name="geo_location:utf8:ustring"]:visible').each(function(){
+				if($(this).val()){
+					has_address = true;
+				};
+			});
+			return has_address;
+		}
+	}
+
+	function remove_irelevant(){
+		if(verify_relevance()){
+			$('[name="answer_ids"]').each(function(){
+				if ($(this).attr('checked') != true){
+					$(this).parent().parent().remove();
+				}
+			});
+			$('[name="geo_location:utf8:ustring"]').each(function(){
+				if(!$(this).val()){
+					$(this).parent().parent().remove();
+				};
+			});
+		}
+		return true;
+	}
+</script>
+
 <form name="select_for_report" method="post" action="." onSubmit="return check_answers()">
 <div class="create-stats" tal:condition="shadows">
 	<input tal:condition="review_template" type="hidden" name="review_template" />
@@ -448,6 +514,9 @@
 		name="viewer_view_report_html:method" i18n:attributes="value"/>
 	<input tal:condition="is_admin" type="submit"
 		value="Delete selected answers" name="delete_survey_answers:method"
+		i18n:attributes="value"/>
+	<input tal:condition="python:library and is_admin" type="submit"
+		value="Update location for selected answers" name="update_locations:method" onClick="return remove_irelevant()"
 		i18n:attributes="value"/>
 </div>
 <div class="message-error field" tal:condition="not:shadows">
@@ -528,6 +597,21 @@
 		<img tal:condition="python:skey=='uploader'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
+	<!-- Reported by organisation-->
+	<th rowspan="2" tal:condition="python:library and is_admin and
+		(rkey and skey=='uploader_organisation'
+			or skey!='uploader_organisation')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader_organisation">Organisation</a>
+		<img tal:condition="python:skey=='uploader_organisation'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+	</th>
+	<th rowspan="2" tal:condition="python:library and is_admin and
+		(not rkey and skey=='uploader_organisation')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader_organisation&rkey=True">Organisation</a>
+		<img tal:condition="python:skey=='uploader_organisation'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+	</th>
+
+	<th tal:condition="python: library and is_admin" rowspan="2" i18n:translate="">Organisation address</th>
+
 	<th tal:condition="python: library or review_template" colspan="2" i18n:translate="">Geo coverage:</th>
 
 	<!-- Year of publication -->
@@ -604,6 +688,16 @@
 	<td tal:condition="is_admin" tal:content="python: here.utShowFullDateTime(i.creation_date)"/>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
+	<td tal:condition="python: library and is_admin" tal:content="python:i.get('uploader_organisation')"/>
+	<td tal:condition="python:library and is_admin"
+		tal:define="lat i/geo_location/lat|nothing;
+					lon i/geo_location/lon|nothing;
+					address i/geo_location/address|nothing">
+		<input class="update_geo_location" type="text" name="geo_location:utf8:ustring" tal:attributes="value address"/>
+		<input type="hidden" name="missing_coordinates"
+			class="missing_coordinates"
+			tal:attributes="value python:test(not lat or not lon, 1, 0)"/>
+	</td>
 	<td tal:define="countries i/geo_coverage_country|nothing">
 		<tal:block condition="python: countries and review_template"
 			content="countries"/>
