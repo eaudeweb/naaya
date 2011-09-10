@@ -135,8 +135,8 @@
 						$(this).parent().parent().remove();
 					}
 				});
-				$('#show_only_missing_container').hide()
-				$('#please_refresh').show()
+				$('#show_only_missing_container').hide();
+				$('#please_refresh').show();
 			}
 		});
 	});
