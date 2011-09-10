@@ -19,9 +19,10 @@ import transaction
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaSurvey.interfaces import INySurveyAnswer, INySurveyAnswerAddEvent
 from Products.NaayaCore.CatalogTool.interfaces import INyCatalogAware
+from Products.NaayaCore.GeoMapTool.managers import geocoding
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.core.interfaces import INyObjectContainer
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from naaya.core.utils import force_to_unicode
 from naaya.core.zope2util import ofs_path
 
 import shadow
@@ -1078,6 +1079,43 @@ class AoALibraryViewer(SimpleItem):
         This function is for Review Template Viewer only
         """
         return set(rt_answer.library_id for rt_answer in self.iter_assessments())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_locations')
+    def update_locations(self, REQUEST=None):
+        """Delete selected items from the parent survey"""
+        if REQUEST is None:
+            return
+        target_survey = self.target_survey()
+
+        answer_ids = REQUEST.get('answer_ids', [])
+        new_locations = REQUEST.get('geo_location', [])
+        if answer_ids and new_locations:
+            if isinstance(answer_ids, basestring):
+                answer_ids = [answer_ids]
+            if isinstance(new_locations, basestring):
+                new_locations = [new_locations]
+            locations = set(new_locations)
+            geo_locations = {}
+            for location in locations:
+                geo_locations[location] = do_geocoding(location)
+            for answer_id in answer_ids:
+                target_answer = getattr(target_survey, answer_id)
+                location = new_locations[answer_ids.index(answer_id)]
+                geo_location = geo_locations[location]
+                if geo_location:
+                    setattr(target_answer, 'w_location', geo_location)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+def do_geocoding(address):
+    """ """
+    #if self.portal_map.current_engine == 'yahoo':
+    #    coordinates = geocoding.yahoo_geocode(address)
+    #elif self.portal_map.current_engine == 'google':
+    coordinates = geocoding.location_geocode(address)
+    if coordinates != None:
+        lat, lon = coordinates
+        return Geo(lat, lon, address)
+    return (None)
 
 def viewer_for_survey_answer(answer):
     catalog = answer.getSite().getCatalogTool()

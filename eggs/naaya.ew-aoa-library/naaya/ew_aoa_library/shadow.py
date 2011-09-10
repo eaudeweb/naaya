@@ -262,6 +262,7 @@ def extract_survey_answer_data_library(answer):
         'geo_location': answer.get('w_location'),
         'uploader': ('%s, %s') % (answer.get('w_submitter-name'),
                                   answer.get('w_submitter-organisation'), ),
+        'uploader_organisation': answer.get('w_submitter-organisation'),
         'country': answer.get(key='w_country-or-international-organisation', default=''),
         'geo_type': extract_geo_type(answer),
         'description': ('<strong>%s</strong><br />'
@@ -696,7 +697,6 @@ class AssessmentShadow(SimpleItem, LocalPropertyManager):
         survey_answer.cf_approval_list.remove(country)
         survey_answer._p_changed = True
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-
 
 def get_survey_id(answer):
     return answer.aq_parent.id
