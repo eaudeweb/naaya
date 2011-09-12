@@ -166,6 +166,9 @@
 
     <span class="aoa-i18n" name="search-no-results"
       i18n:translate="">No results were found for this query</span>
+
+    <span class="aoa-i18n" name="recent-assessments"
+      i18n:translate="">Recent assessments</span>
   </div>
 
   <div class="visualClear">&nbsp;</div>
