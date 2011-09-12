@@ -44,12 +44,26 @@ def get_country_index(site):
 
 def get_map_async_config(site):
     t0 = time()
+    vl_viewer = site['virtual-library-viewer']
+
+    TOP_DOCS_COUNT = 20
+    top_docs = [(None, None) for c in range(TOP_DOCS_COUNT)]
+
+    documents = []
+    for n, shadow in enumerate(vl_viewer.iter_assessments()):
+        documents.append(shadow_to_dict(shadow))
+        doc_time = shadow.creation_date.timeTime()
+        if doc_time > top_docs[-1][0]:
+            top_docs[-1] = (doc_time, n)
+            top_docs.sort(reverse=True)
+
+
     return {
         'country_code': country_code,
         'country_index': get_country_index(site),
         'region_countries': region_countries,
-        'documents': [shadow_to_dict(shadow) for shadow in
-                      site['virtual-library-viewer'].iter_assessments()],
+        'documents': documents,
+        'recent': [p[1] for p in top_docs if p[0] is not None],
         'query-time': time() - t0,
     }
 
