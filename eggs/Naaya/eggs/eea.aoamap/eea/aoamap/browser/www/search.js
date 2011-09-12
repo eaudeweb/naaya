@@ -212,25 +212,54 @@ M.async_loop = function(callback) {
   return {'stop': function() { clearInterval(timer); }};
 };
 
+function search_criteria_info(form_data) {
+  var criteria = [];
+  if(form_data['year']) {
+    criteria.push(M._("year") + " " + form_data['year']);
+  }
+  if(form_data['theme']) {
+    criteria.push(M._("theme") + " " + form_data['theme']);
+  }
+  if(form_data['country'].length > 0) {
+    criteria.push(M._("country") + " (" + form_data['country'].join(", ") + ")");
+  }
+  if(form_data['region'].length > 0) {
+    criteria.push(M._("region") + " (" + form_data['region'].join(", ") + ")");
+  }
+  if(form_data['text']) {
+    criteria.push(M._("title-contains") + " " + form_data['text']);
+  }
+
+  if(criteria.length > 0) {
+    return "Assessments with: " + criteria.join(", ");
+  }
+  else {
+    return "All assessments";
+  }
+}
+
 var filter_loop = {'stop': function(){}};
 
 function perform_search(form_data) {
   M.hide_country_coverage();
   filter_loop.stop();
+  var title = $('<h2>').text(search_criteria_info(form_data));
   var results_ul = $('<ul class="search-results">');
-  var results_box = $('#results').empty().append(results_ul);
+  var results_box = $('#results').empty().append(title, results_ul);
 
   var filter = M.build_document_filter(form_data);
   var all_documents = M.config['documents'];
-  var results_counter = 0;
+  var filter_counter = 0;
   filter_loop = M.async_loop(function() {
-    while(results_counter < all_documents.length) {
-      var doc = filter(all_documents[results_counter]);
+    while(filter_counter < all_documents.length) {
+      var doc = filter(all_documents[filter_counter]);
       if(doc != null) {
         M.display_one_result(doc, results_ul);
       }
-      results_counter += 1;
-      if(results_counter % 20 == 0) return true;
+      filter_counter += 1;
+      if(filter_counter % 20 == 0) {
+          return true;
+      }
     }
     if($('>li', results_ul).length == 0) {
       var msg = M._('search-no-results');
@@ -260,7 +289,7 @@ M.display_one_result = function(doc, results_ul) {
       M.hide_country_coverage();
       return;
     }
-    var list_offset = results_ul.offset()['top'];
+    var list_offset = results_ul.parent().offset()['top'];
     var collapsing_doc = collapse_document_info();
     var html = M.templates['search-results-document-info'].tmpl(doc);
     var doc_info = $('<div class="document-info">').html(html);
@@ -276,9 +305,9 @@ M.display_one_result = function(doc, results_ul) {
     }
 
     // scroll 18px higher to show if there's more content above
-    var scroll_offset = Math.max(offset - list_offset - 18, 0);
+    var scroll_offset = Math.max(offset - list_offset - 15, 0);
     doc_info.hide().slideDown(M.animation_speed);
-    $('#results').scrollTo(scroll_offset, M.animation_speed);
+    $('#results-holder').scrollTo(scroll_offset, M.animation_speed);
 
     M.show_country_coverage(doc['country']);
   });

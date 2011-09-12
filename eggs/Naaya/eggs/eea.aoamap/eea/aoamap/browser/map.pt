@@ -107,21 +107,23 @@
 
   </div>
 
-  <div id="results">
+  <div id="results-holder">
+    <div id="results">
 
-    <div class="loading-animation" i18n:translate="">
-      <img src="++resource++eea.aoamap/ajax-loader.gif" i18n:name="spinner" />
-      Loading documents
-    </div>
-
-    <ul class="search-results">
-      <div class="jquery-template" style="display: none;"
-           id="search-results-document">
-        <li class="document">
-          <a href="javascript:" class="title">${title}</a>
-        </li>
+      <div class="loading-animation" i18n:translate="">
+        <img src="++resource++eea.aoamap/ajax-loader.gif" i18n:name="spinner" />
+        Loading documents
       </div>
-    </ul>
+
+      <ul class="search-results">
+        <div class="jquery-template" style="display: none;"
+             id="search-results-document">
+          <li class="document">
+            <a href="javascript:" class="title">${title}</a>
+          </li>
+        </div>
+      </ul>
+    </div>
   </div>
 
   <div style="display: none;">
@@ -169,6 +171,22 @@
 
     <span class="aoa-i18n" name="recent-assessments"
       i18n:translate="">Recent assessments</span>
+
+    <span class="aoa-i18n" name="year"
+      i18n:translate="">year</span>
+
+    <span class="aoa-i18n" name="theme"
+      i18n:translate="">theme</span>
+
+    <span class="aoa-i18n" name="country"
+      i18n:translate="">country</span>
+
+    <span class="aoa-i18n" name="region"
+      i18n:translate="">region</span>
+
+    <span class="aoa-i18n" name="title-contains"
+      i18n:translate="">title contains</span>
+
   </div>
 
   <div class="visualClear">&nbsp;</div>

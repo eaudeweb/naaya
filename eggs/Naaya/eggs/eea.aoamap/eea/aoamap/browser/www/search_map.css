@@ -131,7 +131,7 @@ div#countries-map .olControlLayerSwitcher .minimizeDiv {
   display: none;
 }
 
-div#results {
+div#results-holder {
   height: 400px;
   border: 1px solid #ececec;
   border-top: none;
@@ -139,6 +139,10 @@ div#results {
   -webkit-border-radius: 0 0 3px 3px;
   -moz-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px;
+}
+
+div#results {
+  padding-top: 1px; /* avoid collapsing margins with first child */
 }
 
 div#results ul {
