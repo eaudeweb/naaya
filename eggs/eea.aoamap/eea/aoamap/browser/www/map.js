@@ -3,6 +3,21 @@
 var M = window.M = {};
 
 
+M.i18n_messages = {};
+$('.aoa-i18n').each(function() {
+  var msg = $(this);
+  M.i18n_messages[msg.attr('name')] = msg.text();
+});
+
+M._ = function(msg_id) {
+  var translated = M.i18n_messages[msg_id];
+  if(translated == null) {
+    translated = "[Missing translation: " + msg_id + "]";
+  }
+  return translated;
+};
+
+
 Proj4js.defs["LONG_LAT_8K"] = "+proj=longlat +units=degrees " +
                                   "+a=8000000 +b=8000000";
 Proj4js.defs["LAEA_52N_65E_8K"] = "+proj=laea +lat_0=52 +lon_0=65 " +
@@ -240,7 +255,7 @@ M.create_map_search = function() {
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
   M.countries_map.addControl(M.layer_switcher);
-  $('.baseLbl', M.layer_switcher.layersDiv).text("Geographic level");
+  $('.baseLbl', M.layer_switcher.layersDiv).text(M._('geographic-level'));
   M.layer_switcher.maximizeControl();
 
   $.each(['country', 'region', 'global'], function(i, name) {

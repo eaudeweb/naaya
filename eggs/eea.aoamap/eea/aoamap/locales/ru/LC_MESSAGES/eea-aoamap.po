@@ -8,8 +8,9 @@ msgstr ""
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "Language-Code: en\n"
@@ -17,111 +18,112 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: eea-aoamap\n"
 
-#: ./browser/map.pt:11
+#: browser/map.pt:11
 msgid "${flag} ${name}: ${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:31
+#: browser/map.pt:31
 msgid "${name} ${list-of-countries}: ${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:47
+#: browser/map.pt:47
 msgid "${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:113
+#: browser/map.pt:113
 msgid "${spinner} Loading documents"
 msgstr ""
 
-#: ./browser/map.pt:58
+#: browser/map.pt:58
 msgid "Astana report"
 msgstr ""
 
-#: ./browser/map.pt:131
+#: browser/map.pt:131
 msgid "Author"
 msgstr ""
 
-#: ./browser/map.pt:102
+#: browser/map.pt:102
 msgid "Country"
-msgstr ""
+msgstr "Страна"
 
-#: ./browser/map.pt:18
+#: browser/map.pt:18
 msgid "Country fiches: ${link-cf-green-economy}, ${link-cf-water}"
 msgstr ""
 
-#: ./browser/map.pt:137
+#: browser/map.pt:137
 msgid "Coverage"
 msgstr ""
 
-#: ./browser/map.pt:65
+#: browser/map.pt:65
 msgid "Fill in the form below in order to search the available documents."
 msgstr ""
 
-#: ./browser/map.pt:161
+#: browser/map.pt:161
 msgid "Geographic level"
-msgstr ""
+msgstr "Географический охват"
 
-#: ./browser/map.pt:17
+#: browser/map.pt:17
 msgid "Green economy"
-msgstr ""
+msgstr "«Зеленая» экономика"
 
-#: ./browser/map.pt:167
+#: browser/map.pt:167
 msgid "No results were found for this query"
 msgstr ""
 
-#: ./browser/map.pt:104
+#: browser/map.pt:104
 msgid "Pan-European"
 msgstr ""
 
-#: ./browser/map.pt:84
+#: browser/map.pt:84
 msgid "Publication year"
-msgstr ""
+msgstr "Год издания"
 
-#: ./browser/map.pt:154
+#: browser/map.pt:154
 msgid "Report"
 msgstr ""
 
-#: ./browser/map.pt:92
+#: browser/map.pt:92
 msgid "Reset"
-msgstr ""
+msgstr "Сброс"
 
-#: ./browser/map.pt:88
+#: browser/map.pt:88
 msgid "Search"
+msgstr "Поиск"
+
+#: browser/map.pt:40
+msgid ""
+"Statistics of reviewed reports: ${link-statistics-green-economy}, ${link-"
+"comparative-overview}; ${link-regional-report}"
 msgstr ""
 
-#: ./browser/map.pt:40
-msgid "Statistics of reviewed reports: ${link-statistics-green-economy}, ${link-comparative-overview}; ${link-regional-report}"
-msgstr ""
-
-#: ./browser/map.pt:54
+#: browser/map.pt:54
 msgid "Statistics: ${link-statistics-green-economy}, ${link-statistics-water}"
-msgstr ""
+msgstr "Статистика: ${link-statistics-green-economy}, ${link-statistics-water}"
 
-#: ./browser/map.pt:103
+#: browser/map.pt:103
 msgid "Sub-region"
-msgstr ""
+msgstr "Регион"
 
-#: ./browser/map.pt:145
+#: browser/map.pt:145
 msgid "Themes"
-msgstr ""
+msgstr "темы"
 
-#: ./browser/map.pt:164
+#: browser/map.pt:164
 msgid "There was an error loading the list of documents."
 msgstr ""
 
-#: ./browser/map.pt:19
+#: browser/map.pt:19
 msgid "Water"
-msgstr ""
+msgstr "Все темы"
 
-#: ./browser/map.pt:76
+#: browser/map.pt:76
 msgid "Water + Green economy"
-msgstr ""
+msgstr "Все темы + «Зеленая» экономика"
 
-#: ./browser/map.pt:39
+#: browser/map.pt:39
 msgid "comparative overview"
 msgstr ""
 
-#: ./browser/map.pt:41
+#: browser/map.pt:41
 msgid "regional report"
 msgstr ""
-

@@ -42,7 +42,7 @@ M.load_async_config = function() {
 
   function on_error() {
     var error_msg = $('<span>').css({color: 'red', 'font-size': '14px'});
-    error_msg.text("There was an error loading the list of documents.");
+    error_msg.text(M._('error-loading-documents'));
     $('div.loading-animation').replaceWith(error_msg);
   }
 };
@@ -218,7 +218,7 @@ function perform_search(form_data) {
       if(results_counter % 20 == 0) return true;
     }
     if($('>li', results).length == 0) {
-      var msg = "No results were found for this query";
+      var msg = M._('search-no-results');
       $('ul.search-results').append($('<li>').text(msg));
     }
     return false;
