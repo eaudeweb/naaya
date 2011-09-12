@@ -126,7 +126,7 @@
 				return true;
 			}
 			else{
-				alert(gettext('Please select at least one report!!!'));
+				alert(gettext('Please select at least one report!'));
 				return false;
 			}
 		});
