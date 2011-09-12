@@ -202,6 +202,7 @@ M.async_loop = function(callback) {
 var filter_loop = {'stop': function(){}};
 
 function perform_search(form_data) {
+  M.hide_country_coverage();
   filter_loop.stop();
   var results = $('ul.search-results').empty();
 

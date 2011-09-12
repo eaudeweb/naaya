@@ -12,6 +12,7 @@
 
 .country-flag {
   vertical-align: -1px;
+  max-width: 30px;
 }
 
 input.input-text {
@@ -303,4 +304,25 @@ div.document-info {
       -moz-box-shadow: 0 0px 0 rgba(0, 0, 0, 0.2);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   text-shadow: none;
+}
+
+div.olControlZoomPanel {
+  top: 14px;
+}
+
+div.olControlZoomPanel div.olControlZoomInItemInactive {
+  width: 36px;
+  height: 36px;
+  background: url(zoom-in.png) no-repeat;
+}
+
+div.olControlZoomPanel div.olControlZoomToMaxExtentItemInactive {
+  display: none;
+}
+
+div.olControlZoomPanel div.olControlZoomOutItemInactive {
+  top: 38px;
+  width: 36px;
+  height: 36px;
+  background: url(zoom-out.png) no-repeat;
 }

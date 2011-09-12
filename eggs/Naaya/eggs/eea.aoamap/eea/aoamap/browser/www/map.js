@@ -67,6 +67,7 @@ M.add_view = function(name, tiles_layer) {
      visibility: false,
      styleMap: new OpenLayers.StyleMap({
       'default': new OpenLayers.Style({
+        'cursor': 'pointer',
         'fillOpacity': 0,
         'strokeOpacity': 0,
         'fontSize': 12,
@@ -250,7 +251,11 @@ M.get_layer_labels = function() {
 M.create_map_search = function() {
   var extent = new OpenLayers.Bounds(-8441336, -3173340, 6315323, 6948737);
   M.countries_map = new OpenLayers.Map(M.map_div[0].id, {
-    restrictedExtent: extent
+    restrictedExtent: extent,
+    controls: [
+      new OpenLayers.Control.Navigation(),
+      new OpenLayers.Control.ZoomPanel()
+    ]
   });
 
   M.layer_switcher = new OpenLayers.Control.LayerSwitcher();
