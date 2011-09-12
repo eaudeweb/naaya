@@ -14,11 +14,16 @@ To update the message catalog::
 
 To create a new translation::
 
-  msgen locales/eea-aoamap.pot > locales/en/LC_MESSAGES/eea-aoamap.po
+  msgen locales/eea-aoamap.pot > locales/ru/LC_MESSAGES/eea-aoamap.po
+
+To update an existing translation::
+
+  msgmerge locales/ru/LC_MESSAGES/eea-aoamap.po locales/eea-aoamap.pot > locales/ru/LC_MESSAGES/eea-aoamap.po.new
+  mv locales/ru/LC_MESSAGES/eea-aoamap.po.new locales/ru/LC_MESSAGES/eea-aoamap.po
 
 To compile a translation into an MO file::
 
-  msgfmt -o locales/en/LC_MESSAGES/eea-aoamap.mo locales/en/LC_MESSAGES/eea-aoamap.po
+  msgfmt -o locales/ru/LC_MESSAGES/eea-aoamap.mo locales/ru/LC_MESSAGES/eea-aoamap.po
 
 Deployment
 ----------

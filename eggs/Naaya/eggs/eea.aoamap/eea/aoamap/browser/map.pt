@@ -124,9 +124,8 @@
     </ul>
   </div>
 
-  <div>
-    <div class="jquery-template" style="display: none;"
-         id="search-results-document-info">
+  <div style="display: none;">
+    <div class="jquery-template" id="search-results-document-info">
 
       <div class="template-section">
         <strong><tal:t i18n:translate="">Author</tal:t>:</strong>
@@ -152,12 +151,21 @@
 
       {{if url}}
       <div class="template-section">
-        <strong><tal:t i18n:translate="">Download</tal:t>:</strong>
+        <strong><tal:t i18n:translate="">Report</tal:t>:</strong>
         <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
     </div>
+
+    <span class="aoa-i18n" name="geographic-level"
+      i18n:translate="">Geographic level</span>
+
+    <span class="aoa-i18n" name="error-loading-documents"
+      i18n:translate="">There was an error loading the list of documents.</span>
+
+    <span class="aoa-i18n" name="search-no-results"
+      i18n:translate="">No results were found for this query</span>
   </div>
 
   <div class="visualClear">&nbsp;</div>
