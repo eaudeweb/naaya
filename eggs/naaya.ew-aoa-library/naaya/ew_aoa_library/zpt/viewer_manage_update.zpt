@@ -18,6 +18,7 @@
 	<input type="radio" name="update_type" value="update_remove_please_select_type_of_document" /><label>Remove 'Please select' document type</label><br/>
 	<input type="radio" name="update_type" value="update_to_multiple_types_of_documents" /><label>Migrate to multiple types of documents (do this only after running the previous 2 updates)</label><br/>
 	<input type="radio" name="update_type" value="update_vl_regions" /><label>Migrate VL regions from text to a list of items</label><br/>
+	<input type="radio" name="update_type" value="update_creation_date" /><label>Correct creation date (remove DateTime class object...)</label><br/>
 	<input type="submit" value="Submit" />
 </form>
 
