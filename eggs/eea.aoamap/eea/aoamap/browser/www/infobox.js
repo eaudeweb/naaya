@@ -112,7 +112,7 @@ function country_fiche_url(country_name, theme_name) {
 
 function country_flag_url(country_name) {
   return M.config['www_prefix'] + '/flags/' +
-    M.config['country_code'][country_name] + '.gif';
+    M.config['country_code'][country_name] + '.png';
 }
 
 function setdefault(dic, name, value) {
