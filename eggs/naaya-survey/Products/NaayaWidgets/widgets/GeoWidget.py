@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 
 # Product imports
+from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
@@ -55,6 +56,10 @@ class GeoWidget(Widget):
         lat = form.get(self.getWidgetId() + '.lat', None)
         lon = form.get(self.getWidgetId() + '.lon', None)
         address = form.get(self.getWidgetId() + '.address', '')
+        if not (lat and lon):
+            coordinates = geocoding.location_geocode(address)
+            if coordinates is not None:
+                lat, lon = coordinates
         if not lat:
             lat = None
         if not lon:
