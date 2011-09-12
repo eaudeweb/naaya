@@ -111,7 +111,7 @@
 
                         <ul>
                             <li tal:repeat="shadow shadows">
-                                <a tal:attributes="href string:${site/absolute_url}/${shadow/target_path}?edit=1"
+                                <a tal:attributes="href shadow/url"
                                     tal:content="python: shadow.getLocalProperty('title', lang)"></a>
                                 <tal:block define="publication_year shadow/publication_year|string:"
                                     condition="publication_year">
