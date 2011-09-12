@@ -5,6 +5,7 @@ except ImportError:
     import simplejson as json
 
 
+from DateTime import DateTime
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
@@ -229,11 +230,20 @@ class AoALibraryViewer(SimpleItem):
             self._update_to_multiple_types_of_documents(state, library, country_fiches)
         if update_type == 'update_vl_regions':
             self._update_vl_regions(state, library)
+        if update_type == 'update_creation_date':
+            self._correct_creation_date(state, library)
         return self._manage_update_html(updated_answers=state['updated_answers'],
             errors=state['errors'].items(),
             orphan_answers=state['orphan_answers'], already_updated=state['already_updated'])
 
     _manage_update_html = PageTemplateFile('zpt/viewer_manage_update', globals())
+
+    def _correct_creation_date(self, state, library):
+        """ """
+        for vl_answer in library.objectValues(survey_answer_metatype):
+            if vl_answer.get('creation_date') is DateTime:
+                setattr(vl_answer, 'creation_date', None)
+                state['updated_answers'][vl_answer.absolute_url()] = []
 
     def _update_vl_regions(self, state, library):
         """ """
