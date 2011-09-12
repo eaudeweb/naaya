@@ -1092,7 +1092,7 @@ class AoALibraryViewer(SimpleItem):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_locations')
     def update_locations(self, REQUEST=None):
-        """Delete selected items from the parent survey"""
+        """Update locations of selected answers"""
         if REQUEST is None:
             return
         target_survey = self.target_survey()
