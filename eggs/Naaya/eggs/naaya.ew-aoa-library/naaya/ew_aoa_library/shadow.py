@@ -173,62 +173,21 @@ def extract_survey_answer_data(answer):
     func = mapping[survey_id]
     return func(answer)
 
-def get_document_types_mapping(survey):
-    cache_name = '_v_aoa_document_types_map'
+
+def get_choice_mapping(survey, widget_name):
+    cache_name = '_v_aoa_choice_map_' + widget_name
     if hasattr(survey, cache_name):
         return getattr(survey, cache_name)
 
     mapping = {}
-    for idx, label in enumerate(survey['w_type-document'].getChoices()):
+    widget = survey[widget_name]
+    en_values = widget.getLocalProperty('choices', 'en')
+    for idx, label in list(enumerate(en_values)):
         mapping[idx] = force_to_unicode(label)
 
     setattr(survey, cache_name, mapping)
     return mapping
 
-def get_countries_mapping(survey):
-    cache_name = '_v_aoa_countries_map'
-    if hasattr(survey, cache_name):
-        return getattr(survey, cache_name)
-
-    if survey.getId() == 'country_fiches':
-        widget_name = 'w_country'
-    elif survey.getId() == 'bibliography-details-each-assessment':
-        widget_name = 'w_official-country-region'
-
-    mapping = {}
-    for idx, label in enumerate(survey[widget_name].getChoices()):
-        mapping[idx] = force_to_unicode(label)
-
-    setattr(survey, cache_name, mapping)
-    return mapping
-
-def get_regions_mapping(survey):
-    cache_name = '_v_aoa_regions_map'
-    if hasattr(survey, cache_name):
-        return getattr(survey, cache_name)
-
-    if survey.getId() == 'bibliography-details-each-assessment':
-        widget_name = 'w_geo-coverage-region'
-
-    mapping = {}
-    for idx, label in enumerate(survey[widget_name].getChoices()):
-        mapping[idx] = force_to_unicode(label)
-
-    setattr(survey, cache_name, mapping)
-    return mapping
-
-def get_geolevels_mapping(survey):
-    cache_name = '_v_aoa_geolevels_map'
-    if hasattr(survey, cache_name):
-        return getattr(survey, cache_name)
-
-    mapping = {}
-    _prop_name = 'w_theme-coverage'
-    for idx, label in list(enumerate(survey[_prop_name].getChoices())):
-        mapping[idx] = force_to_unicode(label)
-
-    setattr(survey, cache_name, mapping)
-    return mapping
 
 def main_theme(name):
     if name in ge_themes:
@@ -301,10 +260,10 @@ def extract_survey_answer_data_library(answer):
         attrs['document_type'] = []
 
     survey = answer.getSurveyTemplate()
-    document_types = get_document_types_mapping(survey)
-    countries = get_countries_mapping(survey)
-    regions = get_regions_mapping(survey)
-    geolevels = get_geolevels_mapping(survey)
+    document_types = get_choice_mapping(survey, 'w_type-document')
+    countries = get_choice_mapping(survey, 'w_official-country-region')
+    regions = get_choice_mapping(survey, 'w_geo-coverage-region')
+    geolevels = get_choice_mapping(survey, 'w_theme-coverage')
 
     attrs.update({
         'viewer_title_en': answer.getLocalProperty(
@@ -345,8 +304,8 @@ def extract_survey_answer_data_country_fiches(answer):
         attrs['document_type'] = []
 
     survey = answer.getSurveyTemplate()
-    document_types = get_document_types_mapping(survey)
-    countries = get_countries_mapping(survey)
+    document_types = get_choice_mapping(survey, 'w_type-document')
+    countries = get_choice_mapping(survey, 'w_country')
 
     attrs.update({
         'viewer_title_en': answer.getLocalProperty('w_title', lang='en'),
