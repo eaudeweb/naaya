@@ -62,28 +62,32 @@
     </div>
 
     <div id="filters-form-holder">
-      <p i18n:translate="">
-        Fill in the form below in order to search the available documents.
-      </p>
+      <div id="search-geolevel-box">
+        <label for="search-geolevel" i18n:translate="">Map selection</label>
+        <select id="search-geolevel">
+          <option value="country" i18n:translate="">Country</option>
+          <option value="region" i18n:translate="">Region</option>
+        </select>
+        <span id="selected-on-map"></span>
+      </div>
+
       <form name="filters-form" id="filters-form">
-        <input type="text" name="text" id="description"
-               placeholder="Search for title"
-               class="input-text search-input" />
+        <label for="search-text" i18n:translate="">Title</label>
+        <input type="text" name="text" id="search-text" class="input-text" />
+        <br/>
 
-        <div class="fields-separator">&nbsp;</div>
-
-        <select name="theme" class="input-select">
+        <label for="search-theme" i18n:translate="">Theme</label>
+        <select name="theme" id="search-theme">
           <option value="" i18n:translate="">Water + Green economy</option>
           <option tal:repeat="option options/filter_options/themes"
                   tal:attributes="value option"
                   tal:content="option" i18n:translate=""></option>
         </select>
+        <br/>
 
-        <div class="fields-separator">&nbsp;</div>
-
-        <input type="text" name="year" placeholder="Publication year"
-               class="input-text" id="year" size="14"
-               i18n:attributes="placeholder" />
+        <label for="search-year" i18n:translate="">Year</label>
+        <input type="text" name="year" id="search-year"
+               class="input-text" />
 
         <input type="submit" value="Search" class="standalone"
                id="filter-button"

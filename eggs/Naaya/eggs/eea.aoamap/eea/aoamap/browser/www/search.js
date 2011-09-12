@@ -94,6 +94,41 @@ function setup_search_handlers() {
   $('#filters-form #reset-button').click(function() {
     M.deselect_all_polygons();
   });
+
+  $('select#search-geolevel').change(function(evt) {
+    var name = $(this).val();
+    var view = M.views[name];
+    M.countries_map.setBaseLayer(view['tiles_layer']);
+  });
+
+  $('div#filters').bind('map-selection-changed', function(evt) {
+    var selected = [];
+    if(M.current_view_name == 'country') {
+      selected = M.get_selected_countries();
+    }
+    if(M.current_view_name == 'region') {
+      selected = M.get_selected_regions();
+    }
+
+    var span = $('span#selected-on-map').text("");
+    var parent_box = $('div#search-geolevel-box');
+
+    for(var c = 0; c < selected.length; c ++) {
+      span.text(join_values(selected, c));
+      if(bottom(span) <= bottom(parent_box)) {
+        break;
+      }
+    }
+
+    function join_values(list, clip) {
+      return list.slice(0, list.length-clip).join(", ") +
+        (clip ? (" and " + clip + " other(s)") : "");
+    }
+
+    function bottom(elem) {
+      return elem.position().top + elem.height();
+    }
+  });
 }
 
 function get_search_form_data() {
