@@ -35,10 +35,11 @@ def shadow_to_dict(shadow):
 
 
 def get_country_index(site):
-    from shadow import get_countries_mapping
+    from shadow import get_choice_mapping
     cf_viewer = site['country-fiches-viewer']
     cf_survey = cf_viewer.target_survey()
-    return dict((v,k) for k, v in get_countries_mapping(cf_survey).iteritems())
+    choice_map = get_choice_mapping(cf_survey, 'w_country')
+    return dict((v,k) for k, v in choice_map.iteritems())
 
 
 def get_map_async_config(site):
