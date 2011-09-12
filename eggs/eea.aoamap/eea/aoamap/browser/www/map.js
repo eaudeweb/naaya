@@ -263,7 +263,7 @@ M.create_map_search = function() {
   $('.baseLbl', M.layer_switcher.layersDiv).text(M._('geographic-level'));
   M.layer_switcher.maximizeControl();
 
-  $.each(['country', 'region', 'global'], function(i, name) {
+  $.each(['global', 'region', 'country'], function(i, name) {
     M.add_view(name, M.xyz_layer(M.layer_label[name]));
   });
 
