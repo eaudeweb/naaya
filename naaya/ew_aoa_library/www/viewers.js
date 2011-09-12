@@ -48,31 +48,6 @@
 			}
 		}
 	}
-	/*function check_answers(){
-		var submit_ok = false;
-		$('[name="answer_ids"]').each(function(){
-			if ($(this).attr('checked') == true){
-				submit_ok = true;
-			}
-		});
-		if (submit_ok == true)
-		{
-			return true;
-		}
-		else{
-			alert(gettext('Please select at least one report'));
-			return false;
-		}
-	}
-
-	function remove_irelevant(){
-		$('[name="answer_ids"]').each(function(){
-			if ($(this).attr('checked') != true){
-				$(this).parent().parent().remove();
-			}
-		});
-		return true;
-	}*/
 
 	$(document).ready(function(){
 		$('#javascript_label').hide();
@@ -127,17 +102,65 @@
 			}
 		});
 		$('#show_only_missing').removeAttr('checked');
-		$('#show_only_missing').click(function(){
-			if ($('#show_only_missing:checked').length == 1)
-			{
+		$('#show_only_missing').change(function(){
+			if ($('#show_only_missing:checked').length == 1){
 				$('.missing_coordinates').each(function(){
 					if ($(this).val() == 0){
 						$(this).parent().parent().remove();
 					}
 				});
-				$('#show_only_missing_container').hide();
-				$('#please_refresh').show();
 			}
+			else{
+				window.setTimeout('location.reload()', 1);
+			}
+		});
+		$('form[name="select_for_report"]').submit(function(){
+			var submit_ok = false;
+			$('[name="answer_ids"]').each(function(){
+				if ($(this).attr('checked') == true){
+					submit_ok = true;
+				}
+			});
+			if (submit_ok == true)
+			{
+				return true;
+			}
+			else{
+				alert(gettext('Please select at least one report!!!'));
+				return false;
+			}
+		});
+		function verify_relevance(){
+			var checked = $('[name="answer_ids"]:checked');
+			if(checked.length>0){
+				$('[name="answer_ids"]').each(function(){
+					if ($(this).attr('checked') != true){
+						$(this).parent().parent().hide();
+					}
+				});
+				var has_address = false;
+				$('[name="geo_location:utf8:ustring"]:visible').each(function(){
+					if($(this).val()){
+						has_address = true;
+					};
+				});
+				return has_address;
+			}
+		}
+		$('input[name="update_locations:method"]').click(function(){
+			if(verify_relevance()){
+				$('[name="answer_ids"]').each(function(){
+					if ($(this).attr('checked') != true){
+						$(this).parent().parent().remove();
+					}
+				});
+				$('[name="geo_location:utf8:ustring"]').each(function(){
+					if(!$(this).val()){
+						$(this).parent().parent().remove();
+					};
+				});
+			}
+			return true;
 		});
 	});
 }());

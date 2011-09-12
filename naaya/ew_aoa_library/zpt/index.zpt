@@ -447,66 +447,8 @@
 	</label>
 	<input type="checkbox" id="show_only_missing"/>
 </div>
-<div id="please_refresh" class="message-error field" style="display:none"
-	 tal:condition="python:library and is_admin">
-	<label>
-		<strong>Answers with correct coordinates are now hidden.<br/>Please refresh the page if you need to list all answers again.</strong>
-	</label>	
-</div>
-<script type="text/javascript">
-	function check_answers(){
-		var submit_ok = false;
-		$('[name="answer_ids"]').each(function(){
-			if ($(this).attr('checked') == true){
-				submit_ok = true;
-			}
-		});
-		if (submit_ok == true)
-		{
-			return true;
-		}
-		else{
-			alert(gettext('Please select at least one report'));
-			return false;
-		}
-	}
 
-	function verify_relevance(){
-		var checked = $('[name="answer_ids"]:checked');
-		if(checked.length>0){
-			$('[name="answer_ids"]').each(function(){
-				if ($(this).attr('checked') != true){
-					$(this).parent().parent().hide();
-				}
-			});
-			var has_address = false;
-			$('[name="geo_location:utf8:ustring"]:visible').each(function(){
-				if($(this).val()){
-					has_address = true;
-				};
-			});
-			return has_address;
-		}
-	}
-
-	function remove_irelevant(){
-		if(verify_relevance()){
-			$('[name="answer_ids"]').each(function(){
-				if ($(this).attr('checked') != true){
-					$(this).parent().parent().remove();
-				}
-			});
-			$('[name="geo_location:utf8:ustring"]').each(function(){
-				if(!$(this).val()){
-					$(this).parent().parent().remove();
-				};
-			});
-		}
-		return true;
-	}
-</script>
-
-<form name="select_for_report" method="post" action="." onSubmit="return check_answers()">
+<form name="select_for_report" method="post" action=".">
 <div class="create-stats" tal:condition="shadows">
 	<input tal:condition="review_template" type="hidden" name="review_template" />
 	<input tal:condition="library" type="hidden" name="library" />
