@@ -45,7 +45,7 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, draft=False,
     global gUtil
 
     if creation_date is None:
-        creation_date = DateTime
+        creation_date = DateTime()
 
     if respondent is None and REQUEST is not None:
             respondent = REQUEST.AUTHENTICATED_USER.getUserName()
