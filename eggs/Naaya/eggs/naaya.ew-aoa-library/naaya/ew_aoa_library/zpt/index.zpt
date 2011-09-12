@@ -599,15 +599,15 @@
 
 	<!-- Reported by organisation-->
 	<th rowspan="2" tal:condition="python:library and is_admin and
-		(rkey and skey=='uploader_organisation'
-			or skey!='uploader_organisation')">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader_organisation">Organisation</a>
-		<img tal:condition="python:skey=='uploader_organisation'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
+		(rkey and skey=='conducting_organisation'
+			or skey!='conducting_organisation')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=conducting_organisation">Organisation</a>
+		<img tal:condition="python:skey=='conducting_organisation'" src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle"/>
 	</th>
 	<th rowspan="2" tal:condition="python:library and is_admin and
-		(not rkey and skey=='uploader_organisation')">
-		<a i18n:translate="" tal:attributes="href string:${url}?skey=uploader_organisation&rkey=True">Organisation</a>
-		<img tal:condition="python:skey=='uploader_organisation'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
+		(not rkey and skey=='conducting_organisation')">
+		<a i18n:translate="" tal:attributes="href string:${url}?skey=conducting_organisation&rkey=True">Organisation</a>
+		<img tal:condition="python:skey=='conducting_organisation'" src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle"/>
 	</th>
 
 	<th tal:condition="python: library and is_admin" rowspan="2" i18n:translate="">Organisation address</th>
@@ -688,7 +688,7 @@
 	<td tal:condition="is_admin" tal:content="python: here.utShowFullDateTime(i.creation_date)"/>
 	<td tal:content="python: here.utShowFullDateTime(i.modification_time)"/>
 	<td tal:content="python:i.get('uploader')"/>
-	<td tal:condition="python: library and is_admin" tal:content="python:i.get('uploader_organisation')"/>
+	<td tal:condition="python: library and is_admin" tal:content="python:i.get('conducting_organisation')"/>
 	<td tal:condition="python:library and is_admin"
 		tal:define="lat i/geo_location/lat|nothing;
 					lon i/geo_location/lon|nothing;
