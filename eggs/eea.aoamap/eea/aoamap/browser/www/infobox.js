@@ -40,37 +40,23 @@ M.configure_selection_info = function() {
 
 
 M.update_selection_info = function() {
-  $('#selection-info').empty().append(selection_info_content());
+  $('#selection-info').empty().append(
+    M.render_global_info(), render_selection_info());
 
-  function selection_info_content() {
+  function render_selection_info() {
     if(M.current_view_name == 'country') {
       var countries = M.get_selected_countries();
-      if(countries.length == 0) {
-        return M.render_global_info();
-      }
-      else if(countries.length == 1) {
+      if(countries.length == 1) {
         return M.render_country_info(countries[0]);
-      }
-      else {
-        return $('<p>').text(countries.join(", "));
       }
     }
     else if(M.current_view_name == 'region') {
       var regions = M.get_selected_regions();
-      if(regions.length == 0) {
-        return M.render_global_info();
-      }
-      else if(regions.length == 1) {
-        var countries = M.get_selected_countries();
-        return M.render_region_info(regions[0], countries);
-      }
-      else {
-        return $('<p>').text(regions.join(", "));
+      if(regions.length == 1) {
+        return M.render_region_info(regions[0]);
       }
     }
-    else {
-      return M.render_global_info();
-    }
+    return "";
   }
 };
 
@@ -90,13 +76,8 @@ M.render_country_info = function(name) {
   return country_info_box;
 };
 
-M.render_region_info = function(name, countries) {
-  var countries_txt = (countries.length > 1) ? countries.join(", ") : null;
-  return M.templates['region-info'].tmpl({
-    name: name,
-    countries_txt: countries_txt,
-    documents_count: M.document_counts['region'][name]
-  });
+M.render_region_info = function(name) {
+  return M.templates['region-info'].tmpl({name: name});
 };
 
 M.render_global_info = function() {

@@ -101,6 +101,11 @@ function setup_search_handlers() {
     M.countries_map.setBaseLayer(view['tiles_layer']);
   });
 
+  $(document).ready(function() {
+    $('div#search-geolevel-box select#search-geolevel').val(M.current_view_name);
+    $('div#search-geolevel-box').show();
+  });
+
   $('div#filters').bind('map-selection-changed', function(evt) {
     var selected = [];
     if(M.current_view_name == 'country') {
