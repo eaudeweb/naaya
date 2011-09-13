@@ -30,6 +30,11 @@
 <form method="post" action=".import_from_aoa.submit"
       tal:define="aoa_data view/aoa_data">
 
+  <label>
+    Timestamp for country fiches:
+    <input name="date" tal:attributes="value string:02/09/2011"/>
+  </label><br/>
+
   <input type="submit"/>
 
   <table id="generator-matrix">

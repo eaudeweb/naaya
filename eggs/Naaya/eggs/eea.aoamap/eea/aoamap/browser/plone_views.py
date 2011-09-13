@@ -143,7 +143,8 @@ class ImportFromAoa(BrowserView):
             if theme is None:
                 doc = update_country_profile(self.aq_parent, country)
             else:
-                doc = update_country_fiche(self.aq_parent, country, theme)
+                doc = update_country_fiche(self.aq_parent, country, theme,
+                                           self.request.form['date'])
 
             print>>out, repr(doc)
 
@@ -182,9 +183,9 @@ def update_country_profile(folder, country):
     return update_plone_document(folder, doc_id, title, text)
 
 
-def update_country_fiche(folder, country, theme):
+def update_country_fiche(folder, country, theme, date):
     doc_id = '%s-%s' % (slug(country), slug(theme))
-    title = "%s country fiche - %s (02/09/2011)" % (country, theme)
+    title = "%s country fiche - %s (%s)" % (country, theme, date)
 
     url = ('viewer_aggregator?toplone=1&country%%3Autf8%%3Austring=%s&theme=%s' %
            (country, theme))
