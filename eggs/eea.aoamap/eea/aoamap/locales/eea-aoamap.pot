@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-12 07:10+0000\n"
+"POT-Creation-Date: 2011-09-13 08:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:113
+#: ./browser/map.pt:118
 msgid "${spinner} Loading documents"
 msgstr ""
 
@@ -37,11 +37,11 @@ msgstr ""
 msgid "Astana report"
 msgstr ""
 
-#: ./browser/map.pt:131
+#: ./browser/map.pt:137
 msgid "Author"
 msgstr ""
 
-#: ./browser/map.pt:102
+#: ./browser/map.pt:68
 msgid "Country"
 msgstr ""
 
@@ -49,15 +49,11 @@ msgstr ""
 msgid "Country fiches: ${link-cf-green-economy}, ${link-cf-water}"
 msgstr ""
 
-#: ./browser/map.pt:137
+#: ./browser/map.pt:143
 msgid "Coverage"
 msgstr ""
 
-#: ./browser/map.pt:65
-msgid "Fill in the form below in order to search the available documents."
-msgstr ""
-
-#: ./browser/map.pt:161
+#: ./browser/map.pt:167
 msgid "Geographic level"
 msgstr ""
 
@@ -65,27 +61,35 @@ msgstr ""
 msgid "Green economy"
 msgstr ""
 
-#: ./browser/map.pt:167
+#: ./browser/map.pt:66
+msgid "Map selection"
+msgstr ""
+
+#: ./browser/map.pt:173
 msgid "No results were found for this query"
 msgstr ""
 
-#: ./browser/map.pt:104
+#: ./browser/map.pt:108
 msgid "Pan-European"
 msgstr ""
 
-#: ./browser/map.pt:84
-msgid "Publication year"
+#: ./browser/map.pt:176
+msgid "Recent assessments"
 msgstr ""
 
-#: ./browser/map.pt:154
+#: ./browser/map.pt:69
+msgid "Region"
+msgstr ""
+
+#: ./browser/map.pt:160
 msgid "Report"
 msgstr ""
 
-#: ./browser/map.pt:92
+#: ./browser/map.pt:96
 msgid "Reset"
 msgstr ""
 
-#: ./browser/map.pt:88
+#: ./browser/map.pt:92
 msgid "Search"
 msgstr ""
 
@@ -97,31 +101,63 @@ msgstr ""
 msgid "Statistics: ${link-statistics-green-economy}, ${link-statistics-water}"
 msgstr ""
 
-#: ./browser/map.pt:103
+#: ./browser/map.pt:107
 msgid "Sub-region"
 msgstr ""
 
-#: ./browser/map.pt:145
+#: ./browser/map.pt:79
+msgid "Theme"
+msgstr ""
+
+#: ./browser/map.pt:151
 msgid "Themes"
 msgstr ""
 
-#: ./browser/map.pt:164
+#: ./browser/map.pt:170
 msgid "There was an error loading the list of documents."
+msgstr ""
+
+#: ./browser/map.pt:75
+msgid "Title"
 msgstr ""
 
 #: ./browser/map.pt:19
 msgid "Water"
 msgstr ""
 
-#: ./browser/map.pt:76
+#: ./browser/map.pt:81
 msgid "Water + Green economy"
+msgstr ""
+
+#: ./browser/map.pt:88
+msgid "Year"
 msgstr ""
 
 #: ./browser/map.pt:39
 msgid "comparative overview"
 msgstr ""
 
+#: ./browser/map.pt:185
+msgid "country"
+msgstr ""
+
+#: ./browser/map.pt:188
+msgid "region"
+msgstr ""
+
 #: ./browser/map.pt:41
 msgid "regional report"
+msgstr ""
+
+#: ./browser/map.pt:182
+msgid "theme"
+msgstr ""
+
+#: ./browser/map.pt:191
+msgid "title contains"
+msgstr ""
+
+#: ./browser/map.pt:179
+msgid "year"
 msgstr ""
 
