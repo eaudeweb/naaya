@@ -25,7 +25,9 @@
 
   <div metal:fill-slot="main">
 
-    <h1>AoA Search Map</h1>
+    <h1 tal:content="here/title_or_id"></h1>
+
+    <p tal:content="here/Description"></p>
 
     <tal:block content="structure python:view.get_map_html()"/>
 

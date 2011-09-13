@@ -14,9 +14,14 @@
         <p i18n:translate="">
           Country fiches, produced by the national appointed authorities:
           <tal:t i18n:name="link-cf-green-economy">
-            <a href="#" i18n:translate="">Green economy</a></tal:t>,
+            <a class="link-green-economy-fiche"
+               i18n:translate="">Green economy</a></tal:t>,
           <tal:t i18n:name="link-cf-water">
-            <a href="#" i18n:translate="">Water</a></tal:t>
+            <a class="link-water-fiche"
+               i18n:translate="">Water</a></tal:t>
+        </p>
+        <p>
+          <a class="link-country-profile" i18n:translate="">See more</a>
         </p>
       </div>
 
