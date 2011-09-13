@@ -81,79 +81,6 @@
 
 <script tal:content="python:'var naaya_site_url=%s' % here.rstk.json_dumps(
 							  here.getSite().absolute_url())"></script>
-<script>$(function() {
-
-	/*var widget_green_topics = $("label[for='w_green-economy-topics']").parent();
-	var widget_green_efficiency = $("label[for='w_resource-efficiency-topics']").parent();
-	var widget_water_topics = $("label[for='w_water-resources-topics']").parent();
-	var widget_water_resources = $("label[for='w_water-resource-management-topics']").parent();
-
-
-	$('<div '+'>').insertAfter(widget_green_efficiency).append(
-		widget_green_topics,
-		widget_green_efficiency,
-		widget_water_topics,
-		widget_water_resources
-	).css({
-		'background-color': '#ecf5fa',
-		'border': '1px solid #b6cde1'
-	}).children().css({
-		'padding-left': '3em'
-	});
-	*/
-
-
-	/*var widgets_by_theme = {
-	  green: $('<div '+'>').insertAfter(widget_green_efficiency).append(
-		widget_green_topics.prev('div.widgetEditMode'),
-		widget_green_topics,
-		widget_green_efficiency),
-	  water:$('<div '+'>').insertAfter(widget_water_resources).append(
-		widget_water_topics.prev('div.widgetEditMode'),
-		widget_water_topics,
-		widget_water_resources)
-	};
-	widgets_by_theme['green'].add(widgets_by_theme['water']).css({
-		'background-color': '#ecf5fa',
-		'border': '1px solid #b6cde1'
-	}).children(':not(:first-child)').css({
-		'padding-left': '3em'
-	});
-
-	function show_hide_widgets() {
-		var theme_radio_id = $("input[name='w_theme:int']:checked").attr('id');
-		if(theme_radio_id == 'w_theme_0') {
-			widgets_by_theme['water'].hide();
-			widgets_by_theme['green'].show();
-		}
-		else if(theme_radio_id == 'w_theme_1') {
-			widgets_by_theme['water'].show();
-			widgets_by_theme['green'].hide();
-		}
-		else if(theme_radio_id == 'w_theme_2') {
-			widgets_by_theme['water'].show();
-			widgets_by_theme['green'].show();
-		}
-		else {
-			widgets_by_theme['water'].hide();
-			widgets_by_theme['green'].hide();
-		}
-	}
-
-	show_hide_widgets();
-	$("input[name='w_theme:int']").click(show_hide_widgets);
-	*/
-
-	/*function map_pin_to_label(pin_id, label) {
-		var url = naaya_site_url + '/portal_map/getSymbolPicture?id=' + pin_id;
-		label.append(' ', $('<img'+'/>').attr('src', url));
-	}
-
-	map_pin_to_label('symbol825', $("label[for='w_theme_0']"));
-	map_pin_to_label('symbol814', $("label[for='w_theme_1']"));
-	map_pin_to_label('symbol851', $("label[for='w_theme_2']"));
-	*/
-});</script>
 
 <tal:block define="schema_tool here/getSchemaTool"><script tal:content="string:
 	var WWW_URL='${schema_tool/absolute_url}/www/';"></script></tal:block>
@@ -191,6 +118,7 @@ $(function() {
 
 	//Unhide the main form (hidden so it only works with javascript turned on.
 	$('form[name="frmAdd"]').show();
+	$('#w_submitter-organisation_single_select').show();
 	$('#anonymous_responder_email').parent().hide()
 
 	// function to transform a list of checkboxes with same name
@@ -288,12 +216,6 @@ $(function() {
 					};
 	$('<select id="languages_list">')
 		.insertBefore($('#w_title-original-language'));
-	//$('#w_title-original-language').before('<select id="languages_list">');
-	/*for (i=0;i<languages.length;i++){
-		$('#languages_list')
-			.append($('<option>', {value: languages[i]})
-			.text(languages[i]));
-		}*/
 	$.each(languages, function(key, value){
 		$('#languages_list')
 			.append($('<option>', {value: key})
@@ -348,6 +270,13 @@ $(function() {
 		update_language();
 	});
 	initialize_title_lines();
+	$('input[name="w_location.address:utf8:ustring"]').parent().parent().removeAttr('style');
+	$('input[name="w_location.address:utf8:ustring"]').parent().parent().children().hide();
+	$('input[name="w_location.address:utf8:ustring"]').parent().parent().find('div.tooltips').show();
+	$('input[name="w_location.address:utf8:ustring"]').parent().removeAttr('style').show();
+	$('input[name="w_location.address:utf8:ustring"]').parent().find('p').hide();
+	$('input[name="w_location.address:utf8:ustring"]').parent().find('label').hide();
+
 
 	function reset_languages_list(){
 		$('#languages_list').val('Select language');
@@ -371,10 +300,6 @@ $(function() {
 	function google_translate(text, dest_lang, src_lang, target_field){
 		$.get('translate', {'text:utf8:ustring': text, dest_lang: dest_lang, src_lang: src_lang}, 
 			function(data){
-				if (console){
-					console.log($('#'+target_field).val().length);
-					console.log($('#'+target_field).val().split(': ')[0]);
-				}
 				if (data.length>0){
 					if ($('#'+target_field).val().length == 0 ||
 						$('#'+target_field).val().split(': ')[0] == 'Google translation'){
@@ -468,11 +393,6 @@ $(function() {
 			'style': 'color: rgb(170, 0, 0); font-size: 80%;'
 			})
 			.text('[remove]');
-		/*delete_link.append($("<img>").attr({
-			src: WWW_URL + "cross.gif",
-			title:'Remove',
-			alt: '[x]'
-		})).addClass('tick-image icon-image');*/
 		delete_link.click(function(){
 			update_language(lang);
 		});
@@ -483,7 +403,6 @@ $(function() {
 			})
 			.text('[edit]');
 		edit_link.click(function(){
-			//update_language(lang);
 			$('#languages_list').val(lang);
 			$('#new_language_value').val(title);
 		});
@@ -604,19 +523,12 @@ $(function() {
 	fieldset.insertBefore(legend_elem);
 	legend_elem.remove();
 
-	// predefined values for type of organisation
-	var single_select = $('<select>').attr({
-		'id': 'w_submitter-organisation_single_select'
-	});
-	if (curr_lang == 'ru') {
-		single_select.append($('<option>').attr('value', '').text('Пожалуйста выберите'));
-	} else {
-		single_select.append($('<option>').attr('value', '').text('Please select'));
-	}
-	var choices = ['University/academia',
+	var single_select = $('#w_submitter-organisation_single_select');
+	var choices = ['Business',
+					'International organisations',
 					'government',
+					'University/academia',
 					'NGO',
-					'industry',
 					'general public'];
 	var current_value = $("#w_submitter-organisation").val();
 	var has_value = false;
@@ -627,11 +539,8 @@ $(function() {
 		}
 	}
 	if (!has_value && current_value) {
-		choices.push(current_value);
+		single_select.append($('<option>').attr('value', current_value).text(current_value));
 	}
-	$.each(choices, function (i, value) {
-		single_select.append($('<option>').attr('value', value).text(value));
-	});
 	if (current_value) {
 		single_select.val(current_value);
 	}
@@ -665,4 +574,15 @@ $(function() {
 
 });
 </script>
+<select id="w_submitter-organisation_single_select" style="display:none">
+	<option i18n:translate="" value="">Please select</option>
+	<option i18n:translate="" value="Business">Business</option>
+	<option i18n:translate="" value="International organisations">
+		International organisations</option>
+	<option i18n:translate="" value="government">Government</option>
+	<option i18n:translate="" value="University/academia">
+		University/academia</option>
+	<option i18n:translate="" value="NGO">NGO</option>
+	<option i18n:translate="" value="general public">General public</option>
+</select>
 </metal:block>
