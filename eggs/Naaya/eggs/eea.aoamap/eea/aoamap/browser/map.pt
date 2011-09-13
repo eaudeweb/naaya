@@ -12,7 +12,7 @@
           assessments
         </p>
         <p i18n:translate="">
-          Country fiches:
+          Country fiches, produced by the national appointed authorities:
           <tal:t i18n:name="link-cf-green-economy">
             <a href="#" i18n:translate="">Green economy</a></tal:t>,
           <tal:t i18n:name="link-cf-water">
@@ -22,47 +22,33 @@
 
       <div class="jquery-template" style="display: none;" id="region-info">
         <p i18n:translate="">
-          <tal:t i18n:name="name">
-            <strong>${name}</strong>
-          </tal:t>
-          <tal:t
-            i18n:name="list-of-countries">{{if countries_txt}}
-            (${countries_txt}){{/if}}</tal:t>:
-          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
-          assessments
-        </p>
-        <p i18n:translate="">
-          Statistics of reviewed reports:
-          <tal:t i18n:name="link-statistics-green-economy">
-            <a href="#" i18n:translate="">Green economy</a></tal:t>,
-          <tal:t i18n:name="link-comparative-overview">
-            <a href="#" i18n:translate="">comparative overview</a></tal:t>;
-          <tal:t i18n:name="link-regional-report">
-            <a href="#" i18n:translate="">regional report</a></tal:t>
+          Sub-regional report:
+          <tal:t i18n:name="link-to-report"><a href="#">${name}</a></tal:t>.
         </p>
       </div>
 
       <div class="jquery-template" style="display: none;" id="global-info">
         <p i18n:translate="">
+          The virtual library of EE-AoA contains
           <tal:t i18n:name="number-of-assessments">${total_documents}</tal:t>
-          assessments
-        </p>
-        <p i18n:translate="">
-          Statistics:
-          <tal:t i18n:name="link-statistics-green-economy">
-            <a href="#" i18n:translate="">Green economy</a></tal:t>,
+          assessments on the thematic areas
+          <tal:t i18n:name="green-economy">
+            <em i18n:translate="">Green economy</em></tal:t> and
+          <tal:t i18n:name="water"><em i18n:translate="">Water</em></tal:t>.
+          <tal:t i18n:name="link-browse-report">
+            <a i18n:translate="" href="#">Browse the report</a></tal:t>
+          or view comparative statistics on
+          <tal:t i18n:name="link-statistics-green-economy"
+             ><a href="#" i18n:translate="">Green economy</a></tal:t> and
           <tal:t i18n:name="link-statistics-water">
-            <a href="#" i18n:translate="">Water</a></tal:t>
-        </p>
-        <p>
-          <a href="#" i18n:translate="">Astana report</a>
+            <a href="#" i18n:translate="">Water</a></tal:t>.
         </p>
       </div>
 
     </div>
 
     <div id="filters-form-holder">
-      <div id="search-geolevel-box">
+      <div id="search-geolevel-box" style="display: none">
         <label for="search-geolevel" i18n:translate="">Map selection</label>
         <select id="search-geolevel">
           <option value="country" i18n:translate="">Country</option>
