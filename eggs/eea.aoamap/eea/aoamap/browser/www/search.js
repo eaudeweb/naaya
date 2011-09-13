@@ -283,9 +283,9 @@ var filter_loop = {'stop': function(){}};
 function perform_search(form_data) {
   M.hide_country_coverage();
   filter_loop.stop();
-  var title = $('<h2>').text(search_criteria_info(form_data));
+  $('h2.results-title').text(search_criteria_info(form_data));
   var results_ul = $('<ul class="search-results">');
-  var results_box = $('#results').empty().append(title, results_ul);
+  var results_box = $('#results').empty().append(results_ul);
 
   var filter = M.build_document_filter(form_data);
   var all_documents = M.config['documents'];
@@ -311,9 +311,9 @@ function perform_search(form_data) {
 
 M.display_recent_entries = function() {
   filter_loop.stop();
-  var title = $('<h2>').text(M._('recent-assessments'));
+  $('h2.results-title').text(M._('recent-assessments'));
   var results_ul = $('<ul class="search-results">');
-  var results_box = $('#results').empty().append(title, results_ul);
+  var results_box = $('#results').empty().append(results_ul);
 
   $.each(M.config['recent_documents'], function(i, doc) {
     M.display_one_result(doc, results_ul);
@@ -349,9 +349,32 @@ M.display_one_result = function(doc, results_ul) {
     doc_info.hide().slideDown(M.animation_speed);
     $('#results-holder').scrollTo(scroll_offset, M.animation_speed);
 
-    M.show_country_coverage(doc['country']);
+    M.show_coverage_for_document(doc);
   });
   results_ul.append(doc_li);
+};
+
+M.show_coverage_for_document = function(doc) {
+  var countries = doc['country'];
+
+  if(countries.length < 1) {
+    var unique_countries = {};
+    $.each(doc['region'], function(i, region_name) {
+      var countries_in_region = M.config['region_countries'][region_name];
+      if(countries_in_region) {
+        $.each(countries_in_region, function(i, name) {
+          unique_countries[name] = true;
+        });
+      }
+    });
+    countries = $.map(unique_countries, function(v, name) { return name; });
+  }
+
+  if(countries.length < 1) {
+    countries = $.map(M.config['country_code'], function(v, name) { return name; });
+  }
+
+  M.show_country_coverage(countries);
 };
 
 function update_polygon_numbers(documents) {

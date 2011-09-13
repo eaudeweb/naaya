@@ -28,6 +28,7 @@ M.map_projection = new OpenLayers.Projection("LAEA_52N_65E_8K");
 M.project = function(point) {
   return point.clone().transform(M.proj_long_lat, M.map_projection);
 };
+M.map_extent = new OpenLayers.Bounds(-8441336, -3173340, 6315323, 6948737);
 M.country_code = {};
 
 M.docs_summary_result = $.Deferred();
@@ -186,17 +187,20 @@ M.load_features = function(name, callback) {
 };
 
 M.set_up_country_coverage_layer = function() {
+  M.country_coverage_screening_layer = new OpenLayers.Layer.Image(
+    "Country coverage screen", M.config['www_prefix'] + '/map-dimming.png',
+    M.map_extent, new OpenLayers.Size(2, 2));
+  M.countries_map.addLayer(M.country_coverage_screening_layer);
+
   M.country_coverage_layer = new OpenLayers.Layer.Vector(
     "Country coverage",
     {displayInLayerSwitcher: false,
      visibility: false,
      styleMap: new OpenLayers.StyleMap({
       'default': new OpenLayers.Style({
-        'fillColor': "#cc0",
-        'strokeColor': "#cc0",
-        'fillOpacity': 0.4,
-        'strokeOpacity': 0.1,
-        'strokeWidth': 4
+        'fillColor': "#540",
+        'fillOpacity': 0.6,
+        'strokeWidth': 0
       })
     })});
   M.countries_map.addLayer(M.country_coverage_layer);
@@ -222,6 +226,7 @@ M.set_up_country_coverage_layer = function() {
 M.hide_country_coverage = function() {
   M.country_coverage_click_control.deactivate();
   M.country_coverage_layer.setVisibility(false);
+  M.country_coverage_screening_layer.setVisibility(false);
   M.get_current_view().polygons_layer.setVisibility(true);
   $(M.countries_map.div).trigger('map-coverage-hidden');
 }
@@ -236,6 +241,7 @@ M.show_country_coverage = function(countries) {
     }
   });
   M.country_coverage_layer.setVisibility(true);
+  M.country_coverage_screening_layer.setVisibility(true);
   M.country_coverage_click_control.activate();
 };
 
@@ -249,9 +255,8 @@ M.get_layer_labels = function() {
 };
 
 M.create_map_search = function() {
-  var extent = new OpenLayers.Bounds(-8441336, -3173340, 6315323, 6948737);
   M.countries_map = new OpenLayers.Map(M.map_div[0].id, {
-    restrictedExtent: extent,
+    restrictedExtent: M.map_extent,
     controls: [
       new OpenLayers.Control.Navigation(),
       new OpenLayers.Control.ZoomPanel()
