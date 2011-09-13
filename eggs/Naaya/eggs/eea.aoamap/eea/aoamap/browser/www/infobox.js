@@ -70,9 +70,11 @@ M.render_country_info = function(name) {
   var country_info_box = $('<div>').append(html);
   $('img.country-flag', country_info_box).attr('src', country_flag_url(name));
   $('a.link-water-fiche', country_info_box).attr('href',
-      country_fiche_url(name, "Water"));
+      document_url(name, "Water"));
   $('a.link-green-economy-fiche', country_info_box).attr('href',
-      country_fiche_url(name, "Green Economy"));
+      document_url(name, "Green economy"));
+  $('a.link-country-profile', country_info_box).attr('href',
+      document_url(name, "profile"));
   return country_info_box;
 };
 
@@ -85,10 +87,13 @@ M.render_global_info = function() {
   return M.templates['global-info'].tmpl({total_documents: total_documents});
 };
 
-function country_fiche_url(country_name, theme_name) {
-  return M.config['aoa_report_root_url'] + '?country%3Aint=' +
-      M.config['country_index'][country_name] + '&theme=' +
-      encodeURIComponent(theme_name);
+function document_url(country_name, theme_name) {
+  return M.config['report_documents_url'] + '/' +
+      slug(country_name) + '-' + slug(theme_name);
+}
+
+function slug(name) {
+  return name.replace(/ /g, "-");
 }
 
 function country_flag_url(country_name) {

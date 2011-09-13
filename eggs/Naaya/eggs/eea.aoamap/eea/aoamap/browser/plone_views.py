@@ -67,7 +67,7 @@ class AoaMap(BrowserView):
         map_config = {
             'tiles_url': tiles_url,
             'search_url': self._get_search_url(),
-            'root_url': self._get_root_url(),
+            'report_documents_url': self._get_root_url(),
             'debug': True,
             'www_prefix': "++resource++eea.aoamap",
             'language': lang,
