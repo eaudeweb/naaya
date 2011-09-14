@@ -5,10 +5,10 @@ M.configure_selection_info = function() {
   var per_region = {};
 
   var regions_countries_hash = {};
-  $.each(M.config['region_countries'], function(region_name, countries) {
-    regions_countries_hash[region_name] = {};
-    $.each(countries, function(i, country_name) {
-      regions_countries_hash[region_name][country_name] = true;
+  $.each(M.config['region_countries'], function(region_code, countries) {
+    regions_countries_hash[region_code] = {};
+    $.each(countries, function(i, country_code) {
+      regions_countries_hash[region_code][country_code] = true;
     });
   });
 
@@ -21,10 +21,10 @@ M.configure_selection_info = function() {
     });
 
     // region counters
-    $.each(regions_countries_hash, function(region_name, has_member) {
+    $.each(regions_countries_hash, function(region_code, has_member) {
       $.each(doc['country'], function() {
         if(has_member[this]) {
-          inc(per_region, region_name);
+          inc(per_region, region_code);
           return false;
         }
       });
@@ -60,15 +60,16 @@ M.update_selection_info = function() {
   }
 };
 
-M.render_country_info = function(name) {
+M.render_country_info = function(code) {
+  var name = M.config['country_name'][code];
   var tmpl_data = {
     name: name,
-    code: M.config['country_code'][name],
-    documents_count: M.document_counts['country'][name]
+    code: code,
+    documents_count: M.document_counts['country'][code]
   };
   var html = M.templates['country-info'].tmpl(tmpl_data);
   var country_info_box = $('<div>').append(html);
-  $('img.country-flag', country_info_box).attr('src', country_flag_url(name));
+  $('img.country-flag', country_info_box).attr('src', country_flag_url(code));
   $('a.link-water-fiche', country_info_box).attr('href',
       document_url(name, "Water"));
   $('a.link-green-economy-fiche', country_info_box).attr('href',
@@ -96,9 +97,8 @@ function slug(name) {
   return name.replace(/ /g, "-");
 }
 
-function country_flag_url(country_name) {
-  return M.config['www_prefix'] + '/flags/' +
-    M.config['country_code'][country_name] + '.png';
+function country_flag_url(country_code) {
+  return M.config['www_prefix'] + '/flags/' + country_code + '.png';
 }
 
 function setdefault(dic, name, value) {
