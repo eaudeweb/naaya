@@ -25,8 +25,13 @@ M.load_async_config = function() {
   });
 
   function on_success(response) {
-    M.config['country_code'] = response['country_code'];
+    M.config['country_name'] = response['country_name'];
+    M.config['country_code'] = {};
+    $.each(response['country_name'], function(code, name) {
+      M.config['country_code'][name] = code;
+    });
     M.config['country_index'] = response['country_index'];
+    M.config['region_name'] = response['region_name'];
     M.config['region_countries'] = response['region_countries'];
     M.config['documents'] = response['documents'];
     M.config['recent_documents'] = $.map(response['recent'], function(i) {
@@ -40,6 +45,7 @@ M.load_async_config = function() {
     $('div.loading-animation').remove();
     $(document).ready(function() {
       M.display_recent_entries();
+      M.update_search_form_selected_countries();
     });
   }
 
@@ -71,6 +77,40 @@ function setup_filter_form_visuals() {
       });
   });
 }
+
+
+M.update_search_form_selected_countries = function() {
+  var selected = [];
+  if(M.current_view_name == 'country') {
+    selected = M.get_selected_countries();
+  }
+  if(M.current_view_name == 'region') {
+    selected = M.get_selected_regions();
+  }
+  var selected_names = $.map(selected, function(code) {
+    if(! M.config['country_name']) return code;
+    return M.config['country_name'][code];
+  });
+
+  var span = $('span#selected-on-map').text("");
+  var parent_box = $('div#search-geolevel-box');
+
+  for(var c = 0; c < selected_names.length; c ++) {
+    span.text(join_values(selected_names, c));
+    if(bottom(span) <= bottom(parent_box)) {
+      break;
+    }
+  }
+
+  function join_values(list, clip) {
+    return list.slice(0, list.length-clip).join(", ") +
+      (clip ? (" and " + clip + " other(s)") : "");
+  }
+
+  function bottom(elem) {
+    return elem.position().top + elem.height();
+  }
+};
 
 
 function setup_search_handlers() {
@@ -107,32 +147,7 @@ function setup_search_handlers() {
   });
 
   $('div#filters').bind('map-selection-changed', function(evt) {
-    var selected = [];
-    if(M.current_view_name == 'country') {
-      selected = M.get_selected_countries();
-    }
-    if(M.current_view_name == 'region') {
-      selected = M.get_selected_regions();
-    }
-
-    var span = $('span#selected-on-map').text("");
-    var parent_box = $('div#search-geolevel-box');
-
-    for(var c = 0; c < selected.length; c ++) {
-      span.text(join_values(selected, c));
-      if(bottom(span) <= bottom(parent_box)) {
-        break;
-      }
-    }
-
-    function join_values(list, clip) {
-      return list.slice(0, list.length-clip).join(", ") +
-        (clip ? (" and " + clip + " other(s)") : "");
-    }
-
-    function bottom(elem) {
-      return elem.position().top + elem.height();
-    }
+    M.update_search_form_selected_countries();
   });
 }
 

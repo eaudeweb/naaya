@@ -133,9 +133,11 @@
 
       <div class="template-section">
         <strong><tal:t i18n:translate="">Coverage</tal:t>:</strong>
-        {{each country}}{{if $index}}, {{/if}}${$value}{{/each}}
+        {{each country}}{{if $index}},
+            {{/if}}${M.config['country_name'][$value]}{{/each}}
         {{if region.length}}
-          ({{each region}}{{if $index}}, {{/if}}${$value}{{/each}})
+          ({{each region}}{{if $index}},
+            {{/if}}${M.config['region_name'][$value]}{{/each}})
         {{/if}}
       </div>
 
