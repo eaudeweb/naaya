@@ -5,14 +5,11 @@ types. Other features include map clustering, kml exports, and searching.
 
 """
 
-import os.path
 from decimal import Decimal
 from datetime import datetime
 import time
 from xml.dom import minidom
 import simplejson as json
-import csv
-from StringIO import StringIO
 import operator
 from warnings import warn
 
@@ -20,29 +17,23 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
-from zLOG import LOG, DEBUG, INFO, ERROR
 from App.ImageFile import ImageFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from persistent.dict import PersistentDict
 
 from Products.NaayaBase.constants import *
 import Products.NaayaBase.NyContentType
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import utils, findDuplicates
+from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo, geo_as_json
 from Products.NaayaCore.SchemaTool.widgets.geo import json_encode_helper
-from Products.NaayaCore.GeoMapTool import clusters
 from Products.NaayaCore.GeoMapTool import clusters_catalog
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.NaayaCore.managers.import_export import CSVReader
 from naaya.core.zope2util import path_in_site
 
 from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
-from managers.kml_parser import parse_kml
-from managers.geocoding import location_geocode
 
 all_engines = {}
 
@@ -101,22 +92,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         else:
             return 7
 
-    _marker_template = """
-        <div class="marker-body">
-            <h3>%s</h3>
-            %s
-            <small>%s</small>
-            <div class="marker-more">
-                <a href="%s">%s</a>
-            </div>
-        </div>
-        """
-
-    _small_marker_template = """
-        <div class="marker-more">
-            <a href="%s">%s</a>%s
-        </div>
-        """
+    _marker_template = NaayaPageTemplateFile('zpt/map_marker_popup', globals(),
+                                          'map_marker_popup')
+    _small_marker_template = NaayaPageTemplateFile('zpt/map_small_marker_popup', globals(),
+                                          'map_small_marker_popup')
 
     def get_small_marker(self, object):
         has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
@@ -124,9 +103,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         access_str = ''
         if not has_access:
             access_str = '(RESTRICTED ACCESS)'
-        return self._small_marker_template % (object.absolute_url(),
-                                            object.title_or_id(),
-                                            access_str)
+        return self._small_marker_template(object=object, access_str=access_str)
 
     def get_marker(self, object):
         has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
@@ -135,11 +112,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if not has_access:
             access_str = '<div>RESTRICTED ACCESS</div>'
         translate = self.getSite().getPortalTranslations()
-        return self._marker_template % (object.title_or_id(),
-                                        access_str,
-                                        object.description,
-                                        object.absolute_url(),
-                                        translate("see more"))
+        return self._marker_template(object=object, access_str=access_str)
 
 
     meta_type = METATYPE_GEOMAPTOOL
