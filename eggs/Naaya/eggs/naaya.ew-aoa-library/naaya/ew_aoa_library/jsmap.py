@@ -14,17 +14,26 @@ from devel import aoa_devel_hook
 log = logging.getLogger(__name__)
 
 
-country_code = json.load(open(os.path.join(os.path.dirname(__file__),
-                                           'country_code.json')))
-region_countries = json.load(open(os.path.join(os.path.dirname(__file__),
-                                               'region_countries.json')))
+_pth = lambda *name: os.path.join(os.path.dirname(__file__), *name)
+_invert = lambda dic: dict((v,k) for (k,v) in dic.iteritems())
+
+country_name = json.load(open(_pth('country_name.json')))
+country_code = _invert(country_name)
+region_name = json.load(open(_pth('region_name.json')))
+region_code = _invert(region_name)
+region_countries = json.load(open(_pth('region_countries.json')))
+
+def map_if_available(mapping, values):
+    for v in values:
+        if v in mapping:
+            yield mapping[v]
 
 
 def shadow_to_dict(shadow):
     return {
         "title": shadow.viewer_title_en,
-        "country": shadow.viewer_country,
-        "region": shadow.viewer_region,
+        "country": list(map_if_available(country_code, shadow.viewer_country)),
+        "region": list(map_if_available(region_code, shadow.viewer_region)),
         "geolevel": shadow.viewer_geolevel,
         "theme": shadow.viewer_main_theme,
         "document_type": shadow.viewer_document_type,
@@ -39,7 +48,8 @@ def get_country_index(site):
     cf_viewer = site['country-fiches-viewer']
     cf_survey = cf_viewer.target_survey()
     choice_map = get_choice_mapping(cf_survey, 'w_country')
-    return dict((v,k) for k, v in choice_map.iteritems())
+    return dict((country_code[name], idx)
+                for (idx, name) in choice_map.iteritems())
 
 
 def get_map_async_config(site):
@@ -59,12 +69,14 @@ def get_map_async_config(site):
 
 
     return {
-        'country_code': country_code,
+        'country_name': country_name,
         'country_index': get_country_index(site),
         'region_countries': region_countries,
+        'region_name': region_name,
         'documents': documents,
         'recent': [p[1] for p in top_docs if p[0] is not None],
         'query-time': time() - t0,
+        'timestamp': time(),
     }
 
 
