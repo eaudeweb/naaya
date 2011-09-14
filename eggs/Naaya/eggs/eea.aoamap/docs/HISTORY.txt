@@ -1,7 +1,8 @@
 Changelog
 =========
+[Alex Morega - alex.morega at eaudeweb.ro]
 
-1.0dev (unreleased)
--------------------
+1.0-dev (unreleased)
+--------------------
 
 - Initial release
