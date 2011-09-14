@@ -343,3 +343,7 @@ div.olControlZoomPanel div.olControlZoomOutItemInactive {
   height: 36px;
   background: url(zoom-out.png) no-repeat;
 }
+
+#content div#plone-document-byline {
+  display: none;
+}

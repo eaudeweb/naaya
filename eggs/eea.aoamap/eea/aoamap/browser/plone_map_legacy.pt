@@ -7,7 +7,7 @@
 
 <head>
 
-  <metal:style_slot fill-slot="style_slot">
+  <metal:style_slot fill-slot="css_slot">
     <link href="++resource++eea.aoamap/search_map.css"
           rel="stylesheet" type="text/css" media="screen" />
   </metal:style_slot>
@@ -16,7 +16,11 @@
 
 <body>
 
-  <div metal:fill-slot="content-core">
+  <div metal:fill-slot="main">
+
+    <h1 tal:content="here/title_or_id"></h1>
+
+    <p tal:content="here/Description"></p>
 
     <tal:block content="structure python:view.get_map_html()"/>
 
