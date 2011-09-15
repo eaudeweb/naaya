@@ -213,6 +213,7 @@ def extract_survey_answer_data_library(answer):
     for name in multiple_selects:
         all_topics.update(extract_multipleselect(answer, name))
 
+    lang = answer.gl_get_selected_language()
     attrs = {
         'id': answer.getId(),
         'original_title': extract_original_title_dict(answer.get('w_title-original-language', '')),
@@ -227,7 +228,7 @@ def extract_survey_answer_data_library(answer):
         'description': ('<strong>%s</strong><br />'
                         '%s<br />'
                         '<a href="%s">%s</a><br />') % (
-                            answer.get('w_body-conducting-assessment'),
+                            answer.get('w_body-conducting-assessment', lang=lang),
                             answer.get('w_assessment-year'),
                             answer.get('w_assessment-url'),
                             answer.get('w_assessment-url'),
