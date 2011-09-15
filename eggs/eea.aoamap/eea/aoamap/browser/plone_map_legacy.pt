@@ -20,6 +20,13 @@
 
     <h1 tal:content="here/title_or_id"></h1>
 
+    <div class="documentActions languages">
+      <tal:lang tal:condition="exists: here/global_languageselector">
+        <metal:lang use-macro="here/global_languageselector/macros/language" />
+      </tal:lang>
+      <div class="visualClear"></div>
+    </div>
+
     <p tal:content="here/Description"></p>
 
     <tal:block content="structure python:view.get_map_html()"/>

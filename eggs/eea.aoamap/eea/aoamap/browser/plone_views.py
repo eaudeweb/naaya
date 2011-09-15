@@ -6,13 +6,18 @@ import lxml.html.soupparser, lxml.etree, lxml.cssselect
 from App.config import getConfiguration
 from Products.Five.browser import BrowserView
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
-from zope.component import getMultiAdapter
 from zope import i18n
 
 log = logging.getLogger(__name__)
 
 tiles_url = getConfiguration().environment.get('AOA_MAP_TILES', '')
 aoa_url = getConfiguration().environment.get('AOA_PORTAL_URL', '')
+
+
+def _to_unicode(s):
+    if isinstance(s, str):
+        s = s.decode('utf-8')
+    return s
 
 
 class I18nTemplate(PageTemplateFile):
@@ -26,6 +31,9 @@ class I18nTemplate(PageTemplateFile):
         return super(I18nTemplate, self).__call__(*args, **kwargs)
 
     def __translate(self, msgid, domain=None, mapping=None, default=None):
+        if mapping is not None:
+            for k in mapping:
+                mapping[k] = _to_unicode(mapping[k])
         return i18n.translate(msgid, domain, mapping, default=default,
                               target_language=self.__lang)
 
@@ -52,9 +60,7 @@ class AoaMap(BrowserView):
 
     def _get_current_language(self):
         context = self.aq_parent
-        portal_state = getMultiAdapter((context, self.request),
-                                       name=u'plone_portal_state')
-        return portal_state.language()
+        return context.Language()
 
     def _get_root_url(self):
         return self.aq_parent.getCanonical().absolute_url()

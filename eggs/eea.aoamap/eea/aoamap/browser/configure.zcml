@@ -9,25 +9,13 @@
     permission="zope2.View"
     />
 
-  <configure zcml:condition="have plone-4">
-    <browser:page
-      for=".interfaces.IMapViewParent"
-      name="folder_listing"
-      template="plone_map.pt"
-      class=".plone_views.AoaMap"
-      permission="zope2.View"
-      />
-  </configure>
-
-  <configure zcml:condition="not-have plone-4">
-    <browser:page
-      for=".interfaces.IMapViewParent"
-      name="folder_listing"
-      template="plone_map_legacy.pt"
-      class=".plone_views.AoaMap"
-      permission="zope2.View"
-      />
-  </configure>
+  <browser:page
+    for=".interfaces.IMapViewParent"
+    name="folder_listing"
+    template="plone_map_legacy.pt"
+    class=".plone_views.AoaMap"
+    permission="zope2.View"
+    />
 
   <browser:page
     for=".interfaces.IMapViewParent"
