@@ -348,6 +348,7 @@ M.display_one_result = function(doc, results_ul) {
     var collapsing_doc = collapse_document_info();
     var html = M.templates['search-results-document-info'].tmpl(doc);
     var doc_info = $('<div class="document-info">').html(html);
+    $('a.aoa-link-to-report', doc_info).attr('href', doc['url']);
     $(doc_li.append(doc_info));
     $(this).parent('li.document').addClass('expanded');
 

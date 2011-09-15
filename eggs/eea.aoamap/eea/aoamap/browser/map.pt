@@ -152,7 +152,7 @@
       {{if url}}
       <div class="template-section">
         <strong><tal:t i18n:translate="">Report</tal:t>:</strong>
-        <a href="${url}" title="${title}">${M.ellipsis(url, 100)}</a>
+        <a class="aoa-link-to-report" title="${title}">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
