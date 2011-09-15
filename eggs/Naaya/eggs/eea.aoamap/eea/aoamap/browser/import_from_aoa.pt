@@ -107,6 +107,10 @@ $(document).ready(function() {
     });
     return button;
   }
+
+  $('form').submit(function(evt) {
+    $(this).replaceWith('documents are being imported, please wait...');
+  });
 });
 </script>
 </body>
