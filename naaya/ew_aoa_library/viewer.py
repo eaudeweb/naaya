@@ -298,6 +298,8 @@ class AoALibraryViewer(SimpleItem):
     def get_close_answers(self, title_en, title_ru, year, original_title):
         """ """
         def string_to_match(title):
+            if title.startswith("Google translation: "):
+                title = title[len("Google translation: "):]
             ret = title.lower()
             for c in ' -/().,;!?':
                 ret = ret.replace(c, '')
