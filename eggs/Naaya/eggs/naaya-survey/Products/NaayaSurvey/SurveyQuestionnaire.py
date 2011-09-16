@@ -35,6 +35,8 @@ from Products.NaayaBase.constants import \
      PERMISSION_SKIP_CAPTCHA
 from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.EmailTool.EmailPageTemplate import (
+    manage_addEmailPageTemplate, EmailPageTemplateFile)
 from Products.NaayaWidgets.Widget import WidgetError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from naaya.core.zope2util import folder_manage_main_plus
@@ -57,6 +59,12 @@ def set_response_attachment(RESPONSE, filename, content_type, length=None):
     RESPONSE.setHeader('Cache-Control', 'max-age=0')
     RESPONSE.setHeader('Content-Disposition', "attachment; filename*=UTF-8''%s"
         % urllib.quote(filename))
+
+email_templates = {
+    'email_to_owner': EmailPageTemplateFile('templates/email_survey_answer_to_owner.zpt', globals()),
+    'email_to_respondent': EmailPageTemplateFile('templates/email_survey_answer_to_respondent.zpt', globals()),
+    'email_to_unauthenticated': EmailPageTemplateFile('templates/email_survey_answer_to_unauthenticated.zpt', globals()),
+}
 
 class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyContainer):
     """ """
@@ -344,7 +352,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()
 
-        self._sendEmailNotification('email_survey_answer', d, owner)
+        self._sendEmailNotification('email_to_owner', d, owner)
 
     security.declarePrivate('sendNotificationToRespondent')
     def sendNotificationToRespondent(self, answer):
@@ -366,7 +374,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = "%s" % answer.absolute_url()
 
-        self._sendEmailNotification('email_survey_answer_to_respondent', d,
+        self._sendEmailNotification('email_to_respondent', d,
                 respondent)
 
     security.declarePrivate('sendNotificationToUnauthenticatedRespondent')
@@ -386,8 +394,8 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d['LINK'] = "%s" % answer.absolute_url()
         d['EDIT_LINK'] = "%s?edit=1&key=%s" % (answer.absolute_url(), key)
 
-        self._sendEmailNotification('email_survey_answer_to_unauthenticated', d,
-                recp_email=recp_email)
+        self._sendEmailNotification('email_to_unauthenticated', d,
+                    recp_email=recp_email)
 
     security.declarePrivate('_sendEmailNotification')
     def _sendEmailNotification(self, template_name, d, recipient=None,
@@ -408,7 +416,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         auth_tool = self.getSite().getAuthenticationTool()
         email_tool = self.getSite().getEmailTool()
-        template = email_tool._getOb(template_name)
+        translate = self.getSite().getPortalTranslations()
+        template = self._get_template(template_name)
+        d.update({'portal': self.getSite(), '_translate': translate})
+        mail_data = template(**d)
 
         try:
             sender_email = self.getNotificationTool().from_email
@@ -417,10 +428,10 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
 
         try:
             recp_email = recp_email or auth_tool.getUserEmail(recipient)
-            email_tool.sendEmail(template.body % d,
+            email_tool.sendEmail(mail_data['body_text'],
                                  recp_email,
                                  sender_email,
-                                 template.title)
+                                 mail_data['subject'])
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
             # possible causes - the recipient doesn't have email
@@ -727,5 +738,32 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         return self._manage_update_combo_answers_html(success=True)
 
     _manage_update_combo_answers_html = PageTemplateFile('zpt/questionnaire_manage_update', globals())
+
+    def _get_template(self, name):
+        template = self._getOb(name, None)
+        if template is not None:
+            return template.render_email
+
+        template = email_templates.get(name, None)
+        if template is not None:
+            return template.render_email
+
+        raise ValueError('template for %r not found' % name)
+
+    security.declareProtected(view_management_screens,
+                              'manage_customizeTemplate')
+    def manage_customizeTemplate(self, name, REQUEST=None):
+        """ customize the email template called `name` """
+        manage_addEmailPageTemplate(self, name,
+            email_templates[name]._text)
+        ob = self._getOb(name)
+
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(ob.absolute_url() + '/manage_workspace')
+        else:
+            return name
+
+    customize_email_templates = PageTemplateFile('zpt/customize_emailpt', globals())
+    customize_email_templates.email_templates = email_templates
 
 InitializeClass(SurveyQuestionnaire)
