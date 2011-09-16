@@ -28,6 +28,10 @@ def _apply_index_with_range_dict_results(index, low_value=None, high_value=None)
         r_set = IISet()
     return r_set, r_dict
 
+def getObjectPathFromCatalog(catalog_tool, rid):
+    portal_path = '/'.join(catalog_tool.getSite().getPhysicalPath())
+    return catalog_tool._catalog.getpath(rid)[len(portal_path)+1:]
+
 def getObjectFromCatalog(catalog_tool, rid):
     """ get the object from the rid using the catalog_tool """
     obj_path = catalog_tool._catalog.getpath(rid)

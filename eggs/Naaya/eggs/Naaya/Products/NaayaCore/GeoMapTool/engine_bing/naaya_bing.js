@@ -27,10 +27,7 @@
             if (evt.elementID === null) return;
 
             var shape = the_map.GetShapeByID(evt.elementID);
-            var point = shape.GetIconAnchor();
-            // onclickpoint function is implemented in geomaptool.js
-            onclickpoint(point.Latitude, point.Longitude,
-                shape.naaya_id, shape.naaya_tooltip);
+            map_marker_clicked(shape.naaya_point);
         });
         the_map.AttachEvent("onmouseover", function(evt) {
             if (evt.elementID === null) return;
@@ -70,6 +67,7 @@
                 var point = new VELatLong(place.lat, place.lon);
                 var marker = new VEShape(VEShapeType.Pushpin, point);
                 marker.SetCustomIcon(icon_url[place.icon_name]);
+                marker.naaya_point = place;
                 marker.naaya_id = place.id;
                 marker.naaya_tooltip = place.tooltip;
                 the_points_layer.AddShape(marker);
@@ -174,6 +172,13 @@
                 map_zoom: the_map.GetZoomLevel()};
     }
 
+    function get_resolution() {
+        // calculate current resolution based on map zoom
+        var zoom = the_map.GetZoomLevel();
+        var resolution_at_zoom_zero = 256 / 360; // 256 pixels for 360 degrees
+        return resolution_at_zoom_zero * Math.pow(2, zoom);
+    }
+
     window.naaya_map_engine = {
         name: 'bing',
         map_with_points: function(map_div_id, points) {
@@ -205,6 +210,7 @@
                 set_center_and_zoom_in: set_center_and_zoom_in,
                 get_current_places: get_current_places,
                 get_center_and_zoom: get_center_and_zoom,
+                get_resolution: get_resolution,
                 get_map_layer: get_map_layer
             };
         },

@@ -372,7 +372,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             else:
                 if Decimal(str(lat_min)) < centers[i].lat < Decimal(str(lat_max)):
                         if Decimal(str(lon_min)) < centers[i].lon < Decimal(str(lon_max)):
-                            cluster_obs.append((centers[i], len(groups[i])))
+                            group_paths = [clusters_catalog.getObjectPathFromCatalog(catalog_tool, rid)
+                                           for rid in groups[i]]
+                            cluster_obs.append((centers[i], group_paths))
 
         return cluster_obs, single_obs
 
@@ -513,16 +515,17 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             points = []
             cluster_obs, single_obs = self.search_geo_clusters(REQUEST)
 
-            for center, n_points in cluster_obs:
+            for center, grouped_ids in cluster_obs:
                 points.append({
                     'lat': center.lat,
                     'lon': center.lon,
                     'id': '',
                     'label': 'cluster',
                     'icon_name': ('mk_cluster_%s' %
-                                  self._pick_cluster(n_points)),
+                                  self._pick_cluster(len(grouped_ids))),
                     'tooltip': '',
-                    'num_records': n_points,
+                    'num_records': len(grouped_ids),
+                    'point_ids': grouped_ids,
                 })
 
             for res in single_obs:
@@ -537,12 +540,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     'tooltip': self.get_marker(res),
                 })
 
-            json_response = json.dumps({'points': points},
-                                       default=json_encode_helper)
+            response_data = {'points': points}
 
         except:
             self.log_current_error()
-            json_response = json.dumps({'error': err_info(), 'points': {}})
+            response_data = {'error': err_info(), 'points': {}}
+
+        json_response = json.dumps(response_data, default=json_encode_helper)
 
         REQUEST.RESPONSE.setHeader('Content-type', 'application/json')
         return json_response
@@ -558,7 +562,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             # multiple points requested
             out = ''
             for pth in point_id:
-                out += self.get_small_marker(site.unrestrictedTraverse(pth))
+                ob = site.unrestrictedTraverse(pth, None)
+                if ob is not None:
+                    out += self.get_small_marker(ob)
             return out
         else:
             ob = site.unrestrictedTraverse(point_id)

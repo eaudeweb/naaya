@@ -47,12 +47,12 @@ function load_map_points(bounds, callback) {
         dataType: 'json',
         success: function(data) {
             document.body.style.cursor = "default";
-            callback(parse_response_data(data));
+            parse_response_data(data);
+            callback(data.points);
         },
         error: function(req) {
             document.body.style.cursor = "default";
             setRecordCounter(0);
-            if(console) console.error('error getting map data', req);
         }
     });
 
@@ -70,19 +70,17 @@ function load_map_points(bounds, callback) {
         });
         setRecordCounter(num_records);
         update_locations_values(bounds, query);
-        return response.points;
     }
 }
 
 function points_nearby(places, lat, lon, radius) {
-    out = [];
-    $.each(places, function() {
-        var place = this;
+    return $.map(places, function(place) {
         if(distance_to(place.lat, place.lon) > radius)
             return;
-        out.push(place);
+        if(place.id == "")
+            return;
+        return place.id;
     });
-    return out;
 
     function distance_to(lat2, lon2) {
         var dlat = lat2-lat, dlon = lon2-lon;
@@ -90,14 +88,12 @@ function points_nearby(places, lat, lon, radius) {
     }
 }
 
-function load_marker_balloon(points, callback) {
-    var point_id = points[0].id;
-    var args = "";
-    $.each(points, function() {
-        if(this.id === '') return;
-        args += "&point_id=" + encodeURIComponent(this.id);
+function load_marker_balloon(point_id_list, callback) {
+    var point_args = $.map(point_id_list, function(point_id) {
+        if(point_id == '') return;
+        return "point_id=" + encodeURIComponent(point_id);
     });
-    var url = portal_map_url + "/xrjs_getPointBalloon?" + args.substr(1);
+    var url = portal_map_url + "/xrjs_getPointBalloon?" + point_args.join('&');
 
     $.get(url, function(data) {
         callback(data);
@@ -253,7 +249,33 @@ function custom_balloon(lat, lon, content) {
 }
 var clear_custom_balloon = function() {}
 
+var MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD = 100;
+
+function map_marker_clicked(point) {
+    // new click handler
+    var resolution = map_engine.get_resolution();
+    var point_id_list = [];
+    if (point.id == '') {
+        if(point.point_ids.length < 5 ||
+           resolution > MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD) {
+            point_id_list = point.point_ids;
+        } else {
+            map_engine.set_center_and_zoom_in(point.lat, point.lon);
+            return;
+        }
+    } else {
+        var radius = 10 / resolution;
+        point_id_list = points_nearby(map_engine.get_current_places(),
+                                      point.lat, point.lon, radius);
+    }
+    load_marker_balloon(point_id_list, function(html) {
+        custom_balloon(point.lat, point.lon, html);
+    });
+}
+
 function onclickpoint(lat, lon, point_id, point_tooltip) {
+    // old click handler
+    // TODO replace calls to onclickpoint with calls to map_marker_clicked
     if (point_id === '') {
         map_engine.set_center_and_zoom_in(lat, lon);
     } else {
