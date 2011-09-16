@@ -31,7 +31,7 @@ def map_if_available(mapping, values):
 
 def shadow_to_dict(shadow):
     return {
-        "title": shadow.viewer_title_en,
+        "title": {'en': shadow.viewer_title_en, 'ru': shadow.viewer_title_ru},
         "country": list(map_if_available(country_code, shadow.viewer_country)),
         "region": list(map_if_available(region_code, shadow.viewer_region)),
         "geolevel": shadow.viewer_geolevel,
@@ -40,6 +40,7 @@ def shadow_to_dict(shadow):
         "year": shadow.viewer_year,
         "author": shadow.viewer_author,
         "url": shadow.url,
+        "upload-time": shadow.creation_date.timeTime(),
     }
 
 
@@ -56,16 +57,10 @@ def get_map_async_config(site):
     t0 = time()
     vl_viewer = site['virtual-library-viewer']
 
-    TOP_DOCS_COUNT = 20
-    top_docs = [(None, None) for c in range(TOP_DOCS_COUNT)]
-
     documents = []
     for n, shadow in enumerate(vl_viewer.iter_assessments()):
-        documents.append(shadow_to_dict(shadow))
-        doc_time = shadow.creation_date.timeTime()
-        if doc_time > top_docs[-1][0]:
-            top_docs[-1] = (doc_time, n)
-            top_docs.sort(reverse=True)
+        doc = shadow_to_dict(shadow)
+        documents.append(doc)
 
 
     return {
@@ -74,7 +69,6 @@ def get_map_async_config(site):
         'region_countries': region_countries,
         'region_name': region_name,
         'documents': documents,
-        'recent': [p[1] for p in top_docs if p[0] is not None],
         'query-time': time() - t0,
         'timestamp': time(),
     }
