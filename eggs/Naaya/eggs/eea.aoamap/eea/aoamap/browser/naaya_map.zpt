@@ -3,6 +3,9 @@
 
 <style type="text/css" media="all">
   <!-- @import url(++resource++eea.aoamap/search_map.css); -->
+  #middle_port h2.results-title {
+    text-transform: none;
+  }
 </style>
 
 <div id="tabbedmenu"
