@@ -33,3 +33,5 @@ A few things to remember when deploying the AoA map to production:
 * Plone site - configure the map tile source
 * Plone site - configure prefix of AoA portal
 * AoA portal - configure and test cache invalidation URL(s)
+* Plone site - Russian translation folder should be marked with is_empty=False
+* Plone site - set `left_slots` to a false vale on each map parent folder

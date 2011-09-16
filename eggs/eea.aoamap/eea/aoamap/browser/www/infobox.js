@@ -72,11 +72,11 @@ M.render_country_info = function(code) {
   var country_info_box = $('<div>').append(html);
   $('img.country-flag', country_info_box).attr('src', country_flag_url(code));
   $('a.link-water-fiche', country_info_box).attr('href',
-      document_url(name, "Water"));
+      M.document_url(name, "Water"));
   $('a.link-green-economy-fiche', country_info_box).attr('href',
-      document_url(name, "Green economy"));
+      M.document_url(name, "Green economy"));
   $('a.link-country-profile', country_info_box).attr('href',
-      document_url(name, "profile"));
+      M.document_url(name, "profile"));
   return country_info_box;
 };
 
@@ -88,11 +88,20 @@ M.render_region_info = function(code, countries) {
     }).join(", ");
   }
 
-  return M.templates['region-info'].tmpl({
+  var html = M.templates['region-info'].tmpl({
     name: M.config['region_name'][code],
     countries_txt: countries_txt,
     documents_count: M.document_counts['region'][code]
   });
+  var region_info_box = $('<div>').append(html);
+  var href = M.regional_report_url(code);
+  if(href) {
+    $('a.link-to-regional-report', region_info_box).attr('href', href);
+  }
+  else {
+    $('p.link-to-regional-report-box', region_info_box).remove();
+  }
+  return region_info_box;
 };
 
 M.render_global_info = function() {
@@ -103,10 +112,23 @@ M.render_global_info = function() {
   });
 };
 
-function document_url(country_name, theme_name) {
+M.regional_report_url = function(code) {
+  var slug_by_region = {
+    'caucasus': "eastern-europe-assessment-of-assessment-report",
+    'eastern-europe': "caucasus-assessment-of-assessment-report",
+    'central-asia': "central-asia-assessment-of-assessment-report",
+    'russian-federation': "russian-federation-assessment-of-assessment-report"
+  };
+  if(! slug_by_region[code]) return null;
+  return "http://www.eea.europa.eu/themes/regions/pan-european/" +
+         "sub-regional-assessment-of-assessment-reports/" +
+         slug_by_region[code];
+};
+
+M.document_url = function(country_name, theme_name) {
   return M.config['report_documents_url'] + '/' +
       slug(country_name) + '-' + slug(theme_name);
-}
+};
 
 function slug(name) {
   return name.replace(/ /g, "-");

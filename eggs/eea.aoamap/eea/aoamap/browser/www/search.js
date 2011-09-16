@@ -72,11 +72,13 @@ M.update_search_form_map_selection = function() {
   var selected_names = [];
   if(M.current_view_name == 'country') {
     selected_names = $.map(M.get_selected_countries(), function(code) {
+      if(! M.config['country_name']) return code;
       return M.config['country_name'][code];
     });
   }
   if(M.current_view_name == 'region') {
     selected_names = $.map(M.get_selected_regions(), function(code) {
+      if(! M.config['region_name']) return code;
       return M.config['region_name'][code];
     });
   }
