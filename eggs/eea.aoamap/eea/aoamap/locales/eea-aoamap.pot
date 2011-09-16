@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-13 08:05+0000\n"
+"POT-Creation-Date: 2011-09-16 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,147 +17,167 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: eea-aoamap\n"
 
-#: ./browser/map.pt:11
-msgid "${flag} ${name}: ${number-of-assessments} assessments"
-msgstr ""
-
-#: ./browser/map.pt:31
-msgid "${name} ${list-of-countries}: ${number-of-assessments} assessments"
-msgstr ""
-
-#: ./browser/map.pt:47
+#: ./browser/map.pt:16
 msgid "${number-of-assessments} assessments"
 msgstr ""
 
-#: ./browser/map.pt:118
+#: ./browser/map.pt:132
 msgid "${spinner} Loading documents"
 msgstr ""
 
-#: ./browser/map.pt:58
-msgid "Astana report"
+#: ./browser/map.pt:232
+msgid "All-assessments"
 msgstr ""
 
-#: ./browser/map.pt:137
+#: ./browser/map.pt:73
+msgid "Assessment of Assessments report"
+msgstr ""
+
+#: ./browser/map.pt:229
+msgid "Assessments"
+msgstr ""
+
+#: ./browser/map.pt:152
 msgid "Author"
 msgstr ""
 
-#: ./browser/map.pt:68
+#: ./browser/map.pt:72
+msgid "Browse the ${link-browse-report}."
+msgstr ""
+
+#: ./browser/map.pt:85
 msgid "Country"
 msgstr ""
 
-#: ./browser/map.pt:18
-msgid "Country fiches: ${link-cf-green-economy}, ${link-cf-water}"
+#: ./browser/map.pt:25
+msgid "Country fiches, produced by the national appointed authorities: ${link-cf-green-economy}, ${link-cf-water}"
 msgstr ""
 
-#: ./browser/map.pt:143
-msgid "Coverage"
+#: ./browser/map.pt:164
+msgid "Coverage (countries)"
 msgstr ""
 
-#: ./browser/map.pt:167
+#: ./browser/map.pt:172
+msgid "Coverage (sub-regions)"
+msgstr ""
+
+#: ./browser/map.pt:202
 msgid "Geographic level"
 msgstr ""
 
-#: ./browser/map.pt:17
+#: ./browser/map.pt:23
 msgid "Green economy"
 msgstr ""
 
-#: ./browser/map.pt:66
-msgid "Map selection"
-msgstr ""
-
-#: ./browser/map.pt:173
+#: ./browser/map.pt:208
 msgid "No results were found for this query"
 msgstr ""
 
-#: ./browser/map.pt:108
+#: ./browser/map.pt:87
 msgid "Pan-European"
 msgstr ""
 
-#: ./browser/map.pt:176
+#: ./browser/map.pt:157
+msgid "Publication year"
+msgstr ""
+
+#: ./browser/map.pt:211
 msgid "Recent assessments"
 msgstr ""
 
-#: ./browser/map.pt:69
-msgid "Region"
-msgstr ""
-
-#: ./browser/map.pt:160
+#: ./browser/map.pt:185
 msgid "Report"
 msgstr ""
 
-#: ./browser/map.pt:96
+#: ./browser/map.pt:114
 msgid "Reset"
 msgstr ""
 
-#: ./browser/map.pt:92
+#: ./browser/map.pt:110
 msgid "Search"
 msgstr ""
 
-#: ./browser/map.pt:40
+#: ./browser/map.pt:30
+msgid "See more"
+msgstr ""
+
+#: ./browser/map.pt:83
+msgid "Select on map"
+msgstr ""
+
+#: ./browser/map.pt:51
 msgid "Statistics of reviewed reports: ${link-statistics-green-economy}, ${link-comparative-overview}; ${link-regional-report}"
 msgstr ""
 
-#: ./browser/map.pt:54
-msgid "Statistics: ${link-statistics-green-economy}, ${link-statistics-water}"
-msgstr ""
-
-#: ./browser/map.pt:107
+#: ./browser/map.pt:86
 msgid "Sub-region"
 msgstr ""
 
-#: ./browser/map.pt:79
+#: ./browser/map.pt:68
+msgid "The virtual library of EE-AoA contains ${number-of-assessments} assessments on the thematic areas ${green-economy} and ${water}."
+msgstr ""
+
+#: ./browser/map.pt:97
 msgid "Theme"
 msgstr ""
 
-#: ./browser/map.pt:151
+#: ./browser/map.pt:179
 msgid "Themes"
 msgstr ""
 
-#: ./browser/map.pt:170
+#: ./browser/map.pt:205
 msgid "There was an error loading the list of documents."
 msgstr ""
 
-#: ./browser/map.pt:75
+#: ./browser/map.pt:93
 msgid "Title"
 msgstr ""
 
-#: ./browser/map.pt:19
+#: ./browser/map.pt:195
+msgid "Upload date"
+msgstr ""
+
+#: ./browser/map.pt:26
 msgid "Water"
 msgstr ""
 
-#: ./browser/map.pt:81
+#: ./browser/map.pt:99
 msgid "Water + Green economy"
 msgstr ""
 
-#: ./browser/map.pt:88
+#: ./browser/map.pt:106
 msgid "Year"
 msgstr ""
 
-#: ./browser/map.pt:39
+#: ./browser/map.pt:218
+msgid "about ${theme}"
+msgstr ""
+
+#: ./browser/map.pt:49
 msgid "comparative overview"
 msgstr ""
 
-#: ./browser/map.pt:185
-msgid "country"
+#: ./browser/map.pt:224
+msgid "covering ${names}"
 msgstr ""
 
-#: ./browser/map.pt:188
-msgid "region"
+#: ./browser/map.pt:220
+msgid "or"
 msgstr ""
 
-#: ./browser/map.pt:41
+#: ./browser/map.pt:235
+msgid "ordered by"
+msgstr ""
+
+#: ./browser/map.pt:215
+msgid "published in ${year}"
+msgstr ""
+
+#: ./browser/map.pt:52
 msgid "regional report"
 msgstr ""
 
-#: ./browser/map.pt:182
-msgid "theme"
-msgstr ""
-
-#: ./browser/map.pt:191
-msgid "title contains"
-msgstr ""
-
-#: ./browser/map.pt:179
-msgid "year"
+#: ./browser/map.pt:227
+msgid "with ${pattern} in title"
 msgstr ""
 

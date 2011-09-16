@@ -25,6 +25,7 @@ M.load_async_config = function() {
   });
 
   function on_success(response) {
+    M.config['load_time'] = new Date();
     M.config['country_name'] = response['country_name'];
     M.config['country_code'] = {};
     $.each(response['country_name'], function(code, name) {
@@ -43,7 +44,7 @@ M.load_async_config = function() {
     $('div.loading-animation').remove();
     $(document).ready(function() {
       M.perform_search({});
-      M.update_search_form_selected_countries();
+      M.update_search_form_map_selection();
     });
   }
 
@@ -67,18 +68,18 @@ M.load_async_config = function() {
   }
 };
 
-M.update_search_form_selected_countries = function() {
-  var selected = [];
+M.update_search_form_map_selection = function() {
+  var selected_names = [];
   if(M.current_view_name == 'country') {
-    selected = M.get_selected_countries();
+    selected_names = $.map(M.get_selected_countries(), function(code) {
+      return M.config['country_name'][code];
+    });
   }
   if(M.current_view_name == 'region') {
-    selected = M.get_selected_regions();
+    selected_names = $.map(M.get_selected_regions(), function(code) {
+      return M.config['region_name'][code];
+    });
   }
-  var selected_names = $.map(selected, function(code) {
-    if(! M.config['country_name']) return code;
-    return M.config['country_name'][code];
-  });
 
   var span = $('#selected-on-map').text("");
   var parent_box = $('div#search-geolevel-box');
@@ -120,6 +121,7 @@ function setup_search_handlers() {
   });
 
   $('#filters-form #reset-button').click(function() {
+    M.hide_country_coverage();
     M.deselect_all_polygons();
   });
 
@@ -135,7 +137,7 @@ function setup_search_handlers() {
   });
 
   $('div#filters').bind('map-selection-changed', function(evt) {
-    M.update_search_form_selected_countries();
+    M.update_search_form_map_selection();
   });
 }
 
@@ -288,10 +290,10 @@ M.search_criteria_info = function(form_data) {
   }
 
   if(criteria.length > 0) {
-    return "Assessments " + criteria.join(", ");
+    return M._("Assessments") + " " + criteria.join(", ");
   }
   else {
-    return "All assessments";
+    return M._("All-assessments");
   }
 };
 
@@ -302,7 +304,7 @@ M.perform_search = function(form_data) {
   filter_loop.stop();
   var h2 = $('h2.results-title').empty();
   h2.append(M.search_criteria_info(form_data),
-            ", ordered by ", M.make_results_sorter());
+            ", " + M._("ordered-by") + " ", M.make_results_sorter());
   M.blink_1(h2);
   var results_ul = $('<ul class="search-results">');
   var results_box = $('#results').empty().append(results_ul);
