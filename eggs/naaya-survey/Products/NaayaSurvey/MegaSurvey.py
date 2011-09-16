@@ -237,24 +237,6 @@ def get_content_type_config():
         'add_form': 'megasurvey_add_html',
     }
 
-def install_email_templates(site):
-    import os.path
-    email_tool = site.getEmailTool()
-    log.info("Configuring email notifications on site %r", site)
-    for template, title in [('email_survey_answer.txt', 'Survey answered'),
-                            ('email_survey_answer_to_respondent.txt', 'Survey answered'),
-                            ('email_survey_answer_to_unauthenticated.txt', 'Survey answered')]:
-        id = template[:-4] # without .txt
-        f = open(os.path.join(os.path.dirname(__file__),
-                              'templates', template), 'r')
-        content = f.read()
-        f.close()
-        t_ob = email_tool._getOb(id, None)
-        if t_ob is None:
-            email_tool.manage_addEmailTemplate(id, title, content)
-        else:
-            t_ob.manageProperties(title=title, body=content)
-
 def install_permissions(site):
     """
     Configure security for surveys:
@@ -286,5 +268,4 @@ def pluggable_item_installed_in_site(evt):
     if evt.meta_type != MegaSurvey.meta_type:
         return # some other content type that we don't care about
     site = evt.context
-    install_email_templates(site)
     install_permissions(site)
