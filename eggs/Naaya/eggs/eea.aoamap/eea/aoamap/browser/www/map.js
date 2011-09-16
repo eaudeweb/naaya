@@ -240,6 +240,7 @@ M.set_up_country_coverage_layer = function() {
 };
 
 M.hide_country_coverage = function() {
+  if(M.country_coverage_click_control == null) return;
   M.country_coverage_click_control.deactivate();
   M.country_coverage_layer.setVisibility(false);
   M.country_coverage_screening_layer.setVisibility(false);

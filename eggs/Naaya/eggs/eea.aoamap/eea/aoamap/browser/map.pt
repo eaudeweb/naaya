@@ -41,17 +41,8 @@
             assessments
           </tal:t>
         </p>
-        <p i18n:translate="">
-          Statistics of reviewed reports:
-          <tal:t i18n:name="link-statistics-green-economy">
-            <a class="link-region-statistics-green-economy"
-               href="#" i18n:translate="">Green economy</a></tal:t>,
-          <tal:t i18n:name="link-comparative-overview">
-            <a class="link-region-comparative-overview"
-               href="#" i18n:translate="">comparative overview</a></tal:t>;
-          <tal:t i18n:name="link-regional-report">
-            <a class="link-region-report"
-               href="#" i18n:translate="">regional report</a></tal:t>
+        <p class="link-to-regional-report-box">
+          <a class="link-to-regional-report" i18n:translate="">regional report</a>
         </p>
         <p>
           <a class="link-region-profile" href="#" target="_blank"
