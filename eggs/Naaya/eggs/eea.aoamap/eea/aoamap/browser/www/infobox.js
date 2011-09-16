@@ -53,7 +53,8 @@ M.update_selection_info = function() {
     else if(M.current_view_name == 'region') {
       var regions = M.get_selected_regions();
       if(regions.length == 1) {
-        return M.render_region_info(regions[0]);
+        var countries = M.get_selected_countries();
+        return M.render_region_info(regions[0], countries);
       }
     }
     return "";
@@ -79,16 +80,27 @@ M.render_country_info = function(code) {
   return country_info_box;
 };
 
-M.render_region_info = function(code) {
+M.render_region_info = function(code, countries) {
+  var countries_txt = null;
+  if(countries.length > 1) {
+    countries_txt = $.map(countries, function(code) {
+      return M.config['country_name'][code];
+    }).join(", ");
+  }
+
   return M.templates['region-info'].tmpl({
     name: M.config['region_name'][code],
+    countries_txt: countries_txt,
     documents_count: M.document_counts['region'][code]
   });
 };
 
 M.render_global_info = function() {
   var total_documents = M.config['documents'].length;
-  return M.templates['global-info'].tmpl({total_documents: total_documents});
+  return M.templates['global-info'].tmpl({
+    total_documents: total_documents,
+    when: M.format_date(M.config['load_time'])
+  });
 };
 
 function document_url(country_name, theme_name) {

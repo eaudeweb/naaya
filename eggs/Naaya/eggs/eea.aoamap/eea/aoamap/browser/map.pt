@@ -9,11 +9,13 @@
     <div id="selection-info">
 
       <div class="jquery-template" style="display: none;" id="country-info">
-        <p i18n:translate="">
-          <img class="country-flag" i18n:name="flag" />
-          <tal:t i18n:name="name">${name}</tal:t>:
-          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
-          assessments
+        <p>
+          <img class="country-flag" />
+          ${name}:
+          <tal:t i18n:translate="">
+            <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
+            assessments
+          </tal:t>
         </p>
         <p i18n:translate="">
           Country fiches, produced by the national appointed authorities:
@@ -31,12 +33,13 @@
       </div>
 
       <div class="jquery-template" style="display: none;" id="region-info">
-        <p i18n:translate="">
-          <tal:t i18n:name="name">
-            <strong>${name}</strong>
-          </tal:t>:
-          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
-          assessments
+        <p>
+          <strong>${name}</strong>{{if countries_txt}}
+            (${countries_txt}){{/if}}:
+          <tal:t i18n:translate="">
+            <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
+            assessments
+          </tal:t>
         </p>
         <p i18n:translate="">
           Statistics of reviewed reports:
@@ -58,7 +61,8 @@
 
       <div class="jquery-template" style="display: none;" id="global-info">
         <p i18n:translate="">
-          The virtual library of EE-AoA contains
+          As of <tal:t i18n:name="when">${when}</tal:t>,
+          the virtual library of EE-AoA contains
           <tal:t i18n:name="number-of-assessments">${total_documents}</tal:t>
           assessments on the thematic areas
           <tal:t i18n:name="green-economy">
@@ -223,6 +227,15 @@
 
     <span class="aoa-i18n" name="title-contains-pattern" i18n:translate=""
       >with <tal:t i18n:name="pattern">${pattern}</tal:t> in title</span>
+
+    <span class="aoa-i18n" name="Assessments"
+      i18n:translate="">Assessments</span>
+
+    <span class="aoa-i18n" name="All-assessments"
+      i18n:translate="">All-assessments</span>
+
+    <span class="aoa-i18n" name="ordered-by"
+      i18n:translate="">ordered by</span>
 
   </div>
 

@@ -31,6 +31,22 @@ M.project = function(point) {
 M.map_extent = new OpenLayers.Bounds(-8441336, -3173340, 6315323, 6948737);
 M.country_code = {};
 
+M.format_date = function(date) {
+  return "" + date.getFullYear() + "-" +
+         zeropad(date.getMonth()+1, 2) + "-" +
+         zeropad(date.getDate(), 2) + " " +
+         zeropad(date.getHours(), 2) + ":" +
+         zeropad(date.getMinutes(), 2);
+
+  function zeropad(value, n) {
+    var s = "" + value;
+    while(s.length < n) {
+      s = "0" + s;
+    }
+    return s;
+  }
+};
+
 M.docs_summary_result = $.Deferred();
 
 M.xyz_layer = function(label) {
