@@ -263,7 +263,7 @@ M.create_map_search = function() {
     ]
   });
 
-  $.each(['country', 'region'], function(i, name) {
+  $.each(['country', 'region', 'global'], function(i, name) {
     M.add_view(name, M.xyz_layer(M.layer_label[name]));
   });
 

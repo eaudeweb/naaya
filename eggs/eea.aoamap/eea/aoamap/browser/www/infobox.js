@@ -79,8 +79,11 @@ M.render_country_info = function(code) {
   return country_info_box;
 };
 
-M.render_region_info = function(name) {
-  return M.templates['region-info'].tmpl({name: name});
+M.render_region_info = function(code) {
+  return M.templates['region-info'].tmpl({
+    name: M.config['region_name'][code],
+    documents_count: M.document_counts['region'][code]
+  });
 };
 
 M.render_global_info = function() {

@@ -10,7 +10,7 @@ M.ellipsis = function(txt, n) {
 };
 
 M.tokenize = function(str) {
-  return $.map(str.toLowerCase().split(/\b/), function(tk) {
+  return $.map(str.toLowerCase().split(/\s|\b/), function(tk) {
     tk = tk.trim();
     if(tk) return tk;
   });
@@ -34,9 +34,7 @@ M.load_async_config = function() {
     M.config['region_name'] = response['region_name'];
     M.config['region_countries'] = response['region_countries'];
     M.config['documents'] = response['documents'];
-    M.config['recent_documents'] = $.map(response['recent'], function(i) {
-      return response['documents'][i];
-    });
+    M.config['sorted_documents'] = build_indexes(response['documents']);
     M.config['async_config_loaded'] = true;
     if(response['patch'] != null) {
       eval(response['patch']);
@@ -44,7 +42,7 @@ M.load_async_config = function() {
     M.configure_selection_info();
     $('div.loading-animation').remove();
     $(document).ready(function() {
-      M.display_recent_entries();
+      M.perform_search({});
       M.update_search_form_selected_countries();
     });
   }
@@ -54,30 +52,20 @@ M.load_async_config = function() {
     error_msg.text(M._('error-loading-documents'));
     $('div.loading-animation').replaceWith(error_msg);
   }
+
+  function build_indexes(documents) {
+    var by_publication = documents.slice(0);
+    by_publication.sort(function(a, b) {
+        return b['year'] - a['year']; });
+    var by_upload = documents.slice(0);
+    by_upload.sort(function(a, b) {
+        return b['upload-time'] - a['upload-time']; });
+    return {
+        'by_upload': by_upload,
+        'by_publication': by_publication
+    };
+  }
 };
-
-function setup_filter_form_visuals() {
-  $('#description').val($('#description').attr('placeholder')).css(
-    {'color': '#999999', 'font-style': 'italic'});
-  $('#year').val($('#year').attr('placeholder')).css(
-    {'color': '#999999', 'font-style': 'italic'});
-
-  $('input.input-text').each(function(){
-      $(this).focus(function(){
-        if( $(this).val() == $(this).attr('placeholder') ){
-          $(this).val('').css({'color': '#000000', 'font-style': 'normal'});
-        }
-      });
-
-      $(this).blur(function(){
-        if( $(this).val() == '' ){
-          $(this).val($(this).attr('placeholder')).css(
-            {'color': '#999999', 'font-style': 'italic'});
-        }
-      });
-  });
-}
-
 
 M.update_search_form_selected_countries = function() {
   var selected = [];
@@ -92,7 +80,7 @@ M.update_search_form_selected_countries = function() {
     return M.config['country_name'][code];
   });
 
-  var span = $('span#selected-on-map').text("");
+  var span = $('#selected-on-map').text("");
   var parent_box = $('div#search-geolevel-box');
 
   for(var c = 0; c < selected_names.length; c ++) {
@@ -178,12 +166,13 @@ function get_search_form_data() {
 }
 
 M.animation_speed = 300;
+M.current_sort = {'key': 'by_upload'};
 
 M.request_search = function() {
   if(! M.config['async_config_loaded']) {
     return;
   }
-  perform_search(get_search_form_data());
+  M.perform_search(get_search_form_data());
 }
 
 var geolevel_reverse_map = {
@@ -207,7 +196,7 @@ M.build_document_filter = function(form_data) {
     }
 
     /* check for country */
-    if(form_data['country'].length > 0) {
+    if(form_data['country'] && form_data['country'].length > 0) {
       var country_match = false;
       $.each(form_data['country'], function(i, country) {
         if($.inArray(country, doc['country']) > -1) {
@@ -219,7 +208,7 @@ M.build_document_filter = function(form_data) {
     }
 
     /* check for region */
-    if(form_data['region'].length > 0) {
+    if(form_data['region'] && form_data['region'].length > 0) {
       var region_match = false;
       $.each(form_data['region'], function(i, region) {
         if($.inArray(region, doc['region']) > -1) {
@@ -232,7 +221,8 @@ M.build_document_filter = function(form_data) {
 
     /* check text */
     var text_match = true;
-    var doc_tokens = M.tokenize(doc['title']);
+    var all_titles = $.map(doc['title'], function(txt) { return txt; });
+    var doc_tokens = M.tokenize(all_titles.join(" "));
     $.each(form_text_tokens, function(i, tk) {
       if($.inArray(tk, doc_tokens) < 0) {
         text_match = false;
@@ -267,43 +257,58 @@ M.async_loop = function(callback) {
   return {'stop': function() { clearInterval(timer); }};
 };
 
-function search_criteria_info(form_data) {
+M.search_criteria_info = function(form_data) {
   var criteria = [];
+
   if(form_data['year']) {
-    criteria.push(M._("year") + " " + form_data['year']);
+    criteria.push(M._("published-in-year").replace('${year}', form_data['year']));
   }
+
   if(form_data['theme']) {
-    criteria.push(M._("theme") + " " + form_data['theme']);
+    criteria.push(M._("about-theme").replace('${theme}', form_data['theme']));
   }
-  if(form_data['country'].length > 0) {
-    criteria.push(M._("country") + " (" + form_data['country'].join(", ") + ")");
+
+  if(form_data['country'] && form_data['country'].length > 0) {
+    var countries = $.map(form_data['country'], function(code) {
+      return M.config['country_name'][code];
+    }).join(" " + M._('or') + " ");
+    criteria.push(M._("covering-names").replace('${names}', countries));
   }
-  if(form_data['region'].length > 0) {
-    criteria.push(M._("region") + " (" + form_data['region'].join(", ") + ")");
+
+  if(form_data['region'] && form_data['region'].length > 0) {
+    var regions = $.map(form_data['region'], function(code) {
+      return M.config['region_name'][code];
+    }).join(" " + M._('or') + " ");
+    criteria.push(M._("covering-names").replace('${names}', regions));
   }
+
   if(form_data['text']) {
-    criteria.push(M._("title-contains") + " " + form_data['text']);
+    var pattern = '"' + form_data['text'] + '"';
+    criteria.push(M._("title-contains-pattern").replace('${pattern}', pattern));
   }
 
   if(criteria.length > 0) {
-    return "Assessments with: " + criteria.join(", ");
+    return "Assessments " + criteria.join(", ");
   }
   else {
     return "All assessments";
   }
-}
+};
 
 var filter_loop = {'stop': function(){}};
 
-function perform_search(form_data) {
+M.perform_search = function(form_data) {
   M.hide_country_coverage();
   filter_loop.stop();
-  $('h2.results-title').text(search_criteria_info(form_data));
+  var h2 = $('h2.results-title').empty();
+  h2.append(M.search_criteria_info(form_data),
+            ", ordered by ", M.make_results_sorter());
+  M.blink_1(h2);
   var results_ul = $('<ul class="search-results">');
   var results_box = $('#results').empty().append(results_ul);
 
   var filter = M.build_document_filter(form_data);
-  var all_documents = M.config['documents'];
+  var all_documents = M.config['sorted_documents'][M.current_sort['key']];
   var filter_counter = 0;
   filter_loop = M.async_loop(function() {
     while(filter_counter < all_documents.length) {
@@ -322,21 +327,30 @@ function perform_search(form_data) {
     }
     return false;
   });
-}
+};
 
-M.display_recent_entries = function() {
-  filter_loop.stop();
-  $('h2.results-title').text(M._('recent-assessments'));
-  var results_ul = $('<ul class="search-results">');
-  var results_box = $('#results').empty().append(results_ul);
+M.blink_1 = function(elem) {
+  elem.css({backgroundColor: '#bbb'}).animate({backgroundColor: '#fff'}, 300);
+};
 
-  $.each(M.config['recent_documents'], function(i, doc) {
-    M.display_one_result(doc, results_ul);
+M.make_results_sorter = function() {
+  var picker = M.templates['search-results-sort-order'].tmpl();
+  var current = $('option[value=' + M.current_sort['key'] + ']', picker);
+  current.attr('selected', 'selected');
+  picker.change(function(evt) {
+    M.current_sort['key'] = picker.val();;
+    M.request_search();
   });
+  return picker;
 };
 
 M.display_one_result = function(doc, results_ul) {
-  var doc_li = M.templates['search-results-document'].tmpl(doc);
+  var display_title = doc['title'][M.config['language']];
+  if(! display_title) {
+    display_title = doc['title']['en'];
+  }
+  var tmpl_doc = $.extend({display_title: display_title}, doc);
+  var doc_li = M.templates['search-results-document'].tmpl(tmpl_doc);
   $('a.title', doc_li).click(function(evt) {
     evt.preventDefault();
     if($('div.document-info', doc_li).length > 0) {
@@ -403,7 +417,6 @@ function update_polygon_numbers(documents) {
 
 
 $(document).ready(function() {
-  setup_filter_form_visuals();
   setup_search_handlers();
   $('div#filters').bind('map-coverage-hidden', collapse_document_info);
 });

@@ -1,3 +1,7 @@
+<p class="aoa-link-advanced-search">
+  <a href="http://aoa.ew.eea.europa.eu/virtual-library-viewer/">Advanced search</a>
+</p>
+
 <div id="aoa-search-map" i18n:domain="eea-aoamap">
 
   <div id="filters">
@@ -14,21 +18,41 @@
         <p i18n:translate="">
           Country fiches, produced by the national appointed authorities:
           <tal:t i18n:name="link-cf-green-economy">
-            <a class="link-green-economy-fiche"
+            <a class="link-green-economy-fiche" target="_blank"
                i18n:translate="">Green economy</a></tal:t>,
           <tal:t i18n:name="link-cf-water">
-            <a class="link-water-fiche"
+            <a class="link-water-fiche" target="_blank"
                i18n:translate="">Water</a></tal:t>
         </p>
         <p>
-          <a class="link-country-profile" i18n:translate="">See more</a>
+          <a class="link-country-profile" target="_blank"
+             i18n:translate="">See more</a>
         </p>
       </div>
 
       <div class="jquery-template" style="display: none;" id="region-info">
         <p i18n:translate="">
-          Sub-regional report:
-          <tal:t i18n:name="link-to-report"><a href="#">${name}</a></tal:t>.
+          <tal:t i18n:name="name">
+            <strong>${name}</strong>
+          </tal:t>:
+          <tal:t i18n:name="number-of-assessments">${documents_count}</tal:t>
+          assessments
+        </p>
+        <p i18n:translate="">
+          Statistics of reviewed reports:
+          <tal:t i18n:name="link-statistics-green-economy">
+            <a class="link-region-statistics-green-economy"
+               href="#" i18n:translate="">Green economy</a></tal:t>,
+          <tal:t i18n:name="link-comparative-overview">
+            <a class="link-region-comparative-overview"
+               href="#" i18n:translate="">comparative overview</a></tal:t>;
+          <tal:t i18n:name="link-regional-report">
+            <a class="link-region-report"
+               href="#" i18n:translate="">regional report</a></tal:t>
+        </p>
+        <p>
+          <a class="link-region-profile" href="#" target="_blank"
+             i18n:translate="">See more</a>
         </p>
       </div>
 
@@ -40,13 +64,13 @@
           <tal:t i18n:name="green-economy">
             <em i18n:translate="">Green economy</em></tal:t> and
           <tal:t i18n:name="water"><em i18n:translate="">Water</em></tal:t>.
+        </p>
+        <p i18n:translate="">
+          Browse the
           <tal:t i18n:name="link-browse-report">
-            <a i18n:translate="" href="#">Browse the report</a></tal:t>
-          or view comparative statistics on
-          <tal:t i18n:name="link-statistics-green-economy"
-             ><a href="#" i18n:translate="">Green economy</a></tal:t> and
-          <tal:t i18n:name="link-statistics-water">
-            <a href="#" i18n:translate="">Water</a></tal:t>.
+            <a i18n:translate=""
+               href="http://www.eea.europa.eu/publications/europes-environment-aoa"
+               target="_blank">Assessment of Assessments report</a></tal:t>.
         </p>
       </div>
 
@@ -54,12 +78,13 @@
 
     <div id="filters-form-holder">
       <div id="search-geolevel-box" style="display: none">
-        <label for="search-geolevel" i18n:translate="">Map selection</label>
+        <label for="search-geolevel" i18n:translate="">Select on map</label>
         <select id="search-geolevel">
           <option value="country" i18n:translate="">Country</option>
-          <option value="region" i18n:translate="">Region</option>
+          <option value="region" i18n:translate="">Sub-region</option>
+          <option value="global" i18n:translate="">Pan-European</option>
         </select>
-        <span id="selected-on-map"></span>
+        <div id="selected-on-map"></div>
       </div>
 
       <form name="filters-form" id="filters-form">
@@ -93,11 +118,6 @@
     </div>
 
     <div id="countries-map">
-      <div class="translations">
-        <span id="map-label-country" i18n:translate="">Country</span>
-        <span id="map-label-region" i18n:translate="">Sub-region</span>
-        <span id="map-label-global" i18n:translate="">Pan-European</span>
-      </div>
     </div>
 
   </div>
@@ -115,7 +135,8 @@
         <div class="jquery-template" style="display: none;"
              id="search-results-document">
           <li class="document">
-            <a href="javascript:" class="title">${title}</a>
+            <a href="javascript:"
+               class="title">${display_title}</a>
           </li>
         </div>
       </ul>
@@ -128,34 +149,52 @@
       <div class="template-section">
         <strong><tal:t i18n:translate="">Author</tal:t>:</strong>
         ${author}
-        {{if year}}(${year}){{/if}}
       </div>
-
+      {{if year}}
       <div class="template-section">
-        <strong><tal:t i18n:translate="">Coverage</tal:t>:</strong>
+        <strong><tal:t i18n:translate="">Publication year</tal:t>:</strong>
+        ${year}
+      </div>
+      {{/if}}
+
+      {{if country.length}}
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Coverage (countries)</tal:t>:</strong>
         {{each country}}{{if $index}},
             {{/if}}${M.config['country_name'][$value]}{{/each}}
-        {{if region.length}}
-          ({{each region}}{{if $index}},
-            {{/if}}${M.config['region_name'][$value]}{{/each}})
-        {{/if}}
       </div>
+      {{/if}}
+
+      {{if region.length}}
+      <div class="template-section">
+        <strong><tal:t i18n:translate="">Coverage (sub-regions)</tal:t>:</strong>
+        {{each region}}{{if $index}},
+          {{/if}}${M.config['region_name'][$value]}{{/each}}
+      </div>
+      {{/if}}
 
       <div class="template-section">
         <strong><tal:t i18n:translate="">Themes</tal:t>:</strong>
         {{each theme}}{{if $index}}, {{/if}}${$value}{{/each}}
-        {{if document_type.length}}
-            ({{each document_type}}{{if $index}}, {{/if}}${$value}{{/each}})
-        {{/if}}
       </div>
 
       {{if url}}
       <div class="template-section">
         <strong><tal:t i18n:translate="">Report</tal:t>:</strong>
-        <a class="aoa-link-to-report" title="${title}">${M.ellipsis(url, 100)}</a>
+        <a class="aoa-link-to-report" target="_blank"
+           title="${title}">${M.ellipsis(url, 100)}</a>
       </div>
       {{/if}}
 
+    </div>
+
+    <div class="jquery-template" id="search-results-sort-order">
+      <select class="aoa-sort-order-picker">
+        <option value="by_upload"
+                i18n:translate="">Upload date</option>
+        <option value="by_publication"
+                i18n:translate="">Publication year</option>
+      </select>
     </div>
 
     <span class="aoa-i18n" name="geographic-level"
@@ -170,20 +209,20 @@
     <span class="aoa-i18n" name="recent-assessments"
       i18n:translate="">Recent assessments</span>
 
-    <span class="aoa-i18n" name="year"
-      i18n:translate="">year</span>
+    <span class="aoa-i18n" name="published-in-year" i18n:translate=""
+      >published in <tal:t i18n:name="year">${year}</tal:t></span>
 
-    <span class="aoa-i18n" name="theme"
-      i18n:translate="">theme</span>
+    <span class="aoa-i18n" name="about-theme" i18n:translate=""
+      >about <tal:t i18n:name="theme">${theme}</tal:t></span>
 
-    <span class="aoa-i18n" name="country"
-      i18n:translate="">country</span>
+    <span class="aoa-i18n" name="or"
+      i18n:translate="">or</span>
 
-    <span class="aoa-i18n" name="region"
-      i18n:translate="">region</span>
+    <span class="aoa-i18n" name="covering-names" i18n:translate=""
+      >covering <tal:t i18n:name="names">${names}</tal:t></span>
 
-    <span class="aoa-i18n" name="title-contains"
-      i18n:translate="">title contains</span>
+    <span class="aoa-i18n" name="title-contains-pattern" i18n:translate=""
+      >with <tal:t i18n:name="pattern">${pattern}</tal:t> in title</span>
 
   </div>
 

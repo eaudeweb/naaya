@@ -109,7 +109,8 @@ $(document).ready(function() {
   }
 
   $('form').submit(function(evt) {
-    $(this).replaceWith('documents are being imported, please wait...');
+    var text = 'documents are being imported, please wait a bit...';
+    $(this).hide().after(text);
   });
 });
 </script>
