@@ -88,8 +88,9 @@ M.render_region_info = function(code, countries) {
     }).join(", ");
   }
 
+  var name = M.config['region_name'][code];
   var html = M.templates['region-info'].tmpl({
-    name: M.config['region_name'][code],
+    name: name,
     countries_txt: countries_txt,
     documents_count: M.document_counts['region'][code]
   });
@@ -101,6 +102,8 @@ M.render_region_info = function(code, countries) {
   else {
     $('p.link-to-regional-report-box', region_info_box).remove();
   }
+  $('a.link-region-profile', region_info_box).attr('href',
+    M.region_info_url(name));
   return region_info_box;
 };
 
@@ -128,6 +131,10 @@ M.regional_report_url = function(code) {
 M.document_url = function(country_name, theme_name) {
   return M.config['report_documents_url'] + '/' +
       slug(country_name) + '-' + slug(theme_name);
+};
+
+M.region_info_url = function(region_name) {
+  return M.config['report_documents_url'] + '/' + slug(region_name) + '-info';
 };
 
 function slug(name) {
