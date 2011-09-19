@@ -1,0 +1,33 @@
+<metal:block metal:use-macro="here/standard_template_macro">
+<metal:block fill-slot="body"
+  tal:define="region python:request.form.get('region', None)">
+
+<form id="select-region">
+  <select name="region:utf8:ustring">
+    <option tal:repeat="selregion options/region_names"
+            tal:content="selregion"
+            tal:attributes="selected python:test(selregion==region,
+                                       'selected', None)"></option>
+  </select>
+  <input type="submit"/>
+</form>
+<script>
+$('form#select-region select').change(function() {
+  $(this).parents('form').submit();
+});
+</script>
+
+<tal:block condition="region">
+
+<h1 i18n:translate="">Region info for <tal:block content="region"/></h1>
+
+<div class="aoa-ri-body">
+
+    <p tal:content="string:extra information about ${region}"></p>
+
+</div>
+
+</tal:block>
+
+</metal:block>
+</metal:block>
