@@ -452,7 +452,8 @@
 <div class="create-stats" tal:condition="shadows">
 	<input tal:condition="review_template" type="hidden" name="review_template" />
 	<input tal:condition="library" type="hidden" name="library" />
-	<input type="submit" value="Create statistics with selected answers"
+	<input tal:condition="is_admin" type="submit"
+		value="Create statistics with selected answers"
 		name="viewer_view_report_html:method" i18n:attributes="value"/>
 	<input tal:condition="is_admin" type="submit"
 		value="Delete selected answers" name="delete_survey_answers:method"
