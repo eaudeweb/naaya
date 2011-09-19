@@ -34,16 +34,20 @@ HTML_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool
 <tal:block metal:fill-slot="portlet_content"><span tal:replace="structure here/body" /></tal:block>
 </tal:block>'''
 
-LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+LINKSLIST_PORTLET_TEMPLATE = '''<tal:block tal:define="links python:here.getPortletsTool()['PORTLET_LINKSLIST_ID'].get_links_list();
+		allowed_links python:[link for link in links if here.checkPermissionForLink(link.permission, here)]"
+	tal:condition="allowed_links">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getPortletsTool()['PORTLET_LINKSLIST_ID'].title_or_id()" i18n:translate=""/></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-	<tal:block tal:repeat="item python:here.getPortletsTool()['PORTLET_LINKSLIST_ID'].get_links_list()">
-		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
+	<tal:block tal:repeat="item allowed_links">
+		<li>
 			<a tal:attributes="href python:test(item.relative, '%s%s' % (here.getSitePath(), item.url), item.url); title item/description" i18n:attributes="title" i18n:translate="" tal:content="item/title" />
 		</li>
 	</tal:block>
 	</ul>
+</tal:block>
 </tal:block>
 </tal:block>'''
 
