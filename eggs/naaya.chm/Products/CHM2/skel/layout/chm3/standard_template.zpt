@@ -136,9 +136,7 @@
           <div id="global-search">
             <form method="get" id="global-search-form" tal:attributes="action string:${site_url}/search_html">
               <input type="text" name="query" id="global-search-input" value="" accesskey="4" />
-              <div class="submit-global-button">
-                <input type="submit" value="Search" class="search-input-button" />
-              </div>
+              <input type="submit" value="Search" class="search-input-button" />
             </form>
           </div>
         </div>
