@@ -447,39 +447,20 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         return cluster_obs, single_obs
 
+    map_kml = NaayaPageTemplateFile('zpt/map_kml', globals(),
+                                          'Products.NaayaCore.GeomapTool.map_kml')
+    
     security.declareProtected(view, 'downloadLocationsKml')
     def downloadLocationsKml(self, REQUEST):
         """Returns the selected locations as a KML file"""
 
-        output = []
-        out_app = output.append
-
-        kml = kml_generator()
-        out_app(kml.header())
-        out_app(kml.style())
-
+        points = []
         for loc in self.search_geo_objects(REQUEST=REQUEST):
             if loc.geo_location is not None:
-                try:
-                    loc_url = loc.url
-                except AttributeError:
-                    loc_url = ''
-
-                out_app(kml.add_point(self.utToUtf8(loc.getId()),
-                                      self.utXmlEncode(loc.title_or_id()),
-                                      self.utXmlEncode(loc.description),
-                                      '%s/getSymbolPicture?id=%s' % (self.absolute_url(), self.utToUtf8(loc.geo_type)),
-                                      self.utToUtf8(loc.geo_location.lon),
-                                      self.utToUtf8(loc.geo_location.lat),
-                                      self.utXmlEncode(self.getSymbolTitle(loc.geo_type)),
-                                      self.utToUtf8(self.absolute_url()),
-                                      self.utToUtf8(loc.absolute_url()),
-                                      self.utToUtf8(loc_url),
-                                      self.utXmlEncode(loc.geo_location.address)))
-        out_app(kml.footer())
+                points.append(loc)
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
         REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
-        return '\n'.join(output)
+        return self.map_kml(points=points)
 
     security.declareProtected(view, 'xrjs_getGeoPoints')
     def xrjs_getGeoPoints(self, REQUEST):
