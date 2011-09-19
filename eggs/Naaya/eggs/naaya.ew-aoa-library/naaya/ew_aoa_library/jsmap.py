@@ -15,13 +15,16 @@ log = logging.getLogger(__name__)
 
 
 _pth = lambda *name: os.path.join(os.path.dirname(__file__), *name)
-_invert = lambda dic: dict((v,k) for (k,v) in dic.iteritems())
+_invert_en = lambda dic: dict((v['en'],k) for (k,v) in dic.iteritems())
 
 country_name = json.load(open(_pth('country_name.json')))
-country_code = _invert(country_name)
+country_code = _invert_en(country_name)
 region_name = json.load(open(_pth('region_name.json')))
-region_code = _invert(region_name)
+region_code = _invert_en(region_name)
 region_countries = json.load(open(_pth('region_countries.json')))
+theme_name = json.load(open(_pth('theme_name.json')))
+theme_code = _invert_en(theme_name)
+
 
 def map_if_available(mapping, values):
     for v in values:
@@ -35,7 +38,7 @@ def shadow_to_dict(shadow):
         "country": list(map_if_available(country_code, shadow.viewer_country)),
         "region": list(map_if_available(region_code, shadow.viewer_region)),
         "geolevel": shadow.viewer_geolevel,
-        "theme": shadow.viewer_main_theme,
+        "theme": list(map_if_available(theme_code, shadow.viewer_main_theme)),
         "document_type": shadow.viewer_document_type,
         "year": shadow.viewer_year,
         "author": shadow.viewer_author,
@@ -68,6 +71,7 @@ def get_map_async_config(site):
         'country_index': get_country_index(site),
         'region_countries': region_countries,
         'region_name': region_name,
+        'theme_name': theme_name,
         'documents': documents,
         'query-time': time() - t0,
         'timestamp': time(),
