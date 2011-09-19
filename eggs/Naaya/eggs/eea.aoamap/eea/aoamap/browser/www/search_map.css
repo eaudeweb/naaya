@@ -11,8 +11,9 @@
 }
 
 .country-flag {
-  vertical-align: -1px;
+  vertical-align: middle;
   max-width: 30px;
+  border: 1px solid #888;
 }
 
 input.input-text {
@@ -51,9 +52,7 @@ input#search-text {
 }
 
 select#search-theme {
-  width: 210px;
-  height: 28px;
-  padding: 5px 3px 5px 0;
+  width: 225px;
 }
 
 input#search-year {
@@ -73,6 +72,7 @@ div#filters-form-holder form {
 
 label {
   vertical-align: middle;
+  font-weight: bold;
 }
 
 div#search-geolevel-box {
@@ -87,7 +87,8 @@ div#search-geolevel-box {
 #aoa-search-map {
   clear: both;
   display: block;
-  width: 995px;
+  width: 1075px;
+  font-size: 12px;
 }
 
 div#filters {
@@ -105,8 +106,8 @@ div#filters {
 
 div#selection-info {
   float: right;
-  height: 220px;
-  width: 273px;
+  height: 195px;
+  width: 353px;
   overflow: auto;
   border-bottom: 1px solid #BABBB8;
   padding: 5px 10px 0;
@@ -117,10 +118,15 @@ div#selection-info a:hover {
   border: none;
 }
 
+p.link-country-profile-holder, p.link-region-profile-holder {
+  text-align: right;
+  margin-top: -10px;
+}
+
 div#filters-form-holder {
   float: right;
   clear: right;
-  width: 273px;
+  width: 353px;
   padding: 5px 10px 10px;
 }
 
@@ -239,6 +245,17 @@ div#document-info {
   font-weight: bold;
 }
 
+#filters-form-holder select {
+  border: 1px solid #ccc;
+  height: 28px;
+  padding: 5px 3px 5px 0;
+}
+
+#filters-form-holder td.label-holder {
+  text-align: right;
+  padding-right: 10px;
+}
+
 li.document a.title {
   background: transparent url('expand.png') no-repeat scroll left center;
 }
@@ -346,4 +363,10 @@ div.olControlZoomPanel div.olControlZoomOutItemInactive {
 
 #content div#plone-document-byline {
   display: none;
+}
+
+p.vl-upload-link-holder {
+  text-align: right;
+  margin: 0;
+  padding-right: 65px;
 }
