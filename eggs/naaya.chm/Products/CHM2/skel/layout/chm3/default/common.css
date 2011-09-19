@@ -1,24 +1,35 @@
 /* Required tags - these classes appear in the forms */
 
 #center_content_holder {
-  margin: 0 10px;
-  width: 730px;
-	float: left;
+  width: 720px;
+  float: left;
 }
 
 #right_port {
-	width: 230px;
+	width: 233px;
 	float: left !important;
+	margin-left: 16px;
 }
 
 .right_link_portlet .portlet-title {
-	background: url("small-section-title.png") no-repeat scroll 0 0 transparent;
-	height: 20px;
-	width: 228px;
-	color: #222222;
-	font-size: 18px;
+	background-color: #F7F7F7;
+	background-image: -webkit-linear-gradient(top , #FFFFFF, #F4F4F4);
+	background-image: -moz-linear-gradient(top , #FFFFFF, #F4F4F4);
+	background-image: -ms-linear-gradient(top , #FFFFFF, #F4F4F4);
+	background-image: -o-linear-gradient(top , #FFFFFF, #F4F4F4);
+	background-image: linear-gradient(top , #FFFFFF, #F4F4F4);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#F4F4F4'); /* for IE */
+	border: 1px solid #EAEAEA;
+	-webkit-border-radius: 5px 5px 0px 0px;
+	   -moz-border-radius: 5px 5px 0px 0px;
+		border-radius: 5px 5px 0px 0px;
+	height: 36px;
+	color: #006DAA;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 2.7;
 	margin: 0;
-	padding: 8px 4px 0 8px;
+	padding: 0 4px 0 8px;
 }
 
 .right_link_portlet .content {
@@ -27,12 +38,12 @@
 	border-right: 1px solid #E6E6E6;
 	border-style: solid;
 	border-width: 1px;
-	width: 226px;
-	
+position: relative;
+top: -1px;
 }
 
 .right_link_portlet .content ul  {
-	margin: 8px;
+	/*margin: 8px;*/
 }
 
 .right_link_portlet .content li {
@@ -44,12 +55,12 @@
 .right_link_portlet .content ul li a {
 	display: block;
 	margin: 5px 0;
-	text-decoration: none;
-	color: #808736;
+	text-decoration: underline;
+	color: #006DAA;
 }
 
 .right_link_portlet .content ul li a:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .right_link_portlet .content ul li strong {
@@ -57,7 +68,7 @@
 	padding-right: 20px;
 	clear: both;
 	display: block;
-	color: #0B8E46;
+	color: #000000;
 	text-decoration: none;
 	font-weight: bold;
 }
@@ -104,19 +115,19 @@ table tr td {
 }
 
 /* folder index styles */
-#admin_this_folder{
+.admin_this_folder, #admin_this_folder{
 	margin: 0.5em 0;
 	padding: 0.2em;
-	border: 1px solid #86B6E0;
-	background-color: #D5E9F5;
+	border: 1px solid #F1F4F4;
+	background-color: #FBFBFB;
 	text-align: left;
 	text-indent: 0.3em;
 	clear: both;
 }
-#admin_this_folder #submission {
+.admin_this_folder #submission, #admin_this_folder #submission {
 	font-weight: bold;
 }
-#admin_this_folder a {
+.admin_this_folder a, #admin_this_folder a {
 	text-decoration: none;
 	background-color: #fff;
 	color: #000;
@@ -128,25 +139,26 @@ table tr td {
 	padding:2px 2px;
 	font-size: 90%;
 }
-#admin_this_folder span {
+.admin_this_folder span, #admin_this_folder span {
 	padding:0em 0.4em;
 	margin: 0em 0.3em;
 	font-size: 90%;
 }
-#admin_this_folder img {
+.admin_this_folder img, #admin_this_folder img {
 	vertical-align: middle;
 	padding-right: 4px;
 }
-#admin_this_folder select {
+.admin_this_folder select, #admin_this_folder select {
 	vertical-align: middle;
 	font-size: 95%;
 }
-#admin_this_folder a:hover {
+.admin_this_folder a:hover, #admin_this_folder a:hover {
 	background: #ccc;
 	border-left:1px solid #6791c3;
 	border-top:1px solid #6791c3;
 	border-bottom:1px solid #34649b;
 	border-right:1px solid #34649b;
+	text-decoration: none;
 }
 dd#admin_textarea{
 	margin-left: 3px;
@@ -154,7 +166,7 @@ dd#admin_textarea{
 }
 #toolbar{
 	padding: 0.3em 0;
-	margin: 0.2em auto 0;
+	margin: 15px auto 10px;
 	width: 100%;
 }
 #toolbar a{
@@ -206,15 +218,15 @@ dd#admin_textarea{
 }
 
 #folderfile_list th{
-	background-color: #F0F5F8;
+	background-color: #F1F1F1;
 	font-weight: bold;
-	border-bottom: 1px solid #D5E9F5;
-	border-top: 1px solid #D5E9F5;
+	border-bottom: 1px solid #E6E6E6;
+	border-top: 1px solid #E6E6E6;
 }
 #folderfile_list td{
 	color: #999999;
 	padding: 0.4em 0.1em;
-	border-bottom: 1px solid #D5E9F5;
+	border-bottom: 1px solid #E6E6E6;
 }
 #folderfile_list .checkbox{
 	vertical-align: top;
@@ -243,11 +255,11 @@ dd#admin_textarea{
 	text-align: left;
 }
 td.title-column a{
-	color: #0f75b3;
+	color: #252525;
+	text-decoration: underline;
 }
 td.title-column a:hover{
-	color: #999;
-	text-decoration: underline;
+	text-decoration: none;
 }
 #folderfile_list th.title-column{
 	vertical-align: middle;
@@ -2008,4 +2020,33 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	font-size: 90%;
 	color: #555;
 	font-style: italic;
+}
+
+.right {
+        float: right;
+}
+
+.middle-label {
+        vertical-align: middle;
+        line-height: 1.9
+}
+
+.info-link {
+        background: url("misc_/Naaya/info.png") no-repeat scroll 6px center transparent;
+        font-size: 1px;
+        -moz-outline: none;
+             outline: none;
+        text-indent: -9999px;
+        padding: 10px;
+        text-decoration: none !important;
+}
+
+.admin-info-text {
+        display:none;
+        clear: both;
+        margin: 0;
+        border-top: 1px dashed #DFDFDF;
+        padding: 5px;
+        color: #333;
+        background: #FFFAE2;
 }
