@@ -38,6 +38,13 @@
       permission="zope2.View"
       />
 
+  <browser:page
+      for=".interfaces.IAoaPortal"
+      name="region_info"
+      class=".country_profile.RegionInfoView"
+      permission="zope2.View"
+      />
+
   <browser:resourceDirectory
       name="naaya.ew_aoa_library"
       directory="./www"
