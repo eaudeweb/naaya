@@ -1,5 +1,5 @@
 from naaya.core.zope2util import path_in_site
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 class NotificationsPortlet(object):
     title = 'Subscribe to notifications'
@@ -17,4 +17,4 @@ class NotificationsPortlet(object):
         return tmpl(macro=macro, notif_tool=notif_tool,
                     location=path_in_site(context))
 
-    template = PageTemplateFile('zpt/portlet', globals())
+    template = NaayaPageTemplateFile('zpt/portlet', globals(), 'naaya.core.notifications.notifications_portlet')
