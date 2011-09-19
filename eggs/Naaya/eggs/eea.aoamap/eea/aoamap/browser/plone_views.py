@@ -123,12 +123,12 @@ class ImportFromAoa(BrowserView):
     """
 
     def aoa_data(self):
-        aoa_html = get_aoa_response('viewer_aggregator')
-        aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
+        aoa_json = get_aoa_response('jsmap_search_map_documents')
+        aoa_data = json.loads(aoa_json)
 
         return {
-            'countries': [elem.attrib['value'] for elem in
-                          css('select#country_select option', aoa_doc)],
+            'countries': sorted(v['en'] for v in aoa_data['country_name'].values()),
+            'regions': sorted(v['en'] for v in aoa_data['region_name'].values()),
         }
 
     def submit(self):
@@ -142,6 +142,7 @@ class ImportFromAoa(BrowserView):
             'cp': None,
         }
 
+
         for country_document in self.request.form.get('country-document', []):
             country, theme_code = country_document.split('-')
             theme = theme_name[theme_code]
@@ -153,6 +154,12 @@ class ImportFromAoa(BrowserView):
                                            self.request.form['date'])
 
             print>>out, repr(doc)
+
+
+        for region in self.request.form.get('region-info', []):
+            doc = update_region_info(self.aq_parent, region)
+            print>>out, repr(doc)
+
 
         print>>out, "\ndone"
         return out.getvalue()
@@ -198,6 +205,18 @@ def update_country_fiche(folder, country, theme, date):
     aoa_html = get_aoa_response(url)
     aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
     cf_doc = css('div.aoa-cf-content', aoa_doc)[0]
+    text = lxml.etree.tostring(cf_doc).decode('utf-8')
+
+    return update_plone_document(folder, doc_id, title, text)
+
+def update_region_info(folder, region):
+    doc_id = '%s-info' % (slug(region),)
+    title = "%s region" % (region,)
+
+    url = ('region_info?toplone=1&region%%3Autf8%%3Austring=%s' % (region,))
+    aoa_html = get_aoa_response(url)
+    aoa_doc = lxml.html.soupparser.fromstring(aoa_html)
+    cf_doc = css('div.aoa-ri-body', aoa_doc)[0]
     text = lxml.etree.tostring(cf_doc).decode('utf-8')
 
     return update_plone_document(folder, doc_id, title, text)

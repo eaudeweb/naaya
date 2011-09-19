@@ -3,22 +3,23 @@
 <html>
 <head>
   <style>
-    table#generator-matrix th, table#generator-matrix td {
+    table.documents th, table.documents td {
       border: 1px solid #aaa;
     }
-    table#generator-matrix {
+    table.documents {
       border-collapse: collapse;
+      margin: 10px 0;
     }
-    table#generator-matrix th.country-name {
+    table.documents th.country-name {
       text-align: left;
     }
-    table#generator-matrix td label {
+    table.documents td label {
       display: block;
       width: 100%;
       height: 100%;
       text-align: center;
     }
-    table#generator-matrix tbody th button {
+    table.documents tbody th button {
       float: right;
     }
   </style>
@@ -37,7 +38,26 @@
 
   <input type="submit"/>
 
-  <table id="generator-matrix">
+  <table class="documents">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Region information</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="region aoa_data/regions">
+        <th tal:content="region" class="region-name"
+            tal:attributes="region region"></th>
+        <td><label>
+          <input type="checkbox" name="region-info:list"
+                 tal:attributes="value string:${region}"/>
+        </label></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="documents">
     <thead>
       <tr>
         <th class="document-all"></th>
@@ -79,7 +99,7 @@
 <script src="++resource++eea.aoamap/jquery-1.6.2.min.js"></script>
 <script>
 $(document).ready(function() {
-  var table = $('table#generator-matrix');
+  var table = $('table#country-generator-matrix');
   var inputs = $('input[type=checkbox]', table);
 
   $('th.document-all').append(all_button(inputs));
