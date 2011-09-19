@@ -52,11 +52,11 @@ input#search-text {
 }
 
 select#search-theme {
-  width: 225px;
+  width: 227px;
 }
 
 input#search-year {
-  width: 70px;
+  width: 75px;
 }
 
 div#filters-form-holder form {
@@ -87,7 +87,7 @@ div#search-geolevel-box {
 #aoa-search-map {
   clear: both;
   display: block;
-  width: 1075px;
+  width: 1030px;
   font-size: 12px;
 }
 
@@ -107,7 +107,7 @@ div#filters {
 div#selection-info {
   float: right;
   height: 195px;
-  width: 353px;
+  width: 308px;
   overflow: auto;
   border-bottom: 1px solid #BABBB8;
   padding: 5px 10px 0;
@@ -126,7 +126,7 @@ p.link-country-profile-holder, p.link-region-profile-holder {
 div#filters-form-holder {
   float: right;
   clear: right;
-  width: 353px;
+  width: 308px;
   padding: 5px 10px 10px;
 }
 
@@ -368,5 +368,5 @@ div.olControlZoomPanel div.olControlZoomOutItemInactive {
 p.vl-upload-link-holder {
   text-align: right;
   margin: 0;
-  padding-right: 65px;
+  padding-right: 30px;
 }

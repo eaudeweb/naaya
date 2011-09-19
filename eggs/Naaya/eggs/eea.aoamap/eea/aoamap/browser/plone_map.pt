@@ -10,6 +10,8 @@
   <metal:style_slot fill-slot="style_slot">
     <link href="++resource++eea.aoamap/search_map.css"
           rel="stylesheet" type="text/css" media="screen" />
+    <link href="++resource++eea.aoamap/print.css"
+          rel="stylesheet" type="text/css" media="print" />
   </metal:style_slot>
 
 </head>
