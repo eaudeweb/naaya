@@ -131,7 +131,8 @@
       </form>
 
       <p class="vl-upload-link-holder">
-        <a href="http://aoa.ew.eea.europa.eu/tools/virtual_library/bibliography-details-each-assessment">Upload new assessment</a>
+        <a href="http://aoa.ew.eea.europa.eu/tools/virtual_library/bibliography-details-each-assessment"
+           i18n:translate="">Upload new assessment</a>
       </p>
 
     </div>
