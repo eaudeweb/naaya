@@ -391,7 +391,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
         d = {}
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
-        d['LINK'] = "%s" % answer.absolute_url()
+        d['LINK'] = "%s?key=%s" % (answer.absolute_url(), key)
         d['EDIT_LINK'] = "%s?edit=1&key=%s" % (answer.absolute_url(), key)
 
         self._sendEmailNotification('email_to_unauthenticated', d,
