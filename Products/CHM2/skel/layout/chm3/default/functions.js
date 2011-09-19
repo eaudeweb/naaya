@@ -1,6 +1,8 @@
 $(document).ready(function(){
 	$('.js-enabled').remove();
 	
+	cleanRightPortlet();
+	
 	if( $('.highlights-content').length ){
 		$('.highlights-content').scrollCarousel({
 			selector: '.highlights'
@@ -221,6 +223,8 @@ $(document).ready(function(){
 	*/
 	if($('#categories-slideshow').length){
 		$('#categories-slideshow').infiniteCarousel('.button-categories-slideshow-previous', '.button-categories-slideshow-next');
+		
+		
 		
 		topHeight = 9;
 		bottomHeight = 8;
@@ -1329,6 +1333,12 @@ jQuery.fn.infiniteCarousel = function(previous, next, options){
 		firstElementOnViewPort = 1,
 		isAnimating = false;
 		
+		if( shownInViewport == 6 ) {
+			jQuery(previous).css({
+				'display': 'none !important'
+			});
+		}
+		
 		for (i = 0; i < shownInViewport; i++) {
 			jQuery(sliderList).css('width',(numElmts+shownInViewport)*increment + increment + "px");
 			jQuery(sliderList).append(jQuery(elmnts[i]).clone());
@@ -1373,3 +1383,15 @@ jQuery.fn.infiniteCarousel = function(previous, next, options){
 		});
 	}
 };
+
+function cleanRightPortlet() {
+	portlet = $('#right_port');
+	box = portlet.children('.small-box:eq(0)');
+	clear = $('.clear');
+	
+	if( (portlet.length) && (box.length) && (box.text().trim() == '') ) {
+		box.next('.clear').next('br').remove();
+		box.next('.clear').remove();
+		box.remove();
+	}
+}
