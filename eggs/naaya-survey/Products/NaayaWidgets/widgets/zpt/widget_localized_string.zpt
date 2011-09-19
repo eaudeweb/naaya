@@ -49,8 +49,9 @@
         <tal:block define="
                 lang_code language/code;
                 id string:${widget_id}-${lang_code};">
-            <label tal:attributes="for id"
-                    tal:content="string:${language/name}:"/>
+            <label tal:attributes="for id">
+				<span tal:replace="language/name" i18n:translate=""/>:
+			</label>
             <br />
             <input type="text" tal:attributes="
                     value python: value.get(lang_code, '');
