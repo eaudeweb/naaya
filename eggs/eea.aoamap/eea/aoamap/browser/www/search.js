@@ -26,14 +26,18 @@ M.load_async_config = function() {
 
   function on_success(response) {
     M.config['load_time'] = new Date();
-    M.config['country_name'] = response['country_name'];
+    M.config['country_name'] = values_for_language(response['country_name'],
+                                                   M.config['language']);
     M.config['country_code'] = {};
     $.each(response['country_name'], function(code, name) {
       M.config['country_code'][name] = code;
     });
     M.config['country_index'] = response['country_index'];
-    M.config['region_name'] = response['region_name'];
+    M.config['region_name'] = values_for_language(response['region_name'],
+                                                  M.config['language']);
     M.config['region_countries'] = response['region_countries'];
+    M.config['theme_name'] = values_for_language(response['theme_name'],
+                                                 M.config['language']);
     M.config['documents'] = response['documents'];
     M.config['sorted_documents'] = build_indexes(response['documents']);
     M.config['async_config_loaded'] = true;
@@ -65,6 +69,12 @@ M.load_async_config = function() {
         'by_upload': by_upload,
         'by_publication': by_publication
     };
+  }
+
+  function values_for_language(mapping, language) {
+    var data = {};
+    $.each(mapping, function(k, v) { data[k] = v[language]; });
+    return data;
   }
 };
 
@@ -125,6 +135,9 @@ function setup_search_handlers() {
   $('#filters-form #reset-button').click(function() {
     M.hide_country_coverage();
     M.deselect_all_polygons();
+    setTimeout(function() {
+      M.request_search();
+    }, 0);
   });
 
   $('select#search-geolevel').change(function(evt) {
@@ -396,16 +409,17 @@ M.show_coverage_for_document = function(doc) {
     $.each(doc['region'], function(i, region_name) {
       var countries_in_region = M.config['region_countries'][region_name];
       if(countries_in_region) {
-        $.each(countries_in_region, function(i, name) {
-          unique_countries[name] = true;
+        $.each(countries_in_region, function(i, code) {
+          unique_countries[code] = true;
         });
       }
     });
-    countries = $.map(unique_countries, function(v, name) { return name; });
+    countries = $.map(unique_countries, function(v, code) { return code; });
   }
 
   if(countries.length < 1) {
-    countries = $.map(M.config['country_code'], function(v, name) { return name; });
+    countries = $.map(M.config['country_code'],
+                      function(code, name) { return code; });
   }
 
   M.show_country_coverage(countries);
