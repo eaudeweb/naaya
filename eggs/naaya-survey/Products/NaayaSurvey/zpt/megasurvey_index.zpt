@@ -154,25 +154,25 @@
 						</p>
 
 						<p tal:condition="python: not editing and not here.allow_drafts" i18n:translate="">
-							Fill the questionnaire and click the <strong i18n:name="submit">Submit</strong> button at the end.
+							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end.
 						</p>
 						<p tal:condition="python: not editing and here.allow_drafts and user_anonymous" i18n:translate="">
 							Fill the questionnaire and click the <strong i18n:name="submit">Submit</strong> button at the end.
-							<a tal:attributes="href string:${here/getSitePath}/login_html?came_from=${request/ACTUAL_URL}&amp;disable_cookie_login__=1" i18n:name="login">Login</a> with your account if you wish to save an interim version.
+							<a tal:attributes="href string:${here/getSitePath}/login_html?came_from=${request/ACTUAL_URL}&amp;disable_cookie_login__=1" i18n:name="login" i18n:translate="">Login</a> with your account if you wish to save an interim version.
 						</p>
 						<p tal:condition="python: not editing and here.allow_drafts and not user_anonymous" i18n:translate="">
-							Fill the questionnaire and click the <strong i18n:name="submit">Submit</strong> button at the end or use the <strong i18n:name="save_as_draft">Save as draft</strong> button if you wish to save an interim version.
+							Fill the questionnaire and click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button at the end or use the <strong i18n:name="save_as_draft" i18n:translate="">Save as draft</strong> button if you wish to save an interim version.
 						</p>
 
 						<p tal:condition="python: editing_answer and not here.allow_drafts" i18n:translate="">
-							Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end.
+							Change the questionnaire and click the <strong i18n:name="change_answer" i18n:translate="">Change answer</strong> button at the end.
 						</p>
 						<p tal:condition="python: editing_draft and here.allow_drafts" i18n:translate="">
-							Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft">Save as draft</strong> button.
-							When you have completed the answer, click the <strong i18n:name="submit">Submit</strong> button and your answer finalised.
+							Fill the questionnaire and further save interim versions by clicking on the <strong i18n:name="save_as_draft" i18n:translate="">Save as draft</strong> button.
+							When you have completed the answer, click the <strong i18n:name="submit" i18n:translate="">Submit</strong> button and your answer finalised.
 						</p>
 						<p tal:condition="python: editing_answer and here.allow_drafts" i18n:translate="">
-							Change the questionnaire and click the <strong i18n:name="change_answer">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft">Overwrite as draft</strong> button if you wish to save an interim version.
+							Change the questionnaire and click the <strong i18n:name="change_answer" i18n:translate="">Change answer</strong> button at the end or use the <strong i18n:name="overwrite_as_draft" i18n:translate="">Overwrite as draft</strong> button if you wish to save an interim version.
 							Upon saving an interim version, your answer will not be considered a final answer anymore.
 						</p>
 					</div>
