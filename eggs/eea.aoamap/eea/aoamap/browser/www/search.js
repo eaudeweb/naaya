@@ -282,7 +282,8 @@ M.search_criteria_info = function(form_data) {
   }
 
   if(form_data['theme']) {
-    criteria.push(M._("about-theme").replace('${theme}', form_data['theme']));
+    criteria.push(M._("about-theme").replace('${theme}',
+      M.config['theme_name'][form_data['theme']]));
   }
 
   if(form_data['country'] && form_data['country'].length > 0) {

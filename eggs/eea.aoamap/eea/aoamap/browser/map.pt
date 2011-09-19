@@ -14,7 +14,7 @@
           </tal:t>
         </p>
         <p i18n:translate="">
-          Country fiches, produced by the national appointed authorities on theme:
+          Country Fiches, produced by the national appointed authorities on theme:
           <tal:t i18n:name="link-cf-green-economy">
             <em><a class="link-green-economy-fiche" target="_blank"
                i18n:translate="">Green economy</a></em></tal:t>,
@@ -54,7 +54,7 @@
         <p i18n:translate="">
           As of <tal:t i18n:name="when">${when}</tal:t>,
           the virtual library of EE-AoA contains
-          <tal:t i18n:name="number-of-assessments">${total_documents}</tal:t>
+          <tal:t i18n:name="number-of-assessments"><strong>${total_documents}</strong></tal:t>
           assessments on the thematic areas
           <tal:t i18n:name="green-economy">
             <em i18n:translate="">Green economy</em></tal:t> and
@@ -100,10 +100,12 @@
             </td>
             <td>
               <select name="theme" id="search-theme">
-                <option value="" i18n:translate="">Water + Green economy</option>
-                <option tal:repeat="option options/filter_options/themes"
-                        tal:attributes="value option"
-                        tal:content="option" i18n:translate=""></option>
+                <option value=""
+                        i18n:translate="">Water + Green economy</option>
+                <option value="water"
+                        i18n:translate="">Water</option>
+                <option value="green-economy"
+                        i18n:translate="">Green economy</option>
               </select>
             </td>
           </tr>
