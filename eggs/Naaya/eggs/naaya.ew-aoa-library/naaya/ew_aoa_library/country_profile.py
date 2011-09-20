@@ -1,5 +1,6 @@
 from zope.publisher.browser import BrowserPage
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+#from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from jsmap import (country_code, region_code, region_name, region_countries,
                    country_name)
 
@@ -60,7 +61,7 @@ country_contributors = {
 
 
 
-country_profile_zpt = PageTemplateFile('zpt/country_profile.zpt', globals())
+country_profile_zpt = NaayaPageTemplateFile('zpt/country_profile.zpt', globals(), 'aoa_country_profile')
 
 class CountryProfileView(BrowserPage):
 
@@ -75,7 +76,7 @@ class CountryProfileView(BrowserPage):
 
 
 
-region_info_zpt = PageTemplateFile('zpt/region_info.zpt', globals())
+region_info_zpt = NaayaPageTemplateFile('zpt/region_info.zpt', globals(), 'aoa_region_info')
 
 class RegionInfoView(BrowserPage):
 
