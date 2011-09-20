@@ -23,7 +23,51 @@ $('form#select-region select').change(function() {
 
 <div class="aoa-ri-body">
 
-    <p tal:content="string:extra information about ${region}"></p>
+  <div tal:condition="python:region == 'Central Asia'">
+    <p>
+      <a href="http://www.carecnet.org/"
+         >Regional Environmental Centre for Central Asia (CAREC)</a>
+    </p>
+    <ul>
+      <li>Talaibek Makeev</li>
+      <li>Ludmilla Kiktenko</li>
+      <li>Yekaterina Strikeleva</li>
+      <li>Akmaral Mukaeva</li>
+    </ul>
+  </div>
+
+  <div tal:condition="python:region == 'Eastern Europe'">
+    <p>
+      <a href="http://www.rec.md/"
+         >Regional Environmental Centre Moldova (REC Moldova)</a>
+    </p>
+    <ul>
+      <li>Victor Cotruta</li>
+      <li>Elena Tofan</li>
+    </ul>
+  </div>
+
+  <div tal:condition="python:region == 'Russian Federation'">
+    <p>
+      <a href="http://www.rusrec.ru/en"
+         >Russian Regional Environmental Centre (REC Russia)</a>
+    </p>
+    <ul>
+      <li>Michael Kozeltsev</li>
+      <li>Andrey Terentyev</li>
+    </ul>
+  </div>
+
+  <div tal:condition="python:region == 'Caucasus'">
+    <p>
+      <a href="http://www.rec-caucasus.org/"
+         >Regional Environmental Centre Caucasus (REC Caucasus)</a>
+    </p>
+    <ul>
+      <li>Malak Shukurova</li>
+      <li>Vahagn Tonoyan</li>
+    </ul>
+  </div>
 
 </div>
 
