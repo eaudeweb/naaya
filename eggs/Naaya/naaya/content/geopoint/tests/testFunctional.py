@@ -5,6 +5,7 @@ from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.Naaya.adapters import FolderMetaTypes
 
 
 class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
@@ -15,7 +16,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.geopoint.geopoint_item import addNyGeoPoint
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
-        self.portal.myfolder.folder_meta_types.append('Naaya GeoPoint')
+        FolderMetaTypes(self.portal.myfolder).add('Naaya GeoPoint')
         addNyGeoPoint(self.portal.myfolder, id='mygeopoint', title='My geopoint',
             submitted=1, contributor='contributor', geo_location=Geo('13', '13'))
         import transaction; transaction.commit()

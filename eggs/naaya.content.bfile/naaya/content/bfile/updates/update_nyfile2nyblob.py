@@ -11,6 +11,8 @@ from zope.annotation import IAnnotations
 #Naaya imports
 from naaya.content.bfile import bfile_item
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.Naaya.adapters import FolderMetaTypes
+
 #
 # Export / Import
 #
@@ -297,7 +299,8 @@ class UpdateNyFile2NyBlobFile(UpdateScript):
             if not doc:
                 continue
 
-            meta_types = doc.folder_meta_types[:]
+            folder_meta_types = FolderMetaTypes(doc)
+            meta_types = folder_meta_types.get_values()
             if 'Naaya File' in meta_types:
                 meta_types.remove('Naaya File')
                 meta_types.append('Naaya Blob File')

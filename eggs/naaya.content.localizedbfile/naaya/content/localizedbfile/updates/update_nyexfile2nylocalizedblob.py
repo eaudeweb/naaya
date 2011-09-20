@@ -10,6 +10,7 @@ from zope.annotation import IAnnotations
 #Naaya imports -- to be changed
 from naaya.content.localizedbfile import localizedbfile_item
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.Naaya.adapters import FolderMetaTypes
 #
 # Export / Import
 #
@@ -398,7 +399,8 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             if not doc:
                 continue
 
-            meta_types = doc.folder_meta_types[:]
+            folder_meta_types = FolderMetaTypes(doc)
+            meta_types = folder_meta_types.get_values()
             changed = False
             if 'Naaya Extended File' in meta_types:
                 meta_types.remove('Naaya Extended File')
@@ -409,7 +411,7 @@ class UpdateNyExFile2NyLocalizedBlobFile(UpdateScript):
             if changed:
                 self.log.debug('Updating folder %s subobjects = %s',
                                doc.absolute_url(1), meta_types)
-                doc.manageSubobjects(subobjects=meta_types)
+                folder_meta_types.set_values(meta_types)
 
     def _update(self, portal):
         """ Run updater

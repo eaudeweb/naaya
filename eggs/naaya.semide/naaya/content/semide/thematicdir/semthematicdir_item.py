@@ -38,6 +38,7 @@ from Products.NaayaCore.constants import *
 
 from Products.Naaya.NyFolder import NyFolder
 from Products.NaayaCore.managers.utils import batch_utils
+from Products.Naaya.adapters import FolderMetaTypes
 
 #This is wrong
 from naaya.content.url                                import url_item ; METATYPE_NYURL = url_item.config['meta_type']
@@ -281,10 +282,11 @@ class NySemThematicDir(NyFolder):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
+        meta_types = FolderMetaTypes(self).get_values()
         return 'custom_index="%s" maintainer_email="%s" folder_meta_types="%s" themes="%s" criteria_date="%s"' % \
             (self.utXmlEncode(self.compute_custom_index_value()),
                 self.utXmlEncode(self.maintainer_email),
-                self.utXmlEncode(','.join(self.folder_meta_types)),
+                self.utXmlEncode(','.join(meta_types)),
                 self.utXmlEncode(self.themes),
                 self.utXmlEncode(self.criteria_date))
 

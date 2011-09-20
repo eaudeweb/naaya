@@ -3346,8 +3346,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ Admin view for editing global (default) folder subobjects """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_folder_subobjects')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_manage_subobjects')
-    def admin_folder_manage_subobjects(self, subobjects=None,
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_subobjects_submit')
+    def admin_folder_subobjects_submit(self, subobjects=None,
                                        ny_subobjects=None, only_nyobjects=False,
                                        REQUEST=None):
         """ Updating global (default) folder subobjects """

@@ -28,6 +28,7 @@ from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
+from Products.Naaya.adapters import FolderMetaTypes
 
 class UpdateAddForum(UpdateScript):
     """ Update add forum script  """
@@ -69,10 +70,10 @@ class UpdateAddForum(UpdateScript):
 
         i, j = 0, 0
         for folder in ny_folders:
-            f_mt = folder.folder_meta_types
+            meta_types = FolderMetaTypes(folder)
+            f_mt = meta_types.get_values()
             if to_add not in f_mt:
-                f_mt.append(to_add)
-                folder.manageSubobjects(ny_subobjects=f_mt)
+                meta_types.add(to_add)
                 i+=1
                 self.log.debug('Updated folder %s' % folder.absolute_url(1))
             else:

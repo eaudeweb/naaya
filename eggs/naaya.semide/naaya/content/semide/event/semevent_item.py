@@ -49,6 +49,7 @@ from Products.NaayaBase.NyContentType import NyContentType, NyContentData, NY_CO
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
@@ -183,7 +184,7 @@ def create_month_folder(self, contributor, schema_raw_data):
                         contributor=contributor,
                         title="Events for %s/%s" %
                         (start_date_year, start_date_month)))
-    month_folder.folder_meta_types.append(config['meta_type'])
+    FolderMetaTypes(month_folder).add(config['meta_type'])
     return month_folder
 
 def addNySemEvent(self, id='', REQUEST=None, contributor=None, **kwargs):

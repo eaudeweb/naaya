@@ -42,6 +42,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaBase.managers.import_parser import import_parser
 from Products.Naaya.NyFolder import NyFolder
+from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.content.semide.news.semnews_item import METATYPE_OBJECT as METATYPE_NYSEMNEWS
 from naaya.content.semide.event.semevent_item import METATYPE_OBJECT as METATYPE_NYSEMEVENT
@@ -302,10 +303,11 @@ class NyCountry(NyFolder):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
+        meta_types = FolderMetaTypes(self).get_values()
         return 'custom_index="%s" maintainer_email="%s" folder_meta_types="%s" smallflag="%s" legislation_feed_url="%s" project_feed_url="%s"' % \
             (self.utXmlEncode(self.compute_custom_index_value()),
                 self.utXmlEncode(self.maintainer_email),
-                self.utXmlEncode(','.join(self.folder_meta_types)),
+                self.utXmlEncode(','.join(meta_types)),
                 self.utBase64Encode(self.utNoneToEmpty(self.smallflag)),
                 self.utXmlEncode(self.get_rc_legislation_url()),
                 self.utXmlEncode(self.get_rc_project_url()))

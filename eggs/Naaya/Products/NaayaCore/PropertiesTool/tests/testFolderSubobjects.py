@@ -1,4 +1,5 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.Naaya.adapters import FolderMetaTypes
 
 
 class TestFolderSubobjects(NaayaTestCase):
@@ -10,10 +11,10 @@ class TestFolderSubobjects(NaayaTestCase):
     def test_setting_default_subobjects(self):
         self.portal_properties.manageSubobjects(['ZopeType0', 'ZopeType1'],
                                                 ['NyType0', 'NyType1'])
-        self.assertEqual(set(self.portal.info.folder_meta_types),
+        fmt = FolderMetaTypes(self.portal.info)
+        self.assertEqual(set(fmt.get_values()),
                          set(['ZopeType0', 'ZopeType1', 'NyType0', 'NyType1']))
-        self.assertEqual(set(self.portal.info.folder_meta_types),
-                         set(self.portal.adt_meta_types))
+        self.assertEqual(set(fmt.get_values()), set(self.portal.adt_meta_types))
 
     def test_update_only_nysubobjects(self):
         self.portal_properties.manageSubobjects(['ZopeType0', 'ZopeType1'],
