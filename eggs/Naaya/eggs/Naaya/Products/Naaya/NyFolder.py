@@ -109,6 +109,9 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
     else:
         ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
 
+    if set(ob.folder_meta_types) != set(site.adt_meta_types):
+        ob.dirty_subobjects = True
+
     if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
@@ -221,6 +224,8 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     keywords = LocalProperty('keywords')
 
     default_form_id = 'folder_index'
+    # this is moved on object with 'True' value when subobjects are "customized"
+    dirty_subobjects = False
 
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
@@ -814,8 +819,15 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
 
         if kwargs.get('default', ''):
             self.folder_meta_types = self.adt_meta_types
+            self.dirty_subobjects = False
         else:
-            self.folder_meta_types = self.utConvertToList(kwargs.get('subobjects', []))
+            self.dirty_subobjects = True
+            if kwargs.get('only_nyobjects', False):
+                # Form was missing Zope Meta Types select, do not touch them
+                self.folder_meta_types = self.utListDifference(site.folder_meta_types,
+                                                               self.get_meta_types(1))
+            else:
+                self.folder_meta_types = self.utConvertToList(kwargs.get('subobjects', []))
             self.folder_meta_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
         self._p_changed = 1
 

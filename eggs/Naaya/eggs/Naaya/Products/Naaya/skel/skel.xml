@@ -69,6 +69,7 @@
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
 		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>
 		<form id="site_admin_versioncontrol" title="Portal administration - version control"/>
+		<form id="site_admin_folder_subobjects" title="Portal administration - Folder subobjects"/>
 		<form id="site_external_search" title="Portal external search"/>
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="site_googleanalytics" title="Google Analytics script"/>

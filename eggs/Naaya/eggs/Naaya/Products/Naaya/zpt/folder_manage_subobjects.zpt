@@ -17,7 +17,7 @@
 <fieldset><legend class="form-label">Select the kinds of things that can be added inside Naaya Folders:</legend>
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td colspan="2" valign="top"><input type="checkbox" name="default" value="Load default">Load default</td>
+		<td colspan="2" valign="top"><input type="checkbox" name="default" value="Load default">Use defaults defined in portal_properties</td>
 	</tr>
 	<tr>
 		<td colspan="2" valign="top"><input type="checkbox" name="subfolders" value="Recursively for subfolders">Recursively for subfolders</td>

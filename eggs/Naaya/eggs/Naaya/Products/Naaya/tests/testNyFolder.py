@@ -15,6 +15,7 @@ from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 # Products
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.interfaces import IObjectView
 from Products.Naaya.adapters import NyContentTypeViewAdapter, GenericViewAdapter
 from Products.NaayaCore.LayoutTool.Template import Template
@@ -600,3 +601,33 @@ class TestNyFolderPublicInterface(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+class TestNyFolderSubobjects(NaayaTestCase):
+
+    def setUp(self):
+        super(TestNyFolderSubobjects, self).setUp()
+        addNyFolder(self.portal.info, 'subfolder0', contributor='contributor',
+                    submission=1)
+        addNyFolder(self.portal.info, 'subfolder1', contributor='contributor',
+                    submission=1)
+
+    def test_folders_created_with_default_subobjects(self):
+        for i in range(2):
+            folder = getattr(self.portal.info, 'subfolder' + str(i))
+            self.assertEqual(folder.dirty_subobjects, False)
+            self.assertEqual(set(folder.folder_meta_types),
+                             set(self.portal.adt_meta_types))
+
+    def test_subobjects_customization(self):
+        # customize one subfolder
+        self.portal.info.subfolder1.manageSubobjects(subobjects=[],
+                                               ny_subobjects=['Naaya Document'])
+        # change global setting
+        portal_properties = self.portal.getPropertiesTool()
+        portal_properties.manageSubobjects([], ['Naaya Calendar'])
+        # check
+        self.assertEqual(set(self.portal.info.subfolder0.folder_meta_types),
+                         set(['Naaya Calendar']))
+        self.assertEqual(self.portal.info.subfolder0.dirty_subobjects, False)
+        self.assertEqual(set(self.portal.info.subfolder1.folder_meta_types),
+                         set(['Naaya Document']))
+        self.assertEqual(self.portal.info.subfolder1.dirty_subobjects, True)
