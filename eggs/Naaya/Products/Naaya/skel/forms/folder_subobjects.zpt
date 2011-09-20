@@ -2,9 +2,9 @@
 <metal:block fill-slot="body">
 
 <script type="text/javascript">
-  function displayElement(elm){
+  function displayElement(checkbox, elm){
     var obj = document.getElementById(elm);
-    if (obj.style.display == 'none'){
+    if(checkbox.checked == false){
       obj.style.display = 'block';
     }else{
       obj.style.display = 'none';
@@ -25,13 +25,16 @@
 	its subfolders and press <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
 </p>
 
-<form method="post" action="manageSubobjects">
+<tal:block tal:define="site here/getSite;">
+<form method="post" action="manageSubobjects" name="manageSubobjects">
   <div>
     <input id="load_default"
-      onchange = "displayElement('pluggable_meta_types')"
+      onchange = "displayElement(this, 'nypluggable_meta_types')"
       type="checkbox" name="default" value="Load default"
-      i18n:attributes="value" />
-    <label for="load_default" i18n:translate="">Load default</label>
+      i18n:attributes="value" autocomplete="off" tal:attributes="checked not:here/dirty_subobjects;"/>
+    <label for="load_default" i18n:translate="">Use default subobjects </label>
+    <span>(as defined in Administration - Content management -
+    <a tal:attributes="href string:${site/absolute_url}/admin_folder_subobjects_html;">Folder subobjects</a>)</span>
   </div>
   <div>
     <input id="subfolders"
@@ -39,7 +42,7 @@
       i18n:attributes="value"  />
     <label for="load_default" i18n:translate="">Recursively for subfolders</label>
   </div>
-  <div id="pluggable_meta_types"
+  <div id="nypluggable_meta_types"
        tal:define="meta_types python:here.get_meta_types(1)">
     <select name="ny_subobjects" 
       tal:attributes="size python:len(meta_types) or 10" 
@@ -52,11 +55,16 @@
     </select>
   </div>
   <div>
+    <input type="hidden" name="only_nyobjects" value="1" />
     <input type="hidden" name="redirect_url" value="subobjects_html" />
     <input type="submit" name="submit" value="Save changes" 
       i18n:attributes="value" />
   </div>
 </form>
+<script type='text/javascript'>
+  displayElement(document.manageSubobjects.default, 'nypluggable_meta_types');
+</script>
+</tal:block>
 
 </metal:block>
 </metal:block>

@@ -7,12 +7,15 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
+from OFS.interfaces import IFolder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.search_tool import search_tool
-from naaya.core.zope2util import path_in_site
+from naaya.core.zope2util import path_in_site, ofs_walk
+from Products.Naaya.interfaces import INyFolder
+
 
 def manage_addPropertiesTool(self, REQUEST=None):
     """
@@ -147,18 +150,30 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         if REQUEST: REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageSubobjects')
-    def manageSubobjects(self, subobjects=None, ny_subobjects=None, REQUEST=None):
+    def manageSubobjects(self, subobjects=None, ny_subobjects=None,
+                         only_nyobjects=False, REQUEST=None):
         """
         Update the additional meta types for all objects.
         """
+        site = self.getSite()
         if subobjects is None: subobjects = []
         else: subobjects = self.utConvertToList(subobjects)
+        if only_nyobjects:
+            # Form was missing Zope Meta Types select, do not touch them
+            subobjects = self.utListDifference(site.adt_meta_types,
+                                               self.get_meta_types(1))
         if ny_subobjects is None: ny_subobjects = []
         else: ny_subobjects = self.utConvertToList(ny_subobjects)
-        site = self.getSite()
-        site.adt_meta_types = subobjects
-        site.adt_meta_types.extend(ny_subobjects)
+
+        subobjects.extend(ny_subobjects)
+        site.adt_meta_types = list(set(subobjects))
         site._p_changed = 1
+
+        all_nyfolders = ofs_walk(site, [INyFolder], [IFolder])
+        for nyfolder in all_nyfolders:
+            if not nyfolder.dirty_subobjects:
+                nyfolder.manageSubobjects(default=True)
+
         if REQUEST: REQUEST.RESPONSE.redirect('manage_subobjects_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_addLanguage')

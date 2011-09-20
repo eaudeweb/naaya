@@ -3341,6 +3341,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         notification_tool_url = self.getNotificationTool().absolute_url()
         return REQUEST.RESPONSE.redirect(notification_tool_url + '/admin_html')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_subobjects_html')
+    def admin_folder_subobjects_html(self, REQUEST):
+        """ Admin view for editing global (default) folder subobjects """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_folder_subobjects')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_manage_subobjects')
+    def admin_folder_manage_subobjects(self, subobjects=None,
+                                       ny_subobjects=None, only_nyobjects=False,
+                                       REQUEST=None):
+        """ Updating global (default) folder subobjects """
+        portal_properties = self.getPropertiesTool()
+        portal_properties.manageSubobjects(subobjects, ny_subobjects, only_nyobjects)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('admin_folder_subobjects_html?save=ok')
+
     #others
     def get_localch_noportlet(self):
         return [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
