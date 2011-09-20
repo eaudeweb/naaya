@@ -1098,4 +1098,25 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view_management_screens, 'manage_test_html')
     manage_test_html = PageTemplateFile('zpt/manage_test', globals())
 
+    security.declareProtected(view, 'get_default_style')
+    def get_default_style(self):
+        """ Return the style from the beginning of the file as string
+        so we can get ZMI to let us customize the kml template """
+        kml = kml_generator()
+        return kml.get_default_style()
+
+    security.declareProtected(view, 'open_style')
+    def open_style(self, id):
+        """ Return the <style> tag as string
+        so we can get ZMI to let us customize the kml template """
+        kml = kml_generator()
+        return kml.open_style(id)
+
+    security.declareProtected(view, 'close_style')
+    def close_style(self):
+        """ Return the </style> tag as string
+        so we can get ZMI to let us customize the kml template """
+        kml = kml_generator()
+        return kml.close_style()
+
 InitializeClass(GeoMapTool)
