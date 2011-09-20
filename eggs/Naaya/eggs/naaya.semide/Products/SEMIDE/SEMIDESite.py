@@ -44,6 +44,7 @@ from Products.NaayaCore.managers.utils              import file_utils, batch_uti
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 
 from Products.Naaya.NyFolder                        import addNyFolder
+from Products.Naaya.adapters                        import FolderMetaTypes
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
 from Products.NaayaCore.managers.paginator          import ObjectPaginator
 from Products.NaayaForum.NyForum                    import addNyForum
@@ -1779,7 +1780,8 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     def test_containers_rc(self, p_container):
         #test if the given container contain News and/or Events
-        return (METATYPE_NYSEMNEWS in p_container.folder_meta_types) or (METATYPE_NYSEMEVENT in p_container.folder_meta_types)
+        meta_types = FolderMetaTypes(p_container).get_values()
+        return (METATYPE_NYSEMNEWS in meta_types) or (METATYPE_NYSEMEVENT in meta_types)
 
     def __getSiteMapRemCh(self, root, showitems, expand, depth):
         #site map for Remotechannels
@@ -2129,7 +2131,9 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
         ny_subobjects = [METATYPE_FOLDER,METATYPE_NYSEMEVENT,METATYPE_NYSEMNEWS,METATYPE_NYDOCUMENT, \
                          METATYPE_NYFILE, METATYPE_NYURL,METATYPE_NYPOINTER,METATYPE_NYSEMMULTIMEDIA, METATYPE_NYSEMTEXTLAWS, \
                          METATYPE_NYSEMDOCUMENT]
-        documents_obj.folder_meta_types.extend(self.utConvertToList(ny_subobjects))
+        meta_types = FolderMetaTypes(documents_obj)
+        ny_subobjects.extend(meta_types.get_values())
+        meta_types.set_values(list(set(ny_subobjects)))
 
 
     #Initiatives Folder has 2 portlets (News & Events) present in every header of its subfolders.

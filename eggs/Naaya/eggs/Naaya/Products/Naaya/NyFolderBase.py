@@ -8,6 +8,7 @@ from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.Naaya.adapters import FolderMetaTypes
 
 class NyFolderBase(Folder, NyPermissions):
     """
@@ -276,7 +277,7 @@ class NyFolderBase(Folder, NyPermissions):
         """
 
         if hasattr(self, 'folder_meta_types'):
-            folder_meta_types = self.folder_meta_types
+            folder_meta_types = FolderMetaTypes(self).get_values()
         else:
             folder_meta_types = [METATYPE_FOLDER,
                                  'Naaya Forum',

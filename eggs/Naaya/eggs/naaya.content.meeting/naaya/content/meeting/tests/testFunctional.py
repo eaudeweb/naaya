@@ -6,6 +6,7 @@ from Testing import ZopeTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.EmailTool.EmailTool import divert_mail
 from Products.NaayaSurvey.MegaSurvey import manage_addMegaSurvey
+from Products.Naaya.adapters import FolderMetaTypes
 
 #Meeting imports
 from naaya.content.meeting import ADMINISTRATOR_ROLE, PARTICIPANT_ROLE, OBSERVER_ROLE
@@ -27,7 +28,7 @@ class NyMeetingCreateTestCase(NaayaFunctionalTestCase):
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         self.portal.myfolder.approveThis()
-        self.portal.myfolder.folder_meta_types.append('Naaya Meeting')
+        FolderMetaTypes(self.portal.myfolder).add('Naaya Meeting')
         import transaction; transaction.commit()
 
     def beforeTearDown(self):

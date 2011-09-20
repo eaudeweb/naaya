@@ -25,13 +25,16 @@
 	its subfolders and press <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
 </p>
 
-<tal:block tal:define="site here/getSite;">
+<tal:block tal:define="site here/getSite;
+		      meta_types options/meta_types;
+		      has_custom_value options/has_custom_value">
+
 <form method="post" action="manageSubobjects" name="manageSubobjects">
   <div>
     <input id="load_default"
       onchange = "displayElement(this, 'nypluggable_meta_types')"
       type="checkbox" name="default" value="Load default"
-      i18n:attributes="value" autocomplete="off" tal:attributes="checked not:here/dirty_subobjects;"/>
+      i18n:attributes="value" autocomplete="off" tal:attributes="checked not:has_custom_value;"/>
     <label for="load_default" i18n:translate="">Use default subobjects </label>
     <span>(as defined in Administration - Content management -
     <a tal:attributes="href string:${site/absolute_url}/admin_folder_subobjects_html;">Folder subobjects</a>)</span>
@@ -43,13 +46,13 @@
     <label for="load_default" i18n:translate="">Recursively for subfolders</label>
   </div>
   <div id="nypluggable_meta_types"
-       tal:define="meta_types python:here.get_meta_types(1)">
+       tal:define="all_meta_types python:here.get_meta_types(1)">
     <select name="ny_subobjects" 
-      tal:attributes="size python:len(meta_types) or 10" 
+      tal:attributes="size python:len(all_meta_types) or 10" 
       multiple="true">
-      <tal:block repeat="item meta_types">
+      <tal:block repeat="item all_meta_types">
         <option tal:define="item_label python:here.get_meta_type_label(item);"
-          tal:attributes="value item; selected python:item in here.folder_meta_types"
+          tal:attributes="value item; selected python:item in meta_types"
           tal:content="item_label" />
       </tal:block>
     </select>

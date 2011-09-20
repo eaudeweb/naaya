@@ -169,11 +169,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site.adt_meta_types = list(set(subobjects))
         site._p_changed = 1
 
-        all_nyfolders = ofs_walk(site, [INyFolder], [IFolder])
-        for nyfolder in all_nyfolders:
-            if not nyfolder.dirty_subobjects:
-                nyfolder.manageSubobjects(default=True)
-
         if REQUEST: REQUEST.RESPONSE.redirect('manage_subobjects_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_addLanguage')

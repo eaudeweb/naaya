@@ -29,6 +29,7 @@ from naaya.content.base.events import NyContentObjectEditEvent
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyCommonView import NyCommonView
+from Products.Naaya.adapters import FolderMetaTypes
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -99,18 +100,22 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None,
             REQUEST.RESPONSE.redirect('%s/folder_add_html' % self.absolute_url())
             return
 
+    ob_meta_types = FolderMetaTypes(ob)
+    parent_meta_types = FolderMetaTypes(self)
     #extra settings
     if _folder_meta_types == '':
-        #inherit allowd meta types from the parent
+        # inherit allowed meta types from the parent folder or portal
         if self.meta_type == site.meta_type:
-            ob.folder_meta_types = self.adt_meta_types
+            # parent is portal, use defaults
+            ob_meta_types.set_values(None)
         else:
-            ob.folder_meta_types = self.folder_meta_types
+            if not parent_meta_types.has_custom_value:
+                # if parent uses defaults, so should `ob`
+                ob_meta_types.set_values(None)
+            else:
+                ob_meta_types.set_values(parent_meta_types.get_values())
     else:
-        ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
-
-    if set(ob.folder_meta_types) != set(site.adt_meta_types):
-        ob.dirty_subobjects = True
+        ob_meta_types.set_values(self.utConvertToList(_folder_meta_types))
 
     if self.checkPermissionSkipApproval():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -224,14 +229,15 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     keywords = LocalProperty('keywords')
 
     default_form_id = 'folder_index'
-    # this is moved on object with 'True' value when subobjects are "customized"
-    dirty_subobjects = False
 
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
-        if len(self.folder_meta_types) > 0:
-            #filter meta types
-            l = list(filter(lambda x: x['name'] in self.folder_meta_types, Products.meta_types))
+        meta_types = FolderMetaTypes(self)
+        folder_meta_types = meta_types.get_values()
+
+        if len(folder_meta_types) > 0:
+            # filter meta types
+            l = list(filter(lambda x: x['name'] in folder_meta_types, Products.meta_types))
             #handle uninstalled pluggable meta_types
             pluggable_meta_types = self.get_pluggable_metatypes()
             pluggable_installed_meta_types = self.get_pluggable_installed_meta_types()
@@ -242,6 +248,7 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
             return l
         else:
             return self.meta_types
+
 
     def __init__(self, id, contributor):
         """ """
@@ -264,7 +271,8 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         return 'done import'
 
     # image container for this folder
-    def getUploadedImages(self): return self.objectValues(['Image'])
+    def getUploadedImages(self):
+        return self.objectValues(['Image'])
 
     #import/export
     def exportdata_custom(self, all_levels):
@@ -817,18 +825,19 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         if REQUEST:
             kwargs.update(REQUEST.form)
 
+        meta_types = FolderMetaTypes(self)
+
         if kwargs.get('default', ''):
-            self.folder_meta_types = self.adt_meta_types
-            self.dirty_subobjects = False
+            meta_types.set_values(None)
         else:
-            self.dirty_subobjects = True
             if kwargs.get('only_nyobjects', False):
                 # Form was missing Zope Meta Types select, do not touch them
-                self.folder_meta_types = self.utListDifference(site.folder_meta_types,
-                                                               self.get_meta_types(1))
+                new_types = list(set(meta_types.get_values()) -
+                                 set(self.get_meta_types(1)))
             else:
-                self.folder_meta_types = self.utConvertToList(kwargs.get('subobjects', []))
-            self.folder_meta_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
+                new_types = self.utConvertToList(kwargs.get('subobjects', []))
+            new_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
+            meta_types.set_values(new_types)
         self._p_changed = 1
 
         if kwargs.get('subfolders', False):
@@ -1245,7 +1254,16 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     folder_manage_edit_html = PageTemplateFile('zpt/folder_manage_edit', globals())
 
     security.declareProtected(view_management_screens, 'manage_folder_subobjects_html')
-    manage_folder_subobjects_html = PageTemplateFile('zpt/folder_manage_subobjects', globals())
+    def manage_folder_subobjects_html(self):
+        """
+        Manage (customized or sync with default) subobjects
+        of current folder
+
+        """
+        folder_mt = FolderMetaTypes(self)
+        ptf = PageTemplateFile('zpt/folder_manage_subobjects', globals())
+        return ptf.__of__(self)(meta_types=folder_mt.get_values(),
+                                has_custom_value=folder_mt.has_custom_value)
 
     #site pages
     security.declareProtected(view, 'standard_html_header')
@@ -1480,8 +1498,12 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'subobjects_html')
     def subobjects_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'folder_subobjects')
+        """ Admin view of managing subobjects of current folder """
+        folder_mt = FolderMetaTypes(self)
+        opts = {'meta_types': folder_mt.get_values(),
+                'has_custom_value': folder_mt.has_custom_value}
+        return self.getFormsTool().getContent({'here': self, 'options': opts},
+                                              'folder_subobjects')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):

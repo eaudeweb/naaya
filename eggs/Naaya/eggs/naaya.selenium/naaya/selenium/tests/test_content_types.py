@@ -10,6 +10,7 @@ from zope.component import getGlobalSiteManager
 
 from Products.Naaya.tests.SeleniumTestCase import SeleniumTestCase
 from naaya.core.tests import mock_captcha
+from Products.Naaya.adapters import FolderMetaTypes
 
 fixtures_path = path.join(path.dirname(__file__), 'fixtures')
 
@@ -615,7 +616,7 @@ class BlobFileTest(_CommonContentTests):
         # "Naaya Blob File" is not installed by default
         self.portal.manage_uninstall_pluggableitem("Naaya File")
         self.portal.manage_install_pluggableitem("Naaya Blob File")
-        self.portal.info.folder_meta_types += ["Naaya Blob File"]
+        FolderMetaTypes(self.portal.info).add("Naaya Blob File")
         transaction.commit()
 
     def _assert_object_added_properly(self, container, *args, **kwargs):

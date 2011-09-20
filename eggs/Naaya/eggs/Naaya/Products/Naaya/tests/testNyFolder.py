@@ -17,7 +17,8 @@ from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.interfaces import IObjectView
-from Products.Naaya.adapters import NyContentTypeViewAdapter, GenericViewAdapter
+from Products.Naaya.adapters import (NyContentTypeViewAdapter, FolderMetaTypes,
+                                     GenericViewAdapter)
 from Products.NaayaCore.LayoutTool.Template import Template
 from naaya.content.base.interfaces import INyContentObject
 
@@ -613,8 +614,9 @@ class TestNyFolderSubobjects(NaayaTestCase):
     def test_folders_created_with_default_subobjects(self):
         for i in range(2):
             folder = getattr(self.portal.info, 'subfolder' + str(i))
-            self.assertEqual(folder.dirty_subobjects, False)
-            self.assertEqual(set(folder.folder_meta_types),
+            fmt = FolderMetaTypes(folder)
+            self.assertFalse(fmt.has_custom_value)
+            self.assertEqual(set(fmt.get_values()),
                              set(self.portal.adt_meta_types))
 
     def test_subobjects_customization(self):
@@ -624,10 +626,10 @@ class TestNyFolderSubobjects(NaayaTestCase):
         # change global setting
         portal_properties = self.portal.getPropertiesTool()
         portal_properties.manageSubobjects([], ['Naaya Calendar'])
+        fmt0 = FolderMetaTypes(self.portal.info.subfolder0)
+        fmt1 = FolderMetaTypes(self.portal.info.subfolder1)
         # check
-        self.assertEqual(set(self.portal.info.subfolder0.folder_meta_types),
-                         set(['Naaya Calendar']))
-        self.assertEqual(self.portal.info.subfolder0.dirty_subobjects, False)
-        self.assertEqual(set(self.portal.info.subfolder1.folder_meta_types),
-                         set(['Naaya Document']))
-        self.assertEqual(self.portal.info.subfolder1.dirty_subobjects, True)
+        self.assertEqual(set(fmt0.get_values()), set(['Naaya Calendar']))
+        self.assertFalse(fmt0.has_custom_value)
+        self.assertEqual(set(fmt1.get_values()), set(['Naaya Document']))
+        self.assertTrue(fmt1.has_custom_value)

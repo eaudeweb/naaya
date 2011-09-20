@@ -1,5 +1,8 @@
 from naaya.core.zope2util import DT2dt, icon_for_content_type
 from naaya.core.utils import pretty_size
+from Products.Naaya.interfaces import INyFolder
+
+
 def _get_icon_url(ob):
     site = ob.getSite()
     scheme = site.getLayoutTool().getCurrentSkinScheme()
@@ -118,3 +121,58 @@ class NyFolderViewAdapter(NyContentTypeViewAdapter):
             return "(" + ', '.join(msg) + ")"
         else:
             return trans("folder contains no sub-items")
+
+
+class FolderMetaTypes(object):
+
+
+    def __init__(self, nyfolder):
+        self.context = nyfolder
+
+    def get_values(self):
+        """
+        Returns meta types that can be present as subobjects.
+        Uses the `use default` logic, always returns list-type
+
+        """
+        if self.context.folder_meta_types is None:
+            # None means use global settings
+            return list(self.context.getSite().adt_meta_types)
+        else:
+            return list(self.context.folder_meta_types)
+
+    def set_values(self, meta_types):
+        """
+        Set folder subobject meta_types.
+        Calling this with `meta_types`=None,
+        makes this folder's subobject meta types synced
+        with global ones (the `use default` logic).
+
+        """
+        assert(meta_types is None or isinstance(meta_types, list))
+        self.context.folder_meta_types = meta_types
+
+    def add(self, meta_type):
+        """ Adds meta type """
+        existing = self.get_values()
+        if meta_type not in existing:
+            existing.append(meta_type)
+            self.set_values(existing)
+
+    def remove(self, meta_type):
+        """ Removes a folder meta type """
+        existing = self.get_values()
+        if meta_type in existing:
+            existing.remove(meta_type)
+            self.set_values(existing)
+
+    @property
+    def has_custom_value(self):
+        """
+        Returns True if folder subobjects setting is customized.
+        If False, folder uses default meta types of subobjects,
+        as specified in Portal Properties.
+        Uses the `use default` logic.
+
+        """
+        return self.context.folder_meta_types is not None

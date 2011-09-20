@@ -22,7 +22,7 @@
             and press <strong i18n:name="save-button" i18n:translate="">Save changes</strong>.
     </p>
 
-    <form method="post" action="admin_folder_manage_subobjects">
+    <form method="post" action="admin_folder_subobjects_submit">
 
       <div id="ny_pluggable_meta_types"
            tal:define="meta_types python:here.get_meta_types(1)">

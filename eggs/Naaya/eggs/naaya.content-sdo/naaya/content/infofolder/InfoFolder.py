@@ -44,6 +44,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.managers.utils import make_id
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.NyFolder import NyFolder
+from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.content.info import info_item, NyEnterprise, NyNetwork, NyTool, NyTraining
 from naaya.content.event import event_item
@@ -161,14 +162,20 @@ def addNyInfoFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     site = self.getSite()
     #extra settings
+    ob_meta_types = FolderMetaTypes(ob)
+    parent_meta_types = FolderMetaTypes(self)
     if _folder_meta_types == '':
         #inherit allowd meta types from the parent
         if self.meta_type == site.meta_type:
-            ob.folder_meta_types = self.adt_meta_types
+            ob_meta_types.set_values(site.adt_meta_types)
         else:
-            ob.folder_meta_types = self.folder_meta_types
+            if not parent_meta_types.has_custom_value:
+                # if parent uses defaults, so should `ob`
+                ob_meta_types.set_values(None)
+            else:
+                ob_meta_types.set_values(parent_meta_types.get_values())
     else:
-        ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
+        ob_meta_types.set_values(self.utConvertToList(_folder_meta_types))
 
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -253,7 +260,7 @@ class NyInfoFolder(NyFolder):
 
         info_type = schema_raw_data.pop('info_type', None)
         self.info_type = info_type
-        self.folder_meta_types = self.get_meta_types()
+        FolderMetaTypes(self).set_values(self.get_meta_types())
 
         self.set_categories()
 
