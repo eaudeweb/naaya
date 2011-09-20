@@ -50,6 +50,7 @@ from naaya.content.contact.contact_item             import addNyContact
 from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
 from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
 
@@ -154,7 +155,8 @@ class EnviroWindowsSite(NySite):
         self._install_link_checker()
 
         addNyFolder(self, id='events', title='Events', publicinterface=1)
-        self._getOb('events').folder_meta_types=['Naaya Event']
+        folder_meta_types = FolderMetaTypes(self._getOb('events'))
+        folder_meta_types.set_values(['Naaya Event'])
         event_folder_custom_index = (
             "<metal:block use-macro=\"python:here.getFormsTool()."
             "getForm('event_folder_index').macros['page']\" />")
