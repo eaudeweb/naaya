@@ -32,6 +32,13 @@ def map_if_available(mapping, values):
             yield mapping[v]
 
 
+def load_patch():
+    f = open(_pth('map_patch.js'), 'rb')
+    data = f.read().decode('utf-8')
+    f.close()
+    return data
+
+
 def shadow_to_dict(shadow):
     return {
         "title": {'en': shadow.viewer_title_en, 'ru': shadow.viewer_title_ru},
@@ -75,6 +82,7 @@ def get_map_async_config(site):
         'documents': documents,
         'query-time': time() - t0,
         'timestamp': time(),
+        "patch": load_patch(),
     }
 
 
