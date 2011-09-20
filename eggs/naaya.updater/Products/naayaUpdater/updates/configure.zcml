@@ -345,4 +345,10 @@
       component=".update_add_use_openzoom.UpdateAddUseOpenzoom"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="folder_subobjects.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_folder_subobjects.UpdateSubobjectsStatus"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
