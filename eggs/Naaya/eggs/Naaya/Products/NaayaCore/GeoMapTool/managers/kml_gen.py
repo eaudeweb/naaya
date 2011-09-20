@@ -3,88 +3,43 @@ __doc__ = """
     Google Earth KML template module.
 """
 
+DEFAULT_STYLE = '''<Style id="myDefaultStyles">
+    <IconStyle id="IconStyle">
+        <color>ff0ff0ff</color>
+        <Icon>
+            <href>root://icons/palette-4.png</href>
+            <x>160</x>
+            <y>128</y>
+            <w>32</w>
+            <h>32</h>
+        </Icon>
+    </IconStyle>
+    <LabelStyle id="defaultLabelStyle">
+        <color>7fffaaff</color>
+        <scale>1.5</scale>
+    </LabelStyle>
+    <LineStyle id="defaultLineStyle">
+        <color>ff0000ff</color>
+        <width>15</width>
+    </LineStyle>
+    <PolyStyle id="defaultPolyStyle">
+        <color>ff0000ff</color>
+        <fill>1</fill>
+        <outline>1</outline>
+    </PolyStyle>
+</Style>'''
+
 class kml_generator:
 
     def __init__(self):
         """ constructor """
         pass
 
-    def header(self):
-        return (
-            '<?xml version="1.0" encoding="UTF-8"?>\n'
-            '<kml xmlns="http://earth.google.com/kml/2.2">\n'
-            '<Document>'
-            )
+    def get_default_style(self):
+        return DEFAULT_STYLE
 
-    def style(self):
-        return (
-            '<Style id="myDefaultStyles">\n'
-            '<IconStyle id="IconStyle">\n'
-            '<color>ff0ff0ff</color>\n'
-            '<Icon>\n'
-            '<href>root://icons/palette-4.png</href>\n'
-            '<x>160</x>\n'
-            '<y>128</y>\n'
-            '<w>32</w>\n'
-            '<h>32</h>\n'
-            '</Icon>\n'
-            '</IconStyle>\n'
-            '<LabelStyle id="defaultLabelStyle">\n'
-            '<color>7fffaaff</color>\n'
-            '<scale>1.5</scale>\n'
-            '</LabelStyle>\n'
-            '<LineStyle id="defaultLineStyle">\n'
-            '<color>ff0000ff</color>\n'
-            '<width>15</width>\n'
-            '</LineStyle>\n'
-            '<PolyStyle id="defaultPolyStyle">\n'
-            '<color>ff0000ff</color>\n'
-            '<fill>1</fill>\n'
-            '<outline>1</outline>\n'
-            '</PolyStyle>\n'
-            '</Style>'
-            )
+    def open_style(self, id):
+        return '<Style id="%s">' % id
 
-    def add_point(self, id, title, description, icon_url, in_long, in_lat, geo_type, map_path, item_path, item_url, item_address):
-        return (
-            '<Placemark>\n'
-            '<Style id="%s">\n'
-            '<IconStyle id="%s">\n'
-            '<Icon>\n'
-            '<href>%s</href>\n'
-            '<x>128</x>\n'
-            '<y>64</y>\n'
-            '<w>32</w>\n'
-            '<h>32</h>\n'
-            '</Icon>\n'
-            '</IconStyle>\n'
-            '</Style>\n'
-            '<name>%s</name>\n'
-            '<description><![CDATA[%s]]></description>\n'
-            '<visibility>1</visibility>\n'
-            '<styleUrl>#%s</styleUrl>\n'
-            '<Point id="%s">\n'
-            '<coordinates>%s,%s,0.0</coordinates>\n'
-            '</Point>\n'
-            '</Placemark>'
-            ) % (id, id, icon_url, title, \
-                self.add_description(item_path, title, item_address, description, icon_url, geo_type, item_url), \
-                id, id, in_long, in_lat)
-
-    def add_description(self, ipath, ititle, iaddr, idescr, msymurl, msym, iurl):
-        return (
-            '<img src="%s" />'
-            '<b><a href="%s">%s</a></b>'
-            '<BR><BR>%s'
-            '<BR><BR>'
-            '<b>%s</b><BR>'
-            'Category: %s'
-            '<BR>'
-            'Details: %s'
-            ) % (msymurl, ipath, ititle, idescr, iaddr, msym, iurl)
-
-    def footer(self):
-        return (
-            '</Document>\n'
-            '</kml>'
-            )
+    def close_style(self):
+        return '</Style>'

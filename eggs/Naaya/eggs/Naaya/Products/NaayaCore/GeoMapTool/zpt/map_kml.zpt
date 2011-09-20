@@ -3,35 +3,11 @@
     xmlns:tal="http://xml.zope.org/namespaces/tal">
 <Document>
 
-<Style id="myDefaultStyles">
-	<IconStyle id="IconStyle">
-	<color>ff0ff0ff</color>
-	<Icon>
-	<href>root://icons/palette-4.png</href>
-	<x>160</x>
-	<y>128</y>
-	<w>32</w>
-	<h>32</h>
-	</Icon>
-	</IconStyle>
-	<LabelStyle id="defaultLabelStyle">
-	<color>7fffaaff</color>
-	<scale>1.5</scale>
-	</LabelStyle>
-	<LineStyle id="defaultLineStyle">
-	<color>ff0000ff</color>
-	<width>15</width>
-	</LineStyle>
-	<PolyStyle id="defaultPolyStyle">
-	<color>ff0000ff</color>
-	<fill>1</fill>
-	<outline>1</outline>
-	</PolyStyle>
-</Style>
+<span tal:replace="structure here/get_default_style"/>
 
 <tal:block repeat="point options/points">
 <Placemark tal:define="icon_url python:'%s/getSymbolPicture?id=%s' % (here.absolute_url(), point.geo_type)">
-	<Style tal:attributes="id point/getId">
+	<span tal:replace="structure python:here.open_style(point.getId())"/>
 		<IconStyle tal:attributes="id point/getId">
 		<Icon>
 		<href tal:content="icon_url"/>
@@ -41,7 +17,7 @@
 		<h>32</h>
 		</Icon>
 		</IconStyle>
-	</Style>
+	<span tal:replace="structure here/close_style"/>
 	<name tal:content="point/title_or_id"/>
 	<description
 		tal:define="icon_tag string:&lt;img src=&quot;${icon_url}&quot; /&gt;;
