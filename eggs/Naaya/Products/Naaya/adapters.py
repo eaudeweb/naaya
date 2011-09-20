@@ -124,9 +124,25 @@ class NyFolderViewAdapter(NyContentTypeViewAdapter):
 
 
 class FolderMetaTypes(object):
+    """
+    This is a wrapper for *NyFolder*, allowing you to manage the
+    subobjects list (or folder meta types).
 
+    By default, a folder uses default subobjects setting, available in
+    *Portal Properties*, or inherit the settings of its parent at creation.
+
+    To make a folder use default subobjects, just call `set_values` with None.
+
+    Please be aware that calling `set_values` with a specific list, `add`
+    or `remove` methods will make the folder stop using the default subobjects.
+
+    """
 
     def __init__(self, nyfolder):
+        """ Wrapper for NyFolder """
+        # cross import issue
+        from Products.Naaya.NyFolderBase import NyFolderBase
+        assert(isinstance(nyfolder, NyFolderBase))
         self.context = nyfolder
 
     def get_values(self):
