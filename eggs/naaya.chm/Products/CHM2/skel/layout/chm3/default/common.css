@@ -1,14 +1,14 @@
 /* Required tags - these classes appear in the forms */
 
 #center_content_holder {
-  width: 720px;
+  width: 715px;
   float: left;
 }
 
 #right_port {
 	width: 233px;
 	float: left !important;
-	margin-left: 16px;
+	margin-left: 22px;
 }
 
 .right_link_portlet .portlet-title {
@@ -1263,17 +1263,6 @@ table.datatable {
 }
 .searchQuery input, .searchQuery select  {
 	color:#555555;
-}
-.searchQuery input {
-	height: 1.3em;
-	padding-top: 0.1em;
-}
-.searchQuery .styled_button {
-	height: 2em;
-	padding-top: 0;
-	border: 1px solid #ccc;
-	background: #ddd;
-	cursor: pointer;
 }
 .searchQuery label {
 	color: #2f4b6a;
