@@ -142,7 +142,7 @@ table tr td {
 .admin_this_folder span, #admin_this_folder span {
 	padding:0em 0.4em;
 	margin: 0em 0.3em;
-	font-size: 90%;
+	font-size: 11px;
 }
 .admin_this_folder img, #admin_this_folder img {
 	vertical-align: middle;
@@ -196,7 +196,7 @@ dd#admin_textarea{
 	top:1px;
 }
 
-#toolbar input, #toolbar button, #toolbar span {
+#toolbar input, #toolbar button {
 	white-space: nowrap;
 	font-size: 0.85em;
 	font-weight: bold;
@@ -209,7 +209,7 @@ dd#admin_textarea{
 	color: #333333;
 }
 
-#toolbar input:hover, #toolbar button:hover, #toolbar span:hover {
+#toolbar input:hover, #toolbar button:hover {
 	border-left:1px solid #6791c3;
 	border-top:1px solid #6791c3;
 	border-bottom:1px solid #34649b;
