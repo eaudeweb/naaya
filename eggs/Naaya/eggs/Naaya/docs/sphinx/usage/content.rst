@@ -106,3 +106,15 @@ Content types are pluggable
 
 How to customize a content type?
 --------------------------------
+
+Why can't I add an object of a specific content type?
+-----------------------------------------------------
+There is a global list of allowed content types configurable in
+:doc:`Administration, Folder subobjects <admin>`. All folders inspect that list when they
+show you the selection list of available content types for new objects.
+
+However, a folder can be customized by using its own list of subobjects;
+a manager can click *Edit subobjects* inside a folder and choose to
+select a particular list of content types or check *Use defaults*. There
+is also an option to make changes easier: recursively apply selected settings
+to all subfolders (be it content type customization or `use defaults` setting).

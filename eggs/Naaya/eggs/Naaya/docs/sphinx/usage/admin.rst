@@ -162,6 +162,16 @@ main section; the expand levels option allows administrators to specify
 the depth of the expanded navigation tree, and the maximum levels option
 allows administrators to specify the maximum depth of the navigation tree.
 
+Folder subobjects
+++++++++++++++++++++
+
+The subobjects are the content types that a user with publishing rights
+is allowed to add inside a folder.
+Here you can find the global setting for the allowed
+subobjects of folders in portal. However, each folder can be customized,
+defining a particular set of types (subobjects) that can be added,
+overwriting the default behavior.
+
 ------------------
 Syndication
 ------------------
