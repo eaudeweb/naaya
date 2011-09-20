@@ -2,6 +2,7 @@ $(document).ready(function(){
 	$('.js-enabled').remove();
 	
 	cleanRightPortlet();
+	setWrapHeight();
 	
 	if( $('.highlights-content').length ){
 		$('.highlights-content').scrollCarousel({
@@ -1394,4 +1395,11 @@ function cleanRightPortlet() {
 		box.next('.clear').remove();
 		box.remove();
 	}
+}
+
+function setWrapHeight(){
+	height = window.innerHeight - 198;
+	$('#wrap').css({
+		'min-height': height + 'px'
+	});
 }
