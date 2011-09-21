@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <urlset
-  xmlns="http://www.google.com/schemas/sitemap/0.84"
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
-  xsi:schemaLocation="http://www.google.com/schemas/sitemap/0.84
-                      http://www.google.com/schemas/sitemap/0.84/sitemap.xsd">
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                      http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
   <url tal:repeat="doc python:here.getCatalogedObjectsCheckView(
           meta_type=['Naaya Document', 'Naaya File', 'Naaya Folder'],
