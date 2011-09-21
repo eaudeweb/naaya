@@ -281,9 +281,11 @@ M.after_map_load = function(callback) {
 };
 
 M.map_has_loaded = function() {
-  $.each(M.after_map_load_queue, function(i, callback) {
+  var i = 0;
+  while(M.after_map_load_queue.length > 0) {
+    var callback = M.after_map_load_queue.splice(0, 1)[0];
     callback();
-  });
+  }
   M.after_map_load_queue = null;
 };
 

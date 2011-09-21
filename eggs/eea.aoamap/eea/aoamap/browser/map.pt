@@ -279,7 +279,9 @@
   M.load_templates();
   M.map_div = M.jQuery('#countries-map');
   M.get_layer_labels();
-  M.jQuery(document).ready(function() {
-    M.create_map_search();
+  M.jQuery(window).load(function() {
+    M.jQuery(document).ready(function() {
+      M.create_map_search();
+    });
   });
   "></script>
