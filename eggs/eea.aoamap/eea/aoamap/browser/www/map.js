@@ -271,6 +271,22 @@ M.get_layer_labels = function() {
   trans.remove();
 };
 
+M.after_map_load_queue = [];
+M.after_map_load = function(callback) {
+  if(M.after_map_load_queue == null) {
+    callback();
+  } else {
+    M.after_map_load_queue.push(callback);
+  }
+};
+
+M.map_has_loaded = function() {
+  $.each(M.after_map_load_queue, function(i, callback) {
+    callback();
+  });
+  M.after_map_load_queue = null;
+};
+
 M.create_map_search = function() {
   M.countries_map = new OpenLayers.Map(M.map_div[0].id, {
     restrictedExtent: M.map_extent,
@@ -316,6 +332,7 @@ M.create_map_search = function() {
     var view = M.views["region"];
     view.set_features(M.geojson_format.read(features_json));
   });
+  M.map_has_loaded();
 };
 
 M.create_map_document = function(options) {
