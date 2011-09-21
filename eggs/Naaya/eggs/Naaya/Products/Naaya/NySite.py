@@ -3896,6 +3896,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     sitemap_xml = NaayaPageTemplateFile('zpt/sitemap_xml', globals(), 'naaya.google.sitemap')
 
+    sitemap_rdf_xml = NaayaPageTemplateFile('zpt/sitemap_rdf_xml', globals(), 'naaya.semanticweb.sitemap')
+
     #calendar widget
     security.declarePublic('calendar_js')
     calendar_js = DTMLFile('zpt/calendar/calendar_js', globals())
