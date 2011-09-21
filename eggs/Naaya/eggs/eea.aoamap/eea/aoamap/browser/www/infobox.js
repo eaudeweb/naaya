@@ -72,11 +72,11 @@ M.render_country_info = function(code) {
   var country_info_box = $('<div>').append(html);
   $('img.country-flag', country_info_box).attr('src', country_flag_url(code));
   $('a.link-water-fiche', country_info_box).attr('href',
-      M.document_url(name, "Water"));
+      M.document_url(code, "Water"));
   $('a.link-green-economy-fiche', country_info_box).attr('href',
-      M.document_url(name, "Green economy"));
+      M.document_url(code, "Green economy"));
   $('a.link-country-profile', country_info_box).attr('href',
-      M.document_url(name, "profile"));
+      M.document_url(code, "profile"));
   return country_info_box;
 };
 
@@ -102,8 +102,13 @@ M.render_region_info = function(code, countries) {
   else {
     $('p.link-to-regional-report-box', region_info_box).remove();
   }
-  $('a.link-region-profile', region_info_box).attr('href',
-    M.region_info_url(name));
+  if(code == 'eea' || code == 'western-balkans') {
+    $('div#aoa-search-map a.link-region-profile').remove();
+  }
+  else {
+    $('a.link-region-profile', region_info_box).attr('href',
+      M.region_info_url(code));
+  }
   return region_info_box;
 };
 
@@ -128,13 +133,16 @@ M.regional_report_url = function(code) {
          slug_by_region[code];
 };
 
-M.document_url = function(country_name, theme_name) {
+M.document_url = function(country_code, theme_name) {
+  var country_name_en = M.config['country_name_en'][country_code];
   return M.config['report_documents_url'] + '/' +
-      slug(country_name) + '-' + slug(theme_name);
+      slug(country_name_en) + '-' + slug(theme_name);
 };
 
-M.region_info_url = function(region_name) {
-  return M.config['report_documents_url'] + '/' + slug(region_name) + '-info';
+M.region_info_url = function(region_code) {
+  var region_name_en = M.config['region_name_en'][region_code];
+  return M.config['report_documents_url'] + '/' +
+      slug(region_name_en) + '-info';
 };
 
 function slug(name) {

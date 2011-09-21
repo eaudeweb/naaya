@@ -28,6 +28,8 @@ M.load_async_config = function() {
     M.config['load_time'] = new Date();
     M.config['country_name'] = values_for_language(response['country_name'],
                                                    M.config['language']);
+    M.config['country_name_en'] = values_for_language(response['country_name'],
+                                                      'en');
     M.config['country_code'] = {};
     $.each(response['country_name'], function(code, name) {
       M.config['country_code'][name] = code;
@@ -35,18 +37,20 @@ M.load_async_config = function() {
     M.config['country_index'] = response['country_index'];
     M.config['region_name'] = values_for_language(response['region_name'],
                                                   M.config['language']);
+    M.config['region_name_en'] = values_for_language(response['region_name'],
+                                                     'en');
     M.config['region_countries'] = response['region_countries'];
     M.config['theme_name'] = values_for_language(response['theme_name'],
                                                  M.config['language']);
     M.config['documents'] = response['documents'];
     M.config['sorted_documents'] = build_indexes(response['documents']);
-    M.config['async_config_loaded'] = true;
     if(response['patch'] != null) {
       eval(response['patch']);
     }
     M.configure_selection_info();
     $('div.loading-animation').remove();
-    $(document).ready(function() {
+    M.after_map_load(function() {
+      M.config['async_config_loaded'] = true;
       M.perform_search({});
       M.update_search_form_map_selection();
     });
@@ -146,7 +150,7 @@ function setup_search_handlers() {
     M.countries_map.setBaseLayer(view['tiles_layer']);
   });
 
-  $(document).ready(function() {
+  M.after_map_load(function() {
     $('div#search-geolevel-box select#search-geolevel').val(M.current_view_name);
     $('div#search-geolevel-box').show();
   });
@@ -435,7 +439,7 @@ function update_polygon_numbers(documents) {
 }
 
 
-$(document).ready(function() {
+M.after_map_load(function() {
   setup_search_handlers();
   $('div#filters').bind('map-coverage-hidden', collapse_document_info);
 });
