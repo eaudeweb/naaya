@@ -12,7 +12,7 @@ from zope.interface import implements
 try:
     import ldap
     from Products.LDAPUserFolder.utils import GROUP_MEMBER_MAP
-    from Products.LDAPUserFolder.LDAPDelegate import LDAPDelegate, filter_format
+    from Products.LDAPUserFolder.LDAPDelegate import filter_format
 except:
     pass
 
@@ -150,13 +150,8 @@ class plugLDAPUserFolder(PlugBase):
         return acl_folder.groups_scope
 
     def get_ldap_delegate(self):
-        delegate = LDAPDelegate()
-
         acl_folder = self.getUserFolder()
-        for server in acl_folder.getServers():
-            delegate.addServer(server.get('host'), use_ssl=0)
-
-        return delegate
+        return acl_folder._delegate
 
     def getSortedUserRoles(self, skey='', rkey=''):
         """ sort users list """
