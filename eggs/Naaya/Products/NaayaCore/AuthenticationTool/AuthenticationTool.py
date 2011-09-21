@@ -1373,7 +1373,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_send_emails_log_html')
 
-    security.declareProtected(manage_users, 'manage_addUser')
+    security.declareProtected(manage_users, 'manage_importUsers')
     def manage_importUsers(self, data=None, REQUEST=None):
         """ """
 
