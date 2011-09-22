@@ -10,6 +10,11 @@
 
     <dcterms:title tal:content="here/title" />
 
+    <dcterms:creator
+      tal:define="contributor here/contributor|nothing"
+      tal:condition="contributor"
+      tal:content="contributor" />
+
     <dcterms:description
       tal:condition="here/description | nothing"
       tal:content="here/description" />
