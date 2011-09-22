@@ -40,8 +40,8 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
         self.assertTrue('<rdf:Description '
                         'rdf:about="http://localhost/portal/'
                         'myfolder/mydoc">' in res.body)
-        self.assertTrue('<dc:title>My document</dc:title>' in res.body)
-        self.assertTrue('<dc:language>en</dc:language>' in res.body)
+        self.assertTrue('<dcterms:title>My document</dcterms:title>' in res.body)
+        self.assertTrue('<dcterms:language>en</dcterms:language>' in res.body)
 
         res = get(fmt='rdf')
         self.assert_is_rdf(res)
