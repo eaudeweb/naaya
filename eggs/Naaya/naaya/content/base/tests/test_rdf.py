@@ -63,6 +63,33 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
         self.assertEqual(rdf_language.text, "en")
 
 
+    def test_rdf_description(self):
+        res = self._get()
+        rdf = lxml.etree.fromstring(res.body)
+        rdf_obj = rdf.xpath('./rdf:Description', namespaces=ns)[0]
+        self.assertEqual(rdf_obj.xpath('./dcterms:description', namespaces=ns),
+                         [])
+
+        self.portal['myfolder']['mydoc'].description = "document under test"
+        transaction.commit()
+
+        res = self._get()
+        rdf = lxml.etree.fromstring(res.body)
+
+        rdf_obj = rdf.xpath('./rdf:Description', namespaces=ns)[0]
+        rdf_desc = rdf_obj.xpath('./dcterms:description', namespaces=ns)[0]
+        self.assertEqual(rdf_desc.text, "document under test")
+
+
+    def test_contributor(self):
+        res = self._get()
+        rdf = lxml.etree.fromstring(res.body)
+
+        rdf_obj = rdf.xpath('./rdf:Description', namespaces=ns)[0]
+        rdf_creator = rdf_obj.xpath('./dcterms:creator', namespaces=ns)[0]
+        self.assertEqual(rdf_creator.text, "contributor")
+
+
     def test_security(self):
         url = 'http://localhost/portal/myfolder/mydoc?format=rdf'
         rdf_fragment = ('<rdf:Description '
