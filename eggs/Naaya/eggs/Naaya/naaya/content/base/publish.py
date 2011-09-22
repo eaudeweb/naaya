@@ -30,6 +30,9 @@ class NyContentPublishTraverse(DefaultPublishTraverse):
         return self.fallback(request, name)
 
 def client_wants_rdf(request):
+    if request.get('format', None) == 'rdf':
+        return True
+
     accept = request.HTTP_ACCEPT or 'text/html'
     known_types = ['application/rdf+xml', 'text/html']
     try:
@@ -39,9 +42,6 @@ def client_wants_rdf(request):
     else:
         if mime_type == 'application/rdf+xml':
             return True
-
-    if request.get('format', None) == 'rdf':
-        return True
 
     return False
 
