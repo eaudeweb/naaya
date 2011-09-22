@@ -1,11 +1,17 @@
 from unittest import TestSuite, makeSuite
-
 import webob
 import transaction
-
+import lxml.etree
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.document.document_item import addNyDocument
+
+
+ns = {
+    'dcterms': 'http://purl.org/dc/terms/',
+    'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+}
+
 
 class RdfFunctionalTest(NaayaFunctionalTestCase):
     def afterSetUp(self):
@@ -15,36 +21,47 @@ class RdfFunctionalTest(NaayaFunctionalTestCase):
                       submitted=1, contributor='contributor')
         transaction.commit()
 
-    def beforeTearDown(self):
-        self.portal.manage_delObjects(['myfolder'])
-        transaction.commit()
-
     def assert_is_rdf(self, res):
         self.assertEqual(res.content_type, 'application/rdf+xml')
         self.assertTrue('<rdf:RDF' in res.body)
 
-    def test_get_rdf(self):
-        def get(accept=None, fmt=None, url='/portal/myfolder/mydoc'):
-            req = webob.Request.blank('/portal/myfolder/mydoc')
-            if accept is not None:
-                req.accept = accept
-            if fmt is not None:
-                req.GET['format'] = 'rdf'
-            return req.get_response(self.wsgi_request)
+    def _get(self, accept='application/rdf+xml',
+                   url='/portal/myfolder/mydoc',
+                   query={}):
+        req = webob.Request.blank(url)
+        if accept is not None:
+            req.accept = accept
+        req.GET.update(query)
+        return req.get_response(self.wsgi_request)
 
-        res = get()
+    def test_get_rdf(self):
+        res = self._get(accept=None)
         self.assertEqual(res.content_type, 'text/html')
 
-        res = get(accept='application/rdf+xml')
+        res = self._get()
         self.assert_is_rdf(res)
-        self.assertTrue('<rdf:Description '
-                        'rdf:about="http://localhost/portal/'
-                        'myfolder/mydoc">' in res.body)
-        self.assertTrue('<dcterms:title>My document</dcterms:title>' in res.body)
-        self.assertTrue('<dcterms:language>en</dcterms:language>' in res.body)
 
-        res = get(fmt='rdf')
-        self.assert_is_rdf(res)
+        res2 = self._get(accept='text/html', query={'format': 'rdf'})
+        self.assert_is_rdf(res2)
+
+        self.assertEqual(res.body, res2.body)
+
+
+    def test_rdf_content(self):
+        res = self._get()
+        rdf = lxml.etree.fromstring(res.body)
+
+        rdf_obj = rdf.xpath('./rdf:Description', namespaces=ns)[0]
+        self.assertEqual(rdf_obj.attrib['{%s}about' % ns['rdf']],
+                         'http://localhost/portal/myfolder/mydoc')
+
+        rdf_title = rdf_obj.xpath('./dcterms:title', namespaces=ns)[0]
+        self.assertEqual(rdf_title.text, "My document")
+
+        rdf_language = rdf_obj.xpath('./dcterms:language',
+                                             namespaces=ns)[0]
+        self.assertEqual(rdf_language.text, "en")
+
 
     def test_security(self):
         url = 'http://localhost/portal/myfolder/mydoc?format=rdf'
