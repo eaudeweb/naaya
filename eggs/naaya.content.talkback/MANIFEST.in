@@ -1,0 +1,4 @@
+recursive-include extra *
+recursive-include naaya *
+recursive-include Products *
+global-exclude *py[co]
