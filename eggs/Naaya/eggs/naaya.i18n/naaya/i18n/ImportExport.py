@@ -284,7 +284,7 @@ class TranslationsImportExport(object):
                 if match is not None:
                     msgid = match.groups()[0]
             else:
-                raise ValueError('Undefined state in parsing .po file')
+                raise Error('Undefined state in parsing .po file')
 
         for (msgid, msgstr) in data.items():
             self._catalog.edit_message(
