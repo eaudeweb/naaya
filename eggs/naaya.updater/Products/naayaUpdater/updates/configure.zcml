@@ -351,4 +351,10 @@
       component=".update_folder_subobjects.UpdateSubobjectsStatus"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="update_translations.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_translations.UpdateTranslations"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>

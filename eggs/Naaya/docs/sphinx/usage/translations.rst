@@ -10,7 +10,7 @@ All Naaya portal pages are encoded in *UTF-8(Unicode)*, which means that all cha
 
 Here's the full language negotiation process:
 	1. *Navigation language* (end user selection) 
-	2. *Preferred local language* (client’s browser or operating system) 
+	2. *Preferred local language* (client's browser or operating system) 
 	3. Default portal language
 
 When an end user opens a portal page for the first time, a localization process takes place and the navigation language is set. If any match is found between the list of available languages for the portal and the languages in the browsers preferences, that language is set for the navigation language by default. If more language matches are found, then the first one in the settings of the browser takes precedence.
@@ -35,3 +35,27 @@ If a message in english has several translations in the target language (ex. "ty
     <p i18n:translate="Type (translation tip: used as a verb)">Type</p>
 
 The value will be displayed in the english version and the ID will help the translater understand how he should... translate.
+
+
+Bulk-updating translations in several portals
+---------------------------------------------
+
+There is a handy update tool in *Naaya Updates* called *Update Translations*
+that helps you insert or update translations in more portals at once.
+
+You need to provide a .PO file with your translations - it doesn't need to contain
+all the messages in your portal, but only the ones you want to change. If a
+message lacks translation, it will be ignored. Also specify the language to insert
+translations in, as .PO files do not contain language information.
+If a portal you selected does not have that specific language code installed, it
+will be skipped. Every event in the update is logged.
+
+Next, you will find the list of portals available in your Zope instance, as you
+were probably accoustomed to in other update procedures. Simply check the portals
+you want to be patched with your list of translations.
+
+Take note that the .PO file needs to be encoded with UTF-8 charset. If you have
+non-latin characters in your translations, please make sure you set
+`management_page_charset` string property in your Zope root with 'utf-8' value;
+elsewise, your update will output error when trying to display the logs of the
+update.
