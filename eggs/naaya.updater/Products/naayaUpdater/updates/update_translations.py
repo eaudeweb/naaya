@@ -76,7 +76,7 @@ def read_po(filehandler):
             if match is not None:
                 msgid = match.groups()[0]
         else:
-            raise ValueError('Undefined state in parsing .po file')
+            raise Error('Undefined state in parsing .po file')
 
     return data
 
