@@ -116,6 +116,13 @@ Some terms used in the documentation are described here.
         A :term:`site manager` that inherits from other bundles, or from the
         :term:`global site manager`.
 
+    Naaya Updates
+        There is a product named :doc:`naaya.updater </advanced/updating>`
+        that helps you manage update procedures.
+        Updates are looked up in all your installed packages. These
+        scripts usually apply significant changes and some are required for
+        fixing backwards compatibility issues when updating a product.
+
 
 .. [1] Some recipes, e.g. plone.recipe.bundlecheckout, update their `part`
        on each run of `buildout`.

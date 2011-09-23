@@ -40,22 +40,12 @@ The value will be displayed in the english version and the ID will help the tran
 Bulk-updating translations in several portals
 ---------------------------------------------
 
-There is a handy update tool in *Naaya Updates* called *Update Translations*
+There is a handy update tool in :term:`Naaya Updates` called `Update Translations`
 that helps you insert or update translations in more portals at once.
 
 You need to provide a .PO file with your translations - it doesn't need to contain
 all the messages in your portal, but only the ones you want to change. If a
-message lacks translation, it will be ignored. Also specify the language to insert
-translations in, as .PO files do not contain language information.
-If a portal you selected does not have that specific language code installed, it
-will be skipped. Every event in the update is logged.
+message lacks translation, it will be ignored.
 
-Next, you will find the list of portals available in your Zope instance, as you
-were probably accoustomed to in other update procedures. Simply check the portals
-you want to be patched with your list of translations.
-
-Take note that the .PO file needs to be encoded with UTF-8 charset. If you have
-non-latin characters in your translations, please make sure you set
-`management_page_charset` string property in your Zope root with 'utf-8' value;
-elsewise, your update will output error when trying to display the logs of the
-update.
+If you never used an update script, you can read more about
+:doc:`Naaya Updater </advanced/updating>`
