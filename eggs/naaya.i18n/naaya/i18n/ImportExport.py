@@ -240,11 +240,10 @@ class TranslationsImportExport(object):
     def import_po(self, lang, filehandler):
         """
         Imports a po file in the given `lang` language. Requires a `filehandler`
-        to the uploaded file. This method closes the handler.
+        to the uploaded file.
 
         """
         # Load the data
-        line = filehandler.readline()
         BEFORE_HEADER = 0; IN_HEADER = 1; IN_MAPPINGS = 2
         encoding_pat = re.compile(r'charset=([a-z0-9-]*)', re.IGNORECASE)
         msgid_pat = re.compile(r'^msgid[\t\s]+"(.*?)"$', re.IGNORECASE)
@@ -253,44 +252,41 @@ class TranslationsImportExport(object):
         encoding = None
         msgid = None
         data = {}
-        cnt = 0
-        while line:
-            cnt += 1
+        for cnt, line in enumerate(filehandler):
             line = line.strip()
-            if line:
-                if state is BEFORE_HEADER:
-                    if line == 'msgid ""':
-                        state = IN_HEADER
-                elif state is IN_HEADER:
-                    enc = encoding_pat.search(line)
-                    if enc is not None:
-                        encoding = enc.groups()[0]
-                        if encoding.lower() not in ('utf8', 'utf-8'):
-                            raise ValueError("Only import utf-8 encoded files")
-                        state = IN_MAPPINGS
-                elif state is IN_MAPPINGS:
-                    if encoding is None:
-                        raise ValueError(("Missing encoding specification in"
-                                          " PO headers. "
-                                          "Only import utf-8 encoded files"))
-                    if msgid is not None and line.startswith('msgstr '):
-                        match = msgstr_pat.search(line)
-                        if match is None:
-                            raise ValueError("Error reading msgstr at line %d"
-                                             % cnt)
-                        else:
-                            data[msgid] = match.groups()[0]
-                            msgid = None
-                    match = msgid_pat.search(line)
-                    if match is not None:
-                        msgid = match.groups()[0]
-                else:
-                    raise Error('Undefined state in parsing .po file')
-            line = filehandler.readline()
+            if not line or line.startswith('#'):
+                continue
+            if state is BEFORE_HEADER:
+                if line == 'msgid ""':
+                    state = IN_HEADER
+            elif state is IN_HEADER:
+                enc = encoding_pat.search(line)
+                if enc is not None:
+                    encoding = enc.groups()[0]
+                    if encoding.lower() not in ('utf8', 'utf-8'):
+                        raise ValueError("Only import utf-8 encoded files")
+                    state = IN_MAPPINGS
+            elif state is IN_MAPPINGS:
+                if encoding is None:
+                    raise ValueError(("Missing encoding specification in"
+                                      " PO headers. "
+                                      "Only import utf-8 encoded files"))
+                if msgid is not None and line.startswith('msgstr '):
+                    match = msgstr_pat.search(line)
+                    if match is None:
+                        raise ValueError("Error reading msgstr at line %d", cnt)
+                    else:
+                        msgstr = match.groups()[0]
+                        if msgstr:
+                            data[msgid] = msgstr
+                        msgid = None
+                match = msgid_pat.search(line)
+                if match is not None:
+                    msgid = match.groups()[0]
+            else:
+                raise ValueError('Undefined state in parsing .po file')
 
-        filehandler.close()
         for (msgid, msgstr) in data.items():
-            # TODO: do not replace with empty messages
             self._catalog.edit_message(
                                self.backslash_unescape(msgid).decode(encoding),
                                lang,
