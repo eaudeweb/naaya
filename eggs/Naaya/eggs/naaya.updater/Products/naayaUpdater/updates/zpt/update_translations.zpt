@@ -1,0 +1,13 @@
+<metal:block use-macro="template/default/macros/page">
+<metal:block fill-slot="in-form">
+
+    <p>
+        Insert language code to update translations in:
+        <input type='text' size='4' name='lang_code' id='lang_code' />
+    <p>
+        Select .PO file to import in selected portals
+        <input type='file' name='po_file' id='po_file' />
+    </p>
+
+</metal:block>
+</metal:block>
