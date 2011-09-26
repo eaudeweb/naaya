@@ -209,7 +209,7 @@ class SurveyAnswer(Folder, NyProperties):
     security.declarePublic('can_edit')
     def can_edit(self):
         """ """
-        if self.aq_parent.expired():
+        if self.aq_parent.expired() and not self.checkPermissionPublishObjects():
             return False
         authenticated_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         user_is_anonymous = bool(authenticated_user == 'Anonymous User')
