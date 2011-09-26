@@ -7,6 +7,7 @@ user roles, role permissions and searching.
 
 import re
 import time
+import logging
 from copy import copy
 from StringIO import StringIO
 import csv
@@ -42,6 +43,8 @@ from Products.NaayaCore.managers.import_export import (set_response_attachment,
 
 from recover_password import RecoverPassword
 
+log = logging.getLogger(__name__)
+
 def manage_addAuthenticationTool(self, REQUEST=None):
     """ """
     ob = AuthenticationTool(ID_AUTHENTICATIONTOOL, TITLE_AUTHENTICATIONTOOL)
@@ -50,7 +53,7 @@ def manage_addAuthenticationTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 def check_username(name):
-    name_expr = re.compile('^[A-Za-z0-9]*$')
+    name_expr = re.compile(r'^[A-Za-z0-9._-]+$')
     return re.match(name_expr, name)
 
 def is_anonymous(user_obj):
@@ -214,6 +217,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains, firstname,
                     lastname, email)
+        log.info('User %s, email:%s added.', name, email)
         self._p_changed = 1
         return name
 
@@ -342,9 +346,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         name = str(name)
 
-        if (self.get_user_with_userid(name) is not None or
-            (self._emergency_user and
-             name == self._emergency_user.getUserName())):
+        existing_usernames = set(username.lower
+            for username in self.getUserNames())
+        if self.get_user_with_userid(name) is not None or name.lower() in existing_usernames:
             raise i18n_exception(ValidationError,
                                  'Username ${user} already in use', user=name)
         if (password or confirm) and (password != confirm):
@@ -353,14 +357,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             users = self.getUserNames()
             for n in users:
                 us = self.getUser(n)
-                if email == us.email:
+                if email.lower() == us.email.lower():
                     raise i18n_exception(ValidationError,
                             'A user with the specified email already exists, '
                             'username ${user}', user=n)
-                if firstname == us.firstname and lastname == us.lastname:
-                    raise i18n_exception(ValidationError, 'A user with the spe'
-                                         'cified name already exists, username'
-                                         '${user}', user=n)
         #convert data
         roles = self.utConvertToList(roles)
         domains = self.utConvertToList(domains)
@@ -1415,7 +1415,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
                     email = email.strip()
                     if not check_username(name):
-                        record_errors.append('Record %s: Username: only letters and numbers allowed' % record_number)
+                        record_errors.append('Record %s: Username: only letters, numbers, dot (.), minus (-) and underscore (_) are allowed' % record_number)
                     if not firstname:
                         record_errors.append('Record %s: The first name must be specified' % record_number)
                     if not lastname:
@@ -1429,18 +1429,31 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if not password:
                         record_errors.append('Record %s: Password must be specified' % record_number)
 
-                    name = str(name)
-                    if (self.get_user_with_userid(name) is not None or
-                        (self._emergency_user and
-                          name == self._emergency_user.getUserName())):
+                    name = str(name).lower()
+                    existing_usernames = set(username.lower
+                        for username in self.getUserNames())
+                    if self.get_user_with_userid(name) is not None or name in existing_usernames:
                         record_errors.append('Record %s: Username %s already in use' % (record_number, name))
+                    email = str(email).lower()
+                    existing_emails = set(user.email.lower() for user in self.getUsers())
+                    if email in existing_emails:
+                        users_with_same_email = [user.name for user in self.getUsers()
+                            if user.email.lower() == email]
+                        record_errors.append('Record %s: Email %s already in use - user(s): %s'
+                            % (record_number, email, ', '.join(users_with_same_email)))
                     if record_errors:
                         errors += record_errors
                         continue
 
                     #convert data
-                    roles = self.utConvertToList(roles)
-                    domains = self.utConvertToList(domains)
+                    if roles:
+                        roles = self.utConvertToList(roles)
+                    else:
+                        roles = []
+                    if domains:
+                        domains = self.utConvertToList(domains)
+                    else:
+                        domains = []
 
                     user = self._doAddUser(name, password, roles, domains,
                                    firstname, lastname, email)
