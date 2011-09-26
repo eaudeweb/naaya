@@ -105,7 +105,7 @@ class RadioWidget(MultipleChoiceWidget):
 
     def get_value(self, datamodel=None, **kwargs):
         """ Return a string with the data in this widget """
-        if not datamodel:
+        if datamodel is None:
             return self._get_default_value()
         return str(self.getChoice(datamodel))
 
