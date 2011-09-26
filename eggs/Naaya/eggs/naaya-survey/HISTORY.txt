@@ -1,4 +1,9 @@
-1.2.3 (unreleased)
+1.2.6 (unreleased)
+==================
+ * Bugfix in RadioWidget.get_value
+ * Administrators can now edit answers in expired surveys
+
+1.2.5 (2011-09-23)
 ==================
  * Merge Products.NaayaSurvey and Products.NaayaWidgets into a single package
    named "naaya-survey"
