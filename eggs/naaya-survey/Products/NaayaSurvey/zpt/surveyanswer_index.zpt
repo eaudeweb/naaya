@@ -106,12 +106,14 @@
 					i18n:attributes="value" name="deleteSurveyAnswer:method"/>
 			</div>
 			</tal:block>
-			<p class="message-error" tal:condition="not: can_edit" i18n:translate="">
-				You don't have enough permissions to edit this survey answer!
-			</p>
-			<p class="message-error" tal:condition="here/expired" i18n:translate="">
-				The survey has expired!
-			</p>
+			<tal:block condition="not:can_edit">
+				<p class="message-error" i18n:translate="">
+					You don't have enough permissions to edit this survey answer!
+				</p>
+				<p class="message-error" tal:condition="here/expired" i18n:translate="">
+					The survey has expired!
+				</p>
+			</tal:block>
 		</form>
 	</tal:block>
 	<tal:block condition="python: not try_to_edit or not can_edit">
