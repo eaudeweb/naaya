@@ -33,7 +33,8 @@ from DateTime import *
 import binascii,md5
 import operator, string, time
 import Globals
-from Globals import Persistent, Acquisition
+from Globals import Persistent
+import Acquisition
 from webdav.common import rfc1123_date
 import AccessControl
 import OFS

@@ -148,7 +148,9 @@ class RDFParser:
         request.add_header("Accept-encoding", "")
         if auth:
             request.add_header("Authorization", "Basic %s" % auth)
-        opener = urllib2.build_opener(proxy_support, auth, urllib2.HTTPHandler)
+            opener = urllib2.build_opener(proxy_support, auth, urllib2.HTTPHandler)
+        else:
+            opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
         opener.addheaders = []
         try:
             return opener.open(request)
@@ -174,7 +176,7 @@ class RDFParser:
                     if p.status == 200:
                         #the feed was harvested but with a warning
                         #store feed stuff
-                        if p.etag != '': etag = p.etag
+                        if p.has_key('etag'): etag = p.etag or None
                         else: etag = None
                         if p.has_key('modified'): modified = p.modified
                         else: modified = None
@@ -198,7 +200,7 @@ class RDFParser:
                     if p.status == 200:
                         #everything is OK
                         #store feed stuff
-                        if p.etag != '': etag = p.etag
+                        if p.has_key('etag'): etag = p.etag or None
                         else: etag = None
                         if p.has_key('modified'): modified = p.modified
                         else: modified = None
@@ -208,7 +210,7 @@ class RDFParser:
                         #the feed was permanently moved to a new location
                         #update the new location and also store feed stuff
                         self.set_new_feed_url(p.url)
-                        if p.etag != '': etag = p.etag
+                        if p.has_key('etag'): etag = p.etag or None
                         else: etag = None
                         if p.has_key('modified'): modified = p.modified
                         else: modified = None
@@ -217,7 +219,7 @@ class RDFParser:
                     elif p.status == 302:
                         #the feed was temporarily moved to a new location
                         #store feed stuff
-                        if p.etag != '': etag = p.etag
+                        if p.has_key('etag'): etag = p.etag or None
                         else: etag = None
                         if p.has_key('modified'): modified = p.modified
                         else: modified = None
