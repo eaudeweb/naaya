@@ -1,0 +1,11 @@
+CHANGES.txt for the RDFSummary
+
+  This file contains change information for the RDFSummary product.
+
+    3.0.1 (2007/07/02)
+
+      Bugs Fixed
+
+         * "AttributeError: _v_mtime": this came from missing file corresponding to a channel on the filesytem.
+           It could've come from copying and pasting a RDFSummary instance or never updated object of this type.
+

@@ -1,0 +1,98 @@
+<dtml-var manage_page_header>
+<dtml-with "_(management_view='View')">
+<dtml-var manage_tabs>
+</dtml-with>
+
+<h2>Parsed Content</h2>
+
+<table bgcolor="#f0f0f0" border=1 width="100%">
+  <caption>Properties</caption>
+  <tr>
+    <th>Id</th>
+    <td>&dtml-id;</td>
+  </tr>
+  <tr>
+    <th>Title</th>
+    <td>&dtml-title;</td>
+  </tr>
+  <tr>
+    <th>URL</th>
+    <td>&dtml-rssurl;</td>
+  </tr>
+  <tr>
+    <th>Last updated</th>
+    <td><dtml-var lastupdated></td>
+  </tr>
+</table>
+<dtml-in "channel().keys()">
+ <dtml-if sequence-start>
+  <table bgcolor="#f0f0f0" border=1 width="100%">
+  <caption>Channel information</caption>
+ </dtml-if>
+ <tr>
+    <th><dtml-var "_['sequence-item']"></th>
+    <td><dtml-var "channel()[_['sequence-item']]"></td>
+ </tr>
+ <dtml-if sequence-end>
+  </table>
+ </dtml-if>
+</dtml-in>
+
+<dtml-in "image().keys()">
+ <dtml-if sequence-start>
+  <table bgcolor="#f0f0f0" border=1 width="100%">
+  <caption>Image information</caption>
+ </dtml-if>
+ <tr>
+    <th><dtml-var "_['sequence-item']"></th>
+    <td><dtml-if "_['sequence-item'] == 'data'">
+      <img src="&dtml-URL1;/view_image">
+     <dtml-else>
+      <dtml-var "image()[_['sequence-item']]">
+     </dtml-if>
+    </td>
+ </tr>
+ <dtml-if sequence-end>
+  </table>
+ </dtml-if>
+</dtml-in>
+
+
+<table bgcolor="#f0f0f0" border=1 width="100%">
+ <caption>Items</caption>
+  <dtml-in items>
+  <dtml-let item="_['sequence-item']">
+    <tr>
+     <th colspan=2>Item #<dtml-var sequence-index></th>
+    </tr>
+    <dtml-in "_['sequence-item'].keys()">
+     <tr>
+       <th><dtml-var "_['sequence-item']"></th>
+       <td><dtml-var "item[_['sequence-item']]"></td>
+     </tr>    
+    </dtml-in>
+    </dtml-let>   	
+    </tr>
+    </tr>
+  <dtml-else>
+    <tr><th>
+    Nothing imported
+    </th></tr>
+  </dtml-in>
+</table>
+
+<dtml-in "textinput().keys()">
+ <dtml-if sequence-start>
+  <table bgcolor="#f0f0f0" border=1 width="100%">
+  <caption>Textinput information</caption>
+ </dtml-if>
+   <tr>
+      <th><dtml-var "_['sequence-item']"></th>
+      <td><dtml-var "textinput()[_['sequence-item']]"></td>
+   </tr>
+ <dtml-if sequence-end>
+  </table>
+ </dtml-if>
+</dtml-in>
+
+<dtml-var manage_page_footer>

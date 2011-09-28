@@ -1,0 +1,40 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+<h1>README</h1>
+<p>To add local events from ZCataloged items in your RDFCalendar you need to
+add a Stript (Python) with an id in this form: <strong>local_</strong>script</p>
+<p>The script is required to return a list of dictionaries which is then used to
+display the calendar. Also you must provide these arguments to the Script: year=None, month=None, day=None</p>
+<p>Here is an example:</p>
+<p>Script (Python) <strong>local_events</strong>:</p>
+<p>
+    <pre>
+    return context.rdf_cataloged_items('Event', year=year, month=month, day=day)
+    </pre>
+</p>
+<p>This returns a list of dictionaries containing the data of the Naaya Events
+items. Start and end dates, id, title, description, etc.</p>
+<hr />
+<p>If some other content type is needed then some tweaking is required by providing
+a relation dictionary as rdf_cataloged_items argument.</p>
+<p>For example:</p>
+<p>Script (Python) <strong>local_custom_events</strong>:</p>
+<p>
+    <pre>
+    relations = {
+        'startdate': 'start_date'
+    }
+    return context.rdf_cataloged_items('Custom Event', relations, year=year, month=month, day=day)
+    </pre>
+</p>
+<p>
+This matches startdate field that is required in the RDFCalendar with start_date
+attribute that can be found in Naaya Custom Event. You can customize all the fields like this.
+</p>
+<p>Here is the list of available keys:</p>
+<p>'author', 'creator', 'dc_coverage', 'dc_description', 'dc_format',
+'dc_identifier', 'dc_source', 'dc_type', 'enddate', 'id', 'language',
+'link', 'location', 'link', 'location', 'organizer', 'publisher',
+'rdfsubject', 'rights', 'startdate', 'subtitle', 'summary', 'title',
+'type'</p>
+<dtml-var manage_page_footer>

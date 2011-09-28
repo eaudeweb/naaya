@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns="http://purl.org/rss/1.0/">
+<channel rdf:about="http://europa.eu.int/idabc/en">
+	<title><![CDATA[IDABC RSS]]></title>
+	<link><![CDATA[http://europa.eu.int/idabc/en]]></link>
+	<description><![CDATA[IDABC is a European Commission driven strategic initiative using advances in information and communications technology to support rapid electronic exchange of information between Member State administrations.]]></description>
+	<dc:creator>IDABC</dc:creator>
+	<dc:publisher>IDABC</dc:publisher>
+	<dc:date>2008-04-01</dc:date>
+	<dc:language>en</dc:language>
+	<dc:rights><![CDATA[European Commission, IDABC]]></dc:rights>
+	<items>
+		<rdf:Seq>
+			<rdf:li rdf:resource="http://ec.europa.eu/idabc/en/document/7542"/>
+			<rdf:li rdf:resource="http://ec.europa.eu/idabc/en/document/7543"/>
+			<rdf:li rdf:resource="http://ec.europa.eu/idabc/en/document/7546"/>
+			<rdf:li rdf:resource="http://ec.europa.eu/idabc/en/document/7544"/>
+			<rdf:li rdf:resource="http://ec.europa.eu/idabc/en/document/7545"/>
+		</rdf:Seq>
+	</items>
+</channel>
+<item rdf:about="http://ec.europa.eu/idabc/en/document/7542">
+	<title><![CDATA[CH: Federal Court's Office suite switch is first step to Open Source desktop]]></title>
+	<link><![CDATA[http://ec.europa.eu/idabc/en/document/7542]]></link>
+	<dc:date>2008-03-27</dc:date>
+	<dc:subject><![CDATA[]]></dc:subject>
+	<dc:contributor><![CDATA[]]></dc:contributor>
+	<dc:type><![CDATA[]]></dc:type>
+	<dc:relation><![CDATA[]]></dc:relation>
+	<dc:coverage><![CDATA[]]></dc:coverage>
+	<dc:format><![CDATA[]]></dc:format>
+	<dc:identifier>http://ec.europa.eu/idabc/en/document/7542</dc:identifier>
+	<dc:source>http://ec.europa.eu/idabc</dc:source>
+</item>
+<item rdf:about="http://ec.europa.eu/idabc/en/document/7543">
+	<title><![CDATA[EU: Groups in twenty European countries celebrate Document Freedom Day]]></title>
+	<link><![CDATA[http://ec.europa.eu/idabc/en/document/7543]]></link>
+	<dc:date>2008-03-27</dc:date>
+	<dc:subject><![CDATA[]]></dc:subject>
+	<dc:contributor><![CDATA[]]></dc:contributor>
+	<dc:type><![CDATA[]]></dc:type>
+	<dc:relation><![CDATA[]]></dc:relation>
+	<dc:coverage><![CDATA[]]></dc:coverage>
+	<dc:format><![CDATA[]]></dc:format>
+	<dc:identifier>http://ec.europa.eu/idabc/en/document/7543</dc:identifier>
+	<dc:source>http://ec.europa.eu/idabc</dc:source>
+</item>
+<item rdf:about="http://ec.europa.eu/idabc/en/document/7546">
+	<title><![CDATA[EU: Researcher hints at WTO conflict over ISO approval for OOXML]]></title>
+	<link><![CDATA[http://ec.europa.eu/idabc/en/document/7546]]></link>
+	<dc:date>2008-03-27</dc:date>
+	<dc:subject><![CDATA[]]></dc:subject>
+	<dc:contributor><![CDATA[]]></dc:contributor>
+	<dc:type><![CDATA[]]></dc:type>
+	<dc:relation><![CDATA[]]></dc:relation>
+	<dc:coverage><![CDATA[]]></dc:coverage>
+	<dc:format><![CDATA[]]></dc:format>
+	<dc:identifier>http://ec.europa.eu/idabc/en/document/7546</dc:identifier>
+	<dc:source>http://ec.europa.eu/idabc</dc:source>
+</item>
+<item rdf:about="http://ec.europa.eu/idabc/en/document/7544">
+	<title><![CDATA[FI: Three schools migrating to Open Source]]></title>
+	<link><![CDATA[http://ec.europa.eu/idabc/en/document/7544]]></link>
+	<dc:date>2008-03-27</dc:date>
+	<dc:subject><![CDATA[]]></dc:subject>
+	<dc:contributor><![CDATA[]]></dc:contributor>
+	<dc:type><![CDATA[]]></dc:type>
+	<dc:relation><![CDATA[]]></dc:relation>
+	<dc:coverage><![CDATA[]]></dc:coverage>
+	<dc:format><![CDATA[]]></dc:format>
+	<dc:identifier>http://ec.europa.eu/idabc/en/document/7544</dc:identifier>
+	<dc:source>http://ec.europa.eu/idabc</dc:source>
+</item>
+<item rdf:about="http://ec.europa.eu/idabc/en/document/7545">
+	<title><![CDATA[FR: Open Source for health care organisations]]></title>
+	<link><![CDATA[http://ec.europa.eu/idabc/en/document/7545]]></link>
+	<dc:date>2008-03-27</dc:date>
+	<dc:subject><![CDATA[]]></dc:subject>
+	<dc:contributor><![CDATA[]]></dc:contributor>
+	<dc:type><![CDATA[]]></dc:type>
+	<dc:relation><![CDATA[]]></dc:relation>
+	<dc:coverage><![CDATA[]]></dc:coverage>
+	<dc:format><![CDATA[]]></dc:format>
+	<dc:identifier>http://ec.europa.eu/idabc/en/document/7545</dc:identifier>
+	<dc:source>http://ec.europa.eu/idabc</dc:source>
+</item>
+</rdf:RDF>

@@ -1,0 +1,10 @@
+<dtml-var standard_html_header>
+<dtml-comment>
+param: month, year
+</dtml-comment>
+
+<dtml-let day="0">
+<dtml-var show_events_list>
+</dtml-let>
+
+<dtml-var standard_html_footer>
