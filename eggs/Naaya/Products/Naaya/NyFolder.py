@@ -1048,21 +1048,18 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'renameObjectsIds')
     def renameObjectsIds(self, old_ids, new_ids, REQUEST):
         """renames objects ids for this folder's selected items."""
-        r = []
-        old_ids = self.utConvertToList(old_ids)
-        new_ids = self.utConvertToList(new_ids)
-        for i in range(len(old_ids)):
-            if self.getObjectById(old_ids[i]).meta_type not in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:
+
+        for ids in zip(old_ids, new_ids):
+            if self._getOb(ids[0]).meta_type in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:
+                self.setSessionInfoTrans("File(s) can not be renamed.")
+            else:
                 try:
-                    self.manage_renameObject(old_ids[i], new_ids[i])
-                    if self.getObjectById(new_ids[i]).meta_type in ['Naaya Document', 'Naaya Story']:
-                        new_body = self.getObjectById(new_ids[i]).body.replace(old_ids[i], new_ids[i])
-                        self.getObjectById(new_ids[i]).body = new_body
-                        self.getObjectById(new_ids[i])._p_changed = 1
-                    r.append((MESSAGE_SAVEDCHANGES, {'date': self.utGetTodayDate()}))
-                except: r.append(("The ${id} object could not be renamed.", {'id': old_ids[i]}))
-            else: r.append("Files can not be renamed.")
-        self.setSessionInfoTrans(r)
+                    if ids[0] != ids[1]:
+                        self.manage_renameObject(ids[0], ids[1])
+                    self.setSessionInfoTrans("Items(s) succesfully renamed.")
+                except: 
+                    self.setSessionErrorsTrans("Item %s could not be renamed." % ids[0])
+
         return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(view_management_screens, 'set_subobject')
