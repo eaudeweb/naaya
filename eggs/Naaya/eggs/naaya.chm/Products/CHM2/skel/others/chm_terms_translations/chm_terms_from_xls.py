@@ -162,8 +162,12 @@ def extract_data_from_xls(xls_path):
     wb = xlrd.open_workbook(xls_path)
     sh = wb.sheet_by_index(0)
 
-    HEADING_ROW = 11
-    assert sh.cell(HEADING_ROW, 2).value == "Description"
+    HEADING_ROW = 0 # find out the offset constant
+    for HEADING_ROW in range(sh.nrows):
+        if sh.cell(HEADING_ROW, 2).value == "Description":
+            break
+    else:
+        raise ValueError("Can not find 'Description' cell")
 
     get_translations = TranslationsExtractor(sh.row(HEADING_ROW), 4, 24)
 
