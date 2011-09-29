@@ -5,6 +5,7 @@ from unittest import TestSuite, makeSuite
 from naaya.content.mediafile.mediafile_item import addNyMediaFile
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 from Globals import package_home
+from mock import patch
 from naaya.content.mediafile.converters.MediaConverter import can_convert
 
 
@@ -31,7 +32,9 @@ class NaayaContentTestCase(FunctionalTestCase):
         self.assertNotEqual(self.loadFile('data/square.flv').read(), doc.get_data())
         self.failUnless(doc.get_size()>=4000)
     
-    def test_upload(self):
+    @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
+    def test_upload(self, mock_can_convert):
+        mock_can_convert.return_value = False
         addNyMediaFile(self._portal().info, id='media1', title='media1', lang='en', _skip_videofile_check=True)
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])[0]
         f = self.loadFile('data/square.flv')
@@ -39,10 +42,7 @@ class NaayaContentTestCase(FunctionalTestCase):
         meta.handleMediaUpload(f)
         self.assertEqual(meta.getLocalProperty('title', 'en'), 'media1')
         
-        if can_convert():
-            self._test_with_coverter(meta)
-        else:
-            self.assertEqual(self.loadFile('data/square.flv').read(), meta.get_data())
+        self.assertEqual(self.loadFile('data/square.flv').read(), meta.get_data())
 
         self._portal().info.manage_delObjects([meta.id])
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Media File'])

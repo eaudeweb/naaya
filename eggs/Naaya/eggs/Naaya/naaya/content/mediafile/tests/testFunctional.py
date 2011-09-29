@@ -3,6 +3,7 @@ from unittest import TestSuite, makeSuite
 from copy import deepcopy
 from StringIO import StringIO
 from BeautifulSoup import BeautifulSoup
+from mock import patch
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -24,7 +25,9 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.portal.manage_uninstall_pluggableitem('Naaya Media File')
         import transaction; transaction.commit()
 
-    def test_add(self):
+    @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
+    def test_add(self, mock_can_convert):
+        mock_can_convert.return_value = False
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/mediafile_add_html')
         self.failUnless('<h1>Submit Media File</h1>' in self.browser.get_html())
@@ -85,7 +88,9 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('Value required for "Title"' in html)
         self.failUnless('No file was uploaded' in html)
 
-    def test_edit(self):
+    @patch('naaya.content.mediafile.converters.MediaConverter.can_convert')
+    def test_edit(self, mock_can_convert):
+        mock_can_convert.return_value = False
         self.browser_do_login('admin', '')
 
         self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
