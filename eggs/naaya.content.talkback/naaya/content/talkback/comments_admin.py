@@ -115,23 +115,19 @@ class CommentsAdmin(SimpleItem):
     security.declarePrivate('generate_excel_output')
     def generate_excel_output(self, fields, comments):
 
-        style = xlwt.XFStyle()
-        normalfont = xlwt.Font()
-        header = xlwt.Font()
-        header.bold = True
-        style.font = header
+        header_style = xlwt.easyxf('font: bold on; horiz left;')
+        normal_style = xlwt.easyxf('horiz left, vert top;')
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
         row = 0
         for col in range(len(fields)):
-            ws.row(row).set_cell_text(col, fields[col][0], style)
-        style.font = normalfont
+            ws.row(row).set_cell_text(col, fields[col][0], header_style)
 
         for comment in comments:
             row += 1
             for col in range(len(fields)):
-                ws.row(row).set_cell_text(col, fields[col][1](comment), style)
+                ws.row(row).set_cell_text(col, fields[col][1](comment), normal_style)
         output = StringIO()
         wb.save(output)
 
