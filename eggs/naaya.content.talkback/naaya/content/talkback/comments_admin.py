@@ -133,6 +133,33 @@ class CommentsAdmin(SimpleItem):
 
         return output.getvalue()
 
+    security.declarePrivate('generate_custom_excel_output')
+    def generate_custom_excel_output(self, fields, comments):
+
+        normal_style = xlwt.easyxf('align: wrap on, horiz left, vert top;')
+        header_style = xlwt.easyxf('font: bold on; align: wrap on, horiz left;')
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Sheet 1')
+        row = 0
+        for col in range(len(fields)):
+            ws.row(row).set_cell_text(col, fields[col][0], header_style)
+
+        ws.col(0).width = 3000
+        ws.col(1).width = 20000
+        ws.col(2).width = 7500
+        ws.col(3).width = 5000
+        for comment in comments:
+            row += 1
+            for col in range(len(fields)):
+                ws.row(row).set_cell_text(col, fields[col][1](comment), normal_style)
+            row += 1
+            ws.row(row).set_cell_text(0, 'EEA Comments' , header_style)
+        output = StringIO()
+        wb.save(output)
+
+        return output.getvalue()
+
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'all_comments')
     def all_comments(self):
@@ -178,6 +205,18 @@ class CommentsAdmin(SimpleItem):
         elif file_type == 'Excel':
             assert excel_export_available
             ret = self.generate_excel_output(fields, comments)
+            content_type = 'application/vnd.ms-excel'
+            filename = 'comments.xls'
+
+        elif file_type == 'CustomExcel':
+            fields = [
+                ('Section', lambda c: c.get_section().title_or_id()),
+                ('Message', lambda c: plain(c.message)),
+                ('Contributor', lambda c: c.get_contributor_name()),
+                ('Date', lambda c: c.comment_date.strftime('%Y/%m/%d %H:%M')),
+            ]
+            assert excel_export_available
+            ret = self.generate_custom_excel_output(fields, comments)
             content_type = 'application/vnd.ms-excel'
             filename = 'comments.xls'
 
