@@ -115,8 +115,8 @@ class CommentsAdmin(SimpleItem):
     security.declarePrivate('generate_excel_output')
     def generate_excel_output(self, fields, comments):
 
-        header_style = xlwt.easyxf('font: bold on; horiz left;')
-        normal_style = xlwt.easyxf('horiz left, vert top;')
+        header_style = xlwt.easyxf('font: bold on; align: horiz left;')
+        normal_style = xlwt.easyxf('align: horiz left, vert top;')
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Sheet 1')
