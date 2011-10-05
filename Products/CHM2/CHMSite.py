@@ -22,6 +22,8 @@ from Products.NaayaContent import *
 from Products.Naaya.constants import *
 from Products.NaayaCore.constants import *
 from Products.Naaya.NySite import NySite
+from Products.Naaya.NySite import (CONTAINERS_METATYPES,
+                                   NAAYA_CONTAINERS_METATYPES)
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import addNyPhotoFolder
@@ -36,6 +38,9 @@ from Products.CHM2.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.utils import make_id
 
 METATYPE_NYURL = 'Naaya URL'
+
+CONTAINERS_METATYPES.append(METATYPE_CHMSITE)
+NAAYA_CONTAINERS_METATYPES.append(METATYPE_CHMSITE)
 
 class Extra_for_DateRangeIndex:
     """hack for a bug in DateRangeIndex ---'dict' object has no attribute 'since_field' """
