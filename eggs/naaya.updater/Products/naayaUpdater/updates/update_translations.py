@@ -42,6 +42,7 @@ def read_po(filehandler):
     msgid = None
     data = {}
 
+    filehandler.seek(0)
     for cnt, line in enumerate(filehandler):
         line = line.strip()
         if not line or line.startswith('#'):
