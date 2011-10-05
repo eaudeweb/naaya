@@ -11,7 +11,7 @@
 		<a class="twitter-share-button" title="Twitter" href="http://twitter.com/share"
 			data-count="none" i18n:translate="" i18n:attributes="title">Twitter</a>
 		<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
-		<iframe tal:attributes="src string:http://www.facebook.com/plugins/like.php?href=${here/absolute_url}&amp;show_faces=false&amp;action=recommend&amp;layout=standard"
+		<iframe tal:attributes="src string:http://www.facebook.com/plugins/like.php?href=${here/absolute_url}&amp;show_faces=false&amp;action=recommend&amp;layout=button_count"
 		        scrolling="no" frameborder="0"
 		        style="border:none; width:350px; height:25px;"></iframe>
 

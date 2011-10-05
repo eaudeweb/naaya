@@ -1,5 +1,32 @@
 /* Required tags - these classes appear in the forms */
 
+a.feed_link,
+a.facebook_link,
+a.twitter_link,
+a.download_link {
+	padding-left: 25px;
+	line-height: 1.8;
+	display: inline-block;
+	height: 20px;
+}
+
+a.feed_link {
+	background: transparent url('misc_/Naaya/rss.png') no-repeat scroll left center;
+}
+
+a.facebook_link {
+	background: transparent url('misc_/Naaya/facebook.png') no-repeat scroll left center;
+}
+
+a.twitter_link {
+	background: transparent url('misc_/Naaya/twitter.png') no-repeat scroll left center;
+}
+
+a.download_link {
+	background: transparent url('misc_/Naaya/download.png') no-repeat scroll left center;
+	float: right;
+}
+
 #center_content_holder {
   width: 715px;
   float: left;
@@ -247,13 +274,16 @@ dd#admin_textarea{
 	width: 16px;
 }
 #folderfile_list th.type{
-	vertical-align: middle;
 	width: 0.5em;
 }
 #folderfile_list .title-column{
-	vertical-align: middle;
 	text-align: left;
 }
+
+#folderfile_list .type #user-rating-display img{
+  width: auto;
+}
+
 td.title-column a{
 	color: #252525;
 	text-decoration: underline;
