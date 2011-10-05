@@ -263,6 +263,33 @@ a.button-like, a.button-like:visited {
 	border-left:1px solid #0F75B3;
 }
 
+a.feed_link,
+a.facebook_link,
+a.twitter_link,
+a.download_link {
+	padding-left: 25px;
+	line-height: 1.8;
+	display: inline-block;
+	height: 20px;
+}
+
+a.feed_link {
+	background: transparent url('misc_/Naaya/rss.png') no-repeat scroll left center;
+}
+
+a.facebook_link {
+	background: transparent url('misc_/Naaya/facebook.png') no-repeat scroll left center;
+}
+
+a.twitter_link {
+	background: transparent url('misc_/Naaya/twitter.png') no-repeat scroll left center;
+}
+
+a.download_link {
+	background: transparent url('misc_/Naaya/download.png') no-repeat scroll left center;
+	float: right;
+}
+
 /* Tabbed menus  */
 #tabbedmenu, .tabbedmenu {
 	float:left;
@@ -540,16 +567,17 @@ padding-top: 0.5em;
 	font-size: 80%;
 }
 .commentbox_add {
-	margin: 1em;
+	margin: 15px 0;
 	/*padding-left:1em;*/
 }
 .hr_addcomment {
-	border-top: 1px solid #eaeaea;
-	border-bottom:1px solid white;
+	border: none;
+	background: #EAEAEA;
+	height: 1px;
 }
 .hr_inside_comment {
-	border-top: 1px solid #eaeaea;
-	border-bottom:1px solid white;
+	border: none;
+	background: #EAEAEA;
 	margin-top:0.5em;
 }
 /* +++++++++++++++++++++++  modified on febr 19 2006 +++++++++++++++++*/
@@ -1205,14 +1233,23 @@ table.datatable {
 }
 
 div.folder_footer {
-	margin: 1em 0;
+	margin: 25px 0 5px 0;
+	font-weight: bold;
+	clear: both;
+	display: block;
 }
 div.folder_footer a{
 	text-decoration: none;
-	padding: 0 10px 0 5px;
-	font-size: 0.9em;
+	font-size: 11px;
+	font-weight: normal;
 	color: #0F75B3;
+	
 }
+
+div.folder_footer a:hover {
+	text-decoration: underline;
+}
+
 p.form-errors {
 	color: #f00;
 	font-style: italic;
