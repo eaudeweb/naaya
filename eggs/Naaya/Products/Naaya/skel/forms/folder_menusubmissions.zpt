@@ -5,24 +5,33 @@
     perm_publish_objects here/checkPermissionPublishObjects;
     perm_validate_objects here/checkPermissionValidateObjects">
 <div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects or perm_validate_objects">
-    <span id="submission" tal:condition="perm_add_something">
-        <span i18n:translate="" tal:omit-tag="">Submit</span>:
+    <tal:block condition="perm_add_something">
         <select name="typetoadd"
             tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
-            <option value="#" i18n:translate="">Type to add</option>
+            <option value="#"><tal:block i18n:translate="">Add content</tal:block>...</option>
             <option tal:repeat="item submissions"
                 tal:attributes="value python:item[0]"
                 tal:content="python:item[1]" i18n:translate="" />
         </select>
-    </span>
-    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
-        <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span i18n:translate="">Restrict</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/csv_export"><span i18n:translate="">Export</span></a>
-        <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/csv_import"><span i18n:translate="">CSV import</span></a>
     </tal:block>
+    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+        <a tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
+		<select name="more_actions" class="more_actions"
+			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+			<option value="#"><tal:block i18n:translate="">More actions</tal:block>...</option>
+			<option tal:condition="perm_publish_objects" value="subobjects_html"
+				i18n:translate="" >Manage content types</option>
+			<option tal:condition="perm_publish_objects" value="basketofapprovals_html"
+				i18n:translate="" >Approve/unapprove content</option>
+			<option tal:condition="perm_publish_objects" value="sortorder_html"
+				i18n:translate="" >Sort content</option>
+			<option tal:condition="perm_publish_objects" value="restrict_html"
+				i18n:translate="" >Restrict folder</option>
+			<option tal:condition="perm_publish_objects" value="csv_export"
+				i18n:translate="" >Export content</option>
+			<option tal:condition="perm_publish_objects" value="csv_import"
+				i18n:translate="" >Import content</option>
+		</select>
+	</tal:block>
 </div>
 </tal:block>
