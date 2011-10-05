@@ -1,4 +1,11 @@
-2.11.03 (unreleased)
+2.11.06 (unreleased)
+--------------------
+
+2.11.05 (2011-09-23)
+--------------------
+New release for CHM server migration to use the eggshop (no more svn)
+
+2.11.03 (2011-04-07)
 --------------------
 * Folder listing fetches all information about listed objects using adapters.
 * Fix: ``naaya.core.zope2util.permission_add_role`` used to incorrectly toggle
