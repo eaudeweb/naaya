@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="folder_index" title="NyFolder index for chm"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
 		<form id="languages_box" title="CHM languages box"/>
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
@@ -252,7 +251,8 @@
 				<file id="superslight-min.js" title=""/>
 				<image id="Naaya_Folder-icon" title=""/>
 				<image id="Naaya_Folder-icon-marked" title=""/>
-				<image id="arrow-down.png" title=""/>
+				<image id="arrow-down.png" title=""/>
+
 				<image id="arrow-left.png" title=""/>
 				<image id="arrow-right.png" title=""/>
 				<image id="arrow-up.png" title=""/>
