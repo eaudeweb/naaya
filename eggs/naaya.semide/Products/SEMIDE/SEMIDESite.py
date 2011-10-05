@@ -38,6 +38,8 @@ from Products.NaayaProfilesTool.constants import ID_PROFILESTOOL
 from Products.NaayaProfilesTool.ProfilesTool import manage_addProfilesTool
 
 from Products.Naaya.NySite                          import NySite
+from Products.Naaya.NySite                          import CONTAINERS_METATYPES
+from Products.Naaya.NySite                    import NAAYA_CONTAINERS_METATYPES
 from Products.NaayaCore.managers.paginator import ObjectPaginator
 from Products.NaayaCore.managers.utils              import utils, tmpfile
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
@@ -81,6 +83,14 @@ except ImportError:
     logger.warning("No memcache support. Make sure the python-memcache is"
                     "installed and the server is running")
 
+# TODO: these should stay only in naaya containers,
+# but it seems they are used here
+CONTAINERS_METATYPES.extend([METATYPE_SEMIDESITE, METATYPE_NYCOUNTRY,
+                             METATYPE_NYPHOTOGALLERY,
+                             METATYPE_NYSEMTHEMATICDIR])
+NAAYA_CONTAINERS_METATYPES.extend([METATYPE_SEMIDESITE, METATYPE_NYCOUNTRY,
+                                   METATYPE_NYPHOTOGALLERY,
+                                   METATYPE_NYSEMTHEMATICDIR])
 
 manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
@@ -503,11 +513,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
 
     security.declarePublic('getProfilesToolPath')
     def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
-
-    security.declarePublic('get_containers_metatypes')
-    def get_containers_metatypes(self):
-        #this method is used to display Naaya & Semide container types
-        return [METATYPE_FOLDER, METATYPE_NYCOUNTRY, 'Folder', METATYPE_NYPHOTOGALLERY, METATYPE_NYSEMTHEMATICDIR]
 
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
