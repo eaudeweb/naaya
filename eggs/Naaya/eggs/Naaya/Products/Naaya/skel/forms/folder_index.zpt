@@ -44,12 +44,6 @@
 					tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 			</span>
 		</span>
-		<a class="b_download"
-			href="./zip_export/do_export"
-			title="Download the contents of this folder to a Zip file"
-			tal:condition="python: here.checkPermission('Naaya - Zip export')"
-			i18n:attributes="title"
-			i18n:translate="">Zip download</a>
 	</h1>
     </metal:block>
 
@@ -62,14 +56,23 @@
 		</metal:block>
 	</metal:block>
 	</metal:block>
-	<div class="folder-feeds" metal:define-slot="folder-feeds">
-		<a tal:attributes="href string:${here/absolute_url}/index_rdf">
-			<img src="/misc_/NaayaCore/xml.png" alt="RSS Feed" title="RSS Feed" i18n:attributes="alt; title" />
-		</a>
-		<a tal:attributes="href string:${here/absolute_url}/index_atom">
-			<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt; title" />
-		</a>
-	</div>
+	<metal:block metal:define-slot="folder_footer">
+		<div id="folder_footer" class="folder_footer">
+			<a tal:attributes="href string:${here/absolute_url}/index_atom"
+				i18n:translate="">Web feed</a>
+			| <a class="b_download"
+				href="./zip_export/do_export"
+				title="Download the contents of this folder to a Zip file"
+				tal:condition="python: here.checkPermission('Naaya - Zip export')"
+				i18n:attributes="title"
+				i18n:translate="">Zip download</a>
+			<metal:block metal:define-slot="folder_footer_extension">
+				<tal:comment condition="nothing">
+					Fill this slot to add content to the folder footer.
+				</tal:comment>
+			</metal:block>
+		</div>
+	</metal:block>
 
 <tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
     <tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})"

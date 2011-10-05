@@ -56,7 +56,7 @@ $(document).ready(function(){
 			return false;
 		}
 
-		confirmed = true;
+		var confirmed = true;
 		if (action == 'deleteObjects'){
 			confirmed = confirm(gettext('Are you sure?'));
 		}
@@ -75,10 +75,6 @@ $(document).ready(function(){
 <form id="folder_listing" name="objectItems" method="post" action=".">
 	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
 		<metal:block define-slot="toolbar_default">
-			<input id="btn_select" type="button" value="Select all"
-				class="select-all"
-				i18n:attributes="value"
-				tal:condition="btn_select" />
 			<input type="submit" value="Copy" class="action-button" name="copyObjects:method"
 				i18n:attributes="value"
 				tal:condition="btn_copy" />
