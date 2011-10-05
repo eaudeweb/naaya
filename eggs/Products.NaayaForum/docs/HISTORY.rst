@@ -1,6 +1,10 @@
 Changelog
 =========
 
+1.2.4 (2011-09-23)
+------------------
+New release for CHM server migration to use the eggshop (no more svn)
+
 1.2.1 (2011-03-31)
 ------------------
 
