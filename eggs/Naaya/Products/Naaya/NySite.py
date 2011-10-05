@@ -2437,7 +2437,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return tmpl(REQUEST, **options)
 
     security.declareProtected(change_permissions, 'admin_editrole')
-    def admin_editrole(self, role, zope_perm_list, REQUEST=None):
+    def admin_editrole(self, role, zope_perm_list=[], REQUEST=None):
         """ Change the permissions of a role """
 
         for zope_perm in self.get_naaya_permissions_in_site():
