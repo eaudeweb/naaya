@@ -14,24 +14,23 @@
                 tal:content="python:item[1]" i18n:translate="" />
         </select>
     </tal:block>
-    <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
-        <a tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
-		<select name="more_actions" class="more_actions"
-			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
-			<option value="#"><tal:block i18n:translate="">More actions</tal:block>...</option>
-			<option tal:condition="perm_publish_objects" value="subobjects_html"
-				i18n:translate="" >Manage content types</option>
-			<option tal:condition="perm_publish_objects" value="basketofapprovals_html"
-				i18n:translate="" >Approve/unapprove content</option>
-			<option tal:condition="perm_publish_objects" value="sortorder_html"
-				i18n:translate="" >Sort content</option>
-			<option tal:condition="perm_publish_objects" value="restrict_html"
-				i18n:translate="" >Restrict folder</option>
-			<option tal:condition="perm_publish_objects" value="csv_export"
-				i18n:translate="" >Export content</option>
-			<option tal:condition="perm_publish_objects" value="csv_import"
-				i18n:translate="" >Import content</option>
-		</select>
-	</tal:block>
+	<a tal:condition="perm_edit_object"
+		tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
+	<select tal:condition="perm_publish_objects" name="more_actions" class="more_actions"
+		tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
+		<option value="#"><tal:block i18n:translate="">More actions</tal:block>...</option>
+		<option value="subobjects_html"
+			i18n:translate="" >Manage content types</option>
+		<option value="basketofapprovals_html"
+			i18n:translate="" >Approve/unapprove content</option>
+		<option value="sortorder_html"
+			i18n:translate="" >Sort content</option>
+		<option value="restrict_html"
+			i18n:translate="" >Restrict folder</option>
+		<option value="csv_export"
+			i18n:translate="" >Export content</option>
+		<option value="csv_import"
+			i18n:translate="" >Import content</option>
+	</select>
 </div>
 </tal:block>
