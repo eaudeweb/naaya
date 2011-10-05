@@ -1,4 +1,4 @@
-include *.rst *.txt
+include *.txt
 recursive-include docs *
 recursive-include Products *
 global-exclude *py[co]
