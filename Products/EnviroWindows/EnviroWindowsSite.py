@@ -43,6 +43,8 @@ from Products.NaayaBase.constants                   import *
 from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
+from Products.Naaya.NySite                          import CONTAINERS_METATYPES
+from Products.Naaya.NySite                    import NAAYA_CONTAINERS_METATYPES
 from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.import_export      import CSVReader
 from Products.Naaya.NyFolder import addNyFolder
@@ -54,6 +56,8 @@ from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
 
+CONTAINERS_METATYPES.append(METATYPE_ENVIROWINDOWSSITE)
+NAAYA_CONTAINERS_METATYPES.append(METATYPE_ENVIROWINDOWSSITE)
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
