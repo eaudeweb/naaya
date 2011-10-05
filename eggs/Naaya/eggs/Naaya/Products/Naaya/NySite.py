@@ -112,6 +112,19 @@ MAINTOPICS_SETTINGS = {
     'max_levels': 1
 }
 
+# Other modules can alter these 2 lists. E.g.: CHMSite appends METATYPE_CHMSITE
+CONTAINERS_METATYPES = \
+    [METATYPE_NYSITE, METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery',
+     'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
+     'Naaya Consultation', 'Naaya Simple Consultation',
+     'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+
+NAAYA_CONTAINERS_METATYPES = \
+    [METATYPE_NYSITE, METATYPE_FOLDER, 'Naaya Photo Gallery',
+     'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
+     'Naaya Consultation', 'Naaya Simple Consultation',
+     'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
@@ -940,15 +953,21 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
-        """ Get meta_type's which are containers """
-        return [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+        """
+        Get meta_type-s which are containers.
+        List defined in :mod:`Products.Naaya.NySite`.
+
+        """
+        return list(CONTAINERS_METATYPES)
 
     security.declarePublic('get_naaya_containers_metatypes')
     def get_naaya_containers_metatypes(self):
-        """ Get meta_type's which are containers (Naaya content types only).
+        """
+        Get meta_type-s which are containers (Naaya content types only).
+        List defined in :mod:`Products.Naaya.NySite`.
 
         """
-        return [METATYPE_FOLDER, 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
+        return list(NAAYA_CONTAINERS_METATYPES)
 
     #layer over selection lists
     def get_list_nodes(self, list_id):

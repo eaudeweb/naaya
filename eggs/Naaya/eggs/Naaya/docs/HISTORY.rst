@@ -1,11 +1,13 @@
-2.11.06 (unreleased)
+2.11.6 (unreleased)
 --------------------
+* refactor: :mod:`Products.Naaya.NySite` stores Zope and
+  Naaya containers meta_type-s in two lists in the beginning of the module
 
-2.11.05 (2011-09-23)
+2.11.5 (2011-09-23)
 --------------------
-New release for CHM server migration to use the eggshop (no more svn)
+* New release for CHM server migration to use the eggshop (no more svn)
 
-2.11.03 (2011-04-07)
+2.11.3 (2011-04-07)
 --------------------
 * Folder listing fetches all information about listed objects using adapters.
 * Fix: ``naaya.core.zope2util.permission_add_role`` used to incorrectly toggle
@@ -24,7 +26,7 @@ New release for CHM server migration to use the eggshop (no more svn)
 * Notifications can be disabled temporarily by admins for their own edits.
 * New `GlossaryWidget` with jquery-ui.
 
-2.11.02 (2011-03-01)
+2.11.2 (2011-03-01)
 --------------------
 * New permission `Naaya - Skip approval` replaces `submit_unapproved` flag.
   `checkPermissionSkipApproval` replaces `glCheckPermissionPublishObjects`.
@@ -36,7 +38,7 @@ New release for CHM server migration to use the eggshop (no more svn)
 * Separate email addresses for admin notifications and error reports.
 
 
-2.11.01 (2011-02-02)
+2.11.1 (2011-02-02)
 --------------------
 * Support for i18n messages with different values for ID and English
    translation, useful for handling homonyms.
