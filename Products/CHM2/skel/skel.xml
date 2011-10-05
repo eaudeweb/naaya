@@ -61,6 +61,10 @@
 				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
 				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
 				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="brown" title="Brown">
 				<style id="style" title="Main CSS"/>
@@ -90,6 +94,10 @@
 				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
 				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
 				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="green" title="Green">
 				<style id="style" title="Main CSS"/>
@@ -119,6 +127,10 @@
 				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
 				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
 				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="indigo" title="Indigo">
 				<style id="style" title="Main CSS"/>
@@ -148,6 +160,10 @@
 				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
 				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
 				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 		</skin>
 		<skin id="chm_new" title="CHM 2.0">
@@ -195,30 +211,50 @@
 				<style id="style_common" title="Common CSS"/>
 				<image id="bg-header1.jpg" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="brown" title="Brown">
 				<style id="style" title="Main CSS"/>
 				<style id="style_common" title="Common CSS"/>
 				<image id="bg-header1.jpg" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
             </scheme>
 			<scheme id="dark_green" title="Dark green">
 				<style id="style" title="Main CSS"/>
 				<style id="style_common" title="Common CSS"/>
 				<image id="bg-header1.jpg" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="green" title="Green">
 				<style id="style" title="Main CSS"/>
 				<style id="style_common" title="Common CSS"/>
 				<image id="bg-header1.jpg" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 			<scheme id="indigo" title="Indigo">
 				<style id="style" title="Main CSS"/>
 				<style id="style_common" title="Common CSS"/>
 				<image id="bg-header1.jpg" title=""/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 			</scheme>
 		</skin>
 		<skin id="chm3" title="CHM3">
@@ -362,6 +398,10 @@
 				<image id="warning-32.png" title=""/>
 				<image id="x.gif" title=""/>
 				<image id="zip-icon.png" title=""/>
+				<image id="facebook.png" title="Facebook share"/>
+				<image id="twitter.png" title="Twitter share"/>
+				<image id="rss.png" title="Web feed"/>
+				<image id="download.png" title="Download"/>
 				<file id="CartoGothicStd-Bold-webfont.eot" title=""/>
 				<file id="CartoGothicStd-Bold-webfont.svg" title=""/>
 				<file id="CartoGothicStd-Bold-webfont.ttf" title=""/>

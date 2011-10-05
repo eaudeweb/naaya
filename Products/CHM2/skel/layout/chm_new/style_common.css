@@ -195,6 +195,33 @@ a.button-like, a.button-like:visited {
 	color: white;
 }
 
+a.feed_link,
+a.facebook_link,
+a.twitter_link,
+a.download_link {
+	padding-left: 25px;
+	line-height: 1.8;
+	display: inline-block;
+	height: 20px;
+}
+
+a.feed_link {
+	background: transparent url('rss.png') no-repeat scroll left center;
+}
+
+a.facebook_link {
+	background: transparent url('facebook.png') no-repeat scroll left center;
+}
+
+a.twitter_link {
+	background: transparent url('twitter.png') no-repeat scroll left center;
+}
+
+a.download_link {
+	background: transparent url('download.png') no-repeat scroll left center;
+	float: right;
+}
+
 /* object administration */
 #admin_this_folder{
 	clear: both;
