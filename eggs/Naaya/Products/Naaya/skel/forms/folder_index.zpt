@@ -44,33 +44,34 @@
 	</h1>
 	</metal:block>
 
-	<p tal:condition="python:here.description!=''"
-		tal:content="structure here/description" />
+	<div class="folder_description">
+	    <p tal:condition="python:here.description!=''"
+		    tal:content="structure here/description" />
+	</div>
 
+	<div class="folder_content">
 	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>
 	</metal:block>
+	</div>
 	</metal:block>
 
-	<metal:block metal:define-slot="folder_footer">
-		<div id="folder_footer" class="folder_footer">
-			<a tal:attributes="href string:${here/absolute_url}/index_atom"
-				i18n:translate="">Web feed</a>
-			| <a class="b_download"
-				href="./zip_export/do_export"
-				title="Download the contents of this folder to a Zip file"
-				tal:condition="python: here.checkPermission('Naaya - Zip export')"
-				i18n:attributes="title"
-				i18n:translate="">Zip download</a>
-			<metal:block metal:define-slot="folder_footer_extension">
-				<tal:comment condition="nothing">
-					Fill this slot to add content to the folder footer.
-				</tal:comment>
-			</metal:block>
-		</div>
-	</metal:block>
+	<div id="folder_footer" class="folder_footer">
+	    <a class="feed_link" tal:attributes="href string:${here/absolute_url}/index_atom"
+		    i18n:translate="">Web feed</a>
+	    &middot;
+	    <a class="facebook_link" tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">Facebook</a>
+	    &middot;
+	    <a class="twitter_link" tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">Twitter</a>
+	    <a class="download_link"
+		    href="./zip_export/do_export"
+		    title="Download the contents of this folder to a Zip file"
+		    tal:condition="python: here.checkPermission('Naaya - Zip export')"
+		    i18n:attributes="title"
+		    i18n:translate="">Zip download</a>
+	</div>
 
 	<tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
 		<tal:block content="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})"

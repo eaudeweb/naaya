@@ -50,7 +50,9 @@ misc_ = {
     'cut.gif':ImageFile('www/cut.gif', globals()),
     'delete.gif':ImageFile('www/delete.gif', globals()),
     'download-file.png':ImageFile('www/download-file.png', globals()),
+    'download.png': ImageFile('www/download.png', globals()),
     'edit':ImageFile('www/edit.gif', globals()),
+    'facebook.png':ImageFile('www/facebook.png', globals()),
     'fullscreencollapse_icon.gif':ImageFile('www/fullscreencollapse_icon.gif', globals()),
     'fullscreenexpand_icon.gif':ImageFile('www/fullscreenexpand_icon.gif', globals()),
     'gadfly_container.gif': ImageFile('www/gadfly_container.gif', globals()),
@@ -62,6 +64,7 @@ misc_ = {
     'powered.gif':ImageFile('www/powered.gif', globals()),
     'printer.gif': ImageFile('www/printer.gif', globals()),
     'revoke_permission.png': ImageFile('www/revoke_permission.png', globals()),
+    'rss.png': ImageFile('www/rss.png', globals()),
     'select_all.gif':ImageFile('www/select_all.gif', globals()),
     'sort_asc.gif':ImageFile('www/sort_asc.gif', globals()),
     'sort_desc.gif':ImageFile('www/sort_desc.gif', globals()),
@@ -70,6 +73,7 @@ misc_ = {
     'square.gif':ImageFile('www/square.gif', globals()),
     'star.png':ImageFile('www/star.png', globals()),
     'trash.gif': ImageFile('www/trash.gif', globals()),
+    'twitter.png': ImageFile('www/twitter.png', globals()),
 
     #drag & drop files
     'core.js': ImageFile('zpt/dragdrop/core.js.dtml', globals()),

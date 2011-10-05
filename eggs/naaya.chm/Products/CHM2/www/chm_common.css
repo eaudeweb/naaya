@@ -146,7 +146,7 @@ padding: 0 0 0 2em;
 /* End map styles */
 
 #center_content {
-	float: left;
+	/*float: left;*/
 }
 
 hr.hr_addcomment {

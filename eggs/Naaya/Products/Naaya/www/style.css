@@ -13,7 +13,7 @@ a:visited {
 	color: #000066;
 }
 p {
-	line-height: 1em;
+	line-height: 1.5;
 	margin-top: 0.2em;
 }
 dt {
@@ -31,6 +31,10 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	font-size: 12px;
 	line-height: 12px;
 	vertical-align: 2px;
+}
+
+hr {
+	clear: both;
 }
 
 /* containers */
