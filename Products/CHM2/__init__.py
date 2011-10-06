@@ -18,14 +18,10 @@
 # Cornel Nitu, Eau de Web
 # Dragos Chirila
 
-#Python imports
-from os.path import join
-
-#Zope imports
+import os
 import Globals
 from App.ImageFile import ImageFile
 
-#Product imports
 from constants import *
 from Products.NaayaCore.managers.utils import file_utils
 from managers.config_parser import config_parser
@@ -57,7 +53,8 @@ misc_ = {
 #process config.xml file
 content_urls = {}
 config = config_parser()
-config_handler, error = config_parser().parse(file_utils().futRead(join(CHM2_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
+config_handler, error = config_parser().parse(file_utils().futRead(
+    os.path.join(CHM2_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
 if config_handler is not None:
     if config_handler.root.urls is not None:
         for item in config_handler.root.urls.entries:
@@ -70,3 +67,8 @@ def get_content_urls(self):
 
 CHMSite.CHMSite.get_content_urls = get_content_urls
 
+def chm_bundle_registration():
+    """ Register things from skel into the CHM bundle """
+    from Products.NaayaCore.FormsTool import bundlesupport
+    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
+    bundlesupport.register_templates_in_directory(templates_path, 'CHM')

@@ -7,13 +7,9 @@
     for="Products.Naaya.interfaces.INyPluggableItemInstalled"
     />
 
-  <naaya:call
-    factory=".glossary_widget_wrapper.patch_glossary_widget"
-    />
-
-  <naaya:call
-    factory=".rstk_utils.patch_rstk"
-    />
+  <naaya:call factory=".glossary_widget_wrapper.patch_glossary_widget" />
+  <naaya:call factory=".rstk_utils.patch_rstk" />
+  <naaya:call factory=".chm_bundle_registration"  />
 
   <browser:page
     for="Products.Naaya.interfaces.INyFolder"
