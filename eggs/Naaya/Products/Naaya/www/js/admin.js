@@ -4,7 +4,7 @@
 $(document).ready(function(){
 
 	set_up_info_boxes();
-
+	jQuery("a.suggest_translation").click(add_suggestion);
 });
 
 /**
@@ -24,4 +24,16 @@ function set_up_info_boxes() {
 		var info_div = $(this).siblings('div.admin-info-text');
 		info_div.toggle();
 	}
+}
+
+/**
+ * Translate Messages: add an external translate suggestion
+*/
+
+function add_suggestion(){
+	var jthis = jQuery(this);
+	var lang = jthis.attr("name");
+	var suggestion = jthis.attr("name");
+	jQuery("form[name='translate_" + lang
+	       + "'] textarea[name='translation:utf8:ustring']").val(jthis.text());
 }

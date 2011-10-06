@@ -9,10 +9,10 @@
 			skey python:request.get('skey', 'msg');
 			rkey python:request.get('rkey', '');
 			sort_qs python:'start=%s&amp;skey=%s&amp;rkey=%s&amp;query=%s' % (start, skey, rkey, query);
-			catalog here/getPortalTranslations;
-			languages python:catalog.tt_get_languages_mapping();
+			portal_i18n here/getPortalI18n;
+			languages python:portal_i18n.get_languages_mapping();
 			msg_encoded python:request.get('msg', '');
-			message python:catalog.message_decode(msg_encoded)">
+			message python:portal_i18n.message_decode(msg_encoded)">
 
 <p>
 	<a tal:attributes="href string:${site_url}/admin_translations_html?${sort_qs}"
@@ -31,8 +31,9 @@
 <tal:block tal:repeat="language languages">
 <fieldset>
 	<legend  tal:content="python:language['name']" />
-	<form method="post" tal:attributes="action string:${site_url}/admin_editmessage">
-		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:catalog.get_msg_translations(message, language['code'])" /></div>
+	<form method="post" tal:attributes="action string:${site_url}/admin_editmessage;
+					    name python:'translate_' + language['code']">
+		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:portal_i18n.get_message_translation(message, language['code'], '')" /></div>
 		<input type="hidden" name="message:utf8:ustring" tal:attributes="value message" />
 		<input type="hidden" name="language" tal:attributes="value python:language['code']">
 		<input type="hidden" name="start" tal:attributes="value start" />
@@ -42,6 +43,14 @@
 		<input type="submit" value="Save changes" i18n:attributes="value" />
 		<input type="reset" value="Reset" i18n:attributes="value" />
 	</form>
+	<div tal:condition="python: language['code']!='en'">
+
+		Suggestion:
+		<a tal:content="python:portal_i18n.external_translate(message, language['code'])"
+		   href='javascript:void(0);' class='suggest_translation'
+		   tal:attributes="name python:language['code']"/> (click to use)
+
+	</div>
 </fieldset>
 </tal:block>
 

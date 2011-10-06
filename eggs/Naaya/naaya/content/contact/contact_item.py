@@ -123,6 +123,7 @@ def addNyContact(self, id='', REQUEST=None, contributor=None, **kwargs):
         schema_raw_data = dict(REQUEST.form)
     else:
         schema_raw_data = kwargs
+
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('details', '')

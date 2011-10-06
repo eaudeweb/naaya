@@ -213,8 +213,9 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
                 )
             self.failUnless(re.search(pattern % kwargs, html, re.DOTALL))
 
-        assert_entry(html, folder_path='home page', folder_title='portal',
-            position='center', portlet_title='Test Portlet 1')
+        assert_entry(html, folder_path='home page',
+                     folder_title='Naaya Test Site', position='center',
+                     portlet_title='Test Portlet 1')
         assert_entry(html, folder_path='/fol', folder_title='Folderr',
             position='left', portlet_title='Test Portlet 2')
         assert_entry(html, folder_path='/fol/sub', folder_title='Subfolderr',

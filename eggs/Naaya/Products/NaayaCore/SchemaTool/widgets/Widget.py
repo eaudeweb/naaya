@@ -174,7 +174,7 @@ class Widget(Folder):
         if REQUEST:
             kwargs.update(REQUEST.form)
 
-        _lang = kwargs.get('lang', self.get_selected_language())
+        _lang = kwargs.get('lang', self.gl_get_selected_language())
         _required = bool(kwargs.get('required'))
 
         if not _required and self.must_be_mandatory():

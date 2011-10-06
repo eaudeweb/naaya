@@ -21,9 +21,6 @@ def addHTMLPortlet(self, id='', title='', body='', portlettype='0', lang=None, R
     except: portlettype = 0
     if lang is None: lang = self.gl_get_selected_language()
     ob = HTMLPortlet(id, title, body, portlettype, lang)
-    for lang_rec in self.gl_get_languages_mapping():
-        ob.add_language(lang_rec['code'])
-        if lang_rec['default']: ob.manage_changeDefaultLang(lang_rec['code'])
     self._setObject(id, ob)
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)

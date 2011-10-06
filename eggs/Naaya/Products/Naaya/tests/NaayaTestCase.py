@@ -9,6 +9,7 @@ from Testing.ZopeTestCase import Functional
 from zope.interface import alsoProvides
 from zope.component import getGlobalSiteManager
 from Products.Naaya.interfaces import INySite
+from naaya.i18n.patches import populate_threading_local
 
 class ITestSite(INySite):
     """ Marker interface for a test portal; useful for registering fixtures """
@@ -267,6 +268,8 @@ class NaayaPortalTestPlugin(Plugin):
             the_test.app = wrapped_app
             the_test.portal = wrapped_app[self.portal_id]
             the_test.fake_request = fake_root.REQUEST
+            populate_threading_local(the_test.portal, the_test.portal.REQUEST)
+            the_test.portal.REQUEST['PARENTS'] = [the_test.portal, the_test.app]
 
             self.cleanup_test_layer = cleanup
 

@@ -4,10 +4,10 @@
 <metal:block metal:fill-slot="body">
 
 <tal:block tal:define="
-	languages here/get_languages_mapping;
+	languages here/gl_get_languages_mapping;
 	site here/getSite;
 	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
-	curr_lang_label python:here.get_language_name(curr_lang);"
+	curr_lang_label python:here.gl_get_language_name(curr_lang);"
 	tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())"
 >
 
@@ -199,7 +199,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 
 <!-- Macro for translation bar -->
 <metal:block define-macro="translation_bar"  tal:define="
-languages here/get_languages_mapping;
+languages here/gl_get_languages_mapping;
 curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 color python:here.utHexColors(curr_lang);">
 
