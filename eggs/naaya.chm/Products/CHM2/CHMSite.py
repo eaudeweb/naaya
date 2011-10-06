@@ -36,7 +36,7 @@ from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 from Products.NaayaForum.NyForum import addNyForum
 from Products.CHM2.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.utils import make_id
-
+from naaya.component import bundles
 METATYPE_NYURL = 'Naaya URL'
 
 CONTAINERS_METATYPES.append(METATYPE_CHMSITE)
@@ -70,6 +70,9 @@ def manage_addCHMSite(self, id='', title='', lang=None, google_api_keys=None,
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+chm_bundle = bundles.get("CHM")
+chm_bundle.set_parent(bundles.get("Naaya"))
+
 class CHMSite(NySite):
     """ """
 
@@ -89,7 +92,8 @@ class CHMSite(NySite):
         self.predefined_latest_uploads = []
         self.show_releasedate = 1
         self.workgroups = []
-        NySite.__dict__['__init__'](self, *args, **kwargs)
+        super(CHMSite, self).__init__(*args, **kwargs)
+        self.set_bundle(chm_bundle)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, load_glossaries=[]):
