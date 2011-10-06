@@ -31,7 +31,6 @@
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
 		<form id="site_admin_centre" title="Portal administration - centre"/>
-		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
 		<form id="site_admin_documentation" title="Portal administration - documentation"/>
 		<form id="site_admin_editor" title="Portal administration - editor settings"/>
 		<form id="site_admin_edituser" title="Portal administration - edit user"/>
@@ -41,7 +40,6 @@
 		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
 		<form id="site_admin_glossaries" title="Portal administration - glossaries"/>
 		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
-		<form id="site_admin_importexport" title="Portal administration - import export messages"/>
 		<form id="site_admin_layout" title="Portal administration - layout"/>
 		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
 		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
@@ -51,7 +49,6 @@
 		<form id="site_admin_localchportlets" title="Portal administration - local channels section"/>
 		<form id="site_admin_logos" title="Portal administration - logos"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
-		<form id="site_admin_messages" title="Portal administration - messages' summary"/>
 		<form id="site_admin_metadata" title="Portal administration - medata"/>
 		<form id="site_admin_network" title="Portal administration - network portals"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
@@ -65,7 +62,6 @@
 		<form id="site_admin_sources" title="Portal administration - other users sources"/>
 		<form id="site_admin_specialportlets" title="Portal administration - system portlets section"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_admin_translations" title="Portal administration - translate messages"/>
 		<form id="site_admin_users" title="Portal administration - users"/>
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
 		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>

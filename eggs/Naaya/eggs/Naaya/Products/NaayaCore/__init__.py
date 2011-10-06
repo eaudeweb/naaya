@@ -16,7 +16,6 @@ def initialize(context):
     # they mess up modules' paths
     from CatalogTool import CatalogTool
     from EmailTool import EmailTool
-    from TranslationsTool import TranslationsTool
     from SyndicationTool import SyndicationTool
     from AuthenticationTool import AuthenticationTool
     from PropertiesTool import PropertiesTool
@@ -53,14 +52,6 @@ def initialize(context):
                 EmailTool.manage_addEmailTool,
                 ),
         icon = 'EmailTool/www/EmailTool.gif'
-        )
-    context.registerClass(
-        TranslationsTool.TranslationsTool,
-        permission = PERMISSION_ADD_NAAYACORE_TOOL,
-        constructors = (
-                TranslationsTool.manage_addTranslationsTool,
-                ),
-        icon = 'TranslationsTool/www/TranslationsTool.gif'
         )
     context.registerClass(
         SyndicationTool.SyndicationTool,
@@ -158,7 +149,6 @@ misc_ = {
     'CatalogTool.gif':ImageFile('CatalogTool/www/CatalogTool.gif', globals()),
     'EmailTool.gif':ImageFile('EmailTool/www/EmailTool.gif', globals()),
     'EmailTemplate.gif':ImageFile('EmailTool/www/EmailTemplate.gif', globals()),
-    'TranslationsTool.gif':ImageFile('TranslationsTool/www/TranslationsTool.gif', globals()),
     'SyndicationTool.gif':ImageFile('SyndicationTool/www/SyndicationTool.gif', globals()),
     'RemoteChannel.gif':ImageFile('SyndicationTool/www/RemoteChannel.gif', globals()),
     'RemoteChannelFacade.gif':ImageFile('SyndicationTool/www/RemoteChannelFacade.gif', globals()),
