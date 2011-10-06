@@ -1,7 +1,7 @@
 import zope.component
 import urllib
 from interfaces import IBFileContentViewer
-from naaya.core.utils import pretty_size, force_to_unicode
+from naaya.core.utils import pretty_size, force_to_unicode, icon_for_content_type
 
 def file_has_content(file_ob):
     return (file_ob is not None) and (file_ob.filename != '')
@@ -32,9 +32,7 @@ def tmpl_version(context, version, ver_id):
                  (context.absolute_url(),
                   ver_id,
                   urllib.quote(version.filename, safe=''))),
-        'icon_url': ('%s/getContentTypePicture?id=%s' %
-                     (context.getSite().absolute_url(),
-                      version.content_type)),
+        'icon_url': (icon_for_content_type(version.content_type)['url']),
         'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
         'id': ver_id,
         'is_current': False,
