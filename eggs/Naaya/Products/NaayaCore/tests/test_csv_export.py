@@ -7,6 +7,7 @@ from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.content.contact.contact_item import addNyContact
 
+from Products.NaayaCore.GeoMapTool.tests.test_kml_parser import load_file
 
 class NyCSVExportTest(NaayaTestCase):
     """ TestCase for Naaya CSV export """
@@ -66,8 +67,10 @@ class GeopointExportTest(NaayaTestCase):
                          widget_type='Geo', data_type='geo')
         schema.addWidget('test_geo_type', label="Geo Type",
                          widget_type='GeoType', data_type='str')
+
+        picture_data = load_file('data/symbol.png')
         self.portal.portal_map.addSymbol('sym1', 'Test symbol one',
-                                         '', '', '', '')
+                                         '', '', picture_data, '')
 
     def beforeTearDown(self):
         nycontact_schema = self.portal['portal_schemas']['NyContact']

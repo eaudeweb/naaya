@@ -112,13 +112,15 @@ class SchemaTestCase(NaayaTestCase.NaayaTestCase):
         schema = self.portal.portal_schemas.getSchemaForMetatype('Naaya Document')
         self.failUnlessEqual(
             [ widget.prop_name() for widget in schema.listWidgets() ],
-            ['title', 'description', 'geo_location', 'geo_type', 'coverage', 'keywords',
-                'sortorder', 'releasedate', 'discussion', 'body'])
+            ['title', 'description', 'geo_location', 'geo_type', 'coverage',
+                'keywords', 'chm_terms', 'sortorder', 'releasedate',
+                'discussion', 'body'])
 
     def test_list_local_properties(self):
         schema = self.portal.portal_schemas.getSchemaForMetatype('Naaya Document')
         self.failUnlessEqual(schema.listPropNames(local=True),
-            set(['title', 'description', 'coverage', 'keywords', 'body']))
+            set(['title', 'description', 'coverage',
+                 'keywords', 'chm_terms', 'body']))
 
     def test_NyDocument_initial_schema(self):
         self.failUnless('NyDocument' in self.portal.portal_schemas.objectIds())

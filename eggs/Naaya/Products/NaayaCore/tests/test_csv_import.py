@@ -13,6 +13,7 @@ from Products.NaayaCore.EmailTool import EmailTool
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.Naaya.NyFolder import addNyFolder
 
+from Products.NaayaCore.GeoMapTool.tests.test_kml_parser import load_file
 
 csv_data = ('Title,Description,Automatically redirect to the given URL,URL\n'
     'My URL 1,The best URL,no,http://example.com\n'
@@ -48,7 +49,7 @@ class NyCSVImportTest(NaayaTestCase):
 
     def test_generate_csv_template(self):
         columns = self.portal.csv_import.template('Naaya URL').strip().split(',')
-        self.failUnlessEqual(len(columns), 13)
+        self.failUnlessEqual(len(columns), 14)
         self.failUnless('Title' in columns)
         self.failUnless('Description' in columns)
         self.failUnless('Automatically redirect to the given URL' in columns)
@@ -210,8 +211,11 @@ class GeopointImportTest(NaayaTestCase):
         schema = self.portal.portal_schemas.NyDocument
         schema.addWidget('test_geo_loc', label="Geo Loc", widget_type='Geo', data_type='geo')
         schema.addWidget('test_geo_type', label="Geo Type", widget_type='GeoType', data_type='str')
-        self.portal.portal_map.addSymbol('sym1', 'Test symbol one', '', '', '', '')
-        self.portal.portal_map.addSymbol('sym2', 'Test symbol two', '', '', '', '')
+
+        picture_data = load_file('data/symbol.png')
+
+        self.portal.portal_map.addSymbol('sym1', 'Test symbol one', '', '', picture_data, '')
+        self.portal.portal_map.addSymbol('sym2', 'Test symbol two', '', '', picture_data, '')
 
     def beforeTearDown(self):
         self.portal.portal_map.deleteSymbol(['sym1', 'sym2'])
