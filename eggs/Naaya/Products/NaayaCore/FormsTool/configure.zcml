@@ -1,0 +1,12 @@
+<configure xmlns='http://namespaces.zope.org/zope'
+    xmlns:zcml="http://namespaces.zope.org/zcml">
+
+<subscriber handler=".subscribers.template_added"
+    for=".interfaces.ITemplate zope.app.container.interfaces.IObjectAddedEvent" />
+
+<subscriber handler=".subscribers.template_before_remove"
+    for=".interfaces.ITemplate OFS.interfaces.IObjectWillBeRemovedEvent" />
+
+<include package=".updates" />
+
+</configure>

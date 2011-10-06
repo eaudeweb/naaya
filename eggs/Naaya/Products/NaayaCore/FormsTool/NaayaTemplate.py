@@ -1,23 +1,35 @@
 from Products.PageTemplates.PageTemplate import PageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from FormsTool import register_naaya_template
+from naaya.component import bundles
+
+from interfaces import ITemplate
 
 class NaayaPageTemplateFile(PageTemplateFile):
-    def __init__(self, filename, _globals, name):
+    def __init__(self, filename, _globals, name, bundle_name="Naaya"):
         PageTemplateFile.__init__(self, filename, _globals, __name__=name)
-        register_naaya_template(self, name)
 
-    def pt_render(self, *args, **kwargs):
+        #Register this template to a specific bundle
+        bundle = bundles.get(bundle_name)
+        bundle.registerUtility(self, ITemplate, name)
+        self._bundle_name = bundle_name
+
+    def __of__(self, parent):
+        """
+        When this NaayaPageTemplateFile is placed in an acquisition context,
+        we do our magic: look up the correct (perhaps customized) template
+        and return that instead of ourselves.
+        """
+
         try:
-            site = self.getSite()
+            site = parent.getSite()
         except AttributeError, e:
-            # there's no site in our acquisition context
-            current_form = self
+            sm = bundles.get(self._bundle_name)
         else:
-            forms_tool = site.getFormsTool()
-            current_form = forms_tool[self.__name__]
+            sm = site.getSiteManager()
 
-        current_form = current_form.aq_self.__of__(self.aq_parent)
-
-        return PageTemplate.pt_render(current_form, *args, **kwargs)
+        form = sm.getUtility(ITemplate, self.__name__)
+        if form is self:
+            return PageTemplateFile.__of__(self, parent)
+        else:
+            return form.__of__(parent)

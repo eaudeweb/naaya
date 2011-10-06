@@ -1,10 +1,9 @@
-import Globals
+import os
 from App.ImageFile import ImageFile
 
 def initialize(context):
     """ """
     from constants import PERMISSION_ADD_SITE, PERMISSION_ADD_FOLDER
-    from naaya.content.base.discover import get_pluggable_content
     from naaya.content.base import discover
     import NySite
     import NyFolder
@@ -175,3 +174,10 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
              'Dynamic module "%s" registered' % klass.__name__)
 
     InitializeClass(NyFolder.NyFolder)
+
+
+def naaya_bundle_registration():
+    """ Register things from skel into the Naaya bundle """
+    from Products.NaayaCore.FormsTool import bundlesupport
+    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
+    bundlesupport.register_templates_in_directory(templates_path, 'Naaya')

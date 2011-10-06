@@ -16,7 +16,7 @@ Some terms used in the documentation are described here.
 
     ZMI
         Zope Management Interface. Specific to Zope2, an interface which allows
-        advanced usage of Zope. Things such as adding new instantaces of products,
+        advanced usage of Zope. Things such as adding new instances of products,
         database indexes and connections, template customizations and
         many others.
 

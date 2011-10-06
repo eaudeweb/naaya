@@ -5,6 +5,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 
 from Products.NaayaCore.constants import *
+from Products.NaayaCore.FormsTool.interfaces import ITemplate
 
 from interfaces import INyTemplate
 
@@ -25,7 +26,7 @@ def manage_addTemplate(self, id='', title='', file='', content_type='text/html',
 
 class Template(ZopePageTemplate):
     """ """
-    implements(INyTemplate)
+    implements(INyTemplate, ITemplate)
 
     meta_type = METATYPE_TEMPLATE
     icon = 'misc_/NaayaCore/Template.gif'

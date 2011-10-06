@@ -1,4 +1,5 @@
-<configure xmlns='http://namespaces.zope.org/zope'>
+<configure xmlns='http://namespaces.zope.org/zope'
+    xmlns:naaya="http://namespaces.zope.org/naaya">
   <include package=".adapter" />
 
   <adapter
@@ -65,4 +66,6 @@
   <include package="naaya.content.story" />
   <include package="naaya.content.url" />
   <include package="naaya.i18n" />
+
+  <naaya:call factory=".naaya_bundle_registration" /> 
 </configure>
