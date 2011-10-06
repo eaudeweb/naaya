@@ -685,37 +685,44 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
-    def adminAddSymbol(self, title='', description='', parent='', picture='', sortorder='', REQUEST=None):
+    def adminAddSymbol(self, title='', description='', parent='', picture='',
+                       sortorder='', REQUEST=None):
         """ """
         try:
-            self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture, sortorder)
+            self.addSymbol('symbol%s' % self.utGenRandomId(3), title,
+                           description, parent, picture, sortorder)
         except ValueError, e:
-            if REQUEST:
-                self.setSessionErrorsTrans(e)
-                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
-            else:
+            if REQUEST is None:
                 raise
-        else:
-            if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+            self.setSessionErrorsTrans(e)
+            return REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
+                                              % self.absolute_url())
+
+        if REQUEST is not None:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
+                                       % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
-    def adminUpdateSymbol(self, id='', title='', description='', parent='', picture='', sortorder='', REQUEST=None):
+    def adminUpdateSymbol(self, id='', title='', description='', parent='',
+                          picture='', sortorder='', REQUEST=None):
         """ """
         try:
-            self.updateSymbol(id, title, description, parent, picture, sortorder)
+            self.updateSymbol(id, title, description, parent,
+                              picture, sortorder)
         except ValueError, e:
-            if REQUEST:
-                self.setSessionErrorsTrans(e)
-                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html?id=%s'
-                                            % (self.absolute_url(), id))
-            else:
+            if REQUEST is None:
                 raise
-        else:
-            if REQUEST:
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+            self.setSessionErrorsTrans(e)
+            return REQUEST.RESPONSE.redirect('%s/admin_maptypes_html?id=%s'
+                                              % (self.absolute_url(), id))
+
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
+                                     date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html'
+                                       % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminDeleteSymbols')
     def adminDeleteSymbols(self, id=[], REQUEST=None):
