@@ -174,6 +174,7 @@ padding: 0 0 0 2em;
 
 #center_content {
 	float: left;
+	width: 78%;
 }
 
 hr.hr_addcomment {
@@ -655,6 +656,17 @@ tr.tr-hover:hover {
 		overflow-x: visible !important;
 		overflow-y: visible!important;
 		overflow: visible !important;
+		width: 78%;
+}
+
+#folderfile_list {
+    width: 100%;
+}
+
+#folder_footer {
+		margin: 10px auto;
+		position: relative;
+		width: 97%;
 }
 
 /**
