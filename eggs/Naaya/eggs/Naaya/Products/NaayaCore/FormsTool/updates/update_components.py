@@ -23,7 +23,7 @@ class MigrateToBundles(UpdateScript):
 
         if sm.__name__ == '++etc++site':
             sm.__name__ = 'database'
-            log.info("Set name of local site manager to %r", sm.__name__)
+            self.log.info("Set name of local site manager to %r", sm.__name__)
 
         bundle = portal.get_bundle()
         portal_cls_name = portal.__class__.__name__
