@@ -71,7 +71,6 @@
 <table class="datatable" width="99%">
 	<tr>
 		<th width="1%">&nbsp;</th>
-		<th i18n:translate="">Icon</th>
 		<tal:block tal:condition="python:skey=='title'">
 			<tal:block tal:condition="python:rkey==''">
 				<th>
@@ -96,7 +95,6 @@
 				</a>
 			</th>
 		</tal:block>
-		<th i18n:translate="">Category id</th>
 		<tal:block tal:condition="python:skey=='parent'">
 			<tal:block tal:condition="python:rkey==''">
 				<th>
@@ -142,9 +140,10 @@
 	</tr>
 	<tr tal:repeat="record python:here.getSymbolsListOrdered(skey, rkey)">
 		<td><input type="checkbox" name="id" tal:attributes="value record/id" /></td>
-		<td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" /></td>
-		<td><a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title" /></td>
-		<td tal:content="record/id" />
+		<td>
+			<img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" />
+			<a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title"></a>
+		</td>
 		<td tal:content="python:here.getSymbolTitle(record.parent)" />
 		<td tal:content="record/sortorder" />
 	</tr>
