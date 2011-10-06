@@ -16,7 +16,7 @@
 
 <br clear="all" />
 
-<form method="post" enctype="multipart/form-data"
+<form method="post" enctype="multipart/form-data" id="add-or-update-form"
 	tal:attributes="action python:test(record_data['action']=='add', 'adminAddSymbol', 'adminUpdateSymbol')">
 <fieldset>
 	<legend i18n:translate=""
@@ -36,7 +36,7 @@
 		</dd>
 		<dt i18n:translate="">Parent category</dt>
 		<dd>
-			<select name="parent">
+			<select name="parent" id="parent-selection">
 				<option value="" i18n:translate=""></option>
 				<tal:block repeat="item here/getParentsList">
 					<option i18n:translate="" tal:content="item/title"
@@ -156,6 +156,41 @@
 	</tr>
 </table>
 </form>
+
+<tal:block condition="python: record_data['action'] == 'update'
+							  and here.getSymbolChildren(record_id)">
+<div id="dialog-parent-category" title="Changing parent category"
+	i18n:attributes="title" i18n:translate="" class="hidden">
+	This category has children categories. Selecting a parent category for it
+	will also make all children top level categories (only 2 levels of
+	categories are allowed).
+</div>
+
+<script>
+$(document).ready(function () {
+	$("#dialog-parent-category").dialog({
+		autoOpen: false,
+		modal: true,
+		resizable: false,
+		buttons: {
+			"Ok": function () {
+					document.getElementById("add-or-update-form").submit();
+				},
+			"Cancel": function () {
+					$(this).dialog("close");
+				}
+		}
+	});
+
+	$("#add-or-update-form").submit(function (e) {
+		if ( $("#parent-selection").val() ) {
+			e.preventDefault();
+			$("#dialog-parent-category").dialog('open');
+		}
+	});
+});
+</script>
+</tal:block>
 
 </metal:block>
 
