@@ -88,7 +88,6 @@ from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import folder_add_html, addNyFolder, importNyFolder
-from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method, cooldown, is_ajax
 from naaya.core.zope2util import path_in_site, ofs_path
@@ -96,8 +95,11 @@ from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
-from naaya.i18n.interfaces import INyLanguageManagement
-from naaya.i18n.LocalizerWrapper import LocalizerWrapper
+from Products.NaayaCore.interfaces import ICaptcha
+from naaya.i18n import manage_addNaayaI18n
+from naaya.i18n.constants import *
+from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
+from naaya.i18n.portal_tool import message_encode
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
@@ -292,6 +294,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         manage_addGeoMapTool(self)
         manage_addAnalyticsTool(self)
         manage_addErrorLog(self)
+        manage_addNaayaI18n(self, languages)
         manage_addSchemaTool(self)
 
     security.declarePrivate('loadDefaultData')
@@ -863,7 +866,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getLocalizer(self): return self._getOb('Localizer')
 
     security.declarePublic('getPortalTranslations')
-    def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
+    def getPortalTranslations(self):
+        return TranslationsToolWrapper(self.getPortalI18n().get_catalog())
 
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
@@ -879,6 +883,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('getGeoMapTool')
     def getGeoMapTool(self): return self._getOb(ID_GEOMAPTOOL, None)
+
+    security.declarePublic('getPortalI18n')
+    def getPortalI18n(self): return self._getOb(ID_NAAYAI18N, None)
 
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
@@ -907,6 +914,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
     security.declarePublic('getGeoMapToolPath')
     def getGeoMapToolPath(self, p=0): return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
+    security.declarePublic('getPortalI18nPath')
+    def getPortalI18nPath(self, p=0): return self._getOb(ID_NAAYAI18N, None).absolute_url(p)
 
     def getFolderMetaType(self): return METATYPE_FOLDER
     security.declarePublic('getFolderMainParent')
@@ -1214,45 +1223,53 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
     security.declarePublic('gl_get_all_languages')
-    def gl_get_all_languages(self): return self.get_all_languages()
+    def gl_get_all_languages(self):
+        return self.getPortalI18n().get_lang_manager().get_all_languages()
 
     security.declarePublic('gl_get_languages')
-    def gl_get_languages(self): return self.get_languages()
+    def gl_get_languages(self):
+        lang_manager = self.getPortalI18n().get_portal_lang_manager()
+        return lang_manager.getAvailableLanguages()
 
     security.declarePublic('gl_get_languages_mapping')
-    def gl_get_languages_mapping(self): return self.get_languages_mapping()
+    def gl_get_languages_mapping(self):
+        return self.getPortalI18n().get_languages_mapping()
 
     security.declarePublic('gl_get_default_language')
-    def gl_get_default_language(self): return self.get_default_language()
+    def gl_get_default_language(self):
+        lang_manager = self.getPortalI18n().get_portal_lang_manager()
+        return lang_manager.get_default_language()
 
     security.declarePublic('gl_get_selected_language')
-    def gl_get_selected_language(self): return self.get_selected_language()
+    def gl_get_selected_language(self):
+        return self.getPortalI18n().get_selected_language(self.REQUEST)
 
     security.declarePublic('gl_get_languages_map')
     def gl_get_languages_map(self):
-        lang, langs, r = self.gl_get_selected_language(), self.get_available_languages(), []
+        lang, langs, r = self.gl_get_selected_language(), self.gl_get_languages(), []
         for x in langs:
             r.append({'id': x, 'title': self.gl_get_language_name(x), 'selected': x==lang})
         return r
 
     security.declarePublic('gl_get_language_name')
-    def gl_get_language_name(self, lang): return self.get_language_name(lang)
+    def gl_get_language_name(self, lang):
+        return self.getPortalI18n().get_lang_manager().get_language_name(lang)
 
     def gl_add_languages(self, ob):
         for l in self.gl_get_languages_mapping():
             ob.add_language(l['code'])
             if l['default']: ob.manage_changeDefaultLang(l['code'])
+
     def gl_changeLanguage(self, old_lang, REQUEST=None):
-        """ """
-        self.getLocalizer().changeLanguage(old_lang)
+        """ Changing portal browsing language """
+        self.getPortalI18n().change_selected_language(old_lang)
         if REQUEST: REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def gl_add_site_language(self, language):
         #this is called when a new language is added for the portal
+        self.getPortalI18n().add_language(language)
+
         catalog_tool = self.getCatalogTool()
-        self.add_language(language)
-        self.getLocalizer().add_language(language)
-        self.getPortalTranslations().add_language(language)
         catalog_tool.add_indexes_for_lang(language)
         for b in self.getCatalogedBrains():
             x = catalog_tool.getobject(b.data_record_id_)
@@ -1281,10 +1298,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #this is called when one or more languages are deleted from the portal
         catalog_tool = self.getCatalogTool()
         for language in languages:
-            self.del_language(language)
-            self.getLocalizer().del_language(language)
-            self.getPortalTranslations().del_language(language)
+            self.getPortalI18n().del_language(language)
             catalog_tool.del_indexes_for_lang(language)
+
         for b in self.getCatalogedBrains():
             x = catalog_tool.getobject(b.data_record_id_)
             for language in languages:
@@ -1313,10 +1329,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     def gl_change_site_defaultlang(self, language):
         #this is called when site default language is changed
+        self.getPortalI18n().get_portal_lang_manager().set_default_language(language)
+
         catalog_tool = self.getCatalogTool()
-        self.manage_changeDefaultLang(language)
-        self.getLocalizer().manage_changeDefaultLang(language)
-        self.getPortalTranslations().manage_changeDefaultLang(language)
         for b in self.getCatalogedBrains():
             x = catalog_tool.getobject(b.data_record_id_)
             try: x.manage_changeDefaultLang(language)
@@ -2536,9 +2551,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
         """ """
-        ob = self.getPortalTranslations()
-        message_encoded = ob.message_encode(message)
-        ob.message_edit(message, language, translation, '')
+        ob = self.getPortalI18n().get_catalog()
+        message_encoded = message_encode(message)
+        ob.edit_message(message, language, translation)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
@@ -2547,11 +2562,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
     def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):
         """ """
+        raise NotImplemented()
         return self.getPortalTranslations().manage_export(x, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importmessages')
     def admin_importmessages(self, lang, file, REQUEST=None):
         """ """
+        raise NotImplemented()
         if REQUEST:
             if not file:
                 self.setSessionErrorsTrans('You must select a file to import.')
@@ -2564,11 +2581,13 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
     def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
         """ """
+        raise NotImplemented()
         return self.getPortalTranslations().xliff_export(x, export_all, REQUEST, RESPONSE)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
     def admin_importxliff(self, file, REQUEST=None):
         """ """
+        raise NotImplemented()
         if REQUEST:
             if not file:
                 self.setSessionErrorsTrans('You must select a file to import.')
@@ -3599,8 +3618,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return 0
 
     def check_pluggable_item_properties(self, meta_type, **args):
+        raise NotImplemented("What is this? A test?")
         l = []
         la = l.append
+        #translate(self, domain, msgid, *args, **kw):
+        #gettext(self, msgid, lang, default=None):
         translate = self.getPortalTranslations().translate
         for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
             if v[0] == 1 or v[1]:   #this property is mandatory
@@ -3714,10 +3736,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
     def admin_delmsg(self, messages=[], REQUEST=None):
         """ """
-        ob = self.getPortalTranslations()
+        ob = self.getPortalI18n().get_catalog()
         messages = self.utConvertToList(messages)
         for message in messages:
-            ob.message_del(message)
+            ob.del_message(message)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
@@ -3924,9 +3946,9 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('i18n_js')
     def i18n_js(self, lang='en', REQUEST=None):
         """ translations for messages used by JavaScript """
-        portal_translations = self.getPortalTranslations()
-        translations = dict( (msg, portal_translations(msg, lang=lang))
-                                for msg in JS_MESSAGES )
+        message_catalog = self.getPortalI18n().get_catalog()
+        translations = dict( (msg, message_catalog.gettext(msg, lang))
+                            for msg in JS_MESSAGES )
 
         if REQUEST is not None:
             REQUEST.RESPONSE.setHeader('Content-Type',
@@ -4028,6 +4050,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return 'The heart did not beat since last system restart.'
 
     # functions for translation
+    ''' needs to be removed: '''
+    from Products.NaayaBase.gtranslate import translate, translate_url
     def translate(self, text, dest_lang, src_lang=None):
         return translate(text, dest_lang, src_lang)
 
