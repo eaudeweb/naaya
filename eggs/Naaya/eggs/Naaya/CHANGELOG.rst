@@ -1,5 +1,8 @@
-2.12.0 (unreleased)
---------------------
+2.12.1 (unreleased)
+-------------------
+
+2.12.0 (2011-10-06)
+-------------------
 * refactor: :mod:`Products.Naaya.NySite` stores Zope and
   Naaya containers meta_type-s in two lists in the beginning of the module
 * refactor: :mod:`naaya.i18n` replaces Localizer and itools
