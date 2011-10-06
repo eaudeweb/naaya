@@ -6,6 +6,7 @@ from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaCore.GeoMapTool.clusters import get_discretized_limits
+from test_kml_parser import load_file
 
 class RequestStub(object):
     # simulates HTTP Request with filled form-data
@@ -25,8 +26,10 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
+        picture_data = load_file('data/symbol.png')
+
         for id in self.symbol_ids:
-            self.portal.portal_map.addSymbol(id, id, '', '', '', '')
+            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
 
         addNyFolder(self.portal, 'geo_clusters_test', contributor='contributor',
                 submited=1)

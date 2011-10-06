@@ -5,6 +5,7 @@ import transaction
 
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from test_kml_parser import load_file
 
 class Parser(HTMLParser):
     def __init__(self):
@@ -31,8 +32,10 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
         self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
+        picture_data = load_file('data/symbol.png')
+
         for id in self.symbol_ids:
-            self.portal.portal_map.addSymbol(id, id, '', '', '', '')
+            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
 
         addNyFolder(self.portal, 'listing_by_letter_test', contributor='contributor',
                 submited=1)

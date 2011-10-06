@@ -6,6 +6,7 @@ from Products.Naaya.tests import NaayaFunctionalTestCase
 
 from Products.NaayaCore.GeoMapTool import GeoMapTool
 from Products.Naaya.NyFolder import addNyFolder
+from test_kml_parser import load_file
 
 class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     symbols = ['Capital', 'City', 'News_type', 'Document_type', 'Story_type',
@@ -141,8 +142,10 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
+        picture_data = load_file('data/symbol.png')
+
         for id in self.symbols:
-            self.portal.portal_map.addSymbol(id, id, '', '', '', '')
+            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
 
         addNyFolder(self.portal, 'geo_location_test', contributor='contributor', submitted=1)
         folder = self.portal.geo_location_test
