@@ -115,7 +115,7 @@ $(document).ready(function(){
 				<tal:comment condition="nothing">
 					Fill this slot to add custom columns (heading for columns goes here).
 				</tal:comment>
-				<th tal:condition="ratings"
+				<th width="10%" tal:condition="ratings"
 					class="edit" i18n:translate="">Rating</th>
 			</metal:block>
 		</tr>
@@ -184,7 +184,7 @@ $(document).ready(function(){
 						</a>
 						<tal:block condition="not:editable">n/a</tal:block>
 					</td>
-					<td tal:condition="ratings" class="type">
+					<td witdh="10%" tal:condition="ratings" class="type">
 						<tal:block condition="folder/user_rating_view|nothing"
 							replace="structure folder/user_rating_stars"/>
 					</td>
