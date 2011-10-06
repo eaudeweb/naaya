@@ -44,7 +44,10 @@
 				</tal:block>
 			</select>
 		</dd>
-		<dt i18n:translate="">Icon</dt>
+		<dt>
+			<tal:block i18n:translate="">Icon</tal:block>
+			<span class="mandatory_field">*</span>
+		</dt>
 		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed
 			on the map so it is recommended to create it with these dimensions from the start and make it
 			transparent. Picture types allowed on the map: <strong i18n:name="png">.PNG</strong>, <strong i18n:name="gif">.GIF</strong>.</dd>
@@ -56,7 +59,7 @@
 				<img tal:attributes="src string:misc_/NaayaCore/pin_22_${i}.png; alt string:pin_22_${i}.png" />
 			</tal:block>
 		</dd>
-		<dd><input type="file" name="picture" value="" size="35" /></dd>
+		<dd><input type="file" name="picture" value="" size="35" accept="image/*" /></dd>
 		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
 		<dt i18n:translate="">Sort order</dt>
 		<dd><input id="sortorder" type="text" name="sortorder" size="2"
