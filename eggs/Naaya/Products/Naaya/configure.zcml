@@ -64,4 +64,5 @@
   <include package="naaya.content.pointer" />
   <include package="naaya.content.story" />
   <include package="naaya.content.url" />
+  <include package="naaya.i18n" />
 </configure>

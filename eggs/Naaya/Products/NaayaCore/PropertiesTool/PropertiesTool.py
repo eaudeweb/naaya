@@ -42,7 +42,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
             {'label': 'Main sections', 'action': 'manage_maintopics_html'},
             {'label': 'Subobjects', 'action': 'manage_subobjects_html'},
             {'label': 'File types', 'action': 'manage_contenttypes_html'},
-            {'label': 'Languages', 'action': 'manage_languages_html'},
             {'label': 'Search', 'action': 'manage_search_html'},
         )
         +
@@ -155,14 +154,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
         if REQUEST: REQUEST.RESPONSE.redirect('manage_subobjects_html?save=ok')
 
-    security.declareProtected(view_management_screens, 'manage_addLanguage')
-    def manage_addLanguage(self, language, REQUEST=None):
-        """
-        Add a new language for this portal.
-        """
-        self.getSite().gl_add_site_language(language)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
-
     security.declareProtected(view_management_screens, 'manage_delLanguages')
     def manage_delLanguages(self, languages, REQUEST=None):
         """
@@ -191,9 +182,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
     security.declareProtected(view_management_screens, 'manage_contenttypes_html')
     manage_contenttypes_html = PageTemplateFile('zpt/properties_contenttypes', globals())
-
-    security.declareProtected(view_management_screens, 'manage_languages_html')
-    manage_languages_html = PageTemplateFile('zpt/properties_languages', globals())
 
     security.declareProtected(view_management_screens, 'manage_search_html')
     manage_search_html = PageTemplateFile('zpt/properties_search', globals())

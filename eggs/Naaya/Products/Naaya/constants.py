@@ -18,6 +18,7 @@ METATYPE_FOLDER = 'Naaya Folder'
 LABEL_NYFOLDER = 'Folder'
 
 DEFAULT_PORTAL_LANGUAGE_CODE = 'en' #English language is assumed to be the default language
+DEFAULT_PORTAL_LANGUAGE_NAME = 'English'
 DEFAULT_SORTORDER = 100
 DEFAULT_MAILSERVERNAME = 'localhost'
 DEFAULT_MAILSERVERPORT = 25
