@@ -512,9 +512,28 @@ tr.tr-hover:hover {
 }
 
 #center_content {
+                width: 78%;
 		overflow-x: visible !important;
 		overflow-y: visible!important;
 		overflow: visible !important;
+}
+
+#folderfile_list {
+                width: 100%;
+}
+
+#folder_footer {
+		margin: 10px auto;
+		position: relative;
+		width: 100%;
+}
+
+#folder_listing {
+	padding: 0 !important;
+}
+
+select.more_actions {
+	float: right;
 }
 
 /**
