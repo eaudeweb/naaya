@@ -28,9 +28,6 @@ setup(name='Naaya',
           #Python 3rd party
           'feedparser >= 4.1',
           'gdata >= 2.0.5',
-          'itools',
-              # for Windows, download and install DLLs from
-              # http://naaya.eaudeweb.ro/eggshop/glib-dlls.zip
           'lxml',
           'BeautifulSoup',
           'mimeparse >= 0.1.2',
@@ -50,7 +47,7 @@ setup(name='Naaya',
           'naaya.content-compat',
           'naaya.flowplayer',
           'naaya.content.bfile',
-          'naaya.i18n'
+          'naaya.i18n',
 
           #Testing
           # 'twill',

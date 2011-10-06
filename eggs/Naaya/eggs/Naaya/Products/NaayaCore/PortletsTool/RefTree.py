@@ -7,8 +7,6 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
-#from Products.Localizer.LocalPropertyManager import LocalPropertyManager,\
-#                                                    LocalProperty
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from RefTreeNode import manage_addRefTreeNodeForm, manage_addRefTreeNode, \
                         localizer_patcher

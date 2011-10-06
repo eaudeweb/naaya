@@ -273,22 +273,28 @@ class CaptureTraverse(Implicit):
         assert self.path[-1] == 'index_html'
         return self.callback(self.context[0], self.path[:-1], REQUEST)
 
-### patch ZPublisher.BaseRequest.BaseRequest.traverseName to trigger
-### IBeforeTraverse
+
 def patch_baserequest_traversename():
+    """
+        Patch ZPublisher.BaseRequest.BaseRequest.traverseName to trigger
+        an IBeforeTraverse event.
+
+        zope.app.component.site.threadSiteSubscriber saves the ISite object
+        address on the thread (using threadlocal), making it available by
+        zope.app.component.hooks.getSite()
+    """
     # cross imports problem, need to place them here
     from zope.app.publication.interfaces import (BeforeTraverseEvent,
                                                  IBeforeTraverseEvent)
     from ZPublisher.BaseRequest import BaseRequest
-    from zope.app.component.site import threadSiteSubscriber
     import zope.event
-    from zLOG import LOG, DEBUG
+    import logging
+    log = logging.getLogger(__name__)
     if getattr(BaseRequest.traverseName, '_before_traverse_patch', False):
-        LOG('zope2util.patch_baserequest_traversename', DEBUG,
-            'Baserequest.traverseName already patched')
-        return
-    LOG('zope2util.patch_baserequest_traversename', DEBUG,
-            'Patching Baserequest.traverseName')
+        log.debug('Baserequest.traverseName already patched')
+        return # abort patch
+
+    log.debug('Patching Baserequest.traverseName')
     original = BaseRequest.traverseName
     def new(self, ob, name):
         if isinstance(ob, NySite):

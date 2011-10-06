@@ -9,7 +9,6 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaCore.constants import *
 from managers.portlets_templates import *
-#from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 manage_addHTMLPortlet_html = PageTemplateFile('zpt/htmlportlet_manage_add', globals())
