@@ -24,10 +24,10 @@
 					star_icon string:/++resource++star_icon.gif;
 					blank_star_icon string:/++resource++blank_star_icon.gif;"
 		tal:attributes="action string:${context/absolute_url}/@@user_rating_set/rate">
-		<span i18n:translate="click_to_change_rating" class="label">Your rating:</span>
+		<span i18n:translate="click_to_change_rating" class="label">Rate</span>
 		<span class="discreet"
 			tal:condition="python:rating is None"
-			i18n:translate="not_rated">(not rated)</span>
+			i18n:translate="not_rated"></span>
 	<!-- --><input type="image"
 			name="ratingimage"
 			style="border: 0; padding: 0 2px;"
@@ -38,13 +38,6 @@
 							onmouseout string:highlight(${rating_or_zero});
 							onclick string:rating.value=${star};"
 			i18n:attributes="title"/>
-		<tal:block condition="view/isAuthenticated">
-			<br/><br/>
-			<span i18n:translate="" class="label">
-				As an authenticated user you can <em>change</em> your vote at any time
-			</span>
-			<br/><br/>
-		</tal:block>
 		<input type="hidden" name="rating" value="0"/>
 
 		<input type="hidden"
