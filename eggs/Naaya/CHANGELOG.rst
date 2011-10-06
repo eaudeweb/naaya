@@ -7,6 +7,7 @@
   and bundles [plugaale, andredor, moregale]
   update script: "Migrate to bundles"
 * Bundles inspector [andredor, plugaale]
+* Move customized templates from ZODB to filesystem bundles [moregale]
 
 2.11.5 (2011-09-23)
 --------------------
