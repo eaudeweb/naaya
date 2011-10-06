@@ -49,7 +49,7 @@ class NyCSVImportTest(NaayaTestCase):
 
     def test_generate_csv_template(self):
         columns = self.portal.csv_import.template('Naaya URL').strip().split(',')
-        self.failUnlessEqual(len(columns), 14)
+        self.failUnlessEqual(len(columns), 13)
         self.failUnless('Title' in columns)
         self.failUnless('Description' in columns)
         self.failUnless('Automatically redirect to the given URL' in columns)
