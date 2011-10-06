@@ -197,10 +197,12 @@ a.feed_link,
 a.facebook_link,
 a.twitter_link,
 a.download_link {
-	padding-left: 25px;
+	padding: 0;
 	line-height: 1.8;
 	display: inline-block;
 	height: 20px;
+	width: 20px;
+	text-decoration: none;
 }
 
 a.feed_link {
@@ -217,6 +219,41 @@ a.twitter_link {
 
 a.download_link {
 	background: transparent url('download.png') no-repeat scroll left center;
+	float: right;
+	width: auto;
+	padding-left: 25px;
+}
+
+.folder_social {
+	width: 100%;
+	display: inline-block;
+	clear: both;
+	position: relative;
+}
+
+#ratings {
+	float: left;
+	text-align: left;
+	display: block;
+}
+
+#user-rating-edit {
+	float: left;
+}
+
+.ratings_message {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	border: 1px solid #FFD06D;
+	background: #FFFDE5;
+	padding: 3px;
+	position: relative;
+	top: -3px;
+}
+
+.folder_social_icons {
+	display: block;
 	float: right;
 }
 
@@ -329,6 +366,7 @@ div#toolbar input {
 #folderfile_list .type{
 	vertical-align: top;
 	text-align: center;
+	width: 10%;
 }
 #folderfile_list th.type{
 	vertical-align: middle;
@@ -742,13 +780,15 @@ div#sub_btns a {
 }
 
 .hr_addcomment {
-	border-top: 1px solid #eaeaea; 
-	border-bottom:1px solid white;
+background: none repeat scroll 0 0 #EAEAEA;
+	border: medium none;
+	height: 1px;
 }
 
 .hr_inside_comment {
-	border-top: 1px solid #eaeaea; 
-	border-bottom:1px solid white; 
+	background: none repeat scroll 0 0 #EAEAEA;
+	border: medium none;
+	height: 1px;
 	margin-top:0.5em;
 }
 
