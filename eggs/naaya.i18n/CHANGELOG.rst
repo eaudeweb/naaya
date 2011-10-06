@@ -1,5 +1,8 @@
-1.0 (unreleased)
-------------------
+1.0.1 (unreleased)
+----------------
+
+1.0 (2011-10-06)
+----------------
 * Fully functional version - now translating templates, messages, local
   properties and linked with Naaya administration
 * includes migration script from :mod:`Products.Localizer`
