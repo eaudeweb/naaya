@@ -41,8 +41,15 @@
             <th>Name</th>
             <th tal:repeat="manager managers">
                 <tal:block define="manager_name python: view.get_manager_name(manager);
-                                   manager_class_name python: view.get_manager_class_name(manager);"
-                    content="string:${manager_name} (${manager_class_name})">
+                                   manager_class_name python: view.get_manager_class_name(manager)">
+                <tal:block content="string:${manager_name}
+                                           (${manager_class_name})" />
+                <form tal:condition="python:view.is_reloader_available(manager_name)"
+                      method="post" action="inspector_reload_bundle">
+                    <input type="hidden" name="bundle_name"
+                           tal:attributes="value manager_name"/>
+                    <input type="submit" value="reload"/>
+                </form>
                 </tal:block>
             </th>
             <th>Actions</th>

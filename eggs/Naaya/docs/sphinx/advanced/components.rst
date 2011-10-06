@@ -70,3 +70,21 @@ bundle. This bundle is set using :meth:`~Products.Naaya.NySite.set_bundle`::
     >>> portal.set_bundle(chm_bundle)
 
 .. TODO setting a bundle on the portal
+
+
+Filesystem bundles
+~~~~~~~~~~~~~~~~~~
+Some installations of Naaya have extensive customizations for templates
+and styling. These are stored as separate Python packages in version
+control and each contains a number of bundles. Because they do little
+more than templates in a bundle, there is common code in Naaya for
+loading them (see :func:`~naaya.core.fsbundles.load_filesystem_bundle`)::
+
+    >>> from naaya.component import bundles
+    >>> from naaya.core.fsbundles import load_filesystem_bundle
+    >>> load_filesystem_bundle('path/to/bespoke.bundle', 'Bespoke')
+    >>> bespoke = bundles.get('Bespoke')
+
+Now, if we look in `bespoke`, we find templates registered from
+`path/to/bespoke.bundle/templates`. To make use of the templates we need
+to configure a Naaya portal to use `Bespoke` as its parent bundle.

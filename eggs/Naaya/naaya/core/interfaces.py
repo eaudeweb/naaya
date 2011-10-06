@@ -20,3 +20,9 @@ class INyObjectContainer(Interface):
 class IHeartbeat(Interface):
     """ Interface for Heartbeat event """
     when = Attribute('when')
+
+
+class IFilesystemBundleFactory(Interface):
+    """ Create a filesystem bundle for a given site. """
+    def create_bundle():
+        """ Write the new bundle in the filesystem and return it. """
