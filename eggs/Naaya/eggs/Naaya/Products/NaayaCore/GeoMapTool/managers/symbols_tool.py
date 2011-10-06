@@ -70,12 +70,18 @@ class symbols_tool:
 
     def __addSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
+        if not picture:
+            raise ValueError('A picture is required to add symbol')
+
         obj = symbol_item(id, title, description, parent, None, sortorder)
         obj.setPicture(picture)
         self.__symbol_collection[id] = obj
 
     def __updateSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
+        if not picture:
+            raise ValueError('A picture is required to update symbol')
+
         try: obj = self.__symbol_collection[id]
         except: pass
         else:

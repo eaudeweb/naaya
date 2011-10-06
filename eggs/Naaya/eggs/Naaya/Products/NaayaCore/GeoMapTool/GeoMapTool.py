@@ -687,18 +687,35 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
     def adminAddSymbol(self, title='', description='', parent='', picture='', sortorder='', REQUEST=None):
         """ """
-        self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture, sortorder)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+        try:
+            self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture, sortorder)
+        except ValueError, e:
+            if REQUEST:
+                self.setSessionErrorsTrans(e)
+                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+            else:
+                raise
+        else:
+            if REQUEST:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
     def adminUpdateSymbol(self, id='', title='', description='', parent='', picture='', sortorder='', REQUEST=None):
         """ """
-        self.updateSymbol(id, title, description, parent, picture, sortorder)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
+        try:
+            self.updateSymbol(id, title, description, parent, picture, sortorder)
+        except ValueError, e:
+            if REQUEST:
+                self.setSessionErrorsTrans(e)
+                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html?id=%s'
+                                            % (self.absolute_url(), id))
+            else:
+                raise
+        else:
+            if REQUEST:
+                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+                REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminDeleteSymbols')
     def adminDeleteSymbols(self, id=[], REQUEST=None):
