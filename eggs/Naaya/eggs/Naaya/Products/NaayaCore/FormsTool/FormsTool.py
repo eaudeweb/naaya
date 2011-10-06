@@ -18,6 +18,8 @@ It also provides a way to keep track of the changes made and their differences
 using diff tools.
 
 """
+import os
+import logging
 from App.ImageFile import ImageFile
 from Globals import InitializeClass
 from OFS.Folder import Folder
@@ -26,6 +28,7 @@ from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.deprecation import deprecate
 from zope.component import ComponentLookupError
+from zope.component import getGlobalSiteManager
 
 from Products.NaayaCore.constants import (METATYPE_FORMSTOOL, METATYPE_TEMPLATE,
 ID_FORMSTOOL, TITLE_FORMSTOOL, PERMISSION_ADD_NAAYACORE_TOOL, )
@@ -34,8 +37,12 @@ from Products.NaayaCore.LayoutTool.Template import (
 
 from Products.NaayaCore.managers.utils import html_diff
 
-from interfaces import ITemplate
+from interfaces import ITemplate, IFilesystemTemplateWriter
 from NaayaTemplate import NaayaPageTemplateFile
+from naaya.core import fsbundles
+
+
+log = logging.getLogger(__name__)
 
 
 def manage_addFormsTool(self, REQUEST=None):
@@ -171,5 +178,64 @@ class FormsTool(Folder):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('%s/%s/manage_workspace' %
                                              (self.absolute_url(), name))
+
+
+    def can_write_to_bundle(self):
+        """ Check if we can find (or create) any bundle to write templates. """
+        site = self.getSite()
+        if fsbundles.get_writable_bundle(site) is not None:
+            return True
+        elif fsbundles.get_filesystem_bundle_factory(site) is not None:
+            return True
+        else:
+            return False
+
+
+    security.declareProtected(view_management_screens, 'move_to_bundle')
+    def move_to_bundle(self, REQUEST=None):
+        """ Move templates to a writable bundle. """
+
+        site = self.getSite()
+        user = site.getAuthenticationTool().get_current_userid()
+
+        bundle = fsbundles.get_writable_bundle(site)
+
+        if bundle is None:
+            factory = fsbundles.get_filesystem_bundle_factory(site)
+            assert factory is not None, "No writable bundle found!"
+            bundle = factory()
+
+            if REQUEST is not None:
+                msg = ("IMPORTANT: new bundle %r created. If multiple Zope "
+                       "instances are sharing the same ZEO database, make "
+                       "sure they all load the new bundle." % bundle)
+                self.setSessionInfo([msg])
+
+        bundle_name = bundle.__name__
+        gsm = getGlobalSiteManager()
+        writer = gsm.queryUtility(IFilesystemTemplateWriter, name=bundle_name)
+
+        template_names = []
+        for template in self.objectValues():
+            content = template._text
+            name = template.getId()
+
+            writer.write_zpt(name, content)
+            self._delObject(template.getId())
+
+            log.info("Template %r moved to bundle %r by %r",
+                     name, bundle_name, user)
+            template_names.append(name)
+
+        # TODO reload the bundle in all zope instances
+
+        # TODO in case of failure, print what has been written to disk
+
+        if REQUEST is not None:
+            self.setSessionInfo(["Moved templates bundle %r: %r" %
+                                (bundle_name, template_names)])
+            return REQUEST.RESPONSE.redirect('%s/manage_overview' %
+                                             self.absolute_url())
+
 
 InitializeClass(FormsTool)

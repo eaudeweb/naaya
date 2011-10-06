@@ -30,6 +30,18 @@ a.button-for-custom {
 <script src="misc_/Naaya/jquery.min.js"></script>
 <script tal:attributes="src string:${here/absolute_url}/tool_js"></script>
 
+<tal:block content="structure here/messages_box"/>
+
+<form tal:condition="here/can_write_to_bundle"
+      tal:attributes="action string:${here/absolute_url}/move_to_bundle"
+      method="post">
+
+<input type="submit" value="Move" />
+customized templates to filesystem bundle
+
+</form>
+
+
 <tal:block define="extra_templates python:[name for name in dict(templates)
                                            if name not in bundle_templates]"
            condition="extra_templates">

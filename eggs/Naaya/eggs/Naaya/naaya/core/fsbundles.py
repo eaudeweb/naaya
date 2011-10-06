@@ -72,6 +72,24 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
              name_prefix, bundles_dir)
 
 
+def get_writable_bundle(site):
+    """ Look for a server bundle where templates can be written to disk. """
+    from Products.NaayaCore.FormsTool.interfaces import IFilesystemTemplateWriter
+
+    # TODO formalize this logic as a "parent_bundles" generator
+    gsm = getGlobalSiteManager()
+    bundle = site.get_bundle()
+    from naaya.component.interfaces import IBundle
+    while IBundle.providedBy(bundle):
+        writer = gsm.queryUtility(IFilesystemTemplateWriter,
+                                  name=bundle.__name__)
+        if writer is not None:
+            return bundle
+        bundle = bundle.__bases__[0]
+    else:
+        return None
+
+
 def get_filesystem_bundle_factory(site):
     """ Convenienve function to look up a filesystem bundle factory. """
     gsm = getGlobalSiteManager()

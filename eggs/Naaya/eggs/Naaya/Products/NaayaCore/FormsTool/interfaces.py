@@ -12,3 +12,9 @@ class ITemplateSource(Interface):
 
     def __call__():
         """ Return the source """
+
+class IFilesystemTemplateWriter(Interface):
+    """ Write components to disk so they are loaded via bundles. """
+
+    def write_zpt(name, content):
+        """ Write the given content into a ZPT file on disk. """
