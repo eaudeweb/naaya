@@ -1,6 +1,16 @@
 <configure xmlns='http://namespaces.zope.org/zope'
-    xmlns:naaya="http://namespaces.zope.org/naaya">
-  <include package=".adapter" />
+    xmlns:naaya="http://namespaces.zope.org/naaya"
+    xmlns:browser="http://namespaces.zope.org/browser">
+    <include package=".adapter" />
+
+
+  <browser:page
+    name="manage_bundle"
+    for="Products.Naaya.interfaces.INySite"
+    class=".views.SetBundleView"
+    template="./zpt/site_manage_bundle.pt"
+    permission="zope2.ViewManagementScreens"
+    />
 
   <adapter
     factory=".NyFolderBase.ObjectListingPortlet"
