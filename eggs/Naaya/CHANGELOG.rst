@@ -6,6 +6,7 @@
 * refactor: :mod:`Products.NaayaCore.FormsTool` templates registered via ZCA
   and bundles [plugaale, andredor, moregale]
   update script: "Migrate to bundles"
+* Bundles inspector [andredor, plugaale]
 
 2.11.5 (2011-09-23)
 --------------------
