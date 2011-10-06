@@ -3,8 +3,8 @@
 import os.path
 from Products.Naaya.adapters import NyContentTypeViewAdapter
 from Products.NaayaCore.managers.zip_export_adapters import DefaultZipAdapter
-from naaya.core.zope2util import DT2dt, ensure_tzinfo, icon_for_content_type
-from naaya.core.utils import pretty_size
+from naaya.core.zope2util import DT2dt, ensure_tzinfo
+from naaya.core.utils import pretty_size, icon_for_content_type
 
 from interfaces import INyBFile
 
@@ -59,11 +59,10 @@ class BFileViewAdapter(NyContentTypeViewAdapter):
             return ""
 
     def get_icon(self):
-        if self.ob.approved:
-            version = self.ob.current_version
+        version = self.ob.current_version
 
-            if version is not None:
-                return icon_for_content_type(self.ob, version.content_type)
+        if version is not None:
+            return icon_for_content_type(version.content_type, self.ob.approved)
 
         return super(BFileViewAdapter, self).get_icon()
 
