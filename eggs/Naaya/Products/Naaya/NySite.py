@@ -96,6 +96,8 @@ from naaya.core.zope2util import permission_add_role
 from naaya.core.zope2util import redirect_to
 from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
+from naaya.i18n.interfaces import INyLanguageManagement
+from naaya.i18n.LocalizerWrapper import LocalizerWrapper
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
 from naaya.component import bundles
@@ -1101,7 +1103,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         PARENTS.reverse()
         for crumb in PARENTS:
             breadcrumbs.append(crumb)
-            if crumb.meta_type == self.meta_type:
+            if hasattr(crumb, 'meta_type') and crumb.meta_type == self.meta_type:
                 break
         breadcrumbs.reverse()
         return breadcrumbs

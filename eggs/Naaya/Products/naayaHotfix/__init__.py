@@ -18,6 +18,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.Localizer.MessageCatalog import MessageCatalog
 from itools.gettext import POFile
 from Globals import PersistentMapping
+import App
 
 # Localizer patch crash pagetamplates. Restore pagetemplate.StringIO
 from zope.pagetemplate import pagetemplate
@@ -59,24 +60,28 @@ def _setLocalPropValue(self, id, lang, value):
 
 LocalPropertyManager._setLocalPropValue = _setLocalPropValue
 
-class GlobalTranslationService:
-    def translate(self, domain, msgid, *args, **kw):
-        if domain == 'default':
-            domain = 'portal_translations'
-        context = kw.get('context')
-        if context is None: return msgid
-        translation_service = getattr(context, domain, None)
-        if translation_service is not None:
-            if isinstance(translation_service, TranslationsTool):
-                return translation_service.translate(domain, msgid, *args, **kw)
-        return msgid
+if App.version_txt.getZopeVersion() < (2, 12):
+    class GlobalTranslationService:
+        def translate(self, domain, msgid, *args, **kw):
+            if domain == 'default':
+                domain = 'portal_translations'
+            context = kw.get('context')
+            if context is None: return msgid
+            translation_service = getattr(context, domain, None)
+            if translation_service is not None:
+                if isinstance(translation_service, TranslationsTool):
+                    return translation_service.translate(domain, msgid, *args, **kw)
+            return msgid
 
-def initialize(context):
-    """ """
-    if patch_trans_service is True:
-        setGlobalTranslationService(GlobalTranslationService())
+    def initialize(context):
+        """ """
+        if patch_trans_service is True:
+            setGlobalTranslationService(GlobalTranslationService())
 
-LOG('naayaHotfix', DEBUG, 'Patch for Localizer and other stuff')
+    LOG('naayaHotfix', DEBUG, 'Patch for Localizer and other stuff')
+else:
+    def initialize(context):
+        pass
 
 #apply patches from the patches folder
 from patches import extfile_patch
