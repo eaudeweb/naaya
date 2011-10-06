@@ -19,7 +19,7 @@ def register_templates_in_directory(templates_path, bundle_name):
     for filename in os.listdir(templates_path):
         fileroot, ext = os.path.splitext(filename)
         if ext in ('.zpt', '.pt', ):
-            tmpl_path = os.path.join(templates_path, fileroot)
+            tmpl_path = os.path.join(templates_path, filename)
             NaayaPageTemplateFile(tmpl_path, globals(), fileroot, bundle_name)
             count += 1
 
