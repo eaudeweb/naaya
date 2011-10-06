@@ -44,7 +44,6 @@ setup(name='Naaya',
 
           #Customized 3rd party
           'edw-pycaptcha >= 0.3.1',
-          'edw-localizer >= 1.2.3.3',
           'edw-extfile >= 2.0.2-edw1',
 
           #Naaya specific

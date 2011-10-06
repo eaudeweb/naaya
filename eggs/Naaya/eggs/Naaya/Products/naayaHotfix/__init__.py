@@ -13,7 +13,6 @@ except ImportError:
     patch_trans_service = False
 
 from Products.NaayaCore.TranslationsTool.TranslationsTool import TranslationsTool
-#from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 from Products.Localizer.MessageCatalog import MessageCatalog
@@ -46,20 +45,6 @@ def po_import(self, lang, data):
         self.update_po_header(lang, charset=po.get_encoding())
 
 MessageCatalog.po_import = po_import
-
-#patch for Localizer
-def _setLocalPropValue(self, id, lang, value):
-    # Get previous value
-    old_value, timestamp = self.get_localproperty(id, lang)
-    # Update value only if it is different
-    if value != old_value:
-        properties = self._local_properties.copy()
-        if not properties.has_key(id):
-            properties[id] = {}
-        properties[id][lang] = (value, time())
-        self._local_properties = properties
-
-LocalPropertyManager._setLocalPropValue = _setLocalPropValue
 
 if App.version_txt.getZopeVersion() < (2, 12):
     class GlobalTranslationService:

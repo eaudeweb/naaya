@@ -277,22 +277,23 @@ class CaptureTraverse(Implicit):
 ### IBeforeTraverse
 def patch_baserequest_traversename():
     # cross imports problem, need to place them here
-    from zope.app.publication.interfaces import IBeforeTraverseEvent
+    from zope.app.publication.interfaces import (BeforeTraverseEvent,
+                                                 IBeforeTraverseEvent)
     from ZPublisher.BaseRequest import BaseRequest
-    from Products.Naaya.NySite import NySite
     from zope.app.component.site import threadSiteSubscriber
     import zope.event
+    from zLOG import LOG, DEBUG
     if getattr(BaseRequest.traverseName, '_before_traverse_patch', False):
-        log.debug('Baserequest.traverseName already patched')
+        LOG('zope2util.patch_baserequest_traversename', DEBUG,
+            'Baserequest.traverseName already patched')
         return
-    log.debug('Patching BaseRequest.traverseName')
+    LOG('zope2util.patch_baserequest_traversename', DEBUG,
+            'Patching Baserequest.traverseName')
     original = BaseRequest.traverseName
     def new(self, ob, name):
         if isinstance(ob, NySite):
-            #import pdb; pdb.set_trace()
-            # TODO: ugly hack
-            threadSiteSubscriber(ob, IBeforeTraverseEvent)
-            #zope.event.notify(ob, IBeforeTraverseEvent)
+            # TODO: always do this
+            zope.event.notify(BeforeTraverseEvent(ob, IBeforeTraverseEvent))
         return original(self, ob, name)
     setattr(new, '_before_traverse_patch', True)
     BaseRequest.traverseName = new

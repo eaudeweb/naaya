@@ -81,8 +81,6 @@ from Products.NaayaCore.managers.import_export import (CSVImportTool,
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
-from Products.Localizer.Localizer import manage_addLocalizer
-#from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
 from managers.networkportals_manager import networkportals_manager
@@ -131,7 +129,8 @@ NAAYA_CONTAINERS_METATYPES = \
 
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
-def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
+def manage_addNySite(self, id='', title='', lang=DEFAULT_PORTAL_LANGUAGE_CODE,
+                     default_content=True, REQUEST=None):
     """ """
     ut = utils()
     id = ut.utSlugify(id)
@@ -280,7 +279,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
         manage_addTranslationsTool(self, languages)
-        manage_addLocalizer(self, TITLE_LOCALIZER, languages)
         manage_addCatalogTool(self, languages)
         manage_addPropertiesTool(self)
         manage_addDynamicPropertiesTool(self)
@@ -295,7 +293,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         manage_addGeoMapTool(self)
         manage_addAnalyticsTool(self)
         manage_addErrorLog(self)
-        manage_addNaayaI18n(self, languages)
+        manage_addNaayaI18n(self, [(DEFAULT_PORTAL_LANGUAGE_CODE,
+                                   DEFAULT_PORTAL_LANGUAGE_NAME)])
         manage_addSchemaTool(self)
 
     security.declarePrivate('loadDefaultData')
@@ -349,6 +348,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         skel_path = skel_handler.skel_path
         if skel_handler is not None:
             properties_tool = self.getPropertiesTool()
+            i18n_tool = self.getPortalI18n()
             formstool_ob = self.getFormsTool()
             layouttool_ob = self.getLayoutTool()
             syndicationtool_ob = self.getSyndicationTool()
@@ -383,7 +383,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             #load properties
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
-                    properties_tool.manage_addLanguage(language.code)
+                    i18n_tool.add_language(language.code)
             #forms are loaded from disk at runtime; they can be customized in portal_forms.
             #load skins
             layout = skel_handler.root.layout
@@ -863,12 +863,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('getSchemaTool')
     def getSchemaTool(self): return self._getOb(ID_SCHEMATOOL)
 
-    security.declarePublic('getLocalizer')
-    def getLocalizer(self): return self._getOb('Localizer')
-
     security.declarePublic('getPortalTranslations')
     def getPortalTranslations(self):
-        return TranslationsToolWrapper(self.getPortalI18n().get_catalog())
+        portal_i18n = self.getPortalI18n()
+        return TranslationsToolWrapper(portal_i18n).__of__(portal_i18n)
 
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
@@ -1254,42 +1252,42 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declarePublic('gl_get_language_name')
     def gl_get_language_name(self, lang):
-        return self.getPortalI18n().get_lang_manager().get_language_name(lang)
+        return self.getPortalI18n().get_language_name(lang)
 
     def gl_add_languages(self, ob):
-        return # TODO
-        for l in self.gl_get_languages_mapping():
-            ob.add_language(l['code'])
-            if l['default']: ob.manage_changeDefaultLang(l['code'])
+        # not needed, we don't keep langs in separate places anymore
+        pass
 
     def gl_changeLanguage(self, old_lang, REQUEST=None):
         """ Changing portal browsing language """
         self.getPortalI18n().change_selected_language(old_lang)
         if REQUEST: REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def gl_add_site_language(self, language):
+    def gl_add_site_language(self, language_code, language_name=None):
         #this is called when a new language is added for the portal
-        self.getPortalI18n().add_language(language)
+        self.getPortalI18n().add_language(language_code, language_name)
 
         catalog_tool = self.getCatalogTool()
-        catalog_tool.add_indexes_for_lang(language)
+        catalog_tool.add_indexes_for_lang(language_code)
         for b in self.getCatalogedBrains():
             x = catalog_tool.getobject(b.data_record_id_)
-            try: x.add_language(language)
+            try: x.add_language(language_code)
             except: pass
         for x in self.getPortletsTool().get_html_portlets():
-            try: x.add_language(language)
+            try: x.add_language(language_code)
             except: pass
-        self.gl_add_site_language_custom(language)
+        self.gl_add_site_language_custom(language_code)
         # Custom update site children languages
         for x in self.objectValues():
             object_add_meth = getattr(x, 'custom_object_add_language', None)
             if not object_add_meth:
                 continue
             try:
-                object_add_meth(language)
+                object_add_meth(language_code)
             except Exception, exc_error:
-                zLOG.LOG('NySite', zLOG.DEBUG, 'Could not add language %s for object %s: %s' % (language, x.absolute_url(1), exc_error))
+                zLOG.LOG('NySite', zLOG.DEBUG,
+                         ('Could not add language %s for object %s: %s' %
+                          (language_code, x.absolute_url(1), exc_error)))
                 continue
 
     def gl_add_site_language_custom(self, language):
