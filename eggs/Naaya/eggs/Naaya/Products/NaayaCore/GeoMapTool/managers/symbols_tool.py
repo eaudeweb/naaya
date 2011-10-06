@@ -87,7 +87,12 @@ class symbols_tool:
         else:
             obj.title = title
             obj.description = description
+
             obj.parent = parent
+            if obj.parent:
+                for child in self.getSymbolChildren(obj.id):
+                    child.parent = ''
+
             obj.setPicture(picture)
             try:
                 obj.sortorder = int(sortorder)
