@@ -159,6 +159,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         +
         (
             {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},
+            {'label': 'Bundle Inspector', 'action': 'inspector_view'},
         )
         +
         NyImportExport.manage_options

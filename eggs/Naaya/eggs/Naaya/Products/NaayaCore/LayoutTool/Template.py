@@ -59,7 +59,16 @@ class Template(ZopePageTemplate):
         """ """
         icons = ({'path': self.icon, 'alt': self.meta_type, 'title': self.meta_type},)
         if self._v_errors:
-            icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif', 'alt': 'Error', 'title': 'This template has an error'},)
+            icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif',
+                'alt': 'Error', 'title': 'This template has an error'},)
         return icons
+
+    @property
+    def source(self):
+        try:
+            self.read()
+        except:
+            pass
+        return self._text
 
 InitializeClass(Template)

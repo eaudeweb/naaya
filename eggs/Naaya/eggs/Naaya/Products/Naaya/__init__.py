@@ -120,11 +120,13 @@ misc_ = {
     'jquery.autocomplete.min.js':ImageFile('www/js/jquery.autocomplete.min.js', globals()),
     'jquery.tree.init.js':ImageFile('www/js/jquery.tree.init.js', globals()),
     'jquery.form.js':ImageFile('www/js/jquery.form.js', globals()),
+    'jquery.tooltip.min.js':ImageFile('www/js/jquery.tooltip.min.js', globals()),
 
     #CSS files
     'jquery-ui.css':ImageFile('www/js/css/jquery-ui.css', globals()),
     'jquery-ui-1.8.1.css':ImageFile('www/js/css/jquery-ui.css', globals()),
     'jquery.autocomplete.css':ImageFile('www/js/css/jquery.autocomplete.css', globals()),
+    'jquery.tooltip.css':ImageFile('www/js/css/jquery.tooltip.css', globals()),
 
     #Event index
     'yes.gif':ImageFile('www/yes.gif', globals()),
