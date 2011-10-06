@@ -15,5 +15,4 @@
         directory="./mime-icons"
         permission="zope.Public"
         />
-    <naaya:call factory=".zope2util.patch_baserequest_traversename" />
 </configure>

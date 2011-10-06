@@ -4,7 +4,7 @@
 
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
-				languages here/get_languages_mapping;
+				languages here/gl_get_languages_mapping;
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 <div id="tabbedmenu">

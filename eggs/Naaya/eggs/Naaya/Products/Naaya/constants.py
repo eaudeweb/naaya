@@ -41,28 +41,28 @@ NYEXP_SCHEMA_LOCATION = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/
 
 JS_MESSAGES = [
 # datetime_js
-    'Today',
-    'Yesterday',
-    'Tomorrow',
-    'Calendar',
-    'Cancel',
+    u'Today',
+    u'Yesterday',
+    u'Tomorrow',
+    u'Calendar',
+    u'Cancel',
 # calendar_js
-    ('January February March April May June July '
-     'August September October November December'),
-    'S M T W T F S',
+    (u'January February March April May June July '
+     u'August September October November December'),
+     u'S M T W T F S',
 # portal_map
-    'Check All',
-    'Uncheck All',
-    'Type location address',
-    'Type keywords',
-    'close',
+    u'Check All',
+    u'Uncheck All',
+    u'Type location address',
+    u'Type keywords',
+    u'close',
 # folder_listing.zpt error messages
-    'Please select one or more items to copy.',
-    'Please select one or more items to cut.',
-    'Please select one or more items to delete.',
-    'Please select one or more items to rename.',
+    u'Please select one or more items to copy.',
+    u'Please select one or more items to cut.',
+    u'Please select one or more items to delete.',
+    u'Please select one or more items to rename.',
 # Ajax file upload (CHM NyMunicipality)
-    'Replace picture',
+    u'Replace picture',
 # glossary widget, jquery-ui dialog
-    'Close',
+    u'Close',
 ]

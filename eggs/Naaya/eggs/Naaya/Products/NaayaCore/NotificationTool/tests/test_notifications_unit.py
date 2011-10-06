@@ -162,9 +162,9 @@ class NotificationsUnitTest(BaseNotificationsTest):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user1@example.com', 'notifications',
-                'weekly [fol1/doc_b] portal'),
+                'weekly [fol1/doc_b] Naaya Test Site'),
             ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol1/doc_b] portal'),
+                'weekly [fol1/doc_b] Naaya Test Site'),
         ]))
 
     def test_notification_type_checking(self):
@@ -185,14 +185,14 @@ class NotificationsUnitTest(BaseNotificationsTest):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'daily [fol1/doc_b] portal'),
+                'daily [fol1/doc_b] Naaya Test Site'),
         ]))
 
         notif_tool._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'weekly [fol1/doc_b] portal'),
+                'weekly [fol1/doc_b] Naaya Test Site'),
         ]))
 
         notif_tool._send_newsletter('monthly',
@@ -222,11 +222,11 @@ class NotificationsUnitTest(BaseNotificationsTest):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user1@example.com',
-                'notifications', 'weekly [fol1/g/doc_a] portal'),
+                'notifications', 'weekly [fol1/g/doc_a] Naaya Test Site'),
             ('from.zope@example.com', 'user2@example.com',
-                'notifications', 'weekly [fol1/h/doc_b] portal'),
+                'notifications', 'weekly [fol1/h/doc_b] Naaya Test Site'),
             ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'weekly [fol1/doc_c][fol1/g/doc_a][fol1/h/doc_b] portal'),
+                'weekly [fol1/doc_c][fol1/g/doc_a][fol1/h/doc_b] Naaya Test Site'),
         ]))
 
     def test_instant_notifications(self):
@@ -244,9 +244,9 @@ class NotificationsUnitTest(BaseNotificationsTest):
         notif_tool.notify_instant(self.portal['fol1']['doc_a'], 'somebody')
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'user1@example.com', 'notifications',
-                'instant [fol1/doc_a] portal'),
+                'instant [fol1/doc_a] Naaya Test Site'),
             ('from.zope@example.com', 'user3@example.com', 'notifications',
-                'instant [fol1/doc_a] portal'),
+                'instant [fol1/doc_a] Naaya Test Site'),
         ]))
 
     def test_sitemap(self):
@@ -258,7 +258,7 @@ class NotificationsUnitTest(BaseNotificationsTest):
                        'children': [],
                        'data': {'icon': 'misc_/Naaya/NyFolder.gif',
                                 'title': 'Information'}}],
-         'data': {'title': 'portal', 'icon': 'misc_/Naaya/Site.gif'}}]
+         'data': {'title': 'Naaya Test Site', 'icon': 'misc_/Naaya/Site.gif'}}]
         self.assertEqual(notif_tool._sitemap_dict({'node': ''}), expected)
         self.assertEqual(notif_tool._sitemap_dict({'node': 'info'}), [])
 
@@ -293,9 +293,9 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
         notifications = self._fetch_test_notifications()
         self.assertEqual(set(notifications), set([
             ('from.zope@example.com', 'reviewer@example.com',
-                'notifications', 'instant [fol1/doc_a] portal'),
+                'notifications', 'instant [fol1/doc_a] Naaya Test Site'),
             ('from.zope@example.com', 'user2@example.com',
-                'notifications', 'instant [fol1/doc_b] portal'),
+                'notifications', 'instant [fol1/doc_b] Naaya Test Site'),
         ]))
 
     def test_restricted_periodic(self):
@@ -320,9 +320,9 @@ class NotificationsRestrictedUnitTest(BaseNotificationsTest):
 
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('from.zope@example.com', 'reviewer@example.com', 'notifications',
-                'weekly [fol1/doc_a] portal'),
+                'weekly [fol1/doc_a] Naaya Test Site'),
             ('from.zope@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol1/doc_b] portal'),
+                'weekly [fol1/doc_b] Naaya Test Site'),
         ]))
 
 class NotificationsUnapprovedUnitTest(BaseNotificationsTest):
