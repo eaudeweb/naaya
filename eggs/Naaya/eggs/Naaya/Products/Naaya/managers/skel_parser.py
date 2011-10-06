@@ -1,4 +1,3 @@
-# Python imports
 from xml.dom import minidom
 
 # Translation Map

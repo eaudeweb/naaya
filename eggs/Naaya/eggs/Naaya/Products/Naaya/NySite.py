@@ -199,6 +199,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         #interface which is needed to do component lookup in site managers.
         SiteManagerContainer.setSiteManager.im_func(self, sm)
         self.setSiteManager(sm)
+        sm.__name__ = 'database'
 
         #Set up a default bundle for this site
         bundle = bundles.get('Naaya')

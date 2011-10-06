@@ -1,17 +1,18 @@
-# Python
 import time
 from BeautifulSoup import BeautifulSoup
 from mock import patch
 
-# Zope
 from DateTime import DateTime
 import transaction
-from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
+from Products.PageTemplates.ZopePageTemplate import (ZopePageTemplate,
+        manage_addPageTemplate)
 
-# Products
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaCore.FormsTool.interfaces import ITemplate
+
+from zope.interface import alsoProvides
 from testNyFolder import FolderListingInfo
 
 
@@ -170,10 +171,9 @@ class SiteIndexNotInLayoutTest(NaayaFunctionalTestCase):
         if hasattr(current_skin, 'site_index'):
             current_skin.manage_delObjects(['site_index'])
 
-        if hasattr(forms_tool, 'site_index'):
-            forms_tool.site_index.write(self.TEXT)
-        else:
-            manage_addPageTemplate(forms_tool, 'site_index', text=self.TEXT)
+        form_ob = ZopePageTemplate('site_index', text=self.TEXT)
+        alsoProvides(form_ob, ITemplate)
+        forms_tool._setObject('site_index', form_ob)
 
         transaction.commit()
 

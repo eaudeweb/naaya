@@ -2,11 +2,9 @@
 Bundles are extra component registries that can be mixed and matched.
 Conceptually based on the `z3c.baseregistry` package.
 """
-
 from zope.component import globalregistry, getGlobalSiteManager
 from zope.interface import implements
 from interfaces import IBundle, ICustomize
-
 
 class Bundle(globalregistry.BaseGlobalComponents):
     """

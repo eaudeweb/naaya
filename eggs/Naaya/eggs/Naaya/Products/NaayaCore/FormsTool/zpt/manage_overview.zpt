@@ -2,75 +2,39 @@
 <tal:block content="structure here/manage_tabs"/>
 
 <tal:block define="global current_form_id request/name|nothing;
-                   global registered_templates here/registered_templates" />
+                   global templates here/get_all_templates;
+                   global bundle_templates here/bundle_templates" />
 
 <style>
-    h2 {
-        font-size: 120%;
-    }
-    ul.template_listing a {
-        font-family: monospace;
-    }
-    a.template {
-        color: #448;
-    }
-    li.customized a.template, li.local a.template {
-        color: #00f;
-        font-weight: bold;
-    }
+h2 {
+    font-size: 120%;
+}
+ul.template_listing a {
+    font-family: monospace;
+}
+a.template {
+    color: #448;
+}
+li.customized a.template, li.local a.template {
+    color: #00f;
+    font-weight: bold;
+}
 
-    a.button-for-custom {
-        color: #00f;
-        padding: 0 .2em;
-        margin: 0 .2em;
-        background-color: #ccc;
-    }
+a.button-for-custom {
+    color: #00f;
+    padding: 0 .2em;
+    margin: 0 .2em;
+    background-color: #ccc;
+}
 </style>
+<script src="misc_/Naaya/jquery.min.js"></script>
+<script tal:attributes="src string:${here/absolute_url}/tool_js"></script>
 
-<script type="text/javascript" src="misc_/Naaya/jquery.min.js"></script>
-<script>
-$(function() {
-    $('li.customized').each(function() {
-        var name = $('a.template', $(this)).text();
-        var button = make_delete_button(name, "Delete custom template?");
-        $(this).append(" ", button.text("revert"));
-    });
-
-    $('li.local').each(function() {
-        console.log(this);
-        var name = $('a.template', $(this)).text();
-        var button = make_delete_button(name, "Delete local template?");
-        $(this).append(" ", button.text("delete"));
-    });
-
-    function make_delete_button(name, question) {
-        var button = $('<a href="#" class="button-for-custom">');
-        button.click(function(evt) {
-            evt.preventDefault();
-            button.hide();
-            var no_button = $('<a>').text('cancel').click(function(evt) {
-                confirm_message.remove();
-                button.show();
-            }).addClass('button-for-custom');
-            var yes_button = $('<a>').text('yes').click(function(evt) {
-                $.post('./manage_delObjects', {'ids:list': name},
-                       function() {
-                    window.location.reload(true);
-                });
-            }).addClass('button-for-custom').css('color', 'red');
-            var confirm_message = $('<span>').append(
-                    question, " ", no_button, " ", yes_button);
-            button.after(confirm_message);
-        });
-        return button;
-    }
-});
-</script>
-
-<tal:block define="extra_templates python:[tid for tid in here.objectIds()
-                                           if tid not in registered_templates]"
+<tal:block define="extra_templates python:[name for name in dict(templates)
+                                           if name not in bundle_templates]"
            condition="extra_templates">
-<h2>Extra templates created here</h2>
+
+<h2>Extra templates in this Folder</h2>
 <ul class="template_listing">
     <tal:block repeat="template_id extra_templates">
         <li class="local">
@@ -85,22 +49,22 @@ $(function() {
 
 <h2>Registered templates</h2>
 <ul class="template_listing">
-    <tal:block define="customized_templates here/objectIds;
+    <tal:block define="customized_templates here/customized_templates;
                        here_url here/absolute_url"
-               repeat="name registered_templates">
-        <li tal:define="customized python:name in customized_templates;
-                        form_url python:test(customized,
-                            '%s/%s/manage_workspace' % (here_url, name),
-                            'manage_customize?name=%s' % name)"
-            tal:attributes="class python:test(customized, 'customized', None)">
+               repeat="tpl templates">
+
+               <li tal:define="
+               name python:tpl[0];
+               customized python:name in customized_templates;
+               form_url python:test(customized, '%s/%s/manage_workspace' % (here_url, name), 'manage_customize?name=%s' % name);"
+               tal:condition="python:name in bundle_templates"
+               tal:attributes="class python:test(customized, 'customized', None)">
             <a class="template"
-               tal:attributes="href form_url"
-               tal:content="name"></a>
+                tal:attributes="href form_url"
+                tal:content="name"></a>
             <a class="button-for-custom"
                tal:condition="customized"
-               tal:attributes="href string:${here/absolute_url
-                                    }/show_diff?name=${name}"
-               >diff</a>
+               tal:attributes="href string:${here/absolute_url}/show_diff?name=${name}">diff</a>
         </li>
     </tal:block>
 </ul>

@@ -4,6 +4,7 @@
   <include package=".AuthenticationTool" />
   <include package=".CatalogTool" />
   <include package=".EmailTool" />
+  <include package=".FormsTool" />
   <include package=".GeoMapTool" />
   <include package=".NotificationTool" />
   <include package=".PortletsTool" />
