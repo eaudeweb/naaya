@@ -1,4 +1,5 @@
 <configure xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:naaya="http://namespaces.zope.org/naaya">
 
     <adapter factory="naaya.core.portlets.MainSectionsPortlet"
@@ -9,4 +10,10 @@
     <subscriber handler="naaya.core.heartbeat.cleanup_unsubmitted_objects" />
     <subscriber handler="naaya.core.heartbeat.rdfcalendar_cron" />
     <subscriber handler="naaya.core.heartbeat.linkchecker_cron" />
+    <browser:resourceDirectory
+        name="naaya.mime_icons"
+        directory="./mime-icons"
+        permission="zope.Public"
+        />
+
 </configure>

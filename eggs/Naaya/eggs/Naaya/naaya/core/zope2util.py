@@ -22,6 +22,7 @@ from dateutil.parser import parse
 from Products.Naaya.interfaces import IObjectView
 from naaya.core.utils import force_to_unicode, is_valid_email
 from naaya.core.utils import unescape_html_entities
+from naaya.core.utils import icon_for_content_type
 from Products.Naaya.interfaces import INySite
 from backport import any
 
@@ -205,6 +206,13 @@ class RestrictedToolkit(SimpleItem):
             'icon': view_adapter.get_icon(),
             # TODO add other fields as needed
         }
+
+    def icon_for_content_type(self, *args, **kwargs):
+        """
+        Return a dictionary with the url an title of the icon
+        for the passed content_type
+        """
+        return icon_for_content_type(*args, **kwargs)
 
     def google_analytics(self, ga_id=''):
         """
@@ -446,14 +454,6 @@ def ofs_walk(top, filter=[IItem], containers=[IObjectManager]):
         if any(i.providedBy(ob) for i in containers):
             for item in ofs_walk(ob, filter, containers):
                 yield item
-
-def icon_for_content_type(context, mime_type):
-    site = context.getSite()
-    site_url = site.absolute_url()
-    return {
-        'url': '%s/getContentTypePicture?id=%s' % (site_url, mime_type),
-        'title': site.getContentTypeTitle(mime_type),
-    }
 
 def simple_paginate(items, per_page=4):
     output = []

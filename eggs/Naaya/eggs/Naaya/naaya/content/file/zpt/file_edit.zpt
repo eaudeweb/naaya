@@ -19,9 +19,16 @@
 <div class="field-inline" tal:condition="python:here.get_size()>0">
 	<input type="radio" name="source" id="source-none" value="" checked="checked" />
 	<label for="source-none" i18n:translate="">Keep</label>
-	<tal:block define="download_url here/getEditDownloadUrl; size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)">
-		<a tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" />
-			<span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/>
+	<tal:block define="download_url here/getEditDownloadUrl;
+			size python:here.utShowSizeKb(here.size);
+			icon python:here.rstk.icon_for_content_type(here.content_type);
+			title python:icon['title'];
+			url python:icon['url']">
+		<a tal:attributes="href download_url">
+			<img tal:attributes="src url;
+								alt title;
+								title title" />
+			<span tal:replace="string:${here/downloadfilename} (${title}, ${size} Kb)"/>
 		</a>
 	</tal:block>
 </div>

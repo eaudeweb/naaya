@@ -1,7 +1,5 @@
-from naaya.core.zope2util import DT2dt, icon_for_content_type
-from naaya.core.utils import pretty_size
-from Products.Naaya.interfaces import INyFolder
-
+from naaya.core.zope2util import DT2dt
+from naaya.core.utils import pretty_size, icon_for_content_type
 
 def _get_icon_url(ob):
     site = ob.getSite()
@@ -43,6 +41,8 @@ class GenericViewAdapter(object):
                 title = self.ob.get_meta_label()
             else:
                 title = self.ob.meta_type
+            if not getattr(self.ob.aq_base, 'approved', True):
+                title = 'This %s is not approved' % title
             return {
                 'url': _get_icon_url(self.ob),
                 'title': title,
@@ -69,7 +69,7 @@ class NyContentTypeViewAdapter(GenericViewAdapter):
 
 class NyFileViewAdapter(NyContentTypeViewAdapter):
     def get_icon(self):
-        return icon_for_content_type(self.ob, self.ob.getContentType())
+        return icon_for_content_type(self.ob.content_type, self.ob.approved)
 
     def get_size(self):
         return pretty_size(self.ob.size)
@@ -81,7 +81,7 @@ class NyFileViewAdapter(NyContentTypeViewAdapter):
 
 class NyExFileViewAdapter(NyContentTypeViewAdapter):
     def get_icon(self):
-        return icon_for_content_type(self.ob, self.ob.content_type())
+        return icon_for_content_type(self.ob.content_type(), self.ob.approved)
 
     def get_size(self):
         return pretty_size(self.ob.size())

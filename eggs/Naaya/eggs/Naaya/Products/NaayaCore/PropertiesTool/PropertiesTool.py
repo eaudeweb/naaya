@@ -15,6 +15,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.search_tool import search_tool
 from naaya.core.zope2util import path_in_site, ofs_walk
 from Products.Naaya.interfaces import INyFolder
+from naaya.core.utils import content_type_to_icons
 
 
 def manage_addPropertiesTool(self, REQUEST=None):
@@ -96,6 +97,16 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         try: self.searched_items.remove(item)
         except ValueError: pass
 
+    security.declareProtected(view_management_screens, 'list_mime_tipes')
+    def list_mime_tipes(self):
+        """
+        Return mimetypes available in the portal
+        """
+        mime_types = []
+        for mime_type in content_type_to_icons.items():
+            mime_types.append([mime_type[0], mime_type[1][0], mime_type[1][1]])
+        return sorted(mime_types, key=lambda x: x[1])
+
     #Main topics
     security.declareProtected(view_management_screens, 'manageMainTopics')
     def manageMainTopics(self, maintopics=None, REQUEST=None):
@@ -111,33 +122,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
             site.maintopics.append(path_in_site(folder_ob))
         site._p_changed = True
         if REQUEST: REQUEST.RESPONSE.redirect('manage_maintopics_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageAddContentType')
-    def manageAddContentType(self, id='', title='', picture='', REQUEST=None):
-        """
-        Add a new content type.
-        """
-        self.createContentType(id, title, picture)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageUpdateContentType')
-    def manageUpdateContentType(self, id='', title='', picture='', REQUEST=None):
-        """
-        Update a content type.
-        """
-        self.modifyContentType(id, title, picture)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageDeleteContentTypes')
-    def manageDeleteContentTypes(self, id=[], REQUEST=None):
-        """
-        Delete one or more content types.
-        """
-        self.deleteContentType(self.utConvertToList(id))
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageNyexpSchema')
     def manageNyexpSchema(self, nyexp_schema, REQUEST=None):
