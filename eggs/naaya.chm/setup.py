@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='naaya.chm',
-    version='2.4.1',
+    version='2.4.3',
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro',
@@ -9,7 +9,7 @@ setup(name='naaya.chm',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Naaya',
+        'Naaya >= 2.12',
         'naaya.photoarchive',
         'Products.NaayaLinkChecker',
         'Products.NaayaNetRepository',
