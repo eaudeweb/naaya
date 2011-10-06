@@ -7,6 +7,7 @@ from AccessControl.Permissions import view
 from Globals import InitializeClass
 from zope.deprecation import deprecate
 from constants import *
+from naaya.i18n.constants import PERMISSION_TRANSLATE_PAGES
 
 class NyPermissions:
     """ Class that implements permissions and rights checking."""

@@ -13,8 +13,4 @@
 <subscriber for="Products.Naaya.interfaces.INyFolder zope.app.container.interfaces.IObjectRemovedEvent"
       handler=".events.removedNyFolder" />
 
-
-<five:deprecatedManageAddDelete
-      class="Products.Localizer.Localizer.Localizer"/>
-
 </configure>

@@ -352,7 +352,7 @@ class NyContentData(NyProperties):
 
         # if we find 'key' in the _local_properties dictionary, this means we
         # have a local property
-        if '_local_properties' in self.__dict__ and key in self._local_properties:
+        if self.hasLocalProperty(key):
             return self.getLocalAttribute(key)
 
         # we import NyAttributes here to avoid import loop problems

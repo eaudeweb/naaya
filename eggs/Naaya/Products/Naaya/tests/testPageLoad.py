@@ -57,9 +57,6 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/admin_adduser_html', 'admin')
         self.assert_page_ok('/portal/admin_roles_html', 'admin')
         self.assert_page_ok('/portal/admin_sources_html', 'admin')
-        self.assert_page_ok('/portal/admin_translations_html', 'admin')
-        self.assert_page_ok('/portal/admin_messages_html', 'admin')
-        self.assert_page_ok('/portal/admin_importexport_html', 'admin')
         self.assert_page_ok('/portal/admin_linkslists_html', 'admin')
         self.assert_page_ok('/portal/admin_linkslist_html', 'admin')
         self.assert_page_ok('/portal/admin_reflists_html', 'admin')
@@ -80,7 +77,6 @@ class PageLoadTests(NaayaFunctionalTestCase):
         self.assert_page_ok('/portal/admin_folderportlets_html', 'admin')
         self.assert_page_ok('/portal/admin_linksportlets_html', 'admin')
         self.assert_page_ok('/portal/admin_htmlportlets_html', 'admin')
-        self.assert_page_ok('/portal/admin_delmesg_html', 'admin')
 
         id_channel = self.portal.getSyndicationTool().objectIds([
             'Naaya Channel Aggregator'])[0]

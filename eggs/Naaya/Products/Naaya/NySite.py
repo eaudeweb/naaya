@@ -46,7 +46,6 @@ from naaya.content.base.meta import get_schema_name
 from naaya.content.base.constants import *
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
-from Products.NaayaCore.TranslationsTool.TranslationsTool import manage_addTranslationsTool
 from Products.NaayaCore.DynamicPropertiesTool.DynamicPropertiesTool import manage_addDynamicPropertiesTool
 from Products.NaayaCore.SyndicationTool.SyndicationTool import manage_addSyndicationTool
 from Products.NaayaCore.EmailTool.EmailTool import manage_addEmailTool
@@ -97,7 +96,7 @@ from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaCore.interfaces import ICaptcha
 from naaya.i18n.portal_tool import manage_addNaayaI18n
-from naaya.i18n.constants import ID_NAAYAI18N
+from naaya.i18n.constants import ID_NAAYAI18N, PERMISSION_TRANSLATE_PAGES
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 
 from naaya.core.StaticServe import StaticServeFromZip, StaticServeFromFolder
@@ -278,7 +277,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """ """
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
-        manage_addTranslationsTool(self, languages)
         manage_addCatalogTool(self, languages)
         manage_addPropertiesTool(self)
         manage_addDynamicPropertiesTool(self)
@@ -923,7 +921,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('getGeoMapToolPath')
     def getGeoMapToolPath(self, p=0):
         return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
-    def getPortalTranslationsPath(self, p=0):
+    security.declarePublic('getPortalI18nPath')
+    def getPortalI18nPath(self, p=0):
         return self._getOb(ID_NAAYAI18N).absolute_url(p)
 
     def getFolderMetaType(self):
@@ -1234,7 +1233,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     #the scope is to centralize the list of available languages
     security.declarePublic('gl_get_all_languages')
     def gl_get_all_languages(self):
-        return self.getPortalI18n().get_all_languages_mapping()
+        portal_i18n = self.getPortalI18n()
+        return portal_i18n.get_admin_i18n().get_all_languages()
 
     security.declarePublic('gl_get_languages')
     def gl_get_languages(self):
@@ -2534,54 +2534,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         """
         REQUEST.RESPONSE.redirect('%s/login_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
-    def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
-        """ """
-        portal_i18n = self.getPortalI18n()
-        ob = portal_i18n.get_message_catalog()
-        message_encoded = portal_i18n.message_encode(message)
-        ob.edit_message(message, language, translation)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
-                (self.absolute_url(), quote(message_encoded), start, skey, rkey, query))
-
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
-    def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getPortalI18n().manage_export_po(x, REQUEST, RESPONSE)
-
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importmessages')
-    def admin_importmessages(self, lang, file, REQUEST=None, RESPONSE=None):
-        """ """
-        if REQUEST:
-            if not file:
-                self.setSessionErrorsTrans('You must select a file to import.')
-                return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
-            else:
-                self.getPortalI18n().manage_import_po(file, lang, REQUEST, RESPONSE)
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
-    def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getPortalI18n().manage_export_xliff(export_all, x, REQUEST, RESPONSE)
-
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
-    def admin_importxliff(self, file, REQUEST=None):
-        """ """
-        raise NotImplementedError("Imports not yet implemented in naaya.i18n")
-        if REQUEST:
-            if not file:
-                self.setSessionErrorsTrans('You must select a file to import.')
-                return REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
-            else:
-                self.getPortalTranslations().xliff_import(file)
-                self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-                return REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
-
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletereflist')
     def admin_deletereflist(self, ids=[], REQUEST=None):
         """ """
@@ -3206,17 +3158,17 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_translations_html')
     def admin_translations_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_translations')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_translations_html')
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_messages_html')
     def admin_messages_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_messages')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_messages_html')
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importexport_html')
     def admin_importexport_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_importexport')
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_importexport_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslists_html')
     def admin_linkslists_html(self, REQUEST=None, RESPONSE=None):
@@ -3260,7 +3212,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_translations_html')
     def admin_basket_translations_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return PageTemplateFile('skel/forms/site_admin_basket_translations', globals()).__of__(self)()
+        REQUEST.RESPONSE.redirect(self.getPortalI18nPath() + '/admin_basket_translations_html')
 
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'admin_validation_html')
     def admin_validation_html(self, REQUEST=None, RESPONSE=None):
@@ -3712,23 +3664,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
                     #delete only unsubmitted objects older than 1 day
                     x.getParentNode().manage_delObjects([x.id])
             return "Clean up unsubmitted objects ended successfully on site %s" % self.absolute_url()
-
-    #xxx delete messages // for internal administration
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
-    def admin_delmsg(self, messages=[], REQUEST=None):
-        """ """
-        message_catalog = self.getPortalI18n().get_message_catalog()
-        messages = self.utConvertToList(messages)
-        for message in messages:
-            message_catalog.del_message(message)
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmesg_html')
-    def admin_delmesg_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_delmessages')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_mail_to_roles')
     def send_mail_to_roles(self, mail_subject, mail_body, mails, REQUEST=None):

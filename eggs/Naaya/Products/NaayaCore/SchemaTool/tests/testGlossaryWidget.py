@@ -27,13 +27,14 @@ class GlossaryWidgetTestCase(NaayaTestCase):
         html = self.widget.render_html(self.widget.default)
         self.assertTrue('value="%s"' % self.widget.default in html)
         #Add a site language
-        self.portal.getPropertiesTool().manage_addLanguage('fr')
+        portal_i18n = self.portal.getPortalI18n()
+        portal_i18n.add_language('fr')
 
         translated_message = u"La valeur par défaut"
         #Translate the default value
-        translation_tool = self.portal.getPortalTranslations()
-        translation_tool.message_edit(self.widget.default, 'fr',
-                translated_message, '')
+        translation_tool = portal_i18n.get_message_catalog()
+        translation_tool.edit_message(self.widget.default, 'fr',
+                translated_message)
 
         #render and check if the default value has been translated.
         self.portal.gl_change_site_defaultlang('fr')
