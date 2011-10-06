@@ -1,4 +1,4 @@
-2.12.1 (unreleased)
+2.12.0 (unreleased)
 --------------------
 * refactor: :mod:`Products.Naaya.NySite` stores Zope and
   Naaya containers meta_type-s in two lists in the beginning of the module
