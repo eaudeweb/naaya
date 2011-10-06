@@ -118,6 +118,11 @@ class LocalizerToNaayaI18n(UpdateScript):
         localprops_keep_cnt = 0
         total_cnt = 0
         all_objects = itertools.chain([portal], ofs_walk(portal))
+
+        # this class is not used anymore:
+        if '_contenttypes_tool__contenttype_dictionary' in portal.__dict__:
+            del portal.__dict__['_contenttypes_tool__contenttype_dictionary']
+
         for obj in all_objects:
             # Part 0: if broken, report it
             #         if other localizer in NySite child, skip it
