@@ -5,5 +5,7 @@
 	tal:condition="python:is_ratable and user_rating_set or portal_status_message"
 	id="ratings">
 	<tal:block content="structure user_rating_set"/>
-	<tal:block condition="portal_status_message" content="portal_status_message" />
+	<span class="ratings_message" tal:condition="portal_status_message" >
+		<span tal:content="portal_status_message" />
+	</span>
 </div>

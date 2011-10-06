@@ -200,10 +200,12 @@ a.feed_link,
 a.facebook_link,
 a.twitter_link,
 a.download_link {
-	padding-left: 25px;
+	padding: 0;
 	line-height: 1.8;
 	display: inline-block;
 	height: 20px;
+	width: 20px;
+	text-decoration: none;
 }
 
 a.feed_link {
@@ -336,7 +338,7 @@ div#toolbar input {
 #folderfile_list .type{
 	vertical-align: top;
 	text-align: center;
-	width: 0.5em;
+	width: 10%;
 }
 
 #folderfile_list .type img{
