@@ -96,7 +96,7 @@ from naaya.core.exceptions import ValidationError
 from Products.NaayaBase.NyRoleManager import NyRoleManager
 from Products.NaayaCore.interfaces import ICaptcha
 from naaya.i18n import manage_addNaayaI18n
-from naaya.i18n.constants import *
+from naaya.i18n.constants import ID_NAAYAI18N
 from naaya.i18n.TranslationsToolWrapper import TranslationsToolWrapper
 from naaya.i18n.portal_tool import message_encode
 
@@ -888,35 +888,44 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
-    def getSitePath(self, p=0): return self.absolute_url(p)
+    def getSitePath(self, p=0):
+        return self.absolute_url(p)
     security.declarePublic('getPropertiesToolPath')
-    def getPropertiesToolPath(self, p=0): return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
+    def getPropertiesToolPath(self, p=0):
+        return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
     security.declarePublic('getPortletsToolPath')
-    def getPortletsToolPath(self, p=0): return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
-    security.declarePublic('getPortalTranslationsPath')
-    def getPortalTranslationsPath(self, p=0): return self._getOb(ID_TRANSLATIONSTOOL).absolute_url(p)
+    def getPortletsToolPath(self, p=0):
+        return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
     security.declarePublic('getAuthenticationToolPath')
-    def getAuthenticationToolPath(self, p=0): return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
+    def getAuthenticationToolPath(self, p=0):
+        return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
     security.declarePublic('getCatalogToolPath')
-    def getCatalogToolPath(self, p=0): return self._getOb(ID_CATALOGTOOL).absolute_url(p)
+    def getCatalogToolPath(self, p=0):
+        return self._getOb(ID_CATALOGTOOL).absolute_url(p)
     security.declarePublic('getLayoutToolPath')
-    def getLayoutToolPath(self, p=0): return self._getOb(ID_LAYOUTTOOL).absolute_url(p)
+    def getLayoutToolPath(self, p=0):
+        return self._getOb(ID_LAYOUTTOOL).absolute_url(p)
     security.declarePublic('getSyndicationToolPath')
-    def getSyndicationToolPath(self, p=0): return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
+    def getSyndicationToolPath(self, p=0):
+        return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
     security.declarePublic('getEmailToolPath')
-    def getEmailToolPath(self, p=0): return self._getOb(ID_EMAILTOOL).absolute_url(p)
+    def getEmailToolPath(self, p=0):
+        return self._getOb(ID_EMAILTOOL).absolute_url(p)
     security.declarePublic('getFormsToolPath')
-    def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
+    def getFormsToolPath(self, p=0):
+        return self._getOb(ID_FORMSTOOL).absolute_url(p)
     security.declarePublic('getFolderByPath')
-    def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
+    def getFolderByPath(self, p_folderpath):
+        return self.unrestrictedTraverse(p_folderpath, None)
     security.declarePublic('getNotificationToolPath')
-    def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
+    def getNotificationToolPath(self, p=0):
+        return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
     security.declarePublic('getGeoMapToolPath')
-    def getGeoMapToolPath(self, p=0): return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
-    security.declarePublic('getPortalI18nPath')
-    def getPortalI18nPath(self, p=0): return self._getOb(ID_NAAYAI18N, None).absolute_url(p)
+    def getGeoMapToolPath(self, p=0):
+        return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
 
-    def getFolderMetaType(self): return METATYPE_FOLDER
+    def getFolderMetaType(self):
+        return METATYPE_FOLDER
     security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
         """
@@ -1111,7 +1120,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         PARENTS.reverse()
         for crumb in PARENTS:
             breadcrumbs.append(crumb)
-            if hasattr(crumb, 'meta_type') and crumb.meta_type == self.meta_type:
+            if getattr(crumb, 'meta_type', None) == self.meta_type:
                 break
         breadcrumbs.reverse()
         return breadcrumbs
@@ -2551,7 +2560,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
         """ """
-        ob = self.getPortalI18n().get_catalog()
+        ob = self.getPortalI18n().get_message_catalog()
         message_encoded = message_encode(message)
         ob.edit_message(message, language, translation)
         if REQUEST:
@@ -2562,13 +2571,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
     def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):
         """ """
-        raise NotImplemented()
-        return self.getPortalTranslations().manage_export(x, REQUEST, RESPONSE)
+        return self.getPortalI18n().manage_export_po(self, REQUEST)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importmessages')
     def admin_importmessages(self, lang, file, REQUEST=None):
         """ """
-        raise NotImplemented()
+        raise NotImplementedError("Imports not yet implemented in naaya.i18n")
         if REQUEST:
             if not file:
                 self.setSessionErrorsTrans('You must select a file to import.')
@@ -2581,13 +2589,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
     def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
         """ """
-        raise NotImplemented()
-        return self.getPortalTranslations().xliff_export(x, export_all, REQUEST, RESPONSE)
+        return self.getPortalI18n().manage_export_xliff(export_all, x, REQUEST)
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
     def admin_importxliff(self, file, REQUEST=None):
         """ """
-        raise NotImplemented()
+        raise NotImplementedError("Imports not yet implemented in naaya.i18n")
         if REQUEST:
             if not file:
                 self.setSessionErrorsTrans('You must select a file to import.')
@@ -3618,11 +3625,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return 0
 
     def check_pluggable_item_properties(self, meta_type, **args):
-        raise NotImplemented("What is this? A test?")
         l = []
         la = l.append
-        #translate(self, domain, msgid, *args, **kw):
-        #gettext(self, msgid, lang, default=None):
         translate = self.getPortalTranslations().translate
         for k, v in self.get_pluggable_content().get(meta_type, None).get('properties', {}).items():
             if v[0] == 1 or v[1]:   #this property is mandatory
@@ -3736,10 +3740,10 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
     def admin_delmsg(self, messages=[], REQUEST=None):
         """ """
-        ob = self.getPortalI18n().get_catalog()
+        message_catalog = self.getPortalI18n().get_message_catalog()
         messages = self.utConvertToList(messages)
         for message in messages:
-            ob.del_message(message)
+            message_catalog.del_message(message)
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
@@ -3946,7 +3950,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     security.declarePublic('i18n_js')
     def i18n_js(self, lang='en', REQUEST=None):
         """ translations for messages used by JavaScript """
-        message_catalog = self.getPortalI18n().get_catalog()
+        message_catalog = self.getPortalI18n().get_message_catalog()
         translations = dict( (msg, message_catalog.gettext(msg, lang))
                             for msg in JS_MESSAGES )
 

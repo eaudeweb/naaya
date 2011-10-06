@@ -17,7 +17,10 @@ METATYPE_FOLDER = 'Naaya Folder'
 
 LABEL_NYFOLDER = 'Folder'
 
-DEFAULT_PORTAL_LANGUAGE_CODE = 'en' #English language is assumed to be the default language
+# Default language as described in ISO 639
+# ISO 639 is the set of international standards that lists short codes
+# of two to four letters for language name; see languages.txt in naaya.i18n
+DEFAULT_PORTAL_LANGUAGE_CODE = 'en'
 DEFAULT_PORTAL_LANGUAGE_NAME = 'English'
 DEFAULT_SORTORDER = 100
 DEFAULT_MAILSERVERNAME = 'localhost'
