@@ -6,7 +6,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product related imports
 from Products.NaayaCore.constants import *
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+#from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaCore.managers.utils import make_id
 
 manage_addRefTreeNodeForm = PageTemplateFile('zpt/reftreenode_manage_add', globals())

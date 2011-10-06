@@ -19,7 +19,8 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.Localizer.LocalPropertyManager import LocalProperty
+#from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentType, NyContentData
 from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from Products.NaayaCore.managers.import_export import CSVImportTool, ExportTool

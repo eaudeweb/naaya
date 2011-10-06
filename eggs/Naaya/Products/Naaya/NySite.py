@@ -82,7 +82,8 @@ from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExpo
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.Localizer import manage_addLocalizer
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+#from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
 from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
@@ -1256,6 +1257,7 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         return self.getPortalI18n().get_lang_manager().get_language_name(lang)
 
     def gl_add_languages(self, ob):
+        return # TODO
         for l in self.gl_get_languages_mapping():
             ob.add_language(l['code'])
             if l['default']: ob.manage_changeDefaultLang(l['code'])

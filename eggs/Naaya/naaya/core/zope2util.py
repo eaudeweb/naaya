@@ -273,6 +273,29 @@ class CaptureTraverse(Implicit):
         assert self.path[-1] == 'index_html'
         return self.callback(self.context[0], self.path[:-1], REQUEST)
 
+### patch ZPublisher.BaseRequest.BaseRequest.traverseName to trigger
+### IBeforeTraverse
+def patch_baserequest_traversename():
+    # cross imports problem, need to place them here
+    from zope.app.publication.interfaces import IBeforeTraverseEvent
+    from ZPublisher.BaseRequest import BaseRequest
+    from Products.Naaya.NySite import NySite
+    from zope.app.component.site import threadSiteSubscriber
+    import zope.event
+    if getattr(BaseRequest.traverseName, '_before_traverse_patch', False):
+        log.debug('Baserequest.traverseName already patched')
+        return
+    log.debug('Patching BaseRequest.traverseName')
+    original = BaseRequest.traverseName
+    def new(self, ob, name):
+        if isinstance(ob, NySite):
+            #import pdb; pdb.set_trace()
+            # TODO: ugly hack
+            threadSiteSubscriber(ob, IBeforeTraverseEvent)
+            #zope.event.notify(ob, IBeforeTraverseEvent)
+        return original(self, ob, name)
+    setattr(new, '_before_traverse_patch', True)
+    BaseRequest.traverseName = new
 
 ##################################################################
 ### `UnnamedTimeZone`, `dt2DT` and `DT2dt` come from Plone's

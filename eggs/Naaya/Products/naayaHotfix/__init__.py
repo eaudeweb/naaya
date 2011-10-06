@@ -13,7 +13,8 @@ except ImportError:
     patch_trans_service = False
 
 from Products.NaayaCore.TranslationsTool.TranslationsTool import TranslationsTool
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager
+#from Products.Localizer.LocalPropertyManager import LocalPropertyManager
+from naaya.i18n.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 from Products.Localizer.MessageCatalog import MessageCatalog
 from itools.gettext import POFile
