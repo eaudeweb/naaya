@@ -21,7 +21,8 @@ from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.Localizer.LocalPropertyManager import LocalProperty
+#from Products.Localizer.LocalPropertyManager import LocalProperty
+from naaya.i18n.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap

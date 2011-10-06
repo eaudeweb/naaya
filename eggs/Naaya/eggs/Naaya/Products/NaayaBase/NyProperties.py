@@ -10,7 +10,9 @@ Handle dynamic properties for a specific object
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
-from Products.Localizer.LocalPropertyManager import (
+#from Products.Localizer.LocalPropertyManager import (
+#                                    LocalPropertyManager, LocalProperty)
+from naaya.i18n.LocalPropertyManager import (
                                     LocalPropertyManager, LocalProperty)
 
 module_glossary_metatype = "Naaya Glossary"
