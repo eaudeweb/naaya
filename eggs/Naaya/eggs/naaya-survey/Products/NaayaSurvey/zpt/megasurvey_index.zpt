@@ -211,8 +211,16 @@
 						<tal:block tal:replace="structure attachment/description">description</tal:block>
 						<br/>
 						<tal:block tal:define="download_url attachment/getDownloadUrl">
-							<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
-								<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
+							<a tal:define="size python:attachment.utShowSizeKb(attachment.size());
+							content_type attachment/content_type;
+							icon python:here.rstk.icon_for_content_type(content_type);
+							title python:icon['title'];
+							url python:icon['url']"
+							tal:attributes="href download_url">
+								<img tal:attributes="src url;
+													alt title;
+													title title" />
+								<span tal:replace="string:${attachment/downloadfilename} (${title}, ${size} Kb)"/>
 							</a>
 						</tal:block>
 					</li>
