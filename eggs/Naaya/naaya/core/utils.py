@@ -1,5 +1,4 @@
 from datetime import datetime
-from os import path
 import re
 import htmlentitydefs
 import warnings
@@ -7,39 +6,60 @@ import tempfile
 import urllib
 import socket
 
-from zope.deprecation import deprecate
-
-mimetype_map = {
-    '.css'  : 'text/css',
-    '.html' : 'text/html',
-    '.htm'  : 'text/html',
-    '.txt'  : 'text/plain',
-    '.xml'  : 'text/xml',
-
-    '.gif'  : 'image/gif',
-    '.jpg'  : 'image/jpeg',
-    '.jpeg' : 'image/jpeg',
-    '.png'  : 'image/png',
-
-    '.doc'  : 'application/msword',
-    '.pdf'  : 'application/pdf',
-    '.xls'  : 'application/vnd.ms-excel',
-    '.ppt'  : 'application/vnd.ms-powerpoint',
-    '.swf'  : 'application/x-shockwave-flash',
-    '.js'   : 'application/javascript',
-    '.rar'  : 'application/x-rar-compressed',
-    '.zip'  : 'application/zip',
-
-    '.mp3'  : 'audio/mpeg',
-
-    '.mpeg' : 'video/mpeg',
-    '.mpg'  : 'video/mpeg',
+content_type_to_icons = {
+    "audio/aiff": ["AIFF", "aiff"],
+    "application/octet-stream": ["BINARY", "file"],
+    "image/bmp": ["BMP", "jpg"],
+    "text/css": ["CSS", "css"],
+    "application/msword": ["DOC", "doc"],
+    "image/gif": ["GIF", "gif"],
+    "application/x-gzip": ["GZ", "gz"],
+    "text/html": ["HTML", "html"],
+    "image/pjpeg": ["JPEG", "jpeg"],
+    "image/jpeg": ["JPEG", "jpeg"],
+    "image/jpg": ["JPG", "jpg"],
+    "application/x-javascript": ["JS", "js"],
+    "application/msaccess": ["MDB", "mdb"],
+    "audio/mpeg": ["MP3", "mp3"],
+    "video/mpeg": ["MPG", "mpg"],
+    "text/x-ms-odc": ["ODC", "odc"],
+    "application/vnd.oasis.opendocument.formula": ["ODF", "odf"],
+    "application/vnd.oasis.opendocument.graphics": ["ODG", "odg"],
+    "application/vnd.oasis.opendocument.presentation": ["ODP", "odp"],
+    "application/vnd.oasis.opendocument.spreadsheet": ["ODS", "ods"],
+    "application/vnd.oasis.opendocument.text": ["ODT", "odt"],
+    "application/pdf": ["PDF", "pdf"],
+    "image/png": ["PNG", "png"],
+    "image/x-png": ["PNG", "png"],
+    "application/vnd.ms-powerpoint": ["PPT", "ppt"],
+    "application/postscript": ["PS", "ps"],
+    "application/x-shockwave-flash": ["SWF", "swf"],
+    "application/vnd.sun.xml.calc": ["SXC", "sxc"],
+    "application/vnd.sun.xml.draw": ["SXD", "sxd"],
+    "application/vnd.sun.xml.impress": ["SXI", "sxi"],
+    "application/vnd.sun.xml.writer": ["SXW", "sxw"],
+    "application/x-tar": ["TAR", "tar"],
+    "application/x-compressed": ["TGZ", "tgz"],
+    "text/plain": ["TXT", "txt"],
+    "text/x-vcard": ["VCF", "vcf"],
+    "audio/wav": ["WAV", "wav"],
+    "audio/x-ms-wma": ["WMA", "wma"],
+    "video/x-ms-wmv": ["WMV", "wmv"],
+    "application/vnd.ms-excel": ["XLS", "xls"],
+    "text/xml": ["XML", "xml"],
+    "application/x-xpinstall": ["XPI", "xpi"],
+    "application/x-zip-compressed": ["ZIP", "zip"],
 }
 
-@deprecate('mimetype_from_filename is deprecated, use mimetypes.guess_type')
-def mimetype_from_filename(filename, default=None):
-    ext = path.splitext(filename)[1]
-    return mimetype_map.get(ext.lower(), default)
+def icon_for_content_type(content_type, approved=True):
+    title, image_id = content_type_to_icons.get(content_type, ["BINARY", "file"])
+    if approved:
+        image_filename = image_id+'.png'
+    else:
+        title = 'This %s file is not approved' % title
+        image_filename = image_id+'_marked.png'
+    return {'title': title, 
+            'url': '++resource++naaya.mime_icons/'+image_filename}
 
 def get_noaq_attr(obj, attr, default):
     """

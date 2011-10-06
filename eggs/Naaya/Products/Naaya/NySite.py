@@ -80,7 +80,6 @@ from Products.NaayaCore.managers.import_export import (CSVImportTool,
                                                        ExportTool, UnicodeReader)
 from Products.NaayaCore.managers.zip_import_export import ZipImportTool, ZipExportTool
 from Products.NaayaCore.managers.rdf_calendar_utils import rdf_cataloged_items
-from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -143,7 +142,7 @@ def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQ
 class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
              Folder, NyBase, NyPermissions, NyImportExport, NyVersions, utils,
              list_utils, file_utils, catalog_tool, search_tool,
-             contenttypes_tool, session_manager, portlets_manager,
+             session_manager, portlets_manager,
              networkportals_manager, NyFolderBase):
     """ """
 
@@ -244,7 +243,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         self.display_subobject_count = ""
         self.display_subobject_count_for_admins = ""
         self.default_logo = ''
-        contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
@@ -380,9 +378,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
                     properties_tool.manage_addLanguage(language.code)
-                for contenttype in skel_handler.root.properties.contenttypes:
-                    content = self.futRead(join(skel_path, 'contenttypes', contenttype.picture), 'rb')
-                    self.createContentType(contenttype.id, contenttype.title, content)
             #forms are loaded from disk at runtime; they can be customized in portal_forms.
             #load skins
             layout = skel_handler.root.layout

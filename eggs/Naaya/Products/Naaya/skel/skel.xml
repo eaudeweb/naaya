@@ -172,48 +172,6 @@
 	</portlets>
 	<properties>
 		<language code="en" />
-		<contenttype id="text/plain" title="TXT" picture="txt.png"/>
-		<contenttype id="text/html" title="HTML" picture="html.png"/>
-		<contenttype id="text/xml" title="XML" picture="xml.png"/>
-		<contenttype id="text/css" title="CSS" picture="css.png"/>
-		<contenttype id="text/x-ms-odc" title="ODC" picture="odc.png"/>
-		<contenttype id="text/x-vcard" title="VCF" picture="vcf.png"/>
-		<contenttype id="image/gif" title="GIF" picture="gif.png"/>
-		<contenttype id="image/pjpeg" title="JPEG" picture="jpeg.png"/>
-		<contenttype id="image/jpeg" title="JPEG" picture="jpeg.png"/>
-		<contenttype id="image/jpg" title="JPG" picture="jpg.png"/>
-		<contenttype id="image/bmp" title="BMP" picture="jpg.png"/>
-		<contenttype id="image/png" title="PNG" picture="png.png"/>
-		<contenttype id="image/x-png" title="PNG" picture="png.png"/>
-		<contenttype id="application/octet-stream" title="BINARY" picture="file.png"/>
-		<contenttype id="application/msword" title="DOC" picture="doc.png"/>
-		<contenttype id="application/msaccess" title="MDB" picture="mdb.png"/>
-		<contenttype id="application/pdf" title="PDF" picture="pdf.png"/>
-		<contenttype id="application/vnd.ms-powerpoint" title="PPT" picture="ppt.png"/>
-		<contenttype id="application/vnd.ms-excel" title="XLS" picture="xls.png"/>
-		<contenttype id="application/x-zip-compressed" title="ZIP" picture="zip.png"/>
-		<contenttype id="application/postscript" title="PS" picture="ps.png"/>
-		<contenttype id="application/vnd.oasis.opendocument.formula" title="ODF" picture="odf.png"/>
-		<contenttype id="application/vnd.oasis.opendocument.graphics" title="ODG" picture="odg.png"/>
-		<contenttype id="application/vnd.oasis.opendocument.presentation" title="ODP" picture="odp.png"/>
-		<contenttype id="application/vnd.oasis.opendocument.spreadsheet" title="ODS" picture="ods.png"/>
-		<contenttype id="application/vnd.oasis.opendocument.text" title="ODT" picture="odt.png"/>
-		<contenttype id="application/x-shockwave-flash" title="SWF" picture="swf.png"/>
-		<contenttype id="application/vnd.sun.xml.calc" title="SXC" picture="sxc.png"/>
-		<contenttype id="application/vnd.sun.xml.draw" title="SXD" picture="sxd.png"/>
-		<contenttype id="application/vnd.sun.xml.impress" title="SXI" picture="sxi.png"/>
-		<contenttype id="application/vnd.sun.xml.writer" title="SXW" picture="sxw.png"/>
-		<contenttype id="application/x-tar" title="TAR" picture="tar.png"/>
-		<contenttype id="application/x-compressed" title="TGZ" picture="tgz.png"/>
-		<contenttype id="application/x-xpinstall" title="XPI" picture="xpi.png"/>
-		<contenttype id="application/x-gzip" title="GZ" picture="gz.png"/>
-		<contenttype id="application/x-javascript" title="AIFF" picture="js.png"/>
-		<contenttype id="audio/aiff" title="AIFF" picture="aiff.png"/>
-		<contenttype id="audio/wav" title="WAV" picture="wav.png"/>
-		<contenttype id="audio/x-ms-wma" title="WMA" picture="wma.png"/>
-		<contenttype id="audio/mpeg" title="MP3" picture="mp3.png"/>
-		<contenttype id="video/mpeg" title="MPG" picture="mpg.png"/>
-		<contenttype id="video/x-ms-wmv" title="WMV" picture="wmv.png"/>
 	</properties>
 	<emails>
 		<emailtemplate id="email_feedback" title="Feedback"/>
