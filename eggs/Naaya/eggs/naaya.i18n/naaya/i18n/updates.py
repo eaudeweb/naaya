@@ -11,6 +11,7 @@ from OFS.Uninstalled import BrokenClass
 from naaya.core.zope2util import ofs_walk
 from Products.naayaUpdater.updates import UpdateScript, PRIORITY
 from naaya.core.utils import force_to_unicode
+from Products.Naaya.interfaces import INySite
 
 from naaya.i18n.portal_tool import NaayaI18n, manage_addNaayaI18n
 try:
@@ -53,55 +54,61 @@ class LocalizerToNaayaI18n(UpdateScript):
             return False
 
         if isinstance(portal.getPortalI18n(), NaayaI18n):
-            self.log.debug("Portal already uses naaya.i18n, skipping")
-            return True
+            self.log.debug("Portal already uses naaya.i18n, skipping i18n init")
+            localizer = None
+        else:
+            self.log.debug("Creating portal_i18n and copying message catalog data")
+            localizer = portal._getOb('Localizer', None)
+            portal_trans = portal._getOb('portal_translations')
+            if localizer is None:
+                self.log.error("Localizer not found")
+                return False
+            if portal_trans is None:
+                self.log.error("Portal Translations not found")
+                return False
+    
+            languages = [ (x, localizer.get_language_name(x)) for
+                          x in localizer.get_languages() ]
+            def_lang = localizer.get_default_language()
+            self.log.debug('Found languages: %r, default: %s', languages, def_lang)
+    
+            manage_addNaayaI18n(portal, languages)
+            portal.getPortalI18n().manage_changeDefaultLang(def_lang)
+    
+            message_cat = portal.getPortalI18n().get_message_catalog()
+            (msg_cnt, trans_cnt) = (0, 0)
+            for (msgid, trans) in portal_trans._messages.items():
+                if isinstance(msgid, str):
+                    msgid = force_to_unicode(msgid)
+                # one call to gettext, to add 'en' identical translation, if missing
+                message_cat.gettext(msgid, def_lang)
+                msg_cnt += 1
+                for lang in trans:
+                    found = message_cat.gettext(msgid, lang, '')
+                    if lang != 'note':
+                        trans_cnt += 1
+                        if isinstance(trans[lang], unicode):
+                            translation = trans[lang]
+                        elif isinstance(trans[lang], str):
+                            translation = force_to_unicode(trans[lang])
+                        else:
+                            self.log.error(("Unacceptable type '%s' found for "
+                                            "translation") % type(trans[lang]))
+                            self.log.error("Migration cancelled")
+                            return False
+                        if translation != found:
+                            message_cat.edit_message(msgid, lang, translation)
+    
+            self.log.debug('%d iterated, a total of %d translation mappings.'
+                           % (msg_cnt, trans_cnt))
+            self.log.debug('Message Catalog now counts %d entries (msgid-s).'
+                           % len(message_cat._messages.keys()))
 
-        self.log.debug("Creating portal_i18n and copying message catalog data")
-        localizer = portal._getOb('Localizer', None)
-        portal_trans = portal._getOb('portal_translations')
-        if localizer is None:
-            self.log.error("Localizer not found")
-            return False
-        if portal_trans is None:
-            self.log.error("Portal Translations not found")
-            return False
-
-        languages = [ (x, localizer.get_language_name(x)) for
-                      x in localizer.get_languages() ]
-        def_lang = localizer.get_default_language()
-        self.log.debug('Found languages: %r, default: %s', languages, def_lang)
-
-        manage_addNaayaI18n(portal, languages)
-        portal.getPortalI18n().manage_changeDefaultLang(def_lang)
-
-        message_cat = portal.getPortalI18n().get_message_catalog()
-        (msg_cnt, trans_cnt) = (0, 0)
-        for (msgid, trans) in portal_trans._messages.items():
-            if isinstance(msgid, str):
-                msgid = force_to_unicode(msgid)
-            # one call to gettext, to add 'en' identical translation, if missing
-            message_cat.gettext(msgid, def_lang)
-            msg_cnt += 1
-            for lang in trans:
-                found = message_cat.gettext(msgid, lang, '')
-                if lang != 'note':
-                    trans_cnt += 1
-                    if isinstance(trans[lang], unicode):
-                        translation = trans[lang]
-                    elif isinstance(trans[lang], str):
-                        translation = force_to_unicode(trans[lang])
-                    else:
-                        self.log.error(("Unacceptable type '%s' found for "
-                                        "translation") % type(trans[lang]))
-                        self.log.error("Migration cancelled")
-                        return False
-                    if translation != found:
-                        message_cat.edit_message(msgid, lang, translation)
-
-        self.log.debug('%d iterated, a total of %d translation mappings.'
-                       % (msg_cnt, trans_cnt))
-        self.log.debug('Message Catalog now counts %d entries (msgid-s).'
-                       % len(message_cat._messages.keys()))
+            # Clean up and delete localizer
+            localizer.manage_beforeDelete(localizer, portal)
+            portal._delObject('Localizer')
+            portal._delObject('portal_translations')
+            self.log.debug('Localizer and Portal translations removed')
 
         # Fix local properties:
         # * remove translations with None-index (instead of language code)
@@ -120,11 +127,14 @@ class LocalizerToNaayaI18n(UpdateScript):
         all_objects = itertools.chain([portal], ofs_walk(portal))
 
         # this class is not used anymore:
-        if '_contenttypes_tool__contenttype_dictionary' in portal.__dict__:
-            del portal.__dict__['_contenttypes_tool__contenttype_dictionary']
 
         for obj in all_objects:
-            # Part 0: if broken, report it
+            # Part 0.0: remove unused contenttype classes on sites:
+            if INySite.providedBy(obj):
+                if '_contenttypes_tool__contenttype_dictionary' in obj.__dict__:
+                    del obj.__dict__['_contenttypes_tool__contenttype_dictionary']
+
+            # Part 0.1: if broken, report it
             #         if other localizer in NySite child, skip it
             if isinstance(obj, BrokenClass):
                 self.log.error(("Object %r is broken! Unable to fix local"
@@ -161,12 +171,6 @@ class LocalizerToNaayaI18n(UpdateScript):
 
         self.log.debug("%d LocalAttribute-s deleted from OFS" % localprops_del_cnt)
         self.log.debug("%d LocalAttribute-s kept in OFS" % localprops_keep_cnt)
-
-        # Clean up and delete localizer
-        localizer.manage_beforeDelete(localizer, portal)
-        portal._delObject('Localizer')
-        portal._delObject('portal_translations')
-        self.log.debug('Localizer and Portal translations removed, '
-                       'migration is complete!')
+        self.log.debug('Migration is complete!')
 
         return True
