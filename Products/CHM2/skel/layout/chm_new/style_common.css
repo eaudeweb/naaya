@@ -102,6 +102,7 @@
 	border: 1px solid #3e6178 !important;
 	color: #3e6178;
 	background-color: #fff;
+	width: 99%;
 }
 .information fieldset .fieldset_div ul, .message-information fieldset .fieldset_div ul {
 	margin: 0;

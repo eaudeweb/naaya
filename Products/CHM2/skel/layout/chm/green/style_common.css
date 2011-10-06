@@ -104,6 +104,7 @@
 	border: 1px solid #3e6178 !important;
 	color: #3e6178;
 	background-color: #faf9f2;
+	width: 99%;
 }
 .information fieldset legend, .message-information fieldset legend {
 	border: 1px solid #3e6178 !important;
