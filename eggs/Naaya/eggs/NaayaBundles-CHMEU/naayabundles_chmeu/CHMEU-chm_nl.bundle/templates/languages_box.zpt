@@ -1,0 +1,5 @@
+<!-- not used in this portal. Code is placed in standard_template to avoid problems caused by the missing `here` -->
+<span>
+<a href="http://en.biodiversiteit.nl" title="English" i18n:attributes="title">en</a>
+<a href="http://biodiversiteit.nl" title="Dutch" i18n:attributes="title">nl</a>
+</span>
