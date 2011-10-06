@@ -6,7 +6,7 @@ It registers for INySite.
 from zope.component import getGlobalSiteManager, queryMultiAdapter
 from Products.Five.browser import BrowserView
 
-from interfaces import IDiff
+from interfaces import IDiff, IBundleReloader
 
 class InspectorView(BrowserView):
     # site manager related functions
@@ -76,6 +76,12 @@ class InspectorView(BrowserView):
                 return True
         return False
 
+    def is_reloader_available(self, bundle_name):
+        gsm = getGlobalSiteManager()
+        reloader = gsm.queryUtility(IBundleReloader, name=bundle_name)
+        return (reloader is not None)
+
+
 class InspectorDiffView(InspectorView):
     def get_diffs(self, utility_registrations):
         if len(utility_registrations) < 2:
@@ -91,3 +97,12 @@ class InspectorDiffView(InspectorView):
                     'html_diff': diff.html_diff,
                     })
         return ret
+
+
+class InspectorReloadView(InspectorView):
+    def __call__(self):
+        gsm = getGlobalSiteManager()
+        bundle_name = self.request.form['bundle_name']
+        reloader = gsm.queryUtility(IBundleReloader, name=bundle_name)
+        reloader.reload_bundle()
+        self.request.RESPONSE.redirect('inspector_view')

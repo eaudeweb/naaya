@@ -29,6 +29,9 @@ class Bundle(globalregistry.BaseGlobalComponents):
         """
         self.__bases__ = (parent_bundle,)
 
+    def get_parent(self):
+        return self.__bases__[0]
+
 
 def get(name):
     """

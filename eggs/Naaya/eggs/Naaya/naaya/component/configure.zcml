@@ -16,4 +16,11 @@
         permission="zope2.ViewManagementScreens"
         />
 
+    <browser:page
+        name="inspector_reload_bundle"
+        for="Products.Naaya.interfaces.INySite"
+        class=".inspector.InspectorReloadView"
+        permission="zope2.ViewManagementScreens"
+        />
+
 </configure>

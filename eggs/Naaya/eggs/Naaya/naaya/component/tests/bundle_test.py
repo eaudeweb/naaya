@@ -1,5 +1,6 @@
 import unittest
 import cPickle
+from zope.component import getGlobalSiteManager
 from naaya.component import bundles
 from naaya.component.testing import ITestUtil, MyClass, clean_up_bundle
 
@@ -33,8 +34,6 @@ class BundleRegistrationTest(unittest.TestCase):
         self.assertTrue(my_bundle.getUtility(ITestUtil) is ob)
 
     def test_inheritance(self):
-        from zope.component import getGlobalSiteManager
-
         self.bundle_names.extend(['test_bundle_1', 'test_bundle_2'])
         my_bundle_1 = bundles.get('test_bundle_1')
         my_bundle_2 = bundles.get('test_bundle_2')
@@ -56,6 +55,19 @@ class BundleRegistrationTest(unittest.TestCase):
         ob_2 = MyClass()
         my_bundle_2.registerUtility(ob_2)
         self.assertTrue(my_bundle_2.getUtility(ITestUtil) is ob_2)
+
+    def test_get_parent(self):
+        self.bundle_names.extend(["Foo", "Bar"])
+        foo = bundles.get("Foo")
+        bar = bundles.get("Bar")
+
+        # no parent was set
+        gsm = getGlobalSiteManager()
+        self.assertTrue(foo.get_parent() is gsm)
+
+        # some parent was set
+        foo.set_parent(bar)
+        self.assertTrue(foo.get_parent() is bar)
 
     def test_customize_component(self):
         from zope import interface

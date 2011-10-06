@@ -15,3 +15,8 @@ class IDiff(Interface):
     item2 = Attribute("""source of the second item""")
 
     html_diff = Attribute("""html diff of two items""")
+
+class IBundleReloader(Interface):
+    """ Reloader for a named bundle """
+    def reload():
+        """ Reload the bundle's components from disk """
