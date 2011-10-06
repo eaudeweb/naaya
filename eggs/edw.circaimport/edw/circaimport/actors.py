@@ -1,5 +1,5 @@
 import logging
-
+import mimetypes
 logger = logging.getLogger('edw.circaimport.ui')
 
 class DemoActor(object):
@@ -31,7 +31,6 @@ try:
     from datetime import datetime
     from Products.Naaya.NyFolder import addNyFolder
     from naaya.core.zope2util import path_in_site
-    from naaya.core.utils import mimetype_from_filename
     from naaya.content.url.url_item import addNyURL
     from naaya.content.bfile.bfile_item import addNyBFile, make_blobfile
 except ImportError:
@@ -85,7 +84,7 @@ class ZopeActor(object):
         assert isinstance(data_file, StringIO)
         data_file.filename = filename
         bf = make_blobfile(data_file,
-                           content_type=mimetype_from_filename(filename,
+                           content_type=mimetypes.guess_type(filename,
                                                     'application/octet-stream'),
                            removed=False,
                            timestamp=datetime(date.year, date.month, date.day))
