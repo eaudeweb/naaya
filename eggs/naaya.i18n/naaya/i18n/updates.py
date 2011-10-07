@@ -133,6 +133,7 @@ class LocalizerToNaayaI18n(UpdateScript):
             if INySite.providedBy(obj):
                 if '_contenttypes_tool__contenttype_dictionary' in obj.__dict__:
                     del obj.__dict__['_contenttypes_tool__contenttype_dictionary']
+                    obj._p_changed = 1
 
             # Part 0.1: if broken, report it
             #         if other localizer in NySite child, skip it
