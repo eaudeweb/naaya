@@ -357,4 +357,9 @@
       component=".update_translations.UpdateTranslations"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="update_count_contenttype.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_count_contenttype.UpdateCountContentType"
+      permission="zope2.ViewManagementScreens" />
 </configure>
