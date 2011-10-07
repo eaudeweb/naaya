@@ -1,0 +1,37 @@
+<tal:block metal:define-macro="obslist">
+<tal:block define="permission_edit here/checkPermissionEditObject">
+<ul class="toc_ul" style="">
+	<tal:block repeat="object objects">
+		<li tal:condition="python:object.sortorder < 100 and object.sortorder > 0">
+			<div class="toc_chapter" tal:condition="python:object.meta_type=='Naaya Report Chapter'">
+				<div class="toc_edit_button" tal:condition="permission_edit">
+					<a tal:attributes="href string:${object/absolute_url}/edit_html">
+						<img src="misc_/Naaya/edit" style="border:0;" />
+					</a>
+				</div>
+					<span i18n:translate="" tal:condition="python:object.sortorder < 90">Chapter</span>
+					<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+			</div>
+
+			<div class="toc_section" tal:condition="python:object.meta_type=='Naaya Report Section'">
+				<div class="toc_edit_button" tal:condition="permission_edit">
+					<a tal:attributes="href string:${object/absolute_url}/edit_html">
+						<img src="misc_/Naaya/edit" style="border:0;" />
+					</a>
+				</div>
+					<span i18n:translate=""></span>
+					<!-- a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" / -->
+					<span tal:content="object/title_or_id" />
+			</div>
+
+				<tal:block define="objects object/getSections">
+					<div class="toc_section2" condition="objects">
+						<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
+					</div>
+				</tal:block>
+				
+		</li>
+	</tal:block>
+</ul>
+</tal:block>
+</tal:block>
