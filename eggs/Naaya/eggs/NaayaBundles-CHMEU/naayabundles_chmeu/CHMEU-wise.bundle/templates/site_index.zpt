@@ -70,7 +70,7 @@
 					<div class="page_title"><img tal:attributes="src string:${skin_files_path}/BISE-logo.png" alt="WISE" /></div>
 					<div class="page_subtitle"><div id="site-title" tal:content="here/site_title" /></div>
 					<div class="slider-info">
-						<p>- or more commonly known as WISE -is your gateway to information on European water issues. It comprises a wide range of of data and information collected by EU institutions to serve several stakeholders</p>
+						<p>&ndash; or more commonly known as WISE &ndash; is your gateway to information on European water issues. It comprises a wide range of of data and information collected by EU institutions to serve several stakeholders</p>
 						<p class="buttons-header">
 							<a tal:attributes="href string:${site_url}/info" i18n:translate=""><span>About WISE</span></a>
 							<a tal:attributes="href string:${site_url}/links" i18n:translate=""><span>Links</span></a>
