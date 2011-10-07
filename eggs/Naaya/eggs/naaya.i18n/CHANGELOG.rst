@@ -1,5 +1,9 @@
-1.0.1 (unreleased)
-----------------
+1.0.2 (unreleased)
+------------------
+
+1.0.1 (2011-10-07)
+------------------
+* _p_changed = 1 for deleting contenttype property on site
 
 1.0 (2011-10-06)
 ----------------
