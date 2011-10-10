@@ -23,9 +23,11 @@
               tal:attributes="href here/absolute_url" />
     </metal:block>
 
-    <metal:block tal:define="is_ratable here/is_ratable" fill-slot="body">
-        <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-            title here/get_meta_label; alt here/get_meta_label" />
+    <metal:block tal:define="is_ratable here/is_ratable;
+                              site_object_index python:(here.getFormsTool()
+                                                .getForm('site_object_index'))"
+                 fill-slot="body">
+        <h1><metal:block use-macro="site_object_index/macros/icon"/>
             <span tal:replace="here/title_or_id" />
             <tal:block condition="is_ratable"
                             replace="structure here/user_rating_view|nothing"/>
@@ -36,35 +38,30 @@
                     </span>
                 </span>
         </h1>
-        <tal:block tal:condition="python:here.checkPermissionEditObject()">
-        <div id="admin_this_folder">
-            <tal:block tal:condition="python: not here.hasVersion()">
-                <tal:comment condition="nothing">
-                    <!-- XXX Checkout makes not sense in this context -->
-                    <a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
-                </tal:comment>
-                <a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
-            </tal:block>
-            <tal:comment condition="nothing">
-                <!-- XXX Backward compatible. Remove checkout control in Naaya 2.0 -->
-            </tal:comment>
-            <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
-            <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"><span i18n:translate="">This item has been checked out by another user</span>(<span tal:replace="here/checkout_user" />)</strong>
-        </div>
-        </tal:block>
+
+        <metal:block use-macro="site_object_index/macros/action_buttons"/>
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 
         <!-- Map widget -->
-        <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
+        <tal:block condition="python:here.prop_details('geo_location')['show']"
+            content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
         <tr tal:condition="python:here.size()>0" tal:define="
             req_lang request/lang|nothing;
             downloadfilename python:here.downloadfilename(lang=req_lang)">
             <th i18n:translate="">Download</th>
             <td tal:define="download_url here/getDownloadUrl">
-                <a tal:define="size python:here.utShowSizeKb(here.size()); content_type here/content_type; content_type_title python:here.getContentTypeTitle(content_type)"
-                    tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
+                <a tal:define="size python:here.utShowSizeKb(here.size());
+					content_type here/content_type;
+					icon python:here.rstk.icon_for_content_type(content_type);
+					title python:icon['title'];
+					url python:icon['url'];"
+                    tal:attributes="href download_url">
+					<img tal:attributes="src python:icon['url'];
+										alt title;
+										title title" />
+					<span tal:replace="string:${downloadfilename} (${title}, ${size} Kb)"/></a>
             </td>
         </tr>
 
@@ -83,7 +80,7 @@
         </tr>
 
         <tal:block content="structure python: here.prop_display_tr('releasedate')" />
-        <tal:block content="structure python: here.prop_display_tr('contributor')" />
+        <metal:block use-macro="site_object_index/macros/contributor_tr" />
         <tal:block content="structure python: here.prop_display_tr('coverage')" />
 
           <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
