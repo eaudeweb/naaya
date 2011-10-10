@@ -1,5 +1,6 @@
 2.4.3 (unreleased)
 ------------------
+* adapted skel.nyexp to use the NaayaPageTemplate custom indexes for the News and Stories folders
 
 2.4.2 (2011-10-06)
 ------------------
