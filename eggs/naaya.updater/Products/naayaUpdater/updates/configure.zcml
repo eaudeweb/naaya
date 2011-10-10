@@ -362,4 +362,9 @@
       provides="..interfaces.IUpdateScript"
       component=".update_count_contenttype.UpdateCountContentType"
       permission="zope2.ViewManagementScreens" />
+	<utility
+      name="update_find_customised_indexes.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_find_customised_indexes.UpdateFindCustomIndexes"
+      permission="zope2.ViewManagementScreens" />
 </configure>
