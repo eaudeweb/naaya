@@ -1,3 +1,7 @@
+2.12.3 (unreleased)
+-------------------
+
+
 2.12.2 (2011-10-10)
 -------------------
 * Removed duplicate right portlets from the story and news custom templates
