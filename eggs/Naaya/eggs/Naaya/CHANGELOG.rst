@@ -1,7 +1,7 @@
-2.12.2 (unreleased)
+2.12.2 (2011-10-10)
 -------------------
-* created NaayaPageTemplates for the custom indexes of the News and Stories folders
-* refactor event_folder_index
+* Removed duplicate right portlets from the story and news custom templates
+  [dumitval]
 
 2.12.1 (2011-10-10)
 -------------------

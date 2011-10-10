@@ -43,12 +43,6 @@
 			//-->
 		</script>
 
-		<span style="float: right; width: 20%; word-wrap: break-word;">
-			<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-				<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-			</tal:block>
-		</span>
-
 		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
 			<metal:block use-macro="site_object_index/macros/icon"/>
 			<tal:block tal:replace="here/title_or_id" />
