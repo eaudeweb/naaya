@@ -23,6 +23,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 
 from interfaces import INyStory
@@ -491,6 +492,10 @@ InitializeClass(NyStory)
 manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
 manage_addNyStory_html.kind = config['meta_type']
 manage_addNyStory_html.action = 'addNyStory'
+
+#Custom folder index for stories
+NaayaPageTemplateFile('zpt/story_folder_index', globals(), 'story_folder_index')
+
 config.update({
     'constructors': (manage_addNyStory_html, addNyStory),
     'folder_constructors': [

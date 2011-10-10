@@ -44,13 +44,18 @@
 	</h1>
 	
 	<div class="folder_social">
-	    <tal:block content="structure here/set_content_rating" />
-	    <div class="folder_social_icons">
-		<a class="feed_link" tal:attributes="href string:${here/absolute_url}/index_atom"
-			i18n:translate="">&nbsp;</a>
-		<a class="facebook_link" tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">&nbsp;</a>
-		<a class="twitter_link" tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">&nbsp;</a>
-	    </div>
+		<tal:block content="structure here/set_content_rating" />
+		<div class="folder_social_icons">
+		<a class="feed_link"
+			tal:attributes="href string:${here/absolute_url}/index_atom">
+			&nbsp;</a>
+		<a class="facebook_link"
+			tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+			&nbsp;</a>
+		<a class="twitter_link"
+			tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+			&nbsp;</a>
+		</div>
 	</div>
 	</metal:block>
 

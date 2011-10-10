@@ -24,6 +24,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyBase import rss_item_for_object
 from Products.NaayaCore.managers.utils import slugify, uniqueId, get_nsmap
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.core import submitter
 from naaya.core.zope2util import abort_transaction_keep_session
 
@@ -512,6 +513,10 @@ InitializeClass(NyNews)
 manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
 manage_addNyNews_html.kind = config['meta_type']
 manage_addNyNews_html.action = 'addNyNews'
+
+#Custom folder index for news
+NaayaPageTemplateFile('zpt/news_folder_index', globals(), 'news_folder_index')
+
 config.update({
     'constructors': (manage_addNyNews_html, addNyNews),
     'folder_constructors': [
