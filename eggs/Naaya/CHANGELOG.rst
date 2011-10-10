@@ -1,5 +1,7 @@
 2.12.1 (unreleased)
 -------------------
+* created NaayaPageTemplates for the custom indexes of the News and Stories folders
+* refactor event_folder_index
 
 2.12.0 (2011-10-06)
 -------------------

@@ -1,0 +1,152 @@
+<metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
+
+<metal:block fill-slot="page-middle">
+	<tal:block define="objects_info python:here.getArchiveListing(here);
+						objects_list python:objects_info[2];
+						objects_delete_all python:objects_info[1];
+						objects_select_all python:objects_info[0]">
+
+		<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
+			<!--
+			function fCheckSelection() {
+				var frm = document.objectItems;
+				var i;
+				check = false;
+
+				for(i=0; i<frm.elements.length; i++) if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked) {
+					check = true;
+					break;
+					}
+
+				return check;
+				}
+			//-->
+		</script>
+
+		<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
+			<!--
+			function fDeleteObjects() {
+				if (fCheckSelection()) {
+					document.objectItems.action="deleteObjects";
+					document.objectItems.submit();
+					}
+				else alert('Please select one or more items to delete.');
+				}
+			//-->
+		</script>
+
+		<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
+			<!--
+			function fSetTopStoryObjects() {
+				document.objectItems.action="setTopStoryObjects";
+				document.objectItems.submit();}
+			//-->
+		</script>
+
+		<span style="float: right; width: 20%; word-wrap: break-word;">
+			<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+				<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+			</tal:block>
+		</span>
+
+		<h1 tal:define="site_object_index python:here.getFormsTool()['site_object_index']">
+			<metal:block use-macro="site_object_index/macros/icon"/>
+			<tal:block tal:replace="here/title_or_id" />
+			<tal:block tal:condition="python: here.can_be_seen() and here.has_restrictions()" i18n:translate="">
+				[Limited access]
+			</tal:block>
+			<tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
+				[Restricted access]
+			</tal:block>
+			<span class="available_langs" tal:condition="python:here.item_has_title(here, here.title)">
+				<span i18n:translate="">Item only translated in </span>
+				<span tal:repeat="lang here/gl_get_languages_map">
+					<a tal:content="python:' %s' % lang['title']"
+						tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+						tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+				</span>
+			</span>
+		</h1>
+		<div class="folder_social">
+			<tal:block content="structure here/set_content_rating" />
+			<div class="folder_social_icons">
+			<a class="feed_link"
+				tal:attributes="href string:${here/absolute_url}/index_atom">
+				&nbsp;</a>
+			<a class="facebook_link"
+				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+				&nbsp;</a>
+			<a class="twitter_link"
+				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+				&nbsp;</a>
+			</div>
+		</div>
+
+		<div class="folder_description">
+			<p tal:condition="python:here.description!=''"
+				tal:content="structure here/description" />
+		</div>
+
+	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
+		<metal:block fill-slot="menu_extension">
+			<span tal:replace="structure here/menusubmissions" />
+		</metal:block>
+		<metal:block fill-slot="toolbar_default">
+				<tal:block tal:condition="objects_delete_all">
+					<a href="javascript:fDeleteObjects();">
+						<span i18n:translate="">Delete</span>
+					</a>
+				</tal:block>
+
+				<tal:block tal:condition="objects_select_all">
+					<a href="javascript:fSetTopStoryObjects();">
+						<span i18n:translate="">Save on front</span>
+					</a>
+				</tal:block>
+		</metal:block>
+		<metal:block fill-slot="table_head_default">
+			<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="objects_delete_all">Delete</th>
+			<th i18n:translate="" style="width: 10%;">Release date</th>
+			<th class="title-column" i18n:translate="">Title</th>
+			<th style="width: 30%;" i18n:translate="">Source</th>
+			<th class="checkin" i18n:translate="" tal:condition="python:objects_select_all">On front</th>
+			<th class="edit" i18n:translate="" tal:condition="python:objects_select_all">Edit</th>
+		</metal:block>
+		<metal:block fill-slot="table_objects_default">
+			<tal:block define="del_permission object_info/del_permission;
+								edit_permission object_info/edit_permission;
+								object object_info/self">
+				<td class="checkbox" tal:condition="del_permission" width="4%" valign="top">
+					<input type="checkbox" name="id" tal:attributes="value object/id" />
+				</td>
+				<td class="releasedate">
+					<span tal:replace="python:object.utShowDateTime(object.releasedate)" />
+				</td>
+				<td class="title-column">
+					<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked);
+										alt object/meta_type;
+										title object/meta_type" />
+					<a tal:attributes="href object/absolute_url;
+										title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
+					<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+						[<span tal:replace="object/count_comments" />
+						<span i18n:translate="">comment(s)</span>]
+					</tal:block>
+				</td>
+				<td style="width:40%;">
+					<span tal:replace="python: object.utTruncateString(object.source, 40)" />
+				</td>
+				<td class="checkin" tal:condition="edit_permission">
+					<input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
+				</td>
+				<td class="edit" tal:condition="edit_permission">
+					<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html">
+						<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+					</a>
+				</td>
+			</tal:block>
+		</metal:block>
+	</metal:block>
+</tal:block>
+</metal:block>
+</metal:block>
