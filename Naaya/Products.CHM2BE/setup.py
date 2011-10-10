@@ -5,7 +5,7 @@ version = open('version.txt', 'r').read().strip()
 setup(name=NAME,
       version=version,
       description="CHM2BE",
-      long_description=open("README.txt").read() + "\n",
+      long_description="CHM2BE",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",
