@@ -1,7 +1,13 @@
-2.12.1 (unreleased)
+2.12.2 (unreleased)
 -------------------
 * created NaayaPageTemplates for the custom indexes of the News and Stories folders
 * refactor event_folder_index
+
+2.12.1 (2011-10-10)
+-------------------
+* Added NaayaPageTemplates for News and Stories custom folders [dumitval]
+* Moved content rating and folder social icons to top, fixed stykes [bogdatan]
+* Set focus on the username field on load [dumitval]
 
 2.12.0 (2011-10-06)
 -------------------
