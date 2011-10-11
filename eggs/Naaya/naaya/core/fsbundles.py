@@ -41,7 +41,11 @@ def register_bundle_factory(bundles_dir, name_prefix, parent_name):
     def filesystem_bundle_factory(site):
         def create_bundle():
             """ Create a writable bundle on demand. """
-            bundle_name = name_prefix + site.getId()
+            site_path = site.getPhysicalPath()
+            if site_path[0] == '': # remove first empty path
+                site_path = site_path[1:]
+            bundle_name = name_prefix + '-'.join(site_path)
+
             lsm = site.getSiteManager()
             site_parent = lsm.__bases__[0]
             parent_bundle = bundles.get(parent_name)
