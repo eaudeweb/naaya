@@ -1,5 +1,7 @@
 2.12.6 (unreleased)
 -------------------
+* Zip download link is no longer shown if there are no objects to download
+  [dumitval]
 
 2.12.5 (2011-10-11)
 -------------------
