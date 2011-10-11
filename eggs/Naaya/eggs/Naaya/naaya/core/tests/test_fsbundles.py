@@ -37,6 +37,7 @@ class FilesystemBundlesTest(unittest.TestCase):
         bar = foo.queryUtility(ITemplate, name='bar')
 
         self.assertTrue(bar is not None, "Template `bar` not found")
+        bar._cook_check()
         self.assertEqual(bar._text, "Hello Bar")
 
     def test_parent_bundle(self):
@@ -58,6 +59,7 @@ class FilesystemBundlesTest(unittest.TestCase):
             if tmpl is None:
                 return None
             else:
+                tmpl._cook_check()
                 return tmpl._text
 
         from naaya.core import fsbundles
