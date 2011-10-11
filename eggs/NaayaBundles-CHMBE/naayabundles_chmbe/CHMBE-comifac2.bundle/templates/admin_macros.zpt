@@ -1,0 +1,55 @@
+<tal:block metal:define-macro="head">
+	<head>
+		<tal:block define="dummy python:request.RESPONSE.setHeader('content-type','text/html;;charset=utf-8')" />
+		<title tal:content="here/title_or_id" />
+		<link rel="icon" href="../favicon.ico" />
+		<style type="text/css" media="screen">@import "http://www.biodiv.be/php/dev/reset.css";</style>
+		<style type="text/css" media="screen">@import "http://www.biodiv.be/test_layout_arnaud/portal_layout/littlemouse/littlemouse/administration";</style>
+		<script type="text/javascript" src="http://www.biodiv.be/php/biodiv/admin.js"></script>
+	<!--[if lt IE 7]>
+		<style type="text/css" media="screen">@import "http://www.biodiv.be/php/biodiv/adminIE6.css";</style>
+	<![endif]-->
+
+		<link rel="home" tal:attributes="href python:request['BASE0']" title="Home" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="description" tal:attributes="content here/title_or_id" />
+
+		<tal:block replace="structure here/epFromCookiesToSession" />
+	</head>
+</tal:block>
+
+<tal:block metal:define-macro="header">
+	<div id="header">
+	<a class="skiplink" href="#contentstart" accesskey="2" i18n:translate="">Skip navigation</a>
+		<div id="title_content">
+			<a tal:attributes="href site_url" i18n:translate="" accesskey="1" tal:content="here/site_title" />
+		</div>
+		<div id="language" tal:attributes="class here/gl_get_selected_language">
+			<span tal:replace="structure here/languages_box" />
+		</div>
+
+		<div id="log">
+			<div id="user_id" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
+				<span id="log1" class="logged" tal:condition="python: authenticated_user != 'Anonymous User'" i18n:translate="">You are logged in as:</span>
+				<span id="log2" class="logged" tal:condition="python: authenticated_user != 'Anonymous User'"><span tal:replace="authenticated_user"/></span>
+				<span id="log1" tal:condition="python: authenticated_user == 'Anonymous User'" i18n:translate="">You are not logged in</span>
+			</div>
+			<div id="connexion">
+				<span tal:condition="python:request['AUTHENTICATED_USER'].getUserName() == 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Login</a></span>
+					<span class="logged" tal:condition="python:request['AUTHENTICATED_USER'].getUserName() != 'Anonymous User'"><a tal:attributes="href string:${site_url}/admin_centre_html" i18n:translate="">Administration</a> |</span>
+					<span class="logged" tal:condition="python:request['AUTHENTICATED_USER'].getUserName() != 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></span>
+			</div>
+		</div>
+	</div>
+</tal:block>
+
+<tal:block metal:define-macro="footer">
+<div id="footer">
+<div class="horizlist">
+		<span i18n:translate="">Page last modified:</span> <span tal:replace="python:here.utShowDateTime(here.bobobase_modification_time())" /> | <a tal:attributes="href string:${site_url}/info/copyright" i18n:translate="">Copyright</a> | <a tal:attributes="href string:${site_url}/HelpDesk/" accesskey="9" i18n:translate="">Feedback and helpdesk</a> | <a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+
+</div>
+
+</div>
+
+</tal:block>

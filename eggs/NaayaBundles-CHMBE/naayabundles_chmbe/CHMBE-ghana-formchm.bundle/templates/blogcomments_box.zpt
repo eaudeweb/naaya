@@ -1,0 +1,29 @@
+<tal:block tal:condition="here/is_open_for_comments">
+	<hr class="hr_addcomment" />
+	<div class="commentbox_add">
+		<a tal:attributes="href string:${here/absolute_url}/blogcomment_add_html"
+     i18n:translate="" class="addcomment">Add comment</a>
+	</div>
+	<div tal:repeat="item here/get_comments_list"
+      class="comment_box">
+		<span tal:content="item/title" class="commentbox_title"
+        tal:condition="item/title">Comment Title Here</span>
+		<span style="font-size:95%;">
+			<span tal:replace="structure item/body" />
+		</span>
+		<hr class="hr_inside_comment" />
+		<a tal:condition="here/checkPermissionManageComments"
+     tal:attributes="href string:${here/absolute_url}/comment_del?id=${item/id}"
+     i18n:translate="" class="deletecomment">Delete comment</a>
+		<a tal:attributes="name item/id"></a>
+		<span class="commentbox_content">
+			<span tal:omit-tag="" i18n:translate="">Posted by</span>
+			<span tal:replace="item/author" /><tal:block
+    tal:condition="here/checkPermissionManageComments"> (<span
+    tal:content="item/email"></span>)</tal:block>
+			<span tal:omit-tag="" i18n:translate="">at</span>
+			<span tal:replace="python:here.utShowFullDateTime(item.date)" />
+		</span>
+		<div style="line-height:0.1em; height:2px;">&nbsp;</div>
+	</div>
+</tal:block>
