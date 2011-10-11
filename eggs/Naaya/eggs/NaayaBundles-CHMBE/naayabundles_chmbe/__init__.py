@@ -1,4 +1,4 @@
-PARENT_BUNDLE = 'CHM'
+PARENT_BUNDLE = 'CHMBE'
 BUNDLE_NAME_PREFIX = 'CHMBE-'
 
 def load_bundles():
