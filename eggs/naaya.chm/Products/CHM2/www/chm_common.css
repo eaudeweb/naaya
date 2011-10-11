@@ -209,11 +209,6 @@ padding: 0 0 0 2em;
 }
 /* End map styles */
 
-#center_content {
-	float: left;
-	width: 78%;
-}
-
 hr.hr_addcomment {
     clear: both;
 }
@@ -690,8 +685,9 @@ tr.tr-hover:hover {
 }
 
 #center_content {
+		float: left;
 		overflow-x: visible !important;
-		overflow-y: visible!important;
+		overflow-y: visible !important;
 		overflow: visible !important;
 		width: 78%;
 }
