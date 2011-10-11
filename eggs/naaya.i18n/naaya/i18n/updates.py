@@ -48,10 +48,10 @@ class LocalizerToNaayaI18n(UpdateScript):
          * delete Localizer and portal_translations
 
         """
-        if Localizer is None:
-            self.log.error('Migration unavailable when edw-localizer'
-                           ' not installed')
-            return False
+        #if Localizer is None:
+        #    self.log.error('Migration unavailable when edw-localizer'
+        #                   ' not installed')
+        #    return False
 
         if isinstance(portal.getPortalI18n(), NaayaI18n):
             self.log.debug("Portal already uses naaya.i18n, skipping i18n init")
@@ -166,12 +166,70 @@ class LocalizerToNaayaI18n(UpdateScript):
                 for (property, trans) in _local_properties.items():
                     if property not in obj._local_properties_metadata:
                         obj.set_localproperty(property, 'string')
+                    delete_keys = set()
                     for (lang, translation) in trans.items():
-                        if lang is None or not translation:
-                            del trans[lang]
+                        if not translation[0]:
+                            delete_keys.add(lang)
+                    if len(delete_keys):
+                        for key in delete_keys:
+                            del trans[key]
+                        obj._p_changed = 1
 
         self.log.debug("%d LocalAttribute-s deleted from OFS" % localprops_del_cnt)
         self.log.debug("%d LocalAttribute-s kept in OFS" % localprops_keep_cnt)
         self.log.debug('Migration is complete!')
+
+        return True
+
+class RemoveEmptyLangsOrTrans(UpdateScript):
+    """
+    Removes empty translations or empty languages in
+    local properties implementation
+
+    """
+    title = 'Remove Empty Lang-s or Translations in Local Props.'
+    creation_date = 'Oct 10, 2011'
+    authors = ['Mihnea Simian']
+    description = ('Removes empty translations or empty languages '
+                   'in _local_properties')
+    priority = PRIORITY['HIGH']
+
+    def _update(self, portal):
+        all_objects = itertools.chain([portal], ofs_walk(portal))
+
+        # this class is not used anymore:
+        no_trans = 0
+        for obj in all_objects:
+            # Part 0: if broken, report it
+            if isinstance(obj, BrokenClass):
+                self.log.error(("Object %r is broken! Unable to clean local"
+                                " properties, if any ") % obj)
+                continue
+
+            # Part 1: normalize representation of local properties
+            _local_properties = getattr(obj, '_local_properties', None)
+            if _local_properties is not None:
+                for (property, trans) in _local_properties.items():
+                    delete_keys = set()
+                    for (lang, translation) in trans.items():
+                        if not lang and translation[0]:
+                            delete_keys.add(lang)
+                            en_trans =  obj.getLocalProperty(property, 'en')
+                            if not en_trans:
+                                obj.set_localpropvalue(property, 'en', translation[0])
+                                self.log.info("Moved to 'En' translation for empty lang %s - %s: '%s'"
+                                              % (obj.absolute_url(), property, translation[0]))
+                            else:
+                                self.log.info("Removed translation for empty lang %s - %s: '%s', Keeping: '%s' for En"
+                                              % (obj.absolute_url(), property, translation[0], en_trans))
+                        if not translation[0]:
+                            delete_keys.add(lang)
+                    if len(delete_keys):
+                        no_trans += len(delete_keys)
+                        obj._p_changed = 1
+                    for key in delete_keys:
+                        del trans[key]
+
+        self.log.debug('%d empty translations removed' % no_trans)
 
         return True

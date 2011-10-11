@@ -1,5 +1,10 @@
-1.0.2 (unreleased)
+1.0.3 (unreleased)
 ------------------
+
+1.0.2 (2011-10-10)
+------------------
+* update script for cleaning empty translations on local
+  props
 
 1.0.1 (2011-10-07)
 ------------------
