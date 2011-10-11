@@ -42,6 +42,7 @@
 			</span>
 		</span>
 	</h1>
+	
 	<div class="folder_social">
 		<tal:block content="structure here/set_content_rating" />
 		<div class="folder_social_icons">
