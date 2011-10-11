@@ -1,9 +1,13 @@
+2.12.6 (unreleased)
+-------------------
+
 2.12.5 (2011-10-11)
 -------------------
+* Bundle names based on full site path [andredor]
 
 2.12.4 (2011-10-11)
 -------------------
-Style fix for indexes without right portlets
+* Style fix for indexes without right portlets [dumitval]
 
 2.12.3 (2011-10-11)
 -------------------
