@@ -16,7 +16,14 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+import os
 
 import FormsTool
 import LayoutTool
 import CHMSite
+
+def chmbe_bundle_registration():
+    """ Register things from skel into the Naaya bundle """
+    from Products.NaayaCore.FormsTool import bundlesupport
+    templates_path = os.path.join(os.path.dirname(__file__), 'skel', 'forms')
+    bundlesupport.register_templates_in_directory(templates_path, 'CHMBE')

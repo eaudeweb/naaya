@@ -19,6 +19,9 @@
 """ Patch CHMSite
 """
 from os.path import join
+
+from naaya.component import bundles
+
 from Products.CHM2.CHMSite import CHMSite
 from constants import CHM2BE_PRODUCT_PATH
 
@@ -30,3 +33,6 @@ def wrap_loadDefaultData(method):
 
 CHMSite.product_paths.append(CHM2BE_PRODUCT_PATH)
 CHMSite.loadDefaultData = wrap_loadDefaultData(CHMSite.loadDefaultData)
+
+chmbe_bundle = bundles.get("CHMBE")
+chmbe_bundle.set_parent(bundles.get("CHM"))
