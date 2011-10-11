@@ -85,10 +85,10 @@ except ImportError:
 
 # TODO: these should stay only in naaya containers,
 # but it seems they are used here
-CONTAINERS_METATYPES.extend([METATYPE_SEMIDESITE, METATYPE_NYCOUNTRY,
+CONTAINERS_METATYPES.extend([METATYPE_NYCOUNTRY,
                              METATYPE_NYPHOTOGALLERY,
                              METATYPE_NYSEMTHEMATICDIR])
-NAAYA_CONTAINERS_METATYPES.extend([METATYPE_SEMIDESITE, METATYPE_NYCOUNTRY,
+NAAYA_CONTAINERS_METATYPES.extend([METATYPE_NYCOUNTRY,
                                    METATYPE_NYPHOTOGALLERY,
                                    METATYPE_NYSEMTHEMATICDIR])
 

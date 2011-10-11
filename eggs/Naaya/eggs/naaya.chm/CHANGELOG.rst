@@ -1,5 +1,9 @@
-2.4.4 (unreleased)
+2.4.5 (unreleased)
 ------------------
+
+2.4.4 (2011-10-11)
+------------------
+* CHMSite no longer considered container #705 [simiamih]
 
 2.4.3 (2011-10-11)
 ------------------

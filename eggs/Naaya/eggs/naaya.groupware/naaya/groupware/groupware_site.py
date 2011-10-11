@@ -11,8 +11,6 @@ from Products.PythonScripts.PythonScript import manage_addPythonScript
 from zExceptions import BadRequest
 
 from Products.Naaya.NySite import NySite
-from Products.Naaya.NySite import (CONTAINERS_METATYPES,
-                                   NAAYA_CONTAINERS_METATYPES)
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
@@ -23,9 +21,6 @@ try:
     rdf_calendar_available = True
 except:
     rdf_calendar_available = False
-
-CONTAINERS_METATYPES.append('Groupware Site')
-NAAYA_CONTAINERS_METATYPES.append('Groupware Site')
 
 manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):

@@ -1,6 +1,9 @@
-2.12.3 (unreleased)
+2.12.4 (unreleased)
 -------------------
 
+2.12.3 (2011-10-11)
+-------------------
+* Sites are no longer considered container meta-types [simiamih]
 
 2.12.2 (2011-10-10)
 -------------------
