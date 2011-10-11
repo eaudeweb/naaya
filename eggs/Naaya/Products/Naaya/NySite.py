@@ -115,13 +115,13 @@ MAINTOPICS_SETTINGS = {
 
 # Other modules can alter these 2 lists. E.g.: CHMSite appends METATYPE_CHMSITE
 CONTAINERS_METATYPES = \
-    [METATYPE_NYSITE, METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery',
+    [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery',
      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
      'Naaya Consultation', 'Naaya Simple Consultation',
      'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
 NAAYA_CONTAINERS_METATYPES = \
-    [METATYPE_NYSITE, METATYPE_FOLDER, 'Naaya Photo Gallery',
+    [METATYPE_FOLDER, 'Naaya Photo Gallery',
      'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic',
      'Naaya Consultation', 'Naaya Simple Consultation',
      'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
