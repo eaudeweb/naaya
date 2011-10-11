@@ -5,7 +5,7 @@
 2.4.4 (2011-10-11)
 ------------------
 * CHMSite no longer considered container #705 [simiamih]
-
+* Fixed path of social icons (for folder index) to work for the existing CHMSites too [bogdatan]
 2.4.3 (2011-10-11)
 ------------------
 * adapted skel.nyexp to use the NaayaPageTemplate custom indexes for the News and Stories folders [dumitval]
