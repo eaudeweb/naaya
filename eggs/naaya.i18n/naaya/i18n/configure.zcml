@@ -21,4 +21,10 @@
       component=".updates.LocalizerToNaayaI18n"
       permission="zope2.ViewManagementScreens" />
 
+   <naaya:utility
+      name="RemoveEmptyLangsOrTrans.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.RemoveEmptyLangsOrTrans"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
