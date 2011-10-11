@@ -1,6 +1,11 @@
-2.4.3 (unreleased)
+2.4.4 (unreleased)
 ------------------
-* adapted skel.nyexp to use the NaayaPageTemplate custom indexes for the News and Stories folders
+
+2.4.3 (2011-10-11)
+------------------
+* adapted skel.nyexp to use the NaayaPageTemplate custom indexes for the News and Stories folders [dumitval]
+* style improvements; icons for feeds, facebook and twitter (for folder
+  index) [bogdatan]  
 
 2.4.2 (2011-10-06)
 ------------------
