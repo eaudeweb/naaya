@@ -1,5 +1,6 @@
 2.4.5 (unreleased)
 ------------------
+* Style improvements for indexes without right portlets
 
 2.4.4 (2011-10-11)
 ------------------

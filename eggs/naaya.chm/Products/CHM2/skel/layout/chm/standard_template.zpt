@@ -139,7 +139,7 @@
                         <tr>
                             <td id="left_cell1"></td>
                             <td rowspan="2" id="center_cell">
-                                <div id="location-bar">
+                                <div id="location-bar" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 77%;;', 'width: 99%;;')">
                                     <div id="width_forcer"></div>
                                     <div id="location_border_cover">
 
