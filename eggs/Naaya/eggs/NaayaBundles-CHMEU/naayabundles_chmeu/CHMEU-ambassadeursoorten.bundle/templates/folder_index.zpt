@@ -45,17 +45,17 @@
 	<div class="folder_social">
 		<tal:block content="structure here/set_content_rating" />
 		<div class="folder_social_icons">
-			<a class="feed_link"
-				tal:attributes="href string:${here/absolute_url}/index_atom">
-				&nbsp;</a>
-			<a class="facebook_link"
-				tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
-				&nbsp;</a>
-			<a class="twitter_link"
-				tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
-				&nbsp;</a>
+		<a class="feed_link"
+			tal:attributes="href string:${here/absolute_url}/index_atom">
+			&nbsp;</a>
+		<a class="facebook_link"
+			tal:attributes="href string:http://www.facebook.com/sharer.php?u=${here/absolute_url}">
+			&nbsp;</a>
+		<a class="twitter_link"
+			tal:attributes="href string:http://twitter.com/intent/tweet?text=${here/absolute_url}">
+			&nbsp;</a>
 		</div>
-	</div> 
+	</div>
 	</metal:block>
 
 	<div class="folder_description">
@@ -73,12 +73,13 @@
 	</metal:block>
 
 	<div id="folder_footer" class="folder_footer">
-		<a class="download_link"
-			href="./zip_export/do_export"
-			title="Download the contents of this folder to a Zip file"
-			tal:condition="python: here.checkPermission('Naaya - Zip export')"
-			i18n:attributes="title"
-			i18n:translate="">Zip download</a>
+	    
+	    <a class="download_link"
+		    href="./zip_export/do_export"
+		    title="Download the contents of this folder to a Zip file"
+		    tal:condition="python: here.checkPermission('Naaya - Zip export')"
+		    i18n:attributes="title"
+		    i18n:translate="">Zip download</a>
 	</div>
 
 	<tal:block repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
