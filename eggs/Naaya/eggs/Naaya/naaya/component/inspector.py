@@ -71,7 +71,7 @@ class InspectorView(BrowserView):
     def can_get_diff(self, utility_registrations):
         if len(utility_registrations) < 2:
             return False
-        for ur1, ur2 in zip(utility_registrations, utility_registrations[1:]):
+        for ur1, ur2 in zip(utility_registrations[1:], utility_registrations):
             if queryMultiAdapter((ur1.component, ur2.component), IDiff):
                 return True
         return False
@@ -88,7 +88,7 @@ class InspectorDiffView(InspectorView):
             return []
 
         ret = []
-        for ur1, ur2 in zip(utility_registrations, utility_registrations[1:]):
+        for ur1, ur2 in zip(utility_registrations[1:], utility_registrations):
             diff = queryMultiAdapter((ur1.component, ur2.component, ), IDiff)
             if diff is not None:
                 ret.append({
