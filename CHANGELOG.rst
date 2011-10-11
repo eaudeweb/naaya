@@ -1,6 +1,9 @@
-2.4.5 (unreleased)
+2.4.6 (unreleased)
 ------------------
-* Style improvements for indexes without right portlets
+
+2.4.5 (2011-10-11)
+------------------
+* Style improvements for indexes without right portlets [dumitval]
 
 2.4.4 (2011-10-11)
 ------------------
