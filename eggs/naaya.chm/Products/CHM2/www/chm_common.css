@@ -2,26 +2,63 @@ a.feed_link,
 a.facebook_link,
 a.twitter_link,
 a.download_link {
-	padding-left: 25px;
+	padding: 0;
 	line-height: 1.8;
 	display: inline-block;
 	height: 20px;
+	width: 20px;
+	text-decoration: none !important;
 }
 
 a.feed_link {
-	background: transparent url('rss.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/rss.png') no-repeat scroll left center;
 }
 
 a.facebook_link {
-	background: transparent url('facebook.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/facebook.png') no-repeat scroll left center;
 }
 
 a.twitter_link {
-	background: transparent url('twitter.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/twitter.png') no-repeat scroll left center;
 }
 
 a.download_link {
-	background: transparent url('download.png') no-repeat scroll left center;
+	background: transparent url('misc_/Naaya/download.png') no-repeat scroll left center;
+	float: right;
+	width: auto;
+	padding-left: 25px;
+}
+
+.folder_social {
+	width: 100%;
+	display: inline-block;
+	clear: both;
+	position: relative;
+}
+
+#ratings {
+	float: left;
+	text-align: left;
+	display: block;
+}
+
+#user-rating-edit {
+	float: left;
+}
+
+.ratings_message {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	border: 1px solid #FFD06D;
+	background: #FFFDE5;
+	padding: 3px;
+	position: relative;
+	top: -3px;
+}
+
+.folder_social_icons {
+	display: block;
 	float: right;
 }
 
@@ -660,13 +697,21 @@ tr.tr-hover:hover {
 }
 
 #folderfile_list {
-    width: 100%;
+                width: 100%;
 }
 
 #folder_footer {
 		margin: 10px auto;
 		position: relative;
-		width: 97%;
+		width: 100%;
+}
+
+#folder_listing {
+	padding: 0 !important;
+}
+
+select.more_actions {
+	float: right;
 }
 
 /**
