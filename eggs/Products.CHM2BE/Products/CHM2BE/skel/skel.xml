@@ -6,6 +6,7 @@
 	<forms>
 		<form id="site_admin_template" title="Portal administration - macro"/>
 		<form id="admin_languages_box" title="Portal administration language box"/>
+		<form id="languages_box" title="Portal language box"/>
 	</forms>
 	<layout diskpath_prefix="Products.CHM2BE:skel">
 		<skin id="chm-admin" title="CHM Admin">
