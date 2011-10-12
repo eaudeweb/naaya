@@ -138,7 +138,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.objmap_height_px = 400
         self.objmap_width_px = 400
         self.objmap_zoom = 14
-        self.set_map_engine('google')
+        self.set_map_engine('openlayers')
 
     def _create_map_engine_if_needed(self):
         name = self.current_engine
@@ -1090,9 +1090,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def get_object_map_zoom_level(self):
         if self.current_engine == 'yahoo':
             return 18 - self.objmap_zoom
-        elif self.current_engine == 'google':
-            return self.objmap_zoom
-        elif self.current_engine == 'bing':
+        elif self.current_engine in ['google', 'bing', 'openlayers']:
             return self.objmap_zoom
         else:
             return None
