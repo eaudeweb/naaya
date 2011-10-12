@@ -1,5 +1,6 @@
 2.12.6 (unreleased)
 -------------------
+* Fix news and stories folder sort order [andredor]
 * Zip download link is no longer shown if there are no objects to download
   [dumitval]
 
