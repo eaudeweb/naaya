@@ -20,6 +20,7 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
                        path python:request.get('path', '');
                        height python:request.get('height', here.map_height_px)">
 <tal:block content="structure python:here.setup_map_engine_html(request)" />
+<script src="++resource++naaya.chm_nl.www/chm_nl-map.js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/map_i18n_js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 <script tal:content="structure python:'var portal_map_url=%s;' % here.rstk.json_dumps(here.absolute_url())"></script>
@@ -151,7 +152,23 @@ dummy python:should_redirect and request.RESPONSE.redirect(here.getSite().kaart.
 <script type="text/javascript">
 // not using document.ready because then IE6 won't load yahoo maps :(
 showPageElements();
-window.map_engine = naaya_map_engine.portal_map('map');
+if (naaya_map_engine.name == 'bing') {
+    // bing has problems sometimes on FF, need to wait to init
+    var interval = setInterval(function(){
+        if ((eval("typeof VEMap") != "undefined")
+        && (document.getElementById("map").attachEvent != undefined))
+        {
+            clearInterval(interval);
+            window.naaya_portal_map = naaya_map_engine.portal_map('map');
+        }
+    }, 10);
+} else {
+    window.naaya_portal_map = naaya_map_engine.portal_map('map');
+}
+
+// TODO `map_engine` is for backwards compatibility because the name is
+// wrong; we should remove it at some point.
+window.map_engine = naaya_portal_map;
 
 // don't submit the form, just refresh our map
 $('form[name=frmFilterMap]').submit(function(evt) {
