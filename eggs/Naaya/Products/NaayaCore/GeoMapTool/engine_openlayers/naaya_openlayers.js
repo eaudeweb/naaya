@@ -29,7 +29,8 @@
             width: icon_data['w'],
             height: icon_data['h'],
             offset_x: -icon_data['w'] / 2,
-            offset_y: -icon_data['h']
+            offset_y: -icon_data['h'],
+            color: icon_data['color']
         };
     });
 
@@ -213,9 +214,14 @@
     engine.new_portal_map_marker = function(place, collection) {
         var lonlat = new OpenLayers.LonLat(place.lon, place.lat);
         var i = engine.geotype_icons[place.icon_name];
-        var icon = engine.new_icon(i['url'],
-            i['width'], i['height'],
-            i['offset_x'], i['offset_y']);
+        if(i['color']) {
+            var icon = engine.new_icon(i['url'] + '&size=12', 12, 12, -6, -6);
+        }
+        else {
+            var icon = engine.new_icon(i['url'],
+                                       i['width'], i['height'],
+                                       i['offset_x'], i['offset_y']);
+        }
 
         var marker = engine.new_marker({
             lonlat: lonlat,
@@ -235,8 +241,38 @@
 
         function setup_event_handlers() {
             marker._ol_marker.events.register("click", null, function() {
-                map_marker_clicked(place);
+                var balloon = map_marker_clicked(place);
+                marker._has_balloon = true;
+                update_icon();
+                balloon.destroy(function() {
+                    marker._has_balloon = false;
+                    update_icon();
+                });
             });
+
+            if(i['color']) {
+                marker._ol_marker.events.register("mouseover", null, function() {
+                    marker._mouse_over = true;
+                    update_icon();
+                });
+
+                marker._ol_marker.events.register("mouseout", null, function() {
+                    marker._mouse_over = false;
+                    update_icon();
+                });
+            };
+        }
+
+        function update_icon() {
+            var large = (marker._mouse_over || marker._has_balloon);
+            var size = (large ? 16 : 12);
+            var url = i['url'] + (large ? '&size=16&halo=on' : '&size=12');
+            var offset = new OpenLayers.Pixel(-size/2, -size/2);
+            var icon = marker._ol_marker.icon
+            icon.offset = offset;
+            icon.setSize(new OpenLayers.Size(size, size));
+            icon.setUrl(url);
+            icon.moveTo(icon.px); // force offset calculation
         }
     };
 

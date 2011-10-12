@@ -1,16 +1,16 @@
 
-try:
-    from PIL import Image
-except ImportError:
-    have_pil = False
-else:
-    have_pil = True
 from StringIO import StringIO
+import re
+import PIL.Image
+import PIL.ImageDraw
+
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 from naaya.core.backport import namedtuple
+
+CIRCLE_IMAGE_SIZE = 12
 
 ImageSize = namedtuple('ImageSize', 'w h')
 
@@ -18,18 +18,20 @@ class symbol_item:
     """ """
 
     sortorder = 100
+    color = None
 
     @property
     def image_size(self):
         # temporary, until we're sure all symbol_item objects have the property
         return self._calculate_image_size()
 
-    def __init__(self, id, title, description, parent, picture, sortorder):
+    def __init__(self, id, title, description, parent, color, picture, sortorder):
         self.id = id
         self.title = title
         self.description = description
         self.parent = parent
         self.setPicture(picture)
+        self.color = color
         try:
             self.sortorder = int(sortorder)
         except:
@@ -47,14 +49,30 @@ class symbol_item:
             else:
                 self.picture = picture
 
-        self.__dict__['image_size'] = self._calculate_image_size()
+        if self.picture is not None:
+            self.__dict__['image_size'] = self._calculate_image_size()
+        else:
+            if 'image_size' in self.__dict__:
+                del self.__dict__['image_size']
 
     def _calculate_image_size(self):
-        if not have_pil or self.picture is None:
+        if self.color is not None:
+            return ImageSize(CIRCLE_IMAGE_SIZE, CIRCLE_IMAGE_SIZE)
+
+        if self.picture is None:
             return ImageSize(16, 16) # guess a plausible value
 
-        image = Image.open(StringIO(self.picture))
+        image = PIL.Image.open(StringIO(self.picture))
         return ImageSize(*image.size)
+
+    def getPicture(self, options={}):
+        if self.color is None:
+            return self.picture
+
+        else:
+            size = int(options.get('size', CIRCLE_IMAGE_SIZE))
+            halo = bool(options.get('halo', False))
+            return colored_circle(size, self.color, halo)
 
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
@@ -68,18 +86,18 @@ class symbols_tool:
         """ """
         self.__symbol_collection = {}
 
-    def __addSymbol(self, id, title, description, parent, picture, sortorder):
+    def __addSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
-        if not picture:
+        if color is None and not picture:
             raise ValueError('A picture is required to add symbol')
 
-        obj = symbol_item(id, title, description, parent, None, sortorder)
+        obj = symbol_item(id, title, description, parent, color, None, sortorder)
         obj.setPicture(picture)
         self.__symbol_collection[id] = obj
 
-    def __updateSymbol(self, id, title, description, parent, picture, sortorder):
+    def __updateSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
-        if not picture:
+        if color is None and not picture:
             raise ValueError('A picture is required to update symbol')
 
         try: obj = self.__symbol_collection[id]
@@ -98,6 +116,8 @@ class symbols_tool:
                 obj.sortorder = int(sortorder)
             except:
                 obj.sortorder = 100
+
+            obj.color = color
             obj._p_changed = 1
 
     def __deleteSymbol(self, id):
@@ -142,11 +162,27 @@ class symbols_tool:
         """ """
         ob = self.getSymbol(id)
         if ob is not None:
-            return {'action': 'update', 'id': ob.id, 'title': ob.title,
-                'description': ob.description, 'parent': ob.parent, 'picture': ob.picture, 'sortorder': ob.sortorder}
+            return {
+                'action': 'update',
+                'id': ob.id,
+                'title': ob.title,
+                'description': ob.description,
+                'parent': ob.parent,
+                'color': ob.color,
+                'picture': ob.picture,
+                'sortorder': ob.sortorder,
+            }
         else:
-            return {'action': 'add', 'id': '', 'title': '',
-                'description': '', 'parent': '', 'picture': None, 'sortorder': 100}
+            return {
+                'action': 'add',
+                'id': '',
+                'title': '',
+                'description': '',
+                'parent': '',
+                'color': None,
+                'picture': None,
+                'sortorder': 100,
+            }
 
     def getSymbolTitle(self, id):
         """Get title"""
@@ -164,22 +200,25 @@ class symbols_tool:
             return self.__symbol_collection[id].picture
         except: return None
 
-    def getSymbolPicture(self, id, REQUEST=None):
+    def getSymbolPicture(self, id, REQUEST):
         """Get picture stream"""
-        if id.startswith('symbol_cluster'):
-            try:
-                idx = int(id[len('symbol_cluster_'):])
-            except: return None
-            try:
-                REQUEST.RESPONSE.setHeader('Content-Type', 'image/jpeg')
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'inline; filename="%s.jpg"' % id)
-                return self._cluster_pngs[idx].index_html(REQUEST, REQUEST.RESPONSE)
-            except: return None
+        RESPONSE = REQUEST.RESPONSE
+
         try:
-            REQUEST.RESPONSE.setHeader('Content-Type', 'image/jpeg')
-            REQUEST.RESPONSE.setHeader('Content-Disposition', 'inline; filename="%s.jpg"' % id)
-            return self.__symbol_collection[id].picture
-        except: return None
+            RESPONSE.setHeader('Content-Type', 'image/jpeg')
+            RESPONSE.setHeader('Content-Disposition',
+                               'inline; filename="%s.jpg"' % id)
+
+            if id.startswith('symbol_cluster'):
+                idx = int(id[len('symbol_cluster_'):])
+                return self._cluster_pngs[idx].index_html(REQUEST, RESPONSE)
+
+            symbol = self.__symbol_collection[id]
+
+            return symbol.getPicture(dict(REQUEST.form))
+
+        except:
+            return None
 
     def updateSymbols(self):
         """ """
@@ -215,14 +254,14 @@ class symbols_tool:
             self.__symbol_collection[obj.id] = newobj
         self._p_changed = 1
 
-    def addSymbol(self, id, title, description, parent, picture, sortorder):
+    def addSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
-        self.__addSymbol(id, title, description, parent, picture, sortorder)
+        self.__addSymbol(id, title, description, parent, color, picture, sortorder)
         self._p_changed = 1
 
-    def updateSymbol(self, id, title, description, parent, picture, sortorder):
+    def updateSymbol(self, id, title, description, parent, color, picture, sortorder):
         """ """
-        self.__updateSymbol(id, title, description, parent, picture, sortorder)
+        self.__updateSymbol(id, title, description, parent, color, picture, sortorder)
         self._p_changed = 1
 
     def deleteSymbol(self, ids):
@@ -235,3 +274,31 @@ class symbols_tool:
 
 InitializeClass(symbols_tool)
 
+
+def parse_color(value, _color_pattern=re.compile(
+        r'^#(?P<R>[0-9a-f]{2})(?P<G>[0-9a-f]{2})(?P<B>[0-9a-f]{2})$')):
+    m = _color_pattern.match(value.lower())
+    if m is None:
+        raise ValueError("Invalid color spec: %r" % value)
+    return (
+        int(m.group('R'), 16),
+        int(m.group('G'), 16),
+        int(m.group('B'), 16),
+    )
+
+
+def colored_circle(size, color, halo=False):
+    image_2x = PIL.Image.new("RGBA", (size*2, size*2), (128, 128, 128, 0))
+    draw = PIL.ImageDraw.Draw(image_2x)
+
+    if halo:
+        draw.ellipse((1, 1, size*2-2, size*2-2), fill=parse_color('#000000'))
+        draw.ellipse((4, 4, size*2-5, size*2-5), fill=parse_color('#ffffff'))
+        draw.ellipse((7, 7, size*2-8, size*2-8), fill=parse_color(color))
+    else:
+        draw.ellipse((1, 1, size*2-2, size*2-2), fill=parse_color(color))
+
+    image = image_2x.resize((size, size), PIL.Image.ANTIALIAS)
+    data = StringIO()
+    image.save(data, "PNG")
+    return data.getvalue()

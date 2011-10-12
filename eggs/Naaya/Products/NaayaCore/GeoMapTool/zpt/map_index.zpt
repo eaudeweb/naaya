@@ -63,15 +63,13 @@
 							<li>
 								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox" style="display: none;"
 									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
-								<img tal:condition="python:item.picture is not None"
-									tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" width="16" height="16" />
+								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
 								<label tal:attributes="for item/id"><span i18n:translate="" tal:content="item/title" /></label>
 								<ul tal:condition="children" class="category_child">
 									<li tal:repeat="child children">
 										<input type="checkbox" name="geo_types:list"
 											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
-										<img tal:condition="python:child.picture is not None"
-											tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" width="16" height="16" />
+										<img tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
 										<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 									</li>
 								</ul>
