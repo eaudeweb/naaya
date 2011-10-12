@@ -40,8 +40,17 @@ function load_map_points(bounds, callback) {
                 naaya_map_i18n["Type location address"]), "");
     enc_form = enc_form.replace(encode_form_value(
                 naaya_map_i18n["Type keywords"]), "");
-    var url = portal_map_url + "/xrjs_getGeoClusters?" +
+
+    var url;
+    if(naaya_map_engine.config['cluster_points']) {
+        url = portal_map_url + "/xrjs_getGeoClusters?" +
               str_bounds + '&' + enc_form + '&geo_query=' + query;
+    }
+    else {
+        url = portal_map_url + "/xrjs_getGeoPoints?" +
+              str_bounds + '&' + enc_form + '&geo_query=' + query;
+    }
+
     $.ajax({
         url: url,
         dataType: 'json',

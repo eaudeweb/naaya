@@ -124,6 +124,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         {'label': 'Admin', 'action': 'admin_map_html'},
     ) + Folder.manage_options[2:]
 
+    cluster_points = True
+
     def __init__(self, id, title):
         """
         Initialize variables.
@@ -1052,15 +1054,18 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
     def manageProperties(self, REQUEST):
         """ """
+        form = dict(REQUEST.form)
+        form.setdefault('cluster_points', False)
         for key in ('initial_address', 'map_height_px',
-                    'objmap_height_px', 'objmap_width_px', 'objmap_zoom'):
-            setattr(self, key, REQUEST.form[key])
+                    'objmap_height_px', 'objmap_width_px', 'objmap_zoom',
+                    'cluster_points'):
+            setattr(self, key, form[key])
 
-        new_engine = REQUEST.form['engine']
+        new_engine = form['engine']
         if new_engine != self.current_engine:
             self.set_map_engine(new_engine)
         else:
-            self.get_map_engine().save_config(REQUEST.form)
+            self.get_map_engine().save_config(form)
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('%s/admin_map_html' %
@@ -1075,6 +1080,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             'initial_address': self.initial_address,
             'icons': list(self.get_geotype_icons()),
             'objmap_zoom': self.get_object_map_zoom_level(),
+            'cluster_points': self.cluster_points,
         }
         global_config.update(kwargs)
 

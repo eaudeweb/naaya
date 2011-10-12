@@ -26,6 +26,14 @@
     </div>
 
     <div class="field-inline">
+        <label for="form-cluster_points"
+               i18n:translate="">Cluster points</label>
+        <input type="checkbox" name="cluster_points:boolean"
+               id="form-cluster_points"
+               tal:attributes="checked here/cluster_points" />
+    </div>
+
+    <div class="field-inline">
         <span i18n:translate="">Object index map</span>
         <label for="form-objmap_height_px"
                i18n:translate="">height (px)</label>
