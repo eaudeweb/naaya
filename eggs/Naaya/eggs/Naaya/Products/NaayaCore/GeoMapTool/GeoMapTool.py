@@ -575,6 +575,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                         (self.absolute_url(), i)),
                 'w': 32,
                 'h': 32,
+                'color': None,
             }
 
         for symbol in self.getSymbolsList():
@@ -585,6 +586,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                         (self.absolute_url(), symbol.id)),
                 'w': size.w,
                 'h': size.h,
+                'color': symbol.color,
             }
 
     def get_location_marker(self, location):
@@ -687,12 +689,18 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
-    def adminAddSymbol(self, title='', description='', parent='', picture='',
-                       sortorder='', REQUEST=None):
+    def adminAddSymbol(self, title='', description='', parent='',
+                       color='', picture='', sortorder='', REQUEST=None):
         """ """
+        if color:
+            picture = None
+        else:
+            color = None
+
         try:
-            self.addSymbol('symbol%s' % self.utGenRandomId(3), title,
-                           description, parent, picture, sortorder)
+            id = 'symbol%s' % self.utGenRandomId(3)
+            self.addSymbol(id, title, description, parent,
+                           color, picture, sortorder)
         except ValueError, e:
             if REQUEST is None:
                 raise
@@ -708,11 +716,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
     def adminUpdateSymbol(self, id='', title='', description='', parent='',
-                          picture='', sortorder='', REQUEST=None):
+                          color='', picture='', sortorder='', REQUEST=None):
         """ """
+        if color:
+            picture = None
+        else:
+            color = None
+
         try:
             self.updateSymbol(id, title, description, parent,
-                              picture, sortorder)
+                              color, picture, sortorder)
         except ValueError, e:
             if REQUEST is None:
                 raise

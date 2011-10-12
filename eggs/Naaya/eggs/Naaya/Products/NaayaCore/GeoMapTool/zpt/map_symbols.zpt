@@ -44,22 +44,16 @@
 				</tal:block>
 			</select>
 		</dd>
+
 		<dt>
 			<tal:block i18n:translate="">Icon</tal:block>
 			<span class="mandatory_field">*</span>
 		</dt>
-		<dd i18n:translate="">The picture you upload will be scaled at 16x16 pixels when displayed
-			on the map so it is recommended to create it with these dimensions from the start and make it
-			transparent. Picture types allowed on the map: <strong i18n:name="png">.PNG</strong>, <strong i18n:name="gif">.GIF</strong>.</dd>
-		<dd><div i18n:translate="">Example pins (download the image on your computer and upload it below):</div>
-			<tal:block repeat="i python:range(1,20)">
-				<img tal:attributes="src string:misc_/NaayaCore/pin${i}.png; alt string:pin${i}.png" />
-			</tal:block><br />
-			<tal:block repeat="i python:range(1,14)">
-				<img tal:attributes="src string:misc_/NaayaCore/pin_22_${i}.png; alt string:pin_22_${i}.png" />
-			</tal:block>
+		<dd>
+			Specify color <input name="color" size="10" tal:attributes="value record_data/color" />
+			or <input type="file" name="picture" value="" size="35" accept="image/*" />
 		</dd>
-		<dd><input type="file" name="picture" value="" size="35" accept="image/*" /></dd>
+
 		<dd tal:condition="record_data/picture"><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></dd>
 		<dt i18n:translate="">Sort order</dt>
 		<dd><input id="sortorder" type="text" name="sortorder" size="2"
@@ -144,7 +138,7 @@
 	<tr tal:repeat="record python:here.getSymbolsListOrdered(skey, rkey)">
 		<td><input type="checkbox" name="id" tal:attributes="value record/id" /></td>
 		<td>
-			<img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" />
+			<img tal:condition="python:record.color is not None or record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" />
 			<a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title"></a>
 		</td>
 		<td tal:content="python:here.getSymbolTitle(record.parent)" />
