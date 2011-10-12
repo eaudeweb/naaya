@@ -1,8 +1,8 @@
 <metal:block define-macro="page" extend-macro="python:here.getSite().getFormsTool().getForm('folder_index').macros['page']">
 
 <metal:block fill-slot="page-middle">
-	<tal:block define="objects_info python:here.getArchiveListing(here);
-						objects_list python:objects_info[2];
+	<tal:block define="folder_listing_info python: here.folder_listing_info(sort_on='releasedate', sort_order=1);
+						objects_info python:here.getArchiveListing(here);
 						objects_delete_all python:objects_info[1];
 						objects_select_all python:objects_info[0]">
 
