@@ -234,29 +234,79 @@ function showPageElements() {
 	displayParentCheckboxes();
 }
 
+var new_naaya_map_balloon = function(options) {
+    var balloon = {
+        div: $('<div>')[0],
+        destroy_callbacks: []
+    };
+
+    var content_div = $('<div>')[0];
+
+    var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>');
+    close_button.css({color: '#999', float: 'right'});
+    close_button.click(function(){ balloon.destroy(); });
+
+    var balloon_div = $(balloon['div']);
+    $(balloon['div']).append(close_button, content_div);
+
+    balloon.show = function(options) {
+        $(balloon['div']).appendTo(options['parent']).css({
+            position: 'absolute',
+            border: '2px solid #999',
+            background: 'white',
+            padding: '5px',
+            'z-index': 1020,
+            left: options['left'],
+            top: options['top']
+        });
+        return balloon;
+    };
+
+    balloon.html = function(html) {
+        $(content_div).html(html);
+        return balloon;
+    };
+
+    balloon.destroy = function(callback) {
+        if(arguments.length == 0) {
+            $(balloon['div']).remove();
+            $.each(balloon.destroy_callbacks, function(i, callback) {
+                callback();
+            });
+        }
+        else {
+            balloon.destroy_callbacks.push(callback);
+        }
+        return balloon;
+    };
+
+    return balloon;
+};
+
+var custom_balloon_singleton = null;
+var clear_custom_balloon = function() {
+    if(custom_balloon_singleton != null) {
+        custom_balloon_singleton.destroy();
+        custom_balloon_singleton = null;
+    }
+}
+
 function custom_balloon(lat, lon, content) {
     clear_custom_balloon();
-    var map_jq = $('#map');
-    var css = {
-        position: 'absolute',
-        border: '2px solid #999',
-        background: 'white',
-        padding: '5px',
-        'z-index': 1000
-    };
+    var balloon = custom_balloon_singleton = new_naaya_map_balloon();
+    balloon.html(content);
+
+    var map_div = $('#map');
     var point_position = map_engine.page_position(lat, lon);
-    css.left = point_position.x + map_jq.position().left - 70;
-    css.top = map_jq.offset().top + point_position.y;
 
-    var balloon = $('<div>').css(css);
-    var close_button = $('<a>[' + naaya_map_i18n["close"] + ']</a>').css({color: '#999', float: 'right'});
-    close_button.click(function(){ clear_custom_balloon(); });
-    balloon.append(close_button, $('<div>').html(content));
-    map_jq.parent().append(balloon);
+    balloon.show({
+        left: point_position.x + map_div.offset().left - 70,
+        top: map_div.offset().top + point_position.y + 10,
+        parent: map_div.parent()
+    });
 
-    clear_custom_balloon = function() { balloon.remove(); }
+    return balloon;
 }
-var clear_custom_balloon = function() {}
 
 var MAP_CLUSTER_ZOOM_RESOLUTION_THRESHOLD = 100;
 
@@ -277,9 +327,11 @@ function map_marker_clicked(point) {
         point_id_list = points_nearby(map_engine.get_current_places(),
                                       point.lat, point.lon, radius);
     }
+    var balloon = custom_balloon(point.lat, point.lon, "loading...");
     load_marker_balloon(point_id_list, function(html) {
-        custom_balloon(point.lat, point.lon, html);
+        balloon.html(html);
     });
+    return balloon;
 }
 
 function onclickpoint(lat, lon, point_id, point_tooltip) {
