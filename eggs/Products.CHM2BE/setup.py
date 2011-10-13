@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
 NAME = 'Products.CHM2BE'
-version = open('version.txt', 'r').read().strip()
 
 setup(name=NAME,
-      version=version,
+      version='1.0.2',
       description="CHM2BE",
       long_description="CHM2BE",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
