@@ -200,25 +200,34 @@ class symbols_tool:
             return self.__symbol_collection[id].picture
         except: return None
 
-    def getSymbolPicture(self, id, REQUEST):
+    def getSymbolPicture(self, id, REQUEST=None):
         """Get picture stream"""
-        RESPONSE = REQUEST.RESPONSE
-
-        try:
-            RESPONSE.setHeader('Content-Type', 'image/jpeg')
-            RESPONSE.setHeader('Content-Disposition',
-                               'inline; filename="%s.jpg"' % id)
-
-            if id.startswith('symbol_cluster'):
+        if id.startswith('symbol_cluster'):
+            try:
                 idx = int(id[len('symbol_cluster_'):])
+            except: return None
+
+            if REQUEST is None:
+                return self._cluster_pngs[idx]
+            else:
+                RESPONSE = REQUEST.RESPONSE
+                RESPONSE.setHeader('Content-Type', 'image/jpeg')
+                RESPONSE.setHeader('Content-Disposition',
+                                   'inline; filename="%s.jpg"' % id)
                 return self._cluster_pngs[idx].index_html(REQUEST, RESPONSE)
+        else:
+            try:
+                symbol = self.__symbol_collection[id]
+            except: return None
 
-            symbol = self.__symbol_collection[id]
-
-            return symbol.getPicture(dict(REQUEST.form))
-
-        except:
-            return None
+            if REQUEST is None:
+                return symbol.getPicture()
+            else:
+                RESPONSE = REQUEST.RESPONSE
+                RESPONSE.setHeader('Content-Type', 'image/jpeg')
+                RESPONSE.setHeader('Content-Disposition',
+                                   'inline; filename="%s.jpg"' % id)
+                return symbol.getPicture(dict(REQUEST.form))
 
     def updateSymbols(self):
         """ """
