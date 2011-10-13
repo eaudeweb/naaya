@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 NAME = 'Products.CHM2BE'
 
 setup(name=NAME,
-      version='1.0.2',
+      version='1.0.3',
       description="CHM2BE",
       long_description="CHM2BE",
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
