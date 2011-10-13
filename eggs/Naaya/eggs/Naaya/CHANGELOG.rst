@@ -1,5 +1,6 @@
 2.12.6 (unreleased)
 -------------------
+* Fix TypeError in latestcomments_rdf: syndicateThis() takes exactly 2 arguments (1 given)  
 * Event, news, stories and folder listing improvements [dumitval]
 * Fix news and stories folder sort order [andredor]
 * Zip download link is no longer shown if there are no objects to download
