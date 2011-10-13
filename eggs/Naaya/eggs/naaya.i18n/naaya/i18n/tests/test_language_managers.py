@@ -34,3 +34,24 @@ class NyPortalLanguageManagerTest(unittest.TestCase):
             for lang in portal_langs.getAvailableLanguages():
                 portal_langs.delAvailableLanguage(lang)
         self.assertRaises(ValueError, delete_all)
+
+    def test_display_order(self):
+        portal_langs = NyPortalLanguageManager()
+        portal_langs.addAvailableLanguage('fr')
+        portal_langs.addAvailableLanguage('fr-be')
+        self.assertEqual(portal_langs.getAvailableLanguages(),
+                         ('en', 'fr', 'fr-BE'))
+
+        portal_langs.set_display_order('0-1')
+        self.assertEqual(portal_langs.getAvailableLanguages(),
+                         ('fr', 'en', 'fr-BE'))
+        portal_langs.set_display_order('1-2')
+        self.assertEqual(portal_langs.getAvailableLanguages(),
+                         ('fr', 'fr-BE', 'en'))
+        portal_langs.set_display_order('1-2')
+        portal_langs.addAvailableLanguage('es')
+        self.assertEqual(portal_langs.getAvailableLanguages(),
+                         ('fr', 'en', 'fr-BE', 'es'))
+        portal_langs.delAvailableLanguage('fr-BE')
+        self.assertEqual(portal_langs.getAvailableLanguages(),
+                         ('fr', 'en', 'es'))

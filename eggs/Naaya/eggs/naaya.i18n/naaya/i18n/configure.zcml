@@ -1,6 +1,7 @@
 <configure xmlns:naaya="http://namespaces.zope.org/zope"
            xmlns:zope="http://namespaces.zope.org/zope"
            xmlns:five="http://namespaces.zope.org/five"
+           xmlns:browser="http://namespaces.zope.org/browser"
            >
 
    <five:registerPackage package="." initialize=".initialize" />
@@ -8,6 +9,12 @@
    <zope:adapter
          factory=".patches.NySitePublishTraverse"
       />
+
+    <browser:resourceDirectory
+        name="naaya.i18n.icons"
+        directory="./www"
+        permission="zope.Public"
+        />
 
    <naaya:utility
       factory=".utilities.NyI18nTranslator"
