@@ -11,10 +11,9 @@
 
 	<metal:block fill-slot="body">
 
-		<span tal:replace="structure python:here.get_portlet_object('portlet_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-
 		<div id="center_content">
 			<h1 metal:define-slot="title" i18n:translate="">Portal administration page</h1>
+			<span tal:replace="structure python:here.get_portlet_object('portlet_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 			<tal:block metal:define-slot="section">Section</tal:block>
 		</div>
 
