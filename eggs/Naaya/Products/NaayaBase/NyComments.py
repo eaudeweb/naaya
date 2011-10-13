@@ -96,9 +96,12 @@ class NyComment(SimpleItem):
         obj = self.aq_parent.aq_parent
         return '%s#comment-%s' % (obj.absolute_url(), self.id)
 
-    def syndicateThis(self, lang):
+    def syndicateThis(self, lang=None):
         """ Render this comment as a fragment of an RSS 1.0 feed """
         out = StringIO()
+        if lang is None: 
+            lang = self.gl_get_selected_language()
+
         title = "Comment by %s: %s" % (self.author, self.title)
         out.write('<item rdf:about="%s">' % self.absolute_url())
         out.write('<link>%s</link>' % self.absolute_url())
