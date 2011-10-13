@@ -47,32 +47,66 @@
 	expired_events python:[x for x in all_events if getattr(x['self'], 'end_date', here.utGetTodayDate()) and getattr(x['self'], 'start_date', here.utGetTodayDate())  < here.utGetTodayDate()];
 	list_expired python:request.get('list_expired', '');
 	list_all_events python:request.get('list_all_events', '');
-	object_list_custom python:test(list_expired, expired_events, test(list_all_events, all_events, upcoming_events))">
+	global object_list_custom python:test(list_expired, expired_events, test(list_all_events, all_events, upcoming_events))">
 	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
 			<div class="admin_this_folder">
 				<a class="buttons"
 				   tal:attributes="href string:${here/absolute_url}?list_all_events=True"
-				   tal:condition="not:list_all_events" i18n:translate="">Show all events</a>&nbsp;
+				   tal:condition="python: len(all_events)>0 and not list_all_events" i18n:translate="">Show all events</a>&nbsp;
 				<a class="buttons"
 				   tal:attributes="href string:${here/absolute_url}?list_expired=True"
-				   tal:condition="python: not list_expired or list_all_events" i18n:translate="">Show past events</a>
+				   tal:condition="python: len(all_events)>0 and (not list_expired or list_all_events)" i18n:translate="">Show past events</a>
 				<a class="buttons"
 				   tal:attributes="href string:${here/absolute_url}"
-				   tal:condition="python:list_expired or list_all_events" i18n:translate="">Show upcoming events</a>
+				   tal:condition="python: len(all_events)>0 and (list_expired or list_all_events)" i18n:translate="">Show upcoming events</a>
 			</div>
-			<h2 tal:condition="list_all_events" i18n:translate="">
+			<h2 tal:condition="python:list_all_events and len(all_events)>0"
+				i18n:translate="">
 				All events:</h2>
-			<tal:block condition="not:list_all_events">
-				<h2 tal:condition="list_expired" i18n:translate="">
+			<h2 tal:condition="python:len(all_events)==0"
+				i18n:translate="">
+				There are no events.</h2>
+			<tal:block condition="python: len(all_events)>0 and not list_all_events">
+				<h2 tal:condition="python:list_expired and len(object_list_custom)>0"
+					i18n:translate="">
 					Past events:</h2>
-				<h2 tal:condition="not:list_expired" i18n:translate="">
+				<h2 tal:condition="python:list_expired and len(object_list_custom)==0"
+					i18n:translate="">
+					There are no past events.</h2>
+				<h2 tal:condition="python: not list_expired and len(object_list_custom)>0"
+					i18n:translate="">
 					Upcoming events:</h2>
+				<h2 tal:condition="python: not list_expired and len(object_list_custom)==0"
+					i18n:translate="">
+					There are no upcoming events.</h2>
 			</tal:block>
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>
-		<metal:block fill-slot="table_head_extend">
-			<th class="onfront" i18n:translate="">On front</th>
+		<metal:block fill-slot="toolbar" tal:condition="python:len(object_list_custom)>0">
+		<div id="toolbar" tal:condition="btn_delete">
+			<input type="submit" value="Delete" class="action-button" name="deleteObjects:method"
+				i18n:attributes="value"
+				tal:condition="btn_delete" />
+			<input type="submit" value="Rename" class="action-button" name="renameobject_html:method"
+				i18n:attributes="value"
+				tal:condition="python: here.rename_id and btn_delete" />
+		</div>
+		</metal:block>
+		<metal:block fill-slot="table_head"
+			tal:condition="python:len(object_list_custom)>0">
+			<tr>
+				<th class="checkbox" style="width: 4%;"
+					tal:condition="btn_select">
+					<input type="checkbox" class="select-all" />
+				</th>
+				<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+				<th class="title-column" i18n:translate="">Title</th>
+				<th i18n:translate="">Location</th>
+				<th tal:condition="can_operate" class="checkin" i18n:translate="">Version</th>
+				<th tal:condition="can_operate" class="edit" i18n:translate="">Edit</th>
+				<th tal:condition="can_operate" class="onfront" i18n:translate="">On front</th>
+			</tr>
 		</metal:block>
 		<metal:block fill-slot="table_objects_default">
 			<tal:block define="
@@ -119,7 +153,9 @@
 					</tal:block>
 					</tal:block>
 				</td>
-
+				<td class="location">
+					<span tal:replace="object/location" />
+				</td>
 				<td class="checkin" tal:condition="edit_permission">
 					<tal:block condition="not:versionable">n/a</tal:block>
 					<a tal:condition="python:versionable and editable" tal:attributes="href string:${object/absolute_url}/startVersion">
@@ -139,12 +175,6 @@
 					<tal:block define="user_rating object/user_rating_stars|nothing"
 						condition="object/is_ratable" replace="structure user_rating"/>
 				</td>
-			</tal:block>
-		</metal:block>
-		<metal:block fill-slot="table_objects_extend">
-			<tal:block define="
-				edit_permission python:object_info['edit_permission'];
-				object python:object_info['self'];">
 				<td class="onfront" tal:condition="edit_permission">
 					<a tal:condition="object/topitem"
 						tal:attributes="href string:${object/absolute_url}/change_topitem_status" i18n:attributes="title" title="Click to hide event from the front page">
@@ -159,5 +189,15 @@
 		</metal:block>
 	</metal:block>
 	</tal:block>
+</metal:block>
+<metal:block fill-slot="folder_footer">
+	<div id="folder_footer" class="folder_footer">
+		<a class="download_link"
+			href="./zip_export/do_export"
+			title="Download the contents of this folder to a Zip file"
+			tal:condition="python: here.checkPermission('Naaya - Zip export') and len(object_list_custom) > 0"
+			i18n:attributes="title"
+			i18n:translate="">Zip download</a>
+	</div>
 </metal:block>
 </metal:block>

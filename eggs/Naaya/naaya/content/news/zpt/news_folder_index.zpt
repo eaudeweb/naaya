@@ -2,6 +2,7 @@
 
 <metal:block fill-slot="page-middle">
 	<tal:block define="folder_listing_info python: here.folder_listing_info(sort_on='releasedate', sort_order=1);
+						global object_list python:folder_listing_info['objects'];
 						objects_info python:here.getArchiveListing(here);
 						objects_delete_all python:objects_info[1];
 						objects_select_all python:objects_info[0]">
@@ -83,28 +84,35 @@
 
 	<metal:block use-macro="python:here.getFormsTool().getForm('folder_listing').macros['listing']">
 		<metal:block fill-slot="menu_extension">
+			<h3 tal:condition="python:len(objects_list)==0" i18n:translate="">
+				There are no news.
+			</h3>
 			<span tal:replace="structure here/menusubmissions" />
 		</metal:block>
-		<metal:block fill-slot="toolbar_default">
+		<metal:block fill-slot="toolbar">
+			<div id="toolbar" tal:condition="python: objects_select_all or objects_delete_all">
 				<tal:block tal:condition="objects_delete_all">
 					<a href="javascript:fDeleteObjects();">
 						<span i18n:translate="">Delete</span>
 					</a>
 				</tal:block>
-
 				<tal:block tal:condition="objects_select_all">
 					<a href="javascript:fSetTopStoryObjects();">
 						<span i18n:translate="">Save on front</span>
 					</a>
 				</tal:block>
+			</div>
 		</metal:block>
-		<metal:block fill-slot="table_head_default">
-			<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="objects_delete_all">Delete</th>
-			<th i18n:translate="" style="width: 10%;">Release date</th>
-			<th class="title-column" i18n:translate="">Title</th>
-			<th style="width: 30%;" i18n:translate="">Source</th>
-			<th class="checkin" i18n:translate="" tal:condition="python:objects_select_all">On front</th>
-			<th class="edit" i18n:translate="" tal:condition="python:objects_select_all">Edit</th>
+		<metal:block fill-slot="table_head"
+			tal:condition="python:len(object_list)>0">
+			<tr>
+				<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="objects_delete_all">Delete</th>
+				<th i18n:translate="" style="width: 10%;">Release date</th>
+				<th class="title-column" i18n:translate="">Title</th>
+				<th style="width: 30%;" i18n:translate="">Source</th>
+				<th class="checkin" i18n:translate="" tal:condition="python:objects_select_all">On front</th>
+				<th class="edit" i18n:translate="" tal:condition="python:objects_select_all">Edit</th>
+			</tr>
 		</metal:block>
 		<metal:block fill-slot="table_objects_default">
 			<tal:block define="del_permission object_info/del_permission;
@@ -142,5 +150,15 @@
 		</metal:block>
 	</metal:block>
 </tal:block>
+</metal:block>
+<metal:block fill-slot="folder_footer">
+	<div id="folder_footer" class="folder_footer">
+		<a class="download_link"
+			href="./zip_export/do_export"
+			title="Download the contents of this folder to a Zip file"
+			tal:condition="python: here.checkPermission('Naaya - Zip export') and len(object_list) > 0"
+			i18n:attributes="title"
+			i18n:translate="">Zip download</a>
+	</div>
 </metal:block>
 </metal:block>
