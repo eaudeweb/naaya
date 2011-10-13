@@ -73,11 +73,13 @@ class NyPortalLanguageManager(Persistent):
     Portal_i18n has an instance of this type, accessible by *get_lang_manager()*
     method. It supplies add/edit/remove/set_default operations with languages
     available in portal and it is also used to get current available
-    languages and default language.
+    languages, default language and manage display order.
 
     """
     implements(INyLanguageManagement)
 
+    # by default, the display order is the creation order, default lang first
+    custom_display_order = None
 
     def __init__(self, default_langs=[('en', 'English')]):
         if not isinstance(default_langs, list):
@@ -88,7 +90,10 @@ class NyPortalLanguageManager(Persistent):
     def getAvailableLanguages(self):
         """Return a sequence of language tags/codes for available languages
         """
-        return tuple([ x[0] for x in self.portal_languages ])
+        if self.custom_display_order is None:
+            return tuple([ x[0] for x in self.portal_languages ])
+        else:
+            return tuple(self.custom_display_order)
 
     def addAvailableLanguage(self, lang_code, lang_name=None):
         """Adds available language in portal"""
@@ -97,8 +102,7 @@ class NyPortalLanguageManager(Persistent):
             lang_name = get_iso639_name(lang_code)
         if lang_code not in self.getAvailableLanguages():
             self.portal_languages.append((lang_code, lang_name))
-            # call set_default_language to reorder them alphabetically
-            self.set_default_language(self.get_default_language())
+            self.set_display_order()
 
     def delAvailableLanguage(self, lang):
         """
@@ -113,8 +117,40 @@ class NyPortalLanguageManager(Persistent):
             else:
                 pos = available.index(lang)
                 self.portal_languages.pop(pos)
+                self.set_display_order()
 
     # MORE:
+    def set_display_order(self, operation=None):
+        """
+        `operation` is 'x-y' where x and y are consecutive indices
+        about to be switched.
+        If operation is None, custom display order is "refreshed" if it is
+        defined and if there were any changes in available portal languages.
+
+        """
+        if self.custom_display_order is None and operation is None:
+            # no operation, no custom order
+            return
+
+        creation_order = [x[0] for x in self.portal_languages]
+
+        if operation is None:
+            # explore for changes - new added lang or removed language
+            # custom_display_order obviously not None
+            added = set(creation_order) - set(self.custom_display_order)
+            rmed = set(self.custom_display_order) - set(creation_order)
+            self.custom_display_order.extend(list(added))
+            for r in rmed:
+                self.custom_display_order.remove(r)
+        else:
+            # we have a "move operation" request
+            if self.custom_display_order is None:
+                self.custom_display_order = PersistentList(creation_order)
+            switch = map(int, operation.split("-"))
+            assert((switch[0]-switch[1])**2 == 1)
+            acc = self.custom_display_order.pop(switch[0])
+            self.custom_display_order.insert(switch[1], acc)
+
     def set_default_language(self, lang):
         """
         Sets default language in language manager. Default language
@@ -130,11 +166,8 @@ class NyPortalLanguageManager(Persistent):
             return
         pos = available.index(lang)
         new_default = self.portal_languages.pop(pos)
-        # PersistentList can not sort by key
-        to_sort = list(self.portal_languages)
-        to_sort.sort(key=lambda x: x[0])
-        self.portal_languages = PersistentList(to_sort)
         self.portal_languages.insert(0, new_default)
+        self.set_display_order()
 
     def get_default_language(self):
         """ Returns default language """
@@ -147,7 +180,7 @@ class NyPortalLanguageManager(Persistent):
         """
         available = list(self.getAvailableLanguages())
         if code in available:
-            pos = available.index(code)
+            pos = [lcode for lcode, name in self.portal_languages].index(code)
             return self.portal_languages[pos][1]
         else:
             return "???"
