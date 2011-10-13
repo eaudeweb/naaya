@@ -10,11 +10,22 @@
 	<p class="form-help">
 		Languages in this portal
 	</p>
-	<form method="post" action="manage_delLanguages">
+	<form method="post" action="manage_delLanguages" name="manage_delLanguages">
+		<input type='hidden' name='display_order' value='' autocomplete='off' />
 	<tal:block tal:repeat="item here/gl_get_languages_mapping">
-	<input type="checkbox" name="languages:tuple" tal:attributes="value python:item['code']" />
-	<span tal:replace="python:'%s [%s]' % (item['name'], item['code'])" />
-	<br />
+		<input type="checkbox" name="languages:tuple" tal:attributes="value python:item['code']" />
+		<span tal:replace="python:'%s [%s]' % (item['name'], item['code'])" />
+		<tal:block tal:condition="python:not repeat['item'].end">
+			<img src='/++resource++naaya.i18n.icons/down.gif' title='Move down'
+			     tal:attributes="onclick python:('move_lang(\'%s-%s\')'%(repeat['item'].index, repeat['item'].index+1))"
+			     style='cursor: pointer;' />
+		</tal:block>
+		<tal:block tal:condition="python:not repeat['item'].start">
+			<img src='/++resource++naaya.i18n.icons/up.gif' title='Move up'
+			     tal:attributes="onclick python:('move_lang(\'%s-%s\')'%(repeat['item'].index-1, repeat['item'].index))"
+			     style='cursor: pointer;' />
+		</tal:block>
+		<br /><br />
 	</tal:block>
 	<input type="submit" value="Delete" />
 	</form>
@@ -51,6 +62,10 @@
 	<input type="text" name="language_code" size="3" placeholder="Code" />
 	<input type="submit" value="Add" />
 	<script type='text/javascript'>
+	function move_lang(order){
+		document.manage_delLanguages.display_order.value = order;
+		document.manage_delLanguages.submit();
+	}
 	document.manage_addLanguage.language.onchange = function(){
 		var frm = document.manage_addLanguage;
 		var selection = frm.language[frm.language.selectedIndex];

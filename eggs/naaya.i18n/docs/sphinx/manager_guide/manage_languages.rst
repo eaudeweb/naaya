@@ -23,3 +23,9 @@ This setting does not influence the default translation for new found strings.
 Each new found message without translation is still considered in English,
 since most of the Naaya and Zope products are edited so.
 
+Languages display order
+-----------------------
+The default order is creation order, except for the default language which
+is always first in list.
+You can rearrange them anyhow you like using the arrows next to
+them in the same page you used to add, remove or set default language.

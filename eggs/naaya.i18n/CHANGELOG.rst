@@ -1,5 +1,9 @@
-1.0.3 (unreleased)
+1.0.4 (unreleased)
 ------------------
+
+1.0.3 (2011-10-13)
+------------------
+* feature: languages display order is customizable [simiamih]
 
 1.0.2 (2011-10-10)
 ------------------

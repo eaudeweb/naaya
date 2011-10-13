@@ -154,7 +154,6 @@ class NaayaI18n(SimpleItem):
 
         """
         langs = list(self._portal_langs.getAvailableLanguages())
-        langs.sort()
         result = []
         default = self._portal_langs.get_default_language()
         for l in langs:
@@ -425,11 +424,17 @@ class NaayaI18n(SimpleItem):
             REQUEST.RESPONSE.redirect('manage_languages?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_delLanguages')
-    def manage_delLanguages(self, languages, REQUEST=None):
+    def manage_delLanguages(self, languages=[], display_order='', REQUEST=None):
         """
-        Delete one or more languages.
+        Delete one or more languages. Also handles move up/down language
+        in display order.
+
         """
-        self.getSite().gl_del_site_languages(languages)
+        if languages:
+            self.getSite().gl_del_site_languages(languages)
+        if display_order:
+            lang_manager = self.get_lang_manager()
+            lang_manager.set_display_order(display_order)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_languages?save=ok')
 
