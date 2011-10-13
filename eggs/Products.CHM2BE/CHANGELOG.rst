@@ -1,3 +1,6 @@
+1.0.3 (unreleased)
+-----------------------
+
 1.0.2 (2011-10-13)
 -----------------------
 * added admin_languages_box to portal_forms [andredor]
