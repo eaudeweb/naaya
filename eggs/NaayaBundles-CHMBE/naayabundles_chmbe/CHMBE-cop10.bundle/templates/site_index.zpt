@@ -28,7 +28,7 @@
 </metal:block>
 
 <metal:block fill-slot="right-portlets-slot">
-<td>
+<td id="right-port-td">
 <div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
 	tal:condition="python:len(items)>0">
 	<tal:block tal:repeat="item items">
