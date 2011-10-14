@@ -93,6 +93,10 @@
 	</tal:block>
 </div>
 
+<span tal:replace="structure here/comments_box" />
+
+</metal:block>
+
 <metal:block fill-slot="right-portlets-slot">
 <td id="right-port-td">
 <div id="right_port">
@@ -101,9 +105,6 @@
 	</tal:block>
 </div>
 </td>
-</metal:block>
-
-<span tal:replace="structure here/comments_box" />
 </metal:block>
 
 </metal:block>
