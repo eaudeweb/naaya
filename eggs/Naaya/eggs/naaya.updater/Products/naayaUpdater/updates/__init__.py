@@ -39,6 +39,7 @@ class UpdateScript(Item, Acquisition.Implicit):
     authors = ['John Doe']
     priority = PRIORITY['LOW']
     description = ''
+    report_html = ''
 
     manage_options = (
         {'label': 'Update', 'action': 'manage_update'},
@@ -118,6 +119,10 @@ class UpdateScript(Item, Acquisition.Implicit):
                     report_html += '<h4>SUCCESS</h4>'
                 else:
                     report_html += '<h4>FAILED</h4>'
+
+                report_html += self.report_html
+                self.report_html = ''
+
                 report_html += html_quote(log_data)
 
                 portals[portal_path] = success

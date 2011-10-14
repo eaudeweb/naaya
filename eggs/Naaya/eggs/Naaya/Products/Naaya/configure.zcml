@@ -49,6 +49,9 @@
     factory=".adapters.NyFolderViewAdapter"
     />
 
+  <adapter factory="Products.Naaya.portlets.AdministrationPortlet"
+           name="portlet_administration" />
+
   <class class=".NyFolder.NyFolder">
     <implements interface="naaya.core.interfaces.INyObjectContainer" />
   </class>
@@ -78,5 +81,5 @@
   <include package="naaya.content.url" />
   <include package="naaya.i18n" />
 
-  <naaya:call factory=".naaya_bundle_registration" /> 
+  <naaya:call factory=".naaya_bundle_registration" />
 </configure>

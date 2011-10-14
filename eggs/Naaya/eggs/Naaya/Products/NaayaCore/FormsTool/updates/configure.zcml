@@ -5,5 +5,5 @@
                  provides="Products.naayaUpdater.interfaces.IUpdateScript"
                  component=".update_components.MigrateToBundles"
                  permission="zope2.ViewManagementScreens" />
-   </configure> 
+   </configure>
 </configure>

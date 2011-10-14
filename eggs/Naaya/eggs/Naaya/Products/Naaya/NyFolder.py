@@ -1,5 +1,4 @@
 from copy import copy, deepcopy
-import operator
 
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -439,48 +438,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
 
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
-    security.declarePublic('getPublishedFolders')
-    def getPublishedFolders(self):
-        folders = []
-        if not self.checkPermissionView():
-            return folders
-        for obj in self.objectValues(self.get_naaya_containers_metatypes()):
-            if not getattr(obj, 'approved', False):
-                continue
-            if not getattr(obj, 'submitted', False):
-                continue
-            folders.append(obj)
-        folders.sort(key=operator.attrgetter('sortorder'))
-        return folders
-
-    def getPublishedObjects(self, items=0):
-        doc_metatypes = [m for m in self.get_meta_types()
-                         if m not in self.get_naaya_containers_metatypes()]
-        result = []
-        for obj in self.objectValues(doc_metatypes):
-            if not getattr(obj, 'approved', False):
-                continue
-            if not getattr(obj, 'submitted', False):
-                continue
-            result.append(obj)
-
-        if items:
-            result = result[:items]
-
-        return result
-
-    def getPublishedContent(self):
-        r = self.getPublishedFolders()
-        r.extend(self.getPublishedObjects())
-        return r
-
-    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
-    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
-    def getPendingContent(self):
-        r = self.getPendingFolders()
-        r.extend(self.getPendingObjects())
-        return r
-
     def getTranslatableFolders(self, lang): return [x for x in self.objectValues(METATYPE_FOLDER) if not x.getLocalProperty('title', lang)]
     def getTranslatableObjects(self, lang): return [x for x in self.getObjects() if not x.getLocalProperty('title', lang)]
     def getTranslatableContent(self, lang):
@@ -917,58 +874,6 @@ class NyFolder(NyRoleManager, NyCommonView, NyAttributes, NyProperties,
         except: self.setSessionErrorsTrans('Error while updating data.')
         else: self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
-    def processPendingContent(self, appids=[], delids=[], REQUEST=None):
-        """
-        Process the pending content inside this folder.
-
-        Objects with ids in appids list will be approved.
-
-        Objects with ids in delids will be deleted.
-        """
-        for id in self.utConvertToList(appids):
-            ob = self._getOb(id, None)
-            if not ob:
-                continue
-            if hasattr(ob, 'approveThis'):
-                ob.approveThis()
-            if hasattr(ob, 'takeEditRights'):
-                ob.takeEditRights()
-            ob.releasedate = self.utGetTodayDate()
-            self.recatalogNyObject(ob)
-
-        for id in self.utConvertToList(delids):
-            try: self._delObject(id)
-            except: pass
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
-    def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
-        """
-        Process the published content inside this folder.
-
-        Objects with ids in appids list will be unapproved.
-
-        Objects with ids in delids will be deleted.
-        """
-        for id in self.utConvertToList(appids):
-            ob = self._getOb(id, None)
-            if not ob:
-                continue
-            if hasattr(ob, 'approveThis'):
-                ob.approveThis(0, None)
-            if hasattr(ob, 'giveEditRights'):
-                ob.giveEditRights()
-            self.recatalogNyObject(ob)
-        for id in self.utConvertToList(delids):
-            try: self._delObject(id)
-            except: pass
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setSortOrder')
     def setSortOrder(self, ids, REQUEST):

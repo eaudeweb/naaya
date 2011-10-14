@@ -7,6 +7,7 @@ from zipfile import ZipFile
 from PIL import Image
 import urllib
 
+from zope.interface import implements
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
@@ -35,6 +36,9 @@ from Products.NaayaForum.NyForum import addNyForum
 from Products.CHM2.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.utils import make_id
 from naaya.component import bundles
+
+from interfaces import ICHMSite
+
 METATYPE_NYURL = 'Naaya URL'
 
 class Extra_for_DateRangeIndex:
@@ -70,7 +74,7 @@ chm_bundle.set_parent(bundles.get("Naaya"))
 
 class CHMSite(NySite):
     """ """
-
+    implements(ICHMSite)
     meta_type = METATYPE_CHMSITE
     icon = 'misc_/CHM2/Site.gif'
 

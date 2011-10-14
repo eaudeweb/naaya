@@ -1,13 +1,22 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser">
-    <adapter factory="naaya.groupware.portlets.NavigationPortlet"
-             name="portlet_navigation" />
 
-    <browser:page
-          for=".interfaces.IGroupwareApplication"
-          name="local_users_html"
-          class=".ui.LocalUsersPage"
-          permission="zope2.ViewManagementScreens"/>
+  <adapter
+    factory="naaya.groupware.portlets.NavigationPortlet"
+    name="portlet_navigation"
+    />
 
-    <include package=".updates" />
+  <adapter
+    factory="naaya.groupware.portlets.AdministrationPortlet"
+    name="portlet_administration"
+    />
+
+  <browser:page
+    for=".interfaces.IGroupwareApplication"
+    name="local_users_html"
+    class=".ui.LocalUsersPage"
+    permission="zope2.ViewManagementScreens"
+    />
+
+  <include package=".updates" />
 </configure>

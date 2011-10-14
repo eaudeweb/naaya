@@ -1,3 +1,5 @@
+import operator
+
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -5,7 +7,7 @@ import zLOG
 
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS, PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES
 from Products.Naaya.interfaces import IObjectView
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes
@@ -28,6 +30,101 @@ class NyFolderBase(Folder, NyPermissions):
     def contained_folders(self):
         return [f for f in self.objectValues(METATYPE_FOLDER)
                 if getattr(f, 'submitted', 0) == 1]
+
+
+    security.declarePublic('getPublishedFolders')
+    def getPublishedFolders(self):
+        folders = []
+        if not self.checkPermissionView():
+            return folders
+        for obj in self.objectValues(self.get_naaya_containers_metatypes()):
+            if not getattr(obj, 'approved', False):
+                continue
+            if not getattr(obj, 'submitted', False):
+                continue
+            folders.append(obj)
+        folders.sort(key=lambda obj: getattr(obj, 'sortorder', 100))
+        return folders
+
+    def getPublishedObjects(self, items=0):
+        doc_metatypes = [m for m in self.get_meta_types()
+                         if m not in self.get_naaya_containers_metatypes()]
+        result = []
+        for obj in self.objectValues(doc_metatypes):
+            if not getattr(obj, 'approved', False):
+                continue
+            if not getattr(obj, 'submitted', False):
+                continue
+            result.append(obj)
+
+        if items:
+            result = result[:items]
+
+        return result
+
+    def getPublishedContent(self):
+        r = self.getPublishedFolders()
+        r.extend(self.getPublishedObjects())
+        return r
+
+    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
+    def getPendingObjects(self): return [x for x in self.contained_objects() if x.approved==0 and x.submitted==1]
+    def getPendingContent(self):
+        r = self.getPendingFolders()
+        r.extend(self.getPendingObjects())
+        return r
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
+    def processPendingContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the pending content inside this folder.
+
+        Objects with ids in appids list will be approved.
+
+        Objects with ids in delids will be deleted.
+        """
+        for id in self.utConvertToList(appids):
+            ob = self._getOb(id, None)
+            if not ob:
+                continue
+            if hasattr(ob, 'approveThis'):
+                ob.approveThis()
+            if hasattr(ob, 'takeEditRights'):
+                ob.takeEditRights()
+            ob.releasedate = self.utGetTodayDate()
+            self.recatalogNyObject(ob)
+
+        for id in self.utConvertToList(delids):
+            try: self._delObject(id)
+            except: pass
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_basketofapprovals_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
+    def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the published content inside this folder.
+
+        Objects with ids in appids list will be unapproved.
+
+        Objects with ids in delids will be deleted.
+        """
+        for id in self.utConvertToList(appids):
+            ob = self._getOb(id, None)
+            if not ob:
+                continue
+            if hasattr(ob, 'approveThis'):
+                ob.approveThis(0, None)
+            if hasattr(ob, 'giveEditRights'):
+                ob.giveEditRights()
+            self.recatalogNyObject(ob)
+        for id in self.utConvertToList(delids):
+            try: self._delObject(id)
+            except: pass
+        if REQUEST:
+            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
+            REQUEST.RESPONSE.redirect('%s/admin_basketofapprovals_html' % self.absolute_url())
 
 
     def listed_folders_info(self, skey='sortorder', rkey=0,

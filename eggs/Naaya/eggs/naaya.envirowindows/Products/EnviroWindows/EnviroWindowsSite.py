@@ -29,8 +29,7 @@ from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 from App.ImageFile import ImageFile
-from zope.interface import Interface, implements
-from zope.component import adapts, provideAdapter
+from zope.interface import implements
 import zLOG
 
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
@@ -47,9 +46,6 @@ from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.import_export      import CSVReader
 from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.contact.contact_item             import addNyContact
-from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
-from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
-from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.Naaya.adapters import FolderMetaTypes
 
 from naaya.core.zope2util import physical_path
@@ -67,9 +63,7 @@ def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
 
 class EnviroWindowsSite(NySite):
     """ """
-
     implements(IEWSite)
-
     meta_type = METATYPE_ENVIROWINDOWSSITE
     icon = 'misc_/EnviroWindows/Site.gif'
 
@@ -1192,18 +1186,3 @@ class SimpleFieldStorage(object):
         self.file = file
         self.filename = filename
         self.headers = headers
-
-
-class ObjectListingPortlet(object):
-    implements(INyPortlet)
-    adapts(IEWSite)
-
-    title = 'List contained objects'
-
-    def __init__(self, site):
-        self.site = site
-
-    def __call__(self, context, position):
-        return self.template.__of__(context)()
-
-    template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.envirowindows.folder.listing_portlet')

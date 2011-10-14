@@ -2,6 +2,9 @@
            xmlns:naaya="http://namespaces.zope.org/naaya"
            xmlns:browser="http://namespaces.zope.org/browser">
 
+  <adapter factory="Products.CHM2.portlets.AdministrationPortlet"
+           name="portlet_administration" />
+
   <subscriber
     handler=".CHMSite.handle_content_type_installed"
     for="Products.Naaya.interfaces.INyPluggableItemInstalled"

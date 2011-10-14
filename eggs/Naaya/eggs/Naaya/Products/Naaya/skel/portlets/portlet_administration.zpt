@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:use-macro="options/macro|python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title" i18n:translate="">Administration</tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <ul tal:define="site_url here/getSitePath;
@@ -17,6 +17,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_notifications_html" title="Notifications" i18n:attributes="title" i18n:translate="">Notifications</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map settings" i18n:attributes="title" i18n:translate="">Map management</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Site content" i18n:attributes="title" i18n:translate="">Site content</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_schemas/admin_html" title="Content type property definitions" i18n:attributes="title" i18n:translate="">Manage content types</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_html" title="Centralized basket of approvals" i18n:attributes="title" i18n:translate="">Basket of approvals</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${portal_i18n_url}/admin_basket_translations_html" title="Centralized basket of content that has not yet been translated" i18n:attributes="title" i18n:translate="">Basket of translations</a></li>

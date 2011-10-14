@@ -294,7 +294,6 @@
 		<emailtemplate id="email_createaccount" title="Create account notification"/>
 	</emails>
 	<portlets left="portlet_places,portlet_notifications" center="portlet_latestuploads_rdf">
-		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_ymap" title="Destinet frontpage Yahoo map" />
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="103" title="EWindows" description="EnviroWindows" url="http://ew.eea.europa.eu/" relative="0" permission="" order="1"/>
