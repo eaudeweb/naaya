@@ -440,7 +440,6 @@
 		<remotechannel id="biodiv_news" title="Biodiversity news" url="http://www.nlbif.nl/rss/biodiversity_news_en.xml" numbershownitems="10" />
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
-		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<portlet id="portlet_calendar" title="Calendar of Events"/>
 		<portlet id="chm3_other_mainsection_image" title="[CHM3 - Other] Main section image"/>
