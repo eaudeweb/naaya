@@ -1,6 +1,9 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
+-----------------
+
+1.0.4 (2011-10-14)
 ------------------
-* Improved style for Administration
+* Improved style for Administration [bogdatan]
 
 1.0.3 (2011-10-14)
 ------------------
