@@ -32,6 +32,7 @@ def addNyForum(self, id='', title='', description='', categories='', file_max_si
     categories = self.utConvertLinesToList(categories)
     file_max_size = abs(int(file_max_size))
     ob = NyForum(id, title, description, categories, file_max_size)
+    ob.releasedate = self.process_releasedate()
     self._setObject(id, ob)
     if not REQUEST:
         return id

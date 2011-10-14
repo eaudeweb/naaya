@@ -45,6 +45,11 @@
   </class>
 
   <configure zcml:condition="installed Products.naayaUpdater">
-    <!-- Update scripts -->
+    <utility
+      name="add_releasedate.update"
+      provides="Products.naayaUpdater.interfaces.IUpdateScript"
+      component=".updates.AddReleasedate"
+      permission="zope2.ViewManagementScreens"
+     />
   </configure>
 </configure>

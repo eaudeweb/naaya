@@ -1,16 +1,11 @@
 from setuptools import setup, find_packages
-import os
-
-NAME = 'Products.NaayaForum'
-PATH = NAME.split('.') + ['version.txt']
-VERSION = open(os.path.join(*PATH)).read().strip()
 
 setup(
-    name=NAME,
-    version=VERSION,
+    name='Products.NaayaForum',
+    version='1.2.5',
     description="Naaya Forum",
     long_description=open("README.rst").read() + "\n" +
-                open(os.path.join("docs", "HISTORY.rst")).read(),
+                open("CHANGELOG.rst").read(),
     author='Eau de Web',
     author_email='office@eaudeweb.ro',
     url='http://naaya.eaudeweb.ro',
@@ -19,8 +14,5 @@ setup(
     namespace_packages=['Products'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[ 'setuptools',
-        'Naaya',
-        'naaya.sql'
-    ],
+    install_requires=['setuptools', 'Naaya', 'naaya.sql'],
 )
