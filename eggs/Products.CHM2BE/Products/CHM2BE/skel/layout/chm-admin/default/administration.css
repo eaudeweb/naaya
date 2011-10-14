@@ -1,7 +1,36 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.8em;
-  background: #ccc;
+  line-height: 1.5;
+  background: #F9F9F9;
+}
+
+h2 {
+  margin: 15px 0 10px 0;
+}
+
+strong {
+  font-weight: bold;
+}
+
+ol, ol li, ul, ul li {
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+pre {
+  background: #F9F9F9;
+  border: 2px solid #DFDFDF;
+  color: #252525;
+  padding: 10px;
 }
 
 /* Page structure*/
@@ -14,9 +43,8 @@ body {
   top: 0;
   left: 0;
   color: #333;
-  height: 3.5em;
-  padding: 10px 0 0 0;
-  border-bottom: 1px solid black;
+  padding: 10px;
+  border-bottom: 1px solid #555555;
 }
 
 #pagecontent {
@@ -29,8 +57,8 @@ body {
 #footer {
   clear: both;
   color: #333;
-  border-top: 2px solid #666;
-  background: #ccc;
+  border-top: 1px solid #DFDFDF;
+  background: #F9F9F9;
   width:100%;
 }
 
@@ -72,8 +100,8 @@ body {
 /* Languages */
 #language {
   position:absolute;
-  right:0;
-  top:3.2em;
+  right:10px;
+  top:2.2em;
   color:white;
   font-size:9px;
   font-family: Verdana, Arial, "Sans serif";
@@ -103,32 +131,32 @@ input.langButton {
 
 /* Back to public site buttons */
 .backSite {
-  width:20em;
+  max-width: 150px;
   margin-left:1em;
-  background:#ccc;
+  background:#FFFFFF;
 }
 
 .backSite a {
   text-decoration:none;
-  color:white;
+  color:#252525;
   font-weight:bold;
   display:block;
-  padding:2px;
+  padding:5px;
   text-align:center;
 }
 
 .backSite {
-  border:1px solid black;
-  border-bottom:1px solid #ccc;
+  border:1px solid #DFDFDF;
+  border-bottom:none;
 }
 
 .backSite.top {
   background:#00AFCE;
-  border-top:none;
   position:absolute;
   top:0;
   right:1em;
-  border-bottom:1px solid black;
+  border:1px solid #555555;
+  border-top:none;
 }
 
 .backSite-bottom {
@@ -149,7 +177,7 @@ input.langButton {
   width:10em;
   border-top:none;
   text-decoration:none;
-  background:#ccc;
+  background:#FFFFFF;
   font-weight:bold;
   color:#666;
 }
@@ -162,40 +190,55 @@ input.langButton {
   color: #000;
 }
 
+ul#nav {
+  display: block;
+  margin-top: 10px;
+}
+
 /* Subtitle (based on page type) and menu */
 .right_link_portlet {
   width:100%;
-  background:#ccc;
-  display:inline;
+  display:inline-block;
+  margin-bottom: 0;
+  padding: 0;
+  
 }
 
 #right_port {
   float: none;
-  width: 100%;
+  width: auto;
   margin: 0;
+  background: #F4F4F4;
+  border-bottom: 1px solid #DFDFDF;
 }
 
 #pagecontent h1 {
   clear: left;
-  font-size: 150%;
-  background: #ccc;
-  color: #666;
-  padding: 0.5em 0.5em 1em 0.5em;
-  border-bottom: 2px solid #666;
+  font-size: 18px;
+  font-weight: bold;
+  background: #F4F4F4;
+  color: #252525;
+  padding: 10px;
+  border-bottom: 1px solid #DFDFDF;
   margin: 0;
 }
 
-#pagecontent p {
-  margin: 3em 0.5em 0.5em 0.5em;
-}
-
+p
+#pagecontent p,
 #pagecontent form p {
-  margin: 0.5em;
+  margin: 1em;
+  line-height: 1.5em;
 }
 
 #pagecontent form {
   margin: 0.5em;
-  border: 2px solid #EEE;
+  border: 3px solid #EEE;
+  padding: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
 }
 
 #pagecontent form .field {
@@ -213,7 +256,7 @@ input.langButton {
 
 /* Drop-down menu */
 .right_link_portlet a:visited {
-  color: #FFF;
+  color: #252525;
 }
 
 .right_link_portlet ul {
@@ -224,22 +267,26 @@ input.langButton {
 } /* all lists */
 
 .right_link_portlet ul a,.right_link_portlet ul strong {
+  cursor: pointer;
+  background: #DFDFDF;
+  padding: 5px;
   display: block;
   text-decoration:none;
-  color:white;
-  padding:2px 3px;
+  color:#252525;
   font-size:1.2em;
+  border-left: 1px solid #BABBB8;
+  font-weight: normal;
 }
 
 .right_link_portlet ul ul strong {
-  background:#666 url(http://www.biodiv.be/portal_layout/littlemouse/littlemouse/fleche_droite.png) no-repeat right center;
+  background:#DFDFDF url(http://www.biodiv.be/portal_layout/littlemouse/littlemouse/fleche_droite.png) no-repeat right center;
 }
 
 .right_link_portlet ul li {
   float: left;
-  margin:0 0 1px 3px;
+  margin:0;
+  padding: 0px;
   display:block;
-  background:#666;
   color:white;
   font-size:90%;
 } /* all list items */
@@ -247,19 +294,18 @@ input.langButton {
 .right_link_portlet ul li ul {
   position: absolute;
   background: transparent;
-  width: 11em;
+  width: 180px;
   display:block;
   left: -999em; /* using left instead of display to hide menus because display: none isn't read by screen readers */ 
 } /* second-level lists */
 
 .right_link_portlet ul li ul ul {
-  margin: -1em 0 0 10em;
+  margin: -23px 0 0 180px;
 } /* third-and-above-level lists */
 
 .right_link_portlet li li {
-  border:1px solid black;
   display:block;
-  width:11em;
+  width:180px;
 }
 
 .right_link_portlet ul li:hover ul ul, .right_link_portlet ul li.sfhover ul ul {
@@ -271,7 +317,7 @@ input.langButton {
 } /* lists nested under hovered list items */
 
 .right_link_portlet a:hover,.right_link_portlet strong:hover {
-  background:black;
+  background-color:#BABBB8;
 }
 
 .right_link_portlet .content {
@@ -300,6 +346,7 @@ h2 {
 /* Common content */
 p {
   margin-bottom:.8em;
+  line-height: 1.5;
 }
 
 tr {
@@ -308,6 +355,10 @@ tr {
 
 th {
   background:#eaeaea;
+}
+
+td, th {
+  padding: 5px;
 }
 
 td a, th a {
@@ -459,6 +510,10 @@ a#top_en,a#bottom_en {
   margin:1.5em auto;
 }
 
+.edit-holder {
+  padding: 10px;
+}
+
 #formEdit{
   background:#E5EAF0;
   width:100%;
@@ -484,7 +539,7 @@ a#top_en,a#bottom_en {
   margin: 0.5em;
 }
 #edit {
-  padding: 10px 0;
+  padding: 0 0 10px 0;
 }
 
 /* Stuff to hide */
@@ -504,4 +559,22 @@ a#top_en,a#bottom_en {
 
 .translate_bar_right {
   position: relative;
+}
+
+dl {
+  margin-top: 15px;
+}
+
+dt, dd {
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+dt {
+  margin-top: 10px;
+}
+
+.user-role, .user-role-revoke {
+  min-height: 30px;
+  vertical-align: top;
 }
