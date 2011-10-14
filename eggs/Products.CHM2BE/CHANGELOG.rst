@@ -1,5 +1,6 @@
 1.0.4 (unreleased)
 ------------------
+* Improved style for Administration
 
 1.0.3 (2011-10-14)
 ------------------
