@@ -9,6 +9,7 @@ from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PythonScripts.PythonScript import manage_addPythonScript
 from zExceptions import BadRequest
+from zope.interface import implements
 
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
@@ -16,6 +17,7 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from member_search import MemberSearch
+from interfaces import IGWSite
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -42,7 +44,7 @@ ACTION_LOG_TYPES={
 
 class GroupwareSite(NySite):
     """ """
-
+    implements(IGWSite)
     meta_type = 'Groupware site'
     #icon = 'misc_/GroupwareSite/site.gif'
 

@@ -37,7 +37,6 @@
 	</layout>
 
 	<portlets left="portlet_navigation,portlet_places,portlet_notifications" center="ig_description,portlet_latestuploads_rdf">
-		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="ig_description" title="IG description" />
 		<portlet id="portlet_rdfcalendar" title="Meetings and events" />
 		<linkslist id="places" title="Places" portlet="1">
