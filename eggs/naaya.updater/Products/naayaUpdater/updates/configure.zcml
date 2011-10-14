@@ -367,4 +367,11 @@
       provides="..interfaces.IUpdateScript"
       component=".update_find_customised_indexes.UpdateFindCustomIndexes"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="update_portlet_administration.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_portlet_administration.UpdatePortletAdministration"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
