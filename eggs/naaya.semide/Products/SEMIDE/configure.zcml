@@ -2,6 +2,11 @@
   xmlns="http://namespaces.zope.org/zope"
   i18n_domain="naaya">
 
+  <adapter
+    factory="Products.SEMIDE.portlets.AdministrationPortlet"
+    name="portlet_administration"
+    />
+
   <subscriber
     handler=".subscribers.handler_approved"
     for="naaya.content.base.interfaces.INyContentObjectApproveEvent"

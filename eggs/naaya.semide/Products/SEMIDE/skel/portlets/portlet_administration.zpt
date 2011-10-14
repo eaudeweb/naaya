@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:use-macro="options/macro|python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title" i18n:translate="">Administration</tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <ul tal:define="site_url here/getSitePath;
@@ -22,6 +22,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maplocations_html" title="Map manage locations" i18n:attributes="title" i18n:translate="">Manage locations</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_mapduplicatelocations_html" title="Map manage duplicate locations" i18n:attributes="title" i18n:translate="">Duplicate locations</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Site content" i18n:attributes="title" i18n:translate="">Site content</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_html" title="Centralized basket of approvals" i18n:attributes="title" i18n:translate="">Basket of approvals</a></li>
 	<li tal:condition="canValidate"><a tal:attributes="href string:${site_url}/admin_validation_html" title="Centralized basket of validation" i18n:attributes="title" i18n:translate="">Basket of validation</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_latest_comments_html" title="Latest comments" i18n:attributes="title" i18n:translate="">Latest comments</a></li>

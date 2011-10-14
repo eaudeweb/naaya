@@ -2707,21 +2707,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     #Main topics
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
-                              'admin_addmaintopics')
-    def admin_addmaintopics(self, title='', lang=None, REQUEST=None):
-        """ """
-        folder_id = addNyFolder(self, title=title, lang=lang)
-        folder_ob = self.utGetObject(folder_id)
-        folder_ob.approveThis()
-        self.maintopics.append(path_in_site(folder_ob))
-        self._p_changed = True
-        if REQUEST is not None:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES,
-                                     date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html'
-                                      % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_updatemaintopics')
     def admin_updatemaintopics(self, folder_url='', REQUEST=None):
         """ """
@@ -2798,21 +2783,12 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS,
                               'admin_deletemaintopics')
-    def admin_deletemaintopics(self, ids=None, delref=None, REQUEST=None):
+    def admin_deletemaintopics(self, ids=None, REQUEST=None):
         """ """
         if ids is not None: ids = self.utConvertToList(ids)
         else: ids = []
         for id in ids:
             try: self.maintopics.remove(id)
-            except: self.log_current_error()
-
-            if not delref: continue
-            doc = self.unrestrictedTraverse(id)
-            if not doc: continue
-
-            parent = doc.aq_inner.aq_parent
-            if not parent: continue
-            try: parent.manage_delObjects([doc.getId(),])
             except: self.log_current_error()
         self._p_changed = True
 
@@ -3064,6 +3040,16 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_centre_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_centre')
+
+    security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_topcontent_html')
+    def admin_topcontent_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_topcontent')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basketofapprovals_html')
+    def admin_basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_basketofapprovals')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_metadata_html')
     def admin_metadata_html(self, REQUEST=None, RESPONSE=None):

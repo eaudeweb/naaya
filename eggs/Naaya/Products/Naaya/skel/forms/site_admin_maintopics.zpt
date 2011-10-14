@@ -5,14 +5,6 @@
 				maintopics here/getMainTopics">
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('input[type=checkbox][name=ids]').click(function(){
-			if ($('input[type=checkbox][name=ids]:checked').length > 0) {
-				$('#delref_box').show();
-			} else {
-				$('#delref_box').hide();
-			}
-		});
-
 		$('#maintopicslist').sortable({
 			axis: 'y',
 			cursor: 'move',
@@ -47,11 +39,6 @@
 		</li>
 	</ul>
 
-	<div id="delref_box" style="display:none">
-	  <input type="checkbox" id="delref" name="delref" class="chk"/>
-	  <label for="delref" class="chk"
-		i18n:translate="">Check this if you want to delete the folder(s) on remove</label>
-	</div>
 	<input type="hidden" id="positions" name="positions" />
 	<input type="submit" name="../admin_ordermaintopics:method" value="Save positions" i18n:attributes="value"/>
 	<input type="submit" name="../admin_deletemaintopics:method" value="Remove" i18n:attributes="value"/>
@@ -60,35 +47,9 @@
 	taken out from the main sections' list, not physically deleted.
 </p>
 
+
 <fieldset>
-	<legend i18n:translate="">Add new main section</legend>
-	<form method="post" tal:attributes="action string:${site_url}/admin_addmaintopics">
-		<p i18n:translate="">
-			Upon adding a main section, a top-folder will be created in this portal and it will be included
-			in the list of main sections. For further changes and translation of this folder,
-			go to its index and edit it.
-		</p>
-		<div class="field" tal:define="selected_language here/gl_get_selected_language">
-			<label i18n:translate="" for="lang">Posting language</label>
-			<select name="lang" id="lang">
-				<option tal:repeat="item here/gl_get_languages_mapping"
-					tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
-					tal:content="python:item['name']" />
-			</select>
-		</div>
-		<div class="field">
-			<label for="title" i18n:translate="">Title</label>
-			<input type="text" name="title:utf8:ustring" id="title" size="50" />
-		</div>
-		<div class="field">
-			<label for="submit-button" class="invisible" i18n:translate="">Submit button</label>
-			<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
-		</div>
-	</form>
-</fieldset>
-<br />
-<fieldset>
-	<legend i18n:translate="">Assign existing folder as main section</legend>
+	<legend i18n:translate="">Assign folder as main section</legend>
 	<form method="post" tal:attributes="action string:${site_url}/admin_updatemaintopics" name="frmEditTopic">
 		<p i18n:translate="">
 			Pick a folder from this portal and press the

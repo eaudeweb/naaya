@@ -1,4 +1,4 @@
-
+from zope.deprecation import deprecate
 
 from Products.NaayaCore.constants import *
 
@@ -123,9 +123,9 @@ class portlets_manager:
 
         return list(portal_portlets._get_portlets_for_ids(portlet_ids))
 
+    @deprecate('Use self.getPortletsTool().getPortletById instead')
     def get_portlet_object(self, p_id):
-        #returns a portlet object with the given id
-        return self.getPortletsTool()._getOb(p_id, None)
+        return self.getPortletsTool().getPortletById(p_id)
 
     def delete_portlet_for_object(self, ob):
         #try to delete the portlet for the given object

@@ -12,6 +12,7 @@ from OFS.Image import Image, manage_addImage
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from ZPublisher.HTTPRequest import record
+from zope.interface import implements
 
 #Product imports
 from constants import *
@@ -64,6 +65,8 @@ from Products.PythonScripts.PythonScript import manage_addPythonScript
 from Products.ZOpenArchives import (OAIServer, OAIAggregator,
                                     ZCatalogHarvester,OAIHarvester)
 
+from interfaces import ISEMIDESite
+
 from managers.config_parser                         import config_parser
 from managers.semide_zip                            import SemideZip
 from managers                                       import utils as semide_utils
@@ -105,7 +108,7 @@ def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
 
 class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     """ """
-
+    implements(ISEMIDESite)
     meta_type = METATYPE_SEMIDESITE
     icon = 'misc_/SEMIDE/Site.gif'
 
@@ -2422,19 +2425,6 @@ class SEMIDESite(NySite, ProfileMeta, export_pdf, SemideZip, Cacheable):
     def get_latest_comments(self):
         """ """
         return self.getCatalogTool().getLatestComments(path='/', limit=20)
-
-    #add main topics
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
-    def admin_addmaintopics(self, id='', title='', lang=None, REQUEST=None):
-        """ """
-        if len(id) == 0: id = PREFIX_FOLDER + self.utGenRandomId(6)
-        addNyFolder(self, id=id, title=title, lang=lang)
-        folder_ob = self.utGetObject(id)
-        self.maintopics.append(folder_ob.absolute_url(1))
-        self._p_changed = 1
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(view, 'search_rdf')
     # XXX Use decorators in python 2.4+

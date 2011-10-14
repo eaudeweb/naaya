@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<portlets left="" center="">
-		<portlet id="portlet_administration" title="Administration" />
 	</portlets>
 	<forms>
 		<form id="site_admin_template" title="Portal administration - macro"/>

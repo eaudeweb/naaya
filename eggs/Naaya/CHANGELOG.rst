@@ -1,5 +1,12 @@
-2.12.7 (unreleased)
+2.12.8 (unreleased)
 -------------------
+
+2.12.7 (2011-10-14)
+-------------------
+* admin top content page [andredor]
+* main topics admin page doesn't add/delete folders [andredor]
+* portlet administration on disk for new semide sites [andredor]
+* portlet administration also on disk [andredor]
 
 2.12.6 (2011-10-13)
 -------------------

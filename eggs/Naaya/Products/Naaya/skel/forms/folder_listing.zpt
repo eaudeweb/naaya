@@ -165,7 +165,7 @@ $(document).ready(function(){
 						<tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
 							[Restricted access]
 						</tal:block>
-						<tal:block condition="folder/discussion">
+						<tal:block condition="folder/discussion|nothing">
 						<tal:block define="count_comments folder/count_comments" condition="count_comments" on-error="string:">
 							[<span tal:replace="count_comments" />
 							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
@@ -243,7 +243,7 @@ $(document).ready(function(){
 									tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
 							</span>
 						</span>
-						<tal:block condition="object/discussion">
+						<tal:block condition="object/discussion|nothing">
 						<tal:block define="count_comments object/count_comments" condition="count_comments" on-error="string:">
 							[<span tal:replace="count_comments" />
 							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
