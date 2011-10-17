@@ -46,7 +46,6 @@ class BasicTests(AuthTestSetup):
         self.auth_tool.manage_delUsers(names=[user_obj.name])
         self.assertEqual(self.auth_tool.getUser(user_name), None)
 
-
 class UserAuthTestSetup(AuthTestSetup):
     def setUp(self):
         super(UserAuthTestSetup, self).setUp()
@@ -175,4 +174,3 @@ class UserWithRolesOnlyOnFolderTests(UserWithRolesOnlyOnFolderTestSetup):
 
         self.browser.go(folder_url)
         self.assertEqual(folder_url, self.browser.get_url())
-

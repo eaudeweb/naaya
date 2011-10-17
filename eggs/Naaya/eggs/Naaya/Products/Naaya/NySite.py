@@ -308,6 +308,11 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
         # initially, nobody can skip approval process
         self._set_submit_unapproved(True)
 
+        # view permission not inherited from root
+        view_perm = Permission(view, (), self)
+        roles_with_view = view_perm.getRoles()
+        view_perm.setRoles(tuple(roles_with_view))
+
         #load default skeleton
         self.loadSkeleton(NAAYA_PRODUCT_PATH)
         #set default main topics
