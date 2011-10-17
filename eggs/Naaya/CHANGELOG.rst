@@ -1,4 +1,7 @@
-2.12.8 (unreleased)
+2.12.9 (unreleased)
+-------------------
+
+2.12.8 (2011-10-17)
 -------------------
 * view permission not inherited for new sites [andredor]
 * fix copy/cut/paste/delete redirect for top objects [andredor]
