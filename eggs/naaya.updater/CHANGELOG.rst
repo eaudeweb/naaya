@@ -1,4 +1,7 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
+------------------
+
+1.2.6 (2011-10-17)
 ------------------
 * update script to remove inheritance for view permission [andredor]
 
