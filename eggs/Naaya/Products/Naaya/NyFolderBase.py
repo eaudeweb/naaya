@@ -269,7 +269,7 @@ class NyFolderBase(Folder, NyPermissions):
             try: self.manage_copyObjects(ids, REQUEST)
             except: self.setSessionErrorsTrans('Error while copy data.')
             else: self.setSessionInfoTrans('Item(s) copied.')
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
     def cutObjects(self, REQUEST=None, **kwargs):
@@ -286,7 +286,7 @@ class NyFolderBase(Folder, NyPermissions):
             try: self.manage_cutObjects(ids, REQUEST)
             except: self.setSessionErrorsTrans('Error while cut data.')
             else: self.setSessionInfoTrans('Item(s) cut.')
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(view, 'pasteObjects')
     def pasteObjects(self, REQUEST=None, **kwargs):
@@ -301,7 +301,7 @@ class NyFolderBase(Folder, NyPermissions):
             try: self.manage_pasteObjects(None, REQUEST)
             except: self.setSessionErrorsTrans('Error while paste data.')
             else: self.setSessionInfoTrans('Item(s) pasted.')
-        return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, REQUEST=None, **kwargs):
@@ -322,7 +322,7 @@ class NyFolderBase(Folder, NyPermissions):
                 zLOG.LOG("NyFolder.deleteObjects", zLOG.DEBUG, err)
             else:
                 self.setSessionInfoTrans('Item(s) deleted.')
-        return REQUEST.RESPONSE.redirect('index_html')
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
 
 
