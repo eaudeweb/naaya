@@ -6,6 +6,8 @@ from DateTime import DateTime
 import transaction
 from Products.PageTemplates.ZopePageTemplate import (ZopePageTemplate,
         manage_addPageTemplate)
+from AccessControl.Permissions import view
+from AccessControl.Permission import Permission
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
@@ -92,6 +94,22 @@ class TestNySite(NaayaTestCase):
         self.assertEqual(perms[skip_captcha]['zope_permission'], skip_captcha)
         self.assertTrue('title' in perms[skip_captcha].keys())
         self.assertTrue('description' in perms[skip_captcha].keys())
+
+    def test_view_permission_not_inherited(self):
+        view_perm = Permission(view, (), self.portal)
+        site_roles_with_view = view_perm.getRoles()
+        self.assertTrue(tuple is type(site_roles_with_view))
+
+
+class NoPermissionsForAnonymous(NaayaFunctionalTestCase):
+    def setUp(self):
+        super(NoPermissionsForAnonymous, self).setUp()
+        self.portal.admin_editrole('Anonymous', [])
+        transaction.commit()
+
+    def test_anonymous_can_have_view_restricted(self):
+        self.browser.go(self.portal.absolute_url())
+        self.assertNotEqual(self.portal.absolute_url(), self.browser.get_url())
 
 
 class TestNySiteListing(NaayaFunctionalTestCase):
