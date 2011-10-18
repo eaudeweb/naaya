@@ -181,6 +181,7 @@
 
     window.naaya_map_engine = {
         name: 'bing',
+        config: config,
         map_with_points: function(map_div_id, points) {
             $('div#'+map_div_id).text(
                 'map_with_points not implemented for bing maps');
