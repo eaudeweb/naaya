@@ -59,7 +59,7 @@
     </tal:block>
     <li><strong i18n:translate="">Content management</strong>
         <ul>
-	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Site content" i18n:attributes="title" i18n:translate="">Site content</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_topcontent_html" title="Top content" i18n:attributes="title" i18n:translate="">Top content</a></li>
 <li tal:condition="canPublish">
 <strong>Content types</strong>
             <ul>
