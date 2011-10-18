@@ -255,12 +255,22 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     #
     # Statistics
     #
-    security.declarePrivate("_getStatisticsContainer")
-    def _getStatisticsContainer(self):
+    security.declarePrivate("_getStatisticsContainerCursor")
+    def _getStatisticsContainerCursor(self):
         """ Create statistics container if it doesn't exists and return it
         """
         stats_container = getattr(self, STATISTICS_CONTAINER, None)
         if stats_container is None:
+            # do DB was ever created
+            cursor = None
+        else:
+            try:
+                cursor = stats_container.cursor()
+            except naaya.sql.DbMissing:
+                # DB was removed
+                cursor = None
+
+        if cursor is None:
             stats_container = naaya.sql.new_db()
             setattr(self, STATISTICS_CONTAINER, stats_container)
             table = ("CREATE TABLE HITS"
@@ -268,8 +278,10 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
             for (col, val) in STATISTICS_COLUMNS.items():
                 table += ", " + col + " " + val
             table += ")"
-            stats_container.cursor().execute(table)
-        return stats_container
+            cursor = stats_container.cursor()
+            cursor.execute(table)
+
+        return cursor
 
     def _removeStatisticsContainer(self):
         """ Remove statistics container if exists
@@ -284,7 +296,7 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     def getTopicHits(self, topic):
         """ Returns statistics for given topic
         """
-        cursor = self._getStatisticsContainer().cursor()
+        cursor = self._getStatisticsContainerCursor()
         cursor.execute("SELECT hits from HITS where topic=?", (topic,))
         res = cursor.fetchone()
         if not res:
@@ -296,9 +308,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     security.declarePrivate('setTopicHits')
     def setTopicHits(self, topic, how_many=1):
         hits = self.getTopicHits(topic) + how_many
-        stats_container = self._getStatisticsContainer()
-        stats_container.cursor().execute("UPDATE HITS set hits=? where topic=?",
-                                    (hits, topic))
+        cursor = self._getStatisticsContainerCursor()
+        cursor.execute("UPDATE HITS set hits=? where topic=?", (hits, topic))
 
     security.declareProtected(view, 'updateTopicHits')
     def updateTopicHits(self, topic):
@@ -310,9 +321,8 @@ class NyForum(NyRoleManager, NyPermissions, NyForumBase, Folder, utils):
     def removeTopicHits(self, topic):
         """ Remove hits record for topic
         """
-        stats_container = self._getStatisticsContainer()
-        stats_container.cursor().execute("DELETE FROM HITS where topic=?",
-                                         (topic, ))
+        cursor = self._getStatisticsContainerCursor()
+        cursor.execute("DELETE FROM HITS where topic=?", (topic, ))
 
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
