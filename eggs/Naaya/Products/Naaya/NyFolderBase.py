@@ -99,7 +99,7 @@ class NyFolderBase(Folder, NyPermissions):
             except: pass
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_basketofapprovals_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
     def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
@@ -124,7 +124,7 @@ class NyFolderBase(Folder, NyPermissions):
             except: pass
         if REQUEST:
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_basketofapprovals_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
 
     def listed_folders_info(self, skey='sortorder', rkey=0,
