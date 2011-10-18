@@ -1,5 +1,9 @@
-1.2.7 (unreleased)
+1.2.8 (unreleased)
 ------------------
+
+1.2.7 (2011-10-18)
+------------------
+* update script for file content type [andredor]
 
 1.2.6 (2011-10-17)
 ------------------
