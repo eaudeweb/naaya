@@ -138,7 +138,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.objmap_height_px = 400
         self.objmap_width_px = 400
         self.objmap_zoom = 14
-        self.set_map_engine('openlayers')
+        self.set_map_engine('google')
 
     def _create_map_engine_if_needed(self):
         name = self.current_engine
