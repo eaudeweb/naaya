@@ -381,6 +381,12 @@
       permission="zope2.ViewManagementScreens" />
 
 	<utility
+      name="update_display_glossary_terms_usage.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_display_glossary_terms_usage.UpdateDisplayGlossaryUsage"
+      permission="zope2.ViewManagementScreens" />
+
+	<utility
       name="update_file_content_type.update"
       provides="..interfaces.IUpdateScript"
       component=".update_file_content_type.UpdateFileContentType"
