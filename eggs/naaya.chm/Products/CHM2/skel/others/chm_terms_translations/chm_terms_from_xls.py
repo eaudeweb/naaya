@@ -4,7 +4,6 @@ from lxml.etree import tostring
 import xlrd
 import re
 from cStringIO import StringIO
-import json
 import collections
 
 log = logging.getLogger(__name__)
@@ -103,7 +102,7 @@ def _warn_if_replacements_incomplete(value, dictionary_keys):
     initial = value
     for fragment_en in dictionary_keys:
         value = value.replace(fragment_en, '')
-    value = re.sub(r'[^\w\s]+', '', value).strip()
+    value = re.sub(r'([^\w\s]+|\b\d+\b)', '', value).strip()
     if value:
         log.warn("Possibly not all strings replaced: %r -> %r", initial, value)
 
@@ -185,7 +184,7 @@ def extract_data_from_xls(xls_path):
     glossary.description.update(get_translations(sh.row(2)))
     glossary.description['en'] = val(sh.row(2)[3])
 
-    for n in range(HEADING_ROW+1, sh.nrows-1):
+    for n in range(HEADING_ROW+1, sh.nrows):
         row = sh.row(n)
         theme_name = val(row[0])
         term_name = val(row[1])
@@ -212,10 +211,15 @@ def extract_data_from_xls(xls_path):
             description_parser.handle(row)
 
         # should we save the current definition?
-        next_row = sh.row(n+1)
+        if n < sh.nrows - 1:
+            next_row = sh.row(n+1)
+        else:
+            next_row = None
+
         if description_parser is None: # nothing to save
             pass
-        elif val(next_row[3]): # next line continues the definition; keep going
+        elif next_row is not None and val(next_row[3]):
+            # next line continues the definition; keep going
             pass
         else: # definition is over, let's wrap it up
             values_trans = description_parser.compile_translations()
@@ -304,6 +308,7 @@ def do_import(ny_glossary, xls_path, autocommit=True):
 
 def main():
     import sys
+    import json
     logging.basicConfig()
     glossary_data = extract_data_from_xls(sys.argv[1])
     if len(sys.argv) > 2 and sys.argv[2] == 'metadata':
