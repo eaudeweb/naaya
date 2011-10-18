@@ -380,4 +380,10 @@
       component=".update_site_dont_inherit_view_permission.DontInheritViewPermission"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="update_file_content_type.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_file_content_type.UpdateFileContentType"
+      permission="zope2.ViewManagementScreens" />
+
 </configure>
