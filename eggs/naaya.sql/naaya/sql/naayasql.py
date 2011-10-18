@@ -50,6 +50,8 @@ class NaayaSqlDb(Persistent):
         """Drop database, delete it from disk"""
         remove(self._get_path())
 
+    def __repr__(self):
+        return '<NaayaSqlDb id: %s>' % self.db_id
 
 def new_db():
     exists = lambda x: (os.path.exists(os.path.join(DBS_FOLDER_PATH, x))
