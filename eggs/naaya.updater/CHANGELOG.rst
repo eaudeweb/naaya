@@ -1,4 +1,7 @@
-1.2.8 (unreleased)
+1.2.9 (unreleased)
+------------------
+
+1.2.8 (2011-10-18)
 ------------------
 * update script for displaying glossary usage throughout the portals [dumitval]
 * update script for setting contributor from owner if None [andredor]
