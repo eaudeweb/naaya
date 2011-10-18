@@ -160,15 +160,16 @@ if (naaya_map_engine.name == 'bing') {
         {
             clearInterval(interval);
             window.naaya_portal_map = naaya_map_engine.portal_map('map');
+            window.map_engine = naaya_portal_map;
         }
     }, 10);
 } else {
     window.naaya_portal_map = naaya_map_engine.portal_map('map');
+    // TODO `map_engine` is for backwards compatibility because the name is
+    // wrong; we should remove it at some point.
+    window.map_engine = naaya_portal_map;
 }
 
-// TODO `map_engine` is for backwards compatibility because the name is
-// wrong; we should remove it at some point.
-window.map_engine = naaya_portal_map;
 
 // don't submit the form, just refresh our map
 $('form[name=frmFilterMap]').submit(function(evt) {
