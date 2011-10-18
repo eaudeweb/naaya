@@ -70,7 +70,7 @@ class GeopointExportTest(NaayaTestCase):
 
         picture_data = load_file('data/symbol.png')
         self.portal.portal_map.addSymbol('sym1', 'Test symbol one',
-                                         '', '', picture_data, '')
+                                         '', '', None, picture_data, '')
 
     def beforeTearDown(self):
         nycontact_schema = self.portal['portal_schemas']['NyContact']

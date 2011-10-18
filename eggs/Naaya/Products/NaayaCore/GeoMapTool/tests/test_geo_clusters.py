@@ -29,7 +29,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         picture_data = load_file('data/symbol.png')
 
         for id in self.symbol_ids:
-            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
+            self.portal.portal_map.addSymbol(id, id, '', '', None, picture_data, '')
 
         addNyFolder(self.portal, 'geo_clusters_test', contributor='contributor',
                 submited=1)

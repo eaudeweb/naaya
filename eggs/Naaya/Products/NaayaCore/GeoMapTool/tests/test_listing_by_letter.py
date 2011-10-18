@@ -35,7 +35,7 @@ class ListingByLetterTest(NaayaFunctionalTestCase):
         picture_data = load_file('data/symbol.png')
 
         for id in self.symbol_ids:
-            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
+            self.portal.portal_map.addSymbol(id, id, '', '', None, picture_data, '')
 
         addNyFolder(self.portal, 'listing_by_letter_test', contributor='contributor',
                 submited=1)
