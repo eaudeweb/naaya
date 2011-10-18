@@ -437,7 +437,8 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
         modif_time = DT2dt(self.bobobase_modification_time())
         cal.vevent.add('dtstamp').value = modif_time
 
-        cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
+        if self.start_date is not None:
+            cal.vevent.add('dtstart').value = DT2dt(self.start_date).date()
         if self.end_date is not None:
             cal.vevent.add('dtend').value = (DT2dt(self.end_date).date() +
                                              datetime.timedelta(days=1))
