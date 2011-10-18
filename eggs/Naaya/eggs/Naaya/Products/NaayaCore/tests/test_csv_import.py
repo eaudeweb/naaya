@@ -214,8 +214,8 @@ class GeopointImportTest(NaayaTestCase):
 
         picture_data = load_file('data/symbol.png')
 
-        self.portal.portal_map.addSymbol('sym1', 'Test symbol one', '', '', picture_data, '')
-        self.portal.portal_map.addSymbol('sym2', 'Test symbol two', '', '', picture_data, '')
+        self.portal.portal_map.addSymbol('sym1', 'Test symbol one', '', '', None, picture_data, '')
+        self.portal.portal_map.addSymbol('sym2', 'Test symbol two', '', '', None, picture_data, '')
 
     def beforeTearDown(self):
         self.portal.portal_map.deleteSymbol(['sym1', 'sym2'])

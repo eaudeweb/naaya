@@ -145,7 +145,7 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
         picture_data = load_file('data/symbol.png')
 
         for id in self.symbols:
-            self.portal.portal_map.addSymbol(id, id, '', '', picture_data, '')
+            self.portal.portal_map.addSymbol(id, id, '', '', None, picture_data, '')
 
         addNyFolder(self.portal, 'geo_location_test', contributor='contributor', submitted=1)
         folder = self.portal.geo_location_test
