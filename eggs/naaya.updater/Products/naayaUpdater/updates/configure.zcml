@@ -386,4 +386,9 @@
       component=".update_file_content_type.UpdateFileContentType"
       permission="zope2.ViewManagementScreens" />
 
+	<utility
+      name="update_set_contributor.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_set_contributor.SetContributor"
+      permission="zope2.ViewManagementScreens" />
 </configure>
