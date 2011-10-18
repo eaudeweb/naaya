@@ -88,7 +88,8 @@ def clean_display_id(id):
     id = to_single_dashes.sub('-', id)
     return id
 
-def addNyPhoto(self, id='', REQUEST=None, _klass=None, **kwargs):
+def addNyPhoto(self, id='', REQUEST=None, contributor=None,
+        _klass=None, **kwargs):
     """
     Create a Photo type of object.
     """
@@ -118,9 +119,12 @@ def addNyPhoto(self, id='', REQUEST=None, _klass=None, **kwargs):
     if id:
         id = clean_display_id(id)
     id = make_id(self, id=id, title=(_title or _file), prefix=PREFIX_NYPHOTO)
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
     schema_raw_data['title'] = _title
 
-    ob = _klass(id, content_type=_content_type, displays=self.displays.copy())
+    ob = _klass(id, contributor=contributor,
+            content_type=_content_type, displays=self.displays.copy())
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     ob = self._getOb(id)
@@ -166,10 +170,11 @@ class NyPhoto(NyContentData, NyAttributes, photo_archive_base, NyFSContainer, Ny
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, content_type='', displays={}):
+    def __init__(self, id, contributor, content_type='', displays={}):
         """ """
         #image stuff
         self.id = id
+        self.contributor = contributor
         self.content_type = content_type
         self.displays = displays
         NyFSContainer.__init__(self)

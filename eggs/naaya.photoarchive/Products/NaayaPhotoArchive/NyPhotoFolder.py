@@ -72,7 +72,8 @@ def photofolder_add_html(self, REQUEST):
     return _photofolder_add_html.__of__(self)(REQUEST, form_helper=form_helper)
 
 
-def addNyPhotoFolder(self, id='', REQUEST=None, _klass=None, **kwargs):
+def addNyPhotoFolder(self, id='', REQUEST=None, contributor=None,
+        _klass=None, **kwargs):
     """
     Create a PhotoFolder type of object.
     """
@@ -88,8 +89,10 @@ def addNyPhotoFolder(self, id='', REQUEST=None, _klass=None, **kwargs):
     _file = schema_raw_data.pop('file', None)
 
     folder_id = make_id(self, id=id, title=schema_raw_data['title'], prefix=PREFIX_NYPHOTOFOLDER)
+    if contributor is None:
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _klass(folder_id)
+    ob = _klass(folder_id, contributor)
     self.gl_add_languages(ob)
     self._setObject(folder_id, ob)
 
@@ -172,8 +175,9 @@ class NyPhotoFolder(NyRoleManager, NyContentData, NyAttributes, photo_archive_ba
     restrict_original = False
     watermark_text = ''
 
-    def __init__(self, id):
+    def __init__(self, id, contributor):
         self.id = id
+        self.contributor = contributor
         self.displays = DEFAULT_DISPLAYS.copy()
         NyContainer.__init__(self)
         NyContentData.__init__(self)
