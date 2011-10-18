@@ -1,5 +1,9 @@
-1.0.5 (unreleased)
------------------
+1.0.6 (unreleased)
+------------------
+
+1.0.5 (2011-10-18)
+------------------
+* fixed name and description for top content [andredor]
 
 1.0.4 (2011-10-14)
 ------------------
