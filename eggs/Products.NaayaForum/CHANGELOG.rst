@@ -1,4 +1,7 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
+------------------
+
+1.2.6 (2011-10-18)
 ------------------
 * Recreate statistics DB if it was removed [moregale]
 
