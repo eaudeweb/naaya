@@ -1,5 +1,6 @@
-1.2.9 (unreleased)
+1.2.9 (2011-10-18)
 ------------------
+* fix update script for setting contributor from owner if None [andredor]
 
 1.2.8 (2011-10-18)
 ------------------
