@@ -55,7 +55,7 @@
 
         <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-        <p><a tal:attributes="href string:${here/absolute_url}/get_ics"
+        <p tal:condition="here/start_date"><a tal:attributes="href string:${here/absolute_url}/get_ics"
               i18n:translate="">Download as iCalendar</a></p>
 
         <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
