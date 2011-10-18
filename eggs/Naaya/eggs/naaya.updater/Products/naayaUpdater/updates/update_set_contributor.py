@@ -1,7 +1,5 @@
 from AccessControl import ClassSecurityInfo
 
-from naaya.core.zope2util import ofs_walk
-
 from Products.naayaUpdater.updates import UpdateScript
 
 class SetContributor(UpdateScript):
@@ -14,7 +12,11 @@ class SetContributor(UpdateScript):
 
     security.declarePrivate('_update')
     def _update(self, portal):
-        for item in ofs_walk(portal):
+        portal_catalog = portal.getCatalogTool()
+        for brain in portal_catalog():
+            item = brain.getObject()
+            if not hasattr(item.aq_base, 'contributor'):
+                continue
             if item.contributor is not None:
                 continue
             self.log.debug('%s has None "contributor"' % item.absolute_url())
