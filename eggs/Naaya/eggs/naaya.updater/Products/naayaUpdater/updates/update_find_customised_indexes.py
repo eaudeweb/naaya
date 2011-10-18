@@ -1,4 +1,3 @@
-from Products.naayaUpdater.utils import get_portals
 from Products.naayaUpdater.updates import UpdateScript
 
 class UpdateFindCustomIndexes(UpdateScript):
