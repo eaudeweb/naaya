@@ -166,6 +166,7 @@
 
     window.naaya_map_engine = {
         name: 'yahoo',
+        config: config,
         map_with_points: function(map_div_id, points) {
             the_map = new YMap(document.getElementById(map_div_id));
             the_map.setMapType(base_layer_names[config.base_layer]);

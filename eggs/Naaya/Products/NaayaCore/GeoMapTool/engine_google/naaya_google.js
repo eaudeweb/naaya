@@ -209,6 +209,7 @@
 
     window.naaya_map_engine = {
         name: 'google',
+        config: config,
         map_with_points: function(map_div_id, points) {
             setup_map(map_div_id);
             draw_points_on_map(points);
