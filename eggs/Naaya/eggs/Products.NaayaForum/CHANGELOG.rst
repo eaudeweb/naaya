@@ -1,3 +1,7 @@
+1.2.6 (unreleased)
+------------------
+* Recreate statistics DB if it was removed [moregale]
+
 1.2.5 (2011-10-13)
 ------------------
 * add releasedate for forum objects
