@@ -202,18 +202,6 @@ function toggleChildren(elem) {
 	startMapRefresh();
 }
 
-function displayParentCheckboxes() {
-	form = document.getElementById('filter_map');
-	if (form != null) {
-		form_children = form.childNodes;
-		for (var i=0;i<form_children.length;i++) {
-			if (form_children[i].tagName == 'LI') {
-				form_children[i].getElementsByTagName('input')[0].style.display = "inline"
-			}
-		}
-	}
-}
-
 function showPageElements() {
 	// set explanatory text in search fields
 	var address = document.getElementById('address');
@@ -241,7 +229,6 @@ function showPageElements() {
 	document.getElementById('address_button').disabled = false;
 	document.getElementById('geo_query_button').disabled = false;
 	document.getElementById('map_links_js').style.display = "block";
-
 	//Also place handlers on inputs:
 	jQuery('#geo_query, #address').keypress(handleKeyPress);
 }
