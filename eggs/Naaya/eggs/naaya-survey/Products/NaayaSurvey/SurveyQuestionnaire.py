@@ -95,6 +95,7 @@ class SurveyQuestionnaire(NyRoleManager, NyAttributes, questionnaire_item, NyCon
     notify_respondents = 'LET_THEM_CHOOSE_YES'
     allow_overtime = 0
     allow_drafts = False
+    allow_multiple_answers = False
 
     def __init__(self, id, survey_template, lang=None, **kwargs):
         """
