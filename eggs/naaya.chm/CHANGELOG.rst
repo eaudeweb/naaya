@@ -1,4 +1,7 @@
-2.4.7 (unreleased)
+2.4.8 (unreleased)
+------------------
+
+2.4.7 (2011-10-19)
 ------------------
 * portal_map css updated for the new and cleaner design [simiamih]
 
