@@ -1,5 +1,9 @@
-1.2.6 (unreleased)
+1.2.7 (unreleased)
 ==================
+
+1.2.6 (2011-10-18)
+==================
+ * xlwt dependency, rel="nofollow" on export link [simiamih]
  * Bugfix in RadioWidget.get_value
  * Administrators can now edit answers in expired surveys
 

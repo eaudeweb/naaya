@@ -40,7 +40,7 @@
 			tal:content="object/title" />
 	</td>
 	<td class="title-column">
-		<a i18n:translate=""
+		<a i18n:translate="" rel="nofollow"
 		tal:attributes="href string:${here/absolute_url}/questionnaire_export?report_id=${object/id}" >
 			Download as Excel
 		</a>
