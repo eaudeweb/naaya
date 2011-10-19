@@ -397,4 +397,10 @@
       provides="..interfaces.IUpdateScript"
       component=".update_set_contributor.SetContributor"
       permission="zope2.ViewManagementScreens" />
+
+	<utility
+      name="update_remove_site_title_attr.update"
+      provides="..interfaces.IUpdateScript"
+      component=".update_remove_site_title_attr.RemoveSiteTitle"
+      permission="zope2.ViewManagementScreens" />
 </configure>
