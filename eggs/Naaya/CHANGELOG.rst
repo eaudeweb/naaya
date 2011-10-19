@@ -1,5 +1,6 @@
-2.12.11 (unreleased)
+2.12.11 (2011-10-19)
 --------------------
+* removed Glossaries tab from admin portal properties [dumitval]
 * removed Properties tab for the site (#710) [andredor]
 
 2.12.10 (2011-10-19)

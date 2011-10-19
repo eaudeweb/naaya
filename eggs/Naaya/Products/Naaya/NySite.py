@@ -2181,29 +2181,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
             self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_glossary_ids')
-    def admin_set_glossary_ids(self, keywords=None, coverage=None, REQUEST=None):
-        """ Change glossary widget for all content types """
-
-        self.keywords_glossary = keywords
-        self.coverage_glossary = coverage
-
-        for schema in self.getSchemaTool().objectValues():
-            for widget in schema.listWidgets():
-                prop_name = widget.prop_name()
-
-                if prop_name == 'keywords':
-                    widget.glossary_id = keywords
-                elif prop_name == 'coverage':
-                    widget.glossary_id = coverage
-                else:
-                    continue
-
-        if REQUEST:
-            self.setSessionInfoTrans(MESSAGE_SAVEDCHANGES, date=self.utGetTodayDate())
-            REQUEST.RESPONSE.redirect('%s/admin_glossaries_html' % self.absolute_url())
-
-
     def _set_submit_unapproved(self, submit_unapproved):
         if submit_unapproved:
             # permission will not be acquired and is granted to nobody
@@ -3075,11 +3052,6 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_logos')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_glossaries_html')
-    def admin_glossaries_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_glossaries')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties_html')
     def admin_properties_html(self, REQUEST=None, RESPONSE=None):
