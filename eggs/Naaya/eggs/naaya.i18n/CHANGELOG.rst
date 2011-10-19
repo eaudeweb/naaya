@@ -1,7 +1,10 @@
-1.0.4 (unreleased)
+1.0.5 (unreleased)
 ------------------
-* bug: default lang for properties should always be 'en', and not portal
-  default language [simiamih]
+
+1.0.4 (2011-10-19)
+------------------
+* feature: return en translation when default lang in site is not en,
+  but object has translation only for en [simiamih]
 
 1.0.3 (2011-10-13)
 ------------------
