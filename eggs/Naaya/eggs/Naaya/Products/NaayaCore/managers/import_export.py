@@ -25,7 +25,6 @@ from Products.NaayaCore.events import CSVImportEvent
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
-from Products.NaayaCore.GeoMapTool.managers import geocoding
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 logger = logging.getLogger(__name__)
@@ -63,19 +62,6 @@ class CSVImportTool(Implicit, Item):
             set_response_attachment(REQUEST.RESPONSE, filename,
                 'text/csv; charset=utf-8', output.len)
         return output.getvalue()
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
-    def do_geocoding(self, properties):
-        lat = properties.get(self.geo_fields['lat'], '')
-        lon = properties.get(self.geo_fields['lon'], '')
-        address = properties.get(self.geo_fields['address'], '')
-        if lat.strip() == '' and lon.strip() == '' and address:
-            coordinates = geocoding.geocode(self.portal_map, address)
-            if coordinates != None:
-                lat, lon = coordinates
-                properties[self.geo_fields['lat']] = lat
-                properties[self.geo_fields['lon']] = lon
-        return properties
 
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
@@ -147,7 +133,6 @@ class CSVImportTool(Implicit, Item):
                         key = prop_map[column]['column']
                         convert = prop_map[column]['convert']
                         properties[key] = convert(value)
-                    properties = self.do_geocoding(properties)
                     ob_id = add_object(location_obj, _send_notifications=False, **properties)
                     ob = location_obj._getOb(ob_id)
                     if extra_properties:
