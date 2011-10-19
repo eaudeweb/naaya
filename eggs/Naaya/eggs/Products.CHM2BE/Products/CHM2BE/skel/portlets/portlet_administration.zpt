@@ -12,7 +12,6 @@
             <li><a tal:attributes="href string:${site_url}/admin_metadata_html" title="Metadata" i18n:attributes="title" i18n:translate="">Metadata</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_logos_html" title="Logos" i18n:attributes="title" i18n:translate="">Logos</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_email_html" title="Email Settings" i18n:attributes="title" i18n:translate="">Email Settings</a></li>
-            <li><a tal:attributes="href string:${site_url}/admin_glossaries_html" title="Glossaries" i18n:attributes="title" i18n:translate="">Glossaries</a></li>
             <li><a tal:attributes="href string:${site_url}/admin_properties_html" title="Other Properties" i18n:attributes="title" i18n:translate="">Other Properties</a></li>
         </ul>
     </li>

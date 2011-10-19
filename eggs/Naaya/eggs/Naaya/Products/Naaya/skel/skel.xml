@@ -36,7 +36,6 @@
 		<form id="site_admin_email" title="Portal administration - email settings"/>
 		<form id="site_admin_folderportlets" title="Portal administration - portlets for folders section"/>
 		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
-		<form id="site_admin_glossaries" title="Portal administration - glossaries"/>
 		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
 		<form id="site_admin_layout" title="Portal administration - layout"/>
 		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
