@@ -1,3 +1,6 @@
+2.4.9 (unreleased)
+------------------
+
 2.4.8 (2011-10-19)
 ------------------
 * removed glossaries tab from admin portal properties [dumitval]
