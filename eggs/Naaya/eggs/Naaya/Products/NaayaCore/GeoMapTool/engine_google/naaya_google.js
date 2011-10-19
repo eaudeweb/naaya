@@ -19,6 +19,7 @@
     var base_layer_names = {
         'map': G_NORMAL_MAP,
         'hybrid': G_HYBRID_MAP,
+        'physical': G_PHYSICAL_MAP,
         'satellite': G_SATELLITE_MAP
     };
 
