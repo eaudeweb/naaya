@@ -975,3 +975,24 @@ form.user-form .field-inline input[type="text"]:focus, form.user-form .field-inl
 	float: left;
 	width: 15em;
 }
+
+.naaya-openlayers .olControlAttribution {
+	bottom: 5px;
+}
+.naaya-openlayers .olControlZoomPanel {
+	top: 14px;
+}
+.naaya-openlayers .olControlZoomPanel .olControlZoomInItemInactive {
+	width: 36px;
+	height: 36px;
+	background: url(www/zoom-in.png) no-repeat;
+}
+.naaya-openlayers .olControlZoomPanel .olControlZoomToMaxExtentItemInactive {
+	display: none;
+}
+.naaya-openlayers .olControlZoomPanel .olControlZoomOutItemInactive {
+	top: 38px;
+	width: 36px;
+	height: 36px;
+	background: url(www/zoom-out.png) no-repeat;
+}
