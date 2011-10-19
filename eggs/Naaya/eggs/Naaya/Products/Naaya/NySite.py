@@ -155,7 +155,8 @@ class NySite(NyRoleManager, NyCommonView, CookieCrumbler, LocalPropertyManager,
     icon = 'misc_/Naaya/Site.gif'
 
     manage_options = (
-        Folder.manage_options
+        tuple(op for op in Folder.manage_options
+                    if op['action'] != 'manage_propertiesForm')
         +
         (
             {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},

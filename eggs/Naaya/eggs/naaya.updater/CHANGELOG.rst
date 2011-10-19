@@ -1,5 +1,6 @@
 1.2.10 (unreleased)
 -------------------
+* update script to remove the site title property [andredor]
 
 1.2.9 (2011-10-18)
 ------------------
