@@ -1,5 +1,9 @@
-2.12.10 (unreleased)
+2.12.11 (unreleased)
 --------------------
+
+2.12.10 (2011-10-19)
+--------------------
+* portal_map redesign - cleaner legend, no checkboxes, less elements [simiamih]
 
 2.12.9 (2011-10-18)
 -------------------

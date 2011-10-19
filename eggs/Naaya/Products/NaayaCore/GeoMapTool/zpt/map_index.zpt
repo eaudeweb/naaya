@@ -25,51 +25,61 @@
 		<noscript>
 			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
 		</noscript>
-		<p id="js_links" style="display: none; height: 2em">
-			<span i18n:translate="">Displaying </span>
-			<strong id="record_counter"></strong>
-			<span i18n:translate="">location(s).</span>
-			You can also <a href="." id="view_as_list" i18n:translate="">view these locations as a list</a>, <a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a>
-			or <a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a>.
-		</p>
-		<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
+
+		<div id="portalmap_center">
+			<div id="portalmap_top">
+				<div class="portalmap_portlet">
+					<div class="portalmap_location_filters">
+						<input type="text" class="text_input" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" />
+						<input type="button" name="address_button" id="address_button" value="Zoom in" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
+					</div>
+					<div class="portalmap_location_filters">
+						<input type="text" class="text_input" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" style="width: 60%" />
+						<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Filter locations" onclick="startMapRefresh()" i18n:attributes="value"/>
+						<noscript>
+							<p><small i18n:translate="">eg: "water supply"</small></p>
+						</noscript>
+					</div>
+
+				</div>
+			</div>
+			<br clear="all" style="clear:both"/>
+			<div id="map" tal:attributes="style string:width: 100%;; height: ${height}px;;"></div>
+		</div>
 		<br clear="all" style="clear:both"/>
 		<div style="display:none" id="map_markers"></div>
+		<p i18n:translate="">
+			You can also <span i18n:name="view-link"><a href="." id="view_as_list" i18n:translate="">view locations as a list</a></span>,
+			<span i18n:name="view-google-earth-link"><a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a></span>
+			or <span i18n:name="geo-rss-link"><a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a></span>.
+		</p>
 	</div>
 	<div id="portalmap">
 		<div class="portalmap_portlet">
-			<div class="portalmap_portlet_title">
-				<p i18n:translate="">Find address</p>
-			</div>
-			<div>
-				<input type="text" id="address" name="address:ustring:utf8" readonly="readonly" tal:attributes="value request/address|string:" onkeypress="return handleKeyPress(this, event);" />
-				<input type="button" name="address_button" id="address_button" value="Go" disabled="disabled" onclick="findAddress()" i18n:attributes="value"/>
-			</div>
-			<div class="portalmap_portlet_title">
-				<p i18n:translate="">Filter locations</p>
-			</div>
+
 			<div class="map_filters">
-				<div>
-					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value request/geo_query|string:" onkeypress="return handleKeyPress(this, event);" style="width: 60%" />
-					<input type="button" name="geo_query_button" id="geo_query_button" disabled="disabled" value="Go" onclick="startMapRefresh()" i18n:attributes="value"/>
-					<noscript>
-						<p><small i18n:translate="">eg: "water supply"</small></p>
-					</noscript>
-				</div>
-				<small><a href="javascript:toggleSelect();" title="Check all" i18n:translate="" i18n:attributes="title" id="checkall" style="display:none">Uncheck All</a></small>
+						<p id="js_links" style="display: none;">
+							<strong id="record_counter"></strong>
+							<span i18n:translate="">location(s)</span>
+						</p>
+
 					<ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsListOrdered" tal:condition="parentsList">
 						<tal:block repeat="item parentsList">
 							<tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
 							<li>
 								<input type="checkbox" name="geo_types:list" class="map_hidden_checkbox" style="display: none;"
-									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" onclick="javascript:toggleChildren(this)" />
-								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
+									tal:attributes="value item/id; id item/id; checked python:item.id in geo_types"
+									class="hidden"
+									onclick="javascript:toggleChildren(this)" />
+								<img tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title; class string:pin" />
 								<label tal:attributes="for item/id"><span i18n:translate="" tal:content="item/title" /></label>
 								<ul tal:condition="children" class="category_child">
 									<li tal:repeat="child children">
 										<input type="checkbox" name="geo_types:list"
-											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" onclick="javascript: startMapRefresh()" />
-										<img tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
+											tal:attributes="value child/id; id child/id; checked python:child.id in geo_types"
+											class="hidden"
+											onclick="javascript: startMapRefresh()" />
+										<img tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title; class string:pin" />
 										<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 									</li>
 								</ul>
@@ -77,6 +87,7 @@
 							</tal:block>
 						</tal:block>
 					</ul>
+					<p class="map_right_control"><a href="javascript:toggleSelect();" style="display: none;" title="Hide all" i18n:translate="" i18n:attributes="title" id="checkall">Hide All</a></p>
 					<div>
 						<input type="hidden" id="path" name="path" tal:attributes="value path" />
 						<noscript>

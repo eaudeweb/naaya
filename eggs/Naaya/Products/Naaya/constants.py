@@ -51,8 +51,8 @@ JS_MESSAGES = [
      u'August September October November December'),
      u'S M T W T F S',
 # portal_map
-    u'Check All',
-    u'Uncheck All',
+    u'Show All',
+    u'Hide All',
     u'Type location address',
     u'Type keywords',
     u'close',
