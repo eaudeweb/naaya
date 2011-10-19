@@ -24,6 +24,12 @@
 		<h1 i18n:translate="" tal:content="here/title_or_id" />
 		<noscript>
 			<p i18n:translate="" class="message-information">You must have Javascript turned on to access all the Geo Map features.</p>
+			<p i18n:translate="">
+			You can <span i18n:name="view-link"><a tal:attributes="href python: 'list_locations?geo_types='+','.join(geo_types)"
+							       i18n:translate="">view locations as a list</a></span>
+			or <span i18n:name="geo-rss-link"><a tal:attributes="href python: 'export_geo_rss?geo_types='+','.join(geo_types)"
+							     i18n:translate="">download them in GeoRSS format</a></span>.
+			</p>
 		</noscript>
 
 		<div id="portalmap_center">
@@ -48,7 +54,7 @@
 		</div>
 		<br clear="all" style="clear:both"/>
 		<div style="display:none" id="map_markers"></div>
-		<p i18n:translate="">
+		<p i18n:translate="" id="map_links_js" class="hidden">
 			You can also <span i18n:name="view-link"><a href="." id="view_as_list" i18n:translate="">view locations as a list</a></span>,
 			<span i18n:name="view-google-earth-link"><a href="." id="view_in_google_earth" i18n:translate="">view them in Google Earth</a></span>
 			or <span i18n:name="geo-rss-link"><a href="." id="download_georss" i18n:translate="">download them in GeoRSS format</a></span>.
