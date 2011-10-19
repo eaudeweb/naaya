@@ -48,6 +48,7 @@ class GoogleMapEngine(SimpleItem):
         return self._config_html(all_layers=[
                 {'name': 'map', 'label': "Streets"},
                 {'name': 'hybrid', 'label': "Hybrid"},
+                {'name': 'physical', 'label': "Physical"},
                 {'name': 'satellite', 'label': "Satellite"}])
 
     security.declarePrivate('save_config')
