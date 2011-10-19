@@ -1,5 +1,6 @@
 2.4.7 (unreleased)
 ------------------
+* portal_map css updated for the new and cleaner design [simiamih]
 
 2.4.6 (2011-10-14)
 ------------------

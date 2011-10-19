@@ -8,8 +8,8 @@ function toggleSelect() {
 		  frm.elements[i].checked = !isSelected;
 	  isSelected = !isSelected;
   var btn = document.getElementById('checkall');
-  if (btn.innerHTML == naaya_map_i18n["Check All"]) {btn.innerHTML = naaya_map_i18n["Uncheck All"]}
-  else {btn.innerHTML = naaya_map_i18n["Check All"]}
+  if (btn.innerHTML == naaya_map_i18n["Show All"]) {btn.innerHTML = naaya_map_i18n["Hide All"]}
+  else {btn.innerHTML = naaya_map_i18n["Show All"]}
   }
   startMapRefresh();
 }
@@ -121,12 +121,20 @@ function update_locations_values(bounds, query){
 	if (filter_map != null) {
 		var symbols = filter_map.getElementsByTagName('input');
 		form.symbols.value = "";
+		var container_li = undefined;
 		for (var i=0;i<symbols.length;i++){
-			if (symbols[i].checked && form.symbols.value.indexOf(symbols[i]) == -1){
+			container_li = symbols[i].parentNode;
+			if (symbols[i].checked){
+			  container_li.className = '';
+			  if(form.symbols.value.indexOf(symbols[i]) == -1){
+				// construct ','.join(symbols values) in form.symbols.value
 				if (form.symbols.value != ""){
 					form.symbols.value = form.symbols.value + "," + symbols[i].value;
 				}
 				else {form.symbols.value = symbols[i].value;}
+			  }
+			} else {
+			  container_li.className = 'unchecked_categ';
 			}
 		}
 		var req_link = "?lat_min=" + bounds.lat_min +
@@ -172,8 +180,9 @@ function findAddress(evt) {
 	}
 }
 
-function handleKeyPress(elem, key) {
-	if (key.keyCode == 13) { 
+function handleKeyPress(event) {
+	var elem = event.target;
+	if (event.keyCode == 13) { 
 		if (elem.id == 'address') {findAddress(); return false;}
 		if (elem.id == 'geo_query') {startMapRefresh(); return false;}
 	}
@@ -231,7 +240,10 @@ function showPageElements() {
 	a = document.getElementById('address').readOnly = false;
 	document.getElementById('address_button').disabled = false;
 	document.getElementById('geo_query_button').disabled = false;
-	displayParentCheckboxes();
+	document.getElementById('map_links_js').style.display = "block";
+
+	//Also place handlers on inputs:
+	jQuery('#geo_query, #address').keypress(handleKeyPress);
 }
 
 var new_naaya_map_balloon = function(options) {

@@ -1,5 +1,11 @@
 <configure xmlns='http://namespaces.zope.org/zope'
-           xmlns:naaya="http://namespaces.zope.org/naaya">
+           xmlns:naaya="http://namespaces.zope.org/naaya"
+           xmlns:browser="http://namespaces.zope.org/browser">
+    <browser:resourceDirectory
+        name="geomaptool.icons"
+        directory="./www"
+        permission="zope.Public"
+        />
   <naaya:call factory=".engine_google.register" />
   <naaya:call factory=".engine_yahoo.register" />
   <naaya:call factory=".engine_bing.register" />
