@@ -1,3 +1,6 @@
+2.4.10 (unreleased)
+-------------------
+
 2.4.9 (2011-10-19)
 ------------------
 * add 'Folder subobjects' link to portal_administration [andredor]
