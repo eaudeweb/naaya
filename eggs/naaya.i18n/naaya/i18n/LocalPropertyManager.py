@@ -161,9 +161,13 @@ class LocalPropertyManager(object):
             if lang is None:
                 # eg: we ask default (en), id has only 'de', lang is then None
                 # because fallback=False (or else it would have been `de`)
-                lang = 'en' # better use 'en' than i18n['default_language']
+                lang = i18n['default_language']
         if lang not in self._local_properties[id]:
-            return ''
+            if 'en' in self._local_properties[id]:
+                # when default lang in portal != 'en', but trans only in en
+                lang = 'en'
+            else:
+                return ''
         value = self._local_properties[id][lang]
         if isinstance(value, tuple): # (value, timestamp)
             return value[0]
