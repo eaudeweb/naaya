@@ -324,6 +324,10 @@ p
   border: none;
 }
 
+.right_link_portlet .content ul ul ul {
+  margin: -23px 0 0 180px !important;
+}
+
 /* Administration content */
 #content_info {
   padding-left:1em;
