@@ -33,7 +33,6 @@ from Products.NaayaGlossary.constants import *
 from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 from Products.NaayaForum.NyForum import addNyForum
-from Products.CHM2.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.utils import make_id
 from naaya.component import bundles
 
