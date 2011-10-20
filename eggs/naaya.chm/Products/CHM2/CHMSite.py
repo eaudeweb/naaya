@@ -808,19 +808,6 @@ class CHMSite(NySite):
             self.setSessionInfoTrans("Role(s) revoked")
             return REQUEST.RESPONSE.redirect(redirect_url)
 
-    security.declareProtected(view, 'getCaptcha')
-    def getCaptcha(self):
-        """ generate a Captcha image """
-        g = captcha_tool()
-        g.defaultSize = (100, 20)
-        i = g.render()
-        newimg = StringIO()
-        i.save(newimg, "JPEG")
-        newimg.seek(0)
-        #set the word on session
-        self.setSession('captcha', g.solutions[0])
-        return newimg.getvalue()
-
     #overwrite the Naaaya processFeedbackForm function. CAPTCHA added
     security.declareProtected(view, 'processFeedbackForm')
     def processFeedbackForm(self, username='', email='', comments='', contact_word='', REQUEST=None):
