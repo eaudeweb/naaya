@@ -1,5 +1,6 @@
 2.4.11 (unreleased)
 -------------------
+* add admin_network_html to portlet_administration [andredor]
 
 2.4.10 (2011-10-20)
 -------------------

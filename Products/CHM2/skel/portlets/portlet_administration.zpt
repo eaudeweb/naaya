@@ -33,6 +33,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_localchannels_html" title="Definition of local channels of information" i18n:attributes="title" i18n:translate="">Local channels</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_remotechannels_html" title="Definition of remote channels of information" i18n:attributes="title" i18n:translate="">Remote channels</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_remotechannels_aggregators_html" title="Definition of remote channels aggregators" i18n:attributes="title" i18n:translate="">Remote channels aggregators</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_network_html" title="Portals in your network" i18n:attributes="title" i18n:translate="">Portals in your network</a></li>
 	<li tal:condition="canPublish"><strong i18n:translate="">Portlets</strong></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_portlets/admin_layout" title="Arrange portlet layout" i18n:attributes="title" i18n:translate="">Arrange</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_remotechportlets_html" title="Manage portlets" i18n:attributes="title" i18n:translate="">Manage</a></li>
