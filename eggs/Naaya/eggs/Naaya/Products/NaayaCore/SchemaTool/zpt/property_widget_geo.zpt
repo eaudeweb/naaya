@@ -1,5 +1,5 @@
 <tal:block define="
-field_class string:field-inline right-position;
+field_class string:field-inline;
 value options/value|nothing;
 opt_value options/value;
 json_opt_value python:here.coord_as_json(opt_value);
