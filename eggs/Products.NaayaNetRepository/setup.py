@@ -1,15 +1,11 @@
 from setuptools import setup, find_packages
-import os
 
 NAME = 'Products.NaayaNetRepository'
-PATH = NAME.split('.') + ['version.txt']
-VERSION = open(os.path.join(*PATH)).read().strip()
 
 setup(name=NAME,
-      version=VERSION,
+      version='1.0.4',
       description="",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description=open("README.txt").read().strip(),
       # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Programming Language :: Python",

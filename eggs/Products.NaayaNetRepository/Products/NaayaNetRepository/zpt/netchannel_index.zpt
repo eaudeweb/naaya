@@ -4,8 +4,6 @@
                       content python:here.html2text(description);"
           tal:condition="content"
           tal:attributes="content content" name="description" />
-    <meta tal:condition="here/keywords"
-          tal:attributes="content here/keywords" name="keywords" />
     <meta tal:attributes="content here/contributor" name="author" />
     <meta tal:attributes="content here/gl_get_selected_language"
           name="dc.language" />
